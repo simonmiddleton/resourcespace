@@ -2410,3 +2410,4 @@ $lang["pixel_width"]="Pixel width";
 $lang["file_extension_label"]="File extension";
 $lang["signin_required"]="You must be signed in to perform this action";
 $lang["signin_required_request_account"]="You must be signed in to perform this action. If you do not have an account you can request one by clicking on the above link";
+$lang["error_batch_edit_resources"] = "The following resources have not been updated";

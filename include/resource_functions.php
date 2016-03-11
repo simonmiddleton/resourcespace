@@ -688,13 +688,27 @@ function save_resource_data_multi($collection)
 					else {
 						# Automatically append a space when appending text types.
 						$val=$origval . " " . $existing;
-					}
+                        }
                     }
 				elseif (getval("modeselect_" . $fields[$n]["ref"],"")=="RM")
 					{
                     # Remove text/option(s) mode
                     $val=str_replace($origval,"",$existing);
-                    $nodes_to_remove=$selected_nodes;
+                    if($fields[$n]["required"] && strip_leading_comma($val)=="")
+                        {
+                        // Required field and  no value now set, revert to existing and add to array of failed edits
+                        global $lang;
+                        $val=$existing;
+                        if(!isset($errors[$fields[$n]["ref"]]))
+                            {$errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;}
+                        $errors[$fields[$n]["ref"]] .=  $ref;
+                        if($m<count($list)-1){$errors[$fields[$n]["ref"]] .= ",";}
+                        
+                        }
+                    else
+                        {
+                        $nodes_to_remove=$selected_nodes;
+                        }
 					}
 				else
 					{
@@ -941,7 +955,9 @@ function save_resource_data_multi($collection)
 		update_xml_metadump($list[$m]);
 		}
 	
-	hook("aftersaveresourcedata");	
+	hook("aftersaveresourcedata");
+    if (count($errors)==0) {return true;} else {return $errors;}
+    
 	}
 }
 
