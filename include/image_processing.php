@@ -1809,19 +1809,35 @@ function base64_to_jpeg( $imageData, $outputfile ) {
  
 }
 
+/**
+* Extracts JPG previews from INDD files when these have been set with a preview
+* Note: it requires ExifTool >= 9.50
+* 
+* @param string $filename
+* 
+* @return array|bool
+*/
 function extract_indd_pages($filename)
     {
-    $exiftool_fullpath = get_utility_path("exiftool");
+    $exiftool_fullpath = get_utility_path('exiftool');
     if ($exiftool_fullpath)
         {
         $array = run_command($exiftool_fullpath.' -b -j -pageimage ' . escapeshellarg($filename));
         $array = json_decode($array);
-        
-        if (isset($array[0]->PageImage))
-        	{
-        	return $array[0]->PageImage;
-        	}
+
+        if(isset($array[0]->PageImage))
+            {
+            if(is_array($array[0]->PageImage))
+                {
+                return $array[0]->PageImage;
+                }
+            else
+                {
+                return array($array[0]->PageImage);
+                }
+            }
         }
+
     return false;
     }
 

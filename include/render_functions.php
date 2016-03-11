@@ -298,9 +298,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 case 'save_search_to_dash':
                     var option_url  = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('url');
                     var option_link = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('link');
-
-                    // Dash requires to have some search paramenters (even if they are the default ones)
-                    if((window.location.href).replace(window.baseurl, '') != '/pages/search.php')
+                    
+                    // Dash requires to have some search parameters (even if they are the default ones)
+                    if((basename(option_link).substr(0, 10)) != 'search.php')
                         {
                         option_link = (window.location.href).replace(window.baseurl, '');
                         }

@@ -783,8 +783,13 @@ if(!$multiple)
         $types = get_resource_types();
         for($n = 0; $n < count($types); $n++)
             {
-            if((checkperm("XU{$types[$n]["ref"]}") || in_array($types[$n]['ref'], $hide_resource_types)) ) continue;   // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that)
-            ?><option value="<?php echo $types[$n]["ref"]?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo htmlspecialchars($types[$n]["name"])?></option><?php
+            // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
+            if(0 > $ref && (checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types)))
+                {
+                continue;
+                }
+                ?>
+            <option value="<?php echo $types[$n]["ref"]?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo htmlspecialchars($types[$n]["name"])?></option><?php
             }
             ?>
         </select>
