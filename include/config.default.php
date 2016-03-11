@@ -2957,4 +2957,3 @@ $watermark_single_image = array(
     'position' => 'Center',
 );
 */
-
