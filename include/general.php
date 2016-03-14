@@ -4875,3 +4875,96 @@ function form_value_display($row,$name,$default="")
     return htmlspecialchars(getval($name,$default));
     }
 
+function get_download_filename($ref,$size,$alternative,$ext)
+	{
+	# Constructs a filename for download
+	global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,$download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,$prefix_filename_string;
+	
+	$filename = $ref . $size . ($alternative>0?"_" . $alternative:"") . "." . $ext;
+	
+	if ($original_filenames_when_downloading)
+		{
+		# Use the original filename.
+		if ($alternative>0)
+			{
+			# Fetch from the resource_alt_files alternatives table (this is an alternative file)
+			$origfile=get_alternative_file($ref,$alternative);
+			$origfile=$origfile["file_name"];
+			}
+		else
+			{
+			# Fetch from field data or standard table	
+			$origfile=get_data_by_field($ref,$filename_field);	
+			}
+		if (strlen($origfile)>0)
+			{
+			# do an extra check to see if the original filename might have uppercase extension that can be preserved.	
+			$pathparts=pathinfo($origfile);
+			if (isset($pathparts['extension'])){
+				if (strtolower($pathparts['extension'])==$ext){$ext=$pathparts['extension'];}	
+			} 
+			
+			# Use the original filename if one has been set.
+			# Strip any path information (e.g. if the staticsync.php is used).
+			# append preview size to base name if not the original
+			if($size != '' && !$download_filenames_without_size)
+				{
+				$filename = strip_extension(mb_basename($origfile)) . '-' . $size . '.' . $ext;
+				}
+			else
+				{
+				$filename = strip_extension(mb_basename($origfile)) . '.' . $ext;
+				}
+
+			if($prefix_resource_id_to_filename)
+				{
+				$filename = $prefix_filename_string . $ref . "_" . $filename;
+				}
+			}
+		}
+
+	if ($download_filename_id_only){
+		if(!hook('customdownloadidonly', '', array($ref, $ext, $alternative))) {
+			$filename=$ref . "." . $ext;
+
+			if($size != '' && $download_id_only_with_size) {
+				$filename = $ref . '-' . $size . '.' . $ext;
+			}
+
+			if(isset($prefix_filename_string) && trim($prefix_filename_string) != '') {
+				$filename = $prefix_filename_string . $filename;
+			}
+
+		}
+	}
+	
+	if (isset($download_filename_field))
+		{
+		$newfilename=get_data_by_field($ref,$download_filename_field);
+		if ($newfilename)
+			{
+			$filename = trim(nl2br(strip_tags($newfilename)));
+			if($size != "" && !$download_filenames_without_size)
+				{
+				$filename = substr($filename, 0, 200) . '-' . $size . '.' . $ext;
+				}
+			else
+				{
+				$filename = substr($filename, 0, 200) . '.' . $ext;
+				}
+
+			if($prefix_resource_id_to_filename)
+				{
+				$filename = $prefix_filename_string . $ref . '_' . $filename;
+				}
+			}
+		}
+
+	# Remove critical characters from filename
+	$altfilename=hook("downloadfilenamealt");
+	if(!($altfilename)) $filename = preg_replace('/:/', '_', $filename);
+	else $filename=$altfilename;
+
+    hook("downloadfilename");
+	return $filename;
+	}
