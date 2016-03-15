@@ -1958,6 +1958,9 @@ $staticsync_deleted_state=2;
 # NOTE: Alternative file processing only works when $staticsync_ingest is set to 'true'.
 $staticsync_alternatives_suffix="_alternatives";
 
+# Option to have alternative files located in same directory as primary files but identified by a defined string. As with staticsync_alternatives_suffix this only works when $staticsync_ingest is set to 'true'.
+#$staticsync_alternative_file_text="_alt_";
+
 # if false, the system will always synthesize a title from the filename and path, even
 # if an embedded title is found in the file. If true, the embedded title will be used.
 $staticsync_prefer_embedded_title = true;
