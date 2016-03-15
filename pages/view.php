@@ -797,7 +797,7 @@ function add_download_column($ref, $size_info, $downloadthissize)
 			global $size_info_array;
 			$size_info_array = $size_info;
 			if(!hook("downloadbuttonreplace"))
-				{f
+				{
 				?><a id="downloadlink" <?php
 				if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]
 						. "&ext=" . $size_info["extension"])))
