@@ -1845,7 +1845,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             }
         if(count($propertysearchcodes)>0)
             {
-            $search.="!properties" . implode(";",$propertysearchcodes);
+            $search = '!properties' . implode(';', $propertysearchcodes) . ' ' . $search;
             }
         else
             {
@@ -2599,7 +2599,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # Search for resource properties
     if (substr($search,0,11)=="!properties")
         {
-        $properties=explode(";",substr($search,11));
+        // Note: in order to combine special searches with normal searches, these are separated by space (" ")
+        $searches_array = explode(' ', $search);
+        $properties     = explode(';', substr($searches_array[0], 11));
         $sql_join.=" left join resource_dimensions rdim on r.ref=rdim.resource";
         
         foreach ($properties as $property)
