@@ -825,7 +825,7 @@ var pluploadconfig = {
                                   uploader.bind('UploadComplete', function(up, files) {
                                         jQuery('.plupload_done').slideUp('2000', function() {
                                                         uploader.splice();
-                                                        window.location.href='<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo urlencode($userref) ?>&archive=<?php echo urlencode($setarchivestate); if ($setarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1")){echo "&promptsubmit=true" . "&collection_add=" . $collection_add;} ?>';
+                                                        window.location.href='<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo urlencode($userref) ?>&archive=<?php echo urlencode($setarchivestate); if ($setarchivestate == -2 && $pending_submission_prompt_review && $collection_add!="" && checkperm("e-1")){echo "&promptsubmit=true" . "&collection_add=" . $collection_add;} ?>';
                                                         
                                         });
                                   });
