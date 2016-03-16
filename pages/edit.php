@@ -21,6 +21,7 @@ $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 $modal=(getval("modal","")=="true");
+$single=getval("single","")!="" || getval("forcesingle","")!="";
 
 $archive=getvalescaped("archive",0,true); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
   
@@ -133,6 +134,14 @@ if ($ref<0 && $resource_type!="" && $resource_type!=$resource["resource_type"] &
   $resource["resource_type"]=$resource_type;
   }
 
+if(in_array($resource['resource_type'], $data_only_resource_types))
+     {
+     $single=true;
+     }
+else
+  {
+  $uploadparams = str_replace(array('&forcesingle=true','&noupload=true'), array(''),$uploadparams); 
+  }
 $setarchivestate = getvalescaped('status', $resource["archive"], TRUE);
 
 # Allow alternative configuration settings for this resource type.
@@ -235,6 +244,15 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
         {
         update_resource_type($ref,$resource_type);
         $resource=get_resource_data($ref,false); # Reload resource data.
+        if(in_array($resource['resource_type'], $data_only_resource_types))
+            {
+            $single=true;
+            }
+       else
+          {
+          $single=false;
+          $uploadparams = str_replace(array('&forcesingle=true','&noupload=true'), array(''),$uploadparams); 
+          }
         }       
          
        # Perform the save
@@ -287,7 +305,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
               # Save button pressed? Move to next step.
               if (getval("save","")!="") {redirect($baseurl_short."pages/team/team_batch_select.php?use_local=yes&collection_add=" . getval("collection_add","")."&entercolname=".urlencode(getvalescaped("entercolname",""))."&resource_type=". urlencode($resource_type) . "&status=" . $setarchivestate .  "&no_exif=" . $no_exif . "&autorotate=" . $autorotate . $uploadparams );}
               }
-            elseif (getval("single","")!="") // Test if single upload (archived or not).
+            elseif ($single) // Test if single upload (archived or not).
               {
               # Save button pressed? Move to next step. if noupload is set - create resource without uploading stage
               if ((getval("noupload","")!="")&&(getval("save","")!="")) {$ref=copy_resource(0-$userref);redirect($baseurl_short."pages/view.php?ref=". urlencode($ref));}
@@ -536,11 +554,19 @@ function SaveAndClearButtons($extraclass="")
 <?php
 $form_action = $baseurl_short . 'pages/edit.php?ref=' . urlencode($ref) . '&amp;uploader=' . urlencode(getvalescaped("uploader","")) . '&amp;single=' . urlencode(getvalescaped("single","")) . '&amp;local=' . urlencode(getvalescaped("local","")) . '&amp;search=' . urlencode($search) . '&amp;offset=' . urlencode($offset) . '&amp;order_by=' . urlencode($order_by) . '&amp;sort=' . urlencode($sort) . '&amp;archive=' . urlencode($archive) . '&amp;collection=' . $collection . '&amp;metadatatemplate=' . getval("metadatatemplate","")  . $uploadparams . '&modal=' . getval("modal","");
 // If resource type is set as a data only, don't reach upload stage (step 2)
-if(0 > $ref && in_array($resource['resource_type'], $data_only_resource_types))
+if(0 > $ref)
+  {
+  if(in_array($resource['resource_type'], $data_only_resource_types))
     {
-    $uploadparams .= '&single=true&noupload=true';
+    $uploadparams .= '&forcesingle=true&noupload=true';
     $form_action = $baseurl_short . 'pages/edit.php?ref=' . urlencode($ref) . '&amp;local=' . urlencode(getvalescaped("local","")) . '&amp;search=' . urlencode($search) . '&amp;offset=' . urlencode($offset) . '&amp;order_by=' . urlencode($order_by) . '&amp;sort=' . urlencode($sort) . '&amp;archive=' . urlencode($archive) . '&amp;collection=' . $collection . '&amp;metadatatemplate=' . getval("metadatatemplate","")  . $uploadparams . '&modal=' . getval("modal","");
     }
+  else
+    {
+    $uploadparams = str_replace(array('&forcesingle=true','&noupload=true'), array(''),$uploadparams);      
+    }
+  }
+  
 ?>
 
 <form method="post" action="<?php echo $form_action; ?>" id="mainform" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
@@ -716,19 +742,20 @@ else
    if (!hook("replaceeditheader"))
    {
     # Define the title h1:
-    if (getval("uploader","")=="plupload") {$titleh1 = $lang["addresourcebatchbrowser"];} # Add Resource Batch - In Browser
-    elseif (getval("uploader","")=="java") {$titleh1 = $lang["addresourcebatchbrowserjava"];} # Add Resource Batch - In Browser - Java (Legacy)
-    elseif (getval("single","")!="")
-    {
-       if (getval("status","")=="2")
-       {
-            $titleh1 = $lang["newarchiveresource"]; # Add Single Archived Resource
-         }
-         else
-         {
-            $titleh1 = $lang["addresource"]; # Add Single Resource
-         }
+    if ($single)
+      {
+      if (getval("status","")=="2")
+        {
+        $titleh1 = $lang["newarchiveresource"]; # Add Single Archived Resource
+        }
+      else
+        {
+        $titleh1 = $lang["addresource"]; # Add Single Resource
+        }
       }
+    elseif (getval("uploader","")=="" || getval("uploader","")=="plupload") {$titleh1 = $lang["addresourcebatchbrowser"];} # Add Resource Batch - In Browser
+    elseif (getval("uploader","")=="java") {$titleh1 = $lang["addresourcebatchbrowserjava"];} # Add Resource Batch - In Browser - Java (Legacy)
+  
     elseif ((getval("local","")!="")||(getval("uploader","")=="local")) {$titleh1 = $lang["addresourcebatchlocalfolder"];} # Add Resource Batch - Fetch from local upload folder
     else $titleh1 = $lang["addresourcebatchftp"]; # Add Resource Batch - Fetch from FTP server
     
