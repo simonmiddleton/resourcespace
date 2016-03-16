@@ -97,9 +97,9 @@ $uploadurl=generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams) . 
 $redirecturl = getval("redirecturl","");
 if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
 
-$default_sort="DESC";
-if (substr($order_by,0,5)=="field"){$default_sort="ASC";}
-$sort=getval("sort",$default_sort);
+$default_sort_direction="DESC";
+if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
+$sort=getval("sort",$default_sort_direction);
 
 $allowed_extensions="";
 if ($resource_type!="") {$allowed_extensions=get_allowed_extensions_by_type($resource_type);}
