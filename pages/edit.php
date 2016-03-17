@@ -308,7 +308,16 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             elseif ($single) // Test if single upload (archived or not).
               {
               # Save button pressed? Move to next step. if noupload is set - create resource without uploading stage
-              if ((getval("noupload","")!="")&&(getval("save","")!="")) {$ref=copy_resource(0-$userref);redirect($baseurl_short."pages/view.php?ref=". urlencode($ref));}
+              if ((getval("noupload","")!="")&&(getval("save","")!=""))
+                {
+                $ref=copy_resource(0-$userref);
+                if($collection_add!="")
+                    {
+                    add_resource_to_collection($ref, $collection_add);
+                    set_user_collection($userref, $collection_add);
+                    }
+                redirect($baseurl_short."pages/view.php?ref=". urlencode($ref) . '&refreshcollectionframe=true');
+                }
   
               if (getval("save","")!="") {redirect($baseurl_short."pages/upload.php?resource_type=". urlencode($resource_type) . "&status=" . $setarchivestate .  "&no_exif=" . $no_exif . "&autorotate=" . urlencode($autorotate) . "&archive=" . urlencode($archive) . $uploadparams );}
               }    
@@ -555,18 +564,17 @@ function SaveAndClearButtons($extraclass="")
 $form_action = $baseurl_short . 'pages/edit.php?ref=' . urlencode($ref) . '&amp;uploader=' . urlencode(getvalescaped("uploader","")) . '&amp;single=' . urlencode(getvalescaped("single","")) . '&amp;local=' . urlencode(getvalescaped("local","")) . '&amp;search=' . urlencode($search) . '&amp;offset=' . urlencode($offset) . '&amp;order_by=' . urlencode($order_by) . '&amp;sort=' . urlencode($sort) . '&amp;archive=' . urlencode($archive) . '&amp;collection=' . $collection . '&amp;metadatatemplate=' . getval("metadatatemplate","")  . $uploadparams . '&modal=' . getval("modal","");
 // If resource type is set as a data only, don't reach upload stage (step 2)
 if(0 > $ref)
-  {
-  if(in_array($resource['resource_type'], $data_only_resource_types))
     {
-    $uploadparams .= '&forcesingle=true&noupload=true';
-    $form_action = $baseurl_short . 'pages/edit.php?ref=' . urlencode($ref) . '&amp;local=' . urlencode(getvalescaped("local","")) . '&amp;search=' . urlencode($search) . '&amp;offset=' . urlencode($offset) . '&amp;order_by=' . urlencode($order_by) . '&amp;sort=' . urlencode($sort) . '&amp;archive=' . urlencode($archive) . '&amp;collection=' . $collection . '&amp;metadatatemplate=' . getval("metadatatemplate","")  . $uploadparams . '&modal=' . getval("modal","");
+    if(in_array($resource['resource_type'], $data_only_resource_types))
+        {
+        $uploadparams .= '&forcesingle=true&noupload=true';
+        $form_action = $baseurl_short . 'pages/edit.php?ref=' . urlencode($ref) . '&amp;local=' . urlencode(getvalescaped("local","")) . '&amp;search=' . urlencode($search) . '&amp;offset=' . urlencode($offset) . '&amp;order_by=' . urlencode($order_by) . '&amp;sort=' . urlencode($sort) . '&amp;archive=' . urlencode($archive) . '&amp;collection=' . $collection . '&amp;metadatatemplate=' . getval("metadatatemplate","")  . $uploadparams . '&modal=' . getval("modal","");
+        }
+    else
+        {
+        $uploadparams = str_replace(array('&forcesingle=true','&noupload=true'), array(''),$uploadparams);      
+        }
     }
-  else
-    {
-    $uploadparams = str_replace(array('&forcesingle=true','&noupload=true'), array(''),$uploadparams);      
-    }
-  }
-  
 ?>
 
 <form method="post" action="<?php echo $form_action; ?>" id="mainform" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
