@@ -8,14 +8,14 @@ include "../../../include/search_functions.php";
 include_once "../languages/en.php"; # Because this may not be included automatically, i.e. if the plugin is not available to all groups.
 
 # Get variables and check key is valid.
-$ref=getvalescaped("ref","");
-$key=getvalescaped("key","");
-$size=getvalescaped("size","pre");
-$transition=(int)getvalescaped("transition",4);
-$showtext=getvalescaped("showtext","0");
+$ref        = getvalescaped('ref', '');
+$key        = getvalescaped('k', '');
+$size       = getvalescaped('size', 'pre');
+$transition = (int)getvalescaped('transition', 4);
+$showtext   = getvalescaped('showtext', '0');
 
-$width=getvalescaped("width","");
-$player_width=$width;
+$width        = getvalescaped('width', '');
+$player_width = $width;
 
 # Check key is valid
 if (!check_access_key_collection($ref,$key))
