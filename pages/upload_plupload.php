@@ -471,7 +471,7 @@ if ($_FILES)
 								{								
 								// we don't need to wait for this..
 								ob_flush();flush();
-								notify_resource_change($replace_resource);
+								notify_resource_change($alternative);
 								}
 								
 			    	
