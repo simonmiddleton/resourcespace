@@ -2980,3 +2980,8 @@ $offline_job_delete_completed=false;
 
 # Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
 $download_file_lifetime=14;
+
+# $replace_resource_preserve_option - Option to keep original resource files as alternatives when replacing resource
+$replace_resource_preserve_option=false;
+# $replace_resource_preserve_default - if $replace_resource_preserve_option is enabled, should the option be checked by default?
+$replace_resource_preserve_default=false;
