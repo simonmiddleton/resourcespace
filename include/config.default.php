@@ -285,6 +285,15 @@ $dash_tile_shadows=false;
 $managed_home_dash = false;
 # Allows Dash Administrators to have their own dash whilst all other users have the managed dash ($managed_home_dash must be on)
 $unmanaged_home_dash_admins = false;
+
+/*
+* Dash tile color picker/ selector
+* If $dash_tile_colour = true and there are no colour options, a colour picker (jsColor) will be used instead
+* Example of colour options array:
+* $dash_tile_colour_options = array('0A8A0E' => 'green', '0C118A' => 'blue');
+*/
+$dash_tile_colour         = true;
+$dash_tile_colour_options = array();
 /* End Dash Config Options */
 
 /*
