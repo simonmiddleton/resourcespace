@@ -621,15 +621,14 @@ function save_resource_data_multi($collection)
             elseif ($fields[$n]["type"] == 7 || $fields[$n]["type"]==9) // Category tree or dynamic keywords     
 				{
 				$submittedval=getval("field_" . $fields[$n]["ref"],"");
-				$submittedvals=explode(",",$submittedval);
+				$submittedvals=explode("|",$submittedval);
                 $newvals=array();
                 foreach($fields[$n]["nodes"] as $noderef => $nodedata)
                     {
                     $addnode=false;
                     foreach($submittedvals as $checkval)
                         {                  
-                        if (in_array($checkval,i18n_get_translations($nodedata['name'])))
-                            {
+						if (trim($checkval) == trim($nodedata['name']))                            {
                             $addnode=true;                            
                             }                        
                         }
