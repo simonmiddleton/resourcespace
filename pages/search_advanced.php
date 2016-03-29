@@ -57,6 +57,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 			}
 		else
 			{
+$restypes="1,2,3,4,5,6,7,8,9";
 			#debug("restypes:".$restypes."=".$search.";".substr($restypes,0,11));
 			if (substr($restypes,0,11)!="Collections" && !$collection_search_includes_resource_metadata)
 			    $result=do_search($search,$restypes,"relevance",$archive,1,"",false,$starsearch);
@@ -377,7 +378,7 @@ if($advanced_search_buttons_top)
  }
 $rt=explode(",",getvalescaped("restypes",""));
 
-if(!hook("advsearchrestypes") && !$collection_search_includes_resource_metadata): ?>
+if(!hook("advsearchrestypes")): ?>
 <div class="Question">
 <label><?php echo $lang["search-mode"]?></label><?php
 
