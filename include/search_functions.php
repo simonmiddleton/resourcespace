@@ -1767,8 +1767,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
             break;
 
-            case 7: 
-            case 9: # -------- Category tree and dynamic keywords
+            case 7:  # -------- Category tree
             $name="field_" . $fields[$n]["ref"];
             $value=getvalescaped($name,"");
             $selected=trim_array(explode(",",$value));
@@ -1791,7 +1790,31 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 $search.=$fields[$n]["name"] . ":" . $p;
                 }
             break;
+        
+            case 9: # -------- Dynamic keywords
+            $name="field_" . $fields[$n]["ref"];
+            $value=getvalescaped($name,"");
+            $selected=trim_array(explode("|",$value));
+            $p="";
+            for ($m=0;$m<count($selected);$m++)
+                {
+                if ($selected[$m]!="")
+                    {
+                    if ($p!="") {$p.=";";}
+                    $p.=$selected[$m];
+                    }
 
+                # Resolve keywords to make sure that the value has been indexed prior to including in the search string.
+                $keywords=split_keywords($selected[$m]);
+                foreach ($keywords as $keyword) {resolve_keyword($keyword,true);}
+                }
+            if ($p!="")
+                {
+                if ($search!="") {$search.=", ";}
+                $search.=$fields[$n]["name"] . ":" . $p;
+                }
+            break;
+        
             // Radio buttons:
             case 12:
                 if($fields[$n]['display_as_dropdown']) {
