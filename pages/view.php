@@ -973,7 +973,7 @@ elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_ful
 		<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
 		<td <?php hook("modifydownloadbutton") ?>  class="DownloadButton">
 		<?php if (!$direct_download || $save_as){ ?>
-			<a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&ext=" . $resource["file_extension"] ))) { ?>href="<?php echo generateURL($baseurl_short . "pages/terms.php",$urlparams, array("url"=> generateURL($baseurl_short . "download_progress.php",$urlparams,array("ext"=>$resource["file_extension"])))); } ?> onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
+			<a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&ext=" . $resource["file_extension"] ))) { ?>href="<?php echo generateURL($baseurl_short . "pages/terms.php",$urlparams, array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("ext"=>$resource["file_extension"])))); } ?> onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
 		<?php } else { ?>
 			<a href="#" onclick="directDownload('<?php echo  generateURL($baseurl_short . "pages/download_progress.php",$urlparams, array("ext"=>$resource['file_extension'])); ?>')"><?php echo $lang["action-download"]?></a>
 		<?php } // end if direct_download ?>
