@@ -2367,7 +2367,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search,0,19)=="!contentscollection")
         {
         $flags=substr($search,19,strpos($search," ")-19); # Extract User/Public/Theme flags from the beginning of the search parameter.
-    
+    	if ($flags=="") {$flags="TP";} # Sensible default
+
         # Add collections based on the provided collection type flags.
         $collection_filter="(";
         if (strpos($flags,"T")!==false) # Include themes
