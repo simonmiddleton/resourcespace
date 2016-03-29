@@ -2994,6 +2994,6 @@ $replace_resource_preserve_option=false;
 $replace_resource_preserve_default=false;
 
 # When searching collections, return results based on the metadata of the resources inside also
-$collection_search_includes_resource_metadata=true;
+$collection_search_includes_resource_metadata=false;
 
 
