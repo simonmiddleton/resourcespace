@@ -12,14 +12,12 @@ function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
     {
     if ((substr($search,0,11)!="!collection")&&($collections!="")&&is_array($collections))
         {
-        global $baseurl_short, $collection_prefix, $search_tiles_text_shadow;
-        
-				$tile_height=180;
-				$tile_width=250;
-                
+        global $baseurl_short, $collection_prefix, $search_tiles_text_shadow,$search_tiles_collection_count;
+        $tile_height=180;
+        $tile_width=250;
         for ($n=0;$n<count($collections);$n++)
             {
-            $resources=do_search("!collection".$collections[$n]['ref'],"","relevance","",5);
+            $resources=do_search("!collection".$collections[$n]['ref'],"","relevance","",1);
             $hook_result=hook("process_search_results","",array("result"=>$resources,"search"=>"!collection".$collections[$n]['ref']));
             if ($hook_result!==false) {$resources=$hook_result;}
             
@@ -27,8 +25,8 @@ function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
 			class=\"HomePanel DashTile\" id=\"search_tile_col" . $collections[$n]['ref'] . "\">
 			<div id=\"contents_search_tile_col" . $collections[$n]['ref'] . "\" class=\"HomePanelIN HomePanelDynamicDash " . (($search_tiles_text_shadow)? "TileContentShadow":"") . "\">
 			";
-            
-            if(count($resources)>0)
+            $count=count($resources);
+            if($count>0)
                 {
                 $previewresource=$resources[0];
                 //exit(print_r($previewresource));
@@ -76,7 +74,16 @@ function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
                 <h2 class="title thmbs_tile">
                 <?php echo htmlspecialchars(str_replace(array("\"","'"),"", $collection_prefix . i18n_get_collection_name($collections[$n]))); ?>
                 </h2>
-            
+                <?php
+                if($search_tiles_collection_count)
+                    {?>
+                    <p class="tile_corner_box">
+                    <span class="count-icon"></span>
+                    <?php echo $count; ?>
+                    </p>
+                    <?php
+                    }
+                    ?>
             </div></a>
             <?php            
             }
