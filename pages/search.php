@@ -671,7 +671,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
 	    }
 	 ?></div>
 	<?php
-	if(!hook('replacedisplayselector','search.php',array($search,(isset($collections)?$collections:""))))
+	if(!hook('replacedisplayselector','',array($search,(isset($collections)?$collections:""))))
 		{
 		?>
 		<div class="InpageNavLeftBlock <?php if($iconthumbs) {echo 'icondisplay';} ?>"><?php echo $lang["display"]?>:<br />
