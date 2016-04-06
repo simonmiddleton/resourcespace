@@ -2996,4 +2996,7 @@ $replace_resource_preserve_default=false;
 # When searching collections, return results based on the metadata of the resources inside also
 $collection_search_includes_resource_metadata=false;
 
+# Specify field references for fields that you do not wish the blank default entry to appear for, so the first keyword node is selected by default.
+# e.g. array(3,12);
+$default_to_first_node_for_fields=array();
 
