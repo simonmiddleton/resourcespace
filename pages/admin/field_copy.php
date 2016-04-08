@@ -2,6 +2,7 @@
 include "../../include/db.php";
 include_once "../../include/general.php";
 include "../../include/authenticate.php";if (!checkperm("a")) {exit ("Permission denied.");}
+include_once '../../include/resource_functions.php';
 
 $ref=getvalescaped("ref","");
 $copied='';
@@ -83,11 +84,14 @@ if (getval("saveform","")!="")
 		" . $sync . "	
 	
 		from resource_type_field where ref='$ref'
-		
-		
-		");	
-	$copied=sql_insert_id();
-        redirect($baseurl_short . "pages/admin/admin_resource_type_field_edit.php?ref=" . $copied);
+		");
+
+	$copied = sql_insert_id();
+
+    // Copy nodes if resource type is a fixed list type:
+    copy_resource_type_field_nodes($ref, $copied);
+
+    redirect($baseurl_short . "pages/admin/admin_resource_type_field_edit.php?ref=" . $copied);
 	}
         
 if ($copied!='')
