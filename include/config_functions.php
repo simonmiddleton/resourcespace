@@ -551,7 +551,7 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
         // This is how it was used on plugins setup page. Makes sense for developers when trying to debug and not much for non-technical users
         $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
         }
-    ?><div class="Question">
+    ?><div class="Question" style="min-height: 1.5em;">
         <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
         <div class="AutoSaveStatus">
             <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
