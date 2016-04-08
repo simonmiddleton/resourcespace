@@ -178,6 +178,9 @@ $linkedheaderimgsrc="";
 # Include ResourceSpace version header in View Source
 $include_rs_header_info=true;
 
+# Used for specifying custom colour for header background
+$header_colour_style_override='';
+
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
 $defaultlanguage="en"; # default language, uses ISO 639-1 language codes ( en, es etc.)
