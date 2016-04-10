@@ -224,14 +224,6 @@ if($videojs && ($pagename=='search' && $keyboard_navigation_video_search) || ($p
     <?php
     }
 
-if($dash_tile_colour && 0 === count($dash_tile_colour_options))
-    {
-    ?>
-    <script src="<?php echo $baseurl_short; ?>lib/js/jscolor.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
-    <?php
-    }
-    ?>
-
 <script type="text/javascript">
 var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
