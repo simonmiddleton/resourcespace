@@ -223,6 +223,7 @@ if($videojs && ($pagename=='search' && $keyboard_navigation_video_search) || ($p
 	<script type="text/javascript" src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?<?php echo $css_reload_key?>"></script>
     <?php
     }
+?>
 
 <script type="text/javascript">
 var baseurl_short="<?php echo $baseurl_short?>";
