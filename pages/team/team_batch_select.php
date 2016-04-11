@@ -8,6 +8,7 @@ $use_local = getvalescaped('use_local', '') !== '';
 $resource_type = getvalescaped('resource_type','');
 $collection_add = getvalescaped("collection_add","");
 $collectionname = getvalescaped("entercolname","");
+$alternative = getvalescaped('alternative','');
 
 $allowed_extensions=get_allowed_extensions_by_type($resource_type);
 
@@ -93,6 +94,7 @@ include "../../include/header.php";
 <input type="hidden" name="no_exif" value="<?php echo getval("no_exif","")?>">
 <input type="hidden" name="autorotate" value="<?php echo getval("autorotate","")?>">
 <input type="hidden" name="collection" value="<?php echo $collection_add?>">
+<input type="hidden" name="alternative" value="<?php echo $alternative?>">
 
 
 <div class="Question"><label><?php echo $use_local ? $lang["local_upload_path"] : $lang["ftp_upload_path"] ?></label><input name="folder" type="text" class="stdwidth" value="<?php echo $use_local ? $folder : getval("ftp_server","") . "/" . $folder?>" readonly="readonly"></div>
