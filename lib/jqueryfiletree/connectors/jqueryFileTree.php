@@ -31,7 +31,7 @@ $root = '';
 
 //$root = '';
 $postDir = rawurldecode($root.(isset($_POST['dir']) ? $_POST['dir'] : null ));
-if(substr($postDir,-1)!=='/'){echo "Adding trailing slash to post dir<br/>";$postDir.="/";}
+if(substr($postDir,-1)!=='/'){$postDir.="/";}
 
 // set checkbox if multiSelect set to true
 $checkbox = ( isset($_POST['multiSelect']) && $_POST['multiSelect'] == 'true' ) ? "<input type='checkbox' class='upload_select'/>" : null;

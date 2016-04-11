@@ -178,7 +178,7 @@ else
         		jQuery(".filetreeselect input:checkbox").each(function(){
         			var sThisVal = (this.checked ? jQuery(this).next().attr('rel') : "");
         			if(sThisVal!==''){
-        				newValPos=sThisVal.indexOf("<?php echo $filetree_path?>")+ filetree_path.length -1;// the -1 keeps the "/" there
+        				newValPos=sThisVal.indexOf("<?php echo $filetree_path?>")+ filetree_path.length;
         				newVal = sThisVal.substr(newValPos);
         				jQuery("form").append('<input type="hidden" name="uploadfiles[]" value="'+newVal+'"/>');
         			}
