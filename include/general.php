@@ -1436,7 +1436,7 @@ function auto_create_user_account()
 			get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email, $email_user_notifications);    
 			if($send_email && $approval_notify_user["email"]!="")
 				{
-				send_mail($email_notify,$applicationname . ": " . $lang["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
+				send_mail($approval_notify_user["email"],$applicationname . ": " . $lang["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
 				}        
 			else
 				{
