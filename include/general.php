@@ -1367,7 +1367,7 @@ function auto_create_user_account()
 			{
 			global $rs_session;
 			$rs_session=get_rs_session_id();
-			if($rs_session==false){break;}
+			if($rs_session==false){continue;}
 			# Copy any anonymous session collections to the new user account 
 			if (!function_exists("get_session_collections"))
 				{
