@@ -2707,6 +2707,7 @@ $download_no_session_cache_limiter=false;
 
 # Specifies that searching will search all workflow states
 # NOTE - does not work with $advanced_search_archive_select=true (advanced search status searching) as the below option removes the workflow selection altogether.
+# IMPORTANT - this feature gets disabled when requests ask for a specific archive state (e.g. View deleted resources or View resources in pending review)
 $search_all_workflow_states=false;
 
 # Require email address to be entered when users are submitting collecion feedback

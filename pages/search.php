@@ -230,7 +230,20 @@ if ($order_by=="")
 		}
 	}
 $per_page=getvalescaped("per_page",$default_perpage);rs_setcookie('per_page', $per_page);
-$archive=getvalescaped("archive",0);if (strpos($search,"!")===false) {rs_setcookie('saved_archive', $archive);}
+$archive = getvalescaped('archive', 0);
+
+// Disable search through all workflow states when an archive state is specifically requested
+// This prevents links like View deleted resources to show the user resources in all states
+if($search_all_workflow_states && 0 != $archive)
+    {
+    $search_all_workflow_states = false;
+    }
+
+if(false === strpos($search, '!'))
+    {
+    rs_setcookie('saved_archive', $archive);
+    }
+
 $jumpcount=0;
 
 if (getvalescaped("recentdaylimit","")!="") //set for recent search, don't set cookie
