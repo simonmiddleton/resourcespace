@@ -460,6 +460,7 @@ $lang["rotateanticlockwise"]="Rotate anti-clockwise";
 $lang["increasegamma"]="Brighten previews";
 $lang["decreasegamma"]="Darken previews";
 $lang["restoreoriginal"]="Restore original";
+$lang["createpreviews"]="Create previews";
 $lang["recreatepreviews"]="Recreate previews";
 $lang["retrypreviews"]="Retry preview creation";
 $lang["specifydefaultcontent"]="Specify default content for new resources";
