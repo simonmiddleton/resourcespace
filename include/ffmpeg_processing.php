@@ -32,7 +32,7 @@ else
 	if (!isset($_SERVER['argv'][7])) {exit("Alternative param missing");}
 	$alternative=$_SERVER['argv'][7];
 
-	debug ("Starting ffmpeg_processing.php async with parameters: ref=$ref, file=$file, target=$target, previewonly=$previewonly, snapshottime=$snapshottime, alternative=$alternative");
+	debug ("Starting ffmpeg_processing.php async with parameters: ref=$ref, file=$file, target=$target, previewonly=$previewonly, snapshottime=$snapshottime, alternative=$alternative",$ref);
 
 	# SQL Connection may have hit a timeout
 	sql_connect();

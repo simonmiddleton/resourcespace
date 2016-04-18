@@ -54,7 +54,7 @@ endif;
 $convert_fullpath = get_utility_path("im-convert");
 if ($convert_fullpath==false) {exit("Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");}
 
-debug ("Starting preview preprocessing. File extension is $extension.");
+debug ("Starting preview preprocessing. File extension is $extension.",$ref);
 
 hook("metadata");
 
@@ -84,10 +84,10 @@ if (is_array($preview_preprocessing_results)){
 if (isset($qlpreview_path) && !in_array($extension, $qlpreview_exclude_extensions) && !in_array($extension, $ffmpeg_supported_extensions) && !in_array($extension, $ffmpeg_audio_extensions) && !isset($newfile))
 	{
 	$qlpreview_command=$qlpreview_path."/qlpreview -generatePreviewOnly yes -imageType jpg -maxWidth 800 -maxHeight 800 -asIcon no -preferFileIcon no -inPath " . escapeshellarg($file) . " -outPath " . escapeshellarg($target);
-	debug("qlpreview command: " . $qlpreview_command);
+	debug("qlpreview command: " . $qlpreview_command,RESOURCE_LOG_APPEND_PREVIOUS);
 	$output=run_command($qlpreview_command);
 	#sleep(4); # Delay to allow processing
-	if (file_exists($target)){$newfile = $target;debug("qlpreview success!");}	
+	if (file_exists($target)){$newfile = $target;debug("qlpreview success!",RESOURCE_LOG_APPEND_PREVIOUS);}
 	}
 
 
@@ -487,11 +487,11 @@ global $ffmpeg_preview,$ffmpeg_preview_seconds,$ffmpeg_preview_extension,$ffmpeg
 
 
 // If a snapshot has already been created and $ffmpeg_no_new_snapshots, never revert the snapshot (this is usually a custom preview)
-debug('FFMPEG-VIDEO: ####################################################################');
-debug('FFMPEG-VIDEO: Start trying FFMPeg for video files -- resource ID ' . $ref);
+debug('FFMPEG-VIDEO: ####################################################################',RESOURCE_LOG_APPEND_PREVIOUS);
+debug('FFMPEG-VIDEO: Start trying FFMPeg for video files -- resource ID ' . $ref,RESOURCE_LOG_APPEND_PREVIOUS);
 if (($ffmpeg_fullpath!=false) && $snapshotcheck && in_array($extension, $ffmpeg_supported_extensions) && $ffmpeg_no_new_snapshots)
 	{
-		debug('FFMPEG-VIDEO: Create a preview for this video by going straight to ffmpeg_processing.php');
+		debug('FFMPEG-VIDEO: Create a preview for this video by going straight to ffmpeg_processing.php',RESOURCE_LOG_APPEND_PREVIOUS);
 		$target=get_resource_path($ref,true,"pre",false,'jpg',-1,1,false,"");
 		include (dirname(__FILE__)."/ffmpeg_processing.php");
 	}
@@ -499,12 +499,12 @@ if (($ffmpeg_fullpath!=false) && $snapshotcheck && in_array($extension, $ffmpeg_
 
 else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpeg_supported_extensions))
         {   
-		debug('FFMPEG-VIDEO: Start process for creating previews...');
+		debug('FFMPEG-VIDEO: Start process for creating previews...',RESOURCE_LOG_APPEND_PREVIOUS);
 
         $snapshottime = 1;
         $out = run_command($ffprobe_fullpath . " -i " . escapeshellarg($file), true);
 
-        debug('FFMPEG-VIDEO: Running information command: ' . $ffprobe_fullpath . ' -i ' . $file);
+        debug('FFMPEG-VIDEO: Running information command: ' . $ffprobe_fullpath . ' -i ' . $file,RESOURCE_LOG_APPEND_PREVIOUS);
 
         if(preg_match("/Duration: (\d+):(\d+):(\d+)\.\d+, start/", $out, $match))
         	{
@@ -525,20 +525,20 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
 
  	if(!hook("previewpskipthumb","",array($file))){    
    $output = run_command($ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " -f image2 -vframes 1 -ss ".$snapshottime." " . escapeshellarg($target));
-   debug('FFMPEG-VIDEO: Get snapshot: ' . $ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y -i ' . $file . ' -f image2 -vframes 1 -ss ' . $snapshottime . ' ' . $target);
+   debug('FFMPEG-VIDEO: Get snapshot: ' . $ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y -i ' . $file . ' -f image2 -vframes 1 -ss ' . $snapshottime . ' ' . $target,RESOURCE_LOG_APPEND_PREVIOUS);
 	}
         if (file_exists($target)) 
             {
             $newfile=$target;
-            debug('FFMPEG-VIDEO: $newfile = ' . $newfile);
+            debug('FFMPEG-VIDEO: $newfile = ' . $newfile,RESOURCE_LOG_APPEND_PREVIOUS);
            
 
             if ($ffmpeg_preview && ($extension!=$ffmpeg_preview_extension || $ffmpeg_preview_force) )
                 {
-                	debug('FFMPEG-VIDEO: Before running the actual preview command...');
+                	debug('FFMPEG-VIDEO: Before running the actual preview command...',RESOURCE_LOG_APPEND_PREVIOUS);
                 	if ($ffmpeg_preview_async && isset($php_path) && file_exists($php_path . "/php"))
 	                	{
-	                		debug('FFMPEG-VIDEO: Create preview asynchronously...');
+	                		debug('FFMPEG-VIDEO: Create preview asynchronously...',RESOURCE_LOG_APPEND_PREVIOUS);
 	                	global $scramble_key;
 	                	exec($php_path . "/php " . dirname(__FILE__)."/ffmpeg_processing.php " . 
 	                		escapeshellarg($scramble_key) . " " . 
@@ -552,12 +552,12 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
 	                	}
                 	else 
 	                	{
-	                		debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...');
+	                		debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...',RESOURCE_LOG_APPEND_PREVIOUS);
 	                	include (dirname(__FILE__)."/ffmpeg_processing.php");
 	                	}
                 }
             }
-            debug('FFMPEG-VIDEO: ####################################################################'); 
+            debug('FFMPEG-VIDEO: ####################################################################',RESOURCE_LOG_APPEND_PREVIOUS);
         } 
 
 
@@ -573,7 +573,7 @@ if (($ffmpeg_fullpath!=false) && in_array($extension, $ffmpeg_audio_extensions))
 	if(!file_exists($mp3file))
 		{
 		sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
-		echo debug("Failed to process resource " . $ref . " - MP3 creation failed.");
+		echo debug("Failed to process resource " . $ref . " - MP3 creation failed.",RESOURCE_LOG_APPEND_PREVIOUS);
 		}	
 	}
 
@@ -638,7 +638,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 
    if (($extension=="pdf") || (($extension=="eps") && !$photoshop_eps) || ($extension=="ai") || ($extension=="ps")) 
     	{
-    	debug("PDF multi page preview generation starting");
+    	debug("PDF multi page preview generation starting",RESOURCE_LOG_APPEND_PREVIOUS);
     	
    	  # For EPS/PS/PDF files, use GS directly and allow multiple pages.
 	# EPS files are always single pages:
@@ -738,14 +738,14 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 			break;
 			}
 
-    	debug("PDF multi page preview: page $n, executing " . $gscommand2);
+    	debug("PDF multi page preview: page $n, executing " . $gscommand2,RESOURCE_LOG_APPEND_PREVIOUS);
 
 	
 		# Set that this is the file to be used.
 		if (file_exists($target) && $n==1)
 			{
 			$newfile=$target;$pagecount=$n;
-	    	debug("Page $n generated successfully");
+	    	debug("Page $n generated successfully",RESOURCE_LOG_APPEND_PREVIOUS);
 			}
 			
 		# resize directly to the screen size (no other sizes needed)
