@@ -352,7 +352,7 @@ else
 	$result=array(); # Do not return resources (e.g. for collection searching only)
 	}
 
-if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive==0){$collections=do_collections_search($search,$restypes);} // don't do this for external shares
+if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive==0){$collections=do_collections_search($search,$restypes,0,$order_by,$sort);} // don't do this for external shares
 
 # Allow results to be processed by a plugin
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));

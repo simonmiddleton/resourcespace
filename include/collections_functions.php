@@ -490,8 +490,8 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 }
 
 
-function do_collections_search($search,$restypes,$archive=0)
-    {
+function do_collections_search($search,$restypes,$archive=0,$order_by,$sort)
+    {echo $sort;
     global $search_includes_themes, $search_includes_public_collections, $search_includes_user_collections, $userref, $collection_search_includes_resource_metadata;
     $result=array();
     
@@ -522,7 +522,7 @@ function do_collections_search($search,$restypes,$archive=0)
 				. ($search_includes_user_collections_now?'U':'')
 				. ($search_includes_public_collections_now?'P':'')
 				. ($search_includes_themes_now?'T':'')
-				. " " . $search);
+				. " " . $search,"",$order_by,0,-1,$sort);
 		}
 	else
 		{
