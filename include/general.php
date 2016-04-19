@@ -4114,7 +4114,7 @@ function format_display_field($value){
 // formats a string with a collapsible more / less section
 function format_string_more_link($string,$max_words_before_more=-1)
     {
-    $words=preg_split('/\s/',$string);
+    $words=preg_split('/[\t\f ]/',$string);
     if ($max_words_before_more==-1)
         {
         global $max_words_before_more;
