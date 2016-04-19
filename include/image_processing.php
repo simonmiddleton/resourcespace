@@ -102,8 +102,10 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false)
 		# if not, try exiftool	
 		else if ($exiftool_fullpath!=false)
 			{
-			$file_type_by_exiftool=run_command($exiftool_fullpath." -filetype -s -s -s ".escapeshellarg($processfile['tmp_name']));
-			if (strlen($file_type_by_exiftool)>0){$extension=str_replace(" ","_",trim(strtolower($file_type_by_exiftool)));$filename=$filename;}else{return false;}
+            $cmd=$exiftool_fullpath." -filetype -s -s -s ".escapeshellarg($processfile['tmp_name']);
+			$file_type_by_exiftool=run_command($cmd);
+            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $file_type_by_exiftool);
+            if (strlen($file_type_by_exiftool)>0){$extension=str_replace(" ","_",trim(strtolower($file_type_by_exiftool)));$filename=$filename;}else{return false;}
 			}
 		# if no clue of extension by now, return false		
 		else {return false;}	
@@ -402,7 +404,9 @@ function extract_exif_comment($ref,$extension="")
 		
 			$command = $exiftool_fullpath . " -s -s -s -t -composite:imagesize -xresolution -resolutionunit " . escapeshellarg($image);
 			$dimensions_resolution_unit=explode("\t",run_command($command));
-			# if dimensions resolution and unit could be extracted, add them to the database.
+            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $dimensions_resolution_unit);
+
+            # if dimensions resolution and unit could be extracted, add them to the database.
 			# they can be used in view.php to give more accurate data.
 			if (count($dimensions_resolution_unit)==3)
 				{
@@ -423,9 +427,11 @@ function extract_exif_comment($ref,$extension="")
 		# the command result isn't printed in columns, which will help in parsing
 		# We then split the lines in the result into an array
 		$command = $exiftool_fullpath . " -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -G " . escapeshellarg($image);
-		$metalines = explode("\n", run_command($command));
+        $output=run_command($command);
+        $metalines = explode("\n",$output);
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
 
-		$metadata = array(); # an associative array to hold metadata field/value pairs
+        $metadata = array(); # an associative array to hold metadata field/value pairs
 		
 		# go through each line and split field/value using the first
 		# occurrance of ": ".  The keys in the associative array is converted
@@ -1020,6 +1026,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                     }
 
                 $output = run_command($command);
+                resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
 
                 if(file_exists($apath))
                     {
@@ -1207,7 +1214,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		# Get image's dimensions.
 		$identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
 		$identoutput=run_command($identcommand);
-		if($lean_preview_generation){
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$identcommand . ":\n" . $identoutput);
+
+        if($lean_preview_generation){
 			$all_sizes=false;
 			if(!$thumbonly && !$previewonly){
 				// seperate width and height
@@ -1356,7 +1365,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				$runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
                                 if(!hook("imagepskipthumb")):
 				$output=run_command($runcommand);
-				$created_count++;
+                resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
+
+                $created_count++;
 				# if this is the first file generated for non-ingested resources check rotation
 				if($autorotate_no_ingest && $created_count==1 && !$ingested){
 					# first preview created for non-ingested file...auto-rotate
@@ -1369,8 +1380,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				if ($extension=="png" || $extension=="gif"){
 					global $transparency_background;
 				$transparencyreal=dirname(__FILE__) ."/../" . $transparency_background;
-					$wait=run_command(str_replace("identify","composite",$identify_fullpath)."  -compose Dst_Over -tile ".escapeshellarg($transparencyreal)." ".escapeshellarg($path)." ".escapeshellarg(str_replace($extension,"jpg",$path)), true);
-					unlink($path);
+
+                    $cmd=str_replace("identify","composite",$identify_fullpath)."  -compose Dst_Over -tile ".escapeshellarg($transparencyreal)." ".escapeshellarg($path)." ".escapeshellarg(str_replace($extension,"jpg",$path));
+                    $wait=run_command($cmd, true);
+                    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $wait);
+
+                unlink($path);
 					$path=str_replace($extension,"jpg",$path);
 				}               
 
@@ -1415,7 +1430,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         }
 
 					$output = run_command($runcommand);
-					}
+                    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
+
+                    }
 				}// end hook replacewatermarkcreation
 				} 
 			}
@@ -1829,9 +1846,10 @@ function extract_indd_pages($filename)
     $exiftool_fullpath = get_utility_path('exiftool');
     if ($exiftool_fullpath)
         {
-        $array = run_command($exiftool_fullpath.' -b -j -pageimage ' . escapeshellarg($filename));
+        $cmd=$exiftool_fullpath.' -b -j -pageimage ' . escapeshellarg($filename);
+        $array = run_command($cmd);
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $array);
         $array = json_decode($array);
-
         if(isset($array[0]->PageImage))
             {
             if(is_array($array[0]->PageImage))
@@ -1945,8 +1963,11 @@ function extract_text($ref,$extension,$path="")
 		$command=$antiword_path . "/antiword";
 		if (!file_exists($command)) {$command=$antiword_path . "\antiword.exe";}
 		if (!file_exists($command)) {debug("ERROR: Antiword executable not found at '$antiword_path'",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
-		$text=run_command($command . " -m UTF-8 \"" . $path . "\"");
-		}
+
+        $cmd=$command . " -m UTF-8 \"" . $path . "\"";
+        $text=run_command($cmd);
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $text);
+        }
 	
        # Microsoft OfficeOpen (docx,xlsx) extraction
        # This is not perfect and needs some work, but does at least extract indexable content.
@@ -1958,12 +1979,16 @@ function extract_text($ref,$extension,$path="")
                # We extract this then remove tags.
                switch($extension){
                case "xlsx":
-               $text=run_command("unzip -p $path \"xl/sharedStrings.xml\"");
-               break;
+                   $cmd="unzip -p $path \"xl/sharedStrings.xml\"";
+                   $text=run_command($cmd);
+                   resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $text);
+                   break;
 
                case "docx":
-               $text=run_command("unzip -p $path \"word/document.xml\"");
-               break;
+                   $cmd="unzip -p $path \"word/document.xml\"";
+                   $text=run_command($cmd);
+                   resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $text);
+                   break;
                }
                
 		# Remove tags, but add newlines as appropriate (without this, separate text blocks are joined together with no spaces).
@@ -1979,9 +2004,11 @@ function extract_text($ref,$extension,$path="")
 		
 		# ODT files are zip files and the content is in content.xml.
 		# We extract this then remove tags.
-		$text=run_command("unzip -p $path \"content.xml\"");
+		$cmd="unzip -p $path \"content.xml\"";
+        $text=run_command($cmd);
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $text);
 
-		# Remove tags, but add newlines as appropriate (without this, separate text blocks are joined together with no spaces).
+        # Remove tags, but add newlines as appropriate (without this, separate text blocks are joined together with no spaces).
 		$text=str_replace("<","\n<",$text);
 		$text=trim(strip_tags($text));
 		while (strpos($text,"\n\n")!==false) {$text=str_replace("\n\n","\n",$text);} # condense multiple line breaks
@@ -1993,9 +2020,12 @@ function extract_text($ref,$extension,$path="")
 		$command=$pdftotext_path . "/pdftotext";
 		if (!file_exists($command)) {$command=$pdftotext_path . "\pdftotext.exe";}
 		if (!file_exists($command)) {debug("ERROR: pdftotext executable not found at '$pdftotext_path'",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
-		$text=run_command($command . " -enc UTF-8 \"" . $path . "\" -");
-		
-		}
+
+        $cmd=$command . " -enc UTF-8 \"" . $path . "\" -";
+        $text=run_command($cmd);
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $text);
+
+        }
 	
 	# HTML extraction
 	if ($extension=="html" || $extension=="htm")
@@ -2013,9 +2043,12 @@ function extract_text($ref,$extension,$path="")
 		{
 		# Zip files - map the field
 		$path=escapeshellarg($path);
-		$text=run_command("unzip -l $path");
-		
-		global $zip_contents_field_crop;
+
+        $cmd="unzip -l $path";
+        $text=run_command($cmd);
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $text);
+
+        global $zip_contents_field_crop;
 		if ($zip_contents_field_crop>0)
 			{
 			# Remove the first few lines according to $zip_contents_field_crop in config.
@@ -2054,7 +2087,10 @@ function get_image_orientation($file)
         {
         return 0;
         }
-    $orientation = run_command($exiftool_fullpath . ' -s -s -s -orientation ' . escapeshellarg($file));
+
+    $cmd=$exiftool_fullpath . ' -s -s -s -orientation ' . escapeshellarg($file);
+    $orientation = run_command($cmd);
+    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $orientation);
     $orientation = str_replace('Rotate', '', $orientation);
     
     if (strpos($orientation, 'CCW'))
@@ -2109,7 +2145,8 @@ function AutoRotateImage($src_image, $ref = false)
         if ($orientation != 0) 
             {
             $command = $convert_fullpath . ' ' . escapeshellarg($src_image) . ' -rotate +' . $orientation . ' ' . escapeshellarg($new_image);
-            run_command($command);
+            $output=run_command($command);
+            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
             }
         $command = $exiftool_fullpath . ' Orientation=1 ' . escapeshellarg($new_image);
         } 
@@ -2125,7 +2162,9 @@ function AutoRotateImage($src_image, $ref = false)
             if ($orientation != 0) 
                 {
                 $command = $convert_fullpath . ' -rotate +' . $orientation . ' ' . escapeshellarg($src_image) . ' ' . escapeshellarg($new_image);
-                run_command($command);
+                $output=run_command($command);
+                resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
+
                 # change the orientation metadata
                 $command = $exiftool_fullpath . ' Orientation=1 ' . escapeshellarg($new_image);
                 }
@@ -2133,7 +2172,8 @@ function AutoRotateImage($src_image, $ref = false)
         else
             {
             $command = $convert_fullpath . ' ' . escapeshellarg($src_image) . ' -auto-orient ' . escapeshellarg($new_image);
-            run_command($command);
+            $output=run_command($command);
+            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
             }
         }
 
@@ -2147,17 +2187,21 @@ function AutoRotateImage($src_image, $ref = false)
         # preserve custom metadata fields with exiftool        
         # save the new orientation
         # $new_orientation=run_command($exiftool_fullpath.' -s -s -s -orientation -n '.$new_image);
-        $old_orientation = run_command($exiftool_fullpath . ' -s -s -s -orientation -n ' . escapeshellarg($src_image));
-        
+        $cmd=$exiftool_fullpath . ' -s -s -s -orientation -n ' . escapeshellarg($src_image);
+        $old_orientation = run_command($cmd);
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $old_orientation);
         $exiftool_copy_command = $exiftool_fullpath . " -TagsFromFile " . escapeshellarg($src_image) . " -all:all " . escapeshellarg($new_image);
-        run_command($exiftool_copy_command);
-        
+
+        $output=run_command($exiftool_copy_command);
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$exiftool_copy_command . ":\n" . $output);
+
         # If orientation was empty there's no telling if rotation happened, so don't assume.
         # Also, don't go through this step if the old orientation was set to normal
         if ($old_orientation != '' && $old_orientation != 1) 
             {
             $fix_orientation = $exiftool_fullpath . ' Orientation=1 -n ' . escapeshellarg($new_image);
-            run_command($fix_orientation);
+            $output=run_command($fix_orientation);
+            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$fix_orientation . ":\n" . $output);
             }
         }
     
@@ -2198,8 +2242,10 @@ function extract_icc($infile) {
       unlink($outfile);
    }
 
-   $cmdout = run_command("$convert_fullpath $infile" . '[0]' . " $outfile $stderrclause");
-   
+    $cmd="$convert_fullpath $infile" . '[0]' . " $outfile $stderrclause";
+    $cmdout = run_command($cmd);
+    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $cmdout);
+
    if ( preg_match("/no color profile is available/",$cmdout) || !file_exists($outfile) ||filesize_unlimited($outfile) == 0){
    // the icc profile extraction failed. So delete file.
    if (file_exists($outfile)){ unlink ($outfile); };
