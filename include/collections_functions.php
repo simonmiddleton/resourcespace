@@ -491,7 +491,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 
 
 function do_collections_search($search,$restypes,$archive=0,$order_by,$sort)
-    {echo $sort;
+    {
     global $search_includes_themes, $search_includes_public_collections, $search_includes_user_collections, $userref, $collection_search_includes_resource_metadata;
     $result=array();
     
