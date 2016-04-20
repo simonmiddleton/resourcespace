@@ -1996,8 +1996,8 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
 
 	$templatevars['text']=stripslashes(str_replace("\\r\\n","\n",$text));
 	$body=$templatevars['text'];
-
-	if ($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)
+	
+	if ($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL || $message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN))
 		{
 		$emails=resolve_user_emails($ulist);
 		$emails=$emails['emails'];
@@ -2011,7 +2011,7 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
 				}
 			}
 		}
-	elseif ($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)
+	if ($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN || $message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN))
 		{
 		$user_refs = array();
 		foreach ($ulist as $user)
@@ -2021,6 +2021,11 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
 				{
 				array_push($user_refs,$user_ref);
 				}
+			}
+		if($message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN) && $html)
+			{
+			# strip the tags out
+			$body=strip_tags($body);
 			}
 		message_add($user_refs,$body,$url);
 		}

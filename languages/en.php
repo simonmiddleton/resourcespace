@@ -2396,6 +2396,9 @@ $lang["message_type"]="Message type";
 $lang["message_url"]="Message URL";
 $lang["sendbulkmessage"]="Send bulk message";
 $lang["message_sent"]="Message sent";
+$lang['email_and_screen']="Email and screen";
+$lang["sendbulkmailandmessage"]="Send bulk email and message";
+$lang["emailandmessagesent"]="Email and message sent";
 
 $lang["confirm_remove_custom_usergroup_access"]="This will revoke all custom user group access. Are you sure?";
 $lang["applogo_does_not_exists"]="The uploaded logo is no longer available";
