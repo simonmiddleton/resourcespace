@@ -671,9 +671,9 @@ function sql_insert_id()
 	}
 	}
 
-function check_db_structs()
+function check_db_structs($verbose=false)
 	{
-	CheckDBStruct("dbstruct");
+	CheckDBStruct("dbstruct",$verbose);
 	global $plugins;
 	for ($n=0;$n<count($plugins);$n++)
 		{
@@ -682,7 +682,7 @@ function check_db_structs()
 	hook("checkdbstruct");
 	}
 
-function CheckDBStruct($path)
+function CheckDBStruct($path,$verbose=false)
 	{
 	# Check the database structure against the text files stored in $path.
 	# Add tables / columns / data / indices as necessary.
@@ -740,6 +740,9 @@ function CheckDBStruct($path)
 				}
 				debug($sql);
 
+				# Verbose mode, used for better output from the test script.
+				if ($verbose) {echo "$table ";ob_flush();}
+				
 				sql_query("create table $table ($sql)",false,-1,false);
 				
 				# Add initial data
