@@ -38,7 +38,7 @@ asort($tests);
 echo "-----\n";
 foreach ($tests as $test)
     {
-    echo "Running test " . str_pad($test,35," ") . " ";ob_flush();
+    echo "Running test " . str_pad($test,45," ") . " ";ob_flush();
     $result = include "test_list/" . $test;
     if ($result===false)
         {
