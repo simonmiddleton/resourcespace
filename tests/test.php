@@ -1,5 +1,8 @@
 <?php
 include "../include/db.php";
+include "../include/general.php";
+include "../include/resource_functions.php";
+include "../include/collections_functions.php";
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 /*
@@ -28,6 +31,13 @@ echo "...done\n";
 # Use an alternative filestore path
 $storagedir.="/rs_test/";
 echo "Filestore is now at $storagedir\n";
+
+# Insert a new user and run as them.
+$u=new_user("admin");
+user_set_usergroup($u,3);
+$userdata=get_user($u);
+setup_user($userdata);
+echo "Now running as user $userref\n";ob_flush();
 
 # Get a list of tests
 $tests=scandir("test_list");
