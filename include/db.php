@@ -1654,13 +1654,17 @@ function setup_user($userdata)
         # Given an array of user data loaded from the user table, set up all necessary global variables for this user
         # including permissions, current collection, config overrides and so on.
         
-	global $userpermissions,$usergroup,$usergroupname,$usergroupparent,$useremail,$userpassword,$userfullname,$userfixedtheme,$ip_restrict_group,$ip_restrict_user,$rs_session,$global_permissions,$userref,$username,$anonymous_user_session_collection,$global_permissions_mask,$user_preferences,$userrequestmode,$usersearchfilter,$usereditfilter,$userderestrictfilter,$hidden_collections,$userresourcedefaults,$userrequestmode,$request_adds_to_collection,$usercollection,$lang,$validcollection,$userpreferences;
+    global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, $userfixedtheme, 
+           $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms, $anonymous_user_session_collection, 
+           $global_permissions_mask, $user_preferences, $userrequestmode, $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, 
+           $userresourcedefaults, $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
-	
-	$userref=$userdata["ref"];
-        $username=$userdata["username"];
+
+    $userref           = $userdata['ref'];
+    $username          = $userdata['username'];
+    $useracceptedterms = $userdata['accepted_terms'];
 	
 	# Create userpermissions array for checkperm() function
 	$userpermissions=array_diff(array_merge(explode(",",trim($global_permissions)),explode(",",trim($userdata["permissions"]))),explode(",",trim($global_permissions_mask))); 
