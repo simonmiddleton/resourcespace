@@ -30,6 +30,7 @@ echo "...done\n";
 
 # Use an alternative filestore path
 $storagedir.="/rs_test/";
+if (!file_exists($storagedir)) {mkdir($storagedir);}
 echo "Filestore is now at $storagedir\n";
 
 # Insert a new user and run as them.
