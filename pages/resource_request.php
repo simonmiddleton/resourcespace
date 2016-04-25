@@ -2,9 +2,9 @@
 include "../include/db.php";
 include_once "../include/general.php";
 
-if (!checkperm('q')){exit($lang["error-permissiondenied"]);}
-
 $k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include_once "../include/authenticate.php";}
+
+if (!checkperm('q')){exit($lang["error-permissiondenied"]);}
 
 if ($k!="" && (!isset($internal_share_access) || !$internal_share_access) && $prevent_external_requests)
 	{
