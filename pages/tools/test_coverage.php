@@ -29,7 +29,9 @@ foreach(new RecursiveIteratorIterator($rdi) as $filename=>$data)
                 $functions[$match]=array(
                     'filename'=>$filename,
                     'file'=>basename($filename,'.php'),
-                    'function'=>$match
+                    'function'=>$match,
+                    'count_code'=>0,
+                    'count_tests'=>0
                 );
                 }
             }
@@ -42,11 +44,11 @@ foreach(new RecursiveIteratorIterator($rdi) as $filename=>$data)
 
 foreach ($functions as $function=>$attributes)
     {
-    preg_match_all('/\s' .  $function . '\s*?\(/i', $content_code, $matches);
+    preg_match_all('/[\s\W]' .  $function . '\s*?\(/i', $content_code, $matches);
     $match_count=count($matches[0]);
     $functions[$function]['count_code']=$match_count;
 
-    preg_match_all('/\s' .  $function . '\s*?\(/i', $content_tests, $matches);
+    preg_match_all('/[\s\W]' .  $function . '\s*?\(/i', $content_tests, $matches);
     $match_count=count($matches[0]);
     $functions[$function]['count_tests']=$match_count;
 
