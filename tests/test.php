@@ -17,6 +17,20 @@ if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 $argv=preg_replace('/^(-|--|\/)/','',$argv);    // remove leading /, -- or -
 
+if(array_search('?',$argv)!==false || array_search('help',$argv)!==false)
+    {
+?>
+
+Command line paramaters:
+
+-nosetup        Do not setup the database, connect user in current state
+-noteardown     Do not drop the database once tests have completed
+-help or -?     This help information
+[n]...          Specific test number(s) to run
+<?php
+    exit;
+    }
+
 # Create an array of tests that were passed from the command line
 $specific_tests=array();
 foreach($argv as $arg)
