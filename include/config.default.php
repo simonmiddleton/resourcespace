@@ -3014,3 +3014,6 @@ $collection_search_includes_resource_metadata=false;
 # e.g. array(3,12);
 $default_to_first_node_for_fields=array();
 
+# A list of groups for which the knowledge base will launch on login, until dismissed.
+$launch_kb_on_login_for_groups=array();
+
