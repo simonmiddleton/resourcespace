@@ -1420,6 +1420,8 @@ $default_user_select="";
 # limit the options available in the other dropdowns automatically? This adds a performance penalty so is off by default.
 $simple_search_dropdown_filtering=false;
 
+# Honor display condition settings on simple search for the included fields.
+$simple_search_display_condition=array();
 
 # When searching, also include themes/public collections at the top?
 $search_includes_themes=false;
