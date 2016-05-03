@@ -3334,14 +3334,14 @@ function check_access_key($resource,$key)
 			exit();
 			}
 		
-		global $usergroup,$userpermissions,$userrequestmode,$userfixedtheme,$usersearchfilter;
+		global $usergroup,$userpermissions,$userrequestmode,$userfixedtheme,$usersearchfilter,$external_share_groups_config_options; 
                 $groupjoin="u.usergroup=g.ref";
                 if ($keys[0]["usergroup"]!="")
                     {
                     # Select the user group from the access key instead.
                     $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "'";
                     }
-		$userinfo=sql_query("select g.ref usergroup,g.permissions,g.fixed_theme,g.search_filter,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
+		$userinfo=sql_query("select g.ref usergroup,g.permissions,g.fixed_theme,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
 		if (count($userinfo)>0)
 			{
                         $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
@@ -3380,6 +3380,31 @@ function check_access_key($resource,$key)
 				}
 				
 			}
+			
+			if($external_share_groups_config_options || stripos(trim($userinfo[0]["config_options"]),"external_share_groups_config_options=true")!==false)
+				{
+				# Apply config override options
+				$config_options=trim($userinfo[0]["config_options"]);
+				if ($config_options!="")
+					{
+					$co=explode(";",$config_options);
+					foreach($co as $ext_co)
+						{
+						$co_parts=explode("=",$ext_co);
+						
+						if($co_parts[0]!='' && isset($co_parts[1]))
+							{
+							$name=str_replace("$","",$co_parts[0]);
+							$value=ltrim($co_parts[1]); 
+							if(strtolower($value)=='false'){$value=0;}
+							elseif(strtolower($value)=='true'){$value=1;}
+							
+							global $$name;
+							$$name = $value;
+							}
+						}
+					}
+				}
 		
 		# Special case for anonymous logins.
 		# When a valid key is present, we need to log the user in as the anonymous user so they will be able to browse the public links.

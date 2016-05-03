@@ -2992,6 +2992,9 @@ $external_share_view_as_internal=false;
 they are allowed*/
 $allowed_external_share_groups = array();
 
+# When sharing externally as a specific user group (permission x), honor group config options (meant to respect settings like $collection_download).
+$external_share_groups_config_options=false;
+
 // CSV Download - add original URL column
 $csv_export_add_original_size_url_column = false;
 
