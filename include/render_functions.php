@@ -22,7 +22,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     {
     node_field_options_override($field);
     
-    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition;
+    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl;
     $name="field_" . ($forsearchbar ? htmlspecialchars($field["name"]) : $field["ref"]);
     $id="field_" . $field["ref"];
     
