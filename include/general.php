@@ -3153,18 +3153,9 @@ function check_display_condition($n, $field)
 					{
 					<?php
 					if($scriptcondition['type'] == 12) {
-
-						$scriptcondition["options"] = explode(',', $scriptcondition["options"]);
-
-						foreach ($scriptcondition["options"] as $key => $value) 
-							{
-							$scriptcondition["options"][$key] = sha1($value);
-							}
-
-						$scriptcondition["options"] = implode(',', $scriptcondition["options"]);
 						?>
 						
-						var options_string = '<?php echo $scriptcondition["options"]; ?>';
+						var options_string = '<?php echo htmlspecialchars($scriptcondition["options"]); ?>';
 						var field<?php echo $scriptcondition["field"]; ?>_options = options_string.split(',');
 						var checked = null;
 						
