@@ -800,6 +800,9 @@ $lang["status-note"]="NOTE";
 $lang["action-changelanguage"]="Change language";
 $lang["loading"]="Loading...";
 $lang['disable_languages']='Disable language selection options';
+$lang['import_export'] = 'Import/ Export';
+$lang['import'] = 'Import';
+$lang['export'] = 'Export';
 
 # Pager
 $lang["next"]="Next";

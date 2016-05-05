@@ -15,6 +15,7 @@ include_once '../../include/node_functions.php';
 
 // Initialize
 $ajax       = getvalescaped('ajax', '');
+$action     = getvalescaped('action', '');
 
 $field      = getvalescaped('field', '');
 $field_data = get_field($field);
@@ -203,6 +204,22 @@ if('true' === $ajax && !(trim($submit_new_option)=="") && 'add_new' === $submit_
             }
         draw_tree_node_table($new_record_ref, $field, $new_option_name, $new_option_parent, $new_option_order_by);
         }
+
+    exit();
+    }
+
+// [Import/ Export]
+if('true' === $ajax && 'import' === $action)
+    {
+
+    exit();
+    }
+
+if('true' === $ajax && 'export' === $action)
+    {
+    include_once '../../include/csv_export_functions.php';
+
+    generateNodesExportCSV($field_data, true);
 
     exit();
     }
@@ -508,5 +525,34 @@ function ToggleTreeNode(ref, field_ref)
 
 jQuery('.node_parent_chosen_selector').chosen({});
 </script>
+
+<div class="BasicsBox">
+    <h3><?php echo $lang['import_export']; ?></h3>
+    <div class="Question">
+        <form method="POST" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php" enctype="multipart/form-data">
+            <label for="import_nodes"><?php echo $lang['import']; ?></label>
+            <div class="AutoSaveStatus">
+                <span id="AutoSaveStatus-import_nodes" style="display:none;"></span>
+            </div>
+            <input type="file" name="import_nodes">
+            <input type="submit" name="upload_import_nodes" value="<?php echo $lang['import']; ?>">
+        </form>
+        <div class="clearerleft"></div>
+    </div>
+
+    <div class="Question">
+        <label><?php echo $lang['export']; ?></label>
+        <button type="submit" onclick="ExportNodes();"><?php echo $lang['export']; ?></button>
+        <script>
+        function ExportNodes()
+            {
+            window.location.href = '<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?ajax=true&field=<?php echo $field; ?>&action=export';
+
+            return false;
+            }
+        </script>
+        <div class="clearerleft"></div>
+    </div>
+</div> <!-- end of BasicBox -->
 <?php
 include '../../include/footer.php';
