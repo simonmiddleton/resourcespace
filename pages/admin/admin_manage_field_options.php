@@ -587,7 +587,7 @@ jQuery('.node_parent_chosen_selector').chosen({});
             }
 
         render_dropdown_question(
-            $lang['property-parent'],
+            $lang['manage_metadata_field_options_import_for_parent'],
             'import_for_parent',
             $import_for_parent_nodes
         );
