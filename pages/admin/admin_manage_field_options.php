@@ -208,13 +208,25 @@ if('true' === $ajax && !(trim($submit_new_option)=="") && 'add_new' === $submit_
     exit();
     }
 
-// [Import/ Export]
-if('true' === $ajax && 'import' === $action)
+// [Import nodes]
+if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tmp_name']) && is_uploaded_file($_FILES['import_nodes']['tmp_name']))
     {
+    $uploaded_file_pathinfo  = pathinfo($_FILES['import_nodes']['name']);
+    $uploaded_file_extension = $uploaded_file_pathinfo['extension'];
+        
+    if(in_array($uploaded_file_extension, $banned_extensions))
+        {
+        trigger_error('You are not allowed to upload "' . $uploaded_file_extension . '" files to the system!');
+        }
+
+    $uploaded_tmp_filename   = $_FILES['import_nodes']['tmp_name'];
+
+    // Process file
 
     exit();
     }
 
+// [Export nodes]
 if('true' === $ajax && 'export' === $action)
     {
     include_once '../../include/csv_export_functions.php';
@@ -529,7 +541,7 @@ jQuery('.node_parent_chosen_selector').chosen({});
 <div class="BasicsBox">
     <h3><?php echo $lang['import_export']; ?></h3>
     <div class="Question">
-        <form method="POST" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php" enctype="multipart/form-data">
+        <form method="POST" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>" enctype="multipart/form-data">
             <label for="import_nodes"><?php echo $lang['import']; ?></label>
             <div class="AutoSaveStatus">
                 <span id="AutoSaveStatus-import_nodes" style="display:none;"></span>
