@@ -33,6 +33,11 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 	{
 	global $userref,$applicationname,$lang;
 	
+	if(!is_int($notification_type))
+		{
+		$notification_type=intval($notification_type); // make sure this in an integer
+		}
+	
 	$orig_text=$text;
 	$text = escape_check($text);
 	$url = escape_check($url);
@@ -55,7 +60,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 		sql_query("INSERT INTO `user_message` (`user`, `message`) VALUES ($user,$message_ref)");
 		
 		// send an email if the user has notifications and emails setting and the message hasn't already been sent via email
-		if(~MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)
+		if(~$notification_type & MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)
 			{
 			get_config_option($user,'email_and_user_notifications', $notifications_always_email);
 			if($notifications_always_email)
