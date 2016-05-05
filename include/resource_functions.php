@@ -1258,7 +1258,12 @@ function update_field($resource,$field,$value)
 	# Delete the old value (if any) and add a new value.
 	sql_query("delete from resource_data where resource='$resource' and resource_type_field='$field'");
 	$value=escape_check($value);
-	sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
+	
+	# write to resource_data if not an empty value
+	if($value!=='')
+		{
+		sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
+		}
 	
 	if ($value=="") {$value="null";} else {$value="'" . $value . "'";}
 
@@ -3128,7 +3133,7 @@ function update_xml_metadump($resource)
 		$rtypename = '';
 	}
 
-	$f=fopen($path,"w+");
+	$f=fopen($path,"w");
 	fwrite($f,"<?xml version=\"1.0\"?>\n");
 	fwrite($f,"<record xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" resourcespace:resourceid=\"$resource\"");
 	fwrite($f," resourcespace:extension=\"$ext\" resourcespace:resourcetype=\"$rtypename\" resourcespace:resourcetypeid=\"$rtype\" ");
