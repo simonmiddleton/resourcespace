@@ -574,7 +574,9 @@ jQuery('.node_parent_chosen_selector').chosen({});
         array(
             'append_nodes'  => $lang['appendtext'],
             'replace_nodes' => $lang['replacealltext']
-        )
+        ),
+        '',
+        'form="import_nodes_form"'
     );
 
     // Select a parent node to import for
@@ -589,13 +591,15 @@ jQuery('.node_parent_chosen_selector').chosen({});
         render_dropdown_question(
             $lang['manage_metadata_field_options_import_for_parent'],
             'import_for_parent',
-            $import_for_parent_nodes
+            $import_for_parent_nodes,
+            '',
+            'form="import_nodes_form"'
         );
         }
     ?>
 
     <div class="Question">
-        <form method="POST" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>" enctype="multipart/form-data">
+        <form id="import_nodes_form" method="POST" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>" enctype="multipart/form-data">
             <label for="import_nodes"><?php echo $lang['import']; ?></label>
             <input type="file" name="import_nodes">
             <input type="submit" name="upload_import_nodes" value="<?php echo $lang['import']; ?>">
