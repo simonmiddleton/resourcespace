@@ -2412,7 +2412,6 @@ $lang["applogo_does_not_exists"]="The uploaded logo is no longer available";
 /* Edit field options */
 $lang["manage_metadata_field_options"] = "Manage metadata field options";
 $lang['manage_metadata_field_options_import_options'] = 'Import options';
-$lang['manage_metadata_field_options_import_for_parent'] = 'Import for parent';
 $lang["system_performance"]="System performance";
 $lang["mysql_throughput"]="MySQL throughput";
 $lang["cpu_benchmark"]="CPU benchmark";

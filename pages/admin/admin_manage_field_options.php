@@ -568,17 +568,6 @@ jQuery('.node_parent_chosen_selector').chosen({});
     <h3><?php echo $lang['import_export']; ?></h3>
 
     <?php 
-    render_dropdown_question(
-        $lang['manage_metadata_field_options_import_options'],
-        'import_options',
-        array(
-            'append_nodes'  => $lang['appendtext'],
-            'replace_nodes' => $lang['replacealltext']
-        ),
-        '',
-        'form="import_nodes_form"'
-    );
-
     // Select a parent node to import for
     if(7 == $field_data['type'])
         {
@@ -589,13 +578,24 @@ jQuery('.node_parent_chosen_selector').chosen({});
             }
 
         render_dropdown_question(
-            $lang['manage_metadata_field_options_import_for_parent'],
+            $lang['property-parent'],
             'import_for_parent',
             $import_for_parent_nodes,
             '',
             'form="import_nodes_form"'
         );
         }
+
+    render_dropdown_question(
+        $lang['manage_metadata_field_options_import_options'],
+        'import_options',
+        array(
+            'append_nodes'  => $lang['appendtext'],
+            'replace_nodes' => $lang['replacealltext']
+        ),
+        '',
+        'form="import_nodes_form"'
+    );
     ?>
 
     <div class="Question">
