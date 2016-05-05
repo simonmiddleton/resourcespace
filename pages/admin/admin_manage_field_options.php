@@ -213,17 +213,43 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
     {
     $uploaded_file_pathinfo  = pathinfo($_FILES['import_nodes']['name']);
     $uploaded_file_extension = $uploaded_file_pathinfo['extension'];
-        
+
     if(in_array($uploaded_file_extension, $banned_extensions))
         {
         trigger_error('You are not allowed to upload "' . $uploaded_file_extension . '" files to the system!');
         }
 
     $uploaded_tmp_filename   = $_FILES['import_nodes']['tmp_name'];
+    
+    // Get each line from file into an array
+    $file_handle  = fopen($uploaded_tmp_filename, 'rb');
+    $file_content = fread($file_handle, filesize($uploaded_tmp_filename));
+    fclose($file_handle);
 
-    // Process file
+    // Setup node names (existing/ future ones)
+    $import_nodes   = array_filter(explode("\r\n", $file_content));
+    $existing_nodes = get_nodes($field, null, true);
 
-    exit();
+    // Setup for category trees
+    $parent = getvalescaped('import_for_parent', null);
+
+// echo '<pre>';print_r($existing_nodes);echo '</pre>';
+// echo '<pre>';print_r($import_nodes);echo '</pre>';
+
+    // Phase 1 - add new nodes without creating duplicates
+    foreach($import_nodes as $import_node_name)
+        {
+        $existing_node_key = array_search($import_node_name, array_column($existing_nodes, 'name'));
+
+        // Node doesn't exist so we can create it now.
+        if(false === $existing_node_key)
+            {
+            set_node(null, $field, $import_node_name, $parent, '');
+            }
+        }
+
+    // Phase 2 - Remove any nodes that don't exist in the imported file
+    // Note: only for "Replace options" option
     }
 
 // [Export nodes]
@@ -231,7 +257,7 @@ if('true' === $ajax && 'export' === $action)
     {
     include_once '../../include/csv_export_functions.php';
 
-    generateNodesExportCSV($field_data, true);
+    generateNodesExport($field_data, true);
 
     exit();
     }
@@ -540,12 +566,37 @@ jQuery('.node_parent_chosen_selector').chosen({});
 
 <div class="BasicsBox">
     <h3><?php echo $lang['import_export']; ?></h3>
+
+    <?php 
+    render_dropdown_question(
+        $lang['manage_metadata_field_options_import_options'],
+        'import_options',
+        array(
+            'append_nodes'  => $lang['appendtext'],
+            'replace_nodes' => $lang['replacealltext']
+        )
+    );
+
+    // Select a parent node to import for
+    if(7 == $field_data['type'])
+        {
+        $import_for_parent_nodes = array(0 => '');
+        foreach(get_nodes($field, null, true) as $import_for_parent_node)
+            {
+            $import_for_parent_nodes[$import_for_parent_node['ref']] = $import_for_parent_node['name'];
+            }
+
+        render_dropdown_question(
+            $lang['property-parent'],
+            'import_for_parent',
+            $import_for_parent_nodes
+        );
+        }
+    ?>
+
     <div class="Question">
         <form method="POST" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>" enctype="multipart/form-data">
             <label for="import_nodes"><?php echo $lang['import']; ?></label>
-            <div class="AutoSaveStatus">
-                <span id="AutoSaveStatus-import_nodes" style="display:none;"></span>
-            </div>
             <input type="file" name="import_nodes">
             <input type="submit" name="upload_import_nodes" value="<?php echo $lang['import']; ?>">
         </form>
