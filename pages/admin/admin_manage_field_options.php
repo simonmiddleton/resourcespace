@@ -226,17 +226,17 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
     $file_content = fread($file_handle, filesize($uploaded_tmp_filename));
     fclose($file_handle);
 
+    $import_options = getval('import_options', '');
+
     // Setup node names (existing/ future ones)
     $import_nodes   = array_filter(explode("\r\n", $file_content));
     $existing_nodes = get_nodes($field, null, true);
 
     // Setup for category trees
-    $parent = getvalescaped('import_for_parent', null);
+    $import_for_parent = getvalescaped('import_for_parent', null);
 
-// echo '<pre>';print_r($existing_nodes);echo '</pre>';
-// echo '<pre>';print_r($import_nodes);echo '</pre>';
 
-    // Phase 1 - add new nodes without creating duplicates
+    // Phase 1 - add new nodes, without creating duplicates
     foreach($import_nodes as $import_node_name)
         {
         $existing_node_key = array_search($import_node_name, array_column($existing_nodes, 'name'));
@@ -244,12 +244,24 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
         // Node doesn't exist so we can create it now.
         if(false === $existing_node_key)
             {
-            set_node(null, $field, $import_node_name, $parent, '');
+            set_node(null, $field, $import_node_name, $import_for_parent, '');
             }
         }
 
     // Phase 2 - Remove any nodes that don't exist in the imported file
     // Note: only for "Replace options" option
+    foreach($existing_nodes as $existing_node)
+        {
+        if('replace_nodes' != $import_options)
+            {
+            break;
+            }
+
+        if(!in_array($existing_node['name'], $import_nodes))
+            {
+            delete_node($existing_node['ref']);
+            }
+        }
     }
 
 // [Export nodes]
