@@ -116,7 +116,7 @@ function generateNodesExport(array $field, $parent = null, $send_headers = false
         $return .= "{$node['name']}\r\n";
         }
 
-    log_activity("{$lang['export']} {$lang['metadatafields']}", LOG_CODE_DOWNLOADED);
+    log_activity("{$lang['export']} metadata field options - field {$field['ref']}", LOG_CODE_DOWNLOADED);
     
     if($send_headers)
         {

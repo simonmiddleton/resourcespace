@@ -244,6 +244,8 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
         if(false === $existing_node_key)
             {
             set_node(null, $field, $import_node_name, $import_export_parent, '');
+
+            log_activity("{$lang['import']} metadata field options - field {$field}", LOG_CODE_CREATED, $import_node_name, 'node', 'name');
             }
         }
 
@@ -260,6 +262,9 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
         if(!in_array($existing_node['name'], $import_nodes))
             {
             delete_node($existing_node['ref']);
+
+            log_activity("{$lang['import']} metadata field options - field {$field}", LOG_CODE_DELETED, null, 'node', 'name', $existing_node['ref'], null, $existing_node['name']);
+
             $reorder_required = true;
             }
         }
