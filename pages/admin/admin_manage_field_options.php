@@ -226,14 +226,12 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
     $file_content = fread($file_handle, filesize($uploaded_tmp_filename));
     fclose($file_handle);
 
+    // Setup needed vars for this process
     $import_options = getval('import_options', '');
+    $parent = getvalescaped('parent', null);
 
-    // Setup node names (existing/ future ones)
     $import_nodes   = array_filter(explode("\r\n", $file_content));
-    $existing_nodes = get_nodes($field, null, true);
-
-    // Setup for category trees
-    $import_for_parent = getvalescaped('import_for_parent', null);
+    $existing_nodes = get_nodes($field, $parent);
 
 
     // Phase 1 - add new nodes, without creating duplicates
@@ -244,12 +242,13 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
         // Node doesn't exist so we can create it now.
         if(false === $existing_node_key)
             {
-            set_node(null, $field, $import_node_name, $import_for_parent, '');
+            set_node(null, $field, $import_node_name, $parent, '');
             }
         }
 
     // Phase 2 - Remove any nodes that don't exist in the imported file
     // Note: only for "Replace options" option
+    $reorder_required = false;
     foreach($existing_nodes as $existing_node)
         {
         if('replace_nodes' != $import_options)
@@ -260,7 +259,20 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
         if(!in_array($existing_node['name'], $import_nodes))
             {
             delete_node($existing_node['ref']);
+            $reorder_required = true;
             }
+        }
+
+    if($reorder_required)
+        {
+        $new_nodes_order = array();
+
+        foreach(get_nodes($field, $parent) as $node)
+            {
+            $new_nodes_order[] = $node['ref'];
+            }
+
+        reorder_node($new_nodes_order);
         }
     }
 
@@ -583,16 +595,16 @@ jQuery('.node_parent_chosen_selector').chosen({});
     // Select a parent node to import for
     if(7 == $field_data['type'])
         {
-        $import_for_parent_nodes = array(0 => '');
-        foreach(get_nodes($field, null, true) as $import_for_parent_node)
+        $parent_nodes = array('' => '');
+        foreach(get_nodes($field, null, true) as $parent_node)
             {
-            $import_for_parent_nodes[$import_for_parent_node['ref']] = $import_for_parent_node['name'];
+            $parent_nodes[$parent_node['ref']] = $parent_node['name'];
             }
 
         render_dropdown_question(
             $lang['property-parent'],
-            'import_for_parent',
-            $import_for_parent_nodes,
+            'parent',
+            $parent_nodes,
             '',
             'form="import_nodes_form"'
         );
