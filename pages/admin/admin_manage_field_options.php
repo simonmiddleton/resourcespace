@@ -23,6 +23,8 @@ $field_data = get_field($field);
 $node_ref   = getvalescaped('node_ref', '');
 $nodes      = array();
 
+$import_export_parent = getvalescaped('import_export_parent', null);
+
 $chosencsslink ='<link type="text/css" rel="stylesheet" href="' . $baseurl_short . 'lib/chosen/chosen.min.css"></link>';
 $chosenjslink = '<script type="text/javascript" src="' . $baseurl_short . 'lib/chosen/chosen.jquery.min.js"></script>';
 
@@ -227,8 +229,7 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
     fclose($file_handle);
 
     // Setup needed vars for this process
-    $import_options    = getval('import_options', '');
-    $import_export_parent = getvalescaped('import_export_parent', null);
+    $import_options = getval('import_options', '');
 
     $import_nodes   = array_filter(explode("\r\n", $file_content));
     $existing_nodes = get_nodes($field, $import_export_parent);
@@ -281,7 +282,7 @@ if('true' === $ajax && 'export' === $action)
     {
     include_once '../../include/csv_export_functions.php';
 
-    generateNodesExport($field_data, true);
+    generateNodesExport($field_data, $import_export_parent, true);
 
     exit();
     }
@@ -637,7 +638,13 @@ jQuery('.node_parent_chosen_selector').chosen({});
         <script>
         function ExportNodes()
             {
-            window.location.href = '<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?ajax=true&field=<?php echo $field; ?>&action=export';
+            var import_export_parent = jQuery('#import_export_parent').val();
+            if(typeof import_export_parent === 'undefined')
+                {
+                import_export_parent = '';
+                }
+
+            window.location.href = '<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?ajax=true&field=<?php echo $field; ?>&action=export&import_export_parent=' + import_export_parent;
 
             return false;
             }

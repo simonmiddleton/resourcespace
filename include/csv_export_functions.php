@@ -107,7 +107,7 @@ function generateNodesExport(array $field, $parent = null, $send_headers = false
         }
 
     $return = '';
-    $nodes  = get_nodes($field['ref'], null, true);
+    $nodes  = get_nodes($field['ref'], $parent);
 
     foreach($nodes as $node)
         {
