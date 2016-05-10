@@ -11,6 +11,7 @@ if(!checkperm('k'))
 
 include_once '../../include/resource_functions.php';
 include_once '../../include/node_functions.php';
+include_once '../../include/render_functions.php';
 
 
 // Initialize
