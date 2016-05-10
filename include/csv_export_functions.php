@@ -99,7 +99,7 @@ function generateResourcesMetadataCSV(array $resources)
 * 
 * @return mixed
 */
-function generateNodesExport(array $field, $send_headers = false)
+function generateNodesExport(array $field, $parent = null, $send_headers = false)
     {
     if(0 === count($field) || !isset($field['ref']) || !isset($field['type']))
         {
@@ -115,7 +115,8 @@ function generateNodesExport(array $field, $send_headers = false)
         }
 
     // TODO: log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=null, $remote_table=null, $remote_column=null, $remote_ref=null, $ref_column_override=null, $value_old=null, $user=null, $generate_diff=false)
-
+echo '<pre>';print_r($return);echo '</pre>';die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
+    
     if($send_headers)
         {
         header('Content-type: application/octet-stream');

@@ -227,11 +227,11 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
     fclose($file_handle);
 
     // Setup needed vars for this process
-    $import_options = getval('import_options', '');
-    $parent = getvalescaped('parent', null);
+    $import_options    = getval('import_options', '');
+    $import_export_parent = getvalescaped('import_export_parent', null);
 
     $import_nodes   = array_filter(explode("\r\n", $file_content));
-    $existing_nodes = get_nodes($field, $parent);
+    $existing_nodes = get_nodes($field, $import_export_parent);
 
 
     // Phase 1 - add new nodes, without creating duplicates
@@ -242,7 +242,7 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
         // Node doesn't exist so we can create it now.
         if(false === $existing_node_key)
             {
-            set_node(null, $field, $import_node_name, $parent, '');
+            set_node(null, $field, $import_node_name, $import_export_parent, '');
             }
         }
 
@@ -267,7 +267,7 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
         {
         $new_nodes_order = array();
 
-        foreach(get_nodes($field, $parent) as $node)
+        foreach(get_nodes($field, $import_export_parent) as $node)
             {
             $new_nodes_order[] = $node['ref'];
             }
@@ -595,16 +595,16 @@ jQuery('.node_parent_chosen_selector').chosen({});
     // Select a parent node to import for
     if(7 == $field_data['type'])
         {
-        $parent_nodes = array('' => '');
-        foreach(get_nodes($field, null, true) as $parent_node)
+        $import_export_parent_nodes = array('' => '');
+        foreach(get_nodes($field, null, true) as $import_export_parent_node)
             {
-            $parent_nodes[$parent_node['ref']] = $parent_node['name'];
+            $import_export_parent_nodes[$import_export_parent_node['ref']] = $import_export_parent_node['name'];
             }
 
         render_dropdown_question(
             $lang['property-parent'],
-            'parent',
-            $parent_nodes,
+            'import_export_parent',
+            $import_export_parent_nodes,
             '',
             'form="import_nodes_form"'
         );
