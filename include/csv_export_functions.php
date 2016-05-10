@@ -101,6 +101,8 @@ function generateResourcesMetadataCSV(array $resources)
 */
 function generateNodesExport(array $field, $parent = null, $send_headers = false)
     {
+    global $lang;
+
     if(0 === count($field) || !isset($field['ref']) || !isset($field['type']))
         {
         trigger_error('Field array cannot be empty. generateNodesExport() requires at least "ref" and "type" indexes!');
@@ -114,8 +116,7 @@ function generateNodesExport(array $field, $parent = null, $send_headers = false
         $return .= "{$node['name']}\r\n";
         }
 
-    // TODO: log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=null, $remote_table=null, $remote_column=null, $remote_ref=null, $ref_column_override=null, $value_old=null, $user=null, $generate_diff=false)
-echo '<pre>';print_r($return);echo '</pre>';die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
+    log_activity($lang['import_export_metadata_fields'], LOG_CODE_DOWNLOADED, "{$lang['export']} field {$field['ref']}");
     
     if($send_headers)
         {
