@@ -3043,6 +3043,3 @@ $default_to_first_node_for_fields=array();
 
 # A list of groups for which the knowledge base will launch on login, until dismissed.
 $launch_kb_on_login_for_groups=array();
-
-# PHP output buffer chunk size (bytes)
-$php_ob_buffer_size=4096;
