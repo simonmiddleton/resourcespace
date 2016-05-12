@@ -396,17 +396,93 @@ if (!$basic_simple_search)
 				if (reset)
 					{
 					// When clicking checkboxes, always reset any resource type specific fields.
-					document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';
+					<?php
+					switch($fields[$n]['type'])
+						{
+						case '7':
+							?>
+							document.getElementById('<?php echo htmlspecialchars($fields[$n]["name"]) ?>_category').value='';
+							document.getElementById('<?php echo htmlspecialchars($fields[$n]["name"]) ?>_statusbox').innerHTML='<?php echo $lang["nocategoriesselected"]?>';
+							<?php
+							break;
+						case '4':
+						case '6':
+						case '10':
+							?>
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_year').value='';
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_month').value='';
+							<?php
+							if($searchbyday)
+								{
+								?>
+								document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_day').value='';
+								<?php
+								}
+							break;
+						default:
+							?>
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
+							<?php
+						}
+					?>
 					}
 					
 				if (document.getElementById('TickBox<?php echo $fields[$n]["resource_type"] ?>') !== null && !document.getElementById('TickBox<?php echo $fields[$n]["resource_type"] ?>').checked)
 					{
 					document.getElementById('simplesearch_<?php echo $fields[$n]["ref"] ?>').style.display='none';
 					// Also deselect it.
-					document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';
+					<?php
+					switch($fields[$n]['type'])
+						{
+						case '0':# -------- Text boxes
+						case '1':
+						case '5':
+						case '8':
+						case ($fields[$n]["type"]==9 && !$simple_search_show_dynamic_as_dropdown):
+							?>
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
+							<?php
+							break;
+						case '4':
+						case '6':
+						case '10':
+							?>
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_year').value='';
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_month').value='';
+							<?php
+							if($searchbyday)
+								{
+								?>
+								document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_day').value='';
+								<?php
+								}
+							break;
+						case 2: 
+        				case 3:
+						case ($fields[$n]["type"]==9 && $simple_search_show_dynamic_as_dropdown):
+							?>
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
+							<?php
+							break;
+						default:
+							?>
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';
+							<?php
+						}
+					?>
 					}
 				else
-					{document.getElementById('simplesearch_<?php echo $fields[$n]["ref"] ?>').style.display='';}
+					{
+					<?php
+					if(in_array($fields[$n]['type'],array(2,3)) || ($fields[$n]["type"]==9 && $simple_search_show_dynamic_as_dropdown))
+						{
+						?>
+						document.getElementById('field_<?php echo $fields[$n]["ref"] ?>').disabled=false;
+						<?php
+						}
+					?>
+					document.getElementById('simplesearch_<?php echo $fields[$n]["ref"] ?>').style.display='';
+					}
 				<?php
 				}
 			}

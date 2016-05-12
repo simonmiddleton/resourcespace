@@ -278,7 +278,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         case 5:
         case 8:
         case ($forsearchbar && $field["type"]==9 && !$simple_search_show_dynamic_as_dropdown):
-        ?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"><?php
+        ?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}" <?php } ?> ><?php 
         
         if ($forsearchbar && $autocomplete_search) { 
 				# Auto-complete search functionality
@@ -552,7 +552,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             
             <?php if ($forsearchbar && $searchbyday) { ?><br /><?php } ?>
             
-            <select name="<?php echo $name?>_month" class="SearchWidth" style="width:100px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo $name?>_month" id="<?php echo $id?>_month" class="SearchWidth" style="width:100px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo $lang["anymonth"]?></option>
               <?php
               for ($d=1;$d<=12;$d++)
@@ -566,7 +566,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             <?php if (!$forsearchbar || ($forsearchbar && $searchbyday)) 
             	{ 
             	?>
-				<select name="<?php echo $name?>_day" class="SearchWidth" style="width:100px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+				<select name="<?php echo $name?>_day" id="<?php echo $id?>_day" class="SearchWidth" style="width:100px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
 				  <option value=""><?php echo $lang["anyday"]?></option>
 				  <?php
 				  for ($d=1;$d<=31;$d++)
@@ -584,8 +584,11 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 				$clear_function.="
 					document.getElementById('field_" . $field["ref"] . "_year').selectedIndex=0;
 					document.getElementById('field_" . $field["ref"] . "_month').selectedIndex=0;
-					document.getElementById('field_" . $field["ref"] . "_day').selectedIndex=0;
 					";
+				if($searchbyday)
+					{
+					$clear_function.="document.getElementById('field_" . $field["ref"] . "_day').selectedIndex=0;";
+					}
 				}
             }
                     
@@ -699,6 +702,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     }
 
 /**
+* Renders sort order functionality as a dropdown box
 * Renders sort order functionality as a dropdown box
 *
 */
