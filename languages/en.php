@@ -800,6 +800,9 @@ $lang["status-note"]="NOTE";
 $lang["action-changelanguage"]="Change language";
 $lang["loading"]="Loading...";
 $lang['disable_languages']='Disable language selection options';
+$lang['import_export'] = 'Import/ Export';
+$lang['import'] = 'Import';
+$lang['export'] = 'Export';
 
 # Pager
 $lang["next"]="Next";
@@ -2408,6 +2411,7 @@ $lang["applogo_does_not_exists"]="The uploaded logo is no longer available";
 
 /* Edit field options */
 $lang["manage_metadata_field_options"] = "Manage metadata field options";
+$lang['manage_metadata_field_options_import_options'] = 'Import options';
 $lang["system_performance"]="System performance";
 $lang["mysql_throughput"]="MySQL throughput";
 $lang["cpu_benchmark"]="CPU benchmark";
@@ -2426,6 +2430,8 @@ $lang['user_pref_daily_digest'] = "Send me a daily email with all unread notific
 $lang['email_daily_digest_subject'] = "Notification summary";
 $lang['email_daily_digest_text'] = "This is a summary of your unread messages from the last 24 hours";
 $lang['user_pref_daily_digest_mark_read'] = "Mark messages as read once I have been sent the summary email";
+$lang['user_pref_email_and_user_notifications']="Send me emails in addition to system notifications";
+$lang['notification_email_subject']="Notification email";
 $lang['mymessages_introtext'] = "You can configure which messages appear here by changing your user preferences";
 $lang["login_slideshow_image_notes"] = "This image will be used for the login page background only";
 $lang['media'] = "Media";
