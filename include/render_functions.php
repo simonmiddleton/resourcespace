@@ -729,7 +729,7 @@ function render_sort_order(array $order_fields)
 			}
 		
         $fixed_order = $name == 'relevance';
-        $selected    = $order_by == $name; echo "selected=$selected - name=$name<br/>";
+        $selected    = ($order_by == $name || ($name=='date' && $order_by=='field'.$date_field));
 		
         // Build the option:
         $option = '<option value="' . $name . '"';
