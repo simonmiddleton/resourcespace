@@ -390,7 +390,7 @@ if (!$basic_simple_search)
 			{
 			# Check it's not a global field, we don't need to hide those
 			# Also check it's not a duplicate field as those should not be toggled.
-			if ($fields[$n]["resource_type"]!=0 && !in_array($fields[$n]["name"],$duplicate_fields))
+			if ($fields[$n]["resource_type"]!=0 && !in_array($fields[$n]["name"],$duplicate_fields) && (empty($simple_search_display_condition) || (!empty($simple_search_display_condition) && !in_array($fields[$n]['ref'],$simple_search_display_condition))))
 				{
 				?>
 				if (reset)

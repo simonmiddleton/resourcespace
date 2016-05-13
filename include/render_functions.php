@@ -242,7 +242,12 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             }
         }
         </script>
-    <?php
+    	<?php
+    	if($forsearchbar)
+    		{
+    		// add the display condition check to the clear function
+    		$clear_function.="checkDisplayCondition".$field['ref']."();";
+    		}
         }
 
     $is_search = true;
