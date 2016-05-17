@@ -35,7 +35,7 @@ foreach($resource_type_fields as $resource_type_field)
     {
     $out="Migrating resource_data {$resource_type_field['ref']}:{$resource_type_field['name']}";
     $resource_data_entries=sql_query("SELECT `resource`,`value` FROM `resource_data` WHERE  resource_type_field={$resource_type_field['ref']}");
-    $out.=' (' . count($resource_data_entries) . ' resource_data rows found)';
+    $out.=' (' . count($resource_data_entries) . ' rows found)';
     echo str_pad($out,100,' ');
     ob_flush();
     $sql="INSERT INTO `resource_node`(`resource`,`node`)
