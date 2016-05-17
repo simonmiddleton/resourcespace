@@ -1012,7 +1012,7 @@ function nicedate($date,$time=false,$wordy=true)
 	{
 		$y = substr($y, 2, 2);
 	}
-	if (($y=="") || ($y=="0000")) return "-";
+	if ( $y=="" ) return "-";
 	$m = @$lang["months"][substr($date,5,2)-1];
 	if ($m=="") return $y;
 	$d = substr($date,8, 2);
