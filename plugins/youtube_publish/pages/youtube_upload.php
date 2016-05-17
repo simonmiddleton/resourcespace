@@ -37,7 +37,10 @@ if (strpos($search,"!")!==false) {$restypes="";}
 $archive=getvalescaped("archive",0,true);
 $video_status=getval("video_status",'unlisted');
 $video_category = getvalescaped("video_category",""); // This is the uploading video category. There are only certain categories that are accepted. 
-if ($youtube_publish_url_field>0){$youtube_url=sql_value("select value from resource_data where resource='$ref' and resource_type_field=$youtube_publish_url_field", "");}
+if($youtube_publish_url_field > 0)
+	{
+	$youtube_url = get_data_by_field($ref, $youtube_publish_url_field);
+	}
 $youtube_error=false;
 
 $default_sort_direction="DESC";
