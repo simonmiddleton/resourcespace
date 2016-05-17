@@ -11,7 +11,7 @@ function HookTms_linkEditEditbeforesectionhead()
 		?>
 		<div class="Question" id="question_tms_link">
 			<label for="question_tms_link"><?php echo $lang["tms_link_upload_tms_field"]?></label>
-			<input type="text" id="field_<?php echo $tms_link_object_id_field ?>" name="field_<?php echo $tms_link_object_id_field ?>" value="<?php echo htmlspecialchars(sql_value("select value from resource_data where resource='" . $ref . "' and resource_type_field='" . $tms_link_object_id_field . "'","")) ?>">
+			<input type="text" id="field_<?php echo $tms_link_object_id_field ?>" name="field_<?php echo $tms_link_object_id_field ?>" value="<?php echo htmlspecialchars(get_data_by_field($ref, $tms_link_object_id_field)); ?>">
 			
 			<div class="clearerleft"> </div>
 		</div>
