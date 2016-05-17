@@ -453,7 +453,7 @@ h2#dbaseconfig{  min-height: 32px;}
 <body class="SlimHeader">
 <div id="Header" class="slimheader_darken" style="height: 40px;margin-bottom: 20px;">
     <a href="#" onclick="return CentralSpaceLoad(this,true);" class="HeaderImgLink">
-    	<img src="../gfx/titles/title.png" id="HeaderImg" />
+    	<img src="../gfx/titles/title.svg" id="HeaderImg" />
     </a>
     <div id="HeaderNav1" class="HorizontalNav "><ul></ul></div>
 	<div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav"><ul></ul></div> 
