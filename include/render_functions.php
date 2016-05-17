@@ -48,6 +48,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 {
                 if ($s[0]==$fields[$cf]["name"] && ($fields[$cf]["resource_type"]==0 || $fields[$cf]["resource_type"]==$field["resource_type"])) # this field needs to be checked
                     {
+                    $display_condition_js_prepend=($forsearchbar ? "#simplesearch_".$fields[$cf]["ref"]." " : "");
+                    
                     $scriptconditions[$condref]["field"] = $fields[$cf]["ref"];  # add new jQuery code to check value
                     $scriptconditions[$condref]['type'] = $fields[$cf]['type'];
 
@@ -86,7 +88,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                                     {
                                     $checkname=($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"]) . "_" . md5($options[$m]);
                                     echo "
-                                    jQuery('input[name=\"" . $checkname . "\"]').change(function (){
+                                    jQuery('<?php echo $display_condition_js_prepend ?>input[name=\"" . $checkname . "\"]').change(function (){
                                         checkDisplayCondition" . $field["ref"] . "();
                                         });";
                                     }
@@ -100,8 +102,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                             <script type="text/javascript">
                             jQuery(document).ready(function() {
                                 // Check for radio buttons (default behaviour)
-                                jQuery('input[name=field_<?php echo ($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"])  ?>]:radio').change(function() {
-                                    checkDisplayCondition<?php echo $field["ref"];?>();
+                                jQuery('<?php echo $display_condition_js_prepend ?>input[name=field_<?php echo ($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"])  ?>]:radio').change(function() {
+                                    checkSearchDisplayCondition<?php echo $field["ref"];?>();
                                 });
 
                                 <?php
@@ -115,8 +117,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                                     $name = 'field_' . ($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"]) . '_' . sha1($option); ?>
                                     
                                     // Check for checkboxes (advanced search behaviour)
-                                    jQuery('input[name=<?php echo $name; ?>]:checkbox').change(function() {
-                                        checkDisplayCondition<?php echo $field['ref']; ?>();
+                                    jQuery('<?php echo $display_condition_js_prepend ?>input[name=<?php echo $name; ?>]:checkbox').change(function() {
+                                        checkSearchDisplayCondition<?php echo $field['ref']; ?>();
                                     });
 
                                 <?php
@@ -132,8 +134,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                             ?>
                             <script type="text/javascript">
                             jQuery(document).ready(function() {
-                                jQuery('#field_<?php echo $fields[$cf]["ref"];?>').change(function (){
-                                checkDisplayCondition<?php echo $field["ref"];?>();
+                                jQuery('<?php echo $display_condition_js_prepend ?>#field_<?php echo $fields[$cf]["ref"];?>').change(function (){
+                                checkSearchDisplayCondition<?php echo $field["ref"];?>();
                                 });
                             });
                             </script>
@@ -148,7 +150,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         ?>
         <script type="text/javascript">
         
-        function checkDisplayCondition<?php echo $field["ref"];?>() {
+        function checkSearchDisplayCondition<?php echo $field["ref"];?>() {
             var questionField          = jQuery('#<?php echo ($forsearchbar ? "simplesearch_" . $field["ref"] : "question_" . $n );?>');
             var fieldInput			   = jQuery('#<?php echo ($forsearchbar ? "simplesearch_" . $field["ref"] : "question_" . $n );?> #field_<?php echo $field["ref"]?>');
             var fieldStatus            = questionField.css('display');
