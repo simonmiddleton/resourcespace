@@ -1535,7 +1535,7 @@ function new_user($newuser)
 function get_stats_activity_types()
 	{
 	# Returns a list of activity types for which we have stats data (Search, User Session etc.)
-	return sql_array("select distinct activity_type value from daily_stat order by activity_type");
+	return sql_array("SELECT DISTINCT activity_type `value` FROM daily_stat ORDER BY activity_type");
 	}
 
 function get_stats_years()
