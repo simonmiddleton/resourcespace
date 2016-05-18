@@ -1562,17 +1562,12 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
 		$f=fopen($debug_log_location,"a");
 		chmod($debug_log_location,0333);
 		}
-	else {
-            $f_cli=fopen(get_debug_log_dir() . "/debug_cli.txt","a");
-            $f_sql=fopen(get_debug_log_dir() . "/debug_sql.txt","a");
-        }
-        if (strpos ($text , 'CLI')!== false) { 
-            fwrite($f_cli,date("Y-m-d H:i:s") . " " . $text . "\n");
-        } else {
-            fwrite($f_sql,date("Y-m-d H:i:s") . " " . $text . "\n");
-        }
-	fclose ($f_cli);
-        fclose ($f_sql);
+    else
+        {
+		$f=fopen($debug_log_location,"a");
+		}
+    fwrite($f,date("Y-m-d H:i:s") . " " . $text . "\n");
+    fclose ($f);
 	return true;
 	}
 	
