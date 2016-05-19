@@ -1193,3 +1193,5 @@ form.FormFilter button {
     border: 1px solid red !important;
     margin: -2px ;
 }
+
+UL.jqueryFileTree A:hover {font-weight:bold;}
