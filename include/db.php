@@ -1792,3 +1792,5 @@ function setup_user($userdata)
             }
         
 	}
+
+include_once __DIR__ . '/../upgrade/upgrade.php';

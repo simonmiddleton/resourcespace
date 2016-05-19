@@ -2,9 +2,9 @@
 
 // Note: It is safe to run this script at any time as it will work on differential data if migration interrupted
 
-include __DIR__ . "/../include/db.php";
-include __DIR__ . "/../include/general.php";
-include __DIR__ . "/../include/resource_functions.php";
+include_once __DIR__ . "/../include/db.php";
+include_once __DIR__ . "/../include/general.php";
+include_once __DIR__ . "/../include/resource_functions.php";
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Step 1.  Convert any missing fixed field type options to nodes (where not already deprecated)
@@ -34,6 +34,7 @@ $resource_type_fields=sql_query('SELECT `ref`,`name` FROM `resource_type_field` 
 foreach($resource_type_fields as $resource_type_field)
     {
     $out="Migrating resource_data {$resource_type_field['ref']}:{$resource_type_field['name']}";
+    set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$out);
     $resource_data_entries=sql_query("SELECT `resource`,`value` FROM `resource_data` WHERE  resource_type_field={$resource_type_field['ref']}");
     $out.=' (' . count($resource_data_entries) . ' rows found)';
     echo str_pad($out,100,' ');

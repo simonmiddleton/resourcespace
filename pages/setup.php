@@ -825,6 +825,13 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)))
 	include_once '../include/db.php';
 	check_db_structs();
 
+    // set the current upgrade level to current one specified in version.php
+    if (get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL)===false)
+        {
+        include_once(__DIR__ . '/../include/version.php');
+        set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL,$system_upgrade_level);
+        }
+
 	if(!empty($structural_plugin) && !$develmode)
 		{
 		$suppress_headers=true;
