@@ -273,9 +273,11 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         $rangestring=substr($kw[1],5);
                         if (strpos($rangestring,"start")!==FALSE )
                             {
-                            $rangestart=str_replace(" ","-",$rangestring);
+                            $rangestartpos=strpos($rangestring,"start")+5;
+                            $rangestart=str_replace(" ","-",substr($rangestring,$rangestartpos,strpos($rangestring,"end")?strpos($rangestring,"end")-$rangestartpos:10));
+                                                        
                             if ($sql_filter!="") {$sql_filter.=" and ";}
-                            $sql_filter.="rd" . $c . ".value >= '" . substr($rangestart,strpos($rangestart,"start")+5,10) . "'";
+                            $sql_filter.="rd" . $c . ".value >= '" . $rangestart . "'";
                             }
                         if (strpos($kw[1],"end")!==FALSE )
                             {
