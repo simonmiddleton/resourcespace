@@ -146,3 +146,18 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
 
     return true;
     }
+
+
+/*
+template can be found at either
+- /templates (default - base templates)
+- /filestore/system/templates (custom templates)
+*/
+function get_template_path($template_name)
+    {
+    $template_path = '';
+
+    // 
+
+    return $template_path;
+    }
