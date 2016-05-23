@@ -57,10 +57,11 @@ function get_pdf_template_path($resource_type, $template_name = '')
 * @param  array    $bind_placeholders   A map of all the values that are meant to replace any 
 *                                       placeholders found in the HTML template
 * @param  boolean  $save_on_server      If true, PDF file will be saved to the filename path
+* @param  array    $pdf_properties      Properties of the PDF file (e.g. author, title, font, margins)
 *
 * @return boolean
 */
-function generate_pdf($html_template_path, $filename, array $bind_placeholders = array(), $save_on_server = false)
+function generate_pdf($html_template_path, $filename, array $bind_placeholders = array(), $save_on_server = false, array $pdf_properties = array())
     {
     global $baseurl, $baseurl_short, $storagedir;
 
@@ -132,7 +133,25 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
     // Last resort to clean up PDF templates by searching for all remaining placeholders
     $html = preg_replace('/\[%.*%\]/', '', $html);
 
-    $html2pdf = new HTML2PDF('P', 'A4', 'en');
+    // Setup PDF
+    $pdf_orientation = 'P';
+    $pdf_format      = 'A4';
+    $pdf_language    = 'en';
+
+    if(array_key_exists('orientation', $pdf_properties) && '' != trim($pdf_properties['orientation']))
+        {
+        $pdf_orientation = $pdf_properties['orientation'];
+        }
+    if(array_key_exists('format', $pdf_properties) && '' != trim($pdf_properties['format']))
+        {
+        $pdf_orientation = $pdf_properties['format'];
+        }
+    if(array_key_exists('language', $pdf_properties) && '' != trim($pdf_properties['language']))
+        {
+        $pdf_orientation = $pdf_properties['language'];
+        }
+
+    $html2pdf = new HTML2PDF($pdf_orientation, $pdf_format, $pdf_language);
     $html2pdf->WriteHTML($html);
 
     if($save_on_server)
