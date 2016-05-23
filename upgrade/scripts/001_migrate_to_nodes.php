@@ -2,9 +2,9 @@
 
 // Note: It is safe to run this script at any time as it will work on differential data if migration interrupted
 
-include_once __DIR__ . "/../include/db.php";
-include_once __DIR__ . "/../include/general.php";
-include_once __DIR__ . "/../include/resource_functions.php";
+include_once __DIR__ . "/../../include/db.php";
+include_once __DIR__ . "/../../include/general.php";
+include_once __DIR__ . "/../../include/resource_functions.php";
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Step 1.  Convert any missing fixed field type options to nodes (where not already deprecated)
@@ -15,7 +15,7 @@ include_once __DIR__ . "/../include/resource_functions.php";
 
 $resource_type_fields=sql_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' .
     implode(',',$FIXED_LIST_FIELD_TYPES) .
-    ") AND NOT `options` REGEXP '^!deprecated' ORDER BY `ref`");
+    ") AND NOT `options` LIKE '!deprecated%' ORDER BY `ref`");
 
 foreach($resource_type_fields as $resource_type_field)
     {
@@ -27,9 +27,6 @@ foreach($resource_type_fields as $resource_type_field)
 // ---------------------------------------------------------------------------------------------------------------------
 // Step 2.  Migrate any missing resource_data fixed fields only when not already existing in resource_node table
 // ---------------------------------------------------------------------------------------------------------------------
-
-$resource_type_fields=sql_query('SELECT `ref`,`name` FROM `resource_type_field` WHERE `type` IN (' .
-    implode(',',$FIXED_LIST_FIELD_TYPES) . ')');
 
 foreach($resource_type_fields as $resource_type_field)
     {

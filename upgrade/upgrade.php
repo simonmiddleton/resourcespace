@@ -70,7 +70,7 @@ set_process_lock(PROCESS_LOCK_UPGRADE_IN_PROGRESS);
 
 // grab a list of files to run as part of the upgrade process
 $new_system_version_files=array();
-$files=scandir(__DIR__ .  '/../upgrade');
+$files=scandir(__DIR__ .  '/../upgrade/scripts');
 $total_upgrade_files=0;
 for($i=$current_system_upgrade_level+1; $i<=$system_upgrade_level; $i++)
     {
@@ -126,7 +126,7 @@ foreach($new_system_version_files as $new_system_version=>$files)
             }
         try
             {
-            include_once($file);
+            include_once(__DIR__ . '/scripts/' . $file);
             foreach($notification_users as $notification_user)
                 {
                 message_add($notification_user['ref'], 'version ' . $new_system_version . ' upgrade script: ' . $file . ' completed OK.', '', $notification_user['ref']);
