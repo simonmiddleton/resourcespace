@@ -148,16 +148,59 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
     }
 
 
-/*
-template can be found at either
-- /templates (default - base templates)
-- /filestore/system/templates (custom templates)
+/**
+* Returns the path to any HTML template in the system.
+* 
+* Returns the path to any HTML templates in the system as long as they are saved in the correct place:
+* - /templates (default - base templates)
+* - /filestore/system/templates (custom templates)
+* Templates will be structured in folders based on features (e.g templates/contact_sheet/ 
+* will be used for any templates used for contact sheets)
+* 
+* @param string  $template_name       Template names should be the actual template filename (e.g. test_tpl for test_tpl.html)
+* @param string  $template_namespace  The name by which multiple templates are grouped together
+* 
+* @return string
 */
-function get_template_path($template_name)
+function get_template_path($template_name, $template_namespace)
     {
-    $template_path = '';
+    global $storagedir;
 
-    // 
+    $template_path = '';
+    $template_name .= '.html';
+
+    $remove_directory_listings = array('.', '..');
+
+    // Directories that may contain these files
+    $default_tpl_dir   = dirname(__FILE__) . "/../templates/{$template_namespace}";
+    $filestore_tpl_dir = "{$storagedir}/system/templates/{$template_namespace}";
+
+    if(!file_exists($default_tpl_dir))
+        {
+        trigger_error("ResourceSpace could not find templates folder '{$template_namespace}'");
+        }
+
+    // Get default path
+    $default_tpl_files = array_diff(scandir($default_tpl_dir), $remove_directory_listings);
+    if(in_array($template_name, $default_tpl_files))
+        {
+        $template_path = "$default_tpl_dir/$template_name";
+        }
+
+    // Get custom template (if any)
+    if(file_exists($filestore_tpl_dir))
+        {
+        $filestore_tpl_files = array_diff(scandir($filestore_tpl_dir), $remove_directory_listings);
+        if(in_array($template_name, $filestore_tpl_files))
+            {
+            $template_path = "$filestore_tpl_dir/$template_name";
+            }
+        }
+
+    if('' == $template_path)
+        {
+        trigger_error("ResourceSpace could not find template '{$template_name}'");
+        }
 
     return $template_path;
     }
