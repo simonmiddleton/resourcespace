@@ -265,14 +265,9 @@ In total 4 if and 4 endif
 */
 function process_if_statements($original_string, $bind_params)
     {
-    // echo $original_string;
-    // echo PHP_EOL . '###########################################' . PHP_EOL;
-
     $remove_placeholder_elements = array('[%if ', ' is set%]');
 
-
     preg_match_all('/\[%if (.*?) is set%\]/', $original_string, $if_isset_matches);
-
     foreach($if_isset_matches[0] as $if_isset_match)
         {
         $var_name = str_replace($remove_placeholder_elements, '', $if_isset_match);
@@ -286,63 +281,51 @@ function process_if_statements($original_string, $bind_params)
         // don't stop at the first endif unless there are no if statements inside it
         // otherwise, move passed it and continue looking for other endifs until you get the same number of endifs as you had ifs
         $endif_count = 0;
-        $substr_html_two = substr($original_string, $if_isset_match_position, $substr_lenght + 9);
+        $substr_html_two   = substr($original_string, $if_isset_match_position, $substr_lenght + 9);
+        $substr_html_three = substr($original_string, $endif_position + 9);
         do
             {
             $if_count = preg_match_all('/\[%if (.*?) is set%\]/', $substr_html_two, $if_isset_matches_subset_two) - 1;
             if(0 < $if_count)
                 {
                 // Move the end of the second subset of HTML to the next endif and then increase endif counter
-                // 
+                /*
+                [pseudo-code]
+                find next occurence of endif in subset 3 of HTML
+                remove from HTML 3 that substring and append it to HTML 2
+                */
+                $next_endif_position = strpos($substr_html_three, '[%endif%]') + 9;
+                $substr_html_two .= substr($substr_html_three, 0, $next_endif_position);
+                $substr_html_three = substr($substr_html_three, $next_endif_position);
 
                 $endif_count++;
                 }
-
-            echo '<pre>';print_r($if_count);echo '</pre>';
-            die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
-                
             }
         while($if_count !== $endif_count);
 
 
-
-        $substr_html_three = substr($original_string, $endif_position + 9);
-
-        echo PHP_EOL . '################ START ###################' . PHP_EOL;
+        echo PHP_EOL . '################ START '.$var_name.' ###################' . PHP_EOL;
         echo $substr_html_one;
         echo PHP_EOL . '################ HTML 2 ###################' . PHP_EOL;
         echo $substr_html_two;
         echo PHP_EOL . '################ HTML 3 ###################' . PHP_EOL;
         echo $substr_html_three;
-        echo PHP_EOL . '################ STOP ###################' . PHP_EOL;
-        }
-
-    // echo '<pre>';var_dump($endif_count);echo '</pre>';
-    die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
-    /*foreach($if_isset_matches[0] as $if_isset_match)
-        {
-        ##$remove_placeholder_elements = array('[%if ', ' is set%]');
-        $var_name = str_replace($remove_placeholder_elements, '', $if_isset_match);
-
-        $if_isset_match_position = strpos($html, $if_isset_match);
-        $endif_position          = strpos($html, '[%endif%]', $if_isset_match_position);
-        $substr_lenght           = $endif_position - $if_isset_match_position;
-
-        $substr_html_one   = substr($html, 0, $if_isset_match_position);
-        $substr_html_two   = substr($html, $if_isset_match_position, $substr_lenght + 9);
-        $substr_html_three = substr($html, $endif_position + 9);
-
+        echo PHP_EOL . '################ STOP '.$var_name.' ###################' . PHP_EOL;
+        // Variable is not set, remove that section from the template
         if(!array_key_exists($var_name, $bind_params))
             {
-            $html = $substr_html_one . $substr_html_three;
+            $original_string = $substr_html_one . $substr_html_three;die('BANG');
 
             continue;
             }
 
         $substr_html_two = str_replace(array($if_isset_match, '[%endif%]'), '', $substr_html_two);
 
-        $html = $substr_html_one . $substr_html_two . $substr_html_three;
-        }*/
+        $original_string = $substr_html_one . $substr_html_two . $substr_html_three;
+        }
 
-    return;
+    echo $original_string;
+    die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
+
+    return $original_string;
     }
