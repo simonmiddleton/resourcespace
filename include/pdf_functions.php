@@ -110,39 +110,7 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
         $html = str_replace("\r\n", '<br>', $html);
         }
 
-    echo 'Original HTML:' . PHP_EOL;
-    echo $html;
-    echo PHP_EOL . '###########################################' . PHP_EOL;
-    process_if_statements($html, $bind_params);
-
-    // Handle [%if var is set%] and [%endif%] statements
-    preg_match_all('/\[%if (.*?) is set%\]/', $html, $if_isset_matches);
-    foreach($if_isset_matches[0] as $if_isset_match)
-        {
-        $remove_placeholder_elements = array('[%if ', ' is set%]');
-        $var_name = str_replace($remove_placeholder_elements, '', $if_isset_match);
-
-        $if_isset_match_position = strpos($html, $if_isset_match);
-        $endif_position          = strpos($html, '[%endif%]', $if_isset_match_position);
-        $substr_lenght           = $endif_position - $if_isset_match_position;
-
-        $substr_html_one   = substr($html, 0, $if_isset_match_position);
-        $substr_html_two   = substr($html, $if_isset_match_position, $substr_lenght + 9);
-        $substr_html_three = substr($html, $endif_position + 9);
-
-        if(!array_key_exists($var_name, $bind_params))
-            {
-            $html = $substr_html_one . $substr_html_three;
-
-            continue;
-            }
-
-        $substr_html_two = str_replace(array($if_isset_match, '[%endif%]'), '', $substr_html_two);
-
-        $html = $substr_html_one . $substr_html_two . $substr_html_three;
-        }
-
-    echo 'Old code:<pre>';echo PHP_EOL . $html;die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
+    $html = process_if_statements($html, $bind_params);
     
     // Last resort to clean up PDF templates by searching for all remaining placeholders
     $html = preg_replace('/\[%.*%\]/', '', $html);
@@ -240,30 +208,18 @@ function get_template_path($template_name, $template_namespace)
     }
 
 
-/*
-[pseudo-code]
-Scenario:
-            if
-                if
-                    if
-                    endif
-                endif
-            endif
-            if
-            endif
-In total 4 if and 4 endif
-
-1 Find first if
-2 find first endif
-3 check if there are any "if" between them <=> nested ifs. If there are none, that's it.
-4 count how many ifs are (e.g 2). This means we need to find the position of 2 more endifs
-    - from first endif to ending of original string search for endif until we find the 2 more endifs
-5 get position of the 3 endif
-6 now substring from first if to 3 endif
-
-
+/**
+* Process a string (mainly HTML) which contains if statement placeholders and return the processed string
+* 
+* Handles [%if var is set%] [%endif%] type of placeholders
+* 
+* @param string $original_string  Full string containing placeholders
+* @param array  $bind_params      A map of all the values that are meant to replace any 
+*                                 placeholders found in the HTML template
+* 
+* @return string
 */
-function process_if_statements($original_string, $bind_params)
+function process_if_statements($original_string, array $bind_params)
     {
     $remove_placeholder_elements = array('[%if ', ' is set%]');
 
@@ -277,55 +233,45 @@ function process_if_statements($original_string, $bind_params)
         $substr_lenght           = $endif_position - $if_isset_match_position;
 
         $substr_html_one   = substr($original_string, 0, $if_isset_match_position);
-
-        // don't stop at the first endif unless there are no if statements inside it
-        // otherwise, move passed it and continue looking for other endifs until you get the same number of endifs as you had ifs
-        $endif_count = 0;
         $substr_html_two   = substr($original_string, $if_isset_match_position, $substr_lenght + 9);
         $substr_html_three = substr($original_string, $endif_position + 9);
+
+        /*
+        Make sure we have the correct subset (html2) for our if statement. This means we don't
+        stop at the first endif we found unless there are no if statements inside the subset.
+        If there are, move passed it and continue looking for other endifs until we reach the
+        same number of endifs as we had ifs
+        */
+        $endif_count = 0;
         do
             {
             $if_count = preg_match_all('/\[%if (.*?) is set%\]/', $substr_html_two, $if_isset_matches_subset_two) - 1;
             if(0 < $if_count)
                 {
                 // Move the end of the second subset of HTML to the next endif and then increase endif counter
-                /*
-                [pseudo-code]
-                find next occurence of endif in subset 3 of HTML
-                remove from HTML 3 that substring and append it to HTML 2
-                */
                 $next_endif_position = strpos($substr_html_three, '[%endif%]') + 9;
-                $substr_html_two .= substr($substr_html_three, 0, $next_endif_position);
-                $substr_html_three = substr($substr_html_three, $next_endif_position);
+                $substr_html_two    .= substr($substr_html_three, 0, $next_endif_position);
+                $substr_html_three   = substr($substr_html_three, $next_endif_position);
 
                 $endif_count++;
                 }
             }
         while($if_count !== $endif_count);
 
-
-        echo PHP_EOL . '################ START '.$var_name.' ###################' . PHP_EOL;
-        echo $substr_html_one;
-        echo PHP_EOL . '################ HTML 2 ###################' . PHP_EOL;
-        echo $substr_html_two;
-        echo PHP_EOL . '################ HTML 3 ###################' . PHP_EOL;
-        echo $substr_html_three;
-        echo PHP_EOL . '################ STOP '.$var_name.' ###################' . PHP_EOL;
         // Variable is not set, remove that section from the template
         if(!array_key_exists($var_name, $bind_params))
             {
-            $original_string = $substr_html_one . $substr_html_three;die('BANG');
+            $original_string = $substr_html_one . $substr_html_three;
 
             continue;
             }
 
-        $substr_html_two = str_replace(array($if_isset_match, '[%endif%]'), '', $substr_html_two);
+        // The section stays in, clean it up of the top level if - endif placeholders
+        $substr_html_two = substr($substr_html_two, strlen($if_isset_match));
+        $substr_html_two = substr($substr_html_two, 0, -9);
 
         $original_string = $substr_html_one . $substr_html_two . $substr_html_three;
         }
-
-    echo $original_string;
-    die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
 
     return $original_string;
     }
