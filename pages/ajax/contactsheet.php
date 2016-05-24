@@ -27,8 +27,9 @@ $orientation=getvalescaped("orientation","");
 $sheetstyle=getvalescaped("sheetstyle","thumbnails");
 
 // Contact sheet options:
-$contactsheet_header   = ('yes' == getvalescaped('includeheader', '') ? true : $contact_sheet_include_header);
-$add_contactsheet_logo = ('true' == getvalescaped('addlogo', $include_contactsheet_logo) ? true : false);
+$contactsheet_header    = ('yes' == getvalescaped('includeheader', '') ? true : $contact_sheet_include_header);
+$add_contactsheet_logo  = ('true' == getvalescaped('addlogo', $include_contactsheet_logo) ? true : false);
+$contact_sheet_add_link = ('true' == getvalescaped('addlink', $contact_sheet_add_link) ? true : false);
 
 
 
@@ -63,6 +64,11 @@ if($html2pdf)
         $placeholders['contact_sheet_logo']    = "$baseurl/$contact_sheet_logo";
         }
 
+    if($contact_sheet_add_link)
+        {
+        $placeholders['contact_sheet_add_link'] = $contact_sheet_add_link;
+        }
+
     // Set PDF properties:
     $pdf_properties['orientation'] = $orientation;
     $pdf_properties['format']      = $size;
@@ -81,10 +87,6 @@ if($html2pdf)
 
 $logospace=0;
 $footerspace=0;
-
-if (getvalescaped("addlogo",$include_contactsheet_logo)=="true") {$add_contactsheet_logo=true;}else{$add_contactsheet_logo=false;}
-
-$contact_sheet_add_link=getvalescaped("addlink",$contact_sheet_add_link);
 
 if(getvalescaped("preview","")!=""){$preview=true;} else {$preview=false;}
 if ($sheetstyle=="single"){$imgsize=getvalescaped("ressize","lpr");}

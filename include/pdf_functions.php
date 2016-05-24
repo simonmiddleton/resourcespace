@@ -126,11 +126,11 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
         }
     if(array_key_exists('format', $pdf_properties) && '' != trim($pdf_properties['format']))
         {
-        $pdf_orientation = $pdf_properties['format'];
+        $pdf_format = $pdf_properties['format'];
         }
     if(array_key_exists('language', $pdf_properties) && '' != trim($pdf_properties['language']))
         {
-        $pdf_orientation = $pdf_properties['language'];
+        $pdf_language = $pdf_properties['language'];
         }
     // end of Setup PDF
 
