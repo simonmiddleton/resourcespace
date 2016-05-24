@@ -1677,6 +1677,10 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
                 $diff = $tovalue;
                 break;
 
+            case LOG_CODE_NODE_REVERT:
+                $diff = $tovalue;
+                break;
+
             default:
                 $diff = log_diff($fromvalue, $tovalue);
             }
@@ -1718,7 +1722,7 @@ function get_resource_log($resource, $fetchrows=-1)
     $extrafields=hook("get_resource_log_extra_fields");
     if (!$extrafields) {$extrafields="";}
     
-    $log = sql_query("select distinct r.ref,r.date,u.username,u.fullname,r.type,f.title,r.notes,r.diff,r.usageoption,r.purchase_price,r.purchase_size,ps.name size, r.access_key,ekeys_u.fullname shared_by" . $extrafields . " from resource_log r left outer join user u on u.ref=r.user left outer join resource_type_field f on f.ref=r.resource_type_field left outer join external_access_keys ekeys on r.access_key=ekeys.access_key left outer join user ekeys_u on ekeys.user=ekeys_u.ref left join preview_size ps on r.purchase_size=ps.id where r.resource='$resource' order by r.date desc",false,$fetchrows);
+    $log = sql_query("select distinct r.ref,r.date,u.username,u.fullname,r.type,rtf.type resource_type_field, f.title,r.notes,r.diff,r.usageoption,r.purchase_price,r.purchase_size,ps.name size, r.access_key,ekeys_u.fullname shared_by" . $extrafields . " from resource_log r left outer join user u on u.ref=r.user left outer join resource_type_field f on f.ref=r.resource_type_field left outer join external_access_keys ekeys on r.access_key=ekeys.access_key left outer join user ekeys_u on ekeys.user=ekeys_u.ref left join preview_size ps on r.purchase_size=ps.id left outer join resource_type_field rtf on r.resource_type_field=rtf.ref where r.resource='$resource' order by r.date desc",false,$fetchrows);
     for ($n = 0;$n<count($log);$n++)
         {
         $log[$n]["title"] = lang_or_i18n_get_translated($log[$n]["title"], "fieldtitle-");
