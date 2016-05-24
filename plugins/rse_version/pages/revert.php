@@ -8,31 +8,113 @@ include '../../../include/image_processing.php';
 $ref=getvalescaped("ref","");
 
 # Load log entry
-$log=sql_query("select * from resource_log where ref='$ref'");
+$log=sql_query("select resource_log.*, rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` from resource_log left outer join resource_type_field rtf on resource_log.resource_type_field=rtf.ref where resource_log.ref='$ref'");
 if (count($log)==0) {exit("Log entry not found");}
 $log=$log[0];
 $resource=$log["resource"];
 $field=$log["resource_type_field"];
 $type=$log["type"];
 
-if ($type=="e" || $type=="m")
+$nodes_to_add=array();
+$nodes_to_remove=array();
+$node_strings_not_found=array();
+
+$b_fixed_field=in_array($log['resource_type_field_type'],$FIXED_LIST_FIELD_TYPES);
+
+// resolve node changes
+if($b_fixed_field)
+    {
+
+    $nodes_available=array();
+    foreach(get_nodes($log['resource_type_field']) as $available_node)
+        {
+        $nodes_available[$available_node['ref']]=$available_node['name'];
+        }
+
+    // all to be added
+    preg_match_all('/^\s*\-\s*(.*?)$/m',$log['diff'],$matches);
+    if(isset($matches[1][0]))
+        {
+        foreach ($matches[1] as $match)
+            {
+            $match=trim($match);
+            $found_key=array_search($match,$nodes_available);
+            if($found_key===false)
+                {
+                $node_strings_not_found[]=$match;
+                echo "adding match:" . $match;
+                }
+            else
+                {
+                $nodes_to_add[]=$found_key;
+                }
+            }
+        }
+
+    // all to be removed
+    preg_match_all('/^\s*\+\s*(.*?)$/m',$log['diff'],$matches);
+    if(isset($matches[1][0]))
+        {
+        foreach ($matches[1] as $match)
+            {
+            $match=trim($match);
+            $found_key=array_search($match,$nodes_available);
+            if($found_key===false)
+                {
+                $node_strings_not_found[]=$match;
+                }
+            else
+                {
+                $nodes_to_remove[]=$found_key;
+                }
+            }
+        }
+    }
+
+if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)
     {
     # ----------------------------- PROCESSING FOR "e" (edit) and "m" (multi edit) METADATA ROWS ---------------------------------------------
-    
-    # Fetch current value for comparison
+
     $current=get_data_by_field($resource,$field);
-    
     $diff=log_diff($current,$log["previous_value"]);
-    
+
     # Process submit
     if (getval("action","")=="revert")
         {
-        update_field($resource, $field, $log["previous_value"]);
-        resource_log($resource,"e",$field,$lang["revert_log_note"],$current,$log["previous_value"]);
+        if($b_fixed_field)
+            {
+            $log_entry='';
+            if (count($nodes_to_add) > 0)
+                {
+                add_resource_nodes($resource, array_values($nodes_to_add));
+                foreach($nodes_to_add as $node_to_add)
+                    {
+                    $log_entry.='+ ' . $nodes_available[$node_to_add] . PHP_EOL;
+                    }
+                }
+            if (count($nodes_to_remove) > 0)
+                {
+                delete_resource_nodes($resource,array_values($nodes_to_remove));
+                foreach($nodes_to_remove as $node_to_remove)
+                    {
+                    $log_entry.='- ' . $nodes_available[$node_to_remove] . PHP_EOL;
+                    }
+                }
+
+            if($log_entry!='')
+                {
+                resource_log($resource,LOG_CODE_NODE_REVERT,$field,$lang["revert_log_note"],'',$log_entry);
+                }
+            }
+        else
+            {
+            update_field($resource, $field, $log["previous_value"]);
+            resource_log($resource,LOG_CODE_EDITED,$field,$lang["revert_log_note"],$current,$log["previous_value"]);
+            }
         redirect("pages/view.php?ref=" . $resource);
         }
     }
-elseif($type=="u")
+elseif($type==LOG_CODE_UPLOADED)
     {
     # ----------------------------- PROCESSING FOR "u" IMAGE UPLOAD ROWS ---------------------------------------------
     
@@ -69,7 +151,7 @@ elseif($type=="u")
             }
             
         # Update log so this has a pointer.
-        $log_ref=resource_log($resource,"u",0,$lang["revert_log_note"]);
+        $log_ref=resource_log($resource,LOG_CODE_UPLOADED,0,$lang["revert_log_note"]);
         sql_query("update resource_log set previous_file_alt_ref='$alt_file' where ref='$log_ref'");
     
         # Now perform the revert, copy and recreate previews.
@@ -97,23 +179,75 @@ include "../../../include/header.php";
 
 <div class="BasicsBox">
 <p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo $resource ?>" onClick="CentralSpaceLoad(this,true);return false;">&lt;&nbsp;<?php echo $lang["back"] ?></a></p>
-
 <h1><?php echo $lang["revert"]?></h1>
+<p><?php echo $lang['revertingclicktoproceed'];?></p>
 
 <form method=post name="form" id="form" action="<?php echo $baseurl_short ?>plugins/rse_version/pages/revert.php" onSubmit="CentralSpacePost(this,true);return false;">
 <input type="hidden" name="ref" value="<?php echo $ref ?>">
 <input type="hidden" name="action" value="revert">
     
-<?php if ($type=="e" || $type=="m") { ?>
+<?php if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)
+    if ($b_fixed_field)
+        {
+        if(count($nodes_to_add)>0)
+            {
+?><div class="Question">
+<label><?php echo $lang["revertingwilladd"]?></label>
+    <div class="Fixed">
+        <?php
+        foreach($nodes_to_add as $node_to_add)
+            {
+            echo htmlspecialchars($nodes_available[$node_to_add]);
+            ?><br/>
+            <?php
+            }
+?>    </div>
+    <div class="clearerleft"> </div>
+</div>
+<?php       }
+        if(count($nodes_to_remove)>0)
+            {
+?><div class="Question">
+    <label><?php echo $lang["revertingwillremove"]?></label>
+    <div class="Fixed">
+        <?php
+        foreach($nodes_to_remove as $nodes_to_remove)
+            {
+            echo htmlspecialchars($nodes_available[$nodes_to_remove]);
+            ?><br/>
+            <?php
+            }
+        ?>    </div>
+    <div class="clearerleft"> </div>
+</div>
+<?php       }
+        if(count($node_strings_not_found)>0)
+            {
+?><div class="Question">
+    <label><?php echo $lang["revertingwillignore"]?></label>
+    <div class="Fixed">
+        <?php
+        foreach($node_strings_not_found as $node_string_not_found)
+            {
+            echo htmlspecialchars($node_string_not_found);
+            ?><br/>
+            <?php
+            }
+?>  </div>
+    <div class="clearerleft"> </div>
+    </div>
+<?php       }
+        }
+    else
+        { ?>
 <div class="Question">
 <label><?php echo $lang["revertingwillapply"]?></label>
 <div class="Fixed"><?php echo nl2br(htmlspecialchars($diff)) ?></div>
 <div class="clearerleft"> </div>
 </div>
-<?php } ?>
+<?php   }
 
-
-<?php if ($type=="u") {
+if ($type==LOG_CODE_UPLOADED) {
     # Fetch the thumbnail of the image
     $alt_file=$log["previous_file_alt_ref"];
     $alt_thumb=get_resource_path($resource, true, 'thm', true, "", -1, 1, false, "", $alt_file);
@@ -133,18 +267,15 @@ include "../../../include/header.php";
         }
     ?>
 
-
 <?php } ?>
 
-
 <div class="QuestionSubmit">
-<label for="buttons"> </label>			
-<input name="revert" type="submit" value="&nbsp;&nbsp;<?php echo $lang["revert"]?>&nbsp;&nbsp;" />
+    <label for="buttons"> </label>
+    <input name="revert" type="submit" value="&nbsp;&nbsp;<?php echo $lang["revert"]?>&nbsp;&nbsp;" />
 </div>
 
 </form>
 </div>
-
 
 <?php
 include "../../../include/footer.php";
