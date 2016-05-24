@@ -14,17 +14,16 @@ include_once('../../include/collections_functions.php');
 include('../../include/image_processing.php');
 include('../../include/pdf_functions.php');
 
-// require_once('../../lib/tcpdf/tcpdf.php');
-// require_once('../../lib/fpdi/fpdi.php');
-
 # Still making variables manually when not using Prototype: 
-$collection=getvalescaped("c","");
-$size=getvalescaped("size","");
-$column=getvalescaped("columns","");
-$order_by=getvalescaped("orderby","relevance");
-$sort=getvalescaped("sort","asc");
-$orientation=getvalescaped("orientation","");
-$sheetstyle=getvalescaped("sheetstyle","thumbnails");
+$collection  = getvalescaped('c', '');
+$size        = getvalescaped('size', '');
+$column      = getvalescaped('columns', '');
+$order_by    = getvalescaped('orderby', 'relevance');
+$sort        = getvalescaped('sort', 'asc');
+$orientation = getvalescaped('orientation', '');
+$sheetstyle  = getvalescaped('sheetstyle', 'thumbnails');
+$preview     = ('true' == getvalescaped('preview', '') ? true : false);
+$previewpage = getvalescaped('previewpage', 1);
 
 // Contact sheet options:
 $contactsheet_header    = ('yes' == getvalescaped('includeheader', '') ? true : $contact_sheet_include_header);
@@ -44,14 +43,13 @@ if(!collection_readable($collection))
 
 
 
-
-
-
 if($html2pdf)
     {
     $pdf_template_path = get_template_path($sheetstyle, 'contact_sheet');
     $PDF_filename      = 'contactsheet.pdf';
-    $placeholders      = array();
+    $placeholders      = array(
+        'date' => date('Y-m-d H:i:s')
+    );
 
     if($contactsheet_header)
         {
@@ -73,6 +71,18 @@ if($html2pdf)
     $pdf_properties['orientation'] = $orientation;
     $pdf_properties['format']      = $size;
 
+    // 
+    $imgsize = ('single' == $sheetstyle ? getvalescaped('ressize', 'lpr') : 'pre');
+    if($preview)
+        {
+        $imgsize = 'col';
+        }
+    if('single' == $sheetstyle && $preview)
+        {
+        $imgsize = 'pre';
+        }
+
+
     if(!generate_pdf($pdf_template_path, $PDF_filename, $placeholders, false, $pdf_properties))
         {
         trigger_error('ResourceSpace could not generate the contact sheet PDF!');
@@ -81,41 +91,6 @@ if($html2pdf)
     exit();
     }
 
-
-
-
-
-$logospace=0;
-$footerspace=0;
-
-if(getvalescaped("preview","")!=""){$preview=true;} else {$preview=false;}
-if ($sheetstyle=="single"){$imgsize=getvalescaped("ressize","lpr");}
-else{$imgsize="pre";}
-$previewpage=getvalescaped("previewpage",1);
-
-if ($preview==true){$imgsize="col";}if ($sheetstyle=="single" && $preview==true){$imgsize="pre";}
-if ($size == "a4") {$width=210/25.4;$height=297/25.4;} // convert to inches
-if ($size == "a3") {$width=297/25.4;$height=420/25.4;}
-
-if ($size == "letter") {$width=8.5;$height=11;}
-if ($size == "legal") {$width=8.5;$height=14;}
-if ($size == "tabloid") {$width=11;$height=17;}
-
-#configuring the sheet:
-if ($orientation=="L"){
-$pagewidth=$pagesize[1]=$height ;
-$pageheight=$pagesize[0]=$width;
-}else{
-$pagewidth=$pagesize[0]=$width;
-$pageheight=$pagesize[1]=$height;
-}
-$date= date("Y-m-d H:i:s");
-$leading=2;
-
-# back compatibility  
-if (isset($print_contact_title)){
-	if ($print_contact_title && empty($config_sheetthumb_fields)){$config_sheetthumb_fields=array(8);}
-}
 
 function contact_sheet_add_fields($resourcedata)
 	{
