@@ -2,7 +2,6 @@
 #
 # PDF Contact Sheet Functionality
 #
-
 foreach ($_POST as $key => $value) {$$key = stripslashes(utf8_decode(trim($value)));}
 
 // create new PDF document
@@ -13,9 +12,10 @@ include('../../include/search_functions.php');
 include('../../include/resource_functions.php');
 include_once('../../include/collections_functions.php');
 include('../../include/image_processing.php');
+include('../../include/pdf_functions.php');
 
-require_once('../../lib/tcpdf/tcpdf.php');
-require_once('../../lib/fpdi/fpdi.php');
+// require_once('../../lib/tcpdf/tcpdf.php');
+// require_once('../../lib/fpdi/fpdi.php');
 
 # Still making variables manually when not using Prototype: 
 $collection=getvalescaped("c","");
@@ -26,14 +26,61 @@ $sort=getvalescaped("sort","asc");
 $orientation=getvalescaped("orientation","");
 $sheetstyle=getvalescaped("sheetstyle","thumbnails");
 
+// Contact sheet options:
+$contactsheet_header   = ('yes' == getvalescaped('includeheader', '') ? true : $contact_sheet_include_header);
+$add_contactsheet_logo = ('true' == getvalescaped('addlogo', $include_contactsheet_logo) ? true : false);
+
+
+
+$html2pdf       = ('true' == getval('html2pdf', '') ? true : false);
+$pdf_properties = array();
+
 # Check access
-if (!collection_readable($collection)) {exit($lang["no_access_to_collection"]);}
+if(!collection_readable($collection))
+    {
+    exit($lang['no_access_to_collection']);
+    }
+
+
+
+
+
+
+if($html2pdf)
+    {
+    $pdf_template_path = get_template_path($sheetstyle, 'contact_sheet');
+    $PDF_filename      = 'contactsheet.pdf';
+    $placeholders      = array();
+
+    if($contactsheet_header)
+        {
+        $placeholders['contactsheet_header'] = $contactsheet_header;
+        }
+
+    if($add_contactsheet_logo)
+        {
+        $placeholders['add_contactsheet_logo'] = $add_contactsheet_logo;
+        $placeholders['contact_sheet_logo']    = "$baseurl/$contact_sheet_logo";
+        }
+
+    // Set PDF properties:
+    $pdf_properties['orientation'] = $orientation;
+    $pdf_properties['format']      = $size;
+
+    if(!generate_pdf($pdf_template_path, $PDF_filename, $placeholders, false, $pdf_properties))
+        {
+        trigger_error('ResourceSpace could not generate the contact sheet PDF!');
+        }
+
+    exit();
+    }
+
+
+
+
 
 $logospace=0;
 $footerspace=0;
-
-$contactsheet_header=getvalescaped("includeheader",'');
-if ($contactsheet_header==''){$contactsheet_header=$contact_sheet_include_header;}
 
 if (getvalescaped("addlogo",$include_contactsheet_logo)=="true") {$add_contactsheet_logo=true;}else{$add_contactsheet_logo=false;}
 

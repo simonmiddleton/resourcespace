@@ -63,7 +63,7 @@ function get_pdf_template_path($resource_type, $template_name = '')
 */
 function generate_pdf($html_template_path, $filename, array $bind_placeholders = array(), $save_on_server = false, array $pdf_properties = array())
     {
-    global $baseurl, $baseurl_short, $storagedir;
+    global $applicationname, $baseurl, $baseurl_short, $storagedir, $date_d_m_y, $linkedheaderimgsrc;
 
     $html2pdf_path = dirname(__FILE__) . '/../lib/html2pdf/html2pdf.class.php';
     if(!file_exists($html2pdf_path))
@@ -86,12 +86,19 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
 
     // General placeholders available to HTML templates
     $general_params = array(
-        'baseurl'       => $baseurl,
-        'baseurl_short' => $baseurl_short,
-        'filestore'     => $storagedir,
-        'filename'      => (!$save_on_server ? $filename : basename($filename)),
-        'date'          => date('d/m/Y'),
+        'applicationname' => $applicationname,
+        'baseurl'         => $baseurl,
+        'baseurl_short'   => $baseurl_short,
+        'filestore'       => $storagedir,
+        'filename'        => (!$save_on_server ? $filename : basename($filename)),
+        'date'            => ($date_d_m_y ? date('d/m/Y') : date('m/d/Y')),
     );
+
+    if('' != $linkedheaderimgsrc)
+        {
+        $general_params['linkedheaderimgsrc'] = $linkedheaderimgsrc;
+        }
+
     $bind_params = array_merge($general_params, $bind_placeholders);
 
     foreach($bind_params as $param => $param_value)
@@ -150,6 +157,7 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
         {
         $pdf_orientation = $pdf_properties['language'];
         }
+    // end of Setup PDF
 
     $html2pdf = new HTML2PDF($pdf_orientation, $pdf_format, $pdf_language);
     $html2pdf->WriteHTML($html);

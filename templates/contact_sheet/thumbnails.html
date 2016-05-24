@@ -1,0 +1,51 @@
+<style>
+#logo {
+    height: 50px;
+    max-width: 100%;
+}
+</style>
+<page backtop="25mm" backbottom="15mm" backleft="15mm" backright="5mm">
+    [%if contactsheet_header is set%]
+    <page_header>
+        <table cellspacing="0" style="width: 100%;">
+            <tr>
+                <td style="width: 60%;"><h1>[%applicationname%]</h1></td>
+                [%if add_contactsheet_logo is set%]
+                <td style="width: 40%;" align=right>
+                    <img id="logo" src="[%contact_sheet_logo%]" alt="Logo">
+                </td>
+                [%endif%]
+            </tr>
+        </table>
+        <hr>
+    </page_header>
+    [%endif%]
+    <page_footer>
+        <table style="width: 100%;">
+            <tr>
+                <!-- Filename | Page | Date
+                <td style="text-align: left; width: 33%">[%filename%]</td>
+                <td style="text-align: center; width: 34%">page [[page_cu]]/[[page_nb]]</td>
+                <td style="text-align: right; width: 33%">[%date%]</td> -->
+
+                <!-- Page on right side of the page -->
+                <td style="text-align: left; width: 33%"></td>
+                <td style="text-align: center; width: 34%"></td>
+                <td style="text-align: right; width: 33%">[[page_cu]]/[[page_nb]]</td>
+            </tr>
+        </table>
+    </page_footer>
+
+
+    <!-- Real content starts here -->
+    <!-- <h2>[%metadatafield-8:value%]</h2>
+    <table style="width: 90%;" align="center" cellspacing="15">
+        <tbody>
+            <tr>
+                <td valign="top" style="text-align: left;"><b>[%metadatafield-10:title%]</b></td>
+                <td style="width: 2%;"></td>
+                <td style="width: 70%; text-align: left;">[%metadatafield-10:value%]</td>
+            </tr>
+        </tbody>
+    </table> -->
+</page>

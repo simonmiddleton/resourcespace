@@ -1,0 +1,58 @@
+<style>
+</style>
+<page backtop="25mm" backbottom="10mm" backleft="5mm" backright="5mm">
+    <page_header>
+        <table cellspacing="0" style="width: 100%;">
+            <tr>
+                <td style="width: 40%;"><h1>[%resource_type_name%]</h1></td>
+                <td style="width: 60%;" align=right>
+                    <!-- <img style="height: 50px; max-width: 100%" src="[%filestore%]/system/pdf_templates/data_only_template_logo.jpg" alt="Logo" > -->
+                    <img style="height: 50px; max-width: 100%" src="[%baseurl%]/gfx/titles/title.png" alt="Logo" >
+                </td>
+            </tr>
+        </table>
+        <hr>
+    </page_header>
+    <page_footer>
+        <table style="width: 100%;">
+            <tr>
+                <!-- Filename | Page | Date
+                <td style="text-align: left; width: 33%">[%filename%]</td>
+                <td style="text-align: center; width: 34%">page [[page_cu]]/[[page_nb]]</td>
+                <td style="text-align: right; width: 33%">[%date%]</td> -->
+
+                <!-- Page on right side of the page -->
+                <td style="text-align: left; width: 33%"></td>
+                <td style="text-align: center; width: 34%"></td>
+                <td style="text-align: right; width: 33%">[[page_cu]]/[[page_nb]]</td>
+            </tr>
+        </table>
+    </page_footer>
+
+
+    <!-- Real content starts here -->
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac mauris in orci dignissim venenatis quis a nisi. Praesent congue suscipit est, vitae sagittis risus auctor ut.</p>
+
+    <h2>[%metadatafield-8:value%]</h2>
+    <table style="width: 90%;" align="center" cellspacing="15">
+        <tbody>
+            <!-- Date -->
+            <tr>
+                <td valign="top" style="text-align: left;"><b>[%metadatafield-12:title%]</b></td>
+                <td style="width: 2%;"></td>
+                <td style="width: 70%; text-align: left;">[%metadatafield-12:value%]</td>
+            </tr>
+
+            <!-- Original filename -->
+            <tr>
+                <td valign="top" style="text-align: left;"><b>[%metadatafield-10:title%]</b></td>
+                <td style="width: 2%;"></td>
+                <td style="width: 70%; text-align: left;">[%metadatafield-10:value%]</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Document extract -->
+    <h4>[%metadatafield-9:title%]</h4>
+    <p>[%metadatafield-9:value%]</p>
+</page>
