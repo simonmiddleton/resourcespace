@@ -274,24 +274,6 @@ do_contactsheet_sizing_calculations();
 
 $pdf = new rsPDF($orientation , 'in', $size, true, 'UTF-8', false); 
 
-/*
-Remove once done
-$pdf->SetTitle(i18n_get_collection_name($collectiondata).' - '.nicedate($date, true, true));
-$pdf->SetAuthor($user['fullname']);
-$pdf->SetSubject($applicationname . " - " . $lang["contactsheet"]);
-$pdf->SetMargins(1,1.2,.7);
-$pdf->SetAutoPageBreak(false);
-$pdf->SetCellPadding(0); 
-$pdf->AddPage(); 
-$pdf->SetFont($contact_sheet_font,'','','',$subsetting);*/
-
-
-if($contactsheet_header=="true"){
-	$pdf->SetX(1);$pdf->SetY(1.2 + $logospace);
-} else {
-	$pdf->SetX(1);$pdf->SetY(0.8 + $logospace);
-}
-
 #Begin loop through resources, collecting Keywords too.
 $i=0;
 $j=0;
