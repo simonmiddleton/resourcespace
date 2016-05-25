@@ -91,10 +91,6 @@ input[readonly] {color: #000000;}
 .HomePanel a:hover
 	{color:#FFF;}
 .HomePanel h2{color:#FFF;}
-.HomePanel h2 {background: url(../gfx/interface/HomeArrow.gif) no-repeat 1px 10px;}
-.HomePanelThemes h2 {background: url(../gfx/interface/themes.png) no-repeat 0 0;}
-.HomePanelMyCollections h2 {background: url(../gfx/interface/my_collections.png) no-repeat -2px 0;}
-.HomePanelHelp h2 {background: url(../gfx/interface/help.png) no-repeat 0 0;}
 
 #SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN {
 	background: rgba(30, 30, 30, 0.70);

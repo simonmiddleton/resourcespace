@@ -292,7 +292,7 @@ if($slimheader)
 if(!hook("customloadinggraphic"))
 	{
 	?>
-	<div id="LoadingBox"><?php echo $lang["pleasewait"] ?><img src="<?php echo $baseurl_short ?>gfx/interface/loading.gif"></div>
+	<div id="LoadingBox"><?php echo $lang["pleasewait"] ?>&nbsp;<i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></div>
 	<?php
 	}
 ?>
