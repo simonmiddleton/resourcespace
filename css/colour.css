@@ -252,13 +252,6 @@ li.plupload_droptext {color:#999;}
   	border: 1px solid #d0d0d0;
 }
 .dash_tile_bin_text {color: #fff;}
-.HomePanel .tile_corner_box .count-icon {background: url("../gfx/dash/count.gif") no-repeat;}
-.HomePanel .collection-icon {background: url("../gfx/dash/non-collection.png") no-repeat;}
-.HomePanel .theme-icon {background: url("../gfx/dash/non-theme.png") no-repeat;}
-.HomePanel .shopping-icon {background: url("../gfx/dash/non-my_collections.png") no-repeat;}
-.HomePanel .search-icon {background: url("../gfx/dash/non-search.png") no-repeat;}
-.HomePanel .help-icon {background: url("../gfx/dash/non-help.png") no-repeat;}
-.HomePanel .clock-icon {background: url("../gfx/dash/non-clock.png") no-repeat;}
 
 /* Shadowy Styling */
 .HomePanelDynamicDash.TileContentShadow h2, .HomePanelDynamicDash.TileContentShadow p, .HomePanelDynamicDash.TileContentShadow,
@@ -266,12 +259,6 @@ li.plupload_droptext {color:#999;}
 	text-shadow: 1px 1px 8px #090909;
 	color:#fff;
 }
-.HomePanelDynamicDash.TileContentShadow .collection-icon {background: url("../gfx/dash/collection.png") no-repeat;}
-.HomePanelDynamicDash.TileContentShadow .theme-icon {background: url("../gfx/dash/theme.png") no-repeat;}
-.HomePanelDynamicDash.TileContentShadow .shopping-icon {background: url("../gfx/dash/my_collections.png") no-repeat;}
-.HomePanelDynamicDash.TileContentShadow .search-icon {background: url("../gfx/dash/search.png") no-repeat;}
-.HomePanelDynamicDash.TileContentShadow .help-icon {background: url("../gfx/dash/help.png") no-repeat;}
-.HomePanelDynamicDash.TileContentShadow .clock-icon {background: url("../gfx/dash/clock.png") no-repeat;}
 .HomePanel h2.title {background: transparent;color:#fff;}
 .HomePanel .HomePanelDynamicDash h2{background:transparent;}
 .HomePanelDynamicDash p.tile_corner_box {background: rgba(19, 19, 19, 0.67);border-top-left-radius: 5px;color:#fff;}

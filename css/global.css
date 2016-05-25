@@ -787,67 +787,6 @@ a.HomePanel:hover {
 .DashTileDraggable {
 	cursor:pointer;
 }
-.HomePanel .tile_corner_box .count-icon {
-	width: 20px;
-	height: 15px;
-	display: block;
-	float: left;
-	margin-top: 8px;
-}
-.HomePanel .collection-icon {
-	width: 56px;
-	height: 60px;
-	display: block;
-	float: left;
-	position: relative;
-	margin-left: 3px;
-	margin-top: 6px;
-}
-.HomePanel .theme-icon {
-	width: 56px;
-	height: 60px;
-	display: block;
-	float: left;
-	position: relative;
-	margin-left: 3px;
-	margin-top: 6px;
-}
-.HomePanel .shopping-icon {
-	width: 56px;
-	height: 60px;
-	display: block;
-	float: left;
-	position: relative;
-	margin-left: 3px;
-	margin-top: 6px;
-}
-.HomePanel .search-icon {
-	width: 54px;
-	height: 60px;
-	display: block;
-	float: left;
-	position: relative;
-	margin-left: 3px;
-	margin-top: 6px;
-}
-.HomePanel .help-icon {
-	width: 54px;
-	height: 60px;
-	display: block;
-	float: left;
-	position: relative;
-	margin-left: 3px;
-	margin-top: 6px;
-}
-.HomePanel .clock-icon {
-  width: 54px;
-  height: 60px;
-  display: block;
-  float: left;
-  position: relative;
-  margin-left: 3px;
-  margin-top: 9px;
-}
 .HomePanelDynamicDash, .HomePanelThemes {
 	padding: 0;
 	overflow: hidden;
