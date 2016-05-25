@@ -45,6 +45,36 @@ $collectiondata = get_collection($collection);
 $user           = get_user($collectiondata['user']);
 $title          = i18n_get_collection_name($collectiondata) . ' - ' . nicedate(date('Y-m-d H:i:s'), true, true);
 
+// Get data
+if(is_numeric($order_by))
+    {
+    $order_by = "field{$order_by}";
+    }
+$result = do_search("!collection{$collection}", '', $order_by, 0, -1, $sort);
+
+switch($sheetstyle)
+    {
+    case 'thumbnails':
+        $getfields = $config_sheetthumb_fields;
+        break;
+
+    case 'list':
+        $getfields = $config_sheetlist_fields;
+        break;
+
+    case 'single':
+        $getfields = $config_sheetsingle_fields;
+        break;
+    }
+
+$csf = array();
+foreach($getfields as $field_id)
+    {
+    $csf_data = sql_query("SELECT name, value_filter, type FROM resource_type_field WHERE ref = '{$field_id}'");
+    $csf[]    = $csf_data[0];
+    }
+
+
 if($html2pdf)
     {
     $pdf_template_path = get_template_path($sheetstyle, 'contact_sheet');
@@ -237,35 +267,6 @@ function contact_sheet_add_image()
 
 $deltay=1;
 do_contactsheet_sizing_calculations();
-
-#Get data
-$collectiondata= get_collection($collection);
-if (is_numeric($order_by)){ $order_by="field".$order_by;}
-//debug("Contact Sheet Sort is $order_by $sort");
-$result=do_search("!collection" . $collection,"",$order_by,0,-1,$sort);
-
-if ($sheetstyle=="thumbnails"){$getfields=$config_sheetthumb_fields;}
-else if ($sheetstyle=="list"){$getfields=$config_sheetlist_fields;}
-else if ($sheetstyle=="single"){$getfields=$config_sheetsingle_fields;}
-$csf="";
-for ($m=0;$m<count($getfields);$m++)
-	{
-	$csf_data=sql_query("select name,value_filter, type from resource_type_field where ref='$getfields[$m]'");
-	$csf[$m]['name']=$csf_data[0]['name'];
-	$csf[$m]['value_filter']=$csf_data[0]['value_filter'];
-	$csf[$m]['type']=$csf_data[0]['type'];
-	}	
-
-
-
-
-
-
-          
-
-    
-
-
 
 	
 class MYPDF extends FPDI {
