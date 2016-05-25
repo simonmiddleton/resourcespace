@@ -43,13 +43,17 @@ if(!collection_readable($collection))
 
 $collectiondata = get_collection($collection);
 $user           = get_user($collectiondata['user']);
+$title          = i18n_get_collection_name($collectiondata) . ' - ' . nicedate(date('Y-m-d H:i:s'), true, true);
 
 if($html2pdf)
     {
     $pdf_template_path = get_template_path($sheetstyle, 'contact_sheet');
     $PDF_filename      = 'contactsheet.pdf';
     $placeholders      = array(
-        'date' => date('Y-m-d H:i:s')
+        'date'              => date('Y-m-d H:i:s'),
+        'titlefontsize'     => $titlefontsize,
+        'refnumberfontsize' => $refnumberfontsize,
+        'title'             => $title,
     );
 
     if($contactsheet_header)
@@ -72,7 +76,7 @@ if($html2pdf)
     $pdf_properties['orientation'] = $orientation;
     $pdf_properties['format']      = $size;
     $pdf_properties['margins']     = array(10, 12, 10, 7);
-    $pdf_properties['title']       = i18n_get_collection_name($collectiondata) . ' - ' . nicedate(date('Y-m-d H:i:s'), true, true);
+    $pdf_properties['title']       = $title;
     $pdf_properties['author']      = $user['fullname'];
     $pdf_properties['subject']     = "{$applicationname} - {$lang['contactsheet']}";
     $pdf_properties['font']        = $contact_sheet_font;
@@ -355,8 +359,7 @@ $pdf->SetCellPadding(0);
 $pdf->AddPage(); 
 $pdf->SetFont($contact_sheet_font,'','','',$subsetting);*/
 
-//$pdf->ln();$pdf->ln();
-$pdf->SetFontSize($refnumberfontsize);
+
 if($contactsheet_header=="true"){
 	$pdf->SetX(1);$pdf->SetY(1.2 + $logospace);
 } else {

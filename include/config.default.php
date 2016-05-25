@@ -869,14 +869,12 @@ $contact_sheet_preview_size="250x250";
 # There are also several other fonts included in the tcpdf lib (but not ResourceSpace), which provide unicode support
 # To embed more elaborate fonts, acquire the files from the TCPDF distribution or create your own using TCPDF utilities, and install them in the lib/tcpdf/fonts folder.
 $contact_sheet_font="helvetica";
-# if using a custom tcpdf font, subsetting is available, but can be turned off
-$subsetting=true; 
 # allow unicode filenames? (stripped out by default in tcpdf but since collection names may 
 # have special characters, probably want to try this on.)
 $contact_sheet_unicode_filenames=true;
 # Set font sizes for contactsheet
-$titlefontsize=10; // Contact Sheet Title
-$refnumberfontsize=8; // This includes field text, not just ref number
+$titlefontsize     = 20; // Contact Sheet Title
+$refnumberfontsize = 14; // This includes field text, not just ref number
 # If making a contact sheet with list sheet style, use these fields in contact sheet:
 $config_sheetlist_fields = array(8);
 $config_sheetlist_include_ref=true;
