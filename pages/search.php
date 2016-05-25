@@ -229,7 +229,14 @@ if ($order_by=="")
 		$order_by=$default_sort;
 		}
 	}
-$per_page=getvalescaped("per_page",$default_perpage);rs_setcookie('per_page', $per_page);
+
+$per_page=getvalescaped("per_page",$default_perpage);
+if(empty($per_page))
+    {
+    $per_page=$default_perpage;
+    }
+rs_setcookie('per_page', $per_page);
+
 $archive = getvalescaped('archive', 0);
 
 // Disable search through all workflow states when an archive state is specifically requested
