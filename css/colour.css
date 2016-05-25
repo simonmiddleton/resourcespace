@@ -110,14 +110,6 @@ input[readonly] {color: #000000;}
 
 .ImageBorder, .Picture, .VideoBorder {border: 1px solid #000000;}	
 .CollectImageBorder {border: 1px solid #000000;}	
-
-.IconCollect, .KeyCollect	{background: url(../gfx/interface/IcCol.gif) no-repeat;}
-.IconCollectOut, .KeyCollectOut	{background: url(../gfx/interface/IcColOut.gif) no-repeat;}
-.IconEmail, .KeyEmail	{background: url(../gfx/interface/IcEml.gif) no-repeat;}
-.IconEdit, .KeyEdit	{background: url(../gfx/interface/IcEdit.gif) no-repeat;}
-.IconPreview, .KeyPreview	{background: url(../gfx/interface/IcPre.gif) no-repeat;}
-.IconStar, .KeyStar	{	background: url(../gfx/interface/IcStar.gif) no-repeat;}
-.IconComment, .KeyComment	{	background: url(../gfx/interface/IcComment.gif) no-repeat;}
 .ASC	{	background: url(../gfx/interface/ASC.gif) no-repeat;background-position:center;}
 .DESC	{	background: url(../gfx/interface/DESC.gif) no-repeat;background-position:center;}
 .IconUserRatingStar	{	background: url(../gfx/interface/RatingStarRed.gif) no-repeat;}
