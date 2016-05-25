@@ -214,22 +214,12 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelLarge {padding:0;margin:0;width: 365px;padding-bottom:5px;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.IconCollect	{width: 22px;height:12px;padding: 0;display: block;float: right;margin-right: 5px;}
-.IconCollectOut	{width: 22px;height:12px;padding: 0;display: block;float: right;margin-right: 5px;}
-.IconEmail,.IconPreview,.IconEdit	{width:16px;height:12px;padding: 0;display: block;float: right;margin-right: 5px;}
-.IconStar	{width:11px;height:12px;padding: 0;display: block;float: right;}
-.IconRemove		{width:14px;height:12px;padding: 0;display: block;float: right;}
-.IconComment	{width:16px;height:12px;padding: 0;display: block;float: right;}
+.ResourcePanelIcons a	{float: right;margin-right: 5px;text-decoration:none;}
+.ResourcePanelIcons a:hover	{text-decoration:none;}
+
 .ResourceSelect {display:block;float:right;}
 .IconUserRatingStar	{width:13px;height:15px;padding: 0;margin-bottom:6px;display: block;}
 .IconUserRatingSpace	{width:7px;height:10px;padding: 0;margin-bottom:6px;display: block;float: left;}
-.KeyComment {margin: 0px 5px 10px;display: inline;padding-left: 19px;}
-.KeyStar {margin: 0px 5px 10px;display: inline;padding-left: 14px;}
-.KeyEmail {margin: 0px 5px 10px;display: inline;padding-left: 19px;}
-.KeyEdit {margin: 0px 5px 10px;display: inline;padding-left: 19px;}
-.KeyPreview {margin: 0px 5px 10px;display: inline;padding-left: 19px;}
-.KeyCollect {margin: 0px 5px 10px;display: inline;padding-left: 25px;}
-.KeyCollectOut {margin: 0px 5px 10px;display: inline;padding-left: 25px;}
 .ASC {display: inline;padding-right: 10px;}
 .DESC {display: inline;padding-right: 10px;}
 
