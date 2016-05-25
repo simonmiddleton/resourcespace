@@ -215,7 +215,9 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
 .ResourcePanelIcons a	{float: right;margin-right: 5px;text-decoration:none;}
+.ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
+.ListTools a:hover	{text-decoration:none;}
 
 .ResourceSelect {display:block;float:right;}
 .IconUserRatingStar	{width:13px;height:15px;padding: 0;margin-bottom:6px;display: block;}
@@ -230,8 +232,6 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .Listview td {padding: 5px 5px 5px 5px;}
 .ListTools {text-align: right;}
 .ListTitle {font-weight: bold;}
-.ListTools a:link, .ListTools a:visited, .ListTitle a:link, .ListTitle a:visited {text-decoration:none;}
-.ListTools a:hover, .ListTools a:active, .ListTitle a:hover, .ListTitle a:active {text-decoration:underline;}
 .Listview .IconStar	{width:11px;height:12px;padding: 0;display: block;float:left;}
 
 /*Search Panel layout*/
