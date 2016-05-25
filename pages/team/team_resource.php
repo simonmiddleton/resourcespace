@@ -16,7 +16,6 @@ include "../../include/header.php";
 <div class="BasicsBox"> 
 
   <h1><?php echo $lang["manageresources"]?></h1>
-  <p><?php echo text("introtext")?></p>
 
 	<div class="VerticalNav">
 	<ul>

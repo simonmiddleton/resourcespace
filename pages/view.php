@@ -1525,7 +1525,7 @@ if (count($result)>0)
 			}
 		?>
 		<div class="clearerleft"> </div>
-		<?php $count_extensions++; if ($count_extensions==count($related_file_extensions)){?><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["clicktoviewasresultset"]?></a><?php }?>
+		<?php $count_extensions++; if ($count_extensions==count($related_file_extensions)){?><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a><?php }?>
 		</div>
 		</div>
 		</div>
@@ -1584,7 +1584,7 @@ if (count($result)>0)
 			}
 		?>
 		<div class="clearerleft"> </div>
-		<?php $count_restypes++; if ($count_restypes==count($related_restypes)){?><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["clicktoviewasresultset"]?></a><?php }?>
+		<?php $count_restypes++; if ($count_restypes==count($related_restypes)){?><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a><?php }?>
 		</div>
 		</div>
 		</div>
@@ -1640,7 +1640,7 @@ if (count($result)>0)
         }
     ?>
     <div class="clearerleft"> </div>
-        <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["clicktoviewasresultset"]?></a>
+        <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!related" . $ref) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewasresultset"]?></a>
 
     </div>
     </div>
@@ -1671,7 +1671,7 @@ if (count($result)>0)
 		for ($n=0;$n<count($result);$n++)			
 			{
 			?>
-			<a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $result[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo (strlen($result[$n]["theme"])>0)?htmlspecialchars(str_replace("*","",i18n_get_translated($result[$n]["theme"])) . " / "):$lang["public"] . " : "; ?><?php if (!$collection_public_hide_owner) {echo htmlspecialchars($result[$n]["fullname"] . " / ");} ?><?php echo i18n_get_collection_name($result[$n]); ?></a><br />
+			<a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $result[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (strlen($result[$n]["theme"])>0)?htmlspecialchars(str_replace("*","",i18n_get_translated($result[$n]["theme"])) . " / "):$lang["public"] . " : "; ?><?php if (!$collection_public_hide_owner) {echo htmlspecialchars($result[$n]["fullname"] . " / ");} ?><?php echo i18n_get_collection_name($result[$n]); ?></a><br />
 			<?php		
 			}
 		?>

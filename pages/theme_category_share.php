@@ -257,7 +257,7 @@ else
 					<td><?php echo ($keys[$n]["expires"]=="")?$lang["never"]:nicedate($keys[$n]["expires"],false)?></td>
 					<td><?php echo ($keys[$n]["access"]==-1)?"":$lang["access" . $keys[$n]["access"]]; ?></td>
 					<td><div class="ListTools">
-					<a href="#" onClick="if (confirm('<?php echo $lang["confirmdeleteaccess"]?>')) {document.getElementById('deleteaccess').value='<?php echo $keys[$n]["access_key"] ?>';document.getElementById('ref').value='<?php echo htmlspecialchars($ref) ?>';document.getElementById('themeform').submit(); }">&gt;&nbsp;<?php echo $lang["action-delete"]?></a>
+					<a href="#" onClick="if (confirm('<?php echo $lang["confirmdeleteaccess"]?>')) {document.getElementById('deleteaccess').value='<?php echo $keys[$n]["access_key"] ?>';document.getElementById('ref').value='<?php echo htmlspecialchars($ref) ?>';document.getElementById('themeform').submit(); }"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>
 					</div></td>
 					</tr>
 					<?php

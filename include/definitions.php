@@ -100,3 +100,6 @@ define ('STATUS_ERROR',					5);
 // -------------------- General definitions --------------------
 
 define ('RESOURCE_LOG_APPEND_PREVIOUS', -1);    // used to specify that we want to append the previous resource_log entry
+
+define('LINK_CARET','<i class="fa fa-caret-right"></i>&nbsp;'); // Global definition of link bullet caret
+

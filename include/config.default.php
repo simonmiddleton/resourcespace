@@ -1541,7 +1541,7 @@ $partial_index_min_word_length=3;
 # Search Display 
 
 # Thumbs Display Fields: array of fields to display on the large thumbnail view.
-$thumbs_display_fields=array(8,3);
+$thumbs_display_fields=array(8);
 # array of defined thumbs_display_fields to apply CSS modifications to (via $search_results_title_wordwrap, $search_results_title_height, $search_results_title_trim)
 $thumbs_display_extended_fields=array();
 	# $search_result_title_height=26;
@@ -1551,7 +1551,7 @@ $thumbs_display_extended_fields=array();
 # Enable extra large thumbnails option for search screen
 $xlthumbs=true;
 # Extra Large Display Fields:  array of fields to display on the xlarge thumbnail view.
-$xl_thumbs_display_fields=array(8,3);
+$xl_thumbs_display_fields=array(8);
 # array of defined xl_thumbs_display_fields to apply CSS modifications to (via $xl_search_results_title_wordwrap, $xl_search_results_title_height, $xl_search_results_title_trim)
 $xl_thumbs_display_extended_fields=array();
 	# $xl_search_result_title_height=26;

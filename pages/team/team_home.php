@@ -50,7 +50,22 @@ include "../../include/header.php";
 			}
 		else
 			{
-			?><li><a href="<?php echo $baseurl_short?>pages/team/team_resource.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["manageresources"]?></a></li><?php
+			?><li><a href="<?php echo $baseurl_short?>pages/team/team_resource.php"
+				<?php if (getval("modal","")!="")
+				  {
+				  # If a modal, open in the same modal
+				  ?>
+				  onClick="return ModalLoad(this,true,true,'right');"
+				  <?php
+				  }
+				else
+				  { ?>
+				  onClick="return CentralSpaceLoad(this,true);"
+				  <?php
+				  }
+				?>
+			
+			><?php echo $lang["manageresources"]?></a></li><?php
 			}
  		}
  	?>

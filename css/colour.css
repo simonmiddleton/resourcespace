@@ -153,7 +153,6 @@ div.autocomplete ul li {color: #000;}
 .RecordStory a:hover{color: #000000;}
 .RecordStory .highlight {color:black;}
 .BasicsBox .HorizontalNav li {border-right:1px solid #B5C3D4;border-top-style: none;border-bottom-style: none;border-left-style: none;}
-.BasicsBox .VerticalNav li, .ThemeBox li {list-style: url(../gfx/interface/bullet.gif) none inside;}
 .ThemeBox {border-bottom: 1px solid #BBBBBB;}
 .CategoryBox {border:1px solid #999999;background-color:#ffffff;color: black;font-weight: normal;}
 .MiniCategoryBox {border:1px solid #999999;background-color:#ffffff;color: black;font-weight: normal;}

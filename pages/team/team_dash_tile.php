@@ -37,14 +37,14 @@ if($show_usergroups_dash)
     }
     ?>
     <p>
-        <a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["dasheditmodifytiles"];?></a>
+        <a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["dasheditmodifytiles"];?></a>
     </p>
 <?php
 if(!$show_usergroups_dash)
     {
     ?>
     <p>
-        <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile_special.php" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["specialdashtiles"];?></a>
+        <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile_special.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["specialdashtiles"];?></a>
     </p>
     <?php
     }

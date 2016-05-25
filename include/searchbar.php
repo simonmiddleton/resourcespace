@@ -609,8 +609,8 @@ if (!$basic_simple_search)
   </form>
   <br />
   <?php hook("searchbarbeforebottomlinks"); ?>
-  <?php if (! $disable_geocoding) { ?><p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/geo_search.php">&gt; <?php echo $lang["geographicsearch"]?></a></p><?php } ?>
-  <?php if (! $advancedsearch_disabled && !hook("advancedsearchlink")) { ?><p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php">&gt; <?php echo $lang["gotoadvancedsearch"]?></a></p><?php } ?>
+  <?php if (! $disable_geocoding) { ?><p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/geo_search.php"><?php echo LINK_CARET ?><?php echo $lang["geographicsearch"]?></a></p><?php } ?>
+  <?php if (! $advancedsearch_disabled && !hook("advancedsearchlink")) { ?><p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo LINK_CARET ?><?php echo $lang["gotoadvancedsearch"]?></a></p><?php } ?>
 
   <?php hook("searchbarafterbuttons"); ?>
 

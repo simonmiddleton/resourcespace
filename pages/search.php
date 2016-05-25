@@ -673,7 +673,7 @@ if (isset($result_title_height))
 if(!$search_titles && isset($theme_link))
 	{
 	// Show the themes breadcrumbs if they exist, but not if we are using the search_titles
-	echo "<div class='SearchBreadcrumbs'>" . $theme_link . '&nbsp;&gt;&nbsp;<span id="coltitle'.$collection.'"><a  href="'.$baseurl_short.'pages/search.php?search=!collection' . $collection . '" onClick="return CentralSpaceLoad(this,true);">'.i18n_get_collection_name($collectiondata). '</a></span>' . "</div>" ;
+	echo "<div class='SearchBreadcrumbs'>" . $theme_link . '&nbsp;<?php echo LINK_CARET ?><span id="coltitle'.$collection.'"><a  href="'.$baseurl_short.'pages/search.php?search=!collection' . $collection . '" onClick="return CentralSpaceLoad(this,true);">'.i18n_get_collection_name($collectiondata). '</a></span>' . "</div>" ;
 	}
 
 if (!hook("replacesearchheader")) # Always show search header now.
@@ -962,13 +962,13 @@ if (!hook("replacesearchheader")) # Always show search header now.
 		if ($arcresults>0) 
 			{
 			?>
-			<div class="SearchOptionNav"><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&amp;archive=2" onClick="return CentralSpaceLoad(this);">&gt;&nbsp;<?php echo $lang["view"]?> <span class="Selected"><?php echo number_format($arcresults)?></span> <?php echo ($arcresults==1)?$lang["match"]:$lang["matches"]?> <?php echo $lang["inthearchive"]?></a></div>
+			<div class="SearchOptionNav"><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&amp;archive=2" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET ?><?php echo $lang["view"]?> <span class="Selected"><?php echo number_format($arcresults)?></span> <?php echo ($arcresults==1)?$lang["match"]:$lang["matches"]?> <?php echo $lang["inthearchive"]?></a></div>
 			<?php 
 			}
 		else
 			{
 			?>
-			<div class="InpageNavLeftBlock">&gt;&nbsp;<?php echo $lang["nomatchesinthearchive"]?></div>
+			<div class="InpageNavLeftBlock"><?php echo LINK_CARET ?><?php echo $lang["nomatchesinthearchive"]?></div>
 			<?php 
 			}
 		}

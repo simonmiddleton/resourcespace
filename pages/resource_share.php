@@ -320,14 +320,14 @@ if($editing && !$editexternalurl)
                                 if ($collection_share)
                                     {
                                     ?>
-                                    <a onClick="return CentralSpaceLoad(this,true);" href="collection_share.php?ref=<?php echo $key["collection"] ?>">&gt;&nbsp;<?php echo $lang["viewcollection"]?></a>
+                                    <a onClick="return CentralSpaceLoad(this,true);" href="collection_share.php?ref=<?php echo $key["collection"] ?>"><?php echo LINK_CARET ?><?php echo $lang["viewcollection"]?></a>
                                     <?php
                                     }
                                 else
                                     {
                                     ?>
-                                    <a href="#" onClick="return resourceShareDeleteShare('<?php echo $key["access_key"] ?>');">&gt;&nbsp;<?php echo $lang["action-delete"]?></a>      
-                                    <a href="#" onClick="return resourceShareEditShare(<?php echo "'{$key["access_key"]}', '{$key["expires"]}', '{$key["access"]}', '{$key["usergroup"]}'" ?>);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
+                                    <a href="#" onClick="return resourceShareDeleteShare('<?php echo $key["access_key"] ?>');"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>      
+                                    <a href="#" onClick="return resourceShareEditShare(<?php echo "'{$key["access_key"]}', '{$key["expires"]}', '{$key["access"]}', '{$key["usergroup"]}'" ?>);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
                                     <?php
                                     }
                                     ?>

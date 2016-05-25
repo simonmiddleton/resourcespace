@@ -57,7 +57,7 @@ if (!$save_as)
 	# $save_as set or Opera browser? Provide a download link instead. Opera blocks any attempt to send it a download (meta/js redirect)	?>
     <h2>&nbsp;<h2> 
     <h1><?php echo $lang["downloadresource"]?></h1>
-    <p style="font-weight:bold;">&gt;&nbsp;<a href="<?php echo $url?>"><?php echo $lang["rightclicktodownload"]?></a></p>
+    <p style="font-weight:bold;"><?php echo LINK_CARET ?><a href="<?php echo $url?>"><?php echo $lang["rightclicktodownload"]?></a></p>
 	<?php } else { 
 	# Any other browser - standard 'your download will start shortly' text.
 	?>

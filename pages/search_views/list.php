@@ -194,7 +194,7 @@ if (!hook("replacelistitem"))
 							href="<?php echo str_replace("view.php","edit.php",$url) ?>"  
 							onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
 							title="<?php echo $lang["editresource"]?>"
-						>&gt;&nbsp;<?php echo $lang["action-edit"] ?>
+						><?php echo LINK_CARET ?><?php echo $lang["action-edit"] ?>
 						</a>&nbsp;
 					<?php
 					$showkeyedit = true;
@@ -204,9 +204,7 @@ if (!hook("replacelistitem"))
 				<a 
 					onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this);" 
 					href="<?php echo $url?>"
-				>
-					&gt;&nbsp;
-					<?php echo $lang["action-view"]?>
+				><?php echo LINK_CARET ?><?php echo $lang["action-view"]?>
 				</a> 
 				&nbsp;
 				<?php
@@ -215,9 +213,7 @@ if (!hook("replacelistitem"))
 					if (!checkperm("b")&& $k=="") 
 						{ 
 						echo add_to_collection_link($ref,$search);
-						?>
-							&gt;&nbsp;
-							<?php echo $lang["action-addtocollection"]?>
+						?><?php echo LINK_CARET ?><?php echo $lang["action-addtocollection"]?>
 						</a> 
 						&nbsp;
 						<?php 
@@ -229,9 +225,7 @@ if (!hook("replacelistitem"))
 						class="nowrap" 
 						onClick="return CentralSpaceLoad(this);" 
 						href="<?php echo $baseurl_short?>pages/resource_share.php?ref=<?php echo htmlspecialchars($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;k=<?php echo urlencode($k)?>"
-					>
-						&gt;&nbsp;
-						<?php echo $lang["share"]?>
+					><?php echo LINK_CARET ?><?php echo $lang["share"]?>
 					</a>
 					<?php 
 					} ?>

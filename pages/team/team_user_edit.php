@@ -160,7 +160,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 
 <div class="Question">
 <label><?php echo $lang["team_user_contributions"]?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo $ref?>">&gt;&nbsp;<?php echo $lang["team_user_view_contributions"] ?></a></div>
+<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo $ref?>"><?php echo LINK_CARET ?><?php echo $lang["team_user_view_contributions"] ?></a></div>
 <div class="clearerleft"> </div></div>
 
 
@@ -202,11 +202,11 @@ if (!hook("ticktoemailpassword"))
 <?php if ($user["approved"]==1 && !hook("loginasuser")) { ?>
 
 <div class="Question"><label><?php echo $lang["log"]?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["clicktoviewlog"]?></a></div>
+<div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewlog"]?></a></div>
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["login"]?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $ref?>&loginas=true">&gt;&nbsp;<?php echo $lang["clicktologinasthisuser"]?></a></div>
+<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $ref?>&loginas=true"><?php echo LINK_CARET ?><?php echo $lang["clicktologinasthisuser"]?></a></div>
 <div class="clearerleft"> </div></div>
 <?php } ?>
 
