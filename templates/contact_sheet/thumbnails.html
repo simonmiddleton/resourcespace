@@ -13,6 +13,10 @@ page {
     height: 50px;
     max-width: 100%;
 }
+
+.centeredText {
+    text-align: center;
+}
 </style>
 <page backtop="25mm" backbottom="15mm" backleft="15mm" backright="5mm">
     [%if contactsheet_header is set%]
@@ -30,15 +34,20 @@ page {
         <hr>
     </page_header>
     [%endif%]
+    [%if contact_sheet_footer is set%]
     <page_footer>
+        <hr>
         <table style="width: 100%;">
             <tr>
-                <td style="text-align: left; width: 33%"></td>
-                <td style="text-align: center; width: 34%"></td>
-                <td style="text-align: right; width: 33%">[[page_cu]] of [[page_nb]]</td>
+                <td class="centeredText" style="width: 90%">
+                    <span>XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999</span>
+                    <p>&#0169; ReourceSpace. All Rights Reserved.</p>
+                </td>
+                <td style="text-align: right; width: 10%">[[page_cu]] of [[page_nb]]</td>
             </tr>
         </table>
     </page_footer>
+    [%endif%]
 
 
     <!-- Real content starts here -->

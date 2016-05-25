@@ -70,8 +70,7 @@ switch($sheetstyle)
 $csf = array();
 foreach($getfields as $field_id)
     {
-    $csf_data = sql_query("SELECT name, value_filter, type FROM resource_type_field WHERE ref = '{$field_id}'");
-    $csf[]    = $csf_data[0];
+    $csf[] = get_resource_type_field($field_id);
     }
 
 
@@ -100,6 +99,11 @@ if($html2pdf)
     if($contact_sheet_add_link)
         {
         $placeholders['contact_sheet_add_link'] = $contact_sheet_add_link;
+        }
+
+    if($contact_sheet_footer)
+        {
+        $placeholders['contact_sheet_footer'] = $contact_sheet_footer;
         }
 
     // Set PDF properties:
@@ -269,78 +273,6 @@ $deltay=1;
 do_contactsheet_sizing_calculations();
 
 	
-class MYPDF extends FPDI {
-
-	//Page header
-	public function Header() {
-		global $logowidth,$contactsheet_header,$contact_sheet_logo,$add_contactsheet_logo,$contact_sheet_font,$titlefontsize,$applicationname,$collectiondata,$date,$subsetting,$lang, $pagewidth,$pageheight, $logospace,$contact_sheet_logo_resize;
-		
-		if (isset($contact_sheet_logo) && $add_contactsheet_logo)
-			{			
-			if (file_exists("../../" . $contact_sheet_logo))
-				{
-				$extension=pathinfo($contact_sheet_logo);$extension=$extension['extension'];
-				
-				if ($extension=="pdf")
-					{  //recommended as it works best with or without $contact_sheet_logo_resize
-					$this->setSourceFile("../../" . $contact_sheet_logo);
-					$this->_tplIdx = $this->importPage(1);
-					$logosize=$this->getTemplateSize($this->_tplIdx );
-					if (!$contact_sheet_logo_resize){	
-						$logowidth=$logosize['w'];
-						$logospace=$logosize['h'];
-						do_contactsheet_sizing_calculations(); // run this code again with new logospace
-					} 
-					else {
-						$logoratio=$logosize['w']/$logosize['h'];
-						$logowidth=$pageheight/8 * $logoratio;
-					}
-					$this->useTemplate($this->_tplIdx,$pagewidth/2-($logowidth/2),.4,$logowidth);
-				}
-				/*else if ($extension=="svg")
-					{
-						$this->ImageSVG("../../" . $contact_sheet_logo, '', $pageheight/30, '', $pageheight/8,'','',"C");					
-					}*/
-				else
-					{
-					if (!$contact_sheet_logo_resize){	
-						$logospace = getimagesize("../../" . $contact_sheet_logo);
-						$logospace=$logospace[1]/300; 
-						$this->Image("../../" . $contact_sheet_logo,'',.5,'',$logospace,$extension,false,'',true,'300','C', false, false, 0, false, false, false);
-						do_contactsheet_sizing_calculations(); // run this code again with new logospace
-					} else {
-						$this->Image("../../" . $contact_sheet_logo,'',$pageheight/30,'',$pageheight/8,$extension,false,'',true,'300','C', false, false, 0, false, false, false);	
-						
-					}
-					}
-				}
-				else 
-				{
-				exit("Contact sheet logo file not found at " . $contact_sheet_logo);
-				}
-			}
-			if($contactsheet_header=="true")
-			{
-			$this->SetFont($contact_sheet_font,'',$titlefontsize,'',$subsetting);
-			$title = $applicationname.' - '. i18n_get_collection_name($collectiondata).' - '.nicedate($date,true,true);
-			$pagenumber=$this->getAliasNumPage(). " " . $lang["of"] . " " .$this->getAliasNbPages();
-			$this->Text(1,$logospace+0.8,$title.'   '.$pagenumber);
-			}
-		}
-
-	// Page footer
-	 public function Footer() {
-		 // custom footer avoids linerule
-		 global $contact_sheet_custom_footerhtml,  $pageheight, $pagewidth,$refnumberfontsize;
-			if ($contact_sheet_custom_footerhtml!='')
-				{			
-				$this->Line(0.5, $pageheight*.94,$pagewidth - 0.5,$pageheight*.94);
-				$this->SetFontSize($refnumberfontsize);
-				$this->writeHTMLCell('',$pageheight*0.04,0.5, $pageheight*.95, ($contact_sheet_custom_footerhtml), 0, 0, 0, true,'c', true);
-				}
-		}
-	}
-
 class rsPDF extends MYPDF {
 
     var $_tplIdx;

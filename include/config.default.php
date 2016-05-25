@@ -903,8 +903,8 @@ $contact_sheet_logo_resize=true;
 # Give user option to add/remove logo?
 #$contact_sheet_logo_option=true;
 
-# Optional example footer html to include on contact sheet
-#$contact_sheet_custom_footerhtml='<div style="text-align: center" >XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999</div><table style="width:100%;margin:auto;"><tr><td style="width:50%;text-align: center" >resourcespace.org</td><td style="width:50%;text-align: center" >&#0169; ReourceSpace. All Rights Reserved.</td></tr></table>';
+# Show contact sheet footer (old $contact_sheet_custom_footerhtml removed as this is now handled in templates and enabled by either showing/ hiding the footer)
+$contact_sheet_footer = false;
 
 # Make images in contactsheet links to the resource view page?
 $contact_sheet_add_link=true;
