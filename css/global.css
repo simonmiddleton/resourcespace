@@ -213,9 +213,10 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelShellLarge.ui-draggable {text-align: left;}
 .ResourcePanelLarge {padding:0;margin:0;width: 365px;padding-bottom:5px;}
 .ResourcePanelLarge .ResourcePanelIcons {font-size:1.5em;}
+.ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a	{float: right;margin-right: 5px;text-decoration:none;}
+.ResourcePanelIcons a	{float: right;margin-right: 0.5em;text-decoration:none;}
 .ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
 .ListTools a:hover	{text-decoration:none;}
