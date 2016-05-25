@@ -1167,27 +1167,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         </div>
         <?php
         }
-    else
-        {
-        # Display keys (only keys used in the current search view).
-        if (!hook("replacesearchkey"))
-            {
-            if (is_array($result) && count($result)>0 && $search_includes_resources)
-                { ?>
-                <div class="BottomInpageKey"><?php
-                    echo $lang["key"] . " ";
-                    if ($showkeystar) { ?><div class="KeyStar"><?php echo $lang["verybestresources"]?></div><?php }
-                    if ($showkeycomment) { ?><div class="KeyComment"><?php echo $lang["addorviewcomments"]?></div><?php }
-                    if ($showkeyedit) { ?><div class="KeyEdit"><?php echo $lang["editresource"]?></div><?php }
-		    if ($showkeyemail) { ?><div class="KeyEmail"><?php echo $lang["share-resource"]?></div><?php }
-                    if ($showkeycollectout) { ?><div class="KeyCollectOut"><?php echo $lang["removefromcurrentcollection"]?></div><?php }
-                    if ($showkeycollect) { ?><div class="KeyCollect"><?php echo $lang["addtocurrentcollection"]?></div><?php }
-                    if ($showkeypreview) { ?><div class="KeyPreview"><?php echo $lang["fullscreenpreview"]?></div><?php }
-                    hook("searchkey"); ?>
-                </div><?php
-                }
-            } /* end hook replacesearchkey */
-        }        
+    
 $url=$baseurl_short."pages/search.php?search=" . urlencode($search) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive) . "&amp;daylimit=" . urlencode($daylimit) . "&amp;k=" . urlencode($k) . "&amp;restypes=" . urlencode($restypes);	
 ?>
 </div> <!-- end of CentralSpaceResources -->
