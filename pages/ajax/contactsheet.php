@@ -14,7 +14,6 @@ include_once('../../include/collections_functions.php');
 include('../../include/image_processing.php');
 include('../../include/pdf_functions.php');
 
-# Still making variables manually when not using Prototype: 
 $collection  = getvalescaped('c', '');
 $size        = getvalescaped('size', '');
 $column      = getvalescaped('columns', '');
@@ -25,6 +24,12 @@ $sheetstyle  = getvalescaped('sheetstyle', 'thumbnails');
 $preview     = ('true' == getvalescaped('preview', '') ? true : false);
 $previewpage = getvalescaped('previewpage', 1);
 
+// Check access
+if(!collection_readable($collection))
+    {
+    exit($lang['no_access_to_collection']);
+    }
+
 // Contact sheet options:
 $contactsheet_header    = ('yes' == getvalescaped('includeheader', '') ? true : $contact_sheet_include_header);
 $add_contactsheet_logo  = ('true' == getvalescaped('addlogo', $include_contactsheet_logo) ? true : false);
@@ -34,12 +39,6 @@ $contact_sheet_add_link = ('true' == getvalescaped('addlink', $contact_sheet_add
 
 $html2pdf       = ('true' == getval('html2pdf', '') ? true : false);
 $pdf_properties = array();
-
-# Check access
-if(!collection_readable($collection))
-    {
-    exit($lang['no_access_to_collection']);
-    }
 
 $collectiondata = get_collection($collection);
 $user           = get_user($collectiondata['user']);
@@ -271,12 +270,6 @@ function contact_sheet_add_image()
 
 $deltay=1;
 do_contactsheet_sizing_calculations();
-
-	
-class rsPDF extends MYPDF {
-
-    var $_tplIdx;
-}
 
 
 $pdf = new rsPDF($orientation , 'in', $size, true, 'UTF-8', false); 
