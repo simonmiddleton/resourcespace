@@ -119,22 +119,56 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
     $pdf_orientation = 'P';
     $pdf_format      = 'A4';
     $pdf_language    = 'en';
+    $pdf_unicode     = true;
+    $pdf_encoding    = 'UTF-8';
+    $pdf_margins     = array(5, 5, 5, 8);
 
     if(array_key_exists('orientation', $pdf_properties) && '' != trim($pdf_properties['orientation']))
         {
         $pdf_orientation = $pdf_properties['orientation'];
         }
+
     if(array_key_exists('format', $pdf_properties) && '' != trim($pdf_properties['format']))
         {
         $pdf_format = $pdf_properties['format'];
         }
+
     if(array_key_exists('language', $pdf_properties) && '' != trim($pdf_properties['language']))
         {
         $pdf_language = $pdf_properties['language'];
         }
-    // end of Setup PDF
 
-    $html2pdf = new HTML2PDF($pdf_orientation, $pdf_format, $pdf_language);
+    if(array_key_exists('margins', $pdf_properties) && is_array($pdf_properties['margins']) && 0 !== count($pdf_properties['margins']))
+        {
+        $pdf_margins = $pdf_properties['margins'];
+        }
+
+    $html2pdf = new HTML2PDF($pdf_orientation, $pdf_format, $pdf_language, $pdf_unicode, $pdf_encoding, $pdf_margins);
+
+    // Set PDF title
+    if(array_key_exists('title', $pdf_properties) && '' != trim($pdf_properties['title']))
+        {
+        $html2pdf->pdf->SetTitle($pdf_properties['title']);
+        }
+
+    // Set PDF author
+    if(array_key_exists('author', $pdf_properties) && '' != trim($pdf_properties['author']))
+        {
+        $html2pdf->pdf->SetAuthor($pdf_properties['author']);
+        }
+
+    // Set PDF subject
+    if(array_key_exists('subject', $pdf_properties) && '' != trim($pdf_properties['subject']))
+        {
+        $html2pdf->pdf->SetSubject($pdf_properties['subject']);
+        }
+
+    // Set PDF font family
+    if(array_key_exists('font', $pdf_properties) && '' != trim($pdf_properties['font']))
+        {
+        $html2pdf->setDefaultFont($pdf_properties['font']);
+        }
+
     $html2pdf->WriteHTML($html);
 
     if($save_on_server)

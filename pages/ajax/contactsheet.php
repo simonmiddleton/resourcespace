@@ -41,7 +41,8 @@ if(!collection_readable($collection))
     exit($lang['no_access_to_collection']);
     }
 
-
+$collectiondata = get_collection($collection);
+$user           = get_user($collectiondata['user']);
 
 if($html2pdf)
     {
@@ -70,6 +71,12 @@ if($html2pdf)
     // Set PDF properties:
     $pdf_properties['orientation'] = $orientation;
     $pdf_properties['format']      = $size;
+    $pdf_properties['margins']     = array(10, 12, 10, 7);
+    $pdf_properties['title']       = i18n_get_collection_name($collectiondata) . ' - ' . nicedate(date('Y-m-d H:i:s'), true, true);
+    $pdf_properties['author']      = $user['fullname'];
+    $pdf_properties['subject']     = "{$applicationname} - {$lang['contactsheet']}";
+    $pdf_properties['font']        = $contact_sheet_font;
+
 
     // 
     $imgsize = ('single' == $sheetstyle ? getvalescaped('ressize', 'lpr') : 'pre');
@@ -245,9 +252,6 @@ for ($m=0;$m<count($getfields);$m++)
 	$csf[$m]['type']=$csf_data[0]['type'];
 	}	
 
-	
-$user= get_user($collectiondata['user']);
-
 
 
 
@@ -340,6 +344,8 @@ class rsPDF extends MYPDF {
 
 $pdf = new rsPDF($orientation , 'in', $size, true, 'UTF-8', false); 
 
+/*
+Remove once done
 $pdf->SetTitle(i18n_get_collection_name($collectiondata).' - '.nicedate($date, true, true));
 $pdf->SetAuthor($user['fullname']);
 $pdf->SetSubject($applicationname . " - " . $lang["contactsheet"]);
@@ -347,7 +353,7 @@ $pdf->SetMargins(1,1.2,.7);
 $pdf->SetAutoPageBreak(false);
 $pdf->SetCellPadding(0); 
 $pdf->AddPage(); 
-$pdf->SetFont($contact_sheet_font,'','','',$subsetting);
+$pdf->SetFont($contact_sheet_font,'','','',$subsetting);*/
 
 //$pdf->ln();$pdf->ln();
 $pdf->SetFontSize($refnumberfontsize);
