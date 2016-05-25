@@ -1677,7 +1677,7 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
 }
 
 if (!function_exists("remove_from_collection_link")){		
-function remove_from_collection_link($resource,$search="",$class)
+function remove_from_collection_link($resource,$search="",$class="")
     {
     # Generates a HTML link for removing a resource to a collection
     global $lang, $pagename;

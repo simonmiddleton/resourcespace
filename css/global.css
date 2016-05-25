@@ -1181,3 +1181,5 @@ form.FormFilter button {
 }
 
 UL.jqueryFileTree A:hover {font-weight:bold;}
+
+.CollectBack .CollectionResourceRemove, .CollectBack .CollectionResourceRemove:hover {text-decoration:none;} 
