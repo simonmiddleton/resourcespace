@@ -73,7 +73,6 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
     {
    
     $password=trim(getvalescaped("password",""));
-
 	$result=perform_login();
 	if ($result['valid'])
 		{
@@ -107,11 +106,24 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
         $accepted = sql_value("SELECT accepted_terms value FROM user WHERE ref = '{$result['ref']}'", 0);
         if(0 == $accepted && $terms_login && !checkperm('p'))
             {
-            redirect('pages/terms.php?noredir=true&url=' . urlencode('pages/user/user_change_password.php'));
+            $redirect_url='pages/terms.php?noredir=true&url=' . urlencode('pages/user/user_change_password.php');
             }
         else{
-            redirect($url);
+            $redirect_url=$url;
             }
+            
+		if(!$modal)
+			{
+			redirect($redirect_url);
+			}
+		else
+			{
+			?>
+			<script type="text/javascript">
+				CentralSpaceLoad('<?php echo $baseurl."/".$redirect_url?>',true);
+			</script>
+			<?php
+			}
         }
     else
         {
@@ -256,7 +268,7 @@ if (!hook("replaceloginform")) {
 # Javascript to default the focus to the username box
 ?>
 <script type="text/javascript">
-document.getElementById('username').focus();
+jQuery('#username').focus();
 
 jQuery(document).ready(function() {
     /* 
