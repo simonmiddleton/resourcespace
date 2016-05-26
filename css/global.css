@@ -220,6 +220,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
 .ListTools a:hover	{text-decoration:none;}
+a:hover .fa {text-decoration:none !important;} /* Never underline an icon */
 
 .ResourceSelect {display:block;float:right;}
 .IconUserRatingStar	{width:13px;height:15px;padding: 0;margin-bottom:6px;display: block;}
