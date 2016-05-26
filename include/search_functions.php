@@ -66,7 +66,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
     # Extract search parameters and split to keywords.
     $search_params=$search;
-    if (substr($search,0,1)=="!")
+    if (substr($search,0,1)=="!" && substr($search,0,6)!="!empty")
         {
         # Special search, discard the special search identifier when splitting keywords and extract the search paramaters
         $s=strpos($search," ");
