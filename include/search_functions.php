@@ -190,7 +190,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
             $restypes = substr($restypes, 7);
             }
 
-        $sql_restrict_by_field_types = sql_value("SELECT group_concat(ref) AS `value` FROM resource_type_field WHERE keywords_index = 1 AND resource_type IN ({$restypes})", '');
+        // 0 is for global fields which need to be added here as well
+        $sql_restrict_by_field_types = sql_value("SELECT group_concat(ref) AS `value` FROM resource_type_field WHERE keywords_index = 1 AND resource_type IN (0, {$restypes})", '');
 
         if('' != $sql_restrict_by_field_types)
             {
