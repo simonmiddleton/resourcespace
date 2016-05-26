@@ -30,7 +30,7 @@ function HookOcrstreamEditBeforeimagecorrection()
             {
             $choices = get_tesseract_languages();
             ?>
-            <div id="ocr_status_anim"><div style="margin-top: 66px;"><img src="../plugins/ocrstream/assets/images/ocrstream_loader.gif" alt="Loading..." /><p><?php echo $lang['ocr_in_progress']?></p><p id="ocr_status_text"></p></div></div>
+            <div id="ocr_status_anim"><div style="margin-top: 66px;"><i class="fa fa-spinner fa-pulse fa-2x fa-fw" style="margin-top: 10px;margin-bottom: 10px;"></i><p><?php echo $lang['ocr_in_progress']?></p><p id="ocr_status_text"></p></div></div>
             <script src="../plugins/ocrstream/vendor/monstrum/jcrop/dist/min/jquery.Jcrop.min.js"></script>
             <link rel="stylesheet" href="../plugins/ocrstream/vendor/monstrum/jcrop/dist/min/jquery.Jcrop.min.css" type="text/css" />
             <script>
@@ -193,8 +193,7 @@ function HookOcrstreamEditEditbeforesave()
         $_SESSION['ocr_start'] = getvalescaped('ocr_upload_start','');
         $_SESSION['ocr_psm'] = getvalescaped('ocr_psm','');
         }
-    if (isset($_POST['ocr_cron_start']))
-        {
+    if (isset($_POST['ocr_cron_start'])) {
         $_SESSION['ocr_cron'] = getvalescaped('ocr_cron_start','');
-        }
     }
+}
