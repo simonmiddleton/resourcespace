@@ -154,7 +154,7 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 			$file .= "?v=" . urlencode($file_modified);
 			}
 		}
-	
+	debug("BANG " . $file);
 	return  $file;
 	}
 	
