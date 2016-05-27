@@ -1122,5 +1122,5 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 	}
 
 /* Collapsible sections - using FontAwesome */
-.collapsed:before {content: "\f0da";    font: normal normal normal 24px FontAwesome;padding-right:5px;}
-.expanded:before {content: "\f0d7";    font: normal normal normal 24px FontAwesome;padding-right:5px;}
+.collapsed:before {content: "\f0da";    font: normal normal normal 22px FontAwesome;padding-right:5px; display: inline-block; width:0.6em;}
+.expanded:before {content: "\f0d7";    font: normal normal normal 22px FontAwesome;padding-right:5px; display: inline-block; width:0.6em;}
