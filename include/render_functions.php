@@ -677,7 +677,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         else
             {
             # For advanced search and elsewhere, include the category tree.
-            include "../pages/edit_fields/7.php";
+            include __DIR__ . "/../pages/edit_fields/7.php";
             }
         break;
         
@@ -699,7 +699,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 $display_as_checkbox = FALSE;
             }
             
-            include '../pages/edit_fields/12.php';
+            include __DIR__ . '/../pages/edit_fields/12.php';
         break;
         }
     ?>
