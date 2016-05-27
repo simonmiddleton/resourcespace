@@ -2663,15 +2663,16 @@ function pager($break=true)
 				<?php } ?>
 				</select>
 			<?php } else { ?>
-				<a href="#" title="<?php echo $lang["jumptopage"]?>" onClick="p=document.getElementById('jumppanel<?php echo $jumpcount?>');if (p.style.display!='block') {p.style.display='block';document.getElementById('jumpto<?php echo $jumpcount?>').focus();} else {p.style.display='none';}; return false;"><?php echo $lang["page"]?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo $lang["of"]?>&nbsp;<?php echo $totalpages?></a>
+
+				<div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo $lang["jumptopage"]?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), true);}">
+			&nbsp;<a class="fa fa-times-circle" href="#" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='inline';"></a></div>
+			
+				<a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo $lang["jumptopage"]?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo $lang["page"]?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo $lang["of"]?>&nbsp;<?php echo $totalpages?></a>
 			<?php } ?>
 
 			&nbsp;&nbsp;<?php if ($curpage<$totalpages) { ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo $url?>&amp;go=next&amp;offset=<?php echo urlencode($offset+$per_page) ?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, true);" <?php } ?>><?php } ?><i class="fa fa-arrow-right"></i><?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
 			</span>
-			<?php if (!$pager_dropdown){?>
-				<div id="jumppanel<?php echo $jumpcount?>" style="display:none;margin-top:5px;"><?php echo $lang["jumptopage"]?>: <input type="text" size="3" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), true);}">
-			&nbsp;<input type="submit" name="jump" value="<?php echo $lang["jump"]?>" onClick="var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), true);"></div>
-			<?php } ?>
+			
 		<?php } else { ?><span class="HorizontalWhiteNav">&nbsp;</span><div <?php if ($pagename=="search"){?>style="display:block;"<?php } else { ?>style="display:inline;"<?php }?>>&nbsp;</div><?php } ?>
 		<?php
 		}

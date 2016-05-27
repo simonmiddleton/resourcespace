@@ -136,9 +136,6 @@ $atoz.="</div>";
 	<?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]?></span><?php } else { ?><a href="<?php echo $url; ?>&per_page_list=99999" onClick="return CentralSpaceLoad(this);"><?php echo $lang["all"]?></a><?php } ?>
 	</div></div> <?php pager(false); ?><div class="clearerleft"></div></div>
 
-<strong><?php echo $lang["total"] . ": " . count($users); ?> </strong><?php echo $lang["users"]; ?>
-<br />
-
 <div class="Listview">
 <?php if(!hook('overrideuserlist')):
 
@@ -213,8 +210,16 @@ for ($n=$offset;(($n<count($users)) && ($n<($offset+$per_page)));$n++)
 </table>
 <?php endif; // hook overrideuserlist ?>
 </div>
-<div class="BottomInpageNav"><?php pager(false); ?></div>
+<div class="BottomInpageNav">
+<div class="BottomInpageNavLeft">
+<strong><?php echo $lang["total"] . ": " . count($users); ?> </strong><?php echo $lang["users"]; ?>
 </div>
+
+<?php pager(false); ?></div>
+</div>
+
+
+
 
 <?php if(!$team_user_filter_top){show_team_user_filter_search();}?>
 

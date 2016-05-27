@@ -32,6 +32,7 @@ input[readonly] {color: #000000;}
 #TextHeader, #TextHeader a {color:#616161;}
 #TextDesc{color:#616161;}
 .TopInpageNav {border-bottom: 1px solid #BBBBBB;}
+
 .FormError {color: #FF0000;}
 .FormIncorrect {color: #FF0000;border: 1px solid #BBBBBB;background: #FFFFFF;}
 .PageInformal {color: #FF0000;border: 1px solid #BBBBBB;background: #FFFFFF;}

@@ -111,7 +111,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #CentralSpace {text-align:left;position:relative;}
 
 .TopInpageNav {clear: left;padding-bottom: 5px;margin-bottom:10px;margin-right: 15px;position:relative;}
-.BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 0px 0px; position:relative;}
+.BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0px; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
 .TopInpageNavLeft{float:left;padding-right:240px;}
 .TopInpageNavRight{position:absolute;right:0;top:0;width:280px;text-align:right;}
@@ -123,9 +123,6 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .TopInpageNav a:link, .TopInpageNav a:visited, .BottomInpageNav a:link, .BottomInpageNav a:visited , #CentralSpaceLogin a:link, #CentralSpaceLogin a:visited {text-decoration:none;}
 .TopInpageNav a:hover, .TopInpageNav a:active, .BottomInpageNav a:hover, .BottomInpageNav a:active, #CentralSpaceLogin a:hover, #CentralSpaceLogin a:active {text-decoration:underline;}
 .Selected {font-weight: bold;}
-#jumppanel1{margin-top:45px !important;padding: 10px;}
-#jumppanel3{margin-top: 20px !important;text-align: right;}
-.TopInpageNav #jumppanel2{margin-top: 35px !important;text-align: right;float: right;}
 
 .HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;}
 .HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0px;}
@@ -220,7 +217,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
 .ListTools a:hover	{text-decoration:none;}
-a:hover .fa {text-decoration:none !important;} /* Never underline an icon */
+a:hover .fa {text-decoration:none !important;} /* Never underline a FontAwesome icon */
 
 .ResourceSelect {display:block;float:right;}
 .IconUserRatingStar	{width:13px;height:15px;padding: 0;margin-bottom:6px;display: block;}
@@ -229,7 +226,7 @@ a:hover .fa {text-decoration:none !important;} /* Never underline an icon */
 .DESC {display: inline;padding-right: 10px;}
 
 /*Resource Panel layout*/
-.Listview {overflow-x:auto;	margin: 25px 10px 25px 0;}
+.Listview {overflow-x:auto;	margin: 0 10px 25px 0;}
 .ListviewTight {margin: 5px 10px 5px 0;}
 .Listview table{ width:100%;}
 .Listview td {padding: 5px 5px 5px 5px;}
@@ -1124,4 +1121,9 @@ form.FormFilter button {
 
 UL.jqueryFileTree A:hover {font-weight:bold;}
 
-.CollectBack .CollectionResourceRemove, .CollectBack .CollectionResourceRemove:hover {text-decoration:none;} 
+.CollectBack .CollectionResourceRemove, .CollectBack .CollectionResourceRemove:hover {text-decoration:none;}
+
+.JumpPanel input
+	{
+	width:35px;
+	}
