@@ -4533,7 +4533,7 @@ function draw_performance_footer(){
 		}
 	?>
 	<tr><td>Dupes</td><td><?php echo $dupes?></td></tr>
-	<tr><td colspan=2><a href="#" onClick="document.getElementById('querylog<?php echo $performance_footer_id?>').style.display='block';return false;">&gt;&nbsp;details</a></td></tr>
+	<tr><td colspan=2><a href="#" onClick="document.getElementById('querylog<?php echo $performance_footer_id?>').style.display='block';return false;"><?php echo LINK_CARET ?>details</a></td></tr>
 	</table>
 	<table class="InfoTable" id="querylog<?php echo $performance_footer_id?>" style="display: none; float: <?php if ($pagename=='collections'){?>left<?php } else {?>right<?php }?>; margin: 10px;">
 	<?php
