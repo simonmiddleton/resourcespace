@@ -356,7 +356,7 @@ a:hover .fa {text-decoration:none !important;} /* Never underline a FontAwesome 
 /*Home styling */
 .HomePanel {margin:0px 15px 15px 0px;width: 250px;float: left;} 
 .HomePanelIN {padding: 15px;min-height: 150px;}
-.HomePanel h2 {display:block;margin: 5px 0px;}
+.HomePanel h2 {display:block;margin: 5px 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .HomePanel p {margin: 0; padding: 5px 0 4px 0;}
 .HomePicturePanel {    margin:0px 15px 10px 0px;float: left;width: 517px;}
 .HomePicturePanelIN img {width:517px; height:350px;}
