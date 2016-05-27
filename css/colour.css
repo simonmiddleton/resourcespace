@@ -228,8 +228,8 @@ li.plupload_droptext {color:#999;}
 .permissionstable tbody{color: #000000;}
 .CodeMirror-wrapping{color: #000000;background: #FFFFFF;}
 .PanelShadow{background: none;}
-.collapsed{background: url(../gfx/interface/HomeArrow.gif) no-repeat top left; background-position:3px 8px; }
-.expanded{background: url(../gfx/interface/HomeArrowDown.gif) no-repeat top left; background-position:0px 12px;}
+
+
 .CommentFlag { background-image: url('../gfx/interface/FlagOff.png'); }
 .CommentEntryInfoCommenterName { color: #3070bf; }
 .CommentBody { color: #000000}
