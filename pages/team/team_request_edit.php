@@ -33,7 +33,7 @@ if ($request === false)
     
 include "../../include/header.php";
 ?>
-<p><a href="<?php echo $baseurl_short?>pages/team/team_request.php"  onClick="return CentralSpaceLoad(this,true);">&lt;&nbsp;<?php echo $lang["back"] ?></a></p>
+<p><a href="<?php echo $baseurl_short?>pages/team/team_request.php"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"] ?></a></p>
 <div class="BasicsBox">
     <h1><?php echo $lang["editrequestorder"]?></h1>
 

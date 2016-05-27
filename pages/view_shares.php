@@ -14,7 +14,7 @@ include "../include/header.php";
 
 ?>
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);">&lt;&nbsp;<?php echo $lang["managecollectionslink"]?></a></p>	
+<p><a href="<?php echo $baseurl_short?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["managecollectionslink"]?></a></p>	
 <h1><?php echo $lang["shared_collections"]?></h1>
 <?php
 
