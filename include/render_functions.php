@@ -694,12 +694,18 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             $display_as_radiobuttons = FALSE;
             $display_as_checkbox = TRUE;
 
-            if($field['display_as_dropdown']) {
+            if($field['display_as_dropdown'] || $forsearchbar) {
                 $display_as_dropdown = TRUE;
                 $display_as_checkbox = FALSE;
             }
             
             include __DIR__ . '/../pages/edit_fields/12.php';
+            // need to adjust the field's name value
+            ?>
+        	<script type="text/javascript">
+        		jQuery("#field_<?php echo $field['ref']?>").attr('name', 'field_<?php echo $field["name"]?>');
+        	</script>
+            <?php
         break;
         }
     ?>
