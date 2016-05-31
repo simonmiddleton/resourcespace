@@ -434,15 +434,6 @@ if (!$basic_simple_search)
 					<?php
 					switch($fields[$n]['type'])
 						{
-						case '0':# -------- Text boxes
-						case '1':
-						case '5':
-						case '8':
-						case ($fields[$n]["type"]==9 && !$simple_search_show_dynamic_as_dropdown):
-							?>
-							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
-							<?php
-							break;
 						case '4':
 						case '6':
 						case '10':
@@ -457,16 +448,14 @@ if (!$basic_simple_search)
 								<?php
 								}
 							break;
-						case 2: 
-        				case 3:
-						case ($fields[$n]["type"]==9 && $simple_search_show_dynamic_as_dropdown):
+						case '7':
 							?>
-							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';
 							<?php
 							break;
 						default:
 							?>
-							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
 							<?php
 						}
 					?>
