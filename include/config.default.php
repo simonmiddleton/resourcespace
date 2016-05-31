@@ -2149,6 +2149,9 @@ $enable_plugin_upload = true;
 #Disable geocoding features?
 $disable_geocoding = false;
 
+#Enable geolocating multiple assets on a map that are part of a collection
+$geo_locate_collection = false;
+
 # OpenLayers: The default center and zoom for the map view when searching or selecting a new location. This is a world view.
 # For example, to specify the USA use: #$geolocation_default_bounds="-10494743.596017,4508852.6025659,4";
 # For example, to specify Utah, use $geolocation_default_bounds="-12328577.96607,4828961.5663655,6";
