@@ -328,6 +328,8 @@ a:hover .fa {text-decoration:none !important;} /* Never underline a FontAwesome 
 .RecordPanel .RecordDownloadSpace {padding: 6px;}
 .RecordPanel .RecordDownloadSpace ul {padding:0.2em 0;margin:0;margin-top: 10px;list-style:none;}
 .RecordPanel .RecordDownloadSpace li {padding:0;margin:0 12px 5px 0;float:left;min-width:208px;}
+.RecordPanel .RecordDownloadSpace li a:hover {text-decoration:none;}
+
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {text-align: center;font-weight: bold;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend h2 {margin:0;padding:0;font-size: 1em;	text-align: left;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {margin:0;padding:0;	text-align: left;}
