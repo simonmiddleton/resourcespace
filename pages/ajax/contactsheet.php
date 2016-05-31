@@ -126,11 +126,8 @@ if($html2pdf)
         $imgsize = 'pre';
         }
 
-
-    if(!generate_pdf($pdf_template_path, $PDF_filename, $placeholders, false, $pdf_properties))
-        {
-        trigger_error('ResourceSpace could not generate the contact sheet PDF!');
-        }
+    $pdf_content = process_template($pdf_template_path, $placeholders);
+    // 
 
     exit();
     }

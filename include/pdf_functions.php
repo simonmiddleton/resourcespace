@@ -242,6 +242,50 @@ function get_template_path($template_name, $template_namespace)
 
 
 /**
+* Function used to process a template
+* 
+* Process template and bind any placeholders. The template should contain (if needed) PHP statements which will
+* will be processed through this function.
+* 
+* @param string $template_path      The full path to the location of the template (as returned by get_template_path())
+* @param array  $bind_placeholders  A map of all the values that are meant to replace any placeholders found in the template
+* 
+* @return string
+*/
+function process_template($template_path, array $bind_placeholders = array())
+    {
+    global $applicationname, $baseurl, $baseurl_short, $storagedir, $date_d_m_y, $linkedheaderimgsrc;
+
+    // General placeholders available to templates
+    $general_params = array(
+        'applicationname' => $applicationname,
+        'baseurl'         => $baseurl,
+        'baseurl_short'   => $baseurl_short,
+        'filestore'       => $storagedir,
+        'date'            => ($date_d_m_y ? date('d/m/Y') : date('m/d/Y')),
+    );
+
+    if('' != $linkedheaderimgsrc)
+        {
+        $general_params['linkedheaderimgsrc'] = $linkedheaderimgsrc;
+        }
+
+    $bind_params = array_merge($general_params, $bind_placeholders);
+
+    foreach($bind_params as $bind_param => $bind_param_value)
+        {
+        $$bind_param = $bind_param_value;
+        }
+
+    // At this point we shoud have all the placeholders we need to render the template nicely
+    include $template_path;
+    $content = ob_get_clean();
+
+    return $content;
+    }
+
+
+/**
 * Process a string (mainly HTML) which contains if statement placeholders and return the processed string
 * 
 * Handles [%if var is set%] [%endif%] type of placeholders
