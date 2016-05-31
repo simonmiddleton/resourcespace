@@ -178,7 +178,7 @@ hook("rendermapfooter");
 </form>
 
 </div>
-<div class="PanelShadow"></div>
+
 </div>
 <?php
 include "../include/footer.php";

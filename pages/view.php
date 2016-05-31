@@ -1322,7 +1322,7 @@ if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/us
 </div>
 <?php include "view_metadata.php"; ?>
 </div></div>
-<div class="PanelShadow"></div>
+
 </div>
 
 <?php
@@ -1350,7 +1350,7 @@ function RenderPushedMetadata($resource)
         <div class="Title"><?php echo $resource["resource_type_name"] . " : " . $resource["field" . $view_title_field] ?></div>
         <?php include "view_metadata.php"; ?>
         </div>
-        <div class="PanelShadow"></div>
+        
         </div>
 	<?php
 	}
@@ -1370,7 +1370,7 @@ End of pushed metadata support
             <div id="Titles2" class="ViewPanelTitles"></div>
         </div>
     </div>
-    <div class="PanelShadow"></div>
+    
 </div>
 <?php if ($view_resource_collections){
 	# only render this box when needed
@@ -1381,7 +1381,7 @@ End of pushed metadata support
             <div id="Titles3" class="ViewPanelTitles"></div>
         </div>
     </div>
-    <div class="PanelShadow"></div>
+    
 </div>
 <?php } ?>
 <?php } 
@@ -1453,7 +1453,7 @@ if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_acce
         <div class="Title"><?php echo $lang['metadata-report']?></div>
         <div id="<?php echo $context ?>metadata_report"><a onclick="metadataReport(<?php echo htmlspecialchars($ref)?>,'<?php echo $context ?>');document.getElementById('<?php echo $context ?>metadata_report').innerHTML='<?php echo $lang['pleasewait']?>';return false;" class="itemNarrow" href="#">&gt; <?php echo $lang['viewreport'];?></a><br></div>
         </div>
-        <div class="PanelShadow"></div>
+        
         </div>
 
 <?php } ?>
@@ -1528,7 +1528,7 @@ if (count($result)>0)
 		</div>
 		</div>
 		</div>
-		<div class="PanelShadow"></div>
+		
 		</div><?php
 		} #end of display loop by resource extension
 	} #end of IF sorted relations
@@ -1587,7 +1587,7 @@ if (count($result)>0)
 		</div>
 		</div>
 		</div>
-		<div class="PanelShadow"></div>
+		
 		</div><?php
 		} #end of display loop by resource extension
 	} #end of IF sorted relations	
@@ -1644,7 +1644,7 @@ if (count($result)>0)
     </div>
     </div>
     </div>
-    <div class="PanelShadow"></div>
+    
     </div><?php
 		}# end related resources display
 	} 
@@ -1678,7 +1678,7 @@ if (count($result)>0)
 	</div>
 	</div>
 	</div>
-	<div class="PanelShadow"></div>
+	
 	</div><?php
 	}} 
 
@@ -1732,7 +1732,7 @@ for ($n=0;$n<count($keywords);$n++)
 </div>
 </div>
 </div>
-<div class="PanelShadow"></div>
+
 </div>
 <?php 
 	hook("afterviewfindsimilar");

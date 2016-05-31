@@ -287,7 +287,7 @@ if (!hook("renderresultthumb"))
 			} // end hook replaceresourcetools ?>
         </div>	
 	</div>
-	<div class="PanelShadow"></div>
+	
 	</div>
 	<?php 
 	} # end hook renderresultthumb

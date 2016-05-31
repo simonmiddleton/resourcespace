@@ -54,7 +54,7 @@ if($alternative!=='')
 <div class="clearerleft"> </div>
 </div>
 </div>
-<div class="PanelShadow"></div>
+
 </div>
 
 <?php

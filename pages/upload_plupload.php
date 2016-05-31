@@ -986,7 +986,7 @@ if ($collection_add!="" && count(get_collection_external_access($collection_add)
         
  <?php if ($overquota) 
    {
-   ?><h1><?php echo $lang["diskerror"]?></h1><div class="PanelShadow"><?php echo $lang["overquota"] ?></div> </div> <?php 
+   ?><h1><?php echo $lang["diskerror"]?></h1><p><?php echo $lang["overquota"] ?></p> <?php 
    include "../include/footer.php";
    exit();
    }

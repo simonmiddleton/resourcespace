@@ -608,7 +608,7 @@ if (!$basic_simple_search)
 	<?php } ?> <!-- END of Searchbarreplace hook -->
 	</div>
 	</div>
-	<div class="PanelShadow"></div>
+	
 <?php } ?>	
 	
 	<?php if ($show_anonymous_login_panel && isset($anonymous_login) && (isset($username)) && ($username==$anonymous_login))
@@ -634,7 +634,7 @@ if (!$basic_simple_search)
 	</div>
  
 	</div>
-	<div class="PanelShadow"></div>
+	
 	<?php
 	}
 ?>
@@ -651,7 +651,7 @@ if (!$basic_simple_search)
 	</div><br />
 	<?php } /* end replaceresearchrequestboxcontent */ ?>
 	</div>
-	<div class="PanelShadow"></div>
+	
 	<?php } /* end replaceresearchrequestbox */ ?>
 	<?php } ?>
 

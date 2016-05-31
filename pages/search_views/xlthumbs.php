@@ -270,7 +270,7 @@ if (!hook("renderresultlargethumb"))
 				?>
 			</div>
 		</div>
-		<div class="PanelShadow"></div>
+		
 	</div>
  	<?php 
  	} # end hook renderresultlargethumb

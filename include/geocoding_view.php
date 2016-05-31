@@ -127,7 +127,7 @@
  if (!isset($geolocation_panel_only))
 	{?>
 	</div> <!-- End of RecordPanel  -->
-	 <div class="PanelShadow"></div>
+	 
 	 </div> <!-- End of RecordBox -->
 	<!-- End Geolocation Section -->
 	<?php }

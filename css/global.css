@@ -772,7 +772,6 @@ a.HomePanel:hover {
   	font-size:50px;
   	min-width:100%;
 }
-#HomePanelContainer .HomePanel .PanelShadow{display:none;}
 .HomePanelDynamicDash p.tile_corner_box {
 	position: absolute;
   	bottom: 0;

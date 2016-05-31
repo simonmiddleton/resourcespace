@@ -68,7 +68,7 @@ for ($n=0;$n<count($collections);$n++)
 		
 		<div class="clearer"></div>
 		</div>
-		<div class="PanelShadow"></div>
+		
 		</div>
 	<?php } 
 	
@@ -133,7 +133,7 @@ for ($n=0;$n<count($collections);$n++)
 		  <?php hook("xlargesearchiconpublic");?></div>
 		<div class="clearer"></div>
 		</div>
-		<div class="PanelShadow"></div>
+		
 		</div>
 	<?php } 
 	
@@ -200,7 +200,7 @@ for ($n=0;$n<count($collections);$n++)
         <div class="ResourcePanelCountry" style="font-size:9px;"><a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]?>"  onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]?></a>&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET .  $lang["viewall"]?></a></div><div class="clearer"></div>
         <?php } ?>
 		</div>
-		<div class="PanelShadow"></div>
+		
 		</div>
 	<?php } 
 	
