@@ -477,7 +477,7 @@ $urlparams= array(
 # Check if actually coming from a search, but not if a numeric search and config_search_for_number is set or if this is a direct request e.g. ?r=1234.
 if (isset($_GET["search"]) && !($config_search_for_number && is_numeric($usearch))) { ?>
 <div class="backtoresults">
-<a class="prevLink" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);"><?php echo $lang["previousresult"]?></a>
+<a class="prevLink fa fa-arrow-left" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);" title="<?php echo $lang["previousresult"]?>"></a>
 <?php 
 if (!hook("viewallresults")) 
 	{
@@ -485,14 +485,14 @@ if (!hook("viewallresults"))
 	<a class="upLink" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams,array("go"=>"up")) . (($search_anchors)?"&place=" . $ref:"") ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["viewallresults"]?></a>
 	<?php 
 	} ?>
-<a class="nextLink" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"next")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);"><?php echo $lang["nextresult"]?></a>
+<a class="nextLink fa fa-arrow-right" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"next")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);" title="<?php echo $lang["nextresult"]?>"></a>
 
 <?php
 	if($modal)
 		{
 		?>
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["maximise"]?></a>
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="ModalClose();"><?php echo $lang["close"] ?></a>
+		<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);" class="maxLink fa fa-expand" title="<?php echo $lang["maximise"]?>"></a>
+		<a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
 		<?php
 		}
 	?>
@@ -503,8 +503,8 @@ else if($modal)
 	{
 	?>
 	<div class="backtoresults">
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["maximise"]?></a>
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="ModalClose();"><?php echo $lang["close"] ?></a>
+		<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);" class="maxLink fa fa-expand" title="<?php echo $lang["maximise"]?>"></a>
+		<a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
 	</div>
 	<?php
 	}

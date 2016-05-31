@@ -291,15 +291,17 @@ a:hover .fa {text-decoration:none !important;} /* Never underline a FontAwesome 
 .RecordBox {margin: 20px 15px 15px 0px;}
 .RecordPanel {padding: 15px 20px 15px 20px;}
 .backtoresults {float: right;margin: 0.4em 0 0 0.25em;}
-.backtoresults .upLink, .backtoresults .nextLink {
-	padding-left:8px;padding-right:6px;
+.backtoresults .upLink, .backtoresults .nextLink,.backtoresults .prevLink {
+	padding-left:4px;padding-right:4px;
 	margin-left:2px;
-	border-left: 1px solid;
+	border-left: none;
 }
-.backtoresults .prevLink {
-	padding-left:8px;padding-right:6px;
-	}
-	
+.backtoresults .nextLink,.backtoresults .prevLink,.backtoresults .maxLink {font-size:1.1em;}
+.backtoresults .maxLink {padding-left:20px;}
+.backtoresults .closeLink {padding-left:5px;font-size:1.3em;}
+
+.backtoresults .prevLink:hover,.backtoresults .nextLink:hover,.backtoresults .closeLink:hover,.backtoresults .maxLink:hover {text-decoration:none;}
+
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {float: left;margin: 0px 0px 0px 0px;}
 #previewimagewrapper {float:left;margin: 0px 20px 15px 0px;}
