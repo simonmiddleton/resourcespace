@@ -1326,7 +1326,7 @@ the dash is the name, you see it referenced in the convert command, you actually
                 		
 					$command.=' -write mpr:' . $ref . ' +delete ';
 					}
-				//$command.='mpr:' . $ref . ' -quality ' . $preview_quality;
+				$command.='mpr:' . $ref . ' -quality ' . $preview_quality;
 				}
 			else
 				{
@@ -1408,7 +1408,7 @@ the dash is the name, you see it referenced in the convert command, you actually
 				
 				if($imagemagick_mpr)
 					{
-					$command.="mpr:" . $ref . (($extension!="png" && $extension!="gif")?" $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . "-write mpr:" . $ref . "wm" . $id ." -write " . escapeshellarg($path) . " +delete ";
+					$command.=(($extension!="png" && $extension!="gif")?" $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . "-write mpr:" . $ref . "wm" . $id ." -write " . escapeshellarg($path) . " +delete ";
 					//mpr:full -intent relative -black-point-compensation -profile sRGB.icc +profile "!iptc,*" -resize 2000x2000 -write mpr:full -write lpr.jpg +delete \
 					}
 				else

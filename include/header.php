@@ -228,6 +228,7 @@ if($videojs && ($pagename=='search' && $keyboard_navigation_video_search) || ($p
 <script type="text/javascript">
 var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
+var lang=<?php echo json_encode($lang, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG)?>;
 var pagename="<?php echo $pagename?>";
 var errorpageload = "<h1><?php echo $lang["error"] ?></h1><p><?php echo str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"])) ?></p>";
 var applicationname = "<?php echo $applicationname?>";
