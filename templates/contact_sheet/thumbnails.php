@@ -24,11 +24,8 @@ if(isset($titlefontsize))
     text-align: center;
 }
 
-.itemContainer {
-    border: 1px solid black;
-    width: 200px;
-    display: inline;
-}
+.itemContainer { border: 1px solid black; }
+.itemContainer img { width: <?php echo $column_width; ?>px; }
 </style>
 <page backtop="25mm" backbottom="25mm">
 <?php
@@ -78,11 +75,26 @@ if(isset($contact_sheet_footer))
 
     <!-- Real content starts here -->
     <h3 id="pageTitle"><?php echo $title; ?></h3>
+    <table>
+        <tbody>
+            <tr>
+            <?php
+            for($i = 1; $i <= $columns; $i++)
+                {
+                ?>
+                <td class="itemContainer">
+                <?php
+                ?>
+                    <p>ref</p>
+                <?php
+                ?>
+                    <img src="<?php echo $contact_sheet_logo; ?>" alt="Logo">
+                </td>
+                <?php
+                }
+                ?>
+            </tr>
+        </tbody>
+    </table>
 
-    <div class="itemContainer">
-        <p>ref</p>
-        <p>country</p>
-        <p>field</p>
-        <img src="<?php echo $contact_sheet_logo; ?>" alt="Logo">
-    </div>
 </page>

@@ -17,7 +17,7 @@ require_once '../../lib/html2pdf/html2pdf.class.php';
 
 $collection  = getvalescaped('c', '');
 $size        = getvalescaped('size', '');
-$column      = getvalescaped('columns', '');
+$columns     = getvalescaped('columns', '');
 $order_by    = getvalescaped('orderby', 'relevance');
 $sort        = getvalescaped('sort', 'asc');
 $orientation = getvalescaped('orientation', '');
@@ -83,6 +83,7 @@ if($html2pdf)
         'titlefontsize'     => $titlefontsize,
         'refnumberfontsize' => $refnumberfontsize,
         'title'             => $title,
+        'columns'           => $columns,
     );
 
     if($contactsheet_header)
@@ -127,17 +128,31 @@ if($html2pdf)
         $imgsize = 'pre';
         }
 
-    $pdf_content = process_template($pdf_template_path, $placeholders);
 
     try
         {
-        $html2pdf = new Html2Pdf('P', 'A4', 'en', true, 'UTF-8', array(15, 5, 15, 5));
+        $html2pdf = new Html2Pdf($pdf_properties['orientation'], $pdf_properties['format'], 'en', true, 'UTF-8', $pdf_properties['margins']);
+
+        $html2pdf->pdf->SetTitle($pdf_properties['title']);
+        $html2pdf->pdf->SetAuthor($pdf_properties['author']);
+        $html2pdf->pdf->SetSubject($pdf_properties['subject']);
+        $html2pdf->setDefaultFont($pdf_properties['font']);
+
+        $available_width = $html2pdf->pdf->getW() - ($html2pdf->pdf->getlMargin() + $html2pdf->pdf->getrMargin());
+        $column_width    = floor($available_width / $columns) / (25.4 / 96) - 3;
+
+        // Column width is made as "column width in mm / (25.4 / 96)"
+        $placeholders['column_width'] = $column_width;
+
+        $pdf_content = process_template($pdf_template_path, $placeholders);
+
         $html2pdf->writeHTML($pdf_content);
         $html2pdf->Output($PDF_filename);
         }
     catch(Html2PdfException $e)
         {
         $formatter = new ExceptionFormatter($e);
+
         echo $formatter->getHtmlMessage();
         }
 
