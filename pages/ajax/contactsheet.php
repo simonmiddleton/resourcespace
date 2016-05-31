@@ -13,6 +13,7 @@ include('../../include/resource_functions.php');
 include_once('../../include/collections_functions.php');
 include('../../include/image_processing.php');
 include('../../include/pdf_functions.php');
+require_once '../../lib/html2pdf/html2pdf.class.php';
 
 $collection  = getvalescaped('c', '');
 $size        = getvalescaped('size', '');
@@ -127,7 +128,18 @@ if($html2pdf)
         }
 
     $pdf_content = process_template($pdf_template_path, $placeholders);
-    // 
+
+    try
+        {
+        $html2pdf = new Html2Pdf('P', 'A4', 'en', true, 'UTF-8', array(15, 5, 15, 5));
+        $html2pdf->writeHTML($pdf_content);
+        $html2pdf->Output($PDF_filename);
+        }
+    catch(Html2PdfException $e)
+        {
+        $formatter = new ExceptionFormatter($e);
+        echo $formatter->getHtmlMessage();
+        }
 
     exit();
     }
