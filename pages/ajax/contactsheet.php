@@ -75,7 +75,7 @@ foreach($getfields as $field_id)
 
 if($html2pdf)
     {
-    $pdf_template_path = get_template_path($sheetstyle, 'contact_sheet');
+    $pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
     $PDF_filename      = 'contactsheet.pdf';
     $placeholders      = array(
         'date'              => date('Y-m-d H:i:s'),

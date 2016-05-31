@@ -185,15 +185,15 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
 
 
 /**
-* Returns the path to any HTML template in the system.
+* Returns the path to any template in the system.
 * 
-* Returns the path to any HTML templates in the system as long as they are saved in the correct place:
+* Returns the path to any templates in the system as long as they are saved in the correct place:
 * - /templates (default - base templates)
 * - /filestore/system/templates (custom templates)
 * Templates will be structured in folders based on features (e.g templates/contact_sheet/ 
 * will be used for any templates used for contact sheets)
 * 
-* @param string  $template_name       Template names should be the actual template filename (e.g. test_tpl for test_tpl.html)
+* @param string  $template_name       Template names should contain the extension as well (e.g. template_1.php / template_1.html)
 * @param string  $template_namespace  The name by which multiple templates are grouped together
 * 
 * @return string
@@ -203,7 +203,6 @@ function get_template_path($template_name, $template_namespace)
     global $storagedir;
 
     $template_path = '';
-    $template_name .= '.html';
 
     $remove_directory_listings = array('.', '..');
 
