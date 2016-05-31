@@ -1147,8 +1147,8 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 	}
 
 function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false)
-	{
-	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
+	{$time_start = microtime(true);
+	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr;
 
 	$icc_transform_complete=false;
 	debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested)",RESOURCE_LOG_APPEND_PREVIOUS);
@@ -1255,6 +1255,26 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			}
 			$ps = array_values($ps);
 		}
+		
+		# Locate imagemagick.
+		$convert_fullpath = get_utility_path("im-convert");
+		if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
+		
+		if($imagemagick_mpr)
+			{
+			// need to check that we're using IM and not GM
+			$version = run_command($convert_fullpath . " -version");
+			if (strpos($version, "GraphicsMagick")!==false)
+				{
+				$imagemagick_mpr=false;
+				}
+			else
+				{
+				global $imagemagick_mpr_depth;
+				$command='';
+				}
+			}
+		
 		$created_count=0;
 		for ($n=0;$n<count($ps);$n++)
 			{ 
@@ -1272,10 +1292,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			if(file_exists($scr_path)){$file=$scr_path;}
 			}
 
-			# Locate imagemagick.
-            $convert_fullpath = get_utility_path("im-convert");
-            if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
-
 			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif") {
 			    $flatten = "";
 			} else {
@@ -1287,7 +1303,35 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			
 			$preview_quality=get_preview_quality($ps[$n]['id']);
 			
-            $command = $convert_fullpath . ' '. escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : ' ') . $flatten . ' -quality ' . $preview_quality;
+			if($imagemagick_mpr)
+				{
+				if($command=='')
+					{
+					// this prepares the image for storage and saves it to memory. We handle auto-rotation and transparency background here if needed.
+					$command.=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0]' : '') . ' -debug cache -depth ' . $imagemagick_mpr_depth . (!in_array($extension, $extensions_no_alpha_off) ? ' +matte ' : ' ') . $flatten;
+					
+					if($autorotate_no_ingest)
+						{
+						$orientation = get_image_orientation($file);
+						if($orientation != 0) 
+							{
+							$command.=' -rotate +' . $orientation;
+							}
+						}
+					/* got it, this will solve my watermarking issues too. pipe a miff!
+convert tranparent.png -background none miff:- | composite -compose Dst_Over -tile pattern:checkerboard - hpr.jpg
+so you’d do everything in exactly the same way but to do the composite rather than save the mpr, pipe ‘miff:-‘ (basically imagemagicks only native file format) to the composite command
+the dash is the name, you see it referenced in the convert command, you actually use a dash
+					*/
+                		
+					$command.=' -write mpr:' . $ref . ' +delete ';
+					}
+				//$command.='mpr:' . $ref . ' -quality ' . $preview_quality;
+				}
+			else
+				{
+            	$command = $convert_fullpath . ' '. escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : ' ') . $flatten . ' -quality ' . $preview_quality;
+            	}
 
 			# fetch target width and height
 			$tw=$ps[$n]["width"];$th=$ps[$n]["height"];
@@ -1361,33 +1405,44 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						$profile="-strip -colorspace ".$imagemagick_colorspace;
 						}
 				}
-
-				$runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
-                                if(!hook("imagepskipthumb")):
-				$output=run_command($runcommand);
-                resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
-
-                $created_count++;
-				# if this is the first file generated for non-ingested resources check rotation
-				if($autorotate_no_ingest && $created_count==1 && !$ingested){
-					# first preview created for non-ingested file...auto-rotate
-					if($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"){AutoRotateImage($path,$ref);}
-					else{AutoRotateImage($path);}
-				}
-                                endif;
 				
-				// checkerboard
-				if ($extension=="png" || $extension=="gif"){
-					global $transparency_background;
-				$transparencyreal=dirname(__FILE__) ."/../" . $transparency_background;
+				if($imagemagick_mpr)
+					{
+					$command.="mpr:" . $ref . (($extension!="png" && $extension!="gif")?" $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . "-write mpr:" . $ref . "wm" . $id ." -write " . escapeshellarg($path) . " +delete ";
+					//mpr:full -intent relative -black-point-compensation -profile sRGB.icc +profile "!iptc,*" -resize 2000x2000 -write mpr:full -write lpr.jpg +delete \
+					}
+				else
+					{
+					$runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
+					if(!hook("imagepskipthumb"))
+						{
+						echo "run_command=".$runcommand."<br/>";
+						$output=run_command($runcommand);
+						resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
 
-                    $cmd=str_replace("identify","composite",$identify_fullpath)."  -compose Dst_Over -tile ".escapeshellarg($transparencyreal)." ".escapeshellarg($path)." ".escapeshellarg(str_replace($extension,"jpg",$path));
-                    $wait=run_command($cmd, true);
-                    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $wait);
+						$created_count++;
+						# if this is the first file generated for non-ingested resources check rotation
+						if($autorotate_no_ingest && $created_count==1 && !$ingested){
+							# first preview created for non-ingested file...auto-rotate
+							if($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"){AutoRotateImage($path,$ref);}
+							else{AutoRotateImage($path);}
+						}
+						}
+					
+					// checkerboard - this will have to be integrated into mpr
+					if ($extension=="png" || $extension=="gif")
+						{
+						global $transparency_background;
+						$transparencyreal=dirname(__FILE__) ."/../" . $transparency_background;
 
-                unlink($path);
-					$path=str_replace($extension,"jpg",$path);
-				}               
+						$cmd=str_replace("identify","composite",$identify_fullpath)."  -compose Dst_Over -tile ".escapeshellarg($transparencyreal)." ".escapeshellarg($path)." ".escapeshellarg(str_replace($extension,"jpg",$path));
+						$wait=run_command($cmd, true);
+						resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $wait);
+
+						unlink($path);
+						$path=str_replace($extension,"jpg",$path);
+						}
+					}           
 
 				# Add a watermarked image too?
 				global $watermark, $watermark_single_image;
@@ -1400,11 +1455,27 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					
 					$watermarkreal=dirname(__FILE__) ."/../" . $watermark;
 					
-					$runcommand = $command ." +matte $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+					if($imagemagick_mpr && !($extension=="png" || $extension=="gif") && !isset($watermark_single_image))
+						{
+						$command.="mpr:" . $ref . "wm" . $id . ' -tile ' . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $tw,$th\" -write " . escapeshellarg($wmpath) . " +delete ";
+						//mpr:full -tile watermark.png -draw "rectangle 0,0 1100,800" -write scr_wm.jpg +delete \
+						}
+					else
+						{
+						$runcommand = $command ." +matte $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+						}
 					
 					// alternate command for png/gif using the path from above, and omitting resizing
 					if ($extension=="png" || $extension=="gif"){
-						$runcommand = $convert_fullpath . ' '. escapeshellarg($path) .(($extension!="png" && $extension!="gif")?'[0] +matte ':'') . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+						if($imagemagick_mpr && !isset($watermark_single_image))
+							{
+							$command.="mpr:" . $ref . "wm" . $id . " -tile " . escapeshellarg($watermarkreal) ." -draw \"rectangle 0,0 $tw,$th\" -write " . escapeshellarg($wmpath) . " +delete ";
+							//mpr:full -tile watermark.png -draw "rectangle 0,0 1100,800" -write scr_wm.jpg +delete \
+							}
+						else
+							{
+							$runcommand = $convert_fullpath . ' '. escapeshellarg($path) .(($extension!="png" && $extension!="gif")?'[0] +matte ':'') . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+							}
 					}
 
                     // Generate the command for a single watermark instead of a tiled one
@@ -1414,28 +1485,50 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
                         $wm_scaled_width  = $tw * ($wm_scale / 100);
                         $wm_scaled_height = $th * ($wm_scale / 100);
-
-                        // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-                        $runcommand = sprintf('%s %s %s -gravity %s -geometry %sx%s+0+0 -resize %sx%s -composite %s',
-                            $convert_fullpath,
-                            escapeshellarg($file),
-                            escapeshellarg($watermarkreal),
-                            escapeshellarg($watermark_single_image['position']),
-                            escapeshellarg($wm_scaled_width),
-                            escapeshellarg($wm_scaled_height),
-                            escapeshellarg($tw),
-                            escapeshellarg($th),
-                            escapeshellarg($wmpath)
-                        );
+						
+						if($imagemagick_mpr)
+							{
+							$command.="mpr:" . $ref . "wm" . $id . " " . escapeshellarg($watermarkreal) . " -gravity " . escapeshellarg($watermark_single_image['position']) . " -geometry " . escapeshellarg($wm_scaled_width) . "x" . escapeshellarg($wm_scaled_height) . "+0+0 -composite " . "" . " -write " . escapeshellarg($wmpath) . " +delete ";
+							}
+						else
+							{
+							// Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
+							$runcommand = sprintf('%s %s %s -gravity %s -geometry %sx%s+0+0 -resize %sx%s -composite %s',
+								$convert_fullpath,
+								escapeshellarg($file),
+								escapeshellarg($watermarkreal),
+								escapeshellarg($watermark_single_image['position']),
+								escapeshellarg($wm_scaled_width),
+								escapeshellarg($wm_scaled_height),
+								escapeshellarg($tw),
+								escapeshellarg($th),
+								escapeshellarg($wmpath)
+							);
+							}
                         }
-
-					$output = run_command($runcommand);
-                    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
+					if(!$imagemagick_mpr)
+						{
+						$output = run_command($runcommand);
+						resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
+						}
 
                     }
 				}// end hook replacewatermarkcreation
 				} 
 			}
+		
+		// run the mpr command if set
+		if($imagemagick_mpr)
+			{
+			// remove the last slash
+			echo "run_command=".$command."<br/>";
+			//die("test");
+			$output = exec($command);
+			//die("test");
+			// logging
+			resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
+			}
+		
 		# For the thumbnail image, call extract_mean_colour() to save the colour/size information
 		$target=@imagecreatefromjpeg(get_resource_path($ref,true,"thm",false,"jpg",-1,1,false,"",$alternative));
 		if ($target && $alternative==-1) # Do not run for alternative uploads 
@@ -1451,6 +1544,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
 				}
 			}
+		
+		$time_end = microtime(true);
+$time = $time_end - $time_start;
+
+echo "Did preview creation in $time seconds\n";
+		
 		return true;
 		}
 	else
