@@ -445,14 +445,13 @@ else
 	?>
 	<ul>
 	<?php if (!hook("replaceheaderfullnamelink")){?>
-	<li>
-	<a href="<?php echo $baseurl?>/pages/user/user_home.php"  onClick="ModalClose();return ModalLoad(this,true,true,'right');"><?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?></a>
+	<li><a href="<?php echo $baseurl?>/pages/user/user_home.php"  onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?></a>
 		<span style="display: none;" class="MessageCountPill"></span>
 		<div id="MessageContainer" style="position:absolute; "></div>
 	<?php } ?></li>
 	
 	<!-- Team centre link -->
-	<?php if (checkperm("t")) { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><?php echo $lang["teamcentre"]?></a>
+	<?php if (checkperm("t")) { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i class="fa fa-bars fa-fw"></i>&nbsp;<?php echo $lang["teamcentre"]?></a>
 	<?php if ($team_centre_alert_icon && (checkperm("R")||checkperm("r")) &&  (sql_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",0) > 0)){
 			echo '<img src="' . $baseurl . '/gfx/images/attention_16.png" width="16" height="16" alt="Alert" class="TeamCentreAlertIcon" />';
 	} ?>
@@ -462,7 +461,7 @@ else
 	<?php hook("addtoplinks");
 	if(!isset($password_reset_mode) || !$password_reset_mode)
 		{?>
-		<li><a href="<?php echo $baseurl?>/login.php?logout=true&amp;nc=<?php echo time()?>"><?php echo $lang["logout"]?></a></li>
+		<li><a href="<?php echo $baseurl?>/login.php?logout=true&amp;nc=<?php echo time()?>"><i class="fa fa-sign-out fa-fw"></i>&nbsp;<?php echo $lang["logout"]?></a></li>
 		<?php
 		}
 	hook("addtologintoolbarmiddle");?>
