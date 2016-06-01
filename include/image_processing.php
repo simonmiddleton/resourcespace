@@ -1396,6 +1396,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						$mpr_parts['sourceprofile']=$iccpath . " " . $icc_preview_options;
 						$mpr_parts['strip_target']=($icc_preview_profile_embed ? false : true);
 						$mpr_parts['targetprofile']=$targetprofile;
+						$mpr_parts['colorspace']='';
 						}
 					else
 						{
@@ -1555,17 +1556,18 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					
                     }
 				}// end hook replacewatermarkcreation
+				if($imagemagick_mpr)
+					{
+					$command_parts[]=$mpr_parts;
+					} 
 				}
-			if($imagemagick_mpr)
-				{
-				$command_parts[]=$mpr_parts;
-				} 
+			
 			}
 		
 		// run the mpr command if set
 		if($imagemagick_mpr)
 			{
-			//echo "<pre>bits for mpr command:";print_r($command_parts);echo"</pre>";
+			echo "<pre>bits for mpr command:";print_r($command_parts);echo"</pre>";
 			// let's run some checks to better optimize the convert command. Assume everything is the same until proven otherwise
 			$unique_flatten=false;
 			$unique_strip_source=false;
@@ -1675,7 +1677,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						$command.=" -profile " . $command_parts[$p]['sourceprofile'];
 						}
-					 if($unique_colorspace)
+					 if($unique_colorspace && $command_parts[0]['colorspace']!=='')
 						{
 						$command.=" -colorspace " . $command_parts[$p]['colorspace'];
 						}
@@ -1685,7 +1687,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						}
 					 if($unique_target_profile)
 						{
-						$command.=" -profile " . $command_parts[$p]['target_profile'];
+						$command.=" -profile " . $command_parts[$p]['targetprofile'];
 						}
 					}
 				// save out to file
