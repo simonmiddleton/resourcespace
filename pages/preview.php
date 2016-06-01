@@ -47,7 +47,7 @@ if ($go!="")
 	if ($modified_result_set){
 		$result=$modified_result_set;
 	} else {
-		$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,$starsearch);
+		$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,$starsearch,false,false,"",false,true,true);
 	}
 	if (is_array($result))
 		{

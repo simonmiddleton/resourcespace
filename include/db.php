@@ -484,7 +484,7 @@ function db_end_transaction()
 		}
 	}
 
-function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true)
+function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     # sql_query(sql) - execute a query and return the results as an array.
 	# Database functions are wrapped in this way so supporting a database server other than MySQL is 
@@ -624,18 +624,43 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 		{
 		if ($mysql_verbatim_queries)		// no need to do clean up on every cell
 			{
-			$return_rows[$return_row_count]=$result_row;		// simply dump the entire row into the return results set
+			if($fetch_specific_columns===false)
+                {
+                $return_rows[$return_row_count]=$result_row;		// simply dump the entire row into the return results set
+                }
+            else
+                {
+                foreach($fetch_specific_columns as $fetch_specific_column)
+                    {
+                    $return_rows[$return_row_count][$fetch_specific_column]=$result_row[$fetch_specific_column];        // dump the specific column into the results set
+                    }
+                }
 			}
 		else
 			{
-			while (list($name,$value)=each($result_row))		// we need to clean up each cell
-				{
-				$return_rows[$return_row_count][$name]=str_replace("\\","",stripslashes($value));		// iterate through each cell cleaning up
-				}
-			}
+            if($fetch_specific_columns===false)     // for all columns
+                {
+                foreach ($result_row as $name => $value)
+                    {
+                    $return_rows[$return_row_count][$name] = str_replace("\\", "", stripslashes($value));        // iterate through each cell cleaning up
+                    }
+                }
+            else
+                {
+                foreach($fetch_specific_columns as $fetch_specific_column)      // for specific columns
+                    {
+                    $return_rows[$return_row_count][$fetch_specific_column]=str_replace("\\", "", stripslashes($result_row[$fetch_specific_column]));       // iterate through each cell cleaning up
+                    }
+                }
+            }
 		$return_row_count++;
 		}
-	
+
+    if($use_mysqli)
+        {
+        mysqli_free_result($result);
+        }
+
 	if ($fetchrows==-1)		// we do not care about the number of rows returned so get out of here
 		{
 		return $return_rows;

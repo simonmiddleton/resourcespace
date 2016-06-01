@@ -6,7 +6,7 @@
 include_once 'node_functions.php';
 
 if (!function_exists("do_search")) {
-function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$access_override=false,$starsearch=0,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true)
+function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$access_override=false,$starsearch=0,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false)
     {
     debug("search=$search $go $fetchrows restypes=$restypes archive=$archive daylimit=$recent_search_daylimit");
 
@@ -152,8 +152,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
         $select.=",null group_access, null user_access ";
         }
     
-    # add 'joins' to select (adding them 
-    $joins=get_resource_table_joins();
+    # add 'joins' to select (only add fields if not returning the refs only)
+    $joins=$return_refs_only===false ? get_resource_table_joins() : array();
     foreach( $joins as $datajoin)
         {
         $select.=",r.field".$datajoin." ";
@@ -818,8 +818,21 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     # Debug
     debug('$results_sql=' . $results_sql);
 
-    # Execute query
-    $result=sql_query($results_sql,false,$fetchrows);
+    if($return_refs_only)
+        {
+        # Execute query but only ask for ref columns back from mysql_query();
+        # We force verbatim query mode on (and restore it afterwards) as there is no point trying to strip slashes etc. just for a ref column
+        global $mysql_verbatim_queries;
+        $mysql_vq=$mysql_verbatim_queries;
+        $mysql_verbatim_queries=true;
+        $result=sql_query($results_sql,false,$fetchrows,true,2,true,array('ref'));
+        $mysql_verbatim_queries=$mysql_vq;
+        }
+    else
+        {
+        # Execute query as normal
+        $result=sql_query($results_sql,false,$fetchrows);
+        }
 
     # Performance improvement - perform a second count-only query and pad the result array as necessary
     if ($search_sql_double_pass_mode && count($result)>=$max_results)
