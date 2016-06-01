@@ -1458,16 +1458,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 							}
 						}
 				
-					if($imagemagick_mpr)
-						{
-						//$command.=(($extension!="png" && $extension!="gif")?" $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . "-write mpr:" . $ref . "wm" . $id ." -write " . escapeshellarg($path) . " +delete ";
-						}
-					else
+					if(!$imagemagick_mpr)
 						{
 						$runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
 						if(!hook("imagepskipthumb"))
 							{
-							//echo "run_command=".$runcommand."<br/>";
 							$output=run_command($runcommand);
 							resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
 
@@ -1519,36 +1514,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					
 					if(!($extension=="png" || $extension=="gif") && !isset($watermark_single_image))
 						{
-						if($imagemagick_mpr)
-							{
-							/*if($imagemagick_mpr_miff)
-								{
-								// $INPUTFILE miff:- |composite -tile watermark.png - test_wm.jpg
-								//$command.="mpr:" . $ref . "wm" . $id . ' ' . str_replace("identify","composite",$identify_fullpath) . ' -tile ' . escapeshellarg($watermarkreal) . " -write " . escapeshellarg($wmpath) . " +delete ";
-								}
-							else
-								{
-								$command.="mpr:" . $ref . "wm" . $id . ' -tile ' . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $tw,$th\" -write " . escapeshellarg($wmpath) . " +delete ";
-								}*/
-							}
-						else
-							{
-							$runcommand = $command ." +matte $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
-							}
+						$runcommand = $command ." +matte $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
 						}
 					
 					// alternate command for png/gif using the path from above, and omitting resizing
-					if ($extension=="png" || $extension=="gif"){
-						if($imagemagick_mpr && !isset($watermark_single_image))
-							{
-							$command.="mpr:" . $ref . "wm" . $id . " -tile " . escapeshellarg($watermarkreal) ." -draw \"rectangle 0,0 $tw,$th\" -write " . escapeshellarg($wmpath) . " +delete ";
-							//mpr:full -tile watermark.png -draw "rectangle 0,0 1100,800" -write scr_wm.jpg +delete \
-							}
-						else
-							{
-							$runcommand = $convert_fullpath . ' '. escapeshellarg($path) .(($extension!="png" && $extension!="gif")?'[0] +matte ':'') . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
-							}
-					}
+					if ($extension=="png" || $extension=="gif")
+						{
+						$runcommand = $convert_fullpath . ' '. escapeshellarg($path) .(($extension!="png" && $extension!="gif")?'[0] +matte ':'') . $flatten . ' -quality ' . $preview_quality ." -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+						}
 
                     // Generate the command for a single watermark instead of a tiled one
                     if(isset($watermark_single_image))
@@ -1558,25 +1531,18 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $wm_scaled_width  = $tw * ($wm_scale / 100);
                         $wm_scaled_height = $th * ($wm_scale / 100);
 						
-						if($imagemagick_mpr)
-							{
-							$command.="mpr:" . $ref . "wm" . $id . " " . escapeshellarg($watermarkreal) . " -gravity " . escapeshellarg($watermark_single_image['position']) . " -geometry " . escapeshellarg($wm_scaled_width) . "x" . escapeshellarg($wm_scaled_height) . "+0+0 -composite " . "" . " -write " . escapeshellarg($wmpath) . " +delete ";
-							}
-						else
-							{
-							// Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-							$runcommand = sprintf('%s %s %s -gravity %s -geometry %sx%s+0+0 -resize %sx%s -composite %s',
-								$convert_fullpath,
-								escapeshellarg($file),
-								escapeshellarg($watermarkreal),
-								escapeshellarg($watermark_single_image['position']),
-								escapeshellarg($wm_scaled_width),
-								escapeshellarg($wm_scaled_height),
-								escapeshellarg($tw),
-								escapeshellarg($th),
-								escapeshellarg($wmpath)
-							);
-							}
+						// Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
+						$runcommand = sprintf('%s %s %s -gravity %s -geometry %sx%s+0+0 -resize %sx%s -composite %s',
+							$convert_fullpath,
+							escapeshellarg($file),
+							escapeshellarg($watermarkreal),
+							escapeshellarg($watermark_single_image['position']),
+							escapeshellarg($wm_scaled_width),
+							escapeshellarg($wm_scaled_height),
+							escapeshellarg($tw),
+							escapeshellarg($th),
+							escapeshellarg($wmpath)
+						);
                         }
 					if(!$imagemagick_mpr)
 						{
@@ -1604,7 +1570,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			$unique_strip_target=false;
 			$unique_target_profile=false;
 			$unique_colorspace=false;
+			
 			$cp_count=count($command_parts);
+			$mpr_init_write=false;
+			
 			for($p=1;$p<$cp_count;$p++)
 				{
 				// we compare these with the previous
@@ -1673,12 +1642,21 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			//$command.=' -write mpr:' . $ref . ' +delete '; // save this to memory as these settings are true for all versions
 			for($p=0;$p<$cp_count;$p++)
 				{
-				$command.=($p>0 ? ' mpr:' . $ref : '') . ' -quality ' . $command_parts[$p]['quality'];
+				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '') . ' -quality ' . $command_parts[$p]['quality'];
+				
 				if($command_parts[$p]['tw']!=='' && $command_parts[$p]['th']!=='')
 					{
 					$command.=" -resize " . $command_parts[$p]['tw'] . "x" . $command_parts[$p]['th'] . (($previews_allow_enlarge && $command_parts[$p]['id']!="hpr")?" ":"\">\"");
 					}
+				//$command.=" -write mpr:" . $ref;
+				if(isset($command_parts[$p]['wmpath']))
+					{
 					$command.=" -write mpr:" . $ref;
+					if(!$mpr_init_write)
+						{
+						$mpr_init_write=true;
+						}
+					}
 				if($unique_flatten || $unique_strip_source || $unique_source_profile || $unique_colorspace || $unique_strip_target || $unique_target_profile)
 					{
 					// make these changes
@@ -1708,6 +1686,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						}
 					}
 				// save out to file
+				if(!$mpr_init_write && !isset($command_parts[$p]['wmpath']) && isset($command_parts[($p+1)]['wmpath']))
+					{
+					$command.=" -write mpr:" . $ref;
+					$mpr_init_write=true;
+					}
 				$command.=(($p===($cp_count-1) && !isset($command_parts[$p]['wmpath'])) ? " " : " -write "). escapeshellarg($command_parts[$p]['targetpath']);
 				//$command.=" -write " . $command_parts[$p]['targetpath'];
 				// watermarks?
@@ -1727,7 +1710,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						}
 					$command.=($p!==($cp_count-1) ? " -write " : " "). escapeshellarg($command_parts[$p]['wmpath']);
 					}
-					$command.=($p!==($cp_count-1) ? " +delete" : "");
+					$command.=($p!==($cp_count-1) && $mpr_init_write ? " +delete" : "");
 				}
 			echo "run_command=".$command."<br/>";
 			//die("test");
