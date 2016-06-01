@@ -1678,10 +1678,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					{
 					$command.=" -resize " . $command_parts[$p]['tw'] . "x" . $command_parts[$p]['th'] . (($previews_allow_enlarge && $command_parts[$p]['id']!="hpr")?" ":"\">\"");
 					}
-				if($p===0)
-					{
 					$command.=" -write mpr:" . $ref;
-					}
 				if($unique_flatten || $unique_strip_source || $unique_source_profile || $unique_colorspace || $unique_strip_target || $unique_target_profile)
 					{
 					// make these changes
