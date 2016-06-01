@@ -1260,6 +1260,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		$convert_fullpath = get_utility_path("im-convert");
 		if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
 		
+		$command_list='';
 		if($imagemagick_mpr)
 			{
 			// need to check that we're using IM and not GM
@@ -1462,7 +1463,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						$runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
 						if(!hook("imagepskipthumb"))
-							{
+							{$command_list.=$runcommand."\n";
 							$output=run_command($runcommand);
 							resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
 
@@ -1488,6 +1489,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						$transparencyreal=dirname(__FILE__) ."/../" . $transparency_background;
 
 						$cmd=str_replace("identify","composite",$identify_fullpath)."  -compose Dst_Over -tile ".escapeshellarg($transparencyreal)." ".escapeshellarg($path)." ".escapeshellarg(str_replace($extension,"jpg",$path));
+						$command_list.=$cmd."\n";
 						$wait=run_command($cmd, true);
 						resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $wait);
 
@@ -1546,6 +1548,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         }
 					if(!$imagemagick_mpr)
 						{
+						$command_list.=$runcommand."\n";
 						$output = run_command($runcommand);
 						resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
 						}
@@ -1718,6 +1721,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			//die("test");
 			// logging
 			resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
+			}
+		else
+			{
+			echo "run_command=".$command_list."<br/>";
 			}
 		
 		# For the thumbnail image, call extract_mean_colour() to save the colour/size information
