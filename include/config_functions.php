@@ -247,7 +247,8 @@ function set_config_option($user_id, $param_name, $param_value)
 * @param  string   $name            Parameter name
 * @param  string   $returned_value  If a value does exist it will be returned through
 *                                   this parameter which is passed by reference
-* @param  $default  Optionally used to set a default that may not be the current global setting e.g. for checking admin resource preferences
+* @param  mixed    $default         Optionally used to set a default that may not be the current
+*                                   global setting e.g. for checking admin resource preferences
 *
 * @return boolean
 */

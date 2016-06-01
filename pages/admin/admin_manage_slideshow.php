@@ -113,11 +113,11 @@ if('true' === $ajax && getval("static","")!="")
     {
     if(getval("static","")=="true")
         {
-        set_config_option($userref, 'static_slideshow_image', true);
+        set_config_option(null, 'static_slideshow_image', true);
         }
     else
         {
-        set_config_option($userref, 'static_slideshow_image', false);       
+        set_config_option(null, 'static_slideshow_image', false);       
         }
     }
     
