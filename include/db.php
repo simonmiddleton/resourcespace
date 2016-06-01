@@ -656,13 +656,12 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 		$return_row_count++;
 		}
 
-    if($use_mysqli)
-        {
-        mysqli_free_result($result);
-        }
-
 	if ($fetchrows==-1)		// we do not care about the number of rows returned so get out of here
 		{
+        if($use_mysqli)
+            {
+            mysqli_free_result($result);
+            }
 		return $return_rows;
 		}
 	
@@ -670,6 +669,11 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 	# is still correct (even though these rows won't be shown).
 	
 	$query_returned_row_count=$use_mysqli ? mysqli_num_rows($result) : mysql_num_rows($result);		// get the number of rows returned from the query
+
+    if($use_mysqli)
+        {
+        mysqli_free_result($result);
+        }
 	
 	if ($return_row_count<$query_returned_row_count)
 		{
