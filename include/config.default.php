@@ -1356,6 +1356,8 @@ $imagemagick_mpr=true;
 
 $imagemagick_mpr_depth="8";
 
+$imagemagick_mpr_miff=false;
+
 # Should resource views be logged for reporting purposes?
 # Note that general daily statistics for each resource are logged anyway for the statistics graphs
 # - this option relates to specific user tracking for the more detailed report.

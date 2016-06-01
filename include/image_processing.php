@@ -1708,13 +1708,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						}
 					}
 				// save out to file
-				$command.=" -write " . $command_parts[$p]['targetpath'];
+				$command.=(($p===($cp_count-1) && !isset($command_parts[$p]['wmpath'])) ? " " : " -write "). escapeshellarg($command_parts[$p]['targetpath']);
+				//$command.=" -write " . $command_parts[$p]['targetpath'];
 				// watermarks?
 				if(isset($command_parts[$p]['wmpath']))
 					{
 					if(!isset($watermark_single_image))
 						{
-						$command.=' -tile ' . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 " . $command_parts[$p]['tw'] . "," . $command_parts[$p]['th'] . "\" -write " . escapeshellarg($command_parts[$p]['wmpath']);
+						$command.=' -tile ' . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 " . $command_parts[$p]['tw'] . "," . $command_parts[$p]['th'] . "\"";
 						}
 					else
 						{
@@ -1722,10 +1723,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $wm_scaled_width  = $command_parts[$p]['tw'] * ($wm_scale / 100);
                         $wm_scaled_height = $command_parts[$p]['th'] * ($wm_scale / 100);
 						
-						$command.=" " . escapeshellarg($watermarkreal) . " -gravity " . escapeshellarg($watermark_single_image['position']) . " -geometry " . escapeshellarg($wm_scaled_width) . "x" . escapeshellarg($wm_scaled_height) . "+0+0 -composite " . "" . " -write " . escapeshellarg($command_parts[$p]['wmpath']);
+						$command.=" " . escapeshellarg($watermarkreal) . " -gravity " . escapeshellarg($watermark_single_image['position']) . " -geometry " . escapeshellarg($wm_scaled_width) . "x" . escapeshellarg($wm_scaled_height) . "+0+0 -composite";
 						}
+					$command.=($p!==($cp_count-1) ? " -write " : " "). escapeshellarg($command_parts[$p]['wmpath']);
 					}
-					$command.=" +delete";
+					$command.=($p!==($cp_count-1) ? " +delete" : "");
 				}
 			echo "run_command=".$command."<br/>";
 			//die("test");
