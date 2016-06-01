@@ -1148,7 +1148,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 
 function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false)
 	{$time_start = microtime(true);
-	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr;
+	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_miff;
 
 	$icc_transform_complete=false;
 	debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested)",RESOURCE_LOG_APPEND_PREVIOUS);
@@ -1272,12 +1272,18 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				{
 				global $imagemagick_mpr_depth;
 				$command='';
+				$command_parts=array();
 				}
 			}
 		
 		$created_count=0;
 		for ($n=0;$n<count($ps);$n++)
-			{ 
+			{
+			if($imagemagick_mpr)
+				{
+				$mpr_parts=array();
+				}
+			
 			# If this is just a jpg resource, we avoid the hpr size because the resource itself is an original sized jpg. 
 			# If preview_preprocessing indicates the intermediate jpg should be kept as the hpr image, do that. 
 			if ($keep_for_hpr && $ps[$n]['id']=="hpr"){
@@ -1292,50 +1298,38 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			if(file_exists($scr_path)){$file=$scr_path;}
 			}
 
-			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif") {
+			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif")
+				{
 			    $flatten = "";
-			} else {
+				}
+			else
+				{
 			    $flatten = "-flatten";
-			}
+				}
 
             // Extensions for which the alpha/ matte channel should not be set to Off (i.e. +matte option)
             $extensions_no_alpha_off = array('png', 'gif', 'tif');
 			
 			$preview_quality=get_preview_quality($ps[$n]['id']);
 			
-			if($imagemagick_mpr)
-				{
-				if($command=='')
-					{
-					// this prepares the image for storage and saves it to memory. We handle auto-rotation and transparency background here if needed.
-					$command.=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0]' : '') . ' -debug cache -depth ' . $imagemagick_mpr_depth . (!in_array($extension, $extensions_no_alpha_off) ? ' +matte ' : ' ') . $flatten;
-					
-					if($autorotate_no_ingest)
-						{
-						$orientation = get_image_orientation($file);
-						if($orientation != 0) 
-							{
-							$command.=' -rotate +' . $orientation;
-							}
-						}
-					/* got it, this will solve my watermarking issues too. pipe a miff!
-convert tranparent.png -background none miff:- | composite -compose Dst_Over -tile pattern:checkerboard - hpr.jpg
-so you’d do everything in exactly the same way but to do the composite rather than save the mpr, pipe ‘miff:-‘ (basically imagemagicks only native file format) to the composite command
-the dash is the name, you see it referenced in the convert command, you actually use a dash
-					*/
-                		
-					$command.=' -write mpr:' . $ref . ' +delete ';
-					}
-				$command.='mpr:' . $ref . ' -quality ' . $preview_quality;
-				}
-			else
+			if(!$imagemagick_mpr)
 				{
             	$command = $convert_fullpath . ' '. escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : ' ') . $flatten . ' -quality ' . $preview_quality;
             	}
 
 			# fetch target width and height
-			$tw=$ps[$n]["width"];$th=$ps[$n]["height"];
+			$tw=$ps[$n]["width"];
+			$th=$ps[$n]["height"];
 			$id=$ps[$n]["id"];
+			if($imagemagick_mpr)
+				{
+				$mpr_parts['id']=$id;
+				$mpr_parts['quality']=$preview_quality;
+				$mpr_parts['tw']=($id!='hpr' ? $tw : ''); // hpr should be fullsized and does not need this setting
+				$mpr_parts['th']=($id!='hpr' ? $tw : ''); // hpr should be fullsized and does not need this setting
+				$mpr_parts['flatten']=($flatten=='' ? false : true);
+				}
+				
 
 			# Debug
 			debug("Contemplating " . $ps[$n]["id"] . " (sw=$sw, tw=$tw, sh=$sh, th=$th, extension=$extension)",RESOURCE_LOG_APPEND_PREVIOUS);
@@ -1343,6 +1337,11 @@ the dash is the name, you see it referenced in the convert command, you actually
 			# Find the target path
 			if ($extension=="png" || $extension=="gif"){$target_ext=$extension;} else {$target_ext="jpg";}
 			$path=get_resource_path($ref,true,$ps[$n]["id"],false,$target_ext,-1,1,false,"",$alternative);
+			
+			if($imagemagick_mpr)
+				{
+				$mpr_parts['targetpath']=$path;
+				}
 			
 			# Delete any file at the target path. Unless using the previewbased option, in which case we need it.			
             if(!hook("imagepskipdel") && !$keep_for_hpr)
@@ -1384,49 +1383,107 @@ the dash is the name, you see it referenced in the convert command, you actually
 						}
 					}
 				}
-
-				if($icc_extraction && file_exists($iccpath) && !$icc_transform_complete){
+				$profile='';
+				if($icc_extraction && file_exists($iccpath) && !$icc_transform_complete)
+					{
 					global $icc_preview_profile_embed;
 					// we have an extracted ICC profile, so use it as source
 					$targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
-					$profile  = " -strip -profile $iccpath $icc_preview_options -profile $targetprofile".($icc_preview_profile_embed?" ":" -strip ");
-					// consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
-                    if ($id == 'hpr' || $id == 'lpr' || $id == 'scr') $icc_transform_complete=true;
-				} else {
-					// use existing strategy for color profiles
-					# Preserve colour profiles? (omit for smaller sizes)
-					if ($imagemagick_preserve_profiles && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
-						$profile="";
-					else if (!empty($default_icc_file))
-						$profile="-profile $default_icc_file ";
+					if($imagemagick_mpr)
+						{
+						$mpr_parts['strip_source']=true;
+						$mpr_parts['sourceprofile']=$iccpath . " " . $icc_preview_options;
+						$mpr_parts['strip_target']=($icc_preview_profile_embed ? false : true);
+						$mpr_parts['targetprofile']=$targetprofile;
+						}
 					else
 						{
-						# By default, strip the colour profiles ('+' is remove the profile, confusingly)
-						$profile="-strip -colorspace ".$imagemagick_colorspace;
+						$profile  = " -strip -profile $iccpath $icc_preview_options -profile $targetprofile".($icc_preview_profile_embed?" ":" -strip ");
 						}
-				}
-				
-				if($imagemagick_mpr)
-					{
-					$command.=(($extension!="png" && $extension!="gif")?" $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . "-write mpr:" . $ref . "wm" . $id ." -write " . escapeshellarg($path) . " +delete ";
-					//mpr:full -intent relative -black-point-compensation -profile sRGB.icc +profile "!iptc,*" -resize 2000x2000 -write mpr:full -write lpr.jpg +delete \
+					// consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
+                    if ($id == 'hpr' || $id == 'lpr' || $id == 'scr')
+                    	{
+                    	$icc_transform_complete=true;
+                    	}
 					}
-				else
-					{
-					$runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
-					if(!hook("imagepskipthumb"))
+					else 
 						{
-						echo "run_command=".$runcommand."<br/>";
-						$output=run_command($runcommand);
-						resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
-
-						$created_count++;
-						# if this is the first file generated for non-ingested resources check rotation
-						if($autorotate_no_ingest && $created_count==1 && !$ingested){
-							# first preview created for non-ingested file...auto-rotate
-							if($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"){AutoRotateImage($path,$ref);}
-							else{AutoRotateImage($path);}
+						// use existing strategy for color profiles
+						# Preserve colour profiles? (omit for smaller sizes)
+						if ($imagemagick_preserve_profiles && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
+							{
+							if($imagemagick_mpr)
+								{
+								$mpr_parts['strip_source']=false;
+								$mpr_parts['sourceprofile']='';
+								$mpr_parts['strip_target']=false;
+								$mpr_parts['targetprofile']='';
+								$mpr_parts['colorspace']='';
+								}
+							else
+								{
+								$profile="";
+								}
+							}
+						else if (!empty($default_icc_file))
+							{
+							if($imagemagick_mpr)
+								{
+								$mpr_parts['strip_source']=false;
+								$mpr_parts['sourceprofile']=$default_icc_file;
+								$mpr_parts['strip_target']=false;
+								$mpr_parts['targetprofile']='';
+								$mpr_parts['colorspace']='';
+								}
+							else
+								{
+								$profile="-profile $default_icc_file ";
+								}
+							}
+						else
+							{
+							if($imagemagick_mpr)
+								{
+								$mpr_parts['strip_source']=true;
+								$mpr_parts['sourceprofile']='';
+								$mpr_parts['strip_target']=false;
+								$mpr_parts['targetprofile']='';
+								$mpr_parts['colorspace']=$imagemagick_colorspace;
+								}
+							else
+								{
+								# By default, strip the colour profiles ('+' is remove the profile, confusingly)
+								$profile="-strip -colorspace ".$imagemagick_colorspace;
+								}
+							}
 						}
+				
+					if($imagemagick_mpr)
+						{
+						//$command.=(($extension!="png" && $extension!="gif")?" $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . "-write mpr:" . $ref . "wm" . $id ." -write " . escapeshellarg($path) . " +delete ";
+						}
+					else
+						{
+						$runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
+						if(!hook("imagepskipthumb"))
+							{
+							//echo "run_command=".$runcommand."<br/>";
+							$output=run_command($runcommand);
+							resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
+
+							$created_count++;
+							# if this is the first file generated for non-ingested resources check rotation
+							if($autorotate_no_ingest && $created_count==1 && !$ingested){
+								# first preview created for non-ingested file...auto-rotate
+								if($id=="thm" || $id=="col" || $id=="pre" || $id=="scr")
+									{
+									AutoRotateImage($path,$ref);
+									}
+								else
+									{
+									AutoRotateImage($path);
+									}
+							}
 						}
 					
 					// checkerboard - this will have to be integrated into mpr
@@ -1455,14 +1512,29 @@ the dash is the name, you see it referenced in the convert command, you actually
 					
 					$watermarkreal=dirname(__FILE__) ."/../" . $watermark;
 					
-					if($imagemagick_mpr && !($extension=="png" || $extension=="gif") && !isset($watermark_single_image))
+					if($imagemagick_mpr)
 						{
-						$command.="mpr:" . $ref . "wm" . $id . ' -tile ' . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $tw,$th\" -write " . escapeshellarg($wmpath) . " +delete ";
-						//mpr:full -tile watermark.png -draw "rectangle 0,0 1100,800" -write scr_wm.jpg +delete \
+						$mpr_parts['wmpath']=$wmpath;
 						}
-					else
+					
+					if(!($extension=="png" || $extension=="gif") && !isset($watermark_single_image))
 						{
-						$runcommand = $command ." +matte $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+						if($imagemagick_mpr)
+							{
+							/*if($imagemagick_mpr_miff)
+								{
+								// $INPUTFILE miff:- |composite -tile watermark.png - test_wm.jpg
+								//$command.="mpr:" . $ref . "wm" . $id . ' ' . str_replace("identify","composite",$identify_fullpath) . ' -tile ' . escapeshellarg($watermarkreal) . " -write " . escapeshellarg($wmpath) . " +delete ";
+								}
+							else
+								{
+								$command.="mpr:" . $ref . "wm" . $id . ' -tile ' . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $tw,$th\" -write " . escapeshellarg($wmpath) . " +delete ";
+								}*/
+							}
+						else
+							{
+							$runcommand = $command ." +matte $profile -resize " . $tw . "x" . $th . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw \"rectangle 0,0 $tw,$th\" ".escapeshellarg($wmpath); 
+							}
 						}
 					
 					// alternate command for png/gif using the path from above, and omitting resizing
@@ -1511,16 +1583,153 @@ the dash is the name, you see it referenced in the convert command, you actually
 						$output = run_command($runcommand);
 						resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
 						}
-
+					
                     }
 				}// end hook replacewatermarkcreation
+				}
+			if($imagemagick_mpr)
+				{
+				$command_parts[]=$mpr_parts;
 				} 
 			}
 		
 		// run the mpr command if set
 		if($imagemagick_mpr)
 			{
-			// remove the last slash
+			//echo "<pre>bits for mpr command:";print_r($command_parts);echo"</pre>";
+			// let's run some checks to better optimize the convert command. Assume everything is the same until proven otherwise
+			$unique_flatten=false;
+			$unique_strip_source=false;
+			$unique_source_profile=false;
+			$unique_strip_target=false;
+			$unique_target_profile=false;
+			$unique_colorspace=false;
+			$cp_count=count($command_parts);
+			for($p=1;$p<$cp_count;$p++)
+				{
+				// we compare these with the previous
+				if($command_parts[$p]['flatten']!==$command_parts[$p-1]['flatten'] && !$unique_flatten)
+					{
+					$unique_flatten=true;
+					}
+				if($command_parts[$p]['strip_source']!==$command_parts[$p-1]['strip_source'] && !$unique_strip_source)
+					{
+					$unique_strip_source=true;
+					}
+				if($command_parts[$p]['sourceprofile']!==$command_parts[$p-1]['sourceprofile'] && !$unique_source_profile)
+					{
+					$unique_source_profile=true;
+					}
+				if($command_parts[$p]['strip_target']!==$command_parts[$p-1]['strip_target'] && !$unique_strip_target)
+					{
+					$unique_strip_target=true;
+					}
+				if($command_parts[$p]['targetprofile']!==$command_parts[$p-1]['targetprofile'] && !$unique_target_profile)
+					{
+					$unique_target_profile=true;
+					}
+				if($command_parts[$p]['colorspace']!==$command_parts[$p-1]['colorspace'] && !$unique_colorspace)
+					{
+					$unique_colorspace=true;
+					}
+				}
+			//echo "unique_flatten=$unique_flatten - unique_strip_source=$unique_strip_source - unique_source_profile=$unique_source_profile - unique_strip_target=$unique_strip_target - unique_target_profile=$unique_target_profile - unique_colorspace=$unique_colorspace<br/>";
+			// time to build the command
+			$command=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0]' : '') . ' -debug cache -depth ' . $imagemagick_mpr_depth . (!in_array($extension, $extensions_no_alpha_off) ? ' +matte' : '');
+			if(!$unique_flatten)
+				{
+			 	$command.=($command_parts[0]['flatten'] ? " -flatten " : "");
+			 	}
+			 if(!$unique_strip_source)
+			 	{
+			 	$command.=($command_parts[0]['strip_source'] ? " -strip " : "");
+			 	}
+			 if(!$unique_source_profile && $command_parts[0]['sourceprofile']!=='')
+			 	{
+			 	$command.=" -profile " . $command_parts[0]['sourceprofile'];
+			 	}
+			 if(!$unique_colorspace && $command_parts[0]['colorspace']!=='')
+			 	{
+			 	$command.=" -colorspace " . $command_parts[0]['colorspace'];
+			 	}
+			 if(!$unique_strip_target)
+			 	{
+			 	$command.=($command_parts[0]['strip_target'] ? " -strip " : "");
+			 	}
+			 if(!$unique_source_profile && !$unique_target_profile && $command_parts[0]['targetprofile']!=='') // if the source is different but the target is the same we could get into trouble...
+			 	{
+			 	$command.=" -profile " . $command_parts[0]['targetprofile'];
+			 	}
+					
+			if($autorotate_no_ingest)
+				{
+				$orientation = get_image_orientation($file);
+				if($orientation != 0) 
+					{
+					$command.=' -rotate +' . $orientation;
+					}
+				}
+                		
+			//$command.=' -write mpr:' . $ref . ' +delete '; // save this to memory as these settings are true for all versions
+			for($p=0;$p<$cp_count;$p++)
+				{
+				$command.=($p>0 ? ' mpr:' . $ref : '') . ' -quality ' . $command_parts[$p]['quality'];
+				if($command_parts[$p]['tw']!=='' && $command_parts[$p]['th']!=='')
+					{
+					$command.=" -resize " . $command_parts[$p]['tw'] . "x" . $command_parts[$p]['th'] . (($previews_allow_enlarge && $command_parts[$p]['id']!="hpr")?" ":"\">\"");
+					}
+				if($p===0)
+					{
+					$command.=" -write mpr:" . $ref;
+					}
+				if($unique_flatten || $unique_strip_source || $unique_source_profile || $unique_colorspace || $unique_strip_target || $unique_target_profile)
+					{
+					// make these changes
+					if($unique_flatten)
+						{
+						$command.=($command_parts[$p]['flatten'] ? " -flatten " : "");
+						}
+					 if($unique_strip_source)
+						{
+						$command.=($command_parts[$p]['strip_source'] ? " -strip " : "");
+						}
+					 if($unique_source_profile)
+						{
+						$command.=" -profile " . $command_parts[$p]['sourceprofile'];
+						}
+					 if($unique_colorspace)
+						{
+						$command.=" -colorspace " . $command_parts[$p]['colorspace'];
+						}
+					 if($unique_strip_target) // if the source is different but the target is the same we could get into trouble...
+						{
+						$command.=($command_parts[$p]['strip_target'] ? " -strip" : "");
+						}
+					 if($unique_target_profile)
+						{
+						$command.=" -profile " . $command_parts[$p]['target_profile'];
+						}
+					}
+				// save out to file
+				$command.=" -write " . $command_parts[$p]['targetpath'];
+				// watermarks?
+				if(isset($command_parts[$p]['wmpath']))
+					{
+					if(!isset($watermark_single_image))
+						{
+						$command.=' -tile ' . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 " . $command_parts[$p]['tw'] . "," . $command_parts[$p]['th'] . "\" -write " . escapeshellarg($command_parts[$p]['wmpath']);
+						}
+					else
+						{
+						$wm_scale = $watermark_single_image['scale'];
+                        $wm_scaled_width  = $command_parts[$p]['tw'] * ($wm_scale / 100);
+                        $wm_scaled_height = $command_parts[$p]['th'] * ($wm_scale / 100);
+						
+						$command.=" " . escapeshellarg($watermarkreal) . " -gravity " . escapeshellarg($watermark_single_image['position']) . " -geometry " . escapeshellarg($wm_scaled_width) . "x" . escapeshellarg($wm_scaled_height) . "+0+0 -composite " . "" . " -write " . escapeshellarg($command_parts[$p]['wmpath']);
+						}
+					}
+					$command.=" +delete";
+				}
 			echo "run_command=".$command."<br/>";
 			//die("test");
 			$output = exec($command);
@@ -1546,9 +1755,9 @@ the dash is the name, you see it referenced in the convert command, you actually
 			}
 		
 		$time_end = microtime(true);
-$time = $time_end - $time_start;
+		$time = $time_end - $time_start;
 
-echo "Did preview creation in $time seconds\n";
+		echo "Did preview creation in $time seconds\n";
 		
 		return true;
 		}
