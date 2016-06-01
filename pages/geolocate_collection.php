@@ -5,7 +5,7 @@ include "../include/authenticate.php";
 include "../include/resource_functions.php";
 include "../include/collections_functions.php";
 include "../include/header.php";
-//need to honour geo_search_restrict still pending
+
 //The two variables below act like "pemissions" to display or not the page
 if ( $disable_geocoding || (!$disable_geocoding && !$geo_locate_collection) ){exit($lang["error-permissiondenied"]);}
 
@@ -70,7 +70,6 @@ foreach ($all_resources as $value)
 		<?php if (get_edit_access($resource['ref'])){?><td><a href=<?php echo $baseurl . "/pages/geo_edit.php?ref=" . $resource['ref'] ?> > <?php echo $lang['location-add']?></a></td><?php } else { ?><td> <?php echo $lang['location-noneselected'];?> </td><?php } ?>
 		</tr>
 		
-		
 		<?php
 		}
 	else
@@ -79,7 +78,7 @@ foreach ($all_resources as $value)
 		//echo $resource['field8'];
 		$markers[] =  [ $resource['geo_long'] . "," .  $resource['geo_lat'] . "," . $resource['ref'] . "," . $forthumb['thumb_width'] . "," . $forthumb['thumb_height']  ];
 		$paths[] = $parts[0];
-		$titles[] = $resource['field8'];
+		
 		}
 	}
 }
@@ -87,12 +86,12 @@ foreach ($all_resources as $value)
 ?>
 <?php if ($check){?></table><?php echo "<br>";} ?>
 
-<div id="GeoColDiv" style="width:900px; height:450px;"></div>
-
+<div class="BasicsBox"> 
+<div id="map_canvas" style="width: 100%; height: <?php echo isset($mapheight)?$mapheight:"500" ?>px; display:block; float:none;overflow: hidden;" class="Picture" ></div>
 <script src="../lib/OpenLayers/OpenLayers.js"></script>
 <script>
 
-    map = new OpenLayers.Map("GeoColDiv");
+    map = new OpenLayers.Map("map_canvas");
     
     map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
     map.addLayer(new OpenLayers.Layer.OSM('OSM'));
@@ -106,7 +105,7 @@ foreach ($all_resources as $value)
     //of backslashes because Javascript was complaining
     var markers = <?php echo str_replace(array('"','\\'),'',json_encode($markers)) ?>;
     var paths = <?php echo str_replace('\\','',json_encode($paths)) ?>;
-    var titles = <?php echo json_encode($titles)?>;
+    
     var baseurl = <?php echo str_replace('\\','',json_encode($baseurl) )?>;
 
     for (var i=0; i<markers.length; i++)
@@ -117,7 +116,7 @@ foreach ($all_resources as $value)
         var width = markers[i][3];
         var height = markers[i][4];
         var reslink = paths[i];
-        var title = titles[i];
+        
         
         var feature = new OpenLayers.Feature.Vector(
 			new OpenLayers.Geometry.Point( lon, lat ).transform(epsg4326, projectTo),
@@ -166,6 +165,7 @@ foreach ($all_resources as $value)
     map.zoomToExtent(vectorLayer2.getDataExtent());
     
 </script>
+</div>
 
 
 <?php
