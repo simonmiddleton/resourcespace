@@ -139,8 +139,15 @@ if($html2pdf)
 
             if(array_key_exists("field{$contact_sheet_field['ref']}", $result_data))
                 {
-                $contact_sheet_value = get_data_by_field($result_data['ref'], $contact_sheet_field['ref']);
-                $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][] = $contact_sheet_value;
+                $contact_sheet_value = trim(get_data_by_field($result_data['ref'], $contact_sheet_field['ref']));
+
+                // Clean fixed list types of their front comma
+                if(in_array($contact_sheet_field['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    $contact_sheet_value = tidylist($contact_sheet_value);
+                    }
+
+                $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][] = tidylist($contact_sheet_value);
                 }
             }
         }

@@ -24,8 +24,7 @@ if(isset($titlefontsize))
     text-align: center;
 }
 
-.resourceContainer { border: 1px solid black; }
-.resourceContainer img { width: <?php echo $column_width; ?>px; }
+.resourceContainer { border: 1px solid black; vertical-align: bottom; }
 </style>
 <page backtop="25mm" backbottom="25mm">
 <?php
@@ -76,49 +75,58 @@ if(isset($contact_sheet_footer))
     <!-- Real content starts here -->
     <h3 id="pageTitle"><?php echo $title; ?></h3>
 
-    <table>
-        <tbody>
-            <tr>
+<table>
+<tbody>
+<?php
+$row    = 1;
+$column = 0;
+
+$max_rows = ceil(count($resources) / $columns);
+
+foreach($resources as $resource)
+    {
+    if(0 == $column)
+        {
+        ?>
+        <tr>
         <?php
-        $current_column = 1;
-        $current_row    = 1;
-        $max_rows       = ceil(count($resources) / $columns);
+        }
+        ?>
 
-        foreach($resources as $resource)
-            {
-            ?>
+    <td class="resourceContainer" width="<?php echo $column_width; ?>">
+    <?php
+    foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
+        {
+        ?>
+        <p><?php echo $contact_sheet_field; ?></p>
+        <?php
+        }
+        ?>
+        <img src="<?php echo $contact_sheet_logo; ?>" alt="Resource Preview">
+    </td>
 
-                <td class="resourceContainer">
-                <?php
-                foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
-                    {
-                    ?>
-                    <p><?php echo $contact_sheet_field; ?></p>
-                    <?php
-                    }
-                    ?>
-                    <img src="<?php echo $contact_sheet_logo; ?>" alt="Logo">
-                </td>
+    <?php
+    $column++;
 
-            <?php
-            if($current_column == $columns)
-                {
-                $current_column = 1;
-                ?>
-                </tr>
-                <?php
-                if($current_row < $max_rows)
-                    {
-                    ?>
-                    <tr>
-                    <?php
-                    }
-                }
-            $current_column++;
-            $current_row++;
-            }
-            ?>
-        </tbody>
-    </table>
+    // We've reached the number of columns for this row
+    if($column == $columns)
+        {
+        ?>
+        </tr>
+        <?php
+        $row++;
+        $column = 0;
+        }
+    }
+
+    if($row == $max_rows)
+        {
+        ?>
+        </tr>
+        <?php
+        }
+    ?>
+</tbody>
+</table>
 
 </page>
