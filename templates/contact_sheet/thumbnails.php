@@ -18,7 +18,7 @@ if(isset($titlefontsize))
 #logo { height: 50px; max-width: 100%; }
 .centeredText { text-align: center; }
 
-.resourceContainer { border: 1px solid black; }
+.resourceContainer { border: 1px solid black; vertical-align: top;}
 .resourcePreview { width: <?php echo $column_width; ?>px; }
 </style>
 <page backtop="25mm" backbottom="25mm">
