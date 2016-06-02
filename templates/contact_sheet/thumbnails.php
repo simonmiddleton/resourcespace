@@ -18,7 +18,7 @@ if(isset($titlefontsize))
 #logo { height: 50px; max-width: 100%; }
 .centeredText { text-align: center; }
 
-.resourceContainer { border: 1px solid black; vertical-align: top;}
+.resourceContainer { border: 1px solid black; vertical-align: top; }
 .resourcePreview { width: <?php echo $column_width; ?>px; }
 </style>
 <page backtop="25mm" backbottom="25mm">
@@ -104,7 +104,7 @@ foreach($resources as $resource_ref => $resource)
         <?php
         }
         ?>
-        <img class="resourcePreview" src="<?php echo $contact_sheet_logo; ?>" alt="Resource Preview">
+        <img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview">
     </td>
 
     <?php

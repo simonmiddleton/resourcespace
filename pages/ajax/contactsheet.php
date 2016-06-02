@@ -119,19 +119,27 @@ if($html2pdf)
     $pdf_properties['font']        = $contact_sheet_font;
 
 
-    // 
-    $imgsize = ('single' == $sheetstyle ? getvalescaped('ressize', 'lpr') : 'pre');
+    // Choose the image size requirements
+    $img_size = ('single' == $sheetstyle ? getvalescaped('ressize', 'lpr') : 'pre');
     if($preview)
         {
-        $imgsize = 'col';
+        $img_size = 'col';
         }
     if('single' == $sheetstyle && $preview)
         {
-        $imgsize = 'pre';
+        $img_size = 'pre';
         }
 
     foreach($results as $result_data)
         {
+        $access = get_resource_access($result_data);
+
+        // Skip confidential resources
+        if(2 == $access)
+            {
+            continue;
+            }
+
         $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'] = array();
 
         foreach($csf as $contact_sheet_field)
@@ -151,8 +159,18 @@ if($html2pdf)
                 $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][] = tidylist($contact_sheet_value);
                 }
             }
-        }
 
+        // Add the preview image
+        $use_watermark = check_use_watermark();
+        $img_path = get_resource_path($result_data['ref'], true, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
+        if(!file_exists($img_path))
+            {
+            $img_path = "../../gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false, true);
+            }
+
+        $placeholders['resources'][$result_data['ref']]['preview_src'] = str_replace($storagedir, $storageurl, $img_path);
+        unset($img_path);
+        }
 
     try
         {
