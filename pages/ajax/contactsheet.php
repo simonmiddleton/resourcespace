@@ -148,11 +148,6 @@ if($html2pdf)
                     $contact_sheet_value = tidylist($contact_sheet_value);
                     }
 
-                /*if('' == $contact_sheet_value || ',' == $contact_sheet_value)
-                    {
-                    $contact_sheet_value = '&nbsp;';
-                    }*/
-
                 $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][] = tidylist($contact_sheet_value);
                 }
             }
