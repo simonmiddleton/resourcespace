@@ -1552,7 +1552,7 @@ function compile_search_actions($top_actions)
     			$o++;
                 }
 
-            if($show_searchitemsdiskusage) 
+            if(0 != $resources_count && $show_searchitemsdiskusage) 
                 {
                 $extra_tag_attributes = sprintf('
                         data-url="%spages/search_disk_usage.php?search=%s&restypes=%s&offset=%s&order_by=%s&sort=%s&archive=%s&daylimit=%s&k=%s"

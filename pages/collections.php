@@ -748,6 +748,9 @@ elseif ($k!="" && !$internal_share_access)
 	<?php
 	// Render dropdown actions
 	hook("beforecollectiontoolscolumn");
+
+    $resources_count = $count_result;
+
 	render_actions($cinfo, false);
 	hook("aftercollectionsrenderactions");
 	?>
