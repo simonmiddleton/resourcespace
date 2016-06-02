@@ -277,7 +277,11 @@ function process_template($template_path, array $bind_placeholders = array())
         $$bind_param = $bind_param_value;
         }
 
+    // Sometimes, HTML2PDF complains about headers being already sent
+    ob_end_clean();
+
     // At this point we shoud have all the placeholders we need to render the template nicely
+    ob_start();
     include $template_path;
     $content = ob_get_clean();
 

@@ -40,6 +40,7 @@ $contact_sheet_add_link = ('true' == getvalescaped('addlink', $contact_sheet_add
 
 $html2pdf       = ('true' == getval('html2pdf', '') ? true : false);
 $pdf_properties = array();
+$resources      = array();
 
 $collectiondata = get_collection($collection);
 $user           = get_user($collectiondata['user']);
@@ -50,7 +51,7 @@ if(is_numeric($order_by))
     {
     $order_by = "field{$order_by}";
     }
-$result = do_search("!collection{$collection}", '', $order_by, 0, -1, $sort);
+$results = do_search("!collection{$collection}", '', $order_by, 0, -1, $sort);
 
 switch($sheetstyle)
     {
@@ -126,6 +127,22 @@ if($html2pdf)
     if('single' == $sheetstyle && $preview)
         {
         $imgsize = 'pre';
+        }
+
+    foreach($results as $result_data)
+        {
+        $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'] = array();
+
+        foreach($csf as $contact_sheet_field)
+            {
+            $contact_sheet_value = '';
+
+            if(array_key_exists("field{$contact_sheet_field['ref']}", $result_data))
+                {
+                $contact_sheet_value = get_data_by_field($result_data['ref'], $contact_sheet_field['ref']);
+                $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][] = $contact_sheet_value;
+                }
+            }
         }
 
 
