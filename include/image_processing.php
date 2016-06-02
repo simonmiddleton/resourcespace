@@ -1664,7 +1664,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				if(isset($command_parts[$p]['icc_transform_complete']) && !$mpr_icc_transform_complete && $command_parts[$p]['icc_transform_complete'] && $command_parts[$p]['targetprofile']!=='')
 					{
 					// convert to the target profile now. the source profile will only contain $icc_preview_options and needs to be included here as well
-					$command.=($command_parts[$p]['sourceprofile']!='' ? " " . $command_parts[$p]['sourceprofile'] : "") . ($mpr_metadata_profiles!=='' ? " +profile \"" . $mpr_metadata_profiles . ",*\"" : "") . " -profile " . $command_parts[$p]['targetprofile'];
+					$command.=($command_parts[$p]['sourceprofile']!='' ? " " . $command_parts[$p]['sourceprofile'] : "") . " -profile " . $command_parts[$p]['targetprofile']. ($mpr_metadata_profiles!=='' ? " +profile \"" . $mpr_metadata_profiles . ",*\"" : "");
 					$mpr_icc_transform_complete=true;
 					$force_mpr_write=true;
 					$skip_source_and_target_profiles=true;
