@@ -1396,7 +1396,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						$mpr_parts['sourceprofile']=$iccpath . " " . $icc_preview_options;
 						$mpr_parts['strip_target']=($icc_preview_profile_embed ? false : true);
 						$mpr_parts['targetprofile']=$targetprofile;
-						$mpr_parts['colorspace']='';
+						//$mpr_parts['colorspace']='';
 						}
 					else
 						{
@@ -1420,7 +1420,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 								$mpr_parts['sourceprofile']='';
 								$mpr_parts['strip_target']=false;
 								$mpr_parts['targetprofile']='';
-								$mpr_parts['colorspace']='';
+								//$mpr_parts['colorspace']='';
 								}
 							else
 								{
@@ -1435,7 +1435,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 								$mpr_parts['sourceprofile']=$default_icc_file;
 								$mpr_parts['strip_target']=false;
 								$mpr_parts['targetprofile']='';
-								$mpr_parts['colorspace']='';
+								//$mpr_parts['colorspace']='';
 								}
 							else
 								{
@@ -1450,7 +1450,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 								$mpr_parts['sourceprofile']='';
 								$mpr_parts['strip_target']=false;
 								$mpr_parts['targetprofile']='';
-								$mpr_parts['colorspace']=$imagemagick_colorspace;
+								//$mpr_parts['colorspace']=$imagemagick_colorspace;
 								}
 							else
 								{
@@ -1574,7 +1574,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			$unique_source_profile=false;
 			$unique_strip_target=false;
 			$unique_target_profile=false;
-			$unique_colorspace=false;
+			//$unique_colorspace=false;
 			
 			$cp_count=count($command_parts);
 			$mpr_init_write=false;
@@ -1602,10 +1602,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					{
 					$unique_target_profile=true;
 					}
-				if($command_parts[$p]['colorspace']!==$command_parts[$p-1]['colorspace'] && !$unique_colorspace)
+				/*if($command_parts[$p]['colorspace']!==$command_parts[$p-1]['colorspace'] && !$unique_colorspace)
 					{
 					$unique_colorspace=true;
-					}
+					}*/
 				}
 			//echo "unique_flatten=$unique_flatten - unique_strip_source=$unique_strip_source - unique_source_profile=$unique_source_profile - unique_strip_target=$unique_strip_target - unique_target_profile=$unique_target_profile - unique_colorspace=$unique_colorspace<br/>";
 			// time to build the command
@@ -1622,10 +1622,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			 	{
 			 	$command.=" -profile " . $command_parts[0]['sourceprofile'];
 			 	}
-			 if(!$unique_colorspace && $command_parts[0]['colorspace']!=='')
+			/* if(!$unique_colorspace && $command_parts[0]['colorspace']!=='')
 			 	{
 			 	$command.=" -colorspace " . $command_parts[0]['colorspace'];
-			 	}
+			 	} */
 			 if(!$unique_strip_target)
 			 	{
 			 	$command.=($command_parts[0]['strip_target'] ? " -strip " : "");
