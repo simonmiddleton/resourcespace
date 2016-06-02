@@ -525,10 +525,12 @@ hook("processusercommand");
 <?php 
 $searches=get_saved_searches($usercollection);
 
-// Note that the full search is done initially. The time saved is due to content drawing and transfer.
-$result=do_search("!collection" . $usercollection,"","relevance",0);
+// Do an initial count of how many resources there are in the collection (only returning ref and archive)
+$result=do_search("!collection" . $usercollection,"","relevance",0,-1,"desc",false,0,false,false,"",false,true,true);
 $count_result=count($result);
 
+// Then do another pass getting all data for the maximum allowed collection thumbs
+$result=do_search("!collection" . $usercollection,"","relevance",0,$max_collection_thumbs,"desc");
 
 $hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
 $feedback=$cinfo["request_feedback"];
@@ -750,9 +752,8 @@ elseif ($k!="" && !$internal_share_access)
 	hook("beforecollectiontoolscolumn");
 
     $resources_count = $count_result;
-
-	render_actions($cinfo, false);
-	hook("aftercollectionsrenderactions");
+	render_actions($cinfo, false,true,'',$result);
+    hook("aftercollectionsrenderactions");
 	?>
  	<ul>
 	<?php
@@ -1016,7 +1017,7 @@ hook("thumblistextra");
     	hook('aftertogglethumbs');
 
 	    // Render dropdown actions
-		render_actions($cinfo, false, false, "min");
+		render_actions($cinfo, false, false, "min",$result);
 		?>
 		</div>
 

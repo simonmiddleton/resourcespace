@@ -870,7 +870,7 @@ function render_dropdown_option($value, $label, array $data_attr = array(), $ext
 * 
 */
 if (!function_exists("render_actions")){
-function render_actions(array $collection_data, $top_actions = true, $two_line = true, $id = '')
+function render_actions(array $collection_data, $top_actions = true, $two_line = true, $id = '',$resource_data=array())
     {
     if(hook('prevent_running_render_actions'))
         {
@@ -915,8 +915,8 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
             <?php
 
             // Collection Actions
-            $collection_actions_array = compile_collection_actions($collection_data, $top_actions);
-			
+            $collection_actions_array = compile_collection_actions($collection_data, $top_actions, $resource_data);
+
             // Usual search actions
             $search_actions_array = compile_search_actions($top_actions);
 
