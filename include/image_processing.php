@@ -1148,7 +1148,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 
 function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false)
 	{$time_start = microtime(true);
-	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_preserve_profiles;
+	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles;
 
 	$icc_transform_complete=false;
 	debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested)",RESOURCE_LOG_APPEND_PREVIOUS);
@@ -1329,6 +1329,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				$mpr_parts['tw']=($id!='hpr' ? $tw : ''); // hpr should be fullsized and does not need this setting
 				$mpr_parts['th']=($id!='hpr' ? $tw : ''); // hpr should be fullsized and does not need this setting
 				$mpr_parts['flatten']=($flatten=='' ? false : true);
+				$mpr_parts['icc_transform_complete']=$icc_transform_complete;
 				}
 				
 
@@ -1392,8 +1393,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					$targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
 					if($imagemagick_mpr)
 						{
-						$mpr_parts['strip_source']=true;
-						$mpr_parts['sourceprofile']=$iccpath . " " . $icc_preview_options;
+						$mpr_parts['strip_source']=(!$imagemagick_mpr_preserve_profiles ? true : false);
+						$mpr_parts['sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? $iccpath : ''). " " . $icc_preview_options;
 						$mpr_parts['strip_target']=($icc_preview_profile_embed ? false : true);
 						$mpr_parts['targetprofile']=$targetprofile;
 						//$mpr_parts['colorspace']='';
@@ -1406,6 +1407,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     if ($id == 'hpr' || $id == 'lpr' || $id == 'scr')
                     	{
                     	$icc_transform_complete=true;
+                    	if($imagemagick_mpr)
+                    		{
+                    		$mpr_parts['icc_transform_complete']=$icc_transform_complete;
+                    		}
                     	}
 					}
 					else 
@@ -1578,9 +1583,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			
 			$cp_count=count($command_parts);
 			$mpr_init_write=false;
+			$mpr_icc_transform_complete=false;
 			
 			for($p=1;$p<$cp_count;$p++)
 				{
+				$force_mpr_write=false;
+				$skip_source_and_target_profiles=false;
 				// we compare these with the previous
 				if($command_parts[$p]['flatten']!==$command_parts[$p-1]['flatten'] && !$unique_flatten)
 					{
@@ -1643,18 +1651,32 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					$command.=' -rotate +' . $orientation;
 					}
 				}
-                		
+			$mpr_metadata_profiles='';
+			if(!empty($imagemagick_mpr_preserve_metadata_profiles))
+				{
+            	$mpr_metadata_profiles="!" . implode(",!",$imagemagick_mpr_preserve_metadata_profiles);	
+            	}	
 			//$command.=' -write mpr:' . $ref . ' +delete '; // save this to memory as these settings are true for all versions
 			for($p=0;$p<$cp_count;$p++)
 				{
 				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '') . ($command_parts[$p]['quality']!=100 ? ' -quality ' . $command_parts[$p]['quality'] : '');
 				
+				if(isset($command_parts[$p]['icc_transform_complete']) && !$mpr_icc_transform_complete && $command_parts[$p]['icc_transform_complete'] && $command_parts[$p]['targetprofile']!=='')
+					{
+					// convert to the target profile now. the source profile will only contain $icc_preview_options and needs to be included here as well
+					$command.=($command_parts[$p]['sourceprofile']!='' ? " " . $command_parts[$p]['sourceprofile'] : "") . ($mpr_metadata_profiles!=='' ? " +profile \"" . $mpr_metadata_profiles . ",*\"" : "") . " -profile " . $command_parts[$p]['targetprofile'];
+					$mpr_icc_transform_complete=true;
+					$force_mpr_write=true;
+					$skip_source_and_target_profiles=true;
+					}
+					
 				if($command_parts[$p]['tw']!=='' && $command_parts[$p]['th']!=='')
 					{
 					$command.=" -resize " . $command_parts[$p]['tw'] . "x" . $command_parts[$p]['th'] . (($previews_allow_enlarge && $command_parts[$p]['id']!="hpr")?" ":"\">\"");
 					}
+				
 				//$command.=" -write mpr:" . $ref;
-				if(isset($command_parts[$p]['wmpath']))
+				if(isset($command_parts[$p]['wmpath']) || $force_mpr_write)
 					{
 					$command.=" -write mpr:" . $ref;
 					if(!$mpr_init_write)
@@ -1669,11 +1691,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						$command.=($command_parts[$p]['flatten'] ? " -flatten " : "");
 						}
-					 if($unique_strip_source)
+					 if($unique_strip_source && !$skip_source_and_target_profiles)
 						{
 						$command.=($command_parts[$p]['strip_source'] ? " -strip " : "");
 						}
-					 if($unique_source_profile && $command_parts[$p]['sourceprofile']!=='')
+					 if($unique_source_profile && $command_parts[$p]['sourceprofile']!=='' && !$skip_source_and_target_profiles)
 						{
 						$command.=" -profile " . $command_parts[$p]['sourceprofile'];
 						}
@@ -1681,17 +1703,17 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						$command.=" -colorspace " . $command_parts[$p]['colorspace'];
 						}*/
-					 if($unique_strip_target) // if the source is different but the target is the same we could get into trouble...
+					 if($unique_strip_target && !$skip_source_and_target_profiles) // if the source is different but the target is the same we could get into trouble...
 						{
 						$command.=($command_parts[$p]['strip_target'] ? " -strip" : "");
 						}
-					 if($unique_target_profile && $command_parts[$p]['targetprofile']!=='')
+					 if($unique_target_profile && $command_parts[$p]['targetprofile']!=='' && !$skip_source_and_target_profiles)
 						{
 						$command.=" -profile " . $command_parts[$p]['targetprofile'];
 						}
 					}
 				// save out to file
-				if(!$mpr_init_write && !isset($command_parts[$p]['wmpath']) && isset($command_parts[($p+1)]['wmpath']))
+				if(!$mpr_init_write && !isset($command_parts[$p]['wmpath']) && isset($command_parts[($p+1)]['wmpath']) && (!isset($command_parts[$p]['icc_transform_complete']) || !$mpr_icc_transform_complete))
 					{
 					$command.=" -write mpr:" . $ref;
 					$mpr_init_write=true;
