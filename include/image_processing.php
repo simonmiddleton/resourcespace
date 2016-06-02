@@ -1673,7 +1673,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						$command.=($command_parts[$p]['strip_source'] ? " -strip " : "");
 						}
-					 if($unique_source_profile)
+					 if($unique_source_profile && $command_parts[$p]['sourceprofile']!=='')
 						{
 						$command.=" -profile " . $command_parts[$p]['sourceprofile'];
 						}
@@ -1685,7 +1685,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						$command.=($command_parts[$p]['strip_target'] ? " -strip" : "");
 						}
-					 if($unique_target_profile)
+					 if($unique_target_profile && $command_parts[$p]['targetprofile']!=='')
 						{
 						$command.=" -profile " . $command_parts[$p]['targetprofile'];
 						}
