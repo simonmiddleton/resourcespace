@@ -783,7 +783,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     # --------------------------------------------------------------------------------
     # Special Searches (start with an exclamation mark)
     # --------------------------------------------------------------------------------
-    $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage);
+    $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only);
     if ($special_results!==false) {return $special_results;}
 
     # -------------------------------------------------------------------------------------
@@ -1789,7 +1789,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	return $sql_filter;
 	}
 
-function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage)
+function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false)
 	{
 	# Process special searches. These return early with results.
 
@@ -1954,14 +1954,25 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }   
         $searchsql = $sql_prefix . "select distinct c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select from resource r  join collection_resource c on r.ref=c.resource $colcustperm  where c.collection='" . $collection . "' and $colcustfilter group by r.ref order by $order_by" . $sql_suffix;
         $collectionsearchsql=hook('modifycollectionsearchsql','',array($searchsql));
+
         if($collectionsearchsql)
-            {$searchsql=$collectionsearchsql;}
-        $result = sql_query($searchsql,false,$fetchrows);
-        hook('beforereturnresults', '', array($result, $archive)); 
-        
+            {
+            $searchsql=$collectionsearchsql;
+            }
+        if($return_refs_only)
+            {
+            $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','archive'));    // note that we actually include archive column too as often used to work out permission to edit collection
+            }
+        else
+            {
+            $result = sql_query($searchsql,false,$fetchrows);
+            }
+
+        hook('beforereturnresults', '', array($result, $archive));
+
         return $result;
         }
-    
+
     # View Related - Pushed Metadata (for the view page)
     if (substr($search,0,14)=="!relatedpushed")
         {
