@@ -1507,8 +1507,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				# Add a watermarked image too?
 				global $watermark, $watermark_single_image;
 				
-				if (!hook("replacewatermarkcreation","",array($ref, $ps, $n, $alternative, $profile, $command))){
-				if (($alternative==-1 || ($alternative!==-1 && $alternative_file_previews)) && isset($watermark) && ($ps[$n]["internal"]==1 || $ps[$n]["allow_preview"]==1))
+				if (!hook("replacewatermarkcreation","",array($ref, $ps, $n, $alternative, $profile, $command)) && ($alternative==-1 || ($alternative!==-1 && $alternative_file_previews)) && isset($watermark) && ($ps[$n]["internal"]==1 || $ps[$n]["allow_preview"]==1))
 					{
 					$wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,'',$alternative);
 					if (file_exists($wmpath)) {unlink($wmpath);}
@@ -1559,10 +1558,15 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$runcommand . ":\n" . $output);
 						}
 					
-                    }
-				}// end hook replacewatermarkcreation
+                    }// end hook replacewatermarkcreation
 				if($imagemagick_mpr)
 					{
+					// need a watermark replacement here as the existing hook doesn't work
+					$modified_mpr_watermark=hook("modify_mpr_watermark",'',array($ref, $ps, $n, $alternative));
+					if($modified_mpr_watermark!='')
+						{echo "changing wmpath to $modified_mpr_watermark<br/>";
+						$mpr_parts['wmpath']=$modified_mpr_watermark;
+						}
 					$command_parts[]=$mpr_parts;
 					} 
 				}
