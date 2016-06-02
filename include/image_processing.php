@@ -1677,10 +1677,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						$command.=" -profile " . $command_parts[$p]['sourceprofile'];
 						}
-					 if($unique_colorspace && $command_parts[0]['colorspace']!=='')
+					 /*if($unique_colorspace && $command_parts[0]['colorspace']!=='')
 						{
 						$command.=" -colorspace " . $command_parts[$p]['colorspace'];
-						}
+						}*/
 					 if($unique_strip_target) // if the source is different but the target is the same we could get into trouble...
 						{
 						$command.=($command_parts[$p]['strip_target'] ? " -strip" : "");
