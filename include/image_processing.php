@@ -1647,7 +1647,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			//$command.=' -write mpr:' . $ref . ' +delete '; // save this to memory as these settings are true for all versions
 			for($p=0;$p<$cp_count;$p++)
 				{
-				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '') . ($command_parts[$p]['quality']!=100 ? ' -quality ' . $command_parts[$p]['quality'] : '') . (($extension!="png" && $extension!="gif")?" -alpha off":"");
+				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '') . ($command_parts[$p]['quality']!=100 ? ' -quality ' . $command_parts[$p]['quality'] : '');
 				
 				if($command_parts[$p]['tw']!=='' && $command_parts[$p]['th']!=='')
 					{
