@@ -1308,7 +1308,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			    $flatten = "-flatten";
 				}
 
-            // Extensions for which the alpha/ matte channel should not be set to Off (i.e. +matte option)
+            // Extensions for which the alpha/ matte channel should not be set to Off (i.e. +matte option) *** '+matte' no longer exists but is the same as '-alpha off'
             $extensions_no_alpha_off = array('png', 'gif', 'tif');
 			
 			$preview_quality=get_preview_quality($ps[$n]['id']);
@@ -1609,7 +1609,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				}
 			//echo "unique_flatten=$unique_flatten - unique_strip_source=$unique_strip_source - unique_source_profile=$unique_source_profile - unique_strip_target=$unique_strip_target - unique_target_profile=$unique_target_profile - unique_colorspace=$unique_colorspace<br/>";
 			// time to build the command
-			$command=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0]' : '') . ' -debug cache -depth ' . $imagemagick_mpr_depth . (!in_array($extension, $extensions_no_alpha_off) ? ' +matte' : '');
+			$command=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -alpha off' : '') . ' -debug cache -depth ' . $imagemagick_mpr_depth;
 			if(!$unique_flatten)
 				{
 			 	$command.=($command_parts[0]['flatten'] ? " -flatten " : "");
@@ -1647,7 +1647,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			//$command.=' -write mpr:' . $ref . ' +delete '; // save this to memory as these settings are true for all versions
 			for($p=0;$p<$cp_count;$p++)
 				{
-				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '') . ($command_parts[$p]['quality']!=100 ? ' -quality ' . $command_parts[$p]['quality'] : '');
+				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '') . ($command_parts[$p]['quality']!=100 ? ' -quality ' . $command_parts[$p]['quality'] : '') . (($extension!="png" && $extension!="gif")?" -alpha off":"");
 				
 				if($command_parts[$p]['tw']!=='' && $command_parts[$p]['th']!=='')
 					{
