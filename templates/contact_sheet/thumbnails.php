@@ -25,6 +25,7 @@ if(isset($titlefontsize))
 }
 
 .resourceContainer { border: 1px solid black; vertical-align: bottom; }
+.resourceContainer img { width: <?php echo $column_width; ?>px; }
 </style>
 <page backtop="25mm" backbottom="25mm">
 <?php
