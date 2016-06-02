@@ -18,7 +18,7 @@ if(isset($titlefontsize))
 #logo { height: 50px; max-width: 100%; }
 .centeredText { text-align: center; }
 
-.resourceContainer { border: 1px solid black; vertical-align: top;}
+.resourceContainer { border: 1px solid black; }
 .resourcePreview { width: <?php echo $column_width; ?>px; }
 </style>
 <page backtop="25mm" backbottom="25mm">
@@ -93,14 +93,14 @@ foreach($resources as $resource_ref => $resource)
     if($config_sheetthumb_include_ref)
         {
         ?>
-        <div class="resourceRef"><?php echo $resource_ref; ?></div>
+        <span class="resourceRef"><?php echo $resource_ref; ?></span><br>
         <?php
         }
 
     foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
         {
         ?>
-        <div><?php echo $contact_sheet_field; ?></div>
+        <span><?php echo $contact_sheet_field; ?></span><br>
         <?php
         }
         ?>
