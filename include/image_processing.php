@@ -1148,7 +1148,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 
 function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false)
 	{$time_start = microtime(true);
-	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_miff;
+	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_preserve_profiles;
 
 	$icc_transform_complete=false;
 	debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested)",RESOURCE_LOG_APPEND_PREVIOUS);
@@ -1385,7 +1385,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					}
 				}
 				$profile='';
-				if($icc_extraction && file_exists($iccpath) && !$icc_transform_complete)
+				if($icc_extraction && file_exists($iccpath) && !$icc_transform_complete && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
 					{
 					global $icc_preview_profile_embed;
 					// we have an extracted ICC profile, so use it as source
@@ -1412,7 +1412,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						// use existing strategy for color profiles
 						# Preserve colour profiles? (omit for smaller sizes)
-						if ($imagemagick_preserve_profiles && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
+						if (($imagemagick_preserve_profiles || $imagemagick_mpr_preserve_profiles) && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
 							{
 							if($imagemagick_mpr)
 								{
@@ -1647,7 +1647,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			//$command.=' -write mpr:' . $ref . ' +delete '; // save this to memory as these settings are true for all versions
 			for($p=0;$p<$cp_count;$p++)
 				{
-				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '') . ' -quality ' . $command_parts[$p]['quality'];
+				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '') . ($command_parts[$p]['quality']!=100 ? ' -quality ' . $command_parts[$p]['quality'] : '');
 				
 				if($command_parts[$p]['tw']!=='' && $command_parts[$p]['th']!=='')
 					{
