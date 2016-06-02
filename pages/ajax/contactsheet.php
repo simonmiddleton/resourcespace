@@ -80,11 +80,12 @@ if($html2pdf)
     $pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
     $PDF_filename      = 'contactsheet.pdf';
     $placeholders      = array(
-        'date'              => date('Y-m-d H:i:s'),
-        'titlefontsize'     => $titlefontsize,
-        'refnumberfontsize' => $refnumberfontsize,
-        'title'             => $title,
-        'columns'           => $columns,
+        'date'                          => date('Y-m-d H:i:s'),
+        'titlefontsize'                 => $titlefontsize,
+        'refnumberfontsize'             => $refnumberfontsize,
+        'title'                         => $title,
+        'columns'                       => $columns,
+        'config_sheetthumb_include_ref' => $config_sheetthumb_include_ref,
     );
 
     if($contactsheet_header)
@@ -147,6 +148,11 @@ if($html2pdf)
                     $contact_sheet_value = tidylist($contact_sheet_value);
                     }
 
+                /*if('' == $contact_sheet_value || ',' == $contact_sheet_value)
+                    {
+                    $contact_sheet_value = '&nbsp;';
+                    }*/
+
                 $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][] = tidylist($contact_sheet_value);
                 }
             }
@@ -166,7 +172,7 @@ if($html2pdf)
 
         // Column width is made as "[column width in mm] / (25.4 / 96) - [adjustment]"
         // IMPORTANT: [adjustment] is needed so that the content would be within the margins of the document
-        $placeholders['column_width'] = floor($available_width / $columns) / (25.4 / 96) - 10;
+        $placeholders['column_width'] = floor(floor($available_width / $columns) / (25.4 / 96) - 10);
 
         $pdf_content = process_template($pdf_template_path, $placeholders);
 

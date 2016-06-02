@@ -15,17 +15,11 @@ if(isset($titlefontsize))
     }
     ?>
 
-#logo {
-    height: 50px;
-    max-width: 100%;
-}
+#logo { height: 50px; max-width: 100%; }
+.centeredText { text-align: center; }
 
-.centeredText {
-    text-align: center;
-}
-
-.resourceContainer { border: 1px solid black; vertical-align: bottom; }
-.resourceContainer img { width: <?php echo $column_width; ?>px; }
+.resourceContainer { border: 1px solid black; vertical-align: top;}
+.resourcePreview { width: <?php echo $column_width; ?>px; }
 </style>
 <page backtop="25mm" backbottom="25mm">
 <?php
@@ -84,7 +78,7 @@ $column = 0;
 
 $max_rows = ceil(count($resources) / $columns);
 
-foreach($resources as $resource)
+foreach($resources as $resource_ref => $resource)
     {
     if(0 == $column)
         {
@@ -96,14 +90,21 @@ foreach($resources as $resource)
 
     <td class="resourceContainer" width="<?php echo $column_width; ?>">
     <?php
+    if($config_sheetthumb_include_ref)
+        {
+        ?>
+        <div class="resourceRef"><?php echo $resource_ref; ?></div>
+        <?php
+        }
+
     foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
         {
         ?>
-        <p><?php echo $contact_sheet_field; ?></p>
+        <div><?php echo $contact_sheet_field; ?></div>
         <?php
         }
         ?>
-        <img src="<?php echo $contact_sheet_logo; ?>" alt="Resource Preview">
+        <img class="resourcePreview" src="<?php echo $contact_sheet_logo; ?>" alt="Resource Preview">
     </td>
 
     <?php
