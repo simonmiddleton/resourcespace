@@ -838,6 +838,8 @@ $lang["stat-resourceview"]="Resource view";
 $lang["stat-search"]="Search";
 $lang["stat-usersession"]="User session";
 $lang["stat-addedsmartcollection"]="Added smart collection";
+$lang["stat-removedresourcefromcollection"]="Removed resource from collection";
+$lang["stat-keywordusage-noresultsfound"]="Keyword usage - no results found";
 
 # Access
 $lang["access0"]="Open";
@@ -2463,3 +2465,41 @@ $lang['permission_manage_external_shares'] = 'Can manage external shares with ex
 $lang['manage_external_shares'] = 'Manage external shares';
 $lang['filter_label'] = 'Filter';
 /* end of Manage external shares */
+
+
+$lang["rse_analytics"]="Analytics";
+$lang["new_report"]="New report";
+$lang["edit_report"]="Edit report";
+$lang["all_activity"]="All activity";
+
+$lang["report-graph-by-pie"]="breakdown";
+$lang["report-graph-by-piegroup"]="by user group";
+$lang["report-graph-by-line"]="over time";
+$lang["report-graph-by-summary"]="summary";
+$lang["update_report"]="Update report";
+$lang["save_report"]="Save report";
+$lang["save_report_as"]="Save report as...";
+
+$lang["report_graph_types"]="Graph types";
+$lang["report_no_data"]="No data for the selected criteria";
+
+$lang["report_breakdown_pie"]="Breakdown pie";
+$lang["report_user_group_pie"]="User group pie";
+$lang["report_time_line"]="Time line";
+$lang["report_summary_block"]="Summary block";
+
+$lang["report_total"]="Total";
+$lang["report_average"]="Daily average";
+$lang["report_maximum"]="Maximum";
+$lang["report_name"]="Report name";
+$lang["report_please_enter_name"]="Please enter a report name to save this report.";
+$lang["report_create_new"]="Create new report.";
+$lang["report_filter_to_collection"]="Include only resources within a collection";
+$lang["report_all_resources"]="(no collection filtering)";
+$lang["report_no_matching_activity_types"]="The selected activity type was not appropriate for collection filtering. Please choose another activity type or deselect the collection.";
+$lang["report_external_options"]="External shares...";
+$lang["report_external_option0"]="...are ignored";
+$lang["report_external_option1"]="...are combined with the user group of the sharing user";
+$lang["report_external_option2"]="...are reported as a separate user group";
+$lang["report_external_share"]="External share";
+$lang["report_add_to_dash"]="Add to dash";
