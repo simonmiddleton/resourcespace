@@ -46,11 +46,14 @@ include ("../../include/header.php");
             <li><a href="<?php echo $baseurl_short?>pages/admin/admin_reportbug.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["reportbug"]?></a></li>
             <?php
             }
-            ?>
-		
-		<li><a href="<?php echo $baseurl_short?>pages/team/team_export.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["exportdata"]?></a></li>
 
-		<?php
+        if('' != $mysql_bin_path)
+            {
+            ?>
+            <li><a href="<?php echo $baseurl_short?>pages/team/team_export.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["exportdata"]?></a></li>
+            <?php
+            }
+
 		if (checkperm('a'))
 			{
 			?>
