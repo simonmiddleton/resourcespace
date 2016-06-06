@@ -98,7 +98,7 @@ if (!$from_dash)
     # Add to dash tile function
     $graph_params="activity_type=" . urlencode($activity_type) . "&groups=" . urlencode($groups) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . getvalescaped("period","") . "&period_days=" . getvalescaped("period_days",""). "&collection=" . $collection . "&external=" . $external . "&type=" . urlencode($type) . "&from_dash=true";
     ?>
-    &nbsp;&nbsp;<a class="ReportAddToDash" href="<?php echo $baseurl_short ?>pages/dash_tile.php?create=true&title=<?php echo urlencode($title) ?>&nostyleoptions=true&link=<?php echo urlencode("pages/team/team_analytics_edit.php?ref=" . $report)?>&url=<?php echo urlencode("pages/team/ajax/graph.php?" . $graph_params) ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["report_add_to_dash"] ?></a>
+    &nbsp;&nbsp;<a style="white-space:nowrap;" class="ReportAddToDash" href="<?php echo $baseurl_short ?>pages/dash_tile.php?create=true&title=<?php echo urlencode($title) ?>&nostyleoptions=true&link=<?php echo urlencode("pages/team/team_analytics_edit.php?ref=" . $report)?>&url=<?php echo urlencode("pages/team/ajax/graph.php?" . $graph_params) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-plus-square"></i>&nbsp;<?php echo  $lang["report_add_to_dash"] ?></a>
     </h2>
     <?php
     }

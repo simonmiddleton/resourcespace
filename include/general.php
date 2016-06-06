@@ -2991,7 +2991,7 @@ function send_statistics()
 	$total_resources=sql_value("select count(*) value from resource",0);
 	
 	# Send stats
-	@file("http://www.montala.net/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
+	@file("http://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
 	
 	# Update last sent date/time.
 	sql_query("delete from sysvars where name='last_sent_stats'");

@@ -2467,7 +2467,7 @@ $lang['filter_label'] = 'Filter';
 /* end of Manage external shares */
 
 
-$lang["rse_analytics"]="Analytics";
+$lang["rse_analytics"]="View analytics";
 $lang["new_report"]="New report";
 $lang["edit_report"]="Edit report";
 $lang["all_activity"]="All activity";
