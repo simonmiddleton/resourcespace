@@ -19,7 +19,7 @@ include ("../../include/header.php");
 		<li><i class="fa fa-fw fa-cubes"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_resource_types.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang["treenode-resource_types_and_fields"] ?></a></li>
 		<li><i class="fa fa-fw fa-bars"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_fields.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang["admin_resource_type_fields"] ?></a></li>
 		
-		<li><i class="fa fa-fw fa-bar-chart"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_report_management.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang['page-title_report_management']; ?></a></li>
+		<li><i class="fa fa-fw fa-table"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_report_management.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang['page-title_report_management']; ?></a></li>
 		
 		<li><i class="fa fa-fw fa-files-o"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_size_management.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang["page-title_size_management"] ?></a></li>
 		
@@ -57,15 +57,16 @@ include ("../../include/header.php");
 		if (checkperm('a'))
 			{
 			?>
+			<li><i class="fa fa-fw fa-check-square"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/check.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["installationcheck"]?></a></li>
 			<li><i class="fa fa-fw fa-history"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/admin/admin_system_log.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["systemlog"]; ?></a></li>
 			<li><i class="fa fa-fw fa-terminal"></i>&nbsp;<a href="<?php echo $baseurl?>/pages/team/team_system_console.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["systemconsole"]?></a></li>
-			<li><i class="fa fa-fw fa-cog"></i>&nbsp;<a href="<?php echo $baseurl; ?>/pages/admin/admin_system_config.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['systemconfig']; ?></a></li>
 			<li><i class="fa fa-fw fa-bolt"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_system_performance.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["system_performance"]?></a></li>
+			<li><i class="fa fa-fw fa-cog"></i>&nbsp;<a href="<?php echo $baseurl; ?>/pages/admin/admin_system_config.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['systemconfig']; ?></a></li>
 			<?php
 			}
 			?>
 
-		<li><i class="fa fa-fw fa-check-square"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/check.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["installationcheck"]?></a></li>
+		
 
 <?php
 if ($web_config_edit)
