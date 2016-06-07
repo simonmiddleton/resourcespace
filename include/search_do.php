@@ -10,7 +10,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     debug("search=$search $go $fetchrows restypes=$restypes archive=$archive daylimit=$recent_search_daylimit");
 
     # globals needed for hooks
-    global $sql,$order,$select,$sql_join,$sql_filter,$orig_order,$collections_omit_archived,$search_sql_double_pass_mode,$usergroup,$search_filter_strict,$default_sort,$superaggregationflag;
+    global $sql,$order,$select,$sql_join,$sql_filter,$orig_order,$collections_omit_archived,$search_sql_double_pass_mode,$usergroup,$search_filter_strict,$default_sort,$superaggregationflag,$k;
 
     $alternativeresults = hook("alternativeresults", "", array($go));
     if ($alternativeresults)
@@ -117,72 +117,75 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     $sql_prefix="";$sql_suffix="";
     if ($return_disk_usage)
         {
-        $sql_prefix="select sum(disk_usage) total_disk_usage,count(*) total_resources from (";$sql_suffix=") resourcelist";
+        $sql_prefix="select sum(disk_usage) total_disk_usage,count(*) total_resources from (";
+        $sql_suffix=") resourcelist";
         }
 
-# ------ Advanced 'custom' permissions, need to join to access table.
-$sql_join="";
-global $k;
-if ((!checkperm("v")) &&!$access_override)
-{
-global $usergroup;global $userref;
-# one extra join (rca2) is required for user specific permissions (enabling more intelligent watermarks in search view)
-# the original join is used to gather group access into the search query as well.
-$sql_join=" left outer join resource_custom_access rca2 on r.ref=rca2.resource and rca2.user='$userref'  and (rca2.user_expires is null or rca2.user_expires>now()) and rca2.access<>2  ";
-$sql_join.=" left outer join resource_custom_access rca on r.ref=rca.resource and rca.usergroup='$usergroup' and rca.access<>2 ";
+    # ------ Advanced 'custom' permissions, need to join to access table.
+    $sql_join="";
+    if ((!checkperm("v")) &&!$access_override)
+        {
+        global $usergroup;global $userref;
+        # one extra join (rca2) is required for user specific permissions (enabling more intelligent watermarks in search view)
+        # the original join is used to gather group access into the search query as well.
+        $sql_join=" left outer join resource_custom_access rca2 on r.ref=rca2.resource and rca2.user='$userref'  and (rca2.user_expires is null or rca2.user_expires>now()) and rca2.access<>2  ";
+        $sql_join.=" left outer join resource_custom_access rca on r.ref=rca.resource and rca.usergroup='$usergroup' and rca.access<>2 ";
 
-if ($sql_filter!="") {$sql_filter.=" and ";}
-# If rca.resource is null, then no matching custom access record was found
-# If r.access is also 3 (custom) then the user is not allowed access to this resource.
-# Note that it's normal for null to be returned if this is a resource with non custom permissions (r.access<>3).
-$sql_filter.=" not(rca.resource is null and r.access=3)";
-}
+        if ($sql_filter!="") {$sql_filter.=" and ";}
+        # If rca.resource is null, then no matching custom access record was found
+        # If r.access is also 3 (custom) then the user is not allowed access to this resource.
+        # Note that it's normal for null to be returned if this is a resource with non custom permissions (r.access<>3).
+        $sql_filter.=" not(rca.resource is null and r.access=3)";
+        }
 
-# Join thumbs_display_fields to resource table
-$select="r.ref, r.resource_type, r.has_image, r.is_transcoding, r.hit_count, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path ";
+    # Join thumbs_display_fields to resource table
+    $select="r.ref, r.resource_type, r.has_image, r.is_transcoding, r.hit_count, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path ";
 
-$modified_select=hook("modifyselect");
-if ($modified_select){$select.=$modified_select;}
-$modified_select2=hook("modifyselect2");
-if ($modified_select2){$select.=$modified_select2;}
+    $modified_select=hook('modifyselect');
+    $select.=$modified_select ? $modified_select : '';      // modify select hook 1
 
-# Return disk usage for each resource if returning sum of disk usage.
-if ($return_disk_usage) {$select.=",r.disk_usage";}
+    $modified_select2=hook('modifyselect2');
+    $select.=$modified_select2 ? $modified_select2 : '';    // modify select hook 2
 
-# select group and user access rights if available, otherwise select null values so columns can still be used regardless
-# this makes group and user specific access available in the basic search query, which can then be passed through access functions
-# in order to eliminate many single queries.
-if ((!checkperm("v")) &&!$access_override)
-{
-$select.=",rca.access group_access,rca2.access user_access ";
-}
-else
-{
-$select.=",null group_access, null user_access ";
-}
+    $select.=$return_disk_usage ? ',r.disk_usage' : '';      // disk usage
 
-# add 'joins' to select (only add fields if not returning the refs only)
-$joins=$return_refs_only===false ? get_resource_table_joins() : array();
-foreach( $joins as $datajoin)
-{
-$select.=",r.field".$datajoin." ";
-}
+    # select group and user access rights if available, otherwise select null values so columns can still be used regardless
+    # this makes group and user specific access available in the basic search query, which can then be passed through access functions
+    # in order to eliminate many single queries.
+    if (!checkperm("v") && !$access_override)
+        {
+        $select.=",rca.access group_access,rca2.access user_access ";
+        }
+    else
+        {
+        $select.=",null group_access, null user_access ";
+        }
 
-# Prepare SQL to add join table for all provided keywods
+    # add 'joins' to select (only add fields if not returning the refs only)
+    $joins=$return_refs_only===false ? get_resource_table_joins() : array();
+    foreach( $joins as $datajoin)
+        {
+        $select.=",r.field".$datajoin." ";
+        }
 
-$suggested=$keywords; # a suggested search
-$fullmatch=true;
-$c=0;
-$t="";
-$t2="";
-$score="";
-$skipped_last=false;
+    # Prepare SQL to add join table for all provided keywords
 
-$keysearch=true;
+    $suggested=$keywords; # a suggested search
+    $fullmatch=true;
+    $c=0;
+    $t="";
+    $t2="";
+    $score="";
+    $skipped_last=false;
 
-# Do not process if a numeric search is provided (resource ID)
-global $config_search_for_number, $category_tree_search_use_and;
-if ($config_search_for_number && is_numeric($search)) {$keysearch=false;}
+
+
+    # Do not process if a numeric search is provided (resource ID)
+    global $config_search_for_number, $category_tree_search_use_and;
+    $keysearch=!($config_search_for_number && is_numeric($search));
+
+
+
 
 
 # Fetch a list of fields that are not available to the user - these must be omitted from the search.
@@ -208,6 +211,14 @@ if('' != $sql_restrict_by_field_types)
 $sql_restrict_by_field_types = '-1,' . $sql_restrict_by_field_types;
 }
 }
+
+
+// ******************************** START OF KEYSEARCH HERE MATT **************************************************
+// ******************************** START OF KEYSEARCH HERE MATT **************************************************
+// ******************************** START OF KEYSEARCH HERE MATT **************************************************
+// ******************************** START OF KEYSEARCH HERE MATT **************************************************
+// ******************************** START OF KEYSEARCH HERE MATT **************************************************
+
 
 if ($keysearch)
 {
@@ -635,9 +646,23 @@ $field=0;#echo "<li>$keyword<br/>";
     $skipped_last=false;
     }
     }
-    }
-    }
-    }
+    }       // end of check if special search
+    }       // end n keyword loop
+    }       // end keysearch if
+
+
+// ******************************** END OF KEYSEARCH HERE MATT **************************************************
+// ******************************** END OF KEYSEARCH HERE MATT **************************************************
+// ******************************** END OF KEYSEARCH HERE MATT **************************************************
+// ******************************** END OF KEYSEARCH HERE MATT **************************************************
+// ******************************** END OF KEYSEARCH HERE MATT **************************************************
+
+
+
+
+
+
+
 
     # Could not match on provided keywords? Attempt to return some suggestions.
     if ($fullmatch==false)
@@ -827,6 +852,11 @@ $field=0;#echo "<li>$keyword<br/>";
     # Debug
     debug('$results_sql=' . $results_sql);
 
+
+    file_put_contents(__DIR__ . '/../debug.txt',$results_sql,FILE_APPEND);
+
+
+
     if($return_refs_only)
     {
     # Execute query but only ask for ref columns back from mysql_query();
@@ -840,7 +870,16 @@ $field=0;#echo "<li>$keyword<br/>";
     else
     {
     # Execute query as normal
+
+
+
+
     $result=sql_query($results_sql,false,$fetchrows);
+
+
+
+
+
     }
 
     # Performance improvement - perform a second count-only query and pad the result array as necessary
