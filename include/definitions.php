@@ -1,24 +1,46 @@
 <?php
 
 // ------------------------- FIELD TYPES -------------------------
-$field_types=array(
-		0=>"fieldtype-text_box_single_line",
-		1=>"fieldtype-text_box_multi-line",
-		2=>"fieldtype-check_box_list",
-		3=>"fieldtype-drop_down_list",
-		4=>"fieldtype-date_and_optional_time",
-		5=>"fieldtype-text_box_large_multi-line",
-		6=>"fieldtype-expiry_date",
-		7=>"fieldtype-category_tree",
-		8=>"fieldtype-text_box_formatted_and_ckeditor",
-		9=>"fieldtype-dynamic_keywords_list",
-		10=>"fieldtype-date",
-		11=>"fieldtype-dynamic_tree_in_development",
-		12=>"fieldtype-radio_buttons",
-		13=>"fieldtype-warning_message"
-		);
 
-$FIXED_LIST_FIELD_TYPES = array(2,3,7,9,12);
+define ('FIELD_TYPE_TEXT_BOX_SINGLE_LINE',              0);
+define ('FIELD_TYPE_TEXT_BOX_MULTI_LINE',               1);
+define ('FIELD_TYPE_CHECK_BOX_LIST',                    2);
+define ('FIELD_TYPE_DROP_DOWN_LIST',                    3);
+define ('FIELD_TYPE_DATE_AND_OPTIONAL_TIME',            4);
+define ('FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE',         5);
+define ('FIELD_TYPE_EXPIRY_DATE',                       6);
+define ('FIELD_TYPE_CATEGORY_TREE',                     7);
+define ('FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR',   8);
+define ('FIELD_TYPE_DYNAMIC_KEYWORDS_LIST',             9);
+define ('FIELD_TYPE_DATE',                             10);
+define ('FIELD_TYPE_DYNAMIC_TREE_IN_DEVELOPMENT',      11);
+define ('FIELD_TYPE_RADIO_BUTTONS',                    12);
+define ('FIELD_TYPE_WARNING_MESSAGE',                  13);
+
+$field_types = array(
+    FIELD_TYPE_TEXT_BOX_SINGLE_LINE             =>"fieldtype-text_box_single_line",
+    FIELD_TYPE_TEXT_BOX_MULTI_LINE              =>"fieldtype-text_box_multi-line",
+    FIELD_TYPE_CHECK_BOX_LIST                   =>"fieldtype-check_box_list",
+    FIELD_TYPE_DROP_DOWN_LIST                   =>"fieldtype-drop_down_list",
+    FIELD_TYPE_DATE_AND_OPTIONAL_TIME           =>"fieldtype-date_and_optional_time",
+    FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE        =>"fieldtype-text_box_large_multi-line",
+    FIELD_TYPE_EXPIRY_DATE                      =>"fieldtype-expiry_date",
+    FIELD_TYPE_CATEGORY_TREE                    =>"fieldtype-category_tree",
+    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR  =>"fieldtype-text_box_formatted_and_ckeditor",
+    FIELD_TYPE_DYNAMIC_KEYWORDS_LIST            =>"fieldtype-dynamic_keywords_list",
+    FIELD_TYPE_DATE                             =>"fieldtype-date",
+    FIELD_TYPE_DYNAMIC_TREE_IN_DEVELOPMENT      =>"fieldtype-dynamic_tree_in_development",
+    FIELD_TYPE_RADIO_BUTTONS                    =>"fieldtype-radio_buttons",
+    FIELD_TYPE_WARNING_MESSAGE                  =>"fieldtype-warning_message"
+);
+
+$FIXED_LIST_FIELD_TYPES = array(
+    FIELD_TYPE_CHECK_BOX_LIST,
+    FIELD_TYPE_DROP_DOWN_LIST,
+    FIELD_TYPE_CATEGORY_TREE,
+    FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,
+    FIELD_TYPE_RADIO_BUTTONS
+);
 
 // ------------------------- LOG_CODE_ -------------------------
 

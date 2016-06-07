@@ -329,6 +329,11 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         }
                     elseif (!hook('customsearchkeywordfilter', null, array($kw)))
                         {
+
+                        // ********************************************************************************
+                        //                                                     START Nodes for fixed fields
+                        // ********************************************************************************
+
                         # Fetch field info
                         global $fieldinfo_cache;
                         if (isset($fieldinfo_cache[$kw[0]]))
@@ -340,7 +345,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             $fieldinfo=sql_query("select ref,type from resource_type_field where name='" . escape_check($kw[0]) . "'",0);
                             $fieldinfo_cache[$kw[0]]=$fieldinfo;
                             }
-                        if ($fieldinfo[0]["type"] == 7)
+
+                        if ($fieldinfo[0]["type"]==FIELD_TYPE_CATEGORY_TREE)
                             {
                             $ckeywords=preg_split('/[\|;]/',$kw[1]);
                             }
@@ -368,13 +374,13 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         }
 
                         # Special handling for dates
-                        if ($fieldinfo[0]["type"]==4 || $fieldinfo[0]["type"]==6 || $fieldinfo[0]["type"]==10)
+                        if ($fieldinfo[0]["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME || $fieldinfo[0]["type"]==FIELD_TYPE_EXPIRY_DATE || $fieldinfo[0]["type"]==FIELD_TYPE_DATE)
                             {
                             $ckeywords=array(str_replace(" ","-",$kw[1]));
                             }
 
                         #special SQL generation for category trees to use AND instead of OR
-                        if ($fieldinfo[0]["type"] == 7 && $category_tree_search_use_and)
+                        if ($fieldinfo[0]["type"]==FIELD_TYPE_CATEGORY_TREE && $category_tree_search_use_and)
                             {
                             for ($m=0;$m<count($ckeywords);$m++)
                                 {
@@ -414,7 +420,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         else
                             {
                             $c++;
-
                             # work through all options in an OR approach for multiple selects on the same field
                             $searchkeys=array();
                             for ($m=0;$m<count($ckeywords);$m++)
@@ -468,6 +473,11 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             $sql_keyword_union_criteria[] = "h.keyword_" . $c . "_found";
                             $sql_keyword_union[] = $union;
                             }
+
+                        // ********************************************************************************
+                        //                                                       END Nodes for fixed fields
+                        // ********************************************************************************
+
                         }
                     }
                 else
