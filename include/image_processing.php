@@ -1215,17 +1215,18 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		$identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
 		$identoutput=run_command($identcommand);
         resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$identcommand . ":\n" . $identoutput);
+        
+        if(!empty($identoutput)){
+			$wh=explode("x",$identoutput);
+			$o_width=$wh[0];
+			$o_height=$wh[1];
+		}
 
         if($lean_preview_generation){
 			$all_sizes=false;
 			if(!$thumbonly && !$previewonly){
 				// seperate width and height
 				$all_sizes=true;
-				if(!empty($identoutput)){
-					$wh=explode("x",$identoutput);
-					$o_width=$wh[0];
-					$o_height=$wh[1];
-				}
 			}
 		}
 		
@@ -1322,12 +1323,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			$tw=$ps[$n]["width"];
 			$th=$ps[$n]["height"];
 			$id=$ps[$n]["id"];
+			echo "tw=$tw - th=$th<br/>";
 			if($imagemagick_mpr)
 				{
 				$mpr_parts['id']=$id;
 				$mpr_parts['quality']=$preview_quality;
-				$mpr_parts['tw']=($id!='hpr' ? $tw : ''); // hpr should be fullsized and does not need this setting
-				$mpr_parts['th']=($id!='hpr' ? $tw : ''); // hpr should be fullsized and does not need this setting
+				$mpr_parts['tw']=($id=='hpr' && $tw==999999 && isset($o_width) ? $o_width : $tw); // might as well pass on the original dimension
+				$mpr_parts['th']=($id=='hpr' && $th==999999 && isset($o_height) ? $o_height : $th); // might as well pass on the original dimension
 				$mpr_parts['flatten']=($flatten=='' ? false : true);
 				$mpr_parts['icc_transform_complete']=$icc_transform_complete;
 				}
@@ -1562,7 +1564,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				if($imagemagick_mpr)
 					{
 					// need a watermark replacement here as the existing hook doesn't work
-					$modified_mpr_watermark=hook("modify_mpr_watermark",'',array($ref, $ps, $n, $alternative));
+					$modified_mpr_watermark=hook("modify_mpr_watermark",'',array($ref, $ps, $n, $alternative, $mpr_parts));
 					if($modified_mpr_watermark!='')
 						{echo "changing wmpath to $modified_mpr_watermark<br/>";
 						$mpr_parts['wmpath']=$modified_mpr_watermark;
