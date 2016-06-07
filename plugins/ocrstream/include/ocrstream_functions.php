@@ -278,9 +278,9 @@ function get_res_type ($ID)
  */
 function set_ocr_state($ID, $ocr_state)
     {
-    $ID_filter_options = ["options" =>['min_range' => 1, 'max_range' => sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')]];
+    $ID_filter_options = array("options" =>array('min_range' => 1, 'max_range' => sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')));
     $ID_filtered = filter_var($ID, FILTER_VALIDATE_INT, $ID_filter_options);
-    $ocr_state_filter_options = ["options" =>['min_range' => 0, 'max_range' => 3]];
+    $ocr_state_filter_options = array("options" =>array('min_range' => 0, 'max_range' => 3));
     $ocr_state_filtered = filter_var($ocr_state, FILTER_VALIDATE_INT, $ocr_state_filter_options);
     if (!$ID_filtered || (!$ocr_state_filtered && $ocr_state_filtered !== 0))
         {
@@ -315,7 +315,7 @@ function is_resource_lock($ID)
 
 function set_resource_lock($ID, $clear)
     {
-    $ID_filter_options = ["options" => ['min_range' => 1, 'max_range' => sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')]];
+    $ID_filter_options = array("options" =>array('min_range' => 1, 'max_range' => sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')));
     $ID_filtered = filter_var($ID, FILTER_VALIDATE_INT, $ID_filter_options);
     if (!$ID_filtered)
         {
@@ -515,9 +515,9 @@ function get_ocronjob_resources()
 
 function set_ocronjob($ID, $ocr_state)
     {
-    $ID_filter_options = ["options" =>['min_range' => 1, 'max_range' => sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')]];
+    $ID_filter_options = array("options" =>array('min_range' => 1, 'max_range' => sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')));
     $ID_filtered = filter_var($ID, FILTER_VALIDATE_INT, $ID_filter_options);
-    $ocr_state_filter_options = ["options" =>['min_range' => 0, 'max_range' => 3]];
+    $ocr_state_filter_options = array("options" =>array('min_range' => 0, 'max_range' => 3));
     $ocr_state_filtered = filter_var($ocr_state, FILTER_VALIDATE_INT, $ocr_state_filter_options);
     if (!$ID_filtered || !$ocr_state_filtered)
         {
