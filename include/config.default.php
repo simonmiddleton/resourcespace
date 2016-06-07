@@ -681,7 +681,7 @@ $themes_navlink = true;
 # display an alert icon next to the team centre link 
 # and the relevant team centre item when there are requests that need managing
 # only affects users with permissions to do this.
-$team_centre_alert_icon = false;
+$team_centre_alert_icon = true;
 
 # Hide mycontributions link from regular users
 $mycontributions_userlink=true;
@@ -2688,7 +2688,7 @@ $ctrls_to_save=false;
 # Option to separate some resource types in searchbar selection boxes
 $separate_resource_types_in_searchbar=Array();
 
-$team_centre_bug_report=true;
+$team_centre_bug_report=false;
 
 # Option to show resource archive status in search results list view
 $list_view_status_column=false;

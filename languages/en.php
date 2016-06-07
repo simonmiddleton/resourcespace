@@ -252,8 +252,7 @@ $lang["managethemes"]="Manage featured collections";
 $lang["manageresearchrequests"]="Manage research requests";
 $lang["manageusers"]="Manage users";
 $lang["managecontent"]="Manage content";
-$lang["viewstatistics"]="View statistics";
-$lang["viewreports"]="View reports";
+$lang["viewreports"]="Reports";
 $lang["viewreport"]="View report";
 $lang["treeobjecttype-report"]=$lang["report"]="Report";
 $lang["sendbulkmail"]="Send bulk mail";
@@ -2467,7 +2466,7 @@ $lang['filter_label'] = 'Filter';
 /* end of Manage external shares */
 
 
-$lang["rse_analytics"]="View analytics";
+$lang["rse_analytics"]="Analytics";
 $lang["new_report"]="New report";
 $lang["edit_report"]="Edit report";
 $lang["all_activity"]="All activity";

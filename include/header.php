@@ -365,15 +365,22 @@ else
 	<ul>
 	<?php if (!hook("replaceheaderfullnamelink")){?>
 	<li><a href="<?php echo $baseurl?>/pages/user/user_home.php"  onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?></a>
-		<span style="display: none;" class="MessageCountPill"></span>
+		<span style="display: none;" class="MessageCountPill Pill"></span>
 		<div id="MessageContainer" style="position:absolute; "></div>
 	<?php } ?></li>
 	
 	<!-- Team centre link -->
 	<?php if (checkperm("t")) { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i class="fa fa-bars fa-fw"></i>&nbsp;<?php echo $lang["teamcentre"]?></a>
-	<?php if ($team_centre_alert_icon && (checkperm("R")||checkperm("r")) &&  (sql_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",0) > 0)){
-			echo '<img src="' . $baseurl . '/gfx/images/attention_16.png" width="16" height="16" alt="Alert" class="TeamCentreAlertIcon" />';
-	} ?>
+	<?php if ($team_centre_alert_icon && (checkperm("R")||checkperm("r")))
+			{
+			# Show pill count if there are any pending requests
+			$pending=sql_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",0);
+			if ($pending>0)
+				{
+				?><span class="Pill"><?php echo $pending ?></span><?php
+				}
+			}
+		?>
 	</li><?php } ?>
 	<!-- End of team centre link -->
 	
