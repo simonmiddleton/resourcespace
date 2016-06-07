@@ -19,8 +19,7 @@ include "../../include/header.php";
 
 <div class="BasicsBox"> 
   <h1><?php echo $lang["managerequestsorders"]?></h1>
-  <p><?php echo text("introtext")?></p>
- 
+
 <?php 
 $requests=get_requests();
 
@@ -32,7 +31,9 @@ $curpage=floor($offset/$per_page)+1;
 $url="team_request.php?";
 $jumpcount=1;
 
-?><div class="TopInpageNav"><?php pager();	?></div>
+?><div class="TopInpageNav"><?php pager();	?> <br style="clear:left" /><br />
+</div>
+
 
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
