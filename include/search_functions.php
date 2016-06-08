@@ -303,6 +303,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
                         if(0 === count($fieldinfo))
                             {
+                            debug('Field short name not found.');
                             return false;
                             }
 
@@ -313,11 +314,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         else
                             {
                             $ckeywords=explode(";",$kw[1]);
-                            }
-
-                        if (count($fieldinfo)==0)
-                            {
-                            debug("Field short name not found.");return false;
                             }
                         
                         # Create an array of matching field IDs.
