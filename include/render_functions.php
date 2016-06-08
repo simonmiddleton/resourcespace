@@ -974,7 +974,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
             switch(v)
                 {
             <?php
-            if(!empty($collection_data))
+            if(0 !== count($collection_data) && collection_readable($collection_data['ref']))
                 {
                 ?>
                 case 'select_collection':
