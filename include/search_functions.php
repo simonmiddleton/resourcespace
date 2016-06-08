@@ -301,6 +301,11 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             $fieldinfo_cache[$kw[0]]=$fieldinfo;
                         }
 
+                        if(0 === count($fieldinfo))
+                            {
+                            return false;
+                            }
+
                         if ($fieldinfo[0]["type"] == 7)
                             {
                             $ckeywords=preg_split('/[\|;]/',$kw[1]);
