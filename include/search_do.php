@@ -113,6 +113,15 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     $sql_keyword_union_aggregation = array();
     $sql_keyword_union_criteria    = array();
 
+    // ********************************************************************************
+
+    // IMPORTANT!
+    // add to this array in the format [node ref]=>boolean where true=AND and false=OR
+
+    $node_bucket=array();
+
+    // ********************************************************************************
+
     # If returning disk used by the resources in the search results ($return_disk_usage=true) then wrap the returned SQL in an outer query that sums disk usage.
     $sql_prefix="";$sql_suffix="";
     if ($return_disk_usage)
@@ -222,7 +231,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                 {
                 global $date_field;
                 $field=0;
-
                 //echo "<li>$keyword<br/>";
 
                 if (strpos($keyword,":")!==false && !$ignore_filters)
@@ -253,10 +261,10 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             {
                             $sql_filter.=" and ";
                             }
-                            $val=str_replace("n","_", $kw[1]);
-                            $val=str_replace("|","-", $val);
-                            $sql_filter.="rd" . $c . ".value like '". $val . "%' ";
-                            $sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $datefield . "'";
+                        $val=str_replace("n","_", $kw[1]);
+                        $val=str_replace("|","-", $val);
+                        $sql_filter.="rd" . $c . ".value like '". $val . "%' ";
+                        $sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $datefield . "'";
                         }
                     elseif ($kw[0]=="day")
                         {
@@ -346,7 +354,12 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             $fieldinfo_cache[$kw[0]]=$fieldinfo;
                             }
 
-                        if ($fieldinfo[0]["type"]==FIELD_TYPE_CATEGORY_TREE)
+                        if (!isset($fieldinfo[0]["type"]))
+                            {
+                            return false;       // this is a duff field, i.e. does not exist
+                            }
+
+                        if($fieldinfo[0]["type"]==FIELD_TYPE_CATEGORY_TREE)
                             {
                             $ckeywords=preg_split('/[\|;]/',$kw[1]);
                             }
@@ -355,23 +368,19 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             $ckeywords=explode(";",$kw[1]);
                             }
 
-                        if (count($fieldinfo)==0)
-                            {
-                            debug("Field short name not found.");return false;
-                            }
-
                         # Create an array of matching field IDs.
-                        $fields=array();foreach ($fieldinfo as $fi)
-                        {
-                        if (in_array($fi["ref"], $hidden_indexed_fields))
+                        $fields=array();
+                        foreach ($fieldinfo as $fi)
                             {
-                            # Attempt to directly search field that the user does not have access to.
-                            return false;
-                            }
+                            if (in_array($fi["ref"], $hidden_indexed_fields))
+                                {
+                                # Attempt to directly search field that the user does not have access to.
+                                return false;
+                                }
 
-                        # Add to search array
-                        $fields[]=$fi["ref"];
-                        }
+                            # Add to search array
+                            $fields[]=$fi["ref"];
+                            }
 
                         # Special handling for dates
                         if ($fieldinfo[0]["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME || $fieldinfo[0]["type"]==FIELD_TYPE_EXPIRY_DATE || $fieldinfo[0]["type"]==FIELD_TYPE_DATE)
@@ -379,9 +388,21 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             $ckeywords=array(str_replace(" ","-",$kw[1]));
                             }
 
-                        #special SQL generation for category trees to use AND instead of OR
                         if ($fieldinfo[0]["type"]==FIELD_TYPE_CATEGORY_TREE && $category_tree_search_use_and)
                             {
+
+                            // ********************************************************************************
+                            //                                                     START category tree AND join
+                            // ********************************************************************************
+
+                            foreach($ckeywords as $ckeyword)
+                                {
+                                $node_bucket[$ckeyword]=true;       // true for AND condition
+                                }
+
+                            // TODO: remove this proper when nodes plumbed in
+
+                            /*
                             for ($m=0;$m<count($ckeywords);$m++)
                                 {
                                 // node implementation will eventually replace this fix
@@ -415,11 +436,26 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                     # Log this
                                     if ($stats_logging) {daily_stat("Keyword usage",$keyref);}
                                     }
-                                }
+                                }       // end for each keyword
+                            */
+
+                            // ********************************************************************************
+                            //                                                       END category tree AND join
+                            // ********************************************************************************
+
                             }
                         else
                             {
+                            foreach($ckeywords as $ckeyword)
+                                {
+                                $node_bucket[$ckeyword]=false;       // true for AND condition
+                                }
+
+                            // TODO: remove this proper when nodes plumbed in
+
+                            /*
                             $c++;
+
                             # work through all options in an OR approach for multiple selects on the same field
                             $searchkeys=array();
                             for ($m=0;$m<count($ckeywords);$m++)
@@ -472,6 +508,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             $sql_keyword_union_aggregation[] = "bit_or(keyword_" . $c . "_found) as keyword_" . $c . "_found";
                             $sql_keyword_union_criteria[] = "h.keyword_" . $c . "_found";
                             $sql_keyword_union[] = $union;
+                            */
                             }
 
                         // ********************************************************************************
@@ -748,6 +785,32 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     //
     // *******************************************************************************
 
+    // TODO: Expand out these lists to include keyword_related (i.e. synonyms)
+
+    $node_bucket_AND=array_keys($node_bucket,true,true);
+    $node_bucket_OR=array_keys($node_bucket,false,true);
+
+    // *******************************************************************************
+    //                                                       START add node conditions
+    // *******************************************************************************
+
+    if(count($node_bucket_AND)>0)
+        {
+        $sql_filter=' ref IN (SELECT `resource` FROM `resource_node` WHERE node IN ('.
+            implode(',',$node_bucket_AND) . ') GROUP BY resource having COUNT(1)=' .
+            count($node_bucket_AND) . ') AND ' . $sql_filter;
+        }
+
+    if(count($node_bucket_OR)>0)
+        {
+        $sql_filter='EXISTS (SELECT `resource` FROM `resource_node` WHERE `ref`=`resource` AND `node` IN (' .
+            implode(',',$node_bucket_OR) . ')) AND ' . $sql_filter;
+        }
+
+    // *******************************************************************************
+    //                                                         END add node conditions
+    // *******************************************************************************
+
     # Could not match on provided keywords? Attempt to return some suggestions.
     if ($fullmatch==false)
         {
@@ -986,9 +1049,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
     # Debug
     debug('$results_sql=' . $results_sql);
-
-    // TODO: remove this permanently
-    // file_put_contents(__DIR__ . '/../debug.txt',PHP_EOL . PHP_EOL . $results_sql,FILE_APPEND);
 
     if($return_refs_only)
         {
