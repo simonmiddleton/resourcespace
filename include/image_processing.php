@@ -1568,6 +1568,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					if($modified_mpr_watermark!='')
 						{echo "changing wmpath to $modified_mpr_watermark<br/>";
 						$mpr_parts['wmpath']=$modified_mpr_watermark;
+						if($id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
+							{
+							// need to convert the profile
+							$mpr_parts['wm_sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? $iccpath : ''). " " . $icc_preview_options;
+							$mpr_parts['wm_targetprofile']=($icc_extraction && file_exists($iccpath) && $id!="thm" || $id!="col" || $id!="pre" || $id=="scr" ? dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile : "");
+							}
 						}
 					$command_parts[]=$mpr_parts;
 					} 
@@ -1590,6 +1596,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			$cp_count=count($command_parts);
 			$mpr_init_write=false;
 			$mpr_icc_transform_complete=false;
+			$mpr_wm_created=false;
 			
 			for($p=1;$p<$cp_count;$p++)
 				{
@@ -1623,7 +1630,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				}
 			//echo "unique_flatten=$unique_flatten - unique_strip_source=$unique_strip_source - unique_source_profile=$unique_source_profile - unique_strip_target=$unique_strip_target - unique_target_profile=$unique_target_profile - unique_colorspace=$unique_colorspace<br/>";
 			// time to build the command
-			$command=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -alpha off' : '') . ' -debug cache -depth ' . $imagemagick_mpr_depth;
+			$command=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -alpha off' : '') . ' -depth ' . $imagemagick_mpr_depth;
 			if(!$unique_flatten)
 				{
 			 	$command.=($command_parts[0]['flatten'] ? " -flatten " : "");
@@ -1665,7 +1672,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			//$command.=' -write mpr:' . $ref . ' +delete '; // save this to memory as these settings are true for all versions
 			for($p=0;$p<$cp_count;$p++)
 				{
-				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '') . ' -quality ' . $command_parts[$p]['quality'];
+				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '');
 				
 				if(isset($command_parts[$p]['icc_transform_complete']) && !$mpr_icc_transform_complete && $command_parts[$p]['icc_transform_complete'] && $command_parts[$p]['targetprofile']!=='')
 					{
@@ -1679,17 +1686,21 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				if($command_parts[$p]['tw']!=='' && $command_parts[$p]['th']!=='')
 					{
 					$command.=" -resize " . $command_parts[$p]['tw'] . "x" . $command_parts[$p]['th'] . (($previews_allow_enlarge && $command_parts[$p]['id']!="hpr")?" ":"\">\"");
+					if($p>0)
+						{
+						$command.=" -write mpr:" . $ref ." -delete 1";
+						}
 					}
 				
 				//$command.=" -write mpr:" . $ref;
-				if(isset($command_parts[$p]['wmpath']) || $force_mpr_write)
+				/*if(isset($command_parts[$p]['wmpath']) || $force_mpr_write)
 					{
 					$command.=" -write mpr:" . $ref;
 					if(!$mpr_init_write)
 						{
 						$mpr_init_write=true;
 						}
-					}
+					}*/
 				if($unique_flatten || $unique_strip_source || $unique_source_profile || $unique_colorspace || $unique_strip_target || $unique_target_profile)
 					{
 					// make these changes
@@ -1697,11 +1708,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						$command.=($command_parts[$p]['flatten'] ? " -flatten " : "");
 						}
-					 if($unique_strip_source && !$skip_source_and_target_profiles)
+					 if($unique_strip_source && !$skip_source_and_target_profiles && !$mpr_icc_transform_complete)
 						{
 						$command.=($command_parts[$p]['strip_source'] ? " -strip " : "");
 						}
-					 if($unique_source_profile && $command_parts[$p]['sourceprofile']!=='' && !$skip_source_and_target_profiles)
+					 if($unique_source_profile && $command_parts[$p]['sourceprofile']!=='' && !$skip_source_and_target_profiles && !$mpr_icc_transform_complete)
 						{
 						$command.=" -profile " . $command_parts[$p]['sourceprofile'];
 						}
@@ -1709,27 +1720,53 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						$command.=" -colorspace " . $command_parts[$p]['colorspace'];
 						}*/
-					 if($unique_strip_target && !$skip_source_and_target_profiles) // if the source is different but the target is the same we could get into trouble...
+					 if($unique_strip_target && !$skip_source_and_target_profiles && !$mpr_icc_transform_complete) // if the source is different but the target is the same we could get into trouble...
 						{
 						$command.=($command_parts[$p]['strip_target'] ? " -strip" : "");
 						}
-					 if($unique_target_profile && $command_parts[$p]['targetprofile']!=='' && !$skip_source_and_target_profiles)
+					 if($unique_target_profile && $command_parts[$p]['targetprofile']!=='' && !$skip_source_and_target_profiles && !$mpr_icc_transform_complete)
 						{
 						$command.=" -profile " . $command_parts[$p]['targetprofile'];
 						}
 					}
 				// save out to file
-				if(!$mpr_init_write && !isset($command_parts[$p]['wmpath']) && isset($command_parts[($p+1)]['wmpath']) && (!isset($command_parts[$p]['icc_transform_complete']) || !$mpr_icc_transform_complete))
+				/*if(!$mpr_init_write && !isset($command_parts[$p]['wmpath']) && isset($command_parts[($p+1)]['wmpath']) && (!isset($command_parts[$p]['icc_transform_complete']) || !$mpr_icc_transform_complete))
 					{
 					$command.=" -write mpr:" . $ref;
 					$mpr_init_write=true;
-					}
-				$command.=(($p===($cp_count-1) && !isset($command_parts[$p]['wmpath'])) ? " " : " -write "). escapeshellarg($command_parts[$p]['targetpath']);
+					}*/
+				$command.=(($p===($cp_count-1) && !isset($command_parts[$p]['wmpath'])) ? " " : " -quality " . $command_parts[$p]['quality'] . " -write "). escapeshellarg($command_parts[$p]['targetpath']) . ($mpr_wm_created && isset($command_parts[$p]['wmpath']) ? " +delete mpr:" . $ref : "" );
 				//$command.=" -write " . $command_parts[$p]['targetpath'];
 				// watermarks?
 				if(isset($command_parts[$p]['wmpath']))
 					{
-					if(!isset($watermark_single_image))
+					if(!$mpr_wm_created)
+						{
+						if(isset($command_parts[$p]['wm_sourceprofile']))
+							{
+							// convert to the target profile now. the source profile will only contain $icc_preview_options and needs to be included here as well
+							$command.=($command_parts[$p]['wm_sourceprofile']!='' ? " " . $command_parts[$p]['wm_sourceprofile'] : "") . (isset($command_parts[$p]['wm_targetprofile']) && $command_parts[$p]['wm_targetprofile']!='' ? " -profile " . $command_parts[$p]['wm_targetprofile'] : "" ) . ($mpr_metadata_profiles!=='' ? " +profile \"" . $mpr_metadata_profiles . ",*\"" : "");
+							$mpr_icc_transform_complete=true;
+							//$force_mpr_write=true;
+							//$skip_source_and_target_profiles=true;
+							}
+						$TILESIZE=($command_parts[$p]['th']<$command_parts[$p]['tw'] ? $command_parts[$p]['th'] : $command_parts[$p]['tw']);
+						$TILESIZE=$TILESIZE/3;
+						$TILEROLL=$TILESIZE/4;
+						
+						// let's create the watermark and save as an mpr
+						//$command.=" \( " . escapeshellarg($watermarkreal) . " -write mpr:" . $ref . "_wm +delete \)";
+						$command.=" \( " . escapeshellarg($watermarkreal) . " -resize x" . escapeshellarg($TILESIZE) . " -background none -write mpr:" . $ref . " +delete \)";
+						$command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escapeshellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
+						$mpr_init_write=true;
+						$mpr_wm_created=true;
+						$command.=" -delete 1 -write mpr:" . $ref . " -delete 0";
+						$command.=" -quality " . $command_parts[$p]['quality'] . ($p!==($cp_count-1) ? " -write " : " "). escapeshellarg($command_parts[$p]['wmpath']);
+						}
+					// now add the watermark line in
+					//$command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escapeshellarg($command_parts[$p]['th']) . " tile:mpr:" . $ref . "_wm \) \( -clone 0 -clone 1 -compose multiply -composite \)";
+					
+					/*if(!isset($watermark_single_image))
 						{
 						$command.=' -tile ' . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 " . $command_parts[$p]['tw'] . "," . $command_parts[$p]['th'] . "\"";
 						}
@@ -1740,8 +1777,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $wm_scaled_height = $command_parts[$p]['th'] * ($wm_scale / 100);
 						
 						$command.=" " . escapeshellarg($watermarkreal) . " -gravity " . escapeshellarg($watermark_single_image['position']) . " -geometry " . escapeshellarg($wm_scaled_width) . "x" . escapeshellarg($wm_scaled_height) . "+0+0 -composite";
+						}*/
+					else
+						{
+						$command.=" -delete 0" . ($p!==($cp_count-1) ? " -write " : " "). escapeshellarg($command_parts[$p]['wmpath']);
 						}
-					$command.=($p!==($cp_count-1) ? " -write " : " "). escapeshellarg($command_parts[$p]['wmpath']);
 					}
 					$command.=($p!==($cp_count-1) && $mpr_init_write ? " +delete" : "");
 				}
