@@ -79,21 +79,6 @@ function LOG_CODE_get_all()
 	return definitions_get_by_prefix('LOG_CODE');
 	}
 
-// used internally
-function definitions_get_by_prefix($prefix)
-	{
-	$return_definitions = array();
-	foreach (get_defined_constants() as $key=>$value)
-		{
-		if (preg_match('/^' . $prefix . '/', $key))
-			{
-			$return_definitions[$key]=$value;
-			}
-		}
-	return $return_definitions;
-	}
-
-
 // ------------------------- SYSTEM NOTIFICATION TYPES -------------------------
 define ('MANAGED_REQUEST',		1);
 define ('COLLECTION_REQUEST',	2);
@@ -123,3 +108,24 @@ define ('STATUS_ERROR',					5);
 // -------------------- General definitions --------------------
 
 define ('RESOURCE_LOG_APPEND_PREVIOUS', -1);    // used to specify that we want to append the previous resource_log entry
+
+define ('NODE_TOKEN_PREFIX','@@');
+define ('NODE_TOKEN_OR','|');
+define ('NODE_TOKEN_NOT','!');
+
+// --------------------------------------------------------------------------------
+
+// used internally within this file
+
+function definitions_get_by_prefix($prefix)
+    {
+    $return_definitions = array();
+    foreach (get_defined_constants() as $key=>$value)
+        {
+        if (preg_match('/^' . $prefix . '/', $key))
+            {
+            $return_definitions[$key]=$value;
+            }
+        }
+    return $return_definitions;
+    }

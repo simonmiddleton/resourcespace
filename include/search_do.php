@@ -59,6 +59,25 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
     hook("modifyorderarray");
 
+    // ********************************************************************************
+
+    // IMPORTANT!
+    // add to this array in the format [node ref]=>boolean where true=AND and false=OR
+    $node_bucket=array();
+
+    // add to this normal array to exclude nodes from search
+    $node_bucket_not=array();
+
+    // Take the current search URL and extract any nodes (putting into buckets) removing terms from $search
+    //
+    // UNDER DEVELOPMENT.  Currently supports:
+    // @@<node id> (defaulting to AND)
+    // @@|<node id> (OR)
+    // @@!<node id> (NOT)
+    resolve_given_nodes($search,$node_bucket,$node_bucket_not);
+
+    // ********************************************************************************
+
     # Recognise a quoted search, which is a search for an exact string
     global $quoted_string;
     $quoted_string=substr($search,0,1)=="\"" && substr($search,-1,1)=="\"";
@@ -112,15 +131,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     $sql_keyword_union             = array();
     $sql_keyword_union_aggregation = array();
     $sql_keyword_union_criteria    = array();
-
-    // ********************************************************************************
-
-    // IMPORTANT!
-    // add to this array in the format [node ref]=>boolean where true=AND and false=OR
-
-    $node_bucket=array();
-
-    // ********************************************************************************
 
     # If returning disk used by the resources in the search results ($return_disk_usage=true) then wrap the returned SQL in an outer query that sums disk usage.
     $sql_prefix="";$sql_suffix="";
@@ -807,6 +817,12 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
             implode(',',$node_bucket_OR) . ')) AND ' . $sql_filter;
         }
 
+    if(count($node_bucket_not)>0)
+        {
+        $sql_filter='NOT EXISTS (SELECT `resource` FROM `resource_node` WHERE `ref`=`resource` AND `node` IN (' .
+            implode(',',$node_bucket_not) . ')) AND ' . $sql_filter;
+        }
+
     // *******************************************************************************
     //                                                         END add node conditions
     // *******************************************************************************
@@ -1121,5 +1137,56 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     else
         {
         return array();
+        }
+    }
+
+// Take the current search URL and extract any nodes (putting into buckets) removing terms from $search
+//
+// UNDER DEVELOPMENT.  Currently supports:
+// @@<node id> (defaulting to AND)
+// @@|<node id> (OR)
+// @@!<node id> (NOT)
+function resolve_given_nodes(&$search, &$node_bucket, &$node_bucket_not)
+    {
+    global $category_tree_search_use_and, $checkbox_and;
+
+    if (preg_match_all('/' . NODE_TOKEN_PREFIX . '([' . NODE_TOKEN_OR . NODE_TOKEN_NOT . ']*)(\d+)/',$search,$matches)===false || count($matches[0])==0)
+        {
+        return;
+        }
+
+    $resource_type_fields=array();
+
+    foreach (sql_query('SELECT `node`.`ref`, `resource_type_field`.`type` FROM `node` INNER JOIN `resource_type_field`'.
+        ' ON `node`.`resource_type_field`=`resource_type_field`.`ref` WHERE `node`.`ref` IN (' .
+        implode(',',$matches[2]) .')') as $resource_type_field)
+        {
+        $resource_type_fields[$resource_type_field['ref']]=$resource_type_field['type'];
+        }
+
+    for($i=0; $i<count($matches[0]); $i++)
+        {
+        $search=str_replace($matches[0][$i],'',$search);        // remove the entire node string match from the search
+        $operator=$matches[1][$i];
+        $node=$matches[2][$i];
+
+        if(!isset($resource_type_fields[$node]))
+            {
+            continue;    // this is not a legal node as we could not find its resource_type_field
+            }
+
+        if(strpos($operator,NODE_TOKEN_NOT)===false)       // we are dealing with standard node bucket
+            {
+            // set node bucket entry to true for AND condition
+            $node_bucket[$node]=
+                strpos($operator,NODE_TOKEN_OR)===false &&
+                (!$resource_type_fields[$node]==FIELD_TYPE_CATEGORY_TREE || $category_tree_search_use_and) &&
+                (!$resource_type_fields[$node]==FIELD_TYPE_CHECK_BOX_LIST || $checkbox_and);
+            }
+        else
+            // we are dealing with NOT operator so push onto node_bucket_not list
+            {
+            $node_bucket_not[]=$node;
+            }
         }
     }
