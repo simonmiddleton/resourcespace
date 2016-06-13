@@ -11,8 +11,6 @@ a:active {color:#B5C3D4;}
 
 input[readonly] {color: #FFFFFF;}
 
-#Header {border-bottom: 1px solid #5A7599;background: #203D62 url(../gfx/greyblu/titles/title.gif) no-repeat; background-position: 10px 15px;}
-.SlimHeader #Header{background: #4B6B95 linear-gradient(#233B57,#224066);}
 #Footer {border-top: 1px solid #94A7C0;}
 #TextHeader, #TextHeader a {color:#c2e066;}
 #TextDesc{color:#c2e066;}
@@ -145,8 +143,6 @@ input[readonly] {color: #FFFFFF;}
 .permissionstable tr td.permheader{color: #000000;background: rgb(221,221,221);}
 .permissionstable tbody{color: #000000;}
 .CodeMirror-wrapping{color: #000000;background: #FFFFFF;}
-.collapsed { background: url(../gfx/greyblu/interface/HomeArrow.gif) no-repeat top left; background-position:3px 8px;}
-.expanded { background: url(../gfx/greyblu/interface/HomeArrowDown.gif) no-repeat top left; background-position:0px 12px;}
 .CommentFlag { background-image: url('../gfx/greyblu/interface/FlagOff.png');}
 .CommentEntryInfoCommenterName { color: #ffffff; }
 .CommentBody { color: #ffffff}
