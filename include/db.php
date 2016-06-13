@@ -226,7 +226,7 @@ if ($use_plugins_manager)
 	    $plugin_yaml_path = get_plugin_path($plugin["name"])."/".$plugin["name"].".yaml";
 	    $py = get_plugin_yaml($plugin_yaml_path, false);
 	    array_push($active_yaml,$py);
-	    if ($plugin['enabled_groups']=='' && !isset($py["userpreferencegroup"]))
+	    if ($plugin['enabled_groups'] == '')
 		    {
 		    # Add to the plugins array if not already present which is what we are working with
 		    $plugins[]=$plugin['name'];
@@ -236,7 +236,7 @@ if ($use_plugins_manager)
 	for ($n=count($active_plugins)-1;$n>=0;$n--)
 		{
 		$plugin=$active_plugins[$n];
-		if ($plugin['enabled_groups']=='' && !isset($active_yaml[$n]["userpreferencegroup"]))
+		if ($plugin['enabled_groups'] == '')
 			{
 			include_plugin_config($plugin['name'], $plugin['config'], $plugin['config_json']);
 			}
@@ -286,6 +286,7 @@ for ($n=count($plugins)-1;$n>=0;$n--)
 	{
 	register_plugin_language($plugins[$n]);
 	}
+
 global $suppress_headers;
 # Set character set.
 if (($pagename!="download") && ($pagename!="graph") && !$suppress_headers) {header("Content-Type: text/html; charset=UTF-8");} // Make sure we're using UTF-8.

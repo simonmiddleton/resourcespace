@@ -368,7 +368,7 @@ foreach($active_plugins as $plugin)
 	$py = get_plugin_yaml($plugin_yaml_path, false);
 
 	# Check 
-	if((!isset($userfixedtheme) || $userfixedtheme=="") && (isset($py["userpreferencegroup"]) && preg_replace("/^col-/","",$py["name"])==$ctheme))
+	if((!isset($userfixedtheme) || $userfixedtheme=="") && preg_replace("/^col-/","",$py["name"])==$ctheme)
 		{
 		$exists = sql_value("SELECT name as value FROM plugins WHERE name='".$plugin["name"]."'",'');
 		if($exists)
@@ -381,7 +381,7 @@ foreach($active_plugins as $plugin)
 		}
 
 	# Check group access and applicable for this user in the group
-	if(!isset($py["userpreferencegroup"]) && $plugin['enabled_groups']!='')
+	if($plugin['enabled_groups']!='')
 		{
 		$s=explode(",",$plugin['enabled_groups']);
 		if (isset($usergroup) && in_array($usergroup,$s))
@@ -392,7 +392,7 @@ foreach($active_plugins as $plugin)
 			$plugins[]=$plugin['name'];
 			}
 		}
-	else if(!isset($py["userpreferencegroup"]) && $plugin['enabled_groups']=='')
+	else if($plugin['enabled_groups']=='')
 		{
 		$plugins[]=$plugin['name'];
 		}
