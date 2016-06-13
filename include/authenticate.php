@@ -337,28 +337,6 @@ else
 $plugins= array();
 $active_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 ORDER BY priority"));
 
-/* Process User Preferences
-Check Colour Theme for this user:
-1) Userfixedtheme = system/group fixed option
-2) defaulttheme = system/group & user configurable from user_preferences
-*/
-global $userfixedtheme,$defaulttheme;
-if(isset($userfixedtheme) && $userfixedtheme!="")
-    {
-    $ctheme = $userfixedtheme;
-    }
-else
-    {
-    $ctheme = (isset($userpreferences["colour_theme"]) && $userpreferences["colour_theme"]!="") ? $userpreferences["colour_theme"]: $defaulttheme;
-    }
-$ctheme = preg_replace("/^col-/","", $ctheme);
-switch($ctheme)
-    {
-    case "blue":
-    case "greyblu": $ctheme = "blue"; break;
-    case "charcoal":
-    case "slimcharcoal": $ctheme = "charcoal"; break;
-    }
 
 foreach($active_plugins as $plugin)
 	{
@@ -366,19 +344,6 @@ foreach($active_plugins as $plugin)
 	$plugin_yaml_path = get_plugin_path($plugin["name"]) ."/".$plugin["name"].".yaml";
 	$py="";
 	$py = get_plugin_yaml($plugin_yaml_path, false);
-
-	# Check 
-	if((!isset($userfixedtheme) || $userfixedtheme=="") && preg_replace("/^col-/","",$py["name"])==$ctheme)
-		{
-		$exists = sql_value("SELECT name as value FROM plugins WHERE name='".$plugin["name"]."'",'');
-		if($exists)
-			{
-			include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
-			register_plugin($plugin['name']);
-			register_plugin_language($plugin['name']);
-			$plugins[]=$plugin['name'];
-			}
-		}
 
 	# Check group access and applicable for this user in the group
 	if($plugin['enabled_groups']!='')
@@ -392,7 +357,7 @@ foreach($active_plugins as $plugin)
 			$plugins[]=$plugin['name'];
 			}
 		}
-	else if($plugin['enabled_groups']=='')
+	elseif($plugin['enabled_groups']=='')
 		{
 		$plugins[]=$plugin['name'];
 		}
