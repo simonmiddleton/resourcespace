@@ -1704,7 +1704,7 @@ function setup_user($userdata)
         # Given an array of user data loaded from the user table, set up all necessary global variables for this user
         # including permissions, current collection, config overrides and so on.
         
-    global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, $userfixedtheme, 
+    global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms, $anonymous_user_session_collection, 
            $global_permissions_mask, $user_preferences, $userrequestmode, $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, 
            $userresourcedefaults, $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences;
@@ -1726,7 +1726,6 @@ function setup_user($userdata)
         $useremail=$userdata["email"];
         $userpassword=$userdata["password"];
         $userfullname=$userdata["fullname"];
-	if (!isset($userfixedtheme)) {$userfixedtheme=$userdata["fixed_theme"];} # only set if not set in config.php
 
         $ip_restrict_group=trim($userdata["ip_restrict_group"]);
         $ip_restrict_user=trim($userdata["ip_restrict_user"]);
