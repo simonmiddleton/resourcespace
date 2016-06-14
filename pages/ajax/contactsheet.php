@@ -17,7 +17,7 @@ require_once '../../lib/html2pdf/html2pdf.class.php';
 
 $collection  = getvalescaped('c', '');
 $size        = getvalescaped('size', '');
-$columns     = getvalescaped('columns', '');
+$columns     = getvalescaped('columns', 1);
 $order_by    = getvalescaped('orderby', 'relevance');
 $sort        = getvalescaped('sort', 'asc');
 $orientation = getvalescaped('orientation', '');
@@ -186,6 +186,10 @@ if($html2pdf)
         // Column width is made as "[column width in mm] / (25.4 / 96) - [adjustment]"
         // IMPORTANT: [adjustment] is needed so that the content would be within the margins of the document
         $placeholders['column_width'] = floor(floor($available_width / $columns) / (25.4 / 96) - 10);
+        if('list' == $sheetstyle || 'single' == $sheetstyle)
+            {
+            $placeholders['column_width'] = floor($available_width / (25.4 / 96) * 0.25);
+            }
 
         $pdf_content = process_template($pdf_template_path, $placeholders);
 
