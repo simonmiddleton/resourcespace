@@ -156,7 +156,7 @@ if($html2pdf)
                     $contact_sheet_value = tidylist($contact_sheet_value);
                     }
 
-                $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][] = tidylist($contact_sheet_value);
+                $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = tidylist($contact_sheet_value);
                 }
             }
 
