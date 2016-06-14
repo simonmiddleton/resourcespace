@@ -530,7 +530,7 @@ if (!hook("replacetitleprefix","",array($resource["archive"]))) { switch ($resou
 	?><span class="DeletedResourceTitle"><?php echo $lang["status3"]?>:</span>&nbsp;<?php
 	break;
 	} }
-if (!hook("replaceviewtitle")){ echo highlightkeywords(htmlspecialchars(i18n_get_translated(get_data_by_field($resource['ref'],$title_field))),$search); } /* end hook replaceviewtitle */  
+if (!hook("replaceviewtitle")){ echo highlightkeywords(htmlspecialchars(tidylist(i18n_get_translated(get_data_by_field($resource['ref'],$title_field)))),$search); } /* end hook replaceviewtitle */  
 ?>&nbsp;</h1>
 <?php } /* End of renderinnerresourceheader hook */ ?>
 </div>
