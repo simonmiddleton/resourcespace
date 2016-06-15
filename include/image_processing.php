@@ -1334,7 +1334,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			$tw=$ps[$n]["width"];
 			$th=$ps[$n]["height"];
 			$id=$ps[$n]["id"];
-			echo "tw=$tw - th=$th<br/>";
+			
 			if($imagemagick_mpr)
 				{
 				$mpr_parts['id']=$id;
@@ -1438,7 +1438,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 								$mpr_parts['sourceprofile']='';
 								$mpr_parts['strip_target']=false;
 								$mpr_parts['targetprofile']='';
-								//$mpr_parts['colorspace']='';
 								}
 							else
 								{
@@ -1453,7 +1452,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 								$mpr_parts['sourceprofile']=$default_icc_file;
 								$mpr_parts['strip_target']=false;
 								$mpr_parts['targetprofile']='';
-								//$mpr_parts['colorspace']='';
 								}
 							else
 								{
@@ -1468,7 +1466,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 								$mpr_parts['sourceprofile']='';
 								$mpr_parts['strip_target']=false;
 								$mpr_parts['targetprofile']='';
-								//$mpr_parts['colorspace']=$imagemagick_colorspace;
 								}
 							else
 								{
@@ -1577,10 +1574,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					// need a watermark replacement here as the existing hook doesn't work
 					$modified_mpr_watermark=hook("modify_mpr_watermark",'',array($ref,$ps, $n,$alternative));
 					if($modified_mpr_watermark!='')
-						{echo "changing wmpath to $modified_mpr_watermark<br/>";
-						/*$mpr_parts['wmpath']=$modified_mpr_watermark;*/
-						$wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,'',$alternative);echo "wmpath mod=$wmpath<br/>";
-						$mpr_parts['wmpath']=$wmpath;
+						{
+						$mpr_parts['wmpath']=$modified_mpr_watermark;
 						if($id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
 							{
 							// need to convert the profile
@@ -1597,7 +1592,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		// run the mpr command if set
 		if($imagemagick_mpr)
 			{
-			echo "<pre>bits for mpr command:";print_r($command_parts);echo"</pre>";
 			// let's run some checks to better optimize the convert command. Assume everything is the same until proven otherwise
 			$unique_flatten=false;
 			$unique_strip_source=false;
@@ -1636,12 +1630,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					{
 					$unique_target_profile=true;
 					}
-				/*if($command_parts[$p]['colorspace']!==$command_parts[$p-1]['colorspace'] && !$unique_colorspace)
-					{
-					$unique_colorspace=true;
-					}*/
 				}
-			//echo "unique_flatten=$unique_flatten - unique_strip_source=$unique_strip_source - unique_source_profile=$unique_source_profile - unique_strip_target=$unique_strip_target - unique_target_profile=$unique_target_profile - unique_colorspace=$unique_colorspace<br/>";
 			// time to build the command
 			$command=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -alpha off' : '') . ' -depth ' . $imagemagick_mpr_depth;
 			if(!$unique_flatten)
@@ -1656,10 +1645,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			 	{
 			 	$command.=" -profile " . $command_parts[0]['sourceprofile'];
 			 	}
-			/* if(!$unique_colorspace && $command_parts[0]['colorspace']!=='')
-			 	{
-			 	$command.=" -colorspace " . $command_parts[0]['colorspace'];
-			 	} */
 			 if(!$unique_strip_target)
 			 	{
 			 	$command.=($command_parts[0]['strip_target'] ? " -strip " : "");
@@ -1682,7 +1667,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				{
             	$mpr_metadata_profiles="!" . implode(",!",$imagemagick_mpr_preserve_metadata_profiles);	
             	}	
-			//$command.=' -write mpr:' . $ref . ' +delete '; // save this to memory as these settings are true for all versions
+			
 			for($p=0;$p<$cp_count;$p++)
 				{
 				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '');
@@ -1705,15 +1690,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						}
 					}
 				
-				//$command.=" -write mpr:" . $ref;
-				/*if(isset($command_parts[$p]['wmpath']) || $force_mpr_write)
-					{
-					$command.=" -write mpr:" . $ref;
-					if(!$mpr_init_write)
-						{
-						$mpr_init_write=true;
-						}
-					}*/
 				if($unique_flatten || $unique_strip_source || $unique_source_profile || $unique_colorspace || $unique_strip_target || $unique_target_profile)
 					{
 					// make these changes
@@ -1729,10 +1705,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						{
 						$command.=" -profile " . $command_parts[$p]['sourceprofile'];
 						}
-					 /*if($unique_colorspace && $command_parts[0]['colorspace']!=='')
-						{
-						$command.=" -colorspace " . $command_parts[$p]['colorspace'];
-						}*/
 					 if($unique_strip_target && !$skip_source_and_target_profiles && !$mpr_icc_transform_complete) // if the source is different but the target is the same we could get into trouble...
 						{
 						$command.=($command_parts[$p]['strip_target'] ? " -strip" : "");
@@ -1743,11 +1715,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						}
 					}
 				// save out to file
-				/*if(!$mpr_init_write && !isset($command_parts[$p]['wmpath']) && isset($command_parts[($p+1)]['wmpath']) && (!isset($command_parts[$p]['icc_transform_complete']) || !$mpr_icc_transform_complete))
-					{
-					$command.=" -write mpr:" . $ref;
-					$mpr_init_write=true;
-					}*/
 				$command.=(($p===($cp_count-1) && !isset($command_parts[$p]['wmpath'])) ? " " : " -quality " . $command_parts[$p]['quality'] . " -write "). escapeshellarg($command_parts[$p]['targetpath']) . ($mpr_wm_created && isset($command_parts[$p]['wmpath']) ? " +delete mpr:" . $ref : "" );
 				//$command.=" -write " . $command_parts[$p]['targetpath'];
 				// watermarks?
@@ -1785,16 +1752,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				}
 			$modified_mpr_command=hook('modify_mpr_command','',array($command,$ref,$extension));
 			if($modified_mpr_command!=''){$command=$modified_mpr_command;}
-			echo "run_command=".$command."<br/>";
-			//die("test");
 			$output = exec($command);
-			//die("test");
 			// logging
 			resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
-			}
-		else
-			{
-			echo "run_command=".$command_list."<br/>";
 			}
 		
 		# For the thumbnail image, call extract_mean_colour() to save the colour/size information
@@ -1812,11 +1772,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
 				}
 			}
-		
-		$time_end = microtime(true);
-		$time = $time_end - $time_start;
-
-		echo "Did preview creation in $time seconds\n";
 		
 		return true;
 		}

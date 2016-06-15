@@ -390,7 +390,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		$hook_cache_hits++;
 
 		unset($GLOBALS['hook_return_value']);
-
+		$empty_global_return_value=true;
 		// we use $GLOBALS['hook_return_value'] so that hooks can directly modify the overall return value
 
 		foreach ($hook_cache[$hook_cache_index] as $function)
@@ -402,7 +402,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 				continue;	// the function did not return a value so skip to next hook call
 				}
 
-			if (!$last_hook_value_wins &&
+			if (!$last_hook_value_wins && !$empty_global_return_value &&
 				isset($GLOBALS['hook_return_value']) &&
 				(gettype($GLOBALS['hook_return_value']) == gettype($function_return_value)) &&
 				(is_array($function_return_value) || is_string($function_return_value) || is_bool($function_return_value)))
@@ -426,6 +426,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 			else
 				{
 				$GLOBALS['hook_return_value'] = $function_return_value;
+				$empty_global_return_value=false;
 				}
 			}
 
