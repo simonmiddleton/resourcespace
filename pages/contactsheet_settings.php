@@ -7,6 +7,20 @@ include_once '../include/collections_functions.php';
 $collection     = getvalescaped('ref', '', true);
 $collectiondata = get_collection($collection);
 
+/* Depending on the style, users get different fields to select from.
+Super Admins decide what fields they can see based on config options (e.g. $config_sheetthumb_fields)and permissions */
+$available_contact_sheet_fields = array(
+    0 => array(
+        'ref'   => '',
+        'title' => $lang['allfields']
+    )
+);
+foreach(get_fields($config_sheetthumb_fields) as $field_data)
+    {
+    $available_contact_sheet_fields[] = $field_data;
+    }
+
+
 include '../include/header.php';
 ?>
 <div class="BasicsBox" >
@@ -139,11 +153,31 @@ if($contact_sheet_add_link_option)
     }
     ?>
 
-            <div class="Question">
-                <label><?php echo $lang["size"]; ?></label>
-                <select class="shrtwidth" name="size" id="size" onChange="jQuery().rsContactSheet('revert');"><?php echo $papersize_select; ?></select>
-                <div class="clearerleft"> </div>
-            </div>
+    <div class="Question">
+        <label><?php echo $lang['contact_sheet_select_fields']; ?></label>
+        <select class="shrtwidth" name="selected_contact_sheet_fields[]" multiple>
+            <?php
+            foreach($available_contact_sheet_fields as $contact_sheet_field)
+                {
+                $selected = '';
+                if('' == $contact_sheet_field['ref'])
+                    {
+                    $selected = 'selected';
+                    }
+                ?>
+                <option value="<?php echo $contact_sheet_field['ref']; ?>"<?php echo $selected; ?>><?php echo $contact_sheet_field['title']; ?></option>
+                <?php
+                }
+            ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+
+    <div class="Question">
+        <label><?php echo $lang["size"]; ?></label>
+        <select class="shrtwidth" name="size" id="size" onChange="jQuery().rsContactSheet('revert');"><?php echo $papersize_select; ?></select>
+        <div class="clearerleft"> </div>
+    </div>
 
 <?php
 if($contactsheet_sorting)
