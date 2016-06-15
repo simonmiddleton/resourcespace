@@ -247,25 +247,23 @@ if ($preview && isset($imagemagick_path))
 // Create a resource based on this PDF file or download it?
 if($contact_sheet_resource)
     {
-    echo "TO DO: contact_sheet_resource!";die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
-    $newresource = create_resource(1, 0);
+    $new_resource = create_resource(1, 0);
 
-    update_field($newresource, 8, i18n_get_collection_name($collectiondata) . ' ' . $date);
-    update_field($newresource, $filename_field, "{$newresource}.pdf");
+    update_field($new_resource, 8, i18n_get_collection_name($collectiondata) . ' ' . date('Y-m-d H:i:s'));
+    update_field($new_resource, $filename_field, "{$new_resource}.pdf");
 
-    #Relate all resources in collection to the new contact sheet resource
-    relate_to_collection($newresource, $collection);	
+    // Relate all resources in collection to the new contact sheet resource
+    relate_to_collection($new_resource, $collection);	
 
-    sql_query("UPDATE resource SET file_extension = 'pdf' WHERE ref = '{$newresource}'");
+    sql_query("UPDATE resource SET file_extension = 'pdf' WHERE ref = '{$new_resource}'");
 
-    # Create the file in the new resource folder:
-    $path = get_resource_path($newresource, true, '', true, 'pdf');
+    // Create the file in the new resource folder:
+    $path = get_resource_path($new_resource, true, '', true, 'pdf');
+    $html2pdf->Output($path, 'F');
 
-    $pdf->Output($path,'F');
-
-    #Create thumbnails and redirect browser to the new contact sheet resource
-    create_previews($newresource, true, 'pdf');
-    redirect("{$baseurl_short}pages/view.php?ref={$newresource}");
+    // Create thumbnails and redirect browser to the new contact sheet resource
+    create_previews($new_resource, true, 'pdf');
+    redirect("{$baseurl_short}pages/view.php?ref={$new_resource}");
     }
 
 // Generate PDF file
