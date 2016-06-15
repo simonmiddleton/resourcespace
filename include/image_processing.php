@@ -1216,11 +1216,22 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		$identoutput=run_command($identcommand);
         resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$identcommand . ":\n" . $identoutput);
         
+        if(empty($identoutput) && $imagemagick_mpr)
+        	{
+        	// we really need dimensions here
+        	$identoutput = getimagesize(escapeshellarg($prefix . $file));
+        	}
+        
         if(!empty($identoutput)){
 			$wh=explode("x",$identoutput);
 			$o_width=$wh[0];
 			$o_height=$wh[1];
 		}
+		elseif($imagemagick_mpr)
+        	{
+			// this puts us in a bad spot...die for now
+			die("no width or height found");
+			}
 
         if($lean_preview_generation){
 			$all_sizes=false;
@@ -1564,10 +1575,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				if($imagemagick_mpr)
 					{
 					// need a watermark replacement here as the existing hook doesn't work
-					$modified_mpr_watermark=hook("modify_mpr_watermark",'',array($ref, $ps, $n, $alternative, $mpr_parts));
+					$modified_mpr_watermark=hook("modify_mpr_watermark",'',array($ref,$ps, $n,$alternative));
 					if($modified_mpr_watermark!='')
 						{echo "changing wmpath to $modified_mpr_watermark<br/>";
-						$mpr_parts['wmpath']=$modified_mpr_watermark;
+						/*$mpr_parts['wmpath']=$modified_mpr_watermark;*/
+						$wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,'',$alternative);echo "wmpath mod=$wmpath<br/>";
+						$mpr_parts['wmpath']=$wmpath;
 						if($id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
 							{
 							// need to convert the profile
