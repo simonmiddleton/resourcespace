@@ -58,7 +58,7 @@ if(isset($contact_sheet_footer))
             <tr>
                 <td class="centeredText" style="width: 90%">
                     <span>XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999</span>
-                    <p>&#0169; ReourceSpace. All Rights Reserved.</p>
+                    <p>&#0169; ResourceSpace. All Rights Reserved.</p>
                 </td>
                 <td style="text-align: right; width: 10%">[[page_cu]] of [[page_nb]]</td>
             </tr>
@@ -79,7 +79,21 @@ if(isset($contact_sheet_footer))
             ?>
             <tr>
                 <td class="resourcePreviewContainer">
+                <?php
+                if(isset($contact_sheet_add_link))
+                    {
+                    // IMPORTANT: having space between a tag and img creates some weird visual lines (HTML2PDF issues maybe?!)
+                    ?>
+                    <a target="_blank" href="<?php echo $baseurl; ?>/?r=<?php echo $resource_ref; ?>"><img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview"></a>
+                    <?php
+                    }
+                else
+                    {
+                    ?>
                     <img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview">
+                    <?php
+                    }
+                    ?>
                 </td>
                 <td class="resourceDataContainer">
                 <?php
