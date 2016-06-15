@@ -75,465 +75,202 @@ foreach($getfields as $field_id)
     }
 
 
-if($html2pdf)
+$pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
+$PDF_filename      = get_temp_dir() . '/contactsheet.pdf';
+$placeholders      = array(
+    'date'                          => date('Y-m-d H:i:s'),
+    'titlefontsize'                 => $titlefontsize,
+    'refnumberfontsize'             => $refnumberfontsize,
+    'title'                         => $title,
+    'columns'                       => $columns,
+    'config_sheetthumb_include_ref' => $config_sheetthumb_include_ref,
+);
+
+if($contactsheet_header)
     {
-    $pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
-    $PDF_filename      = 'contactsheet.pdf';
-    $placeholders      = array(
-        'date'                          => date('Y-m-d H:i:s'),
-        'titlefontsize'                 => $titlefontsize,
-        'refnumberfontsize'             => $refnumberfontsize,
-        'title'                         => $title,
-        'columns'                       => $columns,
-        'config_sheetthumb_include_ref' => $config_sheetthumb_include_ref,
-    );
+    $placeholders['contactsheet_header'] = $contactsheet_header;
+    }
 
-    if($contactsheet_header)
+if($add_contactsheet_logo)
+    {
+    $placeholders['add_contactsheet_logo'] = $add_contactsheet_logo;
+    $placeholders['contact_sheet_logo']    = "$baseurl/$contact_sheet_logo";
+    }
+
+if($contact_sheet_add_link)
+    {
+    $placeholders['contact_sheet_add_link'] = $contact_sheet_add_link;
+    }
+
+if($contact_sheet_footer)
+    {
+    $placeholders['contact_sheet_footer'] = $contact_sheet_footer;
+    }
+
+// Set PDF properties:
+$pdf_properties['orientation'] = $orientation;
+$pdf_properties['format']      = $size;
+$pdf_properties['margins']     = array(10, 12, 10, 7);
+$pdf_properties['title']       = $title;
+$pdf_properties['author']      = $user['fullname'];
+$pdf_properties['subject']     = "{$applicationname} - {$lang['contactsheet']}";
+$pdf_properties['font']        = $contact_sheet_font;
+
+
+// Choose the image size requirements
+$img_size = ('single' == $sheetstyle ? getvalescaped('ressize', 'lpr') : 'pre');
+if($preview)
+    {
+    $img_size = 'col';
+    }
+if('single' == $sheetstyle && $preview)
+    {
+    $img_size = 'pre';
+    }
+
+foreach($results as $result_data)
+    {
+    $access = get_resource_access($result_data);
+
+    // Skip confidential resources
+    if(2 == $access)
         {
-        $placeholders['contactsheet_header'] = $contactsheet_header;
+        continue;
         }
 
-    if($add_contactsheet_logo)
+    $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'] = array();
+
+    foreach($csf as $contact_sheet_field)
         {
-        $placeholders['add_contactsheet_logo'] = $add_contactsheet_logo;
-        $placeholders['contact_sheet_logo']    = "$baseurl/$contact_sheet_logo";
-        }
+        $contact_sheet_value = '';
 
-    if($contact_sheet_add_link)
-        {
-        $placeholders['contact_sheet_add_link'] = $contact_sheet_add_link;
-        }
-
-    if($contact_sheet_footer)
-        {
-        $placeholders['contact_sheet_footer'] = $contact_sheet_footer;
-        }
-
-    // Set PDF properties:
-    $pdf_properties['orientation'] = $orientation;
-    $pdf_properties['format']      = $size;
-    $pdf_properties['margins']     = array(10, 12, 10, 7);
-    $pdf_properties['title']       = $title;
-    $pdf_properties['author']      = $user['fullname'];
-    $pdf_properties['subject']     = "{$applicationname} - {$lang['contactsheet']}";
-    $pdf_properties['font']        = $contact_sheet_font;
-
-
-    // Choose the image size requirements
-    $img_size = ('single' == $sheetstyle ? getvalescaped('ressize', 'lpr') : 'pre');
-    if($preview)
-        {
-        $img_size = 'col';
-        }
-    if('single' == $sheetstyle && $preview)
-        {
-        $img_size = 'pre';
-        }
-
-    foreach($results as $result_data)
-        {
-        $access = get_resource_access($result_data);
-
-        // Skip confidential resources
-        if(2 == $access)
+        if(array_key_exists("field{$contact_sheet_field['ref']}", $result_data))
             {
-            continue;
-            }
+            $contact_sheet_value = trim(get_data_by_field($result_data['ref'], $contact_sheet_field['ref']));
 
-        $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'] = array();
-
-        foreach($csf as $contact_sheet_field)
-            {
-            $contact_sheet_value = '';
-
-            if(array_key_exists("field{$contact_sheet_field['ref']}", $result_data))
+            // Clean fixed list types of their front comma
+            if(in_array($contact_sheet_field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
-                $contact_sheet_value = trim(get_data_by_field($result_data['ref'], $contact_sheet_field['ref']));
-
-                // Clean fixed list types of their front comma
-                if(in_array($contact_sheet_field['type'], $FIXED_LIST_FIELD_TYPES))
-                    {
-                    $contact_sheet_value = tidylist($contact_sheet_value);
-                    }
-
-                $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = tidylist($contact_sheet_value);
+                $contact_sheet_value = tidylist($contact_sheet_value);
                 }
-            }
 
-        // Add the preview image
-        $use_watermark = check_use_watermark();
-        $img_path = get_resource_path($result_data['ref'], true, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
-        if(!file_exists($img_path))
-            {
-            $img_path = "../../gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false, true);
+            $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = tidylist($contact_sheet_value);
             }
-
-        $placeholders['resources'][$result_data['ref']]['preview_src'] = str_replace($storagedir, $storageurl, $img_path);
-        unset($img_path);
         }
 
-    try
+    // Add the preview image
+    $use_watermark = check_use_watermark();
+    $img_path = get_resource_path($result_data['ref'], true, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
+    if(!file_exists($img_path))
         {
-        $html2pdf = new Html2Pdf($pdf_properties['orientation'], $pdf_properties['format'], 'en', true, 'UTF-8', $pdf_properties['margins']);
-
-        $html2pdf->pdf->SetTitle($pdf_properties['title']);
-        $html2pdf->pdf->SetAuthor($pdf_properties['author']);
-        $html2pdf->pdf->SetSubject($pdf_properties['subject']);
-        $html2pdf->setDefaultFont($pdf_properties['font']);
-
-        $available_width = $html2pdf->pdf->getW() - ($html2pdf->pdf->getlMargin() + $html2pdf->pdf->getrMargin());
-
-        // Column width is made as "[column width in mm] / (25.4 / 96) - [adjustment]"
-        // IMPORTANT: [adjustment] is needed so that the content would be within the margins of the document
-        $placeholders['column_width'] = floor(floor($available_width / $columns) / (25.4 / 96) - 10);
-        if('list' == $sheetstyle || 'single' == $sheetstyle)
-            {
-            $placeholders['column_width'] = floor($available_width / (25.4 / 96) * 0.25);
-            }
-
-        $pdf_content = process_template($pdf_template_path, $placeholders);
-
-        $html2pdf->writeHTML($pdf_content);
-        $html2pdf->Output($PDF_filename);
+        $img_path = "../../gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false, true);
         }
-    catch(Html2PdfException $e)
+
+    $placeholders['resources'][$result_data['ref']]['preview_src'] = str_replace($storagedir, $storageurl, $img_path);
+    unset($img_path);
+    }
+
+try
+    {
+    $html2pdf = new Html2Pdf($pdf_properties['orientation'], $pdf_properties['format'], 'en', true, 'UTF-8', $pdf_properties['margins']);
+
+    $html2pdf->pdf->SetTitle($pdf_properties['title']);
+    $html2pdf->pdf->SetAuthor($pdf_properties['author']);
+    $html2pdf->pdf->SetSubject($pdf_properties['subject']);
+    $html2pdf->setDefaultFont($pdf_properties['font']);
+
+    $available_width = $html2pdf->pdf->getW() - ($html2pdf->pdf->getlMargin() + $html2pdf->pdf->getrMargin());
+
+    // Column width is made as "[column width in mm] / (25.4 / 96) - [adjustment]"
+    // IMPORTANT: [adjustment] is needed so that the content would be within the margins of the document
+    $placeholders['column_width'] = floor(floor($available_width / $columns) / (25.4 / 96) - 10);
+    if('list' == $sheetstyle || 'single' == $sheetstyle)
         {
-        $formatter = new ExceptionFormatter($e);
-
-        echo $formatter->getHtmlMessage();
+        $placeholders['column_width'] = floor($available_width / (25.4 / 96) * 0.25);
         }
+
+    $pdf_content = process_template($pdf_template_path, $placeholders);
+
+    $html2pdf->writeHTML($pdf_content);
+    }
+catch(Html2PdfException $e)
+    {
+    $formatter = new ExceptionFormatter($e);
+
+    echo $formatter->getHtmlMessage();
 
     exit();
     }
 
+// Make AJAX preview
+if ($preview && isset($imagemagick_path)) 
+    {
+    $contact_sheet_rip = get_temp_dir() . '/contactsheetrip.jpg';
+    if(file_exists($contact_sheet_rip))
+        {
+        unlink($contact_sheet_rip);
+        }
 
-function contact_sheet_add_fields($resourcedata)
-	{
-	global $pdf, $n, $getfields, $sheetstyle, $imagesize, $refnumberfontsize, $leading, $csf, $pageheight, $currentx, $currenty, $topx, $topy, $bottomx, $bottomy, $logospace, $deltay,$width,$config_sheetsingle_include_ref,$contactsheet_header,$cellsize,$ref,$pagewidth; 
+    $contact_sheet_preview_img = get_temp_dir() . '/contactsheet.jpg';
+    if(file_exists($contact_sheet_preview_img))
+        {
+        unlink($contact_sheet_preview_img);
+        }
 
-	if ($sheetstyle=="single" && $config_sheetsingle_include_ref=="true"){
-		$pdf->SetY($bottomy);
-		$pdf->MultiCell($pagewidth-2,0,'','','L',false,1);	
-		$pdf->ln();
-		$pdf->MultiCell($pagewidth-2,0,$ref,'','L',false,1);	
-	}
+    if(file_exists($PDF_filename))
+        {
+        unlink($PDF_filename);
+        }
 
+    echo $html2pdf->pdf->GetPage();
+    $html2pdf->Output($PDF_filename, 'F');
 
-	for($ff=0; $ff<count($getfields); $ff++){
-		$value="";
-		$value=str_replace("'","\'", $resourcedata['field'.$getfields[$ff]]);
-			
-		$plugin="../../plugins/value_filter_" . $csf[$ff]['name'] . ".php";
-		if ($csf[$ff]['value_filter']!=""){
-			eval($csf[$ff]['value_filter']);
-			}
-		else if (file_exists($plugin)) {include $plugin;}
-		$value=TidyList($value);
-	
-		if ($sheetstyle=="thumbnails") 
-			{
-			$pdf->Cell($imagesize,(($refnumberfontsize+$leading)/72),$value,0,2,'L',0,'',1);			
-			$bottomy=$pdf->GetY();
-			$bottomx=$pdf->GetX();
-			}
-		else if ($sheetstyle=="list")
-			{
-			$pdf->SetXY($pdf->GetX()+$imagesize+0.1,$pdf->GetY()+(0.2*($ff+$deltay)));
-			$pdf->MultiCell($pagewidth-3,0.15,$value,0,"L");
-			$pdf->SetXY($currentx,$currenty);
-			}
-		else if ($sheetstyle=="single")
-			{
-			$query = sprintf(
-					   "SELECT rd.`value`, 
-					           rtf.`type` AS field_type
-					      FROM resource_data AS rd
-					INNER JOIN resource_type_field AS rtf ON rd.resource_type_field = rtf.ref AND rtf.ref = '%s'
-					     WHERE rd.resource = '%s';"
-				,
-				$getfields[$ff],
-				$resourcedata['ref']
-			);
-			$raw_value = sql_query($query);
+    // Set up
+    putenv("MAGICK_HOME={$imagemagick_path}");
+    putenv("PATH={$ghostscript_path}:{$imagemagick_path}");
+    $ghostscript_fullpath = get_utility_path('ghostscript');
+    $convert_fullpath = get_utility_path('im-convert');
+    
+    if(!$convert_fullpath)
+        {
+        exit("Could not find ImageMagick 'convert' utility at location '{$imagemagick_path}'");
+        }
 
-			// Default value:
-			if (isset($raw_value[0])){
-			$value = $raw_value[0]['value'];
-			// When values have been saved using CKEditor make sure to remove html tags and decode html entitities:
-			if($raw_value[0]['field_type'] == '8')
-				{
-				$value = strip_tags($raw_value[0]['value']);
-				$value = mb_convert_encoding($value, 'UTF-8', 'HTML-ENTITIES');
-				}
-			$pdf->MultiCell($pagewidth-2,0,$value,'','L',false,1);		
-			}
-			}
-			
-		}
-	}
-	
-function contact_sheet_add_image()
-	{	
-	global $pdf, $imgpath, $sheetstyle, $imagesize, $pageheight, $pagewidth, $imagewidth, $imageheight, $preview_extension, $baseurl, $contact_sheet_add_link, $ref, $extralines, $refnumberfontsize, $cellsize, $topx, $topy, $bottomy, $align,$thumbsize,$logospace,$width,$contactsheet_header; 
-	$nextline="";
-	if ($sheetstyle=="single")
-		{
-		# Centre on page
-		//$posx="C";
-		$align="C";		
-		$nextline="N";
-			
-			$posx=((($width-2)/2)-($cellsize[0])/2);
-			if($contactsheet_header=="true"){
-				$posy=1.2 + $logospace;
-			} else {
-				$posy=0.8 + $logospace;
-			}
-		}
-	elseif ($sheetstyle=="list")
-		{
-		global $currenty;
-		$posx=$pdf->GetX();
-		$posy=$currenty;
-		$align="";
-		}
-	elseif ($sheetstyle=="thumbnails")
-		{
-		if ($imagewidth==0)
-			{$posx=$pdf->GetX()+ $cellsize[0]/2 - ($cellsize[1] * $thumbsize[0])/($thumbsize[1]*2);}
-		else
-			{$posx=$pdf->GetX();}
-		if ($imageheight==0)
-			{$posy=$pdf->GetY()+0.025 + $cellsize[1]/2 - ($cellsize[0] * $thumbsize[1])/($thumbsize[0]*2);}
-		else
-			{$posy=$pdf->GetY()+0.025;}
-			$align="";
-		}
-		
-	# Add the image
-	if ($contact_sheet_add_link=="true")
-		{$pdf->SetMargins(.7,1.2,.7);
-		$imageinfo=$pdf->Image($imgpath,$posx,$posy,$imagewidth,$imageheight,$preview_extension,$baseurl. '/?r=' . $ref,$nextline,false,300,$align,false,false,0);
-		$pdf->SetMargins(1,1.2,.7);
-		}
-	else
-		{
-		$pdf->Image($imgpath,$posx,$posy,$imagewidth,$imageheight,$preview_extension,'',$nextline,false,300,$align,false,false,0);
-		}	
-	
-	$bottomy=$pdf->GetY();
-	# Add spacing cell
-	if ($sheetstyle=="list")
-		{		
-		$pdf->Cell($cellsize[0],$cellsize[1],'',0,0);    
-		}
-	/*else if ($sheetstyle=="single")
-		{		
-		$pdf->Setx($posx+$cellsize[0]);
-		$pdf->Cell($cellsize[0],($bottomy-$topy)+$imagesize+.2,'',0,0);		
-		}*/
-	else if ($sheetstyle=="thumbnails")
-		{			
-		$pdf->Setx($topx);
-		$pdf->Cell($cellsize[0],($bottomy-$topy)+$imagesize+.2,'',0,0);		
-		}
-	}
+    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage={$previewpage} -o -r100 -dLastPage={$previewpage} -sOutputFile=" . escapeshellarg($contact_sheet_rip) . ' ' . escapeshellarg($PDF_filename) . (($config_windows) ? '':' 2>&1');
+    run_command($command);
 
-$deltay=1;
-do_contactsheet_sizing_calculations();
+    $command = "{$convert_fullpath} -resize {$contact_sheet_preview_size} -quality 90 -colorspace {$imagemagick_colorspace} \"{$contact_sheet_rip}\" \"$contact_sheet_preview_img\"" . (($config_windows) ? '' : ' 2>&1');
+    run_command($command);
 
+    exit();
+    }
 
-$pdf = new rsPDF($orientation , 'in', $size, true, 'UTF-8', false); 
+// Create a resource based on this PDF file or download it?
+if($contact_sheet_resource)
+    {
+    echo "TO DO: contact_sheet_resource!";die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
+    $newresource = create_resource(1, 0);
 
-#Begin loop through resources, collecting Keywords too.
-$i=0;
-$j=0;
+    update_field($newresource, 8, i18n_get_collection_name($collectiondata) . ' ' . $date);
+    update_field($newresource, $filename_field, "{$newresource}.pdf");
 
+    #Relate all resources in collection to the new contact sheet resource
+    relate_to_collection($newresource, $collection);	
 
-for ($n=0;$n<count($result);$n++){
-	$ref=$result[$n]["ref"];
-	$preview_extension=$result[$n]["preview_extension"];
-	$resourcetitle="";
-    $i++;
-	$currentx=$pdf->GetX();
-	$currenty=$pdf->GetY();
-	if ($ref!==false){
-		# Find image
-		# Load access level
-		
-		$access=get_resource_access($result[$n]); // feed get_resource_access the resource array rather than the ref, since access is included.
-		$use_watermark=check_use_watermark();
-		$imgpath = get_resource_path($ref,true,$imgsize,false,$preview_extension,-1,1,$use_watermark);
-		if (!file_exists($imgpath) && $preview_extension=="jpg" && $imgsize=='hpr'){$imgpath = get_resource_path($ref,true,'',false,$preview_extension,-1,1,$use_watermark);}
-		if (!file_exists($imgpath) && $imgsize!='pre'){$imgpath = get_resource_path($ref,true,'pre',false,$preview_extension,-1,1,$use_watermark);}
-		if (!file_exists($imgpath)){
-			$imgpath="../../gfx/".get_nopreview_icon($result[$n]['resource_type'],$result[$n]['file_extension'],false,true); 
-			$preview_extension=explode(".",$imgpath);
-			if(count($preview_extension)>1){
-				$preview_extension=trim(strtolower($preview_extension[count($preview_extension)-1]));
-			} 
-		}	
-		if (file_exists($imgpath)){
-			# cells are used for measurement purposes only
-			# Two ways to size image, either by height or by width.
-			$thumbsize=getimagesize($imgpath);			
-			if ($thumbsize[0]>$thumbsize[1]){ ################# landscape image
-				$imagewidth=$imagesize;
-				$imageheight=0;
-				if ($sheetstyle=="thumbnails"){
-					$topy=$pdf->GetY();	$topx=$pdf->GetX();	
-					if ($config_sheetthumb_include_ref){
-						$pdf->Cell($imagesize,(($refnumberfontsize+$leading)/72),$ref,0,2,'L',0,'',1);
-					}
-					##render fields
-					contact_sheet_add_fields($result[$n]);
-					$bottomy=$pdf->GetY();	
-					$bottomx=$pdf->GetX();	
-					#Add image
-					contact_sheet_add_image();
-					$pdf->SetXY($topx,$topy);
-					$pdf->Cell($cellsize[0],($bottomy-$topy)+$imagesize+.2,'',0,0);
-					
-					}				
-				else if ($sheetstyle=="list")
-					{					
-					if ($config_sheetlist_include_ref){
-					    $pdf->SetXY($currentx,$currenty);
-					    $pdf->Text($pdf->GetX()+$imagesize+0.1,$pdf->GetY(),$ref);
-						 $deltay=1;
-						}
-					$pdf->SetXY($currentx,$currenty);	
-					#render fields				
-					contact_sheet_add_fields($result[$n]);
-					#Add image
-					contact_sheet_add_image();					
-					}
-				else if ($sheetstyle=="single")
-					{									
-					#Add image
-					contact_sheet_add_image();
-					contact_sheet_add_fields($result[$n]);
-					}
-				}
-					
-			else
-				{ # portrait
-				$imagewidth=0;
-				$imageheight=$imagesize;
-				
-				if ($sheetstyle=="thumbnails")
-					{
-					$topy=$pdf->GetY();	
-					$topx=$pdf->GetX();	
-					if ($config_sheetthumb_include_ref){
-						$pdf->Cell($imagesize,(($refnumberfontsize+$leading)/72),$ref,0,2,'L',0,'',1);
-						}
-					##render fields
-					contact_sheet_add_fields($result[$n]);
-					#Add image
-					contact_sheet_add_image();
-					$pdf->SetXY($topx,$topy);
-					$pdf->Setx($topx);
-					$pdf->Cell($cellsize[0],($bottomy-$topy)+$imagesize+.2,'',0,0);
-					}
-				else if ($sheetstyle=="list"){
-					
-					if ($config_sheetlist_include_ref){
-					    $pdf->SetXY($currentx,$currenty);
-					    $pdf->Text($pdf->GetX()+$imagesize+0.1,$pdf->GetY()+0.2,$ref);
-						$deltay=2;
-					}
-					$pdf->SetXY($currentx,$currenty);		
-					#render fields								
-					contact_sheet_add_fields($result[$n]);
-					#Add image
-					contact_sheet_add_image();
-					
-					}
-				
-				else if ($sheetstyle=="single"){					
-					#Add image
-					contact_sheet_add_image();			
-					#render fields	
-					
-					contact_sheet_add_fields($result[$n]);			
-					
-					}			
-				}
-			$n=$n++;
-			if ($i == $columns){
-					
-				$pdf->ln();
-				$i=0;$j++;	
-				if ($j > $rowsperpage || $sheetstyle=="single"){
-					$j=0; 
-							
-							
-					if ($n<count($result)-1){ //avoid making an additional page if it will be empty							
-						$pdf->AddPage();
-						$pdf->SetX(1);$pdf->SetY(1.2 + $logospace);
-					}
-				}			
-			}
-		}
-	}
-}	
+    sql_query("UPDATE resource SET file_extension = 'pdf' WHERE ref = '{$newresource}'");
 
-#Make AJAX preview?:
-	if ($preview==true && isset($imagemagick_path)) 
-		{
-		if (file_exists(get_temp_dir() . "/contactsheetrip.jpg")){unlink(get_temp_dir() . "/contactsheetrip.jpg");}
-		if (file_exists(get_temp_dir() . "/contactsheet.jpg")){unlink(get_temp_dir() . "/contactsheet.jpg");}
-		if (file_exists(get_temp_dir() . "/contactsheet.pdf")){unlink(get_temp_dir() . "/contactsheet.pdf");}
-		echo ($pdf->GetPage());
-		$pdf->Output(get_temp_dir() . "/contactsheet.pdf","F");
-		
-		# Set up  
-		putenv("MAGICK_HOME=" . $imagemagick_path); 
-		putenv("PATH=" . $ghostscript_path . ":" . $imagemagick_path); # Path 
+    # Create the file in the new resource folder:
+    $path = get_resource_path($newresource, true, '', true, 'pdf');
 
-        $ghostscript_fullpath = get_utility_path("ghostscript");
-        $command = $ghostscript_fullpath . " -sDEVICE=jpeg -dFirstPage=$previewpage -o -r100 -dLastPage=$previewpage -sOutputFile=" . escapeshellarg(get_temp_dir() . "/contactsheetrip.jpg") . " " . escapeshellarg(get_temp_dir() . "/contactsheet.pdf") . (($config_windows)?"":" 2>&1");
-		run_command($command);
+    $pdf->Output($path,'F');
 
-        $convert_fullpath = get_utility_path("im-convert");
-        if ($convert_fullpath==false) {exit("Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");}
+    #Create thumbnails and redirect browser to the new contact sheet resource
+    create_previews($newresource, true, 'pdf');
+    redirect("{$baseurl_short}pages/view.php?ref={$newresource}");
+    }
 
-        $command = $convert_fullpath . " -resize ".$contact_sheet_preview_size." -quality 90 -colorspace ".$imagemagick_colorspace." \"".get_temp_dir() . "/contactsheetrip.jpg\" \"".get_temp_dir() . "/contactsheet.jpg\"" . (($config_windows)?"":" 2>&1");
+// Generate PDF file
+$PDF_filename = i18n_get_collection_name($collectiondata) . '.pdf';
+$html2pdf->Output($PDF_filename);
 
-		run_command($command);
-		exit();
-		}
-
-#check configs, decide whether PDF outputs to browser or to a new resource.
-if ($contact_sheet_resource==true){
-	$newresource=create_resource(1,0);
-
-	update_field($newresource,8,i18n_get_collection_name($collectiondata)." ".$date);
-	update_field($newresource,$filename_field,$newresource.".pdf");
-
-#Relate all resources in collection to the new contact sheet resource
-relate_to_collection($newresource,$collection);	
-
-	#update file extension
-	sql_query("update resource set file_extension='pdf' where ref='$newresource'");
-	
-	# Create the file in the new resource folder:
-	$path=get_resource_path($newresource,true,"",true,"pdf");
-	
-	$pdf->Output($path,'F');
-
-	#Create thumbnails and redirect browser to the new contact sheet resource
-	create_previews($newresource,true,"pdf");
-	redirect($baseurl_short."pages/view.php?ref=" .$newresource);
-	}
-
-else{ 
-	$out1 = ob_get_contents();
-	if ($out1!=""){
-	ob_end_clean();
-	}
-$pdf->Output(i18n_get_collection_name($collectiondata).".pdf","D");
-}
-
-hook("endscript");
+hook('endscript');
