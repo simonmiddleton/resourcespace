@@ -1001,53 +1001,77 @@ div.MessageBox a {
 }
 
 
-
-
 .FeaturedSimpleLinks {
 	display: table;
 	width:100%;
 }
 
-.FeaturedSimpleLink {
+.FeaturedSimpleTile {
+	position: relative;
 	margin-left: 100px;
 	margin-right: 100px;
 	margin-top: 25px;
 	height: 150px;
+	border-radius:5px;
+	overflow: hidden;
+}
+
+
+.FeaturedSimpleTileImage .HomePanelIN {
+	background: none;  
 }
 
 .FeaturedSimpleLinks .FeaturedSimpleTileContents {
-    background: transparent;  
-}
-
-a.FeaturedSimpleLink:hover { 
-	border-radius:5px;  
-}
-
-.FeaturedSimpleTile {
+	width:100%;
+	height:100%;
 	display: table;
-	height: 150px;
-	width:250px;
-    position: relative;
-	padding: 0px; 
-	overflow: hidden; 
 }
 
-.FeaturedSimpleTileContents {
-	display: table-cell; 
+.FeaturedSimpleTileText {
 	vertical-align: middle;
+	display: table-cell;
 }
+   
+.FeaturedSimpleLink{
+    position: absolute;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+ 
+ 
+a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  { 
+	text-decoration:none;
+}
+
 
 .FeaturedSimpleTile .FeaturedSimpleTileContents h2{
-  background: transparent;
-  float: none;
-  position: relative;
-  text-align: center;
-  padding-left: 0px;   
-	max-height: 100px;
-	max-width: 215px;
-	overflow-wrap: break-word;
+	background: transparent;
+	text-align: center;
+	margin: auto;  
+	max-width: 215px;    
+	white-space: normal;
 }
 
+.FeaturedSimpleTileActions {
+    position: absolute;
+    color: #fff;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    background: #000;
+    height: 20px;
+    text-align: right;
+    z-index:2;
+}
+
+.FeaturedSimpleTileActions .tool {
+    margin-left: 8px;
+    vertical-align: middle;
+    display: inline-block;
+    padding-right: 5px;    
+}
 
 .MessageUnread {
     font-weight: bold;
