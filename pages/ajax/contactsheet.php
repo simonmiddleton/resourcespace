@@ -15,15 +15,16 @@ include('../../include/image_processing.php');
 include('../../include/pdf_functions.php');
 require_once '../../lib/html2pdf/html2pdf.class.php';
 
-$collection  = getvalescaped('c', '');
-$size        = getvalescaped('size', '');
-$columns     = getvalescaped('columns', 1);
-$order_by    = getvalescaped('orderby', 'relevance');
-$sort        = getvalescaped('sort', 'asc');
-$orientation = getvalescaped('orientation', '');
-$sheetstyle  = getvalescaped('sheetstyle', 'thumbnails');
-$preview     = ('true' == getvalescaped('preview', '') ? true : false);
-$previewpage = getvalescaped('previewpage', 1);
+$collection    = getvalescaped('c', '');
+$size          = getvalescaped('size', '');
+$columns       = getvalescaped('columns', 1);
+$order_by      = getvalescaped('orderby', 'relevance');
+$sort          = getvalescaped('sort', 'asc');
+$orientation   = getvalescaped('orientation', '');
+$sheetstyle    = getvalescaped('sheetstyle', 'thumbnails');
+$preview       = ('true' == getvalescaped('preview', '') ? true : false);
+$previewpage   = getvalescaped('previewpage', 1);
+$includeheader = getvalescaped('includeheader', '');
 
 // Check access
 if(!collection_readable($collection))
@@ -32,7 +33,7 @@ if(!collection_readable($collection))
     }
 
 // Contact sheet options:
-$contactsheet_header    = ('yes' == getvalescaped('includeheader', '') ? true : $contact_sheet_include_header);
+$contactsheet_header    = ('' != $includeheader ? filter_var($includeheader, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_include_header);
 $add_contactsheet_logo  = ('true' == getvalescaped('addlogo', $include_contactsheet_logo) ? true : false);
 $contact_sheet_add_link = ('true' == getvalescaped('addlink', $contact_sheet_add_link) ? true : false);
 
