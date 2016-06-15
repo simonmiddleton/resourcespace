@@ -62,18 +62,13 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     // ********************************************************************************
 
     // IMPORTANT!
-    // add to this array in the format [node ref]=>boolean where true=AND and false=OR
+    // add to this array in the format [AND group]=array(<list of nodes> to OR)
     $node_bucket=array();
 
-    // add to this normal array to exclude nodes from search
+    // add to this normal array to exclude nodes from entire search
     $node_bucket_not=array();
 
     // Take the current search URL and extract any nodes (putting into buckets) removing terms from $search
-    //
-    // UNDER DEVELOPMENT.  Currently supports:
-    // @@<node id> (defaulting to AND)
-    // @@|<node id> (OR)
-    // @@!<node id> (NOT)
     resolve_given_nodes($search,$node_bucket,$node_bucket_not);
 
     // ********************************************************************************
@@ -407,7 +402,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
                             foreach($ckeywords as $ckeyword)
                                 {
-                                $node_bucket[$ckeyword]=true;       // true for AND condition
+                                //$node_bucket[$ckeyword]=true;       // true for AND condition
                                 }
 
                             // TODO: remove this proper when nodes plumbed in
@@ -458,7 +453,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             {
                             foreach($ckeywords as $ckeyword)
                                 {
-                                $node_bucket[$ckeyword]=false;       // true for AND condition
+                                //$node_bucket[$ckeyword]=false;       // true for AND condition
                                 }
 
                             // TODO: remove this proper when nodes plumbed in
@@ -797,25 +792,17 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
     // TODO: Expand out these lists to include keyword_related (i.e. synonyms)
 
-    $node_bucket_AND=array_keys($node_bucket,true,true);
-    $node_bucket_OR=array_keys($node_bucket,false,true);
-
     // *******************************************************************************
     //                                                       START add node conditions
     // *******************************************************************************
 
-    if(count($node_bucket_AND)>0)
+    $node_bucket_sql="";
+    foreach($node_bucket as $node_bucket_or)
         {
-        $sql_filter=' ref IN (SELECT `resource` FROM `resource_node` WHERE node IN ('.
-            implode(',',$node_bucket_AND) . ') GROUP BY resource having COUNT(1)=' .
-            count($node_bucket_AND) . ') AND ' . $sql_filter;
+        $node_bucket_sql.='EXISTS (SELECT `resource` FROM `resource_node` WHERE `ref`=`resource` AND `node` IN (' .
+            implode(',',$node_bucket_or) . ')) AND ';
         }
-
-    if(count($node_bucket_OR)>0)
-        {
-        $sql_filter='EXISTS (SELECT `resource` FROM `resource_node` WHERE `ref`=`resource` AND `node` IN (' .
-            implode(',',$node_bucket_OR) . ')) AND ' . $sql_filter;
-        }
+    $sql_filter=$node_bucket_sql . $sql_filter;
 
     if(count($node_bucket_not)>0)
         {
@@ -1143,50 +1130,30 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 // Take the current search URL and extract any nodes (putting into buckets) removing terms from $search
 //
 // UNDER DEVELOPMENT.  Currently supports:
-// @@<node id> (defaulting to AND)
-// @@|<node id> (OR)
 // @@!<node id> (NOT)
+// @@<node id>@@<node id> (OR)
 function resolve_given_nodes(&$search, &$node_bucket, &$node_bucket_not)
     {
-    global $category_tree_search_use_and, $checkbox_and;
 
-    if (preg_match_all('/' . NODE_TOKEN_PREFIX . '([' . NODE_TOKEN_OR . NODE_TOKEN_NOT . ']*)(\d+)/',$search,$matches)===false || count($matches[0])==0)
+    // extract all of the words, a word being a bunch of tokens with optional NOTs
+    if (preg_match_all('/(' . NODE_TOKEN_PREFIX . NODE_TOKEN_NOT . '*\d+)+/',$search,$words)===false || count($words[0])==0)
         {
         return;
         }
 
-    $resource_type_fields=array();
-
-    foreach (sql_query('SELECT `node`.`ref`, `resource_type_field`.`type` FROM `node` INNER JOIN `resource_type_field`'.
-        ' ON `node`.`resource_type_field`=`resource_type_field`.`ref` WHERE `node`.`ref` IN (' .
-        implode(',',$matches[2]) .')') as $resource_type_field)
+    // spin through each of the words and process tokens
+    foreach ($words[0] as $word)
         {
-        $resource_type_fields[$resource_type_field['ref']]=$resource_type_field['type'];
-        }
+        $search=str_replace($word,'',$search);        // remove the entire word from the search string
 
-    for($i=0; $i<count($matches[0]); $i++)
-        {
-        $search=str_replace($matches[0][$i],'',$search);        // remove the entire node string match from the search
-        $operator=$matches[1][$i];
-        $node=$matches[2][$i];
+        preg_match_all('/' . NODE_TOKEN_PREFIX . '(' . NODE_TOKEN_NOT . '*)(\d+)/',$word,$tokens);
 
-        if(!isset($resource_type_fields[$node]))
+        if(count($tokens)==1 && $tokens[1][0]==NODE_TOKEN_NOT)      // you are currently only allowed not condition for a single token within a single word
             {
-            continue;    // this is not a legal node as we could not find its resource_type_field
+            $node_bucket_not[]=$tokens[2][0];       // add the node number to the node_bucket_not
+            continue;
             }
 
-        if(strpos($operator,NODE_TOKEN_NOT)===false)       // we are dealing with standard node bucket
-            {
-            // set node bucket entry to true for AND condition
-            $node_bucket[$node]=
-                strpos($operator,NODE_TOKEN_OR)===false &&
-                (!$resource_type_fields[$node]==FIELD_TYPE_CATEGORY_TREE || $category_tree_search_use_and) &&
-                (!$resource_type_fields[$node]==FIELD_TYPE_CHECK_BOX_LIST || $checkbox_and);
-            }
-        else
-            // we are dealing with NOT operator so push onto node_bucket_not list
-            {
-            $node_bucket_not[]=$node;
-            }
+        $node_bucket[]=$tokens[2];
         }
     }
