@@ -1218,7 +1218,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         
         if(empty($identoutput) && $imagemagick_mpr)
         	{
-        	// we really need dimensions here
+        	// we really need dimensions here, so fallback to php's method
         	$identoutput = getimagesize(escapeshellarg($prefix . $file));
         	}
         
@@ -1229,8 +1229,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		}
 		elseif($imagemagick_mpr)
         	{
-			// this puts us in a bad spot...die for now
-			die("no width or height found");
+			// this puts us in a bad spot...return false
+			return false;
 			}
 
         if($lean_preview_generation){
@@ -1380,7 +1380,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			# Always make preview sizes for smaller file sizes.
 			#
 			# Always make pre/thm/col sizes regardless of source image size.
-			if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews))
+			if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
 				{			
 				# Debug
 				debug("Generating preview size " . $ps[$n]["id"] . " to " . $path,RESOURCE_LOG_APPEND_PREVIOUS);
@@ -1768,7 +1768,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						$TILEROLL=$TILESIZE/4;
 						
 						// let's create the watermark and save as an mpr
-						//$command.=" \( " . escapeshellarg($watermarkreal) . " -write mpr:" . $ref . "_wm +delete \)";
 						$command.=" \( " . escapeshellarg($watermarkreal) . " -resize x" . escapeshellarg($TILESIZE) . " -background none -write mpr:" . $ref . " +delete \)";
 						$command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escapeshellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
 						$mpr_init_write=true;
@@ -1777,20 +1776,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						$command.=" -quality " . $command_parts[$p]['quality'] . ($p!==($cp_count-1) ? " -write " : " "). escapeshellarg($command_parts[$p]['wmpath']);
 						}
 					// now add the watermark line in
-					//$command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escapeshellarg($command_parts[$p]['th']) . " tile:mpr:" . $ref . "_wm \) \( -clone 0 -clone 1 -compose multiply -composite \)";
-					
-					/*if(!isset($watermark_single_image))
-						{
-						$command.=' -tile ' . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 " . $command_parts[$p]['tw'] . "," . $command_parts[$p]['th'] . "\"";
-						}
-					else
-						{
-						$wm_scale = $watermark_single_image['scale'];
-                        $wm_scaled_width  = $command_parts[$p]['tw'] * ($wm_scale / 100);
-                        $wm_scaled_height = $command_parts[$p]['th'] * ($wm_scale / 100);
-						
-						$command.=" " . escapeshellarg($watermarkreal) . " -gravity " . escapeshellarg($watermark_single_image['position']) . " -geometry " . escapeshellarg($wm_scaled_width) . "x" . escapeshellarg($wm_scaled_height) . "+0+0 -composite";
-						}*/
 					else
 						{
 						$command.=" -delete 0" . ($p!==($cp_count-1) ? " -write " : " "). escapeshellarg($command_parts[$p]['wmpath']);
@@ -1798,6 +1783,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					}
 					$command.=($p!==($cp_count-1) && $mpr_init_write ? " +delete" : "");
 				}
+			$modified_mpr_command=hook('modify_mpr_command','',array($command,$ref,$extension));
+			if($modified_mpr_command!=''){$command=$modified_mpr_command;}
 			echo "run_command=".$command."<br/>";
 			//die("test");
 			$output = exec($command);
