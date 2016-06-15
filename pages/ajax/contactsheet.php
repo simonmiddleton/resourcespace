@@ -2,9 +2,6 @@
 #
 # PDF Contact Sheet Functionality
 #
-foreach ($_POST as $key => $value) {$$key = stripslashes(utf8_decode(trim($value)));}
-
-// create new PDF document
 include('../../include/db.php');
 include_once('../../include/general.php');
 include('../../include/authenticate.php');
