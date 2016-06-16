@@ -183,8 +183,10 @@ try
     $html2pdf->pdf->SetSubject($pdf_properties['subject']);
     $html2pdf->setDefaultFont($pdf_properties['font']);
 
-    $available_width = $html2pdf->pdf->getW() - ($html2pdf->pdf->getlMargin() + $html2pdf->pdf->getrMargin());
-    $placeholders['available_width'] = $available_width;
+    $available_width  = $html2pdf->pdf->getW() - ($html2pdf->pdf->getlMargin() + $html2pdf->pdf->getrMargin());
+    $available_height = $html2pdf->pdf->getH() - ($html2pdf->pdf->gettMargin() + $html2pdf->pdf->getbMargin());
+    $placeholders['available_width']  = floor($available_width / (25.4 / 96));
+    $placeholders['available_height'] = floor($available_height / (25.4 / 96));
 
     // Column width is made as "[column width in mm] / (25.4 / 96) - [adjustment]"
     // IMPORTANT: [adjustment] is needed so that the content would be within the margins of the document
@@ -192,10 +194,6 @@ try
     if('list' == $sheetstyle)
         {
         $placeholders['column_width'] = floor($available_width / (25.4 / 96) * 0.25);
-        }
-    else if('single' == $sheetstyle)
-        {
-        $placeholders['column_width'] = floor($available_width / (25.4 / 96));
         }
 
     $pdf_content = process_template($pdf_template_path, $placeholders);

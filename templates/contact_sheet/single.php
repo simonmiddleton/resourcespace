@@ -17,7 +17,7 @@ if(isset($titlefontsize))
 
 #logo { height: 50px; max-width: 100%; }
 .centeredText { text-align: center; }
-/*.resourcePreview { width: <?php echo $column_width; ?>px; }*/
+.resourcePreview { width: <?php echo $available_width * 0.7 ?>px; height: <?php echo $available_height * 0.5; ?>px; }
 </style>
 <?php
 foreach($resources as $resource_ref => $resource)
@@ -71,21 +71,30 @@ if(isset($contact_sheet_footer))
 
     <!-- Real content starts here -->
     <h3 id="pageTitle"><?php echo $title; ?></h3>
-    <?php
-    if(isset($contact_sheet_add_link))
-        {
-        // IMPORTANT: having space between a tag and img creates some weird visual lines (HTML2PDF issues maybe?!)
-        ?>
-        <a target="_blank" href="<?php echo $baseurl; ?>/?r=<?php echo $resource_ref; ?>"><img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview"></a>
-        <?php
-        }
-    else
-        {
-        ?>
-        <img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview">
-        <?php
-        }
-        ?>
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 15%"></td>
+            <td style="width: 70%">
+                <?php
+            if(isset($contact_sheet_add_link))
+                {
+                // IMPORTANT: having space between a tag and img creates some weird visual lines (HTML2PDF issues maybe?!)
+                ?>
+                <a target="_blank" href="<?php echo $baseurl; ?>/?r=<?php echo $resource_ref; ?>"><img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview"></a>
+                <?php
+                }
+            else
+                {
+                ?>
+                <img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview">
+                <?php
+                }
+                ?>
+            </td>
+            <td style="width: 15%"></td>
+        </tr>
+        </table>
     <br>
     <?php
     if($config_sheetthumb_include_ref)
