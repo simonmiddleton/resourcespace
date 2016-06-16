@@ -247,3 +247,31 @@
 247,54,"Digital Camera",,20
 248,54,"Scanned Negative",,30
 249,54,"Scanned Photo",,40
+250,73,Woman,,10
+251,73,Man,,20
+252,73,Child,,30
+253,73,Building,,140
+254,73,Vehicle,,130
+255,73,Animal,,80
+256,73,Elderly,,70
+257,73,Baby,,60
+258,73,Boy,,40
+259,73,Girl,,50
+260,74,Exhibition,,10
+261,74,Meeting,,20
+262,74,Concert,,30
+263,74,Festival,,40
+264,74,Party,,50
+265,74,Conference,,60
+266,74,"Photo shoot",,80
+267,75,Happy,,10
+268,75,Sad,,20
+269,75,Inspirational,,30
+270,75,"Eye contact",,40
+271,75,Thoughtful,,50
+272,73,Family,,90
+273,73,Group,,100
+274,73,Product,,150
+275,73,Employee,,110
+276,73,Customer,,120
+277,74,Fundraising,,70
