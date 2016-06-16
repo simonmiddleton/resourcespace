@@ -17,7 +17,7 @@ for ($m=0;$m<count($field['node_options']);$m++)
 		$option_trans_simple[]=$trans;
 	}
 	}
-
+	
 if ($auto_order_checkbox && !hook("ajust_auto_order_checkbox","",array($field))) {
 	if($auto_order_checkbox_case_insensitive){natcasesort($option_trans);}
 	else{natsort($option_trans);}
@@ -108,7 +108,7 @@ else
 		$name=$field["ref"] . "_" . md5($option);
 		$wrap++;if ($wrap>$cols) {$wrap=1;?></tr><tr><?php }
 		?>
-		<td width="1"><input type="checkbox" name="<?php echo $name?>" value="yes" <?php if (in_array($option,$set)) {?>checked<?php } ?>
+		<td width="1"><input type="checkbox" name="<?php echo $name?>" value="yes" <?php if (in_array($trans,$set)) {?>checked<?php } ?>
 		<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"] ?>');"<?php } ?>
 		 /></td><td><?php echo htmlspecialchars($trans)?>&nbsp;</td>
 		<?php
