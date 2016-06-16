@@ -1045,7 +1045,8 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 		{
 		if (isset($imagemagick_path))
 			{
-			create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested);
+			$return_val=create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested);
+			return $return_val;
 			}
 		else
 			{
