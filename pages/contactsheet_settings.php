@@ -6,18 +6,54 @@ include_once '../include/collections_functions.php';
 
 $collection     = getvalescaped('ref', '', true);
 $collectiondata = get_collection($collection);
+$ajax           = ('true' == getvalescaped('ajax', '') ? true : false);
+$sheetstyle     = getvalescaped('sheetstyle', 'thumbnails');
+
+
+switch($sheetstyle)
+    {
+    case 'thumbnails':
+        $sheetstyle_fields = $config_sheetthumb_fields;
+        break;
+
+    case 'list':
+        $sheetstyle_fields = $config_sheetlist_fields;
+        break;
+
+    case 'single':
+        $sheetstyle_fields = $config_sheetsingle_fields;
+        break;
+    }
 
 /* Depending on the style, users get different fields to select from.
-Super Admins decide what fields they can see based on config options (e.g. $config_sheetthumb_fields)and permissions */
+Super Admins decide what fields they can see based on config options (e.g. $config_sheetthumb_fields)and permissions
+Note: By default we use thumbnails fields
+*/
 $available_contact_sheet_fields = array(
     0 => array(
         'ref'   => '',
         'title' => $lang['allfields']
     )
 );
-foreach(get_fields($config_sheetthumb_fields) as $field_data)
+foreach(get_fields($sheetstyle_fields) as $field_data)
     {
     $available_contact_sheet_fields[] = $field_data;
+    }
+
+if($ajax && 'get_sheetstyle_fields' == getval('action', ''))
+    {
+    $response = array();
+
+    foreach($available_contact_sheet_fields as $field_data)
+        {
+        $response[] = array(
+            'ref'   => $field_data['ref'],
+            'title' => $field_data['title'],
+        );
+        }
+
+    echo json_encode($response);
+    exit();
     }
 
 
@@ -63,7 +99,8 @@ if(!collection_readable($collection))
                 			{
                 			document.getElementById('size_options').style.display='none';
                 			}
-                		
+
+                        updateAvailableContactSheetFields('list');
                 		}
                 	else if (jQuery('#sheetstyle').val()=='single')
                 		{
@@ -72,6 +109,8 @@ if(!collection_readable($collection))
                 			{
                 			document.getElementById('size_options').style.display='block';
                 			}
+
+                        updateAvailableContactSheetFields('single');
                 		}
                 	else if (jQuery('#sheetstyle').val()=='thumbnails')
                 		{
@@ -80,7 +119,9 @@ if(!collection_readable($collection))
                 		if (document.getElementById('size_options'))
                 			{
                 			document.getElementById('size_options').style.display='none';
-                			}	
+                			}
+
+                        updateAvailableContactSheetFields('thumbnails');
                 		}
                 	jQuery().rsContactSheet('revert');	
                 		">
@@ -89,6 +130,43 @@ if(!collection_readable($collection))
                     <option value="single" ><?php echo $lang["contactsheet-single"]; ?></option>
                 </select>
                 <div class="clearerleft"></div>
+                <script>
+                function updateAvailableContactSheetFields(style)
+                    {
+                    var contact_sheet_fields_selector = jQuery('#selected_contact_sheet_fields');
+
+                    var post_url  = '<?php echo $baseurl; ?>/pages/contactsheet_settings.php';
+                    var post_data = 
+                        {
+                        ajax: true,
+                        sheetstyle: style,
+                        action: 'get_sheetstyle_fields',
+                        };
+
+                    jQuery.post(post_url, post_data, function(response)
+                        {
+                        if(typeof response !== 'undefined')
+                            {
+                            var response_obj = JSON.parse(response);
+
+                            // Remove all options
+                            contact_sheet_fields_selector.empty();
+
+                            var x;
+                            for(x in response_obj)
+                                {
+                                var contact_sheet_field_obj = response_obj[x];
+
+                                contact_sheet_fields_selector.append('<option value="' + contact_sheet_field_obj.ref + '">' + contact_sheet_field_obj.title + '</option>');
+                                }
+
+                            return true;
+                            }
+                        });
+
+                    return false;
+                    }
+                </script>
             </div>
 <?php
 if($contact_sheet_include_header_option)
@@ -155,7 +233,7 @@ if($contact_sheet_add_link_option)
 
     <div class="Question">
         <label><?php echo $lang['contact_sheet_select_fields']; ?></label>
-        <select class="shrtwidth" name="selected_contact_sheet_fields[]" multiple>
+        <select id="selected_contact_sheet_fields" class="shrtwidth" name="selected_contact_sheet_fields[]" multiple>
             <?php
             foreach($available_contact_sheet_fields as $contact_sheet_field)
                 {

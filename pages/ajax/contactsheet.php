@@ -37,8 +37,6 @@ $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_V
 $selected_contact_sheet_fields = getvalescaped('selected_contact_sheet_fields', '');
 
 
-
-
 $pdf_properties = array();
 $resources      = array();
 
@@ -66,6 +64,12 @@ switch($sheetstyle)
     case 'single':
         $getfields = $config_sheetsingle_fields;
         break;
+    }
+
+// If user has specified which fields to show, then respect it
+if('' != $selected_contact_sheet_fields && '' != $selected_contact_sheet_fields[0])
+    {
+    $getfields = $selected_contact_sheet_fields;
     }
 
 $csf = array();
