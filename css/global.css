@@ -1059,7 +1059,7 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     color: #fff;
     left: 0;
     bottom: 0;
-    width: 250px;
+    width: 100%;
     background: #000;
     height: 20px;
     text-align: right;
