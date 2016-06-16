@@ -184,13 +184,18 @@ try
     $html2pdf->setDefaultFont($pdf_properties['font']);
 
     $available_width = $html2pdf->pdf->getW() - ($html2pdf->pdf->getlMargin() + $html2pdf->pdf->getrMargin());
+    $placeholders['available_width'] = $available_width;
 
     // Column width is made as "[column width in mm] / (25.4 / 96) - [adjustment]"
     // IMPORTANT: [adjustment] is needed so that the content would be within the margins of the document
     $placeholders['column_width'] = floor(floor($available_width / $columns) / (25.4 / 96) - 10);
-    if('list' == $sheetstyle || 'single' == $sheetstyle)
+    if('list' == $sheetstyle)
         {
         $placeholders['column_width'] = floor($available_width / (25.4 / 96) * 0.25);
+        }
+    else if('single' == $sheetstyle)
+        {
+        $placeholders['column_width'] = floor($available_width / (25.4 / 96));
         }
 
     $pdf_content = process_template($pdf_template_path, $placeholders);
