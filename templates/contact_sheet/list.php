@@ -19,9 +19,8 @@ if(isset($titlefontsize))
 .centeredText { text-align: center; }
 
 #resourcesTable { width: 100%; vertical-align: top; }
-.resourcePreviewContainer { width: 30%; padding-bottom: 20px; }
+.resourcePreviewContainer { width: <?php echo $available_width * 0.3; ?>px; height: 150px; padding-bottom: 20px; }
 .resourceDataContainer { width: 70%; padding-bottom: 20px; }
-.resourcePreview { width: <?php echo $column_width; ?>px; }
 </style>
 <page backtop="25mm" backbottom="25mm">
 <?php
@@ -80,17 +79,19 @@ if(isset($contact_sheet_footer))
             <tr>
                 <td class="resourcePreviewContainer">
                 <?php
+                $image_dimensions = calculate_image_dimensions($resource['preview_src'], $available_width * 0.3, 150);
+
                 if(isset($contact_sheet_add_link))
                     {
                     // IMPORTANT: having space between a tag and img creates some weird visual lines (HTML2PDF issues maybe?!)
                     ?>
-                    <a target="_blank" href="<?php echo $baseurl; ?>/?r=<?php echo $resource_ref; ?>"><img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview"></a>
+                    <a target="_blank" href="<?php echo $baseurl; ?>/?r=<?php echo $resource_ref; ?>"><img style="margin-left: <?php echo $image_dimensions['y_offset']; ?>px;" src="<?php echo $resource['preview_src']; ?>" width="<?php echo $image_dimensions['new_width']; ?>" height="<?php echo $image_dimensions['new_height']; ?>" alt="Resource Preview"></a>
                     <?php
                     }
                 else
                     {
                     ?>
-                    <img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview">
+                    <img style="margin-left: <?php echo $image_dimensions['y_offset']; ?>px;" src="<?php echo $resource['preview_src']; ?>" width="<?php echo $image_dimensions['new_width']; ?>" height="<?php echo $image_dimensions['new_height']; ?>" alt="Resource Preview">
                     <?php
                     }
                     ?>

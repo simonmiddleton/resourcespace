@@ -346,3 +346,4 @@ div.MessageBox a {
 }
 UL.jqueryFileTree A {color:#000;background-color:initial;}
 UL.jqueryFileTree A:hover {background-color:initial !important;}
+#previewimage { border: 1px solid #CCC; }

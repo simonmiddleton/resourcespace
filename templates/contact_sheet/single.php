@@ -88,7 +88,7 @@ if(isset($contact_sheet_footer))
             else
                 {
                 ?>
-                <img src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview">
+                <img style="margin-left: <?php echo $image_dimensions['y_offset']; ?>px;" src="<?php echo $resource['preview_src']; ?>" width="<?php echo $image_dimensions['new_width']; ?>" height="<?php echo $image_dimensions['new_height']; ?>" alt="Resource Preview">
                 <?php
                 }
                 ?>
