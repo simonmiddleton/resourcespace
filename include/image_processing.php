@@ -2354,11 +2354,14 @@ else if ($sheetstyle=="single")
 * 
 * @return array New dimensions which can be used to resize the image
 */
-function calculateImageDimensions($image_path, $target_width, $target_height)
+function calculate_image_dimensions($image_path, $target_width, $target_height)
     {
-    $return = array();
+    if(false === (list($source_width, $source_height) = @getimagesize($image_path)))
+        {
+        trigger_error("'{$image_path}' is not a valid image!");
+        }
 
-    list($source_width, $source_height) = getimagesize($image_path);
+    $return = array();
 
     // Calculate width and height
     if($source_width > $source_height)
@@ -2374,6 +2377,8 @@ function calculateImageDimensions($image_path, $target_width, $target_height)
 
     $return['new_width']  = floor($source_width * $ratio);
     $return['new_height'] = floor($source_height * $ratio);
+    $return['x_offset']   = ceil(($target_height - $return['new_height']) / 2);
+    $return['y_offset']   = ceil(($target_width - $return['new_width']) / 2);
 
     return $return;
     }
