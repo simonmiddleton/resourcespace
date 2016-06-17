@@ -2344,3 +2344,36 @@ else if ($sheetstyle=="single")
 	$columns=1;
 	}
 }
+
+
+/**
+* Function used to get new width & height for an image in order to maintain
+* aspect ratio while it will fit within a desired dimension
+* 
+* @param string $image_path The full path to the image (can be physical / URL)
+* 
+* @return array New dimensions which can be used to resize the image
+*/
+function calculateImageDimensions($image_path, $target_width, $target_height)
+    {
+    $return = array();
+
+    list($source_width, $source_height) = getimagesize($image_path);
+
+    // Calculate width and height
+    if($source_width > $source_height)
+        {
+        // Landscape
+        $ratio = $target_width / $source_width;
+        }
+    else
+        {
+        // Portrait
+        $ratio = $target_height / $source_height;
+        }
+
+    $return['new_width']  = floor($source_width * $ratio);
+    $return['new_height'] = floor($source_height * $ratio);
+
+    return $return;
+    }

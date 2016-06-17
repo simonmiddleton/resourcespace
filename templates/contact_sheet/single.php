@@ -72,22 +72,24 @@ if(isset($contact_sheet_footer))
     <!-- Real content starts here -->
     <h3 id="pageTitle"><?php echo $title; ?></h3>
 
-    <table style="width: 100%;">
+    <table style="width: 100%; border: 1px solid black;">
         <tr>
             <td style="width: 15%"></td>
-            <td style="width: 70%">
-                <?php
+            <td style="width: 70%; height: 300px; border: 1px solid black;">
+            <?php
+            $image_dimensions = calculateImageDimensions($resource['preview_src'], $available_width * 0.7, $available_height * 0.5);
+
             if(isset($contact_sheet_add_link))
                 {
                 // IMPORTANT: having space between a tag and img creates some weird visual lines (HTML2PDF issues maybe?!)
                 ?>
-                <a target="_blank" href="<?php echo $baseurl; ?>/?r=<?php echo $resource_ref; ?>"><img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview"></a>
+                <a target="_blank" href="<?php echo $baseurl; ?>/?r=<?php echo $resource_ref; ?>"><img src="<?php echo $resource['preview_src']; ?>" width="<?php echo $image_dimensions['new_width']; ?>" height="<?php echo $image_dimensions['new_height']; ?>" alt="Resource Preview"></a>
                 <?php
                 }
             else
                 {
                 ?>
-                <img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview">
+                <img src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview">
                 <?php
                 }
                 ?>
@@ -95,7 +97,6 @@ if(isset($contact_sheet_footer))
             <td style="width: 15%"></td>
         </tr>
         </table>
-    <br>
     <?php
     if($config_sheetthumb_include_ref)
         {
