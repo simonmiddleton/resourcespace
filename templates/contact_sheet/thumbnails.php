@@ -55,8 +55,8 @@ if(isset($contact_sheet_footer))
         <table style="width: 100%;">
             <tr>
                 <td class="centeredText" style="width: 90%">
-                    <span>XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999</span>
-                    <p>&#0169; ResourceSpace. All Rights Reserved.</p>
+                    <span><?php echo $lang['contact_sheet_footer_address']; ?></span>
+                    <p><?php echo $lang['contact_sheet_footer_copyright']; ?></p>
                 </td>
                 <td style="text-align: right; width: 10%">[[page_cu]] of [[page_nb]]</td>
             </tr>

@@ -254,7 +254,7 @@ function get_template_path($template_name, $template_namespace)
 */
 function process_template($template_path, array $bind_placeholders = array())
     {
-    global $applicationname, $baseurl, $baseurl_short, $storagedir, $date_d_m_y, $linkedheaderimgsrc;
+    global $applicationname, $baseurl, $baseurl_short, $storagedir, $lang, $date_d_m_y, $linkedheaderimgsrc;
 
     // General placeholders available to templates
     $general_params = array(
@@ -262,6 +262,7 @@ function process_template($template_path, array $bind_placeholders = array())
         'baseurl'         => $baseurl,
         'baseurl_short'   => $baseurl_short,
         'filestore'       => $storagedir,
+        'lang'            => $lang,
         'date'            => ($date_d_m_y ? date('d/m/Y') : date('m/d/Y')),
     );
 
