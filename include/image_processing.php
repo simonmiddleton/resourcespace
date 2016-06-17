@@ -2348,31 +2348,48 @@ else if ($sheetstyle=="single")
 
 /**
 * Function used to get new width & height for an image in order to maintain
-* aspect ratio while it will fit within a desired dimension
+* aspect ratio while it will fit within a desired dimension.
 * 
-* @param string $image_path The full path to the image (can be physical / URL)
+* @param string  $image_path    The full path to the image (can be physical / URL)
+* @param integer $target_width  
+* @param integer $target_height 
+* @param boolean $enlarge_image Specify whether images smaller than our target
+*                               should be enlarged or not. Default is FALSE
 * 
-* @return array New dimensions which can be used to resize the image
+* @return array New dimensions which can be used to resize the image and offset values client
+*               code can use for consistent visual display
 */
-function calculate_image_dimensions($image_path, $target_width, $target_height)
+function calculate_image_dimensions($image_path, $target_width, $target_height, $enlarge_image = false)
     {
     if(false === (list($source_width, $source_height) = @getimagesize($image_path)))
         {
         trigger_error("'{$image_path}' is not a valid image!");
         }
 
-    $return = array();
+    $return = array(
+        'portrait'  => false,
+        'landscape' => false,
+    );
 
     // Calculate width and height
     if($source_width > $source_height)
         {
         // Landscape
+        $return['landscape'] = true;
+
         $ratio = $target_width / $source_width;
         }
     else
         {
         // Portrait
+        $return['portrait'] = true;
+
         $ratio = $target_height / $source_height;
+        }
+
+    if(!$enlarge_image && $target_width > $source_width)
+        {
+        $ratio = 1;
         }
 
     $return['new_width']  = floor($source_width * $ratio);

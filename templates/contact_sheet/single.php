@@ -17,7 +17,6 @@ if(isset($titlefontsize))
 
 #logo { height: 50px; max-width: 100%; }
 .centeredText { text-align: center; }
-.resourcePreview { width: <?php echo $available_width * 0.7 ?>px; height: <?php echo $available_height * 0.5; ?>px; }
 </style>
 <?php
 foreach($resources as $resource_ref => $resource)
@@ -72,12 +71,12 @@ if(isset($contact_sheet_footer))
     <!-- Real content starts here -->
     <h3 id="pageTitle"><?php echo $title; ?></h3>
 
-    <table style="width: 100%; border: 1px solid black;">
+    <table style="width: 100%;">
         <tr>
             <td style="width: 15%"></td>
-            <td style="width: 70%; height: 500px; border: 1px solid black;">
+            <td style="width: 70%; height: <?php echo $available_height * 0.5; ?>px;">
             <?php
-            $image_dimensions = calculate_image_dimensions($resource['preview_src'], $available_width * 0.7, 500);
+            $image_dimensions = calculate_image_dimensions($resource['preview_src'], $available_width * 0.7, $available_height * 0.5);
 
             if(isset($contact_sheet_add_link))
                 {
