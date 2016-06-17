@@ -1862,6 +1862,9 @@ $collection_allow_not_approved_share=false;
 #Allow the smartsearch to override $access rules when searching
 $smartsearch_accessoverride=true;
 
+# Allow special searches to honor resource type settings.
+$special_search_honors_restypes=false;
+
 # Image preview zoom using jQuery.zoom (hover over the preview image to zoom in on the resource view page)
 $image_preview_zoom=false;
 
