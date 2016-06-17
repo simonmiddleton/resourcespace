@@ -1370,9 +1370,7 @@ if($collapsible_sections)
     <input type="submit" name="save" value="Save">
  </div><!-- end of question_copyfrom -->
  <?php
-}
-
-?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
+} ?><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
 
