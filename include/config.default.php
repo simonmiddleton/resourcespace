@@ -681,7 +681,7 @@ $themes_navlink = true;
 # display an alert icon next to the team centre link 
 # and the relevant team centre item when there are requests that need managing
 # only affects users with permissions to do this.
-$team_centre_alert_icon = false;
+$team_centre_alert_icon = true;
 
 # Hide mycontributions link from regular users
 $mycontributions_userlink=true;
@@ -794,24 +794,6 @@ $resource_type_icons=false;
 $defaulttheme="";
 
 
-/** DEPRECATED **/
-
-	# Theme chips available. This makes it possible to add new themes and chips using the same structure.
-	# To create a new theme, you need a chip in gfx/interface, a graphics folder called gfx/<themename>,
-	# and a css file called css/Col-<themename>.css
-	# this is a basic way of adding general custom themes that do not affect SVN checkouts, 
-	# though css can also be added in plugins as usual.
-	 
-	$available_themes=array("multi", "whitegry","greyblu","black");
-
-	# NOTE: Do not add custom themes to $available_themes_by_default.
-	# This is being used to know which themes are custom
-	$available_themes_by_default = array("multi", "whitegry","greyblu","black","slimcharcoal");
-
-	# Uncomment and set the next line to lock to one specific colour scheme (e.g. greyblu/whitegry).
-	# $userfixedtheme="whitegry";
-
-/** END OF DEPRECATED **/
 
 /** USER PREFERENCES **/
 $user_preferences = true;
@@ -1887,6 +1869,9 @@ $collection_allow_not_approved_share=false;
 #Allow the smartsearch to override $access rules when searching
 $smartsearch_accessoverride=true;
 
+# Allow special searches to honor resource type settings.
+$special_search_honors_restypes=false;
+
 # Image preview zoom using jQuery.zoom (hover over the preview image to zoom in on the resource view page)
 $image_preview_zoom=false;
 
@@ -2155,6 +2140,9 @@ $enable_plugin_upload = true;
 # Note that a Google Maps API key is no longer required.
 #Disable geocoding features?
 $disable_geocoding = false;
+
+#Enable geolocating multiple assets on a map that are part of a collection
+$geo_locate_collection = false;
 
 # OpenLayers: The default center and zoom for the map view when searching or selecting a new location. This is a world view.
 # For example, to specify the USA use: #$geolocation_default_bounds="-10494743.596017,4508852.6025659,4";
@@ -2692,7 +2680,7 @@ $ctrls_to_save=false;
 # Option to separate some resource types in searchbar selection boxes
 $separate_resource_types_in_searchbar=Array();
 
-$team_centre_bug_report=true;
+$team_centre_bug_report=false;
 
 # Option to show resource archive status in search results list view
 $list_view_status_column=false;

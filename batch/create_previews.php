@@ -229,8 +229,10 @@ foreach($resources as $resource) // For each resources
 			# Increment the preview count.
 			sql_query("update resource set preview_attempts=ifnull(preview_attempts,1) + 1 where ref='" . $resource['ref'] . "'");
 
-			create_previews($resource['ref'], false, $resource['file_extension'],false,false,-1,$ignoremaxsize,$ingested);
-			echo sprintf("Processed resource %d in %01.2f seconds.\n", $resource['ref'], microtime(true) - $start_time);
+			$success=create_previews($resource['ref'], false, $resource['file_extension'],false,false,-1,$ignoremaxsize,$ingested);
+			hook('after_batch_create_preview');
+			$success_sting=($success==true ? "successfully" : "with error" );
+			echo sprintf("Processed resource %d %s in %01.2f seconds.\n", $resource['ref'], $success_sting, microtime(true) - $start_time);
 			}
 
 	  if ($multiprocess)

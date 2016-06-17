@@ -154,7 +154,6 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 			$file .= "?v=" . urlencode($file_modified);
 			}
 		}
-	debug("BANG " . $file);
 	return  $file;
 	}
 	
@@ -1019,7 +1018,7 @@ function get_usergroup($ref)
 {
     # Returns the user group corresponding to the $ref. A standard user group name is translated using $lang. A custom user group name is i18n translated.
 
-    $return = sql_query("select ref,name,permissions,fixed_theme,parent,search_filter,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo from usergroup where ref='$ref'");
+    $return = sql_query("select ref,name,permissions,parent,search_filter,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo from usergroup where ref='$ref'");
     if (count($return)==0) {return false;}
     else {
         $return[0]["name"] = lang_or_i18n_get_translated($return[0]["name"], "usergroup-");
@@ -1034,7 +1033,7 @@ function get_user($ref)
         if (isset($udata_cache[$ref])){
           $return=$udata_cache[$ref];
         } else {
-	$udata_cache[$ref]=sql_query("select u.*, g.permissions, g.fixed_theme, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, resource_defaults,g.config_options,g.request_mode, g.derestrict_filter from user u left join usergroup g on u.usergroup=g.ref where u.ref='$ref'");
+	$udata_cache[$ref]=sql_query("select u.*, g.permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, resource_defaults,g.config_options,g.request_mode, g.derestrict_filter from user u left join usergroup g on u.usergroup=g.ref where u.ref='$ref'");
     }
     
 	# Return a user's credentials.
@@ -2991,7 +2990,7 @@ function send_statistics()
 	$total_resources=sql_value("select count(*) value from resource",0);
 	
 	# Send stats
-	@file("http://www.montala.net/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
+	@file("http://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
 	
 	# Update last sent date/time.
 	sql_query("delete from sysvars where name='last_sent_stats'");
@@ -3337,14 +3336,14 @@ function check_access_key($resource,$key)
 			exit();
 			}
 		
-		global $usergroup,$userpermissions,$userrequestmode,$userfixedtheme,$usersearchfilter,$external_share_groups_config_options; 
+		global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options; 
                 $groupjoin="u.usergroup=g.ref";
                 if ($keys[0]["usergroup"]!="")
                     {
                     # Select the user group from the access key instead.
                     $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "'";
                     }
-		$userinfo=sql_query("select g.ref usergroup,g.permissions,g.fixed_theme,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
+		$userinfo=sql_query("select g.ref usergroup,g.permissions,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
 		if (count($userinfo)>0)
 			{
                         $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
@@ -3352,9 +3351,6 @@ function check_access_key($resource,$key)
 			$usersearchfilter=$userinfo[0]["search_filter"];
 
             $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
-
-
-			if (trim($userinfo[0]["fixed_theme"])!="") {$userfixedtheme=$userinfo[0]["fixed_theme"];} # Apply fixed theme also
 
 			if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
 			$userrequestmode=0; # Always use 'email' request mode for external users
