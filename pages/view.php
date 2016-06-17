@@ -822,7 +822,7 @@ function add_download_column($ref, $size_info, $downloadthissize)
 				if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]
 						. "&ext=" . $size_info["extension"])))
 					{
-					echo "href=\"" . generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("ext"=>($size_info['id']==''?$resource["file_extension"]:$size_info["extension"]),"size"=>$size_info["id"],"size"=>$size_info["id"])) . "\"";
+					echo "href=\"" . generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"&ext="=> $size_info["extension"])))) . "\"";
 					}
 					?> onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"]?></a><?php
 				}
