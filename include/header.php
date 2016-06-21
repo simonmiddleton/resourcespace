@@ -225,6 +225,9 @@ if($videojs && ($pagename=='search' && $keyboard_navigation_video_search) || ($p
     }
 ?>
 
+<script src="<?php echo $baseurl_short; ?>lib/jquery_tags_input/jquery.tagsinput.min.js"></script>
+<link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jquery_tags_input/jquery.tagsinput.min.css" />
+
 <script type="text/javascript">
 var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
