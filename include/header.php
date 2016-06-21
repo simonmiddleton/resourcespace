@@ -341,7 +341,11 @@ hook("headertop");
 
 if (!isset($allow_password_change)) {$allow_password_change=true;}
 
-if (isset($username) && ($pagename!="login") && ($loginterms==false) && ($k=="" || $internal_share_access)) { ?>
+$not_authenticated_pages = array('login', 'user_change_password');
+
+if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
+    {
+    ?>
 <div id="HeaderNav1" class="HorizontalNav ">
 
 <?php
