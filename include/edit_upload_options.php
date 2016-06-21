@@ -77,7 +77,6 @@ if ($ref<0)
 			//If the user is attached to a collection that is not allowed to add resources to,
 			//then we hide this collection from the drop down menu of the upload page
 			$temp_list=get_user_collections($userref);
-			//file_put_contents('/var/www/rs/releases/7.8/filestore/tmp/liveDebug.txt', print_r($temp_list, true), FILE_APPEND); 
 			$list = array();
 			$hide_non_editable = array();
 				
@@ -162,7 +161,6 @@ if ($ref<0)
 			{
 			# The user's current collection has not been found in their list of collections (perhaps they have selected a theme to edit). Display this as a separate item.
 			$cc=get_collection($usercollection);
-			file_put_contents('/var/www/rs/releases/7.8/filestore/tmp/liveDebug.txt', print_r($cc, true), FILE_APPEND); 
 			//Check if the current collection is editable as well by checking $cc['allow_changes']
 			if ($cc!==false && $cc['allow_changes']!=0)
 				{$currentfound=true;
