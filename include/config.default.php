@@ -3034,3 +3034,5 @@ $launch_kb_on_login_for_groups=array();
 # This is used by Montala to automatically test the RS trunk on a nightly basis.
 # $email_test_fails_to="example@example.com";
 
+# Option to hide the collection bar (hidden, not minimised) if it has no resources in it
+$collection_bar_hide_empty=false;

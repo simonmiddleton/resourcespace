@@ -184,7 +184,7 @@ if ($allow_reorder)
 				helper: function(event, ui)
 					{
 					//Hack to append the element to the body (visible above others divs), 
-					//but still bellonging to the scrollable container
+					//but still belonging to the scrollable container
 					jQuery('#CollectionSpace').append('<div id="CollectionSpaceClone" class="ui-state-default">' + ui[0].outerHTML + '</div>');   
 					jQuery('#CollectionSpaceClone').hide();
 					setTimeout(function() {
@@ -323,6 +323,7 @@ else { ?>
 
 		jQuery(document).ready(function() {
 			jQuery('#CentralSpace').trigger('prepareTrash');
+			CheckHideCollectionBar();
 		});
 	</script>
 	<!-- End of Drag and Drop -->
