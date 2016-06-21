@@ -829,7 +829,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)))
     if (get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL)===false)
         {
         include_once(__DIR__ . '/../include/version.php');
-        set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL,$system_upgrade_level);
+        set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL,SYSTEM_UPGRADE_LEVEL);
         }
 
 	if(!empty($structural_plugin) && !$develmode)

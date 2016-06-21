@@ -15,7 +15,6 @@ if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 // note that we do not include anything at this point as db.php will try and connect to a given schema and
 // perform an upgrade - we do not want this to happen for this new test schema
 
-ob_start();
 $suppress_headers=true;
 
 $argv=preg_replace('/^(-|--|\/)/','',$argv);    // remove leading /, -- or -
@@ -51,7 +50,6 @@ function create_new_db($db_name)
     {
     # Create a database for testing purposes
     echo "Creating database $db_name\n";
-    ob_flush();
     include __DIR__ . '/../include/config.php';
     $db=mysqli_connect($mysql_server,$mysql_username,$mysql_password,'');
     mysqli_query($db,"drop database if exists `$db_name`");
@@ -76,17 +74,13 @@ if(array_search('nosetup',$argv)===false)
     # Connect and create standard tables.
     echo "Creating default database tables...";
     ob_flush();
-    sql_connect();
     check_db_structs(true);
     echo "...done\n";
-
     # Insert a new user and run as them.
     $u = new_user($test_user_name);
     }
 else
     {
-    sql_connect();
-
     # Try to retrieve the ref of the existing user
     $u = sql_value("SELECT `ref` AS value FROM `user` WHERE `username`='{$test_user_name}'",-1);
     if ($u==-1)
