@@ -142,11 +142,24 @@ function get_collection_resources($collection)
 	return sql_array("select resource value from collection_resource where collection='$collection' order by sortorder asc, date_added desc, resource desc"); 
 	}
 	
-function add_resource_to_collection($resource,$collection,$smartadd=false,$size="")
+function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
 	{
-	global $collection_allow_not_approved_share;
-	if (collection_writeable($collection)||$smartadd)
-		{	
+	global $collection_allow_not_approved_share, $collection_block_restypes;	
+	$addpermitted=collection_writeable($collection) && !$smartadd;
+	if ($addpermitted &&(count($collection_block_restypes)>0))
+		{
+		if($addtype=="")
+			{
+			$addtype=sql_value("select resource_type value from resource where ref='" . $resource . "'",0);
+			}
+		if(in_array($addtype,$collection_block_restypes))
+			{
+			$addpermitted=false;
+			}
+		}
+		
+	if ($addpermitted)	
+		{
 		# Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
 		# for this specific resource, and warn the user that this has happened.
 		$keys=get_collection_external_access($collection);
@@ -1300,6 +1313,7 @@ function get_search_title($searchstring){
 
 function add_saved_search_items($collection)
 	{
+	global $collection_share_warning, $collection_allow_not_approved_share, $userref, $collection_block_restypes;
 	# Adds resources from a search to the collection.
 	$results=do_search(getvalescaped("addsearch",""), getvalescaped("restypes",""), "relevance", getvalescaped("archive","",true),-1,'',false,getvalescaped("starsearch",""),false,false,getvalescaped("daylimit",""));
 
@@ -1307,39 +1321,50 @@ function add_saved_search_items($collection)
 	# for this specific resource, and warn the user that this has happened.
 	$keys=get_collection_external_access($collection);
 	$resourcesnotadded=array(); # record the resources that are not added so we can display to the user
-	if (count($keys)>0)
+	$blockedtypes=array();# Record the resource types that are not added 
+	
+	for ($r=0;$r<count($results);$r++)
 		{
-		# Set the flag so a warning appears.
-		global $collection_share_warning, $collection_allow_not_approved_share;
-		$collection_share_warning=true;
+		$resource=$results[$r]["ref"];
+		$archivestatus=$results[$r]["archive"];
 		
-		for ($n=0;$n<count($keys);$n++)
+		if(in_array($results[$r]["resource_type"],$collection_block_restypes))
 			{
-			# Insert a new access key entry for this resource/collection.
-			global $userref;
-			
-			for ($r=0;$r<count($results);$r++)
+			$blockedtypes[] = $results[$r]["resource_type"];
+			continue;
+			}
+
+		if (count($keys)>0)
+			{			
+			if ($archivestatus<0 && !$collection_allow_not_approved_share)
 				{
-				$resource=$results[$r]["ref"];
-				$archivestatus=$results[$r]["archive"];
-				if ($archivestatus<0 && !$collection_allow_not_approved_share) {$resourcesnotadded[$resource] = $results[$r];continue;}
+				$resourcesnotadded[$resource] = $results[$r];
+				continue;
+				}
+			for ($n=0;$n<count($keys);$n++)
+				{
+				# Insert a new access key entry for this resource/collection.
 				sql_query("insert into external_access_keys(resource,access_key,user,collection,date) values ('$resource','" . escape_check($keys[$n]["access_key"]) . "','$userref','$collection',now())");
 				#log this
-				collection_log($collection,"s",$resource, $keys[$n]["access_key"]);
+				collection_log($collection,"s",$resource, $keys[$n]["access_key"]);	
+				
+				# Set the flag so a warning appears.
+				$collection_share_warning=true;	
 				}
 			}
-		}
-
+		}	
+		
+		
 	if (is_array($results))
-		{
+		{		
 		$modifyNotAdded = hook('modifynotaddedsearchitems', '', array($results, $resourcesnotadded));
 		if (is_array($modifyNotAdded))
 			$resourcesnotadded = $modifyNotAdded;
 
 		for ($n=0;$n<count($results);$n++)
 			{
-            $resource=$results[$n]["ref"];
-			if (!isset($resourcesnotadded[$resource]))
+			$resource=$results[$n]["ref"];
+			if (!isset($resourcesnotadded[$resource]) && !in_array($results[$n]["resource_type"],$collection_block_restypes))
 				{
 				sql_query("delete from collection_resource where resource='$resource' and collection='$collection'");
 				sql_query("insert into collection_resource(resource,collection) values ('$resource','$collection')");
@@ -1347,7 +1372,7 @@ function add_saved_search_items($collection)
 			}
 		}
 
-	if (!empty($resourcesnotadded))
+	if (!empty($resourcesnotadded) || count($blockedtypes)>0)
 		{
 		# Translate to titles only for displaying them to the user
 		global $view_title_field;
@@ -1356,7 +1381,16 @@ function add_saved_search_items($collection)
 			{
 			$titles[] = i18n_get_translated($resource['field' . $view_title_field]);
 			}
+		if(count($blockedtypes)>0)
+			{
+			$blocked_restypes=array_unique($blockedtypes);
+			// Return a list of blocked resouce types
+			$titles["blockedtypes"]=$blocked_restypes;
+			}
 		return $titles;
+		}
+	if(count($blockedtypes)>0)
+		{
 		}
 	return array();
 	}

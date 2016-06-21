@@ -302,7 +302,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $ref=copy_resource(0-$userref);
                 if($collection_add!="")
                     {
-                    add_resource_to_collection($ref, $collection_add);
+                    add_resource_to_collection($ref, $collection_add,false,"",$resource_type);
                     set_user_collection($userref, $collection_add);
                     }
                 redirect($baseurl_short."pages/view.php?ref=". urlencode($ref) . '&refreshcollectionframe=true');

@@ -256,21 +256,30 @@ if (!hook("renderresultthumb"))
 			if(!hook("thumbscheckboxes"))
 			{
 			if ($use_checkboxes_for_selection)
-				{ ?>
-				<input 
-					type="checkbox" 
-					id="check<?php echo htmlspecialchars($ref)?>" 
-					class="checkselect" 
-					<?php 
-					if (in_array($ref,$collectionresources))
-						{ ?>
-						checked
+				{
+				if(!in_array($result[$n]['resource_type'],$collection_block_restypes))	
+					{?>
+					<input 
+						type="checkbox" 
+						id="check<?php echo htmlspecialchars($ref)?>" 
+						class="checkselect" 
 						<?php 
-						} ?> 
-					onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
-				>
-				&nbsp;
-				<?php 
+						if (in_array($ref,$collectionresources))
+							{ ?>
+							checked
+							<?php 
+							} ?> 
+						onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
+					>
+					&nbsp;
+					<?php 
+					}
+				else
+					{
+					?>
+					<input type="checkbox" style="opacity: 0;">
+					<?php
+					}
 				}
 			} # end hook thumbscheckboxes
 		if(!hook("replacethumbsidinthumbnail"))

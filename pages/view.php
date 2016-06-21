@@ -1100,7 +1100,8 @@ hook ("resourceactions") ?>
 		<?php 
 		}
 	if (!hook("replaceaddtocollection") && !checkperm("b")
-			&& !(($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)) 
+			&& !(($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
+			&&!in_array($resource["resource_type"],$collection_block_restypes)) 
 		{ 
 		?>
 		<li>

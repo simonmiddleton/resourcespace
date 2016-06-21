@@ -3040,3 +3040,6 @@ $collection_bar_hide_empty=false;
 # Should the alternative files be visible to restricted users (they must still request access to download however)
 $alt_files_visible_when_restricted=true;
 
+# Option to prevent resource types specified in array from being added to collections. Will not affect existing resources in collections
+# e.g. $collection_block_restypes=array(3,4);
+$collection_block_restypes=array();
