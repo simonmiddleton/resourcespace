@@ -30,7 +30,7 @@ if ($current_system_upgrade_level===false)
     }
 
 // if the current system upgrade level is the same as that found in version.php then simply return as there is nothing to do
-if ($current_system_upgrade_level===SYSTEM_UPGRADE_LEVEL)
+if ($current_system_upgrade_level>=SYSTEM_UPGRADE_LEVEL)
     {
     if ($cli)
         {
