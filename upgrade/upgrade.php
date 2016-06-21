@@ -22,7 +22,7 @@ if ($cli || count(preg_grep('/general\.php/', get_included_files()))==0)
 // try and grab the current system upgrade level from sysvars
 $current_system_upgrade_level=get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL);
 
-// if not set, then simply return as we do not want to run scripts
+// if not set, then set to zero which will force execution of the upgrade scripts
 if ($current_system_upgrade_level===false)
     {
     set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL,0);
@@ -30,7 +30,7 @@ if ($current_system_upgrade_level===false)
     }
 
 // if the current system upgrade level is the same as that found in version.php then simply return as there is nothing to do
-if ($current_system_upgrade_level===$system_upgrade_level)
+if ($current_system_upgrade_level===SYSTEM_UPGRADE_LEVEL)
     {
     if ($cli)
         {
@@ -72,7 +72,7 @@ set_process_lock(PROCESS_LOCK_UPGRADE_IN_PROGRESS);
 $new_system_version_files=array();
 $files=scandir(__DIR__ .  '/../upgrade/scripts');
 $total_upgrade_files=0;
-for($i=$current_system_upgrade_level+1; $i<=$system_upgrade_level; $i++)
+for($i=$current_system_upgrade_level+1; $i<=SYSTEM_UPGRADE_LEVEL; $i++)
     {
     foreach($files as $file)
         {
