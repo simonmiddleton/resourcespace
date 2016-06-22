@@ -141,19 +141,30 @@ if ($display_user_rating_stars && $star_search){ ?>
 	<label for="ssearchbox"><?php echo text("searchpanel")?></label>
 	
 	<form id="simple_search_form" method="post" action="<?php echo $baseurl?>/pages/search.php" onSubmit="return CentralSpacePost(this,true);">
-	<?php if (!hook("replacesearchbox")){ ?>
-		<div class="ui-widget">
+    <?php
+    if(!hook("replacesearchbox"))
+        {
+        ?>
+        <div class="ui-widget">
         <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo htmlspecialchars(stripslashes(@$quicksearch))?>">
         </div>
-	<?php } ?>
-<?php if ($autocomplete_search) { 
+        <script>
+        <?php
+        $autocomplete_src = '';
+        if($autocomplete_search)
+        	{
+    		$autocomplete_src = "{$baseurl}/pages/ajax/autocomplete_search.php";
+        	}
+        ?>
+        setSearchTagInput(jQuery('#ssearchbox'), '<?php echo $autocomplete_src; ?>');
+        </script>
+        <?php
+        }
+
+	if ($autocomplete_search) { 
 # Auto-complete search functionality
 ?>
-<script type="text/javascript">
-jQuery(document).ready(function () {
-	jQuery('#ssearchbox').autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php" } );
-	})
-</script>
+
 
 <?php } ?>
 
