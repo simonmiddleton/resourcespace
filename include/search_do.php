@@ -343,10 +343,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                     elseif (!hook('customsearchkeywordfilter', null, array($kw)))
                         {
 
-                        // ********************************************************************************
-                        //                                                     START Nodes for fixed fields
-                        // ********************************************************************************
-
                         # Fetch field info
                         global $fieldinfo_cache;
                         if (isset($fieldinfo_cache[$kw[0]]))
@@ -392,10 +388,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             {
                             $ckeywords=array(str_replace(" ","-",$kw[1]));
                             }
-
-                        // ********************************************************************************
-                        //                                                       END Nodes for fixed fields
-                        // ********************************************************************************
 
                         }
                     }
@@ -532,6 +524,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                     {
                                     $sql_filter.=" and ";
                                     }
+                                // TODO: change resource_keyword to resource_node -> node_keyword
+                                // echo "***************** HERE 1 *****************" . PHP_EOL;
                                 $sql_filter .= "r.ref not in (select resource from resource_keyword where keyword='$keyref')"; # Filter out resources that do contain the keyword.
                                 }
                             else
@@ -605,6 +599,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                         {
                                         $filter_by_resource_field_type = "and k{$c}.resource_type_field in ({$sql_restrict_by_field_types})";  // -1 needed for global search
                                         }
+                                    // TODO: change resource_keyword to resource_node -> node_keyword
+                                    // echo "***************** HERE 2 *****************" . PHP_EOL;
                                     $union="SELECT resource, {$bit_or_condition} SUM(hit_count) AS score FROM resource_keyword k{$c}" .
                                     " WHERE (k{$c}.keyword={$keyref} {$filter_by_resource_field_type} {$relatedsql} {$union_restriction_clause})".
                                     " GROUP BY resource";
@@ -620,6 +616,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 # The UNION / bit_or() approach doesn't support position checking hence the need for additional joins to do this.
                                 if ($quoted_string)
                                     {
+                                    // TODO: change resource_keyword to resource_node -> node_keyword
+                                    // echo "***************** HERE 3 *****************" . PHP_EOL;
                                     $sql_join.=" join resource_keyword qrk_$c on qrk_$c.resource=r.ref and qrk_$c.keyword='$keyref' ";
 
                                     # Exclude fields from the quoted search join also
@@ -790,6 +788,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
             if (!$filter_not)
                 {
                 # Standard operation ('=' syntax)
+                // TODO: change resource_keyword to resource_node -> node_keyword
+                // echo "***************** HERE 4 *****************" . PHP_EOL;
                 $sql_join.=" join resource_keyword filter" . $n . " on r.ref=filter" . $n . ".resource and filter" . $n . ".resource_type_field in ('" . join("','",$f) . "') and ((filter" . $n . ".keyword in ('" .     join("','",$kw) . "')) ";
 
                 # Option for custom access to override search filters.
@@ -813,6 +813,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                     {
                     $sql_filter.=" and ";
                     }
+                // TODO: change resource_keyword to resource_node -> node_keyword
+                // echo "***************** HERE 5 *****************" . PHP_EOL;
                 $sql_filter .= "((r.ref not in (select resource from resource_keyword where resource_type_field in ('" . join("','",$f) . "') and keyword in ('" .    join("','",$kw) . "'))) "; # Filter out resources that do contain the keyword(s)
 
                 # Option for custom access to override search filters.
