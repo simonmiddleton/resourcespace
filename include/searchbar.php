@@ -152,24 +152,15 @@ if ($display_user_rating_stars && $star_search){ ?>
         <?php
         $autocomplete_src = '';
         if($autocomplete_search)
-        	{
-    		$autocomplete_src = "{$baseurl}/pages/ajax/autocomplete_search.php";
-        	}
-        ?>
-        setSearchTagInput(jQuery('#ssearchbox'), '<?php echo $autocomplete_src; ?>');
+            {
+            $autocomplete_src = "{$baseurl}/pages/ajax/autocomplete_search.php";
+            }
+            ?>
+        setSearchTagInput(jQuery('#ssearchbox'), <?php echo json_encode($config_separators); ?>, '<?php echo $autocomplete_src; ?>');
         </script>
         <?php
         }
 
-	if ($autocomplete_search) { 
-# Auto-complete search functionality
-?>
-
-
-<?php } ?>
-
-
-<?php
 if (!$basic_simple_search)
 	{
 	# Load resource types.
