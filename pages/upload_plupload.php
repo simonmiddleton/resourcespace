@@ -811,9 +811,7 @@ var pluploadconfig = {
 
                             uploader.settings.url = pluploader_new_url;
                             <?php hook('beforeupload_end'); ?>
-                        });                  
-                
-                       
+                        });       
                 
                           <?php 
 						  
@@ -920,7 +918,33 @@ var pluploadconfig = {
                     
                             return false;
                          });
-                        }
+                        //Change URL if exif box status changes
+						jQuery('#no_exif').live('change', function(){
+										if(jQuery(this).is(':checked')){
+												uploader.settings.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'no_exif','yes');
+										}
+										else {
+												uploader.settings.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'no_exif','');
+										}
+						});
+						<?php
+						if($replace_resource_preserve_option)
+								{
+								?>
+								//Change URL if keep_original box status changes
+								jQuery('#keep_original').live('change', function(){
+										if(jQuery(this).is(':checked')){
+												uploader.settings.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'keep_original','yes');
+										}
+										else {
+												uploader.settings.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'keep_original','');
+										}
+								});
+								<?php
+								}
+								?>
+						
+						}
                     }
                 
             }; // End of pluploader config
@@ -930,30 +954,7 @@ var pluploadconfig = {
                 
                 jQuery("#pluploader").plupload<?php if (!$plupload_widget){?>Queue<?php } ?>(pluploadconfig);
 
-				//Change URL if exif box status changes
-				jQuery('#no_exif').live('change', function(){
-						if(jQuery(this).is(':checked')){
-								pluploadconfig.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'no_exif','yes');
-						}
-						else {
-							   pluploadconfig.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'no_exif','');
-						}
-				});
-				<?php
-				if($replace_resource_preserve_option)
-					{?>
-					//Change URL if keep_original box status changes
-					jQuery('#keep_original').live('change', function(){
-							if(jQuery(this).is(':checked')){
-								pluploadconfig.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'keep_original','yes');
-							}
-							else {
-								pluploadconfig.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'keep_original','');
-							}
-					});
-					<?php
-					}
-					?>
+				
 	             
             });
 	
