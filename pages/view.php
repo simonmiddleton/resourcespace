@@ -822,7 +822,7 @@ function add_download_column($ref, $size_info, $downloadthissize)
 				if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]
 						. "&ext=" . $size_info["extension"])))
 					{
-					echo "href=\"" . generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"&ext="=> $size_info["extension"])))) . "\"";
+					echo "href=\"" . generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
 					}
 					?> onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"]?></a><?php
 				}
@@ -1101,7 +1101,7 @@ hook ("resourceactions") ?>
 		}
 	if (!hook("replaceaddtocollection") && !checkperm("b")
 			&& !(($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
-			&&!in_array($resource["resource_type"],$collection_block_restypes)) 
+			&& !in_array($resource["resource_type"],$collection_block_restypes)) 
 		{ 
 		?>
 		<li>
