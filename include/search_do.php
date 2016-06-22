@@ -393,129 +393,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             $ckeywords=array(str_replace(" ","-",$kw[1]));
                             }
 
-                        if ($fieldinfo[0]["type"]==FIELD_TYPE_CATEGORY_TREE && $category_tree_search_use_and)
-                            {
-
-                            // ********************************************************************************
-                            //                                                     START category tree AND join
-                            // ********************************************************************************
-
-                            foreach($ckeywords as $ckeyword)
-                                {
-                                //$node_bucket[$ckeyword]=true;       // true for AND condition
-                                }
-
-                            // TODO: remove this proper when nodes plumbed in
-
-                            /*
-                            for ($m=0;$m<count($ckeywords);$m++)
-                                {
-                                // node implementation will eventually replace this fix
-                                if (trim($ckeywords[$m])=='')
-                                    {
-                                    continue;
-                                    }
-
-                                $keyref=resolve_keyword($ckeywords[$m]);
-                                if (!($keyref===false))
-                                    {
-                                    $c++;
-
-                                    # Add related keywords
-                                    $related=get_related_keywords($keyref);
-                                    $relatedsql="";
-                                    for ($r=0;$r<count($related);$r++)
-                                        {
-                                        $relatedsql.=" or k" . $c . ".keyword='" . $related[$r] . "'";
-                                        }
-
-                                    # Form join
-                                    $sql_join.=" join resource_keyword k" . $c . " on k" . $c . ".resource=r.ref and k" . $c . ".resource_type_field in ('" . join("','",$fields) . "') and (k" . $c . ".keyword='$keyref' $relatedsql)";
-
-                                    if ($score!="")
-                                        {
-                                        $score.="+";
-                                        }
-                                    $score.="k" . $c . ".hit_count";
-
-                                    # Log this
-                                    if ($stats_logging) {daily_stat("Keyword usage",$keyref);}
-                                    }
-                                }       // end for each keyword
-                            */
-
-                            // ********************************************************************************
-                            //                                                       END category tree AND join
-                            // ********************************************************************************
-
-                            }
-                        else
-                            {
-                            foreach($ckeywords as $ckeyword)
-                                {
-                                //$node_bucket[$ckeyword]=false;       // true for AND condition
-                                }
-
-                            // TODO: remove this proper when nodes plumbed in
-
-                            /*
-                            $c++;
-
-                            # work through all options in an OR approach for multiple selects on the same field
-                            $searchkeys=array();
-                            for ($m=0;$m<count($ckeywords);$m++)
-                                {
-                                $keyref=resolve_keyword($ckeywords[$m]);
-                                if ($keyref===false)
-                                    {
-                                    $keyref=-1;
-                                    }
-                                $searchkeys[]=$keyref;
-
-                                # Also add related.
-                                $related=get_related_keywords($keyref);
-                                for ($o=0;$o<count($related);$o++)
-                                    {
-                                    $searchkeys[]=$related[$o];
-                                    }
-
-                                # Log this
-                                if ($stats_logging)
-                                    {
-                                    daily_stat("Keyword usage",$keyref);
-                                    }
-                                }
-
-                            $union="select resource,";
-                            for ($p=1;$p<=count($keywords);$p++)
-                                {
-                                if ($p==$c)
-                                    {
-                                    $union.="true";
-                                    }
-                                else
-                                    {
-                                    $union.="false";
-                                    }
-                                $union.=" as keyword_" . $p . "_found,";
-                                }
-                            $union.="hit_count as score from resource_keyword k" . $c . " where (k" . $c . ".keyword='$keyref' or k" . $c . ".keyword in ('" . join("','",$searchkeys) . "')) and k" . $c . ".resource_type_field in ('" . join("','",$fields) . "')";
-
-                            if (!empty($sql_exclude_fields))
-                                {
-                                $union.=" and k" . $c . ".resource_type_field not in (". $sql_exclude_fields .")";
-                                }
-                            if (count($hidden_indexed_fields)>0)
-                                {
-                                $union.=" and k" . $c . ".resource_type_field not in ('". join("','",$hidden_indexed_fields) ."')";
-                                }
-
-                            $sql_keyword_union_aggregation[] = "bit_or(keyword_" . $c . "_found) as keyword_" . $c . "_found";
-                            $sql_keyword_union_criteria[] = "h.keyword_" . $c . "_found";
-                            $sql_keyword_union[] = $union;
-                            */
-                            }
-
                         // ********************************************************************************
                         //                                                       END Nodes for fixed fields
                         // ********************************************************************************
@@ -789,8 +666,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     //                                                                    END keywords
     //
     // *******************************************************************************
-
-    // TODO: Expand out these lists to include keyword_related (i.e. synonyms)
 
     // *******************************************************************************
     //                                                       START add node conditions
