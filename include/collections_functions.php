@@ -1674,7 +1674,7 @@ function send_collection_feedback($collection,$comment)
 function copy_collection($copied,$current,$remove_existing=false)
 	{	
 	# Get all data from the collection to copy.
-	$copied_collection=sql_query("select * from collection_resource where collection='$copied'","");
+	$copied_collection=sql_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection='$copied'","");
 	
 	if ($remove_existing)
 		{
@@ -1687,7 +1687,7 @@ function copy_collection($copied,$current,$remove_existing=false)
 	foreach($copied_collection as $col_resource)
 		{
 		# Use correct function so external sharing is honoured.
-		add_resource_to_collection($col_resource['resource'],$current,true);
+		add_resource_to_collection($col_resource['resource'],$current,true,"",$col_resource['resource_type']);
 		}
 	}
 
