@@ -363,7 +363,12 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $ref=$c; # Proceed as normal
         }
     else {
-    
+        
+        # Create a copy of the collection to attach to the request so that subsequent collection changes do not affect the request
+        $c=create_collection($userref,$lang["request"] . " " . date("ymdHis"));
+        copy_collection($ref,$c);    
+        $ref=$c; # Proceed as normal        
+        
         $admin_mail_template="emailcollectionrequest";
         $user_mail_template="emailusercollectionrequest";
     
