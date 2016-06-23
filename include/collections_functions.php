@@ -1882,20 +1882,16 @@ function collection_set_themes($collection,$themearr)
 	
 function remove_all_resources_from_collection($ref){
 	// abstracts it out of save_collection()
-		# Remove all resources?
-	if (getval("removeall","")!="")
+	$removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . $ref . ';');
+
+	// First log this for each resource (in case it was done by mistake)
+	foreach($removed_resources as $removed_resource_id)
 		{
-		$removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . $ref . ';');
-
-		// First log this for each resource (in case it was done by mistake)
-		foreach($removed_resources as $removed_resource_id)
-			{
-			collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
-			}
-
-		sql_query('DELETE FROM collection_resource WHERE collection = ' . $ref);
-		collection_log($ref, 'R', 0);
+		collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
 		}
+
+	sql_query('DELETE FROM collection_resource WHERE collection = ' . $ref);
+	collection_log($ref, 'R', 0);
 	}	
 
 if (!function_exists("get_home_page_promoted_collections")){

@@ -198,7 +198,7 @@ function email_collection_request($ref,$details)
     {
     # Request mode 0
     # E-mails a collection request (posted) to the team
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,$resource_request_reason_required,$admin_resource_access_notifications, $always_email_from_user;
+    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,$resource_request_reason_required,$admin_resource_access_notifications, $always_email_from_user,$collection_empty_on_submit;
     
     $message="";
     #if (isset($username) && trim($username)!="") {$message.=$lang["username"] . ": " . $username . "\n";}
@@ -213,9 +213,15 @@ function email_collection_request($ref,$details)
     # The user cannot then gain access to further resources by adding them to their original collection as the
     # shared collection is a copy.
     # A complicated scenario that is best avoided using 'managed requests'.
-    $copied=create_collection(-1,$lang["requestcollection"]);
-    copy_collection($ref,$copied);
-    $ref=$copied;
+    $newcopy=create_collection(-1,$lang["requestcollection"]);
+    copy_collection($ref,$newcopy);
+    
+    if($collection_empty_on_submit)
+        {
+        remove_all_resources_from_collection($ref);    
+        }
+        
+    $ref=$newcopy;
     
     $templatevars["requesturl"]=$baseurl."/?c=".$ref;
     
@@ -334,7 +340,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     # Managed via the administrative interface
     
     # An e-mail is still sent.
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails, $manage_request_admin, $resource_request_reason_required, $admin_resource_access_notifications, $always_email_from_user;
+    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails, $manage_request_admin, $resource_request_reason_required, $admin_resource_access_notifications, $always_email_from_user, $collection_empty_on_submit;
 
     # Has a resource reference (instead of a collection reference) been passed?
     # Manage requests only work with collections. Create a collection containing only this resource.
@@ -366,7 +372,13 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         
         # Create a copy of the collection to attach to the request so that subsequent collection changes do not affect the request
         $c=create_collection($userref,$lang["request"] . " " . date("ymdHis"));
-        copy_collection($ref,$c);    
+        copy_collection($ref,$c);
+        
+        if($collection_empty_on_submit)
+            {
+            remove_all_resources_from_collection($ref);    
+            }
+        
         $ref=$c; # Proceed as normal        
         
         $admin_mail_template="emailcollectionrequest";
