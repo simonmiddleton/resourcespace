@@ -145,7 +145,7 @@ function get_collection_resources($collection)
 function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
 	{
 	global $collection_allow_not_approved_share, $collection_block_restypes;	
-	$addpermitted=collection_writeable($collection) && !$smartadd;
+	$addpermitted=collection_writeable($collection) || $smartadd;
 	if ($addpermitted &&(count($collection_block_restypes)>0))
 		{
 		if($addtype=="")
