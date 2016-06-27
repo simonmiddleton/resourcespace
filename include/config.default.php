@@ -500,7 +500,7 @@ $ffmpeg_global_options = "";
 
 # $ffmpeg_command_prefix - Ability to add prefix to command when calling ffmpeg 
 # Example for use on Linux using nice to avoid slowing down the server
-# $ffmpeg_command_prefix = "nice - n 10";
+# $ffmpeg_command_prefix = "nice -n 10";
 
 # If uploaded file is in the preview format already, should we transcode it anyway?
 # Note this is now ON by default as of switching to MP4 previews, because it's likely that uploaded MP4 files will need a lower bitrate preview and
