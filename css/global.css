@@ -1188,3 +1188,5 @@ form.FormFilter button {
     margin-top: 20px;
     float: right;
 }
+
+.tag-editor li { padding: initial; }
