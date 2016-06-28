@@ -157,14 +157,8 @@ if ($display_user_rating_stars && $star_search){ ?>
             }
 
         $search_tag_input_delimiters = $config_separators;
-        $separator_index = array_search('"', $search_tag_input_delimiters);
-        if(false !== $separator_index)
-            {
-            unset($search_tag_input_delimiters[$separator_index]);
-            $search_tag_input_delimiters = array_values($search_tag_input_delimiters);
-            }
         ?>
-        setSearchTagInput(jQuery('#ssearchbox'), <?php echo json_encode($search_tag_input_delimiters); ?>, '<?php echo $autocomplete_src; ?>');
+        // setSearchTagInput(jQuery('#ssearchbox'), <?php echo json_encode($search_tag_input_delimiters); ?>, '<?php echo $autocomplete_src; ?>');
         </script>
         <?php
         }
