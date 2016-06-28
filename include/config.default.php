@@ -2133,6 +2133,7 @@ $enable_plugin_upload = true;
 # Note that a Google Maps API key is no longer required.
 #Disable geocoding features?
 $disable_geocoding = false;
+$use_google_maps = false;
 
 #Enable geolocating multiple assets on a map that are part of a collection
 $geo_locate_collection = false;
