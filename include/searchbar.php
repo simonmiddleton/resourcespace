@@ -156,7 +156,16 @@ if ($display_user_rating_stars && $star_search){ ?>
             $autocomplete_src = "{$baseurl}/pages/ajax/autocomplete_search.php";
             }
             ?>
-        setSearchTagInput(jQuery('#ssearchbox'), '', '<?php echo $autocomplete_src; ?>');
+
+        // ¬ character used as a default so user can use only tab / enter for creating new tags
+        // $initial_tags is used for reloading search bar so that the tags will remain the same otherwise separate tags can become one big tag
+        jQuery('#ssearchbox').tagEditor({
+            'initialTags': <?php echo isset($initial_tags) ? json_encode($initial_tags) : json_encode(array()); ?>,
+            'delimiter': '¬',
+            'autocomplete': {
+                'source': '<?php echo $autocomplete_src; ?>',
+            }
+        });
         </script>
         <?php
         }

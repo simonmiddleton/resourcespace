@@ -42,6 +42,11 @@ if ($k!="" && !$internal_share_access) {$use_checkboxes_for_selection=false;}
 $search = getvalescaped('search', '');
 $modal  = ('true' == getval('modal', ''));
 
+if(false !== strpos($search, '¬'))
+	{
+	$search = str_replace('¬', ',', $search);
+	}
+
 hook("moresearchcriteria");
 
 # create a display_fields array with information needed for detailed field highlighting
