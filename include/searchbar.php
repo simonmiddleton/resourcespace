@@ -164,6 +164,14 @@ if ($display_user_rating_stars && $star_search){ ?>
             'delimiter': '¬',
             'autocomplete': {
                 'source': '<?php echo $autocomplete_src; ?>',
+            },
+            onChange: function(field, editor, tags) {
+                jQuery(document).keyup(function(event) {
+                    if(event.key == 'Enter' && event.which === 13)
+                        {
+                        document.getElementById('simple_search_form').submit();
+                        }
+                });
             }
         });
         </script>
