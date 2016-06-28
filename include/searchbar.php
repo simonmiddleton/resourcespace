@@ -155,10 +155,8 @@ if ($display_user_rating_stars && $star_search){ ?>
             {
             $autocomplete_src = "{$baseurl}/pages/ajax/autocomplete_search.php";
             }
-
-        $search_tag_input_delimiters = $config_separators;
-        ?>
-        // setSearchTagInput(jQuery('#ssearchbox'), <?php echo json_encode($search_tag_input_delimiters); ?>, '<?php echo $autocomplete_src; ?>');
+            ?>
+        setSearchTagInput(jQuery('#ssearchbox'), '', '<?php echo $autocomplete_src; ?>');
         </script>
         <?php
         }
