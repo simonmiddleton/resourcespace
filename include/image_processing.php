@@ -1181,13 +1181,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				}
 			if ($autorotate_no_ingest && !$ingested && !$previewonly)
 				{
-					# extra check for !previewonly should there also be ingested resources in the system
-					$file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
+				# extra check for !previewonly should there also be ingested resources in the system
+				$file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
 				}
 			}
 		else if (!$previewonly)
 			{
-			$file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);	
+			$file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
+			$origfile=$file;
 			}
 		else
 			{
@@ -1258,20 +1259,30 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		}
 		$created_count=0;
 		for ($n=0;$n<count($ps);$n++)
-			{ 
+			{
 			# If this is just a jpg resource, we avoid the hpr size because the resource itself is an original sized jpg. 
 			# If preview_preprocessing indicates the intermediate jpg should be kept as the hpr image, do that. 
-			if ($keep_for_hpr && $ps[$n]['id']=="hpr"){
+			if ($keep_for_hpr && $ps[$n]['id']=="hpr")
+				{
 				rename($file,$hpr_path); // $keep_for_hpr is switched to false below
-			}
+				}
 			
 			# If we've already made the LPR or SCR then use those for the remaining previews.
 			# As we start with the large and move to the small, this will speed things up.
-			if ($extension!="png" && $extension!="gif"){
-			if(file_exists($hpr_path)){$file=$hpr_path;}
-			if(file_exists($lpr_path)){$file=$lpr_path;}
-			if(file_exists($scr_path)){$file=$scr_path;}
-			}
+			if ($extension!="png" && $extension!="gif")
+				{
+				if(file_exists($hpr_path)){$file=$hpr_path;}
+				if(file_exists($lpr_path)){$file=$lpr_path;}
+				if(file_exists($scr_path)){$file=$scr_path;}
+				
+				# Check that source image dimensions are sufficient to create the required size. Unusually wide/tall images can
+				# mean that the height/width of the larger sizes is less than the required target height/width
+				list($checkw,$checkh) = @getimagesize($file);
+				if(($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) && $file!=$hpr_path)
+					{
+					$file=file_exists($hpr_path)?$hpr_path:$origfile;
+					}
+				}
 
 			# Locate imagemagick.
             $convert_fullpath = get_utility_path("im-convert");
