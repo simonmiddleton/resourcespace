@@ -44,14 +44,6 @@ function HookRse_versionEditSave_resource_data_multi_extra_modes($ref,$field)
             
             # Find the value of this field as of this date and time in the resource log.
             $value=sql_value("select previous_value value from resource_log where resource='$ref' and resource_type_field='" . $field["ref"] . "' and (type='e' or type='m') and date>'$revert_date' and previous_value is not null order by date limit 1",-1);
-            
-           /*if ($ref==126149)
-                {
-                echo "PROCESS! $revert_date";
-                echo $value;
-                exit();
-                }
-             */
            
             if ($value!=-1) {return $value;}
             }
