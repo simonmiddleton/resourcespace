@@ -851,14 +851,12 @@ $contact_sheet_preview_size="250x250";
 # There are also several other fonts included in the tcpdf lib (but not ResourceSpace), which provide unicode support
 # To embed more elaborate fonts, acquire the files from the TCPDF distribution or create your own using TCPDF utilities, and install them in the lib/tcpdf/fonts folder.
 $contact_sheet_font="helvetica";
-# if using a custom tcpdf font, subsetting is available, but can be turned off
-$subsetting=true; 
 # allow unicode filenames? (stripped out by default in tcpdf but since collection names may 
 # have special characters, probably want to try this on.)
 $contact_sheet_unicode_filenames=true;
 # Set font sizes for contactsheet
-$titlefontsize=10; // Contact Sheet Title
-$refnumberfontsize=8; // This includes field text, not just ref number
+$titlefontsize     = 20; // Contact Sheet Title
+$refnumberfontsize = 14; // This includes field text, not just ref number
 # If making a contact sheet with list sheet style, use these fields in contact sheet:
 $config_sheetlist_fields = array(8);
 $config_sheetlist_include_ref=true;
@@ -887,8 +885,8 @@ $contact_sheet_logo_resize=true;
 # Give user option to add/remove logo?
 #$contact_sheet_logo_option=true;
 
-# Optional example footer html to include on contact sheet
-#$contact_sheet_custom_footerhtml='<div style="text-align: center" >XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999</div><table style="width:100%;margin:auto;"><tr><td style="width:50%;text-align: center" >resourcespace.org</td><td style="width:50%;text-align: center" >&#0169; ReourceSpace. All Rights Reserved.</td></tr></table>';
+# Show contact sheet footer (old $contact_sheet_custom_footerhtml removed as this is now handled in templates and enabled by either showing/ hiding the footer)
+$contact_sheet_footer = false;
 
 # Make images in contactsheet links to the resource view page?
 $contact_sheet_add_link=true;

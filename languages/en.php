@@ -1873,8 +1873,11 @@ $lang["report-send-all-users"]="Send the report to all active users?";
 $lang["contactsheet-single"]="1 per page";
 $lang["contact_sheet-include_header_option"]="Include header?";
 $lang["contact_sheet-add_link_option"]="Add clickable links to resource view page?";
+$lang['contact_sheet_select_fields'] = 'Select metadata fields to display on contact sheet';
 $lang["contact_sheet-add_logo_option"]="Add logo to top of each page?";
 $lang["contact_sheet-single_select_size"]="Image quality";
+$lang['contact_sheet_footer_address'] = 'XXX MAIN STREET, CITY, ABC 123 - TEL: (111) 000-8888 - FAX: (000) 111-9999';
+$lang['contact_sheet_footer_copyright'] = '&#0169; ResourceSpace. All Rights Reserved.';
 
 $lang["caps-lock-on"]="Warning! Caps Lock is on";
 $lang["collectionnames"]="Collection names";
