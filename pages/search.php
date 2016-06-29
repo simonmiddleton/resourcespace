@@ -348,7 +348,7 @@ if (getvalescaped("refreshcollectionframe","")!="")
 $refs=array();
 
 # Special query? Ignore restypes
-if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties") {$restypes="";}
+if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties" && !$special_search_honors_restypes) {$restypes="";}
 
 # Do the search!
 $search=refine_searchstring($search);
@@ -880,6 +880,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
 			<?php
 			for($n = 0; $n < count($results_display_array); $n++)
 				{
+				$count_result = count($results_display_array);
 				if($display_selector_dropdowns || $perpage_dropdown)
 					{
 					?>

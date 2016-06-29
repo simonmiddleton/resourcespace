@@ -363,7 +363,7 @@ if (!hook("replacecdivrender"))
 
 		<script type="text/javascript">
 			var collection_frame_height=<?php echo $collection_frame_height?>;
-			var thumbs="<?php echo htmlspecialchars($thumbs); ?>";
+			var thumbs="<?php echo htmlspecialchars($thumbs); ?>";									
 			function ShowThumbs() {
 				myLayout.sizePane("south", collection_frame_height);
 				jQuery('.ui-layout-south').animate({scrollTop:0}, 'fast');
@@ -389,12 +389,18 @@ if (!hook("replacecdivrender"))
 				}
 			}
 			function InitThumbs() {
+				<?php if ($collection_bar_hide_empty)
+					{					
+					echo "CheckHideCollectionBar();";
+					}
+					?>
 				if(thumbs!="hide") {
 					ShowThumbs();
 				} else if(thumbs=="hide") {
 					HideThumbs();
 				}
 			}
+			
 			myLayout=jQuery('body').layout({
 				//closable:false,
 				resizable:true,
@@ -407,7 +413,7 @@ if (!hook("replacecdivrender"))
 				togglerTip_open: '<?php echo $lang["toggle"]?>',
 				resizerTip: '<?php echo $lang["resize"]?>',
 				south__onclose_start: function(pane){
-					if (pane=="south"){
+					if (pane=="south" && (typeof colbarresizeon === "undefined" || colbarresizeon==true)){
 						if(jQuery('.ui-layout-south').height()>40 && thumbs!="hide"){
 							HideThumbs();
 						} else if(jQuery('.ui-layout-south').height()<=40 && thumbs=="hide"){
@@ -418,10 +424,10 @@ if (!hook("replacecdivrender"))
 				ModalCentre();
 				},
 				south__onresize: function(pane){
-					if (pane=="south"){
+					if (pane=="south" && (typeof colbarresizeon === "undefined" || colbarresizeon==true)){
 						thumbs = getCookie("thumbs");
 						if(jQuery('.ui-layout-south').height() < collection_frame_height && thumbs!="hide"){
-							HideThumbs();
+						HideThumbs();
 						} else if(jQuery('.ui-layout-south').height()> 40 && thumbs=="hide"){
 							ShowThumbs();
 						}

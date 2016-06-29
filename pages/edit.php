@@ -302,7 +302,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $ref=copy_resource(0-$userref);
                 if($collection_add!="")
                     {
-                    add_resource_to_collection($ref, $collection_add);
+                    add_resource_to_collection($ref, $collection_add,false,"",$resource_type);
                     set_user_collection($userref, $collection_add);
                     }
                 redirect($baseurl_short."pages/view.php?ref=". urlencode($ref) . '&refreshcollectionframe=true');
@@ -1370,9 +1370,7 @@ if($collapsible_sections)
     <input type="submit" name="save" value="Save">
  </div><!-- end of question_copyfrom -->
  <?php
-}
-
-?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
+} ?><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
 

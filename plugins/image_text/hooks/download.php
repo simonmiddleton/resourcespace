@@ -12,7 +12,7 @@ function HookImage_textDownloadModifydownloadfile()
 	
     # Get text from field
 	global $image_text_field_select, $image_text_default_text;
-	$overlaytext=get_data_by_field($ref, $image_text_field_select);
+	$overlaytext=strip_leading_comma(mb_convert_encoding(get_data_by_field($ref, $image_text_field_select), "pass", "auto"));
 	if($overlaytext=="")
 		{
 		if($image_text_default_text!="")

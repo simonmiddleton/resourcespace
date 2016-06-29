@@ -1962,7 +1962,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         if($return_refs_only)
             {
-            $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','archive'));    // note that we actually include archive column too as often used to work out permission to edit collection
+            // note that we actually include archive and created by columns too as often used to work out permission to edit collection
+            $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','archive', 'created_by'));
             }
         else
             {

@@ -115,7 +115,9 @@ if ($contact_sheet)
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script>
 <?php if (!$disable_geocoding) { ?>
 <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
-<script src="https://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"></script>
+<?php if ($use_google_maps) { ?>
+<script src="https://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+<?php } ?>
 <?php } ?>
 <?php if (!hook("ajaxcollections")) { ?>
 <script src="<?php echo $baseurl;?>/lib/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
@@ -161,7 +163,8 @@ var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad -
 oktext="<?php echo $lang["ok"] ?>";
 var scrolltopElementCentral='.ui-layout-center';
 var scrolltopElementCollection='.ui-layout-south';
-var scrolltopElementModal='#modal';
+var scrolltopElementModal='#modal'
+collection_bar_hide_empty=<?php echo $collection_bar_hide_empty?"true":"false"; ?>;
 </script>
 
 <script src="<?php echo $baseurl_short?>lib/js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
@@ -340,7 +343,11 @@ hook("headertop");
 
 if (!isset($allow_password_change)) {$allow_password_change=true;}
 
-if (isset($username) && ($pagename!="login") && ($loginterms==false) && ($k=="" || $internal_share_access)) { ?>
+$not_authenticated_pages = array('login', 'user_change_password');
+
+if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
+    {
+    ?>
 <div id="HeaderNav1" class="HorizontalNav ">
 
 <?php

@@ -31,15 +31,18 @@ else
 
 <div class="BasicsBox">
 <?php
-if($alternative!=='')
+if(!hook('replace_tbu_backlinks'))
 	{
-	?>
-	<p>
-		<a href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($alternative)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagealternativefiles"]?></a>
-		<br / >
-		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($alternative)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
-	</p>
-	<?php
+	if($alternative!=='')
+		{
+		?>
+		<p>
+			<a href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($alternative)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagealternativefiles"]?></a>
+			<br / >
+			<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($alternative)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+		</p>
+		<?php
+		}
 	}
 ?>
 <h1><?php echo $titleh1 ?></h1>

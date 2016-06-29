@@ -500,7 +500,7 @@ $ffmpeg_global_options = "";
 
 # $ffmpeg_command_prefix - Ability to add prefix to command when calling ffmpeg 
 # Example for use on Linux using nice to avoid slowing down the server
-# $ffmpeg_command_prefix = "nice - n 10";
+# $ffmpeg_command_prefix = "nice -n 10";
 
 # If uploaded file is in the preview format already, should we transcode it anyway?
 # Note this is now ON by default as of switching to MP4 previews, because it's likely that uploaded MP4 files will need a lower bitrate preview and
@@ -1860,6 +1860,9 @@ $collection_allow_not_approved_share=false;
 #Allow the smartsearch to override $access rules when searching
 $smartsearch_accessoverride=true;
 
+# Allow special searches to honor resource type settings.
+$special_search_honors_restypes=false;
+
 # Image preview zoom using jQuery.zoom (hover over the preview image to zoom in on the resource view page)
 $image_preview_zoom=false;
 
@@ -2128,6 +2131,7 @@ $enable_plugin_upload = true;
 # Note that a Google Maps API key is no longer required.
 #Disable geocoding features?
 $disable_geocoding = false;
+$use_google_maps = false;
 
 #Enable geolocating multiple assets on a map that are part of a collection
 $geo_locate_collection = false;
@@ -3028,4 +3032,17 @@ $launch_kb_on_login_for_groups=array();
 # E-mail address to send a report to if any of the automated tests (tests/test.php) fail.
 # This is used by Montala to automatically test the RS trunk on a nightly basis.
 # $email_test_fails_to="example@example.com";
+
+# Option to hide the collection bar (hidden, not minimised) if it has no resources in it
+$collection_bar_hide_empty=false;
+
+# Should the alternative files be visible to restricted users (they must still request access to download however)
+$alt_files_visible_when_restricted=true;
+
+# Option to prevent resource types specified in array from being added to collections. Will not affect existing resources in collections
+# e.g. $collection_block_restypes=array(3,4);
+$collection_block_restypes=array();
+
+# Option to remove all resources from the current collection once it has been requested
+$collection_empty_on_submit=false;
 

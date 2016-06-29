@@ -18,7 +18,7 @@ if (!hook("replacefullscreenpreviewicon"))
 <?php
 if(!hook("iconcollect"))
         {
-        if (!checkperm("b") && ($k=="" || $internal_share_access)  && !$use_checkboxes_for_selection) 
+        if (!checkperm("b") && ($k=="" || $internal_share_access) && !$use_checkboxes_for_selection && !in_array($result[$n]['resource_type'],$collection_block_restypes)) 
                 { ?>
                         <?php echo add_to_collection_link($ref,$search,"","","fa fa-plus-circle")?>
                         </a>

@@ -61,7 +61,7 @@ if (getval("save","")!="")
 		$allow_changes=(getval("allow_changes","")!=""?1:0);
 		$sharedcollection=create_collection($userref,i18n_get_translated($resource["field".$view_title_field]) . " Share " . nicedate(date("Y-m-d H:i:s")),$allow_changes);
 		
-		add_resource_to_collection($ref,$sharedcollection);
+		add_resource_to_collection($ref,$sharedcollection,false,"",$resource["resource_type"]);
 		if($sharing_related)
 			{
 			foreach($relatedshares as $relatedshare)
