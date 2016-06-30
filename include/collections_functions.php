@@ -2135,7 +2135,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Request all
-    if($count_result > 0)
+    if($count_result > 0 && ($k == '' || $internal_share_access))
         {
         # Ability to request a whole collection (only if user has restricted access to any of these resources)
         $min_access = collection_min_access($result);
