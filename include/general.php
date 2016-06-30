@@ -1584,6 +1584,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             {
             # When searching text, search all languages to pick up matches for languages other than the default. Add array so that default is first then we can skip adding duplicates.
 			$search_languages=array($defaultlanguage);
+            if($defaultlanguage!="en"){$search_languages[]="en";}
 			$search_languages = $search_languages + array_keys($languages);	
 			}
         else
