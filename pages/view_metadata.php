@@ -1,7 +1,7 @@
 <?php
 
 # Global everything we need, in case called inside a function (e.g. for push_metadata support)
-global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hitcount,$show_contributed_by,$baseurl_short,$search,$enable_related_resources,$force_display_template_order_by;
+global $k,$lang,$show_resourceid,$show_access_field,$show_resource_type,$show_hitcount,$show_contributed_by,$baseurl_short,$search,$enable_related_resources,$force_display_template_order_by,$modal;
 
 // -----------------------  Tab calculation -----------------
 $fields_tab_names = array();
