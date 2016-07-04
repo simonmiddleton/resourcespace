@@ -17,10 +17,6 @@ $page_def[] = config_add_text_input('emu_api_server', $lang['emu_api_server']);
 $page_def[] = config_add_text_input('emu_api_server_port', $lang['emu_api_server_port']);
 $page_def[] = config_add_text_input('emu_api_authentication_token', $lang['emu_api_authentication_token']);
 
-// 
-$page_def[] = config_add_section_header($lang['emu_api_settings']);
-$page_def[] = config_add_multi_rtype_select('emu_resource_types', $lang['emu_resource_types']);
-
 // EMUu script
 $page_def[]      = config_add_section_header($lang['emu_script_header']);
 $script_last_ran = sql_value('SELECT `value` FROM sysvars WHERE name = "last_emu_import"', '');
@@ -30,7 +26,10 @@ $page_def[]      = config_add_boolean_select('emu_test_mode', $lang['emu_test_mo
 $page_def[]      = config_add_text_input('emu_interval_run', $lang['emu_interval_run']);
 $page_def[]      = config_add_text_input('emu_email_notify', $lang['emu_email_notify']);
 
-
+// EMu settings
+$page_def[] = config_add_section_header($lang['emu_settings_header']);
+$page_def[] = config_add_single_ftype_select('emu_irn_field',$lang['emu_irn_field']);
+$page_def[] = config_add_multi_rtype_select('emu_resource_types', $lang['emu_resource_types']);
 
 
 
