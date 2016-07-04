@@ -1,9 +1,16 @@
 <?php
 // EMu Server connection settings
-$emu_dsn_name   = 'EMu Server';
-$emu_user       = '';
-$emu_password   = '';
-$emu_table_name = '';
+$emu_api_server               = 'http://[server.address]';
+$emu_api_server_port          = '8000';
+$emu_api_authentication_token = '';
 
-$emu_test_mode    = false;
-$emu_email_notify = '';
+// EMu script
+$emu_enable_script = true;
+$emu_test_mode     = false;
+$emu_email_notify  = '';
+$emu_interval_run  = '';
+
+// metadata field used to store the EMu identifier (IRN)
+$emu_irn_field = null;
+
+$emu_resource_types = array();
