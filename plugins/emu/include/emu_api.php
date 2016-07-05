@@ -9,7 +9,7 @@ class EMuAPI
     protected $session;
     protected $module;
     protected $terms;
-    protected $columns;
+    protected $columns = array();
 
 
     /**
@@ -22,11 +22,48 @@ class EMuAPI
         $this->terms       = new IMuTerms();
         }
 
-
     public function setIrnColumn()
         {
-        $this->columns = array('irn');
+        $this->columns[] = 'irn';
+
+        return;
         }
 
+    public function setColumns(array $names)
+        {
+        $this->columns = array_merge($this->columns, $names);
+
+        return;
+        }
+
+    public function getColumns($name = '')
+        {
+        $return = $this->columns;
+
+        if('' !== trim($name))
+            {
+            $return = $this->columns[$name];
+            }
+
+        return $return;
+        }
+
+    public function resetColumns($name = '')
+        {
+        if('' !== trim($name))
+            {
+            unset($this->columns[$name]);
+
+            return;
+            }
+
+        $this->columns = array();
+
+        return;
+        }
+
+    public function testSearch()
+        {
+        }
 
     }
