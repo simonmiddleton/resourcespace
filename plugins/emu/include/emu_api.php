@@ -62,8 +62,23 @@ class EMuAPI
         return;
         }
 
+    public function getResults($offset, $count, $columns)
+        {
+        return $this->module->fetch('start', $offset, $count, $columns)->rows;
+        }
+
+
+
     public function testSearch()
         {
+        $this->terms->add('ClaInstitution', 'CMH');
+        $this->module->findTerms($this->terms);
+
+        $this->module->addFetchSet('object_fields', array('ClaInstitution'));
+
+        $result = $this->getResults(0, 1, 'object_fields');
+
+        return $result;
         }
 
     }
