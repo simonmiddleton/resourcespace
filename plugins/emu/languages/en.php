@@ -18,3 +18,6 @@ $lang['emu_interval_run'] = 'Run script at the following interval (e.g. 1 day, 2
 
 $lang['emu_settings_header'] = 'EMu settings';
 $lang['emu_irn_field'] = 'Metadata field used to store the EMu identifier (IRN)';
+
+// Errors
+$lang['emu_no_resource'] = 'No resource ID specified!';

@@ -1,7 +1,7 @@
 <?php
 // EMu Server connection settings
 $emu_api_server               = 'http://[server.address]';
-$emu_api_server_port          = '8000';
+$emu_api_server_port          = '25040';
 $emu_api_authentication_token = '';
 
 // EMu script
