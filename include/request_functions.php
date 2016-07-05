@@ -200,6 +200,8 @@ function email_collection_request($ref,$details)
     # E-mails a collection request (posted) to the team
     global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,$resource_request_reason_required,$admin_resource_access_notifications, $always_email_from_user,$collection_empty_on_submit;
     
+	if (trim($details)=="" && $resource_request_reason_required) {return false;}
+	
     $message="";
     #if (isset($username) && trim($username)!="") {$message.=$lang["username"] . ": " . $username . "\n";}
     
@@ -242,7 +244,7 @@ function email_collection_request($ref,$details)
                 }
             }
         }
-    if (trim($details)!="") {$message.=$lang["requestreason"] . ": " . newlines($details) . "\n\n";} elseif ($resource_request_reason_required) {return false;}
+    if (trim($details)!="") {$message.=$lang["requestreason"] . ": " . newlines($details) . "\n\n";}
     
     # Add custom fields
     $c="";
@@ -342,6 +344,8 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     # An e-mail is still sent.
     global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails, $manage_request_admin, $resource_request_reason_required, $admin_resource_access_notifications, $always_email_from_user, $collection_empty_on_submit;
 
+	if (trim($details)=="" && $resource_request_reason_required) {return false;}
+
     # Has a resource reference (instead of a collection reference) been passed?
     # Manage requests only work with collections. Create a collection containing only this resource.
     if ($ref_is_resource)
@@ -410,7 +414,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 }
             }
         }
-    if (trim($details)!="") {$message.=$lang["requestreason"] . ": " . newlines($details) . "\n\n";}  elseif ($resource_request_reason_required) {return false;}
+    if (trim($details)!="") {$message.=$lang["requestreason"] . ": " . newlines($details) . "\n\n";}
     
     # Add custom fields
     $c="";
