@@ -5,10 +5,11 @@ $emu_api_server_port          = '25040';
 $emu_api_authentication_token = '';
 
 // EMu script
-$emu_enable_script = true;
-$emu_test_mode     = false;
-$emu_email_notify  = '';
-$emu_interval_run  = ''; // see http://php.net/manual/en/datetime.formats.relative.php or http://php.net/manual/en/datetime.add.php
+$emu_enable_script              = true;
+$emu_test_mode                  = false;
+$emu_email_notify               = '';
+$emu_interval_run               = ''; // see http://php.net/manual/en/datetime.formats.relative.php or http://php.net/manual/en/datetime.add.php
+$emu_script_failure_notify_days = 3;
 
 // EMu settings
 // metadata field used to store the EMu identifier (IRN)
