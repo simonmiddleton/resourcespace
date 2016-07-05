@@ -475,6 +475,39 @@ function db_begin_transaction()
 		}
 	}
 
+# Used to perform the same DML operation over-and-over-again without the hit of preparing the statement every time.
+# Useful for re-indexing fields etc.
+# Example usage:
+#
+# sql_query_prepared('INSERT INTO `my_table`(`colint`,`colstring`) VALUES (?,?)',array('is',10,'Ten');
+#
+# Where first array parameter indicates types of bind data:
+# i=integer
+# s=string
+function sql_query_prepared($sql,$bind_data)
+    {
+    global $prepared_statement_cache,$db;
+    if(!isset($prepared_statement_cache[$sql]))
+        {
+        if(!isset($prepared_statement_cache))
+            {
+            $prepared_statement_cache=array();
+            }
+        $prepared_statement_cache[$sql]=$db->prepare($sql);
+        if($prepared_statement_cache[$sql]===false)
+            {
+            die('Bad prepared SQL statement:' . $sql);
+            }
+        }
+    $bind_data_processed = array();
+    foreach($bind_data as $key => $value)
+        {
+        $bind_data_processed[$key] = &$bind_data[$key];
+        }
+    call_user_func_array(array($prepared_statement_cache[$sql], 'bind_param'), $bind_data_processed);
+    mysqli_stmt_execute($prepared_statement_cache[$sql]);
+    }
+
 # Tell the database to commit the current transaction.
 function db_end_transaction()
 	{

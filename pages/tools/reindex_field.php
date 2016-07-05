@@ -49,6 +49,9 @@ if (getval("submit","")!="")
 	$data=sql_query("select * from resource_data $joindata where resource_type_field='$field' and length(value)>0 $conditionand and value is not null");
 	$n=0;
 	$total=count($data);
+
+    db_begin_transaction();
+
 	foreach ($data as $row)
 		{
 		$n++;
@@ -79,6 +82,9 @@ if (getval("submit","")!="")
 			}
 		flush();
 		}
+
+    db_end_transaction();
+
 	echo "Reindex complete\n\n\n";
 	}
 else
