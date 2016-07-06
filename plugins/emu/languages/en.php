@@ -5,7 +5,6 @@ $lang['emu_mapping_rules'] = 'Mapping rules';
 $lang['emu_api_settings'] = 'API server settings';
 $lang['emu_api_server'] = 'Server address (e.g. http://[server.address])';
 $lang['emu_api_server_port'] = 'Server port';
-$lang['emu_api_authentication_token'] = 'Authentication token (leave blank if API is not set to use one';
 
 $lang['emu_resource_types'] = 'Select resource types linked to EMu';
 $lang['emu_email_notify'] = 'E-mail address that script will send notifications to. Leave blank to default to the system notification address';

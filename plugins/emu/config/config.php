@@ -2,7 +2,6 @@
 // EMu Server connection settings
 $emu_api_server               = 'http://[server.address]';
 $emu_api_server_port          = 25040;
-$emu_api_authentication_token = '';
 
 // EMu script
 $emu_enable_script              = true;
@@ -15,3 +14,6 @@ $emu_script_failure_notify_days = 3;
 // metadata field used to store the EMu identifier (IRN)
 $emu_irn_field      = null;
 $emu_resource_types = array();
+
+
+// EMu - ResourceSpace mappings

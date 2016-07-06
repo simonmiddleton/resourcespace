@@ -15,7 +15,6 @@ $plugin_name = 'emu';
 $page_def[] = config_add_section_header($lang['emu_api_settings']);
 $page_def[] = config_add_text_input('emu_api_server', $lang['emu_api_server']);
 $page_def[] = config_add_text_input('emu_api_server_port', $lang['emu_api_server_port']);
-$page_def[] = config_add_text_input('emu_api_authentication_token', $lang['emu_api_authentication_token']);
 
 // EMUu script
 $page_def[]      = config_add_section_header($lang['emu_script_header']);
