@@ -1689,6 +1689,8 @@ function copy_collection($copied,$current,$remove_existing=false)
 		# Use correct function so external sharing is honoured.
 		add_resource_to_collection($col_resource['resource'],$current,true,"",$col_resource['resource_type']);
 		}
+	
+	hook('aftercopycollection','',array($copied,$current))
 	}
 
 if (!function_exists("collection_is_research_request")){
