@@ -16,4 +16,14 @@ $emu_irn_field      = null;
 $emu_resource_types = array();
 
 
-// EMu - ResourceSpace mappings
+/* EMu - ResourceSpace mappings
+IMPORTANT: ResourceSpace is expecting an atomic value for the field, anything else will fail
+
+$emu_rs_saved_mappings[module_name][column] = rs_field_id
+
+Example:
+$emu_rs_saved_mappings['epublic']['ObjTitle'] = 20;
+$emu_rs_saved_mappings['epublic']['ObjName'] = 17;
+$emu_rs_saved_mappings['emultimedia']['ChaAspectRatio'] = 32;
+*/
+$emu_rs_saved_mappings = base64_encode(serialize(array()));

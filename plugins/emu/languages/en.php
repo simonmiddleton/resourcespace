@@ -1,6 +1,5 @@
 <?php
 $lang['emu_configuration'] = 'EMu Configuration';
-$lang['emu_mapping_rules'] = 'Mapping rules';
 
 $lang['emu_api_settings'] = 'API server settings';
 $lang['emu_api_server'] = 'Server address (e.g. http://[server.address])';
@@ -18,6 +17,12 @@ $lang['emu_interval_run'] = 'Run script at the following interval (e.g. 1 day, 2
 
 $lang['emu_settings_header'] = 'EMu settings';
 $lang['emu_irn_field'] = 'Metadata field used to store the EMu identifier (IRN)';
+
+$lang['emu_rs_mappings_header'] = 'EMu - ResourceSpace mapping rules';
+$lang['emu_module'] = 'EMu module';
+$lang['emu_column_name'] = 'EMu module column';
+$lang['emu_rs_field'] = 'ResourceSpace field';
+$lang['emu_add_mapping'] = 'Add mapping';
 
 // Errors
 $lang['emu_script_problem'] = 'WARNING - the EMu script has not successfully completed within the last %days% days. Last run time: ';
