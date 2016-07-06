@@ -1690,7 +1690,7 @@ function copy_collection($copied,$current,$remove_existing=false)
 		add_resource_to_collection($col_resource['resource'],$current,true,"",$col_resource['resource_type']);
 		}
 	
-	hook('aftercopycollection','',array($copied,$current))
+	hook('aftercopycollection','',array($copied,$current));
 	}
 
 if (!function_exists("collection_is_research_request")){
