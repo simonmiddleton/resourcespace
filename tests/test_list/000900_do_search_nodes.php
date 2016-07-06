@@ -16,6 +16,9 @@ sql_query("INSERT INTO `resource_node`(`resource`,`node`) values (901,247) ON DU
 sql_query("INSERT INTO `resource_node`(`resource`,`node`) values (900,2) ON DUPLICATE KEY UPDATE resource=resource");  // resource 900: "Aland Islands"
 sql_query("INSERT INTO `resource_node`(`resource`,`node`) values (900,130) ON DUPLICATE KEY UPDATE resource=resource");  // resource 900: "Macedonia - The Former Yugoslav Republic Of"
 
+update_field(900,'title','search test one');
+update_field(901,'title','search test two');
+
 reindex_resource(900);
 reindex_resource(901);
 

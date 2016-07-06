@@ -1,9 +1,4 @@
 <?php
-include_once "../include/db.php";
-include_once "../include/general.php";
-include_once "../include/resource_functions.php";
-include_once "../include/collections_functions.php";
-
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 /*
@@ -68,6 +63,11 @@ if(array_search('nosetup',$argv)===false)
     create_new_db($mysql_db);
     }
 
+include_once "../include/db.php";
+include_once "../include/general.php";
+include_once "../include/resource_functions.php";
+include_once "../include/collections_functions.php";
+
 sql_connect();
 if(array_search('nosetup',$argv)===false)
     {
@@ -97,6 +97,10 @@ echo "Now running as user $userref\n";
 ob_flush();
 
 # Use an alternative filestore path
+if (!file_exists($storagedir))
+    {
+    mkdir($storagedir);
+    }
 $storagedir .= "/rs_test/";
 if (!file_exists($storagedir))
     {
