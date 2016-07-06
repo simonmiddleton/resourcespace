@@ -20,7 +20,10 @@ $page_def[] = config_add_text_input('emu_api_authentication_token', $lang['emu_a
 // EMUu script
 $page_def[]      = config_add_section_header($lang['emu_script_header']);
 $script_last_ran = sql_value('SELECT `value` FROM sysvars WHERE name = "last_emu_import"', '');
-$page_def[]      = config_add_html($lang['emu_last_run_date'] . ('' != $script_last_ran ? date('l F jS Y @ H:i:s', strtotime($script_last_ran)) : $lang['status-never']) . '<br><br>');
+$page_def[]      = config_add_html(str_replace('%script_last_ran%', 
+                        '' != $script_last_ran ? date('l F jS Y @ H:i:s', strtotime($script_last_ran)) : $lang['status-never'],
+                        $lang['emu_last_run_date'])
+                    );
 $page_def[]      = config_add_boolean_select('emu_enable_script', $lang['emu_enable_script']);
 $page_def[]      = config_add_boolean_select('emu_test_mode', $lang['emu_test_mode']);
 $page_def[]      = config_add_text_input('emu_interval_run', $lang['emu_interval_run']);
