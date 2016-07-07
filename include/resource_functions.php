@@ -2723,12 +2723,17 @@ function get_resource_access($resource)
 	$customuseraccess=false;
 	
 	global $k;
-	if ($k!="")
+	if('' != $k)
 		{
         global $internal_share_access;
+
 		# External access - check how this was shared.
-		$extaccess=sql_value("select access value from external_access_keys where resource=".$ref." and access_key='" . escape_check($k) . "' and (expires is null or expires>now())",-1);
-		if ($extaccess!=-1 && (!$internal_share_access || ($internal_share_access && $extaccess<$access))) {return $extaccess;}
+		$extaccess = sql_value("SELECT access `value` FROM external_access_keys WHERE resource = '{$ref}' AND access_key = '" . escape_check($k) . "' AND (expires IS NULL OR expires > NOW())", -1);
+
+		if(-1 != $extaccess && (!$internal_share_access || ($internal_share_access && $extaccess < $access)))
+            {
+            return $extaccess;
+            }
 		}
 	
 	global $uploader_view_override, $userref;
