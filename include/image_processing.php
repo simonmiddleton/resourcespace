@@ -1188,14 +1188,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		else if (!$previewonly)
 			{
 			$file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-			$origfile=$file;
 			}
 		else
 			{
 			# We're generating based on a new preview (scr) image.
 			$file=get_resource_path($ref,true,"tmp",false,"jpg");	
 			}
-
+		$origfile=$file;
+		
 		$hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);	
 		if (file_exists($hpr_path) && !$previewbased) {unlink($hpr_path);}	
 		$lpr_path=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",$alternative);	
