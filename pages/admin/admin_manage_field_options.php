@@ -232,7 +232,7 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
     // Setup needed vars for this process
     $import_options = getval('import_options', '');
 
-    $import_nodes   = array_filter(explode("\r\n", $file_content));
+    $import_nodes   = array_filter(explode(PHP_EOL, $file_content));
     $existing_nodes = get_nodes($field, $import_export_parent);
 
 
