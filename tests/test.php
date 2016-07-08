@@ -44,6 +44,7 @@ foreach($argv as $arg)
 
 $mysql_db = "rs_test_db";
 $test_user_name = "admin";
+$test_user_password = "admin123";
 
 function create_new_db($db_name)
     {
@@ -78,6 +79,7 @@ if(array_search('nosetup',$argv)===false)
     echo "...done\n";
     # Insert a new user and run as them.
     $u = new_user($test_user_name);
+    sql_query("UPDATE `user` SET `password`='{$test_user_password }'");
     }
 else
     {

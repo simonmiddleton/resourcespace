@@ -19,6 +19,9 @@ sql_query("INSERT INTO `resource_node`(`resource`,`node`) values (900,130) ON DU
 update_field(900,'title','search test one');
 update_field(901,'title','search test two');
 
+update_field(900,'subject','Animal');
+update_field(901,'subject','Building');
+
 reindex_resource(900);
 reindex_resource(901);
 
