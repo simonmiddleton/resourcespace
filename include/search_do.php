@@ -524,9 +524,21 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                     {
                                     $sql_filter.=" and ";
                                     }
-                                // TODO: change resource_keyword to resource_node -> node_keyword
-                                // echo "***************** HERE 1 *****************" . PHP_EOL;
+
+                                // TODO: deprecate this once nodes stable START
+
+                                // ----- check that keyword does not exist in the resource_keyword table -----
+
                                 $sql_filter .= "r.ref not in (select resource from resource_keyword where keyword='$keyref')"; # Filter out resources that do contain the keyword.
+                                $sql_filter .= " AND ";
+
+                                // TODO: deprecate this once nodes stable END
+
+                                // ----- check that keyword does not exist via resource_node->node_keyword relationship -----
+
+                                $sql_filter .= "`r`.`ref` NOT IN (SELECT `resource` FROM `resource_node` JOIN `node_keyword` ON `resource_node`.`node`=`node_keyword`.`node`" .
+                                    " WHERE `resource_node`.`resource`=`r`.`ref` AND `node_keyword`.`keyword`={$keyref})";
+
                                 }
                             else
                                 {

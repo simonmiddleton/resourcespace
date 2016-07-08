@@ -90,8 +90,27 @@ if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']
 // search for 'billy' which will produce 1 result (via resource_keyword)
 $results=do_search('billy');
 if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=952) return false;
+
 // search for 'beard' which will produce 1 result (via resource_node->node_keyword)
 $results=do_search('beard');
 if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=954) return false;
+
+// search for goat without 'billy' which will produce 2 results (omit via resource_keyword)
+$results=do_search('goat -billy');
+if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
+    (
+        ($results[0]['ref']!=950 && $results[1]['ref']!=954) &&
+        ($results[0]['ref']!=954 && $results[1]['ref']!=950)
+    )
+) return false;
+
+// search for goat without 'beard' which will produce 2 results (omit via resource_node->node_keyword)
+$results=do_search('goat -beard');
+if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
+    (
+        ($results[0]['ref']!=950 && $results[1]['ref']!=952) &&
+        ($results[0]['ref']!=952 && $results[1]['ref']!=950)
+    )
+) return false;
 
 return true;
