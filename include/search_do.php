@@ -599,16 +599,32 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                         {
                                         $filter_by_resource_field_type = "and k{$c}.resource_type_field in ({$sql_restrict_by_field_types})";  // -1 needed for global search
                                         }
-                                    // TODO: change resource_keyword to resource_node -> node_keyword
-                                    // echo "***************** HERE 2 *****************" . PHP_EOL;
+
+                                    // ----- resource_keyword sub query -----
+
+                                    // TODO: deprecate this once nodes stable START
+
                                     $union="SELECT resource, {$bit_or_condition} SUM(hit_count) AS score FROM resource_keyword k{$c}" .
                                     " WHERE (k{$c}.keyword={$keyref} {$filter_by_resource_field_type} {$relatedsql} {$union_restriction_clause})".
                                     " GROUP BY resource";
                                     $sql_keyword_union[]=$union;
-                                    }
+                                    $sql_keyword_union_criteria[]="h.keyword_" . $c . "_found";
 
-                                $sql_keyword_union_aggregation[]="bit_or(keyword_" . $c . "_found) as keyword_" . $c . "_found";
-                                $sql_keyword_union_criteria[]="h.keyword_" . $c . "_found";
+                                    // TODO: deprecate this once nodes stable END
+
+                                    // ----- resource_node -> node_keyword sub query -----
+
+                                    $union="SELECT resource, {$bit_or_condition} SUM(hit_count) AS score FROM resource_node rn{$c}" .
+                                        " LEFT OUTER JOIN `node_keyword` nk{$c} ON rn{$c}.node=nk{$c}.node " .
+                                        " WHERE (nk{$c}.keyword={$keyref} {$filter_by_resource_field_type} {$relatedsql} {$union_restriction_clause})".
+                                        " GROUP BY resource";
+                                    $sql_keyword_union[]=$union;
+                                    $sql_keyword_union_criteria[]="h.keyword_" . $c . "_found";
+
+                                    // ---- end of resource_node -> node_keyword sub query -----
+
+                                    $sql_keyword_union_aggregation[]="bit_or(keyword_" . $c . "_found) as keyword_" . $c . "_found";
+                                    }
 
                                 // --------------------------------------------------------------------------------
 
