@@ -62,8 +62,10 @@ if(!empty($results)) return false;
 // search for 'Digital Camera' (should return both resources 900 and 901)
 $results=do_search('@@247');
 if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
-    ($results[0]['ref']!=900 && $results[1]['ref']!=900) ||
+    (
+    ($results[0]['ref']!=900 && $results[1]['ref']!=900) &&
     ($results[0]['ref']!=901 && $results[1]['ref']!=901)
+    )
 ) return false;
 
 // search for 'Digital Camera' AND 'Aland Island' (should return the one resource, 900)

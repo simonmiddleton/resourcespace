@@ -32,7 +32,7 @@ resource_node_keyword_associated(950,8,'small',0);
 resource_node_keyword_associated(950,8,'goat',1);
 
 resource_node_keyword_associated(951,8,'central',0);
-resource_node_keyword_associated(952,8,'library',1);
+resource_node_keyword_associated(951,8,'library',1);
 
 // -------------- Old resource_keyword lookup only ------------
 
@@ -73,15 +73,25 @@ sql_query("DELETE FROM `resource_keyword` WHERE `resource`=955 AND `keyword` IN 
 // traditional keyword lookup:
 // select * from resource_keyword left outer join keyword on resource_keyword.keyword=keyword.ref where resource >= 950 and resource <=955
 
+
+// search for 'goat' which will produce 3 results (both from keywords and nodes)
 $results=do_search('goat');
+if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref']) ||
+    (
+    ($results[0]['ref']!=950 && $results[1]['ref']!=952 && $results[2]['ref']!=954) &&
+    ($results[0]['ref']!=950 && $results[1]['ref']!=954 && $results[2]['ref']!=952) &&
+    ($results[0]['ref']!=952 && $results[1]['ref']!=954 && $results[2]['ref']!=950) &&
+    ($results[0]['ref']!=952 && $results[1]['ref']!=950 && $results[2]['ref']!=954) &&
+    ($results[0]['ref']!=954 && $results[1]['ref']!=950 && $results[2]['ref']!=952) &&
+    ($results[0]['ref']!=954 && $results[1]['ref']!=952 && $results[2]['ref']!=950)
+    )
+) return false;
 
-// TODO: *** under development ***
-
-echo "results:" . PHP_EOL;
-print_r($results);
-
-
-
+// search for 'billy' which will produce 1 result (via resource_keyword)
+$results=do_search('billy');
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=952) return false;
+// search for 'beard' which will produce 1 result (via resource_node->node_keyword)
+$results=do_search('beard');
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=954) return false;
 
 return true;
-
