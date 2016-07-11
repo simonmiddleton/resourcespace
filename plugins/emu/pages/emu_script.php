@@ -153,7 +153,7 @@ while($emu_pointer < $count_emu_resources && $emu_pointer < $emu_test_count)
     fwrite($emu_log_file, "Retrieving data from EMu database\r\n");
     fwrite($emu_log_file, "EMu query IRNs:\r\n" . print_r($emu_query_ids, true));
 
-    $emu_records = get_emu_data($emu_query_ids, $emu_rs_mappings);
+    $emu_records = get_emu_data($emu_api_server, $emu_api_server_port, $emu_query_ids, $emu_rs_mappings);
     echo '<pre>';print_r($emu_records);echo '</pre>';die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
         
 

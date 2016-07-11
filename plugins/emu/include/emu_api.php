@@ -106,7 +106,6 @@ class EMuAPI
 
 
     /**
-    * 
     * Get EMu object based on IRN
     * 
     * @param integer $irn Unique KE EMu object identifier
@@ -118,6 +117,28 @@ class EMuAPI
         $this->module->findKey($irn);
 
         return $this->getResults('object_fields');
+        }
+
+
+    /**
+    * Get EMu objects based on an array of IRNs
+    * 
+    * @param array $irns Array of Unique KE EMu object identifiers
+    * 
+    * @return array
+    */
+    public function getObjectsByIrns(array $irns)
+        {
+        $count_irns = count($irns);
+
+        if(0 === $count_irns)
+            {
+            return array();
+            }
+
+        $this->module->findKeys($irns);
+
+        return $this->getResults('object_fields', 0, $count_irns);
         }
 
 
