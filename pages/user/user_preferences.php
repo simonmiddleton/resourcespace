@@ -47,6 +47,12 @@ include "../../include/header.php";
     
 <div class="CollapsibleSections">
     <?php
+    
+    // Retina mode
+    
+    $page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['resultsdisplay'] . '</h2><div id="UserPreferenceResultsDisplaySection" class="CollapsibleSection">');
+    $page_def[] = config_add_boolean_select('retina_mode', $lang['retina_mode'], $enable_disable_options, 300, '', true);
+    
     // Result display section
     $all_field_info = get_fields_for_search_display(array_unique(array_merge(
         $sort_fields,
@@ -125,7 +131,6 @@ include "../../include/header.php";
             }
         }
 
-    $page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['resultsdisplay'] . '</h2><div id="UserPreferenceResultsDisplaySection" class="CollapsibleSection">');
     $page_def[] = config_add_single_select(
         'default_sort',
         $lang['userpreference_default_sort_label'],

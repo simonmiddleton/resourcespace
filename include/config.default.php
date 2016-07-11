@@ -3050,3 +3050,6 @@ $collection_block_restypes=array();
 # Option to remove all resources from the current collection once it has been requested
 $collection_empty_on_submit=false;
 
+# Retina mode. Use the "next size up" when rending previews and thumbs for a more crisp display on high resolution screens. Note - uses much more bandwidth also.
+$retina_mode=false;
+

@@ -621,7 +621,7 @@ elseif ($resource["has_image"]==1)
 		}
 	else
 		{
-		$imageurl=get_resource_path($ref,false,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
+		$imageurl=get_resource_path($ref,false,($retina_mode?"scr":"pre"),false,$resource["preview_extension"],-1,1,$use_watermark);
 		}
 	
 	?>
@@ -629,7 +629,9 @@ elseif ($resource["has_image"]==1)
 	<?php
 	if (file_exists($imagepath))
 		{ 
-		?><img src="<?php echo $imageurl?>" alt="<?php echo $lang["fullscreenpreview"]?>" class="Picture" GALLERYIMG="no" id="previewimage" /><?php 
+		?><img src="<?php echo $imageurl?>" alt="<?php echo $lang["fullscreenpreview"]?>" class="Picture" GALLERYIMG="no" id="previewimage"
+		<?php if ($retina_mode) { ?>onload="this.width/=1.8;this.onload=null;"<?php } ?>											   
+		/><?php 
 		} 
 	?><?php hook("aftersearchimg","",array($ref))?></a><?php
 	if(isset($previewcaption))
