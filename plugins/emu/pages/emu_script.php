@@ -28,6 +28,13 @@ if('' != $emu_email_notify)
     $email_notify = $emu_email_notify;
     }
 
+$emu_query_offset = 100;
+$emu_test_count   = 999999999;
+if($emu_test_mode)
+    {
+    $emu_test_count = 500;
+    }
+
 
 // Check if we need to clear locks or need help using the script
 if('cli' == $php_sapi_name && 2 == $argc)
@@ -70,11 +77,15 @@ if(is_process_lock('emu_import'))
 // set_process_lock('emu_import');
 
 
+
 $emu_script_start_time = microtime(true);
 $emu_resources         = get_emu_resources();
 $count_emu_resources   = count($emu_resources);
+$emu_rs_mappings       = unserialize(base64_decode($emu_rs_saved_mappings));
+$emu_pointer           = 0;
 
 
+// Init script logging (if set)
 if('' != trim($emu_log_directory))
     {
     if(!is_dir($emu_log_directory))
@@ -116,7 +127,55 @@ if('' != trim($emu_log_directory))
     }
 
 
+$emu_query_ids = array();
 
+while($emu_pointer < $count_emu_resources && $emu_pointer < $emu_test_count)
+    {
+    unset($emu_query_ids);
+    $emu_query_ids = array();
+
+    for($t = $emu_pointer; $t < ($emu_pointer + $emu_query_offset) && (($emu_pointer + $t) < $emu_test_count) && $t < $count_emu_resources; $t++)
+        {
+        if('' != $emu_resources[$t]['object_irn'] && is_numeric($emu_resources[$t]['object_irn']) && false === strpos($emu_resources[$t]['object_irn'], '.'))
+            {
+            $emu_query_ids[] = $emu_resources[$t]['object_irn'];
+            }
+        else
+            {
+            // Invalid IRN
+            $emu_log_message = "Invalid EMu data stored in ResourceSpace: {$emu_resources[$t]['object_irn']}";
+            $emu_errors[$emu_resources[$t]['resource']] = $emu_log_message;
+
+            fwrite($emu_log_file, $emu_log_message);
+            }
+        }
+
+    fwrite($emu_log_file, "Retrieving data from EMu database\r\n");
+    fwrite($emu_log_file, "EMu query IRNs:\r\n" . print_r($emu_query_ids, true));
+
+    $emu_records = get_emu_data($emu_query_ids, $emu_rs_mappings);
+    echo '<pre>';print_r($emu_records);echo '</pre>';die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
+        
+
+    if(!is_array($emu_records) || 0 === count($emu_records))
+        {
+        $emu_log_message =  'No EMu data received, continuing...';
+
+        echo $emu_log_message . PHP_EOL;
+        fwrite($emu_log_file, "{$emu_log_message}\r\n");
+
+        $emu_pointer = $emu_pointer + $emu_query_offset;
+        
+        continue;
+        }
+
+ 
+    // Update pointer and go onto next set of resources
+    $emu_pointer = $emu_pointer + $emu_query_offset;
+
+    }
+
+$emu_log_text .= sprintf("EMu Script completed in %01.2f seconds.\r\n", microtime(true) - $emu_script_start_time) . "\r\n";
 
 
 

@@ -50,3 +50,61 @@ function get_emu_resources()
 
     return $emu_resources;
     }
+
+
+/**
+* Get EMu data by using an array of IRNs.
+* 
+* @param array $irn             Array of one/ more IRNs to get data by
+* @param array $emu_rs_mappings EMu table-column -> RS field mappings
+* 
+* @return array
+*/
+function get_emu_data(array $irn, array $emu_rs_mappings)
+    {
+    $return = array();
+
+    foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
+        {
+        $columns_list = array_keys($emu_module_columns);
+
+        $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port, $emu_module);
+        $emu_api->setColumns($columns_list);
+
+        $object_data = $emu_api->getObjectByIrn($irn);
+
+        foreach($columns_list as $column)
+            {
+            if(!array_key_exists($column, $object_data))
+                {
+                continue;
+                }
+
+            $emu_data[$column] = $object_data[$column];
+            }
+        }
+    /*
+
+foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
+    {
+    $columns_list = array_keys($emu_module_columns);
+
+    $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port, $emu_module);
+    $emu_api->setColumns($columns_list);
+
+    $object_data = $emu_api->getObjectByIrn($irn);
+
+    foreach($columns_list as $column)
+        {
+        if(!array_key_exists($column, $object_data))
+            {
+            continue;
+            }
+
+        $emu_data[$column] = $object_data[$column];
+        }
+    }
+    */
+
+    return $return;
+    }
