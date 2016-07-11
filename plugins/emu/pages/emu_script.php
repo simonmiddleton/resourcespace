@@ -18,7 +18,10 @@ include_once dirname(__FILE__) . '/../include/emu_api.php';
 ob_end_clean();
 set_time_limit(24 * 60 * 60);
 
-$debug_log = false;
+$debug_log           = false;
+$emu_log_text        = '';
+$emu_updated_records = array();
+$emu_errors          = array();
 
 if('' != $emu_email_notify)
     {
@@ -52,7 +55,7 @@ $emu_script_last_ran = '';
 if(!check_script_last_ran($emu_script_last_ran))
     {
     $emu_script_failed_subject = ($emu_test_mode ? 'TESTING MODE: ' : '') . 'EMu Import script - WARNING';
-    send_mail($email_notify, $emu_script_failed_subject, "WARNING: The EMu Import Script has not completed since '{$emu_script_last_ran}'.\r\n\r\nYou can safely ignore this warning only if you subsequently received notification of a successful script completion.", $email_from);
+    // send_mail($email_notify, $emu_script_failed_subject, "WARNING: The EMu Import Script has not completed since '{$emu_script_last_ran}'.\r\n\r\nYou can safely ignore this warning only if you subsequently received notification of a successful script completion.", $email_from);
     }
 
 // Check for a process lock
@@ -64,9 +67,53 @@ if(is_process_lock('emu_import'))
     send_mail($email_notify, $emu_script_failed_subject, "The EMu script failed to run because a process lock was in place. This indicates that the previous run did not complete.\r\n\r\nIf you need to clear the lock after a failed run, run the script as follows:\r\n\r\nphp emu_script.php --clearlock\r\n", $email_from);
     exit();
     }
-set_process_lock('emu_import');
+// set_process_lock('emu_import');
 
 
+$emu_script_start_time = microtime(true);
+$emu_resources         = get_emu_resources();
+$count_emu_resources   = count($emu_resources);
+
+
+if('' != trim($emu_log_directory))
+    {
+    if(!is_dir($emu_log_directory))
+        {
+        @mkdir($emu_log_directory, 0755, true);
+
+        if(!is_dir($emu_log_directory))
+            {
+            echo 'Unable to create log directory: "' . htmlspecialchars($emu_log_directory) . '"' . PHP_EOL;
+            }
+        }
+    else
+        {
+        // Valid log directory
+
+        // Clean up old files
+        $iterator        = new DirectoryIterator($emu_log_directory);
+        $log_expiry_time = $emu_script_start_time - ((5 * intval($emu_script_failure_notify_days)) * 24 * 60 * 60) ;
+
+        foreach($iterator as $file_info)
+            {
+            if(!$file_info->isFile())
+                {
+                continue;
+                }
+
+            $filename = $file_info->getFilename();
+
+            // Delete log file if it is older than its expiration time
+            if('emu_script_log' == substr($filename, 0, 14) && $file_info->getMTime() < $log_expiry_time)
+                {
+                @unlink($file_info->getPathName());
+                }
+            }
+
+        // New log file
+        $emu_log_file = fopen($emu_log_directory . DIRECTORY_SEPARATOR . 'emu_script_log_' . date('Y_m_d-H_i') . '.log', 'ab');
+        }
+    }
 
 
 

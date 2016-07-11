@@ -14,6 +14,7 @@ $lang['emu_last_run_date'] = '<div class="Question"><label><strong>Script last r
 $lang['emu_enable_script'] = 'Enable EMu script';
 $lang['emu_test_mode'] = 'Test mode - Set to true and script will run but not update resources';
 $lang['emu_interval_run'] = 'Run script at the following interval (e.g. 1 day, 2 weeks, fortnight). Leave blank and it will run everytime cron_copy_hitcount.php runs)';
+$lang['emu_log_directory'] = 'Directory to store script logs in. If this is left blank or is invalid then no logging will occur.';
 
 $lang['emu_settings_header'] = 'EMu settings';
 $lang['emu_irn_field'] = 'Metadata field used to store the EMu identifier (IRN)';
