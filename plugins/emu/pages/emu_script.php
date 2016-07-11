@@ -154,22 +154,39 @@ while($emu_pointer < $count_emu_resources && $emu_pointer < $emu_test_count)
     fwrite($emu_log_file, "EMu query IRNs:\r\n" . print_r($emu_query_ids, true));
 
     $emu_records = get_emu_data($emu_api_server, $emu_api_server_port, $emu_query_ids, $emu_rs_mappings);
-    echo '<pre>';print_r($emu_records);echo '</pre>';die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
-        
 
     if(!is_array($emu_records) || 0 === count($emu_records))
         {
-        $emu_log_message =  'No EMu data received, continuing...';
+        $emu_log_message =  'No EMu data received, continuing...' . PHP_EOL;
 
-        echo $emu_log_message . PHP_EOL;
-        fwrite($emu_log_file, "{$emu_log_message}\r\n");
+        echo $emu_log_message;
+        fwrite($emu_log_file, $emu_log_message);
 
         $emu_pointer = $emu_pointer + $emu_query_offset;
         
         continue;
         }
 
- 
+    for($ri = $emu_pointer; $ri < ($emu_pointer + $emu_query_offset) && (($emu_pointer + $ri) < $emu_test_count) && $ri < $count_emu_resources; $ri++)
+        {
+        $emu_object_data_found = false;
+
+        foreach($emu_records as $emu_record_irn => $emu_record)
+            {
+            if($emu_resources[$ri]['object_irn'] != $emu_record_irn)
+                {
+                continue;
+                }
+
+            $emu_object_data_found = true;
+
+            $emu_log_message = "Checking resource: '{$emu_resources[$ri]['resource']}'. Object ID: '{$emu_resources[$ri]['object_irn']}'" . PHP_EOL;
+
+            echo $emu_log_message;
+            fwrite($emu_log_file, $emu_log_message);
+            }
+        }
+
     // Update pointer and go onto next set of resources
     $emu_pointer = $emu_pointer + $emu_query_offset;
 
