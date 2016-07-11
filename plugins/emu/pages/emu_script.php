@@ -25,14 +25,8 @@ if('' != $emu_email_notify)
     $email_notify = $emu_email_notify;
     }
 
-// Check when this script was last run - do it now in case of permanent process locks
-$emu_script_last_ran = '';
-if(!check_script_last_ran($emu_script_last_ran))
-    {
-    $emu_script_failed_subject = ($emu_test_mode ? 'TESTING MODE: ' : '') . 'EMu Import script - WARNING';
-    send_mail($email_notify, $emu_script_failed_subject, "WARNING: The EMu Import Script has not completed since '{$emu_script_last_ran}'.\r\n\r\nYou can safely ignore this warning only if you subsequently received notification of a successful script completion.", $email_from);
-    }
 
+// Check if we need to clear locks or need help using the script
 if('cli' == $php_sapi_name && 2 == $argc)
     {
     if(in_array($argv[1], array('--help', '-help', '-h', '-?')))
@@ -53,7 +47,15 @@ if('cli' == $php_sapi_name && 2 == $argc)
         }
     }
 
-# Check for a process lock
+// Check when this script was last run - do it now in case of permanent process locks
+$emu_script_last_ran = '';
+if(!check_script_last_ran($emu_script_last_ran))
+    {
+    $emu_script_failed_subject = ($emu_test_mode ? 'TESTING MODE: ' : '') . 'EMu Import script - WARNING';
+    send_mail($email_notify, $emu_script_failed_subject, "WARNING: The EMu Import Script has not completed since '{$emu_script_last_ran}'.\r\n\r\nYou can safely ignore this warning only if you subsequently received notification of a successful script completion.", $email_from);
+    }
+
+// Check for a process lock
 if(is_process_lock('emu_import')) 
     {
     echo 'EMu script lock is in place. Deferring.' . PHP_EOL . 'To clear the lock after a failed run use --clearlock flag.' . PHP_EOL;
