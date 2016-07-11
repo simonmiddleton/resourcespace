@@ -1,5 +1,5 @@
 <?php
-require_once '../lib/imu_api/IMu.php';
+require_once dirname(__FILE__) . '/../lib/imu_api/IMu.php';
 require_once IMu::$lib . '/Session.php';
 require_once IMu::$lib . '/Module.php';
 require_once IMu::$lib . '/Terms.php';
