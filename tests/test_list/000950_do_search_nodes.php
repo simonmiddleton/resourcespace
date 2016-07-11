@@ -141,5 +141,8 @@ if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']
     )
 ) return false;
 
+// negative test case to check that incorrect order does not return a match
+$results=do_search('"many containing"');  // this would typically return a suggestion string "many", not a results array
+if(is_array($results)) return false;
 
 return true;
