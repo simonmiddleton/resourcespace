@@ -2464,6 +2464,10 @@ $email_errors_address="";
 # Only enable if the extension is present.
 $use_mysqli=function_exists("mysqli_connect");
 
+# Use prepared statements
+# Default is false until technology proven
+$use_mysqli_prepared=$use_mysqli && false;
+
 # Experimental performance enhancement - two pass mode for search results.
 # The first query returns only the necessary number of results for the current search results display
 # The second query is the same but returns only a count of the full result set, which is used to pad the result array to the correct size (so counts display correctly).

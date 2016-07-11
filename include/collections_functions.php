@@ -1689,6 +1689,8 @@ function copy_collection($copied,$current,$remove_existing=false)
 		# Use correct function so external sharing is honoured.
 		add_resource_to_collection($col_resource['resource'],$current,true,"",$col_resource['resource_type']);
 		}
+	
+	hook('aftercopycollection','',array($copied,$current));
 	}
 
 if (!function_exists("collection_is_research_request")){
@@ -1807,23 +1809,33 @@ function collection_max_access($collection)
 	return $maxaccess;
 	}
 
-function collection_min_access($collection)	
-	{
-	# Returns the minimum access (the least permissive) that the current user has to the resources in $collection.
-	$minaccess=0;
-	if (is_array($collection)){$result=$collection;}
-	else {
-		$result=do_search("!collection" . $collection,"","relevance",0,-1,"desc",false,"",false,"");
-	}
-	for ($n=0;$n<count($result);$n++)
-		{
-		$ref=$result[$n]["ref"];
-		# Load access level
-		$access=get_resource_access($result[$n]);
-		if ($access>$minaccess) {$minaccess=$access;}
-		}
-	return $minaccess;
-	}
+function collection_min_access($collection)
+    {
+    # Returns the minimum access (the least permissive) that the current user has to the resources in $collection.
+    $minaccess = 0;
+    if(is_array($collection))
+        {
+        $result = $collection;
+        }
+    else
+        {
+        $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '');
+        }
+
+    for($n = 0; $n < count($result); $n++)
+        {
+        $ref = $result[$n]['ref'];
+
+        # Load access level
+        $access = get_resource_access($result[$n]);
+        if($access > $minaccess)
+            {
+            $minaccess = $access;
+            }
+        }
+
+    return $minaccess;
+    }
 	
 function collection_set_public($collection)
 	{
@@ -2152,7 +2164,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             $o++;
             }
         }
-	
+
 	if($geo_locate_collection)
         {
             $data_attribute['url'] = sprintf('%spages/geolocate_collection.php?ref=%s',

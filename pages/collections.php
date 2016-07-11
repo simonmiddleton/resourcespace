@@ -104,7 +104,10 @@ if ($collection!="")
 // Load collection info. 
 // get_user_collections moved before output as function may set cookies
 $cinfo=get_collection($usercollection);
-$list=get_user_collections($userref);
+if('' == $k || $internal_share_access)
+    {
+    $list = get_user_collections($userref);
+    }
 
 # if the old collection or new collection is being displayed as search results, we'll need to update the search actions so "save results to this collection" is properly displayed
 if(substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
