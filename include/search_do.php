@@ -554,13 +554,12 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                     {
                                     if ($p==$c)
                                         {
-                                        $bit_or_condition.="true";
+                                        $bit_or_condition.="`position` AS `keyword_{$p}_position`, TRUE AS `keyword_{$p}_found`,";
                                         }
                                     else
                                         {
-                                        $bit_or_condition.="false";
+                                        $bit_or_condition.="-1 AS `keyword_{$p}_position`, FALSE AS `keyword_{$p}_found`,";
                                         }
-                                    $bit_or_condition.=" as keyword_" . $p . "_found,";
                                     }
 
                                 // these restrictions apply to both !empty searches as well as normal keyword searches (i.e. both branches of next if statement)
@@ -620,7 +619,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                     " WHERE (k{$c}.keyword={$keyref} {$filter_by_resource_field_type} {$relatedsql} {$union_restriction_clause})".
                                     " GROUP BY resource";
                                     $sql_keyword_union[]=$union;
-                                    $sql_keyword_union_criteria[]="h.keyword_" . $c . "_found";
 
                                     // TODO: deprecate this once nodes stable END
 
@@ -631,46 +629,24 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                         " WHERE (nk{$c}.keyword={$keyref} {$filter_by_resource_field_type} {$relatedsql} {$union_restriction_clause})".
                                         " GROUP BY resource";
                                     $sql_keyword_union[]=$union;
-                                    $sql_keyword_union_criteria[]="h.keyword_" . $c . "_found";
 
                                     // ---- end of resource_node -> node_keyword sub query -----
 
-                                    $sql_keyword_union_aggregation[]="bit_or(keyword_" . $c . "_found) as keyword_" . $c . "_found";
+                                    $sql_keyword_union_criteria[]="`h`.`keyword_{$c}_found`";
+
+                                    // if a quoted search then check the keywords are in sequence
+                                    if($quoted_string && $c>1)
+                                        {
+                                        $sql_keyword_union_criteria[]="`h`.`keyword_{$c}_position` > `h`.`keyword_" . ($c-1) . "_position`";
+                                        }
+
+                                    $sql_keyword_union_aggregation[]="BIT_OR(`keyword_{$c}_found`) AS `keyword_{$c}_found`";
+                                    $sql_keyword_union_aggregation[]="MAX(`keyword_{$c}_position`) AS `keyword_{$c}_position`";
+
                                     }
 
                                 // --------------------------------------------------------------------------------
 
-                                # Quoted search? Also add a specific join to check that the positions add up.
-                                # The UNION / bit_or() approach doesn't support position checking hence the need for additional joins to do this.
-                                if ($quoted_string)
-                                    {
-                                    // TODO: change resource_keyword to resource_node -> node_keyword
-                                    // echo "***************** HERE 3 *****************" . PHP_EOL;
-                                    $sql_join.=" join resource_keyword qrk_$c on qrk_$c.resource=r.ref and qrk_$c.keyword='$keyref' ";
-
-                                    # Exclude fields from the quoted search join also
-                                    if (!empty($sql_exclude_fields))
-                                        {
-                                        $sql_join.=" and qrk_" . $c . ".resource_type_field not in (". $sql_exclude_fields .")";
-                                        }
-
-                                    if (count($hidden_indexed_fields)>0)
-                                        {
-                                        $sql_join.=" and qrk_" . $c . ".resource_type_field not in ('". join("','",$hidden_indexed_fields) ."')";
-                                        }
-
-                                    # For keywords other than the first one, check the position is next to the previous keyword.
-                                    if ($c>1)
-                                        {
-                                        $last_key_offset=1;
-                                        if (isset($skipped_last) && $skipped_last)
-                                            {
-                                            $last_key_offset=2;
-                                            } # Support skipped keywords - if the last keyword was skipped (listed in $noadd), increase the allowed position from the previous keyword. Useful for quoted searches that contain $noadd words, e.g. "black and white" where "and" is a skipped keyword.
-                                        # Also check these occurances are within the same field.
-                                        $sql_join.=" and qrk_" . $c . ".position>0 and qrk_" . $c . ".position=qrk_" . ($c-1) . ".position+" . $last_key_offset . " and qrk_" . $c . ".resource_type_field=qrk_" . ($c-1) . ".resource_type_field";
-                                        }
-                                    }       // end if quoted string
                                 }       // end if not omit
 
                             # Log this
