@@ -25,6 +25,10 @@ $lang['emu_column_name'] = 'EMu module column';
 $lang['emu_rs_field'] = 'ResourceSpace field';
 $lang['emu_add_mapping'] = 'Add mapping';
 
+$lang['emu_upload_emu_field_label'] = 'EMu IRN';
+$lang['emu_confirm_upload_nodata'] = 'Please check the box to confirm you wish to proceed with the upload';
+
 // Errors
 $lang['emu_script_problem'] = 'WARNING - the EMu script has not successfully completed within the last %days% days. Last run time: ';
 $lang['emu_no_resource'] = 'No resource ID specified!';
+$lang['emu_upload_nodata'] = 'No EMu data found for this IRN: ';
