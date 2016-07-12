@@ -156,14 +156,7 @@ class EMuAPI
     */
     public function getResults($columns, $offset = 0, $count = 1)
         {
-        $return = $this->module->fetch('start', $offset, $count, $columns)->rows;
-
-        if(1 === $count)
-            {
-            $return = $return[0];
-            }
-
-        return $return;
+        return $this->module->fetch('start', $offset, $count, $columns)->rows;
         }
 
 
