@@ -25,7 +25,7 @@ $emu_data        = get_emu_data($emu_api_server, $emu_api_server_port, array($ir
 include '../../../include/header.php';
 ?>
 <h2>EMu Object details</h2>
-<div class='Listview'>
+<div id="EmuObjectDetailContainer" class='Listview'>
     <table style='border=1;'>
     <?php
     foreach($emu_data[$irn] as $key => $value)
