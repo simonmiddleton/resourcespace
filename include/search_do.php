@@ -416,11 +416,10 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         {
                         $keyword=$kw[1];
                         }
-
-                    echo "keyword={$keyword}" . PHP_EOL;
-
-
+                    
                     // TODO: do we need to kill of $ignore_filters ?
+
+                    //echo "keyword={$keyword}" . PHP_EOL;
 
                     /*
                     if (strpos($keyword,":")!==false && $ignore_filters)
