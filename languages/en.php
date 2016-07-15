@@ -1089,7 +1089,7 @@ $lang["setup-successheader"]="Congratulations!";
 $lang["setup-successdetails"]="Your initial ResourceSpace setup is complete.  Be sure to check out 'include/default.config.php' for more configuration options.";
 $lang["setup-successnextsteps"]="Next steps:";
 $lang["setup-successremovewrite"]="You can now remove write access to 'include/'.";
-$lang["setup-visitwiki"]='Visit the <a target="_blank" href="http://wiki.resourcespace.org/index.php/?title=Main_Page">ResourceSpace Documentation Wiki</a> for more information about customizing your installation.';
+$lang["setup-visitwiki"]='Visit the <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> for more information about customizing your installation.';
 $lang["php-config-file"]="PHP config: '%phpinifile'"; # %phpinifile will be replaced, e.g. PHP config: '/etc/php5/apache2/php.ini'
 $lang["setup-checkconfigwrite"]="Write access to config directory:";
 $lang["setup-checkstoragewrite"]="Write access to storage directory:";
@@ -2148,7 +2148,7 @@ $lang["download_progress__introtext"]="Your download will start shortly. When yo
 $lang["downloadfile_nofile"]="The file requested was not found.";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="Please select which fields you wish to overwrite. Fields you do not select will be left untouched.";
-$lang["help__introtext"]='<iframe src="http://www.resourcespace.org/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;"/>
+$lang["help__introtext"]='<iframe src="https://resourcespace.montala.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;"/>
 ';
 $lang["home__help"]="Help and advice to get the most out of ResourceSpace.";
 $lang["home__mycollections"]="Organise, collaborate & share your resources. Use these tools to help you work more effectively.";

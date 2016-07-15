@@ -930,29 +930,28 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)))
         }
 
     // Create user
-    $credentials_username = '';
-    $credentials_password = '';
+    
+    // Set a password
+    $password_hash = hash('sha256', md5('RS' . $admin_username . $admin_password));
 
-    $user_count = sql_value("SELECT count(*) value FROM user WHERE username = '{$admin_username}'", 0);
+    // Existing user?
+    $user_count = sql_value("SELECT count(*) value FROM user WHERE username = '" . escape_check($admin_username) . "'", 0);
     if(0 == $user_count)
         {
-        $password_hash = hash('sha256', md5('RS' . $admin_username . $admin_password));
-
+        // No existing matching user. Insert.
         // Note: First user should always be part of Super Admin, hence user group is set to 3
         $sql_query = "INSERT INTO user(username, password, fullname, email, usergroup) VALUES('" . escape_check($admin_username) . "', '" . $password_hash . "', '" . escape_check($admin_fullname) . "', '" . escape_check($admin_email) . "', 3)";
-
-        $credentials_username = $admin_username;
-        $credentials_password = $admin_password;
-
-        sql_query($sql_query);
         }
-
-    // We got so far but if somehow we didn't create a user so far, trigger error now and let user be aware of it
-    if('' == $credentials_username)
+    else
         {
-        trigger_error('Unexpected error! ResourceSpace could not set your credentials or username doesn\'t have a value!');
+        // Existing user found. Update password. This is a useful mechanism for regaining access when a system is being set up again.
+        $sql_query = "UPDATE user set password='" . $password_hash . "' where username = '" . escape_check($admin_username) . "'";
         }
-        ?>
+
+    // Perform the insert / update
+    sql_query($sql_query);
+
+    ?>
 	<div id="intro">
 		<h1><?php echo $lang["setup-successheader"]; ?></h1>
 		<p><?php echo $lang["setup-successdetails"]; ?></p>
@@ -962,19 +961,11 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)))
 			<li><?php echo $lang["setup-visitwiki"]; ?></li>
 			<li><a href="<?php echo $baseurl;?>/login.php"><?php echo $lang["setup-login_to"] . " " . $applicationname; ?></a>
 				<ul>
-					<li><?php echo $lang["username"] . ': ' . $credentials_username; ?></li>
-					<li><?php echo $lang["password"] . ': ' . $credentials_password; ?></li>
+					<li><?php echo $lang["username"] . ': ' . $admin_username; ?></li>
+					<li><?php echo $lang["password"] . ': ' . $admin_password; ?></li>
 				</ul>
 			</li>
 		</ul>
-    <?php
-    if('' == $credentials_password)
-        {
-        ?>
-        <p>Warning! for some unknown reason your password is being seen as not having a value. Please log in and change the password!</p>
-        <?php
-        }
-    ?>
 	</div>
 	<?php
 	}
@@ -1236,19 +1227,19 @@ else
 				<?php } ?>
 						
 				<div class="configitem">
-					<label for="mysqlserver"><?php echo $lang["setup-mysqlserver"];?></label><input class="mysqlconn" type="text" id="mysqlserver" name="mysql_server" value="<?php echo $mysql_server;?>"/><strong>*</strong><a class="iflink" href="#if-mysql-server">?</a>
+					<label for="mysqlserver"><?php echo $lang["setup-mysqlserver"];?></label><input class="mysqlconn" type="text" required id="mysqlserver" name="mysql_server" value="<?php echo $mysql_server;?>"/><strong>*</strong><a class="iflink" href="#if-mysql-server">?</a>
 					<p class="iteminfo" id="if-mysql-server"><?php echo $lang["setup-if_mysqlserver"];?></p>
 				</div>
 				<div class="configitem">
-					<label for="mysqlusername"><?php echo $lang["setup-mysqlusername"];?></label><input class="mysqlconn" type="text" id="mysqlusername" name="mysql_username" value="<?php echo $mysql_username;?>"/><strong>*</strong><a class="iflink" href="#if-mysql-username">?</a>
+					<label for="mysqlusername"><?php echo $lang["setup-mysqlusername"];?></label><input class="mysqlconn" type="text" required id="mysqlusername" name="mysql_username" value="<?php echo $mysql_username;?>"/><strong>*</strong><a class="iflink" href="#if-mysql-username">?</a>
 					<p class="iteminfo" id="if-mysql-username"><?php echo $lang["setup-if_mysqlusername"];?></p>		
 				</div>
 				<div class="configitem">
-					<label for="mysqlpassword"><?php echo $lang["setup-mysqlpassword"];?></label><input class="mysqlconn" type="password" id="mysqlpassword" name="mysql_password" value="<?php echo $mysql_password;?>"/><strong>*</strong><a class="iflink" href="#if-mysql-password">?</a>
+					<label for="mysqlpassword"><?php echo $lang["setup-mysqlpassword"];?></label><input class="mysqlconn" type="password" id="mysqlpassword" name="mysql_password" value="<?php echo $mysql_password;?>"/><a class="iflink" href="#if-mysql-password">?</a>
 					<p class="iteminfo" id="if-mysql-password"><?php echo $lang["setup-if_mysqlpassword"];?></p>
 				</div>
 				<div class="configitem">
-					<label for="mysqldb"><?php echo $lang["setup-mysqldb"];?></label><input id="mysqldb" class="mysqlconn" type="text" name="mysql_db" value="<?php echo $mysql_db;?>"/><strong>*</strong><a class="iflink" href="#if-mysql-db">?</a>
+					<label for="mysqldb"><?php echo $lang["setup-mysqldb"];?></label><input id="mysqldb" class="mysqlconn" type="text" required name="mysql_db" value="<?php echo $mysql_db;?>"/><a class="iflink" href="#if-mysql-db">?</a>
 					<p class="iteminfo" id="if-mysql-db"><?php echo $lang["setup-if_mysqldb"];?></p>
 				</div>
 				
@@ -1273,7 +1264,7 @@ else
 					<?php if(isset($warnings['baseurlverify'])){?>
 						<div class="warnitem"><?php echo $lang["setup-err_baseurlverify"];?></div>
 					<?php } ?>
-					<label for="baseurl"><?php echo $lang["setup-baseurl"];?></label><input id="baseurl" type="text" name="baseurl" value="<?php echo $baseurl;?>"/><strong>*</strong><a class="iflink" href="#if-baseurl">?</a>
+					<label for="baseurl"><?php echo $lang["setup-baseurl"];?></label><input id="baseurl" type="url" name="baseurl" required value="<?php echo $baseurl;?>"/><strong>*</strong><a class="iflink" href="#if-baseurl">?</a>
 					<p class="iteminfo" id="if-baseurl"><?php echo $lang["setup-if_baseurl"];?></p>
 				</div>
                 <div class="configitem">
@@ -1298,17 +1289,17 @@ else
                     }
                     ?>
                     <label for="admin_email"><?php echo $lang['setup-admin_email']; ?></label>
-                    <input id="admin_email" class="admin_credentials" type="text" name="admin_email" value="<?php echo $admin_email; ?>"/><strong>*</strong>
+                    <input id="admin_email" class="admin_credentials" type="email" name="admin_email" required value="<?php echo $admin_email; ?>"/><strong>*</strong>
                 </div>
                 <div class="configitem">
                     <label for="admin_username"><?php echo $lang['setup-admin_username']; ?></label>
-                    <input id="admin_username" class="admin_credentials" type="text" name="admin_username" value="<?php echo $admin_username; ?>"/><strong>*</strong><a class="iflink" href="#if-admin-username">?</a>
+                    <input id="admin_username" class="admin_credentials" type="text" name="admin_username" required value="<?php echo $admin_username; ?>"/><strong>*</strong><a class="iflink" href="#if-admin-username">?</a>
                     <p id="if-admin-username" class="iteminfo"><?php echo $lang['setup-if_admin_username']; ?></p>
                 </div>
                 <div class="configitem">
                     <div id="admin_password_error" class="erroritem" <?php echo !isset($errors['admin_password']) ? 'style="display: none;"' : ''; ?>><?php echo isset($errors['admin_password']) ? $errors['admin_password'] : ''; ?></div>
                     <label for="admin_password"><?php echo $lang['setup-admin_password']; ?></label>
-                    <input id="admin_password" class="admin_credentials" type="password" name="admin_password" value="<?php echo $admin_password; ?>"/><strong>*</strong><a class="iflink" href="#if-admin-password">?</a>
+                    <input id="admin_password" class="admin_credentials" type="password" name="admin_password" required value="<?php echo $admin_password; ?>"/><strong>*</strong><a class="iflink" href="#if-admin-password">?</a>
                     <p id="if-admin-password" class="iteminfo"><?php echo $lang['setup-if_admin_password']; ?></p>
                 </div>
 				<div class="configitem">
@@ -1320,7 +1311,7 @@ else
                     <?php
                     }
                     ?>
-					<label for="emailfrom"><?php echo $lang["setup-emailfrom"];?></label><input id="emailfrom" type="text" name="email_from" value="<?php echo $email_from;?>"/><strong>*</strong><a class="iflink" href="#if-emailfrom">?</a>
+					<label for="emailfrom"><?php echo $lang["setup-emailfrom"];?></label><input id="emailfrom" type="email" required name="email_from" value="<?php echo $email_from;?>"/><strong>*</strong><a class="iflink" href="#if-emailfrom">?</a>
 					<p id="if-emailfrom" class="iteminfo"><?php echo $lang["setup-if_emailfrom"];?></p>
 				</div>
 
