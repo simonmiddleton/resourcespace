@@ -20,9 +20,10 @@ check_script_last_ran($emu_script_last_ran);
 // Save module - column - rs_field mappings
 if('' != getval('submit', '') || '' != getval('save', ''))
     {
-    $emu_module = getvalescaped('emu_module', array());
-    $emu_column = getvalescaped('emu_column', array());
-    $rs_field   = getvalescaped('rs_field', array());
+    $emu_module          = getvalescaped('emu_module', array());
+    $emu_column          = getvalescaped('emu_column', array());
+    $rs_field            = getvalescaped('rs_field', array());
+    $emu_rs_mappings_new = array();
 
     // There should always be the same number of values in each array
     for($i = 0; $i < count($emu_module); $i++)
