@@ -969,6 +969,10 @@ $searchbar_buttons_at_bottom=true;
 # Hide the main simple search field in the searchbar (if using only simple search fields for the searchbar)
 $hide_main_simple_search=false;
 
+/*Display keywords as pills on Simple Search. Use tab to create new tags/ pills
+Note: full text strings are also accepted as a pill*/
+$simple_search_pills_view = false;
+
 # Custom top navigation links.
 # You can add as many panels as you like. They must be numbered sequentially starting from zero (0,1,2,3 etc.)
 # URL should be absolute, or include $baseurl as below, because a relative URL will not work from the Team Center.
