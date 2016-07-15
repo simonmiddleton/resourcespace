@@ -1,15 +1,15 @@
 <?php
-function HookEmuViewRenderfield($field)
+function HookEmuViewRenderfield($field, $resource)
     {
-    global $baseurl, $emu_irn_field, $search, $ref;
-
     if(!checkperm('a'))
         {
         return false;
         }
 
-    if($field['ref'] == $emu_irn_field)
-        {           
+    global $baseurl, $search, $ref, $emu_irn_field, $emu_resource_types;
+
+    if($field['ref'] == $emu_irn_field && in_array($resource['resource_type'], $emu_resource_types))
+        {
         $emu_irn = $field['value'];
         $value   = highlightkeywords($emu_irn, $search, $field['partial_index'], $field['name'], $field['keywords_index']);
         ?>

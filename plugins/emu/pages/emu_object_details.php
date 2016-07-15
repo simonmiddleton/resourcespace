@@ -28,18 +28,21 @@ include '../../../include/header.php';
 <div id="EmuObjectDetailContainer" class='Listview'>
     <table style='border=1;'>
     <?php
-    foreach($emu_data[$irn] as $key => $value)
+    if(isset($emu_data[$irn]))
         {
-        if(is_array($value))
+        foreach($emu_data[$irn] as $key => $value)
             {
-            $value = 'Non-atomic value <=> Array()';
+            if(is_array($value))
+                {
+                $value = 'Non-atomic value <=> Array()';
+                }
+                ?>
+            <tr> 
+            <td><strong><?php echo $key; ?></strong></td>
+            <td><?php echo $value; ?></td> 
+            </tr>
+            <?php
             }
-            ?>
-        <tr> 
-        <td><strong><?php echo $key; ?></strong></td>
-        <td><?php echo $value; ?></td> 
-        </tr>
-        <?php
         }
         ?>
     </table>
