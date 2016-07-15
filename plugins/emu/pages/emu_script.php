@@ -86,6 +86,8 @@ $emu_pointer           = 0;
 
 
 // Init script logging (if set)
+$emu_log_file = '';
+
 if('' != trim($emu_log_directory))
     {
     if(!is_dir($emu_log_directory))
