@@ -861,9 +861,10 @@ if ($count_result>0)
 		<table border="0" class="CollectionResourceAlign"><tr><td>
 		<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo $k?>&curpos=<?php echo $n ?>"><?php if ($result[$n]["has_image"]==1) { 
 		
-		$colimgpath=get_resource_path($ref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])
+		$colimgpath=get_resource_path($ref,false,($retina_mode?"thm":"col"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])
 		?>
-		<img border=0 src="<?php echo $colimgpath?>" class="CollectImageBorder" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" />
+		<img border=0 src="<?php echo $colimgpath?>" class="CollectImageBorder" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                   <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> />
 			<?php
 		
 		} else { ?><img border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" /><?php } ?><?php hook("aftersearchimg","",array($result[$n]))?></a></td>

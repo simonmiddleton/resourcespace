@@ -16,16 +16,25 @@ if (!hook("replacefullscreenpreviewicon"))
 
 <!-- Add to collection icon -->
 <?php
-if(!hook("iconcollect"))
+if(!hook('iconcollect'))
+    {
+    if(!checkperm('b') && ('' == $k || $internal_share_access) && !$use_checkboxes_for_selection && !in_array($result[$n]['resource_type'], $collection_block_restypes))
         {
-        if (!checkperm("b") && ($k=="" || $internal_share_access) && !$use_checkboxes_for_selection && !in_array($result[$n]['resource_type'],$collection_block_restypes)) 
-                { ?>
-                        <?php echo add_to_collection_link($ref,$search,"","","fa fa-plus-circle")?>
-                        </a>
-                <?php
-                $showkeycollect = true;
-                }
-        } # end hook iconcollect ?>
+        // Basket mode? - this is for the e-commerce user request modes.
+        if(2 == $userrequestmode || 3 == $userrequestmode)
+            {
+            echo add_to_collection_link($ref, $search, '', '', 'fa fa-shopping-cart') . '</a>';
+            }
+        else
+            {
+            echo add_to_collection_link($ref, $search, '', '', 'fa fa-plus-circle') . '</a>';
+            }
+
+        $showkeycollect = true;
+        }
+    } # end hook iconcollect
+    ?>
+
 <!-- Remove from collection icon -->
 <?php 
 if (!checkperm("b") && substr($search,0,11)=="!collection" && ($k=="" || $internal_share_access) && !$use_checkboxes_for_selection) 

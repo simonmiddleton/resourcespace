@@ -87,9 +87,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                                 for ($m=0;$m<count($options);$m++)
                                     {
                                     $checkname=($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"]) . "_" . md5($options[$m]);
-                                    echo "
-                                    jQuery('<?php echo $display_condition_js_prepend ?>input[name=\"" . $checkname . "\"]').change(function (){
-                                        checkDisplayCondition" . $field["ref"] . "();
+									echo "jQuery('" . $display_condition_js_prepend . "input[name=\"" . $checkname . "\"]').change(function (){
+                                        checkSearchDisplayCondition" . $field["ref"] . "();
                                         });";
                                     }
                                     ?>
