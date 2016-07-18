@@ -2,7 +2,7 @@ name    : emu
 author  : Montala Ltd.
 version : 1.0
 desc    : Allows resource metadata to be extracted from EMu database. 
-info_url: http://www.kesoftware.com
+info_url: http://www.resourcespace.com/knowledge-base/user/plugin-emu
 config_url: /plugins/emu/pages/setup.php
 default_priority: 100
 category: Advanced
