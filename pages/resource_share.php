@@ -90,12 +90,12 @@ if($editing && !$editexternalurl)
                     {
                     if ($email_sharing) 
                         { ?>
-                        <li><i class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["emailresourcetitle"]?></a></li> 
+                        <li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["emailresourcetitle"]?></a></li> 
                         <?php 
                         }
                     if(!$internal_share_only && !$hide_resource_share_generate_url) 
 						{ ?>
-                        <li><i class="fa fa-fw fa-link"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_share.php?' . $query_string . '&generateurl=true' ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo $lang["generateurl"]?></a></li> 
+                        <li><i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_share.php?' . $query_string . '&generateurl=true' ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo $lang["generateurl"]?></a></li> 
                         <?php 
                         }
 					else // Just show the internal share URL straight away as there is no generate link

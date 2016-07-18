@@ -153,8 +153,8 @@ include "../include/header.php";
 
 <?php if (!checkperm("b") && !(($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size) && !in_array($resource["resource_type"],$collection_block_restypes)) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<?php echo add_to_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i class="fa fa-plus-circle"></i>&nbsp;<?php echo $lang["action-addtocollection"]?></a><?php } ?>
-<?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i class="fa fa-minus-circle"></i>&nbsp;<?php echo $lang["action-removefromcollection"]?></a><?php } ?>
+<?php echo add_to_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;<?php echo $lang["action-addtocollection"]?></a><?php } ?>
+<?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-minus-circle"></i>&nbsp;<?php echo $lang["action-removefromcollection"]?></a><?php } ?>
 <?php } ?>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
