@@ -43,7 +43,7 @@ for ($x=0;$x<$themecount;$x++)
 			{
 			$link.= "theme=" . getvalescaped("rename",""); 
 			}
-		$themename=i18n_get_translated($themes[$x]);
+		$themename=$themes[$x];
 		}
 	else
 		{
@@ -54,7 +54,7 @@ for ($x=0;$x<$themecount;$x++)
 			{
 			$link.= "theme" . ($x+1) . "=" . getvalescaped("rename",""); 
 			}
-		$themename=i18n_get_translated($themes[$x]);
+		$themename=$themes[$x];
 		}
 	}
 
@@ -94,12 +94,12 @@ if(!$modal)
 			{
 			if ($x==0)
 				{?>
-				<input type="hidden" name="theme" id="theme" value="<?php echo i18n_get_translated($themes[$x])?>">
+				<input type="hidden" name="theme" id="theme" value="<?php echo $themes[$x]?>">
 				<?php
 				}
 			else
 				{ ?>
-				<input type="hidden" name="theme<?php echo $x+1 ?>" id="theme<?php echo $x+1 ?>" value="<?php echo i18n_get_translated($themes[$x]) ?>">
+				<input type="hidden" name="theme<?php echo $x+1 ?>" id="theme<?php echo $x+1 ?>" value="<?php echo $themes[$x] ?>">
 				<?php }
 			}
 		?>
