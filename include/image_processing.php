@@ -2178,7 +2178,7 @@ function AutoRotateImage($src_image, $ref = false)
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
 
                 # change the orientation metadata
-                $command = $exiftool_fullpath . ' Orientation=1 ' . escapeshellarg($new_image);
+                $command = $exiftool_fullpath . ' -Orientation=1 ' . escapeshellarg($new_image);
                 }
             } 
         else
@@ -2211,7 +2211,7 @@ function AutoRotateImage($src_image, $ref = false)
         # Also, don't go through this step if the old orientation was set to normal
         if ($old_orientation != '' && $old_orientation != 1) 
             {
-            $fix_orientation = $exiftool_fullpath . ' Orientation=1 -n ' . escapeshellarg($new_image);
+            $fix_orientation = $exiftool_fullpath . ' -Orientation=1 -n ' . escapeshellarg($new_image);
             $output=run_command($fix_orientation);
             resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$fix_orientation . ":\n" . $output);
             }
