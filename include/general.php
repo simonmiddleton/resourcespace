@@ -1078,8 +1078,7 @@ function save_user($ref)
         $ip_restrict            = trim(getvalescaped('ip_restrict', ''));
         $search_filter_override = trim(getvalescaped('search_filter_override', ''));
         $comments               = trim(getvalescaped('comments', ''));
-
-        $suggest = getval('suggest', '');
+        $suggest                = getval('suggest', '');
 
         # Username or e-mail address already exists?
         $c = sql_value("SELECT count(*) value FROM user WHERE ref <> '$ref' AND (username = '" . $username . "' OR email = '" . $email . "')", 0);
@@ -1123,6 +1122,13 @@ function save_user($ref)
         if('' == $fullname && '' == $suggest)
             {
             return $lang['setup-admin_fullname_error'];
+            }
+
+        /*Make sure IP restrict filter is a proper IP, otherwise make it blank
+        Note: we do this check only when wildcards are not used*/
+        if(false === strpos($ip_restrict, '*'))
+            {
+            $ip_restrict = (false === filter_var($ip_restrict, FILTER_VALIDATE_IP) ? '' : $ip_restrict);
             }
 
         $additional_sql = hook('additionaluserfieldssave');
