@@ -876,11 +876,13 @@ function CheckDBStruct($path,$verbose=false)
 							sql_query($sql,false,-1,false);
 							$values=sql_query("select resource,value from resource_data where resource_type_field=$joins[$m]",false,-1,false);
 	
-							for($x=0;$x<count($values);$x++){
-								$value=$values[$x]['value'];
-								$resource=$values[$x]['resource'];
-								sql_query("update resource set field$joins[$m]='".escape_check($value)."' where ref=$resource",false,-1,false);	
-						    }	
+							for($x = 0; $x < count($values); $x++)
+                                {
+                                $value    = substr(escape_check($values[$x]['value']), 0, $resource_field_column_limit);
+                                $resource = $values[$x]['resource'];
+
+                                sql_query("UPDATE resource SET field{$joins[$m]} = '{$value}' WHERE ref = {$resource}", false, -1, false);	
+                                }	
 						}
 					}	
 				}		
