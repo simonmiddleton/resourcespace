@@ -13,6 +13,9 @@ include_once __DIR__ . "/../../include/resource_functions.php";
 // IMPORTANT! - Uncomment this line if you want to force migration of fixed field values
 // sql_query("update resource_type_field set options=replace(options,'!deprecated,','')");
 
+$check_options_column=sql_query('SHOW COLUMNS FROM `resource_type_field` LIKE \'OPTIONS\'');
+if(count($check_options_column)==0) {return true;}
+                                
 $resource_type_fields=sql_query('SELECT * FROM `resource_type_field` WHERE `type` IN (' .
     implode(',',$FIXED_LIST_FIELD_TYPES) .
     ") AND NOT `options` LIKE '!deprecated%' ORDER BY `ref`");
