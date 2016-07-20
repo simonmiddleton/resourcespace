@@ -16,7 +16,7 @@ include_once dirname(__FILE__) . '/../include/emu_api.php';
 
 // Init
 ob_end_clean();
-set_time_limit(24 * 60 * 60);
+set_time_limit($cron_job_time_limit);
 
 $debug_log           = false;
 $emu_log_text        = '';

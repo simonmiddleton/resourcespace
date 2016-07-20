@@ -10,7 +10,8 @@ include dirname(__FILE__) . "/../include/tms_link_functions.php";
 $debug_log=false;
 
 ob_end_clean();
-set_time_limit(60*60*40);
+set_time_limit($cron_job_time_limit);
+
 if($tms_link_email_notify!=""){$email_notify=$tms_link_email_notify;}
 
 // Check when this script was last run - do it now in case of permanent process locks
