@@ -968,7 +968,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     #
     # This is used to take the advanced search form and assemble it into a search query.
     
-    global $auto_order_checkbox,$checkbox_and;
+    global $auto_order_checkbox,$checkbox_and,$dynamic_keyword_and;
     $search="";
     if (getval("year","")!="")
         {
@@ -1266,11 +1266,17 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 $keywords=split_keywords($selected[$m]);
                 foreach ($keywords as $keyword) {resolve_keyword($keyword,true);}
                 }
-            if ($p!="")
+            if ($p!="" && !$dynamic_keyword_and)
                 {
                 if ($search!="") {$search.=", ";}
                 $search.=$fields[$n]["name"] . ":" . $p;
                 }
+            elseif ($p!="" && $dynamic_keyword_and)
+                    {
+                    $p=str_replace(";",", {$fields[$n]["name"]}:",$p);	// this will force each and condition into a separate union in do_search (which will AND)
+                    $search.=$fields[$n]["name"] . ":" . $p;
+                    }   
+                
             break;
         
             // Radio buttons:
