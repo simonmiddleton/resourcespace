@@ -1220,7 +1220,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         if(empty($identoutput) && $imagemagick_mpr)
         	{
         	// we really need dimensions here, so fallback to php's method
-        	$identoutput = getimagesize(escapeshellarg($prefix . $file));
+        	if(file_exists($prefix . $file))
+        		{
+        		$identoutput = @getimagesize(escapeshellarg($prefix . $file));
+        		}
+        	else
+        		{
+        		return false;
+        		}
         	}
         
         if(!empty($identoutput)){
@@ -1328,7 +1335,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			
 			if(!$imagemagick_mpr)
 				{
-            	$command = $convert_fullpath . ' '. escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : ' ') . $flatten . ' -quality ' . $preview_quality;
+            	$command = $convert_fullpath . ' '. escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
             	}
 
 			# fetch target width and height
@@ -1633,7 +1640,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					}
 				}
 			// time to build the command
-			$command=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -alpha off' : '') . ' -depth ' . $imagemagick_mpr_depth;
+			$command=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
 			if(!$unique_flatten)
 				{
 			 	$command.=($command_parts[0]['flatten'] ? " -flatten " : "");
