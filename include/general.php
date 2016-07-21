@@ -840,39 +840,50 @@ function get_field_options($ref)
 	
 	return $options;
 	}
-	
-function get_data_by_field($resource,$field)
+
+
+/**
+* Get the resource data value for a field and a specific resource
+* or get the specified field for all resources in the system
+* 
+* @param integer        $resource Resource ID. Use NULL to retrieve all resources 
+*                                 records for the specified field
+* @param integer|string $field    Resource type field ID. Can also be a shortname.
+* 
+* @return string|array
+*/
+function get_data_by_field($resource, $field)
     {
-    /*Return the resource data for field $field in resource $resource
-    $field can also be a shortname*/
     global $rt_fieldtype_cache;
 
+    $return              = '';
+    $resource_type_field = escape_check($field);
+
+    // Let's first check how we deal with the field value we've got
+    // Integer values => search for a specific ID
+    // String values => search by using a shortname
     if(is_numeric($field))
         {
-        $value = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource}' AND resource_type_field = '" . escape_check($field) . "'", '');
-
-        if(!isset($rt_fieldtype_cache[$field]))
-            {
-            $rt_fieldtype_cache[$field] = sql_value("SELECT type `value` FROM resource_type_field WHERE ref = '" . escape_check($field) . "'", '');
-            }
+        $return = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource}' AND resource_type_field = '{$resource_type_field}'", '');
         }
     else
         {
-        $value = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource}' AND resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '" . escape_check($field) . "' LIMIT 1)", '');
+        $return = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource}' AND resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)", '');
+        }
 
-        if(!isset($rt_fieldtype_cache[$field]))
-            {
-            $rt_fieldtype_cache[$field] = sql_value("SELECT type `value` FROM resource_type_field WHERE name = '" . escape_check($field) . "'", '');
-            }
+    // Update cache
+    if(!isset($rt_fieldtype_cache[$field]))
+        {
+        $rt_fieldtype_cache[$field] = sql_value("SELECT type AS `value` FROM resource_type_field WHERE ref = '{$resource_type_field}' OR name = '{$resource_type_field}'", null);
         }
 
     if(8 == $rt_fieldtype_cache[$field])
         {
-        $value = strip_tags($value);
-        $value = str_replace('&nbsp;', ' ', $value);
+        $return = strip_tags($return);
+        $return = str_replace('&nbsp;', ' ', $return);
         }
 
-    return $value;
+    return $return;
     }
 	
 if (!function_exists("get_users")){		
