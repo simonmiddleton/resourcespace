@@ -859,16 +859,39 @@ function get_data_by_field($resource, $field)
     $return              = '';
     $resource_type_field = escape_check($field);
 
+    $sql_select   = 'SELECT *';
+    $sql_from     = 'FROM resource_data AS rd';
+    $sql_join     = '';
+    // $sql_join     = 'LEFT JOIN resource AS r ON rd.resource = r.ref';
+    $sql_where    = 'WHERE';
+    $sql_order_by = '';
+    $sql_limit    = '';
+
     // Let's first check how we deal with the field value we've got
     // Integer values => search for a specific ID
     // String values => search by using a shortname
     if(is_numeric($field))
         {
-        $return = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource}' AND resource_type_field = '{$resource_type_field}'", '');
+        $sql_select = 'SELECT rd.`value`';
+        $sql_where  .= " rd.resource = '{$resource}'";
+        $sql_where  .= " AND rd.resource_type_field = '{$resource_type_field}'";
         }
     else
         {
-        $return = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource}' AND resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)", '');
+        $sql_select = 'SELECT rd.`value`';
+        $sql_where .= " rd.resource = '{$resource}'";
+        $sql_where .= " AND rd.resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)";
+        }
+
+    $results = sql_query("{$sql_select} {$sql_from} {$sql_join} {$sql_where} {$sql_order_by} {$sql_limit}");
+    if(0 !== count($results))
+        {
+        $return = !is_null($resource) ? $results[0]['value'] : $return;
+        }
+    // Default values: '' when we are looking for a specific resource and empty array when looking through all resources
+    else
+        {
+        $return = !is_null($resource) ? $return : array();
         }
 
     // Update cache
@@ -877,7 +900,7 @@ function get_data_by_field($resource, $field)
         $rt_fieldtype_cache[$field] = sql_value("SELECT type AS `value` FROM resource_type_field WHERE ref = '{$resource_type_field}' OR name = '{$resource_type_field}'", null);
         }
 
-    if(8 == $rt_fieldtype_cache[$field])
+    if(!is_array($return) && 8 == $rt_fieldtype_cache[$field])
         {
         $return = strip_tags($return);
         $return = str_replace('&nbsp;', ' ', $return);
