@@ -2771,12 +2771,11 @@ function get_resource_access($resource)
 		}
 
 	global $open_access_for_contributor;
-	if ($open_access_for_contributor && $access == 1 && $resourcedata['created_by'] == $userref)
+	if ($open_access_for_contributor && $resourcedata['created_by'] == $userref)
 		{
-		# If access is restricted and user has contributed resource, grant open access.
-		$access = 0;
+		# If user has contributed resource, grant open access and ignore any further filters.
+		return 0;
 		}
-
 
 	# Check for user-specific and group-specific access (overrides any other restriction)
 	global $userref,$usergroup;
