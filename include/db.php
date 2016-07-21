@@ -943,7 +943,9 @@ function CheckDBStruct($path,$verbose=false)
 										 ||
 										(stripos($basecoltype,"text")!==false && stripos($existingcoltype,"text")===false)
 										||
-										(stripos($basecoltype,"BIGINT")!==false && stripos($existingcoltype,"INT")!==false)
+										(strtoupper($basecoltype)=="BIGINT" && strtoupper($existingcoltype=="INT"))
+										||
+										(strtoupper($basecoltype)=="INT" && strtoupper($existingcoltype=="TINYINT") || strtoupper($existingcoltype=="SMALLINT"))
 									       )
 										{        
 										debug("DBSTRUCT - updating column " . $col[0] . " in table " . $table . " from " . $existing[$n]["Type"] . " to " . str_replace("§",",",$col[1]) );
