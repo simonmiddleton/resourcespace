@@ -2426,6 +2426,9 @@ $lang["mysql_throughput"]="MySQL throughput";
 $lang["cpu_benchmark"]="CPU benchmark";
 $lang["disk_write_speed"]="Disk write speed";
 $lang["metadata_option_change_warning"]="Please note that at present, updating these options will not automatically alter stored parameters. Batch editing must be used to migrate existing stored values.";
+$lang['metadata_first_option_is_default']='The first option will be used as the default option for this field. To set the default option on all resources currently missing a value for this field use the link below.';
+$lang['metadata_populate_default_node_for_empty_values']='Populate default option';
+
 /* Manage slideshows */
 $lang["manage_slideshow"] = "Manage slideshow";
 $lang["action-add-new"] = "Add new";
