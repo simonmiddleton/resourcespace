@@ -861,11 +861,15 @@ function reorder_user_dash($user)
 	{
 	$user_tiles = sql_query("SELECT user_dash_tile.ref FROM user_dash_tile LEFT JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user='".$user."' ORDER BY user_dash_tile.order_by");
 	$order_by=10 * count($user_tiles);
+	
+	$sql="UPDATE user_dash_tile SET order_by = (CASE ";
 	for($i=count($user_tiles)-1;$i>=0;$i--)
 		{
-		$result = update_user_dash_tile_order($user,$user_tiles[$i]["ref"],$order_by);
+		$sql.=" WHEN ref='" . $user_tiles[$i]["ref"] . "' THEN '" . $order_by . "' ";
 		$order_by-=10;
 		}
+	$sql.=" END) WHERE user='" . $user . "'";
+	sql_query($sql);
 	}
 
 /*
