@@ -2445,3 +2445,30 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     return $options;
     }
 }
+
+/**
+* Make a filename unique by appending a dupe-string.
+*
+* @param array $base_values
+* @param string $filename
+* @param string $dupe_string
+* @param string $extension
+* @param int $dupe_increment
+*
+* @return string Unique filename
+*/
+function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $dupe_increment = null)
+    {
+    // Create filename to check if exist in $base_values
+    $check_filename = $filename . ($dupe_increment ? $dupe_string . $dupe_increment : '') . '.' . $extension;
+
+    if(!in_array($check_filename, $base_values))
+        {
+        // Confirmed filename does not exist yet
+        return $check_filename;
+        }
+
+    // Recursive call this function with incremented value
+    // Doing $dupe_increment = null, ++$dupe_increment results in $dupe_increment = 1
+    return makeFilenameUnique($base_values, $filename, $dupe_string, $extension, ++$dupe_increment);
+    }
