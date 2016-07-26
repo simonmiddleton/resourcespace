@@ -1347,7 +1347,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             }
         if(count($propertysearchcodes)>0)
             {
-            $search = '!properties' . implode(';', $propertysearchcodes) . ' ' . $search;
+            $search = '!properties' . implode(';', $propertysearchcodes) . ', ' . $search;
             }
         else
             {
