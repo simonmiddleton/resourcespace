@@ -25,14 +25,13 @@ if (!hook("renderresultsmallthumb"))
 					{$col_url=$result[$n]["col_url"];} # If col_url set in data, use instead, e.g. by manipulation of data via process_search_results hook
 				else
 					{
-					$col_path=get_resource_path($ref,true,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
+					$col_path=get_resource_path($ref,true,($retina_mode?"thm":"col"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
 					if ($result[$n]["has_image"] && file_exists($col_path))
 						{
-						$col_url=get_resource_path($ref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
+						$col_url=get_resource_path($ref,false,($retina_mode?"thm":"col"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
 						}
 					else
 						{
-						$col_url=get_resource_path($ref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
 						$col_url = $baseurl_short . "gfx/" . get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],"col");
 						}
 					}
@@ -101,6 +100,27 @@ if (!hook("renderresultsmallthumb"))
 							src="<?php echo $col_url ?>" 
 							class="ImageBorder"  
 							alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))); ?>"
+								    <?php 
+									if ($result[$n]["thumb_width"]!="" && $result[$n]["thumb_width"]!=0 && $result[$n]["thumb_height"]!="") 
+										{ 
+										$ratio=$result[$n]["thumb_width"]/$result[$n]["thumb_height"];
+										if ($result[$n]["thumb_width"]>$result[$n]['thumb_height'])
+											{
+											$smlwidth=75;
+											$smlheight=round(75/$ratio);
+											} 
+										else 
+											{
+											$smlheight=75;
+											$smlwidth=round(75*$ratio);
+											}
+										
+										?> 
+										width="<?php echo $smlwidth?>" 
+										height="<?php echo $smlheight?>"
+										<?php
+										}
+						?>
 					 	/><?php 
 					 	} 
 					else 
@@ -238,6 +258,35 @@ if (!hook("renderresultsmallthumb"))
 				{ ?>
 				<div class="ResourcePanelIcons">
 					<?php 
+					if(!hook("smallthumbscheckboxes"))
+						{
+						if ($use_checkboxes_for_selection)
+							{
+							if(!in_array($result[$n]['resource_type'],$collection_block_restypes))	
+								{?>
+								<input 
+									type="checkbox" 
+									id="check<?php echo htmlspecialchars($ref)?>" 
+									class="checkselect" 
+									<?php 
+									if (in_array($ref,$collectionresources))
+										{ ?>
+										checked
+										<?php 
+										} ?> 
+									onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
+								>
+								&nbsp;
+								<?php 
+								}
+							else
+								{
+								?>
+								<input type="checkbox" style="opacity: 0;">
+								<?php
+								}
+							}
+						} # end hook thumbscheckboxes
 					if ($display_resource_id_in_thumbnail && $ref>0) 
 						{ 
 						echo htmlspecialchars($ref); 

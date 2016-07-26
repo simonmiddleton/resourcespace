@@ -374,6 +374,8 @@ if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
 if ($hook_result!==false) {$result=$hook_result;}
 
+$count_result = count($result);
+
 if ($collectionsearch)
 	{
 	$collection=substr($search,11);

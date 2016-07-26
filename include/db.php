@@ -317,6 +317,8 @@ $query = sprintf('
 );
 $results=sql_query($query);
 
+// Create a new array to hold customised text at any stage, may be overwritten in authenticate.php. Needed so plugin lang file can be overidden if plugin only enabled for specific groups
+$customsitetext=array();
 // Go through the results twice, setting the default language first, then repeat for the user language so we can override the default with any language specific entries
 for ($n=0;$n<count($results);$n++) 
 	{
@@ -324,6 +326,7 @@ for ($n=0;$n<count($results);$n++)
 	if ($results[$n]["page"]=="") 
 		{
 		$lang[$results[$n]["name"]]=$results[$n]["text"];
+		$customsitetext[$results[$n]['name']] = $results[$n]['text'];
 		} 
 	else 
 		{
@@ -336,6 +339,7 @@ for ($n=0;$n<count($results);$n++)
 	if ($results[$n]["page"]=="") 
 		{
 		$lang[$results[$n]["name"]]=$results[$n]["text"];
+		$customsitetext[$results[$n]['name']] = $results[$n]['text'];
 		} 
 	else 
 		{
@@ -475,6 +479,39 @@ function db_begin_transaction()
 		mysqli_begin_transaction($db);
 		}
 	}
+
+# Used to perform the same DML operation over-and-over-again without the hit of preparing the statement every time.
+# Useful for re-indexing fields etc.
+# Example usage:
+#
+# sql_query_prepared('INSERT INTO `my_table`(`colint`,`colstring`) VALUES (?,?)',array('is',10,'Ten');
+#
+# Where first array parameter indicates types of bind data:
+# i=integer
+# s=string
+function sql_query_prepared($sql,$bind_data)
+    {
+    global $prepared_statement_cache,$db;
+    if(!isset($prepared_statement_cache[$sql]))
+        {
+        if(!isset($prepared_statement_cache))
+            {
+            $prepared_statement_cache=array();
+            }
+        $prepared_statement_cache[$sql]=$db->prepare($sql);
+        if($prepared_statement_cache[$sql]===false)
+            {
+            die('Bad prepared SQL statement:' . $sql);
+            }
+        }
+    $bind_data_processed = array();
+    foreach($bind_data as $key => $value)
+        {
+        $bind_data_processed[$key] = &$bind_data[$key];
+        }
+    call_user_func_array(array($prepared_statement_cache[$sql], 'bind_param'), $bind_data_processed);
+    mysqli_stmt_execute($prepared_statement_cache[$sql]);
+    }
 
 # Tell the database to commit the current transaction.
 function db_end_transaction()
@@ -840,11 +877,13 @@ function CheckDBStruct($path,$verbose=false)
 							sql_query($sql,false,-1,false);
 							$values=sql_query("select resource,value from resource_data where resource_type_field=$joins[$m]",false,-1,false);
 	
-							for($x=0;$x<count($values);$x++){
-								$value=$values[$x]['value'];
-								$resource=$values[$x]['resource'];
-								sql_query("update resource set field$joins[$m]='".escape_check($value)."' where ref=$resource",false,-1,false);	
-						    }	
+							for($x = 0; $x < count($values); $x++)
+                                {
+                                $value    = substr(escape_check($values[$x]['value']), 0, $resource_field_column_limit);
+                                $resource = $values[$x]['resource'];
+
+                                sql_query("UPDATE resource SET field{$joins[$m]} = '{$value}' WHERE ref = {$resource}", false, -1, false);	
+                                }	
 						}
 					}	
 				}		
@@ -905,7 +944,9 @@ function CheckDBStruct($path,$verbose=false)
 										 ||
 										(stripos($basecoltype,"text")!==false && stripos($existingcoltype,"text")===false)
 										||
-										(stripos($basecoltype,"BIGINT")!==false && stripos($existingcoltype,"INT")!==false)
+										(strtoupper($basecoltype)=="BIGINT" && strtoupper($existingcoltype=="INT"))
+										||
+										(strtoupper($basecoltype)=="INT" && strtoupper($existingcoltype=="TINYINT") || strtoupper($existingcoltype=="SMALLINT"))
 									       )
 										{        
 										debug("DBSTRUCT - updating column " . $col[0] . " in table " . $table . " from " . $existing[$n]["Type"] . " to " . str_replace("§",",",$col[1]) );
@@ -1440,7 +1481,7 @@ function include_plugin_config($plugin_name,$config="",$config_json="")
 	}
 function register_plugin_language($plugin)
     {
-    global $plugins,$language,$pagename,$lang,$applicationname;
+    global $plugins,$language,$pagename,$lang,$applicationname,$customsitetext;
     
     	# Include language file
     	$langpath=get_plugin_path($plugin) . "/languages/";
@@ -1452,6 +1493,14 @@ function register_plugin_language($plugin)
     			@include $langpath . safe_file_name(substr($language, 0, 2)) . ".php";
     		@include $langpath . safe_file_name($language) . ".php";
     		}
+	// If we have custome text created from Manage Content we need to reset this
+	if(isset($customsitetext))
+		{
+		foreach ($customsitetext as $customsitetextname=>$customsitetextentry)
+			{
+			$lang[$customsitetextname] = $customsitetextentry;
+			}
+		}
     }
     
 function get_plugin_path($plugin,$url=false)

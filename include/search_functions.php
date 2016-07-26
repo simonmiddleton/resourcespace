@@ -968,7 +968,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     #
     # This is used to take the advanced search form and assemble it into a search query.
     
-    global $auto_order_checkbox,$checkbox_and;
+    global $auto_order_checkbox,$checkbox_and,$dynamic_keyword_and;
     $search="";
     if (getval("year","")!="")
         {
@@ -1266,11 +1266,17 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 $keywords=split_keywords($selected[$m]);
                 foreach ($keywords as $keyword) {resolve_keyword($keyword,true);}
                 }
-            if ($p!="")
+            if ($p!="" && !$dynamic_keyword_and)
                 {
                 if ($search!="") {$search.=", ";}
                 $search.=$fields[$n]["name"] . ":" . $p;
                 }
+            elseif ($p!="" && $dynamic_keyword_and)
+                    {
+                    $p=str_replace(";",", {$fields[$n]["name"]}:",$p);	// this will force each and condition into a separate union in do_search (which will AND)
+                    $search.=$fields[$n]["name"] . ":" . $p;
+                    }   
+                
             break;
         
             // Radio buttons:
@@ -1962,7 +1968,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         if($return_refs_only)
             {
-            $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','archive'));    // note that we actually include archive column too as often used to work out permission to edit collection
+            // note that we actually include archive and created by columns too as often used to work out permission to edit collection
+            $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','archive', 'created_by'));
             }
         else
             {
@@ -2089,6 +2096,10 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         # Extract the user ref
         $cuser=explode(" ",$search);$cuser=str_replace("!contributions","",$cuser[0]);
+        
+        // Don't filter if user is searching for their own resources and $open_access_for_contributor=true;
+		global $open_access_for_contributor;
+		if($open_access_for_contributor && $userref==$cuser){$sql_filter="true";$sql_join="";}
         
         $select=str_replace(",rca.access group_access,rca2.access user_access ",",null group_access, null user_access ",$select);
         return sql_query($sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where created_by='" . $cuser . "' and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix,false,$fetchrows);

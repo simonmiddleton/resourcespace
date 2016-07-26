@@ -104,7 +104,10 @@ if ($collection!="")
 // Load collection info. 
 // get_user_collections moved before output as function may set cookies
 $cinfo=get_collection($usercollection);
-$list=get_user_collections($userref);
+if('' == $k || $internal_share_access)
+    {
+    $list = get_user_collections($userref);
+    }
 
 # if the old collection or new collection is being displayed as search results, we'll need to update the search actions so "save results to this collection" is properly displayed
 if(substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
@@ -184,7 +187,7 @@ if ($allow_reorder)
 				helper: function(event, ui)
 					{
 					//Hack to append the element to the body (visible above others divs), 
-					//but still bellonging to the scrollable container
+					//but still belonging to the scrollable container
 					jQuery('#CollectionSpace').append('<div id="CollectionSpaceClone" class="ui-state-default">' + ui[0].outerHTML + '</div>');   
 					jQuery('#CollectionSpaceClone').hide();
 					setTimeout(function() {
@@ -323,6 +326,7 @@ else { ?>
 
 		jQuery(document).ready(function() {
 			jQuery('#CentralSpace').trigger('prepareTrash');
+			CheckHideCollectionBar();
 		});
 	</script>
 	<!-- End of Drag and Drop -->
@@ -462,7 +466,31 @@ if ($addsearch!=-1)
             $resourcesnotadded=add_saved_search_items($usercollection);
             if (!empty($resourcesnotadded))
                 {
-                ?><script language="Javascript">alert("<?php echo $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);?>");</script><?php
+		$warningtext="";
+		//exit($resourcesnotadded["blockedtypes"]);
+		if(isset($resourcesnotadded["blockedtypes"]))
+			{
+			// There are resource types blocked due to $collection_block_restypes
+			$warningtext = $lang["collection_restype_blocked"] . "<br /><br />";
+			//$restypes=get_resource_types(implode(",",$collection_block_restypes));
+			$blocked_types=get_resource_types(implode(",",$resourcesnotadded["blockedtypes"]));
+			foreach($blocked_types as $blocked_type)
+				{
+				if($warningtext==""){$warningtext.="<ul>";}
+				$warningtext.= "<li>" . $blocked_type["name"] . "</li>";
+				}
+			$warningtext.="</ul>";
+			unset($resourcesnotadded["blockedtypes"]);
+			}
+			
+		if (!empty($resourcesnotadded))	
+			{
+			// There are resources blocked from being added due to archive state
+			if($warningtext==""){$warningtext.="<br /><br />";}
+			$warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
+			}
+		
+                ?><script language="Javascript">styledalert("<?php echo $lang["status-warning"]; ?>","<?php echo $warningtext; ?>",600);</script><?php
                 }
             # Log this
             daily_stat("Add saved search items to collection",0);
@@ -831,11 +859,12 @@ if ($count_result>0)
 		<?php $access=get_resource_access($result[$n]);
 		$use_watermark=check_use_watermark();?>
 		<table border="0" class="CollectionResourceAlign"><tr><td>
-		<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo $k?>&curpos=<?php echo $n ?>"><?php if ($result[$n]["has_image"]==1) { 
+		<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>"><?php if ($result[$n]["has_image"]==1) { 
 		
-		$colimgpath=get_resource_path($ref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])
+		$colimgpath=get_resource_path($ref,false,($retina_mode?"thm":"col"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])
 		?>
-		<img border=0 src="<?php echo $colimgpath?>" class="CollectImageBorder" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" />
+		<img border=0 src="<?php echo $colimgpath?>" class="CollectImageBorder" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                   <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> />
 			<?php
 		
 		} else { ?><img border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" /><?php } ?><?php hook("aftersearchimg","",array($result[$n]))?></a></td>
@@ -879,7 +908,7 @@ if ($count_result>0)
 		<?php if (!isset($cinfo['savedsearch'])||(isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null)){ // add 'remove' link only if this is not a smart collection 
 			?>
 		<?php if (!hook("replaceremovelink")){?>
-		<a class="CollectionResourceRemove" onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?remove=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>"><i class="fa fa-minus-circle"></i> <?php echo $lang["action-remove"]?></a>
+		<a class="CollectionResourceRemove" onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?remove=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>"><i aria-hidden="true" class="fa fa-minus-circle"></i> <?php echo $lang["action-remove"]?></a>
 		<?php
 				} //end hook replaceremovelink 
 			} # End of remove link condition 

@@ -316,7 +316,7 @@ $url=$baseurl_short."pages/collection_manage.php?paging=true&col_order_by=".urle
 for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
 	{
     $colusername=$collections[$n]['fullname'];
-
+    $count_result = $collections[$n]["count"];
 	?><tr <?php hook("collectionlistrowstyle");?>>
 	<td class="name"><div class="ListTitle">
 		<a <?php if ($collections[$n]["public"]==1 && (strlen($collections[$n]["theme"])>0)) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this);"><?php echo highlightkeywords(i18n_get_collection_name($collections[$n]),$find) ?></a></div></td>

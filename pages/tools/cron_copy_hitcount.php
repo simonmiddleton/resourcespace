@@ -4,7 +4,8 @@ include_once dirname(__FILE__) . "/../../include/general.php";
 include_once dirname(__FILE__) . "/../../include/reporting_functions.php";
 include_once dirname(__FILE__) . "/../../include/resource_functions.php";
 include_once dirname(__FILE__) . "/../../include/search_functions.php";
-set_time_limit(60*30);
+
+set_time_limit($cron_job_time_limit);
 
 # All scheduled tasks are here for now, as older installations still call this file directly instead of batch/cron.php.
 
@@ -46,5 +47,3 @@ if($offline_job_queue)
     
 #Perform any plugin cron tasks
 hook("addplugincronjob");
-
- ?>

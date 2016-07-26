@@ -417,8 +417,9 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 			# Theme headers
 			for ($n=0;$n<count($headers);$n++)
 				{
-				$link=$baseurl_short."pages/themes.php?theme1=" . urlencode((!isset($themes[0]))? $headers[$n]:$themes[0]) . "&simpleview=true";
-				$theme_image_path="";
+				$headerlink       = '';
+				$link             = $baseurl_short."pages/themes.php?theme1=" . urlencode((!isset($themes[0]))? $headers[$n]:$themes[0]) . "&simpleview=true";
+				$theme_image_path = '';
 				if($themes_simple_images)
 					{
 					$targettheme=array_merge($themes,array($headers[$n]));

@@ -1,5 +1,4 @@
 <?php 
-global $ctheme,$userfixedtheme,$defaulttheme;
 hook ("preheaderoutput");
  
 $k=getvalescaped("k","");
@@ -115,7 +114,9 @@ if ($contact_sheet)
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script>
 <?php if (!$disable_geocoding) { ?>
 <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
-<script src="https://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"></script>
+<?php if ($use_google_maps) { ?>
+<script src="https://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+<?php } ?>
 <?php } ?>
 <?php if (!hook("ajaxcollections")) { ?>
 <script src="<?php echo $baseurl;?>/lib/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
@@ -162,7 +163,8 @@ var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad -
 oktext="<?php echo $lang["ok"] ?>";
 var scrolltopElementCentral='.ui-layout-center';
 var scrolltopElementCollection='.ui-layout-south';
-var scrolltopElementModal='#modal';
+var scrolltopElementModal='#modal'
+collection_bar_hide_empty=<?php echo $collection_bar_hide_empty?"true":"false"; ?>;
 </script>
 
 <script src="<?php echo $baseurl_short?>lib/js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
@@ -189,8 +191,7 @@ $extrafooterhtml="";
 <!--[if lte IE 5.6]> <link href="<?php echo $baseurl?>/css/globalIE5.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css"  media="screen,projection,print" /> <![endif]-->
 
 <?php
-global $ctheme;
-echo get_plugin_css($ctheme);
+echo get_plugin_css();
 // after loading these tags we change the class on them so a new set can be added before they are removed (preventing flickering of overridden theme)
 ?>
 <script>jQuery('.plugincss').attr('class','plugincss0');</script>
@@ -212,7 +213,7 @@ if($slimheader)
 if(!hook("customloadinggraphic"))
 	{
 	?>
-	<div id="LoadingBox"><?php echo $lang["pleasewait"] ?>&nbsp;<i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></div>
+	<div id="LoadingBox"><?php echo $lang["pleasewait"] ?>&nbsp;<i aria-hidden="true" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></div>
 	<?php
 	}
 ?>
@@ -341,7 +342,11 @@ hook("headertop");
 
 if (!isset($allow_password_change)) {$allow_password_change=true;}
 
-if (isset($username) && ($pagename!="login") && ($loginterms==false) && ($k=="" || $internal_share_access)) { ?>
+$not_authenticated_pages = array('login', 'user_change_password');
+
+if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
+    {
+    ?>
 <div id="HeaderNav1" class="HorizontalNav ">
 
 <?php
@@ -365,13 +370,13 @@ else
 	?>
 	<ul>
 	<?php if (!hook("replaceheaderfullnamelink")){?>
-	<li><a href="<?php echo $baseurl?>/pages/user/user_home.php"  onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?></a>
+	<li><a href="<?php echo $baseurl?>/pages/user/user_home.php"  onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?></a>
 		<span style="display: none;" class="MessageCountPill Pill"></span>
 		<div id="MessageContainer" style="position:absolute; "></div>
 	<?php } ?></li>
 	
 	<!-- Team centre link -->
-	<?php if (checkperm("t")) { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i class="fa fa-bars fa-fw"></i>&nbsp;<?php echo $lang["teamcentre"]?></a>
+	<?php if (checkperm("t")) { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-bars fa-fw"></i>&nbsp;<?php echo $lang["teamcentre"]?></a>
 	<?php if ($team_centre_alert_icon && (checkperm("R")||checkperm("r")))
 			{
 			# Show pill count if there are any pending requests
@@ -388,7 +393,7 @@ else
 	<?php hook("addtoplinks");
 	if(!isset($password_reset_mode) || !$password_reset_mode)
 		{?>
-		<li><a href="<?php echo $baseurl?>/login.php?logout=true&amp;nc=<?php echo time()?>"><i class="fa fa-sign-out fa-fw"></i>&nbsp;<?php echo $lang["logout"]?></a></li>
+		<li><a href="<?php echo $baseurl?>/login.php?logout=true&amp;nc=<?php echo time()?>"><i aria-hidden="true" class="fa fa-sign-out fa-fw"></i>&nbsp;<?php echo $lang["logout"]?></a></li>
 		<?php
 		}
 	hook("addtologintoolbarmiddle");?>

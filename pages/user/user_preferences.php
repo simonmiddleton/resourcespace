@@ -12,31 +12,6 @@ if(isset($anonymous_login) && ($anonymous_login == $username))
     die('Permission denied!');
     }
 
-if(getvalescaped("quicksave",FALSE))
-    {
-    $ctheme = getvalescaped("colour_theme","");
-    if($ctheme==""){exit("missing");}
-    $ctheme = preg_replace("/^col-/","",trim(mb_strtolower($ctheme)));
-    if($ctheme =="default")
-        {
-        if(empty($userpreferences))
-            {
-            // create a record
-            sql_query("INSERT INTO user_preferences (user, parameter, `value`) VALUES (" . $userref . ", 'colour_theme', NULL);");
-            rs_setcookie("colour_theme", "",100, "/", "", substr($baseurl,0,5)=="https", true);
-            exit("1");
-            }
-        else
-            {
-            sql_query("UPDATE user_preferences SET `value` = NULL WHERE user = " . $userref . " AND parameter = 'colour_theme';");
-            rs_setcookie("colour_theme", "",100, "/", "", substr($baseurl,0,5)=="https", true);
-            exit("1");
-            }
-        }
-
-    exit("0");
-    }
-
 $enable_disable_options = array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']);
 
 include "../../include/header.php";
@@ -47,6 +22,12 @@ include "../../include/header.php";
     
 <div class="CollapsibleSections">
     <?php
+    
+    // Retina mode
+    
+    $page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['resultsdisplay'] . '</h2><div id="UserPreferenceResultsDisplaySection" class="CollapsibleSection">');
+    $page_def[] = config_add_boolean_select('retina_mode', $lang['retina_mode'], $enable_disable_options, 300, '', true);
+    
     // Result display section
     $all_field_info = get_fields_for_search_display(array_unique(array_merge(
         $sort_fields,
@@ -125,7 +106,6 @@ include "../../include/header.php";
             }
         }
 
-    $page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['resultsdisplay'] . '</h2><div id="UserPreferenceResultsDisplaySection" class="CollapsibleSection">');
     $page_def[] = config_add_single_select(
         'default_sort',
         $lang['userpreference_default_sort_label'],

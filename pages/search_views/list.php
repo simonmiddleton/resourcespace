@@ -7,22 +7,31 @@ if (!hook("replacelistitem"))
 	if(!hook("listcheckboxes"))
 		{
 		if ($use_checkboxes_for_selection)
-			{?>
-			<td width="30px">
-				<input 
-					type="checkbox" 
-					style="position:relative;margin-bottom:-4px;top:-3px;height:21px;" 
-					id="check<?php echo htmlspecialchars($ref)?>" 
-					class="checkselect" 
-					<?php 
-					if (in_array($ref,$collectionresources))
-						{ ?>checked<?php } ?> 
-					onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked') { RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); <?php if (isset($collection)){?>document.location.href='?search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&offset=<?php echo urlencode($offset)?>';<?php } ?> }"
-				>
-			</td>
-			<?php 
-			} ?>
-		<?php 
+			{
+			if(!in_array($result[$n]['resource_type'],$collection_block_restypes))
+				{?>
+				<td width="30px">
+					<input 
+						type="checkbox" 
+						style="position:relative;margin-bottom:-4px;top:-3px;height:21px;" 
+						id="check<?php echo htmlspecialchars($ref)?>" 
+						class="checkselect" 
+						<?php 
+						if (in_array($ref,$collectionresources))
+							{ ?>checked<?php } ?> 
+						onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked') { RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); <?php if (isset($collection)){?>document.location.href='?search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&offset=<?php echo urlencode($offset)?>';<?php } ?> }"
+					>
+				</td>
+				<?php 
+				}
+			else
+				{
+				?>
+				<td width="30px">
+				</td>
+				<?php
+				}
+			}
 		} #end hook listcheckboxes 
 		for ($x=0;$x<count($df);$x++)
 			{

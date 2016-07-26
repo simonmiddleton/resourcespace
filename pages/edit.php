@@ -10,6 +10,7 @@ include_once '../include/node_functions.php';
 
 # Editing resource or collection of resources (multiple)?
 $ref=getvalescaped("ref","",true);
+if(getval("create","")!="" && $ref==0 && $userref>0){$ref=0-$userref;} // Saves manual link creation having to work out user template ref
 
 # Fetch search details (for next/back browsing and forwarding of search params)
 $search=getvalescaped("search","");
@@ -302,7 +303,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $ref=copy_resource(0-$userref);
                 if($collection_add!="")
                     {
-                    add_resource_to_collection($ref, $collection_add);
+                    add_resource_to_collection($ref, $collection_add,false,"",$resource_type);
                     set_user_collection($userref, $collection_add);
                     }
                 redirect($baseurl_short."pages/view.php?ref=". urlencode($ref) . '&refreshcollectionframe=true');

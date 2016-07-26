@@ -358,7 +358,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					$joins=get_resource_table_joins();
 					if (in_array($fields[$n]["ref"],$joins)){
 						if(substr($val,0,1)==","){$val=substr($val,1);}
-						sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check($val)."' where ref='$ref'");
+						sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
 					}
                                         
                                 # Add any onchange code
@@ -762,7 +762,7 @@ function save_resource_data_multi($collection)
 					# If this is a 'joined' field we need to add it to the resource column
 					$joins=get_resource_table_joins();
 					if (in_array($fields[$n]["ref"],$joins)){
-						sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check($val)."' where ref='$ref'");
+						sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
 					}		
 						
 					# Purge existing data and keyword mappings, decrease keyword hitcounts.
@@ -1101,7 +1101,6 @@ function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=f
 
     add_verbatim_keywords($keywords, $string, $resource_type_field); // add in any verbatim keywords (found using regex).
 
-    db_begin_transaction();
     for($n = 0; $n < count($keywords); $n++)
         {
         unset($kwpos);
@@ -1119,7 +1118,6 @@ function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=f
 
         add_keyword_to_resource($ref, $kw, $resource_type_field, $kwpos, $optional_column, $optional_value, false);
         }
-    db_end_transaction();
 
     }
 }
@@ -1137,7 +1135,7 @@ function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$o
                     add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,true);
                     }
         }
-    global $noadd;
+    global $noadd,$use_mysqli_prepared;
     if (!(in_array($keyword,$noadd)))
             {           
             debug("adding " . $keyword);
@@ -1145,13 +1143,21 @@ function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$o
             
             # create mapping, increase hit count.
             if ($optional_column<>'' && $optional_value<>'')	# Check if any optional column value passed and add this
-                    {
-					sql_query("insert into resource_keyword(resource,keyword,position,resource_type_field,$optional_column) values ('$ref','$keyref','$position','$resource_type_field','$optional_value')");
-					}
+                {
+                sql_query("insert into resource_keyword(resource,keyword,position,resource_type_field,$optional_column) values ('$ref','$keyref','$position','$resource_type_field','$optional_value')");
+                }
             else  
+                {
+                if(isset($use_mysqli_prepared) && $use_mysqli_prepared)
                     {
-					sql_query("insert into resource_keyword(resource,keyword,position,resource_type_field) values ('$ref','$keyref','$position','$resource_type_field')");
-					}
+                    sql_query_prepared('INSERT INTO `resource_keyword`(`resource`,`keyword`,`position`,`resource_type_field`) VALUES (?,?,?,?)',
+                        array('iiii',$ref,$keyref,$position,$resource_type_field));
+                    }
+                else
+                    {
+                    sql_query("insert into resource_keyword(resource,keyword,position,resource_type_field) values ('$ref','$keyref','$position','$resource_type_field')");
+                    }
+                }
 
             sql_query("update keyword set hit_count=hit_count+1 where ref='$keyref'");
             
@@ -1303,7 +1309,7 @@ function update_field($resource,$field,$value)
 		if ($value!="null")
 			{
 			global $resource_field_column_limit;
-			$truncated_value = substr($value, 0, $resource_field_column_limit);
+			$truncated_value = truncate_join_field_value($value);
 
             // Remove backslashes from the end of the truncated value
             if(substr($truncated_value, -1) === '\\')
@@ -1741,7 +1747,7 @@ function get_resource_log($resource, $fetchrows=-1)
     $extrafields=hook("get_resource_log_extra_fields");
     if (!$extrafields) {$extrafields="";}
     
-    $log = sql_query("select distinct r.ref,r.date,u.username,u.fullname,r.type,f.title,r.notes,r.diff,r.usageoption,r.purchase_price,r.purchase_size,ps.name size, r.access_key,ekeys_u.fullname shared_by" . $extrafields . " from resource_log r left outer join user u on u.ref=r.user left outer join resource_type_field f on f.ref=r.resource_type_field left outer join external_access_keys ekeys on r.access_key=ekeys.access_key left outer join user ekeys_u on ekeys.user=ekeys_u.ref left join preview_size ps on r.purchase_size=ps.id where r.resource='$resource' order by r.date desc",false,$fetchrows);
+    $log = sql_query("select distinct r.ref,r.date,u.username,u.fullname,r.type,f.title,r.notes,r.diff,r.usageoption,r.purchase_price,r.purchase_size,ps.name size, r.access_key,ekeys_u.fullname shared_by" . $extrafields . " from resource_log r left outer join user u on u.ref=r.user left outer join resource_type_field f on f.ref=r.resource_type_field left outer join external_access_keys ekeys on r.access_key=ekeys.access_key and r.resource=ekeys.resource left outer join user ekeys_u on ekeys.user=ekeys_u.ref left join preview_size ps on r.purchase_size=ps.id where r.resource='$resource' order by r.date desc",false,$fetchrows);
     for ($n = 0;$n<count($log);$n++)
         {
         $log[$n]["title"] = lang_or_i18n_get_translated($log[$n]["title"], "fieldtitle-");
@@ -1757,31 +1763,52 @@ function get_resource_type_name($type)
 	}
 	
 function get_resource_custom_access($resource)
-	{
-    # Return a list of usergroups with the custom access level for resource $resource (if set).
-    # The standard usergroup names are translated using $lang. Custom usergroup names are i18n translated.
-	$sql="";
-	if (checkperm("E"))
-		{
-		# Restrict to this group and children groups only.
-		global $usergroup,$usergroupparent;
-		$sql="where g.parent='$usergroup' or g.ref='$usergroup' or g.ref='$usergroupparent'";
-		}
-    $resource_custom_access = sql_query("select g.ref,g.name,g.permissions,c.access from usergroup g left outer join resource_custom_access c on g.ref=c.usergroup and c.resource='$resource' $sql group by g.ref order by (g.permissions like '%v%') desc,g.name");
-    for ($n = 0;$n<count($resource_custom_access);$n++)
+    {
+    /*Return a list of usergroups with the custom access level for resource $resource (if set).
+    The standard usergroup names are translated using $lang. Custom usergroup names are i18n translated.*/
+    $sql = '';
+    if(checkperm('E'))
         {
-        $resource_custom_access[$n]["name"] = lang_or_i18n_get_translated($resource_custom_access[$n]["name"], "usergroup-");
+        // Restrict to this group and children groups only.
+        global $usergroup, $usergroupparent;
+
+        $sql = "WHERE g.parent = '{$usergroup}' OR g.ref = '{$usergroup}' OR g.ref = '{$usergroupparent}'";
         }
+
+    $resource_custom_access = sql_query("
+                   SELECT g.ref,
+                          g.name,
+                          g.permissions,
+                          c.access
+                     FROM usergroup AS g
+          LEFT OUTER JOIN resource_custom_access AS c ON g.ref = c.usergroup AND c.resource = '{$resource}'
+                     $sql
+                 GROUP BY g.ref
+                 ORDER BY (g.permissions LIKE '%v%') DESC, g.name
+     ");
+
+    for($n = 0; $n < count($resource_custom_access); $n++)
+        {
+        $resource_custom_access[$n]['name'] = lang_or_i18n_get_translated($resource_custom_access[$n]['name'], 'usergroup-');
+        }
+
     return $resource_custom_access;
-	}
+    }
 
 function get_resource_custom_access_users_usergroups($resource)
     {
     # Returns only matching custom_access rows, with users and groups expanded
-    return sql_query("select g.name usergroup,u.username user,c.access,c.user_expires expires from resource_custom_access c
-        left outer join usergroup g on g.ref=c.usergroup
-        left outer join user u on u.ref=c.user
-        where c.resource='$resource' order by g.name,u.username");
+    return sql_query("
+                 SELECT g.name usergroup,
+                        u.username user,
+                        c.access,
+                        c.user_expires AS expires
+                   FROM resource_custom_access AS c
+        LEFT OUTER JOIN usergroup AS g ON g.ref = c.usergroup
+        LEFT OUTER JOIN user AS u ON u.ref = c.user
+                  WHERE c.resource = '{$resource}'
+               ORDER BY g.name, u.username
+    ");
     }
     
     
@@ -2717,12 +2744,17 @@ function get_resource_access($resource)
 	$customuseraccess=false;
 	
 	global $k;
-	if ($k!="")
+	if('' != $k)
 		{
         global $internal_share_access;
+
 		# External access - check how this was shared.
-		$extaccess=sql_value("select access value from external_access_keys where resource=".$ref." and access_key='" . escape_check($k) . "' and (expires is null or expires>now())",-1);
-		if ($extaccess!=-1 && (!$internal_share_access || ($internal_share_access && $extaccess<$access))) {return $extaccess;}
+		$extaccess = sql_value("SELECT access `value` FROM external_access_keys WHERE resource = '{$ref}' AND access_key = '" . escape_check($k) . "' AND (expires IS NULL OR expires > NOW())", -1);
+
+		if(-1 != $extaccess && (!$internal_share_access || ($internal_share_access && $extaccess < $access)))
+            {
+            return $extaccess;
+            }
 		}
 	
 	global $uploader_view_override, $userref;
@@ -2760,12 +2792,11 @@ function get_resource_access($resource)
 		}
 
 	global $open_access_for_contributor;
-	if ($open_access_for_contributor && $access == 1 && $resourcedata['created_by'] == $userref)
+	if ($open_access_for_contributor && $resourcedata['created_by'] == $userref)
 		{
-		# If access is restricted and user has contributed resource, grant open access.
-		$access = 0;
+		# If user has contributed resource, grant open access and ignore any further filters.
+		return 0;
 		}
-
 
 	# Check for user-specific and group-specific access (overrides any other restriction)
 	global $userref,$usergroup;
@@ -3064,84 +3095,62 @@ function filter_match($filter,$name,$value)
 		}
 	return 0;
 	}
-	
-function log_diff($fromvalue,$tovalue)	
-	{
-	# Forumlate descriptive text to describe the change made to a metadata field.
-
-	# Remove any database escaping
-	$fromvalue=str_replace("\\","",$fromvalue);
-	$tovalue=str_replace("\\","",$tovalue);
-	
-	if (substr($fromvalue,0,1)==",")
-		{
-		# Work a different way for checkbox lists.
-		$fromvalue=explode(",",i18n_get_translated($fromvalue));
-		$tovalue=explode(",",i18n_get_translated($tovalue));
-		
-		# Get diffs
-		$inserts=array_diff($tovalue,$fromvalue);
-		$deletes=array_diff($fromvalue,$tovalue);
-
-		# Process array diffs into meaningful strings.
-		$return="";
-		if (count($deletes)>0)
-			{
-			$return.="- " . join("\n- " , $deletes);
-			}
-		if (count($inserts)>0)
-			{
-			if ($return!="") {$return.="\n";}
-			$return.="+ " . join("\n+ ", $inserts);
-			}
-		
-		#debug($return);
-		return $return;
-		}
-
-	# For standard strings, use Text_Diff
-		
-	require_once dirname(__FILE__).'/../lib/Text_Diff/Diff.php';
-	require_once dirname(__FILE__).'/../lib/Text_Diff/Diff/Renderer/inline.php';
-
-	$lines1 = explode("\n",$fromvalue);
-	$lines2 = explode("\n",$tovalue);
-
-	$diff     = new Text_Diff('native', array($lines1, $lines2));
-	$renderer = new Text_Diff_Renderer_inline();
-	$diff=$renderer->render($diff);
-	
-	$return="";
-
-	# The inline diff syntax places inserts within <ins></ins> tags and deletes within <del></del> tags.
-
-	# Handle deletes
-	if (strpos($diff,"<del>")!==false)
-		{
-		$s=explode("<del>",$diff);
-		for ($n=1;$n<count($s);$n++)
-			{
-			$t=explode("</del>",$s[$n]);
-			if ($return!="") {$return.="\n";}
-			$return.="- " . trim(i18n_get_translated($t[0]));
-			}
-		}
-	# Handle inserts
-	if (strpos($diff,"<ins>")!==false)
-		{
-		$s=explode("<ins>",$diff);
-		for ($n=1;$n<count($s);$n++)
-			{
-			$t=explode("</ins>",$s[$n]);
-			if ($return!="") {$return.="\n";}
-			$return.="+ " . trim(i18n_get_translated($t[0]));
-			}
-		}
 
 
-	#debug ($return);
-	return $return;
-	}
+/**
+* Check changes made to a metadata field and create a nice user friendly summary
+* 
+* @uses Diff::compare()
+* @uses Diff::toString()
+* 
+* @param string $fromvalue
+* @param string $tovalue
+* 
+* @return string
+*/
+function log_diff($fromvalue, $tovalue)
+    {
+    $return = '';
+
+    // Remove any database escaping
+    $fromvalue = str_replace("\\", '', $fromvalue);
+    $tovalue   = str_replace("\\", '', $tovalue);
+
+    // Work a different way for fixed lists
+    if(',' == substr($fromvalue, 0, 1))
+        {
+        $fromvalue = explode(',', i18n_get_translated($fromvalue));
+        $tovalue   = explode(',', i18n_get_translated($tovalue));
+
+        // Get diffs
+        $inserts = array_diff($tovalue, $fromvalue);
+        $deletes = array_diff($fromvalue, $tovalue);
+
+        // Process array diffs into meaningful strings
+        if(0 < count($deletes))
+            {
+            $return .= '- ' . join("\n- " , $deletes);
+            }
+
+        if(0 < count($inserts))
+            {
+            if('' != $return)
+                {
+                $return .= "\n";
+                }
+
+            $return .= '+ ' . join("\n+ ", $inserts);
+            }
+
+        return $return;
+        }
+
+    // For standard strings, use Diff library
+    require_once dirname(__FILE__) . '/../lib/Diff/class.Diff.php';
+    $return = Diff::toString(Diff::compare($fromvalue, $tovalue));
+
+    return $return;
+    }
 	
 function update_xml_metadump($resource)
 	{
@@ -3998,4 +4007,9 @@ function delete_resource_custom_access_usergroups($ref)
         sql_query("delete from resource_custom_access where resource='" . escape_check($ref) . "' and usergroup is not null");
         }
 
-
+// truncate the field for insertion into the main resource table field<n>
+function truncate_join_field_value($value)
+    {
+    global $resource_field_column_limit;
+    return substr($value, 0, $resource_field_column_limit);
+    }

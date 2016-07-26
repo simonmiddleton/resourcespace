@@ -38,11 +38,11 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 	global $contact_sheet_preview_size,$annotate_pdf_output_only_annotated,$lang,$userfullname,$view_title_field,$baseurl,$imagemagick_path,$imagemagick_colorspace,$ghostscript_path,$previewpage,$storagedir,$storageurl,$annotate_font,$access,$k;
 	$date= date("m-d-Y h:i a");
 	
-	include_once($storagedir.'/../include/search_functions.php');
-	include_once($storagedir.'/../include/resource_functions.php');
-	include_once($storagedir.'/../include/collections_functions.php');
-	include_once($storagedir.'/../include/image_processing.php');
-	include_once($storagedir.'/../lib/tcpdf/tcpdf.php');
+	include_once(dirname(__FILE__) . '/../../../include/search_functions.php');
+	include_once(dirname(__FILE__) . '/../../../include/resource_functions.php');
+	include_once(dirname(__FILE__) . '/../../../include/collections_functions.php');
+	include_once(dirname(__FILE__) . '/../../../include/image_processing.php');
+	include_once(dirname(__FILE__) . '/../../../lib/tcpdf/tcpdf.php');
 
 	$pdfstoragepath=get_annotate_file_path($ref,true,"pdf");
 	$jpgstoragepath=get_annotate_file_path($ref,true,"jpg");

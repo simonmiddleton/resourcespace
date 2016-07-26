@@ -2,25 +2,17 @@
 
 include '../../../include/db.php';
 include_once '../../../include/general.php';
-include '../../../include/authenticate.php';
 include '../../../include/resource_functions.php';
 include '../../../include/search_functions.php';
-
 include_once dirname(__FILE__) . "/../include/utility.php";
 
+$k=getvalescaped("k","");
 $ref = getvalescaped('ref', 0, true);
 $size = getvalescaped('size', '');
 $page = getvalescaped('page', 1, true);
 $alternative = getvalescaped('alt', -1, true);
 
 $resource = get_resource_data($ref);
-
-if (!resource_download_allowed($ref, $size, $resource["resource_type"]))
-	{
-	# This download is not allowed.
-	exit("Permission denied");
-	}
-
 $width = getvalescaped('width', 0, true);
 $height = getvalescaped('height', 0, true);
 

@@ -1148,7 +1148,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 	}
 
 function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false)
-	{$time_start = microtime(true);
+	{
 	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles;
 
 	$icc_transform_complete=false;
@@ -1181,20 +1181,21 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				}
 			if ($autorotate_no_ingest && !$ingested && !$previewonly)
 				{
-					# extra check for !previewonly should there also be ingested resources in the system
-					$file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
+				# extra check for !previewonly should there also be ingested resources in the system
+				$file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
 				}
 			}
 		else if (!$previewonly)
 			{
-			$file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);	
+			$file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
 			}
 		else
 			{
 			# We're generating based on a new preview (scr) image.
 			$file=get_resource_path($ref,true,"tmp",false,"jpg");	
 			}
-
+		$origfile=$file;
+		
 		$hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);	
 		if (file_exists($hpr_path) && !$previewbased) {unlink($hpr_path);}	
 		$lpr_path=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",$alternative);	
@@ -1307,26 +1308,37 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			
 			# If this is just a jpg resource, we avoid the hpr size because the resource itself is an original sized jpg. 
 			# If preview_preprocessing indicates the intermediate jpg should be kept as the hpr image, do that. 
-			if ($keep_for_hpr && $ps[$n]['id']=="hpr"){
+			if ($keep_for_hpr && $ps[$n]['id']=="hpr")
+				{
 				rename($file,$hpr_path); // $keep_for_hpr is switched to false below
-			}
+				}
 			
 			# If we've already made the LPR or SCR then use those for the remaining previews.
 			# As we start with the large and move to the small, this will speed things up.
-			if ($extension!="png" && $extension!="gif"){
-			if(file_exists($hpr_path)){$file=$hpr_path;}
-			if(file_exists($lpr_path)){$file=$lpr_path;}
-			if(file_exists($scr_path)){$file=$scr_path;}
-			}
+			if ($extension!="png" && $extension!="gif")
+				{
+				if(file_exists($hpr_path)){$file=$hpr_path;}
+				if(file_exists($lpr_path)){$file=$lpr_path;}
+				if(file_exists($scr_path)){$file=$scr_path;}
+				
+				# Check that source image dimensions are sufficient to create the required size. Unusually wide/tall images can
+				# mean that the height/width of the larger sizes is less than the required target height/width
+				list($checkw,$checkh) = @getimagesize($file);
+				if(($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) && $file!=$hpr_path)
+					{
+					$file=file_exists($hpr_path)?$hpr_path:$origfile;
+					}
+				}
 
-			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif")
-				{
+			# Locate imagemagick.
+            $convert_fullpath = get_utility_path("im-convert");
+            if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
+
+			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif") {
 			    $flatten = "";
-				}
-			else
-				{
+			} else {
 			    $flatten = "-flatten";
-				}
+			}
 
             // Extensions for which the alpha/ matte channel should not be set to Off (i.e. +matte option) *** '+matte' no longer exists but is the same as '-alpha off'
             $extensions_no_alpha_off = array('png', 'gif', 'tif');
@@ -1764,7 +1776,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			// logging
 			resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
 			}
-		
 		# For the thumbnail image, call extract_mean_colour() to save the colour/size information
 		$target=@imagecreatefromjpeg(get_resource_path($ref,true,"thm",false,"jpg",-1,1,false,"",$alternative));
 		if ($target && $alternative==-1) # Do not run for alternative uploads 
@@ -1780,7 +1791,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
 				}
 			}
-		
 		return true;
 		}
 	else
@@ -2496,7 +2506,7 @@ function AutoRotateImage($src_image, $ref = false)
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
 
                 # change the orientation metadata
-                $command = $exiftool_fullpath . ' Orientation=1 ' . escapeshellarg($new_image);
+                $command = $exiftool_fullpath . ' -Orientation=1 ' . escapeshellarg($new_image);
                 }
             } 
         else
@@ -2529,7 +2539,7 @@ function AutoRotateImage($src_image, $ref = false)
         # Also, don't go through this step if the old orientation was set to normal
         if ($old_orientation != '' && $old_orientation != 1) 
             {
-            $fix_orientation = $exiftool_fullpath . ' Orientation=1 -n ' . escapeshellarg($new_image);
+            $fix_orientation = $exiftool_fullpath . ' -Orientation=1 -n ' . escapeshellarg($new_image);
             $output=run_command($fix_orientation);
             resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$fix_orientation . ":\n" . $output);
             }
@@ -2615,62 +2625,56 @@ function get_imagemagick_version($array=true){
 }
 
 
-## Sizing calculations
-function do_contactsheet_sizing_calculations(){
-global $sheetstyle,$deltay,$add_contactsheet_logo,$pageheight,$pagewidth,$column,$config_sheetthumb_fields,$config_sheetthumb_include_ref,$leading,$refnumberfontsize,$imagesize,$columns,$rowsperpage,$cellsize,$logospace,$page,$rowsperpage,$contact_sheet_logo_resize,$contact_sheet_custom_footerhtml,$footerspace,$contactsheet_header,$config_sheetsingle_fields,$config_sheetsingle_include_ref,$orientation;
+/**
+* Function used to get new width & height for an image in order to maintain
+* aspect ratio while it will fit within a desired dimension.
+* 
+* @param string  $image_path    The full path to the image (can be physical / URL)
+* @param integer $target_width  
+* @param integer $target_height 
+* @param boolean $enlarge_image Specify whether images smaller than our target
+*                               should be enlarged or not. Default is FALSE
+* 
+* @return array New dimensions which can be used to resize the image and offset values client
+*               code can use for consistent visual display
+*/
+function calculate_image_dimensions($image_path, $target_width, $target_height, $enlarge_image = false)
+    {
+    if(false === (list($source_width, $source_height) = @getimagesize($image_path)))
+        {
+        trigger_error("'{$image_path}' is not a valid image!");
+        }
 
+    $return = array(
+        'portrait'  => false,
+        'landscape' => false,
+    );
 
-if ($sheetstyle=="thumbnails")
-	{
-	if ($add_contactsheet_logo && $contact_sheet_logo_resize)
-	{$logospace=$pageheight/9;}
+    // Check orientation and calculate ratio
+    if($source_width > $source_height)
+        {
+        // Landscape
+        $return['landscape'] = true;
 
-	$columns=$column;
-	#calculating sizes of cells, images, and number of rows:
-	$cellsize[0]=$cellsize[1]=($pagewidth-1.7)/$columns;
-	$imagesize=$cellsize[0]-.3;
-	# estimate rows per page based on config lines
-	$extralines=(count($config_sheetthumb_fields)!=0)?count($config_sheetthumb_fields):0;
-	if ($contact_sheet_custom_footerhtml!=''){$footerspace=$pageheight*.05;}
-	if ($config_sheetthumb_include_ref){$extralines++;}
-	$rowsperpage=($pageheight-.5-$logospace-$footerspace-($cellsize[1]+($extralines*(($refnumberfontsize+$leading)/72))))/($cellsize[1]+($extralines*(($refnumberfontsize+$leading)/72)));
-	$page=1;	
-	}
-else if ($sheetstyle=="list")
-	{ 
-	if ($add_contactsheet_logo && $contact_sheet_logo_resize)
-	{$logospace=$pageheight/9;}
-	#calculating sizes of cells, images, and number of rows:
-	$columns=1;
-	$imagesize=1.0;
-	$cellsize[0]=$pagewidth-1.7;
-	$cellsize[1]=1.2;
-	if ($contact_sheet_custom_footerhtml!=''){$footerspace=$pageheight*.05;}
-	$rowsperpage=($pageheight-1.2-$logospace-$footerspace-$cellsize[1])/$cellsize[1];
-	$page=1;
-	}
-else if ($sheetstyle=="single")
-	{
-	$extralines=(count($config_sheetsingle_fields)!=0)?count($config_sheetsingle_fields):0;
-	if ($add_contactsheet_logo && $contact_sheet_logo_resize)
-		{
-		if ($orientation=="L"){$logospace=$pageheight/11;if ($contactsheet_header){$extralines=$extralines + 2;}} else {$logospace=$pageheight/9;}
-		}
-	$columns=$column;	
-	if ($config_sheetsingle_include_ref){$extralines++;}
-	
-	# calculate size of single cell per page, allowing for extra lines. Needs to be smaller if landscape.
-	if ($orientation=="L")
-		{
-		$cellsize[0]=$cellsize[1]=($pageheight*0.65)-($extralines*(($refnumberfontsize+$leading)/72));
-		}
-	else 
-		{
-		$cellsize[0]=$cellsize[1]=($pagewidth*0.8);
-		}
-	$imagesize=$cellsize[0]-0.3;
-	$rowsperpage=1;
-	$page=1;
-	$columns=1;
-	}
-}
+        $ratio = $target_width / $source_width;
+        }
+    else
+        {
+        // Portrait
+        $return['portrait'] = true;
+
+        $ratio = $target_height / $source_height;
+        }
+
+    if(!$enlarge_image && $target_width > $source_width)
+        {
+        $ratio = 1;
+        }
+
+    $return['new_width']  = floor($source_width * $ratio);
+    $return['new_height'] = floor($source_height * $ratio);
+    $return['x_offset']   = ceil(($target_height - $return['new_height']) / 2);
+    $return['y_offset']   = ceil(($target_width - $return['new_width']) / 2);
+
+    return $return;
+    }

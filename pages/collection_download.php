@@ -334,18 +334,21 @@ if ($submitted != "")
                         $filename = mb_convert_encoding($filename, $to_charset, 'UTF-8');
 						
 						// check if a file has already been processed with this name
-						if (in_array($filename,$filenames)){
-							// if so, append a dupe tag
-							$path_parts=pathinfo($filename);
-							if (isset($path_parts['extension'])&& isset($path_parts['filename'])){
-								$filename_ext=$path_parts['extension'];
-								$filename_wo=$path_parts['filename'];
-								$x=findDuplicates($filenames,$filename);
-								$filename=$filename_wo.$lang["_dupe"].$x.".".$filename_ext;
-							}
-						} else {
-							$filenames[]=$filename;
-						}
+						if(in_array($filename, $filenames))
+                            {
+                            $path_parts = pathinfo($filename);
+                            if(isset($path_parts['extension']) && isset($path_parts['filename']))
+                                {
+                                $filename_ext = $path_parts['extension'];
+                                $filename_wo  = $path_parts['filename'];
+
+                                // Run through function to guarantee unique filename
+                                $filename = makeFilenameUnique($filenames, $filename_wo, $lang["_dupe"], $filename_ext);
+                                }
+                            }
+                        
+                        // Add the filename to the array so it can be checked in the next loop
+                        $filenames[] = $filename;
 
                         # Copy to tmp (if exiftool failed) or rename this file
                         # this is for extra efficiency to reduce copying and disk usage

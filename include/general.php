@@ -1054,20 +1054,22 @@ function save_user($ref)
     {
     global $lang, $allow_password_email, $home_dash;
 
-    # Save user details, data is taken from the submitted form.
-    if(getval('deleteme', '') != '')
+    $current_user_data = get_user($ref);
+
+    // Save user details, data is taken from the submitted form.
+    if('' != getval('deleteme', ''))
         {
-        sql_query("DELETE FROM user WHERE ref='$ref'");
+        sql_query("DELETE FROM user WHERE ref = '{$ref}'");
+
         include dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
-        log_activity(null, LOG_CODE_DELETED, null, 'user', null, $ref);
+
+        log_activity("{$current_user_data['username']} ({$ref})", LOG_CODE_DELETED, null, 'user', null, $ref);
 
         return true;
         }
     else
         {
-        $current_user_data = get_user($ref);
-
         // Get submitted values
         $username               = trim(getvalescaped('username', ''));
         $password               = trim(getvalescaped('password', ''));
@@ -1078,8 +1080,7 @@ function save_user($ref)
         $ip_restrict            = trim(getvalescaped('ip_restrict', ''));
         $search_filter_override = trim(getvalescaped('search_filter_override', ''));
         $comments               = trim(getvalescaped('comments', ''));
-
-        $suggest = getval('suggest', '');
+        $suggest                = getval('suggest', '');
 
         # Username or e-mail address already exists?
         $c = sql_value("SELECT count(*) value FROM user WHERE ref <> '$ref' AND (username = '" . $username . "' OR email = '" . $email . "')", 0);
@@ -1123,6 +1124,13 @@ function save_user($ref)
         if('' == $fullname && '' == $suggest)
             {
             return $lang['setup-admin_fullname_error'];
+            }
+
+        /*Make sure IP restrict filter is a proper IP, otherwise make it blank
+        Note: we do this check only when wildcards are not used*/
+        if(false === strpos($ip_restrict, '*'))
+            {
+            $ip_restrict = (false === filter_var($ip_restrict, FILTER_VALIDATE_IP) ? '' : $ip_restrict);
             }
 
         $additional_sql = hook('additionaluserfieldssave');
@@ -1584,6 +1592,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             {
             # When searching text, search all languages to pick up matches for languages other than the default. Add array so that default is first then we can skip adding duplicates.
 			$search_languages=array($defaultlanguage);
+            if($defaultlanguage!="en"){$search_languages[]="en";}
 			$search_languages = $search_languages + array_keys($languages);	
 			}
         else
@@ -2652,7 +2661,7 @@ function pager($break=true)
 	$jumpcount++;
 	if(!hook("replace_pager")){
 		if ($totalpages!=0 && $totalpages!=1){?>     
-			<span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo $url?>&amp;go=prev&amp;offset=<?php echo urlencode($offset-$per_page) ?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, true);" <?php } ?>><?php } ?><i class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
+			<span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo $url?>&amp;go=prev&amp;offset=<?php echo urlencode($offset-$per_page) ?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, true);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
 
 			<?php if ($pager_dropdown){
 				$id=rand();?>
@@ -2664,12 +2673,12 @@ function pager($break=true)
 			<?php } else { ?>
 
 				<div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo $lang["jumptopage"]?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), true);}">
-			&nbsp;<a class="fa fa-times-circle" href="#" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='inline';"></a></div>
+			&nbsp;<a aria-hidden="true" class="fa fa-times-circle" href="#" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='inline';"></a></div>
 			
 				<a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo $lang["jumptopage"]?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo $lang["page"]?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo $lang["of"]?>&nbsp;<?php echo $totalpages?></a>
 			<?php } ?>
 
-			&nbsp;&nbsp;<?php if ($curpage<$totalpages) { ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo $url?>&amp;go=next&amp;offset=<?php echo urlencode($offset+$per_page) ?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, true);" <?php } ?>><?php } ?><i class="fa fa-arrow-right"></i><?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
+			&nbsp;&nbsp;<?php if ($curpage<$totalpages) { ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo $url?>&amp;go=next&amp;offset=<?php echo urlencode($offset+$per_page) ?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, true);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-right"></i><?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
 			</span>
 			
 		<?php } else { ?><span class="HorizontalWhiteNav">&nbsp;</span><div <?php if ($pagename=="search"){?>style="display:block;"<?php } else { ?>style="display:inline;"<?php }?>>&nbsp;</div><?php } ?>
@@ -3984,46 +3993,47 @@ function user_email_exists($email)
 	}
 
 function filesize_unlimited($path)
-    { 
+    {
     # A resolution for PHP's issue with large files and filesize().
-	
-	hook("beforefilesize_unlimited","",array($path));
-	
-    if (PHP_OS=='WINNT')
-        {
-		if (class_exists("COM"))
-			{
-			try
-				{
-				$filesystem=new COM('Scripting.FileSystemObject');
-				$file=$filesystem->GetFile($path);
-				return $file->Size();
-				}
-			catch (com_exception $e)
-				{
-				return false;
-				}
-			}
 
-		return exec('for %I in (' . escapeshellarg($path) . ') do @echo %~zI' );
+    hook("beforefilesize_unlimited","",array($path));
+
+    if('WINNT' == PHP_OS)
+        {
+        if(class_exists('COM'))
+            {
+            try
+                {
+                $filesystem = new COM('Scripting.FileSystemObject');
+                $file       =$filesystem->GetFile($path);
+
+                return $file->Size();
+                }
+            catch(com_exception $e)
+                {
+                return false;
+                }
+            }
+
+        return exec('for %I in (' . escapeshellarg($path) . ') do @echo %~zI' );
         }
-	else if(PHP_OS == 'Darwin') 
-    	{
+    else if('Darwin' == PHP_OS || 'FreeBSD' == PHP_OS)
+        {
         $bytesize = exec("stat -f '%z' " . escapeshellarg($path));
-    	}
+        }
     else 
-    	{
-		$bytesize = exec("stat -c '%s' " . escapeshellarg($path));
-    	}
-    	
-	if(!is_int($bytesize))
-		{
-		$bytesize= @filesize($path); # Bomb out, the output wasn't as we expected. Return the filesize() output.
-		}
-		
-	hook("afterfilesize_unlimited","",array($path));
-	
-	return $bytesize;
+        {
+        $bytesize = exec("stat -c '%s' " . escapeshellarg($path));
+        }
+
+    if(!is_int($bytesize))
+        {
+        $bytesize = @filesize($path); # Bomb out, the output wasn't as we expected. Return the filesize() output.
+        }
+
+    hook('afterfilesize_unlimited', '', array($path));
+
+    return $bytesize;
     }
 
 function strip_leading_comma($val)
@@ -4588,6 +4598,24 @@ function sql_affected_rows(){
 	}
 }
 
+function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
+{
+    global $imagemagick_path;
+	if (!isset($imagemagick_path))
+		{
+		# ImageMagick convert path not configured.
+		return false;
+		}
+	$path=get_executable_path($imagemagick_path, $exeNames, $checked_path);
+	if ($path===false)
+		{
+		# Support 'magick' also, ie. ImageMagick 7+
+		return get_executable_path($imagemagick_path, array("unix"=>"magick", "win"=>"magick.exe"),
+				$checked_path) . ' ' . $utilityname;
+		}
+	return $path;
+}
+
 function get_utility_path($utilityname, &$checked_path = null)
     {
     # !!! Under development - only some of the utilities are implemented!!!
@@ -4595,28 +4623,20 @@ function get_utility_path($utilityname, &$checked_path = null)
     # Returns the full path to a utility if installed, else returns false.
     # Note that this function doesn't check that the utility is working.
 
-    global $imagemagick_path, $ghostscript_path, $ghostscript_executable, $ffmpeg_path, $exiftool_path, $antiword_path, $pdftotext_path, $blender_path, $archiver_path, $archiver_executable;
+    global $ghostscript_path, $ghostscript_executable, $ffmpeg_path, $exiftool_path, $antiword_path, $pdftotext_path, $blender_path, $archiver_path, $archiver_executable;
 
     $checked_path = null;
 
     switch (strtolower($utilityname))
         {
         case "im-convert":
-            if (!isset($imagemagick_path)) {return false;} # ImageMagick convert path not configured.
-            return get_executable_path($imagemagick_path, array("unix"=>"convert", "win"=>"convert.exe"), $checked_path);
-            break;
+			return get_imagemagick_path('convert', array("unix"=>"convert", "win"=>"convert.exe"), $checked_path);
         case "im-identify":
-            if (!isset($imagemagick_path)) {return false;} # ImageMagick identify path not configured.
-            return get_executable_path($imagemagick_path, array("unix"=>"identify", "win"=>"identify.exe"), $checked_path);
-            break;
+			return get_imagemagick_path('identify', array("unix"=>"identify", "win"=>"identify.exe"), $checked_path);
         case "im-composite":
-            if (!isset($imagemagick_path)) {return false;} # ImageMagick composite path not configured.
-            return get_executable_path($imagemagick_path, array("unix"=>"composite", "win"=>"composite.exe"), $checked_path);
-            break;
+			return get_imagemagick_path('composite', array("unix"=>"composite", "win"=>"composite.exe"), $checked_path);
         case "im-mogrify":
-            if (!isset($imagemagick_path)) {return false;} # ImageMagick mogrify path not configured.
-            return get_executable_path($imagemagick_path, array("unix"=>"mogrify", "win"=>"mogrify.exe"), $checked_path);
-            break;
+			return get_imagemagick_path('mogrify', array("unix"=>"mogrify", "win"=>"mogrify.exe"), $checked_path);
         case "ghostscript":
             if (!isset($ghostscript_path)) {return false;} # Ghostscript path not configured.
             if (!isset($ghostscript_executable)) {return false;} # Ghostscript executable not configured.

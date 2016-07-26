@@ -28,6 +28,7 @@ var osm = new OpenLayers.Layer.OSM("<?php echo $lang["openstreetmap"]?>"
 	
 );
 
+<?php if ($use_google_maps) { ?>
 var gphy = new OpenLayers.Layer.Google(
 "<?php echo $lang["google_terrain"]?>",
 {type: google.maps.MapTypeId.TERRAIN}
@@ -43,7 +44,7 @@ var gsat = new OpenLayers.Layer.Google(
 {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
 // used to be {type: G_SATELLITE_MAP, numZoomLevels: 22}
 );
-
+<?php } ?>
 
 map.addLayers([<?php echo $geo_layers ?>]);
 map.addControl(new OpenLayers.Control.LayerSwitcher());

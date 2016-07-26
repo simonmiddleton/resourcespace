@@ -927,7 +927,7 @@ $lang["setup-successheader"]="Onnittelut!";
 $lang["setup-successdetails"]="ResourceSpacen alustavat asetukset ovat valmiina. Tiedostosta 'include/default.config.php' näkee muita asetusvaihtoehtoja.";
 $lang["setup-successnextsteps"]="Seuraavat askeleet:";
 $lang["setup-successremovewrite"]="Voit nyt poistaa kirjoitusoikeuden kansiosta 'include/'.";
-$lang["setup-visitwiki"]='Lisätietoa asetuksista wikissä osoitteessa <a target="_blank" href="http://wiki.resourcespace.org/index.php/Main_Page">ResourceSpace Documentation Wiki</a>.';
+$lang["setup-visitwiki"]='Lisätietoa asetuksista wikissä osoitteessa <a target="_blank" href="http://wiki.resourcespace.org/index.php/Main_Page">ResourceSpace Knowledge Base</a>.';
 $lang["php-config-file"]="PHP-asetukset: '%phpinifile'"; # %phpinifile will be replaced, e.g. PHP config: '/etc/php5/apache2/php.ini'
 $lang["setup-checkconfigwrite"]="Kirjoitusoikeudet asetuskansioon:";
 $lang["setup-checkstoragewrite"]="Kirjoitusoikeudet varastokansioon:";

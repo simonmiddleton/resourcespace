@@ -167,7 +167,7 @@ $lang["download_click__introtext"]="ファイルをダウンロードするに�
 $lang["download_progress__introtext"]="あなたのダウンロードはまもなく、始まるでしょう。 ダウンロード完了後、継続するには以下のリンクを使用してください。";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="どのフィールドを上書きしたいかを選択してください。 あなたが選択しないフィールドはそのままの状態でおかれるでしょう。";
-$lang["help__introtext"]="<p>本サイトを最大限に活用してください。 これらのガイドは、あなたが、より効果的にシステムとリソースを使用するのを助けるでしょう。 </p>    <p>テーマを使用して、テーマでリソースをブラウズするか、または単純検索を使用して、特定のリソースを検索してください。</p>   <p><a href=http://www.montala.net/downloads/ResourceSpace-GettingStarted.pdf>Download the user guide (PDF file)</a></p>   <p><a target=_blank href=http://wiki.resourcespace.org/index.php/?title=main_Page>Online Documentation (Wiki)</a></p>";
+$lang["help__introtext"]="<p>本サイトを最大限に活用してください。 これらのガイドは、あなたが、より効果的にシステムとリソースを使用するのを助けるでしょう。 </p>    <p>テーマを使用して、テーマでリソースをブラウズするか、または単純検索を使用して、特定のリソースを検索してください。</p>   <p><a href=http://www.montala.net/downloads/ResourceSpace-GettingStarted.pdf>Download the user guide (PDF file)</a></p>   <p><a target=_blank href=http://www.resourcespace.com/knowledge-base/>Online Documentation (Wiki)</a></p>";
 $lang["home__help"]="本サイトを最大限に活用するためのヘルプと助言。";
 $lang["home__mycollections"]="リソースの組織化、共同化、共有化してください。 より効果的に働けるようにこれらのツールを活用してください。";
 $lang["home__restrictedtext"]="あなたのために選択されたリソースにアクセスするためにメールされたリンクをクリックしてください。";
@@ -680,7 +680,7 @@ $lang["setup-successheader"]="おめでとうございます!";
 $lang["setup-successdetails"]="初期のResourceSpaceセットアップは完了しました。詳細な構成オプションについては'include/default.config.php'を確認してください。";
 $lang["setup-successnextsteps"]="次のステップ:";
 $lang["setup-successremovewrite"]="あなたは'include/'から書き込み権限を削除できます。.";
-$lang["setup-visitwiki"]='あなたのインスタレーションをカスタマイズするための詳細な情報を得るには<a target="_blank" href="http://wiki.resourcespace.org/index.php/?title=main_Page">ResourceSpace Documentation Wiki</a>を訪問してください。';
+$lang["setup-visitwiki"]='あなたのインスタレーションをカスタマイズするための詳細な情報を得るには<a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a>を訪問してください。';
 $lang["setup-checkconfigwrite"]="構成ディレクトリーへ書き込み権限付与:";
 $lang["setup-checkstoragewrite"]="ストレージディレクトリーへ書き込み権限付与:";
 $lang["setup-welcome"]="ResourceSpaceへようこそ";
@@ -788,7 +788,7 @@ $lang["download_click__introtext"]="ファイルをダウンロードするに�
 $lang["download_progress__introtext"]="あなたのダウンロードはまもなく、始まるでしょう。 ダウンロード完了後、継続するには以下のリンクを使用してください。";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="どのフィールドを上書きしたいかを選択してください。 あなたが選択しないフィールドはそのままの状態でおかれるでしょう。";
-$lang["help__introtext"]="<p>本サイトを最大限に活用してください。 これらのガイドは、あなたが、より効果的にシステムとリソースを使用するのを助けるでしょう。 </p>    <p>テーマを使用して、テーマでリソースをブラウズするか、または単純検索を使用して、特定のリソースを検索してください。</p>   <p><a href=http://www.montala.net/downloads/ResourceSpace-GettingStarted.pdf>Download the user guide (PDF file)</a></p>   <p><a target=_blank href=http://wiki.resourcespace.org/index.php/?title=main_Page>Online Documentation (Wiki)</a></p>";
+$lang["help__introtext"]="<p>本サイトを最大限に活用してください。 これらのガイドは、あなたが、より効果的にシステムとリソースを使用するのを助けるでしょう。 </p>    <p>テーマを使用して、テーマでリソースをブラウズするか、または単純検索を使用して、特定のリソースを検索してください。</p>   <p><a href=http://www.montala.net/downloads/ResourceSpace-GettingStarted.pdf>Download the user guide (PDF file)</a></p>   <p><a target=_blank href=http://www.resourcespace.com/knowledge-base/>Online Documentation (Wiki)</a></p>";
 $lang["home__help"]="本サイトを最大限に活用するためのヘルプと助言。";
 $lang["home__mycollections"]="リソースの組織化、共同化、共有化してください。 より効果的に働けるようにこれらのツールを活用してください。";
 $lang["home__restrictedtext"]="あなたのために選択されたリソースにアクセスするためにメールされたリンクをクリックしてください。";

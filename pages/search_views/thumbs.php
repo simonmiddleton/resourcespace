@@ -22,7 +22,7 @@ if (!hook("renderresultthumb"))
 				{
 				$use_watermark=false;	
 				}
-			$thm_url=get_resource_path($ref,false,"thm",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
+			$thm_url=get_resource_path($ref,false,($retina_mode?"pre":"thm"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
 			if (isset($result[$n]["thm_url"])) {$thm_url=$result[$n]["thm_url"];} # Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
 			?>
 			<table border="0" class="ResourceAlign icon_type_<?php echo $result[$n]["resource_type"]; ?> icon_extension_<?php echo $result[$n]['file_extension']; ?><?php if(!hook("replaceresourcetypeicon")){ if (in_array($result[$n]["resource_type"],$videotypes)) { ?> IconVideo<?php } ?><?php } hook('searchdecorateresourcetableclass'); ?>">
@@ -256,21 +256,30 @@ if (!hook("renderresultthumb"))
 			if(!hook("thumbscheckboxes"))
 			{
 			if ($use_checkboxes_for_selection)
-				{ ?>
-				<input 
-					type="checkbox" 
-					id="check<?php echo htmlspecialchars($ref)?>" 
-					class="checkselect" 
-					<?php 
-					if (in_array($ref,$collectionresources))
-						{ ?>
-						checked
+				{
+				if(!in_array($result[$n]['resource_type'],$collection_block_restypes))	
+					{?>
+					<input 
+						type="checkbox" 
+						id="check<?php echo htmlspecialchars($ref)?>" 
+						class="checkselect" 
 						<?php 
-						} ?> 
-					onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
-				>
-				&nbsp;
-				<?php 
+						if (in_array($ref,$collectionresources))
+							{ ?>
+							checked
+							<?php 
+							} ?> 
+						onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
+					>
+					&nbsp;
+					<?php 
+					}
+				else
+					{
+					?>
+					<input type="checkbox" style="opacity: 0;">
+					<?php
+					}
 				}
 			} # end hook thumbscheckboxes
 		if(!hook("replacethumbsidinthumbnail"))
