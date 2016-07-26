@@ -1340,6 +1340,9 @@ function get_plugin_css(){
 		$plugincss.='<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />
 		';
 		}
+	
+	# additional plugin css functionality
+	$plugincss.=hook('moreplugincss','',array($plugins, $n));
         
 	}
 	return $plugincss;
