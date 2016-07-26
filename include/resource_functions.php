@@ -1763,31 +1763,52 @@ function get_resource_type_name($type)
 	}
 	
 function get_resource_custom_access($resource)
-	{
-    # Return a list of usergroups with the custom access level for resource $resource (if set).
-    # The standard usergroup names are translated using $lang. Custom usergroup names are i18n translated.
-	$sql="";
-	if (checkperm("E"))
-		{
-		# Restrict to this group and children groups only.
-		global $usergroup,$usergroupparent;
-		$sql="where g.parent='$usergroup' or g.ref='$usergroup' or g.ref='$usergroupparent'";
-		}
-    $resource_custom_access = sql_query("select g.ref,g.name,g.permissions,c.access from usergroup g left outer join resource_custom_access c on g.ref=c.usergroup and c.resource='$resource' $sql group by g.ref order by (g.permissions like '%v%') desc,g.name");
-    for ($n = 0;$n<count($resource_custom_access);$n++)
+    {
+    /*Return a list of usergroups with the custom access level for resource $resource (if set).
+    The standard usergroup names are translated using $lang. Custom usergroup names are i18n translated.*/
+    $sql = '';
+    if(checkperm('E'))
         {
-        $resource_custom_access[$n]["name"] = lang_or_i18n_get_translated($resource_custom_access[$n]["name"], "usergroup-");
+        // Restrict to this group and children groups only.
+        global $usergroup, $usergroupparent;
+
+        $sql = "WHERE g.parent = '{$usergroup}' OR g.ref = '{$usergroup}' OR g.ref = '{$usergroupparent}'";
         }
+
+    $resource_custom_access = sql_query("
+                   SELECT g.ref,
+                          g.name,
+                          g.permissions,
+                          c.access
+                     FROM usergroup AS g
+          LEFT OUTER JOIN resource_custom_access AS c ON g.ref = c.usergroup AND c.resource = '{$resource}'
+                     $sql
+                 GROUP BY g.ref
+                 ORDER BY (g.permissions LIKE '%v%') DESC, g.name
+     ");
+
+    for($n = 0; $n < count($resource_custom_access); $n++)
+        {
+        $resource_custom_access[$n]['name'] = lang_or_i18n_get_translated($resource_custom_access[$n]['name'], 'usergroup-');
+        }
+
     return $resource_custom_access;
-	}
+    }
 
 function get_resource_custom_access_users_usergroups($resource)
     {
     # Returns only matching custom_access rows, with users and groups expanded
-    return sql_query("select g.name usergroup,u.username user,c.access,c.user_expires expires from resource_custom_access c
-        left outer join usergroup g on g.ref=c.usergroup
-        left outer join user u on u.ref=c.user
-        where c.resource='$resource' order by g.name,u.username");
+    return sql_query("
+                 SELECT g.name usergroup,
+                        u.username user,
+                        c.access,
+                        c.user_expires AS expires
+                   FROM resource_custom_access AS c
+        LEFT OUTER JOIN usergroup AS g ON g.ref = c.usergroup
+        LEFT OUTER JOIN user AS u ON u.ref = c.user
+                  WHERE c.resource = '{$resource}'
+               ORDER BY g.name, u.username
+    ");
     }
     
     
