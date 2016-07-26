@@ -790,11 +790,6 @@ $videotypes=array(3);
 $resource_type_icons=false;
 
 
-# Sets the default colour theme (defaults to white)
-$defaulttheme="";
-
-
-
 /** USER PREFERENCES **/
 $user_preferences = true;
 

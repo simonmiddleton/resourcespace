@@ -1,5 +1,4 @@
 <?php 
-global $ctheme,$userfixedtheme,$defaulttheme;
 hook ("preheaderoutput");
  
 $k=getvalescaped("k","");
@@ -191,8 +190,7 @@ $extrafooterhtml="";
 <!--[if lte IE 5.6]> <link href="<?php echo $baseurl?>/css/globalIE5.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css"  media="screen,projection,print" /> <![endif]-->
 
 <?php
-global $ctheme;
-echo get_plugin_css($ctheme);
+echo get_plugin_css();
 // after loading these tags we change the class on them so a new set can be added before they are removed (preventing flickering of overridden theme)
 ?>
 <script>jQuery('.plugincss').attr('class','plugincss0');</script>

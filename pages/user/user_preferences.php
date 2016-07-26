@@ -12,31 +12,6 @@ if(isset($anonymous_login) && ($anonymous_login == $username))
     die('Permission denied!');
     }
 
-if(getvalescaped("quicksave",FALSE))
-    {
-    $ctheme = getvalescaped("colour_theme","");
-    if($ctheme==""){exit("missing");}
-    $ctheme = preg_replace("/^col-/","",trim(mb_strtolower($ctheme)));
-    if($ctheme =="default")
-        {
-        if(empty($userpreferences))
-            {
-            // create a record
-            sql_query("INSERT INTO user_preferences (user, parameter, `value`) VALUES (" . $userref . ", 'colour_theme', NULL);");
-            rs_setcookie("colour_theme", "",100, "/", "", substr($baseurl,0,5)=="https", true);
-            exit("1");
-            }
-        else
-            {
-            sql_query("UPDATE user_preferences SET `value` = NULL WHERE user = " . $userref . " AND parameter = 'colour_theme';");
-            rs_setcookie("colour_theme", "",100, "/", "", substr($baseurl,0,5)=="https", true);
-            exit("1");
-            }
-        }
-
-    exit("0");
-    }
-
 $enable_disable_options = array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']);
 
 include "../../include/header.php";
