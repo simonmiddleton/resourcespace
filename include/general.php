@@ -1054,20 +1054,22 @@ function save_user($ref)
     {
     global $lang, $allow_password_email, $home_dash;
 
-    # Save user details, data is taken from the submitted form.
-    if(getval('deleteme', '') != '')
+    $current_user_data = get_user($ref);
+
+    // Save user details, data is taken from the submitted form.
+    if('' != getval('deleteme', ''))
         {
-        sql_query("DELETE FROM user WHERE ref='$ref'");
+        sql_query("DELETE FROM user WHERE ref = '{$ref}'");
+
         include dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
-        log_activity(null, LOG_CODE_DELETED, null, 'user', null, $ref);
+
+        log_activity("{$current_user_data['username']} ({$ref})", LOG_CODE_DELETED, null, 'user', null, $ref);
 
         return true;
         }
     else
         {
-        $current_user_data = get_user($ref);
-
         // Get submitted values
         $username               = trim(getvalescaped('username', ''));
         $password               = trim(getvalescaped('password', ''));
