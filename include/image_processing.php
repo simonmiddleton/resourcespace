@@ -1144,6 +1144,8 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
       		include(dirname(__FILE__)."/preview_preprocessing.php");
 			}
 		}
+		
+	hook('afterpreviewcreation', '',array($ref, $alternative));
 	return true;
 	}
 
@@ -1463,6 +1465,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				sql_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref='$ref'");
 				}
 			}
+		
+		hook('afterpreviewcreation', '',array($ref, $alternative));
 		return true;
 		}
 	else
