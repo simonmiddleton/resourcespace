@@ -10,15 +10,15 @@ include_once dirname(__FILE__)."/../include/resource_functions.php";
 include_once dirname(__FILE__)."/../include/search_functions.php";
 include_once dirname(__FILE__) . '/../include/render_functions.php';
 
-$order_by=getvalescaped("order_by",$default_collection_sort);
-$sort=getvalescaped("sort","DESC");
-$search=getvalescaped("search","");
-$last_collection=getval('last_collection','');
-$restypes=getvalescaped('restypes','');
-$archive=getvalescaped('archive','');
-$daylimit=getvalescaped('daylimit','');
-$offset=getvalescaped('offset','');
-$resources_count=getvalescaped('resources_count','');
+$order_by        = getvalescaped('order_by', $default_collection_sort);
+$sort            = getvalescaped('sort', 'DESC');
+$search          = getvalescaped('search', '');
+$last_collection = getval('last_collection', '');
+$restypes        = getvalescaped('restypes', '');
+$archive         = getvalescaped('archive', '');
+$daylimit        = getvalescaped('daylimit', '');
+$offset          = getvalescaped('offset', '');
+$resources_count = getvalescaped('resources_count', '');
 
 $change_col_url="search=" . urlencode($search). "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&restypes=" . urlencode($restypes) . "&archive=" .urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&offset=" . urlencode($offset) . "&resources_count=" . urlencode($resources_count);
 
@@ -554,11 +554,11 @@ hook("processusercommand");
 $searches=get_saved_searches($usercollection);
 
 // Do an initial count of how many resources there are in the collection (only returning ref and archive)
-$results_all=do_search("!collection" . $usercollection,"","relevance",0,-1,"desc",false,0,false,false,"",false,true,true);
-$count_result=count($results_all);
+$results_all  = do_search("!collection{$usercollection}", '', $order_by, 0, -1, $sort, false, 0, false, false, '', false, true, true);
+$count_result = count($results_all);
 
 // Then do another pass getting all data for the maximum allowed collection thumbs
-$result=do_search("!collection" . $usercollection,"","relevance",0,$max_collection_thumbs,"desc");
+$result = do_search("!collection{$usercollection}", '', $order_by, 0, $max_collection_thumbs, $sort);
 
 $hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
 $feedback=$cinfo["request_feedback"];
