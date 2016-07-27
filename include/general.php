@@ -873,8 +873,8 @@ function get_data_by_field($resource, $field)
     if(is_numeric($field))
         {
         $sql_select = 'SELECT rd.`value`';
-        $sql_where  .= " rd.resource = '{$resource}'";
-        $sql_where  .= " AND rd.resource_type_field = '{$resource_type_field}'";
+        $sql_where .= " rd.resource = '{$resource}'";
+        $sql_where .= " AND rd.resource_type_field = '{$resource_type_field}'";
         }
     else
         {
@@ -908,7 +908,28 @@ function get_data_by_field($resource, $field)
 
     return $return;
     }
-	
+
+
+/**
+* Get all resources by resource_type_field and value
+* 
+* @param string $resource_type_field
+* @param string $value
+* 
+* @return array
+*/
+function get_resources_by_resource_data_value($resource_type_field, $value)
+    {
+    return sql_value("
+        SELECT rd.resource AS `value`
+          FROM resource_data AS rd
+         WHERE rd.resource > 0
+           AND resource_type_field = '{$resource_type_field}'
+           AND rd.`value` = '$value'
+    ", 0);
+    }
+
+
 if (!function_exists("get_users")){		
 function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1)
 {
