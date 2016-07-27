@@ -2475,9 +2475,6 @@ $use_mysqli_prepared=$use_mysqli && false;
 # This means that large volumes of resource data are not passed around unnecessarily, which can significantly improve performance on systems with large data sets.
 $search_sql_double_pass_mode=true;
 
-# Experimental performance enhancement - only search for fields with matching keywords that are supposed to be indexed.
-$search_sql_force_field_index_check = false;
-
 # Use the new tab ordering system. This will sort the tabs by the order by value set in System Setup
 $use_order_by_tab_view=false;
 
