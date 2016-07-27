@@ -954,6 +954,11 @@ function get_user_by_email($email)
     return $return;
 }
 
+function get_user_by_username($username)
+    {
+    return sql_value("select ref value from user where username='" . escape_check($username) . "'",false);
+    }
+
 function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array = false)
 {
     # Returns a list of user groups. The standard user groups are translated using $lang. Custom user groups are i18n translated.

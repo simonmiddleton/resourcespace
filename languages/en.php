@@ -2511,3 +2511,5 @@ $lang["report_add_to_dash"]="Add to dash";
 $lang["collection_restype_blocked"]="The following resource types cannot be added";
 
 $lang["retina_mode"]="Retina mode";
+
+$lang["private-api-key"]="Private API key";

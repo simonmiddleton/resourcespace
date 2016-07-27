@@ -2261,7 +2261,7 @@ $wildcard_always_applied_leading = false;
 $U_perm_strict=false;
 
 # enable remote apis (if using API, RSS2, or other plugins that allow remote authentication via an api key)
-$enable_remote_apis=false;
+$enable_remote_apis=true;
 $api_scramble_key="abcdef123";
 
 # Allow users capable of deleting a full collection (of resources) to do so from the Collection Manage page.
