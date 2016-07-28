@@ -1327,12 +1327,11 @@ $feedback_resource_select=false;
 # If true pre, thm, and col sizes will not be considered.
 $lean_preview_generation=false;
 
-# experimental ImageMagic optimizations. this will not work for GraphicsMagick
-$imagemagick_mpr=true;
+# experimental ImageMagic optimizations. This will not work for GraphicsMagick.
+$imagemagick_mpr=false;
 
+# set the depth to be passed to mpr command.
 $imagemagick_mpr_depth="8";
-
-$imagemagick_mpr_miff=false;
 
 # Should resource views be logged for reporting purposes?
 # Note that general daily statistics for each resource are logged anyway for the statistics graphs
@@ -2268,7 +2267,7 @@ $wildcard_always_applied_leading = false;
 $U_perm_strict=false;
 
 # enable remote apis (if using API, RSS2, or other plugins that allow remote authentication via an api key)
-$enable_remote_apis=false;
+$enable_remote_apis=true;
 $api_scramble_key="abcdef123";
 
 # Allow users capable of deleting a full collection (of resources) to do so from the Collection Manage page.
@@ -2481,9 +2480,6 @@ $use_mysqli_prepared=$use_mysqli && false;
 # The second query is the same but returns only a count of the full result set, which is used to pad the result array to the correct size (so counts display correctly).
 # This means that large volumes of resource data are not passed around unnecessarily, which can significantly improve performance on systems with large data sets.
 $search_sql_double_pass_mode=true;
-
-# Experimental performance enhancement - only search for fields with matching keywords that are supposed to be indexed.
-$search_sql_force_field_index_check = false;
 
 # Use the new tab ordering system. This will sort the tabs by the order by value set in System Setup
 $use_order_by_tab_view=false;

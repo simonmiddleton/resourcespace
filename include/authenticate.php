@@ -287,7 +287,7 @@ if (!$api){
 	$last_browser="API Client";
 }
 
-// don't update this table if the System is doing it's own operations
+// don't update this table if the System is doing its own operations
 if (!isset($system_login)){
 	sql_query("update user set lang='$language', last_active=now(),logged_in=1,last_ip='" . get_ip() . "',last_browser='" . $last_browser . "' where ref='$userref'",false,-1,true,0);
 }
