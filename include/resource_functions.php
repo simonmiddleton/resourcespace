@@ -4021,7 +4021,7 @@ function truncate_join_field_value($value)
 * 
 * @param integer $resource_id Resource unique ref
 * 
-* @return integer 0 for no snapshots or the number of snapshots found
+* @return array|integer Array of all file paths found or number of files found
 */
 function get_video_snapshots($resource_id, $count_only = false)
     {
