@@ -4026,7 +4026,7 @@ function truncate_join_field_value($value)
 function get_video_snapshots($resource_id, $count_only = false)
     {
     $snapshots_found = array();
-    $path = get_resource_path($resource_id, true, 'snapshot', false, 'jpg', -1, 1, false, '');
+    $path            = get_resource_path($resource_id, true, 'snapshot', false, 'jpg', -1, 1, false, '');
 
     $i = 1;
     do

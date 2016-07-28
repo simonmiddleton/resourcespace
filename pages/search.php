@@ -1130,13 +1130,18 @@ if (!hook("replacesearchheader")) # Always show search header now.
 	    
             if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results, e.g. by plugin using process_Search_results hook above
  
-            $rating = "";
-            if (isset($rating_field)){$rating = "field".$rating_field;}
-			hook("beforesearchviewcalls");
+            $rating = '';
+            if(isset($rating_field))
+                {
+                $rating = "field{$rating_field}";
+                }
+
+            hook('beforesearchviewcalls');
+
             if ($display=="thumbs")
                 {
                 #  ---------------------------- Thumbnails view ----------------------------
-                include "search_views/thumbs.php";
+                include 'search_views/thumbs.php';
                 } 
 
             if ($display=="xlthumbs")
@@ -1162,9 +1167,8 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 # ----------------  Stripes view -------------------
                 include "search_views/stripes.php";
                 }
-		
-            hook("customdisplaymode");
 
+            hook('customdisplaymode');
             }
 	}
         }

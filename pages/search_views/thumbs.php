@@ -80,22 +80,76 @@ if (!hook("renderresultthumb"))
 					onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
 					title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field])))?>"
 				>
-					<?php 
-					if ($result[$n]["has_image"]==1) 
-						{ ?>
-						<img 
-							<?php if ($result[$n]["thumb_width"]!="" && $result[$n]["thumb_width"]!=0 && $result[$n]["thumb_height"]!="") 
-								{ ?> 
-								width="<?php echo $result[$n]["thumb_width"]?>" 
-								height="<?php echo $result[$n]["thumb_height"]?>" 
-								<?php 
-								} ?> 
-							src="<?php echo $thm_url ?>" 
-							class="ImageBorder" 
-							alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))); ?>"
-						/>
-						<?php 
-						} 
+                        <?php 
+                        if(1 == $result[$n]['has_image'])
+                        {
+                        ?>
+                        <img 
+                        <?php
+                        if('' != $result[$n]['thumb_width'] && 0 != $result[$n]['thumb_width'] && '' != $result[$n]['thumb_height'])
+                            {
+                            ?>
+                            width="<?php echo $result[$n]["thumb_width"]?>" 
+                            height="<?php echo $result[$n]["thumb_height"]?>" 
+                            <?php
+                            }
+                            ?>
+                        src="<?php echo $thm_url ?>" 
+                        class="ImageBorder" 
+                        alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))); ?>"
+                        />
+                        <?php
+                        // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
+                        // when user hovers over the preview thumbnail
+                        /*
+                        [5] => Array
+                            (
+                                [ref] => 6
+                                [resource_type] => 3
+                                [has_image] => 1
+                                [is_transcoding] => 0
+                                [hit_count] => 14
+                                [creation_date] => 2016-05-23 13:25:01
+                                [rating] => 
+                                [user_rating] => 
+                                [user_rating_count] => 
+                                [user_rating_total] => 
+                                [file_extension] => mp4
+                                [preview_extension] => jpg
+                                [image_red] => 0
+                                [image_green] => 0
+                                [image_blue] => 0
+                                [thumb_width] => 150
+                                [thumb_height] => 84
+                                [archive] => 0
+                                [access] => 0
+                                [colour_key] => W
+                                [created_by] => 1
+                                [file_modified] => 2016-07-28 13:32:19
+                                [file_checksum] => 
+                                [request_count] => 0
+                                [new_hit_count] => 24
+                                [expiry_notification_sent] => 0
+                                [preview_tweaks] => 0|1
+                                [file_path] => 
+                                [group_access] => 
+                                [user_access] => 
+                                [field12] => 2016-05-23 13:24
+                                [field8] => Test Video
+                                [field3] => 
+                                [score] => 14
+                            )
+                        */
+                        if(1 < $ffmpeg_snapshot_frames && in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && 0 < get_video_snapshots($ref))
+                            {
+                            ?>
+                            <script>
+                            // add in a range slider on the UI with range as the number of snapshots found
+                            alert('TODO: add in a range slider');
+                            </script>
+                            <?php
+                            }
+                        } 
 					else 
 						{ ?>
 						<img 
