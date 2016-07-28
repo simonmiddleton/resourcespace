@@ -4250,59 +4250,52 @@ function get_temp_dir($asUrl = false,$uniqid="")
  * @return Url that is the relative path.
  */
 function convert_path_to_url($abs_path)
-{
+    {
     // Get the root directory of the app:
     $rootDir = dirname(dirname(__FILE__));
     // Get the baseurl:
     global $baseurl;
     // Replace the $rootDir with $baseurl in the path given:
     return str_ireplace($rootDir, $baseurl, $abs_path);
-}
+    }
 
 function run_command($command, $geterrors=false)
-	{
-	# Works like system(), but returns the complete output string rather than just the
-	# last line of it.
-	global $debug_log,$config_windows;
-	debug("CLI command: $command");
-	if($debug_log || $geterrors) 
-		{
-		if($config_windows===true) 
-			{
-			$process = @proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipe, NULL, NULL, array('bypass_shell' => true));
-			}
-		else 
-			{
-			$process = @proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipe, NULL, NULL, array('bypass_shell' => true));
-			}
-		}
-	else
-		{
-		$process = @proc_open($command, array(1 => array('pipe', 'w')), $pipe, NULL, NULL, array('bypass_shell' => true));
-		}
+    {
+    # Works like system(), but returns the complete output
+    # string rather than just the last line of it.
+    global $debug_log;
+    debug("CLI command: $command");
 
-	if (is_resource($process)) 
-		{
-		$output = trim(stream_get_contents($pipe[1]));
-	 	if($geterrors)
-			{
-			$output.= trim(stream_get_contents($pipe[2]));
-			}
-		if ($debug_log)
-			{
-			debug("CLI output: $output");
-			debug("CLI errors: ". trim(stream_get_contents($pipe[2])));
-			}
-		return $output;  
-		}
-	return '';
-	}
+    $descriptorspec = array(
+        1 => array("pipe", "w") // stdout is a pipe that the child will write to
+    );
+    if($debug_log || $geterrors) 
+        {
+        $descriptorspec[2] = array("pipe", "w"); // stderr is a file to write to
+        }
+    $process = @proc_open($command, $descriptorspec, $pipe, NULL, NULL, array('bypass_shell' => true));
+
+    if (!is_resource($process)) { return ''; }
+
+    $output = trim(stream_get_contents($pipe[1]));
+    if($geterrors)
+        {
+        $output .= trim(stream_get_contents($pipe[2]));
+        }
+    if ($debug_log)
+        {
+        debug("CLI output: $output");
+        debug("CLI errors: " . trim(stream_get_contents($pipe[2])));
+        }
+    proc_close($process);
+    return $output;
+    }
 
 function run_external($cmd,&$code)
-{
-# Thanks to dk at brightbyte dot de
-# http://php.net/manual/en/function.shell-exec.php
-# Returns an array with the resulting output (stdout & stderr). 
+    {
+    # Thanks to dk at brightbyte dot de
+    # http://php.net/manual/en/function.shell-exec.php
+    # Returns an array with the resulting output (stdout & stderr). 
     debug("CLI command: $cmd");
 
     $descriptorspec = array(
