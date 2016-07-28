@@ -498,6 +498,15 @@ $ffmpeg_global_options = "";
 #$ffmpeg_snapshot_fraction=0.1; # Set this to specify a point in the video at which snapshot image is taken. Expressed as a proportion of the video duration so must be set between 0 and 1. Only valid if duration is greater than 10 seconds.
 #$ffmpeg_snapshot_seconds=10;  # Set this to specify the number of seconds into the video at which snapshot should be taken, overrides the $ffmpeg_snapshot_fraction setting
 
+/*
+Make video previews have multiple snapshots from the video.
+Hovering over a search result thumbnail preview, will show the user frames from the video in order for 
+the user to get an idea of what the video is about
+
+Note: Set to 0 to disable this feature
+*/
+$ffmpeg_snapshot_frames = 12;
+
 # $ffmpeg_command_prefix - Ability to add prefix to command when calling ffmpeg 
 # Example for use on Linux using nice to avoid slowing down the server
 # $ffmpeg_command_prefix = "nice -n 10";
