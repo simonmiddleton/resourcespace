@@ -4013,3 +4013,35 @@ function truncate_join_field_value($value)
     global $resource_field_column_limit;
     return substr($value, 0, $resource_field_column_limit);
     }
+
+
+/**
+* Check whether a resource (of a video type) has any snapshots created.
+* Snapshots are being created using config option $ffmpeg_snapshot_frames
+* 
+* @param integer $resource_id Resource unique ref
+* 
+* @return integer 0 for no snapshots or the number of snapshots found
+*/
+function get_video_snapshots($resource_id, $count_only = false)
+    {
+    $snapshots_found = array();
+    $path = get_resource_path($resource_id, true, 'snapshot', false, 'jpg', -1, 1, false, '');
+
+    $i = 1;
+    do
+        {
+        $snapshot_path  = str_replace('snapshot', "snapshot_{$i}", $path);
+        $snapshot_found = file_exists($snapshot_path);
+
+        if($snapshot_found)
+            {
+            $snapshots_found[] = $snapshot_path;
+            }
+
+        $i++;
+        }
+    while(true === $snapshot_found);
+
+    return (!$count_only ? $snapshots_found : count($snapshots_found));
+    }
