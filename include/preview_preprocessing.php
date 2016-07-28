@@ -593,7 +593,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
             {
             $frame_rate     = '1/' . floor($duration / $ffmpeg_snapshot_frames);
             $escaped_file   = escapeshellarg($file);
-            $escaped_target = escapeshellarg(get_resource_path($ref, true, 'snapshot_%d', false, 'jpg', -1, 1, false, ''));
+            $escaped_target = escapeshellarg(str_replace('snapshot', 'snapshot_%d', get_resource_path($ref, true, 'snapshot', false, 'jpg', -1, 1, false, '')));
 
             $cmd = "{$ffmpeg_fullpath} {$ffmpeg_global_options} -y -i {$escaped_file} -r {$frame_rate} {$escaped_target}";
             $output = run_command($cmd);
