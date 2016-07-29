@@ -2006,7 +2006,7 @@ function update_collection_user($collection,$newuser)
 if(!function_exists("compile_collection_actions")){	
 function compile_collection_actions(array $collection_data, $top_actions, $resource_data=array())
     {
-    global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $contact_sheet,
+    global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path, 		 $collection_download_settings, $contact_sheet,
            $manage_collections_contact_sheet_link, $manage_collections_share_link, $allow_share,
            $manage_collections_remove_link, $userref, $collection_purge, $show_edit_all_link, $result,
            $edit_all_checkperms, $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
@@ -2186,7 +2186,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 	
     // Download option
-    if( $download_usage && (isset($zipcommand) || $use_zip_extension) && $collection_download && $count_result > 0)
+    if( $download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
         {
         $data_attribute['url'] = $baseurl_short . "pages/terms.php?k=" . urlencode($k) . "&url=pages/download_usage.php?collection=" . urlencode($collection_data['ref']) ."%26k=" . urlencode($k);
         $options[$o]['value']='download_collection';
@@ -2194,7 +2194,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		$options[$o]['data_attr']=$data_attribute;
 		$o++;
         }
-    else if( (isset($zipcommand) || $use_zip_extension) && $collection_download && $count_result > 0)
+    else if( (isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
         {
 		$data_attribute['url'] = $baseurl_short . "pages/terms.php?k=" . urlencode($k) . "&url=pages/collection_download.php?collection=" . urlencode($collection_data['ref']) ."%26k=" . urlencode($k);
         $options[$o]['value']='download_collection';
