@@ -591,7 +591,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
         // Custom target used ONLY for captured snapshots during the video
         if(1 < $ffmpeg_snapshot_frames)
             {
-            $frame_rate     = '1/' . floor($duration / $ffmpeg_snapshot_frames);
+            $frame_rate     = '1/' . ceil($duration / $ffmpeg_snapshot_frames);
             $escaped_file   = escapeshellarg($file);
             $escaped_target = escapeshellarg(str_replace('snapshot', 'snapshot_%d', get_resource_path($ref, true, 'snapshot', false, 'jpg', -1, 1, false, '')));
 
