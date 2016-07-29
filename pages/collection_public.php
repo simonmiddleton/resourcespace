@@ -211,6 +211,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
 		<td class="tools">
 			<div class="ListTools">
 			<?php
+			$count_result = $collections[$n]["count"];
 			hook('render_collections_public_list_tools', '', array($collections[$n]));
 			render_actions($collections[$n], true, false);
 			?>
