@@ -319,6 +319,11 @@ jQuery(document).ready(function()
             }
 			else {								
                 jQuery('#SearchGlobal').removeAttr('checked');
+				
+				//Hide specific resource type areas
+				jQuery('.ResTypeSectionHead').hide();
+				jQuery('.ResTypeSection').hide();
+				
 				// If global was previously checked, make sure all other types are now checked
 				selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != id;});
 				if(selectedtypes.length==1){
