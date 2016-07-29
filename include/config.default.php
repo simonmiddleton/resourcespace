@@ -1336,6 +1336,18 @@ $feedback_resource_select=false;
 # If true pre, thm, and col sizes will not be considered.
 $lean_preview_generation=false;
 
+# Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
+$imagemagick_mpr=false;
+
+# Set the depth to be passed to mpr command.
+$imagemagick_mpr_depth="8";
+
+# Should colour profiles be preserved?
+$imagemagick_mpr_preserve_profiles=true;
+
+# If using imagemagick and mpr, specify any metadata profiles to be retained. Default setting good for ensuring copyright info is not stripped which may be required by law
+$imagemagick_mpr_preserve_metadata_profiles=array('iptc');
+
 # Should resource views be logged for reporting purposes?
 # Note that general daily statistics for each resource are logged anyway for the statistics graphs
 # - this option relates to specific user tracking for the more detailed report.
@@ -2270,7 +2282,7 @@ $wildcard_always_applied_leading = false;
 $U_perm_strict=false;
 
 # enable remote apis (if using API, RSS2, or other plugins that allow remote authentication via an api key)
-$enable_remote_apis=false;
+$enable_remote_apis=true;
 $api_scramble_key="abcdef123";
 
 # Allow users capable of deleting a full collection (of resources) to do so from the Collection Manage page.

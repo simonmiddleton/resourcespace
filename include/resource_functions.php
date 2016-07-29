@@ -3159,6 +3159,7 @@ function update_xml_metadump($resource)
 	if (!$xml_metadump || $resource < 0) {return true;} # Only execute when configured and when not a template
 	
 	$path=dirname(get_resource_path($resource,true,"pre",true)) . "/metadump.xml";
+	hook("before_update_xml_metadump");
 	if (file_exists($path)){$wait=unlink($path);}
 	
 	$ext = htmlspecialchars(sql_value("select file_extension value from resource where ref = '$resource'",''),ENT_QUOTES);
@@ -3203,6 +3204,7 @@ function update_xml_metadump($resource)
 
 	fwrite($f,"</record>\n");
 	fclose($f);
+	hook("after_update_xml_metadump");
 	//chmod($path,0777); // fixme - temporarily make world readable/writable until we have better solution for file permissions
 
 	}

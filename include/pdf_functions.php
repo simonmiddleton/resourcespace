@@ -357,3 +357,47 @@ function process_if_statements($original_string, array $bind_params)
 
     return $original_string;
     }
+    
+/**
+* Function to convert the user's language into an HTML2PDF supported language.
+* 
+* Scans the HTML2PDF locale folder to create a list of supported languages to compare against 
+* the set user language. Also resolves dialects when possible. Fallback set to 'en'.
+* 
+* @return string
+*/
+function resolve_pdf_language(){
+	global $language, $storagedir;
+	
+	$asdefaultlanguage='en';
+	
+	$supported_lang_files=scandir($storagedir."/../lib/html2pdf/locale");
+	$supported_langs=array();
+	foreach($supported_lang_files as $file)
+		{
+		$sl=pathinfo($file, PATHINFO_FILENAME);
+		if(!in_array($sl, array("",".","..")))
+			{
+			$supported_langs[]=$sl;
+			}
+		}
+	if(in_array($language, $supported_langs))
+		{
+		return $language;
+		}
+	else
+		{
+		switch($language)
+			{
+			case "es-AR":
+				return "es";
+				break;
+			case "pt-BR":
+				return "pt";
+				break;
+			default:
+				// this includes en-US
+				return $asdefaultlanguage;
+			}
+		}
+}

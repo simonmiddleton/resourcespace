@@ -395,7 +395,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 		$hook_cache_hits++;
 
 		unset($GLOBALS['hook_return_value']);
-
+		$empty_global_return_value=true;
 		// we use $GLOBALS['hook_return_value'] so that hooks can directly modify the overall return value
 
 		foreach ($hook_cache[$hook_cache_index] as $function)
@@ -407,7 +407,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 				continue;	// the function did not return a value so skip to next hook call
 				}
 
-			if (!$last_hook_value_wins &&
+			if (!$last_hook_value_wins && !$empty_global_return_value &&
 				isset($GLOBALS['hook_return_value']) &&
 				(gettype($GLOBALS['hook_return_value']) == gettype($function_return_value)) &&
 				(is_array($function_return_value) || is_string($function_return_value) || is_bool($function_return_value)))
@@ -417,7 +417,22 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 					// We merge the cached result with the new result from the plugin and remove any duplicates
 					// Note: in custom plugins developers should work with the full array (ie. superset) rather than just a sub-set of the array.
 					//       If your plugin needs to know if the array has been modified previously by other plugins use the global variable "hook_return_value"
-					$GLOBALS['hook_return_value'] = array_values(array_unique(array_merge_recursive($GLOBALS['hook_return_value'], $function_return_value), SORT_REGULAR));
+					$numeric_key=false;
+					foreach($GLOBALS['hook_return_value'] as $key=> $value){
+						if(is_numeric($key)){
+							$numeric_key=true;
+						}
+						else{
+							$numeric_key=false;
+						}
+						break;
+					}
+					if($numeric_key){
+						$GLOBALS['hook_return_value'] = array_values(array_unique(array_merge_recursive($GLOBALS['hook_return_value'], $function_return_value), SORT_REGULAR));
+					}
+					else{
+						$GLOBALS['hook_return_value'] = array_unique(array_merge_recursive($GLOBALS['hook_return_value'], $function_return_value), SORT_REGULAR);
+					}
 					}
 				elseif (is_string($function_return_value))
 					{
@@ -431,6 +446,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 			else
 				{
 				$GLOBALS['hook_return_value'] = $function_return_value;
+				$empty_global_return_value=false;
 				}
 			}
 
