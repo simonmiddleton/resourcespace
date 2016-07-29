@@ -4036,7 +4036,7 @@ function get_video_snapshots($resource_id, $count_only = false)
 
         if($snapshot_found)
             {
-            $snapshots_found[] = $snapshot_path;
+            $snapshots_found[$i] = $snapshot_path;
             }
 
         $i++;
