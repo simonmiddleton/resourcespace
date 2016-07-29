@@ -101,51 +101,20 @@ if (!hook("renderresultthumb"))
                         <?php
                         // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
                         // when user hovers over the preview thumbnail
-                        /*
-                        [5] => Array
-                            (
-                                [ref] => 6
-                                [resource_type] => 3
-                                [has_image] => 1
-                                [is_transcoding] => 0
-                                [hit_count] => 14
-                                [creation_date] => 2016-05-23 13:25:01
-                                [rating] => 
-                                [user_rating] => 
-                                [user_rating_count] => 
-                                [user_rating_total] => 
-                                [file_extension] => mp4
-                                [preview_extension] => jpg
-                                [image_red] => 0
-                                [image_green] => 0
-                                [image_blue] => 0
-                                [thumb_width] => 150
-                                [thumb_height] => 84
-                                [archive] => 0
-                                [access] => 0
-                                [colour_key] => W
-                                [created_by] => 1
-                                [file_modified] => 2016-07-28 13:32:19
-                                [file_checksum] => 
-                                [request_count] => 0
-                                [new_hit_count] => 24
-                                [expiry_notification_sent] => 0
-                                [preview_tweaks] => 0|1
-                                [file_path] => 
-                                [group_access] => 
-                                [user_access] => 
-                                [field12] => 2016-05-23 13:24
-                                [field8] => Test Video
-                                [field3] => 
-                                [score] => 14
-                            )
-                        */
-                        if(1 < $ffmpeg_snapshot_frames && in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && 0 < get_video_snapshots($ref))
+                        if(1 < $ffmpeg_snapshot_frames && in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && 0 < get_video_snapshots($ref, false, true))
                             {
                             ?>
                             <script>
-                            // add in a range slider on the UI with range as the number of snapshots found
-                            alert('TODO: add in a range slider');
+                            jQuery('#ResourceShell<?php echo $ref; ?> .ResourcePanel table tbody tr td a img').mousemove(function(event)
+                                {
+                                var x_coord             = event.pageX - jQuery(this).offset().left;
+                                var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref)); ?>;
+                                var snapshot_segment_px = Math.ceil(jQuery(this).width() / Object.keys(video_snapshots).length);
+                                var snapshot_number     = Math.ceil(x_coord / snapshot_segment_px);
+
+                                jQuery(this).attr('src', video_snapshots[snapshot_number]);
+                                }
+                            );
                             </script>
                             <?php
                             }
