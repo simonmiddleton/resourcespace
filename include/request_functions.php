@@ -342,7 +342,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     # Managed via the administrative interface
     
     # An e-mail is still sent.
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails, $manage_request_admin, $resource_request_reason_required, $admin_resource_access_notifications, $always_email_from_user, $collection_empty_on_submit;
+    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails, $resource_type_request_emails_and_email_notify, $manage_request_admin, $resource_request_reason_required, $admin_resource_access_notifications, $always_email_from_user, $collection_empty_on_submit;
 
 	if (trim($details)=="" && $resource_request_reason_required) {return false;}
 
@@ -692,16 +692,20 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 		
     $admin_notify_emails=array();    
     $admin_notify_users=array();
-    # Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
-    if(isset($resource_type_request_emails))
+    # Check if alternative request email notification address is set, only valid if collection contains resources of the same type
+    
+    if(isset($resource_type_request_emails)  )
         {
         $requestrestypes=array_unique(sql_array("select r.resource_type as value from collection_resource cr left join resource r on cr.resource=r.ref where cr.collection='$ref'"));
         if(count($requestrestypes)==1 && isset($resource_type_request_emails[$requestrestypes[0]]))
             {
             $admin_notify_emails[]=$resource_type_request_emails[$requestrestypes[0]];
             }
+		
         }
-	elseif(!$notification_sent)
+	
+	if(!$notification_sent && (!isset($resource_type_request_emails) || $resource_type_request_emails_and_email_notify))
+
 		{
         $notify_users=get_notification_users("RESOURCE_ACCESS");
 		foreach($notify_users as $notify_user)
