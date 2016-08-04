@@ -898,6 +898,7 @@ $lang["notapprovedsharetheme"]="Sharing is prohibited for at least one collectio
 $lang["notapprovedresources"]="The following resources are not active and cannot be added to a shared collection: ";
 $lang['error_generating_access_key'] = 'Could not generate an access key';
 $lang['access_key_deleted'] = "Access key '%access_key' deleted";
+$lang['email_error_user_list_not_valid'] = 'No valid emails to send to (users might not be approved)';
 
 
 # New for 1.3

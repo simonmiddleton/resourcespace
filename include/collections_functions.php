@@ -1029,6 +1029,12 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 	if ($feedback) {$feedback=1;} else {$feedback=0;}
 	$reflist=trim_array(explode(",",$colrefs));
 	$emails_keys=resolve_user_emails($ulist);
+
+    if(0 === count($emails_keys))
+        {
+        return $lang['email_error_user_list_not_valid'];
+        }
+
 	$emails=$emails_keys['emails'];
 	$key_required=$emails_keys['key_required'];
 

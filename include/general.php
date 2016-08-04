@@ -2014,15 +2014,21 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
 	
 	if ($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL || $message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN))
 		{
-		$emails=resolve_user_emails($ulist);
-		$emails=$emails['emails'];
+		$emails = resolve_user_emails($ulist);
+
+        if(0 === count($emails))
+            {
+            return $lang['email_error_user_list_not_valid'];
+            }
+
+		$emails = $emails['emails'];
 
 		# Send an e-mail to each resolved user
-		for ($n=0;$n<count($emails);$n++)
+		foreach($emails as $email)
 			{
-			if ($emails[$n]!="")
+			if('' != $email)
 				{
-				send_mail($emails[$n],$subject,$body,$applicationname,$email_from,"emailbulk",$templatevars,$applicationname,"",$html);
+				send_mail($email,$subject,$body,$applicationname,$email_from,"emailbulk",$templatevars,$applicationname,"",$html);
 				}
 			}
 		}
@@ -2787,7 +2793,7 @@ function resolve_userlist_groups($userlist)
 				}
 
 			# Find and add the users.
-			$users = sql_array("select username value from user where usergroup='$groupref'");
+			$users = sql_array("SELECT username AS `value` FROM user WHERE usergroup = '{$groupref}'");
 			if ($newlist!="") {$newlist.=",";}
 			$newlist.=join(",",$users);
 			}
@@ -4703,37 +4709,61 @@ function get_executable_path($path, $executable, &$checked_path, $check_exe = fa
     return false; # No path found.
     }
 
-if (!function_exists("resolve_user_emails")){
-function resolve_user_emails($ulist){
-	global $lang, $user_select_internal;
-	// return an array of emails from a list of usernames and email addresses. 
-	// with 'key_required' sibling array preserving the intent of internal/external sharing.
-	$emails_key_required=array();
-	for ($n=0;$n<count($ulist);$n++)
-		{
-		$uname=$ulist[$n];
-		$email=sql_value("select email value from user where username='" . escape_check($uname) . "'",'');
-		if ($email=='')
-			{
-			# Not a recognised user, if @ sign present, assume e-mail address specified
-			if (strpos($uname,"@")===false || (isset($user_select_internal) && $user_select_internal)) {
-				error_alert($lang["couldnotmatchallusernames"] . ": " . escape_check($uname));die();
-			}
-			$emails_key_required['unames'][$n]=$uname;
-			$emails_key_required['emails'][$n]=$uname;
-			$emails_key_required['key_required'][$n]=true;
-			}
-		else
-			{
-			# Add e-mail address from user account
-			$emails_key_required['unames'][$n]=$uname;
-			$emails_key_required['emails'][$n]=$email;
-			$emails_key_required['key_required'][$n]=false;
-			}
-		}
-	return $emails_key_required;
-}	
-}
+
+if(!function_exists('resolve_user_emails'))
+    {
+    /**
+    * Return an array of emails from a list of usernames and email addresses. 
+    * with 'key_required' sibling array preserving the intent of internal/external sharing
+    * 
+    * @param array $user_list
+    * 
+    * @return array
+    */
+    function resolve_user_emails($user_list)
+        {
+        global $lang, $user_select_internal;
+
+        $emails_key_required = array();
+
+        foreach($user_list as $user)
+            {
+            $escaped_username = escape_check($user);
+            $email_details    = sql_query("SELECT email, approved FROM user WHERE username = '{$escaped_username}'");
+
+            // Not a recognised user, if @ sign present, assume e-mail address specified
+            if(0 === count($email_details))
+                {
+                if(false === strpos($user, '@') || (isset($user_select_internal) && $user_select_internal))
+                    {
+                    error_alert("{$lang['couldnotmatchallusernames']}: {$escaped_username}");
+                    die();
+                    }
+
+                $emails_key_required['unames'][]       = $user;
+                $emails_key_required['emails'][]       = $user;
+                $emails_key_required['key_required'][] = true;
+
+                continue;
+                }
+
+            // Skip internal, not approved accounts
+            if(0 == $email_details[0]['approved'])
+                {
+                debug('EMAIL: ' . __FUNCTION__ . '() skipping e-mail "' . $email_details[0]['email'] . '" because it belongs to user account which is not approved');
+
+                continue;
+                }
+
+            // Internal, approved user account - add e-mail address from user account
+            $emails_key_required['unames'][]       = $user;
+            $emails_key_required['emails'][]       = $email_details[0]['email'];
+            $emails_key_required['key_required'][] = false;
+            }
+
+        return $emails_key_required;
+        }
+    }
 
 
 function truncate_cache_arrays(){
