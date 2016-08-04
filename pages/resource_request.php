@@ -87,7 +87,7 @@ include "../include/header.php";
 		<a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo urlencode($ref); ?>&k=<?php echo urlencode($k); ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoresourceview']; ?></a>
 	</p>
 
-  <h1><?php echo $lang["requestresource"]?></h1>
+  <h1><?php echo i18n_get_translated($lang["requestresource"]); ?></h1>
   <p><?php echo text("introtext")?></p>
   
 	<form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php">  
