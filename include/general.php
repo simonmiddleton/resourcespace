@@ -4729,7 +4729,7 @@ if(!function_exists('resolve_user_emails'))
         foreach($user_list as $user)
             {
             $escaped_username = escape_check($user);
-            $email_details    = sql_query("SELECT email, approved FROM user WHERE username = '{$escaped_username}'");
+            $email_details    = sql_query("SELECT email, approved FROM user WHERE username = '{$escaped_username}' AND (account_expires IS NULL OR account_expires > NOW())");
 
             // Not a recognised user, if @ sign present, assume e-mail address specified
             if(0 === count($email_details))
