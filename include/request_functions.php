@@ -369,7 +369,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $templatevars["title"]=$resourcedata["field" . $view_title_field];}
         
         $c=create_collection($userref,$lang["request"] . " " . date("ymdHis"));
-        add_resource_to_collection($ref,$c);
+        add_resource_to_collection($ref,$c,true);
         $ref=$c; # Proceed as normal
         }
     else {

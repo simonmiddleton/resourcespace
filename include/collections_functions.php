@@ -146,7 +146,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 	{
 	global $collection_allow_not_approved_share, $collection_block_restypes;	
 	$addpermitted=collection_writeable($collection) || $smartadd;
-	if ($addpermitted &&(count($collection_block_restypes)>0))
+	if ($addpermitted && !$smartadd && (count($collection_block_restypes)>0)) // Can't always block adding resource types since this may be a single resource managed request
 		{
 		if($addtype=="")
 			{
