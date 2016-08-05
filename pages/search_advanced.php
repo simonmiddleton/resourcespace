@@ -26,30 +26,36 @@ function get_search_default_restypes()
 	}
 	
 function get_search_open_sections()
-	{
-	global $search_includes_resources, $collection_search_includes_resource_metadata;	
-	if (!isset($_COOKIE["advancedsearchsection"]) || getval("resetform","")!="")
-		{
-		if (isset($default_advanced_search_mode)) 
-			{$opensections=$default_advanced_search_mode;}
-		else
-			{
-			if($search_includes_resources)
-				{
-				$opensections=array("Global","Media");
-				}
-			  else
-				{
-				$opensections=array("Collections");
-				}	
-			}
-		}
-	else
-		{
-		$opensections =explode(",",getval("advancedsearchsection",""));
-		}
-	return $opensections;
-	}
+    {
+    global $search_includes_resources, $collection_search_includes_resource_metadata;
+
+    $advanced_search_section = getvalescaped('advancedsearchsection', '');
+
+    if('' != $advanced_search_section || '' != getval('resetform', ''))
+        {
+        if (isset($default_advanced_search_mode)) 
+            {
+            $opensections = $default_advanced_search_mode;
+            }
+        else
+            {
+            if($search_includes_resources)
+                {
+                $opensections = array('Global', 'Media');
+                }
+            else
+                {
+                $opensections=array('Collections');
+                }
+            }
+        }
+    else
+        {
+        $opensections = explode(',', $advanced_search_section);
+        }
+
+    return $opensections;
+    }
 	
 $archive=getvalescaped("archive",0,true);
 $starsearch=getvalescaped("starsearch","");	
