@@ -2869,6 +2869,9 @@ $password_reset_link_expiry =1;
 # Show the resource view in a modal when accessed from search results.
 $resource_view_modal=true;
 
+# Show the resource edit in a modal when accessed from resource view modal.
+$resource_edit_modal_from_view_modal=false;
+
 # Show geographical search results in a modal
 $geo_search_modal_results = true;
 
