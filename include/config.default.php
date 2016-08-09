@@ -2916,6 +2916,16 @@ $resource_request_reason_required=true;
 # Use the 'chosen' library for rendering dropdowns (improved display and search capability for large dropdowns)
 $chosen_dropdowns=false;
 
+# The number of options that must be present before including seach capability.
+$chosen_dropdowns_threshold_main=10;
+$chosen_dropdowns_threshold_simplesearch=10;
+
+# Use the 'chosen' library for rendering dropdowns in the collection bar. $chosen_dropdowns must be set to true.
+$chosen_dropdowns_collection=false;
+
+# The number of options that must be present before including seach capability for collection bar dropdowns.
+$chosen_dropdowns_threshold_collection=10;
+
 # Allow ResourceSpace to upload multiple times the same file in a row
 # Set to true only if you want RS to create duplicates when client is losing
 # connection with the server and tries again to send the last chunk
