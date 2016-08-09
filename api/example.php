@@ -24,7 +24,8 @@ $user="admin"; # <-- RS username of the user you want to log in as
 #$query="user=" . $user . "&function=get_alternative_files&param1=2"; # <--- The function to execute, and parameters
 #$query="user=" . $user . "&function=get_resource_types"; # <--- The function to execute, and parameters
 #$query="user=" . $user . "&function=add_alternative_file&param1=2&param2=Test"; # <--- The function to execute, and parameters
-$query="user=" . $user . "&function=get_resource_log&param1=2"; # <--- The function to execute, and parameters
+#$query="user=" . $user . "&function=get_resource_log&param1=2"; # <--- The function to execute, and parameters
+$query="user=" . $user . "&function=upload_file_by_url&param1=2&param2=&param3=&param4=&param5=" . urlencode("http://www.montala.com/img/slideshow/montala-bg.jpg"); # <--- The function to execute, and parameters
 
 # Sign the query using the private key
 $sign=hash("sha256",$private_key . $query);

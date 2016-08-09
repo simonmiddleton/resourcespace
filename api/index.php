@@ -4,14 +4,16 @@ include "../include/general.php";
 include "../include/search_functions.php";
 include "../include/resource_functions.php";
 include "../include/collections_functions.php";
+include "../include/image_processing.php";
 include "../include/api_functions.php";
+include "../include/api_bindings.php";
 
 # Get parameters
 $user=getvalescaped("user","");
 $sign=getvalescaped("sign","");
 
 # Authenticate based on the provided signature.
-check_api_key($user,$_SERVER["QUERY_STRING"],$sign);
+if (!check_api_key($user,$_SERVER["QUERY_STRING"],$sign)) {exit("Invalid signature");}
 
 # Log them in.
 setup_user(get_user(get_user_by_username($user)));

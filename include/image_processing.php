@@ -10,7 +10,7 @@
  */
 
 if (!function_exists("upload_file")){
-function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false)
+function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="")
 	{
 	hook("beforeuploadfile","",array($ref));
 	hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
@@ -60,11 +60,19 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false)
 		if (isset($_FILES['userfile'])) {$processfile=$_FILES['userfile'];} # Single upload (at least) needs this
 		elseif (isset($_FILES['Filedata'])) {$processfile=$_FILES['Filedata'];} # Java upload (at least) needs this
 
-		# Plupload needs this
-		if (isset($_REQUEST['name'])) {
-			$filename=$_REQUEST['name'];
+		# Work out the filename.
+		if (isset($_REQUEST['name']))
+			{
+			$filename=$_REQUEST['name']; # For PLupload
 			}
-		else {$filename=$processfile['name'];}
+		elseif ($file_path!="")
+			{
+			$filename=basename($file_path); # The file path was provided
+			}
+		else
+			{
+			$filename=$processfile['name']; # Standard uploads
+			}
 
 		global $filename_field;
 		if($no_exif && isset($filename_field)) {
@@ -115,7 +123,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false)
     global $banned_extensions;
     if (in_array($extension,$banned_extensions)) {return false;}
     
-    $status="Please provide a file name.";
     $filepath=get_resource_path($ref,true,"",true,$extension);
 
 	if (!$revert){ 
@@ -147,17 +154,11 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false)
 	if (!$revert){
     if ($filename!="")
     	{
-    	global $jupload_alternative_upload_location, $plupload_upload_location;
-    	if (isset($plupload_upload_location))
-    		{
-    		# PLUpload - file was sent chunked and reassembled - use the reassembled file location
-			$result=rename($plupload_upload_location, $filepath);
-    		}
-		elseif (isset($jupload_alternative_upload_location))
-    		{
-    		# JUpload - file was sent chunked and reassembled - use the reassembled file location
-		    $result=rename($jupload_alternative_upload_location, $filepath);
-    		}
+	    if ($file_path!="")
+			{
+			# File path has been specified. Let's use that directly.
+			$result=rename($file_path, $filepath);
+			}
 		else
 			{
 			# Standard upload.
@@ -168,7 +169,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false)
 			
     	if ($result==false)
        	 	{
-       	 	$status="File upload error. Please check the size of the file you are trying to upload.";
        	 	return false;
        	 	}
      	else
@@ -190,8 +190,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false)
 			extract_icc_profile($ref,$extension);
 		}
 
-
-		$status="Your file has been uploaded.";
     	 	}
     	}
     }	
@@ -367,7 +365,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false)
 	$log_ref=resource_log($ref,"u",0);
 	hook("upload_image_after_log_write","",array($ref,$log_ref));
 	
-    return $status;
+    return true;
     }}
 
 function extract_exif_comment($ref,$extension="")
@@ -2682,3 +2680,17 @@ function calculate_image_dimensions($image_path, $target_width, $target_height, 
 
     return $return;
     }
+
+function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url)
+	{
+	# Download a file from the provided URL, then upload it as if it was a local upload.
+	global $userref;
+	$file_path=get_temp_dir(false,$userref) . "/" . basename($url); # Temporary path creation for the downloaded file.
+	copy($url, $file_path); # Download the file.
+	return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);	# Process as a normal upload...
+	}
+	
+	
+	
+	
+	
