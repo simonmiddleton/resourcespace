@@ -4,6 +4,8 @@
  *
  * Montala Limited, July 2016
  *
+ * For documentation please see: http://www.resourcespace.com/knowledge-base/api/
+ *
  */
 
 function get_api_key($user)

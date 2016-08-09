@@ -6,6 +6,8 @@
  *
  *   Pure PHP example... does not require any local RS elements (connects to RS via HTTP).
  *   This code would be on a client (non ResourceSpace) system.
+ *
+ *   For documentation please see: http://www.resourcespace.com/knowledge-base/api/
  *   
 */
 
