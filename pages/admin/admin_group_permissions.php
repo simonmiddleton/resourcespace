@@ -175,11 +175,19 @@ foreach ($rtypes as $rtype)
 	{
 	DrawOption("XU" . $rtype["ref"], $lang["restricted_upload_for_resource_of_type"] . " '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'", false);
 	}
+	
+# ------------ Edit access to resource types (in any archive state to whcih the group has access)
+foreach ($rtypes as $rtype)
+	{
+	DrawOption("ert" . $rtype["ref"], $lang["can_edit_resource_type"] ." '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'");
+	}
 
 ?>				<tr class="ListviewTitleStyle">
 					<td colspan=3 class="permheader"><?php echo $lang["resource_creation_and_management"] ?></td>
 				</tr>
 <?php
+
+
 
 # ------------ Edit access to workflow states
 for ($n=-2;$n<=3;$n++)
