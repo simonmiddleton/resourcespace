@@ -603,7 +603,7 @@ if (!$basic_simple_search)
 
   <?php hook("searchbarafterbuttons"); ?>
 
-  <?php if ($view_new_material) { ?><p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search.php?search=<?php echo urlencode("!last".$recent_search_quantity)?>">&gt; <?php echo $lang["viewnewmaterial"]?></a></p><?php } ?>
+  <?php if ($view_new_material) { ?><p><i aria-hidden="true" class="fa fa-fw  fa-clock-o"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search.php?search=<?php echo urlencode("!last".$recent_search_quantity)?>"><?php echo $lang["viewnewmaterial"]?></a></p><?php } ?>
 	
 	<?php } ?> <!-- END of Searchbarreplace hook -->
 	</div>
