@@ -302,19 +302,12 @@ if (count($inst_plugins)>0)
             echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '">' . LINK_CARET . $lang['groupaccess'].'</a> ';
             $p['enabled_groups'] = array($p['enabled_groups']);
             if ($p['config_url']!='')        
-               {
-               if(($p['enabled_groups'][0]=='' ||  in_array($userdata[0]['usergroup'],explode(",",$p['enabled_groups'][0]))))
-                  {
-                  echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl.$p['config_url'].'">' . LINK_CARET .$lang['options'].'</a> ';        
-                  if (sql_value("SELECT config_json as value from plugins where name='".$p['name']."'",'')!='' && function_exists('json_decode'))
+               {               
+               echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl.$p['config_url'].'">' . LINK_CARET .$lang['options'].'</a> ';        
+               if (sql_value("SELECT config_json as value from plugins where name='".$p['name']."'",'')!='' && function_exists('json_decode'))
                      {
                      echo '<a class="nowrap" href="'.$baseurl_short.'pages/team/team_download_plugin_config.php?pin='.$p['name'].'">' . LINK_CARET .$lang['plugins-download'].'</a> ';
                      }
-                  }
-               else
-                  {
-                  echo LINK_CARET . '<span class="nowrap" style="text-decoration: line-through;cursor:not-allowed;">'.$lang['options'].'</span> '; 
-                  }
                }
             echo '</div></td></tr>';
             } 

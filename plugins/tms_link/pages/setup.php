@@ -7,6 +7,11 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include_once '../../../include/general.php';
 
+// Specify the name of this plugin and the heading to display for the page.
+$plugin_name = 'tms_link';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
+$plugin_page_heading = $lang['tms_link_configuration'];
 
 $tms_link_field_mappings=unserialize(base64_decode($tms_link_field_mappings_saved));
 
@@ -40,9 +45,7 @@ if (getval("submit","")!="" || getval("save","")!="")
 $scriptlastran=sql_value("select value from sysvars where name='last_tms_import'","");
 
 global $baseurl, $tms_link_field_mappings_saved;
-// Specify the name of this plugin and the heading to display for the page.
-$plugin_name = 'tms_link';
-$plugin_page_heading = $lang['tms_link_configuration'];
+
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 
 $page_def[] = config_add_section_header($lang['tms_link_database_setup']);
@@ -75,6 +78,17 @@ $page_def[] = config_add_text_input('tms_link_log_expiry',$lang['tms_link_log_ex
 $page_def[] = config_add_section_header($lang['tms_link_metadata_setup']);
 $page_def[] = config_add_single_ftype_select('tms_link_checksum_field',$lang["tms_link_checksum_field"]);
 $page_def[] = config_add_single_ftype_select('tms_link_object_id_field',$lang["tms_link_object_id_field"]);
+
+$page_def[] = config_add_section_header($lang['tms_link_bidirectional_options']);
+$page_def[] = config_add_boolean_select('tms_link_push_data', $lang['tms_link_push_data']);
+$page_def[] = config_add_text_input('tms_link_push_condition',$lang['tms_link_push_condition']);
+$page_def[] = config_add_text_input('tms_link_tms_loginid',$lang['tms_link_tms_loginid']);
+$page_def[] = config_add_boolean_select('tms_link_push_image', $lang['tms_link_push_image']);
+$page_def[] = config_add_text_list_input('tms_link_push_image_sizes',$lang['tms_link_push_image_sizes']);
+$page_def[] = config_add_text_input('tms_link_mediatypeid',$lang['tms_link_mediatypeid']);
+$page_def[] = config_add_text_input('tms_link_formatid',$lang['tms_link_formatid']);
+$page_def[] = config_add_text_input('tms_link_colordepthid',$lang['tms_link_colordepthid']);
+$page_def[] = config_add_text_input('tms_link_media_path',$lang['tms_link_media_path']);
 
 //$page_def[] = config_add_hidden($tms_link_field_mappings);
 
@@ -147,7 +161,7 @@ $tmsmaphtml.="</select>
 
 $page_def[] = config_add_html($tmsmaphtml);
 
-$page_def[] = config_add_section_header($lang['tms_link_colum_type_required']);
+$page_def[] = config_add_section_header($lang['tms_link_column_type_required']);
 
 $page_def[] = config_add_text_list_input('tms_link_text_columns', $lang["tms_link_text_columns"]);
 $page_def[] = config_add_text_list_input('tms_link_numeric_columns', $lang["tms_link_numeric_columns"]);

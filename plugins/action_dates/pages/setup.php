@@ -7,6 +7,10 @@ include '../../../include/db.php';
 include_once '../../../include/general.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
+$plugin_name = 'action_dates';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
+	
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'action_dates';
 $plugin_page_heading = $lang['action_dates_configuration'];

@@ -43,6 +43,19 @@ $lang["tms_link_enable_update_script"]="Enable TMS update script";
 $lang["tms_link_enable_update_script_info"]="Enable script that will automatically update the TMS data whenever the ResourceSpace scheduled task (cron_copy_hitcount.php) is run.";
 $lang["tms_link_log_directory"]="Directory to store script logs in. If this is left blank or is invalid then no logging will occur.";
 $lang["tms_link_log_expiry"]="Number of days to store script logs for. Any TMS logs in this directory that are older will be deleted";
-$lang["tms_link_colum_type_required"]="<strong>NOTE</strong>: If adding a new column, please add the column name to the appropriate list below to indicate whether the new column contains numeric or text data.";
+$lang["tms_link_column_type_required"]="<strong>NOTE</strong>: If adding a new column, please add the column name to the appropriate list below to indicate whether the new column contains UTF-8 or UTF-16 data.";
 $lang["tms_link_numeric_columns"]="List of columns that should be retrieved as UTF-8";
 $lang["tms_link_text_columns"]="List of columns that should be retrieved as UTF-16";
+$lang['tms_link_bidirectional_options']="Bidirectional synchronisation (adding RS images to TMS)";
+$lang["tms_link_push_data"]="Send preview images created by ResourceSpace to send data back to TMS?";
+$lang["tms_link_push_condition"]="Metadata criteria that must be met for images to be added to TMS";
+$lang["tms_link_tms_loginid"]="TMS login ID that will be used by ResourceSpace to insert records. A TMS account must be created or exist with this ID";
+$lang["tms_link_push_image"]="Push image to TMS after preview creation? (This will create a new Media record in TMS)";
+$lang["tms_link_push_image_sizes"]="Preferred preview size to send to TMS. Comma separated in order of preference so the first size available will be used";
+$lang["tms_link_mediatypeid"]="MediaTypeID to use for inserted media records";
+$lang["tms_link_formatid"]="FormatID  to use for inserted media records";
+$lang["tms_link_colordepthid"]="ColorDepthID   to use for inserted media records";
+$lang["tms_link_media_path"]="Root path to filestore that will be stored in TMS e.g. \\RS_SERVER\filestore\. Make sure the trailing slash is included. The filename stored in TMS will include the relative path from the filestore root.";
+
+
+

@@ -65,3 +65,14 @@ $tms_link_field_mappings_saved=base64_encode(serialize(array(
 $tms_link_log_directory="";
 $tms_link_log_expiry=7;
 
+// Additional options for bidirectional syncing (ResourceSpace -> TMS)
+$tms_link_push_data=false;
+$tms_link_push_image=false;
+$tms_link_push_image_sizes=array("pre","thm","col");
+$tms_link_push_condition="";
+$tms_link_tms_loginid="ResourceSpace";
+$tms_link_mediatypeid=1;
+$tms_link_formatid=2;
+$tms_link_colordepthid=0;
+$tms_link_media_path="\\\\SERVERNAME\\filestore\\";
+

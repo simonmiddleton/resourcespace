@@ -11,6 +11,8 @@ include_once '../include/emu_functions.php';
 
 
 $plugin_name         = 'emu';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
 $emu_rs_mappings     = unserialize(base64_decode($emu_rs_saved_mappings));
 $emu_script_last_ran = '';
 

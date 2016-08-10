@@ -11,6 +11,8 @@ include '../languages/en.php';
 global $slimheader;
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'col-whitegry';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
 $plugin_page_heading = $lang["whitegry_configtitle"];
 
 #Currently only Slimheader config available.

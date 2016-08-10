@@ -9,6 +9,8 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'swf_preview';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
 $plugin_page_heading = $lang['swf_preview_configuration'];
 $plugin_page_introtext=$lang['swf_preview_introtext'] . "<br /><br />";
 
