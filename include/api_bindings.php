@@ -96,3 +96,48 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     return upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
     }
 
+function api_get_related_resources($ref)
+    {
+    return get_related_resources($ref);
+    }
+
+function api_get_field_options($ref)
+    {
+    return get_field_options($ref);
+    }
+    
+function api_get_user_collections()
+	{
+    global $userref;
+    return get_user_collections($userref);
+    }
+    
+function api_add_resource_to_collection($resource,$collection)
+    {
+    return add_resource_to_collection($resource,$collection);
+    }
+    
+function api_remove_resource_from_collection($resource,$collection)
+    {
+    return remove_resource_from_collection($resource,$collection);                  
+    }
+    
+function api_create_collection($name)
+	{
+    global $userref;
+    return create_collection($userref,$name);
+    }
+    
+function api_delete_collection($ref)
+    {
+    return delete_collection($ref);
+    }
+    
+function api_search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false)
+    {
+    return search_public_collections($search, $order_by, $sort, $exclude_themes, $exclude_public);
+    }
+    
+
+    
+    

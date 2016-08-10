@@ -17,7 +17,7 @@ $user="admin"; # <-- RS username of the user you want to log in as
 # Some example function calls.
 #
 #$query="user=" . $user . "&function=do_search&param1="; # <--- The function to execute, and parameters
-#$query="user=" . $user . "&function=get_resource_field_data&param1=1"; # <--- The function to execute, and parameters
+$query="user=" . $user . "&function=get_resource_field_data&param1=1"; # <--- The function to execute, and parameters
 #$query="user=" . $user . "&function=create_resource&param1=1"; # <--- The function to execute, and parameters
 #$query="user=" . $user . "&function=update_field&param1=1&param2=8&param3=Example"; # <--- The function to execute, and parameters
 #$query="user=" . $user . "&function=delete_resource&param1=1"; # <--- The function to execute, and parameters
@@ -27,7 +27,7 @@ $user="admin"; # <-- RS username of the user you want to log in as
 #$query="user=" . $user . "&function=get_resource_types"; # <--- The function to execute, and parameters
 #$query="user=" . $user . "&function=add_alternative_file&param1=2&param2=Test"; # <--- The function to execute, and parameters
 #$query="user=" . $user . "&function=get_resource_log&param1=2"; # <--- The function to execute, and parameters
-$query="user=" . $user . "&function=upload_file_by_url&param1=2&param2=&param3=&param4=&param5=" . urlencode("http://www.montala.com/img/slideshow/montala-bg.jpg"); # <--- The function to execute, and parameters
+#$query="user=" . $user . "&function=upload_file_by_url&param1=2&param2=&param3=&param4=&param5=" . urlencode("http://www.montala.com/img/slideshow/montala-bg.jpg"); # <--- The function to execute, and parameters
 
 # Sign the query using the private key
 $sign=hash("sha256",$private_key . $query);
