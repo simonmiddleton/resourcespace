@@ -76,7 +76,7 @@ $value=str_replace($from,$to,$value);
         padding-top: .4em;
     }
 </style>
-<link href="<?php echo $baseurl?>/css/Col-<?php echo (isset($userfixedtheme) && $userfixedtheme!="")?$userfixedtheme:getval("colourcss",$defaulttheme)?>.css" rel="stylesheet" type="text/css" media="screen,projection,print" id="colourcss" />
+<link href="<?php echo $baseurl?>/css/Col-<?php echo (isset($userfixedtheme) && $userfixedtheme!="")?$userfixedtheme:getval("colourcss",'')?>.css" rel="stylesheet" type="text/css" media="screen,projection,print" id="colourcss" />
 <?php
 # Include CSS files for for each of the plugins too (if provided)
 for ($n=0;$n<count($plugins);$n++)
@@ -88,7 +88,7 @@ for ($n=0;$n<count($plugins);$n++)
         <link href="<?php echo $baseurl?>/plugins/<?php echo $plugins[$n]?>/css/style.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print"  />
         <?php
         }
-    $theme=((isset($userfixedtheme) && $userfixedtheme!=""))?$userfixedtheme:getval("colourcss",$defaulttheme);
+    $theme=((isset($userfixedtheme) && $userfixedtheme!=""))?$userfixedtheme:getval("colourcss",'');
     $csspath=dirname(__FILE__)."/../../../plugins/" . $plugins[$n] . "/css/Col-".$theme.".css";
     if (file_exists($csspath))
         {
