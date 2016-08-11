@@ -164,6 +164,8 @@ var scrolltopElementCentral='.ui-layout-center';
 var scrolltopElementCollection='.ui-layout-south';
 var scrolltopElementModal='#modal'
 collection_bar_hide_empty=<?php echo $collection_bar_hide_empty?"true":"false"; ?>;
+var chosenCollection='<?php echo ($chosen_dropdowns && $chosen_dropdowns_collection)?>';
+var chosenCollectionThreshold='<?php echo $chosen_dropdowns_threshold_collection ?>';
 </script>
 
 <script src="<?php echo $baseurl_short?>lib/js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
