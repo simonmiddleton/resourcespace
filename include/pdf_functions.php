@@ -63,7 +63,7 @@ function get_pdf_template_path($resource_type, $template_name = '')
 */
 function generate_pdf($html_template_path, $filename, array $bind_placeholders = array(), $save_on_server = false, array $pdf_properties = array())
     {
-    global $applicationname, $baseurl, $baseurl_short, $storagedir, $date_d_m_y, $linkedheaderimgsrc;
+    global $applicationname, $baseurl, $baseurl_short, $storagedir, $date_d_m_y, $linkedheaderimgsrc, $language;
 
     $html2pdf_path = dirname(__FILE__) . '/../lib/html2pdf/html2pdf.class.php';
     if(!file_exists($html2pdf_path))
@@ -118,7 +118,7 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
     // Setup PDF
     $pdf_orientation = 'P';
     $pdf_format      = 'A4';
-    $pdf_language    = 'en';
+    $pdf_language    = resolve_pdf_language();
     $pdf_unicode     = true;
     $pdf_encoding    = 'UTF-8';
     $pdf_margins     = array(5, 5, 5, 8);

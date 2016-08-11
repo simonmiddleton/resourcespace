@@ -119,7 +119,7 @@ $pdf_properties['title']       = $title;
 $pdf_properties['author']      = $user['fullname'];
 $pdf_properties['subject']     = "{$applicationname} - {$lang['contactsheet']}";
 $pdf_properties['font']        = $contact_sheet_font;
-
+$pdf_properties['language']    = resolve_pdf_language();
 
 // Choose the image size requirements
 $img_size = ('single' == $sheetstyle ? getvalescaped('ressize', 'lpr') : 'pre');
@@ -176,7 +176,7 @@ foreach($results as $result_data)
 
 try
     {
-    $html2pdf = new Html2Pdf($pdf_properties['orientation'], $pdf_properties['format'], 'en', true, 'UTF-8', $pdf_properties['margins']);
+    $html2pdf = new Html2Pdf($pdf_properties['orientation'], $pdf_properties['format'], $pdf_properties['language'], true, 'UTF-8', $pdf_properties['margins']);
 
     $html2pdf->pdf->SetTitle($pdf_properties['title']);
     $html2pdf->pdf->SetAuthor($pdf_properties['author']);
