@@ -87,7 +87,7 @@ include "../include/header.php";
 		<a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo urlencode($ref); ?>&k=<?php echo urlencode($k); ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoresourceview']; ?></a>
 	</p>
 
-  <h1><?php echo $lang["requestresource"]?></h1>
+  <h1><?php echo i18n_get_translated($lang["requestresource"]); ?></h1>
   <p><?php echo text("introtext")?></p>
   
 	<form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php">  
@@ -197,7 +197,7 @@ if (isset($custom_request_fields))
 	<?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><?php } ?>
 	<label for="buttons"> </label>			
 	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo htmlspecialchars($ref)?>';"/>&nbsp;
-	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["requestresource"]?>&nbsp;&nbsp;" />
+	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo i18n_get_translated($lang["requestresource"])?>&nbsp;&nbsp;" />
 	</div>
 	</form>
 	

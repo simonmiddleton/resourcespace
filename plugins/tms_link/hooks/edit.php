@@ -146,3 +146,28 @@ function HookTms_linkEditAftersaveresourcedata()
 		}	
 	}
 	
+function HookTms_linkEditAfterpreviewcreation($ref, $alternative=-1)
+	{
+	global $tms_link_push_image,$tms_link_push_condition;
+	if(!$tms_link_push_image){return false;}
+	
+	$metadata=get_resource_field_data($ref,false,false);
+	
+	$matchedfilter=false;
+	for ($n=0;$n<count($metadata);$n++)
+		{
+		$name=$metadata[$n]["name"];
+		$value=$metadata[$n]["value"];			
+		if ($name!="")
+			{
+			$match=filter_match($tms_link_push_condition,$name,$value);
+			if ($match==1) {$matchedfilter=false;break;} 
+			if ($match==2) {$matchedfilter=true;} 
+			}
+		}
+	if(!$matchedfilter){return false;}
+	
+	// Push condition has matched, add the preview image to TMS
+	tms_link_create_tms_thumbnail($ref, $alternative);
+	}
+	

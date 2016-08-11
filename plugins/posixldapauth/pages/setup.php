@@ -3,6 +3,10 @@ include "../../../include/db.php";
 include_once "../../../include/general.php";
 include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ($lang['error-permissiondenied']);}
 
+$plugin_name = 'posixldapauth';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
+	
 $usergroups = sql_query("SELECT ref,name FROM usergroup");
 /* Set the following debug flag to true for more debugging information
 */

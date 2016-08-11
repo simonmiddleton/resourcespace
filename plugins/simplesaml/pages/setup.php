@@ -7,6 +7,10 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include '../../../include/general.php';
 
+$plugin_name = 'simplesaml';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
+
 if ((getval('submit','')!='') || (getval('save','')!=''))
 	{
 		

@@ -498,6 +498,15 @@ $ffmpeg_global_options = "";
 #$ffmpeg_snapshot_fraction=0.1; # Set this to specify a point in the video at which snapshot image is taken. Expressed as a proportion of the video duration so must be set between 0 and 1. Only valid if duration is greater than 10 seconds.
 #$ffmpeg_snapshot_seconds=10;  # Set this to specify the number of seconds into the video at which snapshot should be taken, overrides the $ffmpeg_snapshot_fraction setting
 
+/*
+Make video previews have multiple snapshots from the video.
+Hovering over a search result thumbnail preview, will show the user frames from the video in order for 
+the user to get an idea of what the video is about
+
+Note: Set to 0 to disable this feature
+*/
+$ffmpeg_snapshot_frames = 12;
+
 # $ffmpeg_command_prefix - Ability to add prefix to command when calling ffmpeg 
 # Example for use on Linux using nice to avoid slowing down the server
 # $ffmpeg_command_prefix = "nice -n 10";
@@ -1327,11 +1336,17 @@ $feedback_resource_select=false;
 # If true pre, thm, and col sizes will not be considered.
 $lean_preview_generation=false;
 
-# experimental ImageMagic optimizations. This will not work for GraphicsMagick.
+# Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
 $imagemagick_mpr=false;
 
-# set the depth to be passed to mpr command.
+# Set the depth to be passed to mpr command.
 $imagemagick_mpr_depth="8";
+
+# Should colour profiles be preserved?
+$imagemagick_mpr_preserve_profiles=true;
+
+# If using imagemagick and mpr, specify any metadata profiles to be retained. Default setting good for ensuring copyright info is not stripped which may be required by law
+$imagemagick_mpr_preserve_metadata_profiles=array('iptc');
 
 # Should resource views be logged for reporting purposes?
 # Note that general daily statistics for each resource are logged anyway for the statistics graphs
@@ -2715,7 +2730,9 @@ $no_welcometext = false;
 # e.g. for photo (resource type 1 by default)
 # $resource_type_request_emails[1]="imageadministrator@my.site"; 
 # e.g. for documents (resource type 2 by default)
-# $resource_type_request_emails[2]="documentadministrator@my.site"; 
+# $resource_type_request_emails[2]="documentadministrator@my.site";
+#Can be used so that along with the users/emails specified by $resource_type_request_emails, the rest of the users can be notified as well
+$resource_type_request_emails_and_email_notify = false;
 
 # $rating_field. A legacy option that allows for selection of a metadata field that contains administrator ratings (not user ratings) that will be displayed in search list view. Field must be plain text and have numeric only numeric values.
 # $rating_field=121;
@@ -2901,6 +2918,16 @@ $resource_request_reason_required=true;
 
 # Use the 'chosen' library for rendering dropdowns (improved display and search capability for large dropdowns)
 $chosen_dropdowns=false;
+
+# The number of options that must be present before including seach capability.
+$chosen_dropdowns_threshold_main=10;
+$chosen_dropdowns_threshold_simplesearch=10;
+
+# Use the 'chosen' library for rendering dropdowns in the collection bar. $chosen_dropdowns must be set to true.
+$chosen_dropdowns_collection=false;
+
+# The number of options that must be present before including seach capability for collection bar dropdowns.
+$chosen_dropdowns_threshold_collection=10;
 
 # Allow ResourceSpace to upload multiple times the same file in a row
 # Set to true only if you want RS to create duplicates when client is losing

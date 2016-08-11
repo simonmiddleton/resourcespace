@@ -7,6 +7,12 @@ include '../../../include/db.php';
 include_once '../../../include/general.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
+// Specify the name of this plugin and the heading to display for the page.
+$plugin_name = 'image_text';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
+$plugin_page_heading = $lang['image_text_configuration'];
+    
 $identify_fullpath = get_utility_path("im-identify");
 if ($identify_fullpath==false) {exit($lang['image_text_noim']);}
 
@@ -21,10 +27,6 @@ for($n=0;$n<$imfontcount;$n++)
 	$imfonts[$n]=trim_spaces(str_replace("Font: ","",$imfonts[$n]));
 	}
 natsort($imfonts);
-
-// Specify the name of this plugin and the heading to display for the page.
-$plugin_name = 'image_text';
-$plugin_page_heading = $lang['image_text_configuration'];
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 

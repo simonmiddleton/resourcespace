@@ -3,6 +3,10 @@ include "../../../include/db.php";
 include_once "../../../include/general.php";
 include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permission denied.");}
 
+$plugin_name = 'discount_code';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
+	
 $delete_code=getval("delete_code","");
 if ($delete_code!="")
 	{

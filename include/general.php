@@ -2014,15 +2014,21 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
 	
 	if ($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL || $message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN))
 		{
-		$emails=resolve_user_emails($ulist);
-		$emails=$emails['emails'];
+		$emails = resolve_user_emails($ulist);
+
+        if(0 === count($emails))
+            {
+            return $lang['email_error_user_list_not_valid'];
+            }
+
+		$emails = $emails['emails'];
 
 		# Send an e-mail to each resolved user
-		for ($n=0;$n<count($emails);$n++)
+		foreach($emails as $email)
 			{
-			if ($emails[$n]!="")
+			if('' != $email)
 				{
-				send_mail($emails[$n],$subject,$body,$applicationname,$email_from,"emailbulk",$templatevars,$applicationname,"",$html);
+				send_mail($email,$subject,$body,$applicationname,$email_from,"emailbulk",$templatevars,$applicationname,"",$html);
 				}
 			}
 		}
@@ -2787,7 +2793,7 @@ function resolve_userlist_groups($userlist)
 				}
 
 			# Find and add the users.
-			$users = sql_array("select username value from user where usergroup='$groupref'");
+			$users = sql_array("SELECT username AS `value` FROM user WHERE usergroup = '{$groupref}'");
 			if ($newlist!="") {$newlist.=",";}
 			$newlist.=join(",",$users);
 			}
@@ -4703,37 +4709,61 @@ function get_executable_path($path, $executable, &$checked_path, $check_exe = fa
     return false; # No path found.
     }
 
-if (!function_exists("resolve_user_emails")){
-function resolve_user_emails($ulist){
-	global $lang, $user_select_internal;
-	// return an array of emails from a list of usernames and email addresses. 
-	// with 'key_required' sibling array preserving the intent of internal/external sharing.
-	$emails_key_required=array();
-	for ($n=0;$n<count($ulist);$n++)
-		{
-		$uname=$ulist[$n];
-		$email=sql_value("select email value from user where username='" . escape_check($uname) . "'",'');
-		if ($email=='')
-			{
-			# Not a recognised user, if @ sign present, assume e-mail address specified
-			if (strpos($uname,"@")===false || (isset($user_select_internal) && $user_select_internal)) {
-				error_alert($lang["couldnotmatchallusernames"] . ": " . escape_check($uname));die();
-			}
-			$emails_key_required['unames'][$n]=$uname;
-			$emails_key_required['emails'][$n]=$uname;
-			$emails_key_required['key_required'][$n]=true;
-			}
-		else
-			{
-			# Add e-mail address from user account
-			$emails_key_required['unames'][$n]=$uname;
-			$emails_key_required['emails'][$n]=$email;
-			$emails_key_required['key_required'][$n]=false;
-			}
-		}
-	return $emails_key_required;
-}	
-}
+
+if(!function_exists('resolve_user_emails'))
+    {
+    /**
+    * Return an array of emails from a list of usernames and email addresses. 
+    * with 'key_required' sibling array preserving the intent of internal/external sharing
+    * 
+    * @param array $user_list
+    * 
+    * @return array
+    */
+    function resolve_user_emails($user_list)
+        {
+        global $lang, $user_select_internal;
+
+        $emails_key_required = array();
+
+        foreach($user_list as $user)
+            {
+            $escaped_username = escape_check($user);
+            $email_details    = sql_query("SELECT email, approved FROM user WHERE username = '{$escaped_username}' AND (account_expires IS NULL OR account_expires > NOW())");
+
+            // Not a recognised user, if @ sign present, assume e-mail address specified
+            if(0 === count($email_details))
+                {
+                if(false === strpos($user, '@') || (isset($user_select_internal) && $user_select_internal))
+                    {
+                    error_alert("{$lang['couldnotmatchallusernames']}: {$escaped_username}");
+                    die();
+                    }
+
+                $emails_key_required['unames'][]       = $user;
+                $emails_key_required['emails'][]       = $user;
+                $emails_key_required['key_required'][] = true;
+
+                continue;
+                }
+
+            // Skip internal, not approved accounts
+            if(0 == $email_details[0]['approved'])
+                {
+                debug('EMAIL: ' . __FUNCTION__ . '() skipping e-mail "' . $email_details[0]['email'] . '" because it belongs to user account which is not approved');
+
+                continue;
+                }
+
+            // Internal, approved user account - add e-mail address from user account
+            $emails_key_required['unames'][]       = $user;
+            $emails_key_required['emails'][]       = $email_details[0]['email'];
+            $emails_key_required['key_required'][] = false;
+            }
+
+        return $emails_key_required;
+        }
+    }
 
 
 function truncate_cache_arrays(){
@@ -5242,7 +5272,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
     if(is_array($email_notify_usergroups) && count($email_notify_usergroups)>0)
 		{
 		// If email_notify_usergroups is set we use these over everything else, as long as they have an email address set
-        $notification_users_cache[$userpermissionindex] = sql_query("select ref, email from user where usergroup in (" . implode(",",$email_notify_usergroups) . ") and email <>''");
+        $notification_users_cache[$userpermissionindex] = sql_query("select ref, email from user where usergroup in (" . implode(",",$email_notify_usergroups) . ") and email <>'' AND approved=1 AND (account_expires IS NULL OR account_expires > NOW())");
         return $notification_users_cache[$userpermissionindex];
 		}
 	
@@ -5253,32 +5283,32 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
 			{
 			case "USER_ADMIN";
 			// Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>''" . (is_int($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));	
+			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_int($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));	
 			return $notification_users_cache[$userpermissionindex];
 			break;
 			
 			case "RESOURCE_ACCESS";
 			// Notify users who can grant access to resources, get all users in groups with R permissions
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0");	
+			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");	
 			return $notification_users_cache[$userpermissionindex];		
 			break;
 			
 			case "RESEARCH_ADMIN";
 			// Notify research admins, get all users in groups with r permissions
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0");	
+			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");	
 			return $notification_users_cache[$userpermissionindex];		
 			break;
 					
 			case "RESOURCE_ADMIN";
 			// Get all users in groups with t and e0 permissions
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 and find_in_set(binary 'e0',ug.permissions)");	
+			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 AND find_in_set(binary 'e0',ug.permissions) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");	
 			return $notification_users_cache[$userpermissionindex];
 			break;
             
             case "SYSTEM_ADMIN";
 			default;
 			// Get all users in groups with a permission (default if incorrect admin type has been passed)
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'a',ug.permissions) <> 0");	
+			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'a',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");	
 			return $notification_users_cache[$userpermissionindex];
 			break;
 		
@@ -5291,7 +5321,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
 		foreach ($userpermission as $permission)
 			{
 			if($condition!=""){$condition.=" and ";}
-			$condition.="find_in_set(binary '" . $permission . "',ug.permissions) <> 0";
+			$condition.="find_in_set(binary '" . $permission . "',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())";
 			}
 		$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where $condition");	
 		return $notification_users_cache[$userpermissionindex];

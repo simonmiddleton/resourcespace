@@ -1130,13 +1130,18 @@ if (!hook("replacesearchheader")) # Always show search header now.
 	    
             if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results, e.g. by plugin using process_Search_results hook above
  
-            $rating = "";
-            if (isset($rating_field)){$rating = "field".$rating_field;}
-			hook("beforesearchviewcalls");
+            $rating = '';
+            if(isset($rating_field))
+                {
+                $rating = "field{$rating_field}";
+                }
+
+            hook('beforesearchviewcalls');
+
             if ($display=="thumbs")
                 {
                 #  ---------------------------- Thumbnails view ----------------------------
-                include "search_views/thumbs.php";
+                include 'search_views/thumbs.php';
                 } 
 
             if ($display=="xlthumbs")
@@ -1162,9 +1167,8 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 # ----------------  Stripes view -------------------
                 include "search_views/stripes.php";
                 }
-		
-            hook("customdisplaymode");
 
+            hook('customdisplaymode');
             }
 	}
         }
@@ -1200,28 +1204,35 @@ if(!$modal)
 } # End of replace all results hook conditional
 
 hook("endofsearchpage");
-if($search_anchors){ ?>
-	<script>
-		place='<?php echo getval("place","")?>';
-		display='<?php echo $display?>';
-		highlight='<?php echo $search_anchors_highlight?>';
-		jQuery(document).ready(function(){
-			if(place){
-				ele_id='ResourceShell'+place;
-				elementScroll = document.getElementById(ele_id);
-				if(jQuery(elementScroll).length){
-					elementScroll.scrollIntoView();
-					if(highlight){
-						jQuery(elementScroll).addClass("search-anchor");
-					}
-				}
-			}
-			
-		});
-	</script>
-	<?php
-}
 
+if($search_anchors)
+    {
+    ?>
+    <script>
+    place     = '<?php echo getvalescaped("place", ""); ?>';
+    display   = '<?php echo $display; ?>';
+    highlight = '<?php echo $search_anchors_highlight; ?>';
 
-include "../include/footer.php";
+    jQuery(document).ready(function()
+        {
+        if(place)
+            {
+            ele_id        = 'ResourceShell' + place;
+            elementScroll = document.getElementById(ele_id);
 
+            if(jQuery(elementScroll).length)
+                {
+                elementScroll.scrollIntoView();
+
+                if(highlight)
+                    {
+                    jQuery(elementScroll).addClass('search-anchor');
+                    }
+                }
+            }
+        });
+    </script>
+    <?php
+    }
+
+include '../include/footer.php';

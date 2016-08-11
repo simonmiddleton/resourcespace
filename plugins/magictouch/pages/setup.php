@@ -10,6 +10,8 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'magictouch';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
 $plugin_page_heading = $lang['magictouch_configuration'];
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.

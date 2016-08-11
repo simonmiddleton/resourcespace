@@ -1378,11 +1378,17 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 
 	$emails=array();
 	$key_required=array();
-	
-	$emails_keys=resolve_user_emails($ulist);
-	$unames=$emails_keys['unames'];
-	$emails=$emails_keys['emails'];
-	$key_required=$emails_keys['key_required'];
+
+    $emails_keys = resolve_user_emails($ulist);
+
+    if(0 === count($emails_keys))
+        {
+        return $lang['email_error_user_list_not_valid'];
+        }
+
+    $unames       = $emails_keys['unames'];
+    $emails       = $emails_keys['emails'];
+    $key_required = $emails_keys['key_required'];
 
 	# Send an e-mail to each resolved user / e-mail address
 	$subject="$applicationname: $resourcename";
@@ -3012,10 +3018,10 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         
 	if (!checkperm("e" . $status)) {return false;} # Must have edit permission to this resource first and foremost, before checking the filter.
 	
-	if (checkperm("z" . $status) || ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref))) {return false;} # Cannot edit if z permission, or if other user uploads pending approval and not admin
+	if (checkperm("z" . $status) || ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref) && !checkperm("ert" . $resourcedata['resource_type']))) {return false;} # Cannot edit if z permission, or if other user uploads pending approval and not admin
 	
 	$gotmatch=false;
-	if (trim($usereditfilter)=="" || $status<0) # No filter set, or resource is still in a User Contributed state in which case the edit filter should not be applied.
+	if (trim($usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
 		{
 		$gotmatch = true;
 		}
@@ -4014,4 +4020,40 @@ function truncate_join_field_value($value)
     {
     global $resource_field_column_limit;
     return substr($value, 0, $resource_field_column_limit);
+    }
+
+
+/**
+* Check whether a resource (of a video type) has any snapshots created.
+* Snapshots are being created using config option $ffmpeg_snapshot_frames
+* 
+* @param integer $resource_id Resource unique ref
+* @param boolean $file_path   Specify whether the return value should be the file path. Default is FALSE
+* @param boolean $count_only  Set to true if we are only interested in how many snapshots we have. Default is FALSE
+* 
+* @return array|integer Array of all file paths found or number of files found
+*/
+function get_video_snapshots($resource_id, $file_path = false, $count_only = false)
+    {
+    global $storagedir, $storageurl;
+
+    $snapshots_found = array();
+    $path            = get_resource_path($resource_id, true, 'snapshot', false, 'jpg', -1, 1, false, '');
+
+    $i = 1;
+    do
+        {
+        $snapshot_path  = str_replace('snapshot', "snapshot_{$i}", $path);
+        $snapshot_found = file_exists($snapshot_path);
+
+        if($snapshot_found)
+            {
+            $snapshots_found[$i] = ($file_path ? $snapshot_path : str_replace($storagedir, $storageurl, $snapshot_path));
+            }
+
+        $i++;
+        }
+    while(true === $snapshot_found);
+
+    return (!$count_only ? $snapshots_found : count($snapshots_found));
     }

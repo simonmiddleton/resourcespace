@@ -371,6 +371,9 @@ if (!hook("replacecdivrender"))
 				jQuery('#CollectionMaxDiv').show();
 				SetCookie('thumbs',"show",1000);
 				ModalCentre();
+				if(chosenCollection){
+					jQuery('#CollectionMaxDiv select').chosen({disable_search_threshold:chosenCollectionThreshold});
+				}
 			}
 			function HideThumbs() {
 				myLayout.sizePane("south", 40);
@@ -379,6 +382,10 @@ if (!hook("replacecdivrender"))
 				jQuery('#CollectionMaxDiv').hide();
 				SetCookie('thumbs',"hide",1000);
 				ModalCentre();
+				
+				if(chosenCollection){
+					jQuery('#CollectionMinDiv select').chosen({disable_search_threshold:chosenCollectionThreshold});
+				}
 			}
 			function ToggleThumbs() {
 				thumbs = getCookie("thumbs");
@@ -479,8 +486,8 @@ try{
 <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
 <script type="text/javascript">
   var chosen_config = {
-    "#CentralSpace select"           : {disable_search_threshold:10},
-    "#SearchBox select"           : {disable_search_threshold:10}
+    "#CentralSpace select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_main ?>},
+    "#SearchBox select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_simplesearch ?>}
   }
   for (var selector in chosen_config) {
     jQuery(selector).chosen(chosen_config[selector]);
