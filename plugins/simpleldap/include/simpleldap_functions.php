@@ -122,7 +122,7 @@ function simpleldap_authenticate($username,$password){
 		}
 
 		//$ldap_groupfield = $simpleldap[$ldapgroupfield];
-
+ 
 		$department = '';
 		debug("LDAP - checking for group attribute - " . $ldapgroupfield);
 			
@@ -146,7 +146,7 @@ function simpleldap_authenticate($username,$password){
 					$usermemberof[]=$thedept;
 					$department = $thedept;					
 					} 
-				else 
+				elseif(!isset($knowndept[$thedept])) // Add this unknown group to the list so that it can be easily mapped if necessary
 					{
 					if (!is_numeric($thedept))
 						{
