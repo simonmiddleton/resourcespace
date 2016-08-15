@@ -569,7 +569,18 @@ if (!$basic_simple_search)
 			});
 		});
 
-	function ResetTicks() {<?php echo $clear_function?>}
+	function ResetTicks()
+		{
+		<?php
+		echo $clear_function;
+		if($chosen_dropdowns)
+			{
+			?>
+			jQuery('#SearchBox select').trigger('chosen:updated');
+			<?php
+			}
+		?>
+		}
 	</script>
 	
 	<!--				
