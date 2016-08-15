@@ -144,6 +144,18 @@ if($videojs && ($pagename=='search' && $keyboard_navigation_video_search) || ($p
 <script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.time.js"></script> 
 <script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.pie.js"></script>
 <script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.tooltip.min.js"></script>
+
+<!-- Chosen support -->
+<?php 
+if ($chosen_dropdowns) 
+	{ 
+	?>
+	<script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
+	<?php
+	}
+?>
+
     
 <script type="text/javascript">
 var baseurl_short="<?php echo $baseurl_short?>";

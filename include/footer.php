@@ -482,16 +482,20 @@ try{
 
 <?php if ($chosen_dropdowns) { ?>
 <!-- Chosen support -->
-<script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
 <script type="text/javascript">
   var chosen_config = {
-    "#CentralSpace select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_main ?>},
-    "#SearchBox select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_simplesearch ?>}
+    "#CentralSpace select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_main ?>, allow_single_deselect: true},
+    "#SearchBox select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_simplesearch ?>, allow_single_deselect: true}
   }
-  for (var selector in chosen_config) {
-    jQuery(selector).chosen(chosen_config[selector]);
-  }
+  jQuery(document).ready(function(){
+	  for (var selector in chosen_config) {
+		jQuery(selector).each(function(){
+			var css_width = jQuery(this).css("width");
+			chosen_config[selector]['width']=css_width;
+			jQuery(this).chosen(chosen_config[selector]);
+		});
+	  }
+  });
 </script>
 <!-- End of chosen support -->
 <?php } ?>

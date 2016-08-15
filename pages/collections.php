@@ -1085,12 +1085,13 @@ draw_performance_footer();
 
 if ($chosen_dropdowns && $chosen_dropdowns_collection) { ?>
 <!-- Chosen support -->
-<script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
 <script type="text/javascript">
 	chosenColElm = (thumbs=='show' ? '#CollectionMaxDiv' : '#CollectionMinDiv');
-	
-	jQuery(chosenColElm+" select").chosen({disable_search_threshold: chosenCollectionThreshold});
+	var css_width = jQuery(chosenColElm+" select").css("width");
+	jQuery(chosenColElm+" select").each(function(){
+		var css_width = jQuery(this).css("width");
+		jQuery(this).chosen({disable_search_threshold: chosenCollectionThreshold, 'width': css_width});
+	});
 	
 	jQuery("#CollectionDiv select").on('chosen:showing_dropdown', function(event, params) {
 	   

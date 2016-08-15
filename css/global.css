@@ -176,13 +176,20 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #CollectionMinRightNav ul {padding:0em 0;margin:0;list-style:none;}
 #CollectionMinRightNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0px;}
 
-/* Collection layout with chosen support */
+/* Chosen support - General */
+.chosen-container .chosen-results li {word-wrap: normal;}
+
+/* Chosen support - Collection bar */
 .chosen-container.chosen-drop-up.chosen-container-active.chosen-with-drop .chosen-drop {border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;}
 .chosen-container.chosen-drop-up.chosen-container-active.chosen-with-drop .chosen-single {border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;}
 .chosen-container.chosen-drop-up .chosen-drop {top: auto; bottom: 100%;}
 #CollectionDiv #CollectionMinDiv .chosen-drop {display:none;}
 #CollectionDiv .chosen-results li.active-result {display:list-item; float:none; padding:5px 6px;}
 #colselect2 .chosen-container, #CollectionMinDiv .ActionsContainer .chosen-container {text-align:left;}
+
+/* Chosen support - edit.php dates with  $tabs_on_edit=true*/
+#CentralSpace .ChosenDateMonth {width:88px !important;}
+#CentralSpace .ChosenDateDay, #CentralSpace .ChosenDateHour, #CentralSpace .ChosenDateMinute {width:60px !important;}
 
 
 /*Right Search Box layout*/

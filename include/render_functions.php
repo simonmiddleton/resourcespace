@@ -894,7 +894,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         return;
         }
 
-    global $baseurl, $lang, $k, $pagename, $order_by, $sort;
+    global $baseurl, $lang, $k, $pagename, $order_by, $sort, $chosen_dropdowns;
 
     
     // globals that could also be passed as a reference
@@ -983,6 +983,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         <script>
         function action_onchange_<?php echo $action_selection_id; ?>(v)
             {
+            console.log("v="+v);
             if(v == '')
                 {
                 return false;
@@ -1153,6 +1154,14 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
                 // Go back to no action option
                 jQuery('#<?php echo $action_selection_id; ?> option[value=""]').attr('selected', 'selected');
+                <?php
+                if($chosen_dropdowns)
+                	{
+                	?>
+                	jQuery('#<?php echo $action_selection_id; ?>').trigger('chosen:updated');
+                	<?php
+                	}
+                ?>
 
         }
         </script>
