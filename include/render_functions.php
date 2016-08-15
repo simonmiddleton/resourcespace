@@ -983,7 +983,6 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         <script>
         function action_onchange_<?php echo $action_selection_id; ?>(v)
             {
-            console.log("v="+v);
             if(v == '')
                 {
                 return false;
