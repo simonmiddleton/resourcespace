@@ -53,9 +53,12 @@ $lang["flickr_publishing_in_progress"]='Please wait while we publish. This might
 
 $lang['flickr_theme_publish']="Flickr Theme Publish";
 $lang["flickr_caption_field"]="Caption field";
-$lang["flickr_keywords_field"]="Keyworkd field";
+$lang["flickr_keywords_field"]="Keyword field";
 $lang['flickr_prefix_id_title']="Prefix resource id to title";
-$lang['flickr_scale_up']="Publish the next largest available size if a screen version is not available";
+$lang['flickr_default_size']="Default preview size to publish";
+$lang['flickr_scale_up']="Publish alternative size if the one selected above is not available";
+$lang["flickr_alt_image_sizes"]="List of alternative sizes to use, in order of preference (comma separated). Use 'original' for the original file";
+
 $lang['flickr_nice_progress']="Use a popout with nicer output when publishing";
 $lang['flickr_nice_progress_previews']="Show previews on popout";
 $lang['flickr_nice_progress_metadata']="Show metadata to be published on popout";

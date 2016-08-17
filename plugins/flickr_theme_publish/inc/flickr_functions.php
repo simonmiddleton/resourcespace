@@ -7,7 +7,7 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
 	{
 	# For the resources matching $search, synchronise with Flickr.
 	
-	global $flickr_api_key, $flickr_token, $flickr_caption_field, $flickr_keywords_field, $flickr_prefix_id_title, $lang, $flickr_scale_up, $flickr_nice_progress;
+	global $flickr_api_key, $flickr_token, $flickr_caption_field, $flickr_keywords_field, $flickr_prefix_id_title, $lang, $flickr_scale_up, $flickr_nice_progress,$flickr_default_size,$flickr_alt_image_sizes;
 			
 	$results=do_search($search);
 	
@@ -41,28 +41,33 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
 			// Output: Processing resource...
 			if(!$flickr_nice_progress){echo "<li>" . $lang["processing"] . ": " . $title . "\n";}
 			else{flickr_update_progress_file("photo ".$nice_title);}
-	
-			$im=get_resource_path($result["ref"],true,"scr",false,"jpg");
-			if(!file_exists($im) && $flickr_scale_up){
-				$im=get_resource_path($result["ref"],true,"lrp",false,"jpg");
-				if(!file_exists($im)){
-					$im=get_resource_path($result["ref"],true,"hrp",false,"jpg");
-					if(!file_exists($im)){
-						$im=get_resource_path($result["ref"],true,"",false,$result["file_extension"]);
+			if(strtolower($flickr_default_size)=="original"){$flickr_default_size="";}
+			$im=get_resource_path($result["ref"],true,$flickr_default_size,false,"jpg");
+			if(!file_exists($im) && $flickr_scale_up)
+				{
+				foreach($flickr_alt_image_sizes as $flickr_alt_image_size)
+					{
+					if(strtolower($flickr_alt_image_size)=="original"){$flickr_alt_image_size="";}
+					$im=get_resource_path($resource,true,$flickr_alt_image_size,false);
+					if(file_exists($im))
+						{
+						break;
+						}
 					}
 				}
-			}
-			if(!file_exists($im)){
+			if(!file_exists($im))
+				{
 				// Output: No suitable upload...
 				if(!$flickr_nice_progress){echo "<li>" . $lang["flickr-problem-finding-upload"];}
-				else{
+				else
+					{
 					$results_no_publish++;
 					$results_processed++;
 					//flickr_update_progress_file("no publish ".$nice_title." | processed=".$results_processed." (".$results_no_publish.")");
 					flickr_update_progress_file("no publish ".$nice_title." | processed=".$results_processed." new_publish=".$results_new_publish." no_publish=".$results_no_publish." update_meta=".$results_update_publish);
-				}
+					}
 				continue;
-			}
+				}
 	
 			# If replacing, add the photo ID of the photo to replace.
 			if ($photoid!=""){
