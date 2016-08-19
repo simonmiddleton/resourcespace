@@ -131,34 +131,40 @@ function simpleldap_authenticate($username,$password){
 
 		$usermemberof=array();
 
-		if (isset($entries[0][$ldapgroupfield]) && count($entries[0][$ldapgroupfield]) > 0){
+		if (isset($entries[0][$ldapgroupfield]) && count($entries[0][$ldapgroupfield]) > 0)
+			{
 			debug("LDAP - found group attribute - checking against configured mappings");
-			$usermemberofgroups[]=$entries[0][$ldapgroupfield];
-			$deptresult = sql_query('select ldapgroup, rsgroup from simpleldap_groupmap order by priority desc');
-			foreach ($deptresult as $thedeptresult){
-				$knowndept[$thedeptresult['ldapgroup']] = $thedeptresult['rsgroup'];
-			}
-			foreach ($entries[0][$ldapgroupfield] as $thedept)
+			$usermemberofgroups=$entries[0][$ldapgroupfield];
+			
+			$deptresult = sql_query('select ldapgroup, rsgroup from simpleldap_groupmap order by priority asc');
+			// Go through each configured ldap->RS group mapping, adding each to the array of groups that user is a member of. Update $department with each match so we end up with the highest priority dept
+			foreach ($deptresult as $thedeptresult)
 				{
-				if ($department=="" && isset($knowndept[$thedept]) && $knowndept[$thedept] > 0)
+				$deptname=$thedeptresult['ldapgroup'];
+                $deptmap=$thedeptresult['rsgroup'];
+                $knowndept[$deptname] = $deptmap;
+                if ((isset($deptmap) && !empty($deptmap)) && in_array($deptname,$usermemberofgroups))
 					{
-					// if there are multiples, we will return one of the ones that has a match
-					$usermemberof[]=$thedept;
-					$department = $thedept;					
-					} 
-				elseif(!isset($knowndept[$thedept])) // Add this unknown group to the list so that it can be easily mapped if necessary
+					$department=$deptname;
+					$usermemberof[]=$deptname;
+					}				
+				}
+			// Go through all mappings and add any unknown groups to the list of mappings so that it can be easily used (LDAP group names can be hard to remember)
+			foreach ($usermemberofgroups as $usermemberofgroup)
+				{
+				if(!isset($knowndept[$usermemberofgroup])) // This group is not in the current list
 					{
-					if (!is_numeric($thedept))
+					if (!is_numeric($usermemberofgroup))
 						{
 						// ignore numbers; this is a kludgey way to deal with the fact
 						// that some ldap servers seem to return a result count as the first value
-						$thedept = escape_check($thedept);
-						$usermemberof[]=$thedept;
-						sql_query("replace into simpleldap_groupmap (ldapgroup, rsgroup) values (\"$thedept\",NULL)");
+						$newdept = escape_check($usermemberofgroup);
+						$usermemberof[]=$newdept;
+						sql_query("replace into simpleldap_groupmap (ldapgroup, rsgroup) values (\"$newdept\",NULL)");
 						} 
 					}
 				}
-		}
+			}
 		//Extract email info
 		if ((isset($entries[0][$email_attribute])) && count($entries[0][$email_attribute]) > 0)
 			{

@@ -14,11 +14,12 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 	
 	$auth = false;
 	$authreturn=array();
-	if ($uname != "" && $pword != "") {
+	if ($uname != "" && $pword != "")
+		{
 		$userinfo = simpleldap_authenticate($uname, $pword);
 		//print_r($userinfo);
 		if ($userinfo) { $auth = true; }
-	} 
+		} 
 
 
 		
@@ -37,14 +38,17 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 		$group = $simpleldap['fallbackusergroup'];
 		$groupmatch="";
 		$grouplist = sql_query("select * from simpleldap_groupmap");
-		if (count($grouplist)>0 && $userinfo['group']!=""){
-			for ($i = 0; $i < count($grouplist); $i++){
-				if (($userinfo['group'] == $grouplist[$i]['ldapgroup']) && is_numeric($grouplist[$i]['rsgroup'])){
+		if (count($grouplist)>0 && $userinfo['group']!="")
+			{
+			for ($i = 0; $i < count($grouplist); $i++)
+				{
+				if (($userinfo['group'] == $grouplist[$i]['ldapgroup']) && is_numeric($grouplist[$i]['rsgroup']))
+					{
 					$group = $grouplist[$i]['rsgroup'];
 					$groupmatch=$userinfo['group'];
+					}
 				}
 			}
-		}
 					
 
 		if ($userid > 0){
