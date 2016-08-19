@@ -420,7 +420,7 @@ if ((($extension=="odt") || ($extension=="ott") || ($extension=="odg") || ($exte
 	so it will likely work in most cases, but I think the specs allow it to go anywhere.
    ----------------------------------------
 */
-if ((($extension=="docx") || ($extension=="xlsx") || ($extension=="pptx") || ($extension=="xps")) && !isset($newfile))
+if ((($extension=="docx") || ($extension=="xlsx") || ($extension=="pptx") || ($extension=="xps")) && !isset($newfile) && in_array($extension,$unoconv_extensions) )
 	{
     $cmd="unzip -p ".escapeshellarg($file)." \"docProps/thumbnail.jpeg\" > $target";
     $output=run_command($cmd);
