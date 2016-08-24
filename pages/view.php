@@ -529,7 +529,18 @@ if (!hook("replacetitleprefix","",array($resource["archive"]))) { switch ($resou
 	case 3:
 	?><span class="DeletedResourceTitle"><?php echo $lang["status3"]?>:</span>&nbsp;<?php
 	break;
-	} }
+	}
+	#If additional archive states are set, put them next to the field used as title
+	if ( isset($additional_archive_states) && count($additional_archive_states)!=0){
+		if(in_array($resource["archive"],$additional_archive_states)){
+			{?>
+				<span class="ArchiveResourceTitle"><?php echo $lang["status{$resource['archive']}"]?>:</span>&nbsp;<?php	
+			}
+		}
+	}
+	
+	}
+	
 if (!hook("replaceviewtitle")){ echo highlightkeywords(htmlspecialchars(tidylist(i18n_get_translated(get_data_by_field($resource['ref'],$title_field)))),$search); } /* end hook replaceviewtitle */  
 ?>&nbsp;</h1>
 <?php } /* End of renderinnerresourceheader hook */ ?>
