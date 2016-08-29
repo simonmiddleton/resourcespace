@@ -2,7 +2,7 @@
 if (!hook("renderresultlargethumb")) 
 	{ ?>
 	<!--Resource Panel-->
-	<div class="ResourcePanelShellLarge" id="ResourceShell<?php echo htmlspecialchars($ref)?>">
+	<div class="ResourcePanelShellLarge" id="ResourceShell<?php echo htmlspecialchars($ref)?>"  <?php echo hook('resourcepanelshell_attributes')?>>
 		<div class="ResourcePanelLarge <?php hook('xlthumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
     		<?php  
     		if ($resource_type_icons) 
