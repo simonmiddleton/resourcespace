@@ -176,6 +176,11 @@ var scrolltopElementCentral='.ui-layout-center';
 var scrolltopElementCollection='.ui-layout-south';
 var scrolltopElementModal='#modal'
 collection_bar_hide_empty=<?php echo $collection_bar_hide_empty?"true":"false"; ?>;
+var chosen_config = 
+			{
+			"#CentralSpace select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_main ?>, allow_single_deselect: true, width:"0px"},
+			"#SearchBox select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_simplesearch ?>, allow_single_deselect: true, width:"0px"}
+	  		}
 var chosenCollection='<?php echo ($chosen_dropdowns && $chosen_dropdowns_collection)?>';
 var chosenCollectionThreshold='<?php echo $chosen_dropdowns_threshold_collection ?>';
 </script>

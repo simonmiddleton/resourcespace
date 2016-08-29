@@ -282,7 +282,7 @@ if (!$basic_simple_search)
 	if (!$searchbar_buttons_at_bottom){ echo $searchbuttons."<br/>"; }
 	if (!$basic_simple_search) {
 	// Include simple search items (if any)
-	global $clear_function;
+	global $clear_function, $simple_search_show_dynamic_as_dropdown, $chosen_dropdowns;
 	
 	$optionfields=array();
 	$rendered_names=array();
