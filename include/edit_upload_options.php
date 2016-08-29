@@ -145,7 +145,7 @@ if ($ref<0)
 			#remove smart collections as they cannot be uploaded to.
 			if (!isset($list[$n]['savedsearch'])||(isset($list[$n]['savedsearch'])&&$list[$n]['savedsearch']==null)){
 				#show only active collections if a start date is set for $active_collections 
-				if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1))
+				if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="My Collection" && $list[$n]['user']==$userref))
 					{ if ($list[$n]["ref"]==$usercollection) {$currentfound=true;} 
 					if($hide_collection)
 						{
