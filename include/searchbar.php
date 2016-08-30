@@ -159,10 +159,10 @@ jQuery(document).ready(function () {
 
 
 <?php
+$types=get_resource_types();
+
 if (!$basic_simple_search)
 	{
-	# Load resource types.
-	$types=get_resource_types();
 	
 	# More than 5 types? Always display the 'select all' option.
 	if (count($types)>5) {$searchbar_selectall=true;}
@@ -232,7 +232,25 @@ if (!$basic_simple_search)
 	   
 
 	}
-
+elseif($restypes=='')
+	{
+	# we still need a way to pass restypes based on simple search settings or things link search crumbs will be incorrect
+	if($search_includes_resources)
+		{
+		for($t=0;$t<count($types);$t++)
+			{
+			$restypes.=($restypes=='' ? '' : ',').$types[$t]['ref'];
+			}
+		}
+	if($search_includes_user_collections){$restypes.=($restypes=='' ? '' : ','). "mycol";}
+	if($search_includes_public_collections){$restypes.=($restypes=='' ? '' : ','). "pubcol";}
+	if($search_includes_themes){$restypes.=($restypes=='' ? '' : ','). "themes";}
+	
+	?>
+	<input type="hidden" name="restypes" id="restypes" value="<?php echo $restypes?>" />
+	<?php
+	}
+	
     if($searchbar_selectall)
         {
         ?>
