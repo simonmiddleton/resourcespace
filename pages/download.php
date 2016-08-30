@@ -109,7 +109,7 @@ header("Content-Length: " . $filesize);
 if ($noattach=="")
 	{
 	daily_stat("Resource download",$ref);
-	resource_log($ref,'d',0,$usagecomment,"","",$usage,$size);
+	resource_log($ref,'d',0,$usagecomment,"","",$usage,($alternative!=-1?$alternative:$size));
 	
         hook('moredlactions');
 

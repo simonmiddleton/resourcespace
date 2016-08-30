@@ -244,7 +244,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Listview {overflow-x:auto;	margin: 0 10px 25px 0;}
 .ListviewTight {margin: 5px 10px 5px 0;}
 .Listview table{ width:100%;}
-.Listview td {padding: 5px 5px 5px 5px;}
+.Listview td {padding: 5px 5px 5px 5px;vertical-align: top;}
 .ListTools {text-align: right;}
 .ListTitle {font-weight: bold;}
 .Listview .IconStar	{width:11px;height:12px;padding: 0;display: block;float:left;}
@@ -1170,3 +1170,5 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 
 /* Subtext */
 .sub {font-size:0.8em;}
+
+.Highlight {background:#FFFF00;}
