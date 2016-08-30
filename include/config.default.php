@@ -897,11 +897,14 @@ $contact_sheet_footer = false;
 $contact_sheet_add_link=true;
 # Give user option to enable links?
 $contact_sheet_add_link_option=false;
+
 # Use watermarked previews for contact sheets? If set to 'true' watermarks will be forced rather than judged based on user credentials.
 $contact_sheet_force_watermarks=false;
 # Give user option to force watermarks?
 $contact_sheet_force_watermark_option=false;
 
+# Show contact sheet metadata under preview? For thumbnail view only
+$contact_sheet_metadata_under_thumbnail=false;
 
 $contact_sheet_single_select_size=false;
 

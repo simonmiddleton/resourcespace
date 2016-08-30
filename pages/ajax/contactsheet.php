@@ -89,12 +89,13 @@ foreach($getfields as $field_id)
 $pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
 $PDF_filename      = get_temp_dir() . '/contactsheet.pdf';
 $placeholders      = array(
-    'date'                          => date('Y-m-d H:i:s'),
-    'titlefontsize'                 => $titlefontsize,
-    'refnumberfontsize'             => $refnumberfontsize,
-    'title'                         => $title,
-    'columns'                       => $columns,
-    'config_sheetthumb_include_ref' => $config_sheetthumb_include_ref,
+    'date'                          			=> date('Y-m-d H:i:s'),
+    'titlefontsize'                 			=> $titlefontsize,
+    'refnumberfontsize'             			=> $refnumberfontsize,
+    'title'                         			=> $title,
+    'columns'                       			=> $columns,
+    'config_sheetthumb_include_ref' 			=> $config_sheetthumb_include_ref,
+    'contact_sheet_metadata_under_thumbnail'	=> $contact_sheet_metadata_under_thumbnail
 );
 
 if($contactsheet_header)
