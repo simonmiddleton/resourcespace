@@ -311,6 +311,31 @@ if($contactsheet_sorting)
                 </select>
                 <div class="clearerleft"> </div>
             </div>
+            
+            <?php
+            if($contact_sheet_force_watermarks)
+            	{
+            	if($contact_sheet_force_watermark_option)
+					{
+					?>
+					<div id="WatermarkOptions" class="Question">
+						<label><?php echo $lang["show_watermarked_previews_and_thumbnails"]?></label>
+						<select class="shrtwidth" name="force_watermark" id="force_watermark" onChange="jQuery().rsContactSheet('revert');">
+							<option value="true"><?php echo $lang["yes"]; ?></option>
+							<option value="false"><?php echo $lang["no"]; ?></option>
+						</select>
+						<div class="clearerleft"> </div>
+					</div>
+					<?php
+					}
+				else
+					{
+					?>
+					<input type="hidden" name="force_watermark" id="force_watermark" value="true" />
+					<?php
+					}
+				}
+            ?>
 
             <div name="previewPageOptions" id="previewPageOptions" class="Question" style="display:none">
                 <label><?php echo $lang['previewpage']?></label>

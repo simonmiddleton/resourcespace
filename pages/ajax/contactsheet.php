@@ -23,6 +23,13 @@ $preview       = ('true' == getvalescaped('preview', '') ? true : false);
 $previewpage   = getvalescaped('previewpage', 1);
 $includeheader = getvalescaped('includeheader', '');
 $addlink       = getvalescaped('addlink', '');
+$force_watermark   = getvalescaped('force_watermark','');
+if($force_watermark==='true'){
+	$force_watermark=true;
+}
+elseif($force_watermark==='false'){
+	$force_watermark=false;
+}
 
 // Check access
 if(!collection_readable($collection))
@@ -163,7 +170,8 @@ foreach($results as $result_data)
         }
 
     // Add the preview image
-    $use_watermark = check_use_watermark();
+    $use_watermark = $force_watermark;
+    if($use_watermark==''){$use_watermark = check_use_watermark();}
     $img_path = get_resource_path($result_data['ref'], true, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
     if(!file_exists($img_path))
         {
