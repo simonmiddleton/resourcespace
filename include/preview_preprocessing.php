@@ -576,7 +576,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
         
         if(10 < $duration)
             {
-            $snapshottime = floor($duration * $ffmpeg_snapshot_fraction);
+            $snapshottime = floor($duration * (isset($ffmpeg_snapshot_fraction) ? $ffmpeg_snapshot_fraction : 0.1));
             }
 
         if(isset($ffmpeg_snapshot_seconds)) // Overrides the other settings
