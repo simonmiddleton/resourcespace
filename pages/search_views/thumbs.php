@@ -114,6 +114,10 @@ if (!hook("renderresultthumb"))
 
                                 jQuery(this).attr('src', video_snapshots[snapshot_number]);
                                 }
+                            ).mouseout(function(event)
+                                {
+                                jQuery(this).attr('src', "<?php echo $thm_url; ?>");
+                                }
                             );
                             </script>
                             <?php

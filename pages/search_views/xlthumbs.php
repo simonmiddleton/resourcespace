@@ -125,7 +125,11 @@ if (!hook("renderresultlargethumb"))
 
                                         jQuery(this).attr('src', video_snapshots[snapshot_number]);
                                         }
-                                    );
+                                    ).mouseout(function(event)
+		                                {
+		                                jQuery(this).attr('src', "<?php echo $pre_url; ?>");
+		                                }
+		                            );
                                     </script>
                                     <?php
                                     }
