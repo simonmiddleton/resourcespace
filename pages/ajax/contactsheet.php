@@ -23,6 +23,7 @@ $preview       = ('true' == getvalescaped('preview', '') ? true : false);
 $previewpage   = getvalescaped('previewpage', 1);
 $includeheader = getvalescaped('includeheader', '');
 $addlink       = getvalescaped('addlink', '');
+$addlogo	   = getvalescaped('addlogo', '');
 $force_watermark   = getvalescaped('force_watermark','');
 if($force_watermark==='true'){
 	$force_watermark=true;
@@ -39,7 +40,7 @@ if(!collection_readable($collection))
 
 // Contact sheet options:
 $contactsheet_header           = ('' != $includeheader ? filter_var($includeheader, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_include_header);
-$add_contactsheet_logo         = ('true' == getvalescaped('addlogo', $include_contactsheet_logo) ? true : false);
+$add_contactsheet_logo         = ('' != $addlogo ?  filter_var($addlogo, FILTER_VALIDATE_BOOLEAN) : $include_contactsheet_logo);
 $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_add_link);
 $selected_contact_sheet_fields = getvalescaped('selected_contact_sheet_fields', '');
 
