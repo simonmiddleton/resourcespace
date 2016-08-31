@@ -834,10 +834,10 @@ function add_download_column($ref, $size_info, $downloadthissize)
 			if(!hook("downloadbuttonreplace"))
 				{
 				?><a id="downloadlink" <?php
-				if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]
+				if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . ($internal_share_access?"":$k) . "&size=" . $size_info["id"]
 						. "&ext=" . $size_info["extension"])))
 					{
-					echo "href=\"" . generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
+					echo "href=\"" . generateURL($baseurl_short . "pages/terms.php",$urlparams,array("k"=>($internal_share_access?"":$k),"url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("k"=>($internal_share_access?"":$k),"size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
 					}
 					?> onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"]?></a><?php
 				}
