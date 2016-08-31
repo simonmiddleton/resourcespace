@@ -19,7 +19,7 @@ function HookImagestreamUpload_pluploadInitialuploadprocessing()
 				{				
 				if ($archiver_fullpath==false) {exit($lang["archiver-utility-not-found"]);}
 				}
-		echo print_r($_POST) . print_r($_GET);		
+		
 		if (getval("lastqueued","")) # Now we have all the files, do the processing
 			{
 			debug ("DEBUG: Imagestream - last queued file");
