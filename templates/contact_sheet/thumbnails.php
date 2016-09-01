@@ -35,7 +35,7 @@ if(isset($contactsheet_header))
                 {
                 ?>
                 <td style="width: 40%;" align=right>
-                    <img id="logo" src="<?php echo $contact_sheet_logo; ?>" alt="Logo">
+                    <img id="logo" src="<?php echo $contact_sheet_logo; ?>" alt="Logo" <?php if(isset($contact_sheet_logo_resize) && $contact_sheet_logo_resize){ ?> style="width:100%;height:auto;"<?php } ?>>
                 </td>
                 <?php
                 }

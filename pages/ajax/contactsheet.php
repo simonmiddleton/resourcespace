@@ -108,6 +108,7 @@ if($add_contactsheet_logo)
     {
     $placeholders['add_contactsheet_logo'] = $add_contactsheet_logo;
     $placeholders['contact_sheet_logo']    = "$baseurl/$contact_sheet_logo";
+    $placeholders['contact_sheet_logo_resize'] = $contact_sheet_logo_resize;
     }
 
 if($contact_sheet_add_link)
