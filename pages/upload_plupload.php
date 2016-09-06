@@ -564,8 +564,10 @@ if ($_FILES)
 										}
 								}
 								
-                            $status=upload_file($replace_resource,(getval("no_exif","")=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!=''));
+                            $status = upload_file($replace_resource, ('yes' == getval('no_exif', '') && '' == getval('exif_override', '')), false, ('' != getval('autorotate','')), $plupload_upload_location);
+
                             hook("additional_replace_existing");
+
                             echo "SUCCESS: " . htmlspecialchars($replace_resource);
 											
 							// Check to see if we need to notify users of this change							
