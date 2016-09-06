@@ -587,7 +587,7 @@ if ($_FILES)
 									{
 									// A single resource has been found with the same filename
 									daily_stat("Resource upload",$target_resource[0]);
-									$status=upload_file($target_resource[0],(getval("no_exif","")=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!='')); # Upload to the specified ref.
+									$status=upload_file($target_resource[0],(getval("no_exif","")=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!=''), $plupload_upload_location); # Upload to the specified ref.
 									echo "SUCCESS: " . htmlspecialchars($target_resource[0]);
 									// Check to see if we need to notify users of this change							
 									if($notify_on_resource_change_days!=0)
