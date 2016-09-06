@@ -1187,7 +1187,7 @@ function update_field($resource,$field,$value)
 
 	if (count($fieldinfo)==0) {return false;} else {$fieldinfo=$fieldinfo[0];}
 	    
-    $fieldoptions = get_nodes($field);
+    $fieldoptions = get_nodes($field,null,true);
     $newvalues    = trim_array(explode(',', $value));
     
     # Set up arrays of node ids to add/remove. 
@@ -1253,9 +1253,23 @@ function update_field($resource,$field,$value)
         {
         foreach($fieldoptions as $nodedata)
             {
-            if (in_array($nodedata["name"],$newvalues))
+            // Add to array of nodes, unless it has been added to array already as a parent for a previous node
+            if (in_array($nodedata["name"],$newvalues) && !in_array($nodedata["ref"],$nodes_to_add)) 
                 {
                 $nodes_to_add[] = $nodedata["ref"];
+                // We need to add all parent nodes for category trees
+                if($fieldinfo['type']==7) 
+                    {
+                    $parent_nodes=get_parent_nodes($nodedata["ref"]);
+                    foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
+                        {
+                        $nodes_to_add[]=$parent_node_ref;
+                        if (!in_array($parent_node_name,$newvalues))
+                            {
+                            $value = $parent_node_name . "," . $value;    
+                            }
+                        }
+                    }
                 }
             else
                 {

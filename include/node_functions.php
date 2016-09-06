@@ -993,3 +993,26 @@ function copy_resource_type_field_nodes($from, $to)
 
     return true;
     }
+
+function get_parent_nodes($noderef)
+    {
+    $parent_nodes=array();    
+    $topnode=false;
+    do
+        {
+        $node=sql_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref='" . $noderef . "' ");
+        if(empty($node[0]["parent"]))
+            {  
+            $topnode=true;
+            }
+        else
+            {
+            $parent_nodes[$node[0]["parent"]]=$node[0]["name"];
+            $noderef=$node[0]["parent"];
+            }  
+        }
+    while (!$topnode);
+    
+    return $parent_nodes;
+    }
+
