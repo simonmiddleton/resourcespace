@@ -615,32 +615,41 @@ if ($_FILES)
 									unlink($plfilepath);
 									}
 								}
-							else
-								{							
-								# Overwrite an existing resource using the number from the filename.
-								
-								# Extract the number from the filename
-								$plfilename=strtolower(str_replace(" ","_",$plfilename));
-								$s=explode(".",$plfilename);
-								if (count($s)==2) # does the filename follow the format xxxxx.xxx?
-										{
-										$ref=trim($s[0]);
-										if (is_numeric($ref)) # is the first part of the filename numeric?
-                                                                                    {
-										    daily_stat("Resource upload",$ref);
-                                                                                    $status=upload_file($ref,(getval("no_exif","")=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!='')); # Upload to the specified ref.
-                                                                                    echo "SUCCESS: " . htmlspecialchars($ref);}
-                                                                                else
-                                                                                    {
-                                                                                    // No resource found with the same filename
-                                                                                    header('Content-Type: application/json');
-                                                                                    die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no ref matching filename ' . $origuploadedfilename . '"}, "id" : "id"}');
-                                                                                    unlink($plfilepath);    
-                                                                                    }
-										}
+                                else
+                                    {
+                                    # Overwrite an existing resource using the number from the filename.
 
-								exit();
-								}
+                                    # Extract the number from the filename
+                                    $plfilename=strtolower(str_replace(" ","_",$plfilename));
+                                    $s=explode(".",$plfilename);
+                                    
+                                    # does the filename follow the format xxxxx.xxx?
+                                    if(2 == count($s))
+                                        {
+                                        $ref = trim($s[0]);
+
+                                        // is the first part of the filename numeric?
+                                        if(is_numeric($ref))
+                                            {
+                                            daily_stat("Resource upload",$ref);
+
+                                            $status = upload_file($ref, ('yes' == getval('no_exif', '') && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
+
+                                            echo "SUCCESS: " . htmlspecialchars($ref);
+                                            }
+                                        else
+                                            {
+                                            // No resource found with the same filename
+                                            header('Content-Type: application/json');
+
+                                            die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no ref matching filename ' . $origuploadedfilename . '"}, "id" : "id"}');
+
+                                            unlink($plfilepath);
+                                            }
+                                        }
+
+                                    exit();
+                                    }
                             }
                     }		
 		}
