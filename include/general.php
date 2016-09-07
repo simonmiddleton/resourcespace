@@ -2592,6 +2592,13 @@ define('STR_HIGHLIGHT_STRIPLINKS', 8);
 
 function str_highlight($text, $needle, $options = null, $highlight = null)
 	{
+    /*
+    Sometimes the text can contain HTML entities and can break the hilghlighting feature
+    Example: searching for "q&a" in a string like "q&amp;a" will highlight the wrong string
+    */
+    $text = htmlspecialchars_decode($text);
+
+
 	# Thanks to Aidan Lister <aidan@php.net>
 	# Sourced from http://aidanlister.com/repos/v/function.str_highlight.php on 2007-10-09
 	# License on the website reads: "All code on this website resides in the Public Domain, you are free to use and modify it however you wish."
