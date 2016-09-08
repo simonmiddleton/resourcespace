@@ -115,7 +115,7 @@ if ($contact_sheet)
 <?php if (!$disable_geocoding) { ?>
 <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
 <?php if ($use_google_maps) { ?>
-<script src="https://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+<script src="https://maps.google.com/maps/api/js?v=3.2"></script>
 <?php } ?>
 <?php } ?>
 <?php if (!hook("ajaxcollections")) { ?>
