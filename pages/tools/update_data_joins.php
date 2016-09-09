@@ -78,7 +78,7 @@ if($add!=='' || $all){
 	if(count($add)>0){
 		foreach($add as $column){
 			echo "Updating column field$column...";
-			$wait=sql_query("UPDATE resource r inner join resource_data rd ON r.ref = rd.resource AND rd.resource_type_field={$column} SET r.field{$column} = rd.value");
+			$wait = sql_query("UPDATE resource r inner join resource_data rd ON r.ref = rd.resource AND rd.resource_type_field={$column} SET r.field{$column} = SUBSTR(rd.value, 1, {$resource_field_column_limit})");
 			echo "done!<br/>";
 			flush();
 		}
