@@ -2163,6 +2163,9 @@ $enable_plugin_upload = true;
 $disable_geocoding = false;
 $use_google_maps = false;
 
+# After obtaining an API key, please set the following config option:
+# $google_maps_api_key = '';
+
 #Enable geolocating multiple assets on a map that are part of a collection
 $geo_locate_collection = false;
 
