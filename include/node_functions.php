@@ -194,14 +194,16 @@ function get_node($ref, array &$returned_node)
 * 
 * @param  integer  $resource_type_field    ID of the metadata field
 * @param  integer  $parent                 ID of parent node
-* @param  integer  $recursive              Set to true to get children nodes as well
+* @param  boolean  $recursive              Set to true to get children nodes as well
+* @param  boolean  $lower                  Convert name column values to lower case
 * @return array
 */
-function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE)
+function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $lower = FALSE)
     {
     $return_nodes = array();
 
-    $query = sprintf('SELECT * FROM node WHERE resource_type_field = \'%s\' AND %s ORDER BY order_by ASC;',
+    $query = sprintf('SELECT ref, resource_type_field, %s, parent, order_by FROM node WHERE resource_type_field = \'%s\' AND %s ORDER BY order_by ASC',
+        ($lower ? 'LOWER(`name`) AS `name`' : '`name`'),
         escape_check($resource_type_field),
         (trim($parent)=="") ? 'parent IS NULL' : "parent = '" . escape_check($parent) . "'"
     );

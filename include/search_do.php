@@ -10,7 +10,9 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     debug("search=$search $go $fetchrows restypes=$restypes archive=$archive daylimit=$recent_search_daylimit");
 
     # globals needed for hooks
-    global $sql,$order,$select,$sql_join,$sql_filter,$orig_order,$collections_omit_archived,$search_sql_double_pass_mode,$usergroup,$search_filter_strict,$default_sort,$superaggregationflag,$k;
+    global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
+           $search_sql_double_pass_mode, $usergroup, $search_filter_strict, $default_sort, 
+           $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES;
 
     $alternativeresults = hook("alternativeresults", "", array($go));
     if ($alternativeresults)
@@ -100,9 +102,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
         }
 
     $keywords=split_keywords($search_params);
-
-    //print_r($keywords);
-
 
     foreach (get_indexed_resource_type_fields() as $resource_type_field)
         {
@@ -261,8 +260,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         }
                     }
 
-                //echo "field_short_name_specified=" . $field_short_name_specified . PHP_EOL;
-
                 if ($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && !in_array($fieldinfo['type'],array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE, FIELD_TYPE_TEXT_BOX_MULTI_LINE)))
                     {
 
@@ -364,18 +361,11 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             }
                         $sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $rangefield . "'";
                         }
-                    elseif (!hook('customsearchkeywordfilter', null, array($kw)))
+                    else if(!hook('customsearchkeywordfilter', null, array($kw)))
                         {
-
                         // TODO: suss this out
 
                         /*
-
-                        if (!isset($fieldinfo[0]["type"]))
-                            {
-                            return false;       // this is a duff field, i.e. does not exist
-                            }
-
                         if($fieldinfo[0]["type"]==FIELD_TYPE_CATEGORY_TREE)
                             {
                             $ckeywords=preg_split('/[\|;]/',$kw[1]);
@@ -407,6 +397,19 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
                         */
 
+                        }
+                    }
+                // Convert legacy fixed list field search to new format for nodes (@@NodeID)
+                else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo[0]['type']) && in_array($fieldinfo[0]['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
+                    $field_nodes      = get_nodes($fieldinfo[0]['ref'], null, false, true);
+                    $field_node_index = array_search($kw[1], array_column($field_nodes, 'name'));
+
+                    // Take the ref of the node and put it in the node_bucket
+                    if(false !== $field_node_index)
+                        {
+                        $node_bucket[][] = $field_nodes[$field_node_index]['ref'];
                         }
                     }
                 else
