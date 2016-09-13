@@ -1251,6 +1251,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     if ($search!="") {$search.=", ";}
                     $search.=$fields[$n]["name"] . ":" . $p;
                     }   
+                
             break;
         
             // Radio buttons:
@@ -1351,7 +1352,7 @@ function refine_searchstring($search){
     # This function solves several issues related to searching.
     # it eliminates duplicate terms, helps the field content to carry values over into advanced search correctly, fixes a searchbar bug where separators (such as in a pasted filename) cause an initial search to fail, separates terms for searchcrumbs.
     
-    global $use_refine_searchstring;
+    global $use_refine_searchstring, $dynamic_keyword_and;
     
     if (!$use_refine_searchstring){return $search;}
     
@@ -1364,6 +1365,7 @@ function refine_searchstring($search){
     $keywords=split_keywords($search);
 
     $orfields=get_OR_fields(); // leave checkbox type fields alone
+    $dynamic_keyword_fields=sql_array("select name value from resource_type_field where type=9");
     
     $fixedkeywords=array();
     foreach ($keywords as $keyword){
@@ -1374,7 +1376,7 @@ function refine_searchstring($search){
             $keyname=$keywordar[0];
             if (substr($keyname,0,1)!="!"){
                 if(substr($keywordar[1],0,5)=="range"){$keywordar[1]=str_replace(" ","-",$keywordar[1]);}
-                if (!in_array($keyname,$orfields)){
+                if (!in_array($keyname,$orfields) && (!$dynamic_keyword_and || ($dynamic_keyword_and && !in_array($keyname, $dynamic_keyword_fields)))){
                     $keyvalues=explode(" ",str_replace($keywordar[0].":","",$keywordar[1]));
                 } else {
                     $keyvalues=array($keywordar[1]);
