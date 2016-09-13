@@ -1248,9 +1248,9 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             elseif ($p!="" && $dynamic_keyword_and)
                     {
                     $p=str_replace(";",", {$fields[$n]["name"]}:",$p);	// this will force each and condition into a separate union in do_search (which will AND)
+                    if ($search!="") {$search.=", ";}
                     $search.=$fields[$n]["name"] . ":" . $p;
                     }   
-                
             break;
         
             // Radio buttons:
