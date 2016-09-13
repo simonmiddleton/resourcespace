@@ -19,6 +19,9 @@ if (!($direct_download_noauth && $direct)){
 	$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref","",true),$k))) {include dirname(__FILE__)."/../include/authenticate.php";}
 }
 
+// Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
+$internal_share_access = ($k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
+
 $ref=getvalescaped("ref","",true);
 $size=getvalescaped("size","");
 $ext=getvalescaped("ext","");

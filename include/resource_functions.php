@@ -1698,7 +1698,7 @@ function copy_resource($from,$resource_type=-1)
 	
 function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0)
 	{
-	global $userref,$k,$lang,$resource_log_previous_ref;
+	global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
 
     if(($resource===RESOURCE_LOG_APPEND_PREVIOUS && !isset($resource_log_previous_ref)) || ($resource!==RESOURCE_LOG_APPEND_PREVIOUS && $resource<0))
         {
@@ -1753,7 +1753,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         sql_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `purchase_size`, " .
             "`purchase_price`, `access_key`, `previous_value`) VALUES (now()," .
             (($userref != "") ? "'$userref'" : "null") . ",'{$resource}','{$type}'," . (($field=="") ? "null" : "'{$field}'") . ",'" . escape_check($notes) . "','" .
-            escape_check($diff) . "','{$usage}','{$purchase_size}','{$purchase_price}'," . (isset($k) ? "'{$k}'" : "null") . ",'" . escape_check($fromvalue) . "')");
+            escape_check($diff) . "','{$usage}','{$purchase_size}','{$purchase_price}'," . ((isset($k) && !$internal_share_access) ? "'{$k}'" : "null") . ",'" . escape_check($fromvalue) . "')");
         $log_ref=sql_insert_id();
         $resource_log_previous_ref=$log_ref;
         return $log_ref;
