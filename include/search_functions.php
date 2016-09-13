@@ -2075,7 +2075,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         // Don't filter if user is searching for their own resources and $open_access_for_contributor=true;
 		global $open_access_for_contributor;
-		if($open_access_for_contributor && $userref==$cuser){$sql_filter="true";$sql_join="";}
+		if($open_access_for_contributor && $userref==$cuser){$sql_filter="archive = '$archive'";$sql_join="";}
         
         $select=str_replace(",rca.access group_access,rca2.access user_access ",",null group_access, null user_access ",$select);
         return sql_query($sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where created_by='" . $cuser . "' and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix,false,$fetchrows);
