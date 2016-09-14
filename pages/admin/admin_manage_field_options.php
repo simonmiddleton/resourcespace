@@ -30,10 +30,10 @@ $chosencsslink ='<link type="text/css" rel="stylesheet" href="' . $baseurl_short
 $chosenjslink = '<script type="text/javascript" src="' . $baseurl_short . 'lib/chosen/chosen.jquery.min.js"></script>';
 
 if(!$ajax)
-	{
-	$headerinsert .= $chosencsslink;
-	$headerinsert .= $chosenjslink;
-	}
+    {
+    $headerinsert .= $chosencsslink;
+    $headerinsert .= $chosenjslink;
+    }
 
 $new_node_record_form_action = '/pages/admin/admin_manage_field_options.php?field=' . $field;
 
@@ -296,30 +296,29 @@ if('true' === $ajax && 'export' === $action)
 include '../../include/header.php';
 
 if($ajax)
-	{
-	echo $chosencsslink;
-	echo $chosenjslink;
-	}
-	
-?>
+    {
+    echo $chosencsslink;
+    echo $chosenjslink;
+    }
+    ?>
 <div class="BasicsBox">
     <p>
-        <a href="<?php echo $baseurl_short; ?>pages/admin/admin_resource_type_field_edit.php?ref=<?php echo $field; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']?></a>
+        <a href="<?php echo $baseurl_short; ?>pages/admin/admin_resource_type_field_edit.php?ref=<?php echo $field; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK; ?><?php echo $lang['back']; ?></a>
     </p>
     <h1><?php echo $lang['manage_metadata_field_options'] . (isset($field_data['title']) ? ' - ' . $field_data['title'] : ''); ?></h1>
 
-	<p><?php echo $lang["metadata_option_change_warning"] ?></p>
-	<?php
-	if(in_array($field,$default_to_first_node_for_fields))
-		{
-		?>
-		<p><?php echo $lang["metadata_first_option_is_default"]; ?>
-		<p>
-			<a href="<?php echo $baseurl?>/pages/tools/update_empty_field_with_default.php?field=<?php echo $field?>" onClick="CentralSpaceLoad(this,true);"><?php echo $lang['metadata_populate_default_node_for_empty_values']; ?></a>
-		</p>
-		<?php
-		}
-	?>
+    <p><?php echo $lang['metadata_option_change_warning']; ?></p>
+    <?php
+    if(in_array($field, $default_to_first_node_for_fields))
+        {
+        ?>
+        <p><?php echo $lang["metadata_first_option_is_default"]; ?>
+        <p>
+            <a href="<?php echo $baseurl?>/pages/tools/update_empty_field_with_default.php?field=<?php echo $field?>" onClick="CentralSpaceLoad(this,true);"><?php echo $lang['metadata_populate_default_node_for_empty_values']; ?></a>
+        </p>
+        <?php
+        }
+        ?>
     <div class="ListView">
         <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="5">
         <?php
@@ -337,7 +336,7 @@ if($ajax)
             <tbody>
         <?php
         // Render existing nodes
-		$nodes = get_nodes($field);
+        $nodes = get_nodes($field);
 
         if(0 == count($nodes))
             {
