@@ -293,6 +293,20 @@ if('true' === $ajax && 'export' === $action)
     exit();
     }
 
+// [Paging functionality]
+$url            = "{$baseurl_short}pages/admin/admin_manage_field_options.php?field={$field}";
+$offset         = (int) getvalescaped('offset', 0, true);
+$per_page       = (int) getvalescaped('per_page_list', $default_perpage_list, true);
+$count_nodes    = get_nodes_count($field);
+$totalpages     = ceil($count_nodes / $per_page);
+$curpage        = floor($offset / $per_page) + 1;
+$jumpcount      = 0;
+
+if($offset > $count_nodes)
+    {
+    $offset = 0;
+    }
+
 include '../../include/header.php';
 
 if($ajax)
@@ -319,7 +333,22 @@ if($ajax)
         <?php
         }
         ?>
-    <div class="ListView">
+    <div id="AdminManageMetadataFieldOptions" class="ListView">
+    <?php
+    if(7 != $field_data['type'])
+        {
+        ?>
+        <!-- Pager -->
+        <div class="TopInpageNavRight">
+        <?php
+        pager();
+        $draw_pager = true;
+        ?>
+        </div>
+        <div class="clearerleft"></div>
+        <?php
+        }
+        ?>
         <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="5">
         <?php
         // When editing a category tree we won't show the table headers since the data
@@ -336,7 +365,7 @@ if($ajax)
             <tbody>
         <?php
         // Render existing nodes
-        $nodes = get_nodes($field);
+        $nodes = get_nodes($field, null, false, $offset, $per_page);
 
         if(0 == count($nodes))
             {
@@ -344,7 +373,7 @@ if($ajax)
 
             migrate_resource_type_field_check($fieldinfo);
 
-            $nodes = get_nodes($field);
+            $nodes = get_nodes($field, null, false, $offset, $per_page);
             }
 
         foreach($nodes as $node)
@@ -378,6 +407,24 @@ if($ajax)
             }
             ?>
         </table>
+    <?php
+    if(7 != $field_data['type'])
+        {
+        ?>
+        <div class="BottomInpageNav">
+            <div class="BottomInpageNavRight">  
+            <?php 
+            if(isset($draw_pager))
+                {
+                pager(false);
+                } 
+                ?>
+            </div>
+            <div class="clearerleft"></div>
+        </div>
+        <?php
+        }
+        ?>
     </div><!-- end of ListView -->
 
 <?php

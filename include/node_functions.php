@@ -1044,3 +1044,19 @@ function get_parent_nodes($noderef)
 
     return $parent_nodes;
     }
+
+
+
+/**
+* Get the total number of nodes for a specific field
+* 
+* @param integer $resource_type_field ID of the metadata field
+* 
+* @return integer
+*/
+function get_nodes_count($resource_type_field)
+    {
+    $resource_type_field = escape_check($resource_type_field);
+
+    return (int) sql_value("SELECT count(ref) AS `value` FROM node WHERE resource_type_field = '{$resource_type_field}'", 0);
+    }

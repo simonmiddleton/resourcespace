@@ -1115,13 +1115,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 }
 
 /* Manage External Shares */
-.TeamExternalSharesPager {
-    width: 240px;
-    float: right;
-    margin-top: -50px;
-    margin-right: 10px;
-}
-
 .FormFilter {
     width: 700px;
 }
@@ -1172,3 +1165,22 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 .sub {font-size:0.8em;}
 
 .Highlight {background:#FFFF00;}
+
+/* Pagers (Search, Collections, Shares etc.) */
+.TeamExternalSharesPager {
+    width: 240px;
+    float: right;
+    margin-top: -50px;
+    margin-right: 10px;
+}
+
+#AdminManageMetadataFieldOptions > .TopInpageNavRight,
+#AdminManageMetadataFieldOptions > .TopInpageNavRight > .TopInpageNavRight {
+    position: inherit;
+    padding-left: 250px;
+    margin-bottom: 10px;
+}
+
+#AdminManageMetadataFieldOptions > .BottomInpageNav {
+    width: 540px;
+}
