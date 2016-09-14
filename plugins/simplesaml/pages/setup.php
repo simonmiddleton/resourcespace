@@ -27,6 +27,8 @@ if ((getval('submit','')!='') || (getval('save','')!=''))
 	$simplesaml['simplesaml_group_attribute'] = getvalescaped('simplesaml_group_attribute','');	
 	$simplesaml['simplesaml_fallback_group'] = getvalescaped('simplesaml_fallback_group','');
 	$simplesaml['simplesaml_update_group'] = getvalescaped('simplesaml_update_group','');
+	$simplesaml['simplesaml_fullname_separator'] = getvalescaped('simplesaml_fullname_separator','');
+	$simplesaml['simplesaml_username_separator'] = getvalescaped('simplesaml_username_separator','');
 	
 	$samlgroups = $_REQUEST['samlgroup'];
 	$rsgroups = $_REQUEST['rsgroup'];
@@ -74,6 +76,7 @@ include "../../../include/header.php";
 <?php echo config_boolean_field("simplesaml_site_block",$lang['simplesaml_site_block'],$simplesaml_site_block,30);?>
 <?php echo config_boolean_field("simplesaml_allow_public_shares",$lang['simplesaml_allow_public_shares'],$simplesaml_allow_public_shares,30);?>
 <?php echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp);?>
+<?php echo config_text_input("simplesaml_login_expiry",$lang['simplesaml_login_expiry'],$simplesaml_login_expiry);?>
 
 <?php echo config_text_input("simplesaml_allowedpaths",$lang['simplesaml_allowedpaths'],implode(',',$simplesaml_allowedpaths));?>
 <?php echo config_boolean_field("simplesaml_allow_standard_login",$lang['simplesaml_allow_standard_login'],$simplesaml_allow_standard_login,30);?>
@@ -82,8 +85,11 @@ include "../../../include/header.php";
 
 <?php echo config_section_header($lang['simplesaml_idp_configuration'],$lang['simplesaml_idp_configuration_description']);?>
 
+
 <?php echo config_text_input("simplesaml_username_attribute",$lang['simplesaml_username_attribute'],$simplesaml_username_attribute);?>
+<?php echo config_text_input("simplesaml_username_separator",$lang['simplesaml_username_separator'],$simplesaml_username_separator);?>
 <?php echo config_text_input("simplesaml_fullname_attribute",$lang['simplesaml_fullname_attribute'],$simplesaml_fullname_attribute);?>
+<?php echo config_text_input("simplesaml_fullname_separator",$lang['simplesaml_fullname_separator'],$simplesaml_fullname_separator);?>
 <?php echo config_text_input("simplesaml_email_attribute",$lang['simplesaml_email_attribute'],$simplesaml_email_attribute);?>
 <?php echo config_text_input("simplesaml_group_attribute",$lang['simplesaml_group_attribute'],$simplesaml_group_attribute);?>
 

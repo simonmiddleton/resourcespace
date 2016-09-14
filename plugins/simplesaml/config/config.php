@@ -14,4 +14,7 @@ $simplesaml_update_group=true;
 $simplesaml_fallback_group=2;
 $simplesaml_groupmap=array();
 $simplesaml_sp="default-sp";
+$simplesaml_fullname_separator=",";
+$simplesaml_username_separator=".";
 $simplesaml_prefer_standard_login=true;
+$simplesaml_login_expiry=3;
