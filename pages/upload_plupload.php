@@ -583,7 +583,7 @@ if ($_FILES)
 												{
 												# Move the old preview file to the alternative preview file location
 												$alt_preview_wmpath=get_resource_path($replace_resource, true, $ps[$n]["id"], true, "", -1, 1, true, "", $newaref);
-												rename($wpath, $alt_preview_wmpath);			
+												rename($wmpath, $alt_preview_wmpath);			
 												}
 											}
 										}
@@ -723,7 +723,6 @@ var pluploadconfig = {
         // General settings
         runtimes : '<?php echo $plupload_runtimes ?>',
         url: '<?php echo $uploadurl; ?>',
-        starting_url: '<?php echo $uploadurl; ?>',
          <?php if ($plupload_chunk_size!="")
                 {?>
                 chunk_size: '<?php echo $plupload_chunk_size; ?>',
@@ -835,17 +834,12 @@ var pluploadconfig = {
                 
                         //add flag so that upload_plupload.php can tell if this is the last file.
                         uploader.bind('BeforeUpload', function(up, files) {
-                            var pluploader_new_url = uploader.settings.starting_url;
-
                             // Add index of file in queue so we can know which file is being processed
-                            pluploader_new_url += '&queue_index=' + uploader.total.uploaded;
-
+                            uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'queue_index',uploader.total.uploaded);
                             if(uploader.total.uploaded == uploader.files.length-1)
                                 {
-                                pluploader_new_url += '&lastqueued=true';
+                                uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'lastqueued','true');
                                 }
-
-                            uploader.settings.url = pluploader_new_url;
                             <?php hook('beforeupload_end'); ?>
                         });       
                 
@@ -928,6 +922,8 @@ var pluploadconfig = {
                                                                 }
                                                             ?>
                                                   });
+												 // Reset the lastqueued flag in case more files are added now
+												 uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'lastqueued','');
                           });
                   
                                 
@@ -957,10 +953,10 @@ var pluploadconfig = {
                         //Change URL if exif box status changes
 						jQuery('#no_exif').live('change', function(){
 										if(jQuery(this).is(':checked')){
-												uploader.settings.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'no_exif','yes');
+												uploader.settings.url =ReplaceUrlParameter(uploader.settings.url,'no_exif','yes');
 										}
 										else {
-												uploader.settings.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'no_exif','');
+												uploader.settings.url =ReplaceUrlParameter(uploader.settings.url,'no_exif','');
 										}
 						});
 						<?php
@@ -971,18 +967,18 @@ var pluploadconfig = {
                                 jQuery('#keep_original').change(function() {
                                     if(jQuery(this).is(':checked'))
                                         {
-                                        uploader.settings.starting_url = ReplaceUrlParameter(pluploadconfig.starting_url, 'keep_original', 'yes');
-                                        uploader.settings.starting_url = ReplaceUrlParameter(pluploadconfig.starting_url, 'replace_resource_original_alt_filename', jQuery('#replace_resource_original_alt_filename').val());
+                                        uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'keep_original', 'yes');
+                                        uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'replace_resource_original_alt_filename', jQuery('#replace_resource_original_alt_filename').val());
                                         }
                                     else
                                         {
-                                        uploader.settings.starting_url = ReplaceUrlParameter(pluploadconfig.starting_url, 'keep_original', '');
-                                        uploader.settings.starting_url = ReplaceUrlParameter(pluploadconfig.starting_url, 'replace_resource_original_alt_filename', '');
+                                        uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'keep_original', '');
+                                        uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'replace_resource_original_alt_filename', '');
                                         }
                                 });
 
                                 jQuery('#replace_resource_original_alt_filename').change(function() {
-                                    uploader.settings.starting_url = ReplaceUrlParameter(pluploadconfig.starting_url, 'replace_resource_original_alt_filename', jQuery(this).val());
+                                    uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'replace_resource_original_alt_filename', jQuery(this).val());
                                 });
 								<?php
 								}
