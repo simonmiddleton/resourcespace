@@ -371,7 +371,7 @@ if (!hook("replacecdivrender"))
 				jQuery('#CollectionMaxDiv').show();
 				SetCookie('thumbs',"show",1000);
 				ModalCentre();
-				if(chosenCollection){
+				if(typeof chosenCollection !== 'undefined' && chosenCollection){
 					jQuery('#CollectionMaxDiv select').chosen({disable_search_threshold:chosenCollectionThreshold});
 				}
 			}
@@ -383,7 +383,7 @@ if (!hook("replacecdivrender"))
 				SetCookie('thumbs',"hide",1000);
 				ModalCentre();
 				
-				if(chosenCollection){
+				if(typeof chosenCollection !== 'undefined' && chosenCollection){
 					jQuery('#CollectionMinDiv select').chosen({disable_search_threshold:chosenCollectionThreshold});
 				}
 			}
