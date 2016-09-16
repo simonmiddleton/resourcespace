@@ -367,12 +367,13 @@ function process_if_statements($original_string, array $bind_params)
 * @return string
 */
 function resolve_pdf_language(){
-	global $language, $storagedir;
-	
-	$asdefaultlanguage='en';
-	
-	$supported_lang_files=scandir($storagedir."/../lib/html2pdf/locale");
-	$supported_langs=array();
+    global $language;
+
+    $asdefaultlanguage = 'en';
+    
+    $supported_lang_files = scandir(__DIR__ . '/../lib/html2pdf/locale');
+    $supported_langs      = array();
+
 	foreach($supported_lang_files as $file)
 		{
 		$sl=pathinfo($file, PATHINFO_FILENAME);
