@@ -1,79 +1,73 @@
 <?php
 
 include_once(__DIR__ . '/../../include/search_functions.php');
-
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
-// create a new resource with ref of 900
-sql_query("INSERT INTO `resource`(`ref`,`title`,`resource_type`) values (900,'Node test',1) ON DUPLICATE KEY UPDATE ref=ref");
-sql_query("INSERT INTO `resource`(`ref`,`title`,`resource_type`) values (901,'Node test second resource',1) ON DUPLICATE KEY UPDATE ref=ref");
+// create 3 new resources
+$resourcea=create_resource(1,0);
+$resourceb=create_resource(1,0);
+$resourcec=create_resource(1,0);
+debug("Resource A: " . $resourcea);
+debug("Resource B: " . $resourceb );
+debug("Resource C: " . $resourcec);
 
-// attach source:
-sql_query("INSERT INTO `resource_node`(`resource`,`node`) values (900,247) ON DUPLICATE KEY UPDATE resource=resource");  // resource 900: "Digital Camera"
-sql_query("INSERT INTO `resource_node`(`resource`,`node`) values (901,247) ON DUPLICATE KEY UPDATE resource=resource");  // resource 901: "Digital Camera"
+// Add new nodes to field
+$joeynode = set_node(NULL, 74, "Joey",'',1000);
+$johnnynode = set_node(NULL, 74, "Johnny",'',1000);
+$deedeenode = set_node(NULL, 74, "Dee Dee",'',1000);
+debug("node1: " . $joeynode . "\n");
+debug("node2: " . $johnnynode . "\n");
+debug("node3: " . $deedeenode . "\n");
 
-// attach countries:
-sql_query("INSERT INTO `resource_node`(`resource`,`node`) values (900,2) ON DUPLICATE KEY UPDATE resource=resource");  // resource 900: "Aland Islands"
-sql_query("INSERT INTO `resource_node`(`resource`,`node`) values (900,130) ON DUPLICATE KEY UPDATE resource=resource");  // resource 900: "Macedonia - The Former Yugoslav Republic Of"
+// Add two nodes to resource a
+add_resource_nodes($resourcea,array($johnnynode, $deedeenode));
 
-update_field(900,'title','search test one');
-update_field(901,'title','search test two');
+// Add Joey node to resource b
+add_resource_nodes($resourceb,array($joeynode));
 
-update_field(900,'subject','Animal');
-update_field(901,'subject','Building');
-
-reindex_resource(900);
-reindex_resource(901);
+// Add Johnny node to resource c
+add_resource_nodes($resourcec,array($johnnynode));
 
 // straight search of ref
-$results=do_search(900);
-if(!isset($results[0]['ref']) || $results[0]['ref']!=900) return false;
+debug("searching for resource by ref " . $resourcea );
+$results=do_search($resourcea);
+if(!isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
+debug("Successfully searched for resource by resource id");
 
-// search for 'Aland Island' (should be just one)
-$results=do_search('@@2');
-if(!isset($results[0]['ref']) || $results[0]['ref']!=900) return false;
+// search for 'Joey' (should be just resource b)
+$results=do_search('@@' . $joeynode);
+if(count($results)!==1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourceb) return false;
+debug("Successfully searched for resource by node");
+
+// search for 'Johnny' (should return both resources a and c)
+$results=do_search('@@' . $johnnynode);
+if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
+    ($results[0]['ref']!=$resourcea && $results[1]['ref']!=$resourcea) ||
+    ($results[0]['ref']!=$resourcec && $results[1]['ref']!=$resourcec)
+) return false;
+
+// search for 'Johnny' AND 'Dee Dee' (should be just resource a)
+$results=do_search('@@' . $johnnynode . ' @@' . $deedeenode);
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
+debug("Successfully searched for resources with two nodes");
 
 // search for everything (to get the count)
 $results=do_search('');
 $total=count($results);
-
-// search for everything but 'Aland Island' (should be n-1)
-$results=do_search('@@!2');
-
+// search for everything but 'Dee Dee' (should be n-1)
+$results=do_search('@@!' . $deedeenode);
 // there should be a difference of 1
 if(count($results)!=$total-1) return false;
+debug("Successfully searched for resources excluding node");
 
-// search for 'Aland Island' OR 'Macedonia - The Former Yugoslav Republic Of' (should be just one)
-$results=do_search('@@2@@130');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=900) return false;
+// search for 'Johnny' or 'Dee Dee', should get 2 results 
+$results=do_search('@@' . $johnnynode . '@@' . $deedeenode);
+if(count($results)!=2 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcec || $results[1]['ref']!=$resourcea) return false;
+debug("Successfully searched for resources with either of two nodes");
 
-// search for 'Aland Island' OR NOT 'Macedonia - The Former Yugoslav Republic Of' (should be just one - NOT within an OR is not supported at this time)
-$results=do_search('@@2@@!130');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=900) return false;
-
-// search for 'Aland Island' AND 'Macedonia - The Former Yugoslav Republic Of' (should be just one)
-$results=do_search('@@2 @@130');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=900) return false;
-
-// search for 'Aland Island' AND NOT 'Macedonia - The Former Yugoslav Republic Of' (should return nothing)
-$results=do_search('@@2 @@!130');
-if(!empty($results)) return false;
-
-// search for 'Digital Camera' (should return both resources 900 and 901)
-$results=do_search('@@247');
-if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
-    (
-    ($results[0]['ref']!=900 && $results[1]['ref']!=900) &&
-    ($results[0]['ref']!=901 && $results[1]['ref']!=901)
-    )
-) return false;
-
-// search for 'Digital Camera' AND 'Aland Island' (should return the one resource, 900)
-$results=do_search('@@247 @@130');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=900) return false;
-
-// search for 'Digital Camera' AND NOT 'Aland Island' (should return the one resource, 901)
-$results=do_search('@@247 @@!130');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=901) return false;
+// search for 'Johnny' and NOT 'Dee Dee' (should be resource c)
+$results=do_search('@@' . $johnnynode . ' @@!' . $deedeenode);
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcec) return false;
+debug("Successfully searched for resources with one node and NOT another node");
 
 return true;

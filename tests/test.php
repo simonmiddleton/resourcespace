@@ -11,8 +11,10 @@ if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
   */
 
-// note that we do not include anything at this point as db.php will try and connect to a given schema and
-// perform an upgrade - we do not want this to happen for this new test schema
+include_once "../include/db.php";
+include_once "../include/general.php";
+include_once "../include/resource_functions.php";
+include_once "../include/collections_functions.php";
 
 $suppress_headers=true;
 
@@ -41,33 +43,27 @@ foreach($argv as $arg)
         array_push($specific_tests, str_pad($arg,6,'0',STR_PAD_LEFT));
         }
     }
-
-$mysql_db = "rs_test_db";
-$test_user_name = "admin";
-$test_user_password = "admin123";
-
+    
 function create_new_db($db_name)
     {
+    global $db;
     # Create a database for testing purposes
     echo "Creating database $db_name\n";
-    include __DIR__ . '/../include/config.php';
-    $db=mysqli_connect($mysql_server,$mysql_username,$mysql_password,'');
     mysqli_query($db,"drop database if exists `$db_name`");
     mysqli_query($db,"create database `$db_name`");
     mysqli_query($db,"CREATE TABLE `{$db_name}`.`sysvars`(`name` VARCHAR(50) NOT NULL, `value` TEXT NULL, PRIMARY KEY (`name`))");
     mysqli_query($db,"INSERT INTO `{$db_name}`.`sysvars`(`name`,`value`) VALUE ('upgrade_system_level',999)");
     }
 
+$mysql_db = "rs_test_db";
+$test_user_name = "admin";
+$test_user_password = "admin123";
+
 if(array_search('nosetup',$argv)===false)
     {
     # this has to be done in its own function as it includes the config.php and don't want to scope those vars globally
     create_new_db($mysql_db);
     }
-
-include_once "../include/db.php";
-include_once "../include/general.php";
-include_once "../include/resource_functions.php";
-include_once "../include/collections_functions.php";
 
 sql_connect();
 if(array_search('nosetup',$argv)===false)
