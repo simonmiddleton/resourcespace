@@ -400,58 +400,68 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         
             // Radio buttons:
             case 12:
-                if($fields[$n]['display_as_dropdown']) {
-                    
+                if($fields[$n]['display_as_dropdown'])
+                    {
                     // Process dropdown or checkboxes behaviour (with only one option ticked):
                     $value = getvalescaped('field_' . $fields[$n]['ref'], '');
-                    if($value != '') {
-                        if ($search != '') { 
+
+                    if($value != '')
+                        {
+                        if('' != $search)
+                            { 
                             $search .= ', ';
-                        }
+                            }
+
                         $search .= $fields[$n]['name'] . ':' . $value;
+                        }
                     }
-                
-                } else {
-
+                else
+                    {
                     //Process checkbox behaviour (multiple options selected create a logical AND condition):
-                    //$options = trim_array(explode(',', $fields[$n]['options']));
-
-                    $options=array();
+                    $options = array();
                     node_field_options_override($options,$fields[$n]['ref']);
-                    
+
                     $p = '';
                     $c = 0;
-                    foreach ($options as $option) {
+                    foreach ($options as $option)
+                        {
                         $name = 'field_' . $fields[$n]['ref'] . '_' . sha1($option);
                         $value = getvalescaped($name, '');
 
-                        if($value == $option) {
+                        if($value == $option)
+                            {
                             if($p != '' || ($p=='' && emptyiszero($value)))
                                 {
                                 $c++;
                                 $p .= ';';
                                 }
+
                             $p .= mb_strtolower(i18n_get_translated($option), 'UTF-8');
+                            }
                         }
-                    }
         
                     // All options ticked - omit from the search (unless using AND matching, or there is only one option intended as a boolean selection)
-                    if(($c == count($options) && !$checkbox_and) && (count($options) > 1)) {
+                    if(($c == count($options) && !$checkbox_and) && (count($options) > 1))
+                        {
                         $p = '';
-                    }
-
-                    if($p != '') {
-                        if($search != '') {
-                            $search .= ', ';
                         }
+
+                    if('' != $p)
+                        {
+                        if('' != $search)
+                            {
+                            $search .= ', ';
+                            }
+
 						if($checkbox_and)
 							{
 							$p=str_replace(";",", {$fields[$n]["name"]}:",$p);	// this will force each and condition into a separate union in do_search (which will AND)
 							}
-                        $search .= $fields[$n]['name'] . ':' . $p;
-                    }
 
-                }
+                        $search .= $fields[$n]['name'] . ':' . $p;
+                        }
+
+                    }
             break;
             }
         }

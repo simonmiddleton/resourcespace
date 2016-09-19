@@ -71,7 +71,7 @@ if($edit_autosave)
     // Function to allow radio buttons to save automatically when $edit_autosave from config is set: 
     function radio_allow_save()
         {
-        preventautosave=false;
+        preventautosave = false;
 
         setTimeout(function()
             {
@@ -92,7 +92,7 @@ if($display_as_radiobuttons)
             $row = 1;
             $col = 1;
 
-            foreach ($field['node_options'] as $val)
+            foreach($field['node_options'] as $val)
                 {
                 if($col > $cols) 
                     {
@@ -128,25 +128,32 @@ else if($display_as_checkbox)
             <?php
             $row = 1;
             $col = 1;
-            foreach ($field['node_options'] as $option)
+
+            foreach($field['nodes'] as $node)
                 {
                 if($col > $cols) 
                     {
                     $col = 1;
-                    $row++; ?>
+                    $row++;
+                    ?>
                     </tr>
                     <tr>
                     <?php
                     }
                 $col++;
-                ?>
+
+                if(isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes))
+                    {
+                    $set = $node['ref'];
+                    }
+                    ?>
                 <td valign=middle>
-                    <input type=checkbox id="field_<?php echo $field["ref"] . '_' . sha1($option); ?>" name="field_<?php echo $field["ref"] . '_' . sha1($option); ?>" value="<?php echo $option; ?>" <?php if($option == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                    <input id="node_<?php echo $node['ref']; ?>" type="checkbox" name="node_<?php echo $node['ref']; ?>" value="yes" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                 </td>
                 <td valign=middle>
-                    <?php echo htmlspecialchars($option)?>&nbsp;&nbsp;
+                    <?php echo htmlspecialchars($node['name']); ?>&nbsp;&nbsp;
                 </td>
-                <?php
+                <?php 
                 }
                 ?>
             </tr>

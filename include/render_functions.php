@@ -5,10 +5,6 @@
 * @package ResourceSpace
 */
 
-/*
-TO DO: add here other functions used for rendering such as:
-- render_search_field from search_functions.php (completed)
-*/
 
 /**
 * Renders the HTML for the provided $field for inclusion in a search form, for example the
@@ -17,19 +13,22 @@ TO DO: add here other functions used for rendering such as:
 * $field    an associative array of field data, i.e. a row from the resource_type_field table.
 * $name     the input name to use in the form (post name)
 * $value    the default value to set for this field, if any
+* @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$forsearchbar=false,$limit_keywords=array())
+function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array())
     {
     node_field_options_override($field);
     
-    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short;
-    $name="field_" . ($forsearchbar ? htmlspecialchars($field["name"]) : $field["ref"]);
-    $id="field_" . $field["ref"];
-    
+    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, 
+           $daterange_search, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function,
+           $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short;
+
+    $name = "field_" . ($forsearchbar ? htmlspecialchars($field["name"]) : $field["ref"]);
+    $id   = "field_" . $field["ref"];
+
+    // Simple Search bar specifics
     if($forsearchbar)
     	{
-    	// need to check simple search specifics
-    	
     	}
     
     #Check if field has a display condition set

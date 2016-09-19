@@ -50,10 +50,11 @@ for ($n=0;$n<count($fields);$n++)
 $quoted_string=false;
 if (substr($quicksearch,0,1)=="\"" && substr($quicksearch,-1,1)=="\"") {$quoted_string=true;$quicksearch=substr($quicksearch,1,-1);}
 
-$quicksearch=refine_searchstring($quicksearch);
-$keywords=split_keywords($quicksearch);
-$set_fields=array();
-$simple=array();
+$quicksearch    = refine_searchstring($quicksearch);
+$keywords       = split_keywords($quicksearch);
+$set_fields     = array();
+$simple         = array();
+$searched_nodes = array();
 
 for ($n=0;$n<count($keywords);$n++)
 	{
@@ -66,6 +67,11 @@ for ($n=0;$n<count($keywords);$n++)
 			else {$set_fields[$s[0]]=$s[1];}
 			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);}
 			}
+        // Nodes search
+        else if(strpos($keywords[$n], '@@') !== false)
+            {
+            $searched_nodes[] = str_replace('@@', '', $keywords[$n]);
+            }
 		else
 			{
 			# Plain text (non field) search.
@@ -343,8 +349,7 @@ if (!$basic_simple_search)
 				$has_value[]=$fields[$n]['ref'];
 				}
 
-			render_search_field($fields[$n],$value,false,"SearchWidth",true);
-
+			render_search_field($fields[$n], $value, false, 'SearchWidth', true, array(), $searched_nodes);
 			}
 		}
 	

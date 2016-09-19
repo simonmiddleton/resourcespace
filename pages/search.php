@@ -132,10 +132,11 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 
 	foreach (array_merge($_GET, $_POST) as $key=>$value)
 		{
-		if (is_string($value))
+		if(is_string($value))
 		  {
-		  $value=trim($value);
+		  $value = trim($value);
 		  }
+
 		if ($value!="" && substr($key,0,6)=="field_")
 			{
 			if ((strpos($key,"_year")!==false)||(strpos($key,"_month")!==false)||(strpos($key,"_day")!==false))
@@ -182,8 +183,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				if (substr($value,0,1)==";") {$value=substr($value,1);}
 				
 				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,10) . ":" . $value;
-				}		
-
+				}
 			else
 				{
 				# Standard field
@@ -195,6 +195,13 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 					}
 				}
 			}
+        // Nodes can be searched directly when displayed on simple search bar
+        else if('' != $value && substr($key, 0, 5) == 'node_')
+            {
+            $node_ref = str_replace('node_', '', $key);
+
+            $search = ('' == $search ? '' : join(', ', split_keywords($search)) . ', ') . "@@{$node_ref}";
+            }
 		}
 
 	$year=getvalescaped("year","");
