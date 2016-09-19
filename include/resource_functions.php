@@ -688,16 +688,14 @@ function save_resource_data_multi($collection)
 				if (getval("modeselect_" . $fields[$n]["ref"],"")=="FR")
 					{
                     # Find and replace mode? Perform the find and replace.
-					$findstring=getvalescaped("find_" . $fields[$n]["ref"],"");
-					$replacestring=getvalescaped("replace_" . $fields[$n]["ref"],"");
+					$findstring=getval("find_" . $fields[$n]["ref"],"");
+					$replacestring=getval("replace_" . $fields[$n]["ref"],"");
 					$val=str_replace($findstring,$replacestring,$existing); 
 					if ($fields[$n]["type"] == 8) // Need to replace quotes with html characters
 						{
-						$findstring=htmlspecialchars($findstring);
-						$replacestring=htmlspecialchars($replacestring);
+						$findstring=str_replace("'", "&#39;",htmlspecialchars($findstring));
+						$replacestring=str_replace("'", "&#39;",htmlspecialchars($replacestring));
 						$val=str_replace($findstring,$replacestring,$val); 
-						//echo "Replacing " . $findstring  . " with " . $replacestring ;
-						//exit();
 						}
 					}
 				
