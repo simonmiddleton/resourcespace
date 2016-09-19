@@ -319,7 +319,7 @@ if (!$basic_simple_search)
 	$optionfields=array();
 	$rendered_names=array();
 	$has_value=array();
-	//global $fields;
+
 	for ($n=0;$n<count($fields);$n++)
 		{
 		$render=true;
@@ -329,13 +329,20 @@ if (!$basic_simple_search)
 			$rendered_names[]=$fields[$n]["name"];
 			
 			# Fetch current value
-			$value="";
-			if (isset($set_fields[$fields[$n]["name"]])) {$value=$set_fields[$fields[$n]["name"]];}
-			$fields[$n]['value']=$value;
+			$value = '';
+
+			if(isset($set_fields[$fields[$n]["name"]]))
+                {
+                $value = $set_fields[$fields[$n]["name"]];
+                }
+
+			$fields[$n]['value'] = $value;
+
 			if($value!=='')
 				{
 				$has_value[]=$fields[$n]['ref'];
 				}
+
 			render_search_field($fields[$n],$value,false,"SearchWidth",true);
 
 			}
