@@ -678,15 +678,15 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         // Radio buttons:
         case 12:
             // auto save is not needed when searching
-            $edit_autosave = FALSE;
-             
-            $display_as_radiobuttons = FALSE;
-            $display_as_checkbox = TRUE;
+            $edit_autosave           = false;
+            $display_as_radiobuttons = false;
+            $display_as_checkbox     = true;
 
-            if($field['display_as_dropdown']) {
-                $display_as_dropdown = TRUE;
-                $display_as_checkbox = FALSE;
-            }
+            if($field['display_as_dropdown'])
+                {
+                $display_as_dropdown = true;
+                $display_as_checkbox = false;
+                }
             
             include __DIR__ . '/../pages/edit_fields/12.php';
         break;
