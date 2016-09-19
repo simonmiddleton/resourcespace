@@ -688,13 +688,19 @@ function save_resource_data_multi($collection)
 				if (getval("modeselect_" . $fields[$n]["ref"],"")=="FR")
 					{
                     # Find and replace mode? Perform the find and replace.
-					$val=str_replace
-						(
-						getvalescaped("find_" . $fields[$n]["ref"],""),
-						getvalescaped("replace_" . $fields[$n]["ref"],""),
-						$existing
-						);                    
+					$findstring=getvalescaped("find_" . $fields[$n]["ref"],"");
+					$replacestring=getvalescaped("replace_" . $fields[$n]["ref"],"");
+					$val=str_replace($findstring,$replacestring,$existing); 
+					if ($fields[$n]["type"] == 8) // Need to replace quotes with html characters
+						{
+						$findstring=htmlspecialchars($findstring);
+						$replacestring=htmlspecialchars($replacestring);
+						$val=str_replace($findstring,$replacestring,$val); 
+						//echo "Replacing " . $findstring  . " with " . $replacestring ;
+						//exit();
+						}
 					}
+				
 				
 				# Append text/option(s) mode?
 				if (getval("modeselect_" . $fields[$n]["ref"],"")=="AP")
@@ -1745,7 +1751,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
 
     if ($resource===RESOURCE_LOG_APPEND_PREVIOUS)
         {
-        sql_query("UPDATE `resource_log` SET `diff`=concat(`diff`,'\n','" . escape_check($diff) . "') WHERE `ref`=" . $resource_log_previous_ref);
+        sql_query("UPDATE `resource_log` SET `diff`=left(concat(`diff`,'\n','" . escape_check($diff) . "'),60000) WHERE `ref`=" . $resource_log_previous_ref);
         return $resource_log_previous_ref;
         }
     else
