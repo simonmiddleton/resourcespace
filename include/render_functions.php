@@ -688,7 +688,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 $display_as_checkbox = FALSE;
             }
             
-            include '../pages/edit_fields/12.php';
+            include __DIR__ . '/../pages/edit_fields/12.php';
         break;
         }
     ?>
