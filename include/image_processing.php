@@ -1946,7 +1946,7 @@ function get_colour_key($image)
 	return($colkey);
 	}
 
-function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg")
+function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1)
 	{
 	# Tweak all preview images
 	# On the edit screen, preview images can be either rotated or gamma adjusted. We keep the high(original) and low resolution print versions intact as these would be adjusted professionally when in use in the target application.
@@ -1954,13 +1954,13 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg")
 	# Use the screen resolution version for processing
 	global $tweak_all_images;
 	if ($tweak_all_images){
-		$file=get_resource_path($ref,true,"hpr",false,$extension);$top="hpr";
+		$file=get_resource_path($ref,true,"hpr",false,$extension,-1,1,false,'',$alternative);$top="hpr";
 		if (!file_exists($file)) {
-			$file=get_resource_path($ref,true,"lpr",false,$extension);$top="lpr";
+			$file=get_resource_path($ref,true,"lpr",false,$extension,-1,1,false,'',$alternative);$top="lpr";
 			if (!file_exists($file)) {
-				$file=get_resource_path($ref,true,"scr",false,$extension);$top="scr";
+				$file=get_resource_path($ref,true,"scr",false,$extension,-1,1,false,'',$alternative);$top="scr";
 				if (!file_exists($file)) {
-					$file=get_resource_path($ref,true,"pre",false,$extension);$top="pre";
+					$file=get_resource_path($ref,true,"pre",false,$extension,-1,1,false,'',$alternative);$top="pre";
 				}
 			}
 		}
@@ -2008,7 +2008,7 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg")
 	for ($n=0;$n<count($ps);$n++)
 		{
 		# fetch target width and height
-	    $file=get_resource_path($ref,true,$ps[$n]["id"],false,$extension);		
+	    $file=get_resource_path($ref,true,$ps[$n]["id"],false,$extension,-1,1,false,'',$alternative);		
 	    if (file_exists($file)){
 			list($sw,$sh) = @getimagesize($file);
 	    
@@ -2032,7 +2032,7 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg")
 			}
 		}
 
-	if ($rotateangle!=0)
+	if ($rotateangle!=0 && $alternative==-1)
 		{
 		# Swap thumb heights/widths
 		$ts=sql_query("select thumb_width,thumb_height from resource where ref='$ref'");
@@ -2048,11 +2048,15 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg")
 		
 		}
 	# Update the modified date to force the browser to reload the new thumbs.
-	sql_query("update resource set file_modified=now() where ref='$ref'");
+	$current_preview_tweak ='';
+	if ($alternative==-1){
+		sql_query("update resource set file_modified=now() where ref='$ref'");
 	
 	# record what was done so that we can reconstruct later if needed
 	# current format is rotation|gamma. Additional could be tacked on if more manipulation options are added
 	$current_preview_tweak = sql_value("select preview_tweaks value from resource where ref = '$ref'","");
+	}
+	
 	if (strlen($current_preview_tweak) == 0)
 		{
 			$oldrotate = 0;
@@ -2075,19 +2079,20 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg")
 		}
         global $watermark;
         if ($watermark){
-            tweak_wm_preview_images($ref,$rotateangle,$gamma);
+            tweak_wm_preview_images($ref,$rotateangle,$gamma,"jpg",$alternative);
         }
-        
-        sql_query("update resource set preview_tweaks = '$newrotate|$newgamma' where ref = $ref");
+        if ($alternative==-1){
+			sql_query("update resource set preview_tweaks = '$newrotate|$newgamma' where ref = $ref");
+		}
         
 	}
 
-function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg"){
+function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1){
 
     $ps=sql_query("select * from preview_size where (internal=1 or allow_preview=1)");
     for ($n=0;$n<count($ps);$n++)
         {
-        $wm_file=get_resource_path($ref,true,$ps[$n]["id"],false,$extension,-1,1,true);
+        $wm_file=get_resource_path($ref,true,$ps[$n]["id"],false,$extension,-1,1,true,'',$alternative);
         if (!file_exists($wm_file)) {return false;}
         list($sw,$sh) = @getimagesize($wm_file);
         
