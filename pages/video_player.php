@@ -13,6 +13,7 @@ if($video_player_thumbs_view_alt && isset($video_player_thumbs_view_alt_name) &&
 
 # First we look for a preview video with the expected extension.
 $flashfile=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative);
+$flashfallback=false;
 if (file_exists($flashfile))
 	{
 	$flashpath=get_resource_path($ref,false,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative,false);
@@ -22,10 +23,12 @@ elseif ($ffmpeg_preview_extension!="flv")
 	# Still no file. For legacy systems that are not using MP4 previews, next we look for an FLV preview.
 	$flashfile=get_resource_path($ref,true,"pre",false,"flv",-1,1,false,"",$alternative);
 	$flashpath=get_resource_path($ref,false,"pre",false,"flv",-1,1,false,"",$alternative,false);
+	$flashfallback=true;
 	}
 
 if (!file_exists($flashfile) || $video_preview_original)
-        {
+    {
+	$flashfallback=false;
 	# Back out to playing the source file direct (not a preview). For direct MP4/FLV upload support - the file itself is an FLV/MP4. Or, with the preview functionality disabled, we simply allow playback of uploaded video files.
 	$origvideofile=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative);
 	if(file_exists($origvideofile))
@@ -106,7 +109,7 @@ if(!hook("swfplayer"))
 		?>
 		<link href="<?php echo $baseurl_short?>lib/videojs/video-js.min.css?r=<?=$css_reload_key?>" rel="stylesheet">
         <script src="<?php echo $baseurl_short?>lib/videojs/video.min.js?r=<?=$css_reload_key?>"></script>
-		<script src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?r=<?=$css_reload_key?>"></script>
+		<script src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?r=<?=$css_reload_key?>"></script>		
 		<!-- START VIDEOJS -->
 		<div class="videojscontent">
 		<video 
@@ -143,7 +146,7 @@ if(!hook("swfplayer"))
 				onmouseover="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].play();"
 			<?php } ?>
 		>
-		    <source src="<?php echo $flashpath_raw?>" type="video/<?php echo $ffmpeg_preview_extension?>" >
+		    <source src="<?php echo $flashpath_raw?>" type="video/<?php echo ($flashfallback?"flv":$ffmpeg_preview_extension) ?>" >
 			<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 			<?php hook("html5videoextra"); ?>
 		</video>
