@@ -681,7 +681,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             $display_as_radiobuttons = false;
             $display_as_checkbox     = true;
 
-            if($field['display_as_dropdown'])
+            if($forsearchbar || $field['display_as_dropdown'])
                 {
                 $display_as_dropdown = true;
                 $display_as_checkbox = false;
