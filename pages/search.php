@@ -211,7 +211,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
                     }
                 else if(!is_array($searched_field_nodes))
                     {
-                    $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
+                    $node_ref .= ', ' . NODE_TOKEN_PREFIX . escape_check($searched_field_nodes);
 
                     continue;
                     }
@@ -221,7 +221,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 
                 foreach($searched_field_nodes as $searched_node_ref)
                     {
-                    $node_ref .= NODE_TOKEN_PREFIX . $searched_node_ref;
+                    $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
                     }
                 }
 

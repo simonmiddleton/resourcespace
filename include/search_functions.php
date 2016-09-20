@@ -480,7 +480,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 }
             else if(!is_array($searched_field_nodes))
                 {
-                $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
+                $node_ref .= ', ' . NODE_TOKEN_PREFIX . escape_check($searched_field_nodes);
 
                 continue;
                 }
@@ -490,7 +490,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
             foreach($searched_field_nodes as $searched_node_ref)
                 {
-                $node_ref .= NODE_TOKEN_PREFIX . $searched_node_ref;
+                $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
                 }
             }
 
