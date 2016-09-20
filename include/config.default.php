@@ -3098,3 +3098,5 @@ $collection_empty_on_submit=false;
 # Retina mode. Use the "next size up" when rending previews and thumbs for a more crisp display on high resolution screens. Note - uses much more bandwidth also.
 $retina_mode=false;
 
+# $xframe_options - set this to SAMEORIGIN or ALLOW-FROM with a URL to allow site to be used in an iframe
+$xframe_options = "DENY";
