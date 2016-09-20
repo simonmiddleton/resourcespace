@@ -149,6 +149,8 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 $search=@$_COOKIE["search"];
 $keywords=explode(",",$search);
 $allwords="";$found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";
+$searched_nodes = array();
+
 foreach($advanced_search_properties as $advanced_search_property=>$code)
   {$$advanced_search_property="";}
  
@@ -165,6 +167,7 @@ else
 	{$restypes=get_search_default_restypes();}
   else
 		{$restypes=explode(",",getvalescaped("restypes",""));}
+
   for ($n=0;$n<count($keywords);$n++)
 	  {
 	  $keyword=$keywords[$n];
@@ -199,7 +202,17 @@ else
 				$$fieldname=$propertyval;
 				}
 			  }
-		  } 
+		  }
+        // Nodes search
+        else if(strpos($keyword, NODE_TOKEN_PREFIX) !== false)
+            {
+            $nodes = resolve_nodes_from_string($keyword);
+
+            foreach($nodes as $node)
+                {
+                $searched_nodes[] = $node;
+                }
+            }
 	  else
 		  {
 		  if ($allwords=="") {$allwords=$keyword;} else {$allwords.=", " . $keyword;}
@@ -582,8 +595,7 @@ for ($n=0;$n<count($fields);$n++)
 	if (getval("resetform","")!="") {$value="";}
 	
 	# Render this field
-	render_search_field($fields[$n],$value,true,"SearchWidth");
-
+    render_search_field($fields[$n], $value, true, 'SearchWidth', false, array(), $searched_nodes);
 	}
 ?>
 </div>

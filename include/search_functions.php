@@ -465,7 +465,25 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             break;
             }
         }
-		
+
+        ##### NODES #####
+        // Fixed lists will be handled separately as we don't care about the field they belong to,
+        // we know exactly what we are searching for.
+        $node_ref = '';
+
+        foreach(getval('nodes_searched', array()) as $searched_field_nodes)
+            {
+            $node_ref .= ', ';
+
+            foreach($searched_field_nodes as $searched_node_ref)
+                {
+                $node_ref .= NODE_TOKEN_PREFIX . $searched_node_ref;
+                }
+            }
+
+        $search = ('' == $search ? '' : join(', ', split_keywords($search))) . $node_ref;
+        ##### END OF NODES #####
+
         $propertysearchcodes=array();
         global $advanced_search_properties;
         foreach($advanced_search_properties as $advanced_search_property=>$code)
