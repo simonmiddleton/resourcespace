@@ -204,6 +204,19 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 
             foreach($value as $searched_field_nodes)
                 {
+                // Fields that are displayed as a dropdown will only pass one node ID
+                if(!is_array($searched_field_nodes) && '' == $searched_field_nodes)
+                    {
+                    continue;
+                    }
+                else if(!is_array($searched_field_nodes))
+                    {
+                    $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
+
+                    continue;
+                    }
+
+                // For fields that can pass multiple node IDs at a time
                 $node_ref .= ', ';
 
                 foreach($searched_field_nodes as $searched_node_ref)

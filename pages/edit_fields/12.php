@@ -148,7 +148,7 @@ else if($display_as_checkbox)
                     }
                     ?>
                 <td valign=middle>
-                    <input id="nodes_searched" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                    <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                 </td>
                 <td valign=middle>
                     <?php echo htmlspecialchars($node['name']); ?>&nbsp;&nbsp;
@@ -165,13 +165,19 @@ else if($display_as_checkbox)
 else if($display_as_dropdown)
     {
     ?>
-    <select class="<?php echo $class ?>" name="field_<?php echo $field["ref"]?>" id="field_<?php echo $field["ref"]?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>><option value=""></option><?php
-    foreach($field['node_options'] as $value)
+    <select class="<?php echo $class; ?>" name="nodes_searched[<?php echo $field['ref']; ?>]" <?php if($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+        <option value=""></option>
+    <?php
+    foreach($field['nodes'] as $node)
         {
-        if('' != trim($value))
+        if('' != trim($node['name']))
             {
-            ?>
-            <option value="<?php echo htmlspecialchars(trim($value)); ?>" <?php if($value == $set) { echo 'selected'; } ?>><?php echo htmlspecialchars(trim($value)); ?></option>
+            if(isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes))
+                {
+                $set = $node['ref'];
+                }
+                ?>
+            <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>" <?php if($node['ref'] == $set) { ?>selected<?php } ?>><?php echo htmlspecialchars(trim($node['name'])); ?></option>
             <?php
             }
         }

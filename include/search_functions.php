@@ -473,6 +473,19 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
         foreach(getval('nodes_searched', array()) as $searched_field_nodes)
             {
+            // Fields that are displayed as a dropdown will only pass one node ID
+            if(!is_array($searched_field_nodes) && '' == $searched_field_nodes)
+                {
+                continue;
+                }
+            else if(!is_array($searched_field_nodes))
+                {
+                $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
+
+                continue;
+                }
+
+            // For fields that are displayed as checkboxes
             $node_ref .= ', ';
 
             foreach($searched_field_nodes as $searched_node_ref)
