@@ -68,9 +68,14 @@ for ($n=0;$n<count($keywords);$n++)
 			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);}
 			}
         // Nodes search
-        else if(strpos($keywords[$n], '@@') !== false)
+        else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
             {
-            $searched_nodes[] = str_replace('@@', '', $keywords[$n]);
+            $nodes = resolve_nodes_from_string($keywords[$n]);
+
+            foreach($nodes as $node)
+                {
+                $searched_nodes[] = $node;
+                }
             }
 		else
 			{

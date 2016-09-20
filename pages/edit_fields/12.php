@@ -148,7 +148,7 @@ else if($display_as_checkbox)
                     }
                     ?>
                 <td valign=middle>
-                    <input id="node_<?php echo $node['ref']; ?>" type="checkbox" name="node_<?php echo $node['ref']; ?>" value="yes" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                    <input id="nodes_searched" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                 </td>
                 <td valign=middle>
                     <?php echo htmlspecialchars($node['name']); ?>&nbsp;&nbsp;

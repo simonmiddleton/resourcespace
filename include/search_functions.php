@@ -1357,3 +1357,40 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
      # Arrived here? There were no special searches. Return false.
      return false;
      }
+
+
+/**
+* Function used to create a list of nodes found in a search string
+* 
+* IMPORTANT: use resolve_given_nodes() if you need to detect nodes based on
+* search string format (ie. @@253@@255 and/ or !@@260)
+* 
+* @param string $string
+* 
+* @return array
+*/
+function resolve_nodes_from_string($string)
+    {
+    if(!is_string($string))
+        {
+        return array();
+        }
+
+    $node_bucket     = array();
+    $node_bucket_not = array();
+    $return          = array();
+
+    resolve_given_nodes($string, $node_bucket, $node_bucket_not);
+
+    $merged_nodes = array_merge($node_bucket, $node_bucket_not);
+
+    foreach($merged_nodes as $nodes)
+        {
+        foreach($nodes as $node)
+            {
+            $return[] = $node;
+            }
+        }
+
+    return $return;
+    }

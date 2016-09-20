@@ -196,11 +196,23 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				}
 			}
         // Nodes can be searched directly when displayed on simple search bar
-        else if('' != $value && substr($key, 0, 5) == 'node_')
+		// Note: intially they come grouped by field as we need to know whether if
+		// there is a OR case involved (ie. @@101@@102)
+        else if('' != $value && substr($key, 0, 14) == 'nodes_searched')
             {
-            $node_ref = str_replace('node_', '', $key);
+            $node_ref = '';
 
-            $search = ('' == $search ? '' : join(', ', split_keywords($search)) . ', ') . "@@{$node_ref}";
+            foreach($value as $searched_field_nodes)
+                {
+                $node_ref .= ', ';
+
+                foreach($searched_field_nodes as $searched_node_ref)
+                    {
+                    $node_ref .= NODE_TOKEN_PREFIX . $searched_node_ref;
+                    }
+                }
+
+            $search = ('' == $search ? '' : join(', ', split_keywords($search))) . $node_ref;
             }
 		}
 
