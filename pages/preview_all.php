@@ -28,8 +28,8 @@ $search=getvalescaped("search","");
 if (strpos($search,"!")===false) {rs_setcookie('search', $search);} # store the search in a cookie if not a special search
 $offset=getvalescaped("offset",0);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset);}
 if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
-$order_by=getvalescaped("order_by",$default_sort_direction);if (strpos($search,"!")===false) {rs_setcookie('saved_order_by', $order_by);}
-if ($order_by=="") {$order_by=$default_sort_direction;}
+$order_by=getvalescaped("order_by",$default_sort);if (strpos($search,"!")===false) {rs_setcookie('saved_order_by', $order_by);}
+if ($order_by=="") {$order_by=$default_sort;}
 $per_page=getvalescaped("per_page",$default_perpage);rs_setcookie('per_page', $per_page);
 $archive=getvalescaped("archive",0);if (strpos($search,"!")===false) {rs_setcookie('saved_archive', $archive);}
 $jumpcount=0;
