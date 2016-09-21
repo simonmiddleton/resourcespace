@@ -40,24 +40,26 @@
             {
             for($n = 0; $n < count($custom_top_nav); $n++)
                 {
-                $on_click = ' onClick="return CentralSpaceLoad(this, true);"';
-                $target   = '';
-
-                // External links should open in a new tab
-			   if (false != strpos($custom_top_nav[$n]['link'], "//"))
-                    {
-                    $on_click = '';
-                    $target   = ' target="_blank"';
-                    }
-
-                if(strpos($custom_top_nav[$n]['title'], '(lang)') !== false)
-                    {
-                    $custom_top_nav_title=str_replace("(lang)","",$custom_top_nav[$n]["title"]);
-                    $custom_top_nav[$n]["title"]=$lang[$custom_top_nav_title];
-                    }
-                    ?>
-                <li><a href="<?php echo $custom_top_nav[$n]["link"] ?>"<?php echo $target . $on_click; ?>><?php echo i18n_get_translated($custom_top_nav[$n]["title"]) ?></a></li>
-                <?php
+																// External links should open in a new tab
+																if (strpos($custom_top_nav[$n]['link'], $baseurl) === false)
+																				{
+																				$on_click = '';
+																				$target   = ' target="_blank"';
+																				}
+																//Internal links can still open in the same tab				
+																else
+																				{
+																				$on_click = ' onClick="return CentralSpaceLoad(this, true);"';
+																				$target   = '';
+																				}
+																				if(strpos($custom_top_nav[$n]['title'], '(lang)') !== false)
+																								{
+																								$custom_top_nav_title=str_replace("(lang)","",$custom_top_nav[$n]["title"]);
+																								$custom_top_nav[$n]["title"]=$lang[$custom_top_nav_title];
+																								}
+																								?>
+																				<li><a href="<?php echo $custom_top_nav[$n]["link"] ?>"<?php echo $target . $on_click; ?>><?php echo i18n_get_translated($custom_top_nav[$n]["title"]) ?></a></li>
+																				<?php
                 }
             }
             ?>
