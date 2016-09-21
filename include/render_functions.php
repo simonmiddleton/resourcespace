@@ -658,40 +658,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 
 			# Add to clear function
 			$clear_function.="DeselectAll('" . $field["name"] ."', true);";
-            
-            /*# On the search bar?
-            # Produce a smaller version of the category tree in a single dropdown - max two levels
-            ?>
-            <select class="<?php echo $class ?>" name="field_<?php echo $field["ref"]?>"><option value=""></option><?php
-            $class=explode("\n",$options);
-
-            for ($t=0;$t<count($class);$t++)
-                {
-                $s=explode(",",$class[$t]);
-                if (count($s)==3 && $s[1]==0)
-                    {
-                    # Found a first level
-                    ?>
-                    <option <?php if (in_array(cleanse_string($s[2],true),$set)) {?>selected<?php } ?>><?php echo htmlspecialchars($s[2]) ?></option>
-                    <?php
-                    
-                    # Parse tree again looking for level twos at this point
-                    for ($u=0;$u<count($class);$u++)
-                        {
-                        $v=explode(",",$class[$u]);
-                        if (count($v)==3 && $v[1]==$s[0])
-                            {
-                            # Found a first level
-                            ?>
-                            <option value="<?php echo htmlspecialchars($s[2]) . "," . htmlspecialchars($v[2]) ?>" <?php if (in_array(cleanse_string($s[2],true),$set) && in_array(cleanse_string($v[2],true),$set)) {?>selected<?php } ?>>&nbsp;-&nbsp;<?php echo htmlspecialchars($v[2]) ?></option>
-                            <?php
-                            }                       
-                        }
-                    }
-                }           
-            ?>
-            </select>
-            <?php*/
             }
         else
             {
