@@ -330,18 +330,18 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             if ($field["display_as_dropdown"] || $forsearchbar)
                 {
                 # Show as a dropdown box
-                $set=trim_array(explode(";",cleanse_string($value,true)));
-                if($forsearchbar)
-                	{
-                	$name="field_drop_" . htmlspecialchars($field["name"]);
-                	}
-                ?><select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearchbar){?> onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>><option value=""></option><?php
-                foreach ($option_trans as $option=>$trans)
+                $set  = trim_array(explode(";",cleanse_string($value,true)));
+                $name = "nodes_searched[{$field['ref']}]";
+                    ?>
+                <select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearchbar){?> onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>>
+                    <option value=""></option>
+                <?php
+                foreach($field['nodes'] as $node)
                     {
-                    if (trim($trans)!="")
+                    if('' != trim($node['name']))
                         {
                         ?>
-                        <option value="<?php echo htmlspecialchars(trim($trans))?>" <?php if (in_array(cleanse_string($trans,true),$set)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($trans))?></option>
+                        <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>" <?php if ((isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(cleanse_string($node['ref'], true), $set)) { ?>selected<?php } ?>><?php echo htmlspecialchars(trim($node['name'])); ?></option>
                         <?php
                         }
                     }
@@ -380,57 +380,88 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 $height=ceil(count($options)/$cols);
 
                 global $checkbox_ordered_vertically, $checkbox_vertical_columns;
-                if ($checkbox_ordered_vertically)
-                    {                   
+                if($checkbox_ordered_vertically)
+                    {
                     if(!hook('rendersearchchkboxes'))
                         {
                         # ---------------- Vertical Ordering (only if configured) -----------
-                        ?><table cellpadding=2 cellspacing=0><tr><?php
-                        for ($y=0;$y<$height;$y++)
-                            {
-                            for ($x=0;$x<$cols;$x++)
-                                {
-                                # Work out which option to fetch.
-                                $o=($x*$height)+$y;
-                                if ($o<count($options))
+                        ?>
+                        <table cellpadding=2 cellspacing=0>
+                            <tbody>
+                                <tr>
+                                <?php
+                                $height = 1;
+                                $col    = 1;
+
+                                foreach($field['nodes'] as $node)
                                     {
-                                    $option=$options[$o];
-                                    $trans=$option_trans[$option];
-
-                                    $name=$field["ref"] . "_" . md5($option);
-                                    if ($option!=="")
+                                    if($col > $cols) 
                                         {
+                                        $col = 1;
+                                        $height++;
                                         ?>
-                                        <td valign=middle><input type=checkbox id="<?php echo htmlspecialchars($name) ?>" name="<?php echo ($name) ?>" value="yes" <?php if (in_array(cleanse_string($trans,true),$set)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>></td><td valign=middle><?php echo htmlspecialchars($trans)?>&nbsp;&nbsp;</td>
-
+                                        </tr>
+                                        <tr>
                                         <?php
                                         }
-                                    else
+                                    $col++;
+
+                                    if(isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes))
                                         {
-                                        ?><td></td><td></td><?php
+                                        $set = $node['ref'];
                                         }
+                                        ?>
+                                    <td valign=middle>
+                                        <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                    </td>
+                                    <td valign=middle>
+                                        <?php echo htmlspecialchars($node['name']); ?>&nbsp;&nbsp;
+                                    </td>
+                                    <?php 
                                     }
-                                }?></tr><tr><?php
-                            }
-                        ?></tr></table><?php
+                                    ?>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <?php
                         }
                     }
                 else
                     {
                     # ---------------- Horizontal Ordering (Standard) ---------------------             
-                    ?><table cellpadding=2 cellspacing=0><tr><?php
-                    foreach ($option_trans as $option=>$trans)
+                    ?>
+                    <table cellpadding=2 cellspacing=0>
+                        <tr>
+                    <?php
+                    foreach($field['nodes'] as $node)
                         {
-                        $wrap++;if ($wrap>$cols) {$wrap=1;?></tr><tr><?php }
-                        $name=$field["ref"] . "_" . md5($option);
-                        if ($option!=="")
+                        $wrap++;
+
+                        if($wrap > $cols)
+                            {
+                            $wrap = 1;
+                            ?>
+                            </tr>
+                            <tr>
+                            <?php
+                            }
+
+                        if('' != $node['name'])
                             {
                             ?>
-                            <td valign=middle><input type=checkbox id="<?php echo htmlspecialchars($name) ?>" name="<?php echo htmlspecialchars($name) ?>" value="yes" <?php if (in_array(cleanse_string(i18n_get_translated($option),true),$set)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>></td><td valign=middle><?php echo htmlspecialchars($trans)?>&nbsp;&nbsp;</td>
+                            <td valign=middle>
+                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(cleanse_string(i18n_get_translated($option),true),$set)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                            </td>
+                            <td valign=middle>
+                                <?php echo htmlspecialchars($node['name']); ?>&nbsp;&nbsp;
+                            </td>
                             <?php
                             }
                         }
-                    ?></tr></table><?php
+                        ?>
+                        </tr>
+                    </table>
+                    <?php
                     }
                     
                 }
