@@ -1318,33 +1318,25 @@ function update_field($resource,$field,$value)
 		sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
 		}
 	
-	if ($value=="") {$value="null";} else {$value="'" . $value . "'";}
-
 	# If this is a 'joined' field we need to add it to the resource column
 	$joins=get_resource_table_joins();
-	if(in_array($fieldinfo['ref'],$joins))
+	if(true || in_array($fieldinfo['ref'],$joins))
 		{
 		if ($value!="null")
 			{
 			global $resource_field_column_limit;
 			$truncated_value = truncate_join_field_value($value);
-
             // Remove backslashes from the end of the truncated value
             if(substr($truncated_value, -1) === '\\')
                 {
                 $truncated_value = substr($truncated_value, 0, strlen($truncated_value) - 1);
-                }
-
-			if(substr($truncated_value, -1) !== '\'')
-				{
-				$truncated_value .= '\'';
 				}
 			}
 		else
 			{
 			$truncated_value="null";
-			}
-		sql_query("update resource set field".$field."=" . $truncated_value . " where ref='$resource'");
+			}		
+		sql_query("update resource set field".$field."=" . (($value=="")?"NULL":"'" . $truncated_value . "'") ." where ref='$resource'");
 		}			
 	
         # Add any onchange code
