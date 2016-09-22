@@ -1,7 +1,7 @@
 <?php
 
 
-include dirname(__FILE__) . "/../include/tms_link_functions.php";
+include_once dirname(__FILE__) . "/../include/tms_link_functions.php";
 
 function HookTms_linkEditEditbeforesectionhead()
 	{

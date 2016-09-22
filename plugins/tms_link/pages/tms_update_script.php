@@ -4,8 +4,8 @@ if(!(php_sapi_name() == 'cli')){exit ("Access denied"); }
 
 include dirname(__FILE__) . "/../../../include/db.php";
 include_once dirname(__FILE__) . "/../../../include/general.php";
-include dirname(__FILE__) . "/../../../include/resource_functions.php";
-include dirname(__FILE__) . "/../include/tms_link_functions.php";
+include_once dirname(__FILE__) . "/../../../include/resource_functions.php";
+include_once dirname(__FILE__) . "/../include/tms_link_functions.php";
 
 $debug_log=false;
 
