@@ -1,4 +1,5 @@
 <?php
+include_once dirname(__FILE__) . '/../include/tms_link_functions.php';
 
 function HookTms_linkAllUpdate_field($resource,$field,$value,$existing)
         {
