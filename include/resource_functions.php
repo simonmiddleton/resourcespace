@@ -1320,7 +1320,7 @@ function update_field($resource,$field,$value)
 	
 	# If this is a 'joined' field we need to add it to the resource column
 	$joins=get_resource_table_joins();
-	if(true || in_array($fieldinfo['ref'],$joins))
+	if(in_array($fieldinfo['ref'],$joins))
 		{
 		if ($value!="null")
 			{
