@@ -21,10 +21,11 @@ input[readonly] {color: #000000;}
 #Header #HeaderButtons a:link, #Header #HeaderButtons a:visited,#Header #HeaderButtons a:active {color:#1B1B1B;}
 #Header #HeaderButtons a:hover{color:rgba(0, 62, 81, 0.82); text-decoration: none;}
 #Header {background: linear-gradient(#424242 , #1B1B1B);border:none;}
-#Header a{color:#D6D6D6;}
+#Header a{color:#fff;}
 #Header a:hover, #Header .current {color:#FFF; text-decoration: none;}
 #Header #HeaderButtons a:link, #Header #HeaderButtons a:visited, #Header #HeaderButtons a:active {color:#1B1B1B;}
 #Header #HeaderButtons a:hover{color:rgba(0, 62, 81, 0.82); text-decoration: none;}
+#HeaderNav1, #HeaderNav2 {mix-blend-mode:difference;}
 
 #Footer {border-top: 1px solid #BBBBBB;}
 #TextHeader, #TextHeader a {color:#616161;}
