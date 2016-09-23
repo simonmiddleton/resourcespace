@@ -4025,11 +4025,25 @@ function delete_resource_custom_access_usergroups($ref)
         sql_query("delete from resource_custom_access where resource='" . escape_check($ref) . "' and usergroup is not null");
         }
 
-// truncate the field for insertion into the main resource table field<n>
+/**
+* Truncate the field for insertion into the main resource table field
+* 
+* @param string $value
+* 
+* @return string
+*/
 function truncate_join_field_value($value)
     {
-    global $resource_field_column_limit;
-    return substr($value, 0, $resource_field_column_limit);
+    global $resource_field_column_limit, $server_charset;
+
+    $encoding = 'UTF-8';
+
+    if(isset($server_charset) && '' != $server_charset)
+        {
+        $encoding = $server_charset;
+        }
+
+    return mb_substr($value, 0, $resource_field_column_limit, $encoding);
     }
 
 
