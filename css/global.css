@@ -80,12 +80,12 @@ button[type="submit"] { font-size: 1em; }
 .SlimHeader .ui-layout-container{min-width:1100px;overflow:scroll;}
 .SlimHeader #CentralSpaceContainer {margin: 20px 25px 20px;padding: 0 282px 0 0;text-align: left;}
 .SlimHeader #Header {margin: 0;padding: 5px 25px 5px 25px;background-image:none;}
-.SlimHeader #HeaderNav1, .SlimHeader #HeaderNav2 {margin:0;padding:0;line-height: 35px;}
-.SlimHeader #HeaderNav1 {float:right;}
-.SlimHeader #HeaderNav2 {float:left; padding-left: 10px;}
+.SlimHeader #HeaderNav1, .SlimHeader #HeaderNav2 {margin:5px 0 0 0;padding:0;line-height: 35px;}
+.SlimHeader #HeaderNav1 {float:right;height:50px;}
+.SlimHeader #HeaderNav2 {float:left; padding-left: 20px;}
 .SlimHeader #HeaderNav1 ul, .SlimHeader #Headernav2 ul {padding: 0.2em 0.5em;}
 .SlimHeader .HeaderImgLink{float:left;height:100%;}
-.SlimHeader #HeaderImg{height:40px;margin:0;}
+.SlimHeader #HeaderImg{height:50px;margin:0;}
 .SlimHeader .HorizontalNav li, .SlimHeader .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
 .SlimHeader .HorizontalNav li a, .SlimHeader .HorizontalNav li a{display: inline-block;zoom: 1;*display: inline;}
 .SlimHeader #SearchBarContainer {margin-top: 20px;}
