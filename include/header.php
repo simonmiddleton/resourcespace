@@ -339,17 +339,17 @@ $not_authenticated_pages = array('login', 'user_change_password');
 
 if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
     {
-
-	# Custom header links
-	if (isset($header_link_style_override) && $header_link_style_override!='')
-		{
-		?>
-		<style>
-		#HeaderNav1 a, #HeaderNav2 a {color: <?php echo $header_link_style_override; ?>; }
-		</style>
-		<?php
-		}
-	?>    
+    # Custom header links
+    if (isset($header_link_style_override) && $header_link_style_override!='')
+        {
+        ?>
+        <style>
+        #HeaderNav1 a, #HeaderNav2 a { color: <?php echo $header_link_style_override; ?>; }
+        #HeaderNav2 li { border-color: <?php echo $header_link_style_override; ?>; }
+        </style>
+        <?php
+        }
+	?>
 	<div id="HeaderNav1" class="HorizontalNav">
 
 <?php
