@@ -149,25 +149,12 @@ $header_favicon="gfx/interface/favicon.png";
 #replace header logo with text, application name and description
 $header_text_title=false;
 
-#If using the old background method, create a clickable area of the resourcespace logo graphic. Defaults to Homepage
+# Is the logo a link to the home page?
 $header_link=true;
-#If $slimheader is off you must set the link height and width to match the size of the logo graphic in pixels (Legacy support)
-#$header_link_height=;
-#$header_link_width=;
 
-###### SLIM HEADER DESIGN ######
-#In order to maintain backwards compatibility you must do the following to turn on the Slim Header Design
-#1. Set #slimheader=true;
-#2. (If you want a custom Logo) Set a source image location for the header logo with $linkedheaderimgsrc="/your/location.png";
-#3. (If you want to see the optional slim themes) Enable slim themes (See Below)
+# Header size class. Options are HeaderSmall, HeaderMid, HeaderLarge.
+$header_size="HeaderMid";
 
-## Slim Themes ##
-# The Slim Charcoal theme can be added to the available themes like so: 
-# $available_themes=array("multi", "whitegry","greyblu","black","slimcharcoal");
-
-## Defaults ##
-#This uses an img tag to display the header and will automatically include a link to the homepage. 
-$slimheader=false;
 # Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
 
 # Set this to true in order for the top bar to remain present when scrolling down the page

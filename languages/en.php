@@ -2516,3 +2516,10 @@ $lang["retina_mode"]="Retina mode";
 
 $lang["private-api-key"]="Private API key";
 $lang["can_edit_resource_type"] = "Edit access to resource type: ";
+
+$lang["userpreference_headersize"]="Header size";
+$lang["headersmall"]="Small";
+$lang["headermid"]="Medium";
+$lang["headerlarge"]="Large";
+
+

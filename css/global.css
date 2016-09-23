@@ -70,27 +70,41 @@ button[type="submit"] { font-size: 1em; }
 #TextHeader{font-size:25px;float:left;}
 #TextHeader a {text-decoration:none;}
 #TextDesc{font-size:1em;float:left;display:block;clear:left;}
-#HeaderNav1 {text-align:right;height:40px;}
-#HeaderNav2 {text-align:right;margin-top: 28px;margin-bottom: 4px;}
+
 
 .headerlink {margin:20px 25px; position: absolute; display: block; width: 400px; height: 55px;  top: 0px; left: 0px;}
 .TeamCentreAlertIcon { position: relative; top: 3px;}
 
-/* Slimheader */
-.SlimHeader .ui-layout-container{min-width:1100px;overflow:scroll;}
-.SlimHeader #CentralSpaceContainer {margin: 20px 25px 20px;padding: 0 282px 0 0;text-align: left;}
-.SlimHeader #Header {margin: 0;padding: 5px 25px 5px 25px;background-image:none;}
-.SlimHeader #HeaderNav1, .SlimHeader #HeaderNav2 {margin:5px 0 0 0;padding:0;line-height: 35px;}
-.SlimHeader #HeaderNav1 {float:right;height:50px;}
-.SlimHeader #HeaderNav2 {float:left; padding-left: 20px;}
-.SlimHeader #HeaderNav1 ul, .SlimHeader #Headernav2 ul {padding: 0.2em 0.5em;}
-.SlimHeader .HeaderImgLink{float:left;height:100%;}
-.SlimHeader #HeaderImg{height:50px;margin:0;}
-.SlimHeader .HorizontalNav li, .SlimHeader .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
-.SlimHeader .HorizontalNav li a, .SlimHeader .HorizontalNav li a{display: inline-block;zoom: 1;*display: inline;}
-.SlimHeader #SearchBarContainer {margin-top: 20px;}
-.SlimHeader .RecordBox {margin: 10px 20px 10px 0;}
-.SlimHeader h2#CollectionsPanelHeader {display:none;}
+
+.ui-layout-container{min-width:1100px;overflow:scroll;}
+#CentralSpaceContainer {margin: 20px 25px 20px;padding: 0 282px 0 0;text-align: left;}
+#Header {margin: 0;padding: 5px 25px 5px 25px;background-image:none;}
+#HeaderNav1, #HeaderNav2 {padding:0;}
+#HeaderNav1 {float:right;}
+#HeaderNav2 {float:left; padding-left: 30px;}
+#HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0.5em;}
+.HeaderImgLink{float:left;height:100%;}
+#HeaderImg{margin:0;}
+.HorizontalNav li,  .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
+.HorizontalNav li a, .HorizontalNav li a{display: inline-block;zoom: 1;*display: inline;}
+#SearchBarContainer {margin-top: 20px;}
+.RecordBox {margin: 10px 20px 10px 0;}
+h2#CollectionsPanelHeader {display:none;}
+
+/* Header size variants */
+.HeaderSmall #HeaderNav1,  .HeaderSmall #HeaderNav2 {margin:2px 0 0 0;line-height: 30px;}
+.HeaderSmall #HeaderImg{height:40px;}
+.HeaderSmall #HeaderNav1 {height:30px;}
+
+.HeaderMid #HeaderNav1, .HeaderMid #HeaderNav2 {margin:5px 0 0 0;line-height: 35px;}
+.HeaderMid #HeaderImg{height:50px;}
+.HeaderMid #HeaderNav1 {height:50px;}
+
+.HeaderLarge #HeaderNav1, .HeaderLarge #HeaderNav2 {margin:5px 0 0 0;line-height: 20px;}
+.HeaderLarge #HeaderImg{height:85px;}
+.HeaderLarge #HeaderNav1 {height:70px;}
+.HeaderLarge #HeaderNav2 {float:right; clear:both; padding-left: 20px;margin-top:0;}
+
 
 /* Slim header with fixed top bar */
 div#Header.SlimHeaderFixedPosition { width: 100%; position:fixed; top: 0px; z-index: 100; }
