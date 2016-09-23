@@ -42,7 +42,14 @@ $page_def[] = config_add_colouroverride_input(
     "jQuery('#Header').css('background',value);"
 );
 
-
+$page_def[] = config_add_colouroverride_input(
+    'header_link_style_override',
+    $lang["setup-headerlinkstyleoverride"],
+    '',
+    null,
+    true,
+    "jQuery('#HeaderNav1 a').css('color',value);jQuery('#HeaderNav2 a').css('color',value);"
+);
 
 $page_def[] = config_add_text_input('email_from', $lang['setup-emailfrom'], false, 300, false, '', true);
 $page_def[] = config_add_text_input('email_notify', $lang['setup-emailnotify'], false, 300, false, '', true);

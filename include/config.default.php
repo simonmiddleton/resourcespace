@@ -169,8 +169,9 @@ $linkedheaderimgsrc="";
 # Include ResourceSpace version header in View Source
 $include_rs_header_info=true;
 
-# Used for specifying custom colour for header background
+# Used for specifying custom colours for header 
 $header_colour_style_override='';
+$header_link_style_override='';
 
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
