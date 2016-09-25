@@ -1,5 +1,6 @@
 <?php
-include_once dirname(__FILE__) . '/../include/tms_link_functions.php';
+
+include_once dirname(__FILE__) . "/../include/tms_link_functions.php";
 
 function HookTms_linkAllUpdate_field($resource,$field,$value,$existing)
         {
@@ -23,5 +24,11 @@ function HookTms_linkAllUpdate_field($resource,$field,$value,$existing)
                         update_field($resource,$tms_link_field_id,escape_check($tmsdata[$tms_link_column_name]));
                         }
                 }
+		tms_link_check_preview($resource);
         return true;
         }
+
+function HookTms_linkAllAfterpreviewcreation($ref, $alternative=-1)
+	{
+	tms_link_check_preview($ref, $alternative);
+	}
