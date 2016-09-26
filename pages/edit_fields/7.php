@@ -37,18 +37,12 @@ if(!(isset($treeonly) && $treeonly == true))
     branch_limit_field['field_<?php echo $field['ref']; ?>'] = branch_limit;
     nocategoriesmessage = "<?php echo $lang["nocategoriesselected"] ?>";
     <?php
-    # Load the tree
-    $checked = preg_split('/[,\|]/', strtolower($value));
-
-    for($c = 0; $c < count($checked); $c++)
-        {
-        $checked[$c] = trim($checked[$c]);
-        }
-
+    // Load the tree
     foreach($field['nodes'] as $node)
         {
-        $node_checked = in_array(trim(strtolower($node['name'])),$checked) ? 1 : 0;
-        # Add this node
+        $node_checked = in_array($node['ref'], $searched_nodes) ? 1 : 0;
+
+        // Add this node
         ?>
         AddNode("<?php echo $name; ?>",<?php echo $node['parent']-1; ?>,<?php echo $node['ref']-1; ?>,"<?php echo str_replace('"','\"',trim($node['name']))?>",1,<?php echo $node_checked; ?>,<?php echo $node_checked; ?>);
         <?php
