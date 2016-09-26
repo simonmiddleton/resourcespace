@@ -21,7 +21,7 @@ input[readonly] {color: #000000;}
 #Header #HeaderButtons a:link, #Header #HeaderButtons a:visited,#Header #HeaderButtons a:active {color:#1B1B1B;}
 #Header #HeaderButtons a:hover{color:rgba(0, 62, 81, 0.82); text-decoration: none;}
 #Header {background: linear-gradient(#424242 , #1B1B1B);border:none;}
-#Header a{color:#fff;opacity:0.7;}
+#Header li a{color:#fff;opacity:0.7;}
 #Header a:hover, #Header .current {opacity:1;text-decoration: none}
 #Header #HeaderButtons a:link, #Header #HeaderButtons a:visited, #Header #HeaderButtons a:active {color:#1B1B1B;}
 #Header #HeaderButtons a:hover{color:rgba(0, 62, 81, 0.82); text-decoration: none;}
