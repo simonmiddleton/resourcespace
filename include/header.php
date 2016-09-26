@@ -154,10 +154,9 @@ if ($include_rs_header_info)
 <link rel="icon" type="image/png" href="<?php echo $baseurl."/".$header_favicon?>" />
 
 <!-- Load jQuery and jQueryUI -->
-<script src="<?php echo $baseurl?>/lib/js/jquery-1.7.2.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
-
+<script src="<?php echo $baseurl; ?>/lib/js/jquery-1.12.4.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 <script src="<?php echo $baseurl?>/lib/js/jquery-ui-1.10.2.custom.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
-<script src="<?php echo $baseurl?>/lib/js/jquery.layout.min.js"></script>
+<script src="<?php echo $baseurl; ?>/lib/js/jquery.layout.js"></script>
 <script src="<?php echo $baseurl?>/lib/js/easyTooltip.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <link type="text/css" href="<?php echo $baseurl?>/css/ui-lightness/jquery-ui-1.8.20.custom.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
 <script src="<?php echo $baseurl?>/lib/js/jquery.ui.touch-punch.min.js"></script>
@@ -233,6 +232,10 @@ if($simple_search_pills_view)
     <?php
     }
     ?>
+
+<!-- jsTree -->
+<link rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jstree/themes/default/style.min.css">
+<script src="<?php echo $baseurl_short; ?>lib/jstree/jstree.min.js"></script>
 
 <script type="text/javascript">
 var baseurl_short="<?php echo $baseurl_short?>";

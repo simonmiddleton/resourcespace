@@ -7,50 +7,99 @@ if(!isset($is_search))
     $is_search = false;
     }
     ?>
+
 <div class="Fixed">
 <?php
-if(!(isset($treeonly) && $treeonly == true))
+if(!(isset($treeonly) && true == $treeonly))
 	{
 	?>
-    <div id="<?php echo $name?>_statusbox" class="CategoryBox"<?php if (!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>></div>
+    <div id="<?php echo $name?>_statusbox" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>></div>
     <div>
-        <a href="#" onclick="if (document.getElementById('<?php echo $name?>_tree').style.display!='block') {document.getElementById('<?php echo $name?>_tree').style.display='block';} else {document.getElementById('<?php echo $name?>_tree').style.display='none';} return false;">&gt; <?php echo $lang["showhidetree"]?></a>
+        <a href="#"
+           onclick="
+                if(document.getElementById('tree_<?php echo $field['ref']; ?>').style.display!='block')
+                    {
+                    document.getElementById('tree_<?php echo $field['ref']; ?>').style.display='block';
+                    }
+                else
+                    {
+                    document.getElementById('tree_<?php echo $field['ref']; ?>').style.display='none';
+                    }
+                return false;"
+        >&gt; <?php echo $lang['showhidetree']; ?></a>
         &nbsp;
-        <a href="#" onclick="if (confirm('<?php echo $lang["clearcategoriesareyousure"]?>')) {DeselectAll('<?php echo $name?>', <?php echo json_encode($is_search)?>);} return false;">&gt; <?php echo $lang["clearall"]?></a>
+        <a href="#"
+           onclick="
+                if(confirm('<?php echo $lang["clearcategoriesareyousure"]?>'))
+                    {
+                    jQuery('#tree_<?php echo $field['ref']; ?>').jstree(true).deselect_all();
+                    UpdateResultCount();
+                    }
+                return false;"
+        >&gt; <?php echo $lang['clearall']; ?></a>
     </div>
-    <input type="hidden" name="<?php echo $name?>" id="<?php echo $name?>_category" value="<?php echo $value?>">
     <?php
     }
-    ?>
-    <div id="<?php echo $name?>_tree" class="CategoryTree" <?php if ($category_tree_open) { ?>style="display:block;"<?php } ?>>&nbsp;</div>
-    <script type="text/javascript">
-    TreeParents["<?php echo $name?>"]    = new Array();
-    TreeNames["<?php echo $name?>"]      = new Array();
-    TreeExpand["<?php echo $name?>"]     = new Array();
-    TreeID["<?php echo $name?>"]         = new Array();
-    TreeNode["<?php echo $name?>"]       = new Array();
-    TreeClickable["<?php echo $name?>"]  = new Array();
-    TreeChecked["<?php echo $name?>"]    = new Array();
-    TreeTickedDesc["<?php echo $name?>"] = new Array();
-    TreeDynamic["<?php echo $name?>"]    = false;
 
-    branch_limit_field['field_<?php echo $field['ref']; ?>'] = branch_limit;
-    nocategoriesmessage = "<?php echo $lang["nocategoriesselected"] ?>";
-    <?php
-    // Load the tree
-    foreach($field['nodes'] as $node)
+
+// TODO: draw only root levels and then lazy load
+$tree_data_json = array();
+
+foreach($field['nodes'] as $node)
+    {
+    $selected = false;
+    if(in_array($node['ref'], $searched_nodes))
         {
-        $node_checked = in_array($node['ref'], $searched_nodes) ? 1 : 0;
-
-        // Add this node
-        ?>
-        AddNode("<?php echo $name; ?>",<?php echo $node['parent']-1; ?>,<?php echo $node['ref']-1; ?>,"<?php echo str_replace('"','\"',trim($node['name']))?>",1,<?php echo $node_checked; ?>,<?php echo $node_checked; ?>);
-        <?php
+        $selected = true;
+        echo "<input id=\"nodes_searched_{$node['ref']}\" type=\"hidden\" name=\"nodes_searched[{$field['ref']}][]\" value=\"{$node['ref']}\">";
         }
-        ?>
-        ResolveParents("<?php echo $name?>");
-        DrawTree("<?php echo $name?>", <?php echo json_encode($is_search)?>);
-        UpdateStatusBox("<?php echo $name?>", <?php echo json_encode($is_search)?>);
-        UpdateHiddenField("<?php echo $name?>");
+
+    $tree_data_json[] = array(
+        'id'     => $node['ref'],
+        'parent' => ('' == $node['parent'] ? '#' : $node['parent']),
+        'text'   => $node['name'],
+        'state'  => array(
+            'opened'   => false,
+            'selected' => $selected
+        ),
+    );
+    }
+
+$tree_data_json = json_encode($tree_data_json);
+?>
+    <div id="tree_<?php echo $field['ref']; ?>" style="display: none;"></div>
+    <script>
+    jQuery('#tree_<?php echo $field["ref"]; ?>').jstree({
+        'core' : {
+            'data' : <?php echo $tree_data_json; ?>,
+            'themes' : {
+                'icons' : false
+            }
+        },
+        'plugins' : [
+            'wholerow',
+            'checkbox'
+        ],
+        'checkbox' : {
+            'three_state' : false // to tick checkboxes individually
+        }
+    });
+
+    // Update changes done in category tree
+    jQuery('#tree_<?php echo $field["ref"]; ?>').on('changed.jstree', function (e, data)
+        {
+        // Add value to the hidden input array
+        if(data.action == 'select_node')
+            {
+            document.getElementById('tree_<?php echo $field["ref"]; ?>').insertAdjacentHTML('beforeBegin', '<input id="nodes_searched_' + data.node.id + '" type="hidden" name="nodes_searched[<?php echo $field["ref"]; ?>][]" value="' + data.node.id + '">');
+            }
+        // Remove the value from the array
+        else if(data.action == 'deselect_node')
+            {
+            document.getElementById('nodes_searched_' + data.node.id).remove();
+            }
+
+        UpdateResultCount();
+        });
     </script>
 </div>
