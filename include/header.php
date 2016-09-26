@@ -338,7 +338,7 @@ if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false =
         {
         ?>
         <style>
-        #HeaderNav1 a, #HeaderNav2 a { color: <?php echo $header_link_style_override; ?>; }
+        #HeaderNav1 li a, #HeaderNav2 li a { color: <?php echo $header_link_style_override; ?>; }
         #HeaderNav2 li { border-color: <?php echo $header_link_style_override; ?>; }
         </style>
         <?php
