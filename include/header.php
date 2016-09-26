@@ -86,13 +86,7 @@ if ($slideshow_big)
     <link type="text/css" href="<?php echo $baseurl?>/css/slideshow_big.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
     <?php 
     }
-if ($load_ubuntu_font) 
-    { 
-	$urlprefix="http://";
-	if (strpos($baseurl,"https://")!==false) // Change prefix as mixed content prevents linking in Firefox
-		{$urlprefix="https://";}
-	echo "<link href='" . $urlprefix . "fonts.googleapis.com/css?family=Ubuntu:400,700' rel='stylesheet' type='text/css'>";
-	}
+
 
 if ($contact_sheet)
     {?>
