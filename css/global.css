@@ -291,7 +291,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .SearchSpace p {padding:0 0 0.5em; margin:0; font-size:1em; line-height:1.1em;}
 .SearchSpace form {padding:0; margin:0;}
 .SearchSpace .SearchWidth {width: 250px;font-size: 1em;margin: 3px 0px;padding: 0px;}
-.SearchSpace .SearchWidthHalf {width: 120px;margin: 5px 5px 5px 0;padding: 0px;}
+.SearchSpace .SearchWidthHalf {width: 120px;margin: 5px 4px 5px 0;padding: 0px;}
 .SearchSpace .SearchWidthRight {margin-right:0;}
 
 .SearchSpace .tick {margin:2px;}
