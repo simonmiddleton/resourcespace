@@ -195,7 +195,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #CentralSpace .SplitSearch {float: left; margin-left: 5px;margin-right: 5px;}
 
 .CollectionPanelShell {padding:0;float: left;margin: 0px 15px 5px 0px;width: 97px;height: 120px; text-align: left;}
-.CollectionPanelInfo{}
+.CollectionPanelInfo{padding-bottom:3px;}
 .CollectionResourceAlign {width:97px;height:85px;text-align: center;vertical-align: middle;}
 
 #CollectionMinTitle{float: left;margin: 4px 10px 0px 25px;}
@@ -265,7 +265,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a	{float: right;margin-right: 0.5em;text-decoration:none;}
+.ResourcePanelIcons a, .CollectionPanelInfo a	{float: right;margin-right: 0.5em;text-decoration:none;}
 .ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
 .ListTools a:hover	{text-decoration:none;}
