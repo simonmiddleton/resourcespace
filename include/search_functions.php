@@ -1516,9 +1516,7 @@ function compile_search_actions($top_actions)
 
         if($resources_count != 0)
             {
-            if($usercollection != $collection)
-                {
-                $extra_tag_attributes = sprintf('
+				$extra_tag_attributes = sprintf('
                         data-url="%spages/collections.php?addsearch=%s&restypes=%s&archive=%s&mode=resources&daylimit=%s"
                     ',
                     $baseurl_short,
@@ -1533,7 +1531,7 @@ function compile_search_actions($top_actions)
     			$options[$o]['data_attr']=array();
     			$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
     			$o++;
-                }
+                
 
             if(0 != $resources_count && $show_searchitemsdiskusage) 
                 {
