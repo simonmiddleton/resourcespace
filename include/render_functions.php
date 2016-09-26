@@ -943,6 +943,10 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 $action_index_to_remove = array_search('search_items_disk_usage', array_column($search_actions_array, 'value'));
                 unset($search_actions_array[$action_index_to_remove]);
                 $search_actions_array = array_values($search_actions_array);
+				
+				$action_index_to_remove = array_search('save_search_items_to_collection', array_column($search_actions_array, 'value'));
+                unset($search_actions_array[$action_index_to_remove]);
+				$search_actions_array = array_values($search_actions_array);
                 }
     
             $actions_array = array_merge($collection_actions_array, $search_actions_array);
