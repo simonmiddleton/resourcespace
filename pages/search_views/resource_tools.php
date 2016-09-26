@@ -1,18 +1,4 @@
-<!-- Preview icon -->
-<?php 
-if (!hook("replacefullscreenpreviewicon"))
-        {
-        if ($result[$n]["has_image"]==1)
-                { ?>
-                        <a aria-hidden="true" class="fa fa-expand"
-                                onClick="return CentralSpaceLoad(this,true);"
-                                href="<?php echo $baseurl_short?>pages/preview.php?from=search&amp;ref=<?php echo urlencode($ref)?>&amp;ext=<?php echo $result[$n]["preview_extension"]?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;k=<?php echo urlencode($k)?>" 
-                                title="<?php echo $lang["fullscreenpreview"]?>"
-                        ></a>
-                <?php 
-                $showkeypreview = true;
-                }
-        } /* end hook replacefullscreenpreviewicon */?>
+
 
 <!-- Add to collection icon -->
 <?php
@@ -47,6 +33,23 @@ if ($pagename=="collections" || (!checkperm("b") && substr($search,0,11)=="!coll
                 $showkeycollectout = true;
                 }
         } ?>
+        
+        <!-- Preview icon -->
+<?php 
+if (!hook("replacefullscreenpreviewicon"))
+        {
+        if ($result[$n]["has_image"]==1)
+                { ?>
+                        <a aria-hidden="true" class="fa fa-expand"
+                                onClick="return CentralSpaceLoad(this,true);"
+                                href="<?php echo $baseurl_short?>pages/preview.php?from=search&amp;ref=<?php echo urlencode($ref)?>&amp;ext=<?php echo $result[$n]["preview_extension"]?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;k=<?php echo urlencode($k)?>" 
+                                title="<?php echo $lang["fullscreenpreview"]?>"
+                        ></a>
+                <?php 
+                $showkeypreview = true;
+                }
+        } /* end hook replacefullscreenpreviewicon */?>
+        
 <!-- Email icon -->
 <?php 
 if(!hook("iconemail")) 
