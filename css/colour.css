@@ -92,7 +92,7 @@ input[readonly] {color: #000000;}
 .HomePanel h2{color:#FFF;}
 
 #SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN {
-	background: rgba(30, 30, 30, 0.70);
+	background: rgba(0, 0, 0, 0.65);
 	color:#FFF;
 }
 #HomeSiteText{padding:10px;}
