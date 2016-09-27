@@ -71,7 +71,17 @@ $tree_data_json = json_encode($tree_data_json);
     <script>
     jQuery('#tree_<?php echo $field["ref"]; ?>').jstree({
         'core' : {
-            'data' : <?php echo $tree_data_json; ?>,
+            // 'data' : <?php echo $tree_data_json; ?>,
+            'data' : {
+                    url  : '<?php echo $baseurl; ?>/pages/ajax/category_tree_lazy_load.php',
+                    data : function(node) {
+                        return {
+                            ajax     : true,
+                            node_ref : node.id,
+                            field    : <?php echo $field['ref']; ?>
+                            };
+                    }
+                },
             'themes' : {
                 'icons' : false
             }
