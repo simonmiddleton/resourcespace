@@ -284,6 +284,64 @@ function get_tree_node_level($ref)
 
 
 /**
+* Find node ID of the root parent when searching by one
+* of the leaves ID
+* Example:
+* 1
+* 2
+* 2.1
+* 2.2
+* 2.2.1
+* 2.2.2
+* 2.2.3
+* 2.3
+* 3
+* Searching by "2.2.1" ID will give us the ID of node "2"
+* 
+* @param integer $ref   Node ID of tree leaf
+* @param integer $level Node depth level (as returned by get_tree_node_level())
+* 
+* @return integer|boolean
+*/
+function get_root_node_by_leaf($ref, $level)
+    {
+    $ref   = escape_check($ref);
+    $level = escape_check($level);
+
+    if(!is_numeric($level) && 0 >= $level)
+        {
+        return false;
+        }
+
+    $query = "SELECT n0.ref AS `value` FROM node AS n{$level}";
+    
+    $from_level = $level;
+    $level--;
+
+    while(0 <= $level)
+        {
+        $query .= " LEFT JOIN node AS n{$level} ON n" . ($level + 1) . ".parent = n{$level}.ref";
+
+        if(0 === $level)
+            {
+            $query .= " WHERE n{$from_level}.ref = '{$ref}'";
+            }
+
+        $level--;
+        }
+        
+    $root_node = sql_value($query, '');
+
+    if('' == $root_node)
+        {
+        $root_node = 0;
+        }
+
+    return (int) $root_node;
+    }
+
+
+/**
 * Function used to reorder nodes based on an array with nodes in the new order
 *
 * @param  array  $nodes_new_order  Array of nodes 

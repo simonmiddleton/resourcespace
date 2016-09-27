@@ -4,11 +4,13 @@ include_once '../../include/general.php';
 include '../../include/authenticate.php';
 include_once '../../include/node_functions.php';
 
-
-$ajax         = ('' != getval('ajax', '') ? true : false);
-$field        = (int) getvalescaped('field', '', true);
-$node_ref     = getvalescaped('node_ref', null, true);
-$js_tree_data = array();
+// Initialise
+$ajax           = ('' != getval('ajax', '') ? true : false);
+$node_ref       = getvalescaped('node_ref', null, true);
+$field          = (int) getvalescaped('field', '', true);
+$searched_nodes = getvalescaped('searched_nodes', array());
+$opened_nodes   = array();
+$js_tree_data   = array();
 
 if(!metadata_field_edit_access($field))
     {
@@ -18,20 +20,46 @@ if(!metadata_field_edit_access($field))
 
 $nodes = get_nodes($field, $node_ref);
 
+// Find the root nodes for any of the searched nodes
+// Most of the nodes will most likely be a tree leaf. 
+// This allows us to know which tree nodes we need to 
+// expand from the begining
+foreach($searched_nodes as $searched_node)
+    {
+    $tree_level = get_tree_node_level($searched_node);
+
+    if(0 === $tree_level)
+        {
+        continue;
+        }
+
+    $found_root_node = get_root_node_by_leaf($searched_node, $tree_level);
+    if($found_root_node)
+        {
+        $opened_nodes[] = $found_root_node;
+        }
+    }
+
 foreach($nodes as $node)
     {
+    $node_opened = false;
+
+    if(in_array($node['ref'], $opened_nodes))
+        {
+        $node_opened = true;
+        }
+
     $js_tree_data[] = array(
             'id'     => $node['ref'],
             'parent' => ('' == $node['parent'] ? '#' : $node['parent']),
             'text'   => $node['name'],
             'state'  => array(
-                'opened'   => false,
-                // 'selected' => $selected
+                'opened'   => $node_opened,
+                'selected' => in_array($node['ref'], $searched_nodes)
             ),
             'children' => is_parent_node($node['ref'])
         );
     }
-
 
 header('Content-Type: application/json');
 echo json_encode($js_tree_data);

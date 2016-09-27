@@ -40,45 +40,19 @@ if(!(isset($treeonly) && true == $treeonly))
     </div>
     <?php
     }
-
-
-// TODO: draw only root levels and then lazy load
-$tree_data_json = array();
-
-foreach($field['nodes'] as $node)
-    {
-    $selected = false;
-    if(in_array($node['ref'], $searched_nodes))
-        {
-        $selected = true;
-        echo "<input id=\"nodes_searched_{$node['ref']}\" type=\"hidden\" name=\"nodes_searched[{$field['ref']}][]\" value=\"{$node['ref']}\">";
-        }
-
-    $tree_data_json[] = array(
-        'id'     => $node['ref'],
-        'parent' => ('' == $node['parent'] ? '#' : $node['parent']),
-        'text'   => $node['name'],
-        'state'  => array(
-            'opened'   => false,
-            'selected' => $selected
-        ),
-    );
-    }
-
-$tree_data_json = json_encode($tree_data_json);
-?>
+    ?>
     <div id="tree_<?php echo $field['ref']; ?>" style="display: none;"></div>
     <script>
     jQuery('#tree_<?php echo $field["ref"]; ?>').jstree({
         'core' : {
-            // 'data' : <?php echo $tree_data_json; ?>,
             'data' : {
                     url  : '<?php echo $baseurl; ?>/pages/ajax/category_tree_lazy_load.php',
                     data : function(node) {
                         return {
-                            ajax     : true,
-                            node_ref : node.id,
-                            field    : <?php echo $field['ref']; ?>
+                            ajax           : true,
+                            node_ref       : node.id,
+                            field          : <?php echo $field['ref']; ?>,
+                            searched_nodes : <?php echo json_encode($searched_nodes); ?>
                             };
                     }
                 },
