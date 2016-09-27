@@ -530,10 +530,7 @@ elseif($restypes=='')
 	                }
 	          ?>
 	
-	        </select> 
-	
-	        <?php if ($searchbyday) { ?>
-	        <select id="basicday" name="day" class="SearchWidth">
+	        </select><?php if ($searchbyday) { ?><select id="basicday" name="day" class="SearchWidth">
 	          <option selected="selected" value=""><?php echo $lang["anyday"]?></option>
 	          <?php
 	          for ($n=1;$n<=31;$n++)
