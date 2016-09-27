@@ -33,12 +33,30 @@ if(!(isset($treeonly) && true == $treeonly))
                 if(confirm('<?php echo $lang["clearcategoriesareyousure"]?>'))
                     {
                     jQuery('#tree_<?php echo $field['ref']; ?>').jstree(true).deselect_all();
+
+                    <!-- remove the hidden inputs -->
+                    var elements = document.getElementsByName('nodes_searched[<?php echo $field['ref']; ?>][]');
+                    while(elements[0])
+                        {
+                        elements[0].parentNode.removeChild(elements[0]);
+                        }
+                    
                     UpdateResultCount();
                     }
                 return false;"
         >&gt; <?php echo $lang['clearall']; ?></a>
     </div>
     <?php
+    }
+
+foreach($field['nodes'] as $node)
+    {
+    if(!in_array($node['ref'], $searched_nodes))
+        {
+        continue;
+        }
+
+    echo "<input id=\"nodes_searched_{$node['ref']}\" type=\"hidden\" name=\"nodes_searched[{$field['ref']}][]\" value=\"{$node['ref']}\">";
     }
     ?>
     <div id="tree_<?php echo $field['ref']; ?>" style="display: none;"></div>
@@ -70,7 +88,7 @@ if(!(isset($treeonly) && true == $treeonly))
     });
 
     // Update changes done in category tree
-    jQuery('#tree_<?php echo $field["ref"]; ?>').on('changed.jstree', function (e, data)
+    jQuery('#tree_<?php echo $field["ref"]; ?>').on('changed.jstree', function (event, data)
         {
         // Add value to the hidden input array
         if(data.action == 'select_node')
