@@ -12,7 +12,7 @@ h1 {color: #000000;}
 a:link {color:#737373;}
 a:visited {color:#737373;}
 a:hover {color:#000000;}
-a:active {color:#737373;}
+a:active {opacity:0.6;}
 input[readonly] {color: #000000;}
 
 #Header {
@@ -47,9 +47,9 @@ input[readonly] {color: #000000;}
 .HorizontalWhiteNav a:hover, .BasicsBox .VerticalNav a:hover, .ListTitle a:hover {color:#000000;}
 .HorizontalWhiteNav li, .HorizontalNav li {border-left:1px solid #737373;}
 /* Search Bar */
-#SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover, #SearchBoxPanel a:active,
+#SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover,
 #ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active
-{color:#fff;}
+{color:#fff;text-decoration:none;}
 
 #ThemeBoxPanel,  .RecordPanel, .ResourcePanel, .ResourcePanelSmall, .ResourcePanelLarge{background: #eee;}
 #ThemeBoxPanel, #SearchBoxPanel, #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanel, .ResourcePanelSmall, .ResourcePanelLarge
