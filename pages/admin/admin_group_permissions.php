@@ -48,7 +48,7 @@ if (getval("save","")!="")
 		}
 
 	log_activity(null,LOG_CODE_EDITED,join(",",$perms),'usergroup','permissions',$ref,null,null,null,true);
-	sql_query("update usergroup set permissions='" . join(",",$perms) . "' where ref='$ref'");
+	sql_query("update usergroup set permissions='" . escape_check(join(",",$perms)) . "' where ref='$ref'");
 	}
 
 $group=get_usergroup($ref);
