@@ -31,7 +31,7 @@ foreach($field['nodes'] as $node)
 if(!(isset($treeonly) && true == $treeonly))
 	{
 	?>
-    <div id="<?php echo $name?>_statusbox" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
+    <div id="<?php echo $name; ?>_statusbox" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
         <?php echo $status_box_elements; ?>
     </div>
     <div>
@@ -60,7 +60,14 @@ if(!(isset($treeonly) && true == $treeonly))
                         {
                         elements[0].parentNode.removeChild(elements[0]);
                         }
-                    
+
+                    <!-- update status box -->
+                    var node_statusbox = document.getElementById('<?php echo $name; ?>_statusbox');
+                    while(node_statusbox.lastChild)
+                        {
+                        node_statusbox.removeChild(node_statusbox.lastChild);
+                        }
+
                     UpdateResultCount();
                     }
                 return false;"
