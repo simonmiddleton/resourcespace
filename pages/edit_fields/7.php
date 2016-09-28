@@ -6,14 +6,34 @@ if(!isset($is_search))
     {
     $is_search = false;
     }
-    ?>
 
+$hidden_input_elements = '';
+$status_box_elements   = '';
+
+foreach($field['nodes'] as $node)
+    {
+    if(!in_array($node['ref'], $searched_nodes))
+        {
+        continue;
+        }
+
+    $hidden_input_elements .= "<input id=\"nodes_searched_{$node['ref']}\" type=\"hidden\" name=\"nodes_searched[{$field['ref']}][]\" value=\"{$node['ref']}\">";
+
+    // Show previously searched options on the status box
+    if(!(isset($treeonly) && true == $treeonly))
+        {
+        $status_box_elements .= "<span id=\"statusbox_option_{$node['ref']}\">{$node['name']}</span><br>";
+        }
+    }
+?>
 <div class="Fixed">
 <?php
 if(!(isset($treeonly) && true == $treeonly))
 	{
 	?>
-    <div id="<?php echo $name?>_statusbox" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>></div>
+    <div id="<?php echo $name?>_statusbox" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
+        <?php echo $status_box_elements; ?>
+    </div>
     <div>
         <a href="#"
            onclick="
@@ -49,16 +69,8 @@ if(!(isset($treeonly) && true == $treeonly))
     <?php
     }
 
-foreach($field['nodes'] as $node)
-    {
-    if(!in_array($node['ref'], $searched_nodes))
-        {
-        continue;
-        }
-
-    echo "<input id=\"nodes_searched_{$node['ref']}\" type=\"hidden\" name=\"nodes_searched[{$field['ref']}][]\" value=\"{$node['ref']}\">";
-    }
-    ?>
+echo $hidden_input_elements;
+?>
     <div id="tree_<?php echo $field['ref']; ?>" style="display: none;"></div>
     <script>
     jQuery('#tree_<?php echo $field["ref"]; ?>').jstree({
@@ -93,12 +105,22 @@ foreach($field['nodes'] as $node)
         // Add value to the hidden input array
         if(data.action == 'select_node')
             {
+            // Add hidden input in order to do the search
             document.getElementById('tree_<?php echo $field["ref"]; ?>').insertAdjacentHTML('beforeBegin', '<input id="nodes_searched_' + data.node.id + '" type="hidden" name="nodes_searched[<?php echo $field["ref"]; ?>][]" value="' + data.node.id + '">');
+
+            // Update status box with the selected option
+            var status_option_element = document.getElementById('statusbox_option_' + data.node.id);
+            if(status_option_element == null)
+                {
+                document.getElementById('nodes_searched[<?php echo $field['ref']; ?>]_statusbox').insertAdjacentHTML('beforeEnd', '<span id="statusbox_option_' + data.node.id + '">' + data.node.text + '</span><br>');
+                }
             }
         // Remove the value from the array
         else if(data.action == 'deselect_node')
             {
             document.getElementById('nodes_searched_' + data.node.id).remove();
+            jQuery('#statusbox_option_' + data.node.id).next('br').remove();
+            document.getElementById('statusbox_option_' + data.node.id).remove();
             }
 
         UpdateResultCount();
