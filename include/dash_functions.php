@@ -672,14 +672,14 @@ function update_usergroup_dash_tile_order($usergroup, $tile, $default_order_by)
 *
 * @param	integer	$user_group		ID of group to add tile(s) to
 * @param 	integer	$user_id		ID of individual user to add tile(s) to
-* @param 	integer	$newtile		ID of a single tile to add on the end 
+* @param 	integer	$newtileid		ID of a single tile to add on the end 
 * 
 * @return void
 */
 
 function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
     {
-	if($newtile!="" && is_numeric($newtile))
+	if($newtileid!="" && is_numeric($newtileid))
 		{
 		$user_group_tiles = array($newtileid);
 		}
