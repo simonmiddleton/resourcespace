@@ -1022,6 +1022,11 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
             if(!$top_actions || !empty($collection_data))
                 {
+                global $search;
+                $search_collection='';
+                if(substr($search,0,11)=='!collection'){
+                	$search_collection=substr($search,11);
+                }
                 ?>
                 case 'delete_collection':
                     if(confirm('<?php echo $lang["collectiondeleteconfirm"]; ?>')) {
@@ -1040,7 +1045,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                                     {
                                     CentralSpaceLoad(document.URL);
                                     }
-                                else
+                                else if(basename(document.URL).substr(0, 6) === 'search' && '<?php echo $search_collection?>'=='<?php echo $collection_data["ref"]?>')
                                     {
                                     CentralSpaceLoad('<?php echo $baseurl; ?>/pages/search.php?search=!collection' + response.redirect_to_collection, true);
                                     }
