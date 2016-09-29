@@ -75,6 +75,9 @@ else{
 <label class="accessibility-hidden" for="<?php echo $name; ?>-y"><?php echo $lang["year"]; ?></label>
 <input id="<?php echo $name; ?>-y" type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>" <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
 
+
+<?php hook("addtoeditdate","",array($field));?>
+
 <?php if ($field["type"]!=10) { ?>
 <!-- Time (optional) -->
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
