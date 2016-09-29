@@ -4,11 +4,16 @@ include dirname(__FILE__) . "/../include/simplesaml_functions.php";
 
 function HookSimplesamlAllPreheaderoutput()
     {
+    if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+        {
+        debug("simplesaml: plugin not configured.");
+        return false;
+        }
+        
 	global $simplesaml_site_block, $simplesaml_allow_public_shares, $simplesaml_allowedpaths;
-
+    
 	if(simplesaml_is_authenticated())
 		{
-
 		// Need to make sure we don't ask the user to type in a password, since we don't have it!
 		global $delete_requires_password;
 		$delete_requires_password=false;
@@ -44,6 +49,11 @@ function HookSimplesamlAllPreheaderoutput()
 
 function HookSimplesamlAllProvideusercredentials()
         {
+        if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+            {
+            debug("simplesaml: plugin not configured.");
+            return false;
+            }
 		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types;
 		// Use standard authentication if available
 		if (isset($_COOKIE["user"])) {return true;}
@@ -184,6 +194,11 @@ function HookSimplesamlAllProvideusercredentials()
 
 function HookSimplesamlLoginLoginformlink()
         {
+        if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+            {
+            debug("simplesaml: plugin not configured.");
+            return false;
+            }
 		// Add a link to login.php, as this page may still be seen if $simplesaml_allow_standard_login is set to true
 		global $baseurl, $lang;
         ?>
@@ -195,7 +210,7 @@ function HookSimplesamlLoginLoginformlink()
 
 function HookSimplesamlLoginPostlogout()
         {
-	simplesaml_signout();
+        simplesaml_signout();
         }
 
 function HookSimplesamlLoginPostlogout2()

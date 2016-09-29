@@ -4,8 +4,8 @@
 #
 
 include '../../../include/db.php';
-include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include '../../../include/general.php';
+include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
 $plugin_name = 'simplesaml';
 if(!in_array($plugin_name, $plugins))
@@ -73,7 +73,14 @@ include "../../../include/header.php";
 <div class="BasicsBox"> 
   <h2>&nbsp;</h2>
   <h1><?php echo $lang['simplesaml_configuration'] ?></h1>
-
+  
+<?php
+ if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+            {
+            echo "<div class='PageInfoMessage'>" . $lang['simplesaml_sp_configuration'] . ". <a href='" . $baseurl . "/plugins/simplesaml/pages/about.php'>" . $baseurl . "/plugins/simplesaml/pages/about.php</a></div>";
+			 }  
+  
+?>
 <form id="form1" name="form1" method="post" action="">
 
 <?php echo config_section_header($lang['simplesaml_main_options'],'');?>

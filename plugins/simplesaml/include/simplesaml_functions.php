@@ -1,9 +1,13 @@
 <?php
 
-
 function simplesaml_authenticate()
 	{
 	global $as,$simplesaml_sp;
+    if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+        {
+        debug("simplesaml: plugin not configured.");
+        return false;
+        }
 	if(!isset($as))
 		{
 		require_once(dirname(__FILE__) . '/../lib/lib/_autoload.php');
@@ -30,7 +34,11 @@ function simplesaml_getattributes()
 function simplesaml_signout()
 	{
 	global $baseurl, $as, $simplesaml_sp;
-	
+	if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+        {
+        debug("simplesaml: plugin not configured.");
+        return false;
+        }
 	if(!isset($as))
 		{
 		require_once(dirname(__FILE__) . '/../lib/lib/_autoload.php');
@@ -47,7 +55,12 @@ function simplesaml_signout()
 function simplesaml_is_authenticated()
 	{
 	global $as,$simplesaml_sp;
-	if(!isset($as))
+	if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+        {
+        debug("simplesaml: plugin not configured.");
+        return false;
+        }
+    if(!isset($as))
 		{
 		require_once(dirname(__FILE__) . '/../lib/lib/_autoload.php');
 		$as = new SimpleSAML_Auth_Simple($simplesaml_sp);
@@ -61,6 +74,11 @@ function simplesaml_is_authenticated()
 
 function simplesaml_getauthdata($value)
 	{
+    if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+        {
+        debug("simplesaml: plugin not configured.");
+        return false;
+        }
 	global $as,$simplesaml_sp;
 	if(!isset($as))
 		{
