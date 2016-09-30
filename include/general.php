@@ -1479,41 +1479,59 @@ function auto_create_user_account()
 	}
 } //end function replace hook
 
+
+/**
+* Email user request to admins
+* 
+* @return boolean
+*/
 function email_user_request()
-	{
-	# E-mails the submitted user request form to the team.
-	global $applicationname,$user_email,$baseurl,$email_notify,$lang,$customContents;
+    {
+    // E-mails the submitted user request form to the team.
+    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents;
 
-	# Build a message
+    // Get posted vars sanitized:
+    $name               = strip_tags(getvalescaped('name', ''));
+    $email              = strip_tags(getvalescaped('email', ''));
+    $userrequestcomment = strip_tags(getvalescaped('userrequestcomment', ''));
 
-	$message=$lang["userrequestnotification1"] . "\n\n" . $lang["name"] . ": " . getval("name","") . "\n\n" . $lang["email"] . ": " . getval("email","") . "\n\n" . $lang["comment"] . ": " . getval("userrequestcomment","") . "\n\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang["userrequestnotification2"] . "\n$baseurl";
-	
-	$notificationmessage=$lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . getvalescaped("name","") . "\n" . $lang["email"] . ": " . getvalescaped("email","") . "\n" . $lang["comment"] . ": " . getvalescaped("userrequestcomment","") . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
-	
-	$approval_notify_users=get_notification_users("USER_ADMIN"); 
-	$message_users=array();
-	foreach($approval_notify_users as $approval_notify_user)
-			{
-			get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);		  
-            if($send_message==false){continue;}		
-			
-			get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $approval_notify_user["email"]!="")
-				{
-				send_mail($approval_notify_user["email"],$applicationname . ": " . $lang["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"","",getval("name",""));
-				}        
-			else
-				{
-				$message_users[]=$approval_notify_user["ref"];
-				}
-			}
-		if (count($message_users)>0)
-			{
-			// Send a message with long timeout (30 days)
-            message_add($message_users,$notificationmessage,"",0,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
-			}
-	return true;
-	}
+    // Build a message
+    $message             = "{$lang['userrequestnotification1']}\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n{$lang['userrequestnotification2']}\n{$baseurl}";
+    $notificationmessage = $lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
+
+    $approval_notify_users = get_notification_users("USER_ADMIN"); 
+    $message_users         = array();
+
+    foreach($approval_notify_users as $approval_notify_user)
+        {
+        get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);		  
+
+        if(false == $send_message)
+            {
+            continue;
+            }		
+
+        get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email);
+
+        if($send_email && $approval_notify_user["email"]!="")
+            {
+            send_mail($approval_notify_user['email'], "{$applicationname}: {$lang['requestuserlogin']} - {$name}", $message, '', $user_email, '', '', $name);
+            }
+        else
+            {
+            $message_users[] = $approval_notify_user['ref'];
+            }
+        }
+
+    if(0 < count($message_users))
+        {
+        // Send a message with long timeout (30 days)
+        message_add($message_users,$notificationmessage,"",0,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
+        }
+
+    return true;
+    }
+
 
 function new_user($newuser)
 	{
