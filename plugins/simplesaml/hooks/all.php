@@ -54,8 +54,10 @@ function HookSimplesamlAllProvideusercredentials()
             debug("simplesaml: plugin not configured.");
             return false;
             }
-		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types;
-		// Use standard authentication if available
+		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
+        $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
+        $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator;
+        // Use standard authentication if available
 		if (isset($_COOKIE["user"])) {return true;}
 		
 		// Redirect to login page if not already authenticated and local login option is preferred
@@ -75,8 +77,7 @@ function HookSimplesamlAllProvideusercredentials()
 			}
 		$attributes = simplesaml_getattributes();
 
-		global $baseurl, $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute, $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator;
-
+	
 		$usernamesuffix = $simplesaml_username_suffix;
         
         if(strpos($simplesaml_username_attribute,",")!==false) // Do we have to join two fields together?
@@ -182,11 +183,9 @@ function HookSimplesamlAllProvideusercredentials()
             
             # Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)
             rs_setcookie("user", $session_hash, intval($simplesaml_login_expiry), "", "", substr($baseurl,0,5)=="https", true);
-			return true;
+            return true;
 			}
-
 		return false;
-
         }
 
 function HookSimplesamlLoginLoginformlink()
