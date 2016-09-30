@@ -127,7 +127,7 @@ function HookSimplesamlAllProvideusercredentials()
 		if(isset($attributes[$simplesaml_email_attribute][0])){$email=$attributes[$simplesaml_email_attribute][0];}
 		$groups=$attributes[$simplesaml_group_attribute];
 
-		$password_hash= md5("RSSAML".$username);
+		$password_hash= md5("RSSAML" . $scramble_key . $username);
 
 		$userid = sql_value("select ref value from user where username='" . $username . "'",0);
 
@@ -182,9 +182,6 @@ function HookSimplesamlAllProvideusercredentials()
             
             # Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)
             rs_setcookie("user", $session_hash, intval($simplesaml_login_expiry), "", "", substr($baseurl,0,5)=="https", true);
-
-            # Set default resource types
-            rs_setcookie('restypes', $default_res_types);
 			return true;
 			}
 
