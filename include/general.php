@@ -1597,7 +1597,7 @@ function get_active_users()
         }
     
     # Returns a list of all active users, i.e. users still logged on with a last-active time within the last 2 hours.
-    return sql_query("select u.username,round((unix_timestamp(now())-unix_timestamp(u.last_active))/60,0) t from user u left outer join usergroup g on u.usergroup=g.ref $sql order by t;");
+    return sql_query("select u.ref, u.username,round((unix_timestamp(now())-unix_timestamp(u.last_active))/60,0) t from user u left outer join usergroup g on u.usergroup=g.ref $sql order by t;");
     }
 
 function get_all_site_text($findpage="",$findname="",$findtext="")

@@ -262,7 +262,7 @@ if ($user_purge)
 <div class="Fixed">
 <?php
 $active=get_active_users();
-for ($n=0;$n<count($active);$n++) {if($n>0) {echo", ";}echo "<b>" . $active[$n]["username"] . "</b> (" . $active[$n]["t"] . ")";}
+for ($n=0;$n<count($active);$n++) {if($n>0) {echo", ";}echo "<b><a href='" . $baseurl . "/pages/team/team_user_edit.php?ref=" . $active[$n]["ref"] . "&backurl=" . urlencode($url . "&offset=" . $offset) . "' onClick='return CentralSpaceLoad(this,true);'>" . $active[$n]["username"] . "</a></b> (" . $active[$n]["t"] . ")";}
 ?>
 </div><div class="clearerleft"> </div></div></div>	
 <?php } // end hook("replaceusersonline")
