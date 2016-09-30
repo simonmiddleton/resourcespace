@@ -338,6 +338,8 @@ if($ajax)
     if(7 != $field_data['type'])
         {
         ?>
+        <div id="FilterContainer">
+        </div>
         <!-- Pager -->
         <div class="TopInpageNavRight">
         <?php
