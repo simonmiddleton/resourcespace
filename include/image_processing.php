@@ -87,7 +87,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 					
 				$original_extension = $path_parts['extension'];
 
-				if($original_extension == $user_set_filename_path_parts['extension'])
+				if(isset($user_set_filename_path_parts['extension']) && $original_extension == $user_set_filename_path_parts['extension'])
 					{
 					$filename = $user_set_filename;
 					}
