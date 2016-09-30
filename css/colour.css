@@ -349,3 +349,8 @@ UL.jqueryFileTree A:hover {background-color:initial !important;}
 /* chosen collection div */
 #CollectionDiv #MinColDrop .chosen-single:hover, #CollectionDiv #colselect .chosen-single:hover {color:#444;}
 #CollectionDiv .ActionsContainer .chosen-single:hover {color:#999;}
+
+.FeaturedSimpleTile {
+	background: rgba(30, 30, 30, 0.70);
+	color:#FFF;
+}
