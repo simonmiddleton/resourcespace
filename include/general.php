@@ -5554,32 +5554,4 @@ function user_set_usergroup($user,$usergroup)
     sql_query("update user set usergroup='" . escape_check($usergroup) . "' where ref='" . escape_check($user) . "'");
     }
 
-/**
-* Validate user - check we have a valid user based on SQL criteria e.g. session that is passed in as $user_select_sql
-* Will always return false if matches criteria but the user account is not approved or has expired
-*
-* $user_select_sql example u.session=$variable. 
-* Joins to usergroup table as g  which can be used in criteria
-*
-* @param	string	$user_select_sql		SQL to check - usually session hash e.g. (u.session=$variable) 
-* @param 	boolan	$getuserdata			default true. Return user data as required by authenticate.php
-* 
-* @return boolean|array
-*/
-function validate_user($user_select_sql, $getuserdata=true)
-	{
-	if($user_select_sql==""){return false;}
-	
-	$full_user_select_sql = "approved = 1 AND (account_expires IS NULL OR account_expires = '0000-00-00 00:00:00' OR account_expires > now()) " . ((strtoupper(trim(substr($user_select_sql,0,4)))=="AND")?" ":" AND ") .  $user_select_sql;
-	if($getuserdata)
-		{
-		$userdata=sql_query("SELECT u.ref, u.username, g.permissions, g.parent, u.usergroup, u.current_collection, u.last_active, timestampdiff(second, u.last_active, now()) idle_seconds, u.email, u.password, u.fullname, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, resource_defaults, u.password_last_change, g.config_options, g.request_mode, g.derestrict_filter, u.hidden_collections, u.accepted_terms FROM user u LEFT JOIN usergroup g on u.usergroup=g.ref WHERE " . $full_user_select_sql);
-		return $userdata;
-		}
-	else
-		{
-		$validuser=sql_value("SELECT u.ref value FROM user u LEFT JOIN usergroup g on u.usergroup=g.ref WHERE " . $full_user_select_sql,"");
-		if($validuser!=""){return true;}
-		}
-	return false;
-	}
+
