@@ -754,6 +754,7 @@ $lang["action-download"]="Download";
 $lang["action-email"]="E-mail";
 $lang["action-edit"]="Edit";
 $lang["action-delete"]="Delete";
+$lang["action-deletechecked"]="Delete checked";
 $lang["action-deletecollection"]="Delete collection";
 $lang["action-revertmetadata"]="Revert metadata";
 $lang["confirm-revertmetadata"]="Are you sure you want to re-extract the original metadata from this file? This action will simulate a re-upload of the file, and you will lose any altered metadata.";
