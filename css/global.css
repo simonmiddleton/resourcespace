@@ -1180,6 +1180,10 @@ form.FormFilter button {
     float: right;
 }
 
+form.FormFilter button.ClearButton {
+    margin-right: 10px;
+}
+
 .HiddenTile {
     border: 1px solid red !important;
     margin: -2px ;
@@ -1221,3 +1225,8 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 #AdminManageMetadataFieldOptions > .BottomInpageNav {
     width: 540px;
 }
+
+
+/* Custom filters (extends the default form filters in ResourceSpace) */
+#FilterNodeOptions { width: 510px; }
+#FilterNodeOptions .FilterItemContainer > label { width: 150px; }

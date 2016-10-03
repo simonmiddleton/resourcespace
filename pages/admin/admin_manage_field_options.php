@@ -26,6 +26,8 @@ $nodes      = array();
 
 $import_export_parent = getvalescaped('import_export_parent', null);
 
+$filter_by_name = unescape(getvalescaped('filter_by_name', ''));
+
 $chosencsslink ='<link type="text/css" rel="stylesheet" href="' . $baseurl_short . 'lib/chosen/chosen.min.css"></link>';
 $chosenjslink = '<script type="text/javascript" src="' . $baseurl_short . 'lib/chosen/chosen.jquery.min.js"></script>';
 
@@ -294,10 +296,15 @@ if('true' === $ajax && 'export' === $action)
     }
 
 // [Paging functionality]
-$url            = "{$baseurl_short}pages/admin/admin_manage_field_options.php?field={$field}";
+$url            = generateURL("{$baseurl_short}pages/admin/admin_manage_field_options.php",
+                        array(
+                            'field'          => $field,
+                            'filter_by_name' => $filter_by_name
+                        )
+                    );
 $offset         = (int) getvalescaped('offset', 0, true);
 $per_page       = (int) getvalescaped('per_page_list', $default_perpage_list, true);
-$count_nodes    = get_nodes_count($field);
+$count_nodes    = get_nodes_count($field, $filter_by_name);
 $totalpages     = ceil($count_nodes / $per_page);
 $curpage        = floor($offset / $per_page) + 1;
 $jumpcount      = 0;
@@ -328,7 +335,7 @@ if($ajax)
         ?>
         <p><?php echo $lang["metadata_first_option_is_default"]; ?>
         <p>
-            <a href="<?php echo $baseurl?>/pages/tools/update_empty_field_with_default.php?field=<?php echo $field?>" onClick="CentralSpaceLoad(this,true);"><?php echo $lang['metadata_populate_default_node_for_empty_values']; ?></a>
+            <a href="<?php echo $baseurl; ?>/pages/tools/update_empty_field_with_default.php?field=<?php echo $field?>" onClick="CentralSpaceLoad(this,true);"><?php echo $lang['metadata_populate_default_node_for_empty_values']; ?></a>
         </p>
         <?php
         }
@@ -338,8 +345,17 @@ if($ajax)
     if(7 != $field_data['type'])
         {
         ?>
-        <div id="FilterContainer">
-        </div>
+        <form id="FilterNodeOptions" class="FormFilter" method="post" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
+            <fieldset>
+                <legend><?php echo $lang['filter_label']; ?></legend>
+                <div class="FilterItemContainer">
+                    <label><?php echo $lang['name']; ?></label>
+                    <input type="text" name="filter_by_name" value="<?php echo $filter_by_name; ?>">
+                </div>
+                <button type="submit"><?php echo $lang['filterbutton']; ?></button>
+                <button class="ClearButton" type="submit" onCLick="ClearFilterForm('FilterNodeOptions'); return false;"><?php echo $lang['clearbutton']; ?></button>
+            </fieldset>
+        </form>
         <!-- Pager -->
         <div class="TopInpageNavRight">
         <?php
@@ -367,7 +383,7 @@ if($ajax)
             <tbody>
         <?php
         // Render existing nodes
-        $nodes = get_nodes($field, null, false, $offset, $per_page);
+        $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name);
 
         if(0 == count($nodes))
             {
@@ -375,7 +391,7 @@ if($ajax)
 
             migrate_resource_type_field_check($fieldinfo);
 
-            $nodes = get_nodes($field, null, false, $offset, $per_page);
+            $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name);
             }
 
         foreach($nodes as $node)
@@ -393,8 +409,15 @@ if($ajax)
                             <input type="hidden" name="option_<?php echo $node['ref']; ?>_order_by" value="<?php echo $node['order_by']; ?>">
 
                             <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo $lang['save']; ?></button>
+                        <?php
+                        if('' == $filter_by_name)
+                            {
+                            ?>
                             <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
                             <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>
+                            <?php
+                            }
+                            ?>
                             <button type="submit" onclick="DeleteNode(<?php echo $node['ref']; ?>); return false;"><?php echo $lang['action-delete']; ?></button>
                         </form>
                     </div>
@@ -649,6 +672,19 @@ function ToggleTreeNode(ref, field_ref)
 
     return true;
     }
+
+
+    function ClearFilterForm(filter_form_id)
+        {
+        var input_elements = document.getElementById(filter_form_id).getElementsByTagName('input');
+
+        for(var index = input_elements.length - 1; index >= 0; index--)
+            {
+            input_elements[index].value = '';
+            }
+
+        document.getElementById(filter_form_id).submit();
+        }
 
 jQuery('.node_parent_chosen_selector').chosen({});
 </script>

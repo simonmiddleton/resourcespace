@@ -2523,5 +2523,3 @@ $lang["userpreference_headersize"]="Header size";
 $lang["headersmall"]="Small";
 $lang["headermid"]="Medium";
 $lang["headerlarge"]="Large";
-
-
