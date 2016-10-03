@@ -427,7 +427,11 @@ function extract_exif_comment($ref,$extension="")
 		$command = $exiftool_fullpath . " -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -G " . escapeshellarg($image);
         $output=run_command($command);
         $metalines = explode("\n",$output);
-        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
+		
+		# Just get the first and last few lines of the output if it is large, otherwise the log can be overwhelmed by this output
+		if(count($metalines)>20)
+			{$summary=implode("\n", array_merge(array_slice($metalines, 0, 10),array("...","...","..."),array_slice($metalines, -10, 9)));}
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $summary);
 
         $metadata = array(); # an associative array to hold metadata field/value pairs
 		
