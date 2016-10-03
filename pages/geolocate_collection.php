@@ -77,8 +77,8 @@ foreach ($all_resources as $value)
 		{
 		//These arrays are going to be passed to Javascript below to plot
 		//echo $resource['field8'];
-		$markers[] =  [ $resource['geo_long'] . "," .  $resource['geo_lat'] . "," . $resource['ref'] . "," . $forthumb['thumb_width'] . "," . $forthumb['thumb_height']  ];
-		$paths[] = $parts[0];
+		$markers[] = "[{$resource['geo_long']}, {$resource['geo_lat']}, {$resource['ref']}, {$forthumb['thumb_width']}, {$forthumb['thumb_height']}]";
+		$paths[]   = $parts[0];
 		
 		}
 	}
