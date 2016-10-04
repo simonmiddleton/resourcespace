@@ -292,7 +292,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 				<div class="SearchItem">
 			<?php } 
 			# Add to the clear function so clicking 'clear' clears this box.
-			$clear_function.="document.getElementById('field_" . $field["name"] . "').value='';";
+			$clear_function.="document.getElementById('{$id}').value='';";
         break;
     
         case 2: 
@@ -348,8 +348,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 ?></select><?php
                 if($forsearchbar)
                 	{
-                	# Add to the clear function so clicking 'clear' clears this box.
-					$clear_function.="document.getElementById('field_" . $field["name"] . "').selectedIndex=0;";
+                	// Add to the clear function so clicking 'clear' clears this box.
+					$clear_function .= "document.getElementById('{$id}').selectedIndex = -1;";
                 	}
                 }
             else
@@ -664,7 +664,23 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             </div>
 			<?php
 			# Add to clear function
-			$clear_function .= "DeselectAll('{$field['name']}', true);";
+			$clear_function .= "
+                    jQuery('#tree_{$field['ref']}').jstree(true).deselect_all();
+
+                    <!-- remove the hidden inputs -->
+                    var elements = document.getElementsByName('nodes_searched[{$field['ref']}][]');
+                    while(elements[0])
+                        {
+                        elements[0].parentNode.removeChild(elements[0]);
+                        }
+
+                    <!-- update status box -->
+                    var node_statusbox = document.getElementById('{$name}_statusbox');
+                    while(node_statusbox.lastChild)
+                        {
+                        node_statusbox.removeChild(node_statusbox.lastChild);
+                        }
+                ";
             }
         else
             {
