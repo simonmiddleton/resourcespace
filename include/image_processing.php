@@ -466,6 +466,15 @@ function extract_exif_comment($ref,$extension="")
 					$value=str_replace('...','.\n',$value); # Three dots together is interpreted as a full stop then line feed, not the other way round
 					$value=str_replace('..','\n',$value);
 					
+					# Convert to UTF-8 if not already encoded
+					$encoding=mb_detect_encoding($value,"UTF-8",true);
+					if($encoding!="UTF-8")
+						{
+						debug("extract_exif_comment: non-utf-8 value found. Extracted value: " . $value);
+						$value=utf8_encode($value);
+						debug("extract_exif_comment: Converted value: " . $value);
+						}
+					
 					# Extract group name and tag name
 					$groupname=strtoupper(substr($s[0],1));
 					$tagname=strtoupper(trim($s[1]));
