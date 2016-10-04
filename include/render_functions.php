@@ -637,9 +637,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     // UpdateStatusBox("<?php echo htmlspecialchars($field['name']); ?>", false);
                     </script>
                 </div>
-    			<!-- <input type="hidden" name="field_cat_<?php echo htmlspecialchars($field["name"]) ?>" id="<?php echo htmlspecialchars($field["name"]) ?>_category" value="<?php echo htmlspecialchars(implode('|',$set)); ?>"> -->
-
-                <!-- jsTree container -->
                 <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
                     <p align="right">
                         <a href="#" onClick="document.getElementById('cattree_<?php echo $field['name']; ?>').style.display='none'; return false;"><?php echo $lang['close']; ?></a>

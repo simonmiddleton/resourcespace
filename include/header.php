@@ -196,8 +196,6 @@ if ($contact_sheet)
 <script type="text/javascript">
 	ajaxLoadingTimer=<?php echo $ajax_loading_timer;?>;
 </script>
-
-<script src="<?php echo $baseurl?>/lib/js/category_tree.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script>
 <?php if (!$disable_geocoding) { ?>
 <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
@@ -236,6 +234,7 @@ if($simple_search_pills_view)
 <!-- jsTree -->
 <link rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jstree/themes/default/style.min.css">
 <script src="<?php echo $baseurl_short; ?>lib/jstree/jstree.min.js"></script>
+<script src="<?php echo $baseurl_short; ?>lib/js/category_tree.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
 <script type="text/javascript">
 var baseurl_short="<?php echo $baseurl_short?>";
