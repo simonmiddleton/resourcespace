@@ -689,9 +689,12 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             }
         break;
         
-        case 9: #-- Dynamic keywords list
-        $value=str_replace(";",",",$value); # Different syntax used for keyword separation when searching.
-        include __DIR__ . "/../pages/edit_fields/9.php";
+        // Dynamic keywords list
+        case 9:
+            // Different syntax used for keyword separation when searching
+            $value = str_replace(';', ',', $value);
+
+            include __DIR__ . '/../pages/edit_fields/9.php';
         break;      
 
         // Radio buttons:
