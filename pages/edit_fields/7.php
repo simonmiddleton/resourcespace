@@ -7,8 +7,10 @@ if(!isset($is_search))
     $is_search = false;
     }
 
-$hidden_input_elements = '';
-$status_box_elements   = '';
+$hidden_input_elements             = '';
+$status_box_elements               = '';
+$update_result_count_function_call = 'UpdateResultCount();';
+$tree_container_styling            = 'display: none;';
 
 foreach($field['nodes'] as $node)
     {
@@ -24,6 +26,13 @@ foreach($field['nodes'] as $node)
         {
         $status_box_elements .= "<span id=\"statusbox_option_{$node['ref']}\">{$node['name']}</span><br>";
         }
+    }
+
+if($forsearchbar)
+    {
+    $update_result_count_function_call = '';
+
+    $tree_container_styling = '';
     }
 ?>
 <div class="Fixed">
@@ -68,7 +77,7 @@ if(!(isset($treeonly) && true == $treeonly))
                         node_statusbox.removeChild(node_statusbox.lastChild);
                         }
 
-                    UpdateResultCount();
+                    <?php echo $update_result_count_function_call; ?>
                     }
                 return false;"
         >&gt; <?php echo $lang['clearall']; ?></a>
@@ -78,7 +87,7 @@ if(!(isset($treeonly) && true == $treeonly))
 
 echo $hidden_input_elements;
 ?>
-    <div id="tree_<?php echo $field['ref']; ?>" style="display: none;"></div>
+    <div id="tree_<?php echo $field['ref']; ?>" style="<?php echo $tree_container_styling; ?>"></div>
     <script>
     jQuery('#tree_<?php echo $field["ref"]; ?>').jstree({
         'core' : {
@@ -130,7 +139,7 @@ echo $hidden_input_elements;
             document.getElementById('statusbox_option_' + data.node.id).remove();
             }
 
-        UpdateResultCount();
+        <?php echo $update_result_count_function_call; ?>
         });
     </script>
 </div>

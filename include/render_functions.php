@@ -621,43 +621,42 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         break;
         
         
-        case 7: # ----- Category Tree
-        $options=$field["options"];
+        case 7:
+        # ----- Category Tree
+        $options = $field['options'];
+        $set     = preg_split('/[;\|]/', cleanse_string($value, true));
 
-        //$set=trim_array(explode(";",cleanse_string($value,true)));
-        $set=preg_split('/[;\|]/',cleanse_string($value,true));
-
-        if ($forsearchbar)
+        if($forsearchbar)
             {
-            
+            $category_tree_open = true;
+            $treeonly           = true;
             ?>
-			<div id="field_<?php echo htmlspecialchars($field["name"]) ?>" >
-			<div id="<?php echo htmlspecialchars($field["name"]) ?>_statusbox" class="MiniCategoryBox">
-                <script>UpdateStatusBox("<?php echo htmlspecialchars($field["name"]) ?>", false);</script>
-            </div>
-			<input type="hidden" name="field_cat_<?php echo htmlspecialchars($field["name"]) ?>" id="<?php echo htmlspecialchars($field["name"]) ?>_category" value="<?php echo htmlspecialchars(implode('|',$set)); ?>">
-			
-			
-			<?php
-            if (!isset($extrafooterhtml))
-                {
-                $extrafooterhtml='';
-                }
-			# Add floating frame HTML. This must go in the footer otherwise it appears in the wrong place in IE due to it existing within a floated parent (the search bar).
-			$extrafooterhtml.="
-			<div class=\"RecordPanel\" style=\"display:none;position:fixed;top:100px;left:200px;text-align:left;\" id=\"cattree_" . $fields[$n]["name"] . "\">" . $lang["pleasewait"] . "</div>
-			<script type=\"text/javascript\">
-			// Load Category Tree
-			jQuery(document).ready(function () {
-				jQuery('#cattree_" . $field["name"] . "').load('" . $baseurl_short . "pages/ajax/category_tree_popup.php?field=" . $field["ref"] . "&value=" . urlencode($value) . "&nc=" . time() . "');
-				})
-			</script>
-			";
-			
-			echo "<a href=\"#\" onClick=\"jQuery('#cattree_" . $field["name"] . "').css('top', (jQuery(this).position().top)-200);jQuery('#cattree_" . $field["name"] . "').css('left', (jQuery(this).position().left)-400);jQuery('#cattree_" . $field["name"] . "').css('position', 'fixed');jQuery('#cattree_" . $field["name"] . "').show();jQuery('#cattree_" . $field["name"] . "').draggable();return false;\">" . $lang["select"] . "</a></div>";
+			<div id="field_<?php echo htmlspecialchars($field['name']); ?>">
+    			<div id="<?php echo htmlspecialchars($field['name']); ?>_statusbox" class="MiniCategoryBox">
+                    <script>
+                    // UpdateStatusBox("<?php echo htmlspecialchars($field['name']); ?>", false);
+                    </script>
+                </div>
+    			<!-- <input type="hidden" name="field_cat_<?php echo htmlspecialchars($field["name"]) ?>" id="<?php echo htmlspecialchars($field["name"]) ?>_category" value="<?php echo htmlspecialchars(implode('|',$set)); ?>"> -->
 
+                <!-- jsTree container -->
+                <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
+                    <p align="right">
+                        <a href="#" onClick="document.getElementById('cattree_<?php echo $field['name']; ?>').style.display='none'; return false;"><?php echo $lang['close']; ?></a>
+                    </p>
+                    <?php include __DIR__ . '/../pages/edit_fields/7.php'; ?>
+                 </div>
+                <a href="#"
+                   onClick="
+                        jQuery('#cattree_<?php echo $field['name']; ?>').css('top', (jQuery(this).position().top) - 200);
+                        jQuery('#cattree_<?php echo $field['name']; ?>').css('left', (jQuery(this).position().left) - 400);
+                        jQuery('#cattree_<?php echo $field['name']; ?>').show();
+                        jQuery('#cattree_<?php echo $field['name']; ?>').draggable();
+                        return false;"><?php echo $lang['select']; ?></a>
+            </div>
+			<?php
 			# Add to clear function
-			$clear_function.="DeselectAll('" . $field["name"] ."', true);";
+			$clear_function .= "DeselectAll('{$field['name']}', true);";
             }
         else
             {
