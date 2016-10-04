@@ -625,17 +625,28 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         # ----- Category Tree
         $options = $field['options'];
         $set     = preg_split('/[;\|]/', cleanse_string($value, true));
+        $name    = "nodes_searched[{$field['ref']}]";
 
         if($forsearchbar)
             {
-            $category_tree_open = true;
-            $treeonly           = true;
+            $category_tree_open  = true;
+            $treeonly            = true;
+            $status_box_elements = '';
+
+            foreach($field['nodes'] as $node)
+                {
+                if(!in_array($node['ref'], $searched_nodes))
+                    {
+                    continue;
+                    }
+
+                // Show previously searched options on the status box
+                $status_box_elements .= "<span id=\"statusbox_option_{$node['ref']}\">{$node['name']}</span><br>";
+                }
             ?>
 			<div id="field_<?php echo htmlspecialchars($field['name']); ?>">
-    			<div id="<?php echo htmlspecialchars($field['name']); ?>_statusbox" class="MiniCategoryBox">
-                    <script>
-                    // UpdateStatusBox("<?php echo htmlspecialchars($field['name']); ?>", false);
-                    </script>
+    			<div id="<?php echo $name; ?>_statusbox" class="MiniCategoryBox">
+                    <?php echo $status_box_elements; ?>
                 </div>
                 <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
                     <p align="right">
@@ -658,8 +669,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         else
             {
             # For advanced search and elsewhere, include the category tree.
-            $name = "nodes_searched[{$field['ref']}]";
-
             include "../pages/edit_fields/7.php";
             }
         break;
