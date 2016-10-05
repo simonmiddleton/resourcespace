@@ -161,9 +161,19 @@ function selectKeyword_<?php echo $name ?>(event, ui)
             };
 
         jQuery.ajax({
-            type : 'POST',
-            url  : '<?php echo $baseurl?>/pages/edit_fields/9_ajax/add_keyword.php',
-            data : args
+            type    : 'POST',
+            url     : '<?php echo $baseurl?>/pages/edit_fields/9_ajax/add_keyword.php',
+            data    : args,
+            success : function(result) {
+                if(typeof result.new_node_id === 'undefined')
+                    {
+                    styledalert('Error', 'Could not determine new node ID!');
+
+                    return false;
+                    }
+
+                node_id = result.new_node_id;
+                }
             });
         }
     else if(keyword.substring(0, <?php echo mb_strlen($lang['noentryexists'], 'UTF-8') ?>) == '<?php echo $lang["noentryexists"]; ?>')
