@@ -1,41 +1,55 @@
 <?php
-include dirname(__FILE__) . "/../../../include/db.php";
-include_once dirname(__FILE__) . "/../../../include/general.php";
-include dirname(__FILE__) . "/../../../include/authenticate.php";
+include dirname(__FILE__) . '/../../../include/db.php';
+include_once dirname(__FILE__) . '/../../../include/general.php';
+include dirname(__FILE__) . '/../../../include/authenticate.php';
+include_once dirname(__FILE__) . '/../../../include/node_functions.php';
 
-include_once dirname(__FILE__) . "/../../../include/node_functions.php";
+$field    = getvalescaped('field', '');
+$keyword  = getvalescaped('term', '');
+$readonly = ('' != getval('readonly', '') ? true : false);
 
-$field=getvalescaped("field","");
-$keyword=getval("term","");
-
-$fielddata=get_resource_type_field($field);
+$fielddata = get_resource_type_field($field);
 node_field_options_override($fielddata);
 
-$readonly=getval("readonly","");
+// Return matches
+$first      = true;
+$exactmatch = false;
+$results    = array();
 
-# Return matches
-$first=true;
-$exactmatch=false;
+foreach($fielddata['nodes'] as $node)
+    {
+    $trans = i18n_get_translated($node['name']);
 
-$results=array();
+    if('' != $trans && substr(strtolower($trans), 0, strlen($keyword)) == strtolower($keyword))
+        {
+        if(strtolower($trans) == strtolower($keyword))
+            {
+            $exactmatch = true;
+            }
 
-for ($m=0;$m<count($fielddata['node_options']);$m++)
-	{
-	$trans=i18n_get_translated($fielddata['node_options'][$m]);
-	if ($trans!="" && substr(strtolower($trans),0,strlen($keyword))==strtolower($keyword))
-		{
-		if (strtolower($trans)==strtolower($keyword)) {$exactmatch=true;}
-		$results[]= $trans;
-		}
-	}
-	
-if (!$exactmatch && !$readonly)
-	{
-	$results[] = $lang["createnewentryfor"] . " " . $keyword;
-	}
-elseif($readonly && empty($results)){
-	$results[] = $lang["noentryexists"] . " " . $keyword;
-}
+        $results[] = array(
+                'label' => $trans,
+                'value' => $node['ref']
+            );
+        }
+    }
 
+if(!$exactmatch && !$readonly)
+    {
+    $results[] = array(
+            'label' => "{$lang['createnewentryfor']} {$keyword}",
+            'value' => "{$lang['createnewentryfor']} {$keyword}"
+        );
+    }
+elseif($readonly && empty($results))
+    {
+    $results[] = array(
+            'label' => "{$lang['noentryexists']} {$keyword}",
+            'value' => "{$lang['noentryexists']} {$keyword}"
+        );
+    }
+
+// We return an array of objects with label and value properties: [ { label: "Node ID 1 - option name", value: "101" }, ... ]
+// This will later be used by jQuery autocomplete
 echo json_encode($results);
 exit();
