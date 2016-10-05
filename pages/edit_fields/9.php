@@ -3,9 +3,8 @@
 global $baseurl, $pagename, $edit_autosave;
 
 // Decide when the user can add new keywords to a dynamic keywords list
-$readonly = ($pagename=="search_advanced");
-
-if(checkperm('bdk' . $field['ref']))
+$readonly = false;
+if('search_advanced' == $pagename || checkperm('bdk' . $field['ref']))
     {
     $readonly = true;
     }
