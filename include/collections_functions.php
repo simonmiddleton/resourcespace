@@ -1327,9 +1327,14 @@ function get_search_title($searchstring){
 
 function add_saved_search_items($collection)
 	{
-	global $collection_share_warning, $collection_allow_not_approved_share, $userref, $collection_block_restypes;
+	global $collection_share_warning, $collection_allow_not_approved_share, $userref, $collection_block_restypes, $search_all_workflow_states;
 	# Adds resources from a search to the collection.
-	$results=do_search(getvalescaped("addsearch",""), getvalescaped("restypes",""), "relevance", getvalescaped("archive","",true),-1,'',false,getvalescaped("starsearch",""),false,false,getvalescaped("daylimit",""));
+	$archivesearch = getvalescaped("archive","",true);
+	if($search_all_workflow_states && 0 != $archivesearch)
+		{
+		$search_all_workflow_states = false;
+		}
+	$results=do_search(getvalescaped("addsearch",""), getvalescaped("restypes",""), "relevance", $archivesearch,-1,'',false,getvalescaped("starsearch",""),false,false,getvalescaped("daylimit",""));
 
 	# Check if this collection has already been shared externally. If it has, we must add a further entry
 	# for this specific resource, and warn the user that this has happened.
