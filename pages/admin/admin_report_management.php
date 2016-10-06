@@ -65,7 +65,7 @@ function addColumnHeader($orderName, $labelKey)
 					<a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["name"],$find,STR_HIGHLIGHT_SIMPLE); ?></a>
 				</td>
 				<td>
-					<div class="ListTools">
+					<div class="ListView" align="right">
 						<?php echo LINK_CARET ?><a href="<?php echo $view_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-view"]?></a>
 						<?php echo LINK_CARET ?><a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-edit"]?></a>
 						<?php echo LINK_CARET ?><a href="<?php echo $edit_url; ?>&copyreport=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["copy"]?></a>
