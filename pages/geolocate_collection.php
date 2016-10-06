@@ -4,26 +4,40 @@ include_once "../include/general.php";
 include "../include/authenticate.php";
 include "../include/resource_functions.php";
 include "../include/collections_functions.php";
-include "../include/header.php";
 include_once "../include/search_functions.php";
 
 //The two variables below act like "pemissions" to display or not the page
-if ( $disable_geocoding || (!$disable_geocoding && !$geo_locate_collection) ){exit($lang["error-permissiondenied"]);}
+if($disable_geocoding || (!$disable_geocoding && !$geo_locate_collection))
+    {
+    header('HTTP/1.1 403 Forbidden');
+    exit($lang['error-permissiondenied']);
+    }
 
 global $baseurl;
 
-$ref = getvalescaped("ref","",true);
-if (!is_numeric($ref)){exit("Go away");}
+$ref = getvalescaped('ref', '', true);
+if(!is_numeric($ref))
+    {
+    header('HTTP/1.1 400 Bad Request');
+    exit('Ref is required to be numeric!');
+    }
+
+if(!collection_readable($ref))
+    {
+    header('HTTP/1.1 401 Unauthorized');
+    die('Permission denied!');
+    }
+
 $all_resources = get_collection_resources($ref);
 $collection = get_collection($ref);
 $collectionname = $collection['name'];
 $markers = array();
 $check = false;
-?>
 
+include '../include/header.php';
+?>
 <h1><?php echo $lang["geolocatecollection"] ?></h1>
 <h3><?php echo $lang["collectionname"] . ": " . $collectionname  ?></h3>
-
 <?php
 
 //If the collection is empty stop here and provide a message
