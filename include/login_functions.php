@@ -14,10 +14,10 @@ if (!function_exists('hash'))
     
 function perform_login()
 	{
-	global $api, $scramble_key, $enable_remote_apis, $lang, $max_login_attempts_wait_minutes, $max_login_attempts_per_ip, $max_login_attempts_per_username, $global_cookies, $username, $password, $password_hash;
+	global $scramble_key, $lang, $max_login_attempts_wait_minutes, $max_login_attempts_per_ip, $max_login_attempts_per_username, $global_cookies, $username, $password, $password_hash;
 	
         
-    if (!$api && (strlen($password)==32 || strlen($password)==64) && getval("userkey","")!=md5($username . $scramble_key))
+    if ((strlen($password)==32 || strlen($password)==64) && getval("userkey","")!=md5($username . $scramble_key))
 		{
 		exit("Invalid password."); # Prevent MD5s being entered directly while still supporting direct entry of plain text passwords (for systems that were set up prior to MD5 password encryption was added). If a special key is sent, which is the md5 hash of the username and the secret scramble key, then allow a login using the MD5 password hash as the password. This is for the 'log in as this user' feature.
 		}
@@ -78,17 +78,13 @@ function perform_login()
 		$result['ref']=$userref;
 
 		# Update the user record.
-		# Omit updating session has if using an API, because we don't want API usage to log users out, and there is no 'session' to remember in such a case.
-		if ($api){$session_hash_sql="";} else {$session_hash_sql="session='".escape_check($session_hash)."',";}
+		$session_hash_sql="session='".escape_check($session_hash)."',";
 		sql_query("update user set $session_hash_sql last_active=now(),login_tries=0,lang='".getvalescaped("language","")."' where ref='$userref'");
 
 		# Log this
 		daily_stat("User session",$userref);
-		if (!$api)
-			{
-			/* sql_query("insert into resource_log(date,user,resource,type) values (now()," . (($userref!="")?"'$userref'":"null") . ",0,'l')"); */
-			log_activity(null,LOG_CODE_LOGGED_IN,$ip,"user","ref",($userref!="" ? $userref :"null"),null,'',($userref!="" ? $userref :"null"));
-			}
+		
+        log_activity(null,LOG_CODE_LOGGED_IN,$ip,"user","ref",($userref!="" ? $userref :"null"),null,'',($userref!="" ? $userref :"null"));
 
 		# Blank the IP address lockout counter for this IP
 		sql_query("delete from ip_lockout where ip='" . escape_check($ip) . "'");

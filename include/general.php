@@ -4117,36 +4117,6 @@ function convert($text, $key = '') {
     return $text;
 } 
 
-function make_api_key($username,$password){
-	// this is simply an encryption for username and password that will work as an alternative way to log in for remote access pages such as rss and apis
-	// this is simply to avoid sending username and password plainly in the url.
-	global $api_scramble_key;
-    if (extension_loaded('mcrypt') && extension_loaded('hash')){
-        $cipher = new Cipher($api_scramble_key);
-        return $cipher->encrypt($username."|".$password,$api_scramble_key);
-        }
-    else{
-        return strtr(base64_encode(convert($username."|".$password,$api_scramble_key)), '+/=', '-_,');
-        }
-	}
-	
-function decrypt_api_key($key){
-	global $api_scramble_key;
-    if (extension_loaded('mcrypt') && extension_loaded('hash')){
-        $cipher = new Cipher($api_scramble_key);
-        $key=$cipher->decrypt($key);
-        }
-    else{
-	$key=convert(base64_decode(strtr($key, '-_,', '+/=')),$api_scramble_key);
-        }
-	return explode("|",$key);
-	}
-
-// alternative encryption using mcrypt extension
-//from http://php.net/manual/en/function.mcrypt-encrypt.php
-// IMPORTANT: temp fix to avoid redeclaring issues. An autoloader should be used instead (currently not available)
-include_once 'classes/Cipher.php';
-
 function purchase_set_size($collection,$resource,$size,$price)
 	{
 	// Set the selected size for an item in a collection. This is used later on when the items are downloaded.

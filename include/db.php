@@ -1373,7 +1373,10 @@ function resolve_user_agent($agent)
                     #catch all for mozilla references not specified above
                     );
     $osmatches=array(
-                    "iphone"=>"iPhone",                    
+                    "iphone"=>"iPhone",
+					"nt 10.0"=>"Windows 10",
+					"nt 6.3"=>"Windows 8.1",
+					"nt 6.2"=>"Windows 8",
                     "nt 6.1"=>"Windows 7",
                     "nt 6.0"=>"Vista",
                     "nt 5.2"=>"WS2003",

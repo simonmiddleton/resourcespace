@@ -6,7 +6,6 @@
 #
 #
 $lang["rss_setup_heading"]="Rss2 – inställningar";
-$lang["rss_limits"]="rss_limits:";
 $lang["rss_fields"]="rss_fields:";
 $lang["rss_ttl"]="rss_ttl:";
 $lang["rss_show_field_titles"]="Visa fältnamn";
