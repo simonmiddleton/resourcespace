@@ -430,8 +430,14 @@ function extract_exif_comment($ref,$extension="")
 		
 		# Just get the first and last few lines of the output if it is large, otherwise the log can be overwhelmed by this output
 		if(count($metalines)>20)
-			{$summary=implode("\n", array_merge(array_slice($metalines, 0, 10),array("...","...","..."),array_slice($metalines, -10, 9)));}
-        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $summary);
+			{
+			$summary=implode("\n", array_merge(array_slice($metalines, 0, 10),array("...","...","..."),array_slice($metalines, -10, 9)));
+			}
+        else
+			{
+			$summary=$output;	
+			}		
+		resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $summary);
 
         $metadata = array(); # an associative array to hold metadata field/value pairs
 		
