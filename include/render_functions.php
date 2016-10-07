@@ -894,7 +894,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         return;
         }
 
-    global $baseurl, $lang, $k, $pagename, $order_by, $sort, $chosen_dropdowns;
+    global $baseurl, $lang, $k, $pagename, $order_by, $sort, $chosen_dropdowns, $allow_resource_deletion;
 
     
     // globals that could also be passed as a reference
@@ -1108,24 +1108,29 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
             <?php
             if(!$top_actions)
                 {
-                ?>
-                case 'delete_all_in_collection':
-                    if(confirm('<?php echo $lang["deleteallsure"]; ?>'))
-                        {
-                        var post_data = {
-                            submitted: true,
-                            ref: '<?php echo $collection_data["ref"]; ?>',
-                            name: '<?php echo urlencode($collection_data["name"]); ?>',
-                            public: '<?php echo $collection_data["public"]; ?>',
-                            deleteall: 'on'
-                        };
-
-                        jQuery.post('<?php echo $baseurl; ?>/pages/collection_edit.php?ajax=true', post_data, function()
+                if($allow_resource_deletion)
+                    {
+                    ?>
+                    case 'delete_all_in_collection':
+                        if(confirm('<?php echo $lang["deleteallsure"]; ?>'))
                             {
-                            CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"] ?>');
-                            });
-                        }
-                    break;
+                            var post_data = {
+                                submitted: true,
+                                ref: '<?php echo $collection_data["ref"]; ?>',
+                                name: '<?php echo $collection_data["name"]; ?>',
+                                public: '<?php echo $collection_data["public"]; ?>',
+                                deleteall: 'on'
+                            };
+
+                            jQuery.post('<?php echo $baseurl; ?>/pages/collection_edit.php?ajax=true', post_data, function()
+                                {
+                                CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"] ?>');
+                                });
+                            }
+                        break;
+                    <?php
+                    }
+                    ?>
 
 					case 'hide_collection':
 						var action = 'hidecollection';

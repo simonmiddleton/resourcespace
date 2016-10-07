@@ -2025,12 +2025,15 @@ function update_collection_user($collection,$newuser)
 if(!function_exists("compile_collection_actions")){	
 function compile_collection_actions(array $collection_data, $top_actions, $resource_data=array())
     {
-    global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path, 		 $collection_download_settings, $contact_sheet,
+    global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path,
            $manage_collections_contact_sheet_link, $manage_collections_share_link, $allow_share,
            $manage_collections_remove_link, $userref, $collection_purge, $show_edit_all_link, $result,
            $edit_all_checkperms, $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
-           $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort, $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search, $usercollection, $disable_geocoding, $geo_locate_collection;
+           $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
+           $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
+           $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
+           $allow_resource_deletion;
     
 	#This is to properly render the actions drop down in the themes page	
 	if (isset($collection_data['c']))
@@ -2340,7 +2343,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     if(($k=="" || $internal_share_access) 
 		&& !$top_actions
         && (count($result) != 0 || $count_result != 0)
-        && !(isset($allow_resource_deletion) && !$allow_resource_deletion)
+        && (isset($allow_resource_deletion) && $allow_resource_deletion)
         && collection_writeable($collection_data['ref'])
         && $allow_multi_edit
         && !checkperm('D'))
