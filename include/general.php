@@ -1144,9 +1144,10 @@ function save_user($ref)
         log_activity(null, LOG_CODE_EDITED, $fullname, 'user', 'fullname', $ref);
         log_activity(null, LOG_CODE_EDITED, $email, 'user', 'email', $ref);
 
-        if(isset($current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
+    	if((isset($current_user_data['usergroup']) && '' != $current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
             {
             log_activity(null, LOG_CODE_EDITED, $usergroup, 'user', 'usergroup', $ref);
+            sql_query("DELETE FROM resource WHERE ref = '-{$ref}'");
             }
 
         log_activity(null, LOG_CODE_EDITED, $ip_restrict, 'user', 'ip_restrict', $ref, null, '');
