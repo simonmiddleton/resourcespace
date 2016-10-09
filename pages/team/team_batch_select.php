@@ -182,7 +182,7 @@ else
 					<?php
 					}
 				?>
-			});
+			}<?php hook("jqueryfiletreecallback");?>);
 			
 			
     		jQuery('form').submit(function() {
@@ -204,7 +204,9 @@ else
 				?>
         		return true;
     		});
+    		<?php hook("afterfiletreeload");?>
 		});
+		<?php hook("addtofiletreeselectscript");?>
 	</script>
 	<?php
 	}
@@ -213,7 +215,7 @@ else
 <div class="QuestionSubmit">
 <label for="buttons"> </label>
 <input name="back" type="button" onclick="history.back(-1)" value="&nbsp;&nbsp;<?php echo $lang["back"] ?>&nbsp;&nbsp;" />
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-upload"] ?>&nbsp;&nbsp;" />
+<input id="upload" name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-upload"] ?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>
