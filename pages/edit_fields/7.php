@@ -2,11 +2,8 @@
 /* -------- Category Tree ------------------- */ 
 global $lang, $baseurl, $css_reload_key, $category_tree_show_status_window, $category_tree_open, $is_search;
 
-if(!isset($is_search))
-    {
-    $is_search = false;
-    }
-
+$is_search                         = (isset($is_search) ? $is_search : false);
+$forsearchbar                      = (isset($forsearchbar) ? $forsearchbar : false);
 $hidden_input_elements             = '';
 $status_box_elements               = '';
 $update_result_count_function_call = 'UpdateResultCount();';
