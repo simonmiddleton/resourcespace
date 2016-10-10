@@ -2158,7 +2158,15 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 		extract_exif_comment($r,$extension);
 		update_field($r,8,$title);
 		}
-
+		
+	# Extract text from documents (e.g. PDF, DOC)
+	global $extracted_text_field;
+	if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
+		{
+		// This is skipped if the unoconv process will do it during preview creation later
+		extract_text($r,$extension);
+		}
+		
 	# Ensure folder is created, then create previews.
 	get_resource_path($r,false,"pre",true,$extension);
 

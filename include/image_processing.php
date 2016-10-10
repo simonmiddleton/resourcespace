@@ -276,16 +276,13 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
     }
 	
-	# extract text from documents (e.g. PDF, DOC).
+	# Extract text from documents (e.g. PDF, DOC)
 	global $extracted_text_field;
-	if (isset($extracted_text_field) && !$no_exif) {
-		if (isset($unoconv_path) && in_array($extension,$unoconv_extensions)){
-			// omit, since the unoconv process will do it during preview creation below
-			}
-		else {
-		extract_text($ref,$extension);
+	if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
+		{
+		// This is skipped if the unoconv process will do it during preview creation later
+		extract_text($r,$extension);
 		}
-	}
 
 	# Store original filename in field, if set
 	global $filename_field,$amended_filename;
