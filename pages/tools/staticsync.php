@@ -55,6 +55,10 @@ set_process_lock("staticsync");
 $syncdir=rtrim($syncdir,"/");
 
 echo "Preloading data... ";
+
+// Set options that don't make sense here
+$merge_filename_with_title=false;
+
 $count = 0;
 $done=array();
 $syncedresources = sql_query("SELECT ref, file_path, file_modified, archive FROM resource WHERE LENGTH(file_path)>0 AND file_path LIKE '%/%'");
@@ -474,6 +478,7 @@ function ProcessFolder($folder)
                         $rref = $rd["ref"];
 
                         echo "Resource $rref has changed, regenerating previews: $fullpath" . PHP_EOL;
+                        $merge_filename_with_title=false;
                         extract_exif_comment($rref,$rd["file_extension"]);
 
                         # extract text from documents (e.g. PDF, DOC).
