@@ -8,7 +8,7 @@ include_once '../../include/node_functions.php';
 $ajax           = ('' != getval('ajax', '') ? true : false);
 $node_ref       = getvalescaped('node_ref', null, true);
 $field          = (int) getvalescaped('field', '', true);
-$searched_nodes = getvalescaped('searched_nodes', array());
+$selected_nodes = getvalescaped('selected_nodes', array());
 $opened_nodes   = array();
 $js_tree_data   = array();
 
@@ -24,16 +24,16 @@ $nodes = get_nodes($field, $node_ref);
 // Most of the nodes will most likely be a tree leaf. 
 // This allows us to know which tree nodes we need to 
 // expand from the begining
-foreach($searched_nodes as $searched_node)
+foreach($selected_nodes as $selected_node)
     {
-    $tree_level = get_tree_node_level($searched_node);
+    $tree_level = get_tree_node_level($selected_node);
 
     if(0 === $tree_level)
         {
         continue;
         }
 
-    $found_root_node = get_root_node_by_leaf($searched_node, $tree_level);
+    $found_root_node = get_root_node_by_leaf($selected_node, $tree_level);
     if($found_root_node)
         {
         $opened_nodes[] = $found_root_node;
@@ -55,7 +55,7 @@ foreach($nodes as $node)
             'text'   => $node['name'],
             'state'  => array(
                 'opened'   => $node_opened,
-                'selected' => in_array($node['ref'], $searched_nodes)
+                'selected' => in_array($node['ref'], $selected_nodes)
             ),
             'children' => is_parent_node($node['ref'])
         );
