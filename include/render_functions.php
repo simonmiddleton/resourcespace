@@ -625,7 +625,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         # ----- Category Tree
         $options = $field['options'];
         $set     = preg_split('/[;\|]/', cleanse_string($value, true));
-        $name    = "nodes_searched[{$field['ref']}]";
+        $name    = "nodes_searched[{$field['ref']}][]";
 
         if($forsearchbar)
             {
@@ -641,11 +641,11 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     }
 
                 // Show previously searched options on the status box
-                $status_box_elements .= "<span id=\"statusbox_option_{$node['ref']}\">{$node['name']}</span><br>";
+                $status_box_elements .= "<span id=\"nodes_searched_{$field['ref']}_statusbox_option_{$node['ref']}\">{$node['name']}</span><br>";
                 }
             ?>
 			<div id="field_<?php echo htmlspecialchars($field['name']); ?>">
-    			<div id="<?php echo $name; ?>_statusbox" class="MiniCategoryBox">
+    			<div id="nodes_searched_<?php echo $field['ref']; ?>_statusbox" class="MiniCategoryBox">
                     <?php echo $status_box_elements; ?>
                 </div>
                 <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
@@ -665,7 +665,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 			<?php
 			# Add to clear function
 			$clear_function .= "
-                    jQuery('#tree_{$field['ref']}').jstree(true).deselect_all();
+                    jQuery('#search_tree_{$field['ref']}').jstree(true).deselect_all();
 
                     <!-- remove the hidden inputs -->
                     var elements = document.getElementsByName('nodes_searched[{$field['ref']}][]');
@@ -675,7 +675,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                         }
 
                     <!-- update status box -->
-                    var node_statusbox = document.getElementById('{$name}_statusbox');
+                    var node_statusbox = document.getElementById('nodes_searched_{$field['ref']}_statusbox');
                     while(node_statusbox.lastChild)
                         {
                         node_statusbox.removeChild(node_statusbox.lastChild);
@@ -685,7 +685,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         else
             {
             # For advanced search and elsewhere, include the category tree.
-            include "../pages/edit_fields/7.php";
+            include '../pages/edit_fields/7.php';
             }
         break;
         
