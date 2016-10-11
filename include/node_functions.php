@@ -957,6 +957,28 @@ function add_resource_nodes($resourceid,$nodes=array())
         }
 	}
 
+
+/**
+* Get nodes associated with a particular resource for all / a specific field (optionally)
+* 
+* @param integer $resource
+* @param integer $resource_type_field
+* 
+* @return array
+*/
+function get_resource_nodes($resource, $resource_type_field = null)
+    {
+    $query = "SELECT n.ref AS `value` FROM node AS n INNER JOIN resource_node AS rn ON n.ref = rn.node WHERE rn.resource = '" . escape_check($resource) . "'";
+
+    if(!is_null($resource_type_field) && is_numeric($resource_type_field))
+        {
+        $query .= " AND n.resource_type_field = '" . escape_check($resource_type_field) . "'";
+        }
+
+    return sql_array($query);
+    }
+
+
 function delete_resource_nodes($resourceid,$nodes=array())
 	{
 	if(!is_array($nodes))
