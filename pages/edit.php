@@ -1235,12 +1235,17 @@ function display_field($n, $field, $newtab=false)
         {
         global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
 
-        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES) && 7 == $field['type'])
+        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
-            $name = "nodes[{$field['ref']}][]";
+            $name = "nodes[{$field['ref']}]";
 
-            echo 'TODO: change from hardcoded values in ' . __FILE__ . ' @' . __LINE__;
-            $selected_nodes = array(268,269,272,274);
+            // Sometimes we need to pass multiple options
+            if(in_array($field['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)))
+                {
+                $name = "nodes[{$field['ref']}][]";
+                }
+
+            $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
             }
 
         $is_search = false;

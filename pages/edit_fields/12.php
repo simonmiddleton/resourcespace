@@ -2,15 +2,26 @@
 /*******************************************/
 /**************RADIO BUTTONS****************/
 /*******************************************/
-$set = trim($value);
 
-// Translate the options:
-for($i = 0; $i < count($field['node_options']); $i++)
+// Selected nodes should be used most of the times.
+// When searching, an array of searched_nodes can be found instead
+// which represent the same thing (ie. already selected values)
+if(!isset($selected_nodes))
     {
-    $field['node_options'][$i] = i18n_get_translated($field['node_options'][$i]);
+    $selected_nodes = array();
+
+    if(isset($searched_nodes) && is_array($selected_nodes))
+        {
+        $selected_nodes = $selected_nodes;
+        }
     }
 
-$l = average_length($field['node_options']);
+$node_options = array();
+foreach($field['nodes'] as $node)
+    {
+    $node_options[] = $node['name'];
+    }
+$l = average_length($node_options);
 
 $cols = 10;
 if($l > 5) 
@@ -33,7 +44,7 @@ if($l > 25)
     $cols = 2;
     }
 
-$rows = ceil(count($field['node_options']) / $cols);
+$rows = ceil(count($node_options) / $cols);
 
 // Default behaviour
 if(!isset($display_as_radiobuttons))
@@ -92,7 +103,7 @@ if($display_as_radiobuttons)
             $row = 1;
             $col = 1;
 
-            foreach($field['node_options'] as $val)
+            foreach($field['nodes'] as $node)
                 {
                 if($col > $cols) 
                     {
@@ -105,10 +116,43 @@ if($display_as_radiobuttons)
                 $col++;
                 ?>
                 <td width="10" valign="middle">
-                    <input type="radio" id="field_<?php echo $field["ref"] . '_' . sha1($val); ?>" name="field_<?php echo $field["ref"]; ?>" value="<?php echo $val; ?>" <?php if(i18n_get_translated($val)==i18n_get_translated($set) || ','.i18n_get_translated($val) == i18n_get_translated($set)) {?>checked<?php } ?> <?php if($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"] ?>');"<?php } if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } echo $help_js; ?>/>
+                    <input type="radio"
+                           id="field_<?php echo $field["ref"] . '_' . sha1($node['name']); ?>"
+                           name="<?php echo $name; ?>"
+                           value="<?php echo $node['ref']; ?>"
+                       <?php
+                       if(in_array($node['ref'], $selected_nodes))
+                            {
+                            ?>
+                            checked
+                            <?php
+                            }
+
+                        if($edit_autosave)
+                            {
+                            ?>
+                            onChange="AutoSave('<?php echo $field["ref"]; ?>');"
+                            <?php
+                            }
+                        if($autoupdate)
+                            {
+                            ?>
+                            onChange="UpdateResultCount();"
+                            <?php
+                            }
+
+                        echo $help_js;?>>
                 </td>
                 <td align="left" valign="middle">
-                    <label class="customFieldLabel" for="field_<?php echo $field["ref"] . '_' . sha1($val); ?>" <?php if($edit_autosave) { ?>onmousedown="radio_allow_save();" <?php } ?>><?php echo $val; ?></label>
+                    <label class="customFieldLabel"
+                           for="field_<?php echo $field["ref"] . '_' . sha1($node['name']); ?>"
+                        <?php
+                        if($edit_autosave)
+                            {
+                            ?>
+                            onmousedown="radio_allow_save();"<?php
+                            }
+                            ?>><?php echo i18n_get_translated($node['name']); ?></label>
                 </td>
                 <?php 
                 } 
@@ -141,17 +185,29 @@ else if($display_as_checkbox)
                     <?php
                     }
                 $col++;
-
-                if(isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes))
-                    {
-                    $set = $node['ref'];
-                    }
-                    ?>
+                ?>
                 <td valign=middle>
-                    <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="<?php echo $name; ?>" value="<?php echo $node['ref']; ?>" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                    <input id="nodes_searched_<?php echo $node['ref']; ?>"
+                           type="checkbox"
+                           name="<?php echo $name; ?>"
+                           value="<?php echo $node['ref']; ?>"
+                        <?php
+                        if(in_array($node['ref'], $selected_nodes))
+                            {
+                            ?>
+                            checked
+                            <?php
+                            }
+                        if($autoupdate)
+                            {
+                            ?>
+                            onClick="UpdateResultCount();"
+                            <?php
+                            }
+                            ?>>
                 </td>
                 <td valign=middle>
-                    <?php echo htmlspecialchars($node['name']); ?>&nbsp;&nbsp;
+                    <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
                 </td>
                 <?php 
                 }
@@ -172,12 +228,8 @@ else if($display_as_dropdown)
         {
         if('' != trim($node['name']))
             {
-            if(isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes))
-                {
-                $set = $node['ref'];
-                }
-                ?>
-            <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>" <?php if($node['ref'] == $set) { ?>selected<?php } ?>><?php echo htmlspecialchars(trim($node['name'])); ?></option>
+            ?>
+            <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>"<?php if(in_array($node['ref'], $selected_nodes)) { ?> selected<?php } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
             <?php
             }
         }

@@ -61,7 +61,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	# Save all submitted data for resource $ref.
 	# Also re-index all keywords from indexable fields.
 		
-	global $lang, $auto_order_checkbox,$userresourcedefaults,$multilingual_text_fields,$languages,$language,$user_resources_approved_email;
+	global $lang, $auto_order_checkbox, $userresourcedefaults, $multilingual_text_fields,
+           $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES;
 
 	hook("befsaveresourcedata", "", array($ref));
 
@@ -79,9 +80,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	resource_type_config_override($resource_data["resource_type"]);                
     
 	# Set up arrays of node ids to add/remove. We can't remove all nodes as user may not have access
-	$nodes_to_add=array();
-	$nodes_to_remove=array();
-		
+	$nodes_to_add    = array();
+	$nodes_to_remove = array();
+
+    // All the nodes passed for editing. Some of them were already a value
+    // of the fields while others have been added/ removed
+    $user_set_values = getvalescaped("nodes", array());
+
 	for ($n=0;$n<count($fields);$n++)
 		{
 		if (!(
@@ -96,7 +101,37 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 )
 			{
 
+            ##### NODES #####
             node_field_options_override($fields[$n]);
+
+            // Fixed list fields use node IDs directly
+            if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
+                {
+                $ui_selected_node_values = array();
+
+                if(!is_array($user_set_values[$fields[$n]['ref']]) && '' != $user_set_values[$fields[$n]['ref']] && is_numeric($user_set_values[$fields[$n]['ref']]))
+                    {
+                    $ui_selected_node_values[] = $user_set_values[$fields[$n]['ref']];
+                    }
+                else
+                    {
+                    $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
+                    }
+
+                foreach($fields[$n]['nodes'] as $node)
+                    {
+                    if(in_array($node['ref'], $ui_selected_node_values))
+                        {
+                        $nodes_to_add[] = $node['ref'];
+
+                        continue;
+                        }
+
+                    $nodes_to_remove[] = $node['ref'];
+                    }
+                }
+            ##### END OF NODES #####
+
 			if ($fields[$n]["type"]==2)
 				{
 				# construct the value from the ticked boxes
@@ -117,17 +152,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						$nodes_to_remove[] = $noderef;
 						}
 					}
-				
-				/*for ($m=0;$m<count($fields[$n]['node_options']);$m++)
-					{
-					$name=$fields[$n]["ref"] . "_" . md5($fields[$n]['node_options'][$m]);
-					if (getval($name,"")=="yes")
-						{
-						if ($val!=",") {$val.=",";}
-						$val.=$fields[$n]['node_options'][$m];
-						}
-					}
-				*/
 				}
 			elseif ($fields[$n]["type"]==4 || $fields[$n]["type"]==6 || $fields[$n]["type"]==10)
 				{
@@ -180,28 +204,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					if (strip_leading_comma($val) == $nodedata['name'])
 						{
 						$nodes_to_add[] = $noderef;
-						}
-					else
-						{
-						$nodes_to_remove[] = $noderef;
-						}
-					}							
-				// if it doesn't already start with a comma, add one
-				if (substr($val,0,1) != ',')
-					{
-					$val = ','.$val;
-					}				
-				}
-			elseif ($fields[$n]["type"] == 12)
-				{
-				$val=getvalescaped("field_" . $fields[$n]["ref"],"");	
-				foreach($fields[$n]["nodes"] as $noderef => $nodedata)
-					{
-					if (in_array(strip_leading_comma($val),i18n_get_translations($nodedata['name'])))
-						{
-						$nodes_to_add[] = $noderef;
-						// Correct the string to include all multingual strings as for dropdowns
-						$val=$nodedata['name'];
 						}
 					else
 						{
@@ -394,15 +396,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
             if (count($ok)>0) {sql_query("insert into resource_related(resource,related) values ($ref," . join("),(" . $ref . ",",$ok) . ")");}
             }
 
-	# Autocomplete any blank fields.
-	autocomplete_blank_fields($ref);
-	
-	# Update resource_node table
-	delete_resource_nodes($ref,$nodes_to_remove);
-	if(count($nodes_to_add)>0)
-		{
-        add_resource_nodes($ref,$nodes_to_add);
-		}
+    // Autocomplete any blank fields.
+    autocomplete_blank_fields($ref);
+
+    // Update resource_node table
+    delete_resource_nodes($ref, $nodes_to_remove);
+    if(0 < count($nodes_to_add))
+        {
+        add_resource_nodes($ref, $nodes_to_add);
+        }
             
 	# Expiry field(s) edited? Reset the notification flag so that warnings are sent again when the date is reached.
 	$expirysql="";
