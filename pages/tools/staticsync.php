@@ -478,7 +478,6 @@ function ProcessFolder($folder)
                         $rref = $rd["ref"];
 
                         echo "Resource $rref has changed, regenerating previews: $fullpath" . PHP_EOL;
-                        $merge_filename_with_title=false;
                         extract_exif_comment($rref,$rd["file_extension"]);
 
                         # extract text from documents (e.g. PDF, DOC).
