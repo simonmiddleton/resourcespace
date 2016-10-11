@@ -703,12 +703,13 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             $edit_autosave           = false;
             $display_as_radiobuttons = false;
             $display_as_checkbox     = true;
-            $name                    = "nodes_searched[{$field['ref']}]";
+            $name                    = "nodes_searched[{$field['ref']}][]";
 
             if($forsearchbar || $field['display_as_dropdown'])
                 {
                 $display_as_dropdown = true;
                 $display_as_checkbox = false;
+                $name                = "nodes_searched[{$field['ref']}]";
 
                 $clear_function .= "document.getElementsByName('{$name}')[0].selectedIndex = -1;";
                 }

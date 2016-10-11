@@ -148,7 +148,7 @@ else if($display_as_checkbox)
                     }
                     ?>
                 <td valign=middle>
-                    <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                    <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="<?php echo $name; ?>" value="<?php echo $node['ref']; ?>" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                 </td>
                 <td valign=middle>
                     <?php echo htmlspecialchars($node['name']); ?>&nbsp;&nbsp;
@@ -165,7 +165,7 @@ else if($display_as_checkbox)
 else if($display_as_dropdown)
     {
     ?>
-    <select class="<?php echo $class; ?>" name="nodes_searched[<?php echo $field['ref']; ?>]" <?php if($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+    <select class="<?php echo $class; ?>" name="<?php echo $name; ?>" <?php if($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
         <option value=""></option>
     <?php
     foreach($field['nodes'] as $node)
