@@ -281,7 +281,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 	if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
 		{
 		// This is skipped if the unoconv process will do it during preview creation later
-		extract_text($r,$extension);
+		extract_text($ref,$extension);
 		}
 
 	# Store original filename in field, if set
