@@ -674,7 +674,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 					if (count($hidden_indexed_fields) > 0)
 						{
 						$union_restriction_clause .= " and qrk_" . $c . "_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
-						$union_restriction_clause_node .= "AND nk_" . $c . "_" . $qk . "..node NOT IN (SELECT ref FROM node WHERE nk_" . $c . "_" . $qk . "..node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+						$union_restriction_clause_node .= "AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE nk_" . $c . "_" . $qk . "..node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
 						}
 					 
 					if ($qk==1)
