@@ -1240,9 +1240,13 @@ function display_field($n, $field, $newtab=false)
             $name = "nodes[{$field['ref']}]";
 
             // Sometimes we need to pass multiple options
-            if(in_array($field['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)))
+            if(in_array($field['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE)))
                 {
                 $name = "nodes[{$field['ref']}][]";
+                }
+            else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
+                {
+                $name = "field_{$field['ref']}";
                 }
 
             $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);

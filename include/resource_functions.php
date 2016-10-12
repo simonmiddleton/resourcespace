@@ -109,11 +109,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 {
                 $ui_selected_node_values = array();
 
-                if(!is_array($user_set_values[$fields[$n]['ref']]) && '' != $user_set_values[$fields[$n]['ref']] && is_numeric($user_set_values[$fields[$n]['ref']]))
+                if(isset($user_set_values[$fields[$n]['ref']])
+                    && !is_array($user_set_values[$fields[$n]['ref']])
+                    && '' != $user_set_values[$fields[$n]['ref']]
+                    && is_numeric($user_set_values[$fields[$n]['ref']]))
                     {
                     $ui_selected_node_values[] = $user_set_values[$fields[$n]['ref']];
                     }
-                else
+                else if(isset($user_set_values[$fields[$n]['ref']])
+                    && is_array($user_set_values[$fields[$n]['ref']]))
                     {
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
                     }
