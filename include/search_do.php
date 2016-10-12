@@ -560,13 +560,13 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                     if (!empty($sql_exclude_fields))
                                         {
                                         $union_restriction_clause .= " and k" . $c . ".resource_type_field not in (" . $sql_exclude_fields . ")";
-                                        $union_restriction_clause_node .= "AND nk{$c}.node NOT IN (SELECT ref FROM node WHERE nk{$c}.node=node.ref AND node.resource_type_field IN (" . $sql_exclude_fields .  "))";
+                                        $union_restriction_clause_node .= " AND nk{$c}.node NOT IN (SELECT ref FROM node WHERE nk{$c}.node=node.ref AND node.resource_type_field IN (" . $sql_exclude_fields .  "))";
                                         }
     
                                     if (count($hidden_indexed_fields) > 0)
                                         {
                                         $union_restriction_clause .= " and k" . $c . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
-                                        $union_restriction_clause_node .= "AND nk{$c}.node NOT IN (SELECT ref FROM node WHERE nk{$c}.node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+                                        $union_restriction_clause_node .= " AND nk{$c}.node NOT IN (SELECT ref FROM node WHERE nk{$c}.node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
                                         }
     
                                     if ($empty)  // we are dealing with a special search checking if a field is empty
@@ -667,14 +667,14 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
 					if (!empty($sql_exclude_fields))
 						{
-						$union_restriction_clause .= " and qrk_" . $c . "_" . $qk . ".resource_type_field not in (" . $sql_exclude_fields . ")";
-						$union_restriction_clause_node .= "AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE nk{$c}.node=node.ref AND node.resource_type_field IN (" . $sql_exclude_fields .  "))";
+						$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in (" . $sql_exclude_fields . ")";
+						$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE nk" . $c . "_" . $qk . ".node=node.ref AND node.resource_type_field IN (" . $sql_exclude_fields .  "))";
 						}
 
 					if (count($hidden_indexed_fields) > 0)
 						{
-						$union_restriction_clause .= " and qrk_" . $c . "_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
-						$union_restriction_clause_node .= "AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE nk_" . $c . "_" . $qk . ".node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+						$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
+						$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE nk_" . $c . "_" . $qk . ".node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
 						}
 					 
 					if ($qk==1)
@@ -685,7 +685,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 							"_" . $qk . " LEFT OUTER JOIN `node_keyword` nk_" . $c . "_" . $qk . " ON rn_" . $c . "_" . $qk . ".node=nk_" . $c . "_" . $qk . ".node LEFT OUTER JOIN `node` nn" . $c . "_" . $qk . " ON rn_" . $c . "_" . $qk . ".node=nn" . $c . "_" . $qk . ".ref " .
 							" AND (nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node . ")"; 
 						$freeunioncondition="qrk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
-						$fixedunioncondition="nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
+						$fixedunioncondition="nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node ;
 						}
 					else
 						{
