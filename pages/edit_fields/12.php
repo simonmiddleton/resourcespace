@@ -234,6 +234,6 @@ else if($display_as_dropdown)
             }
         }
         ?>
-    </select><?php
+    </select>
+    <?php
     }
-    ?>

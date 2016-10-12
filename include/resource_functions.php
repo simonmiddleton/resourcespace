@@ -200,26 +200,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						}
 					}
 				}
-			elseif ($fields[$n]["type"] == 3)
-				{
-				$val=getvalescaped("field_" . $fields[$n]["ref"],"");	
-				foreach($fields[$n]["nodes"] as $noderef => $nodedata)
-					{
-					if (strip_leading_comma($val) == $nodedata['name'])
-						{
-						$nodes_to_add[] = $noderef;
-						}
-					else
-						{
-						$nodes_to_remove[] = $noderef;
-						}
-					}							
-				// if it doesn't already start with a comma, add one
-				if (substr($val,0,1) != ',')
-					{
-					$val = ','.$val;
-					}				
-				}
 			else
 				{
 				# Set the value exactly as sent.
