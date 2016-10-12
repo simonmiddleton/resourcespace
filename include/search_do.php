@@ -98,7 +98,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
         }
 
     $search=trim($search);
-    # Dedupe keywords (not for quoted strings as the user may be looking for the same word multiple times together in this instance)
+    # Dedupe keywords 
     $keywords=array_values(array_unique($keywords));
 
     $modified_keywords=hook('dosearchmodifykeywords', '', array($keywords));
@@ -202,7 +202,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
         for ($n=0;$n<count($keywords);$n++)
             {
             $keyword=$keywords[$n];
-            $quoted_string=substr($keyword,0,1)=="\"" && substr($keyword,-1,1)=="\"";
+            $quoted_string=(substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"";
             
             if(!$quoted_string)
                 {            
@@ -643,6 +643,12 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
             else
                 {   
 				// This keyword is a quoted string, split into keywords but don't preserve quotes this time
+				$omit = false;
+                if (substr($keyword, 0, 1) == "-")
+					{
+					$omit = true;
+					$keyword = substr($keyword, 1);
+					}
 				$quotedkeywords=split_keywords(substr($keyword,1,-1));  
 				$qk=1; // Set the counter to the first keyword
 				foreach($quotedkeywords as $quotedkeyword)
@@ -659,7 +665,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 					$keyref = resolve_keyword($quotedkeyword, true); # Resolve keyword.	
 										
 					 // Add code to find matching keywords in non-fixed list fields  
-
 					$union_restriction_clause = "";
 					$union_restriction_clause_node = "";
 
@@ -668,13 +673,13 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 					if (!empty($sql_exclude_fields))
 						{
 						$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in (" . $sql_exclude_fields . ")";
-						$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE nk" . $c . "_" . $qk . ".node=node.ref AND node.resource_type_field IN (" . $sql_exclude_fields .  "))";
+						$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . $sql_exclude_fields .  "))";
 						}
 
 					if (count($hidden_indexed_fields) > 0)
 						{
 						$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
-						$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE nk_" . $c . "_" . $qk . ".node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+						$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
 						}
 					 
 					if ($qk==1)
@@ -702,10 +707,22 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 					    }
 					$qk++;
 					} // End of each keyword in quoted string
-				$sql_keyword_union[] = $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . " GROUP BY resource ";
-				$sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
-				$sql_keyword_union_or[]="TRUE";
-				$sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+					
+				if($omit)# Exclude matching resources from query (omit feature)
+					{
+					if ($sql_filter != "")
+						{
+						$sql_filter .= " and ";
+						}		
+					$sql_filter .= str_replace("[bit_or_condition]",""," r.ref not in (select resource from (" . $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . ") qfilter" . $c . ") "); # Instead of adding to the union, filter out resources that do contain the quoted string.
+					}
+				else
+					{
+					$sql_keyword_union[] = $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . " GROUP BY resource ";
+					$sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
+					$sql_keyword_union_or[]=FALSE;
+					$sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+					}
                 $c++;
 				}	// End of if quoted string
 			} // end keywords expanded loop        
