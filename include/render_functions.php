@@ -1117,7 +1117,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                             var post_data = {
                                 submitted: true,
                                 ref: '<?php echo $collection_data["ref"]; ?>',
-                                name: '<?php echo $collection_data["name"]; ?>',
+                                name: <?php echo json_encode($collection_data["name"]); ?>,
                                 public: '<?php echo $collection_data["public"]; ?>',
                                 deleteall: 'on'
                             };
