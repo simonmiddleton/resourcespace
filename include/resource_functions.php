@@ -85,7 +85,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/ removed
-    $user_set_values = getvalescaped("nodes", array());
+    $user_set_values = getval('nodes', array());
 
 	for ($n=0;$n<count($fields);$n++)
 		{
@@ -215,35 +215,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					{
 					$val = ','.$val;
 					}				
-				}
-            elseif ($fields[$n]["type"] == 7 || $fields[$n]["type"]==9) // Category tree or dynamic keywords
-				{
-                $submittedval=getval("field_" . $fields[$n]["ref"],"");
-				$submittedvals=explode("|",$submittedval);
-                $newvals=array();
-                foreach($fields[$n]["nodes"] as $noderef => $nodedata)
-                    {
-               
-                    $addnode=false;
-                    foreach($submittedvals as $checkval)
-                        {
-                        if (trim($checkval) == trim($nodedata['name']))
-                            {
-                            $addnode=true;                            
-                            }                        
-                        }
-                    if($addnode)
-                        {
-                        $nodes_to_add[] = $noderef;
-                        // Correct the string to include all multingual strings as for dropdowns
-                        $newvals[]=escape_check($nodedata['name']);    
-                        }
-                    else
-                        {
-                        $nodes_to_remove[] = $noderef;    
-                        }
-                    }
-				$val = ',' . implode(",",$newvals);
 				}
 			else
 				{
