@@ -70,4 +70,9 @@ $results=do_search('@@' . $johnnynode . ' @@!' . $deedeenode);
 if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcec) return false;
 debug("Successfully searched for resources with one node and NOT another node");
 
+// search for 'Dee Dee' (should be resource a)
+$results=do_search('"Dee Dee"');
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
+debug("Successfully searched for resources with quoted node string");
+
 return true;

@@ -379,7 +379,7 @@ function get_resource_top_keywords($resource,$count)
 	}
 
 if (!function_exists("split_keywords")){
-function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false)
+function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false, $keepquotes=false)
 	{
 	# Takes $search and returns an array of individual keywords.
 	global $config_trimchars;
@@ -408,11 +408,19 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 	
 	if ((substr($ns,0,1)==",") ||  ($index==false && strpos($ns,":")!==false)) # special 'constructed' query type, split using comma so
 	# we support keywords with spaces.
-		{
-		if (strpos($ns,"startdate")==false && strpos($ns,"enddate")==false)
-			{$ns=cleanse_string($ns,true,!$index,$is_html);}
-	
-		$return=explode(",",$ns);
+		{	
+		if($keepquotes)
+            {
+            preg_match_all('/"(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
+            $return=trim_array($matches[0],$config_trimchars . ",");
+            }
+        else
+            {
+            if (strpos($ns,"startdate")==false && strpos($ns,"enddate")==false)
+                {$ns=cleanse_string($ns,true,!$index,$is_html);}
+            $return=explode(",",$ns);
+            }
+        
 		# If we are indexing, append any values that contain spaces.
         
 		# Important! Solves the searching for keywords with spaces issue.
@@ -434,21 +442,47 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 					}
 				}
 				
-			$return2=trim_array($return2,$config_trimchars);
+			$return2=trim_array($return2,$config_trimchars . ",");
 			if ($partial_index) {return add_partial_index($return2);}
 			return $return2;
 			}
 		else
 			{
-			return trim_array($return,$config_trimchars);
+            // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
+            return trim_array($return,$config_trimchars . ($keepquotes?",":""));
 			}
 		}
 	else
 		{
 		# split using spaces and similar chars (according to configured whitespace characters)
-		$ns=explode(" ",cleanse_string($ns,false,!$index,$is_html));                
-		
-        $ns=trim_array($ns,$config_trimchars);
+        if($keepquotes)
+            {
+            preg_match_all('/"(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
+            $splits=$matches[0];
+            $ns=array();
+            foreach ($splits as $split)
+                {
+                if(!(substr($split,0,1)=="\"" && substr($split,-1,1)=="\"") && strpos($split,",")!==false)
+                    {
+                    $split=explode(",",$split);
+                    $ns = $ns + $split;
+                    }
+                else
+                    {
+                    $ns[] = $split;   
+                    }
+                }
+            }
+        else
+            { 
+            # split using spaces and similar chars (according to configured whitespace characters)
+            $ns=explode(" ",cleanse_string($ns,false,!$index,$is_html));
+            }
+            
+        
+        $ns=trim_array($ns,$config_trimchars . ($keepquotes?",":""));
+        
+//print_r($ns) . "<br /><br />";
 		if ($index && $partial_index) {
 			return add_partial_index($ns);
 		}
@@ -757,8 +791,12 @@ function trim_array($array,$trimchars='')
 			// also trim off extra characters they want gone
 			$el=trim($el,$trimchars);
 			}
-		$array_trimmed[$index]=$el;
-		$index++;
+        // Add to the returned array if there is anything left
+        if (strlen($el) > 0)
+			{
+            $array_trimmed[$index]=$el;
+            $index++;
+            }
 		}
 	if(isset($unshiftblank)){array_unshift($array_trimmed,"");}
 	return $array_trimmed;

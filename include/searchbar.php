@@ -46,12 +46,9 @@ for ($n=0;$n<count($fields);$n++)
 # Process all keywords, putting set fieldname/value pairs into an associative array ready for setting later.
 # Also build a quicksearch string.
 
-# Recognise a quoted search, which is a search for an exact string
-$quoted_string=false;
-if (substr($quicksearch,0,1)=="\"" && substr($quicksearch,-1,1)=="\"") {$quoted_string=true;$quicksearch=substr($quicksearch,1,-1);}
-
 $quicksearch    = refine_searchstring($quicksearch);
-$keywords       = split_keywords($quicksearch);
+$keywords       = split_keywords($quicksearch,false,false,false,false,true);
+
 $set_fields     = array();
 $simple         = array();
 $searched_nodes = array();
@@ -88,14 +85,7 @@ for ($n=0;$n<count($keywords);$n++)
 	
 # Set the text search box to the stripped value.
 $quicksearch=join(" ",trim_array($simple));
-
-if (!$quoted_string)
-	{
-	$quicksearch=str_replace(",-"," -",$quicksearch);
-	}
-
-# Add the quotes back, if a quoted string
-if ($quoted_string) {$quicksearch="\"" . trim($quicksearch) . "\"";}
+$quicksearch=str_replace(",-"," -",$quicksearch);
 
 # Set the predefined date fields
 $found_year="";if (isset($set_fields["year"])) {$found_year=$set_fields["year"];}

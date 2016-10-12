@@ -124,6 +124,8 @@ foreach ($sort_fields as $sort_field)
 	}
 $n=0;	
 
+$saved_search=$search;
+
 # Append extra search parameters from the quick search.
 if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the search query is numeric, as users typically expect numeric searches to return the resource with that ID and ignore country/date filters.
 	{
@@ -225,7 +227,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
                     }
                 }
 
-            $search = ('' == $search ? '' : join(', ', split_keywords($search))) . $node_ref;
+            $search = ('' == $search ? '' : join(', ', split_keywords($search,false,false,false,false,true))) . $node_ref;
             }
 		}
 
@@ -245,16 +247,15 @@ if (is_numeric(trim(getvalescaped("searchresourceid","")))){
 	
 hook("searchstringprocessing");
 
-
 # Fetch and set the values
 //setcookie("search",$search); # store the search in a cookie if not a special search
 $offset=getvalescaped("offset",0);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset);}
 if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 
 // Is this a collection search?
-$collectionsearch = substr($search,0,11)=="!collection"; // We want the default collection order to be applied
+$collectionsearch = strpos($search,"!collection")!==false; // We want the default collection order to be applied
 
-$order_by=getvalescaped("order_by","");if (strpos($search,"!")===false || substr($search,0,11)=="!properties") {rs_setcookie('saved_order_by', $order_by);}
+$order_by=getvalescaped("order_by","");if (strpos($search,"!")===false || strpos($search,"!properties")!==false) {rs_setcookie('saved_order_by', $order_by);}
 if ($order_by=="")
 	{
 	if ($collectionsearch) // We want the default collection order to be applied
@@ -369,13 +370,13 @@ if (getvalescaped("refreshcollectionframe","")!="")
 $refs=array();
 
 # Special query? Ignore restypes
-if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties") {$restypes="";}
+if (strpos($search,"!")!==false &&  strpos($search,"!properties")!==false) {$restypes="";}
 
 # Do the search!
 $search=refine_searchstring($search);
 if (strpos($search,"!")===false || substr($search,0,11)=="!properties") {rs_setcookie('search', $search);}
-hook('searchaftersearchcookie');
 
+hook('searchaftersearchcookie');
 if ($search_includes_resources || substr($search,0,1)==="!")
 	{
 	$search_includes_resources=true; // Always enable resource display for special searches.

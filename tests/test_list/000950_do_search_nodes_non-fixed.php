@@ -4,72 +4,45 @@ include_once(__DIR__ . '/../../include/search_functions.php');
 
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
-
-// --------------------------------------------------------------------------------
-
-function resource_node_keyword_associated($resource,$resource_type_field,$keyword,$position)
-    {
-    sql_query("INSERT INTO `node`(`resource_type_field`,`name`) VALUES ({$resource_type_field},'{$keyword}')");
-    $node_ref=sql_insert_id();
-    sql_query("INSERT INTO resource_node(`resource`,`node`) VALUES ({$resource},{$node_ref})");
-    sql_query("INSERT INTO `node_keyword`(`node`,`keyword`,`position`) SELECT {$node_ref},ref,{$position} FROM `keyword` WHERE `keyword`='{$keyword}'");
-    }
-
-// --------------------------------------------------------------------------------
-
 // -------------- Both old resource_keyword and node_keyword lookups ------------
 
-sql_query("INSERT INTO `resource`(`ref`,`title`,`resource_type`) values (950,'Node test one with resource_keyword and node_keyword',1) ON DUPLICATE KEY UPDATE ref=ref");
-sql_query("INSERT INTO `resource`(`ref`,`title`,`resource_type`) values (951,'Node test two with resource_keyword and node_keyword',1) ON DUPLICATE KEY UPDATE ref=ref");
 
-update_field(950,'title','Small goat');
-update_field(951,'title','Central library containing many cartoons');
+// create 3 new resources
+$resourcea=create_resource(1,0);
+$resourceb=create_resource(2,0);
+$resourcec=create_resource(2,0);
+debug("Resource A: " . $resourcea);
+debug("Resource B: " . $resourceb );
+debug("Resource C: " . $resourcec);
 
-reindex_resource(950);
-reindex_resource(951);
+// Add new nodes to field
+$zebranode = set_node(NULL, 74, "zebra",'',1000);
+$giraffenode = set_node(NULL, 74, "giraffe",'',1000);
+$capybaranode = set_node(NULL, 74, "capybara",'',1000);
+$mammalnode = set_node(NULL, 74, "mammal",'',1000);
+$threeblindmicenode = set_node(NULL, 74, "three blind mice",'',1000);
+$firstthirdsecondnode = set_node(NULL, 74, "first third second",'',1000);
+debug("node1: " . $zebranode . "\n");
+debug("node2: " . $giraffenode . "\n");
+debug("node3: " . $capybaranode . "\n");
+debug("node4: " . $mammalnode . "\n");
 
-resource_node_keyword_associated(950,8,'small',0);
-resource_node_keyword_associated(950,8,'goat',1);
+// Add nodes to resource a
+add_resource_nodes($resourcea,array($zebranode, $mammalnode));
+// Add giraffe  node to resource b
+add_resource_nodes($resourceb,array($giraffenode, $mammalnode,$threeblindmicenode));
+// Add capybara node to resource c
+add_resource_nodes($resourcec,array($capybaranode, $firstthirdsecondnode));
 
-resource_node_keyword_associated(951,8,'central',0);
-resource_node_keyword_associated(951,8,'library',1);
-resource_node_keyword_associated(951,8,'containing',2);
-resource_node_keyword_associated(951,8,'many',3);
-resource_node_keyword_associated(951,8,'books',4);
+// Add data to title field
+update_field($resourcea,$view_title_field,'Zebedee jumping, first second third');
+update_field($resourceb,$view_title_field,'Geoffrey swimming, second first third');
+update_field($resourcec,$view_title_field,'Clifford sleeping, third first second');
 
-// -------------- Old resource_keyword lookup only ------------
-
-sql_query("INSERT INTO `resource`(`ref`,`title`,`resource_type`) values (952,'Node test one with resource_keyword and node_keyword',1) ON DUPLICATE KEY UPDATE ref=ref");
-sql_query("INSERT INTO `resource`(`ref`,`title`,`resource_type`) values (953,'Node test two with resource_keyword and node_keyword',1) ON DUPLICATE KEY UPDATE ref=ref");
-
-update_field(952,'title','Billy goat');
-update_field(953,'title','Mobile library containing many manuscripts');
-
-reindex_resource(952);
-reindex_resource(953);
-
-sql_query("DELETE FROM `node_keyword` WHERE `keyword` IN (SELECT `ref` FROM `keyword` WHERE `keyword` IN ('billy','mobile','manuscripts'))");
-
-// -------------- New node_keyword lookup only ------------
-
-sql_query("INSERT INTO `resource`(`ref`,`title`,`resource_type`) values (954,'Node test one with resource_keyword and node_keyword',1) ON DUPLICATE KEY UPDATE ref=ref");
-sql_query("INSERT INTO `resource`(`ref`,`title`,`resource_type`) values (955,'Node test two with resource_keyword and node_keyword',1) ON DUPLICATE KEY UPDATE ref=ref");
-
-update_field(954,'title','Goat style beard');
-update_field(955,'title','District library containing many documents');
-
-resource_node_keyword_associated(954,8,'goat',0);
-resource_node_keyword_associated(954,8,'style',1);
-resource_node_keyword_associated(954,8,'beard',2);
-
-resource_node_keyword_associated(955,8,'district',0);
-resource_node_keyword_associated(955,8,'library',1);
-resource_node_keyword_associated(955,8,'containing',2);
-resource_node_keyword_associated(955,8,'many',3);
-resource_node_keyword_associated(955,8,'documents',4);
-
-sql_query("DELETE FROM `resource_keyword` WHERE `resource`=954 AND `keyword` IN (SELECT `ref` FROM `keyword` WHERE `keyword` IN ('goat','style','beard'))");
-sql_query("DELETE FROM `resource_keyword` WHERE `resource`=955 AND `keyword` IN (SELECT `ref` FROM `keyword` WHERE `keyword` IN ('district','documents'))");
+// Add data to keyword field that matches an existing node keyword
+update_field($resourcea,1,'stripy, animal');
+update_field($resourceb,1,'long, neck, animal');
+update_field($resourcec,1,'large, rodent, Hydrochoerus, mammal, animal');
 
 // -------------------- Useful SQL: ---------------
 
@@ -80,69 +53,56 @@ sql_query("DELETE FROM `resource_keyword` WHERE `resource`=955 AND `keyword` IN 
 // select * from resource_keyword left outer join keyword on resource_keyword.keyword=keyword.ref where resource >= 950 and resource <=955
 
 
-// search for 'goat' which will produce 3 results (both from keywords and nodes)
-$results=do_search('goat');
+// search for 'mammal' which will return resource a, b and c (from keywords and nodes)
+
+echo "search for mammal\n";
+$results=do_search('mammal');
 if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref']) ||
     (
-    ($results[0]['ref']!=950 && $results[1]['ref']!=952 && $results[2]['ref']!=954) &&
-    ($results[0]['ref']!=950 && $results[1]['ref']!=954 && $results[2]['ref']!=952) &&
-    ($results[0]['ref']!=952 && $results[1]['ref']!=954 && $results[2]['ref']!=950) &&
-    ($results[0]['ref']!=952 && $results[1]['ref']!=950 && $results[2]['ref']!=954) &&
-    ($results[0]['ref']!=954 && $results[1]['ref']!=950 && $results[2]['ref']!=952) &&
-    ($results[0]['ref']!=954 && $results[1]['ref']!=952 && $results[2]['ref']!=950)
+    ($results[0]['ref']!=$resourcea && $results[1]['ref']!=$resourcea && $results[2]['ref']!=$resourcea) &&
+    ($results[0]['ref']!=$resourceb && $results[1]['ref']!=$resourceb && $results[2]['ref']!=$resourceb) &&
+    ($results[0]['ref']!=$resourcec && $results[1]['ref']!=$resourcec && $results[2]['ref']!=$resourcec)
     )
 ) return false;
 
-// search for 'billy' which will produce 1 result (via resource_keyword)
-$results=do_search('billy');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=952) return false;
+// search for 'rodent' which will produce 1 result (via resource_keyword)
+$results=do_search('rodent');
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcec) return false;
 
-// search for 'beard' which will produce 1 result (via resource_node->node_keyword)
-$results=do_search('beard');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=954) return false;
+// search for 'capybara' which will produce 1 result (via resource_node->node_keyword)
+$results=do_search('giraffe');
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourceb) return false;
 
-// search for goat without 'billy' which will produce 2 results (omit via resource_keyword)
-$results=do_search('goat -billy');
+
+// search for mammal without 'swimming' which will produce 2 results (omit via resource_keyword)
+$results=do_search('mammal -swimming');
 if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
     (
-        ($results[0]['ref']!=950 && $results[1]['ref']!=954) &&
-        ($results[0]['ref']!=954 && $results[1]['ref']!=950)
+        ($results[0]['ref']!=$resourcea && $results[1]['ref']!=$resourcea) &&
+        ($results[0]['ref']!=$resourcec && $results[1]['ref']!=$resourcec)
     )
 ) return false;
 
-// search for goat without 'beard' which will produce 2 results (omit via resource_node->node_keyword)
-$results=do_search('goat -beard');
+// search for animal without 'giraffe' which will produce 2 results (omit via resource_node->node_keyword)
+$results=do_search('animal -giraffe');
 if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
     (
-        ($results[0]['ref']!=950 && $results[1]['ref']!=952) &&
-        ($results[0]['ref']!=952 && $results[1]['ref']!=950)
+        ($results[0]['ref']!=$resourcea && $results[1]['ref']!=$resourcea) &&
+        ($results[0]['ref']!=$resourcec && $results[1]['ref']!=$resourcec)
     )
 ) return false;
 
 
-// quoted search (via resource_keyword only)
-$results=do_search('"containing many cartoons"');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=951) return false;
+// quoted search 
+$results=do_search('"first second third"');
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
 
-// quoted search (via resource_node->node_keyword only)
-$results=do_search('"containing many documents"');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=955) return false;
-
-// quoted search (via both resource_keyword and resource_node->node_keyword)
-$results=do_search('"containing many"');
-if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref']) ||
-    (
-        ($results[0]['ref']!=951 && $results[1]['ref']!=953 && $results[2]['ref']!=955) &&
-        ($results[0]['ref']!=951 && $results[1]['ref']!=955 && $results[2]['ref']!=953) &&
-        ($results[0]['ref']!=953 && $results[1]['ref']!=955 && $results[2]['ref']!=951) &&
-        ($results[0]['ref']!=953 && $results[1]['ref']!=951 && $results[2]['ref']!=955) &&
-        ($results[0]['ref']!=955 && $results[1]['ref']!=951 && $results[2]['ref']!=953) &&
-        ($results[0]['ref']!=955 && $results[1]['ref']!=953 && $results[2]['ref']!=951)
-    )
-) return false;
+// quoted search
+$results=do_search('"three blind mice"');
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourceb) return false;
 
 // negative test case to check that incorrect order does not return a match
-$results=do_search('"many containing"');  // this would typically return a suggestion string "many", not a results array
+$results=do_search('"mice blind"');  // this would typically return a suggestion string 
 if(is_array($results)) return false;
 
 return true;

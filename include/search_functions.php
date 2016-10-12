@@ -547,7 +547,7 @@ function refine_searchstring($search){
     $search=str_replace(",-",", -",$search);
     $search=str_replace ("\xe2\x80\x8b","",$search);// remove any zero width spaces.
     
-    $keywords=split_keywords($search);
+    $keywords=split_keywords($search, false, false, false, false, true);
 
     $orfields=get_OR_fields(); // leave checkbox type fields alone
     
@@ -984,7 +984,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         # Fix the order by for this query (special case due to inner query)
         $order_by=str_replace("r.rating","rating",$order_by);
                 
-        return sql_query($sql_prefix . "select distinct *,r2.hit_count score from (select $select from resource r $sql_join where $sql_filter order by ref desc limit $last ) r2 order by $order_by" . $sql_suffix,false,$fetchrows);
+        return sql_query($sql_prefix . "select distinct *,r2.total_hit_count score from (select $select from resource r $sql_join where $sql_filter order by ref desc limit $last ) r2 order by $order_by" . $sql_suffix,false,$fetchrows);
         }
     
      # Collections containing resources
