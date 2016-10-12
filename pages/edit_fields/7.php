@@ -4,6 +4,7 @@ global $lang, $baseurl, $css_reload_key, $category_tree_show_status_window, $cat
 
 $is_search      = (isset($is_search) ? $is_search : false);
 $forsearchbar   = (isset($forsearchbar) ? $forsearchbar : false);
+$edit_autosave  = (isset($edit_autosave) ? $edit_autosave : false);
 
 $hidden_input_elements             = '';
 $hidden_input_elements_id_prefix   = ($is_search ? 'nodes_searched_' : 'nodes_');
@@ -155,7 +156,18 @@ echo $hidden_input_elements;
             document.getElementById('<?php echo $status_box_id;?>_option_' + data.node.id).remove();
             }
 
-        <?php echo $update_result_count_function_call; ?>
+        // Common actions for both selecting or deselecting a node
+        if(data.action == 'select_node' || data.action == 'deselect_node')
+            {
+            <?php
+            if($edit_autosave)
+                {
+                echo "AutoSave('{$field['ref']}');";
+                }
+
+            echo $update_result_count_function_call;
+            ?>
+            }
         });
     </script>
 </div>
