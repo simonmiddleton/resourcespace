@@ -956,6 +956,7 @@ $lang["removetext"]="Remove text / option(s)";
 $lang["find"]="Find";
 $lang["andreplacewith"]="...and replace with...";
 $lang["relateallresources"]="Relate all resources in this collection";
+$lang['relateallresources_confirmation'] = 'Are you sure you want to RELATE ALL resources in this collection?';
 
 # New for 1.5
 $lang["columns"]="Columns";
