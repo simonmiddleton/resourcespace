@@ -2,52 +2,67 @@
 /* -------- Check box list ------------------ */
 if(!hook('customchkboxes', '', array($field)))
     {
-    # Translate all options
-    $modified_options = hook('modify_field_options', '', array($field));
-    if($modified_options != '')
+    // Selected nodes should be used most of the times.
+    // When searching, an array of searched_nodes can be found instead
+    // which represent the same thing (ie. already selected values)
+    if(!isset($selected_nodes))
         {
-        $field['node_options'] = $modified_options;
-        }
+        $selected_nodes = array();
 
-    $option_trans        = array();
-    $option_trans_simple = array();
-
-    for ($m = 0; $m < count($field['node_options']); $m++)
-        {
-        $trans = i18n_get_translated($field['node_options'][$m]);
-
-        if($trans!='')
+        if(isset($searched_nodes) && is_array($selected_nodes))
             {
-            $option_trans[$field['node_options'][$m]]=$trans;
-            $option_trans_simple[]=$trans;
+            $selected_nodes = $selected_nodes;
             }
         }
 
-    if($auto_order_checkbox && !hook("ajust_auto_order_checkbox",'',array($field)))
+    $node_options = array();
+    foreach($field['nodes'] as $node)
         {
-        if($auto_order_checkbox_case_insensitive){natcasesort($option_trans);}
-        else{natsort($option_trans);}
+        $node_options[] = $node['name'];
         }
 
-    $field['node_options'] = array_keys($option_trans); # Set the options array to the keys, so it is now effectively sorted by translated string   
-    $field['node_options'] = array_diff($field['node_options'], array(''));
-
-    $set  = array_unique(preg_split('/,|\~\w+\:/',$value));        // this will remove language variants such as "~en:my option in english"
-    $wrap = 0;
-
-    # Work out an appropriate number of columns based on the average length of the options.
-    $l = average_length($option_trans_simple);
+    // Work out an appropriate number of columns based on the average length of the options.
+    $l = average_length($node_options);
     switch($l)
         {
-        case ($l>40):   $cols=1; break; 
-        case ($l>25):   $cols=2; break;
-        case ($l>15):   $cols=3; break;
-        case ($l>10):   $cols=4; break;
-        case ($l>5):    $cols=5; break;
-        default:    $cols=10;
+        case($l > 40): $cols = 1; break; 
+        case($l > 25): $cols = 2; break;
+        case($l > 15): $cols = 3; break;
+        case($l > 10): $cols = 4; break;
+        case($l > 5):  $cols = 5; break;
+        default:       $cols = 10;
         }
 
-    $height = ceil(count($field['node_options']) / $cols);
+    ##### Reordering options #####
+    $reordered_options = array();
+    foreach($field['nodes'] as $node)
+        {
+        $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
+        }
+
+    if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
+        {
+        if($auto_order_checkbox_case_insensitive)
+            {
+            natcasesort($reordered_options);
+            }
+        else
+            {
+            natsort($reordered_options);
+            }
+        }
+
+    $new_node_order = array();
+    foreach($reordered_options as $reordered_node_id => $reordered_node_option)
+        {
+        $new_node_order[$reordered_node_id] = $field['nodes'][array_search($reordered_node_id, array_column($field['nodes'], 'ref', 'ref'))];
+        }
+
+    $field['nodes'] = $new_node_order;
+    ##### End of reordering options #####
+
+    $wrap = 0;
+    $rows = ceil(count($field['nodes']) / $cols);
 
     if($edit_autosave)
         {
@@ -65,9 +80,6 @@ if(!hook('customchkboxes', '', array($field)))
         <?php
         }
 
-    array_filter($field['node_options']);
-    array_filter($option_trans);
-
     global $checkbox_ordered_vertically;
 
     if ($checkbox_ordered_vertically)
@@ -79,56 +91,55 @@ if(!hook('customchkboxes', '', array($field)))
             <legend class="accessibility-hidden"><?php echo $field['title']; ?></legend>
             <table cellpadding=2 cellspacing=0>
                 <tr>
-                <?php
-                for($y = 0; $y < $height; $y++)
+            <?php
+            $row = 1;
+            $col = 1;
+
+            foreach($field['nodes'] as $node)
+                {
+                if('' == $node['name'])
                     {
-                    for($x = 0; $x < $cols; $x++)
-                        {
-                        # Work out which option to fetch.
-                        $o = ($x * $height) + $y;
+                    continue;
+                    }
 
-                        if($o < count($field['node_options']))
-                            {
-                            $option = $field['node_options'][$o];
-                            $trans  = $option_trans[$option];
-
-                            $name = $field["ref"] . "_" . md5($option);
-                            if($option!='')
-                                {
-                                ?>
-                                <td width="1">
-                                    <input type="checkbox"
-                                           id="<?php echo $name; ?>"
-                                           name="<?php echo $name?>"
-                                           value="yes"
-                                        <?php
-                                        if(in_array($option,$set))
-                                            {
-                                            ?>
-                                            checked
-                                            <?php
-                                            }
-
-                                        if($edit_autosave)
-                                            {
-                                            ?>
-                                            onChange="AutoSave('<?php echo $field['ref']; ?>');" onmousedown="checkbox_allow_save();"
-                                            <?php
-                                            }
-                                            ?>>
-                                </td>
-                                <td>
-                                    <label class="customFieldLabel" for="<?php echo $name; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars($trans)?></label>
-                                </td>
-                                <?php
-                                }
-                            }
-                        }
-                        ?>
+                if($col > $cols) 
+                    {
+                    $col = 1;
+                    $row++;
+                    ?>
                     </tr>
                     <tr>
-                    <?php
+                    <?php 
                     }
+
+                $col++;
+                    ?>
+                <td width="1">
+                    <input type="checkbox"
+                           id="<?php echo $name; ?>"
+                           name="<?php echo $name; ?>"
+                           value="<?php echo $node['ref']; ?>"
+                        <?php
+                        if(in_array($node['ref'], $selected_nodes))
+                            {
+                            ?>
+                            checked
+                            <?php
+                            }
+
+                        if($edit_autosave)
+                            {
+                            ?>
+                            onChange="AutoSave('<?php echo $field['ref']; ?>');" onmousedown="checkbox_allow_save();"
+                            <?php
+                            }
+                            ?>>
+                </td>
+                <td>
+                    <label class="customFieldLabel" for="<?php echo $name; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
+                </td>
+                <?php
+                }
                 ?>
                 </tr>
             </table>
@@ -143,11 +154,9 @@ if(!hook('customchkboxes', '', array($field)))
         <table cellpadding=2 cellspacing=0>
             <tr>
         <?php
-        foreach($option_trans as $option => $trans)
+        foreach($field['nodes'] as $node)
             {
-            $name = $field["ref"] . "_" . md5($option);
             $wrap++;
-
             if($wrap > $cols)
                 {
                 $wrap = 1;
@@ -160,9 +169,9 @@ if(!hook('customchkboxes', '', array($field)))
             <td width="1">
                 <input type="checkbox"
                        name="<?php echo $name; ?>"
-                       value="yes"
+                       value="<?php echo $node['ref']; ?>"
                     <?php
-                    if(in_array($option, $set))
+                    if(in_array($node['ref'], $selected_nodes))
                         {
                         ?>
                         checked
@@ -175,8 +184,9 @@ if(!hook('customchkboxes', '', array($field)))
                         onChange="AutoSave('<?php echo $field['ref']; ?>');"
                         <?php
                         }
-                        ?>></td>
-            <td><?php echo htmlspecialchars($trans); ?>&nbsp;</td>
+                        ?>>
+            </td>
+            <td><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;</td>
             <?php
             }
             ?>

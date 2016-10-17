@@ -136,28 +136,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 }
             ##### END OF NODES #####
 
-			if ($fields[$n]["type"]==2)
-				{
-				# construct the value from the ticked boxes
-				$val=","; # Note: it seems wrong to start with a comma, but this ensures it is treated as a comma separated list by split_keywords(), so if just one item is selected it still does individual word adding, so 'South Asia' is split to 'South Asia','South','Asia'.
-				//$options=trim_array(explode(",",$fields[$n]["options"]));
-				
-                foreach($fields[$n]["nodes"] as $noderef => $nodedata)
-					{
-					$name=$fields[$n]["ref"] . "_" . md5($nodedata['name']);
-					if (getval($name,"")=="yes")
-						{
-						if ($val!=",") {$val .= ",";}
-						$val .= $nodedata['name'];
-						$nodes_to_add[] = $noderef;
-						}
-					else
-						{
-						$nodes_to_remove[] = $noderef;
-						}
-					}
-				}
-			elseif ($fields[$n]["type"]==4 || $fields[$n]["type"]==6 || $fields[$n]["type"]==10)
+			if($fields[$n]["type"]==4 || $fields[$n]["type"]==6 || $fields[$n]["type"]==10)
 				{
 				# date type, construct the value from the date/time dropdowns
 				$val=sprintf("%04d", getvalescaped("field_" . $fields[$n]["ref"] . "-y",""));
