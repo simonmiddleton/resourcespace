@@ -234,7 +234,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $lo
 * 
 * @return array
 */
-function get_nodes_by_name($resource_type_field, $name)
+function get_node_by_name($resource_type_field, $name)
     {
     if(is_null($name) || ('' == trim($name)))
         {
