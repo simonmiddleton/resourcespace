@@ -3144,7 +3144,7 @@ function get_simple_search_fields()
 
 function check_display_condition($n, $field)
 {
-  global $fields, $scriptconditions, $required_fields_exempt, $blank_edit_template, $ref, $use;
+  global $fields, $scriptconditions, $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
 
   $displaycondition=true;
   $s=explode(";",$field["display_condition"]);
@@ -3160,24 +3160,30 @@ function check_display_condition($n, $field)
             {
                 $scriptconditions[$condref]["field"] = $fields[$cf]["ref"];  # add new jQuery code to check value
                 $scriptconditions[$condref]['type'] = $fields[$cf]['type'];
-                $scriptconditions[$condref]['options'] = (in_array($fields[$cf]['type'],array(2, 3, 7, 9, 12))?implode(",",$fields[$cf]['node_options']):$fields[$cf]['options']);
+                $scriptconditions[$condref]['options'] = (in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES) ? implode(',', extract_node_options($fields[$cf]['nodes'])) : '');
 
                 $checkvalues=$s[1];
                 $validvalues=explode("|",mb_strtoupper($checkvalues));
                 $scriptconditions[$condref]["valid"]= "\"";
                 $scriptconditions[$condref]["valid"].= implode("\",\"",$validvalues);
                 $scriptconditions[$condref]["valid"].= "\"";
-                $v=trim_array(explode(",",mb_strtoupper($fields[$cf]["value"])));
+                $v = trim_array(get_resource_nodes($ref, $fields[$cf]['ref']));
 
                 // If blank edit template is used, on upload form the dependent fields should be hidden
                 if($blank_edit_template && $ref < 0 && $use === '-1') {
                    $v = array();
                 }
-                
-                foreach ($validvalues as $validvalue)
-                {
-                    if (in_array($validvalue,$v)) {$displayconditioncheck=true;} # this is  a valid value
-                 }
+
+                foreach($validvalues as $validvalue)
+                    {
+                    $found_validvalue = get_node_by_name($fields[$cf]['nodes'], $validvalue);
+ 
+                    if(0 != count($found_validvalue) && in_array($found_validvalue['ref'], $v))
+                        {
+                        $displayconditioncheck = true;
+                        }
+                    }
+
                  if (!$displayconditioncheck) {$displaycondition=false;$required_fields_exempt[]=$field["ref"];}
                 #add jQuery code to update on changes
                     if ($fields[$cf]["type"]==2) # add onchange event to each checkbox field
