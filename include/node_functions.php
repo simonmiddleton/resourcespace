@@ -963,16 +963,30 @@ function add_resource_nodes($resourceid,$nodes=array())
 * 
 * @param integer $resource
 * @param integer $resource_type_field
+* @param boolean $detailed             Set to true to return full node details (as get_node() does)
 * 
 * @return array
 */
-function get_resource_nodes($resource, $resource_type_field = null)
+function get_resource_nodes($resource, $resource_type_field = null, $detailed = false)
     {
-    $query = "SELECT n.ref AS `value` FROM node AS n INNER JOIN resource_node AS rn ON n.ref = rn.node WHERE rn.resource = '" . escape_check($resource) . "'";
+    $return     = array();
+    $sql_select = 'n.ref AS `value`';
+
+    if($detailed)
+        {
+        $sql_select = 'n.*';
+        }
+
+    $query = "SELECT {$sql_select} FROM node AS n INNER JOIN resource_node AS rn ON n.ref = rn.node WHERE rn.resource = '" . escape_check($resource) . "'";
 
     if(!is_null($resource_type_field) && is_numeric($resource_type_field))
         {
         $query .= " AND n.resource_type_field = '" . escape_check($resource_type_field) . "'";
+        }
+
+    if($detailed)
+        {
+        return sql_query($query);
         }
 
     return sql_array($query);
