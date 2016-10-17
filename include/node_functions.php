@@ -227,6 +227,36 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $lo
 
 
 /**
+* Retrieve a node based on its name
+* 
+* @param integer $resource_type_field    ID of the metadata field
+* @param string  $name                   Name of the node
+* 
+* @return array
+*/
+function get_nodes_by_name($resource_type_field, $name)
+    {
+    if(is_null($name) || ('' == trim($name)))
+        {
+        return array();
+        }
+
+    $resource_type_field = escape_check($resource_type_field);
+    $name                = escape_check($name);
+
+    $query = "SELECT * FROM node WHERE resource_type_field = '{$resource_type_field}' AND name = '{$name}'";
+    $node  = sql_query($query);
+
+    if(0 < count($node))
+        {
+        return $node[0];
+        }
+
+    return array();
+    }
+
+
+/**
 * Checks whether a node is parent to other nodes or not
 *
 * @param  integer    $ref    Node ref
