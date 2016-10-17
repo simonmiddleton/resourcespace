@@ -1113,3 +1113,44 @@ function copy_resource_type_field_nodes($from, $to)
 
     return true;
     }
+
+
+/**
+* Extract option names (in raw form if desired) from a nodes array.
+* 
+* @param  array    $nodes               Array of nodes as returned by get_nodes()
+* @param  boolean  $i18n                Set to false if you don't need to translate the option name
+* @param  boolean  $index_with_node_id  Set to false if you don't want a map between node ID and its name
+* 
+* @return array
+*/
+function extract_node_options(array $nodes, $i18n = true, $index_with_node_id = true)
+    {
+    if(0 == count($nodes))
+        {
+        return array();
+        }
+
+    $return = array();
+
+    foreach($nodes as $node)
+        {
+        $value = $node['name'];
+
+        if($i18n)
+            {
+            $value = i18n_get_translated($node['name']);
+            }
+
+        if($index_with_node_id)
+            {
+            $return[$node['ref']] = $value;
+
+            continue;
+            }
+
+        $return[] = $value;
+        }
+
+    return $return;
+    }
