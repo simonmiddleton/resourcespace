@@ -3143,8 +3143,8 @@ function get_simple_search_fields()
 }
 
 function check_display_condition($n, $field)
-{
-  global $fields, $scriptconditions, $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
+    {
+    global $fields, $scriptconditions, $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
 
   $displaycondition=true;
   $s=explode(";",$field["display_condition"]);
@@ -3158,15 +3158,15 @@ function check_display_condition($n, $field)
             node_field_options_override($fields[$cf]);
             if ($s[0]==$fields[$cf]["name"]) # this field needs to be checked
             {
+                $node_options = extract_node_options($fields[$cf]['nodes']);
+
                 $scriptconditions[$condref]["field"] = $fields[$cf]["ref"];  # add new jQuery code to check value
                 $scriptconditions[$condref]['type'] = $fields[$cf]['type'];
-                $scriptconditions[$condref]['options'] = (in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES) ? implode(',', extract_node_options($fields[$cf]['nodes'])) : '');
+                $scriptconditions[$condref]['options'] = (in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES) ? implode(',', $node_options) : '');
 
                 $checkvalues=$s[1];
                 $validvalues=explode("|",mb_strtoupper($checkvalues));
-                $scriptconditions[$condref]["valid"]= "\"";
-                $scriptconditions[$condref]["valid"].= implode("\",\"",$validvalues);
-                $scriptconditions[$condref]["valid"].= "\"";
+                $scriptconditions[$condref]['valid'] = array();
                 $v = trim_array(get_resource_nodes($ref, $fields[$cf]['ref']));
 
                 // If blank edit template is used, on upload form the dependent fields should be hidden
@@ -3178,243 +3178,138 @@ function check_display_condition($n, $field)
                     {
                     $found_validvalue = get_node_by_name($fields[$cf]['nodes'], $validvalue);
  
-                    if(0 != count($found_validvalue) && in_array($found_validvalue['ref'], $v))
+                    if(0 != count($found_validvalue))
                         {
-                        $displayconditioncheck = true;
+                        $scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
+
+                        if(in_array($found_validvalue['ref'], $v))
+                            {
+                            $displayconditioncheck = true;
+                            }
                         }
                     }
 
-                 if (!$displayconditioncheck) {$displaycondition=false;$required_fields_exempt[]=$field["ref"];}
-                #add jQuery code to update on changes
-                    if ($fields[$cf]["type"]==2) # add onchange event to each checkbox field
+                 if(!$displayconditioncheck)
                     {
-                        # construct the value from the ticked boxes
-                        # Note: it seems wrong to start with a comma, but this ensures it is treated as a comma separated list by split_keywords(), so if just one item is selected it still does individual word adding, so 'South Asia' is split to 'South Asia','South','Asia'.
-                     $options=trim_array($fields[$cf]["node_options"]);
-                     ?><script type="text/javascript">
-                     jQuery(document).ready(function() {<?php
-                       for ($m=0;$m<count($options);$m++)
-                       {
-                         $checkname=$fields[$cf]["ref"] . "_" . md5($options[$m]);
-                         echo "
-                         jQuery('input[name=\"" . $checkname . "\"]').change(function (){
-                           checkDisplayCondition" . $field["ref"] . "();
-                        });";
-                  }
-                  ?>
-               });
-                     </script><?php
-                  }
-                        # add onChange event to each radio button
-                  else if($fields[$cf]['type'] == 12) {
+                    $displaycondition         = false;
+                    $required_fields_exempt[] = $field['ref'];
+                    }
 
-                    $options = $fields[$cf]['node_options'];?>
-					
-                    <script type="text/javascript">
-                    jQuery(document).ready(function() {
-
-                       <?php
-                       foreach ($options as $option) {
-                         $element_id = 'field_' . $fields[$cf]['ref'] . '_' . sha1($option);
-                         $jquery = sprintf('
-                          jQuery("#%s").change(function() {
-                            checkDisplayCondition%s();
-                         });
-                         ',
-                         $element_id,
-                         $field["ref"]
-                         );
-                         echo $jquery;
-                      } ?>
-
-                   });
-                    </script>
-
-                    <?php
-                 }
-                 else
-                 {
-                  ?>
-                  <script type="text/javascript">
-                  jQuery(document).ready(function() {
-                    jQuery('#field_<?php echo $fields[$cf]["ref"];?>').change(function (){
-
-                       checkDisplayCondition<?php echo $field["ref"];?>();
-
-                    });
-                 });
-                  </script>
-                  <?php
-               }
+                    // Check display conditions
+                    // Certain fixed list types allow for multiple nodes to be passed at the same time
+                    if(in_array($fields[$cf]['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)))
+                        {
+                        $checkname = "nodes[{$fields[$cf]['ref']}][]";
+                        ?>
+                        <script type="text/javascript">
+                        jQuery(document).ready(function()
+                            {
+                            jQuery('input[name="<?php echo $checkname; ?>"]').change(function ()
+                                {
+                                checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                                });
+                            });
+                        </script>
+                        <?php
+                        }
+                    else
+                        {
+                        ?>
+                        <script type="text/javascript">
+                        jQuery(document).ready(function()
+                            {
+                            jQuery('#field_<?php echo $fields[$cf]["ref"];?>').change(function ()
+                                {
+                                checkDisplayCondition<?php echo $field["ref"];?>();
+                                });
+                            });
+                        </script>
+                        <?php
+                        }
             }
 
-            } # see if next field needs to be checked
+        } # see if next field needs to be checked
 
             $condref++;
-        } # check next condition
+    } # check next condition
 
         ?>
         <script type="text/javascript">
-        function checkDisplayCondition<?php echo $field["ref"];?>()
+        function checkDisplayCondition<?php echo $field["ref"];?>(node)
 			{
-			field<?php echo $field["ref"]?>status=jQuery('#question_<?php echo $n ?>').css('display');
-			newfield<?php echo $field["ref"]?>status='none';
-			newfield<?php echo $field["ref"]?>provisional=true;
-			
+			field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+			newfield<?php echo $field['ref']; ?>status = 'none';
+			newfield<?php echo $field['ref']; ?>show   = false;
 			<?php
-			foreach ($scriptconditions as $scriptcondition)
+			foreach($scriptconditions as $scriptcondition)
 				{
+                /*
+                Example of $scriptcondition:
+                Array
+                    (
+                    [field] => 73
+                    [type] => 2
+                    [options] => checkbox option,checkbox option 1
+                    [valid] => Array
+                        (
+                            [0] => 267
+                            [1] => 266
+                        )
+                    )
+                */
 				?>
-				newfield<?php echo $field["ref"]?>provisionaltest=false;
-				if (jQuery('#field_<?php echo $scriptcondition["field"]?>').length!=0)
-					{
-					<?php
-					if($scriptcondition['type'] == 12) {
-						?>
-						
-						var options_string = '<?php echo htmlspecialchars($scriptcondition["options"]); ?>';
-						var field<?php echo $scriptcondition["field"]; ?>_options = options_string.split(',');
-						var checked = null;
-						
-						for(var i=0; i < field<?php echo $scriptcondition["field"]; ?>_options.length; i++)
-							{
-							if(jQuery('#field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i]).is(':checked')) 
-								{
-								checked = jQuery('#field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i] + ':checked').val();
-								checked = checked.toUpperCase();
-								}
-							}
-						
-						fieldvalues<?php echo $scriptcondition["field"]?>=checked.split(',');
-						fieldokvalues<?php echo $scriptcondition["field"]; ?> = [<?php echo $scriptcondition["valid"]; ?>];
+                fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
 
-						if(checked !== null && jQuery.inArray(checked, fieldokvalues<?php echo $scriptcondition["field"]; ?>) > -1) 
-							{
-							newfield<?php echo $field["ref"]; ?>provisionaltest = true;
-							}
-						<?php
-						}
-					else
-						{
-						?>
-						fieldcheck<?php echo $scriptcondition["field"]?>=jQuery('#field_<?php echo $scriptcondition["field"]?>').val().toUpperCase();
-						fieldvalues<?php echo $scriptcondition["field"]?>=fieldcheck<?php echo $scriptcondition["field"]?>.split(',');
-						//alert(fieldvalues<?php echo $scriptcondition["field"]?>);
-						<?php
-						}
-					?>
-					}
-				else
-					{
-					<?php
+                <?php
+                }
 
-					# Handle Radio Buttons type: not sure if this is needed here anymore
-					if($scriptcondition['type'] == 12) {
+                ############################
+                ### Field type specific
+                ############################
+                // TODO: most likely we'll need to add others here
+                if(in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)))
+                    {
+                    ?>
+                    if(!newfield<?php echo $field['ref']; ?>show)
+                        {
+                        jQuery('input[name="<?php echo "nodes[{$scriptcondition["field"]}][]"; ?>"]').each(function(index, element)
+                            {
+                            if(element.checked
+                                && fieldokvalues<?php echo $scriptcondition['field']; ?>.indexOf(element.value) != -1)
+                                {
+                                newfield<?php echo $field['ref']; ?>show = true;
+                                }
+                            });
+                        }
+                    <?php
+                    }
+                    ############################
+                    ############################
+                    ?>
+                if(newfield<?php echo $field['ref']; ?>show)
+                    {
+                    newfield<?php echo $field['ref']; ?>status = 'block';
+                    }
 
-						$scriptcondition["options"] = explode(',', $scriptcondition["options"]);
+                if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
+                    {
+                    jQuery('#question_<?php echo $n ?>').slideToggle();
 
-						foreach ($scriptcondition["options"] as $key => $value) 
-							{
-							$scriptcondition["options"][$key] = sha1($value);
-							}
-
-						$scriptcondition["options"] = implode(',', $scriptcondition["options"]);
-						?>
-						
-						var options_string = '<?php echo $scriptcondition["options"]; ?>';
-						var field<?php echo $scriptcondition["field"]; ?>_options = options_string.split(',');
-						var checked = null;
-						
-						for(var i=0; i < field<?php echo $scriptcondition["field"]; ?>_options.length; i++)
-							{
-							if(jQuery('#field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i]).is(':checked')) 
-								{
-								checked = jQuery('#field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i] + ':checked').val();
-								checked = checked.toUpperCase();
-								}
-							}
-
-						fieldokvalues<?php echo $scriptcondition["field"]; ?> = [<?php echo $scriptcondition["valid"]; ?>];
-
-						if(checked !== null && jQuery.inArray(checked, fieldokvalues<?php echo $scriptcondition["field"]; ?>) > -1) 
-							{
-							newfield<?php echo $field["ref"]; ?>provisionaltest = true;
-							}
-						<?php
-						}
-					?>
-					fieldvalues<?php echo $scriptcondition["field"]?>=new Array();
-					checkedvals<?php echo $scriptcondition["field"]?>=jQuery('input[name^=<?php echo $scriptcondition["field"]?>_]');
-      
-					jQuery.each(checkedvals<?php echo $scriptcondition["field"]?>,function()
-						{
-						if (jQuery(this).is(':checked'))
-							{
-							checktext<?php echo $scriptcondition["field"]?>=jQuery(this).parent().next().text().toUpperCase();
-							checktext<?php echo $scriptcondition["field"]?> = jQuery.trim(checktext<?php echo $scriptcondition["field"]?>);
-							fieldvalues<?php echo $scriptcondition["field"]?>.push(checktext<?php echo $scriptcondition["field"]?>);
-							//alert(fieldvalues<?php echo $scriptcondition["field"]?>);
-							}
-						});
-					}
-		
-				fieldokvalues<?php echo $scriptcondition["field"]?>=new Array();
-				fieldokvalues<?php echo $scriptcondition["field"]?>=[<?php echo $scriptcondition["valid"]?>];
-		
-				jQuery.each(fieldvalues<?php echo $scriptcondition["field"]?>,function(f,v)
-					{
-					//alert("checking value " + fieldvalues<?php echo $scriptcondition["field"]?> + " against " + fieldokvalues<?php echo $scriptcondition["field"]?>);
-					//alert(jQuery.inArray(fieldvalues<?php echo $scriptcondition["field"]?>,fieldokvalues<?php echo $scriptcondition["field"]?>));
-					if ((jQuery.inArray(v,fieldokvalues<?php echo $scriptcondition["field"]?>))>-1 || (fieldvalues<?php echo $scriptcondition["field"]?> ==fieldokvalues<?php echo  $scriptcondition["field"]?>))
-						{
-						newfield<?php echo $field["ref"]?>provisionaltest=true;
-						}
-					});
-
-				if (newfield<?php echo $field["ref"]?>provisionaltest==false)
-					{
-					newfield<?php echo $field["ref"]?>provisional=false;
-					}
-				<?php
-				}
-			?>
-			exemptfieldsval=jQuery('#exemptfields').val();
-			exemptfieldsarr=exemptfieldsval.split(',');
-			
-			if (newfield<?php echo $field["ref"]?>provisional==true)
-				{
-				if (jQuery.inArray(<?php echo $field["ref"]?>,exemptfieldsarr))
-					{
-					exemptfieldsarr.splice(jQuery.inArray(<?php echo $field["ref"]?>, exemptfieldsarr), 1 );
-					}
-				newfield<?php echo $field["ref"]?>status='block';
-				}
-			else
-				{
-				if ((jQuery.inArray(<?php echo $field["ref"]?>,exemptfieldsarr))==-1)
-					{
-					exemptfieldsarr.push(<?php echo $field["ref"]?>);
-					}
-				}
-			jQuery('#exemptfields').val(exemptfieldsarr.join(","));
-
-			if (newfield<?php echo $field["ref"]?>status!=field<?php echo $field["ref"]?>status)
-				{
-				jQuery('#question_<?php echo $n ?>').slideToggle();
-				if (jQuery('#question_<?php echo $n ?>').css('display')=='block')
-					{
-					jQuery('#question_<?php echo $n ?>').css('border-top','');
-					}
-				else
-					{
-					jQuery('#question_<?php echo $n ?>').css('border-top','none');
-					}
-				}
+                    if (jQuery('#question_<?php echo $n ?>').css('display')=='block')
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', '');
+                        }
+                    else
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', 'none');
+                        }
+                    }
 			}
 		</script>
 		<?php
-return $displaycondition;
-}
+
+    return $displaycondition;
+    }
 
 function check_access_key($resource,$key)
 	{
