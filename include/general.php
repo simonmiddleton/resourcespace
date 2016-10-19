@@ -3146,13 +3146,15 @@ function check_display_condition($n, $field)
     {
     global $fields, $scriptconditions, $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
 
-  $displaycondition=true;
-  $s=explode(";",$field["display_condition"]);
-  $condref=0;
+    $displaycondition = false;
+    $s                = explode(';', $field['display_condition']);
+    $condref          = 0;
+
     foreach ($s as $condition) # Check each condition
     {
-       $displayconditioncheck=false;
-       $s=explode("=",$condition);
+        $displayconditioncheck = false;
+        $s                     = explode('=', $condition);
+
         for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
         {
             node_field_options_override($fields[$cf]);
@@ -3189,22 +3191,28 @@ function check_display_condition($n, $field)
                         }
                     }
 
-                 if(!$displayconditioncheck)
+                 if($displayconditioncheck)
                     {
-                    $displaycondition         = false;
-                    $required_fields_exempt[] = $field['ref'];
+                    $displaycondition = true;
                     }
 
                     // Check display conditions
                     // Certain fixed list types allow for multiple nodes to be passed at the same time
-                    if(FIELD_TYPE_CHECK_BOX_LIST == $fields[$cf]['type'])
+                    if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
                         {
-                        $checkname = "nodes[{$fields[$cf]['ref']}][]";
+                        $checkname       = "nodes[{$fields[$cf]['ref']}][]";
+                        $jquery_selector = "input[name=\"{$checkname}\"]";
+
+                        if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'])
+                            {
+                            $checkname       = "nodes[{$fields[$cf]['ref']}]";
+                            $jquery_selector = "select[name=\"{$checkname}\"]";
+                            }
                         ?>
                         <script type="text/javascript">
                         jQuery(document).ready(function()
                             {
-                            jQuery('input[name="<?php echo $checkname; ?>"]').change(function ()
+                            jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                 {
                                 checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
                                 });
@@ -3273,6 +3281,22 @@ function check_display_condition($n, $field)
                             {
                             if(element.checked
                                 && fieldokvalues<?php echo $scriptcondition['field']; ?>.indexOf(element.value) != -1)
+                                {
+                                newfield<?php echo $field['ref']; ?>show = true;
+                                }
+                            });
+                        }
+                    <?php
+                    }
+                
+                if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
+                    {
+                    ?>
+                    if(!newfield<?php echo $field['ref']; ?>show)
+                        {
+                        jQuery('select[name="<?php echo "nodes[{$scriptcondition["field"]}]"; ?>"] option:selected').each(function(index, element)
+                            {
+                            if(fieldokvalues<?php echo $scriptcondition['field']; ?>.indexOf(element.value) != -1)
                                 {
                                 newfield<?php echo $field['ref']; ?>show = true;
                                 }
