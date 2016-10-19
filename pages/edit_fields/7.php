@@ -167,6 +167,16 @@ echo $hidden_input_elements;
 
             echo $update_result_count_function_call;
             ?>
+
+            // Trigger an event so we can chain actions once we've changed a category tree option
+            document.getElementById('<?php echo $tree_id; ?>')
+                    .dispatchEvent(new CustomEvent('categoryTreeChanged', {
+                        detail: {
+                            node: data.node.id
+                        },
+                        bubbles: true,
+                        cancelable: false
+                    }));
             }
         });
     </script>

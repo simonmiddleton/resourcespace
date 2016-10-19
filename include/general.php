@@ -3200,6 +3200,24 @@ function check_display_condition($n, $field)
                     // Certain fixed list types allow for multiple nodes to be passed at the same time
                     if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
                         {
+                        if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
+                            {
+                            ?>
+                            <script>
+                            jQuery(document).ready(function()
+                                {
+                                document.getElementById('tree_<?php echo $fields[$cf]["ref"]; ?>').addEventListener('categoryTreeChanged', function(e)
+                                    {
+                                    checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
+                                    });
+                                });
+                            </script>
+                            <?php
+
+                            // Move on to the next field now
+                            continue;
+                            }
+
                         $checkname = "nodes[{$fields[$cf]['ref']}][]";
 
                         if(FIELD_TYPE_RADIO_BUTTONS == $fields[$cf]['type'])
