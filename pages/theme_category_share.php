@@ -179,37 +179,40 @@ else
 				
 				<?php			
 				}
-			else
-				{
-				# Access has been selected. Generate a URL.			
-				?>
-				<p><?php echo $lang["generatethemeurlsexternal"]?></p>
-				<p>
-				<textarea class="URLDisplay" cols="100" rows="<?php echo count($collectionstoshare)*4+1; ?>" ><?php
-				$unapproved_collection=false; 
-				foreach($collectionstoshare as $collection)
-					{	
-					$ref=$collection["ref"];
-					
-					#Check if any resources are not approved
-					if (!is_collection_approved($ref) && !$collection_allow_not_approved_share)
-						{
-						echo str_replace("%collectionname%", i18n_get_collection_name($collection), $lang["collection-name"]) . "\r\n" . $lang["notapprovedsharecollection"] . "\r\n\r\n";
-						$unapproved_collection=true;
-						}
-					else
-						{
-						echo str_replace("%collectionname%", i18n_get_collection_name($collection), $lang["collection-name"]) . "\r\n" . $baseurl?>/?c=<?php echo urlencode($ref)?>&k=<?php echo generate_collection_access_key($ref,0,"URL",$access,$expires) . "\r\n" . ($expires!="" ? str_replace("%date%", $expires, $lang["expires-date"]) : str_replace("%date%", $lang["never"], $lang["expires-date"])) . "\r\n\r\n";
-						}
-					}
-				?>
-				</textarea>
-				<?php if ($unapproved_collection){?><script>alert('<?php echo $lang['notapprovedsharetheme']?>');</script><?php } ?>
-				</p>
-				<?php
-				}
 			}
 		}
+		if ( $access!="" && getvalescaped("generateurl","")!="" )
+			{
+			# Access has been selected. Generate a URL.			
+			?>
+			<p><?php echo $lang["generatethemeurlsexternal"]?></p>
+			<p>
+			<textarea class="URLDisplay" cols="100" rows="<?php echo count($collectionstoshare)*4+1; ?>" ><?php
+			$unapproved_collection=false;
+			
+			foreach($collectionstoshare as $collection)
+				{	
+				$ref=$collection["ref"];
+				
+				#Check if any resources are not approved
+				if (!is_collection_approved($ref) && !$collection_allow_not_approved_share)
+					{
+					echo "\r\n" . str_replace("%collectionname%", i18n_get_collection_name($collection), $lang["collection-name"]) . "\r\n" . $lang["notapprovedsharecollection"] . "\r\n";
+					$unapproved_collection=true;
+					}
+				else
+					{
+					echo "\r\n" . str_replace("%collectionname%", i18n_get_collection_name($collection), $lang["collection-name"]) . "\r\n" . $baseurl?>/?c=<?php echo urlencode($ref)?>&k=<?php echo
+					generate_collection_access_key($ref,0,"URL",$access,$expires) . "\r\n";
+					}
+				}
+			?>
+			</textarea>
+			<?php if ($unapproved_collection){?><script>alert('<?php echo $lang['notapprovedsharetheme']?>');</script><?php } ?>
+			</p>
+			<?php
+			}
+	
 	//Display existing shares for collections in theme
 
 	if ($access=="" && !$internal_share_only)
