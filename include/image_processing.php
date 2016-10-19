@@ -1982,10 +1982,10 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alterna
 		}
 	}
 	else {
-		$file=get_resource_path($ref,true,"scr",false,$extension);$top="scr";
+		$file=get_resource_path($ref,true,"scr",false,$extension,-1,1,false,'',$alternative);$top="scr";
 		if (!file_exists($file)) {
 			# Some images may be too small to have a scr.  Try pre:
-			$file=get_resource_path($ref,true,"pre",false,$extension);$top="pre";
+			$file=get_resource_path($ref,true,"pre",false,$extension,-1,1,false,'',$alternative);$top="pre";
 		}
 	}
 	
