@@ -3200,11 +3200,11 @@ function check_display_condition($n, $field)
                     // Certain fixed list types allow for multiple nodes to be passed at the same time
                     if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
                         {
-                        $checkname       = "nodes[{$fields[$cf]['ref']}][]";
+                        $checkname = "nodes[{$fields[$cf]['ref']}][]";
 
                         if(FIELD_TYPE_RADIO_BUTTONS == $fields[$cf]['type'])
                             {
-                            $checkname       = "nodes[{$fields[$cf]['ref']}]";
+                            $checkname = "nodes[{$fields[$cf]['ref']}]";
                             }
 
                         $jquery_selector = "input[name=\"{$checkname}\"]";
