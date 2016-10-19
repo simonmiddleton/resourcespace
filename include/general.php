@@ -3201,6 +3201,12 @@ function check_display_condition($n, $field)
                     if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
                         {
                         $checkname       = "nodes[{$fields[$cf]['ref']}][]";
+
+                        if(FIELD_TYPE_RADIO_BUTTONS == $fields[$cf]['type'])
+                            {
+                            $checkname       = "nodes[{$fields[$cf]['ref']}]";
+                            }
+
                         $jquery_selector = "input[name=\"{$checkname}\"]";
 
                         if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'])
@@ -3272,31 +3278,31 @@ function check_display_condition($n, $field)
                 ### Field type specific
                 ############################
                 // TODO: most likely we'll need to add others here
-                if(in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)))
+                if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
                     {
-                    ?>
-                    if(!newfield<?php echo $field['ref']; ?>show)
+                    $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}][]\"]";
+                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
+
+                    if(FIELD_TYPE_CHECK_BOX_LIST == $scriptcondition['type'])
                         {
-                        jQuery('input[name="<?php echo "nodes[{$scriptcondition["field"]}][]"; ?>"]').each(function(index, element)
-                            {
-                            if(element.checked
-                                && fieldokvalues<?php echo $scriptcondition['field']; ?>.indexOf(element.value) != -1)
-                                {
-                                newfield<?php echo $field['ref']; ?>show = true;
-                                }
-                            });
+                        $js_conditional_statement = "element.checked && {$js_conditional_statement}";
                         }
-                    <?php
-                    }
-                
-                if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
-                    {
+
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
+                        {
+                        $jquery_condition_selector = "select[name=\"nodes[{$scriptcondition['field']}]\"] option:selected";
+                        }
+
+                    if(FIELD_TYPE_RADIO_BUTTONS == $scriptcondition['type'])
+                        {
+                        $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}]\"]:checked";
+                        }
                     ?>
                     if(!newfield<?php echo $field['ref']; ?>show)
                         {
-                        jQuery('select[name="<?php echo "nodes[{$scriptcondition["field"]}]"; ?>"] option:selected').each(function(index, element)
+                        jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
                             {
-                            if(fieldokvalues<?php echo $scriptcondition['field']; ?>.indexOf(element.value) != -1)
+                            if(<?php echo $js_conditional_statement; ?>)
                                 {
                                 newfield<?php echo $field['ref']; ?>show = true;
                                 }
