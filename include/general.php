@@ -3197,7 +3197,7 @@ function check_display_condition($n, $field)
 
                     // Check display conditions
                     // Certain fixed list types allow for multiple nodes to be passed at the same time
-                    if(in_array($fields[$cf]['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)))
+                    if(FIELD_TYPE_CHECK_BOX_LIST == $fields[$cf]['type'])
                         {
                         $checkname = "nodes[{$fields[$cf]['ref']}][]";
                         ?>
@@ -3218,9 +3218,9 @@ function check_display_condition($n, $field)
                         <script type="text/javascript">
                         jQuery(document).ready(function()
                             {
-                            jQuery('#field_<?php echo $fields[$cf]["ref"];?>').change(function ()
+                            jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
                                 {
-                                checkDisplayCondition<?php echo $field["ref"];?>();
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
                                 });
                             });
                         </script>
@@ -3259,10 +3259,7 @@ function check_display_condition($n, $field)
                 */
 				?>
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
-
                 <?php
-                }
-
                 ############################
                 ### Field type specific
                 ############################
@@ -3283,9 +3280,10 @@ function check_display_condition($n, $field)
                         }
                     <?php
                     }
-                    ############################
-                    ############################
-                    ?>
+                ############################
+                ############################
+                }
+                ?>
                 if(newfield<?php echo $field['ref']; ?>show)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
