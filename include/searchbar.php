@@ -1,21 +1,37 @@
 <?php
+include_once 'search_functions.php';
+include_once 'render_functions.php';
 
 if ($simple_search_reset_after_search)
-	{
-	$restypes="";
-	$search="";
-	$quicksearch="";
-	$starsearch="";
-	}
+    {
+    $restypes    = '';
+    $search      = '';
+    $quicksearch = '';
+    $starsearch  = '';
+    }
 else 
-	{
-	# pull values from cookies if necessary, for non-search pages where this info hasn't been submitted
-	if (!isset($restypes)) {$restypes=@$_COOKIE["restypes"];}
-	if (!isset($search) || ((strpos($search,"!")!==false))) {$quicksearch=(isset($_COOKIE["search"])?$_COOKIE["search"]:"");} else {$quicksearch=$search;}
-	}
+    {
+    # pull values from cookies if necessary, for non-search pages where this info hasn't been submitted
+    if(!isset($restypes))
+        {
+        $restypes = @$_COOKIE['restypes'];
+        }
 
-include_once("search_functions.php");
-include_once("render_functions.php");
+    if(!isset($search) || false !== strpos($search, '!'))
+        {
+        $quicksearch = (isset($_COOKIE['search']) ? $_COOKIE['search'] : '');
+        }
+    else
+        {
+        $quicksearch = $search;
+        }
+    }
+
+if($basic_simple_search)
+    {
+    $restypes    = '';
+    $starsearch  = '';
+    }
 
 if(!isset($internal_share_access))
 	{
