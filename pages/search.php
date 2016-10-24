@@ -53,7 +53,7 @@ $all_field_info=get_fields_for_search_display(array_unique(array_merge($sort_fie
 # get display and normalize display specific variables
 $display=getvalescaped("display",$default_display);rs_setcookie('display', $display);
 
-if ($display=="thumbs" || $display=="stripes"){ 
+if ($display=="thumbs" || $display=="strip"){ 
 	$display_fields	= $thumbs_display_fields;  
 	if (isset($search_result_title_height)) { $result_title_height = $search_result_title_height; }
 	$results_title_trim = $search_results_title_trim;
@@ -1144,6 +1144,13 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 include 'search_views/thumbs.php';
                 } 
 
+            if ($display=="strip")
+                {
+                #  ---------------------------- Thumbnails view ----------------------------
+                include 'search_views/strip.php';
+                }
+
+
             if ($display=="xlthumbs")
                 {
                 #  ---------------------------- X-Large Thumbnails view ----------------------------
@@ -1179,6 +1186,12 @@ if (!hook("replacesearchheader")) # Always show search header now.
         </table>
         </div>
         <?php
+        }
+
+if ($display=="strip")
+	{
+        #  ---------------------------- Extra footer for strip view ----------------------------
+        include 'search_views/strip_footer.php';
         }
     
 $url=$baseurl_short."pages/search.php?search=" . urlencode($search) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive) . "&amp;daylimit=" . urlencode($daylimit) . "&amp;k=" . urlencode($k) . "&amp;restypes=" . urlencode($restypes);	
