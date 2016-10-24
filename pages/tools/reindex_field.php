@@ -8,7 +8,7 @@
 
 include "../../include/db.php";
 include_once "../../include/general.php";
-include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
+if (!(PHP_SAPI == 'cli')) {include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}}
 include "../../include/resource_functions.php";
 include "../../include/image_processing.php";
 
@@ -63,7 +63,7 @@ if (getval("submit","")!="")
 				$ref=$row["resource"];
 				$value=$row["value"];
 			
-				if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES) && strpos(",",$value)!==FALSE)
+				if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES) && strpos(",",$value)!==0)
 					{
 					# Prepend a comma when indexing dropdowns to ensure full value is also indexed
 					$value="," . $value;

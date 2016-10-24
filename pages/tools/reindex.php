@@ -18,7 +18,7 @@ if('' != getval('ref', ''))
     $sql = "WHERE r.ref = '" . getvalescaped('ref', '', true) . "'";
     }
 
-set_time_limit(60*60*10);
+set_time_limit(0);
 echo "<pre>";
 
 $start = getvalescaped('start', '0');
