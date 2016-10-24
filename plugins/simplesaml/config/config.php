@@ -18,3 +18,4 @@ $simplesaml_fullname_separator=",";
 $simplesaml_username_separator=".";
 $simplesaml_prefer_standard_login=true;
 $simplesaml_login_expiry=3;
+$simplesaml_custom_attributes = '';

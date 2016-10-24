@@ -56,7 +56,8 @@ function HookSimplesamlAllProvideusercredentials()
             }
 		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
         $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
-        $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator;
+        $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
+        $simplesaml_custom_attributes;
         // Use standard authentication if available
 		if (isset($_COOKIE["user"])) {return true;}
 		
@@ -77,7 +78,6 @@ function HookSimplesamlAllProvideusercredentials()
 			}
 		$attributes = simplesaml_getattributes();
 
-	
 		$usernamesuffix = $simplesaml_username_suffix;
         
         if(strpos($simplesaml_username_attribute,",")!==false) // Do we have to join two fields together?
@@ -151,6 +151,24 @@ function HookSimplesamlAllProvideusercredentials()
 				}
 			}
 
+        // If custom attributes need to be recorded against a user record, do it now
+        $custom_attributes = array();
+        if('' != $simplesaml_custom_attributes)
+            {
+            $search_custom_attributes = explode(',', $simplesaml_custom_attributes);
+ 
+            foreach($attributes as $attribute => $attribute_value)
+                {
+                if(!in_array($attribute, $search_custom_attributes))
+                    {
+                    continue;
+                    }
+ 
+                // For now, we only allow one value per attribute
+                $custom_attributes[$attribute] = $attribute_value[0];
+                }
+            }
+
 		if ($userid > 0)
 			{
 			if(!isset($email) || $email==""){$email=sql_value("select email value from user where ref='$userid'","");} // Allows accounts without an email address to have one set by the admin without it getting overwritten
@@ -165,6 +183,13 @@ function HookSimplesamlAllProvideusercredentials()
 				sql_query("update user set password = '$password_hash', fullname='$displayname',  email='$email' where ref = '$userid'");
 				}
 
+            if(0 < count($custom_attributes))
+                {
+                $custom_attributes = json_encode($custom_attributes);
+ 
+                sql_query("UPDATE user SET simplesaml_custom_attributes = '$custom_attributes' WHERE ref = '$userid'");
+                }
+
 			$user_select_sql="and u.username='$username'";
 			return true;
 			} 
@@ -175,7 +200,10 @@ function HookSimplesamlAllProvideusercredentials()
 			$userref=new_user($username);
 			 if (!$userref) { echo "returning false!";  return false;} // this shouldn't ever happen
 
-			sql_query("update user set password='$password_hash', fullname='$displayname', email='$email',usergroup='$group',comments='Auto created by SimpleSAML.' where ref='$userref'");
+             $custom_attributes = (0 < count($custom_attributes) ? json_encode($custom_attributes) : '');
+ 
+            sql_query("UPDATE user SET password = '$password_hash', fullname = '$displayname', email = '$email', usergroup = '$group', comments = 'Auto created by SimpleSAML.', simplesaml_custom_attributes = '$custom_attributes' WHERE ref = '$userref'");
+
 			$user_select_sql="and u.username='$username'";
             
             # Generate a new session hash.

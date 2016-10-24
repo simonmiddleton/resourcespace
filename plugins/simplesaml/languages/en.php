@@ -27,3 +27,5 @@ $lang['simplesaml_service_provider'] = "Name of local service provider (SP)";
 $lang['simplesaml_prefer_standard_login'] = "Prefer standard login (redirect to login page by default)";
 $lang['simplesaml_login_expiry'] = "SAML login expiration (days)";
 $lang['simplesaml_sp_configuration'] = "The simplesaml SP configuration must be completed in order to use this plugin. Please see the about page for more information";
+$lang['simplesaml_custom_attributes'] = 'Custom attributes to record against the user record';
+$lang['simplesaml_custom_attribute_label'] = 'Custom attribute - ';

@@ -31,6 +31,7 @@ if ((getval('submit','')!='') || (getval('save','')!=''))
 	$simplesaml['simplesaml_update_group'] = getvalescaped('simplesaml_update_group','');
 	$simplesaml['simplesaml_fullname_separator'] = getvalescaped('simplesaml_fullname_separator','');
 	$simplesaml['simplesaml_username_separator'] = getvalescaped('simplesaml_username_separator','');
+    $simplesaml['simplesaml_custom_attributes'] = getvalescaped('simplesaml_custom_attributes', '');
 	
 	$samlgroups = $_REQUEST['samlgroup'];
 	$rsgroups = $_REQUEST['rsgroup'];
@@ -111,9 +112,10 @@ include "../../../include/header.php";
 $rsgroupoption=array();
 foreach($rsgroups as $rsgroup)
 	{$rsgroupoption[$rsgroup["ref"]]=$rsgroup["name"];}
-echo config_single_select("simplesaml_fallback_group",$lang['simplesaml_fallback_group'],$simplesaml_fallback_group,$rsgroupoption, true);?>
 
-
+echo config_single_select("simplesaml_fallback_group",$lang['simplesaml_fallback_group'],$simplesaml_fallback_group,$rsgroupoption, true);
+echo config_text_input('simplesaml_custom_attributes', $lang['simplesaml_custom_attributes'], $simplesaml_custom_attributes);
+?>
 <div class="Question">
 <h3><?php echo $lang['simplesaml_groupmapping']; ?></h3>
 <table id='groupmaptable'>
