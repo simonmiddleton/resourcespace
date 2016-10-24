@@ -3106,8 +3106,8 @@ function check_display_condition($n, $field)
                 $scriptconditions[$condref]["valid"].= "\"";
                 $v=trim_array(explode(",",mb_strtoupper($fields[$cf]["value"])));
 
-                // If blank edit template is used, on upload form the dependent fields should be hidden
-                if($blank_edit_template && $ref < 0 && $use === '-1') {
+                // If blank edit template is used, on upload form the dependent fields should be hidden, but not when copying e.g. from metadata template
+                if($blank_edit_template && $ref < 0 && $use == $ref) {
                    $v = array();
                 }
                 
