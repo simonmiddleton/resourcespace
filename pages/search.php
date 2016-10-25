@@ -755,6 +755,8 @@ if (!hook("replacesearchheader")) # Always show search header now.
 				<?php
 				}
 	
+
+				
 			if($smallthumbs == true)
 				{
 				if($display == 'smallthumbs')
@@ -772,6 +774,22 @@ if (!hook("replacesearchheader")) # Always show search header now.
 					<?php
 					}
 				}
+				
+			if($display == 'strip')
+				{
+				?>
+				<span class="stripiconactive">&nbsp;</span>
+				<?php
+				}
+			else
+				{
+				?>
+				<a href="<?php echo $url?>&amp;display=strip&amp;k=<?php echo urlencode($k) ?>" title='<?php echo $lang["striptitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+					<span class="stripicon">&nbsp;</span>
+				</a>
+				<?php
+				}
+				
 			if ($searchlist == true) 
 				{
 				if($display == 'list')

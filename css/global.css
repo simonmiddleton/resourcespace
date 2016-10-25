@@ -683,7 +683,7 @@ margin-bottom:10px;
 	margin-bottom:10px;
 }
 
-.smalllisticon, .smalllisticonactive, .xlthumbsicon, .xlthumbsiconactive, .smallthumbsicon, .smallthumbsiconactive, .largethumbsicon, .largethumbsiconactive {
+.smalllisticon, .smalllisticonactive, .xlthumbsicon, .xlthumbsiconactive, .smallthumbsicon, .smallthumbsiconactive, .largethumbsicon, .largethumbsiconactive, .stripicon, .stripiconactive {
 width: 20px;
 display: block;
 height: 20px;
@@ -698,7 +698,7 @@ margin-bottom: 10px;
 }
 
 .icondisplay {
-width: 90px;
+width: 110px;
 }
 
 .smalllisticon{background: url(../gfx/interface/listicon.png) no-repeat 0px;}
@@ -709,6 +709,8 @@ width: 90px;
 .smallthumbsicon{background: url(../gfx/interface/smallicon.png) no-repeat 0px;}
 .largethumbsicon{background: url(../gfx/interface/largeicon.png) no-repeat 0px;}
 .largethumbsiconactive{background: url(../gfx/interface/largeiconactive.png) no-repeat 0px;}
+.stripiconactive{background: url(../gfx/interface/stripiconactive.png) no-repeat 0px;}
+.stripicon{background: url(../gfx/interface/stripicon.png) no-repeat 0px;}
 
 #contactadminbox  textarea{
 	width:100%;
@@ -1231,3 +1233,23 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 /* Custom filters (extends the default form filters in ResourceSpace) */
 #FilterNodeOptions { width: 510px; }
 #FilterNodeOptions .FilterItemContainer > label { width: 150px; }
+
+
+.ImageStrip
+    {
+    height:150px;
+    width:auto;
+    margin:10px 10px 0 0;
+    }
+#CentralSpaceResources  
+    {
+    text-align:justify;
+    }
+.ImageTools
+    {
+    position:absolute;display:inline;background-color:black;visibility:hidden;
+    }
+.ImageStripLink:hover .ImageTools
+    {
+    visibility:visible;
+    }
