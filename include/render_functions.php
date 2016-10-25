@@ -290,6 +290,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         if ($field['field_constraint']==0){ 
 			
 			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}" <?php } ?> ><?php 
+			# Add to the clear function so clicking 'clear' clears this box.
+			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : $field["name"]) . "').value='';";
 		}
         // number view - manipulate the form value (don't send these but send a compiled numrange value instead
         else if ($field['field_constraint']==1){ // parse value for to/from simple search
@@ -297,10 +299,17 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 			($minmax[0]=='')?$minvalue='':$minvalue=str_replace("neg","-",$minmax[0]);
 			(isset($minmax[1]))?$maxvalue=str_replace("neg","-",$minmax[1]):$maxvalue='';
 			?>
-		<input id="<?php echo $name ?>_min" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo $name?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($minvalue)?>"> ...
-		<input id="<?php echo $name ?>_max" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery('#<?php echo $name?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($maxvalue)?>">
-		<input id="<?php echo $name?>" name="<?php echo $name?>" type="hidden" value="<?php echo $value?>">
-		<?php }
+			<input id="<?php echo $name ?>_min" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo $name?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($minvalue)?>"> ...
+			<input id="<?php echo $name ?>_max" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery('#<?php echo $name?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($maxvalue)?>">
+			<input id="<?php echo $name?>" name="<?php echo $name?>" type="hidden" value="<?php echo $value?>">
+		<?php 
+			# Add to the clear function so clicking 'clear' clears this box.
+			 $clear_function.="document.getElementById('".$name."_max').value='';";
+			 $clear_function.="document.getElementById('".$name."_min').value='';";
+			 $clear_function.="document.getElementById('".$name."').value='';";
+		}
+		
+
         
         if ($forsearchbar && $autocomplete_search) { 
 				# Auto-complete search functionality
@@ -315,8 +324,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 				</script>
 				<div class="SearchItem">
 			<?php } 
-			# Add to the clear function so clicking 'clear' clears this box.
-			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : $field["name"]) . "').value='';";
+			
         break;
     
         case 2: 
