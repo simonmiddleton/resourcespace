@@ -1,10 +1,12 @@
 <?php /* -------- Text Box (single line) ---------- */ ?>
 
 <?php
-global $merge_filename_with_title,$merge_filename_with_title_default;
+global $merge_filename_with_title,$merge_filename_with_title_default,$view_title_field;
 
-if($merge_filename_with_title && $field['title'] == 'Title' && $ref < 0) {
+$show_merge_options = $merge_filename_with_title && $field['ref'] == $view_title_field && $ref < 0;
 
+if($show_merge_options)
+	{
 	$do_not_use = FALSE;
 	$replace = FALSE;
 	$prefix = FALSE;
@@ -81,7 +83,4 @@ if($merge_filename_with_title && $field['title'] == 'Title' && $ref < 0) {
 >
 
 <?php 
-
-if($merge_filename_with_title && $field['title'] == 'Title' && $ref < 0) { ?>
-	</div>
-<?php } ?>
+if($show_merge_options) { echo "</div>";}
