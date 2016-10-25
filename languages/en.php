@@ -115,6 +115,9 @@ $lang["property-field_id"]="Field id";
 $lang["property-title"]="Title";
 $lang["property-resource_type"]="Resource type";
 $lang["property-field_type"]="Field type";
+$lang["property-field_constraint"]="Field Constraint";
+$lang["property-field_constraint-none"]="None";
+$lang["property-field_constraint-number"]="Number";
 
 $lang["property-options"]="Comma separated list of options. The first option will be the default option. If you do not wish to set a default value, use a starting comma to default to blank. E.g. <br />,Option1,Option2 - will default to blank.";
 $lang['property-options_edit_link'] = 'Manage options';

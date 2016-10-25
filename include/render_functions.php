@@ -24,6 +24,9 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     
     global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml;
     
+    // set this to zero since this does not apply to collections
+    if (!isset($field['field_constraint'])){$field['field_constraint']=0;}
+      
     $name="field_" . ($forsearchbar ? htmlspecialchars($field["name"]) : $field["ref"]);
     $id="field_" . $field["ref"];
     
@@ -284,7 +287,20 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         case 5:
         case 8:
         case ($forsearchbar && $field["type"]==9 && !$simple_search_show_dynamic_as_dropdown):
-        ?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}" <?php } ?> ><?php 
+        if ($field['field_constraint']==0){ 
+			
+			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}" <?php } ?> ><?php 
+		}
+        // number view - manipulate the form value (don't send these but send a compiled numrange value instead
+        else if ($field['field_constraint']==1){ // parse value for to/from simple search
+			$minmax=explode('|',str_replace("numrange","",$value));
+			($minmax[0]=='')?$minvalue='':$minvalue=str_replace("neg","-",$minmax[0]);
+			(isset($minmax[1]))?$maxvalue=str_replace("neg","-",$minmax[1]):$maxvalue='';
+			?>
+		<input id="<?php echo $name ?>_min" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo $name?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($minvalue)?>"> ...
+		<input id="<?php echo $name ?>_max" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery('#<?php echo $name?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($maxvalue)?>">
+		<input id="<?php echo $name?>" name="<?php echo $name?>" type="hidden" value="<?php echo $value?>">
+		<?php }
         
         if ($forsearchbar && $autocomplete_search) { 
 				# Auto-complete search functionality

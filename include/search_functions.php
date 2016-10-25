@@ -193,6 +193,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                     {
                     $kw=explode(":",$keyword,2);
                     global $datefieldinfo_cache;
+					
                     if (isset($datefieldinfo_cache[$kw[0]]))
                         {
                         $datefieldinfo=$datefieldinfo_cache[$kw[0]];
@@ -203,7 +204,32 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         $datefieldinfo_cache[$kw[0]]=$datefieldinfo;
                         }
 
-                    if (count($datefieldinfo) && substr($kw[1],0,5)!="range")
+					// numrange search ie mynumberfield:numrange1|1234 indicates that mynumberfield needs a numrange search for 1 to 1234. 
+					if (substr($kw[1],0,8)=="numrange")
+						{
+						$c++;
+						$rangefield=$kw[0];
+						$rangefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($kw[0]) . "' and type IN (0)",0);
+						$rangefieldinfo=$rangefieldinfo[0];
+						$rangefield=$rangefieldinfo["ref"];
+						$rangestring=substr($kw[1],8);
+						$minmax=explode("|",$rangestring);$min=str_replace("neg","-",$minmax[0]);if (isset($minmax[1])){$max=str_replace("neg","-",$minmax[1]);} else {$max='';}
+						if ($max=='' || $min==''){	// if only one number is entered, do a direct search
+							if ($sql_filter!="") {$sql_filter.=" and ";}
+							$sql_filter.="rd" . $c . ".value = " . max($min,$max) . " ";
+						} else { // else use min and max values as a range search
+							if ($sql_filter!="") {$sql_filter.=" and ";}
+							$sql_filter.="rd" . $c . ".value >= " . $min . " ";
+							if ($sql_filter!="") {$sql_filter.=" and ";}
+							$sql_filter.="rd" . $c . ".value <= " . $max." ";
+						}
+							
+						$sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" .$rangefield . "'";
+
+						}
+
+
+                    else if (count($datefieldinfo) && substr($kw[1],0,5)!="range")
                         {
                         $c++;
                         $datefieldinfo=$datefieldinfo[0];
@@ -279,6 +305,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             $fieldinfo=sql_query("select ref,type from resource_type_field where name='" . escape_check($kw[0]) . "'",0);
                             $fieldinfo_cache[$kw[0]]=$fieldinfo;
                         }
+
 
                         if(0 === count($fieldinfo))
                             {
@@ -394,7 +421,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 							$sql_keyword_union_criteria[] = "h.keyword_" . $c . "_found";
 							$sql_keyword_union[] = $union;
                             }
-                        }
+                        } 
                     }
                 else
                     {
@@ -1030,6 +1057,14 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         switch ($fields[$n]["type"])
             {
             case 0: # -------- Text boxes
+            // handle numeric constraint field as number range search Convert minus sign to safer symbol 
+            if ($fields[$n]['field_constraint']==1){
+				$fieldname=sql_value("select name value from resource_type_field where ref='".$fields[$n]["ref"]."'","");
+				$value=getvalescaped('field_'.$fields[$n]["ref"],'');
+				$search.=$fieldname.":".$value;
+				break;
+            }
+            
             case 1:
             case 5:
             case 8:

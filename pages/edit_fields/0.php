@@ -76,11 +76,12 @@ if($merge_filename_with_title && $field['title'] == 'Title' && $ref < 0) {
 </table>
 <?php } ?>
 
-<input class="stdwidth" type=text name="<?php echo $name?>" id="<?php echo $name?>" value="<?php echo htmlspecialchars($value)?>" <?php echo $help_js; ?>
+<input <?php if ($field['field_constraint']==1){?>type=number<?php } ?> class="stdwidth" type=text name="<?php echo $name?>" id="<?php echo $name?>" value="<?php echo htmlspecialchars($value)?>" <?php echo $help_js; ?>
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"] ?>');"<?php } ?>
 >
 
 <?php 
+
 if($merge_filename_with_title && $field['title'] == 'Title' && $ref < 0) { ?>
 	</div>
 <?php } ?>
