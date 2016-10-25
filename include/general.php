@@ -239,7 +239,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     }
 
     $return = array();
-	$fieldsSQL = "select d.value,d.resource_type_field,f.*,f.required frequired,f.ref fref from resource_type_field f left join (select * from resource_data where resource='$ref') d on d.resource_type_field=f.ref and d.resource='$ref' where ( " . (($multi)?"1=1":"f.resource_type=0 or f.resource_type=999 or f.resource_type='$rtype'") . ") group by f.ref order by ";
+	$fieldsSQL = "select d.value,d.resource_type_field,f.*,f.required frequired,f.ref fref, f.field_constraint from resource_type_field f left join (select * from resource_data where resource='$ref') d on d.resource_type_field=f.ref and d.resource='$ref' where ( " . (($multi)?"1=1":"f.resource_type=0 or f.resource_type=999 or f.resource_type='$rtype'") . ") group by f.ref order by ";
     if ($ord_by) {
     	$fieldsSQL .= "f.order_by,f.resource_type,f.ref";
     } else {
@@ -293,7 +293,7 @@ function get_resource_field_data_batch($refs)
 	# resource data for a list of resources (e.g. search result display for a page of resources).
 	if (count($refs)==0) {return array();} # return an empty array if no resources specified (for empty result sets)
 	$refsin=join(",",$refs);
-	$results=sql_query("select d.resource,f.*,d.value from resource_type_field f left join resource_data d on d.resource_type_field=f.ref and d.resource in ($refsin) where (f.resource_type=0 or f.resource_type in (select resource_type from resource where ref=d.resource)) order by d.resource,f.order_by,f.ref");
+	$results=sql_query("select d.resource,f.*, f.field_constraint,d.value from resource_type_field f left join resource_data d on d.resource_type_field=f.ref and d.resource in ($refsin) where (f.resource_type=0 or f.resource_type in (select resource_type from resource where ref=d.resource)) order by d.resource,f.order_by,f.ref");
 	$return=array();
 	$res=0;
 	for ($n=0;$n<count($results);$n++)
