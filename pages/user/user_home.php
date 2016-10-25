@@ -17,7 +17,7 @@ $introtext=text("introtext");
 	<div class="VerticalNav">
 	<ul>
 	
-	<?php if ($allow_password_change && !checkperm("p")) { ?>
+	<?php if ($allow_password_change && !checkperm("p") && $userorigin=="") { ?>
         <li><i aria-hidden="true" class="fa fa-fw fa-key"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/user/user_change_password.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["changeyourpassword"]?></a></li>
         <?php } ?>
 	

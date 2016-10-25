@@ -16,5 +16,6 @@ $lang['wordpress_sso_allow_standard_login']="Allow standard ResourceSpace logins
 $lang['wordpress_sso_use_standard_login']="Login using non-WordPress account";
 $lang['wordpress_sso_use_wp_login']="Login using WordPress account";
 $lang['wordpress_sso_retry']="Click here to try and log in again";
+$lang["origin_wordpress_sso"] = "Wordpress SSO plugin";
 
 

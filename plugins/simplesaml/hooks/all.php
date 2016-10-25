@@ -176,11 +176,11 @@ function HookSimplesamlAllProvideusercredentials()
 			global $simplesaml_update_group;
 			if($simplesaml_update_group)
 				{
-				sql_query("update user set password = '$password_hash', usergroup = '$group', fullname='$displayname', email='$email' where ref = '$userid'");
+				sql_query("update user set origin='simplesaml', password = '$password_hash', usergroup = '$group', fullname='$displayname', email='$email' where ref = '$userid'");
 				}
 			else
 				{
-				sql_query("update user set password = '$password_hash', fullname='$displayname',  email='$email' where ref = '$userid'");
+				sql_query("update user set origin='simplesaml', password = '$password_hash', fullname='$displayname',  email='$email' where ref = '$userid'");
 				}
 
             if(0 < count($custom_attributes))
@@ -202,7 +202,7 @@ function HookSimplesamlAllProvideusercredentials()
 
              $custom_attributes = (0 < count($custom_attributes) ? json_encode($custom_attributes) : '');
  
-            sql_query("UPDATE user SET password = '$password_hash', fullname = '$displayname', email = '$email', usergroup = '$group', comments = 'Auto created by SimpleSAML.', simplesaml_custom_attributes = '$custom_attributes' WHERE ref = '$userref'");
+            sql_query("UPDATE user SET origin='simplesaml', password = '$password_hash', fullname = '$displayname', email = '$email', usergroup = '$group', comments = '" . $lang["simplesaml_usercomment"] . "', simplesaml_custom_attributes = '$custom_attributes' WHERE ref = '$userref'");
 
 			$user_select_sql="and u.username='$username'";
             

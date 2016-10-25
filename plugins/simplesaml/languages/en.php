@@ -29,3 +29,5 @@ $lang['simplesaml_login_expiry'] = "SAML login expiration (days)";
 $lang['simplesaml_sp_configuration'] = "The simplesaml SP configuration must be completed in order to use this plugin. Please see the about page for more information";
 $lang['simplesaml_custom_attributes'] = 'Custom attributes to record against the user record';
 $lang['simplesaml_custom_attribute_label'] = 'Custom attribute - ';
+$lang["simplesaml_usercomment"] = "Created by SimpleSAML plugin";
+$lang["origin_simplesaml"] = "SimpleSAML plugin";

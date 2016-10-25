@@ -810,6 +810,7 @@ $lang['disable_languages']='Disable language selection options';
 $lang['import_export'] = 'Import/ Export';
 $lang['import'] = 'Import';
 $lang['export'] = 'Export';
+$lang['origin'] = "Origin";
 
 # Pager
 $lang["next"]="Next";
