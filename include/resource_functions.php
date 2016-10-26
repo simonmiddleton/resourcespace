@@ -89,20 +89,17 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
 	for ($n=0;$n<count($fields);$n++)
 		{
-		if (!(
-		
-		# Not if field has write access denied
-		checkperm("F" . $fields[$n]["ref"])
-		||
-		(checkperm("F*") && !checkperm("F-" . $fields[$n]["ref"]))
-			
-		)
-                && ($autosave_field=="" || $autosave_field==$fields[$n]["ref"] || (is_array($autosave_field) && in_array($fields[$n]["ref"],$autosave_field)))
-                )
-			{
-
+        if(!(
+            checkperm('F' . $fields[$n]['ref'])
+            || (checkperm("F*") && !checkperm('F-' . $fields[$n]['ref']))
+            )
+            && ('' == $autosave_field || $autosave_field == $fields[$n]['ref']
+                || (is_array($autosave_field) && in_array($fields[$n]['ref'], $autosave_field))
+            )
+        )
+            {
             ##### NODES #####
-            node_field_options_override($fields[$n]);
+            $fields[$n]['nodes'] = get_nodes($fields[$n]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type'] ? true : false));
 
             // Fixed list fields use node IDs directly
             if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
