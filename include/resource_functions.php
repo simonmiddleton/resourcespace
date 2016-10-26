@@ -688,14 +688,24 @@ function save_resource_data_multi($collection)
 				if (getval("modeselect_" . $fields[$n]["ref"],"")=="FR")
 					{
                     # Find and replace mode? Perform the find and replace.
+                    
 					$findstring=getval("find_" . $fields[$n]["ref"],"");
 					$replacestring=getval("replace_" . $fields[$n]["ref"],"");
-					$val=str_replace($findstring,$replacestring,$existing); 
+					$val=str_replace($findstring,$replacestring,$existing);
 					if ($fields[$n]["type"] == 8) // Need to replace quotes with html characters
 						{
-						$findstring=str_replace("'", "&#39;",htmlspecialchars($findstring));
-						$replacestring=str_replace("'", "&#39;",htmlspecialchars($replacestring));
-						$val=str_replace($findstring,$replacestring,$val); 
+                        //CkEditor converts some characters to the HTML entity code, in order to use and replace these, we need the
+                        //$rich_field_characters array below so the stored in the database value e.g. &#39; corresponds to "'"
+                        //that the user typed in the search and replace box
+                        //This array could possibly be expanded to include more such conversions
+                        $rich_field_characters = array("&#39;"=>"'","&rsquo;"=>"’");
+                        foreach ($rich_field_characters as $x => $replaceme){
+                            if (stripos( $findstring,$replaceme )!== false){
+                                $findstring=str_replace($replaceme, $x, htmlspecialchars($findstring));
+                                $replacestring=str_replace($replaceme, $x, htmlspecialchars($replacestring));
+                                $val=str_replace($findstring, $replacestring, $val);
+                                }
+                            }
 						}
 					}
 				
