@@ -116,7 +116,7 @@ if(!hook('customchkboxes', '', array($field)))
                     ?>
                 <td width="1">
                     <input type="checkbox"
-                           id="<?php echo $name; ?>"
+                           id="nodes_<?php echo $node['ref']; ?>"
                            name="<?php echo $name; ?>"
                            value="<?php echo $node['ref']; ?>"
                         <?php
@@ -136,7 +136,7 @@ if(!hook('customchkboxes', '', array($field)))
                             ?>>
                 </td>
                 <td>
-                    <label class="customFieldLabel" for="<?php echo $name; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
+                    <label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
                 </td>
                 <?php
                 }
