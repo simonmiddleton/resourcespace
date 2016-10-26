@@ -38,10 +38,16 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 
 	foreach (array_keys($resource_types) as $resource_type)		// check what fields are supported by comparing header fields with required fields per resource_type
 		{
-		if (!isset($meta[$resource_type])) continue;
+		if (!isset($meta[$resource_type])){
+            //this will facilitate csv uploads where there might exist a resource type with no resource type specific fields
+            array_push($messages,"Info: Found that resource_type {$resource_type}({$resource_types[$resource_type]}) has no resource type specific fields");
+            array_push($resource_types_allowed,$resource_type);
+            continue;
+            }
 		$missing_fields=array();
 		foreach ($meta[$resource_type] as $field_name=>$field_attributes)
 			{
+
 			if ($override!="" && $resource_type_filter!=$resource_type && $resource_type!=0)
 				{
 				continue;
@@ -64,7 +70,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 				array_push($messages,"Warning: resource_type {$resource_type}({$resource_types[$resource_type]}) has missing field headers (" . implode(",",$missing_fields) . ") and will be ignored");
 				}
 		}
-		
+	
 	if ($override!="" && (array_search($resource_type_filter,$resource_types_allowed)===false))
 		{
 		array_push($messages, "Error: override resource_type {$resource_type_filter}({$resource_types[$resource_type_filter]}) not found or headers are incomplete");
