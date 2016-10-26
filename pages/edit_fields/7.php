@@ -169,7 +169,7 @@ echo $hidden_input_elements;
             ?>
 
             // Trigger an event so we can chain actions once we've changed a category tree option
-            document.getElementById('<?php echo $tree_id; ?>')
+            document.getElementById('CentralSpace')
                     .dispatchEvent(new CustomEvent('categoryTreeChanged', {
                         detail: {
                             node: data.node.id

@@ -3144,27 +3144,34 @@ function get_simple_search_fields()
 
 function check_display_condition($n, $field)
     {
-    global $fields, $scriptconditions, $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
+    global $fields, $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
 
     $displaycondition = false;
     $s                = explode(';', $field['display_condition']);
     $condref          = 0;
 
+    // echo "<b>{$field['title']}</b>";
+    // echo '<pre>';print_r($s);echo '</pre>';
+    
     foreach ($s as $condition) # Check each condition
-    {
+        {
         $displayconditioncheck = false;
         $s                     = explode('=', $condition);
 
+        // echo "sField = $s[0]<br>";
+        // echo "sCondition = $s[1]<br>";
+
         for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
-        {
-            node_field_options_override($fields[$cf]);
-            if ($s[0]==$fields[$cf]["name"]) # this field needs to be checked
             {
+            if($s[0] == $fields[$cf]['name']) # this field needs to be checked
+                {
+                // echo "Field '{$fields[$cf]['name']}' needs to be checked<br><br>";
+                $fields[$cf]['nodes'] = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
+
                 $node_options = extract_node_options($fields[$cf]['nodes']);
 
-                $scriptconditions[$condref]["field"] = $fields[$cf]["ref"];  # add new jQuery code to check value
-                $scriptconditions[$condref]['type'] = $fields[$cf]['type'];
-                $scriptconditions[$condref]['options'] = (in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES) ? implode(',', $node_options) : '');
+                $scriptconditions[$condref]['field'] = $fields[$cf]['ref'];
+                $scriptconditions[$condref]['type']  = $fields[$cf]['type'];
 
                 $checkvalues=$s[1];
                 $validvalues=explode("|",mb_strtoupper($checkvalues));
@@ -3172,9 +3179,10 @@ function check_display_condition($n, $field)
                 $v = trim_array(get_resource_nodes($ref, $fields[$cf]['ref']));
 
                 // If blank edit template is used, on upload form the dependent fields should be hidden
-                if($blank_edit_template && $ref < 0 && $use === '-1') {
-                   $v = array();
-                }
+                if($blank_edit_template && $ref < 0 && $use == $ref)
+                    {
+                    $v = array();
+                    }
 
                 foreach($validvalues as $validvalue)
                     {
@@ -3196,76 +3204,94 @@ function check_display_condition($n, $field)
                     $displaycondition = true;
                     }
 
-                    // Check display conditions
-                    // Certain fixed list types allow for multiple nodes to be passed at the same time
-                    if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
+                // Check display conditions
+                // Certain fixed list types allow for multiple nodes to be passed at the same time
+                if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
                         {
-                        if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
-                            {
-                            ?>
-                            <script>
-                            jQuery(document).ready(function()
-                                {
-                                document.getElementById('tree_<?php echo $fields[$cf]["ref"]; ?>').addEventListener('categoryTreeChanged', function(e)
-                                    {
-                                    checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
-                                    });
-                                });
-                            </script>
-                            <?php
-
-                            // Move on to the next field now
-                            continue;
-                            }
-
-                        $checkname = "nodes[{$fields[$cf]['ref']}][]";
-
-                        if(FIELD_TYPE_RADIO_BUTTONS == $fields[$cf]['type'])
-                            {
-                            $checkname = "nodes[{$fields[$cf]['ref']}]";
-                            }
-
-                        $jquery_selector = "input[name=\"{$checkname}\"]";
-
-                        if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'])
-                            {
-                            $checkname       = "nodes[{$fields[$cf]['ref']}]";
-                            $jquery_selector = "select[name=\"{$checkname}\"]";
-                            }
                         ?>
-                        <script type="text/javascript">
+                        <script>
                         jQuery(document).ready(function()
                             {
-                            jQuery('<?php echo $jquery_selector; ?>').change(function ()
+                            document.getElementById('CentralSpace').addEventListener('categoryTreeChanged', function(e)
                                 {
-                                checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                                checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
                                 });
                             });
                         </script>
                         <?php
+
+                        // Move on to the next field now
+                        continue;
                         }
-                    else
+                    else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $fields[$cf]['type'])
                         {
                         ?>
-                        <script type="text/javascript">
+                        <script>
                         jQuery(document).ready(function()
                             {
-                            jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
+                            document.getElementById('CentralSpace').addEventListener('dynamickKeywordChanged', function(e)
                                 {
-                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
                                 });
                             });
                         </script>
                         <?php
+
+                        // Move on to the next field now
+                        continue;
                         }
-            }
+
+                    $checkname = "nodes[{$fields[$cf]['ref']}][]";
+
+                    if(FIELD_TYPE_RADIO_BUTTONS == $fields[$cf]['type'])
+                        {
+                        $checkname = "nodes[{$fields[$cf]['ref']}]";
+                        }
+
+                    $jquery_selector = "input[name=\"{$checkname}\"]";
+
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'])
+                        {
+                        $checkname       = "nodes[{$fields[$cf]['ref']}]";
+                        $jquery_selector = "select[name=\"{$checkname}\"]";
+                        }
+                    ?>
+                    <script type="text/javascript">
+                    jQuery(document).ready(function()
+                        {
+                        jQuery('<?php echo $jquery_selector; ?>').change(function ()
+                            {
+                            checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                            });
+                        });
+                    </script>
+                    <?php
+                    }
+                else
+                    {
+                    ?>
+                    <script type="text/javascript">
+                    jQuery(document).ready(function()
+                        {
+                        jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
+                            {
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            });
+                        });
+                    </script>
+                    <?php
+                    }
+                }
 
         } # see if next field needs to be checked
 
-            $condref++;
-    } # check next condition
+    $condref++;
 
-        ?>
+    } # check next condition
+    // echo '<pre>';print_r($scriptconditions);echo '</pre>';
+    ?>
         <script type="text/javascript">
         function checkDisplayCondition<?php echo $field["ref"];?>(node)
 			{
@@ -3281,7 +3307,6 @@ function check_display_condition($n, $field)
                     (
                     [field] => 73
                     [type] => 2
-                    [options] => checkbox option,checkbox option 1
                     [valid] => Array
                         (
                             [0] => 267
@@ -3295,7 +3320,6 @@ function check_display_condition($n, $field)
                 ############################
                 ### Field type specific
                 ############################
-                // TODO: most likely we'll need to add others here
                 if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
                     {
                     $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}][]\"]";
@@ -3332,6 +3356,7 @@ function check_display_condition($n, $field)
                 ############################
                 }
                 ?>
+
                 if(newfield<?php echo $field['ref']; ?>show)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
@@ -3341,7 +3366,7 @@ function check_display_condition($n, $field)
                     {
                     jQuery('#question_<?php echo $n ?>').slideToggle();
 
-                    if (jQuery('#question_<?php echo $n ?>').css('display')=='block')
+                    if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
                         {
                         jQuery('#question_<?php echo $n ?>').css('border-top', '');
                         }
@@ -3350,9 +3375,9 @@ function check_display_condition($n, $field)
                         jQuery('#question_<?php echo $n ?>').css('border-top', 'none');
                         }
                     }
-			}
-		</script>
-		<?php
+            }
+        </script>
+    <?php
 
     return $displaycondition;
     }

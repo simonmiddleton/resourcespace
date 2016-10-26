@@ -87,7 +87,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     var html                  = '';
     var hidden_input_elements = '';
 
-    Keywords_<?php echo $js_keywords_suffix; ?>.forEach(function(item, index)
+    Keywords_<?php echo $js_keywords_suffix; ?>.forEach(function (item, index)
         {
         hidden_input_elements += '<input id="<?php echo $hidden_input_elements_name; ?>_' + index + '" type="hidden" name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]" value="' + index + '">';
 
@@ -122,6 +122,19 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
             <?php
         }
         ?>
+
+    // Trigger an event so we can chain actions once we've changed a dynamic keyword
+    document.getElementsByName('<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]').forEach(function (item)
+        {
+        document.getElementById('CentralSpace')
+            .dispatchEvent(new CustomEvent('dynamickKeywordChanged', {
+                detail: {
+                    node: item.value
+                },
+                bubbles: true,
+                cancelable: false
+            }));
+        });
     }
 
 
@@ -140,6 +153,16 @@ function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
         });
 
     updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action);
+
+    // Trigger an event so we can chain actions once we've changed a dynamic keyword
+    document.getElementById('CentralSpace')
+        .dispatchEvent(new CustomEvent('dynamickKeywordChanged', {
+            detail: {
+                node: node_id
+            },
+            bubbles: true,
+            cancelable: false
+        }));
     }
 
 
