@@ -439,51 +439,80 @@ function set_resource_defaults($ref)
 
 if (!function_exists("save_resource_data_multi")){
 function save_resource_data_multi($collection)
-	{
-	# Save all submitted data for collection $collection, this is for the 'edit multiple resources' feature
-	# Loop through the field data and save (if necessary)
-	$list=get_collection_resources($collection);
-        $errors=array();
-	$tmp = hook("altercollist", "", array("save_resource_data_multi", $list)); if(is_array($tmp)) { if(count($tmp)>0) $list = $tmp; else return true; } // alter the collection list to spare some when saving multiple, if you need
+    {
+    global $auto_order_checkbox,$auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES;
 
-	$ref=$list[0];
-	$fields=get_resource_field_data($ref,true);
-	global $auto_order_checkbox,$auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES;
-	$expiry_field_edited=false;
-   
+    # Save all submitted data for collection $collection, this is for the 'edit multiple resources' feature
+    # Loop through the field data and save (if necessary)
+    $list   = get_collection_resources($collection);
+    $errors = array();
+    $tmp    = hook("altercollist", "", array("save_resource_data_multi", $list));
+    if(is_array($tmp))
+        {
+        if(count($tmp) > 0)
+            {
+            $list = $tmp;
+            }
+        else
+            {
+            return true;
+            }
+        }
+
+	$ref                 = $list[0];
+	$fields              = get_resource_field_data($ref,true);
+	$expiry_field_edited = false;
+
+    // All the nodes passed for editing. Some of them were already a value
+    // of the fields while others have been added/ removed
+    $user_set_values = getval('nodes', array());
+
 	for ($n=0;$n<count($fields);$n++)
 		{
-		if (getval("editthis_field_" . $fields[$n]["ref"],"")!="" || hook("save_resource_data_multi_field_decision","",array($fields[$n]["ref"])))
+		if('' != getval('editthis_field_' . $fields[$n]['ref'], '') || hook('save_resource_data_multi_field_decision', '', array($fields[$n]['ref'])))
 			{
-             # Set up arrays of node ids selcted and we will then resolve these to add/remove. We can't remove all nodes as user may not have access
-            $nodes_to_add=array();
-            $nodes_to_remove=array();
-            $selected_nodes=array();
-            $unselected_nodes=array();
-        
-            node_field_options_override($fields[$n]);
-			if ($fields[$n]["type"]==2)
-				{
-				# construct the value from the ticked boxes
-				$val=","; # Note: it seems wrong to start with a comma, but this ensures it is treated as a comma separated list by split_keywords(), so if just one item is selected it still does individual word adding, so 'South Asia' is split to 'South Asia','South','Asia'.
-                
-                
-                foreach($fields[$n]["nodes"] as $noderef => $nodedata)
-					{
-					$name=$fields[$n]["ref"] . "_" . md5($nodedata['name']);
-					if (getval($name,"")=="yes")
-						{
-						if ($val!=",") {$val .= ",";}
-						$val .= $nodedata['name'];
-						$selected_nodes[] = $noderef;
-						}
-					else
-						{
-						$unselected_nodes[] = $noderef;
-						}
-					}
-				}
-			elseif ($fields[$n]["type"]==4 || $fields[$n]["type"]==6 || $fields[$n]["type"]==10)
+            // Set up arrays of node ids selcted and we will then resolve these to add/remove. We can't remove all nodes as user may not have access
+            $nodes_to_add     = array();
+            $nodes_to_remove  = array();
+            $selected_nodes   = array();
+            $unselected_nodes = array();
+
+            ##### NODES #####
+            $fields[$n]['nodes'] = get_nodes($fields[$n]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type'] ? true : false));
+
+            // Fixed list fields use node IDs directly
+            if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
+                {
+                $ui_selected_node_values = array();
+
+                if(isset($user_set_values[$fields[$n]['ref']])
+                    && !is_array($user_set_values[$fields[$n]['ref']])
+                    && '' != $user_set_values[$fields[$n]['ref']]
+                    && is_numeric($user_set_values[$fields[$n]['ref']]))
+                    {
+                    $ui_selected_node_values[] = $user_set_values[$fields[$n]['ref']];
+                    }
+                else if(isset($user_set_values[$fields[$n]['ref']])
+                    && is_array($user_set_values[$fields[$n]['ref']]))
+                    {
+                    $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
+                    }
+
+                foreach($fields[$n]['nodes'] as $node)
+                    {
+                    if(in_array($node['ref'], $ui_selected_node_values))
+                        {
+                        $selected_nodes[] = $node['ref'];
+
+                        continue;
+                        }
+
+                    $unselected_nodes[] = $node['ref'];
+                    }
+                }
+            ##### END OF NODES #####
+
+			if ($fields[$n]["type"]==4 || $fields[$n]["type"]==6 || $fields[$n]["type"]==10)
 				{
 				# date/expiry date type, construct the value from the date dropdowns
 				$val=sprintf("%04d", getvalescaped("field_" . $fields[$n]["ref"] . "-y",""));
@@ -512,98 +541,29 @@ function save_resource_data_multi($collection)
 						}
 					}
 				}
-			elseif ($fields[$n]["type"] == 3)
-				{
-				$val=getvalescaped("field_" . $fields[$n]["ref"],"");				
-				foreach($fields[$n]["nodes"] as $noderef => $nodedata)
-					{
-					if (strip_leading_comma($val) == $nodedata['name'])
-						{
-						$selected_nodes[] = $noderef;
-						}
-					else
-						{
-						$unselected_nodes[] = $noderef;
-						}
-					}							
-				// if it doesn't already start with a comma, add one
-				if (substr($val,0,1) != ',')
-					{
-					$val = ','.$val;
-					}				
-				}
-            elseif ($fields[$n]["type"] == 12)
-				{
-				$val=getvalescaped("field_" . $fields[$n]["ref"],"");	
-				foreach($fields[$n]["nodes"] as $noderef => $nodedata)
-					{
-					if (in_array(strip_leading_comma($val),i18n_get_translations($nodedata['name'])))
-						{
-						$selected_nodes[] = $noderef;
-						// Correct the string to include all multingual strings as for dropdowns
-						$val=$nodedata['name'];
-						}
-					else
-						{
-						$unselected_nodes[] = $noderef;
-						}
-					}							
-				// if it doesn't already start with a comma, add one
-				if (substr($val,0,1) != ',')
-					{
-					$val = ','.$val;
-					}				
-				}
-            elseif ($fields[$n]["type"] == 7 || $fields[$n]["type"]==9) // Category tree or dynamic keywords     
-				{
-				$submittedval=getval("field_" . $fields[$n]["ref"],"");
-				$submittedvals=explode("|",$submittedval);
-                $newvals=array();
-                foreach($fields[$n]["nodes"] as $noderef => $nodedata)
-                    {
-                    $addnode=false;
-                    foreach($submittedvals as $checkval)
-                        {                  
-						if (trim($checkval) == trim($nodedata['name']))                            {
-                            $addnode=true;                            
-                            }                        
-                        }
-                    if($addnode)
-                        {
-                        $selected_nodes[] = $noderef;
-                        // Correct the string to include all multingual strings as for dropdowns
-                        $newvals[]=escape_check($nodedata['name']);    
-                        }
-                    else
-                        {
-                        $unselected_nodes[] = $noderef;    
-                        }
-                    }
-				$val = ',' . implode(",",$newvals);
-				}
 			else
 				{
 				$val=getvalescaped("field_" . $fields[$n]["ref"],"");
 				}
-			$origval=$val;
+
+			$origval = $val;
+
 			# Loop through all the resources and save.
 			for ($m=0;$m<count($list);$m++)
 				{
-				$ref=$list[$m];
-				$resource_sql="";
+				$ref            = $list[$m];
+				$resource_sql   = '';
+				$existing_nodes = array();
+				$value_changed  = false;
 
 				# Work out existing field value.
-				$existing=escape_check(sql_value("select value from resource_data where resource='$ref' and resource_type_field='" . $fields[$n]["ref"] . "'",""));
-				
+				$existing       = escape_check(sql_value("SELECT `value` FROM resource_data WHERE resource = '{$ref}' AND resource_type_field = '{$fields[$n]['ref']}'", ''));
+				$existing_nodes = get_resource_nodes($ref, $fields[$n]['ref'], true);
+
 				if (getval("modeselect_" . $fields[$n]["ref"],"")=="FR")
 					{
                     # Find and replace mode? Perform the find and replace.
-					$val=str_replace
-						(
-						getvalescaped("find_" . $fields[$n]["ref"],""),
-						getvalescaped("replace_" . $fields[$n]["ref"],""),
-						$existing
-						);                    
+					$val = str_replace(getvalescaped("find_" . $fields[$n]["ref"],""), getvalescaped("replace_" . $fields[$n]["ref"],""), $existing);                    
 					}
 				
 				# Append text/option(s) mode?
@@ -649,17 +609,27 @@ function save_resource_data_multi($collection)
 				else
 					{
                     # Replace text/option(s) mode
-					$nodes_to_add=$selected_nodes;
-                    $nodes_to_remove=$unselected_nodes;
+					$nodes_to_add    = $selected_nodes;
+                    $nodes_to_remove = $unselected_nodes;
 					}
-                
-                # Possibility to hook in and alter the value - additional mode support
-                $hookval=hook("save_resource_data_multi_extra_modes","",array($ref,$fields[$n]));
-                if ($hookval!==false) {$val=$hookval;}
 
-				//$val=strip_leading_comma($val);
-				#echo "<li>existing=$existing, new=$val";
-				if ($existing!==str_replace("\\","",$val))
+                # Possibility to hook in and alter the value - additional mode support
+                $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n]));
+                if($hookval !== false)
+                	{
+            		$val = $hookval;
+            		}
+
+        		// Fixed list fields need to be checked against existing node IDs for this resource and field
+        		foreach($selected_nodes as $selected_node)
+        			{
+    				if(!in_array($selected_node, $existing_nodes))
+    					{
+						$value_changed = true;
+    					}
+        			}
+
+				if ($existing !== str_replace("\\", '', $val) || $value_changed)
 					{
 					# This value is different from the value we have on record.
 					
@@ -704,7 +674,7 @@ function save_resource_data_multi($collection)
 						remove_keyword_mappings($ref,i18n_get_indexable($oldval),$fields[$n]["ref"],$fields[$n]["partial_index"],$is_date,'','',$is_html);
 						add_keyword_mappings($ref,i18n_get_indexable($newval),$fields[$n]["ref"],$fields[$n]["partial_index"],$is_date,'','',$is_html);
 						}
-                        
+
                     # Update resource_node table
                     delete_resource_nodes($ref,$nodes_to_remove);
                     if(count($nodes_to_add)>0)
