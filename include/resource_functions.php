@@ -65,9 +65,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
 	hook("befsaveresourcedata", "", array($ref));
 
-	# save resource defaults
-	# (do this here so that user can override them if the fields are visible.)
-	if ($autosave_field=="") {set_resource_defaults($ref);	}
+    // Save resource defaults (functionality available for upload only)
+    // Call it here so that if users have access to the field and want 
+    // to override it, they can do so
+    if(0 > $ref)
+        {
+        set_resource_defaults($ref);
+        }
 
 	# Loop through the field data and save (if necessary)
 	$errors=array();
@@ -488,32 +492,56 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	
 
 
-function set_resource_defaults($ref) 
-	{	
-	# Save all the resource defaults
-	global $userresourcedefaults;
-	if ($userresourcedefaults!="")
-		{
-		$s=explode(";",$userresourcedefaults);
-		for ($n=0;$n<count($s);$n++)
-			{
-			$e=explode("=",$s[$n]);
-			# Find field(s) - multiple fields can be returned to support several fields with the same name.
-			$f=sql_array("select ref value from resource_type_field where name='" . escape_check($e[0]) . "'");
-			if (count($f)==0) {exit ("Field(s) with short name '" . $e[0] . "' not found in resource defaults for this user group.");}
-			for ($m=0;$m<count($f);$m++)
-				{
-				// Note: we are doing these checks to make sure users can override
-                                // the resource defaults when they can edit the field.
-                                // We always set defaults for an upload template as any defaults can be overridden by save_resource_data later on
-                                if($ref<0 || (checkperm('F' . $f[$m]) || (checkperm('F*') && !checkperm('F-' . $f[$m]))))
-                                    {
-                                    update_field($ref, $f[$m], $e[1]);
-                                    }
-				}
-			}
-		}
-	}
+/**
+* Set resource defaults. Optional, a list of field IDs can be passed on to only update certain fields.
+* IMPORTANT: this function will always set the resource defaults if any are found. The "client code" 
+*            is where developers decide whether this should happen
+* 
+* @global string $userresourcedefaults  Resource defaults rules value based on user group a user belongs to
+* 
+* @param integer $ref             Resource ID
+* @param array   $specific_fields Specific field ID(s) to update
+* 
+* @return boolean
+*/
+function set_resource_defaults($ref, array $specific_fields = array())
+    {
+    global $userresourcedefaults;
+
+    if('' == $userresourcedefaults)
+        {
+        return false;
+        }
+
+    foreach(explode(';', $userresourcedefaults) as $rule)
+        {
+        $rule_detail         = explode('=', $rule);
+        $field_shortname     = escape_check($rule_detail[0]);
+        $field_default_value = $rule_detail[1];
+
+        // Find field(s) - multiple fields can be returned to support several fields with the same name
+        $fields = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE name = '{$field_shortname}'");
+
+        if(0 === count($fields))
+            {
+            continue;
+            }
+
+        // Sometimes we may want to set resource defaults only to specific fields so we ignore anything else
+        if(0 < count($specific_fields))
+            {
+            $fields = array_intersect($fields, $specific_fields);
+            }
+
+        foreach($fields as $field_ref)
+            {
+            update_field($ref, $field_ref, $field_default_value);
+            }
+        }
+
+    return true;
+    }
+
 
 if (!function_exists("save_resource_data_multi")){
 function save_resource_data_multi($collection)
@@ -1677,8 +1705,30 @@ function copy_resource($from,$resource_type=-1)
 	# Copy access
 	sql_query("insert into resource_custom_access(resource,usergroup,access) select '$to',usergroup,access from resource_custom_access where resource='$from'");
 
-	# Set any resource defaults
-	set_resource_defaults($to);
+    // Set any resource defaults
+    // Expected behaviour: set resource defaults only on upload and when
+    // there is no edit access OR no existing value
+    if(0 > $from)
+        {
+        $fields_to_set_resource_defaults = array();
+        $fields_data                     = get_resource_field_data($from, false, true);
+
+        // Set resource defaults only to fields
+        foreach($fields_data as $field_data)
+            {
+            if('' != trim($field_data['value']))
+                {
+                continue;
+                }
+
+            $fields_to_set_resource_defaults[] = $field_data['ref'];
+            }
+
+        if(0 < count($fields_to_set_resource_defaults))
+            {
+            set_resource_defaults($to, $fields_to_set_resource_defaults);
+            }
+        }
 	
 	# Autocomplete any blank fields.
 	autocomplete_blank_fields($to);
