@@ -1351,7 +1351,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $convert_fullpath = get_utility_path("im-convert");
             if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
 
-			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif") {
+			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif" || getval("noflatten","")!="") {
 			    $flatten = "";
 			} else {
 			    $flatten = "-flatten";
