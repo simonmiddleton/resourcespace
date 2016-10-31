@@ -2,34 +2,53 @@
 
 function save_proposed_changes($ref)
 	{
-    global $userref, $auto_order_checkbox,$multilingual_text_fields,$languages,$language;
+    global $userref, $auto_order_checkbox,$multilingual_text_fields,$languages,$language, $FIXED_LIST_FIELD_TYPES;
 
     # Loop through the field data and save (if necessary)
-	$errors=array();
-	$fields=get_resource_field_data($ref,false);
-	$resource_data=get_resource_data($ref);
-        
+	$errors        = array();
+	$fields        = get_resource_field_data($ref, false);
+	$resource_data = get_resource_data($ref);
+
+    // All the nodes passed for editing. Some of them were already a value
+    // of the fields while others have been added/ removed
+    $user_set_values = getval('nodes', array());
+
         for ($n=0;$n<count($fields);$n++)
             {
-            node_field_options_override($fields[$n]);
+            $new_nodes = array();
 
-            if ($fields[$n]["type"]==2)
+            ##### NODES #####
+            $fields[$n]['nodes'] = get_nodes($fields[$n]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type'] ? true : false));
+
+            // Fixed list fields use node IDs directly
+            if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
                 {
-                # construct the value from the ticked boxes
-                $val=","; # Note: it seems wrong to start with a comma, but this ensures it is treated as a comma separated list by split_keywords(), so if just one item is selected it still does individual word adding, so 'South Asia' is split to 'South Asia','South','Asia'.
-                $options = trim_array($fields[$n]['node_options']);
+                $ui_selected_node_values = array();
 
-                for ($m=0;$m<count($options);$m++)
+                if(isset($user_set_values[$fields[$n]['ref']])
+                    && !is_array($user_set_values[$fields[$n]['ref']])
+                    && '' != $user_set_values[$fields[$n]['ref']]
+                    && is_numeric($user_set_values[$fields[$n]['ref']]))
+                    {
+                    $ui_selected_node_values[] = $user_set_values[$fields[$n]['ref']];
+                    }
+                else if(isset($user_set_values[$fields[$n]['ref']])
+                    && is_array($user_set_values[$fields[$n]['ref']]))
+                    {
+                    $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
+                    }
+
+                foreach($fields[$n]['nodes'] as $node)
+                    {
+                    if(in_array($node['ref'], $ui_selected_node_values))
                         {
-                        $name=$fields[$n]["ref"] . "_" . md5($options[$m]);
-                        if (getval($name,"")=="yes")
-                                {
-                                if ($val!=",") {$val.=",";}
-                                $val.=$options[$m];
-                                }
+                        $new_nodes[] = $node['ref'];
                         }
+                    }
                 }
-            elseif ($fields[$n]["type"]==4 || $fields[$n]["type"]==6 || $fields[$n]["type"]==10)
+            ##### END OF NODES #####
+
+            if ($fields[$n]["type"]==4 || $fields[$n]["type"]==6 || $fields[$n]["type"]==10)
                     {
                     # date type, construct the value from the date/time dropdowns
                     $val=sprintf("%04d", getvalescaped("field_" . $fields[$n]["ref"] . "-y",""));
@@ -72,15 +91,6 @@ function save_proposed_changes($ref)
                                     }
                             }
                     }
-           elseif ($fields[$n]["type"] == 3 || $fields[$n]["type"] == 12)
-				{
-				$val=getvalescaped("field_" . $fields[$n]["ref"],"");				
-				// if it doesn't already start with a comma, add one
-				if (substr($val,0,1) != ',')
-					{
-					$val = ','.$val;
-					}
-				}
             else
                     {
                     # Set the value exactly as sent.
@@ -109,16 +119,39 @@ function save_proposed_changes($ref)
                 $errors[$fields[$n]["ref"]]=$error;
                 continue;
                 }
-            if (str_replace("\r\n","\n",$fields[$n]["value"])!== str_replace("\r\n","\n",unescape($val)))
+
+            $field_value = $fields[$n]['value'];
+            if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
+                {
+                $field_value    = '';
+                $val            = '';
+                $resource_nodes = array();
+
+                foreach(get_resource_nodes($ref, $fields[$n]['ref'], true) as $resource_node)
                     {
-                    
+                    $resource_nodes[] = $resource_node['ref'];
+                    }
+
+                if(0 < count($resource_nodes))
+                    {
+                    $field_value = implode(', ', $resource_nodes);
+                    }
+
+                if(0 < count($new_nodes))
+                    {
+                    $val = implode(', ', $new_nodes);
+                    }
+                }
+
+            if (str_replace("\r\n", "\n", $field_value) !== str_replace("\r\n", "\n", unescape($val)))
+                    {
                     # This value is different from the value we have on record. 
                     # Add this to the proposed changes table for the user                    
-                    sql_query("insert into propose_changes_data(resource,user,resource_type_field,value) values('$ref','$userref','" . $fields[$n]["ref"] . "','" . escape_check($val) ."')");
-                    
+                    sql_query("INSERT INTO propose_changes_data(resource, user, resource_type_field, value) VALUES('{$ref}','{$userref}', '{$fields[$n]['ref']}', '" . escape_check($val) . "')");
                     }            
             
             }
+                
         return true;
         }
         

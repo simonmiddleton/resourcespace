@@ -162,26 +162,44 @@ if (getval("save","")!="")
 		$submittedchanges=array();
 		$submittedchangescount=0;		
         if ($save_errors===true)
-			{
-			
+			{			
 			$proposed_changes=get_proposed_changes($ref, $userref);
-			
+
 			for ($n=0;$n<count($proposefields);$n++)
 				{
 				# Has a change to this field been proposed?
 				foreach($proposed_changes as $proposed_change)
 					{
-					if($proposed_change["resource_type_field"]==$proposefields[$n]["ref"])
-						{
-						$submittedchanges[$submittedchangescount]["field"]=$proposefields[$n]["title"];
-						$submittedchanges[$submittedchangescount]["value"]=htmlspecialchars($proposed_change["value"]);
-						$submittedchangescount++;; 
-						}                
+                    if($proposed_change['resource_type_field'] != $proposefields[$n]['ref'])
+                        {
+                        continue;
+                        }
+
+                    $proposed_change_value = $proposed_change['value'];
+
+                    if(in_array($proposed_change['type'], $FIXED_LIST_FIELD_TYPES))
+                        {
+                        $field_node_options    = extract_node_options(get_nodes($proposefields[$n]['ref'], null, true));
+                        $proposed_change_value = array();
+
+                        foreach(explode(', ', $proposed_change['value']) as $proposed_change_node_id)
+                            {
+                            $proposed_change_value[] = $field_node_options[$proposed_change_node_id];
+                            }
+
+                        if(0 < count($proposed_change_value))
+                            {
+                            $proposed_change_value = implode(', ', $proposed_change_value);
+                            }
+                        }
+
+                    $submittedchanges[$submittedchangescount]["field"] = $proposefields[$n]["title"];
+                    $submittedchanges[$submittedchangescount]["value"] = htmlspecialchars($proposed_change_value);
+                    $submittedchangescount++;
 					}
-				}	
-			
+				}
+
 			// send email to admin/resource owner with link	
-			
 			$templatevars['changesummary']=$lang["propose_changes_summary_changes"] . "<br>";
 			for($n=0;$n<$submittedchangescount;$n++)
 				{
@@ -316,7 +334,7 @@ function display_multilingual_text_field($n, $field, $translations)
 function display_field($n, $field)
 	{
 	
-	global $ref, $original_fields, $multilingual_text_fields, $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess;
+	global $ref, $original_fields, $multilingual_text_fields, $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess, $FIXED_LIST_FIELD_TYPES;
 	
     $edit_autosave=false;
 	$name="field_" . $field["ref"];
@@ -326,9 +344,9 @@ function display_field($n, $field)
 	# is there a proposed value set for this field?
 	foreach($proposed_changes as $proposed_change)
 		{
-		if($proposed_change["resource_type_field"]==$field["ref"])
+		if($proposed_change['resource_type_field'] == $field['ref'])
 			{
-			$proposed_value=$proposed_change["value"]; 
+			$proposed_value = $proposed_change['value'];
 			}                
 		}
 
@@ -368,9 +386,24 @@ function display_field($n, $field)
 	
 	// ------------------------------
 	// Show existing value so can edit
-	
 	$value=preg_replace("/^,/","",$field["value"]);
-    $realvalue=$value; // Store this in case it gets changed by view processing
+
+    if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        $resource_nodes = array();
+
+        foreach(get_resource_nodes($ref, $field['ref'], true) as $resource_node)
+            {
+            $resource_nodes[] = i18n_get_translated($resource_node['name']);
+            }
+
+        if(0 < count($resource_nodes))
+            {
+            $value = implode(', ', $resource_nodes);
+            }
+        }
+
+    $realvalue = $value; // Store this in case it gets changed by view processing
 	if ($value!="")
             {
             # Draw this field normally.			
@@ -407,28 +440,57 @@ function display_field($n, $field)
         
 	<div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if($proposed_value==""){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo $field["ref"] ?>">
     <input type="hidden" id="propose_change_<?php echo $field["ref"] ?>" name="propose_change_<?php echo $field["ref"] ?>" value="true" <?php if($proposed_value==""){echo "disabled=\"disabled\""; } ?> />                                                          
-        <?php                                                            
-	# ----------------------------  Show field -----------------------------------
+    <?php
+    # ----------------------------  Show field -----------------------------------
+    // Checkif we have a proposed value for this field
+    if('' != $proposed_value)
+        {
+        $value = $proposed_value;
+        }
+    else
+        {
+        $value = $realvalue;
+        }
 
-	# Checkif we have a proposed value for this field
-	if ($proposed_value!="")
-		{
-		$value=$proposed_value;
-		}
-	else
-		{
-		$value = $realvalue;   
-		}
-        
-	$type=$field["type"];
-	if ($type=="") {$type=0;} # Default to text type.
-	if (!hook("replacefield","",array($field["type"],$field["ref"],$n)))
-		{
-		global $auto_order_checkbox, $auto_order_checkbox_case_insensitive;
-		include dirname(__FILE__) . "/../../../pages/edit_fields/" . $type . ".php";
-		}
-	# ----------------------------------------------------------------------------
-        ?>
+    $type = $field['type'];
+
+    if('' == $type)
+        {
+        $type = 0;
+        }
+
+    if (!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
+        {
+        global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
+
+        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            {
+            $name = "nodes[{$field['ref']}]";
+
+            // Sometimes we need to pass multiple options
+            if(in_array($field['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE)))
+                {
+                $name = "nodes[{$field['ref']}][]";
+                }
+            else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
+                {
+                $name = "field_{$field['ref']}";
+                }
+
+            $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
+
+            if('' != $proposed_value)
+                {
+                $selected_nodes = explode(', ', $proposed_value);
+                }
+            }
+
+        $is_search = false;
+
+        include dirname(__FILE__) . "/../../../pages/edit_fields/{$type}.php";
+        }
+    # ----------------------------------------------------------------------------
+    ?>
         </div><!-- close proposed_change_<?php echo $field["ref"] ?> -->
         <?php
         if($editaccess)
