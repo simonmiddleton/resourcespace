@@ -509,7 +509,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
  */
 function get_managed_dash()
 	{
-	global $baseurl,$baseurl_short,$lang,$anonymous_login,$username,$dash_tile_shadows, $anonymous_default_dash, $userref, $usergroup, $dash_tile_colour, $dash_tile_colour_options;
+	global $baseurl,$baseurl_short,$lang,$anonymous_login,$username,$dash_tile_shadows, $anonymous_default_dash, $userref, $usergroup, $dash_tile_colour, $dash_tile_colour_options, $managed_home_dash;
 	#Build Tile Templates
 	if(checkPermission_anonymoususer() && !$anonymous_default_dash)
         {
@@ -542,15 +542,15 @@ function get_managed_dash()
     foreach($tiles as $tile)
 		{
         $tile_custom_style = '';
-
-        if($dash_tile_colour)
+    if($dash_tile_colour)
             {
             $buildstring = explode('?', $tile['url']);
             parse_str(str_replace('&amp;', '&', $buildstring[1]), $buildstring);
-
+            
             if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
                 {
                 $tile_custom_style .= get_tile_custom_style($buildstring);
+                
                 }
             }
 		?>
@@ -559,12 +559,12 @@ function get_managed_dash()
 			# Check link for external or internal
 			if(mb_strtolower(substr($tile["link"],0,4))=="http")
 				{
-				$link = $tile["link"];
+				$link = parse_dashtile_link($tile["link"]);
 				$newtab = true;
 				}
 			else
 				{
-				$link = $baseurl."/".htmlspecialchars($tile["link"]);
+				$link = $baseurl."/".htmlspecialchars(parse_dashtile_link($tile["link"]));
 				$newtab=false;
 				}
 			?>
