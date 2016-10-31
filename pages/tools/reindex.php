@@ -12,6 +12,9 @@ include_once "../../include/general.php";
 include "../../include/resource_functions.php";
 include "../../include/image_processing.php";
 
+// Disable sql_logging
+$mysql_log_transactions=false;
+
 $sql = '';
 if('' != getval('ref', ''))
     {
@@ -21,17 +24,23 @@ if('' != getval('ref', ''))
 set_time_limit(0);
 echo "<pre>";
 
-$start = getvalescaped('start', '0');
-if(!is_numeric($start))
-    {
-    $start = 0;
-    }
 
+$start = getvalescaped('start', '');
+if(is_numeric($start))
+    {
+    $sql= "where r.ref>=" . $start;
+	$end = getvalescaped('end', '');
+	if(is_numeric($end))
+		{
+		$sql.= " and r.ref<=" . $end;
+		}
+    }
+	
 $resources = sql_query("SELECT r.ref, u.username, u.fullname FROM resource AS r LEFT OUTER JOIN user AS u ON r.created_by = u.ref {$sql} ORDER BY ref");
 
 $time_start = microtime(true);
 
-for($n = $start; $n < count($resources); $n++)
+for($n = 0; $n < count($resources); $n++)
     {
     $ref = $resources[$n]['ref'];
 
