@@ -1127,9 +1127,14 @@ function extract_node_options(array $nodes, $i18n = true, $index_with_node_id = 
 
 
 /**
+* Search an array of nodes by name
 * 
+* Usefull to avoid querying the database multiple times 
+* if we already have a full detail array of nodes
 * 
-* 
+* @param array   $nodes
+* @param string  $name
+* @param boolean $i18n
 * 
 * @return array
 */

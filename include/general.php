@@ -3187,7 +3187,7 @@ function check_display_condition($n, $field)
                 foreach($validvalues as $validvalue)
                     {
                     $found_validvalue = get_node_by_name($fields[$cf]['nodes'], $validvalue);
- 
+
                     if(0 != count($found_validvalue))
                         {
                         $scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
