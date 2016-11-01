@@ -86,7 +86,8 @@ if (getval("save","")!="")
 		$deletedchanges=array();
 		$deletedchangescount=0;		
 		
-		$proposefields=get_resource_field_data($ref,false,true); // Get updated data after save so we can send email with values
+		$proposefields = get_resource_field_data($ref, false, true);
+
 		for ($n=0;$n<count($proposefields);$n++)
 			{
 			node_field_options_override($proposefields[$n]);
@@ -98,9 +99,11 @@ if (getval("save","")!="")
 				$acceptedchanges[$acceptedchangescount]["field"]=$proposefields[$n]["title"];
 				$acceptedchanges[$acceptedchangescount]["value"]=$proposefields[$n]["value"];
 				$acceptedchangescount++;
+
 				// remove this from the list of proposed changes
-				sql_query("delete from propose_changes_data where user='$view_user' and resource_type_field='" . $proposefields[$n]["ref"] . "'");
+				sql_query("DELETE FROM propose_changes_data WHERE user = '{$view_user}' AND resource_type_field = '{$proposefields[$n]['ref']}'");
 				}
+
 			# Has this field been deleted?
 			if (getval("delete_change_" . $proposefields[$n]["ref"],"")!="")
 				{					
@@ -114,10 +117,9 @@ if (getval("save","")!="")
 						$deletedchangescount++;
 						}                
 					}					
-					
-				
+
 				// remove this from the list of proposed changes
-				sql_query("delete from propose_changes_data where user='$view_user' and resource_type_field='" . $proposefields[$n]["ref"] . "'");
+				sql_query("DELETE FROM propose_changes_data WHERE user = '{$view_user}' AND resource_type_field = '{$proposefields[$n]['ref']}'");
 				}
 			}	
 			
@@ -177,17 +179,22 @@ if (getval("save","")!="")
 
                     $proposed_change_value = $proposed_change['value'];
 
-                    if(in_array($proposed_change['type'], $FIXED_LIST_FIELD_TYPES))
+                    if(in_array($proposed_change['type'], $FIXED_LIST_FIELD_TYPES) && '' != $proposed_change_value)
                         {
                         $field_node_options    = extract_node_options(get_nodes($proposefields[$n]['ref'], null, true));
                         $proposed_change_value = array();
 
                         foreach(explode(', ', $proposed_change['value']) as $proposed_change_node_id)
                             {
+                            if('' == $proposed_change_node_id)
+                                {
+                                continue;
+                                }
+
                             $proposed_change_value[] = $field_node_options[$proposed_change_node_id];
                             }
 
-                        if(0 < count($proposed_change_value))
+                        if(is_array($proposed_change_value) && 0 < count($proposed_change_value))
                             {
                             $proposed_change_value = implode(', ', $proposed_change_value);
                             }
@@ -477,11 +484,11 @@ function display_field($n, $field)
                 $name = "field_{$field['ref']}";
                 }
 
-            $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
+            $selected_nodes = explode(', ', $proposed_value);
 
-            if('' != $proposed_value)
+            if(!$editaccess && '' == $proposed_value)
                 {
-                $selected_nodes = explode(', ', $proposed_value);
+                $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
                 }
             }
 
