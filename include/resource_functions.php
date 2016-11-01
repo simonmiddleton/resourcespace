@@ -330,13 +330,41 @@ function save_resource_data($ref,$multi,$autosave_field="")
     // Autocomplete any blank fields.
     autocomplete_blank_fields($ref);
 
+    // Log any changes we have done to nodes
+    // When saving a particular field, log it
+    if(0 < count($nodes_to_add) && '' != $autosave_field && 0 < $autosave_field)
+        {
+        $fields_autosave_field_index = array_search($autosave_field, array_column($fields, 'ref'));
+
+        if(false !== $fields_autosave_field_index)
+            {
+            $existing_nodes_value = '';
+            $new_nodes_val        = '';
+            $node_options         = extract_node_options($fields[$fields_autosave_field_index]['nodes']);
+
+            // Build new value:
+            foreach($nodes_to_add as $node_to_add)
+                {
+                $new_nodes_val .= ",{$node_options[$node_to_add]}";
+                }
+
+            // Build existing value:
+            foreach(get_resource_nodes($ref, $autosave_field) as $existing_node_id)
+                {
+                $existing_nodes_value .= ",{$node_options[$existing_node_id]}";
+                }
+
+            resource_log($ref, LOG_CODE_EDITED, $autosave_field, '', $existing_nodes_value, $new_nodes_val);
+            }
+        }
+
     // Update resource_node table
     delete_resource_nodes($ref, $nodes_to_remove);
     if(0 < count($nodes_to_add))
         {
         add_resource_nodes($ref, $nodes_to_add);
         }
-            
+
 	# Expiry field(s) edited? Reset the notification flag so that warnings are sent again when the date is reached.
 	$expirysql="";
 	if ($expiry_field_edited) {$expirysql=",expiry_notification_sent=0";}
@@ -1045,40 +1073,63 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
     sql_query("delete from resource_keyword where resource='" . escape_check($resource) . "' and resource_type_field='" . escape_check($resource_type_field) . "'");
     }
 
-                    
-function update_field($resource,$field,$value)
-	{
 
+/**
+* Updates resource field. Works out the previous value, so this is
+* not efficient if we already know what this previous value is (hence
+* it is not used for edit where multiple fields are saved)
+* 
+* @param integer $resource Resource ID
+* @param integer $field    Field ID
+* @param string  $value    The new value
+* @param array   &$errors  Any errors that may occur during update
+* 
+* @return boolean
+*/
+function update_field($resource, $field, $value, array $errors = array())
+    {
     global $FIXED_LIST_FIELD_TYPES;
 
-	# Updates a field. Works out the previous value, so this is not efficient if we already know what this previous value is (hence it is not used for edit where multiple fields are saved)
+    // accept shortnames in addition to field refs
+    if(!is_numeric($field))
+        {
+        $field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE name = '" . escape_check($field) . "'", '');
+        }
 
-	# accept shortnames in addition to field refs
-	if (!is_numeric($field)){$field=sql_value("select ref value from resource_type_field where name='".escape_check($field)."'","");}
+    // Fetch some information about the field
+    $fieldinfo = sql_query("SELECT ref, keywords_index, resource_column, partial_index, type, onchange_macro FROM resource_type_field WHERE ref = '$field'");
 
-	# Fetch some information about the field
-	$fieldinfo=sql_query("select ref,keywords_index,resource_column,partial_index,type, onchange_macro from resource_type_field where ref='$field'");
+    if(0 == count($fieldinfo))
+        {
+        $errors[] = "No field information about field ID '{$field}'";
 
-	if (count($fieldinfo)==0) {return false;} else {$fieldinfo=$fieldinfo[0];}
-	    
+        return false;
+        }
+    else
+        {
+        $fieldinfo = $fieldinfo[0];
+        }
+
     $fieldoptions = get_nodes($field);
     $newvalues    = trim_array(explode(',', $value));
-    
-    # Set up arrays of node ids to add/remove. 
-	if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
+
+    // Set up arrays of node ids to add/remove. 
+    if(in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
         {
-        $nodes_to_add=array();
-        $nodes_to_remove=array();
+        $nodes_to_add    = array();
+        $nodes_to_remove = array();
         }
-    
+
     # If this is a dynamic keyword we need to add it to the field options
-    if($fieldinfo['type']==9 && !checkperm('bdk' . $field))
+    if($fieldinfo['type'] == 9 && !checkperm('bdk' . $field))
         {
-        $currentoptions=array();
+        $currentoptions = array();
+
         foreach($fieldoptions as $fieldoption)
             {
-            $fieldoptiontranslations=explode("~",$fieldoption['name']);
-            if (count($fieldoptiontranslations)<2)
+            $fieldoptiontranslations = explode('~', $fieldoption['name']);
+            
+            if(count($fieldoptiontranslations) < 2)
                 {
                 $currentoptions[]=trim($fieldoption['name']); # Not a translatable field
                 debug("update_field: current field option: '" . trim($fieldoption['name']) . "'<br>");
@@ -1100,10 +1151,11 @@ function update_field($resource,$field,$value)
                         $p=strpos($fieldoptiontranslations[$n],':');                         
                         $currentoptions[]=trim(substr($fieldoptiontranslations[$n],$p+1));
                         debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)) . "'<br>");
-                        } 
+                        }
                     }
                 }
             }
+
         foreach($newvalues as $newvalue)
             {
             # Check if each new value exists in current options list
@@ -1119,10 +1171,10 @@ function update_field($resource,$field,$value)
                 }
             }
         }
-    
+
     # Fetch previous value
-    $existing=sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
-     
+    $existing = sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
+
     if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
         {
         foreach($fieldoptions as $nodedata)
@@ -1136,54 +1188,66 @@ function update_field($resource,$field,$value)
                 $nodes_to_remove[] = $nodedata["ref"];
                 }
             }
+
         # Update resource_node table
         delete_resource_nodes($resource,$nodes_to_remove);
+
         if(count($nodes_to_add)>0)
             {
             add_resource_nodes($resource,$nodes_to_add);
             }
         }
-	if ($fieldinfo["keywords_index"])
-		{
-		$is_html=($fieldinfo["type"]==8);	
-		
-		# If there's a previous value, remove the index for those keywords
-		$existing=sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
-		if (strlen($existing)>0)
-			{
-			remove_keyword_mappings($resource,i18n_get_indexable($existing),$field,$fieldinfo["partial_index"],false,'','',$is_html);
-			}
-		
-		if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES) && substr($value,0,1) <> ','){
-			$value = ','.$value;
-		}
-		
-		//$value=strip_leading_comma($value);
-		
-		# Index the new value
-		add_keyword_mappings($resource,i18n_get_indexable($value),$field,$fieldinfo["partial_index"],false,'','',$is_html);
-		}
-		
-	# Delete the old value (if any) and add a new value.
-	sql_query("delete from resource_data where resource='$resource' and resource_type_field='$field'");
-	$value=escape_check($value);
-	
-	# write to resource_data if not an empty value
-	if($value!=='')
-		{
-		sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
-		}
-	
-	if ($value=="") {$value="null";} else {$value="'" . $value . "'";}
 
-	# If this is a 'joined' field we need to add it to the resource column
-	$joins=get_resource_table_joins();
-	if(in_array($fieldinfo['ref'],$joins))
-		{
-		if ($value!="null")
-			{
-			global $resource_field_column_limit;
-			$truncated_value = substr($value, 0, $resource_field_column_limit);
+    if ($fieldinfo["keywords_index"])
+        {
+        $is_html=($fieldinfo["type"]==8);	
+
+        # If there's a previous value, remove the index for those keywords
+        $existing=sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
+        if (strlen($existing)>0)
+            {
+            remove_keyword_mappings($resource,i18n_get_indexable($existing),$field,$fieldinfo["partial_index"],false,'','',$is_html);
+            }
+
+        if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES) && substr($value,0,1) <> ',')
+            {
+            $value = ','.$value;
+            }
+
+        // Index the new value
+        add_keyword_mappings($resource,i18n_get_indexable($value),$field,$fieldinfo["partial_index"],false,'','',$is_html);
+        }
+
+    # Delete the old value (if any) and add a new value.
+    sql_query("delete from resource_data where resource='$resource' and resource_type_field='$field'");
+
+    $value = escape_check($value);
+
+    # write to resource_data if not an empty value
+    if($value !== '')
+        {
+        sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
+        }
+
+    if($value == "")
+        {
+        $value="null";
+        }
+    else
+        {
+        $value = "'" . $value . "'";
+        }
+
+    # If this is a 'joined' field we need to add it to the resource column
+    $joins = get_resource_table_joins();
+
+    if(in_array($fieldinfo['ref'],$joins))
+        {
+        if ($value!="null")
+            {
+            global $resource_field_column_limit;
+
+            $truncated_value = substr($value, 0, $resource_field_column_limit);
 
             // Remove backslashes from the end of the truncated value
             if(substr($truncated_value, -1) === '\\')
@@ -1191,27 +1255,30 @@ function update_field($resource,$field,$value)
                 $truncated_value = substr($truncated_value, 0, strlen($truncated_value) - 1);
                 }
 
-			if(substr($truncated_value, -1) !== '\'')
-				{
-				$truncated_value .= '\'';
-				}
-			}
-		else
-			{
-			$truncated_value="null";
-			}
-		sql_query("update resource set field".$field."=" . $truncated_value . " where ref='$resource'");
-		}			
-	
-        # Add any onchange code
-        if($fieldinfo["onchange_macro"]!="")
-            {
-            eval($fieldinfo["onchange_macro"]);    
+            if(substr($truncated_value, -1) !== '\'')
+                {
+                $truncated_value .= '\'';
+                }
             }
-        
-        # Allow plugins to perform additional actions.
-        hook("update_field","",array($resource,$field,$value,$existing));
-	}
+        else
+            {
+            $truncated_value="null";
+            }
+
+        sql_query("update resource set field".$field."=" . $truncated_value . " where ref='$resource'");
+        }
+
+    // Add any onchange code
+    if($fieldinfo["onchange_macro"]!="")
+        {
+        eval($fieldinfo["onchange_macro"]);    
+        }
+
+    // Allow plugins to perform additional actions.
+    hook("update_field","",array($resource,$field,$value,$existing));
+
+    return true;
+    }
 
 if (!function_exists("email_resource")){	
 function email_resource($resource,$resourcename,$fromusername,$userlist,$message,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$list_recipients=false, $open_internal_access=false, $useraccess=2,$group="")
@@ -2993,7 +3060,7 @@ function log_diff($fromvalue,$tovalue)
 
 	$diff     = new Text_Diff('native', array($lines1, $lines2));
 	$renderer = new Text_Diff_Renderer_inline();
-	$diff=$renderer->render($diff);
+	$diff     = $renderer->render($diff);
 	
 	$return="";
 

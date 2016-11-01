@@ -969,7 +969,6 @@ function add_resource_nodes($resourceid,$nodes=array())
 */
 function get_resource_nodes($resource, $resource_type_field = null, $detailed = false)
     {
-    $return     = array();
     $sql_select = 'n.ref AS `value`';
 
     if($detailed)
