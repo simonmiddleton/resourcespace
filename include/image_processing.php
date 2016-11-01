@@ -266,7 +266,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 							break;
 					}
 
-					update_field($ref, $read_from[$i]['ref'], $newval);
+					if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
 				
 				}
 
@@ -667,7 +667,7 @@ function extract_exif_comment($ref,$extension="")
 
 							}
 							
-							update_field($ref,$read_from[$i]['ref'],$newval);
+							if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
 							$exif_updated_fields[]=$read_from[$i]['ref'];
 							
 							
@@ -730,7 +730,7 @@ function extract_exif_comment($ref,$extension="")
 									break;
 							}
 							
-							update_field($ref,$read_from[$i]['ref'],$newval);
+							if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
 							$exif_updated_fields[]=$read_from[$i]['ref'];
 
 						}
