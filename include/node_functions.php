@@ -949,13 +949,8 @@ function add_resource_nodes($resourceid,$nodes=array())
 	{
 	if(!is_array($nodes))
 		{$nodes=array($nodes);}
-    $existingnodes=sql_array("select distinct node value from resource_node where resource='" . $resourceid . "'","");
-    $nodes_to_add = trim_array(array_diff($nodes,$existingnodes));
-    if(count($nodes_to_add)>0)
-        {
-        sql_query("insert into resource_node (resource, node) values ('" . $resourceid . "','" . implode("'),('" . $resourceid . "','",$nodes_to_add) . "')");
-        }
-	}
+    sql_query("insert into resource_node (resource, node) values ('" . $resourceid . "','" . implode("'),('" . $resourceid . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
+    }
 
 
 /**
@@ -1006,7 +1001,7 @@ function delete_all_resource_nodes($resourceid)
     
 function copy_resource_nodes($resourcefrom,$resourceto)
 	{
-	sql_query("insert into resource_node (resource,node, hit_count, new_hit_count) select '" . $resourceto . "', node, 0, 0 from resource_node where resource ='" . $resourcefrom . "';");	
+	sql_query("insert into resource_node (resource,node, hit_count, new_hit_count) select '" . $resourceto . "', node, 0, 0 from resource_node rnold where resource ='" . $resourcefrom . "' ON DUPLICATE KEY UPDATE hit_count=rnold.new_hit_count;");	
 	}
     
 function get_nodes_from_keywords($keywords=array())
@@ -1162,4 +1157,4 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
         }
 
     return array();
-    }
+    }    
