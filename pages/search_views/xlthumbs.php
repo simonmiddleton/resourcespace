@@ -431,7 +431,7 @@ if (!hook("renderresultlargethumb"))
 								if (in_array($ref,$collectionresources))
 									{ ?>checked<?php } 
 									?> 
-								onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked') { AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
+								onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')=='checked') { AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
 							>
 							<?php 
 							}

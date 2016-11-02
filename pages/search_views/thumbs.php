@@ -256,7 +256,7 @@ if (!hook("renderresultthumb"))
 			if(!hook("thumbscheckboxes"))
 			{
 			if ($use_checkboxes_for_selection)
-				{ ?>
+				{?>
 				<input 
 					type="checkbox" 
 					id="check<?php echo htmlspecialchars($ref)?>" 
@@ -267,7 +267,7 @@ if (!hook("renderresultthumb"))
 						checked
 						<?php 
 						} ?> 
-					onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
+					onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')){AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (!jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
 				>
 				&nbsp;
 				<?php 
