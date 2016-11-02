@@ -22,3 +22,8 @@ $home_slideshow_width=1400;
 $home_slideshow_height=900;
 
 $homeanim_folder = 'filestore/system/slideshow';
+
+
+$themes_simple_view=true;
+$themes_category_split_pages=true;
+$theme_category_levels=8;
