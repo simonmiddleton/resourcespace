@@ -265,8 +265,8 @@ $('#tabs ul li a').click(function(){
 });
 $('#configstoragelocations').each(function(){
 	if (this.checked != true){
-		$('#storageurl').attr("disabled",true);
-		$('#storagedir').attr("disabled",true);
+		$('#storageurl').prop("disabled",true);
+		$('#storagedir').prop("disabled",true);
 	}
 	else {
 		$('#remstorageoptions').show();
@@ -279,8 +279,8 @@ $('#configstoragelocations').click(function(){
 		$('#remstorageoptions').slideDown("slow");
 	}
 	else{
-		$('#storageurl').attr("disabled",true);
-		$('#storagedir').attr("disabled",true);
+		$('#storageurl').prop("disabled",true);
+		$('#storagedir').prop("disabled",true);
 		$('#remstorageoptions').slideUp("slow");
 	}
 });

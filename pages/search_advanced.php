@@ -273,9 +273,9 @@ jQuery(document).ready(function()
 				jQuery('.ResTypeSection').hide();
 				
 				// Global has been checked, check all other checkboxes
-				jQuery('.SearchTypeItemCheckbox').attr('checked','checked');
+				jQuery('.SearchTypeItemCheckbox').prop('checked',true);
 				//Uncheck Collections
-				jQuery('#SearchCollectionsCheckbox').removeAttr('checked');	
+				jQuery('#SearchCollectionsCheckbox').prop('checked',false);	
 
 				jQuery('#AdvancedSearchTypeSpecificSectionGlobalHead').show();
 				if (getCookie('AdvancedSearchTypeSpecificSectionGlobal')!="collapsed"){jQuery("#AdvancedSearchTypeSpecificSectionGlobal").show();}				
@@ -288,8 +288,8 @@ jQuery(document).ready(function()
 
                 //Check Collections
 				selectedtypes=["Collections"];
-				jQuery('#SearchCollectionsCheckbox').attr('checked','checked');
-				jQuery('.tickboxcoll').attr('checked','checked');
+				jQuery('#SearchCollectionsCheckbox').prop('checked',true);
+				jQuery('.tickboxcoll').prop('checked',true);
 				
 
 				// Show collection search sections	
@@ -663,12 +663,12 @@ if($advanced_search_contributed_by)
 function resetTickAllColl(){
 	var checkcount=0;
 	// set tickall to false, then check if it should be set to true.
-	jQuery('.rttickallcoll').attr('checked',false);
+	jQuery('.rttickallcoll').prop('checked',false);
 	var tickboxes=jQuery('#advancedform .tickboxcoll');
 		jQuery(tickboxes).each(function (elem) {
             if( tickboxes[elem].checked){checkcount=checkcount+1;}
         });
-	if (checkcount==tickboxes.length){jQuery('.rttickallcoll').attr('checked',true);}	
+	if (checkcount==tickboxes.length){jQuery('.rttickallcoll').prop('checked',true);}	
 }
 </script>
 <div class="Question">
@@ -678,7 +678,7 @@ $types=get_resource_types();
 $wrap=0;
 ?>
 <table><tr>
-<td align="middle"><input type='checkbox' class="rttickallcoll" id='rttickallcoll' name='rttickallcoll' <?php if (in_array("Collections",$restypes)) {?> checked <?php } ?> onclick='jQuery("#advancedform .tickboxcoll").each (function(index,Element) {jQuery(Element).attr("checked",(jQuery(".rttickallcoll").attr("checked")=="checked"));}); UpdateResultCount(); ' /><?php echo $lang['allcollectionssearchbar']?></td>
+<td align="middle"><input type='checkbox' class="rttickallcoll" id='rttickallcoll' name='rttickallcoll' <?php if (in_array("Collections",$restypes)) {?> checked <?php } ?> onclick='jQuery("#advancedform .tickboxcoll").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery(".rttickallcoll").prop("checked")));}); UpdateResultCount(); ' /><?php echo $lang['allcollectionssearchbar']?></td>
 
 <?php
 $clear_function="";
