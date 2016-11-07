@@ -3083,3 +3083,12 @@ $retina_mode=false;
 
 # $xframe_options - set this to SAMEORIGIN or ALLOW-FROM with a URL to allow site to be used in an iframe
 $xframe_options = "DENY";
+
+
+# FSTemplate - File System Template. Allows a system to contain an initial batch of resources that are stored elsewhere and read only.
+# Used by Montala for the ResourceSpace trial account templates, so each templated installation doesn't need to completely copy all the sample assets.
+$fstemplate_alt_threshold=0; # Applies to resource IDs BELOW this number only. Set the system so the user created resources start at 1000.
+$fstemplate_alt_storagedir=""; # Alternative filestore location for the sample files. The location of the template installation.
+$fstemplate_alt_storageurl="";
+$fstemplate_alt_scramblekey=""; # The scramble key used by the template installation, so paths must be scrambled using this instead for the sample images.
+

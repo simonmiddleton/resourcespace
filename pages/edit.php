@@ -148,6 +148,9 @@ $setarchivestate = getvalescaped('status', $resource["archive"], TRUE);
 # Allow alternative configuration settings for this resource type.
 resource_type_config_override($resource["resource_type"]);
 
+# File readonly?
+$resource_file_readonly=resource_file_readonly($ref);
+
 # If upload template, check if the user has upload permission.
 if ($ref<0 && !(checkperm("c") || checkperm("d")))
 {
@@ -350,7 +353,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 if (getval("autosave","")!="") {exit("SAVED");}
 
 
-if (getval("tweak","")!="")
+if (getval("tweak","")!="" && !$resource_file_readonly)
    {
    $tweak=getval("tweak","");
    switch($tweak)
@@ -681,7 +684,7 @@ if(0 > $ref)
             }
 
         // Allow to upload only if resource is not a data only type
-        if(0 < $ref && !in_array($resource['resource_type'], $data_only_resource_types))
+        if(0 < $ref && !in_array($resource['resource_type'], $data_only_resource_types) && !$resource_file_readonly)
             {
             ?>
             <a href="<?php echo $baseurl_short?>pages/upload_<?php echo $replace_upload_type ?>.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>&replace_resource=<?php echo urlencode($ref)  ?>&resource_type=<?php echo $resource['resource_type']?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (($resource["file_extension"]!="")?$lang["replacefile"]:$lang["uploadafile"]) ?></a>
@@ -691,7 +694,7 @@ if(0 > $ref)
             {hook("afterreplacefile");} 
          else 
             {hook("afteruploadfile");}
-         if (! $disable_upload_preview) 
+         if (!$disable_upload_preview && !$resource_file_readonly) 
             { ?>
             <br />
      <a href="<?php echo $baseurl_short?>pages/upload_preview.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["uploadpreview"]?></a><?php } ?>
@@ -708,7 +711,7 @@ if(0 > $ref)
   <?php }
   hook("beforeimagecorrection");
 
-  if (!checkperm("F*")) { ?>
+  if (!checkperm("F*") && !$resource_file_readonly) { ?>
   <div class="Question" id="question_imagecorrection">
    <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
    <option value=""><?php echo $lang["select"]?></option>
