@@ -47,11 +47,11 @@ function SystemConsoleactivitylogLoad(refresh_secs, extra)
 
 <input type="text" class="stdwidth" placeholder="Filter" value="<?php echo $filter; ?>" onkeyup="if(this.value=='')
 	   {
-	   jQuery('#filterbuttonactivitylog').attr('disabled','disabled');
-	   jQuery('#clearbuttonactivitylog').attr('disabled','disabled')
+	   jQuery('#filterbuttonactivitylog').prop('disabled',true);
+	   jQuery('#clearbuttonactivitylog').prop('disabled',true);
 	   } else {
-	   jQuery('#filterbuttonactivitylog').removeAttr('disabled');
-	   jQuery('#clearbuttonactivitylog').removeAttr('disabled')
+	   jQuery('#filterbuttonactivitylog').prop('disabled',false);
+	   jQuery('#clearbuttonactivitylog').prop('disabled',false);
 	   }
 	   filteractivitylog=this.value;
 	   var e = event;

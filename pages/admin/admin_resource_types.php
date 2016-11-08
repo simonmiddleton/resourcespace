@@ -251,10 +251,10 @@ function ReorderResourceTypes(idsInOrder)
 	  success: function() {
 		
 		//jQuery('.movelink').show();
-	  	jQuery('.movedownlink:last').attr( "disabled", "true" );
-		jQuery('.moveuplink:first').attr( "disabled", "true" );
-	  	jQuery('.movedownlink:not(:last)').removeAttr( "disabled" )
-		jQuery('.moveuplink:not(:first)').removeAttr( "disabled")
+	  	jQuery('.movedownlink:last').prop("disabled",true);
+		jQuery('.moveuplink:first').prop("disabled",true);
+	  	jQuery('.movedownlink:not(:last)').prop("disabled",false);
+		jQuery('.moveuplink:not(:first)').prop("disabled",false);
 		//$( "input:not(:checked) + span" )
 		//alert("SUCCESS");
 		//var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
@@ -314,7 +314,7 @@ function enableRestypesort(){
 enableRestypesort();
 
 jQuery(".moveuplink").click(function(e) {
-    if (jQuery(this).attr('disabled')) {
+    if (jQuery(this).prop('disabled')) {
 	      e.preventDefault();
 	      e.stopImmediatePropagation();
 	  }
@@ -325,7 +325,7 @@ jQuery(".moveuplink").click(function(e) {
     });
    
 jQuery(".movedownlink").click(function(e) {
-   if (jQuery(this).attr('disabled')) {
+   if (jQuery(this).prop('disabled')) {
 	      e.preventDefault();
 	      e.stopImmediatePropagation();
 	  }

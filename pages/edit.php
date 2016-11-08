@@ -418,7 +418,7 @@ jQuery(document).ready(function()
          }
          else
          {
-            e.preventDefault();
+            event.preventDefault();
             if(jQuery('#mainform'))
             {
                jQuery('.AutoSaveStatus').html('<?php echo $lang["saving"] ?>');
