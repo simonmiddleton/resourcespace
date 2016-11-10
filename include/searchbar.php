@@ -178,11 +178,6 @@ if ($display_user_rating_stars && $star_search){ ?>
                             document.getElementById('simple_search_form').submit();
                             }
                         });
-                    },
-                beforeTagSave: function(field, editor, tags, tag, val)
-                    {
-                    // keyup is triggered before tagEditor.
-                    // TDO: WAit here for validation from keyup if we save want to do anything with this value or we want to continue editing
                     }
                 });
 

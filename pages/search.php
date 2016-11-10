@@ -44,7 +44,7 @@ $modal  = ('true' == getval('modal', ''));
 
 if(false !== strpos($search, TAG_EDITOR_DELIMITER))
 	{
-	$search = str_replace(TAG_EDITOR_DELIMITER, ',', $search);
+	$search = str_replace(TAG_EDITOR_DELIMITER, ' ', $search);
 	}
 
 hook("moresearchcriteria");
