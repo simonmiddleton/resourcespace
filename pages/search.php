@@ -42,9 +42,9 @@ if ($k!="" && !$internal_share_access) {$use_checkboxes_for_selection=false;}
 $search = getvalescaped('search', '');
 $modal  = ('true' == getval('modal', ''));
 
-if(false !== strpos($search, '¬'))
+if(false !== strpos($search, TAG_EDITOR_DELIMITER))
 	{
-	$search = str_replace('¬', ',', $search);
+	$search = str_replace(TAG_EDITOR_DELIMITER, ',', $search);
 	}
 
 hook("moresearchcriteria");

@@ -159,24 +159,79 @@ if ($display_user_rating_stars && $star_search){ ?>
 
         if($simple_search_pills_view)
             {
-            ?>
-            // ¬ character used as a default so user can use only tab for creating new tags
             // $initial_tags is used for reloading search bar so that the tags will remain the same otherwise separate tags can become one big tag
-            jQuery('#ssearchbox').tagEditor({
-                'initialTags': <?php echo isset($initial_tags) ? json_encode($initial_tags) : json_encode(array()); ?>,
-                'delimiter': '¬',
-                'autocomplete': {
+            $initial_tags = (isset($initial_tags) ? $initial_tags : array());
+            ?>
+            jQuery('#ssearchbox').tagEditor(
+                {
+                'initialTags': <?php echo json_encode($initial_tags); ?>,
+                'delimiter': '<?php echo TAG_EDITOR_DELIMITER; ?>',
+                /*'autocomplete': {
                     'source': '<?php echo $autocomplete_src; ?>',
-                },
-                onChange: function(field, editor, tags) {
-                    jQuery(document).keyup(function(event) {
+                },*/
+                onChange: function(field, editor, tags)
+                    {
+                    jQuery(document).keyup(function(event)
+                        {
                         if(event.key == 'Enter' && event.which === 13)
                             {
                             document.getElementById('simple_search_form').submit();
                             }
-                    });
-                }
-            });
+                        });
+                    },
+                beforeTagSave: function(field, editor, tags, tag, val)
+                    {
+                    // keyup is triggered before tagEditor.
+                    // TDO: WAit here for validation from keyup if we save want to do anything with this value or we want to continue editing
+                    }
+                });
+
+            // GOTO
+            // Decide when to add tags:
+            // if space addTag
+            // if "word" then addTag
+            // don't do anything if open " but not closed
+            jQuery('ul.tag-editor').keyup(function(e)
+                {
+                var key          = e.keyCode || e.which;
+                var add_tag_flag = false;
+
+                // Get new tag value which is not yet finished/ rendered as a pill
+                var existing_tags = jQuery('#ssearchbox').tagEditor('getTags')[0].tags;
+                var all_tags      = jQuery('.tag-editor-tag:not(.deleted)', this).map(function(i, e)
+                                        {
+                                        var val = jQuery.trim(jQuery(this).hasClass('active') ? jQuery(this).find('input').val() : jQuery(e).text());
+
+                                        if(val)
+                                            {
+                                            return val;
+                                            }
+                                        }).get();
+                var new_tag       = (array_diff(existing_tags, all_tags)[0] || '');
+
+                // Find how many double quotes we have in our tag
+                // 1 => spaces are allowed
+                // 2 => add tag
+                var double_quotes_occurences = (new_tag.match(/"/g) || []).length;
+
+                // 32 is keyCode for " " (spacebar)
+                if(key == 32 && double_quotes_occurences == 0)
+                    {
+                    add_tag_flag = true;
+                    }
+                // 50 is keyCode for " (double quotes)
+                else if(key == 50 && double_quotes_occurences == 2)
+                    {
+                    add_tag_flag = true;
+                    }
+
+                if(add_tag_flag)
+                    {
+                    jQuery('#ssearchbox').tagEditor('addTag', new_tag);
+                    }
+
+                return;
+                });
             <?php
             }
         else

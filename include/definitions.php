@@ -116,6 +116,8 @@ define ('NODE_TOKEN_PREFIX','@@');
 define ('NODE_TOKEN_OR','|');
 define ('NODE_TOKEN_NOT','!');
 
+// Simple Search pills' delimiter
+define ('TAG_EDITOR_DELIMITER', '¬');
 // --------------------------------------------------------------------------------
 
 // used internally within this file
