@@ -73,6 +73,35 @@ for ($n=0;$n<count($keywords);$n++)
                 {
                 $searched_nodes[] = $node;
                 }
+
+            $searched_nodes = array_unique($searched_nodes);
+
+            foreach($searched_nodes as $searched_node)
+                {
+                $node = array();
+
+                if(!get_node($searched_node, $node))
+                    {
+                    continue;
+                    }
+
+                $field_index = array_search($node['resource_type_field'], array_column($fields, 'ref'));
+
+                if(false === $field_index)
+                    {
+                    continue;
+                    }
+
+                $searched_field = $fields[$field_index];
+
+                // We already have a field on search bar so remove this keyword from search box
+                if(true == $searched_field['simple_search'])
+                    {
+                    $quicksearch = str_replace(NODE_TOKEN_PREFIX . $searched_node, '', $quicksearch);
+                    }
+                }
+
+            $initial_tags = explode(',', $quicksearch);
             }
 		else
 			{
@@ -81,8 +110,7 @@ for ($n=0;$n<count($keywords);$n++)
 			}
 		}
 	}
-	
-	
+
 # Set the text search box to the stripped value.
 $quicksearch=join(" ",trim_array($simple));
 $quicksearch=str_replace(",-"," -",$quicksearch);
@@ -181,7 +209,6 @@ if ($display_user_rating_stars && $star_search){ ?>
                     }
                 });
 
-            // GOTO
             // Decide when to add tags:
             // if space addTag
             // if "word" then addTag

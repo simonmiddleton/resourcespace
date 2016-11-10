@@ -49,6 +49,57 @@ if(false !== strpos($search, TAG_EDITOR_DELIMITER))
 
 hook("moresearchcriteria");
 
+if($simple_search_pills_view)
+    {
+    // When searching for specific field options we convert search into nodeID search format (@@nodeID)
+    // This is done because if we also have the field displayed and we search for country:France this needs to 
+    // convert to @@74 in order for the field to have this option selected
+    $keywords = split_keywords($search, false, false, false, false, true);
+
+    foreach($keywords as $keyword)
+        {
+        if('' == trim($keyword))
+            {
+            continue;
+            }
+
+        if(false === strpos($search, ':'))
+            {
+            continue;
+            }
+
+        $specific_field_search = explode(':', $keyword);
+
+        if(2 !== count($specific_field_search))
+            {
+            continue;
+            }
+
+        $field_shortname = trim($specific_field_search[0]);
+
+        if('' == $field_shortname)
+            {
+            continue;
+            }
+
+        $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
+
+        if(0 == $resource_type_field)
+            {
+            continue;
+            }
+
+        $nodes = get_nodes($resource_type_field, null, true);
+
+        $node_found = get_node_by_name($nodes, $specific_field_search[1]);
+
+        if(0 < count($node_found))
+            {
+            $search = str_replace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
+            }
+        }
+    }
+
 # create a display_fields array with information needed for detailed field highlighting
 $df=array();
 
@@ -374,7 +425,11 @@ if (strpos($search,"!")!==false &&  strpos($search,"!properties")!==false) {$res
 
 # Do the search!
 $search=refine_searchstring($search);
-if (strpos($search,"!")===false || substr($search,0,11)=="!properties") {rs_setcookie('search', $search);}
+
+if(false === strpos($search, '!') || '!properties' == substr($search, 0, 11))
+    {
+    rs_setcookie('search', $search);
+    }
 
 hook('searchaftersearchcookie');
 if ($search_includes_resources || substr($search,0,1)==="!")
