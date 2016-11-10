@@ -439,7 +439,7 @@ if ($_FILES)
 					$checksum=md5_file($plfilepath);
 					}
 				$duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
-				if(count($duplicates)>0)
+				if(count($duplicates)>0 && !($replace_resource && in_array($replace_resource,$duplicates)))
 					{
 					debug("PLUPLOAD ERROR- duplicate file matches resources" . implode(",",$duplicates));
 					die('{"jsonrpc" : "2.0", "error" : {"code": 108, "message": "Duplicate file upload, file matches resources: ' . implode(",",$duplicates) . '", "duplicates": "' . implode(",",$duplicates) . '"}, "id" : "id"}');						
