@@ -371,17 +371,18 @@ if (getval("tweak","")!="" && !$resource_file_readonly)
          tweak_preview_images($ref,0,0.7,$resource["preview_extension"]);
          break;
       case "restore":
-         sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
-         if ($enable_thumbnail_creation_on_upload)
+		delete_previews($resource);
+        sql_query("update resource set has_image=0, preview_attempts=0 WHERE ref='" . $ref . "'");
+        if ($enable_thumbnail_creation_on_upload)
             {
             create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
             refresh_collection_frame();
             }
-         else
+        else
             {
             sql_query("update resource set preview_attempts=0, has_image=0 where ref='$ref'");
             }
-         break;
+        break;
       }
    hook("moretweakingaction", "", array($tweak, $ref, $resource));
    # Reload resource data.

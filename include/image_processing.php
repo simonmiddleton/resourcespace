@@ -2711,8 +2711,48 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
 	copy($url, $file_path); # Download the file.
 	return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);	# Process as a normal upload...
 	}
+
+/**
+ * Delete all preview files for specified resource id or resource data array
+ * 
+ * @param $resource array|integer Resource array or resource ID to delete preview files for
+ *
+ */	
+function delete_previews($resource)
+	{
+	global $ffmpeg_preview_extension;
 	
+	// If a resource array has been passed we already have the extensions
+	if(is_array($resource))
+		{
+		$extension=$resource["file_extension"];
+		$resource=$resource["ref"];
+		}
+	else
+		{
+		$resource_data=get_resource_data($resource);
+		$extension=$resource_data["file_extension"];
+		}
 	
+	$fullsizejpgpath=get_resource_path($resource,true,"",false,"jpg",-1,1,false,"",-1);			
+	# Delete the full size original if not a JPG resource
+	if($extension!="" && strtolower($extension)!="jpg" && file_exists($fullsizejpgpath))
+		{
+		unlink($fullsizejpgpath);
+		}			
+	
+	$dirinfo=pathinfo($fullsizejpgpath);	
+	$resourcefolder = $dirinfo["dirname"];
+
+	$presizes=sql_array("select id value from preview_size");
+	$presizes[]="snapshot"; // To include any video snapshots
+	
+	foreach($presizes as $presize)
+		{
+		array_map('unlink', glob($resourcefolder . "/" . $resource . $presize . "*"));
+		}
+	}
+
 	
 	
 	
