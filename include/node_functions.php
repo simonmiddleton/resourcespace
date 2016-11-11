@@ -221,7 +221,6 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $lo
                 }
             }
         }
-    
     return $return_nodes;
     }
 
@@ -264,7 +263,7 @@ function get_tree_node_level($ref)
     {
     if(!isset($ref))
         {
-        trigger_error('Node ID should be set and not NULL');
+        trigger_error('Node ID should be set AND NOT NULL');
         }
 
     $parent      = escape_check($ref);
@@ -951,7 +950,22 @@ function add_resource_nodes($resourceid,$nodes=array())
 		{$nodes=array($nodes);}
     sql_query("insert into resource_node (resource, node) values ('" . $resourceid . "','" . implode("'),('" . $resourceid . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
     }
-
+    
+function add_resource_nodes_multi($resources=array(),$nodes=array())
+	{
+	if(!is_array($nodes))
+		{$nodes=array($nodes);}
+        
+    $sql = "insert into resource_node (resource, node) values ";
+    $nodesql = "";
+    foreach($resources as $resource)
+        {
+        if($nodesql!=""){$nodesql .= ",";}
+        $nodesql .= " ('" . $resource . "','" . implode("'),('" . $resource . "','",$nodes) . "') ";    
+        }
+    $sql = "insert into resource_node (resource, node) values " . $nodesql . "  ON DUPLICATE KEY UPDATE hit_count=hit_count";
+    sql_query($sql);
+    }
 
 /**
 * Get nodes associated with a particular resource for all / a specific field (optionally)
@@ -991,30 +1005,40 @@ function delete_resource_nodes($resourceid,$nodes=array())
 	{
 	if(!is_array($nodes))
 		{$nodes=array($nodes);}
-	sql_query("delete from resource_node where resource ='$resourceid' and node in ('" . implode("','",$nodes) . "')");	
+	sql_query("DELETE FROM resource_node WHERE resource ='$resourceid' AND node in ('" . implode("','",$nodes) . "')");	
 	}
+    
+    
+function delete_resource_nodes_multi($resources=array(),$nodes=array())
+	{
+	if(!is_array($nodes))
+		{$nodes=array($nodes);}
+        
+    $sql = "DELETE FROM resource_node WHERE resource in ('" . implode("','",$resources) . "') AND node in ('" . implode("','",$nodes) . "')";
+    sql_query($sql);
+    }
 
 function delete_all_resource_nodes($resourceid)
 	{
-	sql_query("delete from resource_node where resource ='$resourceid';");	
+	sql_query("DELETE FROM resource_node WHERE resource ='$resourceid';");	
 	}
     
 function copy_resource_nodes($resourcefrom,$resourceto)
 	{
-	sql_query("insert into resource_node (resource,node, hit_count, new_hit_count) select '" . $resourceto . "', node, 0, 0 from resource_node rnold where resource ='" . $resourcefrom . "' ON DUPLICATE KEY UPDATE hit_count=rnold.new_hit_count;");	
+	sql_query("insert into resource_node (resource,node, hit_count, new_hit_count) select '" . $resourceto . "', node, 0, 0 FROM resource_node rnold WHERE resource ='" . $resourcefrom . "' ON DUPLICATE KEY UPDATE hit_count=rnold.new_hit_count;");	
 	}
     
 function get_nodes_from_keywords($keywords=array())
 	{
     if(!is_array($keywords)){$keywords=array($keywords);}
-	return sql_array("select node value from node_keyword where keyword in (" . implode(",",$keywords) . ");");	
+	return sql_array("select node value FROM node_keyword WHERE keyword in (" . implode(",",$keywords) . ");");	
 	}
     
 function update_resource_node_hitcount($resource,$nodes)
 	{
 	# For the specified $resource, increment the hitcount for each node in array
     if(!is_array($nodes)){$nodes=array($nodes);}
-	if (count($nodes)>0) {sql_query("update resource_node set new_hit_count=new_hit_count+1 where resource='$resource' and node in (" . implode(",",$nodes) . ")",false,-1,true,0);}
+	if (count($nodes)>0) {sql_query("update resource_node set new_hit_count=new_hit_count+1 WHERE resource='$resource' AND node in (" . implode(",",$nodes) . ")",false,-1,true,0);}
     }
 
 
@@ -1032,7 +1056,7 @@ function copy_resource_type_field_nodes($from, $to)
     global $FIXED_LIST_FIELD_TYPES;
 
     // Since field has been copied, they are both the same, so we only need to check the from field
-    $type = sql_value("SELECT `type` AS `value` FROM resource_type_field where ref = '{$from}'", 0);
+    $type = sql_value("SELECT `type` AS `value` FROM resource_type_field WHERE ref = '{$from}'", 0);
 
     if(!in_array($type, $FIXED_LIST_FIELD_TYPES))
         {
@@ -1158,3 +1182,4 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
 
     return array();
     }    
+

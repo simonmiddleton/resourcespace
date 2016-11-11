@@ -381,7 +381,6 @@ function get_resource_top_keywords($resource,$count)
 if (!function_exists("split_keywords")){
 function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false, $keepquotes=false)
 	{
-    debug("BANG - splitting " . $search);
 	# Takes $search and returns an array of individual keywords.
 	global $config_trimchars;
 
@@ -461,7 +460,6 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
             preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
             
             $splits=$matches[0];
-    debug("BANG - split into  " . print_r($matches[0],true));
             $ns=array();
             foreach ($splits as $split)
                 {
