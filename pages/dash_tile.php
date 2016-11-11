@@ -260,7 +260,7 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
         }
 	?>
 	<div class="Question">
-		<label for="tltype" class="stdwidth"><?php echo $lang["dashtilestyle"];?></label> 
+		<label for="tltype"><?php echo $lang["dashtilestyle"];?></label> 
 		<table>
 			<tbody>
 				<tr>
@@ -436,7 +436,7 @@ if(!$validpage)
 		{ 
 		?>
 		<div class="Question">
-			<label for="link" class="stdwidth"><?php echo $lang["dashtilelink"];?></label> 
+			<label for="link"><?php echo $lang["dashtilelink"];?></label> 
 			<input type="text" name="link" value="<?php echo htmlspecialchars($link);?>"/>
 			<div class="clearerleft"></div>
 		</div>
@@ -450,7 +450,7 @@ if(!$validpage)
 	if(!$notitle)
 		{ ?>
 		<div class="Question">
-			<label for="title" class="stdwidth"><?php echo $lang["dashtiletitle"];?></label> 
+			<label for="title"><?php echo $lang["dashtiletitle"];?></label> 
 			<input type="text" id="previewtitle" name="title" value="<?php echo htmlspecialchars(ucfirst ($title));?>"/>
 			<div class="clearerleft"></div>
 		</div>
@@ -468,7 +468,7 @@ if(!$validpage)
 			{$freetext="";}
 		?>
 		<div class="Question">
-			<label for="freetext" class="stdwidth"><?php echo $lang["dashtiletext"];?></label> 
+			<label for="freetext"><?php echo $lang["dashtiletext"];?></label> 
 			<input type="text" id="previewtext" name="freetext" value="<?php echo htmlspecialchars(ucfirst($freetext));?>"/>
 			<div class="clearerleft"></div>
 		</div>
@@ -495,7 +495,7 @@ if(!$validpage)
 	if($tile_type=="srch")
 		{?>
 		<div class="Question" id="showresourcecount" >
-			<label for="tltype" class="stdwidth"><?php echo $lang["showresourcecount"];?></label> 
+			<label for="tltype"><?php echo $lang["showresourcecount"];?></label> 
 			<table>
 				<tbody>
 					<tr>
@@ -567,7 +567,7 @@ if(!$validpage)
 		{
         ?>
 		<div class="Question">
-			<label for="tile_audience" class="stdwidth"><?php echo $lang['who_should_see_dash_tile']; ?></label> 
+			<label for="tile_audience"><?php echo $lang['who_should_see_dash_tile']; ?></label> 
 			<table>
 				<tbody>
 					<tr>
