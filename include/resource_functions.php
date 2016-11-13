@@ -100,11 +100,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
             {
             // Fixed list  fields use node IDs directly
             if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
-                {                                                                
+                {       
                 // Get currently selected nodes for this field 
                 $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']); 
+                debug("Current nodes for resource " . $ref . ": " . implode(",",$current_field_nodes));
                 
-                // Work out nodes submitted by user
+				// Work out nodes submitted by user
                 $ui_selected_node_values = array();
 
                 if(isset($user_set_values[$fields[$n]['ref']])
@@ -128,16 +129,36 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					$validnodes[$fieldnode["name"]]=$fieldnode["ref"];
 					}
 				
-				$ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);
-				
-	
 				$node_options = array_flip($validnodes);
 				
-                $newnodes = array_diff($ui_selected_node_values,$current_field_nodes);
-                $nodes_to_add = $nodes_to_add + $newnodes;
+				$ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);				
+					
+                $added_nodes = array_diff($ui_selected_node_values,$current_field_nodes);
+				debug("Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
+                $nodes_to_add = $nodes_to_add + $added_nodes;
 				
-                $removenodes = array_diff($current_field_nodes,$ui_selected_node_values);               
-                $nodes_to_remove = $nodes_to_remove + $removenodes;
+                $removed_nodes = array_diff($current_field_nodes,$ui_selected_node_values);    
+				debug("Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
+                $nodes_to_remove = $nodes_to_remove + $removed_nodes;				
+								
+				if(count($added_nodes)>0 || count($removed_nodes)>0)
+					{  
+					// Log this change, nodes will actually be added later	
+					$existing_nodes_value = '';
+					$new_nodes_val        = '';
+
+					// Build new value:
+					foreach($ui_selected_node_values as $ui_selected_node_value)
+						{
+						$new_nodes_val .= ",{$node_options[$ui_selected_node_value]}";
+						}
+					// Build existing value:
+					foreach($current_field_nodes as $current_field_node)
+						{
+						$existing_nodes_value .= ",{$node_options[$current_field_node]}";
+						}
+					resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $existing_nodes_value, $new_nodes_val);
+					}
                 }
 			else
 				{
@@ -333,43 +354,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
     // Autocomplete any blank fields.
     autocomplete_blank_fields($ref);
 
-    // Log any changes we have done to nodes
-    // When saving a particular field, log it
-    //if(0 < count($nodes_to_add) && '' != $autosave_field && 0 < $autosave_field) 
-   if((count($nodes_to_add)>0 || count($nodes_to_remove)>0)  && '' != $autosave_field && 0 < $autosave_field)
-        {
-        $fields_autosave_field_index = array_search($autosave_field, array_column($fields, 'ref'));
-
-        if(false !== $fields_autosave_field_index)
-            {
-            $existing_nodes_value = '';
-            $new_nodes_val        = '';
-
-            // Build new value:
-            foreach($nodes_to_add as $node_to_add)
-                {
-                $new_nodes_val .= ",{$node_options[$node_to_add]}";
-                }
-
-            // Build existing value:
-            foreach(get_resource_nodes($ref, $autosave_field) as $existing_node_id)
-                {
-                $existing_nodes_value .= ",{$node_options[$existing_node_id]}";
-                }
-
-            resource_log($ref, LOG_CODE_EDITED, $autosave_field, '', $existing_nodes_value, $new_nodes_val);
-            }
-        }
-
     // Update resource_node table
-	debug("BANG  " . print_r($nodes_to_remove));
     db_begin_transaction();
     delete_resource_nodes($ref, $nodes_to_remove);
     if(0 < count($nodes_to_add))
         {
         add_resource_nodes($ref, $nodes_to_add);
-		                   
-   print_r($nodes_to_add);
         }
     db_end_transaction();
 
