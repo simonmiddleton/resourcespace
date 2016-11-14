@@ -373,14 +373,37 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                     // Convert legacy fixed list field search to new format for nodes (@@NodeID)
                     else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo[0]['type']) && in_array($fieldinfo[0]['type'], $FIXED_LIST_FIELD_TYPES))
                         {
-                        // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
-                        $field_nodes      = get_nodes($fieldinfo[0]['ref'], null, false, true);
-                        $field_node_index = array_search($kw[1], array_column($field_nodes, 'name'));
-     
-                        // Take the ref of the node and put it in the node_bucket
-                        if(false !== $field_node_index)
+                        // We've searched using a legacy format (ie. fieldShortName:keyword OR fieldShortName:keyword1;keyword2), try and convert it to @@NodeID
+                        $field_nodes      = get_nodes($fieldinfo[0]['ref'], null, true);
+
+                        // we don't have multiple options, so simulate it
+                        $specific_field_searched_options = array();
+
+                        if(false === strpos($kw[1], ';'))
                             {
-                            $node_bucket[][] = $field_nodes[$field_node_index]['ref'];
+                            $specific_field_searched_options[] = $kw[1];
+                            }
+                        else
+                            {
+                            $specific_field_searched_options = explode(';', $kw[1]);
+                            }
+
+                        $specific_field_node_bucket = array();
+                        foreach($specific_field_searched_options as $specific_field_searched_option)
+                            {
+                            $node_found = get_node_by_name($field_nodes, $specific_field_searched_option);
+         
+                            // Take the ref of the node and put it in node_bucket_or
+                            if(0 < count($node_found))
+                                {
+                                $specific_field_node_bucket[] = $node_found['ref'];
+                                }
+                            }
+
+                        // Take the ref(s) and put it/ them in the node_bucket
+                        if(0 < count($specific_field_node_bucket))
+                            {
+                            $node_bucket[] = $specific_field_node_bucket;
                             }
                         }
                     else
