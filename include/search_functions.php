@@ -1425,3 +1425,26 @@ function resolve_nodes_from_string($string)
 
     return $return;
     }
+
+
+/**
+* Utility function which helps rebuilding a specific field search string
+* from a node element
+* 
+* @param array $node A node element as returned by get_node() or get_nodes()
+* 
+* @return string
+*/
+function rebuild_specific_field_search_from_node(array $node)
+    {
+    if(0 == count($node))
+        {
+        return '';
+        }
+
+    $field_shortname = sql_value("SELECT name AS `value` FROM resource_type_field where ref = '{$node['resource_type_field']}'", "field{$node['resource_type_field']}");
+
+    // Note: at the moment there is no need to return a specific field search by multiple options
+    // Example: country:keyword1;keyword2
+    return "$field_shortname:{$node['name']}";
+    }

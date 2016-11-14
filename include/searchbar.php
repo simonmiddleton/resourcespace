@@ -89,6 +89,10 @@ for ($n=0;$n<count($keywords);$n++)
 
                 if(false === $field_index)
                     {
+                    $quicksearch = str_replace(NODE_TOKEN_PREFIX . $searched_node,
+                        rebuild_specific_field_search_from_node($node),
+                        $quicksearch);
+
                     continue;
                     }
 
