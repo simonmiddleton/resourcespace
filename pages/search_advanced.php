@@ -175,7 +175,7 @@ else
 		{$restypes=explode(",",getvalescaped("restypes",""));}
   for ($n=0;$n<count($keywords);$n++)
 	  {
-	  $keyword=$keywords[$n];
+	  $keyword=trim($keywords[$n]);
 	  if (strpos($keyword,":")!==false && substr($keyword,0,1)!="!")
 		  {
 		  $nk=explode(":",$keyword);
