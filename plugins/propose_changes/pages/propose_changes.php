@@ -767,15 +767,15 @@ function UpdateProposals(checkbox, fieldref)
     {
     if (checkbox.checked)
         {
-        jQuery('#field_' + fieldref).removeAttr('disabled'); 
-		jQuery('#propose_change_' + fieldref).removeAttr('disabled')
+        jQuery('#field_' + fieldref).prop('disabled',false); 
+		jQuery('#propose_change_' + fieldref).prop('disabled',false);
 		checkprefix="input[id^=" + fieldref + "_]";		
-		jQuery(checkprefix).removeAttr('disabled');//enable checkboxes
+		jQuery(checkprefix).prop('disabled',false);//enable checkboxes
         }
     else
         {        
-        jQuery('#field_' + fieldref).attr('disabled','disabled'); 
-        jQuery('#propose_change_' + fieldref).attr('disabled','disabled');      
+        jQuery('#field_' + fieldref).prop('disabled',true); 
+        jQuery('#propose_change_' + fieldref).prop('disabled',true);      
         }
     }
     
@@ -783,15 +783,15 @@ function DeleteProposal(checkbox, fieldref)
     {
 	if (checkbox.checked)
         {            
-        jQuery('#field_' + fieldref).attr('disabled','disabled'); 
+        jQuery('#field_' + fieldref).prop('disabled',true); 
 		checkprefix="input[id^=" + fieldref + "_]";
-		jQuery(checkprefix).attr('disabled','disabled'); //disable checkboxes
-        jQuery('#accept_change_' + fieldref).removeAttr('checked');    
-        jQuery('#accept_change_' + fieldref).attr('disabled','disabled'); 
+		jQuery(checkprefix).prop('disabled',true); //disable checkboxes
+        jQuery('#accept_change_' + fieldref).prop('checked',false);    
+        jQuery('#accept_change_' + fieldref).prop('disabled',true); 
         }
     else
         {  
-        jQuery('#accept_change_' + fieldref).removeAttr('disabled');              
+        jQuery('#accept_change_' + fieldref).prop('disabled',false);              
         }
     }
     
@@ -800,13 +800,13 @@ function ProposeChangesUpdateAll(checkbox)
     {
     if (checkbox.checked)
         {
-        jQuery('.ProposeChangesAcceptCheckbox').attr('checked','checked'); 		
-        jQuery('.ProposeChangesDeleteCheckbox').removeAttr('checked'); 
-        jQuery('.ProposeChangesAcceptCheckbox').removeAttr('disabled');
+        jQuery('.ProposeChangesAcceptCheckbox').prop('checked',true); 		
+        jQuery('.ProposeChangesDeleteCheckbox').prop('checked',false); 
+        jQuery('.ProposeChangesAcceptCheckbox').prop('disabled',false);
         }
     else
         {  
-        jQuery('.ProposeChangesAcceptCheckbox').removeAttr('checked'); 
+        jQuery('.ProposeChangesAcceptCheckbox').prop('checked',false); 
         }
     
     jQuery('.ProposeChangesAcceptCheckbox').trigger('change');
@@ -816,14 +816,14 @@ function ProposeChangesDeleteAll(checkbox)
     {
     if (checkbox.checked)
         {
-        jQuery('.ProposeChangesDeleteCheckbox').attr('checked','checked');  
-        jQuery('.ProposeChangesAcceptCheckbox').removeAttr('checked');  
-        jQuery('.ProposeChangesAcceptCheckbox').attr('disabled','disabled'); 		
+        jQuery('.ProposeChangesDeleteCheckbox').prop('checked',true);  
+        jQuery('.ProposeChangesAcceptCheckbox').prop('checked',false);  
+        jQuery('.ProposeChangesAcceptCheckbox').prop('disabled',true); 		
         }
     else
         {  
-        jQuery('.ProposeChangesDeleteCheckbox').removeAttr('checked'); 
-        jQuery('.ProposeChangesAcceptCheckbox').removeAttr('disabled');    
+        jQuery('.ProposeChangesDeleteCheckbox').prop('checked',false); 
+        jQuery('.ProposeChangesAcceptCheckbox').prop('disabled',false);    
         }
     
     jQuery('.ProposeChangesAcceptCheckbox').trigger('change');
