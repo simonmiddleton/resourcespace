@@ -373,37 +373,14 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                     // Convert legacy fixed list field search to new format for nodes (@@NodeID)
                     else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo[0]['type']) && in_array($fieldinfo[0]['type'], $FIXED_LIST_FIELD_TYPES))
                         {
-                        // We've searched using a legacy format (ie. fieldShortName:keyword OR fieldShortName:keyword1;keyword2), try and convert it to @@NodeID
-                        $field_nodes      = get_nodes($fieldinfo[0]['ref'], null, true);
-
-                        // we don't have multiple options, so simulate it
-                        $specific_field_searched_options = array();
-
-                        if(false === strpos($kw[1], ';'))
+                        // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
+                        $field_nodes      = get_nodes($fieldinfo[0]['ref'], null, false, true);
+                        $field_node_index = array_search($kw[1], array_column($field_nodes, 'name'));
+     
+                        // Take the ref of the node and put it in the node_bucket
+                        if(false !== $field_node_index)
                             {
-                            $specific_field_searched_options[] = $kw[1];
-                            }
-                        else
-                            {
-                            $specific_field_searched_options = explode(';', $kw[1]);
-                            }
-
-                        $specific_field_node_bucket = array();
-                        foreach($specific_field_searched_options as $specific_field_searched_option)
-                            {
-                            $node_found = get_node_by_name($field_nodes, $specific_field_searched_option);
-         
-                            // Take the ref of the node and put it in node_bucket_or
-                            if(0 < count($node_found))
-                                {
-                                $specific_field_node_bucket[] = $node_found['ref'];
-                                }
-                            }
-
-                        // Take the ref(s) and put it/ them in the node_bucket
-                        if(0 < count($specific_field_node_bucket))
-                            {
-                            $node_bucket[] = $specific_field_node_bucket;
+                            $node_bucket[][] = $field_nodes[$field_node_index]['ref'];
                             }
                         }
                     else
@@ -681,54 +658,56 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 						{
 						$skipped_last = true;       
 						}
-						
-					$last_key_offset=1;
-					if (isset($skipped_last) && $skipped_last) {$last_key_offset=2;} # Support skipped keywords - if the last keyword was skipped (listed in $noadd), increase the allowed position from the previous keyword. Useful for quoted searches that contain $noadd words, e.g. "black and white" where "and" is a skipped keyword.
-					
-					$keyref = resolve_keyword($quotedkeyword, true); # Resolve keyword.	
-										
-					 // Add code to find matching keywords in non-fixed list fields  
-					$union_restriction_clause = "";
-					$union_restriction_clause_node = "";
-
-					// TODO: change $c to [union_index]
-
-					if (!empty($sql_exclude_fields))
-						{
-						$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in (" . $sql_exclude_fields . ")";
-						$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . $sql_exclude_fields .  "))";
-						}
-
-					if (count($hidden_indexed_fields) > 0)
-						{
-						$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
-						$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
-						}
-					 
-					if ($qk==1)
-						{
-						$freeunion = " SELECT qrk_" . $c . "_" . $qk . ".resource, [bit_or_condition] qrk_" . $c . "_" . $qk . ".hit_count AS score FROM resource_keyword qrk_" . $c . "_" . $qk;                                                
-						// Add code to find matching nodes in resource_node
-						$fixedunion = " SELECT rn_" . $c . "_" . $qk . ".resource, [bit_or_condition] rn_" . $c . "_" . $qk . ".hit_count AS score FROM resource_node rn_" . $c . 
-							"_" . $qk . " LEFT OUTER JOIN `node_keyword` nk_" . $c . "_" . $qk . " ON rn_" . $c . "_" . $qk . ".node=nk_" . $c . "_" . $qk . ".node LEFT OUTER JOIN `node` nn" . $c . "_" . $qk . " ON rn_" . $c . "_" . $qk . ".node=nn" . $c . "_" . $qk . ".ref " .
-							" AND (nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node . ")"; 
-						$freeunioncondition="qrk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
-						$fixedunioncondition="nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node ;
-						}
 					else
 						{
-						# For keywords other than the first one, check the position is next to the previous keyword.                                           
-						$freeunion .= " JOIN resource_keyword qrk_" . $c . "_" . $qk . "
-							ON qrk_" . $c . "_" . $qk . ".resource = qrk_" . $c . "_" . ($qk-1) . ".resource
-							AND qrk_" . $c . "_" . $qk . ".keyword = '" .$keyref . "'
-							AND qrk_" . $c . "_" . $qk . ".position = qrk_" . $c . "_" . ($qk-1) . ".position + " . $last_key_offset . "
-							AND qrk_" . $c . "_" . $qk . ".resource_type_field = qrk_" . $c . "_" . ($qk-1) . ".resource_type_field";    
-					   
-					   # For keywords other than the first one, check the position is next to the previous keyword.
-                        # Also check these occurances are within the same field.
-						$fixedunion .=" JOIN `node_keyword` nk_" . $c . "_" . $qk . " ON nk_" . $c . "_" . $qk . ".node = nk_" . $c . "_" . ($qk-1) . ".node AND nk_" . $c . "_" . $qk . ".keyword = '" . $keyref . "' AND  nk_" . $c . "_" . $qk . ".position=nk_" . $c . "_" . ($qk-1) . ".position+" . $last_key_offset ;
-					    }
-					$qk++;
+						$last_key_offset=1;
+						if (isset($skipped_last) && $skipped_last) {$last_key_offset=2;} # Support skipped keywords - if the last keyword was skipped (listed in $noadd), increase the allowed position from the previous keyword. Useful for quoted searches that contain $noadd words, e.g. "black and white" where "and" is a skipped keyword.
+						
+						$keyref = resolve_keyword($quotedkeyword, true); # Resolve keyword.	
+											
+						 // Add code to find matching keywords in non-fixed list fields  
+						$union_restriction_clause = "";
+						$union_restriction_clause_node = "";
+
+						// TODO: change $c to [union_index]
+
+						if (!empty($sql_exclude_fields))
+							{
+							$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in (" . $sql_exclude_fields . ")";
+							$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . $sql_exclude_fields .  "))";
+							}
+
+						if (count($hidden_indexed_fields) > 0)
+							{
+							$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
+							$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+							}
+						 
+						if ($qk==1)
+							{
+							$freeunion = " SELECT qrk_" . $c . "_" . $qk . ".resource, [bit_or_condition] qrk_" . $c . "_" . $qk . ".hit_count AS score FROM resource_keyword qrk_" . $c . "_" . $qk;                                                
+							// Add code to find matching nodes in resource_node
+							$fixedunion = " SELECT rn_" . $c . "_" . $qk . ".resource, [bit_or_condition] rn_" . $c . "_" . $qk . ".hit_count AS score FROM resource_node rn_" . $c . 
+								"_" . $qk . " LEFT OUTER JOIN `node_keyword` nk_" . $c . "_" . $qk . " ON rn_" . $c . "_" . $qk . ".node=nk_" . $c . "_" . $qk . ".node LEFT OUTER JOIN `node` nn" . $c . "_" . $qk . " ON rn_" . $c . "_" . $qk . ".node=nn" . $c . "_" . $qk . ".ref " .
+								" AND (nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node . ")"; 
+							$freeunioncondition="qrk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
+							$fixedunioncondition="nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node ;
+							}
+						else
+							{
+							# For keywords other than the first one, check the position is next to the previous keyword.                                           
+							$freeunion .= " JOIN resource_keyword qrk_" . $c . "_" . $qk . "
+								ON qrk_" . $c . "_" . $qk . ".resource = qrk_" . $c . "_" . ($qk-1) . ".resource
+								AND qrk_" . $c . "_" . $qk . ".keyword = '" .$keyref . "'
+								AND qrk_" . $c . "_" . $qk . ".position = qrk_" . $c . "_" . ($qk-1) . ".position + " . $last_key_offset . "
+								AND qrk_" . $c . "_" . $qk . ".resource_type_field = qrk_" . $c . "_" . ($qk-1) . ".resource_type_field";    
+						   
+						   # For keywords other than the first one, check the position is next to the previous keyword.
+							# Also check these occurances are within the same field.
+							$fixedunion .=" JOIN `node_keyword` nk_" . $c . "_" . $qk . " ON nk_" . $c . "_" . $qk . ".node = nk_" . $c . "_" . ($qk-1) . ".node AND nk_" . $c . "_" . $qk . ".keyword = '" . $keyref . "' AND  nk_" . $c . "_" . $qk . ".position=nk_" . $c . "_" . ($qk-1) . ".position+" . $last_key_offset ;
+							}
+						$qk++;
+						} // End of if keyword not excluded (not in $noadd array)
 					} // End of each keyword in quoted string
 					
 				if($omit)# Exclude matching resources from query (omit feature)

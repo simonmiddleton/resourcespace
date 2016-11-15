@@ -466,7 +466,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
                 if(!(substr($split,0,1)=="\"" && substr($split,-1,1)=="\"") && strpos($split,",")!==false)
                     {
                     $split=explode(",",$split);
-                    $ns = $ns + $split;
+                    $ns = array_merge($ns,$split);
                     }
                 else
                     {
