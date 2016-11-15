@@ -12,9 +12,9 @@ debug("Resource B: " . $resourceb );
 debug("Resource C: " . $resourcec);
 
 // Add new nodes to field
-$joeynode = set_node(NULL, 74, "Joey",'',1000);
-$johnnynode = set_node(NULL, 74, "Johnny",'',1000);
-$deedeenode = set_node(NULL, 74, "Dee Dee",'',1000);
+$joeynode = set_node(NULL, 73, "Joey",'',1000);
+$johnnynode = set_node(NULL, 73, "Johnny",'',1000);
+$deedeenode = set_node(NULL, 73, "Dee Dee",'',1000);
 debug("node1: " . $joeynode . "\n");
 debug("node2: " . $johnnynode . "\n");
 debug("node3: " . $deedeenode . "\n");

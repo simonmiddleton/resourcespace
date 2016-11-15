@@ -16,12 +16,12 @@ debug("Resource B: " . $resourceb );
 debug("Resource C: " . $resourcec);
 
 // Add new nodes to field
-$zebranode = set_node(NULL, 74, "zebra",'',1000);
-$giraffenode = set_node(NULL, 74, "giraffe",'',1000);
-$capybaranode = set_node(NULL, 74, "capybara",'',1000);
-$mammalnode = set_node(NULL, 74, "mammal",'',1000);
-$threeblindmicenode = set_node(NULL, 74, "three blind mice",'',1000);
-$firstthirdsecondnode = set_node(NULL, 74, "first third second",'',1000);
+$zebranode = set_node(NULL, 73, "zebra",'',1000);
+$giraffenode = set_node(NULL, 73, "giraffe",'',1000);
+$capybaranode = set_node(NULL, 73, "capybara",'',1000);
+$mammalnode = set_node(NULL, 73, "mammal",'',1000);
+$threeblindmicenode = set_node(NULL, 73, "three blind mice",'',1000);
+$firstthirdsecondnode = set_node(NULL, 73, "first third second",'',1000);
 debug("node1: " . $zebranode . "\n");
 debug("node2: " . $giraffenode . "\n");
 debug("node3: " . $capybaranode . "\n");
@@ -52,10 +52,8 @@ update_field($resourcec,1,'large, rodent, Hydrochoerus, mammal, animal');
 // traditional keyword lookup:
 // select * from resource_keyword left outer join keyword on resource_keyword.keyword=keyword.ref where resource >= 950 and resource <=955
 
-
 // search for 'mammal' which will return resource a, b and c (from keywords and nodes)
 
-echo "search for mammal\n";
 $results=do_search('mammal');
 if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref']) ||
     (
@@ -93,16 +91,28 @@ if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']
 ) return false;
 
 
-// quoted search 
+// quoted search via resource_keyword
 $results=do_search('"first second third"');
 if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
 
-// quoted search
+// quoted search via node_keyword
 $results=do_search('"three blind mice"');
 if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourceb) return false;
 
 // negative test case to check that incorrect order does not return a match
 $results=do_search('"mice blind"');  // this would typically return a suggestion string 
 if(is_array($results)) return false;
+
+// Test node searches after truncating resource_keyword
+sql_query("truncate resource_keyword");
+
+// search for 'capybara' which will produce 1 result (via resource_node->node_keyword)
+$results=do_search('giraffe');
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourceb) return false;
+
+// quoted search via node_keyword
+$results=do_search('"first third second"');
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcec) return false;
+
 
 return true;

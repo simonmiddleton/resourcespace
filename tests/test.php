@@ -55,6 +55,14 @@ function create_new_db($db_name)
     mysqli_query($db,"INSERT INTO `{$db_name}`.`sysvars`(`name`,`value`) VALUE ('upgrade_system_level',999)");
     }
 
+// Used to check that search results return the expected resources
+function match_values( $arraya , $arrayb ) 
+	{ 
+    sort( $arraya ); 
+    sort( $arrayb ); 
+	return $arraya == $arrayb; 
+	} 
+
 $mysql_db = "rs_test_db";
 $test_user_name = "admin";
 $test_user_password = "admin123";

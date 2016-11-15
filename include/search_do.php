@@ -841,12 +841,24 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
             $filterfields=explode("|",escape_check($filterfield));
 
             # Find field(s) - multiple fields can be returned to support several fields with the same name.
-            $f=sql_array("select ref value from resource_type_field where name in ('" . join("','",$filterfields) . "')");
+            $f=sql_query("select ref, type from resource_type_field where name in ('" . join("','",$filterfields) . "')");
             if (count($f)==0)
                 {
                 exit ("Field(s) with short name '" . $filterfield . "' not found in user group search filter.");
                 }
-
+			foreach ($f as $fd)
+				{
+				$fn=array(); // Node filter fields
+				$ff=array(); // Free text filter fields
+				if(in_array($fd['type'], $FIXED_LIST_FIELD_TYPES))
+					{
+					$fn[] = $fd['ref'];
+					}
+				else
+					{
+					$ff[] = $fd['ref'];
+					}
+				}
             # Find keyword(s)
             $ks=explode("|",strtolower(escape_check($s[1])));
             for($x=0;$x<count($ks);$x++)
@@ -871,34 +883,52 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
             if (!$filter_not)
                 {
                 # Standard operation ('=' syntax)
-                // TODO: change resource_keyword to resource_node -> node_keyword
-                // echo "***************** HERE 4 *****************" . PHP_EOL;
-                $sql_join.=" join resource_keyword filter" . $n . " on r.ref=filter" . $n . ".resource and filter" . $n . ".resource_type_field in ('" . join("','",$f) . "') and ((filter" . $n . ".keyword in ('" .     join("','",$kw) . "')) ";
-
-                # Option for custom access to override search filters.
-                # For this resource, if custom access has been granted for the user or group, nullify the search filter for this particular resource effectively selecting "true".
-                global $custom_access_overrides_search_filter;
-                if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
-                    {
-                    $sql_join.="or ((rca.access is not null and rca.access<>2) or (rca2.access is not null and rca2.access<>2))";
-                    }
-                $sql_join.=")";
-
-                if ($search_filter_strict > 1)
-                    {
-                    $sql_join.=" join resource_data dfilter" . $n . " on r.ref=dfilter" . $n . ".resource and dfilter" . $n . ".resource_type_field in ('" . join("','",$f) . "') and (find_in_set('". join ("', dfilter" . $n . ".value) or find_in_set('", explode("|",escape_check($s[1]))) ."', dfilter" . $n . ".value))";
-                    }
+				if(count($ff)>0)
+					{
+					$sql_join.=" join resource_keyword filter" . $n . " on r.ref=filter" . $n . ".resource and filter" . $n . ".resource_type_field in ('" . join("','",$ff) . "') and ((filter" . $n . ".keyword in ('" .     join("','",$kw) . "')) ";
+					
+					# Option for custom access to override search filters.
+					# For this resource, if custom access has been granted for the user or group, nullify the search filter for this particular resource effectively selecting "true".
+					global $custom_access_overrides_search_filter;
+					if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
+						{
+						$sql_join.="or ((rca.access is not null and rca.access<>2) or (rca2.access is not null and rca2.access<>2))";
+						}
+					$sql_join.=")";
+					if ($search_filter_strict > 1)
+						{
+						$sql_join.=" join resource_data dfilter" . $n . " on r.ref=dfilter" . $n . ".resource and dfilter" . $n . ".resource_type_field in ('" . join("','",$ff) . "') and (find_in_set('". join ("', dfilter" . $n . ".value) or find_in_set('", explode("|",escape_check($s[1]))) ."', dfilter" . $n . ".value))";
+						}
+					}
+				if(count($fn)>0)
+					{
+					$sql_join.=" join resource_node filterrn" . $n . " on r.ref=filterrn" . $n . ".resource join node filtern" . $n . " on filtern" . $n . ".ref=filterrn" . $n . ".node and filtern" . $n . ".resource_type_field in  ('" . join("','",$fn) . "') and (filtern" . $n . ".name in ('" .     join("','",$ks) . "') ";
+					if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
+						{
+						$sql_join.="or ((rca.access is not null and rca.access<>2) or (rca2.access is not null and rca2.access<>2))";
+						}
+					$sql_join.=")";
+					}
                 }
             else
                 {
                 # Inverted NOT operation ('!=' syntax)
-                if ($sql_filter!="")
-                    {
-                    $sql_filter.=" and ";
-                    }
-                // TODO: change resource_keyword to resource_node -> node_keyword
-                // echo "***************** HERE 5 *****************" . PHP_EOL;
-                $sql_filter .= "((r.ref not in (select resource from resource_keyword where resource_type_field in ('" . join("','",$f) . "') and keyword in ('" .    join("','",$kw) . "'))) "; # Filter out resources that do contain the keyword(s)
+                if(count($ff)>0)
+					{
+					if ($sql_filter!="")
+						{
+						$sql_filter.=" and ";
+						}
+					$sql_filter .= "((r.ref not in (select resource from resource_keyword where resource_type_field in ('" . join("','",$ff) . "') and keyword in ('" .    join("','",$kw) . "'))) "; # Filter out resources that do contain the keyword(s)
+					}
+				if(count($fn)>0)
+					{
+					if ($sql_filter!="")
+						{
+						$sql_filter.=" and ";
+						}
+					$sql_filter .= "((r.ref not in (select rn.resource from resource_node rn left join node n on rn.node=n.ref where n.resource_type_field in ('" . join("','",$fn) . "') and n.name in ('" .    join("','",$ks) . "'))) "; # Filter out resources that do contain the keyword(s)
+					}
 
                 # Option for custom access to override search filters.
                 # For this resource, if custom access has been granted for the user or group, nullify the search filter for this particular resource effectively selecting "true".
