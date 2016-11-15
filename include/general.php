@@ -3416,7 +3416,7 @@ function check_access_key($resource,$key)
 		$userinfo=sql_query("select g.ref usergroup,g.permissions,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
 		if (count($userinfo)>0)
 			{
-                        $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
+            $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
 			$userpermissions=explode(",",$userinfo[0]["permissions"]);
 			$usersearchfilter=$userinfo[0]["search_filter"];
 
@@ -3450,7 +3450,7 @@ function check_access_key($resource,$key)
 				
 			}
 			
-			if($external_share_groups_config_options || stripos(trim($userinfo[0]["config_options"]),"external_share_groups_config_options=true")!==false)
+			if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
 				{
 				# Apply config override options
 				$config_options=trim($userinfo[0]["config_options"]);
