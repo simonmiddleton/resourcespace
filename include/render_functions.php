@@ -1133,9 +1133,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     CentralSpaceLoad(option_url, true);
                     break;
                 }
-
+				
                 // Go back to no action option
-                jQuery('#<?php echo $action_selection_id; ?> option[value=""]').attr('selected', 'selected');
+                jQuery('#<?php echo $action_selection_id; ?> option[value=""]').prop('selected', true);
 
         }
         </script>
