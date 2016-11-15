@@ -230,20 +230,25 @@ else { ?>
 	<?php 
 	} 
 	hook("responsivethumbsloaded");
-	?>
 
-    <!-- Responsive -->
-    <script type="text/javascript">
-    jQuery(document).ready(function()
+    if($responsive_ui)
         {
-        if(typeof responsive_newpage !== 'undefined' && responsive_newpage === true)
+        ?>
+        <!-- Responsive -->
+        <script type="text/javascript">
+        jQuery(document).ready(function()
             {
-            hideMyCollectionsCols();
-            responsiveCollectionBar();
-            responsive_newpage = false;
-            }
-        }); 
-    </script>
+            if(typeof responsive_newpage !== 'undefined' && responsive_newpage === true)
+                {
+                hideMyCollectionsCols();
+                responsiveCollectionBar();
+                responsive_newpage = false;
+                }
+            }); 
+        </script>
+        <?php
+        }
+        ?>
 	<!-- Drag and Drop -->
 	<script>
 		jQuery('#CentralSpace').on('prepareTrash', function() {

@@ -450,141 +450,144 @@ if (!hook("replacecdivrender"))
 	<?php } // end omit_collectiondiv_load_pages 
 	else {?><div class="ui-layout-south" ></div><script>myLayout=jQuery('body').layout({south__initHidden: true });	</script><?php }
 	}
-	?>
 
-<!-- Responsive -->
-<script src="<?php echo $baseurl_short; ?>lib/js/responsive.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
-<script>
-function toggleSimpleSearch()
+if($responsive_ui)
     {
-    if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
+    ?>
+    <!-- Responsive -->
+    <script src="<?php echo $baseurl_short; ?>lib/js/responsive.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+    <script>
+    function toggleSimpleSearch()
         {
-        jQuery("#searchspace").removeClass("ResponsiveSimpleSearch");
-        jQuery("#Rssearchexpand").val("<?php echo $lang["responsive_more"];?>");
+        if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
+            {
+            jQuery("#searchspace").removeClass("ResponsiveSimpleSearch");
+            jQuery("#Rssearchexpand").val("<?php echo $lang["responsive_more"];?>");
+            }
+        else
+            {
+            jQuery("#searchspace").addClass("ResponsiveSimpleSearch");
+            jQuery("#Rssearchexpand").val(" <?php echo $lang["responsive_less"];?> ");
+            }
         }
-    else
+
+    function toggleResultOptions()
         {
-        jQuery("#searchspace").addClass("ResponsiveSimpleSearch");
-        jQuery("#Rssearchexpand").val(" <?php echo $lang["responsive_less"];?> ");
+        jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock").slideToggle(100);
+        jQuery("#SearchResultFound").hide();
         }
-    }
 
-function toggleResultOptions()
-    {
-    jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock").slideToggle(100);
-    jQuery("#SearchResultFound").hide();
-    }
-
-/* Responsive Stylesheet inclusion based upon viewing device */
-if(document.createStyleSheet)
-    {
-    document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
-    }
-else
-    {
-    jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
-    }
-
-if(!is_touch_device() && jQuery(window).width() <= 1300)
-    {
+    /* Responsive Stylesheet inclusion based upon viewing device */
     if(document.createStyleSheet)
         {
-        document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>');
+        document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
         }
     else
         {
-        jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+        jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
         }
+
+    if(!is_touch_device() && jQuery(window).width() <= 1300)
+        {
+        if(document.createStyleSheet)
+            {
+            document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>');
+            }
+        else
+            {
+            jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+            }
+        }
+
+    var responsive_show = "<?php echo $lang['responsive_collectiontogglehide'];?>";
+    var responsive_hide;
+    var responsive_newpage = true;
+
+    if(jQuery(window).width()<=700) {
+        touchScroll("UICenter");
     }
+    jQuery(window).resize(function() {
+        hideMyCollectionsCols();
+        responsiveCollectionBar();
+    });
+    if(jQuery(window).width()<=900) {
+        jQuery('#CollectionDiv').hide(0);
+    }
+    jQuery("#HeaderNav1Click").click(function(event) {
+        event.preventDefault();
+        if(jQuery(this).hasClass("RSelectedButton")) {
+            jQuery(this).removeClass("RSelectedButton");
+            jQuery("#HeaderNav1").slideUp(0);
+          jQuery("#Header").removeClass("HeaderMenu");
+           
+        }else {
+            jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
+            jQuery("#HeaderNav2").slideUp(80);
 
-var responsive_show = "<?php echo $lang['responsive_collectiontogglehide'];?>";
-var responsive_hide;
-var responsive_newpage = true;
+                jQuery("#Header").addClass("HeaderMenu");
 
-if(jQuery(window).width()<=700) {
-    touchScroll("UICenter");
-}
-jQuery(window).resize(function() {
-    hideMyCollectionsCols();
-    responsiveCollectionBar();
-});
-if(jQuery(window).width()<=900) {
-    jQuery('#CollectionDiv').hide(0);
-}
-jQuery("#HeaderNav1Click").click(function(event) {
-    event.preventDefault();
-    if(jQuery(this).hasClass("RSelectedButton")) {
-        jQuery(this).removeClass("RSelectedButton");
-        jQuery("#HeaderNav1").slideUp(0);
-      jQuery("#Header").removeClass("HeaderMenu");
-       
-    }else {
-        jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
-        jQuery("#HeaderNav2").slideUp(80);
+            jQuery(this).addClass("RSelectedButton");
+            jQuery("#HeaderNav1").slideDown(80);
+        }
+        if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch")) {
+            toggleSimpleSearch();
+        }      
+    });
+    jQuery("#HeaderNav2Click").click(function(event) {
+        event.preventDefault();
+        if(jQuery(this).hasClass("RSelectedButton")) {
+            jQuery(this).removeClass("RSelectedButton");
+            jQuery("#HeaderNav2").slideUp(0);
+            jQuery("#Header").removeClass("HeaderMenu");
+
+        }else {
 
             jQuery("#Header").addClass("HeaderMenu");
+            jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
+            jQuery("#HeaderNav1").slideUp(80);
+            jQuery(this).addClass("RSelectedButton");
+            jQuery("#HeaderNav2").slideDown(80);
+        } 
+        if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch")) {
+            toggleSimpleSearch();
+        }  
+    });
+    jQuery("#HeaderNav2").on("click","a",function() {
+        
+            if(jQuery(window).width() <= 1200) {
 
-        jQuery(this).addClass("RSelectedButton");
-        jQuery("#HeaderNav1").slideDown(80);
-    }
-    if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch")) {
-        toggleSimpleSearch();
-    }      
-});
-jQuery("#HeaderNav2Click").click(function(event) {
-    event.preventDefault();
-    if(jQuery(this).hasClass("RSelectedButton")) {
-        jQuery(this).removeClass("RSelectedButton");
-        jQuery("#HeaderNav2").slideUp(0);
-        jQuery("#Header").removeClass("HeaderMenu");
+            jQuery("#HeaderNav2").slideUp(0);
+            jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
+        }
+    });
+    jQuery("#HeaderNav1").on("click","a",function() {
 
-    }else {
-
-        jQuery("#Header").addClass("HeaderMenu");
-        jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
-        jQuery("#HeaderNav1").slideUp(80);
-        jQuery(this).addClass("RSelectedButton");
-        jQuery("#HeaderNav2").slideDown(80);
-    } 
-    if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch")) {
-        toggleSimpleSearch();
-    }  
-});
-jQuery("#HeaderNav2").on("click","a",function() {
-    
         if(jQuery(window).width() <= 1200) {
-
-        jQuery("#HeaderNav2").slideUp(0);
-        jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
+            jQuery("#HeaderNav1").slideUp(00);
+            jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
+        }
+    });
+    jQuery("#SearchBarContainer").on("click","#Rssearchexpand",toggleSimpleSearch);
+    jQuery("#SearchBarContainer").on("click","a",toggleSimpleSearch);
+    jQuery("#CentralSpaceContainer").on("click","#Responsive_ResultDisplayOptions",function(event) {
+        if(jQuery(this).hasClass("RSelectedButton")) {
+            jQuery(this).removeClass("RSelectedButton");
+        }else {
+            jQuery(this).addClass("RSelectedButton");
+        }
+        toggleResultOptions();
+    });
+    if(jQuery(window).width() <= 700 && jQuery(".ListviewStyle").length && is_touch_device()) {
+        jQuery("td:last-child,th:last-child").hide();
     }
-});
-jQuery("#HeaderNav1").on("click","a",function() {
+    </script>
+    <!-- end of Responsive -->
+    <?php
+    } /* end of if $responsive_ui*/
 
-    if(jQuery(window).width() <= 1200) {
-        jQuery("#HeaderNav1").slideUp(00);
-        jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
-    }
-});
-jQuery("#SearchBarContainer").on("click","#Rssearchexpand",toggleSimpleSearch);
-jQuery("#SearchBarContainer").on("click","a",toggleSimpleSearch);
-jQuery("#CentralSpaceContainer").on("click","#Responsive_ResultDisplayOptions",function(event) {
-    if(jQuery(this).hasClass("RSelectedButton")) {
-        jQuery(this).removeClass("RSelectedButton");
-    }else {
-        jQuery(this).addClass("RSelectedButton");
-    }
-    toggleResultOptions();
-});
-if(jQuery(window).width() <= 700 && jQuery(".ListviewStyle").length && is_touch_device()) {
-    jQuery("td:last-child,th:last-child").hide();
-}
-</script>
-<!-- end of Responsive -->
-
-<?php hook("afteruilayout");?>
-<?php hook("responsivescripts"); ?>
-
-
+    hook("afteruilayout");
+    hook("responsivescripts");
+    ?>
 <!-- Start of modal support -->
 <div id="modal_overlay" onClick="ModalClose();"></div>
 <div id="modal_outer">

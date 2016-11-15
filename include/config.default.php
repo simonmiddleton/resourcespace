@@ -3092,3 +3092,5 @@ $fstemplate_alt_storagedir=""; # Alternative filestore location for the sample f
 $fstemplate_alt_storageurl="";
 $fstemplate_alt_scramblekey=""; # The scramble key used by the template installation, so paths must be scrambled using this instead for the sample images.
 
+# Ability to switch off responsive on UI
+$responsive_ui = true;

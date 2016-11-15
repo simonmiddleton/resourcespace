@@ -690,6 +690,10 @@ if (!hook("replacesearchheader")) # Always show search header now.
 	<div class="TopInpageNav">
 	<div class="TopInpageNavLeft">
 
+<?php
+if($responsive_ui)
+    {
+    ?>
     <div class="ResponsiveResultDisplayControls">
         <a href="#" id="Responsive_ResultDisplayOptions" class="ResourcePanel ResponsiveButton" style="display:none;"><?php echo $lang['responsive_result_settings']; ?><span class="glyph glyph_result"></span></a>
         <div id="ResponsiveResultCount">
@@ -714,10 +718,10 @@ if (!hook("replacesearchheader")) # Always show search header now.
             ?>
         </div>
     </div>
-
-	<?php
-	hook('responsiveresultoptions');
-	?>
+    <?php
+    }
+    hook('responsiveresultoptions');
+    ?>
 	<div id="SearchResultFound" class="InpageNavLeftBlock"><?php echo $lang["youfound"]?>:<br /><span class="Selected">
 	<?php
 	if (isset($collections)) 

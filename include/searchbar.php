@@ -311,7 +311,11 @@ elseif($restypes=='')
         }
 
 	$searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"&nbsp;&nbsp;". $lang['searchbutton']."&nbsp;&nbsp;\" />";
-	$searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . $lang['responsive_more'] . '">';
+
+    if($responsive_ui)
+        {
+        $searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . $lang['responsive_more'] . '">';
+        }
 
 	hook("responsivesimplesearch");
 	
