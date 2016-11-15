@@ -2145,7 +2145,7 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 	{
 	# Update the resource with the file at the given path
 	# Note that the file will be used at it's present location and will not be copied.
-	global $syncdir,$staticsync_prefer_embedded_title;
+	global $syncdir,$staticsync_prefer_embedded_title, $view_title_field;
 
 	update_resource_type($r, $type);
 
@@ -2213,13 +2213,13 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 	# order depends on which title should be the default (embedded or generated)
 	if ($staticsync_prefer_embedded_title)
 		{
-		update_field($r,8,$title);
+		update_field($r,$view_title_field,$title);
 		extract_exif_comment($r,$extension);
 		}
 	else
 		{
 		extract_exif_comment($r,$extension);
-		update_field($r,8,$title);
+		update_field($r,$view_title_field,$title);
 		}
 		
 	# Extract text from documents (e.g. PDF, DOC)
