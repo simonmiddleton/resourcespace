@@ -60,6 +60,7 @@ if ($include_rs_header_info)
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <?php hook("responsivemeta"); ?>
 
 <title><?php echo htmlspecialchars($applicationname)?></title>
@@ -273,7 +274,11 @@ $linkUrl=isset($header_link_url) ? $header_link_url : $homepage_url;
 	echo " " . $header_size;
 ?>"<?php
 if (isset($header_colour_style_override) && $header_colour_style_override!='') { ?> style="background: <?php echo $header_colour_style_override; ?>;"<?php } ?>>
-<?php hook("responsiveheader");
+
+<div id="HeaderResponsive">
+<?php
+hook('responsiveheader');
+
 if($header_text_title) 
 	{?>
 	<div id="TextHeader"><?php if ($k=="" || $internal_share_access){?><a href="<?php echo $homepage_url?>"  onClick="return CentralSpaceLoad(this,true);"><?php } ?><?php echo $applicationname;?><?php if ($k=="" || $internal_share_access){?></a><?php } ?></div>
@@ -324,6 +329,54 @@ else
 	}
 	}
 
+// Responsive
+if(!empty($linkedheaderimgsrc)) 
+    {
+    $header_img_src = $linkedheaderimgsrc;
+    }
+else if(!empty($responsiveheaderimgsrc))
+    {
+    $header_img_src=$responsiveheaderimgsrc;
+    }
+else 
+    {
+    $header_img_src = $baseurl . '/gfx/titles/title.svg';
+    }
+
+// Set via System Config page?
+if('[storage_url]' == substr($header_img_src, 0, 13))
+    {
+    // Parse and replace the storage URL
+    $header_img_src = str_replace('[storage_url]', $storageurl, $header_img_src);
+    }
+
+// If there is a baseurl, no need to add it again
+if(false === strpos($header_img_src, $baseurl))
+    {
+    $header_img_src = $baseurl . $header_img_src;
+    }
+
+$linkedheaderimgsrc=$header_img_src;
+
+if (isset($username) && ($pagename!="login") && ($loginterms==false) && getval("k","")=="") 
+    { 
+    ?>   
+    <div id="HeaderButtons" style="display:none;">
+        <a href="#" id="HeaderNav1Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
+            <span class="rbText"><?php echo $allow_password_change == false ? htmlspecialchars(($userfullname=="" ? $username : $userfullname)) : $lang["responsive_settings_menu"]; ?></span>
+            <span class="glyph glyph_user"></span>
+        </a>
+        <a href="#" id="HeaderNav2Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
+            <span class="rbText"><?php echo $lang["responsive_main_menu"]; ?></span>
+            <span class="glyph glyph_menu"></span>
+        </a>
+    </div>
+    <?php
+    }
+    ?>
+</div>
+<?php
+// end of Responsive
 
 hook("headertop");
 

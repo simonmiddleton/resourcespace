@@ -281,9 +281,9 @@ li.plupload_droptext {color:#999;}
 .ui-draggable-dragging {border: 2px solid;}
 
 /* Responsive SpriteSheet */
-.glyph_user {background:url('../plugins/rse_responsive/gfx/responsive_spritesheet_charcoal.png') -20px 0;}
-.glyph_menu {background:url('../plugins/rse_responsive/gfx/responsive_spritesheet_charcoal.png') 0 0;}
-.glyph_result {background:url('../plugins/rse_responsive/gfx/responsive_spritesheet_charcoal.png') -40px 0;}
+.glyph_user { background: url(../gfx/responsive_spritesheet_charcoal.png) -20px 0; }
+.glyph_menu { background: url(../gfx/responsive_spritesheet_charcoal.png) 0 0; }
+.glyph_result { background: url(../gfx/responsive_spritesheet_charcoal.png) -40px 0; }
 
 
 /* Modal */

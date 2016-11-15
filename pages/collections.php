@@ -227,10 +227,23 @@ else { ?>
 			jQuery('.CollectionPanelShell').enableSelection();			
 		});	
 	</script>
-	<?php } 
+	<?php 
+	} 
 	hook("responsivethumbsloaded");
+	?>
 
-?>
+    <!-- Responsive -->
+    <script type="text/javascript">
+    jQuery(document).ready(function()
+        {
+        if(typeof responsive_newpage !== 'undefined' && responsive_newpage === true)
+            {
+            hideMyCollectionsCols();
+            responsiveCollectionBar();
+            responsive_newpage = false;
+            }
+        }); 
+    </script>
 	<!-- Drag and Drop -->
 	<script>
 		jQuery('#CentralSpace').on('prepareTrash', function() {

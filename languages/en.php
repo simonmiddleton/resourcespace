@@ -2535,3 +2535,14 @@ $lang["userpreference_headersize"]="Header size";
 $lang["headersmall"]="Small";
 $lang["headermid"]="Medium";
 $lang["headerlarge"]="Large";
+
+// Responsive
+$lang["responsive_configtitle"]="Responsive";
+$lang["responsive_main_menu"]="Menu";
+$lang["responsive_settings_menu"]="Account";
+$lang["responsive_more"]="More...";
+$lang["responsive_less"]="Less...";
+$lang['responsive_collectiontogglehide'] = "Hide";
+$lang['linkedheaderimgsrc']="Location of the logo image in the header (Defaults to ResourceSpace):";
+$lang['responsive_result_settings'] = 'Result Settings';
+// end of Responsive
