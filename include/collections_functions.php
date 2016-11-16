@@ -1369,7 +1369,7 @@ function allow_multi_edit($collection)
 	# also applies edit filter, since it uses get_resource_access
 
 	if (!is_array($collection)){ // collection is an array of resource data
-		$collection=do_search("!collection" . $collection);
+        $collection=do_search("!collection" . $collection);
 
 	}
 	for ($n=0;$n<count($collection);$n++){
@@ -1962,7 +1962,7 @@ function update_collection_user($collection,$newuser)
 	}
 
 if(!function_exists("compile_collection_actions")){	
-function compile_collection_actions(array $collection_data, $top_actions)
+function compile_collection_actions(array $collection_data, $top_actions, $resource_data=array())
     {
     global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $contact_sheet,
            $manage_collections_contact_sheet_link, $manage_collections_share_link, $allow_share,
@@ -2150,17 +2150,9 @@ function compile_collection_actions(array $collection_data, $top_actions)
 		$options[$o]['data_attr']=$data_attribute;
 		$o++;
         }
-    else if(isset($zipcommand) || $collection_download) 
-        {
-        $data_attribute['url'] = $baseurl_short . "pages/terms.php?k=" . urlencode($k) . "&url=pages/collection_download.php?collection=" . urlencode($collection_data['ref']) ."%26k=" . urlencode($k);
-        $options[$o]['value']='download_collection';
-		$options[$o]['label']=$lang['action-download'];
-		$options[$o]['data_attr']=$data_attribute;
-		$o++;
-        }
 
     // Contact Sheet
-    if(($k=="" || $internal_share_access) && $contact_sheet == true && ($manage_collections_contact_sheet_link || $contact_sheet_link_on_collection_bar))
+    if(0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet == true && ($manage_collections_contact_sheet_link || $contact_sheet_link_on_collection_bar))
         {
         $data_attribute = array(
             'url' => sprintf('%spages/contactsheet_settings.php?ref=%s',
@@ -2176,7 +2168,7 @@ function compile_collection_actions(array $collection_data, $top_actions)
         }
 
     // Share
-    if(($k=="" || $internal_share_access) && $manage_collections_share_link && $allow_share && (checkperm('v') || checkperm ('g') || (collection_min_access($collection_data['ref'])<=1 && $restricted_share))) 
+    if(0 < $count_result && ($k=="" || $internal_share_access) && $manage_collections_share_link && $allow_share && (checkperm('v') || checkperm ('g') || (collection_min_access($collection_data['ref'])<=1 && $restricted_share))) 
         {
         $extra_tag_attributes = sprintf('
                 data-url="%spages/collection_share.php?ref=%s"
@@ -2243,11 +2235,14 @@ function compile_collection_actions(array $collection_data, $top_actions)
 		$o++;
         }
 
+    // work this out in one place to prevent multiple calls as function is expensive
+    $allow_multi_edit=allow_multi_edit(empty($resource_data) ? $collection_data['ref'] : $resource_data);
+
     // Edit all
     # If this collection is (fully) editable, then display an edit all link
     if(($k=="" || $internal_share_access) && $show_edit_all_link && (count($result) > 0))
         {
-        if(!$edit_all_checkperms || allow_multi_edit($collection_data['ref'])) 
+        if(!$edit_all_checkperms || $allow_multi_edit)
             {
             $extra_tag_attributes = sprintf('
                     data-url="%spages/edit.php?collection=%s"
@@ -2271,7 +2266,7 @@ function compile_collection_actions(array $collection_data, $top_actions)
         && (count($result) != 0 || $count_result != 0)
         && !(isset($allow_resource_deletion) && !$allow_resource_deletion)
         && collection_writeable($collection_data['ref'])
-        && allow_multi_edit($collection_data['ref'])
+        && $allow_multi_edit
         && !checkperm('D'))
         {
         $options[$o]['value']='delete_all_in_collection';
@@ -2297,7 +2292,7 @@ function compile_collection_actions(array $collection_data, $top_actions)
         }
 
     // Remove all
-    if(($k=="" || $internal_share_access) && isset($emptycollection) && $remove_resources_link_on_collection_bar && collection_writeable($collection_data['ref']))
+    if(0 < $count_result && ($k=="" || $internal_share_access) && isset($emptycollection) && $remove_resources_link_on_collection_bar && collection_writeable($collection_data['ref']))
         {
         $data_attribute['url'] = sprintf('%spages/collections.php?emptycollection=%s&removeall=true&submitted=removeall&ajax=true',
             $baseurl_short,
@@ -2311,7 +2306,7 @@ function compile_collection_actions(array $collection_data, $top_actions)
         }
     
     // Edit Previews
-	if (($k=="" || $internal_share_access) && $count_result > 0 && ($userref == $collection_data['user'] || $collection_data['allow_changes'] == 1 || checkperm('h')) && allow_multi_edit($collection_data['ref']))
+	if (($k=="" || $internal_share_access) && $count_result > 0 && ($userref == $collection_data['user'] || $collection_data['allow_changes'] == 1 || checkperm('h')) && $allow_multi_edit)
 		{
 		$main_pages   = array('search', 'collection_manage', 'collection_public', 'themes');
 		$back_to_page = (in_array($pagename, $main_pages) ? htmlspecialchars($pagename) : '');
@@ -2333,7 +2328,7 @@ function compile_collection_actions(array $collection_data, $top_actions)
 		}
 
     // Show disk usage
-    if(($k=="" || $internal_share_access) && !$top_actions && $show_searchitemsdiskusage) 
+    if(($k=="" || $internal_share_access) && !$top_actions && $show_searchitemsdiskusage && 0 < $count_result) 
         {
         $extra_tag_attributes = sprintf('
                 data-url="%spages/search_disk_usage.php?search=!collection%s&k=%s"
@@ -2351,7 +2346,7 @@ function compile_collection_actions(array $collection_data, $top_actions)
         }
 
     // CSV export of collection metadata
-    if(!$top_actions && ($k=="" || $internal_share_access))
+    if(0 < $count_result && !$top_actions && ($k=="" || $internal_share_access))
         {
 
         $options[$o]['value']            = 'csv_export_results_metadata';
