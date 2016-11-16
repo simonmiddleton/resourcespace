@@ -253,7 +253,7 @@ if (!hook("renderresultsmallthumb"))
 			<?php hook("smallthumbicon"); ?>
 		<div class="clearer"></div>
 		</div>	
-	<div class="PanelShadow"></div>
+	
 	</div>
 	<?php 
 	} # end hook renderresultsmallthumb

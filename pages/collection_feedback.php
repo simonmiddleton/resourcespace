@@ -121,7 +121,7 @@ if ($errors!="")
 			
 		<div class="clearer"> </div>
 		</div>
-		<div class="PanelShadow"></div>
+		
 		</div>
 		
 		<?php

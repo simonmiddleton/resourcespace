@@ -726,8 +726,8 @@ if (!$basic_simple_search)
   </form>
   <br />
   <?php hook("searchbarbeforebottomlinks"); ?>
-  <?php if (! $disable_geocoding) { ?><p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/geo_search.php"><?php echo LINK_CARET ?><?php echo $lang["geographicsearch"]?></a></p><?php } ?>
-  <?php if (! $advancedsearch_disabled && !hook("advancedsearchlink")) { ?><p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo LINK_CARET ?><?php echo $lang["gotoadvancedsearch"]?></a></p><?php } ?>
+  <?php if (! $disable_geocoding) { ?><p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/geo_search.php"><i class="fa fa-fw fa-globe"></i>&nbsp;<?php echo $lang["geographicsearch"]?></a></p><?php } ?>
+  <?php if (! $advancedsearch_disabled && !hook("advancedsearchlink")) { ?><p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><i class="fa fa-fw fa-search-plus"></i>&nbsp;<?php echo $lang["gotoadvancedsearch"]?></a></p><?php } ?>
 
   <?php hook("searchbarafterbuttons"); ?>
 
@@ -736,7 +736,7 @@ if (!$basic_simple_search)
 	<?php } ?> <!-- END of Searchbarreplace hook -->
 	</div>
 	</div>
-	<div class="PanelShadow"></div>
+	
 <?php } ?>	
 	
 	<?php if ($show_anonymous_login_panel && isset($anonymous_login) && (isset($username)) && ($username==$anonymous_login))
@@ -762,7 +762,7 @@ if (!$basic_simple_search)
 	</div>
  
 	</div>
-	<div class="PanelShadow"></div>
+	
 	<?php
 	}
 ?>
@@ -779,7 +779,7 @@ if (!$basic_simple_search)
 	</div><br />
 	<?php } /* end replaceresearchrequestboxcontent */ ?>
 	</div>
-	<div class="PanelShadow"></div>
+	
 	<?php } /* end replaceresearchrequestbox */ ?>
 	<?php } ?>
 

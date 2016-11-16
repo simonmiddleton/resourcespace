@@ -273,7 +273,6 @@ function DisplayTheme($themes=array(), $simpleview=false)
 			</div>
 	
 			</div>
-			<div class="PanelShadow"> </div>
 			</div>
 			<?php
 			}
@@ -552,7 +551,6 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 			</div>
 	
 			</div>
-			<div class="PanelShadow"> </div>
 			</div>
 			<?php
 			}
@@ -832,7 +830,6 @@ if ($header=="" && !isset($themes[0]))
 				</div>
 	
 				</div>
-				<div class="PanelShadow"> </div>
 				</div>
 				<?php
 				}

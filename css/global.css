@@ -218,7 +218,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
 .ListTools a:hover	{text-decoration:none;}
-a:hover .fa {text-decoration:none !important;} /* Never underline a FontAwesome icon */
+a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a FontAwesome icon */
 
 .ResourceSelect {display:block;float:right;}
 .IconUserRatingStar	{width:13px;height:15px;padding: 0;margin-bottom:6px;display: block;}
@@ -292,15 +292,17 @@ a:hover .fa {text-decoration:none !important;} /* Never underline a FontAwesome 
 .RecordBox {margin: 20px 15px 15px 0px;}
 .RecordPanel {padding: 15px 20px 15px 20px;}
 .backtoresults {float: right;margin: 0.4em 0 0 0.25em;}
-.backtoresults .upLink, .backtoresults .nextLink {
-	padding-left:8px;padding-right:6px;
+.backtoresults .upLink, .backtoresults .nextLink,.backtoresults .prevLink {
+	padding-left:4px;padding-right:4px;
 	margin-left:2px;
-	border-left: 1px solid;
+	border-left: none;
 }
-.backtoresults .prevLink {
-	padding-left:8px;padding-right:6px;
-	}
-	
+.backtoresults .nextLink,.backtoresults .prevLink,.backtoresults .maxLink {font-size:1.1em;}
+.backtoresults .maxLink {padding-left:20px;}
+.backtoresults .closeLink {padding-left:5px;font-size:1.3em;}
+
+.backtoresults .prevLink:hover,.backtoresults .nextLink:hover,.backtoresults .closeLink:hover,.backtoresults .maxLink:hover {text-decoration:none;}
+
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {float: left;margin: 0px 0px 0px 0px;}
 #previewimagewrapper {float:left;margin: 0px 20px 15px 0px;}
@@ -328,7 +330,9 @@ a:hover .fa {text-decoration:none !important;} /* Never underline a FontAwesome 
 .RecordPanel .RecordDownload .DownloadDBlend td {margin: 0;vertical-align: middle;}
 .RecordPanel .RecordDownloadSpace {padding: 6px;}
 .RecordPanel .RecordDownloadSpace ul {padding:0.2em 0;margin:0;margin-top: 10px;list-style:none;}
-.RecordPanel .RecordDownloadSpace li {padding:0;margin:0 12px 1px 0;float:left;}
+.RecordPanel .RecordDownloadSpace li {padding:0;margin:0 12px 5px 0;float:left;min-width:208px;}
+.RecordPanel .RecordDownloadSpace li a:hover {text-decoration:none;}
+
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {text-align: center;font-weight: bold;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend h2 {margin:0;padding:0;font-size: 1em;	text-align: left;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {margin:0;padding:0;	text-align: left;}
@@ -771,7 +775,6 @@ a.HomePanel:hover {
   	font-size:50px;
   	min-width:100%;
 }
-#HomePanelContainer .HomePanel .PanelShadow{display:none;}
 .HomePanelDynamicDash p.tile_corner_box {
 	position: absolute;
   	bottom: 0;

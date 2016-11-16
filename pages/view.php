@@ -489,7 +489,7 @@ $urlparams= array(
 # Check if actually coming from a search, but not if a numeric search and config_search_for_number is set or if this is a direct request e.g. ?r=1234.
 if (isset($_GET["search"]) && !($config_search_for_number && is_numeric($usearch))) { ?>
 <div class="backtoresults">
-<a class="prevLink" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);"><?php echo $lang["previousresult"]?></a>
+<a class="prevLink fa fa-arrow-left" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);" title="<?php echo $lang["previousresult"]?>"></a>
 <?php 
 if (!hook("viewallresults")) 
 	{
@@ -497,14 +497,14 @@ if (!hook("viewallresults"))
 	<a class="upLink" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams,array("go"=>"up")) . (($search_anchors)?"&place=" . $ref:"") ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["viewallresults"]?></a>
 	<?php 
 	} ?>
-<a class="nextLink" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"next")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);"><?php echo $lang["nextresult"]?></a>
+<a class="nextLink fa fa-arrow-right" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"next")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);" title="<?php echo $lang["nextresult"]?>"></a>
 
 <?php
 	if($modal)
 		{
 		?>
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["maximise"]?></a>
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="ModalClose();"><?php echo $lang["close"] ?></a>
+		<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);" class="maxLink fa fa-expand" title="<?php echo $lang["maximise"]?>"></a>
+		<a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
 		<?php
 		}
 	?>
@@ -515,8 +515,8 @@ else if($modal)
 	{
 	?>
 	<div class="backtoresults">
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["maximise"]?></a>
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="ModalClose();"><?php echo $lang["close"] ?></a>
+		<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);" class="maxLink fa fa-expand" title="<?php echo $lang["maximise"]?>"></a>
+		<a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
 	</div>
 	<?php
 	}
@@ -1338,7 +1338,7 @@ if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/us
 </div>
 <?php include "view_metadata.php"; ?>
 </div></div>
-<div class="PanelShadow"></div>
+
 </div>
 
 <?php
@@ -1366,7 +1366,7 @@ function RenderPushedMetadata($resource)
         <div class="Title"><?php echo $resource["resource_type_name"] . " : " . $resource["field" . $view_title_field] ?></div>
         <?php include "view_metadata.php"; ?>
         </div>
-        <div class="PanelShadow"></div>
+        
         </div>
 	<?php
 	}
@@ -1386,7 +1386,7 @@ End of pushed metadata support
             <div id="Titles2" class="ViewPanelTitles"></div>
         </div>
     </div>
-    <div class="PanelShadow"></div>
+    
 </div>
 <?php if ($view_resource_collections){
 	# only render this box when needed
@@ -1397,7 +1397,7 @@ End of pushed metadata support
             <div id="Titles3" class="ViewPanelTitles"></div>
         </div>
     </div>
-    <div class="PanelShadow"></div>
+    
 </div>
 <?php } ?>
 <?php } 
@@ -1469,7 +1469,7 @@ if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_acce
         <div class="Title"><?php echo $lang['metadata-report']?></div>
         <div id="<?php echo $context ?>metadata_report"><a onclick="metadataReport(<?php echo htmlspecialchars($ref)?>,'<?php echo $context ?>');document.getElementById('<?php echo $context ?>metadata_report').innerHTML='<?php echo $lang['pleasewait']?>';return false;" class="itemNarrow" href="#">&gt; <?php echo $lang['viewreport'];?></a><br></div>
         </div>
-        <div class="PanelShadow"></div>
+        
         </div>
 
 <?php } ?>
@@ -1544,7 +1544,7 @@ if (count($result)>0)
 		</div>
 		</div>
 		</div>
-		<div class="PanelShadow"></div>
+		
 		</div><?php
 		} #end of display loop by resource extension
 	} #end of IF sorted relations
@@ -1603,7 +1603,7 @@ if (count($result)>0)
 		</div>
 		</div>
 		</div>
-		<div class="PanelShadow"></div>
+		
 		</div><?php
 		} #end of display loop by resource extension
 	} #end of IF sorted relations	
@@ -1660,7 +1660,7 @@ if (count($result)>0)
     </div>
     </div>
     </div>
-    <div class="PanelShadow"></div>
+    
     </div><?php
 		}# end related resources display
 	} 
@@ -1694,7 +1694,7 @@ if (count($result)>0)
 	</div>
 	</div>
 	</div>
-	<div class="PanelShadow"></div>
+	
 	</div><?php
 	}} 
 
@@ -1748,7 +1748,7 @@ for ($n=0;$n<count($keywords);$n++)
 </div>
 </div>
 </div>
-<div class="PanelShadow"></div>
+
 </div>
 <?php 
 	hook("afterviewfindsimilar");

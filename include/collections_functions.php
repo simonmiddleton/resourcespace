@@ -1969,7 +1969,7 @@ function compile_collection_actions(array $collection_data, $top_actions)
            $manage_collections_remove_link, $userref, $collection_purge, $show_edit_all_link, $result,
            $edit_all_checkperms, $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
            $show_searchitemsdiskusage, $emptycollection, $remove_resources_link_on_collection_bar, $count_result,
-           $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort, $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search, $usercollection;
+           $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort, $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search, $usercollection, $geo_locate_collection;
            
 	if(isset($search) && substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
 		{ 
@@ -2119,7 +2119,20 @@ function compile_collection_actions(array $collection_data, $top_actions)
             $o++;
             }
         }
-
+	
+	if($geo_locate_collection)
+        {
+            $data_attribute['url'] = sprintf('%spages/geolocate_collection.php?ref=%s',
+                $baseurl_short,
+		urlencode($collection_data['ref'])
+            );
+            $options[$o]['value']='geolocatecollection';
+            $options[$o]['label']=$lang["geolocatecollection"];
+            $options[$o]['data_attr']=$data_attribute;
+            $o++;
+            
+        }
+	
     // Download option
     if($download_usage && ((isset($zipcommand) || $collection_download) && $count_result > 0))
         {

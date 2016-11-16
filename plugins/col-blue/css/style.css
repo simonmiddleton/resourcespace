@@ -145,7 +145,6 @@ input[readonly] {color: #FFFFFF;}
 .permissionstable tr td.permheader{color: #000000;background: rgb(221,221,221);}
 .permissionstable tbody{color: #000000;}
 .CodeMirror-wrapping{color: #000000;background: #FFFFFF;}
-.PanelShadow{background: none;}
 .collapsed { background: url(../gfx/greyblu/interface/HomeArrow.gif) no-repeat top left; background-position:3px 8px;}
 .expanded { background: url(../gfx/greyblu/interface/HomeArrowDown.gif) no-repeat top left; background-position:0px 12px;}
 .CommentFlag { background-image: url('../gfx/greyblu/interface/FlagOff.png');}
