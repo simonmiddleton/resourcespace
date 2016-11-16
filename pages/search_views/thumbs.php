@@ -3,7 +3,7 @@ if (!hook("renderresultthumb"))
 	{ ?>
 	<!--Resource Panel-->
 	<div class="ResourcePanelShell" id="ResourceShell<?php echo htmlspecialchars($ref)?>">
-		<div class="ResourcePanel  <?php hook("thumbsviewpanelstyle");?>">
+		<div class="ResourcePanel <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
 		<?php  
 		if ($resource_type_icons) 
 			{ ?>

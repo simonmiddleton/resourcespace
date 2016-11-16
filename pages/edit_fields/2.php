@@ -39,7 +39,7 @@ if(!hook('customchkboxes', '', array($field)))
         {
         $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
         }
-
+	
     if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
         {
         if($auto_order_checkbox_case_insensitive)
