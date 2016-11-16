@@ -1193,13 +1193,12 @@ if(!hook("replaceactionslistopen")){?>
 hook ("resourceactions") ?>
 <?php if ($k=="" || $internal_share_access) { ?>
 <?php if (!hook("replaceresourceactions")) {
-	global $resourcetoolsGT;
 	hook("resourceactionstitle");
 	 if ($resource_contact_link)	
 	 	{ ?>
 		<li>
 		<a href="<?php echo $baseurl_short?>pages/ajax/contactadmin.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="showContactBox();return false;" >
-		<?php echo ($resourcetoolsGT?"&gt; ":"").$lang["contactadmin"]?>
+		<?php echo "<i class='fa fa-user'></i>&nbsp;" . $lang["contactadmin"]?>
 		</a>
 		</li>
 		<?php 
@@ -1211,7 +1210,7 @@ hook ("resourceactions") ?>
 		<li>
 			<?php 
 			echo add_to_collection_link($ref,$search);
-			echo ($resourcetoolsGT?"&gt; ":"").$lang["action-addtocollection"];
+			echo "<i class='fa fa-plus-circle'></i>&nbsp;" .$lang["action-addtocollection"];
 			?>
 			</a>
 		</li>
@@ -1222,7 +1221,7 @@ hook ("resourceactions") ?>
 			<li>
 			<?php 
 			echo remove_from_collection_link($ref,$search);
-			echo ($resourcetoolsGT?"&gt; ":"").$lang["action-removefromcollection"]?>
+			echo "<i class='fa fa-minus-circle'></i>&nbsp;" .$lang["action-removefromcollection"]?>
 			</a>
 			</li>
 			<?php 
@@ -1232,7 +1231,7 @@ hook ("resourceactions") ?>
 		{ 
 		?>
 		<li><a href="<?php echo $baseurl_short?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);" >
-		<?php echo ($resourcetoolsGT?"&gt; ":"").$lang["share"];?>
+		<?php echo "<i class='fa fa-share-alt'></i>&nbsp;" . $lang["share"];?>
 		</a></li>
 		<?php 
 		hook('aftersharelink', '', array($ref, $search, $offset, $order_by, $sort, $archive));
@@ -1240,7 +1239,7 @@ hook ("resourceactions") ?>
 	if ($edit_access) 
 		{ ?>
 		<li><a href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>"    onClick="return CentralSpaceLoad(this,true);">
-			<?php echo ($resourcetoolsGT?"&gt; ":"").$lang["action-edit"]?>
+			<?php echo "<i class='fa fa-pencil'></i>&nbsp;" .$lang["action-edit"]?>
 		</a></li>
 		<?php 
 		if ((!checkperm("D") || hook('check_single_delete')) && !(isset($allow_resource_deletion) && !$allow_resource_deletion))
@@ -1251,11 +1250,11 @@ hook ("resourceactions") ?>
 			<?php 
 			if ($resource["archive"]==3)
 				{
-				echo ($resourcetoolsGT?"&gt; ":"").$lang["action-delete_permanently"];
+				echo "<i class='fa fa-trash'></i>&nbsp;" .$lang["action-delete_permanently"];
 				} 
 			else 
 				{
-				echo ($resourcetoolsGT?"&gt; ":"") . $lang["action-delete"];
+				echo "<i class='fa fa-trash'></i>&nbsp;" . $lang["action-delete"];
 				}?>
 			</a>
 			</li>
@@ -1264,7 +1263,7 @@ hook ("resourceactions") ?>
 		if (!$disable_alternative_files && !checkperm('A')) 
 			{ ?>
 			<li><a href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
-			<?php echo ($resourcetoolsGT?"&gt; ":"").$lang["managealternativefiles"]?>
+			<?php echo "<i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"]?>
 			</a></li>
 			<?php 
 			}
@@ -1282,19 +1281,19 @@ hook ("resourceactions") ?>
 	if ($metadata_download && (checkperm('f*') || $can_see_fields_individually))	
 		{ ?>
 		<li><a href="<?php echo $baseurl_short?>pages/metadata_download.php?ref=<?php echo urlencode($ref)?>" onClick="return CentralSpaceLoad(this,true);" >
-		<?php echo ($resourcetoolsGT?"&gt; ":"").$lang["downloadmetadata"]?>
+		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["downloadmetadata"]?>
 		</a></li><?php 
 		} 
 	if (checkperm('v')) 
 		{ ?>
 		<li><a href="<?php echo $baseurl_short?>pages/log.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;search_offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
-		<?php echo ($resourcetoolsGT?"&gt; ":"").$lang["log"]?>
+		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["log"]?>
 		</a></li><?php 
 		}
 	if (checkperm("R") && $display_request_log_link) 
 		{ ?>
 		<li><a href="<?php echo $baseurl_short?>pages/request_log.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
-		<?php echo ($resourcetoolsGT?"&gt; ":"").$lang["requestlog"]?>
+		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["requestlog"]?>
 		</a></li><?php 
 		}
     } /* End replaceresourceactions */ 

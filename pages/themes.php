@@ -199,14 +199,14 @@ function DisplayTheme($themes=array(), $simpleview=false)
 							?>
 							
 							</td><tr><td style="margin:0px;padding:0px;">
-							<a href="<?php echo $baseurl_short?>pages/theme_category_share.php?<?php echo $linkparams?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo "> " . $lang["share"] . "</a>";
+							<a href="<?php echo $baseurl_short?>pages/theme_category_share.php?<?php echo $linkparams?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["share"] . "</a>";
 							}
 						hook("themeaction");
 						
 						if ($enable_theme_category_edit && checkperm("t"))
 							{
 							?>
-							<a href="<?php echo $baseurl_short?>pages/theme_edit.php?<?php echo $linkparams . "lastlevelchange=" . $lastlevelchange?>" onClick="return CentralSpaceLoad(this,true);"><?php echo "> " . $lang["action-edit"] . "</a>";
+							<a href="<?php echo $baseurl_short?>pages/theme_edit.php?<?php echo $linkparams . "lastlevelchange=" . $lastlevelchange?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["action-edit"] . "</a>";
 							}
 						}
 					}
@@ -859,7 +859,7 @@ else
 			<div class="BasicsBox">
 				<h1><?php echo $lang["findpubliccollection"]?></h1>
 				<p class="tight"><?php echo text("findpublic")?></p>
-				<p><a href="<?php echo $baseurl_short?>pages/collection_public.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["findpubliccollection"]?>&nbsp;&gt;</a></p>
+				<p><a href="<?php echo $baseurl_short?>pages/collection_public.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["findpubliccollection"]?></a></p>
 			</div>
 			<?php
 			} 

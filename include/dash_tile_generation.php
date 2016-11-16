@@ -103,7 +103,7 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
 				if($theme_category_levels == 1 || !$theme_direct_jump)
 					{
 					?>
-					<a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/themes.php">&gt;&nbsp;<?php echo $lang["viewall"] ?></a>
+					<a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/themes.php"><?php echo LINK_CARET ?><?php echo $lang["viewall"] ?></a>
 					<?php
 					}
 					?>

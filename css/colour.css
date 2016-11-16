@@ -76,7 +76,7 @@ input[readonly] {color: #000000;}
 .ui-layout-resizer {background-color: #383838;background: linear-gradient(#A5A5A5,#000000); }
 .ui-layout-toggler-open-hover{border-radius:2px;background-color:#E0E0E0;background: linear-gradient(#E0E0E0,#383838);}
 .CollectBack {color:#E0E0E0;background: linear-gradient(#2E2E2E , #1B1B1B);}
-#CollectionMenu {border-right: 1px solid #E0E0E0;}
+#CollectionMenu {border-right: 1px solid #737373;}
 #CollectionMinRightNav li {border-left:1px solid #E0E0E0;}
 .CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2 {color:#E0E0E0;}
 .CollectBack a:hover{color:#FFF;}

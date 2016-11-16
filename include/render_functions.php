@@ -723,6 +723,12 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 }
             
             include __DIR__ . '/../pages/edit_fields/12.php';
+            // need to adjust the field's name value
+            ?>
+        	<script type="text/javascript">
+        		jQuery("#field_<?php echo $field['ref']?>").attr('name', 'field_<?php echo $field["name"]?>');
+        	</script>
+            <?php
         break;
         }
     ?>
@@ -1373,8 +1379,8 @@ function render_access_key_tr(array $record)
         <td><?php echo htmlspecialchars((-1 == $record['access']) ? '' : $lang['access' . $record['access']]); ?></td>
         <td>
             <div class="ListTools">
-                <a href="#" onClick="delete_access_key('<?php echo $record['access_key']; ?>', '<?php echo $record['resource']; ?>', '<?php echo $record['collection']; ?>');">&gt;&nbsp;<?php echo $lang['action-delete']; ?></a>
-                <a href="<?php echo $edit_link; ?>">&gt;&nbsp;<?php echo $lang['action-edit']; ?></a>
+                <a href="#" onClick="delete_access_key('<?php echo $record['access_key']; ?>', '<?php echo $record['resource']; ?>', '<?php echo $record['collection']; ?>');"><?php echo LINK_CARET ?><?php echo $lang['action-delete']; ?></a>
+                <a href="<?php echo $edit_link; ?>"><?php echo LINK_CARET ?><?php echo $lang['action-edit']; ?></a>
             </div>
         </td>
     </tr>

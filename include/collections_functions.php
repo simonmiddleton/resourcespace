@@ -1691,7 +1691,7 @@ function change_collection_link($collection)
     {
     # Generates a HTML link for adding a changing the current collection
     global $lang;
-    return '<a onClick="ChangeCollection('.$collection.',\'\');return false;" href="collections.php?collection='.$collection.'">&gt;&nbsp;'.$lang["selectcollection"].'</a>';
+    return '<a onClick="ChangeCollection('.$collection.',\'\');return false;" href="collections.php?collection='.$collection.'">' . LINK_CARET . $lang["selectcollection"].'</a>';
     }
 if(!function_exists("get_collection_external_access")){
 function get_collection_external_access($collection)
