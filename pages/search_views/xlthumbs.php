@@ -109,7 +109,26 @@ if (!hook("renderresultlargethumb"))
 										class="ImageBorder"
 										alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))); ?>"
 								/>
-								<?php 
+								<?php
+                                // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
+                                // when user hovers over the preview thumbnail
+                                if(1 < $ffmpeg_snapshot_frames && in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && 0 < get_video_snapshots($ref, false, true))
+                                    {
+                                    ?>
+                                    <script>
+                                    jQuery('#ResourceShell<?php echo $ref; ?> .ResourcePanelLarge table tbody tr td a img').mousemove(function(event)
+                                        {
+                                        var x_coord             = event.pageX - jQuery(this).offset().left;
+                                        var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref)); ?>;
+                                        var snapshot_segment_px = Math.ceil(jQuery(this).width() / Object.keys(video_snapshots).length);
+                                        var snapshot_number     = Math.ceil(x_coord / snapshot_segment_px);
+
+                                        jQuery(this).attr('src', video_snapshots[snapshot_number]);
+                                        }
+                                    );
+                                    </script>
+                                    <?php
+                                    }
 								} 
 							else 
 								{ ?>

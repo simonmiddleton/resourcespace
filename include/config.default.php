@@ -498,6 +498,15 @@ $ffmpeg_global_options = "";
 #$ffmpeg_snapshot_fraction=0.1; # Set this to specify a point in the video at which snapshot image is taken. Expressed as a proportion of the video duration so must be set between 0 and 1. Only valid if duration is greater than 10 seconds.
 #$ffmpeg_snapshot_seconds=10;  # Set this to specify the number of seconds into the video at which snapshot should be taken, overrides the $ffmpeg_snapshot_fraction setting
 
+/*
+Make video previews have multiple snapshots from the video.
+Hovering over a search result thumbnail preview, will show the user frames from the video in order for 
+the user to get an idea of what the video is about
+
+Note: Set to 0 to disable this feature
+*/
+$ffmpeg_snapshot_frames = 12;
+
 # $ffmpeg_command_prefix - Ability to add prefix to command when calling ffmpeg 
 # Example for use on Linux using nice to avoid slowing down the server
 # $ffmpeg_command_prefix = "nice -n 10";
@@ -1330,6 +1339,18 @@ $feedback_resource_select=false;
 # Prevent previews from creating versions that result in the same size?
 # If true pre, thm, and col sizes will not be considered.
 $lean_preview_generation=false;
+
+# Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
+$imagemagick_mpr=false;
+
+# Set the depth to be passed to mpr command.
+$imagemagick_mpr_depth="8";
+
+# Should colour profiles be preserved?
+$imagemagick_mpr_preserve_profiles=true;
+
+# If using imagemagick and mpr, specify any metadata profiles to be retained. Default setting good for ensuring copyright info is not stripped which may be required by law
+$imagemagick_mpr_preserve_metadata_profiles=array('iptc');
 
 # Should resource views be logged for reporting purposes?
 # Note that general daily statistics for each resource are logged anyway for the statistics graphs
@@ -2265,7 +2286,7 @@ $wildcard_always_applied_leading = false;
 $U_perm_strict=false;
 
 # enable remote apis (if using API, RSS2, or other plugins that allow remote authentication via an api key)
-$enable_remote_apis=false;
+$enable_remote_apis=true;
 $api_scramble_key="abcdef123";
 
 # Allow users capable of deleting a full collection (of resources) to do so from the Collection Manage page.

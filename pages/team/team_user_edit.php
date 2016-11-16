@@ -8,7 +8,7 @@
 include "../../include/db.php";
 include_once "../../include/general.php";
 include "../../include/authenticate.php"; 
-
+include "../../include/api_functions.php"; 
 
 $backurl=getval("backurl","");
 $url=$baseurl_short."pages/team/team_user_edit.php?ref=" .getvalescaped("ref","",true) . "&backurl=" . urlencode($backurl);
@@ -157,11 +157,12 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="Fixed"><?php echo resolve_user_agent($user["last_browser"],true)?></div>
 <div class="clearerleft"> </div></div>
 
-
-<div class="Question">
-<label><?php echo $lang["team_user_contributions"]?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo $ref?>"><?php echo LINK_CARET ?><?php echo $lang["team_user_view_contributions"] ?></a></div>
+<?php if ($enable_remote_apis) { ?>
+<div class="Question"><label><?php echo $lang["private-api-key"] ?></label>
+<div class="Fixed"><?php echo get_api_key($user["ref"]) ?></div>
 <div class="clearerleft"> </div></div>
+<?php } ?>
+
 
 
 
@@ -191,15 +192,19 @@ if (!hook("ticktoemailpassword"))
 		<?php
 		}
 	}?> 
-	
+
 <div class="Question"><label><?php echo $lang["approved"]?></label><input name="approved" type="checkbox"  value="yes" <?php if ($user["approved"]==1) { ?>checked<?php } ?>>
 <?php if ($user["approved"]==0) { ?><div class="FormError">!! <?php echo $lang["ticktoapproveuser"]?> !!</div><?php } ?>
-
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["ticktodelete"]?></label><input name="deleteme" type="checkbox"  value="yes"><div class="clearerleft"> </div></div>
 <?php hook("additionaluserlinks");?>
 <?php if ($user["approved"]==1 && !hook("loginasuser")) { ?>
+
+<div class="Question">
+<label><?php echo $lang["team_user_contributions"]?></label>
+<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo $ref?>"><?php echo LINK_CARET ?><?php echo $lang["team_user_view_contributions"] ?></a></div>
+<div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["log"]?></label>
 <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["clicktoviewlog"]?></a></div>
@@ -209,6 +214,8 @@ if (!hook("ticktoemailpassword"))
 <div class="Fixed"><a href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $ref?>&loginas=true"><?php echo LINK_CARET ?><?php echo $lang["clicktologinasthisuser"]?></a></div>
 <div class="clearerleft"> </div></div>
 <?php } ?>
+
+
 
 <div class="QuestionSubmit">
 <label for="buttons"> </label>			

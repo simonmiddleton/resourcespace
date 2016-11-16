@@ -5,7 +5,7 @@ include(dirname(__FILE__)."/../../../include/search_functions.php");
 include(dirname(__FILE__)."/../../../include/collections_functions.php");
 include(dirname(__FILE__)."/rssfeed.php");
 
-$api=true;
+$api=true;$enable_remote_apis=true;
 include(dirname(__FILE__)."/../../../include/authenticate.php");
 
 // extra check if rss_limits are enabled
