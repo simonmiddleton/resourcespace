@@ -119,7 +119,7 @@ hook("beforepermissionscheck");
 # check permissions (error message is not pretty but they shouldn't ever arrive at this page unless entering a URL manually)
 if($access == 2) 
 	{
-	if(isset($anonymous_login))
+	if(isset($anonymous_login) && (!isset($is_authenticated) || (isset($is_authenticated) && !$is_authenticated)))
 		{
 		redirect('login.php');
 		}

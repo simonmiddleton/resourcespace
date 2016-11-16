@@ -15,6 +15,7 @@ include "../../include/image_processing.php";
 // Disable sql_logging
 $mysql_log_transactions=false;
 
+
 $sql = '';
 if('' != getval('ref', ''))
     {
@@ -24,6 +25,12 @@ if('' != getval('ref', ''))
 set_time_limit(0);
 echo "<pre>";
 
+
+$start = getvalescaped('start', '0');
+if(!is_numeric($start))
+    {
+    $start = 0;
+    }
 
 $start = getvalescaped('start', '');
 if(is_numeric($start))
@@ -38,9 +45,11 @@ if(is_numeric($start))
 	
 $resources = sql_query("SELECT r.ref, u.username, u.fullname FROM resource AS r LEFT OUTER JOIN user AS u ON r.created_by = u.ref {$sql} ORDER BY ref");
 
+
 $time_start = microtime(true);
 
-for($n = 0; $n < count($resources); $n++)
+
+for($n = $start; $n < count($resources); $n++)
     {
     $ref = $resources[$n]['ref'];
 
@@ -49,6 +58,7 @@ for($n = 0; $n < count($resources); $n++)
     $words = sql_value("SELECT count(*) `value` FROM resource_keyword WHERE resource = '{$ref}'", 0);
 
     echo "Done {$ref} ({$n}/" . count($resources) . ") - $words words<br />\n";
+
 
     @flush();
     @ob_flush();
@@ -65,7 +75,8 @@ for($n=0;$n<$count;$n++)
         add_node_keyword_mappings($nodes[$n], $nodes[$n]["partial_index"]);
         }
 
+
 $time_end = microtime(true);
-$time = $time_end - $time_start;
+$time     = $time_end - $time_start;
 
 echo "Reindex took $time seconds\n";

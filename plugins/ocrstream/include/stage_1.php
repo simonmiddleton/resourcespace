@@ -140,7 +140,7 @@ if ($ext === 'pdf')
 
 # If language parameter is not valid, choose global ocr language setting
 $tesseract_languages = get_tesseract_languages();
-if (array_search($ocr_lang, $tesseract_languages) == false)
+if (array_search($ocr_lang, $tesseract_languages) === false)
     {
     $_SESSION["ocr_force_language_" . $ID] = 1;
     }
