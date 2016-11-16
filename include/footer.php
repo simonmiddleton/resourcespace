@@ -511,9 +511,19 @@ if($responsive_ui)
     var responsive_hide;
     var responsive_newpage = true;
 
+    if(jQuery(window).width() <= 1200)
+        {
+        jQuery('.ResponsiveViewFullSite').css('display', 'block');
+        }
+    else
+        {
+        jQuery('.ResponsiveViewFullSite').css('display', 'none');
+        }
+
     if(jQuery(window).width()<=700) {
         touchScroll("UICenter");
     }
+
     jQuery(window).resize(function() {
         hideMyCollectionsCols();
         responsiveCollectionBar();

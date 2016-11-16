@@ -1256,3 +1256,5 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
     
 .CollectionPanelTools {visibility:hidden;}
 .CollectionPanelShell:hover .CollectionPanelTools {visibility:visible;}
+
+.ResponsiveViewFullSite { display: none; }
