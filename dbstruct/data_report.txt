@@ -298,3 +298,17 @@ select
 (select count(*) from collection_resource) as 'Collection resource relationships',
 (select count(*) from user) as 'Total users';
 "
+17,"Resource downloads (number)","
+   SELECT r.ref AS 'Resource ID',
+          r.title AS 'Resource Title',
+          rt.name AS 'Resource Type',
+          count(rl.resource) AS 'Number of downloads'
+     FROM resource_log AS rl
+LEFT JOIN resource AS r ON r.ref = rl.resource# 
+LEFT JOIN resource_type rt ON r.resource_type = rt.ref
+    WHERE rl.type = 'd'
+      AND rl.date >= date('[from-y]-[from-m]-[from-d]')
+      AND rl.date <= adddate(date('[to-y]-[to-m]-[to-d]'), 1)
+ GROUP BY r.ref
+ ORDER BY rl.date
+"
