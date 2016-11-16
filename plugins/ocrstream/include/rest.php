@@ -3,9 +3,9 @@ require_once "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 require_once "../../../include/general.php";
 
-$ref_filter_options = ["options" =>['min_range' => 1]];
+$ref_filter_options = array("options" =>array(('min_range' => 1));
 $ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT, $ref_filter_options);
-$ocr_state_filter_options = ["options" =>['min_range' => 0, 'max_range' => 2]];
+$ocr_state_filter_options = array("options" =>array(('min_range' => 0, 'max_range' => 2));
 $ocr_state = filter_input(INPUT_GET, 'ocr_state', FILTER_VALIDATE_INT, $ocr_state_filter_options);
 $ocr_state_query = filter_input(INPUT_GET, 'ocr_state_query', FILTER_VALIDATE_BOOLEAN);
 $get_true_size = filter_input(INPUT_GET, 'get_true_size', FILTER_VALIDATE_BOOLEAN);

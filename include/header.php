@@ -142,7 +142,13 @@ if($simple_search_pills_view)
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jquery_tag_editor/jquery.tag-editor.css" />
     <?php
     }
-    ?>
+?>
+
+<!-- FLOT for graphs -->
+<script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.js"></script> 
+<script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.time.js"></script> 
+<script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.pie.js"></script> pt>
+<script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.tooltip.min.js"></script>
 
 <!-- jsTree -->
 <link rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jstree/themes/default/style.min.css">

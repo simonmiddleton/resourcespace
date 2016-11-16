@@ -52,7 +52,7 @@ include "../include/header.php";
     
     <?php hook("extra");?>
     <?php } else {?>
-    <p><a href="<?php echo $baseurl_short?>login.php"><?php echo LINK_CARET ?>?php echo $lang["continuetouser"]?></a></p>
+    <p><a href="<?php echo $baseurl_short?>login.php"><?php echo LINK_CARET ?><?php echo $lang["continuetouser"]?></a></p>
     <?php } ?>
 </div>
 

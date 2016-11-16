@@ -137,7 +137,7 @@ include "../../include/header.php";
         }
         ?>
 
-    <li><a href="<?php echo $baseurl_short?>pages/team/team_stats.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["viewstatistics"]?></a></li>
+    <li><a href="<?php echo $baseurl_short?>pages/team/team_analytics.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["rse_analytics"]?></a></li>
     
     <li><a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["viewreports"]?></a></li>
 
