@@ -151,6 +151,17 @@ if($simple_search_pills_view)
 <script src="<?php echo $baseurl_short; ?>lib/jstree/jstree.min.js"></script>
 <script src="<?php echo $baseurl_short; ?>lib/js/category_tree.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
+<!-- Chosen support -->
+<?php 
+if ($chosen_dropdowns) 
+        { 
+        ?>
+        <script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
+        <?php
+        }
+?>
+
 <script type="text/javascript">
 var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
