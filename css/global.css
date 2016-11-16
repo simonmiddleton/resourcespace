@@ -1192,5 +1192,6 @@ form.FormFilter button {
 
 .HiddenTile {
     border: 1px solid red !important;
+    margin: -2px ;
 }
 .tag-editor li { padding: initial; }
