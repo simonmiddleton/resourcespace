@@ -1378,11 +1378,17 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 
 	$emails=array();
 	$key_required=array();
-	
-	$emails_keys=resolve_user_emails($ulist);
-	$unames=$emails_keys['unames'];
-	$emails=$emails_keys['emails'];
-	$key_required=$emails_keys['key_required'];
+
+    $emails_keys = resolve_user_emails($ulist);
+
+    if(0 === count($emails_keys))
+        {
+        return $lang['email_error_user_list_not_valid'];
+        }
+
+    $unames       = $emails_keys['unames'];
+    $emails       = $emails_keys['emails'];
+    $key_required = $emails_keys['key_required'];
 
 	# Send an e-mail to each resolved user / e-mail address
 	$subject="$applicationname: $resourcename";
@@ -3018,10 +3024,10 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
         
 	if (!checkperm("e" . $status)) {return false;} # Must have edit permission to this resource first and foremost, before checking the filter.
 	
-	if (checkperm("z" . $status) || ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref))) {return false;} # Cannot edit if z permission, or if other user uploads pending approval and not admin
+	if (checkperm("z" . $status) || ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref) && !checkperm("ert" . $resourcedata['resource_type']))) {return false;} # Cannot edit if z permission, or if other user uploads pending approval and not admin
 	
 	$gotmatch=false;
-	if (trim($usereditfilter)=="" || $status<0) # No filter set, or resource is still in a User Contributed state in which case the edit filter should not be applied.
+	if (trim($usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
 		{
 		$gotmatch = true;
 		}

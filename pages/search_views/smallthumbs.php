@@ -2,7 +2,7 @@
 if (!hook("renderresultsmallthumb")) 
 	{ ?>
 	<!--Resource Panel-->
-	<div class="ResourcePanelShellSmall" <?php if ($display_user_rating_stars && $k==""){?> <?php } ?>id="ResourceShell<?php echo htmlspecialchars($ref)?>">
+	<div class="ResourcePanelShellSmall" <?php if ($display_user_rating_stars && $k==""){?> <?php } ?>id="ResourceShell<?php echo htmlspecialchars($ref)?>"  <?php echo hook('resourcepanelshell_attributes')?> >
 		<div class="ResourcePanelSmall  <?php hook('smallthumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
 			<?php  
 			if ($resource_type_icons) 

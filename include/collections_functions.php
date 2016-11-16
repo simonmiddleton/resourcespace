@@ -146,7 +146,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 	{
 	global $collection_allow_not_approved_share, $collection_block_restypes;	
 	$addpermitted=collection_writeable($collection) || $smartadd;
-	if ($addpermitted &&(count($collection_block_restypes)>0))
+	if ($addpermitted && !$smartadd && (count($collection_block_restypes)>0)) // Can't always block adding resource types since this may be a single resource managed request
 		{
 		if($addtype=="")
 			{
@@ -355,6 +355,9 @@ function delete_collection($ref)
 	{
 	# Deletes the collection with reference $ref
 	global $home_dash;
+	
+	# Permissions check
+	if (!collection_writeable($ref)) {return false;}
 	
 	hook("beforedeletecollection","",array($ref));
 	sql_query("delete from collection where ref='$ref'");
@@ -1029,6 +1032,12 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 	if ($feedback) {$feedback=1;} else {$feedback=0;}
 	$reflist=trim_array(explode(",",$colrefs));
 	$emails_keys=resolve_user_emails($ulist);
+
+    if(0 === count($emails_keys))
+        {
+        return $lang['email_error_user_list_not_valid'];
+        }
+
 	$emails=$emails_keys['emails'];
 	$key_required=$emails_keys['key_required'];
 

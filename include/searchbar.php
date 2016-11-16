@@ -404,7 +404,7 @@ if (!$basic_simple_search)
 	if (!$searchbar_buttons_at_bottom){ echo $searchbuttons."<br/>"; }
 	if (!$basic_simple_search) {
 	// Include simple search items (if any)
-	global $clear_function;
+	global $clear_function, $simple_search_show_dynamic_as_dropdown, $chosen_dropdowns;
 	
 	$optionfields=array();
 	$rendered_names=array();
@@ -697,7 +697,18 @@ if (!$basic_simple_search)
 			});
 		});
 
-	function ResetTicks() {<?php echo $clear_function?>}
+	function ResetTicks()
+		{
+		<?php
+		echo $clear_function;
+		if($chosen_dropdowns)
+			{
+			?>
+			jQuery('#SearchBox select').trigger('chosen:updated');
+			<?php
+			}
+		?>
+		}
 	</script>
 	
 	<!--				
@@ -731,7 +742,7 @@ if (!$basic_simple_search)
 
   <?php hook("searchbarafterbuttons"); ?>
 
-  <?php if ($view_new_material) { ?><p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search.php?search=<?php echo urlencode("!last".$recent_search_quantity)?>">&gt; <?php echo $lang["viewnewmaterial"]?></a></p><?php } ?>
+  <?php if ($view_new_material) { ?><p><i aria-hidden="true" class="fa fa-fw  fa-clock-o"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search.php?search=<?php echo urlencode("!last".$recent_search_quantity)?>"><?php echo $lang["viewnewmaterial"]?></a></p><?php } ?>
 	
 	<?php } ?> <!-- END of Searchbarreplace hook -->
 	</div>

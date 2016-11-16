@@ -541,7 +541,20 @@ if (!hook("replacetitleprefix","",array($resource["archive"]))) { switch ($resou
 	case 3:
 	?><span class="DeletedResourceTitle"><?php echo $lang["status3"]?>:</span>&nbsp;<?php
 	break;
-	} }
+	}
+	
+	#If additional archive states are set, put them next to the field used as title
+	if ( isset($additional_archive_states) && count($additional_archive_states)!=0)
+		{
+		if(in_array($resource["archive"],$additional_archive_states))
+			{?>
+			<span class="ArchiveResourceTitle"><?php echo $lang["status{$resource['archive']}"]?>:</span>&nbsp;<?php	
+			}
+		}
+	}
+	
+	
+	
 
 if(!hook('replaceviewtitle'))
     {
@@ -1153,7 +1166,7 @@ hook ("resourceactions") ?>
 		}
 	if ($edit_access) 
 		{ ?>
-		<li><a href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>"    onClick="return CentralSpaceLoad(this,true);">
+		<li><a href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>"    onClick="return <?php echo ($resource_edit_modal_from_view_modal && $modal ? 'Modal' : 'CentralSpace')?>Load(this,true);">
 			<?php echo "<i class='fa fa-pencil'></i>&nbsp;" .$lang["action-edit"]?>
 		</a></li>
 		<?php 

@@ -8,7 +8,10 @@ if(!checkperm('a'))
     exit($lang['error-permissiondenied']);
     }
 
+// Specify the name of this plugin and the heading to display for the page.
 $plugin_name         = 'vimeo_publish';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
 $plugin_page_heading = $lang['vimeo_publish_configuration'];
 
 // Build Insructions from language strings:

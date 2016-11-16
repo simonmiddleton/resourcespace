@@ -162,7 +162,14 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
 	# For downloads, add size 
 	if ($log[$n]["type"]=="d")
         {
-        echo " (" . ($log[$n]["size"]==""?$lang["collection_download_original"]:$log[$n]["size"]) . ")";
+		if(is_numeric($log[$n]["purchase_size"])) // The user downloaded an alternative file
+			{
+			echo " (" . $lang["alternativefiles"] . " <a href='" . $baseurl . "/pages/alternative_files.php?ref=" . $ref . "&alternative=" . $log[$n]["purchase_size"] . "'>#" . $log[$n]["purchase_size"] . "<a/>)";
+			}
+		else
+			{
+			echo " (" . ($log[$n]["size"]==""?$lang["collection_download_original"]:$log[$n]["size"]) . ")";	
+			}
         }
 
         hook("log_diff_td_extra","",array($ref));

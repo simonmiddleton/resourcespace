@@ -1347,3 +1347,24 @@ function get_plugin_css(){
 	}
 	return $plugincss;
 }
+/*
+Activate language and configuration for plugins for use on setup page if plugin is not enabled for user group
+
+@param string $plugin_name the name of the plugin to activate
+*/
+function plugin_activate_for_setup($plugin_name)
+	{	
+	// Add language file
+	register_plugin_language($plugin_name);
+	
+	// Include <plugin>/hooks/all.php case functions are included here
+	$pluginpath=get_plugin_path($plugin_name);
+	$hookpath=$pluginpath . "/hooks/all.php";
+	if (file_exists($hookpath)) {include_once $hookpath;}	
+	
+	// Include plugin configuration
+	include_plugin_config($plugin_name);	
+	return true;
+	}
+
+	

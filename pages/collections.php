@@ -743,7 +743,7 @@ elseif ($k!="" && !$internal_share_access)
                 
 
 			#show only active collections if a start date is set for $active_collections 
-			if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1))
+			if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="My Collection" && $list[$n]['user']==$userref))
 					{ ?>
 			<option value="<?php echo $list[$n]["ref"]?>" <?php if ($usercollection==$list[$n]["ref"]) {?> 	selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?> <?php if ($collection_dropdown_user_access_mode){echo htmlspecialchars("(". $colusername."/".$accessmode.")"); } ?></option>
 			<?php }
@@ -1080,4 +1080,92 @@ hook("thumblistextra");
 	</div>
 	<?php } ?>
 
-<?php draw_performance_footer();
+<?php
+draw_performance_footer();
+
+if ($chosen_dropdowns && $chosen_dropdowns_collection) { ?>
+<!-- Chosen support -->
+<script type="text/javascript">
+	chosenColElm = (thumbs=='show' ? '#CollectionMaxDiv' : '#CollectionMinDiv');
+	var css_width = jQuery(chosenColElm+" select").css("width");
+	jQuery(chosenColElm+" select").each(function(){
+		var css_width = jQuery(this).css("width");
+		jQuery(this).chosen({disable_search_threshold: chosenCollectionThreshold, 'width': css_width});
+	});
+	
+	jQuery("#CollectionDiv select").on('chosen:showing_dropdown', function(event, params) {
+	   
+	   var chosen_container = jQuery( event.target ).next( '.chosen-container' );
+	   chosen_containerParent = jQuery(chosen_container).parent();
+	   var dropdown = chosen_container.find( '.chosen-drop' );
+	   var dropdown_top = dropdown.offset().top - jQuery('#CollectionDiv').scrollTop();
+	   var dropdown_height = dropdown.height();
+	   var viewport_height = jQuery('#CollectionDiv').height();
+
+	   if ( dropdown_top + dropdown_height > viewport_height ) {
+		  chosen_container.addClass( 'chosen-drop-up' );
+		  myLayout.allowOverflow('south');
+	   }
+	   switch(thumbs){
+	   		case 'show':
+	   			
+	   			if(jQuery(chosen_containerParent).hasClass('SearchItem')){
+					jQuery("#colselect .chosen-drop").css("display","block");
+				}
+				else{
+					jQuery("#CollectionMaxDiv .ActionsContainer .chosen-drop").css("display","block");
+				}
+	   			break;
+	   		case 'hide':
+	   			
+	   			if(jQuery(chosen_containerParent).attr('id')=='MinColDrop'){
+					jQuery("#colselect2 .chosen-drop").css("display","block");
+				}
+				else{
+					jQuery("#CollectionMinRightNav .ActionsContainer .chosen-drop").css("display","block");
+				}
+				break;
+	   }
+
+	});
+	
+	jQuery("#CollectionDiv select").on('chosen:hiding_dropdown', function(event, params) {
+	   
+	   myLayout.resetOverflow('south');
+	   chosen_containerParent = jQuery( event.target ).next( '.chosen-container' ).parent()
+	   jQuery( event.target ).next( '.chosen-container' ).removeClass( 'chosen-drop-up' );
+	   switch(thumbs){
+	   		case 'show':
+	   			if(jQuery(chosen_containerParent).hasClass('SearchItem')){
+					jQuery("#colselect .chosen-drop").css("display","none");
+				}
+				else{
+					jQuery("#CollectionMaxDiv .ActionsContainer .chosen-drop").css("display","none");
+				}
+	   			break;
+	   		case 'hide':
+	   			if(jQuery(chosen_containerParent).attr('id')=='MinColDrop'){
+					jQuery("#colselect2 .chosen-drop").css("display","none");
+				}
+				else{
+					jQuery("#CollectionMinRightNav .ActionsContainer .chosen-drop").css("display","none");
+				}
+				break;
+	   } 
+	});
+	
+	// for some reason creating a collection would not work without specifying this bit of code...
+	jQuery('#entername2').keyup(function(e){
+		if(e.keyCode == 13){
+			jQuery("#colselect2").submit();
+		}
+	});
+	
+	jQuery('#entername').keyup(function(e){
+		if(e.keyCode == 13){
+			jQuery("#colselect").submit();
+		}
+	});
+</script>
+<!-- End of chosen support -->
+<?php } ?>

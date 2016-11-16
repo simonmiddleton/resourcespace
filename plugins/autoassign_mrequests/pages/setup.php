@@ -8,6 +8,8 @@ include '../../../include/authenticate.php'; if(!checkperm('a')) { exit($lang['e
 
 # Specify the name of this plugin, the heading to display for the page.
 $plugin_name = 'autoassign_mrequests';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}	
 $page_heading = "Auto-assign Managed Requests Configuration";
 
 // Add map

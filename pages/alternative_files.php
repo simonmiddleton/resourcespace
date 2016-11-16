@@ -5,6 +5,7 @@ include "../include/authenticate.php";
 include "../include/resource_functions.php";
 
 $ref=getvalescaped("ref","",true);
+$alt=getvalescaped("alternative","",true);
 
 $search=getvalescaped("search","");
 $offset=getvalescaped("offset","",true);
@@ -74,7 +75,7 @@ for ($n=0;$n<count($files);$n++)
 	{
 	?>
 	<!--List Item-->
-	<tr>
+	<tr <?php if($files[$n]["ref"]==$alt){echo "class='Highlight' ";} ?>>
 	<td><?php echo htmlspecialchars($files[$n]["name"])?></td>	
 	<td><?php echo htmlspecialchars($files[$n]["description"])?>&nbsp;</td>	
 	<td><?php echo ($files[$n]["file_extension"]==""?$lang["notuploaded"]:htmlspecialchars(str_replace_formatted_placeholder("%extension", $files[$n]["file_extension"], $lang["cell-fileoftype"]))); ?></td>	

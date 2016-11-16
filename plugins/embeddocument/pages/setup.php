@@ -5,6 +5,8 @@ include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permis
 
 
 $plugin_name = 'embeddocument';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
 $page_heading = $lang['embeddocument_heading'];
 
 $page_def[]= config_add_single_rtype_select("embeddocument_resourcetype",$lang["embeddocument_specify_resourcetype"]);

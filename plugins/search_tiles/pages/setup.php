@@ -9,6 +9,8 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 	
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'search_tiles';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
 $plugin_page_heading = $lang['search_tiles_title'];
 
 $page_def[] = config_add_boolean_select('search_tiles_text_shadow', $lang['search_tiles_text_shadow'],array(0=>$lang["no"],1=>$lang["yes"]));

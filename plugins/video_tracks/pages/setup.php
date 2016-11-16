@@ -7,6 +7,12 @@ include '../../../include/db.php';
 include_once '../../../include/general.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
+// Specify the name of this plugin and the heading to display for the page.
+$plugin_name = 'video_tracks';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
+$plugin_page_heading = $lang['video_tracks_title'];
+
 $video_tracks_output_formats=unserialize(base64_decode($video_tracks_output_formats_saved));
 $errorfields=array();
 
@@ -36,12 +42,7 @@ if (getval("submit","")!="" || getval("save","")!="")
 	$video_tracks_output_formats_saved=base64_encode(serialize($video_tracks_output_formats_new));
 	}
 
-	
-// Specify the name of this plugin and the heading to display for the page.
-$plugin_name = 'video_tracks';
-$plugin_page_heading = $lang['video_tracks_title'];
-
-
+    
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Now we need to  add all the mappings
 ///////////////////////////////////////////////////////////////////////////////////////////////////

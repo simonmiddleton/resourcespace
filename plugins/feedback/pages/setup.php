@@ -3,6 +3,10 @@ include "../../../include/db.php";
 include_once "../../../include/general.php";
 include "../../../include/authenticate.php"; if (!checkperm("a")) {exit ("Permission denied.");}
 
+$plugin_name = 'feedback';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
+	
 # Make a folder for this
 if(!is_dir($storagedir . "/feedback"))
     {

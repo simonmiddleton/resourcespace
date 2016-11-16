@@ -9,6 +9,8 @@ if (!checkperm('a'))
 
 // Specify the name of this plugin, the heading to display for the page.
 $plugin_name = 'user_preferences';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
 $page_heading = $lang['user_preferences_configuration'];
 
 $choices = array($lang['no'], $lang['yes']);

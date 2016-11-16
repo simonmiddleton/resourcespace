@@ -8,10 +8,13 @@ include '../../../include/db.php';
 include '../../../include/general.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
-$auto_group_templates_array=array();
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name='auto_group';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
 $page_heading=$lang['auto_group_heading'];
+
+$auto_group_templates_array=array();
 $page_intro='';
 
 // Build configuration variable descriptions

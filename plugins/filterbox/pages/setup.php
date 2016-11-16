@@ -7,6 +7,8 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'filterbox';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
 $page_heading = $lang['filterbox_configuration'];
 
 $page_def[]= config_add_boolean_select("filterbox_wildcard",$lang["filterbox_wildcard"]);

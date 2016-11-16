@@ -2734,7 +2734,9 @@ $no_welcometext = false;
 # e.g. for photo (resource type 1 by default)
 # $resource_type_request_emails[1]="imageadministrator@my.site"; 
 # e.g. for documents (resource type 2 by default)
-# $resource_type_request_emails[2]="documentadministrator@my.site"; 
+# $resource_type_request_emails[2]="documentadministrator@my.site";
+#Can be used so that along with the users/emails specified by $resource_type_request_emails, the rest of the users can be notified as well
+$resource_type_request_emails_and_email_notify = false;
 
 # $rating_field. A legacy option that allows for selection of a metadata field that contains administrator ratings (not user ratings) that will be displayed in search list view. Field must be plain text and have numeric only numeric values.
 # $rating_field=121;
@@ -2888,6 +2890,9 @@ $password_reset_link_expiry =1;
 # Show the resource view in a modal when accessed from search results.
 $resource_view_modal=true;
 
+# Show the resource edit in a modal when accessed from resource view modal.
+$resource_edit_modal_from_view_modal=false;
+
 # Show geographical search results in a modal
 $geo_search_modal_results = true;
 
@@ -2917,6 +2922,16 @@ $resource_request_reason_required=true;
 
 # Use the 'chosen' library for rendering dropdowns (improved display and search capability for large dropdowns)
 $chosen_dropdowns=false;
+
+# The number of options that must be present before including seach capability.
+$chosen_dropdowns_threshold_main=10;
+$chosen_dropdowns_threshold_simplesearch=10;
+
+# Use the 'chosen' library for rendering dropdowns in the collection bar. $chosen_dropdowns must be set to true.
+$chosen_dropdowns_collection=false;
+
+# The number of options that must be present before including seach capability for collection bar dropdowns.
+$chosen_dropdowns_threshold_collection=10;
 
 # Allow ResourceSpace to upload multiple times the same file in a row
 # Set to true only if you want RS to create duplicates when client is losing

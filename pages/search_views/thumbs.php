@@ -2,7 +2,7 @@
 if (!hook("renderresultthumb")) 
 	{ ?>
 	<!--Resource Panel-->
-	<div class="ResourcePanelShell" id="ResourceShell<?php echo htmlspecialchars($ref)?>">
+	<div class="ResourcePanelShell" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>>
 		<div class="ResourcePanel <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
 		<?php  
 		if ($resource_type_icons) 
@@ -113,6 +113,10 @@ if (!hook("renderresultthumb"))
                                 var snapshot_number     = Math.ceil(x_coord / snapshot_segment_px);
 
                                 jQuery(this).attr('src', video_snapshots[snapshot_number]);
+                                }
+                            ).mouseout(function(event)
+                                {
+                                jQuery(this).attr('src', "<?php echo $thm_url; ?>");
                                 }
                             );
                             </script>

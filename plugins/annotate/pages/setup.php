@@ -8,6 +8,10 @@ include '../../../include/db.php';
 include_once '../../../include/general.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
+$plugin_name = 'annotate';
+if(!in_array($plugin_name, $plugins))
+	{plugin_activate_for_setup($plugin_name);}
+
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'annotate';
 $plugin_page_heading = $lang['annotate_configuration'];

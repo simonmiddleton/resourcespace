@@ -1,6 +1,6 @@
 <?php /* -------- Date ---------------------------- */ 
 
-global $reset_date_upload_template, $reset_date_field, $blank_date_upload_template,$date_d_m_y;
+global $reset_date_upload_template, $reset_date_field, $blank_date_upload_template,$date_d_m_y, $chosen_dropdowns, $tabs_on_edit;
 
 # Start with a null date
 $dy="";
@@ -40,12 +40,14 @@ elseif ($value!="")
 if($date_d_m_y){  
 ?>
 <select id="<?php echo $name; ?>-d" name="<?php echo $name?>-d"
+<?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateDay"<?php } ?>
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
 ><option value=""><?php echo $lang["day"]?></option>
 <?php for ($m=1;$m<=31;$m++) {?><option <?php if($m==$dd){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
 </select>
     
 <select id="<?php echo $name; ?>-m" name="<?php echo $name?>-m"
+<?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateMonth"<?php } ?>
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
 ><option value=""><?php echo $lang["month"]?></option>
 <?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo $lang["months"][$m-1]?></option><?php } ?>
@@ -55,12 +57,14 @@ if($date_d_m_y){
 else{
 ?>
 <select id="<?php echo $name; ?>-m" name="<?php echo $name?>-m"
+<?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateMonth"<?php } ?>
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
 ><option value=""><?php echo $lang["month"]?></option>
 <?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo $lang["months"][$m-1]?></option><?php } ?>
 </select>
 
 <select id="<?php echo $name; ?>-d" name="<?php echo $name?>-d"
+<?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateDay"<?php } ?>
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
 ><option value=""><?php echo $lang["day"]?></option>
 <?php for ($m=1;$m<=31;$m++) {?><option <?php if($m==$dd){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
@@ -76,12 +80,14 @@ else{
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <select id="<?php echo $name; ?>-h" name="<?php echo $name?>-h"
+<?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateHour"<?php } ?>
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
 ><option value=""><?php echo $lang["hour-abbreviated"]?></option>
 <?php for ($m=0;$m<=23;$m++) {?><option <?php if($m==$dh){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
 </select>
 
 <select id="<?php echo $name; ?>-i" name="<?php echo $name?>-i"
+<?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateMinute"<?php } ?>
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
 ><option value=""><?php echo $lang["minute-abbreviated"]?></option>
 <?php for ($m=0;$m<=59;$m++) {?><option <?php if($m==$di){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
