@@ -400,6 +400,9 @@ Note: this honours $exiftool_write so if that option is false, this will not wor
 $force_exiftool_write_metadata = false;
 $exiftool_write_option         = false;
 
+#Option to strip tags from rich fields when downloading metadata, by default is FALSE (keeping the tags added by CKEDITOR)
+$strip_rich_field_tags = false;
+
 # Set metadata_read to false to omit the option to extract metadata.
 $metadata_read=true;
 
