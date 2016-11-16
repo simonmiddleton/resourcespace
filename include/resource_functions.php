@@ -189,7 +189,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
 									}
 								}
 							}
+                        else 
+                            {
+                            $val.=" 00:00";
+                            }
 						}
+                     else 
+                        {
+                        $val.="-00 00:00";
+                        }
 					}
 				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
 					{
@@ -231,6 +239,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 				$error=hook("additionalvalcheck", "all", array($fields, $fields[$n]));
 				if ($error) 
 					{
+					global $lang;
 					global $lang;
 					if (getval("autosave","")!="")
 						{
