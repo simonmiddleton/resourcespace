@@ -19,12 +19,11 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     {
     node_field_options_override($field);
     
-    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, 
-           $daterange_search, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function,
-           $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml;
+    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml;
+    
+    $name="field_" . ($forsearchbar ? htmlspecialchars($field["name"]) : $field["ref"]);
+    $id="field_" . $field["ref"];
 
-    $name = "field_" . ($forsearchbar ? htmlspecialchars($field["name"]) : $field["ref"]);
-    $id   = "field_" . $field["ref"];
     
     if($forsearchbar)
     	{
@@ -610,9 +609,9 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             	{
             	# Add to the clear function so clicking 'clear' clears this box.
 				$clear_function.="
-					document.getElementById('field_" . $field["name"] . "_year').selectedIndex=0;
-					document.getElementById('field_" . $field["name"] . "_month').selectedIndex=0;
-					document.getElementById('field_" . $field["name"] . "_day').selectedIndex=0;
+					document.getElementById('field_" . $field["ref"] . "_year').selectedIndex=0;
+					document.getElementById('field_" . $field["ref"] . "_month').selectedIndex=0;
+					document.getElementById('field_" . $field["ref"] . "_day').selectedIndex=0;
 					";
 				}
             }
