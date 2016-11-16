@@ -186,6 +186,13 @@ include "include/header.php";
 if($login_background && !hook('replace_login_background'))
 	{
     $backimageurl = "";
+
+    // Create homeanim folder if we don't have one
+    if(!file_exists(dirname(__FILE__) . "/{$homeanim_folder}"))
+        {
+        mkdir(dirname(__FILE__) . "/{$homeanim_folder}", 0777, true);
+        }
+
     $dir = dirname(__FILE__) . "/" . $homeanim_folder;
     $d = scandir($dir);    
 	sort($d, SORT_NUMERIC);

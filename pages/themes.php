@@ -374,7 +374,7 @@ if ($themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
 		$link.="=". urlencode($themes[$x]);
 		if($simpleview)
 		{$link.="&simpleview=true";}
-		echo "<?php echo LINK_CARET ?>";
+		echo LINK_CARET;
 		?><a href="<?php echo $link ?>" onClick="return CentralSpaceLoad(this,true);"><span><?php echo str_replace("*","",i18n_get_collection_name($themes[$x])) ?>&nbsp;</span></a><?php
 		}
 	echo "</div>";
@@ -687,14 +687,14 @@ if ($header=="" && !isset($themes[0]))
 					{				
 					# Sub node, display node name and make it a link to the previous level.
 					?>
-					<p><a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo $headers[$n]["ref"] ?>&node=<?php echo urlencode(getval("parentnode",0)) ?>&nodename=<?php echo urlencode(getval("parentnodename","")) ?>&simpleview=true" onClick="return CentralSpaceLoad(this,true);">&lt;&nbsp;<?php echo $lang["back"]?></a></p>
+					<p><a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo $headers[$n]["ref"] ?>&node=<?php echo urlencode(getval("parentnode",0)) ?>&nodename=<?php echo urlencode(getval("parentnodename","")) ?>&simpleview=true" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
 					<?php						
 					}
 				else
 					{
 					# First smart theme node, display link to main themes page
 					?>
-					<p><a href="<?php echo $baseurl_short?>pages/themes.php?simpleview=true" onClick="return CentralSpaceLoad(this,true);">&lt;&nbsp;<?php echo $lang["back"]?></a></p>
+					<p><a href="<?php echo $baseurl_short?>pages/themes.php?simpleview=true" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
 					<?php
 					}
 				}

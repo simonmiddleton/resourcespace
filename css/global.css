@@ -10,7 +10,7 @@ td, textarea {font-size:1em;}
 
 /*Basic tag setup for creating standards across platforms and browsers*/
 p, h1, h2, h3, h4, h5 {padding:0; margin:0; vertical-align:top;}
-p {padding:0 0 1.75em; margin:0; font-size:1em; line-height:1.25em;}
+p {padding:0 0 1em; margin:0; font-size:1em; line-height:1.25em;}
 p.tight {padding:0 0 0.75em;}
 h1 {padding:0.1em 0 0.5em;margin:0;font-weight: normal;font-size: 1.5em;}
 h2 {padding:0.1em 0;margin:0;font-weight: normal;font-size:1.5em;}
@@ -111,7 +111,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #CentralSpace {text-align:left;position:relative;}
 
 .TopInpageNav {clear: left;padding-bottom: 5px;margin-bottom:10px;margin-right: 15px;position:relative;}
-.BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 0px 0px; position:relative;}
+.BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0px; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
 .TopInpageNavLeft{float:left;padding-right:240px;}
 .TopInpageNavRight{position:absolute;right:0;top:0;width:280px;text-align:right;}
@@ -123,9 +123,6 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .TopInpageNav a:link, .TopInpageNav a:visited, .BottomInpageNav a:link, .BottomInpageNav a:visited , #CentralSpaceLogin a:link, #CentralSpaceLogin a:visited {text-decoration:none;}
 .TopInpageNav a:hover, .TopInpageNav a:active, .BottomInpageNav a:hover, .BottomInpageNav a:active, #CentralSpaceLogin a:hover, #CentralSpaceLogin a:active {text-decoration:underline;}
 .Selected {font-weight: bold;}
-#jumppanel1{margin-top:45px !important;padding: 10px;}
-#jumppanel3{margin-top: 20px !important;text-align: right;}
-.TopInpageNav #jumppanel2{margin-top: 35px !important;text-align: right;float: right;}
 
 .HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;}
 .HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0px;}
@@ -221,7 +218,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
 .ListTools a:hover	{text-decoration:none;}
-a:hover .fa {text-decoration:none !important;} /* Never underline an icon */
+a:hover .fa {text-decoration:none !important;} /* Never underline a FontAwesome icon */
 
 .ResourceSelect {display:block;float:right;}
 .IconUserRatingStar	{width:13px;height:15px;padding: 0;margin-bottom:6px;display: block;}
@@ -230,7 +227,7 @@ a:hover .fa {text-decoration:none !important;} /* Never underline an icon */
 .DESC {display: inline;padding-right: 10px;}
 
 /*Resource Panel layout*/
-.Listview {overflow-x:auto;	margin: 25px 10px 25px 0;}
+.Listview {overflow-x:auto;	margin: 0 10px 25px 0;}
 .ListviewTight {margin: 5px 10px 5px 0;}
 .Listview table{ width:100%;}
 .Listview td {padding: 5px 5px 5px 5px;}
@@ -360,7 +357,7 @@ a:hover .fa {text-decoration:none !important;} /* Never underline an icon */
 /*Home styling */
 .HomePanel {margin:0px 15px 15px 0px;width: 250px;float: left;} 
 .HomePanelIN {padding: 15px;min-height: 150px;}
-.HomePanel h2 {display:block;margin: 5px 0px;}
+.HomePanel h2 {display:block;margin: 5px 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .HomePanel p {margin: 0; padding: 5px 0 4px 0;}
 .HomePicturePanel {    margin:0px 15px 10px 0px;float: left;width: 517px;}
 .HomePicturePanelIN img {width:517px; height:350px;}
@@ -558,19 +555,13 @@ li.plupload_droptext {font-size: 1.1em;}
     {
     height: 8px;
     }
-.BasicsBox h1.CollapsibleSectionHead  
-    {
-    padding-left: 17px;
-    cursor: pointer;
-    }
 .CollapsibleSectionHead 
     {
-    padding-left: 17px;
     cursor: pointer;
     }
 
 h2.CollapsibleSectionHead {
-	padding: 0.1em 0 0.5em 17px;
+	padding: 0.1em 0 0.5em 0;
 }
 
 .CollapsibleSection 
@@ -831,7 +822,6 @@ a.HomePanel:hover {
 	margin-left:10px;
 	margin-bottom: 0;
 	padding-bottom: 0;
-	padding-left: 20px;
 	cursor: pointer;
 	padding-top: 5px;
 	text-transform: capitalize;
@@ -1126,4 +1116,14 @@ form.FormFilter button {
 UL.jqueryFileTree A:hover {font-weight:bold;}
 
 .CollectBack .CollectionResourceRemove, .CollectBack .CollectionResourceRemove:hover {text-decoration:none;}
+
+.JumpPanel input
+	{
+	width:35px;
+	}
+
+/* Collapsible sections - using FontAwesome */
+.collapsed:before {content: "\f0da";    font: normal normal normal 22px FontAwesome;padding-right:5px; display: inline-block; width:0.6em;}
+.expanded:before {content: "\f0d7";    font: normal normal normal 22px FontAwesome;padding-right:5px; display: inline-block; width:0.6em;}
+
 .tag-editor li { padding: initial; }

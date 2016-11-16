@@ -288,24 +288,7 @@ $url=$baseurl_short."pages/collection_manage.php?paging=true&col_order_by=".urle
 <input type=hidden name="remove" id="collectionremove" value="">
 <input type=hidden name="add" id="collectionadd" value="">
 
-<?php
 
-// count how many collections are owned by the user versus just shared, and show at top
-$mycollcount = 0;
-$othcollcount = 0;
-for($i=0;$i<count($collections);$i++){
-	if ($collections[$i]['user'] == $userref){
-		$mycollcount++;
-	} else {
-		$othcollcount++;
-	}
-}
-
-$collcount = count($collections);
-echo $collcount==1 ? $lang["total-collections-1"] : str_replace("%number", $collcount, $lang["total-collections-2"]);
-echo " " . ($mycollcount==1 ? $lang["owned_by_you-1"] : str_replace("%mynumber", $mycollcount, $lang["owned_by_you-2"])) . "<br />";
-# The number of collections should never be equal to zero.
-?>
 
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
@@ -379,7 +362,30 @@ if (!hook('collectionaccessmode')) {
 </div>
 
 </form>
-<div class="BottomInpageNav"><?php pager(false); ?></div>
+<div class="BottomInpageNav">
+<div class="BottomInpageNavLeft">
+<?php
+
+// count how many collections are owned by the user versus just shared, and show at top
+$mycollcount = 0;
+$othcollcount = 0;
+for($i=0;$i<count($collections);$i++){
+	if ($collections[$i]['user'] == $userref){
+		$mycollcount++;
+	} else {
+		$othcollcount++;
+	}
+}
+
+$collcount = count($collections);
+echo $collcount==1 ? $lang["total-collections-1"] : str_replace("%number", $collcount, $lang["total-collections-2"]);
+echo " " . ($mycollcount==1 ? $lang["owned_by_you-1"] : str_replace("%mynumber", $mycollcount, $lang["owned_by_you-2"])) . "<br />";
+# The number of collections should never be equal to zero.
+?>
+</div>
+
+<?php pager(false); ?><div class="clearerleft"></div></div>
+
 </div>
 
 <!--Create a collection-->

@@ -32,6 +32,7 @@ input[readonly] {color: #000000;}
 #TextHeader, #TextHeader a {color:#616161;}
 #TextDesc{color:#616161;}
 .TopInpageNav {border-bottom: 1px solid #BBBBBB;}
+
 .FormError {color: #FF0000;}
 .FormIncorrect {color: #FF0000;border: 1px solid #BBBBBB;background: #FFFFFF;}
 .PageInformal {color: #FF0000;border: 1px solid #BBBBBB;background: #FFFFFF;}
@@ -94,7 +95,6 @@ input[readonly] {color: #000000;}
 
 #SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN {
 	background: rgba(30, 30, 30, 0.70);
-	border: 1px solid #b0b0b0;
 	color:#FFF;
 }
 #HomeSiteText{padding:10px;}
@@ -227,8 +227,8 @@ li.plupload_droptext {color:#999;}
 .permissionstable tbody{color: #000000;}
 .CodeMirror-wrapping{color: #000000;background: #FFFFFF;}
 .PanelShadow{background: none;}
-.collapsed{background: url(../gfx/interface/HomeArrow.gif) no-repeat top left; background-position:3px 8px; }
-.expanded{background: url(../gfx/interface/HomeArrowDown.gif) no-repeat top left; background-position:0px 12px;}
+
+
 .CommentFlag { background-image: url('../gfx/interface/FlagOff.png'); }
 .CommentEntryInfoCommenterName { color: #3070bf; }
 .CommentBody { color: #000000}

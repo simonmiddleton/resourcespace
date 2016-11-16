@@ -160,9 +160,9 @@ function addColumnHeader($orderName, $labelKey)
 
 				<td>
 					<div class="ListTools">
-						<?php echo LINK_CARET ?><a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-edit"]?></a>
+						<a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
 						&nbsp;
-						<?php echo LINK_CARET ?><a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["users"]?></a>
+						<a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["users"]?></a>
 					</div>
 				</td>
 			</tr>
