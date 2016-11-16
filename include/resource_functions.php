@@ -759,7 +759,7 @@ function save_resource_data_multi($collection)
                         # If this is a 'joined' field we need to add it to the resource column
                         $joins=get_resource_table_joins();
                         if (in_array($fields[$n]["ref"],$joins)){
-                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check($val)."' where ref='$ref'");
+                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
                         }		
                             
                         # Purge existing data and keyword mappings, decrease keyword hitcounts.
@@ -1363,7 +1363,7 @@ function update_field($resource, $field, $value, array $errors = array())
             {
             global $resource_field_column_limit;
 
-            $truncated_value = substr($value, 0, $resource_field_column_limit);
+            $truncated_value = truncate_join_field_value($value);
 
             // Remove backslashes from the end of the truncated value
             if(substr($truncated_value, -1) === '\\')
