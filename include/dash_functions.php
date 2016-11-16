@@ -1183,7 +1183,7 @@ function build_dash_tile_list($dtiles_available)
   		$buildstring = explode('?',$tile["url"]);
 		parse_str(str_replace("&amp;","&",$buildstring[1]),$buildstring);
   		?>
-  		<tr id="tile<?php echo $tile["ref"];?>">
+  		<tr id="tile<?php echo $tile["ref"];?>" <?php if(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf") {echo "class=\"conftile\"";} ?>>
   			<td>
   				<input 
   					type="checkbox" 
