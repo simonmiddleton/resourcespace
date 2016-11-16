@@ -582,9 +582,11 @@ elseif($restypes=='')
 								}
 							break;
 						default:
-							?>
+							if ($fields[$n]['field_constraint']==1){?>
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';	
+							<?php } else { ?>
 							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
-							<?php
+							<?php }
 						}
 					?>
 					}
@@ -616,9 +618,11 @@ elseif($restypes=='')
 							<?php
 							break;
 						default:
-							?>
+							if ($fields[$n]['field_constraint']==1){?>
+							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';	
+							<?php } else { ?>
 							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>').value='';
-							<?php
+							<?php }
 						}
 					?>
 					}

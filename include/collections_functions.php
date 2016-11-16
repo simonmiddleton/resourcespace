@@ -2319,7 +2319,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
     // Edit all
     # If this collection is (fully) editable, then display an edit all link
-    if(($k=="" || $internal_share_access) && $show_edit_all_link && (count($result) > 0))
+    if(($k=="" || $internal_share_access) && $show_edit_all_link && $count_result>0)
         {
         if(!$edit_all_checkperms || $allow_multi_edit)
             {

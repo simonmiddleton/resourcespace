@@ -266,7 +266,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 							break;
 					}
 
-					update_field($ref, $read_from[$i]['ref'], $newval);
+					if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
 				
 				}
 
@@ -634,7 +634,7 @@ function extract_exif_comment($ref,$extension="")
 								}
 
 								$oldval = get_data_by_field($ref, $read_from[$i]['ref']);
-								if(strpos($oldval, $value) !== FALSE) {
+								if($value=="" || strpos($oldval, $value) !== FALSE) {
 									continue;
 								}
 								
@@ -667,7 +667,7 @@ function extract_exif_comment($ref,$extension="")
 
 							}
 							
-							update_field($ref,$read_from[$i]['ref'],$newval);
+							if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
 							$exif_updated_fields[]=$read_from[$i]['ref'];
 							
 							
@@ -730,7 +730,7 @@ function extract_exif_comment($ref,$extension="")
 									break;
 							}
 							
-							update_field($ref,$read_from[$i]['ref'],$newval);
+							if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
 							$exif_updated_fields[]=$read_from[$i]['ref'];
 
 						}
@@ -1351,7 +1351,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $convert_fullpath = get_utility_path("im-convert");
             if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
 
-			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif") {
+			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif" || getval("noflatten","")!="") {
 			    $flatten = "";
 			} else {
 			    $flatten = "-flatten";

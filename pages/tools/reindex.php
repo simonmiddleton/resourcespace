@@ -15,7 +15,6 @@ include "../../include/image_processing.php";
 // Disable sql_logging
 $mysql_log_transactions=false;
 
-
 $sql = '';
 if('' != getval('ref', ''))
     {
@@ -26,12 +25,17 @@ set_time_limit(0);
 echo "<pre>";
 
 
-$start = getvalescaped('start', '0');
-if(!is_numeric($start))
+$start = getvalescaped('start', '');
+if(is_numeric($start))
     {
-    $start = 0;
+    $sql= "where r.ref>=" . $start;
+	$end = getvalescaped('end', '');
+	if(is_numeric($end))
+		{
+		$sql.= " and r.ref<=" . $end;
+		}
     }
-
+	
 $start = getvalescaped('start', '');
 if(is_numeric($start))
     {
@@ -48,8 +52,7 @@ $resources = sql_query("SELECT r.ref, u.username, u.fullname FROM resource AS r 
 
 $time_start = microtime(true);
 
-
-for($n = $start; $n < count($resources); $n++)
+for($n = 0; $n < count($resources); $n++)
     {
     $ref = $resources[$n]['ref'];
 
