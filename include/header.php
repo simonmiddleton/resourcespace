@@ -284,7 +284,17 @@ $linkUrl=isset($header_link_url) ? $header_link_url : $homepage_url;
         echo " " . $header_size;
 ?>"<?php
 if (isset($header_colour_style_override) && $header_colour_style_override!='') { ?> style="background: <?php echo $header_colour_style_override; ?>;"<?php } ?>>
-<?php hook("responsiveheader");
+
+<?php
+if($responsive_ui)
+    {
+    ?>
+    <div id="HeaderResponsive">
+    <?php
+    }
+	
+hook('responsiveheader');
+ 
 if($header_text_title) 
         {?>
         <div id="TextHeader"><?php if ($k=="" || $internal_share_access){?><a href="<?php echo $homepage_url?>"  onClick="return CentralSpaceLoad(this,true);"><?php } ?><?php echo $applicationname;?><?php if ($k=="" || $internal_share_access){?></a><?php } ?></div>
