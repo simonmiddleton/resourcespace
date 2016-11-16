@@ -43,72 +43,8 @@ function ip_matches($ip, $ip_restrict)
 	}
 }
 
-if (!isset($api)){$api=false;} // $api is set above inclusion of authenticate.php in remotely accessible scripts.
-
-if ($api && $enable_remote_apis ){
-	include_once "login_functions.php";
-	if (getval("key","")==""){
-		$ip=get_ip();
-		$current_whitelists=sql_query("select u.username,u.fullname,w.* from api_whitelist w join user u on w.userref=u.ref order by u.username");
-		foreach ($current_whitelists as $whitelist){
-			if (ip_matches($ip,$whitelist['ip_domain'])){
-				// IP matches. Log in as specified user
-				$api_whitelisted_user=sql_query("select * from user where ref='".$whitelist['userref']."'");
-				$_POST['key']=$_GET['key']=make_api_key($api_whitelisted_user[0]['username'],$api_whitelisted_user[0]['password']);
-				$allowed_apis=explode(",",$whitelist['apis']);
-				$api_plugin=explode("/",$_SERVER['REQUEST_URI']);
-				$api_plugin=$api_plugin[count($api_plugin)-2];
-				//echo $api_plugin;
-				if (in_array("all",$allowed_apis)){break;}
-				else if (in_array($api_plugin,$allowed_apis)){break;}
-				else{
-					header("HTTP/1.0 403 Access Denied");exit("Access denied for $api_plugin.");
-				}
-			}
-		}
-	}
-	# if using API (RSS or API), send credentials to login.php, as if normally posting, to establish login
-	if (getval("key","")==""){header("HTTP/1.0 403 Access Denied");exit("Access denied - no key.");}
-	if (getval("key","") || (getval("username","")&& getval("password",""))){ // key is provided within the website when logged in (encrypted username and password)
-
-        if (getval("username","")&& getval("password","")){
-            $u_p_array[0]=getval("username","");$u_p_array[1]=getval("password","");
-        }
-        else {
-            $u_p_array=decrypt_api_key(getval("key",""));
-        }
-
-        if (count($u_p_array)!=2)
-			{
-			unset($_COOKIE['user']);
-			} 
-		else
-			{
-			$username=$u_p_array[0];
-			$password=$u_p_array[1];
-			
-			if(strlen($password)==32) // We need to maintain support for old API Access now we are using sha256 hashes
-				{
-				$password=hash('sha256', $password);	
-				}
-
-			$result=perform_login();
-			if ($result['valid'])
-				{
-				$_COOKIE['user']=$result['session_hash'];
-				}
-	        else
-				{
-				unset($_COOKIE['user']);
-				}
-			}
-	}
-}
-
-
 if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset($anonymous_login) || hook('provideusercredentials'))
     {
-	if (!$api){
     $username="";
 	if (array_key_exists("user",$_GET))
 		{
@@ -131,8 +67,7 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 		$session_hash="";
 		$rs_session=get_rs_session_id(true);
 		}
-	}
-	if (!$api){ $user_select_sql="u.session='$session_hash'"; } else { $user_select_sql="u.username='$username'"; }
+	$user_select_sql="u.session='$session_hash'";
 	if (isset($anonymous_login) && ($username==$anonymous_login)) {$user_select_sql="and u.username='$username'";} # Automatic anonymous login, do not require session hash.
 	hook('provideusercredentials');
 
@@ -209,7 +144,7 @@ else
     hook("removeuseridcookie");
     }
 
-if (!$valid && !$api && !isset($system_login))
+if (!$valid && !isset($system_login))
     {
 	$_SERVER['REQUEST_URI'] = ( isset($_SERVER['REQUEST_URI']) ?
 	$_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'] . (( isset($_SERVER
@@ -235,8 +170,7 @@ if (!$valid && !$api && !isset($system_login))
         <?php
         exit();
         }
-    }
-if (!$valid && $api){echo "invalid login";exit();}    
+    }   
 
 # Handle IP address restrictions
 $ip=get_ip();
@@ -278,15 +212,14 @@ if($terms_login && 0 == $useracceptedterms && 'login' != $pagename && 'terms' !=
     redirect('pages/terms.php?noredir=true&url=' . urlencode("pages/{$default_home_page}"));
     }
 
-if (!$api){
-	if (isset($_SERVER["HTTP_USER_AGENT"])){
+if (isset($_SERVER["HTTP_USER_AGENT"]))
+	{
 	$last_browser=escape_check(substr($_SERVER["HTTP_USER_AGENT"],0,250));
-	} else { 
+	}
+else
+	{ 
 	$last_browser="unknown";
 	}
-} else {
-	$last_browser="API Client";
-}
 
 // don't update this table if the System is doing its own operations
 if (!isset($system_login)){

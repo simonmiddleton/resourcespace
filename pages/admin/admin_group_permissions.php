@@ -38,7 +38,7 @@ if (getval("save","")!="")
 			$key=substr($key,11);
 			if ((!$reverse && getval("checked_" . $key,"")!="") || ($reverse && !getval("checked_" . $key,"")!=""))
 				{
-				$perms[]=urldecode($key);
+				$perms[]=base64_decode($key);
 				}
 			}
 		}		
@@ -61,11 +61,11 @@ function DrawOption($permission,$description,$reverse=false,$reload=false)
 	$checked=(in_array($permission,$permissions));
 	if ($reverse) {$checked=!$checked;}
 	?>
-	<input type="hidden" name="permission_<?php echo urlencode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
+	<input type="hidden" name="permission_<?php echo base64_encode($permission)?>" value="<?php echo ($reverse)?"reverse":"normal" ?>">
 	<tr>
 		<td><?php if ($reverse) {?><i><?php } ?><?php echo $permission?><?php if ($reverse) {?></i><?php } ?></td>
 		<td><?php echo $description?></td>
-		<td><input type="checkbox" name="checked_<?php echo urlencode($permission) ?>" <?php 
+		<td><input type="checkbox" name="checked_<?php echo base64_encode($permission) ?>" <?php 
 			if ($checked) { ?> checked <?php } ?><?php if ($reload) { ?> onChange="CentralSpacePost(this.form,false);" <?php } ?>></td>
 	</tr>
 	<?php

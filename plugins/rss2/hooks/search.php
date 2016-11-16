@@ -1,36 +1,41 @@
 <?php
 function HookRss2SearchResultsbottomtoolbar()
-{
-       global $baseurl, $search, $restypes, $archive, $starsearch,$lang;
-       global $userpassword,$username,$api_scramble_key;
-    $apikey=make_api_key($username,$userpassword);
-       $skey = md5($api_scramble_key.$apikey.$search.$archive); 
-    global $k; if ($k!=""){return false;}
-?>
-<div class="InpageNavLeftBlock"><a href="<?php echo $baseurl?>/plugins/rss2/pages/rssfilter.php?key=<?php echo urlencode($apikey);?>&search=<?php echo urlencode($search)?>&restypes=<?php echo urlencode($restypes)?>&archive=<?php echo urlencode($archive)?>&starsearch=<?php echo urlencode($starsearch)?>&skey=<?php echo urlencode($skey); ?>">&gt;&nbsp;<?php echo $lang["rss_feed_for_search_filter"]; ?></a></div>
-<?php
-}
+	   {
+	   global $k; if ($k!=""){return false;}
+	   global $baseurl, $search, $restypes, $archive, $starsearch,$lang,$username,$userref;
+	   	   
+	   $querystring="user=" . base64_encode($username) . "&search=" . urlencode($search) . "&restypes=" . urlencode($restypes) . "&archive=" . urlencode($archive) . "&starsearch=" . urlencode($starsearch) . "&skey=" . urlencode($skey); 
+	   $private_key = get_api_key($userref);
+	   // Sign the query using the private key
+	   $sign=hash("sha256",$private_key . $query);
+	
+	
+	   //$apikey=make_api_key($username,$userpassword);
+      // $skey = md5($api_scramble_key.$apikey.$search.$archive);	   
+	   
+	   ?>
+	   <div class="InpageNavLeftBlock"><a href="<?php echo $baseurl?>/plugins/rss2/pages/rssfilter.php?<?php echo $querystring ?>&sign=<?php echo urlencode($sign);?>">&nbsp;<?php echo $lang["rss_feed_for_search_filter"]; ?></a></div>
+	   <?php
+	   }
 
 function HookRss2SearchRender_search_actions_add_option($options)
 	{
- 	global $baseurl_short, $search, $restypes, $archive, $starsearch, $lang,
- 	$userpassword,$username,$api_scramble_key ,$k;
+ 	global $baseurl_short, $search, $restypes, $archive, $starsearch, $lang,$username,$userref,$api_scramble_key ,$k;
     
     $c=count($options);
     
     if($k=='')
 		{
-		$apikey=make_api_key($username,$userpassword);
-		$skey = md5($api_scramble_key.$apikey.$search.$archive); 
+	    //  user=YWRtaW4=&search=2013&restypes=3%2C4%2C2%2C1%2C6%2C7%2C8%2C9&archive=0&starsearch=	   
+	   $querystring="user=" . base64_encode($username) . "&search=" . urlencode($search) . "&restypes=" . urlencode($restypes) . "&archive=" . urlencode($archive) . "&starsearch=" . urlencode($starsearch); 
+	   $private_key = get_api_key($userref);
+	   // Sign the query using the private key
+	   $sign=hash("sha256",$private_key . $querystring);
+	   
+	   //$apikey=make_api_key($username,$userpassword);
+		//$skey = md5($api_scramble_key.$apikey.$search.$archive); 
 		
-		$data_attribute['url'] = sprintf('%splugins/rss2/pages/rssfilter.php?key=%s&search=<?php echo urlencode($search)?>&restypes=%s&archive=%s&starsearch=%s&skey=%s',
-			$baseurl_short,
-			urlencode($apikey),
-			urlencode($restypes),
-			urlencode($archive),
-			urlencode($starsearch),
-			urlencode($skey)
-		);
+		$data_attribute['url'] = $baseurl_short . "plugins/rss2/pages/rssfilter.php?" . $querystring  . "&sign=" . urlencode($sign);
 		$options[$c]['value']='rss';
 		$options[$c]['label']=$lang["rss_feed_for_search_filter"];
 		$options[$c]['data_attr']=$data_attribute;

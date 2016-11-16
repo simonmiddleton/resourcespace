@@ -276,16 +276,13 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
     }
 	
-	# extract text from documents (e.g. PDF, DOC).
+	# Extract text from documents (e.g. PDF, DOC)
 	global $extracted_text_field;
-	if (isset($extracted_text_field) && !$no_exif) {
-		if (isset($unoconv_path) && in_array($extension,$unoconv_extensions)){
-			// omit, since the unoconv process will do it during preview creation below
-			}
-		else {
+	if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
+		{
+		// This is skipped if the unoconv process will do it during preview creation later
 		extract_text($ref,$extension);
 		}
-	}
 
 	# Store original filename in field, if set
 	global $filename_field,$amended_filename;
@@ -430,8 +427,14 @@ function extract_exif_comment($ref,$extension="")
 		
 		# Just get the first and last few lines of the output if it is large, otherwise the log can be overwhelmed by this output
 		if(count($metalines)>20)
-			{$summary=implode("\n", array_merge(array_slice($metalines, 0, 10),array("...","...","..."),array_slice($metalines, -10, 9)));}
-        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $summary);
+			{
+			$summary=implode("\n", array_merge(array_slice($metalines, 0, 10),array("...","...","..."),array_slice($metalines, -10, 9)));
+			}
+        else
+			{
+			$summary=$output;	
+			}		
+		resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $summary);
 
         $metadata = array(); # an associative array to hold metadata field/value pairs
 		
@@ -465,6 +468,15 @@ function extract_exif_comment($ref,$extension="")
 					$value = str_replace('....', '\n\n', $value); // Two new line feeds in ExifPro are replaced with 4 dots '....'
 					$value=str_replace('...','.\n',$value); # Three dots together is interpreted as a full stop then line feed, not the other way round
 					$value=str_replace('..','\n',$value);
+					
+					# Convert to UTF-8 if not already encoded
+					$encoding=mb_detect_encoding($value,"UTF-8",true);
+					if($encoding!="UTF-8")
+						{
+						debug("extract_exif_comment: non-utf-8 value found. Extracted value: " . $value);
+						$value=utf8_encode($value);
+						debug("extract_exif_comment: Converted value: " . $value);
+						}
 					
 					# Extract group name and tag name
 					$groupname=strtoupper(substr($s[0],1));

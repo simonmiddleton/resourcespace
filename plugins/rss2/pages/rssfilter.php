@@ -2,25 +2,32 @@
 include(dirname(__FILE__)."/../../../include/db.php");
 include_once(dirname(__FILE__)."/../../../include/general.php");
 include(dirname(__FILE__)."/../../../include/search_functions.php");
+include(dirname(__FILE__)."/../../../include/resource_functions.php");
 include(dirname(__FILE__)."/../../../include/collections_functions.php");
+include(dirname(__FILE__)."/../../../include/image_processing.php");
+
+if(!function_exists("get_api_key"))
+	{
+	include(dirname(__FILE__)."/../../../include/api_functions.php");
+	}
+
 include(dirname(__FILE__)."/rssfeed.php");
 
-$api=true;$enable_remote_apis=true;
-include(dirname(__FILE__)."/../../../include/authenticate.php");
+# Get parameters
+$user=base64_decode(getvalescaped("user",""));
+$sign=getvalescaped("sign","");
 
-// extra check if rss_limits are enabled
-// enabled in config. Recommended to prevent anyone with
-// an RSS URL from being able to do arbitrary searches of DB
-if (isset($rss_limits) && $rss_limits){
-	$keytotest = $api_scramble_key.getval('key','').getval('search','').getval('archive','');
-	if (md5($keytotest) <> getval('skey','')){
-		header("HTTP/1.0 403 Forbidden.");
-		echo "HTTP/1.0 403 Forbidden.";
-		exit;
+# Authenticate based on the provided signature.
+if (!check_api_key($user,$_SERVER["QUERY_STRING"],$sign))
+	{
+	header("HTTP/1.0 403 Forbidden.");
+	echo "HTTP/1.0 403 Forbidden.";
+	exit;
 	}
-}
-
-
+	
+# Log them in.
+setup_user(get_user(get_user_by_username($user)));
+	
 $search=getvalescaped("search","");
 $starsearch=getvalescaped("starsearch","");
 

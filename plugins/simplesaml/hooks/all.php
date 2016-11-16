@@ -111,7 +111,7 @@ function HookSimplesamlAllProvideusercredentials()
 		    }
 		else // Previous version used semi-colons
 		    { 
-            $fullnameelements=explode(";",$simplesaml_fullname_attribute);
+	            $fullname_attributes=explode(";",$simplesaml_fullname_attribute);
 		    }
         
         $displayname ="";

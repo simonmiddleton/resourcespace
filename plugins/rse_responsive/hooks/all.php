@@ -2,13 +2,10 @@
 function HookRse_responsiveAllResponsivemeta() {
     ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!--[if lt IE 9]>
-        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
-    <![endif]-->
     <?php
 }
 function serveHeader() {
-    global $lang,$username,$pagename,$loginterms,$baseurl,$linkedheaderimgsrc,$allow_password_change,$userfullname,$username,$slimheader,$theme,$responsiveheaderimgsrc,
+    global $lang,$username,$pagename,$loginterms,$baseurl,$linkedheaderimgsrc,$allow_password_change,$userfullname,$username,$theme,$responsiveheaderimgsrc,
             $storageurl;
 
     if(!empty($linkedheaderimgsrc)) 
@@ -37,17 +34,7 @@ function serveHeader() {
         $header_img_src = $baseurl . $header_img_src;
         }
 
-    if (!$slimheader)
-        {
-        ?>
-        <a href="<?php echo $baseurl; ?>"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" style="display:none;"></img></a>
-        
-        <?php
-        }
-    else 
-        {
-        $linkedheaderimgsrc=$header_img_src;
-        }
+    $linkedheaderimgsrc=$header_img_src;
 
     if (isset($username) && ($pagename!="login") && ($loginterms==false) && getval("k","")=="") 
         { 
@@ -114,7 +101,7 @@ function HookRse_responsiveAllResponsivethumbsloaded()
     }
 function HookRse_responsiveAllResponsivescripts() 
     {
-	global $lang, $baseurl, $slimheader,$rcsskey;
+	global $lang, $baseurl,$rcsskey;
     $plugin_js_path = $baseurl . '/plugins/rse_responsive/js/';
     echo '<script src="' . $plugin_js_path . "general.js?rck=" .$rcsskey.'" type="text/javascript"></script>';
 ?>
@@ -144,44 +131,24 @@ function HookRse_responsiveAllResponsivescripts()
             jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock").slideToggle(100);
             jQuery("#SearchResultFound").hide();
         }
-        <?php 
-        /* Responsive Stylesheet inclusion based upon viewing device */
-        if(!$slimheader) 
-            { ?>
-            if (document.createStyleSheet){
-                    document.createStyleSheet('<?php echo $baseurl;?>/plugins/rse_responsive/css/main-style.css?rcsskey=<?php echo $rcsskey; ?>');
-                }
-            else {
-                    jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl;?>/plugins/rse_responsive/css/main-style.css?rcsskey=<?php echo $rcsskey; ?>' type='text/css' media='screen' />");
-                }
-            if(!is_touch_device() && jQuery(window).width()<=1300) {
-                if (document.createStyleSheet){
-                    document.createStyleSheet('<?php echo $baseurl;?>/plugins/rse_responsive/css/non-touch.css?rcsskey=<?php echo $rcsskey; ?>');
-                }
-                else {
-                    jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl;?>/plugins/rse_responsive/css/non-touch.css?rcsskey=<?php echo $rcsskey; ?>' type='text/css' media='screen' />");
-                }
-            }
-        <?php 
-            } 
-        else {?>
-            if (document.createStyleSheet){
-                    document.createStyleSheet('<?php echo $baseurl;?>/plugins/rse_responsive/css/slim-style.css?rcsskey=<?php echo $rcsskey; ?>');
-                }
-            else {
-                    jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl;?>/plugins/rse_responsive/css/slim-style.css?rcsskey=<?php echo $rcsskey; ?>' type='text/css' media='screen' />");
-                }
-            if(!is_touch_device() && jQuery(window).width()<=1300) {
-                if (document.createStyleSheet){
-                    document.createStyleSheet('<?php echo $baseurl;?>/plugins/rse_responsive/css/slim-non-touch.css?rcsskey=<?php echo $rcsskey; ?>');
-                }
-                else {
-                    jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl;?>/plugins/rse_responsive/css/slim-non-touch.css?rcsskey=<?php echo $rcsskey; ?>' type='text/css' media='screen' />");
-                }
-            }
-        <?php
 
-        }?>
+        /* Responsive Stylesheet inclusion based upon viewing device */
+
+		if (document.createStyleSheet){
+				document.createStyleSheet('<?php echo $baseurl;?>/plugins/rse_responsive/css/slim-style.css?rcsskey=<?php echo $rcsskey; ?>');
+			}
+		else {
+				jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl;?>/plugins/rse_responsive/css/slim-style.css?rcsskey=<?php echo $rcsskey; ?>' type='text/css' media='screen' />");
+			}
+		if(!is_touch_device() && jQuery(window).width()<=1300) {
+			if (document.createStyleSheet){
+				document.createStyleSheet('<?php echo $baseurl;?>/plugins/rse_responsive/css/slim-non-touch.css?rcsskey=<?php echo $rcsskey; ?>');
+			}
+			else {
+				jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl;?>/plugins/rse_responsive/css/slim-non-touch.css?rcsskey=<?php echo $rcsskey; ?>' type='text/css' media='screen' />");
+			}
+		}
+
 
         function touchScroll(id){
             if(is_touch_device()){
@@ -217,15 +184,14 @@ function HookRse_responsiveAllResponsivescripts()
             if(jQuery(this).hasClass("RSelectedButton")) {
                 jQuery(this).removeClass("RSelectedButton");
                 jQuery("#HeaderNav1").slideUp(0);
-                <?php if($slimheader){ ?>
-                    jQuery("#Header").removeClass("HeaderMenu");
-                <?php } ?>
+              jQuery("#Header").removeClass("HeaderMenu");
+               
             }else {
                 jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
                 jQuery("#HeaderNav2").slideUp(80);
-                <?php if($slimheader){ ?>
+
                     jQuery("#Header").addClass("HeaderMenu");
-                <?php } ?>
+
                 jQuery(this).addClass("RSelectedButton");
                 jQuery("#HeaderNav1").slideDown(80);
             }
@@ -238,13 +204,11 @@ function HookRse_responsiveAllResponsivescripts()
             if(jQuery(this).hasClass("RSelectedButton")) {
                 jQuery(this).removeClass("RSelectedButton");
                 jQuery("#HeaderNav2").slideUp(0);
-                <?php if($slimheader){ ?>
-                    jQuery("#Header").removeClass("HeaderMenu");
-                <?php } ?>
+				jQuery("#Header").removeClass("HeaderMenu");
+
             }else {
-                <?php if($slimheader){ ?>
-                    jQuery("#Header").addClass("HeaderMenu");
-                <?php } ?>
+
+				jQuery("#Header").addClass("HeaderMenu");
                 jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
                 jQuery("#HeaderNav1").slideUp(80);
                 jQuery(this).addClass("RSelectedButton");
@@ -255,23 +219,16 @@ function HookRse_responsiveAllResponsivescripts()
             }  
         });
         jQuery("#HeaderNav2").on("click","a",function() {
-            <?php if($slimheader){ ?>
+            
                 if(jQuery(window).width() <= 1200) {
-             <?php }
-             else { ?>
-                if(jQuery(window).width() <= 700) {
-             <?php } ?>
+
                 jQuery("#HeaderNav2").slideUp(0);
                 jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
             }
         });
         jQuery("#HeaderNav1").on("click","a",function() {
-            <?php if($slimheader){ ?>
-                if(jQuery(window).width() <= 1200) {
-             <?php }
-             else { ?>
-                if(jQuery(window).width() <= 700) {
-             <?php } ?>
+
+            if(jQuery(window).width() <= 1200) {
                 jQuery("#HeaderNav1").slideUp(00);
                 jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
             }

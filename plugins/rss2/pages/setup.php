@@ -19,7 +19,6 @@ $plugin_page_heading = $lang['rss_setup_heading'];
 // created by one of the config_add_xxxx helper functions. See their definitions and
 // descriptions in include/plugin_functions for more information.
 
-$page_def[] = config_add_boolean_select('rss_limits', $lang['rss_limits']);
 $page_def[] = config_add_multi_ftype_select('rss_fields', $lang['rss_fields']);
 $page_def[] = config_add_text_input('rss_ttl', $lang['rss_ttl']);
 $page_def[] = config_add_boolean_select('rss_show_field_titles', $lang['rss_show_field_titles']);

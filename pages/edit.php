@@ -1171,9 +1171,9 @@ function display_field($n, $field, $newtab=false)
         <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
         <?php
         }
-      if (in_array($field["type"], array("0","1","2","3","5","7","8","9")))
+      if (in_array($field["type"], array("0","1","2","5","7","8","9")))
         {
-        # Append applies to text boxes, checkboxes ,category tree and dropdowns only.
+        # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields only.
         ?>
         <option value="AP"<?php if(getval("modeselect_" . $field["ref"],"")=="AP"){?> selected<?php } ?>><?php echo $lang["appendtext"]?></option>
         <?php
