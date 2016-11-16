@@ -4,7 +4,7 @@ include_once dirname(__FILE__) . "/../include/utility.php";
 
 function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alternative = -1)
 	{
-	global $baseurl_short,$imagemagick_preserve_profiles, $format_chooser_input_formats, $format_chooser_output_formats;
+	global $baseurl_short,$imagemagick_preserve_profiles, $format_chooser_input_formats, $format_chooser_output_formats, $k;
     
     // Check whether download file extension matches
     if(!in_array(strtoupper($ext),$format_chooser_output_formats))
@@ -26,5 +26,5 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
 		}
 
 	return $baseurl_short . 'plugins/format_chooser/pages/convert.php?ref=' . $ref . '&size='
-			. $size . '&ext=' . $ext . $profile . '&page=' . $page . '&alt=' . $alternative;
+			. $size . '&k=' . $k . '&ext=' . $ext . $profile . '&page=' . $page . '&alt=' . $alternative;
 	}

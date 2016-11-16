@@ -141,59 +141,65 @@ $tabname="";
 $tabcount=0;
 $extra="";
 $show_default_related_resources = TRUE;
-foreach ($fields_tab_names as $tabname) {
 
-	for($i = 0; $i < count($fields); $i++) {
+foreach($fields_tab_names as $tabname)
+    {
+    for($i = 0; $i < count($fields); $i++)
+        {
+        $displaycondition = check_view_display_condition($fields, $i);
 
-		$displaycondition = check_view_display_condition($fields, $i);
+        if($displaycondition && $tabname == $fields[$i]['tab_name'])
+            {
+            if(!hook('renderfield', '', array($fields[$i], $resource)))
+                {
+                display_field_data($fields[$i]);
 
-		if($displaycondition && $tabname == $fields[$i]['tab_name']) {
-			if(!hook('renderfield',"", array($fields[$i]))) {
-				display_field_data($fields[$i]);
+                // Show the fields with a display template now
+                echo $extra;
+                $extra = '';
+                }
+            }
 
-				// Show the fields with a display template now
-				echo $extra;
-				$extra = '';
-			}
-		}
+        }
 
-	}
+    // Add related resources which have the same tab name:
+    if(isset($related_type_show_with_data) && isset($fields_tab_names) && !empty($fields_tab_names))
+        {
+        include '../include/related_resources.php';
 
-	// Add related resources which have the same tab name:
-	if(isset($related_type_show_with_data) && isset($fields_tab_names) && !empty($fields_tab_names)) {
-		
-		include '../include/related_resources.php';
+        $show_default_related_resources = FALSE;
 
-		$show_default_related_resources = FALSE;
+        //Once we've shown the related resources unset the variable so they won't be shown as thumbnails:
+        unset($relatedresources);
+        }
 
-		//Once we've shown the related resources unset the variable so they won't be shown as thumbnails:
-		unset($relatedresources);
-	}
+    $tabcount++;
+    if($tabcount != count($fields_tab_names))
+        {
+        ?>
+        <div class="clearerleft"></div>
+        </div>
+        </div>
+        <div class="TabbedPanel StyledTabbedPanel" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount?>"><div>
+        <?php
+        }
+    }
 
-	$tabcount++;
-	if($tabcount != count($fields_tab_names)) { ?>
-		<div class="clearerleft"></div>
-		</div>
-		</div>
-		<div class="TabbedPanel StyledTabbedPanel" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount?>"><div>
-	<?php
-	}
+if(empty($fields_tab_names))
+    {
+    for($i = 0; $i < count($fields); $i++)
+        {
+        $displaycondition = check_view_display_condition($fields, $i);
 
-}
-
-if(empty($fields_tab_names)) {
-	for($i = 0; $i < count($fields); $i++) {
-
-		$displaycondition = check_view_display_condition($fields, $i);
-
-		if($displaycondition) {
-			if(!hook('renderfield',"", array($fields[$i]))) {
-				display_field_data($fields[$i]);
-			}
-		}
-
-	}
-}
+        if($displaycondition)
+            {
+            if(!hook('renderfield',"", array($fields[$i], $resource)))
+                {
+                display_field_data($fields[$i]);
+                }
+            }
+        }
+    }
 
 // Option to display related resources of specified types along with metadata
 if ($enable_related_resources && $show_default_related_resources)

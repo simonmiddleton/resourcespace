@@ -560,7 +560,7 @@ $lang["setup-successheader"]="Tillykke!";
 $lang["setup-successdetails"]="Deres første ResourceSpace opsætningen er færdig. Sørg for at tjekke ud &#39;omfatte / default.config.php &quot;for yderligere konfiguration valgmuligheder.";
 $lang["setup-successnextsteps"]="Næste trin:";
 $lang["setup-successremovewrite"]="Du kan nu fjerne skrive adgang til &#39;omfatte /&#39;.";
-$lang["setup-visitwiki"]='Visit the <a target="_blank" href="http://wiki.resourcespace.org/index.php/?title=main_Page">ResourceSpace Documentation Wiki</a> for more information about customizing your installation';
+$lang["setup-visitwiki"]='Visit the <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> for more information about customizing your installation';
 $lang["setup-checkconfigwrite"]="Skriveadgang til config directory:";
 $lang["setup-checkstoragewrite"]="Skriv adgang til oplagring directory:";
 $lang["setup-welcome"]="Velkommen til ResourceSpace";

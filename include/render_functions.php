@@ -83,9 +83,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                                 for ($m=0;$m<count($options);$m++)
                                     {
                                     $checkname=($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"]) . "_" . md5($options[$m]);
-                                    echo "
-                                    jQuery('<?php echo $display_condition_js_prepend ?>input[name=\"" . $checkname . "\"]').change(function (){
-                                        checkDisplayCondition" . $field["ref"] . "();
+									echo "jQuery('" . $display_condition_js_prepend . "input[name=\"" . $checkname . "\"]').change(function (){
+                                        checkSearchDisplayCondition" . $field["ref"] . "();
                                         });";
                                     }
                                     ?>
@@ -842,6 +841,15 @@ function render_sort_order(array $order_fields)
 
          <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(option_url);
         updateCollectionActions(selected_option.val(), selected_sort_option);
+
+        // Update collection
+        var query_strings = getQueryStrings();
+        if(is_special_search('!collection', 11) && !is_empty(query_strings) && query_strings.search.substring(11) == usercollection)
+            {
+            /*Because we are looking at the same collection in both CentralSpace and CollectionDiv,
+            make sure to keep both sections in sync*/
+            CollectionDivLoad(baseurl_short + 'pages/collections.php?collection=' + usercollection + '&k=<?php echo $k; ?>' + '&order_by=' + selected_option.val() + '&sort=' + selected_sort_option);
+            }
     });
 
     jQuery('#sort_selection').change(function() {
@@ -853,6 +861,15 @@ function render_sort_order(array $order_fields)
 
         <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(selected_sort_order_option_url);
         updateCollectionActions(selected_sort_order_option.val(), selected_option);
+
+        // Update collection
+        var query_strings = getQueryStrings();
+        if(is_special_search('!collection', 11) && !is_empty(query_strings) && query_strings.search.substring(11) == usercollection)
+            {
+            /*Because we are looking at the same collection in both CentralSpace and CollectionDiv,
+            make sure to keep both sections in sync*/
+            CollectionDivLoad(baseurl_short + 'pages/collections.php?collection=' + usercollection + '&k=<?php echo $k; ?>' + '&order_by=' + selected_sort_order_option.val() + '&sort=' + selected_option);
+            }
     });
     </script>
     <?php

@@ -323,6 +323,7 @@ else
 			if($results[$n]['page'] == '')
 				{
 				$lang[$results[$n]['name']] = $results[$n]['text'];
+				$customsitetext[$results[$n]['name']] = $results[$n]['text'];
 				} 
 			else
 				{

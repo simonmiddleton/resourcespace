@@ -1769,31 +1769,52 @@ function get_resource_type_name($type)
 	}
 	
 function get_resource_custom_access($resource)
-	{
-    # Return a list of usergroups with the custom access level for resource $resource (if set).
-    # The standard usergroup names are translated using $lang. Custom usergroup names are i18n translated.
-	$sql="";
-	if (checkperm("E"))
-		{
-		# Restrict to this group and children groups only.
-		global $usergroup,$usergroupparent;
-		$sql="where g.parent='$usergroup' or g.ref='$usergroup' or g.ref='$usergroupparent'";
-		}
-    $resource_custom_access = sql_query("select g.ref,g.name,g.permissions,c.access from usergroup g left outer join resource_custom_access c on g.ref=c.usergroup and c.resource='$resource' $sql group by g.ref order by (g.permissions like '%v%') desc,g.name");
-    for ($n = 0;$n<count($resource_custom_access);$n++)
+    {
+    /*Return a list of usergroups with the custom access level for resource $resource (if set).
+    The standard usergroup names are translated using $lang. Custom usergroup names are i18n translated.*/
+    $sql = '';
+    if(checkperm('E'))
         {
-        $resource_custom_access[$n]["name"] = lang_or_i18n_get_translated($resource_custom_access[$n]["name"], "usergroup-");
+        // Restrict to this group and children groups only.
+        global $usergroup, $usergroupparent;
+
+        $sql = "WHERE g.parent = '{$usergroup}' OR g.ref = '{$usergroup}' OR g.ref = '{$usergroupparent}'";
         }
+
+    $resource_custom_access = sql_query("
+                   SELECT g.ref,
+                          g.name,
+                          g.permissions,
+                          c.access
+                     FROM usergroup AS g
+          LEFT OUTER JOIN resource_custom_access AS c ON g.ref = c.usergroup AND c.resource = '{$resource}'
+                     $sql
+                 GROUP BY g.ref
+                 ORDER BY (g.permissions LIKE '%v%') DESC, g.name
+     ");
+
+    for($n = 0; $n < count($resource_custom_access); $n++)
+        {
+        $resource_custom_access[$n]['name'] = lang_or_i18n_get_translated($resource_custom_access[$n]['name'], 'usergroup-');
+        }
+
     return $resource_custom_access;
-	}
+    }
 
 function get_resource_custom_access_users_usergroups($resource)
     {
     # Returns only matching custom_access rows, with users and groups expanded
-    return sql_query("select g.name usergroup,u.username user,c.access,c.user_expires expires from resource_custom_access c
-        left outer join usergroup g on g.ref=c.usergroup
-        left outer join user u on u.ref=c.user
-        where c.resource='$resource' order by g.name,u.username");
+    return sql_query("
+                 SELECT g.name usergroup,
+                        u.username user,
+                        c.access,
+                        c.user_expires AS expires
+                   FROM resource_custom_access AS c
+        LEFT OUTER JOIN usergroup AS g ON g.ref = c.usergroup
+        LEFT OUTER JOIN user AS u ON u.ref = c.user
+                  WHERE c.resource = '{$resource}'
+               ORDER BY g.name, u.username
+    ");
     }
     
     
@@ -2729,12 +2750,17 @@ function get_resource_access($resource)
 	$customuseraccess=false;
 	
 	global $k;
-	if ($k!="")
+	if('' != $k)
 		{
         global $internal_share_access;
+
 		# External access - check how this was shared.
-		$extaccess=sql_value("select access value from external_access_keys where resource=".$ref." and access_key='" . escape_check($k) . "' and (expires is null or expires>now())",-1);
-		if ($extaccess!=-1 && (!$internal_share_access || ($internal_share_access && $extaccess<$access))) {return $extaccess;}
+		$extaccess = sql_value("SELECT access `value` FROM external_access_keys WHERE resource = '{$ref}' AND access_key = '" . escape_check($k) . "' AND (expires IS NULL OR expires > NOW())", -1);
+
+		if(-1 != $extaccess && (!$internal_share_access || ($internal_share_access && $extaccess < $access)))
+            {
+            return $extaccess;
+            }
 		}
 	
 	global $uploader_view_override, $userref;
@@ -2772,12 +2798,11 @@ function get_resource_access($resource)
 		}
 
 	global $open_access_for_contributor;
-	if ($open_access_for_contributor && $access == 1 && $resourcedata['created_by'] == $userref)
+	if ($open_access_for_contributor && $resourcedata['created_by'] == $userref)
 		{
-		# If access is restricted and user has contributed resource, grant open access.
-		$access = 0;
+		# If user has contributed resource, grant open access and ignore any further filters.
+		return 0;
 		}
-
 
 	# Check for user-specific and group-specific access (overrides any other restriction)
 	global $userref,$usergroup;
@@ -3076,48 +3101,32 @@ function filter_match($filter,$name,$value)
 		}
 	return 0;
 	}
-	
-function log_diff($fromvalue,$tovalue)	
-	{
-	# Forumlate descriptive text to describe the change made to a metadata field.
 
-	# Remove any database escaping
-	$fromvalue=str_replace("\\","",$fromvalue);
-	$tovalue=str_replace("\\","",$tovalue);
-	
-	if (substr($fromvalue,0,1)==",")
-		{
-		# Work a different way for checkbox lists.
-		$fromvalue=explode(",",i18n_get_translated($fromvalue));
-		$tovalue=explode(",",i18n_get_translated($tovalue));
-		
-		# Get diffs
-		$inserts=array_diff($tovalue,$fromvalue);
-		$deletes=array_diff($fromvalue,$tovalue);
 
-		# Process array diffs into meaningful strings.
-		$return="";
-		if (count($deletes)>0)
-			{
-			$return.="- " . join("\n- " , $deletes);
-			}
-		if (count($inserts)>0)
-			{
-			if ($return!="") {$return.="\n";}
-			$return.="+ " . join("\n+ ", $inserts);
-			}
-		
-		#debug($return);
-		return $return;
-		}
+/**
+* Check changes made to a metadata field and create a nice user friendly summary
+* 
+* @uses Diff::compare()
+* @uses Diff::toString()
+* 
+* @param string $fromvalue
+* @param string $tovalue
+* 
+* @return string
+*/
+function log_diff($fromvalue, $tovalue)
+    {
+    $return = '';
 
-	# For standard strings, use Text_Diff
-		
-	require_once dirname(__FILE__).'/../lib/Text_Diff/Diff.php';
-	require_once dirname(__FILE__).'/../lib/Text_Diff/Diff/Renderer/inline.php';
+    // Remove any database escaping
+    $fromvalue = str_replace("\\", '', $fromvalue);
+    $tovalue   = str_replace("\\", '', $tovalue);
 
-	$lines1 = explode("\n",$fromvalue);
-	$lines2 = explode("\n",$tovalue);
+    // Work a different way for fixed lists
+    if(',' == substr($fromvalue, 0, 1))
+        {
+        $fromvalue = explode(',', i18n_get_translated($fromvalue));
+        $tovalue   = explode(',', i18n_get_translated($tovalue));
 
 	$diff     = new Text_Diff('native', array($lines1, $lines2));
 	$renderer = new Text_Diff_Renderer_inline();
@@ -3125,35 +3134,31 @@ function log_diff($fromvalue,$tovalue)
 	
 	$return="";
 
-	# The inline diff syntax places inserts within <ins></ins> tags and deletes within <del></del> tags.
+        // Process array diffs into meaningful strings
+        if(0 < count($deletes))
+            {
+            $return .= '- ' . join("\n- " , $deletes);
+            }
 
-	# Handle deletes
-	if (strpos($diff,"<del>")!==false)
-		{
-		$s=explode("<del>",$diff);
-		for ($n=1;$n<count($s);$n++)
-			{
-			$t=explode("</del>",$s[$n]);
-			if ($return!="") {$return.="\n";}
-			$return.="- " . trim(i18n_get_translated($t[0]));
-			}
-		}
-	# Handle inserts
-	if (strpos($diff,"<ins>")!==false)
-		{
-		$s=explode("<ins>",$diff);
-		for ($n=1;$n<count($s);$n++)
-			{
-			$t=explode("</ins>",$s[$n]);
-			if ($return!="") {$return.="\n";}
-			$return.="+ " . trim(i18n_get_translated($t[0]));
-			}
-		}
+        if(0 < count($inserts))
+            {
+            if('' != $return)
+                {
+                $return .= "\n";
+                }
 
+            $return .= '+ ' . join("\n+ ", $inserts);
+            }
 
-	#debug ($return);
-	return $return;
-	}
+        return $return;
+        }
+
+    // For standard strings, use Diff library
+    require_once dirname(__FILE__) . '/../lib/Diff/class.Diff.php';
+    $return = Diff::toString(Diff::compare($fromvalue, $tovalue));
+
+    return $return;
+    }
 	
 function update_xml_metadump($resource)
 	{

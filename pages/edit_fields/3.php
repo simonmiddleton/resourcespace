@@ -57,7 +57,8 @@ $field['nodes'] = $new_node_order;
             }
             ?>>
 <?php
-if(!hook('replacedropdowndefault', '', array($field)) && !in_array($field['ref'], $default_to_first_node_for_fields))
+global $default_to_first_node_for_fields, $pagename;
+if(!hook('replacedropdowndefault', '', array($field)) && (!in_array($field["ref"],$default_to_first_node_for_fields) || (in_array($field["ref"],$default_to_first_node_for_fields) && $pagename=="edit" && getval("uploader","")=="" && $value=='')))
     {
     ?>
     <option value=""></option>

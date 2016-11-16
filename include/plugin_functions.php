@@ -1320,13 +1320,9 @@ function config_custom_select($name, $label, $available, $value)
     config_single_select($name, $label, $value, $available, false);
     }
 
-function get_plugin_css($theme){
+function get_plugin_css(){
 	global $plugins,$baseurl,$language,$css_reload_key;
-	// remove "col-" from $theme
-	if (stripos($theme,'col-') !== false)
-		{
-		$theme = substr($theme,4);
-		}
+
 	$plugincss="";
 	for ($n=count($plugins)-1;$n>=0;$n--)
 	{
@@ -1343,15 +1339,11 @@ function get_plugin_css($theme){
 		{
 		$plugincss.='<link href="' . get_plugin_path($plugins[$n],true) . '/css/style-' . $language . '.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />
 		';
-		}	
-
-	# Allow colour theme specific styles
-	$csspath=get_plugin_path($plugins[$n]) . "/css/Col-".$theme.".css";	
-	if (file_exists($csspath))
-		{
-		$plugincss.='<link href="' . get_plugin_path($plugins[$n],true) . '/css/Col-'.$theme.'.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />
-		';
 		}
+	
+	# additional plugin css functionality
+	$plugincss.=hook('moreplugincss','',array($plugins, $n));
+        
 	}
 	return $plugincss;
 }

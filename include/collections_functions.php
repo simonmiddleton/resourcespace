@@ -1809,23 +1809,33 @@ function collection_max_access($collection)
 	return $maxaccess;
 	}
 
-function collection_min_access($collection)	
-	{
-	# Returns the minimum access (the least permissive) that the current user has to the resources in $collection.
-	$minaccess=0;
-	if (is_array($collection)){$result=$collection;}
-	else {
-		$result=do_search("!collection" . $collection,"","relevance",0,-1,"desc",false,"",false,"");
-	}
-	for ($n=0;$n<count($result);$n++)
-		{
-		$ref=$result[$n]["ref"];
-		# Load access level
-		$access=get_resource_access($result[$n]);
-		if ($access>$minaccess) {$minaccess=$access;}
-		}
-	return $minaccess;
-	}
+function collection_min_access($collection)
+    {
+    # Returns the minimum access (the least permissive) that the current user has to the resources in $collection.
+    $minaccess = 0;
+    if(is_array($collection))
+        {
+        $result = $collection;
+        }
+    else
+        {
+        $result = do_search("!collection{$collection}", '', 'relevance', 0, -1, 'desc', false, '', false, '');
+        }
+
+    for($n = 0; $n < count($result); $n++)
+        {
+        $ref = $result[$n]['ref'];
+
+        # Load access level
+        $access = get_resource_access($result[$n]);
+        if($access > $minaccess)
+            {
+            $minaccess = $access;
+            }
+        }
+
+    return $minaccess;
+    }
 	
 function collection_set_public($collection)
 	{
@@ -2154,7 +2164,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             $o++;
             }
         }
-	
+
 	if($geo_locate_collection)
         {
             $data_attribute['url'] = sprintf('%spages/geolocate_collection.php?ref=%s',
@@ -2435,3 +2445,30 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     return $options;
     }
 }
+
+/**
+* Make a filename unique by appending a dupe-string.
+*
+* @param array $base_values
+* @param string $filename
+* @param string $dupe_string
+* @param string $extension
+* @param int $dupe_increment
+*
+* @return string Unique filename
+*/
+function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $dupe_increment = null)
+    {
+    // Create filename to check if exist in $base_values
+    $check_filename = $filename . ($dupe_increment ? $dupe_string . $dupe_increment : '') . '.' . $extension;
+
+    if(!in_array($check_filename, $base_values))
+        {
+        // Confirmed filename does not exist yet
+        return $check_filename;
+        }
+
+    // Recursive call this function with incremented value
+    // Doing $dupe_increment = null, ++$dupe_increment results in $dupe_increment = 1
+    return makeFilenameUnique($base_values, $filename, $dupe_string, $extension, ++$dupe_increment);
+    }

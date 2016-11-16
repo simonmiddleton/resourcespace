@@ -1004,7 +1004,7 @@ $lang["setup-successheader"]="Glückwunsch!";
 $lang["setup-successdetails"]="Ihre ResourceSpace Installation ist abgeschlossen. Weitere Konfigurationsoptionen finden Sie in der Datei 'include/default.config.php'.";
 $lang["setup-successnextsteps"]="Nächste Schritte:";
 $lang["setup-successremovewrite"]="Sie können nun den Schreibzugriff auf den Ordner 'include/' entfernen.";
-$lang["setup-visitwiki"]='Besuchen Sie das <a target="_blank" href="http://wiki.resourcespace.org/index.php/?title=main_Page">ResourceSpace Documentation Wiki</a> für weitere Informationen über die Anpassung Ihrer Installation';
+$lang["setup-visitwiki"]='Besuchen Sie das <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> für weitere Informationen über die Anpassung Ihrer Installation';
 $lang["php-config-file"]="PHP config: '%phpinifile'"; # %phpinifile will be replaced, e.g. PHP config: '/etc/php5/apache2/php.ini'
 $lang["setup-checkconfigwrite"]="Schreibzugriff auf Konfigurationsverzeichnis:";
 $lang["setup-checkstoragewrite"]="Schreibzugriff auf Datenverzeichnis:";
@@ -1947,7 +1947,7 @@ $lang["download_click__introtext"]="Um die Datei herunterzuladen, klicken Sie bi
 $lang["download_progress__introtext"]="Ihr Download wird in Kürze starten. Nachdem der Download abgeschlossen ist, wählen Sie bitte einen der folgenden Links.";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="Bitte wählen Sie die Felder aus, die Sie verändern wollen. Felder, die Sie nicht anwählen, werden nicht verändert.";
-$lang["help__introtext"]="Diese Anleitungen helfen Ihnen, ResourceSpace und Ihre Medien effektiv zu nutzen.</p>\n<p>Benutzen Sie \"Themen\", um Ressourcen nach Themen zu erkunden oder nutzen Sie die Suche um spezifische Ressourcen zu finden.</p>\n<p><a href=\"http://www.montala.net/downloads/resourcespace-GettingStarted.pdf\">User Guide</a> (PDF, englisch)<br /><a target=\"_blank\" href=\"http://wiki.resourcespace.org/index.php/?title=main_Page\">Online Dokumentation</a> (Wiki)</p>";
+$lang["help__introtext"]="Diese Anleitungen helfen Ihnen, ResourceSpace und Ihre Medien effektiv zu nutzen.</p>\n<p>Benutzen Sie \"Themen\", um Ressourcen nach Themen zu erkunden oder nutzen Sie die Suche um spezifische Ressourcen zu finden.</p>\n<p><a href=\"http://www.montala.net/downloads/resourcespace-GettingStarted.pdf\">User Guide</a> (PDF, englisch)<br /><a target=\"_blank\" href=\"http://www.resourcespace.com/knowledge-base/\">Online Dokumentation</a> (Wiki)</p>";
 $lang["home__help"]="Hilfe für die Arbeit mit ResourceSpace";
 $lang["home__mycollections"]="Hier können Sie Ihre Kollektionen organisieren, verwalten und weitergeben.";
 $lang["home__restrictedtext"]="Bitte klicken Sie auf den Link, den Sie per E-Mail erhalten haben, um auf die für Sie ausgesuchten Ressourcen zuzugreifen.";

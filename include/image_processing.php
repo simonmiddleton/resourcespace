@@ -1188,14 +1188,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		else if (!$previewonly)
 			{
 			$file=get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
-			$origfile=$file;
 			}
 		else
 			{
 			# We're generating based on a new preview (scr) image.
 			$file=get_resource_path($ref,true,"tmp",false,"jpg");	
 			}
-
+		$origfile=$file;
+		
 		$hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);	
 		if (file_exists($hpr_path) && !$previewbased) {unlink($hpr_path);}	
 		$lpr_path=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",$alternative);	
@@ -2178,7 +2178,7 @@ function AutoRotateImage($src_image, $ref = false)
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
 
                 # change the orientation metadata
-                $command = $exiftool_fullpath . ' Orientation=1 ' . escapeshellarg($new_image);
+                $command = $exiftool_fullpath . ' -Orientation=1 ' . escapeshellarg($new_image);
                 }
             } 
         else
@@ -2211,7 +2211,7 @@ function AutoRotateImage($src_image, $ref = false)
         # Also, don't go through this step if the old orientation was set to normal
         if ($old_orientation != '' && $old_orientation != 1) 
             {
-            $fix_orientation = $exiftool_fullpath . ' Orientation=1 -n ' . escapeshellarg($new_image);
+            $fix_orientation = $exiftool_fullpath . ' -Orientation=1 -n ' . escapeshellarg($new_image);
             $output=run_command($fix_orientation);
             resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$fix_orientation . ":\n" . $output);
             }

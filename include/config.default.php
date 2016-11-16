@@ -790,11 +790,6 @@ $videotypes=array(3);
 $resource_type_icons=false;
 
 
-# Sets the default colour theme (defaults to white)
-$defaulttheme="";
-
-
-
 /** USER PREFERENCES **/
 $user_preferences = true;
 
@@ -850,6 +845,7 @@ $contact_sheet_preview_size="250x250";
 # helvetica,times,courier (standard) and dejavusanscondensed for more Unicode support (but embedding/subsetting makes it slower).
 # There are also several other fonts included in the tcpdf lib (but not ResourceSpace), which provide unicode support
 # To embed more elaborate fonts, acquire the files from the TCPDF distribution or create your own using TCPDF utilities, and install them in the lib/tcpdf/fonts folder.
+# If you encounter issues with chinese characters, use "arialunicid0" and make sure GhosScript has ArialUnicodeMS font (on Windows server, this should be there already)
 $contact_sheet_font="helvetica";
 # allow unicode filenames? (stripped out by default in tcpdf but since collection names may 
 # have special characters, probably want to try this on.)
@@ -1395,6 +1391,9 @@ $mime_type_by_extension = array(
 # Default is 5 minutes.
 $php_time_limit=300;
 
+# Cron jobs maximum execution time (Default: 30 minutes)
+$cron_job_time_limit = 1800;
+
 # Should the automatically produced FLV file be available as a separate download?
 $flv_preview_downloadable=false;
 
@@ -1847,7 +1846,9 @@ $reporting_periods_default=array(7,30,100,365);
 
 
 # For checkbox list searching, perform logical AND instead of OR when ticking multiple boxes.
-$checkbox_and=false;
+$checkbox_and = false;
+# For dynamic keyword list searching, perform logical AND instead of OR when selecting multiple options.
+$dynamic_keyword_and = false;
 
 # Option to show resource ID in the thumbnail, next to the action icons.
 $display_resource_id_in_thumbnail=false;
@@ -3050,4 +3051,7 @@ $collection_block_restypes=array();
 
 # Option to remove all resources from the current collection once it has been requested
 $collection_empty_on_submit=false;
+
+# Retina mode. Use the "next size up" when rending previews and thumbs for a more crisp display on high resolution screens. Note - uses much more bandwidth also.
+$retina_mode=false;
 

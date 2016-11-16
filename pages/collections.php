@@ -10,15 +10,15 @@ include_once dirname(__FILE__)."/../include/resource_functions.php";
 include_once dirname(__FILE__)."/../include/search_functions.php";
 include_once dirname(__FILE__) . '/../include/render_functions.php';
 
-$order_by=getvalescaped("order_by",$default_collection_sort);
-$sort=getvalescaped("sort","DESC");
-$search=getvalescaped("search","");
-$last_collection=getval('last_collection','');
-$restypes=getvalescaped('restypes','');
-$archive=getvalescaped('archive','');
-$daylimit=getvalescaped('daylimit','');
-$offset=getvalescaped('offset','');
-$resources_count=getvalescaped('resources_count','');
+$order_by        = getvalescaped('order_by', $default_collection_sort);
+$sort            = getvalescaped('sort', 'DESC');
+$search          = getvalescaped('search', '');
+$last_collection = getval('last_collection', '');
+$restypes        = getvalescaped('restypes', '');
+$archive         = getvalescaped('archive', '');
+$daylimit        = getvalescaped('daylimit', '');
+$offset          = getvalescaped('offset', '');
+$resources_count = getvalescaped('resources_count', '');
 
 $change_col_url="search=" . urlencode($search). "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&restypes=" . urlencode($restypes) . "&archive=" .urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&offset=" . urlencode($offset) . "&resources_count=" . urlencode($resources_count);
 
@@ -554,11 +554,11 @@ hook("processusercommand");
 $searches=get_saved_searches($usercollection);
 
 // Do an initial count of how many resources there are in the collection (only returning ref and archive)
-$results_all=do_search("!collection" . $usercollection,"","relevance",0,-1,"desc",false,0,false,false,"",false,true,true);
-$count_result=count($results_all);
+$results_all  = do_search("!collection{$usercollection}", '', $order_by, 0, -1, $sort, false, 0, false, false, '', false, true, true);
+$count_result = count($results_all);
 
 // Then do another pass getting all data for the maximum allowed collection thumbs
-$result=do_search("!collection" . $usercollection,"","relevance",0,$max_collection_thumbs,"desc");
+$result = do_search("!collection{$usercollection}", '', $order_by, 0, $max_collection_thumbs, $sort);
 
 $hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
 $feedback=$cinfo["request_feedback"];
@@ -859,11 +859,12 @@ if ($count_result>0)
 		<?php $access=get_resource_access($result[$n]);
 		$use_watermark=check_use_watermark();?>
 		<table border="0" class="CollectionResourceAlign"><tr><td>
-		<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo $k?>&curpos=<?php echo $n ?>"><?php if ($result[$n]["has_image"]==1) { 
+		<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>"><?php if ($result[$n]["has_image"]==1) { 
 		
-		$colimgpath=get_resource_path($ref,false,"col",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])
+		$colimgpath=get_resource_path($ref,false,($retina_mode?"thm":"col"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])
 		?>
-		<img border=0 src="<?php echo $colimgpath?>" class="CollectImageBorder" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" />
+		<img border=0 src="<?php echo $colimgpath?>" class="CollectImageBorder" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                   <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> />
 			<?php
 		
 		} else { ?><img border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" /><?php } ?><?php hook("aftersearchimg","",array($result[$n]))?></a></td>
@@ -907,7 +908,7 @@ if ($count_result>0)
 		<?php if (!isset($cinfo['savedsearch'])||(isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null)){ // add 'remove' link only if this is not a smart collection 
 			?>
 		<?php if (!hook("replaceremovelink")){?>
-		<a class="CollectionResourceRemove" onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?remove=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>"><i class="fa fa-minus-circle"></i> <?php echo $lang["action-remove"]?></a>
+		<a class="CollectionResourceRemove" onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?remove=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>"><i aria-hidden="true" class="fa fa-minus-circle"></i> <?php echo $lang["action-remove"]?></a>
 		<?php
 				} //end hook replaceremovelink 
 			} # End of remove link condition 
