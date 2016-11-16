@@ -462,19 +462,19 @@ function extract_exif_comment($ref,$extension="")
 				if (count($s)>1 && strlen($s[0])>1)
 					{
 					# Extract value
-					$value=trim(substr($metaline,$pos+2));
-
+					$value=strip_tags(trim(substr($metaline,$pos+2)));
 					# Replace '..' with line feed - either Exiftool itself or Adobe Bridge replaces line feeds with '..'
 					$value = str_replace('....', '\n\n', $value); // Two new line feeds in ExifPro are replaced with 4 dots '....'
-					$value=str_replace('...','.\n',$value); # Three dots together is interpreted as a full stop then line feed, not the other way round
-					$value=str_replace('..','\n',$value);
-					
+					$value = str_replace('...','.\n',$value); # Three dots together is interpreted as a full stop then line feed, not the other way round
+					$value = str_replace('..','\n',$value);
+
 					# Convert to UTF-8 if not already encoded
 					$encoding=mb_detect_encoding($value,"UTF-8",true);
 					if($encoding!="UTF-8")
 						{
 						debug("extract_exif_comment: non-utf-8 value found. Extracted value: " . $value);
 						$value=utf8_encode($value);
+
 						debug("extract_exif_comment: Converted value: " . $value);
 						}
 					
@@ -483,8 +483,9 @@ function extract_exif_comment($ref,$extension="")
 					$tagname=strtoupper(trim($s[1]));
 					
 					# Store both tag data under both tagname and groupname:tagname, to support both formats when mapping fields. 
-					$metadata[$tagname] = $value;
-					$metadata[$groupname . ":" . $tagname] = $value;
+					$metadata[$tagname] = escape_check($value);
+					$metadata[$groupname . ":" . $tagname] = escape_check($value);
+
 					debug("Exiftool: extracted field '$groupname:$tagname', value is '$value'",RESOURCE_LOG_APPEND_PREVIOUS);
 					}
 				}
@@ -1982,10 +1983,10 @@ function tweak_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alterna
 		}
 	}
 	else {
-		$file=get_resource_path($ref,true,"scr",false,$extension);$top="scr";
+		$file=get_resource_path($ref,true,"scr",false,$extension,-1,1,false,'',$alternative);$top="scr";
 		if (!file_exists($file)) {
 			# Some images may be too small to have a scr.  Try pre:
-			$file=get_resource_path($ref,true,"pre",false,$extension);$top="pre";
+			$file=get_resource_path($ref,true,"pre",false,$extension,-1,1,false,'',$alternative);$top="pre";
 		}
 	}
 	

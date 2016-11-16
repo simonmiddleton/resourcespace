@@ -10,8 +10,6 @@ $url=getval("url","index.php");
 $modifiedurl=hook("modifyloginurl","",array($url));
 if ($modifiedurl){$url=$modifiedurl;}
 
-$api=getval("api","");
-
 $modal=getval("modal","");
 
 if ($modal)
@@ -24,7 +22,7 @@ if ($modal)
 
 if (isset($anonymous_login) && $anon_login_modal && !$modal && getval("logout","")==false && !array_key_exists("username",$_POST))
 	{
-	$anon_login_extras="loginmodal=true&url=".urlencode($url)."&api=".urlencode($api)."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""));
+	$anon_login_extras="loginmodal=true&url=".urlencode($url)."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""));
 	
 	$anon_login_redirect="/pages/".$default_home_page."?".$anon_login_extras;
 	if ($use_theme_as_home)

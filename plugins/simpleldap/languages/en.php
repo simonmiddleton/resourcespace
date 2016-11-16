@@ -46,4 +46,7 @@ $lang["simpleldap_test_title"] = "Test";
 $lang["simpleldap_result"] = "Result";
 $lang["simpleldap_retrieve_user"] = "Retrieve user details";
 $lang["simpleldap_externsion_required"] = "The PHP LDAP module must be enabled for this plugin to work";
+$lang["simpleldap_usercomment"] = "Created by SimpleLDAP plugin.";
+$lang["simpleldap_usermatchcomment"] = "Updated to LDAP user by SimpleLDAP.";
+$lang["origin_simpleldap"] = "SimpleLDAP plugin";
 

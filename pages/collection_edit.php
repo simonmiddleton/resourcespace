@@ -357,14 +357,16 @@ include "../include/header.php";
 		<?php 
 		}
 
-	if ($multi_edit && $colcount>1) 
-		{ ?>
-		<div class="Question">
-		<label for="allow_changes"><?php echo $lang["relateallresources"]?></label><input type=checkbox id="relateall" name="relateall">
-		<div class="clearerleft"> </div>
-		</div>
-		<?php 
-		}
+    if($multi_edit && 1 < $colcount) 
+        {
+        ?>
+        <div class="Question">
+            <label for="allow_changes"><?php echo $lang['relateallresources'];?></label>
+            <input type=checkbox id="relateall" name="relateall" onClick="if(this.checked) { return confirm('<?php echo $lang['relateallresources_confirmation']; ?>'); }">
+            <div class="clearerleft"></div>
+        </div>
+        <?php
+        }
 
 	if ($colcount!=0 && $collection['savedsearch']=='')
 		{?>

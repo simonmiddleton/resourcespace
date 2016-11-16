@@ -96,6 +96,21 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                 <label><?php echo $lang['options']; ?></label>
                 <span><a href="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['property-options_edit_link']; ?></a></span>
                 <?php
+                }            
+            if (in_array($currentvalue, array(0)))
+                { // create constraints selector
+				$addconstraint=true;
+				$constraint=sql_value("select field_constraint value from resource_type_field where ref='$ref'",0);?>
+                <div class="clearerleft"></div>
+                </div> <!-- end question -->
+				<div class="Question">
+				<label><?php echo $lang["property-field_constraint"]?></label>
+                <select id="field_constraint" name="field_constraint" class="stdwidth" onchange="CentralSpacePost(this.form);">
+
+				<option value="0" <?php if ($constraint==0) { echo " selected"; } ?>><?php echo $lang["property-field_constraint-none"]?></option>
+				<option value="1" <?php if ($constraint==1) { echo " selected"; } ?>><?php echo $lang["property-field_constraint-number"]?></option>
+				</select>
+                <?php
                 }
             ?>
 			<?php
@@ -261,6 +276,8 @@ if(getval("save","")!="" && getval("delete","")=="")
 			$syncsql.="{$column}=" . (($val=="")?"NULL":"'{$val}'");
 			}
 		}
+	// add field_constraint sql
+	if (getvalescaped("field_constraint","")!=""){$sql.=",field_constraint='".getvalescaped("field_constraint",0)."'";}
 	$sql.=" where ref='{$ref}'";
 	
 	sql_query($sql);

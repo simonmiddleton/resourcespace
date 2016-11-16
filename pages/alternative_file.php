@@ -61,7 +61,7 @@ if (getval("tweak","")!="")
 
 
 
-if (getval("name","")!="")
+if (getval("name","")!="" && getval("tweak","")=="") // do not do this during a tweak operation! 
 	{
 	hook("markmanualupload");
 	# Save file data
@@ -100,7 +100,7 @@ $filepath=get_resource_path($resource,true,"thm",true,"jpg",-1,1,false,'',$ref,t
 $previews_exist=false;
 if (file_exists($filepath)){
 	$previews_exist=true;
-	$fileurl=get_resource_path($resource,false,"thm",true,"jpg",-1,1,false,'',$ref,true);?>
+	$fileurl=get_resource_path($resource,false,"thm",true,"jpg",-1,1,false,rand(1,50000),$ref);?>
 	<div class="Question" style="border:0px;"><img id="preview" align="top" src="<?php echo $fileurl?>" class="ImageBorder" style="margin-right:10px;"/><br /><br /><div class="clearerleft"> </div></div>
 	<?php 
 	} 

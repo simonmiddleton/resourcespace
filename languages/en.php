@@ -115,6 +115,9 @@ $lang["property-field_id"]="Field id";
 $lang["property-title"]="Title";
 $lang["property-resource_type"]="Resource type";
 $lang["property-field_type"]="Field type";
+$lang["property-field_constraint"]="Field Constraint";
+$lang["property-field_constraint-none"]="None";
+$lang["property-field_constraint-number"]="Number";
 
 $lang["property-options"]="Comma separated list of options. The first option will be the default option. If you do not wish to set a default value, use a starting comma to default to blank. E.g. <br />,Option1,Option2 - will default to blank.";
 $lang['property-options_edit_link'] = 'Manage options';
@@ -223,13 +226,15 @@ $lang["anyday"]="Any day";
 $lang["anycountry"]="Any country";
 $lang["resultsdisplay"]="Results display";
 $lang["xlthumbs"]="X-large";
-$lang["xlthumbstitle"]="Extra Large Thumbnails";
+$lang["xlthumbstitle"]="Extra large thumbnails";
 $lang["largethumbs"]="Large";
-$lang["largethumbstitle"]="Large Thumbnails";
+$lang["largethumbstitle"]="Large thumbnails";
 $lang["smallthumbs"]="Small";
-$lang["smallthumbstitle"]="Small Thumbnails";
+$lang["smallthumbstitle"]="Small thumbnails";
+$lang["strip"]="Strip";
+$lang["striptitle"]="Strip view";
 $lang["list"]="List";
-$lang["listtitle"]="List View";
+$lang["listtitle"]="List view";
 $lang["perpage"]="per page";
 $lang["on"]="On";
 $lang["off"]="Off";
@@ -805,6 +810,7 @@ $lang['disable_languages']='Disable language selection options';
 $lang['import_export'] = 'Import/ Export';
 $lang['import'] = 'Import';
 $lang['export'] = 'Export';
+$lang['origin'] = "Origin";
 
 # Pager
 $lang["next"]="Next";
@@ -956,6 +962,7 @@ $lang["removetext"]="Remove text / option(s)";
 $lang["find"]="Find";
 $lang["andreplacewith"]="...and replace with...";
 $lang["relateallresources"]="Relate all resources in this collection";
+$lang['relateallresources_confirmation'] = 'Are you sure you want to RELATE ALL resources in this collection?';
 
 # New for 1.5
 $lang["columns"]="Columns";

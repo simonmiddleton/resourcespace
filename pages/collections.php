@@ -900,7 +900,7 @@ if ($count_result>0)
 		</div>
 		<?php } ?>
 	
-		<?php if ($k=="" || $internal_share_access) { ?><div class="CollectionPanelInfo">
+		<?php if ($k=="" || $internal_share_access) { ?><div class="CollectionPanelTools">
 		<?php if (($feedback) || (($collection_reorder_caption || $collection_commenting))) { ?>
 		<span class="IconComment <?php if ($result[$n]["commentset"]>0) { ?>IconCommentAnim<?php } ?>"><a onclick="return ModalLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref) ?>&collection=<?php echo urlencode($usercollection) ?>"><img src="<?php echo $baseurl_short?>gfx/interface/sp.gif" alt="" width="14" height="12" /></a></span>		
 		<?php } ?>

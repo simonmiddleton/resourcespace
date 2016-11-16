@@ -148,6 +148,10 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="Fixed"><?php echo nicedate($user["created"],true) ?></div>
 <div class="clearerleft"> </div></div>
 
+<div class="Question"><label><?php echo $lang["origin"]; ?></label>
+<div class="Fixed"><?php echo (($user["origin"]!="")?(isset($lang["origin_" . $user["origin"]])?$lang["origin_" . $user["origin"]]:$user["origin"]):$applicationname) ?></div>
+<div class="clearerleft"> </div></div>
+
 <div class="Question"><label><?php echo $lang["lastactive"]?></label>
 <div class="Fixed"><?php echo nicedate($user["last_active"],true) ?></div>
 <div class="clearerleft"> </div></div>

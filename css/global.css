@@ -107,7 +107,7 @@ button[type="submit"] { font-size: 1em; }
 #HeaderNav2 {float:left; padding-left: 30px;}
 #HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0.5em;}
 .HeaderImgLink{float:left;height:100%;}
-#HeaderImg{margin:0 0 0 5px; height: 40px; }
+#HeaderImg{margin:0; height: 40px; }
 .HorizontalNav li,  .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
 .HorizontalNav li a, .HorizontalNav li a{display: inline-block;zoom: 1;*display: inline;}
 #SearchBarContainer {margin-top: 20px;}
@@ -193,6 +193,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #CentralSpace .SearchWidth {width: 550px;font-size: 0.9em ;margin: 0px 0px;padding: 0px;}
 #CentraSpace .SearchWidthExp {width:200px;font-size: 0.9em ;margin: 0px 0px;padding: 0px;}
 #CentralSpace .SplitSearch {float: left; margin-left: 5px;margin-right: 5px;}
+.NumberSearchWidth {font-size: 0.9em;width:80px;font-size: 0.9em;margin: 0px 0px;padding: 0px;margin-bottom:3px;}
 
 .CollectionPanelShell {padding:0;float: left;margin: 0px 15px 5px 0px;width: 97px;height: 120px; text-align: left;}
 .CollectionPanelInfo{padding-bottom:3px;}
@@ -266,7 +267,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a, .CollectionPanelInfo a	{float: right;margin-right: 0.5em;text-decoration:none;}
+.ResourcePanelIcons a, .CollectionPanelTools a	{;margin-right: 0.5em;text-decoration:none;}
 .ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
 .ListTools a:hover	{text-decoration:none;}
@@ -683,7 +684,7 @@ margin-bottom:10px;
 	margin-bottom:10px;
 }
 
-.smalllisticon, .smalllisticonactive, .xlthumbsicon, .xlthumbsiconactive, .smallthumbsicon, .smallthumbsiconactive, .largethumbsicon, .largethumbsiconactive {
+.smalllisticon, .smalllisticonactive, .xlthumbsicon, .xlthumbsiconactive, .smallthumbsicon, .smallthumbsiconactive, .largethumbsicon, .largethumbsiconactive, .stripicon, .stripiconactive {
 width: 20px;
 display: block;
 height: 20px;
@@ -698,7 +699,7 @@ margin-bottom: 10px;
 }
 
 .icondisplay {
-width: 90px;
+width: 110px;
 }
 
 .smalllisticon{background: url(../gfx/interface/listicon.png) no-repeat 0px;}
@@ -709,6 +710,8 @@ width: 90px;
 .smallthumbsicon{background: url(../gfx/interface/smallicon.png) no-repeat 0px;}
 .largethumbsicon{background: url(../gfx/interface/largeicon.png) no-repeat 0px;}
 .largethumbsiconactive{background: url(../gfx/interface/largeiconactive.png) no-repeat 0px;}
+.stripiconactive{background: url(../gfx/interface/stripiconactive.png) no-repeat 0px;}
+.stripicon{background: url(../gfx/interface/stripicon.png) no-repeat 0px;}
 
 #contactadminbox  textarea{
 	width:100%;
@@ -1230,4 +1233,28 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 
 /* Custom filters (extends the default form filters in ResourceSpace) */
 #FilterNodeOptions { width: 510px; }
+#FilterNodeOptions .FilterItemContainer > label { width: 150px; }
+
+
+.ImageStrip
+    {
+    height:150px;
+    width:auto;
+    margin:10px 10px 0 0;
+    }
+#CentralSpaceResources  
+    {
+    text-align:justify;
+    }
+.ImageTools
+    {
+    position:absolute;display:inline;background-color:black;visibility:hidden;
+    }
+.ImageStripLink:hover .ImageTools
+    {
+    visibility:visible;
+    }
+    
+.CollectionPanelTools {visibility:hidden;}
+.CollectionPanelShell:hover .CollectionPanelTools {visibility:visible;}
 #FilterNodeOptions .FilterItemContainer > label { width: 150px; }.tag-editor li { padding: initial; }
