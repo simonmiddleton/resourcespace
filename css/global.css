@@ -1190,4 +1190,7 @@ form.FormFilter button {
     float: right;
 }
 
+.HiddenTile {
+    border: 1px solid red !important;
+}
 .tag-editor li { padding: initial; }
