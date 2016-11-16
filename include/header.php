@@ -277,65 +277,23 @@ if(isset($usergroup))
     }
 
 $linkUrl=isset($header_link_url) ? $header_link_url : $homepage_url;
-if($slimheader)
-    {
-    ?>
-    <div id="Header" class="<?php
+?>
+<div id="Header" class="<?php
         echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
         echo ((isset($slimheader_fixed_position) && $slimheader_fixed_position) ? ' SlimHeaderFixedPosition' : '');
-    ?>"<?php
-    if (isset($header_colour_style_override) && $header_colour_style_override!='') { ?> style="background: <?php echo $header_colour_style_override; ?>;"<?php } ?>>
-    <?php hook("responsiveheader");
-    if($header_text_title) 
+        echo " " . $header_size;
+?>"<?php
+if (isset($header_colour_style_override) && $header_colour_style_override!='') { ?> style="background: <?php echo $header_colour_style_override; ?>;"<?php } ?>>
+<?php hook("responsiveheader");
+if($header_text_title) 
         {?>
         <div id="TextHeader"><?php if ($k=="" || $internal_share_access){?><a href="<?php echo $homepage_url?>"  onClick="return CentralSpaceLoad(this,true);"><?php } ?><?php echo $applicationname;?><?php if ($k=="" || $internal_share_access){?></a><?php } ?></div>
         <?php if ($applicationdesc!="")
-            {?>
-            <div id="TextDesc"><?php echo i18n_get_translated($applicationdesc);?></div>
-            <?php 
-            }
-        }
-    else
-        {
-        if($linkedheaderimgsrc !="") 
-            {
-            $header_img_src = $linkedheaderimgsrc;
-            if(substr($header_img_src, 0, 4) !== 'http')
-                {
-                // Set via System Config page?
-                if (substr($header_img_src, 0, 13) == '[storage_url]')
-                    {
-                    // Parse and replace the storage URL
-                    $header_img_src = str_replace('[storage_url]', $storageurl, $header_img_src);
-                    }
-                else
-                    {
-                    // Set via config.php
-                    // if image source already has the baseurl short, then remove it and add it here
-                    if(substr($header_img_src, 0, 1) === '/')
-                        {
-                        $header_img_src = substr($header_img_src, 1);
-                        }
-                    $header_img_src = $baseurl_short . $header_img_src;
-                    }
+                {?>
+                <div id="TextDesc"><?php echo i18n_get_translated($applicationdesc);?></div>
+                <?php 
                 }
-            }
-        else 
-            {
-            $header_img_src = $baseurl.'/gfx/titles/title.png';
-            }
-        if($header_link && ($k=="" || $internal_share_access))
-	    {?>
-	    <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></a>
-	    <?php
-	    }
-	else
-	    {?>
-	    <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
-	    <?php
-	    }
         }
-    }
 else
 	{
 	if($linkedheaderimgsrc !="") 
