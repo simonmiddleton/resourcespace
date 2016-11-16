@@ -35,7 +35,7 @@ if(isset($contactsheet_header))
                 {
                 ?>
                 <td style="width: 40%;" align=right>
-                    <img id="logo" src="<?php echo $contact_sheet_logo; ?>" alt="Logo">
+                    <img id="logo" src="<?php echo $contact_sheet_logo; ?>" alt="Logo" <?php if(isset($contact_sheet_logo_resize) && $contact_sheet_logo_resize){ ?> style="width:100%;height:auto;"<?php } ?>>
                 </td>
                 <?php
                 }
@@ -97,12 +97,15 @@ foreach($resources as $resource_ref => $resource)
         <?php
         }
 
-    foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
-        {
-        ?>
-        <span><?php echo $contact_sheet_field; ?></span><br>
-        <?php
-        }
+    if(!$contact_sheet_metadata_under_thumbnail)
+    	{
+		foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
+			{
+			?>
+			<span><?php echo $contact_sheet_field; ?></span><br>
+			<?php
+			}
+		}
 
     if(isset($contact_sheet_add_link))
         {
@@ -117,6 +120,16 @@ foreach($resources as $resource_ref => $resource)
         <img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview">
         <?php
         }
+    
+    if($contact_sheet_metadata_under_thumbnail)
+    	{
+		foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
+			{
+			?>
+			<span><?php echo $contact_sheet_field; ?></span><br>
+			<?php
+			}
+		}
         ?>
     </td>
 

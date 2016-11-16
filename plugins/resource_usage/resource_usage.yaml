@@ -1,0 +1,8 @@
+name: resource_usage
+desc: Adds the capability to log resource usage via resource view page
+author: Montala Limited
+version: 1.0
+info_url: http://www.montala.com
+default_priority: 100
+config_url: /plugins/resource_usage/pages/setup.php
+category: Advanced

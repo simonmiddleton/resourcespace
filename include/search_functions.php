@@ -399,6 +399,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             elseif ($p!="" && $dynamic_keyword_and)
                     {
                     $p=str_replace(";",", {$fields[$n]["name"]}:",$p);	// this will force each and condition into a separate union in do_search (which will AND)
+                    if ($search!="") {$search.=", ";}
                     $search.=$fields[$n]["name"] . ":" . $p;
                     }   
                 
@@ -543,7 +544,7 @@ function refine_searchstring($search){
     # This function solves several issues related to searching.
     # it eliminates duplicate terms, helps the field content to carry values over into advanced search correctly, fixes a searchbar bug where separators (such as in a pasted filename) cause an initial search to fail, separates terms for searchcrumbs.
     
-    global $use_refine_searchstring;
+    global $use_refine_searchstring, $dynamic_keyword_and;
     
     if (!$use_refine_searchstring){return $search;}
     
@@ -556,6 +557,7 @@ function refine_searchstring($search){
     $keywords=split_keywords($search, false, false, false, false, true);
 
     $orfields=get_OR_fields(); // leave checkbox type fields alone
+    $dynamic_keyword_fields=sql_array("select name value from resource_type_field where type=9");
     
     $fixedkeywords=array();
     foreach ($keywords as $keyword){
@@ -566,7 +568,7 @@ function refine_searchstring($search){
             $keyname=$keywordar[0];
             if (substr($keyname,0,1)!="!"){
                 if(substr($keywordar[1],0,5)=="range"){$keywordar[1]=str_replace(" ","-",$keywordar[1]);}
-                if (!in_array($keyname,$orfields)){
+                if (!in_array($keyname,$orfields) && (!$dynamic_keyword_and || ($dynamic_keyword_and && !in_array($keyname, $dynamic_keyword_fields)))){
                     $keyvalues=explode(" ",str_replace($keywordar[0].":","",$keywordar[1]));
                 } else {
                     $keyvalues=array($keywordar[1]);
@@ -1265,7 +1267,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         // Don't filter if user is searching for their own resources and $open_access_for_contributor=true;
 		global $open_access_for_contributor;
-		if($open_access_for_contributor && $userref==$cuser){$sql_filter="true";$sql_join="";}
+		if($open_access_for_contributor && $userref==$cuser){$sql_filter="archive = '$archive'";$sql_join="";}
         
         $select=str_replace(",rca.access group_access,rca2.access user_access ",",null group_access, null user_access ",$select);
         return sql_query($sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where created_by='" . $cuser . "' and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix,false,$fetchrows);

@@ -112,7 +112,7 @@ if ($contact_sheet)
 <?php if (!$disable_geocoding) { ?>
 <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
 <?php if ($use_google_maps) { ?>
-<script src="https://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+<script src="https://maps.google.com/maps/api/js?<?php if(isset($google_maps_api_key)) { echo "key={$google_maps_api_key}&"; } ?>v=3"></script>
 <?php } ?>
 <?php } ?>
 <?php if (!hook("ajaxcollections")) { ?>
@@ -175,13 +175,20 @@ var scrolltopElementCentral='.ui-layout-center';
 var scrolltopElementCollection='.ui-layout-south';
 var scrolltopElementModal='#modal'
 collection_bar_hide_empty=<?php echo $collection_bar_hide_empty?"true":"false"; ?>;
-var chosen_config = 
+<?php 
+if ($chosen_dropdowns) 
+	{ 
+	?>
+	var chosen_config = 
 			{
 			"#CentralSpace select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_main ?>, allow_single_deselect: true, width:"0px"},
 			"#SearchBox select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_simplesearch ?>, allow_single_deselect: true, width:"0px"}
 	  		}
-var chosenCollection='<?php echo ($chosen_dropdowns && $chosen_dropdowns_collection)?>';
-var chosenCollectionThreshold='<?php echo $chosen_dropdowns_threshold_collection ?>';
+    var chosenCollection='<?php echo ($chosen_dropdowns && $chosen_dropdowns_collection)?>';
+    var chosenCollectionThreshold='<?php echo $chosen_dropdowns_threshold_collection ?>';
+	<?php
+	}
+?>
 </script>
 
 <script src="<?php echo $baseurl_short?>lib/js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>

@@ -1086,8 +1086,11 @@ function display_field($n, $field, $newtab=false)
   {
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
-  $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl;
+  $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search;
 
+  // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
+  $is_search=false;
+  
   $name="field_" . $field["ref"];
   $value=$field["value"];
   $value=trim($value);

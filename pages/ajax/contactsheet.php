@@ -23,6 +23,14 @@ $preview       = ('true' == getvalescaped('preview', '') ? true : false);
 $previewpage   = getvalescaped('previewpage', 1);
 $includeheader = getvalescaped('includeheader', '');
 $addlink       = getvalescaped('addlink', '');
+$addlogo	   = getvalescaped('addlogo', '');
+$force_watermark   = getvalescaped('force_watermark','');
+if($force_watermark==='true'){
+	$force_watermark=true;
+}
+elseif($force_watermark==='false'){
+	$force_watermark=false;
+}
 
 // Check access
 if(!collection_readable($collection))
@@ -32,7 +40,7 @@ if(!collection_readable($collection))
 
 // Contact sheet options:
 $contactsheet_header           = ('' != $includeheader ? filter_var($includeheader, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_include_header);
-$add_contactsheet_logo         = ('true' == getvalescaped('addlogo', $include_contactsheet_logo) ? true : false);
+$add_contactsheet_logo         = ('' != $addlogo ?  filter_var($addlogo, FILTER_VALIDATE_BOOLEAN) : $include_contactsheet_logo);
 $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_add_link);
 $selected_contact_sheet_fields = getvalescaped('selected_contact_sheet_fields', '');
 
@@ -82,12 +90,13 @@ foreach($getfields as $field_id)
 $pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
 $PDF_filename      = get_temp_dir() . '/contactsheet.pdf';
 $placeholders      = array(
-    'date'                          => date('Y-m-d H:i:s'),
-    'titlefontsize'                 => $titlefontsize,
-    'refnumberfontsize'             => $refnumberfontsize,
-    'title'                         => $title,
-    'columns'                       => $columns,
-    'config_sheetthumb_include_ref' => $config_sheetthumb_include_ref,
+    'date'                          			=> date('Y-m-d H:i:s'),
+    'titlefontsize'                 			=> $titlefontsize,
+    'refnumberfontsize'             			=> $refnumberfontsize,
+    'title'                         			=> $title,
+    'columns'                       			=> $columns,
+    'config_sheetthumb_include_ref' 			=> $config_sheetthumb_include_ref,
+    'contact_sheet_metadata_under_thumbnail'	=> $contact_sheet_metadata_under_thumbnail
 );
 
 if($contactsheet_header)
@@ -99,6 +108,7 @@ if($add_contactsheet_logo)
     {
     $placeholders['add_contactsheet_logo'] = $add_contactsheet_logo;
     $placeholders['contact_sheet_logo']    = "$baseurl/$contact_sheet_logo";
+    $placeholders['contact_sheet_logo_resize'] = $contact_sheet_logo_resize;
     }
 
 if($contact_sheet_add_link)
@@ -163,7 +173,8 @@ foreach($results as $result_data)
         }
 
     // Add the preview image
-    $use_watermark = check_use_watermark();
+    $use_watermark = $force_watermark;
+    if($use_watermark==''){$use_watermark = check_use_watermark();}
     $img_path = get_resource_path($result_data['ref'], true, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
     if(!file_exists($img_path))
         {

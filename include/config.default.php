@@ -898,6 +898,14 @@ $contact_sheet_add_link=true;
 # Give user option to enable links?
 $contact_sheet_add_link_option=false;
 
+# Use watermarked previews for contact sheets? If set to 'true' watermarks will be forced rather than judged based on user credentials.
+$contact_sheet_force_watermarks=false;
+# Give user option to force watermarks?
+$contact_sheet_force_watermark_option=false;
+
+# Show contact sheet metadata under preview? For thumbnail view only
+$contact_sheet_metadata_under_thumbnail=false;
+
 $contact_sheet_single_select_size=false;
 
 # Set this to FALSE in order to remove the link from the collection bar
@@ -2158,6 +2166,9 @@ $enable_plugin_upload = true;
 #Disable geocoding features?
 $disable_geocoding = false;
 $use_google_maps = false;
+
+# After obtaining an API key, please set the following config option:
+# $google_maps_api_key = '';
 
 #Enable geolocating multiple assets on a map that are part of a collection
 $geo_locate_collection = false;

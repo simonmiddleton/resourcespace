@@ -44,7 +44,7 @@ function HookSimplesamlAllPreheaderoutput()
 
 function HookSimplesamlAllProvideusercredentials()
         {
-		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path;
+		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types;
 		// Use standard authentication if available
 		if (isset($_COOKIE["user"])) {return true;}
 		
@@ -65,34 +65,52 @@ function HookSimplesamlAllProvideusercredentials()
 			}
 		$attributes = simplesaml_getattributes();
 
-		global $baseurl, $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute, $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash;
+		global $baseurl, $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute, $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator;
 
 		$usernamesuffix = $simplesaml_username_suffix;
-
-
-		//$username=$attributes[$simplesaml_username_attribute][0] . $simplesaml_username_suffix;
-
-
-		if(!isset($attributes[$simplesaml_username_attribute][0]) )
-			{
-			//$samlusername = simplesaml_getauthdata("saml:Subject:NameID");
-			$samlusername = simplesaml_getauthdata("saml:sp:NameID");
-			debug("simplesaml: username attribute not found. Setting to default user id " . $samlusername);
-			$username= $samlusername . $simplesaml_username_suffix;
-			}
+        
+        if(strpos($simplesaml_username_attribute,",")!==false) // Do we have to join two fields together?
+		    {
+		    $username_attributes=explode(",",$simplesaml_username_attribute);
+		    $username ="";
+		    foreach ($username_attributes as $username_attribute)
+                {
+                if($username!=""){$username.=$simplesaml_username_separator;}   
+                $username.=  $attributes[$username_attribute][0]; 				
+                }
+		    $username= $username . $simplesaml_username_suffix;
+		    }
 		else
-			{
-			$username=$attributes[$simplesaml_username_attribute][0] . $simplesaml_username_suffix;
-			}
-
-		$fullnameelements=explode(";",$simplesaml_fullname_attribute);
-		$displayname="";
-		foreach($fullnameelements as $fullnameelement)
-			{
-			debug("simplesaml: constructing fullname from attribute " . $fullnameelement . ": "  . $attributes[$fullnameelement][0]);
-			$displayname .= $attributes[$fullnameelement][0] . " ";
-			}
-
+		    {
+            if(!isset($attributes[$simplesaml_username_attribute][0]) )
+                {
+                $samlusername = simplesaml_getauthdata("saml:sp:NameID");
+                debug("simplesaml: username attribute not found. Setting to default user id " . $samlusername);
+                $username= $samlusername . $simplesaml_username_suffix;
+                }
+            else
+                {
+                $username=$attributes[$simplesaml_username_attribute][0] . $simplesaml_username_suffix;
+                }
+		    }
+        
+        if(strpos($simplesaml_fullname_attribute,",")!==false) // Do we have to join two fields together?
+		    {
+		    $fullname_attributes=explode(",",$simplesaml_fullname_attribute);		   
+		    }
+		else // Previous version used semi-colons
+		    { 
+            $fullnameelements=explode(";",$simplesaml_fullname_attribute);
+		    }
+        
+        $displayname ="";
+        foreach ($fullname_attributes as $fullname_attribute)
+            {
+            if($displayname!=""){$displayname.=$simplesaml_fullname_separator;}
+            debug("simplesaml: constructing fullname from attribute " . $fullname_attribute . ": "  . $attributes[$fullname_attribute][0]);
+            $displayname.=  $attributes[$fullname_attribute][0]; 				
+            }
+        
 		$displayname=trim($displayname);
 		debug("simplesaml: constructed fullname : "  . $displayname);
 
@@ -148,6 +166,15 @@ function HookSimplesamlAllProvideusercredentials()
 
 			sql_query("update user set password='$password_hash', fullname='$displayname', email='$email',usergroup='$group',comments='Auto created by SimpleSAML.' where ref='$userref'");
 			$user_select_sql="and u.username='$username'";
+            
+            # Generate a new session hash.
+            $session_hash=generate_session_hash($password_hash);
+            
+            # Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)
+            rs_setcookie("user", $session_hash, intval($simplesaml_login_expiry), "", "", substr($baseurl,0,5)=="https", true);
+
+            # Set default resource types
+            rs_setcookie('restypes', $default_res_types);
 			return true;
 			}
 

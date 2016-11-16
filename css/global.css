@@ -1116,13 +1116,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 }
 
 /* Manage External Shares */
-.TeamExternalSharesPager {
-    width: 240px;
-    float: right;
-    margin-top: -50px;
-    margin-right: 10px;
-}
-
 .FormFilter {
     width: 700px;
 }

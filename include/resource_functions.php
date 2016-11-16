@@ -1165,7 +1165,7 @@ function update_field($resource, $field, $value, array $errors = array())
         $fieldinfo = $fieldinfo[0];
         }
 
-    $fieldoptions = get_nodes($field);
+    $fieldoptions = get_nodes($field,null,true);
     $newvalues    = trim_array(explode(',', $value));
 
     // Set up arrays of node ids to add/remove. 
@@ -1236,9 +1236,23 @@ function update_field($resource, $field, $value, array $errors = array())
         {
         foreach($fieldoptions as $nodedata)
             {
-            if (in_array($nodedata["name"],$newvalues))
+            // Add to array of nodes, unless it has been added to array already as a parent for a previous node
+            if (in_array($nodedata["name"],$newvalues) && !in_array($nodedata["ref"],$nodes_to_add)) 
                 {
                 $nodes_to_add[] = $nodedata["ref"];
+                // We need to add all parent nodes for category trees
+                if($fieldinfo['type']==7) 
+                    {
+                    $parent_nodes=get_parent_nodes($nodedata["ref"]);
+                    foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
+                        {
+                        $nodes_to_add[]=$parent_node_ref;
+                        if (!in_array($parent_node_name,$newvalues))
+                            {
+                            $value = $parent_node_name . "," . $value;    
+                            }
+                        }
+                    }
                 }
             else
                 {
@@ -1684,7 +1698,7 @@ function copy_resource($from,$resource_type=-1)
 	
 function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0)
 	{
-	global $userref,$k,$lang,$resource_log_previous_ref;
+	global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
 
     if(($resource===RESOURCE_LOG_APPEND_PREVIOUS && !isset($resource_log_previous_ref)) || ($resource!==RESOURCE_LOG_APPEND_PREVIOUS && $resource<0))
         {
@@ -1743,7 +1757,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         sql_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `purchase_size`, " .
             "`purchase_price`, `access_key`, `previous_value`) VALUES (now()," .
             (($userref != "") ? "'$userref'" : "null") . ",'{$resource}','{$type}'," . (($field=="") ? "null" : "'{$field}'") . ",'" . escape_check($notes) . "','" .
-            escape_check($diff) . "','{$usage}','{$purchase_size}','{$purchase_price}'," . (isset($k) ? "'{$k}'" : "null") . ",'" . escape_check($fromvalue) . "')");
+            escape_check($diff) . "','{$usage}','{$purchase_size}','{$purchase_price}'," . ((isset($k) && !$internal_share_access) ? "'{$k}'" : "null") . ",'" . escape_check($fromvalue) . "')");
         $log_ref=sql_insert_id();
         $resource_log_previous_ref=$log_ref;
         return $log_ref;
@@ -2034,7 +2048,7 @@ function write_metadata($path, $ref, $uniqid="")
 									$writtenfields[$group_tag].="," . $keyword;
 										 
 									# Convert the data to UTF-8 if not already.
-									if (!$exiftool_write_omit_utf8_conversion && (!isset($mysql_charset) || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8"))){$keyword = mb_convert_encoding($keyword, 'UTF-8');}
+									if (!$exiftool_write_omit_utf8_conversion && (!isset($mysql_charset) || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8"))){$keyword = mb_convert_encoding($keyword, mb_detect_encoding($keyword), 'UTF-8');}
 									$command.= escapeshellarg("-" . $group_tag . "-=" . htmlentities($keyword, ENT_QUOTES, "UTF-8")) . " "; // In case value is already embedded, need to manually remove it to prevent duplication
 									$command.= escapeshellarg("-" . $group_tag . "+=" . htmlentities($keyword, ENT_QUOTES, "UTF-8")) . " ";
 									}
@@ -2050,7 +2064,7 @@ function write_metadata($path, $ref, $uniqid="")
                         $writtenfields[$group_tag]=$writevalue;                          
                         debug ("write_metadata - updating tag " . $group_tag);
                         # Write as is, convert the data to UTF-8 if not already.
-                        if (!$exiftool_write_omit_utf8_conversion && (!isset($mysql_charset) || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8"))){$writevalue = mb_convert_encoding($writevalue, 'UTF-8');}
+                        if (!$exiftool_write_omit_utf8_conversion && (!isset($mysql_charset) || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8"))){$writevalue = mb_convert_encoding($writevalue, mb_detect_encoding($writevalue), 'UTF-8');}
                         $command.= escapeshellarg("-" . $group_tag . "=" . htmlentities($writevalue, ENT_QUOTES, "UTF-8")) . " ";
                     }
                 }

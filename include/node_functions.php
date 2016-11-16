@@ -198,19 +198,22 @@ function get_node($ref, array &$returned_node)
 * Get all nodes from database for a specific metadata field or parent.
 * Use $parent = NULL and recursive = TRUE to get all nodes for a field
 * 
+* Use $offset and $rows only when returning a subset.
+* 
 * @param  integer  $resource_type_field    ID of the metadata field
 * @param  integer  $parent                 ID of parent node
 * @param  boolean  $recursive              Set to true to get children nodes as well
 * 
 * @return array
 */
-function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE)
+function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL)
     {
     $return_nodes = array();
 
     $query = sprintf('SELECT * FROM node WHERE resource_type_field = \'%s\' AND %s ORDER BY order_by ASC',
         escape_check($resource_type_field),
-        (trim($parent)=="") ? 'parent IS NULL' : "parent = '" . escape_check($parent) . "'"
+        (trim($parent)=="") ? 'parent IS NULL' : "parent = '" . escape_check($parent) . "'",
+        $limit
     );
     $nodes = sql_query($query);
 

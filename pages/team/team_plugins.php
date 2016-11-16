@@ -105,20 +105,21 @@ elseif ($enable_plugin_upload && isset($_REQUEST['submit']))
                   $rej_reason = $lang['plugins-rejmetadata'];
                   }
                if (!$rejected)
-                  {
-                  # Uploaded plugins live in the filestore folder.
-                  if (!(is_array(PclTarExtract($tmp_file, $storagedir . "/plugins/"))))
-                     {
-                     #TODO: If the new plugin is already activated we should update the DB with the new yaml info.
-                     $rejected = true;
-                     $rej_reason = $lang['plugins-rejarchprob'].' '.PclErrorString(PclErrorCode());
-                     }
-                  else
-                     {
-                     activate_plugin($u_plugin_name);
-                     redirect($baseurl_short.'pages/team/team_plugins.php');
-                     }
-                  }
+		  {
+                  # Uploaded plugins live in the filestore folder.		  
+		  $phar = new PharData($tmp_file);
+                  try {
+		      $phar->extractTo($storagedir . "/plugins/", null, true);
+		      activate_plugin($u_plugin_name);
+                      redirect($baseurl_short.'pages/team/team_plugins.php');
+		      }
+		  catch (Exception $e) 
+			{
+			$rejected = true;
+                        $rej_reason = $lang['plugins-rejarchprob'];
+			}
+		  }
+                  
                }
             }
          else 

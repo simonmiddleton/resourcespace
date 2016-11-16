@@ -6,7 +6,7 @@ function HookTms_linkAllUpdate_field($resource,$field,$value,$existing)
         $resdata=get_resource_data($resource);
         if(!in_array($resdata["resource_type"],$tms_link_resource_types)){return false;}
 	
-        if($field!=$tms_link_object_id_field){return false;}
+	if($resource<0 || $field!=$tms_link_object_id_field){return false;}
 
         $tms_object_id=intval($value);
         $tmsdata=tms_link_get_tms_data($resource,$tms_object_id);

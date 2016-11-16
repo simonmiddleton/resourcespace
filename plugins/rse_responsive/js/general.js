@@ -47,9 +47,6 @@ function responsiveCollectionBar() {
                 hideResponsiveCollection(); 
             } 
         });
-        jQuery("#CollectionDiv").on('click','a',function() {
-            hideResponsiveCollection();
-        });
     }
     else if(jQuery(window).width()<=900 && (jQuery('#responsive_collection_toggle').length)) {
         jQuery("#responsive_collection_toggle").show();
