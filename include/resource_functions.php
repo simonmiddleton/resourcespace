@@ -1129,7 +1129,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 function update_field($resource, $field, $value, array $errors = array())
     {
     global $FIXED_LIST_FIELD_TYPES;
-
+    
     // accept shortnames in addition to field refs
     if(!is_numeric($field))
         {
@@ -1156,9 +1156,11 @@ function update_field($resource, $field, $value, array $errors = array())
     // Set up arrays of node ids to add/remove. 
     if(in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
         {
+        $errors[] = "WARNING: Updates for fixed list fields should not use update_field. Use add_resource_nodes or add_resource_nodes_multi instead. Field: '{$field}'";
         $nodes_to_add    = array();
         $nodes_to_remove = array();
         }
+        
 
     # If this is a dynamic keyword we need to add it to the field options
     if($fieldinfo['type'] == 9 && !checkperm('bdk' . $field))

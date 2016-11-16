@@ -80,4 +80,13 @@ $fixedfields=sql_array("select ref value from resource_type_field where type in 
 $kwcount = sql_value("select count(*) value from resource_keyword where resource_type_field in (" . implode(",",$fixedfields) . ")",0);
 if($kwcount>0){echo "Adding nodes is populating resource_keyword"; return false;}
 
+// Check that using update_field to add nodes to resource returns false
+$errors=array();
+foreach($fixedfields as $fixedfield)
+    {
+    update_field($resourcea,$fixedfield,'DUMMY STRING');
+    if(!is_array($errors)){echo "Using update_field should return false if updating a node field"; return false;}
+    }
+
+
 return true;
