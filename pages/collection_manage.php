@@ -405,7 +405,7 @@ if (!hook('collectionaccessmode')) {
 <div class="BasicsBox">
     <h1><?php echo $lang["findpubliccollection"]?></h1>
     <p class="tight"><?php echo text("findpublic")?></p>
-    <p><a href="<?php echo $baseurl_short?>pages/collection_public.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["findpubliccollection"]?>&nbsp;&gt;</a></p>
+    <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/collection_public.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["findpubliccollection"]?></a></p>
 </div>
 <?php } ?>
 
@@ -414,7 +414,7 @@ if (!hook('collectionaccessmode')) {
 	?>
 	<div class="BasicsBox">
 		<h1><?php echo $lang["view_shared_collections"]?></h1>
-		<p><a href="<?php echo $baseurl_short?>pages/view_shares.php" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["view_shared_collections"]?></a></p>
+		<p><a href="<?php echo $baseurl_short?>pages/view_shares.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["view_shared_collections"]?></a></p>
 	</div>
 	<?php
 	}

@@ -192,7 +192,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelPreview {height: 156px;width: 156px;margin: 3px;}
 .ResourcePanelInfo {margin-right: 5px;margin-left: 5px;margin-bottom: 4px;overflow:hidden;white-space:nowrap;padding:0;margin-top:0;}	
 .ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0px;float: left;clear: left;display:inline;}	
-.ResourcePanelIcons {padding-left: 5px;}	
+.ResourcePanelIcons {padding: 5px;}	
 .ResourcePanelSmallIcons {padding-left: 5px;}	
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
@@ -213,10 +213,14 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelShellLarge {padding:0 0 10px; float: left;margin: 0px 15px 0px 0px;width: 365px;}
 .ResourcePanelShellLarge.ui-draggable {text-align: left;}
 .ResourcePanelLarge {padding:0;margin:0;width: 365px;padding-bottom:5px;}
+.ResourcePanelLarge .ResourcePanelIcons {font-size:1.5em;}
+.ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a	{float: right;margin-right: 5px;text-decoration:none;}
+.ResourcePanelIcons a	{float: right;margin-right: 0.5em;text-decoration:none;}
+.ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
+.ListTools a:hover	{text-decoration:none;}
 
 .ResourceSelect {display:block;float:right;}
 .IconUserRatingStar	{width:13px;height:15px;padding: 0;margin-bottom:6px;display: block;}
@@ -231,8 +235,6 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .Listview td {padding: 5px 5px 5px 5px;}
 .ListTools {text-align: right;}
 .ListTitle {font-weight: bold;}
-.ListTools a:link, .ListTools a:visited, .ListTitle a:link, .ListTitle a:visited {text-decoration:none;}
-.ListTools a:hover, .ListTools a:active, .ListTitle a:hover, .ListTitle a:active {text-decoration:underline;}
 .Listview .IconStar	{width:11px;height:12px;padding: 0;display: block;float:left;}
 
 /*Search Panel layout*/
@@ -787,67 +789,6 @@ a.HomePanel:hover {
 }
 .DashTileDraggable {
 	cursor:pointer;
-}
-.HomePanel .tile_corner_box .count-icon {
-	width: 20px;
-	height: 15px;
-	display: block;
-	float: left;
-	margin-top: 8px;
-}
-.HomePanel .collection-icon {
-	width: 56px;
-	height: 60px;
-	display: block;
-	float: left;
-	position: relative;
-	margin-left: 3px;
-	margin-top: 6px;
-}
-.HomePanel .theme-icon {
-	width: 56px;
-	height: 60px;
-	display: block;
-	float: left;
-	position: relative;
-	margin-left: 3px;
-	margin-top: 6px;
-}
-.HomePanel .shopping-icon {
-	width: 56px;
-	height: 60px;
-	display: block;
-	float: left;
-	position: relative;
-	margin-left: 3px;
-	margin-top: 6px;
-}
-.HomePanel .search-icon {
-	width: 54px;
-	height: 60px;
-	display: block;
-	float: left;
-	position: relative;
-	margin-left: 3px;
-	margin-top: 6px;
-}
-.HomePanel .help-icon {
-	width: 54px;
-	height: 60px;
-	display: block;
-	float: left;
-	position: relative;
-	margin-left: 3px;
-	margin-top: 6px;
-}
-.HomePanel .clock-icon {
-  width: 54px;
-  height: 60px;
-  display: block;
-  float: left;
-  position: relative;
-  margin-left: 3px;
-  margin-top: 9px;
 }
 .HomePanelDynamicDash, .HomePanelThemes {
 	padding: 0;

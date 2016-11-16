@@ -288,7 +288,7 @@ if (!hook("replaceslideshow"))
 						<?php
 						} ?>
 					</select>
-					<a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/themes.php">&gt;&nbsp;<?php echo $lang["viewall"] ?></a>
+					<a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/themes.php"><?php echo LINK_CARET ?><?php echo $lang["viewall"] ?></a>
 				</p>
 				</div>
 				<div class="PanelShadow"></div>

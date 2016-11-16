@@ -66,9 +66,9 @@ function addColumnHeader($orderName, $labelKey)
 				</td>
 				<td>
 					<div class="ListTools">
-						&gt;&nbsp;<a href="<?php echo $view_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-view"]?></a>
-						&gt;&nbsp;<a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-edit"]?></a>
-						&gt;&nbsp;<a href="<?php echo $edit_url; ?>&copyreport=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["copy"]?></a>
+						<?php echo LINK_CARET ?><a href="<?php echo $view_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-view"]?></a>
+						<?php echo LINK_CARET ?><a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-edit"]?></a>
+						<?php echo LINK_CARET ?><a href="<?php echo $edit_url; ?>&copyreport=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["copy"]?></a>
 					</div>
 				</td>
 			</tr>

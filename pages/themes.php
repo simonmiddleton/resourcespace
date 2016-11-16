@@ -374,7 +374,7 @@ if ($themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
 		$link.="=". urlencode($themes[$x]);
 		if($simpleview)
 		{$link.="&simpleview=true";}
-		echo "&gt;&nbsp;";
+		echo "<?php echo LINK_CARET ?>";
 		?><a href="<?php echo $link ?>" onClick="return CentralSpaceLoad(this,true);"><span><?php echo str_replace("*","",i18n_get_collection_name($themes[$x])) ?>&nbsp;</span></a><?php
 		}
 	echo "</div>";
@@ -524,9 +524,9 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 				}?>
 				<tr>
 				<td><div class="ListTitle"><a href="<?php echo $headerlink ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(i18n_get_translated(str_replace("*","",$headers[$n])))?></a><?php hook('addthemeheadertoolaftername')?></div></td>
-				<td><div class="ListTools"><?php hook('addthemeheadertool')?><?php if (!hook("replacethemeselectlink")){?><a href="<?php echo $link ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $linklang;?></a><?php } 
-				if (checkperm("h") && $enable_theme_category_sharing) {?>&nbsp;&nbsp;<a href="<?php echo $sharelink ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["share"]?></a><?php }
-				if ($enable_theme_category_edit && checkperm("t")) {?>&nbsp;&nbsp;<a href="<?php echo $editlink ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a><?php }
+				<td><div class="ListTools"><?php hook('addthemeheadertool')?><?php if (!hook("replacethemeselectlink")){?><a href="<?php echo $link ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $linklang;?></a><?php } 
+				if (checkperm("h") && $enable_theme_category_sharing) {?>&nbsp;&nbsp;<a href="<?php echo $sharelink ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["share"]?></a><?php }
+				if ($enable_theme_category_edit && checkperm("t")) {?>&nbsp;&nbsp;<a href="<?php echo $editlink ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a><?php }
 				hook("addcustomtoolsplitpage");
 				?>
 				</div></td>
@@ -542,7 +542,7 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 				?>
 				<tr>
 				<td><div class="ListTitle"><a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo urlencode($headers[$n]["ref"])?>"><?php echo $headers[$n]["smart_theme_name"]?></a></div></td>
-				<td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo urlencode($headers[$n]["ref"])?>">&gt;&nbsp;<?php echo $lang["action-select"]?></a></div></td>
+				<td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo urlencode($headers[$n]["ref"])?>"><?php echo LINK_CARET ?><?php echo $lang["action-select"]?></a></div></td>
 				</tr>
 				<?php
 				}*/
@@ -812,12 +812,12 @@ if ($header=="" && !isset($themes[0]))
 					</div></td>
 					<?php hook("beforecollectiontoolscolumn");?>
 					<td><div class="ListTools">
-					<a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($s)?>&resetrestypes=true" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $themes_category_split_pages?$lang["action-viewmatchingresources"]:$lang["viewall"]?></a>
+					<a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($s)?>&resetrestypes=true" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $themes_category_split_pages?$lang["action-viewmatchingresources"]:$lang["viewall"]?></a>
 					<?php
                     if($themes_category_split_pages && 7 == $headers[$n]['type'] && $themes[$m]['is_parent'])
                         {
                         ?>
-                        <a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo $headers[$n]["ref"] ?>&node=<?php echo $themes[$m]["node"] ?>&parentnode=<?php echo urlencode($node) ?>&parentnodename=<?php echo urlencode(getval("nodename","")) ?>&nodename=<?php echo urlencode($themes[$m]["name"]) ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-expand"]?></a>
+                        <a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo $headers[$n]["ref"] ?>&node=<?php echo $themes[$m]["node"] ?>&parentnode=<?php echo urlencode($node) ?>&parentnodename=<?php echo urlencode(getval("nodename","")) ?>&nodename=<?php echo urlencode($themes[$m]["name"]) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-expand"]?></a>
                         <?php
                         }
 

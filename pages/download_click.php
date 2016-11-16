@@ -13,7 +13,7 @@ include "../include/header.php";
     <h1><?php echo $lang["downloadresource"]?></h1>
     <p><?php echo text("introtext")?></p>
     
-    <p style="font-weight:bold;">&gt;&nbsp;<a href="<?php echo $url?>"><?php echo $lang["rightclicktodownload"]?></a></p>
+    <p style="font-weight:bold;"><?php echo LINK_CARET ?><a href="<?php echo $url?>"><?php echo $lang["rightclicktodownload"]?></a></p>
     
     <p>&nbsp;</p>
     <p>&nbsp;</p>

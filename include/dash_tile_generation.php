@@ -237,7 +237,7 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
 	?>
 	<!-- <h2 class="title notitle"> <?php echo $lang[strtolower($tile["txt"])]; ?></h2> -->
 	<p class="tile_corner_box">
-		<span class="count-icon"></span>
+		<span class="fa fa-clone"></span>
 		<?php echo $count; ?>
 	</p>
 	<?php
@@ -380,7 +380,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 	if($tile["resource_count"])
 		{?>
 		<p class="tile_corner_box">
-		<span class="count-icon"></span>
+		<span class="fa fa-clone"></span>
 		<?php echo $count; ?>
 		</p>
 		<?php
@@ -472,7 +472,7 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 	if($tile["resource_count"])
 		{?>
 		<p class="tile_corner_box">
-		<span class="count-icon"></span>
+		<span class="fa fa-clone"></span>
 		<?php echo count($resources); ?>
 		</p>
 		<?php
@@ -545,7 +545,7 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 	if($tile["resource_count"])
 		{?>
 		<p class="tile_corner_box">
-		<span class="count-icon"></span>
+		<span class="fa fa-clone"></span>
 		<?php echo $count; ?>
 		</p>
 		<?php

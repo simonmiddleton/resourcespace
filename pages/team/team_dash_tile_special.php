@@ -22,7 +22,7 @@ include "../../include/header.php";
 </p>
 <p>
 	<a href="<?php echo $baseurl_short?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this,true);">
-		&gt;&nbsp;<?php echo $lang["dasheditmodifytiles"];?>
+		<?php echo LINK_CARET ?><?php echo $lang["dasheditmodifytiles"];?>
 	</a>
 </p>
 
