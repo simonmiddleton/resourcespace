@@ -307,8 +307,9 @@ jQuery(document).ready(function() {
 
 <?php
 }
-hook("afterlogin");
-hook("responsivescripts");
+
+hook('afterlogin');
+
 //include_once "./include/footer.php"; AJAX Check Ignores Footer
 //Closing tags as the footer has not been included
 if($login_background)

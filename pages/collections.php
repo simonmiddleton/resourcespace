@@ -229,7 +229,8 @@ else { ?>
 	</script>
 	<?php 
 	} 
-	hook("responsivethumbsloaded");
+
+	hook('collections_thumbs_loaded');
 
     if($responsive_ui)
         {

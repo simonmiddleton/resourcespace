@@ -593,8 +593,7 @@ if($responsive_ui)
     <?php
     } /* end of if $responsive_ui*/
 
-    hook("afteruilayout");
-    hook("responsivescripts");
+    hook('afteruilayout');
     ?>
 <!-- Start of modal support -->
 <div id="modal_overlay" onClick="ModalClose();"></div>
