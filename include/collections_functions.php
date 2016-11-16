@@ -2043,11 +2043,14 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
     // Select collection option - not for collection bar
     if($pagename != 'collections' && ($k == '' || $internal_share_access) && !checkperm('b')
-    	&& ($pagename == 'themes' || $pagename === 'collection_manage' || $pagename === 'resource_collection_list' || $top_actions) && ((isset($search_collection) && isset($usercollection) && $search_collection!=$usercollection) || !isset($search_collection)))
+        && ($pagename == 'themes' || $pagename === 'collection_manage' || $pagename === 'resource_collection_list' || $top_actions)
+        && ((isset($search_collection) && isset($usercollection) && $search_collection != $usercollection) || !isset($search_collection))
+        && collection_readable($collection_data['ref'])
+    )
         {
         $options[$o]['value'] = 'select_collection';
-		$options[$o]['label'] = $lang['selectcollection'];
-		$o++;
+        $options[$o]['label'] = $lang['selectcollection'];
+        $o++;
         }
 
     // Edit Collection
@@ -2185,7 +2188,12 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Remove
-    if(($k=="" || $internal_share_access) && $manage_collections_remove_link && $userref != $collection_data['user'] && !checkperm('b'))
+    if(($k=="" || $internal_share_access)
+        && $manage_collections_remove_link
+        && $userref != $collection_data['user']
+        && !checkperm('b')
+        && collection_readable($collection_data['ref'])
+    )
         {
         $options[$o]['value']='remove_collection';
 		$options[$o]['label']=$lang['action-remove'];
@@ -2346,7 +2354,11 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // CSV export of collection metadata
-    if(0 < $count_result && !$top_actions && ($k=="" || $internal_share_access))
+    if(0 < $count_result 
+        && !$top_actions
+        && ($k =='' || $internal_share_access)
+        && collection_readable($collection_data['ref'])
+    )
         {
 
         $options[$o]['value']            = 'csv_export_results_metadata';
