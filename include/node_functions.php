@@ -203,6 +203,8 @@ function get_node($ref, array &$returned_node)
 * @param  integer  $resource_type_field    ID of the metadata field
 * @param  integer  $parent                 ID of parent node
 * @param  boolean  $recursive              Set to true to get children nodes as well
+* @param  integer  $offset                 Specifies the offset of the first row to return
+* @param  integer  $rows                   Specifies the maximum number of rows to return
 * @param  string   $name                   Filter by name of node
 * 
 * @return array
@@ -210,7 +212,20 @@ function get_node($ref, array &$returned_node)
 function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '')
     {
     $return_nodes = array();
-
+	
+	// Check if limiting is required
+    $limit = '';
+ 
+    if(!is_null($offset) && is_int($offset))
+        {
+        $limit = "LIMIT {$offset}";
+        }
+ 
+    if('' != $limit && !is_null($rows) && is_int($rows))
+        {
+        $limit .= ",{$rows}";
+        }
+		
     // Filter by name if required
     $filter_by_name = '';
     if('' != $name)
