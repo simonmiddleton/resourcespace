@@ -851,6 +851,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                 if(file_exists($delete_filename))
                     {
                     unlink($delete_filename);
+                    hook("configdeletefilesuccess",'',array($delete_filename));
                     }
                 set_config_option(null, $config_name, '');
                 $redirect = true;
@@ -897,6 +898,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
             if(isset($uploaded_filename) && set_config_option(null, $config_name, $saved_filename))
                 {
                 $redirect = true;
+                hook("configuploadfilesuccess",'',array($uploaded_filename));
                 }
             }
         }

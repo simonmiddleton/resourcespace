@@ -72,17 +72,6 @@ function HookRse_responsiveAllHeadertop()
     {
     serveHeader();
     }
-function HookRse_responsiveAllReplaceheaderfullnamelink() 
-    {
-    global $allow_password_change,$userfullname,$username;
-    if ($allow_password_change == false) 
-        {
-        ?>
-        <li class="ResponsiveNav1Username"><?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname))?></li>
-        <?php  
-        return true;
-        }
-    }
 function HookRse_responsiveAllResponsivesimplesearch() 
     {
 	global $lang,$searchbuttons;

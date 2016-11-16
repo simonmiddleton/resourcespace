@@ -44,7 +44,7 @@
                 $target   = '';
 
                 // External links should open in a new tab
-                if(false === strpos($custom_top_nav[$n]['link'], $baseurl))
+			   if (false != strpos($custom_top_nav[$n]['link'], "//"))
                     {
                     $on_click = '';
                     $target   = ' target="_blank"';

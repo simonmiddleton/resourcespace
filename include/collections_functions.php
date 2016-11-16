@@ -145,7 +145,7 @@ function get_collection_resources($collection)
 function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
 	{
 	global $collection_allow_not_approved_share, $collection_block_restypes;	
-	$addpermitted=collection_writeable($collection) && !$smartadd;
+	$addpermitted=collection_writeable($collection) || $smartadd;
 	if ($addpermitted &&(count($collection_block_restypes)>0))
 		{
 		if($addtype=="")
@@ -1674,7 +1674,7 @@ function send_collection_feedback($collection,$comment)
 function copy_collection($copied,$current,$remove_existing=false)
 	{	
 	# Get all data from the collection to copy.
-	$copied_collection=sql_query("select * from collection_resource where collection='$copied'","");
+	$copied_collection=sql_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection='$copied'","");
 	
 	if ($remove_existing)
 		{
@@ -1687,7 +1687,7 @@ function copy_collection($copied,$current,$remove_existing=false)
 	foreach($copied_collection as $col_resource)
 		{
 		# Use correct function so external sharing is honoured.
-		add_resource_to_collection($col_resource['resource'],$current,true);
+		add_resource_to_collection($col_resource['resource'],$current,true,"",$col_resource['resource_type']);
 		}
 	}
 
@@ -1882,20 +1882,16 @@ function collection_set_themes($collection,$themearr)
 	
 function remove_all_resources_from_collection($ref){
 	// abstracts it out of save_collection()
-		# Remove all resources?
-	if (getval("removeall","")!="")
+	$removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . $ref . ';');
+
+	// First log this for each resource (in case it was done by mistake)
+	foreach($removed_resources as $removed_resource_id)
 		{
-		$removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . $ref . ';');
-
-		// First log this for each resource (in case it was done by mistake)
-		foreach($removed_resources as $removed_resource_id)
-			{
-			collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
-			}
-
-		sql_query('DELETE FROM collection_resource WHERE collection = ' . $ref);
-		collection_log($ref, 'R', 0);
+		collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
 		}
+
+	sql_query('DELETE FROM collection_resource WHERE collection = ' . $ref);
+	collection_log($ref, 'R', 0);
 	}	
 
 if (!function_exists("get_home_page_promoted_collections")){
@@ -2139,7 +2135,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Request all
-    if($count_result > 0)
+    if($count_result > 0 && ($k == '' || $internal_share_access))
         {
         # Ability to request a whole collection (only if user has restricted access to any of these resources)
         $min_access = collection_min_access($result);

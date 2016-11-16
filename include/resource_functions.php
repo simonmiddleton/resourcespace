@@ -314,7 +314,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					$joins=get_resource_table_joins();
 					if (in_array($fields[$n]["ref"],$joins)){
 						if(substr($val,0,1)==","){$val=substr($val,1);}
-						sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check($val)."' where ref='$ref'");
+						sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
 					}
                                         
 				# Add any onchange code
@@ -4004,4 +4004,9 @@ function delete_resource_custom_access_usergroups($ref)
         sql_query("delete from resource_custom_access where resource='" . escape_check($ref) . "' and usergroup is not null");
         }
 
-
+// truncate the field for insertion into the main resource table field<n>
+function truncate_join_field_value($value)
+    {
+    global $resource_field_column_limit;
+    return substr($value, 0, $resource_field_column_limit);
+    }
