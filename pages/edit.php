@@ -820,7 +820,9 @@ if(!$multiple)
         <select name="resource_type" id="resourcetype" class="stdwidth" 
                 onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
         <?php
-        $types = get_resource_types();
+        $types                = get_resource_types();
+        $shown_resource_types = array();
+
         for($n = 0; $n < count($types); $n++)
             {
             // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
@@ -828,8 +830,31 @@ if(!$multiple)
                 {
                 continue;
                 }
-                ?>
-            <option value="<?php echo $types[$n]["ref"]?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo htmlspecialchars($types[$n]["name"])?></option><?php
+
+            $shown_resource_types[] = $types[$n]['ref'];
+            ?>
+            <option value="<?php echo $types[$n]['ref']; ?>"
+                <?php
+                if($resource['resource_type'] == $types[$n]['ref'])
+                    {
+                    $selected_type = $types[$n]['ref'];
+                    ?>selected<?php
+                    }
+                    ?>
+            ><?php echo htmlspecialchars($types[$n]["name"])?></option>
+            <?php
+            }
+
+        // make sure the user template resource (edit template) has the correct resource type when they upload so they can see the correct specific fields
+        if('' == getval('submitted', ''))
+            {
+            if(!isset($selected_type))
+                {
+                $selected_type = $shown_resource_types[0];
+                }
+
+            update_resource_type($ref, $selected_type);
+            $resource['resource_type'] = $selected_type;
             }
             ?>
         </select>

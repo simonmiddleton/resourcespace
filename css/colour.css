@@ -319,7 +319,7 @@ li.plupload_droptext {color:#999;}
   }
 
 /* Messaging */
-span.MessageCountPill {
+span.Pill {
     color: white;
     background: red;
 }
