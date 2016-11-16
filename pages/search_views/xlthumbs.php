@@ -259,6 +259,35 @@ if (!hook("renderresultlargethumb"))
 			?>
 			<div class="ResourcePanelIcons">
 				<?php 
+				if(!hook("xlthumbscheckboxes"))
+					{
+					if ($use_checkboxes_for_selection)
+						{
+						if(!in_array($result[$n]['resource_type'],$collection_block_restypes))	
+							{?>
+							<input 
+								type="checkbox" 
+								id="check<?php echo htmlspecialchars($ref)?>" 
+								class="checkselect" 
+								<?php 
+								if (in_array($ref,$collectionresources))
+									{ ?>
+									checked
+									<?php 
+									} ?> 
+								onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
+							>
+							&nbsp;
+							<?php 
+							}
+						else
+							{
+							?>
+							<input type="checkbox" style="opacity: 0;">
+							<?php
+							}
+						}
+					} # end hook xlthumbscheckboxes
 				if ($display_resource_id_in_thumbnail && $ref>0) 
 					{ echo htmlspecialchars($ref); } 
 				else 

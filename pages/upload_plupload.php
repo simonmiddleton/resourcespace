@@ -499,7 +499,7 @@ if ($_FILES)
                             # Add to collection?
                             if ($collection_add!="")
                                     {
-                                    add_resource_to_collection($ref,$collection_add);
+                                    add_resource_to_collection($ref,$collection_add,false,"",$resource_type);
                                     }
                             
 							$relateto= getvalescaped("relateto","",true);   
