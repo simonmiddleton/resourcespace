@@ -266,6 +266,12 @@ function email_collection_request($ref,$details)
             $message.=i18n_get_translated($custom[$n]) . ": " . getval("custom" . $n,"") . "\n\n";
             }
         }
+        
+    $amendedmessage=hook('amend_request_message','', array($userref, $ref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
+    if($amendedmessage)
+        {
+        $message=$amendedmessage;
+        }
     
     $templatevars["requestreason"]=$message;
     
@@ -437,6 +443,12 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             }
         }
     
+    $amendedmessage=hook('amend_request_message','', array($userref, $ref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
+    if($amendedmessage)
+        {
+        $message=$amendedmessage;
+        }
+        
     # Create the request
     global $request_query;
     $request_query = "insert into request(user,collection,created,request_mode,status,comments) values ('$userref','$ref',now(),1,0,'" . escape_check($message) . "')";
@@ -444,6 +456,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     global $notify_manage_request_admin, $assigned_to_user, $admin_resource_access_notifications;
     $notify_manage_request_admin = false;
 	$notification_sent = false;
+    
     // Manage individual requests of resources:
     hook('autoassign_individual_requests', '', array($userref, $ref, $message, isset($collectiondata)));
     if(isset($manage_request_admin) && $ref_is_resource)
@@ -479,12 +492,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             );
 			$notify_manage_request_admin = true;
 			}
-		}
-    $amendedmessage=hook('amend_request_message','', array($userref, $ref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
-    if($amendedmessage)
-        {
-        $message=$amendedmessage;
-        }
+		}   
     
     // Manage collection requests:
     hook('autoassign_collection_requests', '', array($userref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));

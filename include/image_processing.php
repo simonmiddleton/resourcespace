@@ -385,10 +385,6 @@ function extract_exif_comment($ref,$extension="")
 	if (($exiftool_fullpath!=false) && !in_array($extension,$exiftool_no_process))
 		{
 		$resource=get_resource_data($ref);
-		
-		# Field 8 is used in a special way for staticsync; don't overwrite.
-		if ($resource['file_path']!=""){$omit_title_for_staticsync=true;} else {$omit_title_for_staticsync=false;}
-		
 		hook("beforeexiftoolextraction");
 		
 		if ($exiftool_resolution_calc)
@@ -570,7 +566,8 @@ function extract_exif_comment($ref,$extension="")
 						}
 					
 					# Read the data.				
-					if ($read) {
+					if ($read)
+						{
 						$plugin=dirname(__FILE__)."/../plugins/exiftool_filter_" . $read_from[$i]['name'] . ".php";
 						if ($read_from[$i]['exiftool_filter']!="")
 							{
@@ -578,91 +575,88 @@ function extract_exif_comment($ref,$extension="")
 							}
 						if (file_exists($plugin)) {include $plugin;}
 		
-						# Field 8 is used in a special way for staticsync; don't overwrite field 8 in this case
-						if (!($omit_title_for_staticsync && $read_from[$i]['ref']==8))
-							{				
-							$exiffieldoption=$exifoption;
+						$exiffieldoption=$exifoption;
+						
+						if($exifoption=="custom"  || (isset($embedded_data_user_select_fields)  && in_array($read_from[$i]['ref'],$embedded_data_user_select_fields)))
+							{									
+							debug ("EXIF - custom option for field " . $read_from[$i]['ref'] . " : " . $exifoption,RESOURCE_LOG_APPEND_PREVIOUS);
+							$exiffieldoption=getval("exif_option_" . $read_from[$i]['ref'],$exifoption);	
+							}
+						
+						debug ("EXIF - option for field " . $read_from[$i]['ref'] . " : " . $exiffieldoption,RESOURCE_LOG_APPEND_PREVIOUS);
+						
+						if($exiffieldoption=="no")
+							{continue;}
+						
+						elseif($exiffieldoption=="append")
+							{
+							$spacechar=($read_from[$i]["type"]==2 || $read_from[$i]["type"]==3)?", ":" ";
+							$oldval = get_data_by_field($ref,$read_from[$i]['ref']);
+							if(strpos($oldval, $value)!==false){continue;}
+							$newval =  $oldval . $spacechar . iptc_return_utf8($value) ;									
+							}
+						elseif($exiffieldoption=="prepend")
+							{
+							$spacechar=($read_from[$i]["type"]==2 || $read_from[$i]["type"]==3)?", ":" ";
+							$oldval = get_data_by_field($ref,$read_from[$i]['ref']);
+							if(strpos($oldval, $value)!==false){continue;}
+							$newval =  iptc_return_utf8($value) . $spacechar . $oldval;
+							}							
+						else
+							{
+							$newval =  iptc_return_utf8($value);	
+							}
+
+						global $merge_filename_with_title, $lang;
+						if($merge_filename_with_title) {
+
+							$merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
+							$merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
+							$merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
+
+							$original_filename = '';
+							if(isset($_REQUEST['name'])) {
+								$original_filename = $_REQUEST['name'];
+							} else {
+								$original_filename = $processfile['name'];
+							}
+
+							if($merge_filename_with_title_include_extensions == 'yes') {
+								$merged_filename = $original_filename;
+							} else {
+								$merged_filename = strip_extension($original_filename);
+							}
+
+							$oldval = get_data_by_field($ref, $read_from[$i]['ref']);
+							if($value=="" || strpos($oldval, $value) !== FALSE) {
+								continue;
+							}
 							
-							if($exifoption=="custom"  || (isset($embedded_data_user_select_fields)  && in_array($read_from[$i]['ref'],$embedded_data_user_select_fields)))
-								{									
-								debug ("EXIF - custom option for field " . $read_from[$i]['ref'] . " : " . $exifoption,RESOURCE_LOG_APPEND_PREVIOUS);
-								$exiffieldoption=getval("exif_option_" . $read_from[$i]['ref'],$exifoption);	
-								}
-							
-							debug ("EXIF - option for field " . $read_from[$i]['ref'] . " : " . $exiffieldoption,RESOURCE_LOG_APPEND_PREVIOUS);
-							
-							if($exiffieldoption=="no")
-								{continue;}
-							
-							elseif($exiffieldoption=="append")
-								{
-								$spacechar=($read_from[$i]["type"]==2 || $read_from[$i]["type"]==3)?", ":" ";
-								$oldval = get_data_by_field($ref,$read_from[$i]['ref']);
-								if(strpos($oldval, $value)!==false){continue;}
-								$newval =  $oldval . $spacechar . iptc_return_utf8($value) ;									
-								}
-							elseif($exiffieldoption=="prepend")
-								{
-								$spacechar=($read_from[$i]["type"]==2 || $read_from[$i]["type"]==3)?", ":" ";
-								$oldval = get_data_by_field($ref,$read_from[$i]['ref']);
-								if(strpos($oldval, $value)!==false){continue;}
-								$newval =  iptc_return_utf8($value) . $spacechar . $oldval;
-								}							
-							else
-								{
-								$newval =  iptc_return_utf8($value);	
-								}
+							switch ($merge_filename_with_title_option) {
+								case $lang['merge_filename_title_do_not_use']:
+									// Do nothing since the user doesn't want to use this feature
+									break;
 
-							global $merge_filename_with_title, $lang;
-							if($merge_filename_with_title) {
+								case $lang['merge_filename_title_replace']:
+									$newval = $merged_filename;
+									break;
 
-								$merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
-								$merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
-								$merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
-
-								$original_filename = '';
-								if(isset($_REQUEST['name'])) {
-									$original_filename = $_REQUEST['name'];
-								} else {
-									$original_filename = $processfile['name'];
-								}
-
-								if($merge_filename_with_title_include_extensions == 'yes') {
-									$merged_filename = $original_filename;
-								} else {
-									$merged_filename = strip_extension($original_filename);
-								}
-
-								$oldval = get_data_by_field($ref, $read_from[$i]['ref']);
-								if($value=="" || strpos($oldval, $value) !== FALSE) {
-									continue;
-								}
-								
-								switch ($merge_filename_with_title_option) {
-									case $lang['merge_filename_title_do_not_use']:
-										// Do nothing since the user doesn't want to use this feature
-										break;
-
-									case $lang['merge_filename_title_replace']:
+								case $lang['merge_filename_title_prefix']:
+									$newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
+									if($oldval == '') {
 										$newval = $merged_filename;
-										break;
+									}
+									break;
+								case $lang['merge_filename_title_suffix']:
+									$newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
+									if($oldval == '') {
+										$newval = $merged_filename;
+									}
+									break;
 
-									case $lang['merge_filename_title_prefix']:
-										$newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
-										if($oldval == '') {
-											$newval = $merged_filename;
-										}
-										break;
-									case $lang['merge_filename_title_suffix']:
-										$newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
-										if($oldval == '') {
-											$newval = $merged_filename;
-										}
-										break;
-
-									default:
-										// Do nothing
-										break;
+								default:
+									// Do nothing
+									break;
 								}
 
 							}
@@ -672,7 +666,6 @@ function extract_exif_comment($ref,$extension="")
 							
 							
 							hook("metadata_extract_addition","all",array($ref,$newval,$read_from,$i));
-							}
 						}
 
 					} else {
@@ -2711,8 +2704,48 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
 	copy($url, $file_path); # Download the file.
 	return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);	# Process as a normal upload...
 	}
+
+/**
+ * Delete all preview files for specified resource id or resource data array
+ * 
+ * @param $resource array|integer Resource array or resource ID to delete preview files for
+ *
+ */	
+function delete_previews($resource)
+	{
+	global $ffmpeg_preview_extension;
 	
+	// If a resource array has been passed we already have the extensions
+	if(is_array($resource))
+		{
+		$extension=$resource["file_extension"];
+		$resource=$resource["ref"];
+		}
+	else
+		{
+		$resource_data=get_resource_data($resource);
+		$extension=$resource_data["file_extension"];
+		}
 	
+	$fullsizejpgpath=get_resource_path($resource,true,"",false,"jpg",-1,1,false,"",-1);			
+	# Delete the full size original if not a JPG resource
+	if($extension!="" && strtolower($extension)!="jpg" && file_exists($fullsizejpgpath))
+		{
+		unlink($fullsizejpgpath);
+		}			
+	
+	$dirinfo=pathinfo($fullsizejpgpath);	
+	$resourcefolder = $dirinfo["dirname"];
+
+	$presizes=sql_array("select id value from preview_size");
+	$presizes[]="snapshot"; // To include any video snapshots
+	
+	foreach($presizes as $presize)
+		{
+		array_map('unlink', glob($resourcefolder . "/" . $resource . $presize . "*"));
+		}
+	}
+
 	
 	
 	

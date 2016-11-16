@@ -1540,8 +1540,10 @@ function delete_resource($ref)
 		return true;
 		}
 	
-	# Get info
-	
+    # FStemplate support - do not allow samples from the template to be deleted
+    if (resource_file_readonly($ref)) {return false;}
+    
+    	
 	# Is transcoding
 	if ($resource['is_transcoding']==1) {return false;} # Can't delete when transcoding
 
@@ -2113,8 +2115,17 @@ function write_metadata($path, $ref, $uniqid="")
                         $writtenfields[$group_tag]=$writevalue;                          
                         debug ("write_metadata - updating tag " . $group_tag);
                         # Write as is, convert the data to UTF-8 if not already.
+                        
+                        global $strip_rich_field_tags;
                         if (!$exiftool_write_omit_utf8_conversion && (!isset($mysql_charset) || (isset($mysql_charset) && strtolower($mysql_charset)!="utf8"))){$writevalue = mb_convert_encoding($writevalue, mb_detect_encoding($writevalue), 'UTF-8');}
-                        $command.= escapeshellarg("-" . $group_tag . "=" . htmlentities($writevalue, ENT_QUOTES, "UTF-8")) . " ";
+                            if ($strip_rich_field_tags)
+                            {
+                                $command.= escapeshellarg("-" . $group_tag . "=" . trim(strip_tags($writevalue))) . " ";
+                            }
+                            else
+                            {
+                                $command.= escapeshellarg("-" . $group_tag . "=" . htmlentities($writevalue, ENT_QUOTES, "UTF-8")) . " ";
+                            }
                     }
                 }
             }
@@ -2141,7 +2152,7 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 	{
 	# Update the resource with the file at the given path
 	# Note that the file will be used at it's present location and will not be copied.
-	global $syncdir,$staticsync_prefer_embedded_title;
+	global $syncdir,$staticsync_prefer_embedded_title, $view_title_field;
 
 	update_resource_type($r, $type);
 
@@ -2209,13 +2220,13 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 	# order depends on which title should be the default (embedded or generated)
 	if ($staticsync_prefer_embedded_title)
 		{
-		update_field($r,8,$title);
+		update_field($r,$view_title_field,$title);
 		extract_exif_comment($r,$extension);
 		}
 	else
 		{
 		extract_exif_comment($r,$extension);
-		update_field($r,8,$title);
+		update_field($r,$view_title_field,$title);
 		}
 		
 	# Extract text from documents (e.g. PDF, DOC)
@@ -4149,4 +4160,11 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
     while(true === $snapshot_found);
 
     return (!$count_only ? $snapshots_found : count($snapshots_found));
+    }
+
+function resource_file_readonly($ref)
+    {
+    # Even if the user has edit access to a resource, the main file may be read only.
+    global $fstemplate_alt_threshold;
+    return ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold);
     }

@@ -14,7 +14,7 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 	$override=hook("get_resource_path_override","",array($ref,$getfilepath,$size,$generate,$extension,$scramble,$page,$watermarked,$file_modified,$alternative,$includemodified));
 	if (is_string($override)) {return $override;}
 
-	global $storagedir,$originals_separate_storage;
+	global $storagedir,$originals_separate_storage,$fstemplate_alt_threshold,$fstemplate_alt_storagedir,$fstemplate_alt_storageurl,$fstemplate_alt_scramblekey;
 
 	if ($size=="")
 		{
@@ -68,9 +68,18 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 		# Create a scrambled path using the scramble key
 		# It should be very difficult or impossible to work out the scramble key, and therefore access
 		# other resources, based on the scrambled path of a single resource.
-		$scramblepath=substr(md5($ref . "_" . $scramble_key),0,15);
+		$skey=$scramble_key;
+        
+        # FSTemplate support - for trial system templates
+        if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
+            {
+            $skey=$fstemplate_alt_scramblekey;
+            }
+            
+		$scramblepath=substr(md5($ref . "_" . $skey),0,15);
 		}
 	
+    
 	if ($extension=="") {$extension="jpg";}
 	
 	$folder="";
@@ -110,9 +119,16 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 	# Add the watermarked url too
 	if ($watermarked) {$p.="_wm";}
 	
-	
+	$sdir=$storagedir;
+    
+    # FSTemplate support - for trial system templates
+    if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
+        {
+        $sdir=$fstemplate_alt_storagedir;
+        }
+            
 		
-	$filefolder=$storagedir . $path_suffix . $folder;
+	$filefolder=$sdir . $path_suffix . $folder;
 	
 	# Fetching the file path? Add the full path to the file
 	if ($getfilepath)
@@ -121,15 +137,22 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 	    }
 	else
 	    {
-	    global $storageurl;
-	    $folder=$storageurl . $path_suffix . $folder;
+	    global $storageurl;$surl=$storageurl;
+        
+        # FSTemplate support - for trial system templates
+        if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
+            {
+            $surl=$fstemplate_alt_storageurl;
+            }
+        
+	    $folder=$surl . $path_suffix . $folder;
 	    }
 	
 	if ($scramble)
 		{
 		$file_old=$filefolder . $ref . $size . $p . $a . "." . $extension;
-		$file_new=$filefolder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $scramble_key),0,15) . "." . $extension;
-		$file=$folder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $scramble_key),0,15) . "." . $extension;
+		$file_new=$filefolder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
+		$file=$folder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
 		if (file_exists($file_old))
 		  	{
 			rename($file_old, $file_new);
@@ -156,7 +179,8 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 		}
 	return  $file;
 	}
-	
+
+
 $GLOBALS['get_resource_data_cache'] = array();
 function get_resource_data($ref,$cache=true)
 	{
@@ -3470,7 +3494,7 @@ function check_access_key($resource,$key)
 		$userinfo=sql_query("select g.ref usergroup,g.permissions,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
 		if (count($userinfo)>0)
 			{
-                        $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
+            $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
 			$userpermissions=explode(",",$userinfo[0]["permissions"]);
 			$usersearchfilter=$userinfo[0]["search_filter"];
 
@@ -3504,7 +3528,7 @@ function check_access_key($resource,$key)
 				
 			}
 			
-			if($external_share_groups_config_options || stripos(trim($userinfo[0]["config_options"]),"external_share_groups_config_options=true")!==false)
+			if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
 				{
 				# Apply config override options
 				$config_options=trim($userinfo[0]["config_options"]);
@@ -5602,5 +5626,3 @@ function user_set_usergroup($user,$usergroup)
     {
     sql_query("update user set usergroup='" . escape_check($usergroup) . "' where ref='" . escape_check($user) . "'");
     }
-
-

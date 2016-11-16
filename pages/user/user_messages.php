@@ -5,6 +5,8 @@ include_once "../../include/general.php";
 include "../../include/authenticate.php";
 include "../../include/header.php";
 
+global $user_preferences;
+
 if (getval("allseen","")!="")
   {
   // Acknowledgement all messages
@@ -15,13 +17,13 @@ if (getval("allseen","")!="")
   <h1><?php echo $lang["mymessages"]?></h1>
   <p><?php echo $lang["mymessages_introtext"] ?></p>
 
-
+<?php if ($user_preferences){?>
 <div class="VerticalNav">
 <ul>
 <li>
 <a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["userpreferences"];?></a>
 </li>
-<?php
+<?php }
 	$messages=array();
 	if (!message_get($messages,$userref,true,true))		// if no messages get out of here with a message
 		{

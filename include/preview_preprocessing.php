@@ -554,18 +554,28 @@ if(false != $ffmpeg_fullpath && $snapshotcheck && in_array($extension, $ffmpeg_s
     debug('FFMPEG-VIDEO: Create a preview for this video by going straight to ffmpeg_processing.php', RESOURCE_LOG_APPEND_PREVIOUS);
 
     $target = get_resource_path($ref, true, 'pre', false, 'jpg', -1, 1, false, '');
-
-    include dirname(__FILE__) . '/ffmpeg_processing.php';
+    
+	include dirname(__FILE__) . '/ffmpeg_processing.php';
     }
 else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpeg_supported_extensions))
     {
     debug('FFMPEG-VIDEO: Start process for creating previews...', RESOURCE_LOG_APPEND_PREVIOUS);
-
+	
+	//If we are recreating previews, we should remove the previously created snapshots
+	$directory = dirname(get_resource_path($ref,true,"pre",true) );
+	foreach (glob($directory . "/*") as $filetoremove) {
+		if (strpos($filetoremove, 'snapshot_')!==false){
+			unlink($filetoremove);
+		}
+    }
+	
     $snapshottime = 1;
-
+	
     $cmd = $ffmpeg_fullpath . ' -i ' . escapeshellarg($file);
     $out = run_command($cmd, true);
-
+	
+	
+	
     resource_log(RESOURCE_LOG_APPEND_PREVIOUS, LOG_CODE_TRANSFORMED, '', '', '', $cmd . ":\n" . $out);
     debug("FFMPEG-VIDEO: Running information command: {$cmd}", RESOURCE_LOG_APPEND_PREVIOUS);
 

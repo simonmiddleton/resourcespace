@@ -1878,3 +1878,11 @@ $lang["upload_swf__introtext"]="";
 $lang["user_password__introtext"]="Fyll i din e-postadress och ditt användarnamn så kommer ett nytt lösenord att skickas till dig.";
 $lang["user_request__introtext"]="Fyll i formuläret nedan om du vill ansöka om ett användarkonto.";
 $lang["view__storyextract"]="Textutdrag:";
+
+// Responsive
+$lang["responsive_main_menu"]="Meny";
+$lang["responsive_settings_menu"]="Konto";
+$lang["responsive_more"]="Mer...";
+$lang["responsive_less"]="Mindre...";
+$lang['responsive_collectiontogglehide'] = "Dölja";
+// end of Responsive

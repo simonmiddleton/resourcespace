@@ -400,6 +400,9 @@ Note: this honours $exiftool_write so if that option is false, this will not wor
 $force_exiftool_write_metadata = false;
 $exiftool_write_option         = false;
 
+#Option to strip tags from rich fields when downloading metadata, by default is FALSE (keeping the tags added by CKEDITOR)
+$strip_rich_field_tags = false;
+
 # Set metadata_read to false to omit the option to extract metadata.
 $metadata_read=true;
 
@@ -3087,3 +3090,14 @@ $retina_mode=false;
 
 # $xframe_options - set this to SAMEORIGIN or ALLOW-FROM with a URL to allow site to be used in an iframe
 $xframe_options = "DENY";
+
+
+# FSTemplate - File System Template. Allows a system to contain an initial batch of resources that are stored elsewhere and read only.
+# Used by Montala for the ResourceSpace trial account templates, so each templated installation doesn't need to completely copy all the sample assets.
+$fstemplate_alt_threshold=0; # Applies to resource IDs BELOW this number only. Set the system so the user created resources start at 1000.
+$fstemplate_alt_storagedir=""; # Alternative filestore location for the sample files. The location of the template installation.
+$fstemplate_alt_storageurl="";
+$fstemplate_alt_scramblekey=""; # The scramble key used by the template installation, so paths must be scrambled using this instead for the sample images.
+
+# Ability to switch off responsive on UI
+$responsive_ui = true;

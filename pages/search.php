@@ -768,7 +768,7 @@ if (isset($result_title_height))
 if(!$search_titles && isset($theme_link))
 	{
 	// Show the themes breadcrumbs if they exist, but not if we are using the search_titles
-	echo "<div class='SearchBreadcrumbs'>" . $theme_link . '&nbsp;<?php echo LINK_CARET ?><span id="coltitle'.$collection.'"><a  href="'.$baseurl_short.'pages/search.php?search=!collection' . $collection . '" onClick="return CentralSpaceLoad(this,true);">'.i18n_get_collection_name($collectiondata). '</a></span>' . "</div>" ;
+	echo "<div class='SearchBreadcrumbs'>" . $theme_link . "&nbsp;" . LINK_CARET . '<span id="coltitle'.$collection.'"><a  href="'.$baseurl_short.'pages/search.php?search=!collection' . $collection . '" onClick="return CentralSpaceLoad(this,true);">'.i18n_get_collection_name($collectiondata). '</a></span>' . "</div>" ;
 	}
 
 if (!hook("replacesearchheader")) # Always show search header now.
@@ -782,7 +782,39 @@ if (!hook("replacesearchheader")) # Always show search header now.
 	?>
 	<div class="TopInpageNav">
 	<div class="TopInpageNavLeft">
-	<?php hook("responsiveresultoptions"); ?>
+
+<?php
+if($responsive_ui)
+    {
+    ?>
+    <div class="ResponsiveResultDisplayControls">
+        <a href="#" id="Responsive_ResultDisplayOptions" class="ResourcePanel ResponsiveButton" style="display:none;"><?php echo $lang['responsive_result_settings']; ?><span class="glyph glyph_result"></span></a>
+        <div id="ResponsiveResultCount">
+            <span class="Selected">
+        <?php
+        if(isset($collections)) 
+            {
+            echo number_format($results_count);
+            ?>
+            </span>
+            <?php
+            echo ($results_count==1) ? $lang['youfoundresult'] : $lang['youfoundresults'];
+            } 
+        else
+            {
+            echo number_format($resources_count);
+            ?>
+            </span>
+            <?php
+            echo ($resources_count==1)? $lang['youfoundresource'] : $lang['youfoundresources'];
+            }
+            ?>
+        </div>
+    </div>
+    <?php
+    }
+    hook('responsiveresultoptions');
+    ?>
 	<div id="SearchResultFound" class="InpageNavLeftBlock"><?php echo $lang["youfound"]?>:<br /><span class="Selected">
 	<?php
 	if (isset($collections)) 
