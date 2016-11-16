@@ -794,24 +794,6 @@ $resource_type_icons=false;
 $defaulttheme="";
 
 
-/** DEPRECATED **/
-
-	# Theme chips available. This makes it possible to add new themes and chips using the same structure.
-	# To create a new theme, you need a chip in gfx/interface, a graphics folder called gfx/<themename>,
-	# and a css file called css/Col-<themename>.css
-	# this is a basic way of adding general custom themes that do not affect SVN checkouts, 
-	# though css can also be added in plugins as usual.
-	 
-	$available_themes=array("multi", "whitegry","greyblu","black");
-
-	# NOTE: Do not add custom themes to $available_themes_by_default.
-	# This is being used to know which themes are custom
-	$available_themes_by_default = array("multi", "whitegry","greyblu","black","slimcharcoal");
-
-	# Uncomment and set the next line to lock to one specific colour scheme (e.g. greyblu/whitegry).
-	# $userfixedtheme="whitegry";
-
-/** END OF DEPRECATED **/
 
 /** USER PREFERENCES **/
 $user_preferences = true;
