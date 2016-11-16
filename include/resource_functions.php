@@ -168,41 +168,45 @@ function save_resource_data($ref,$multi,$autosave_field="")
 				{
 				if($fields[$n]["type"]==4 || $fields[$n]["type"]==6 || $fields[$n]["type"]==10)
 					{
-					# date type, construct the value from the date/time dropdowns
-					$val=sprintf("%04d", getvalescaped("field_" . $fields[$n]["ref"] . "-y",""));
-					if ((int)$val<=0) 
-						{
-						$val="";
-						}
-					elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-m",""))!="") 
-						{
-						$val.="-" . $field;
-						if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-d",""))!="") 
-							{
-							$val.="-" . $field;
-							if (($field=getval("field_" . $fields[$n]["ref"] . "-h",""))!="")
-								{
-								$val.=" " . $field . ":";
-								if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-i",""))!="") 
-									{
-										$val.=$field;
-									} 
-								else 
-									{
-										$val.="00";
-									}
-								}
-							}
-                        else 
-                            {
-                            $val.=" 00:00";
-                            }
-						}
-                     else 
+                    # date type, construct the value from the date/time dropdowns
+                    $val=sprintf("%04d", getvalescaped("field_" . $fields[$n]["ref"] . "-y",""));
+                    if ((int)$val<=0) 
                         {
-                        $val.="-00 00:00";
+                        $val="";
                         }
-					}
+                    elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-m",""))!="") 
+                        {
+                        $val.="-" . $field;
+                        if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-d",""))!="") 
+                            {
+                            $val.="-" . $field;
+                            if (($field=getval("field_" . $fields[$n]["ref"] . "-h",""))!="")
+                                {
+                                $val.=" " . $field . ":";
+                                if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-i",""))!="") 
+                                    {
+                                    $val.=$field;
+                                    } 
+                                else 
+                                    {
+                                    $val.="00";
+                                    }
+                                }
+                            else 
+                                {
+                                $val.=" 00:00";
+                                }
+                            }
+                         else 
+                            {
+                            $val.="-00 00:00";
+                            }
+                        }
+                    else 
+                        {
+                        $val.="-00-00 00:00";
+                        }
+                    }
 				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
 					{
 					# Construct a multilingual string from the submitted translations
@@ -661,7 +665,19 @@ function save_resource_data_multi($collection)
                                         $val.="00";
                                     }
                                 }
+                            else 
+                                {
+                                $val.=" 00:00";
+                                }
                             }
+                        else 
+                            {
+                            $val.="-00 00:00";
+                            }
+                        }
+                    else 
+                        {
+                        $val.="-00-00 00:00";
                         }
                     }
                 else
