@@ -15,11 +15,18 @@ if(!in_array($plugin_name, $plugins))
 $plugin_name = 'action_dates';
 $plugin_page_heading = $lang['action_dates_configuration'];
 
+$editable_states = array();
+foreach(get_editable_states($userref) as $archive_state)
+    {
+    $editable_states[$archive_state['id']] = $archive_state['name'];
+    }
+
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 
 $page_def[] = config_add_section_header($lang['action_dates_deletesettings']);
 $page_def[] = config_add_single_ftype_select('action_dates_deletefield',$lang['action_dates_delete']);
 $page_def[] = config_add_boolean_select('action_dates_reallydelete',$lang['action_dates_reallydelete']);
+$page_def[] = config_add_single_select('action_dates_new_state', $lang['action_dates_new_state'], $editable_states);
 
 $page_def[] = config_add_section_header($lang['action_dates_restrictsettings']);
 

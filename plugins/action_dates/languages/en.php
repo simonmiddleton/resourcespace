@@ -16,5 +16,4 @@ $lang['action_dates_reallydelete']="Fully delete resource when deletion data pas
 $lang['action_dates_email_admin_days']="Email administrator a set number of days before this date is reached. Leave blank for no email.";
 $lang['action_dates_email_text']="The following resources are due to be restricted in %%DAYS days.";
 $lang['action_dates_email_subject']="Notification of resources due to be restricted";
-
-
+$lang['action_dates_new_state'] = 'New state to move to (if fully deleting resources, than this is not taken into account)';
