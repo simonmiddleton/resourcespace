@@ -3232,11 +3232,9 @@ function log_diff($fromvalue, $tovalue)
         $fromvalue = explode(',', i18n_get_translated($fromvalue));
         $tovalue   = explode(',', i18n_get_translated($tovalue));
 
-	$diff     = new Text_Diff('native', array($lines1, $lines2));
-	$renderer = new Text_Diff_Renderer_inline();
-	$diff     = $renderer->render($diff);
-	
-	$return="";
+        // Get diffs
+        $inserts = array_diff($tovalue, $fromvalue);
+        $deletes = array_diff($fromvalue, $tovalue);
 
         // Process array diffs into meaningful strings
         if(0 < count($deletes))
