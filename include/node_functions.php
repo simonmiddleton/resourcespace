@@ -211,7 +211,14 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
     {
     $return_nodes = array();
 
-    $query = sprintf('SELECT * FROM node WHERE resource_type_field = \'%s\' AND %s ORDER BY order_by ASC',
+    // Filter by name if required
+    $filter_by_name = '';
+    if('' != $name)
+        {
+        $filter_by_name = " AND `name` LIKE '%" . escape_check($name) . "%'";
+        }
+ 
+    $query = sprintf('SELECT * FROM node WHERE resource_type_field = \'%s\' %s AND %s ORDER BY order_by ASC %s',
         escape_check($resource_type_field),
         $filter_by_name,
         (trim($parent)=="") ? 'parent IS NULL' : "parent = '" . escape_check($parent) . "'",
@@ -1111,7 +1118,48 @@ function copy_resource_type_field_nodes($from, $to)
 
     return true;
     }
+	
+function get_parent_nodes($noderef)
+    {
+    $parent_nodes=array();    
+    $topnode=false;
+    do
+        {
+        $node=sql_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref='" . $noderef . "' ");
+        if(empty($node[0]["parent"]))
+            {  
+            $topnode=true;
+            }
+        else
+            {
+            $parent_nodes[$node[0]["parent"]]=$node[0]["name"];
+            $noderef=$node[0]["parent"];
+            }  
+        }
+    while (!$topnode);
+    
+    return $parent_nodes;
+    }
 
+/**
+* Get the total number of nodes for a specific field
+* 
+* @param integer $resource_type_field ID of the metadata field
+* @param string  $name                Filter by name of node
+* 
+* @return integer
+*/
+function get_nodes_count($resource_type_field, $name = '')
+    {
+    $resource_type_field = escape_check($resource_type_field);
+    $filter_by_name = '';
+    if('' != $name)
+        {
+        $filter_by_name = " AND `name` LIKE '%" . escape_check($name) . "%'";
+        }
+ 
+    return (int) sql_value("SELECT count(ref) AS `value` FROM node WHERE resource_type_field = '{$resource_type_field}'{$filter_by_name}", 0);
+    }
 
 /**
 * Extract option names (in raw form if desired) from a nodes array.
