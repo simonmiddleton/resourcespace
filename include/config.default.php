@@ -149,25 +149,12 @@ $header_favicon="gfx/interface/favicon.png";
 #replace header logo with text, application name and description
 $header_text_title=false;
 
-#If using the old background method, create a clickable area of the resourcespace logo graphic. Defaults to Homepage
+# Is the logo a link to the home page?
 $header_link=true;
-#If $slimheader is off you must set the link height and width to match the size of the logo graphic in pixels (Legacy support)
-#$header_link_height=;
-#$header_link_width=;
 
-###### SLIM HEADER DESIGN ######
-#In order to maintain backwards compatibility you must do the following to turn on the Slim Header Design
-#1. Set #slimheader=true;
-#2. (If you want a custom Logo) Set a source image location for the header logo with $linkedheaderimgsrc="/your/location.png";
-#3. (If you want to see the optional slim themes) Enable slim themes (See Below)
+# Header size class. Options are HeaderSmall, HeaderMid, HeaderLarge.
+$header_size="HeaderMid";
 
-## Slim Themes ##
-# The Slim Charcoal theme can be added to the available themes like so: 
-# $available_themes=array("multi", "whitegry","greyblu","black","slimcharcoal");
-
-## Defaults ##
-#This uses an img tag to display the header and will automatically include a link to the homepage. 
-$slimheader=false;
 # Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
 
 # Set this to true in order for the top bar to remain present when scrolling down the page
@@ -182,8 +169,9 @@ $linkedheaderimgsrc="";
 # Include ResourceSpace version header in View Source
 $include_rs_header_info=true;
 
-# Used for specifying custom colour for header background
+# Used for specifying custom colours for header 
 $header_colour_style_override='';
+$header_link_style_override='';
 
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
@@ -1913,11 +1901,6 @@ $resource_field_column_limit=200;
 #
 # $resource_created_by_filter=array();
 
-# Tell the browser to load the Ubuntu font from Google, used by the new styling.
-# This can be set to 'false' to improve loading times if you are using custom styling
-# that does not use this font.
-$load_ubuntu_font=true;
-
 
 #
 # ------------------------ eCommerce Settings -----------------------------
@@ -3102,3 +3085,5 @@ $collection_empty_on_submit=false;
 # Retina mode. Use the "next size up" when rending previews and thumbs for a more crisp display on high resolution screens. Note - uses much more bandwidth also.
 $retina_mode=false;
 
+# $xframe_options - set this to SAMEORIGIN or ALLOW-FROM with a URL to allow site to be used in an iframe
+$xframe_options = "DENY";

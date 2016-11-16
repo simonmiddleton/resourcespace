@@ -633,7 +633,7 @@ function config_add_file_input($config_var, $label, $form_action, $width = 300)
  * @param boolean       $autosave  Flag to say whether the there should be an auto save message feedback through JS. Default: false
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
  */
-function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 300, $title = null, $autosave = false)
+function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 300, $title = null, $autosave = false, $on_change_js=null)
     {
     global $lang;
     
@@ -657,7 +657,7 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
         ?>
         <select id="<?php echo $name; ?>"
                 name="<?php echo $name; ?>"
-                <?php if($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
+                <?php if($autosave) { ?> onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
                 style="width:<?php echo $width; ?>px">
         <?php
         foreach($choices as $key => $choice)
@@ -687,9 +687,9 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
  *          the user sees. Defaulted to true.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_single_select($config_var, $label, $choices = '', $usekeys = true, $width = 300, $title = null, $autosave = false)
+function config_add_single_select($config_var, $label, $choices = '', $usekeys = true, $width = 300, $title = null, $autosave = false, $on_change_js=null)
     {
-    return array('single_select', $config_var, $label, $choices, $usekeys, $width, $title, $autosave);
+    return array('single_select', $config_var, $label, $choices, $usekeys, $width, $title, $autosave, $on_change_js);
     }
 
 
@@ -941,7 +941,7 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'single_select':
-                config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7]);
+                config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
                 break;
 
             case 'colouroverride_input':

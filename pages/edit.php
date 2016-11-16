@@ -768,13 +768,9 @@ else
     elseif ((getval("local","")!="")||(getval("uploader","")=="local")) {$titleh1 = $lang["addresourcebatchlocalfolder"];} # Add Resource Batch - Fetch from local upload folder
     else $titleh1 = $lang["addresourcebatchftp"]; # Add Resource Batch - Fetch from FTP server
     
-    # Define the subtitle h2:
-    $titleh2 = str_replace(array("%number","%subtitle"), array("1", $lang["specifydefaultcontent"]), $lang["header-upload-subtitle"]);
-    
     ?>
     
     <h1><?php echo $titleh1 ?></h1>
-    <h2><?php echo $titleh2 ?></h2>
     <p><?php echo $lang["intro-batch_edit"] ?></p>
     
     <?php

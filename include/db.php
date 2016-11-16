@@ -103,6 +103,8 @@ if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FIL
 if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
 
+header('X-Frame-Options: ' . $xframe_options); // Add X-Frame-Options to HTTP header, so that page cannot be shown in an iframe unless specifically set in config.
+
 if($system_down_redirect && getval('show', '') === '') {
 	redirect($baseurl . '/pages/system_down.php?show=true');
 }

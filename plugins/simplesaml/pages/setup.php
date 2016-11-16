@@ -10,7 +10,7 @@ include '../../../include/general.php';
 $plugin_name = 'simplesaml';
 if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
-
+	
 if ((getval('submit','')!='') || (getval('save','')!=''))
 	{
 		
@@ -18,7 +18,9 @@ if ((getval('submit','')!='') || (getval('save','')!=''))
 	$simplesaml['simplesaml_allow_public_shares'] = getvalescaped('simplesaml_allow_public_shares','');
 	$simplesaml['simplesaml_allowedpaths'] = explode(",",getvalescaped('simplesaml_allowedpaths',''));
 	$simplesaml['simplesaml_allow_standard_login'] = getvalescaped('simplesaml_allow_standard_login','');
+	$simplesaml['simplesaml_prefer_standard_login'] = getvalescaped('simplesaml_prefer_standard_login','');
 	$simplesaml['simplesaml_sp'] = getvalescaped('simplesaml_sp','');
+	$simplesaml['simplesaml_login_expiry'] = getvalescaped('simplesaml_login_expiry','');
 	
 	
 	$simplesaml['simplesaml_username_attribute'] = getvalescaped('simplesaml_username_attribute','');
@@ -53,8 +55,10 @@ if ((getval('submit','')!='') || (getval('save','')!=''))
 	
 	$simplesaml["simplesaml_groupmap"]=$simplesaml_groupmap;
 	set_plugin_config("simplesaml",$simplesaml);
+	include_plugin_config($plugin_name,base64_encode(serialize($simplesaml)));
 	if (getval('submit','')!=''){redirect('pages/team/team_plugins.php');}
-	}
+	}	
+
 
 global $baseurl;
 

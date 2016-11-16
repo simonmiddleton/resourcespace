@@ -1274,7 +1274,6 @@ function update_field($resource, $field, $value, array $errors = array())
     if ($fieldinfo["keywords_index"])
         {
         $is_html=($fieldinfo["type"]==8);	
-
         # If there's a previous value, remove the index for those keywords
         $existing=sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
         if (strlen($existing)>0)
@@ -1749,7 +1748,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
 
     if ($resource===RESOURCE_LOG_APPEND_PREVIOUS)
         {
-        sql_query("UPDATE `resource_log` SET `diff`=concat(`diff`,'\n','" . escape_check($diff) . "') WHERE `ref`=" . $resource_log_previous_ref);
+        sql_query("UPDATE `resource_log` SET `diff`=left(concat(`diff`,'\n','" . escape_check($diff) . "'),60000) WHERE `ref`=" . $resource_log_previous_ref);
         return $resource_log_previous_ref;
         }
     else
@@ -4037,11 +4036,25 @@ function delete_resource_custom_access_usergroups($ref)
         sql_query("delete from resource_custom_access where resource='" . escape_check($ref) . "' and usergroup is not null");
         }
 
-// truncate the field for insertion into the main resource table field<n>
+/**
+* Truncate the field for insertion into the main resource table field
+* 
+* @param string $value
+* 
+* @return string
+*/
 function truncate_join_field_value($value)
     {
-    global $resource_field_column_limit;
-    return substr($value, 0, $resource_field_column_limit);
+    global $resource_field_column_limit, $server_charset;
+
+    $encoding = 'UTF-8';
+
+    if(isset($server_charset) && '' != $server_charset)
+        {
+        $encoding = $server_charset;
+        }
+
+    return mb_substr($value, 0, $resource_field_column_limit, $encoding);
     }
 
 

@@ -103,7 +103,9 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 				}
 			else 
 			    {
-				$result=do_collections_search($search,$restypes,$archive);
+			    $order_by=$default_collection_sort;
+			    $sort="DESC";
+				$result=do_collections_search($search,$restypes,$archive,$order_by,$sort);
 				}
 			if (is_array($result))
 				{

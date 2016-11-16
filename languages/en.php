@@ -1192,7 +1192,8 @@ $lang["setup-login_to"]="Login to";
 $lang["setup-configuration_file_output"]="Configuration file output";
 $lang["more-information"]="More information";
 $lang["setup-structuralplugins"]="System templates";
-$lang["setup-headercolourstyleoverride"]="Custom header colour";
+$lang["setup-headercolourstyleoverride"]="Custom header background colour";
+$lang["setup-headerlinkstyleoverride"]="Custom header link colour";
 
 # Collection log - actions
 $lang["collectionlog"]="Collection log";
@@ -2516,3 +2517,10 @@ $lang["retina_mode"]="Retina mode";
 
 $lang["private-api-key"]="Private API key";
 $lang["can_edit_resource_type"] = "Edit access to resource type: ";
+
+$lang["userpreference_headersize"]="Header size";
+$lang["headersmall"]="Small";
+$lang["headermid"]="Medium";
+$lang["headerlarge"]="Large";
+
+

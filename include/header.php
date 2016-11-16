@@ -85,13 +85,7 @@ if ($slideshow_big)
     <link type="text/css" href="<?php echo $baseurl?>/css/slideshow_big.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
     <?php 
     }
-if ($load_ubuntu_font) 
-    { 
-	$urlprefix="http://";
-	if (strpos($baseurl,"https://")!==false) // Change prefix as mixed content prevents linking in Firefox
-		{$urlprefix="https://";}
-	echo "<link href='" . $urlprefix . "fonts.googleapis.com/css?family=Ubuntu:400,700' rel='stylesheet' type='text/css'>";
-	}
+
 
 if ($contact_sheet)
     {?>
@@ -224,10 +218,6 @@ echo get_plugin_css();
 hook("headblock");
  
 endif; # !hook("customhtmlheader") 
-if($slimheader)
-    {
-    $body_classes[] = 'SlimHeader';
-    }
 ?>
 </head>
 <body lang="<?php echo $language ?>" class="<?php echo implode(' ', $body_classes); ?>" <?php if (isset($bodyattribs)) { ?><?php echo $bodyattribs?><?php } ?>>
@@ -335,32 +325,46 @@ if($slimheader)
         }
     }
 else
-    {
-    ?>
-    <div id="Header" <?php if ($header_text_title){?>style="background-image:none;"<?php } ?>>
-    <?php hook("responsiveheader");
-    if ($header_link && !$header_text_title && ($k=="" || $internal_share_access)) 
-        {
-       if(isset($header_link_height) || isset($header_link_width))
-            {
-            # compile style attribute for headerlink
-            $headerlink_style='';
-            if(isset($header_link_height)){$headerlink_style.="height:".$header_link_height."px;";}
-            if(isset($header_link_width)){$headerlink_style.="width:".$header_link_width."px;";}
-            }
-       $onclick = (substr($linkUrl, 0, strlen($baseurl)) === $baseurl || substr($linkUrl, 0, strlen($baseurl_short)) === $baseurl_short) ? "" : ' onclick="return CentralSpaceLoad(this,true);"';
-        ?><a class="headerlink" <?php if(isset($headerlink_style)){?> style="<?php echo $headerlink_style?>" <?php } ?> href="<?php echo $linkUrl ?>"<?php echo $onclick?>></a><?php
-        }
-    if ($header_text_title)
-        {?>
-        <div id="TextHeader"><?php if ($k=="" || $internal_share_access){?><a href="<?php echo $homepage_url?>"  onClick="return CentralSpaceLoad(this,true);"><?php } ?><?php echo $applicationname;?><?php if ($k=="" || $internal_share_access){?></a><?php } ?></div>
-        <?php if ($applicationdesc!="")
-            {?>
-            <div id="TextDesc"><?php echo i18n_get_translated($applicationdesc);?></div>
-            <?php 
-            }
-        }
-    }
+	{
+	if($linkedheaderimgsrc !="") 
+		{
+		$header_img_src = $linkedheaderimgsrc;
+		if(substr($header_img_src, 0, 4) !== 'http')
+			{
+			// Set via System Config page?
+			if (substr($header_img_src, 0, 13) == '[storage_url]')
+				{
+				// Parse and replace the storage URL
+				$header_img_src = str_replace('[storage_url]', $storageurl, $header_img_src);
+				}
+			else
+				{
+				// Set via config.php
+				// if image source already has the baseurl short, then remove it and add it here
+				if(substr($header_img_src, 0, 1) === '/')
+					{
+					$header_img_src = substr($header_img_src, 1);
+					}
+				$header_img_src = $baseurl_short . $header_img_src;
+				}
+			}
+		}
+	else 
+		{
+		$header_img_src = $baseurl.'/gfx/titles/title.svg';
+		}
+	if($header_link && ($k=="" || $internal_share_access))
+	{?>
+	<a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></a>
+	<?php
+	}
+else
+	{?>
+	<div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
+	<?php
+	}
+	}
+
 
 hook("headertop");
 
@@ -370,8 +374,18 @@ $not_authenticated_pages = array('login', 'user_change_password');
 
 if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
     {
-    ?>
-<div id="HeaderNav1" class="HorizontalNav ">
+    # Custom header links
+    if (isset($header_link_style_override) && $header_link_style_override!='')
+        {
+        ?>
+        <style>
+        #HeaderNav1 a, #HeaderNav2 a { color: <?php echo $header_link_style_override; ?>; }
+        #HeaderNav2 li { border-color: <?php echo $header_link_style_override; ?>; }
+        </style>
+        <?php
+        }
+	?>
+	<div id="HeaderNav1" class="HorizontalNav">
 
 <?php
 hook("beforeheadernav1");
@@ -475,7 +489,7 @@ else {$div="CentralSpace";}
 ?>
 <!--Main Part of the page-->
         <?php if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="user_request")) { ?><div id="CentralSpaceContainer"<?php
-        if(isset($slimheader) && $slimheader && isset($slimheader_fixed_position) && $slimheader_fixed_position)
+        if(isset($slimheader_fixed_position) && $slimheader_fixed_position)
             {
             ?> class="SlimHeaderFixedPosition"<?php
             }

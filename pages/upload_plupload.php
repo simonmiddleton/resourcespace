@@ -784,7 +784,7 @@ var pluploadconfig = {
                         <?php }
                         else { ?>
                                 //Show diff instructions if supports drag and drop
-                                if(!uploader.files.length && uploader.features.dragdrop && uploader.settings.dragdrop)	{jQuery('#plupload_instructions').html('<?php echo escape_check($lang["intro-plupload_dragdrop"] )?>');}
+                                if(!uploader.files.length && uploader.features.dragdrop && uploader.settings.dragdrop)	{jQuery('#plupload_instructions').html('<p><?php echo escape_check($lang["intro-plupload_dragdrop"] )?></p>');}
                         <?php }?>
                         
                         uploader.bind('FileUploaded', function(up, file, info) {
@@ -1073,7 +1073,6 @@ else
 	{
 	# Add Resource Batch - In Browser 
 	$titleh1 = $lang["addresourcebatchbrowser"];
-	$titleh2 = str_replace(array("%number","%subtitle"), array("2", $lang["upload_files"]), $lang["header-upload-subtitle"]);
 	$intro = $lang["intro-plupload"];
 	}	
 
@@ -1081,7 +1080,7 @@ else
 <?php hook("upload_page_top"); ?>
 
 <?php if (!hook("replacepluploadtitle")){?><h1><?php echo $titleh1 ?></h1><?php } ?>
-<h2><?php echo $titleh2 ?></h2>
+
 <div id="plupload_instructions"><p><?php echo $intro?></p></div>
 <?php if (isset($plupload_max_file_size))
 	{

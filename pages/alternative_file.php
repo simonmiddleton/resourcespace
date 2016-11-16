@@ -33,6 +33,34 @@ hook("pageevaluation");
 # Fetch alternative file data
 $file=get_alternative_file($resource,$ref);if ($file===false) {exit("Alternative file not found.");}
 
+# Tweak images
+if (getval("tweak","")!="")
+   {
+   $tweak=getval("tweak","");
+   switch($tweak)
+      {
+      case "rotateclock":
+         $wait=tweak_preview_images($resource,270,0,"jpg",$ref);
+         break;
+      case "rotateanti":
+         $wait=tweak_preview_images($resource,90,0,"jpg",$ref);
+         break;
+      case "restore":
+         if ($enable_thumbnail_creation_on_upload)
+            {
+            $wait=create_previews($resource,false,"jpg",false,false,$ref);
+            //refresh_collection_frame();
+            }
+         break;
+      }
+   //hook("moretweakingaction", "", array($tweak, $ref, $resource));
+   # Reload resource data.
+   //$resource=get_resource_data($ref,false);
+   //sleep(1);
+   }
+
+
+
 if (getval("name","")!="")
 	{
 	hook("markmanualupload");
@@ -44,7 +72,11 @@ if (getval("name","")!="")
 		notify_resource_change($resource);
 		}
 	hook ("savealternatefiledata");
-	redirect ($baseurl_short."pages/alternative_files.php?ref=$resource&search=".urlencode($search)."&offset=$offset&order_by=$order_by&sort=$sort&archive=$archive");
+	if (getval("tweak","")!=''){
+		redirect ($baseurl_short."pages/alternative_file.php?resource=$resource&ref=$ref&search=".urlencode($search)."&offset=$offset&order_by$order_by&sort=$sort&archive=$archive");
+	} else {
+		redirect ($baseurl_short."pages/alternative_files.php?ref=$resource&search=".urlencode($search)."&offset=$offset&order_by=$order_by&sort=$sort&archive=$archive");
+		}
 	}
 
 	
@@ -63,6 +95,16 @@ include "../include/header.php";
 <input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
 <input type=hidden name=resource value="<?php echo htmlspecialchars($resource) ?>">
 
+<?php //display preview if exists
+$filepath=get_resource_path($resource,true,"thm",true,"jpg",-1,1,false,'',$ref,true);
+$previews_exist=false;
+if (file_exists($filepath)){
+	$previews_exist=true;
+	$fileurl=get_resource_path($resource,false,"thm",true,"jpg",-1,1,false,'',$ref,true);?>
+	<div class="Question" style="border:0px;"><img id="preview" align="top" src="<?php echo $fileurl?>" class="ImageBorder" style="margin-right:10px;"/><br /><br /><div class="clearerleft"> </div></div>
+	<?php 
+	} 
+?>
 
 <div class="Question">
 <label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo htmlspecialchars($resource) ?></div>
@@ -92,6 +134,36 @@ include "../include/header.php";
 		echo "\n</select>\n<div class='clearerleft'> </div>\n</div>";
 	}
 ?>
+<?php if ($previews_exist){?>
+<div class="Question" id="question_imagecorrection">
+   <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label>
+   <select name="tweak" id="tweak" onChange="form.submit()">
+   <option value=""><?php echo $lang["select"]?></option>
+   <?php
+	# On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.
+	# A local configuration setting allows this to be rectified
+   if (!$image_rotate_reverse_options)
+   {
+     ?>
+     <option value="rotateclock"><?php echo $lang["rotateclockwise"]?></option>
+     <option value="rotateanti"><?php echo $lang["rotateanticlockwise"]?></option>
+     <?php
+   }
+  else
+  {
+     ?>
+     <option value="rotateanti"><?php echo $lang["rotateclockwise"]?></option>
+     <option value="rotateclock"><?php echo $lang["rotateanticlockwise"]?></option>
+     <?php
+  }
+  ?>
+  <option value="restore"><?php echo $lang["recreatepreviews"]?></option>
+  
+  <?php /*hook("moretweakingopt");*/?>
+</select>
+<div class="clearerleft"> </div>
+</div>
+<?php } ?>
 
 <div class="QuestionSubmit">
 <label for="buttons"> </label>			

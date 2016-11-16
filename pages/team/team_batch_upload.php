@@ -229,7 +229,7 @@ for ($n=0;$n<count($uploadfiles);$n++)
 				$thumb = get_resource_path($ref, true, "thm", false, $rd["preview_extension"]);
 				if (file_exists($thumb))
 					{
-					$previewstatus.= "<br/><img src='" . get_resource_path($ref, false, "thm", false, $rd["preview_extension"]) . "'><br/><br/>";
+					$previewstatus.= "<br/><a href='".$baseurl."/pages/view.php?ref=".$ref."'&search=!last100><img src='" . get_resource_path($ref, false, "thm", false, $rd["preview_extension"]) . "'></a><br/><a href='".$baseurl."/pages/view.php?ref=".$ref."'&search=!last100>> ".$lang['action-view']."</a>&nbsp;&nbsp;<a href='".$baseurl."/pages/edit.php?ref=".$ref."'&search=!last100>> ".$lang['action-edit']."</a>&nbsp;&nbsp;<a href='".$baseurl."/pages/alternative_files.php?ref=".$ref."'&search=!last100>> ".$lang['managealternativefiles']."</a><br/><br/>";
 					}
 				else {$previewstatus.= "<br/><br/>";}
 				?><script type="text/javascript">document.getElementById('uploadlog').innerHTML+="<?php echo $previewstatus ?>";</script><?php
