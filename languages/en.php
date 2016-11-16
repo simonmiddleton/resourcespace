@@ -2545,4 +2545,5 @@ $lang["responsive_less"]="Less...";
 $lang['responsive_collectiontogglehide'] = "Hide";
 $lang['linkedheaderimgsrc']="Location of the logo image in the header (Defaults to ResourceSpace):";
 $lang['responsive_result_settings'] = 'Result Settings';
+$lang['responsive_view_full_site'] = 'View full site';
 // end of Responsive

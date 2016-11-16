@@ -21,6 +21,12 @@
 #UICenter {
     width:100% !important;
 }
+
+.ResponsiveViewFullSite {
+    text-align: center;
+    margin-top: 10px;
+}
+
 @media(max-width:1100px) {
     #SearchBarContainer {
         margin:0;
