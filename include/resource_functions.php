@@ -1058,7 +1058,6 @@ function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=f
 
     add_verbatim_keywords($keywords, $string, $resource_type_field); // add in any verbatim keywords (found using regex).
 
-    db_begin_transaction();
     for($n = 0; $n < count($keywords); $n++)
         {
         unset($kwpos);
@@ -1076,7 +1075,6 @@ function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=f
 
         add_keyword_to_resource($ref, $kw, $resource_type_field, $kwpos, $optional_column, $optional_value, false);
         }
-    db_end_transaction();
 
     }
 }
@@ -1094,7 +1092,7 @@ function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$o
                     add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,true);
                     }
         }
-    global $noadd;
+    global $noadd,$use_mysqli_prepared;
     if (!(in_array($keyword,$noadd)))
             {           
             debug("adding " . $keyword);
@@ -1102,13 +1100,21 @@ function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$o
             
             # create mapping, increase hit count.
             if ($optional_column<>'' && $optional_value<>'')	# Check if any optional column value passed and add this
-                    {
-					sql_query("insert into resource_keyword(resource,keyword,position,resource_type_field,$optional_column) values ('$ref','$keyref','$position','$resource_type_field','$optional_value')");
-					}
+                {
+                sql_query("insert into resource_keyword(resource,keyword,position,resource_type_field,$optional_column) values ('$ref','$keyref','$position','$resource_type_field','$optional_value')");
+                }
             else  
+                {
+                if(isset($use_mysqli_prepared) && $use_mysqli_prepared)
                     {
-					sql_query("insert into resource_keyword(resource,keyword,position,resource_type_field) values ('$ref','$keyref','$position','$resource_type_field')");
-					}
+                    sql_query_prepared('INSERT INTO `resource_keyword`(`resource`,`keyword`,`position`,`resource_type_field`) VALUES (?,?,?,?)',
+                        array('iiii',$ref,$keyref,$position,$resource_type_field));
+                    }
+                else
+                    {
+                    sql_query("insert into resource_keyword(resource,keyword,position,resource_type_field) values ('$ref','$keyref','$position','$resource_type_field')");
+                    }
+                }
 
             sql_query("update keyword set hit_count=hit_count+1 where ref='$keyref'");
             
