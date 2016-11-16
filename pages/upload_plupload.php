@@ -931,7 +931,8 @@ var pluploadconfig = {
                 jQuery("#pluploader").plupload<?php if (!$plupload_widget){?>Queue<?php } ?>(pluploadconfig);
 
 				//Change URL if exif box status changes
-				jQuery('#no_exif').live('change', function(){
+				jQuery('#question_noexif').on('change', '#no_exif', function() {
+				//jQuery('#no_exif').live('change', function(){
 						if(jQuery(this).is(':checked')){
 								pluploadconfig.starting_url =ReplaceUrlParameter(pluploadconfig.starting_url,'no_exif','yes');
 						}
