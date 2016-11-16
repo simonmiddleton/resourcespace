@@ -338,34 +338,6 @@ else
 // Responsive
 if($responsive_ui)
     {
-    if(!empty($linkedheaderimgsrc)) 
-        {
-        $header_img_src = $linkedheaderimgsrc;
-        }
-    else if(!empty($responsiveheaderimgsrc))
-        {
-        $header_img_src=$responsiveheaderimgsrc;
-        }
-    else 
-        {
-        $header_img_src = $baseurl . '/gfx/titles/title.svg';
-        }
-
-    // Set via System Config page?
-    if('[storage_url]' == substr($header_img_src, 0, 13))
-        {
-        // Parse and replace the storage URL
-        $header_img_src = str_replace('[storage_url]', $storageurl, $header_img_src);
-        }
-
-    // If there is a baseurl, no need to add it again
-    if(false === strpos($header_img_src, $baseurl))
-        {
-        $header_img_src = $baseurl . $header_img_src;
-        }
-
-    $linkedheaderimgsrc=$header_img_src;
-
     if (isset($username) && ($pagename!="login") && ($loginterms==false) && getval("k","")=="") 
         { 
         ?>   
