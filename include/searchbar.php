@@ -317,7 +317,7 @@ elseif($restypes=='')
         $searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . $lang['responsive_more'] . '">';
         }
 
-	hook("responsivesimplesearch");
+	hook('extra_search_buttons');
 	
 	$searchbuttons.="</div>";
 	if (!$searchbar_buttons_at_bottom){ echo $searchbuttons."<br/>"; }

@@ -61,7 +61,7 @@ if ($include_rs_header_info)
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<?php hook("responsivemeta"); ?>
+<?php hook('extra_meta'); ?>
 
 <title><?php echo htmlspecialchars($applicationname)?></title>
 <link rel="icon" type="image/png" href="<?php echo $baseurl."/".$header_favicon?>" />
