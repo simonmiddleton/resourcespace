@@ -75,7 +75,7 @@ if ($include_rs_header_info)
 <?php if ($pagename=="login") { ?><script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script><?php } ?>
 <!--[if lte IE 9]><script src="<?php echo $baseurl?>/lib/historyapi/history.min.js"></script><![endif]-->
 <?php if ($image_preview_zoom) { ?><script src="<?php echo $baseurl?>/lib/js/jquery.zoom.js"></script><?php } ?>
-
+<script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.tshift.min.js"></script>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery-periodical-updater.js"></script>
 
 <?php 
@@ -379,7 +379,7 @@ if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false =
         {
         ?>
         <style>
-        #HeaderNav1 a, #HeaderNav2 a { color: <?php echo $header_link_style_override; ?>; }
+        #HeaderNav1 li a, #HeaderNav2 li a { color: <?php echo $header_link_style_override; ?>; }
         #HeaderNav2 li { border-color: <?php echo $header_link_style_override; ?>; }
         </style>
         <?php

@@ -907,10 +907,19 @@ if ($count_result>0)
 
 		<?php if (!isset($cinfo['savedsearch'])||(isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null)){ // add 'remove' link only if this is not a smart collection 
 			?>
-		<?php if (!hook("replaceremovelink")){?>
-		<a class="CollectionResourceRemove" onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?remove=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>"><i aria-hidden="true" class="fa fa-minus-circle"></i> <?php echo $lang["action-remove"]?></a>
-		<?php
-				} //end hook replaceremovelink 
+            
+        <?php
+        $rating = '';
+        if(isset($rating_field))
+            {
+            $rating = "field{$rating_field}";
+            }
+            
+            $url = $baseurl_short."pages/view.php?ref=" . $ref . "&amp;search=" . urlencode($search) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=". urlencode($sort) . "&amp;offset=" . urlencode($offset) . "&amp;archive=" . urlencode($archive) . "&amp;k=" . urlencode($k) . "&amp;curpos=" . urlencode($n) . '&amp;restypes=' . urlencode($restypes);
+            
+        # Include standard search views    
+        include "search_views/resource_tools.php";  
+            
 			} # End of remove link condition 
 		?></div><?php 
 		} # End of k="" condition 

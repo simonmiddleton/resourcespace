@@ -1,12 +1,12 @@
 <?php
 include '../../../include/db.php';
+include_once '../../../include/general.php';
 include '../../../include/authenticate.php';
 if(!checkperm('a'))
     {
     header('HTTP/1.1 401 Unauthorized');
     exit($lang['error-permissiondenied']);
     }
-include_once '../../../include/general.php';
 include_once '../include/emu_functions.php';
 
 

@@ -1585,41 +1585,59 @@ function auto_create_user_account()
 	}
 } //end function replace hook
 
+
+/**
+* Email user request to admins
+* 
+* @return boolean
+*/
 function email_user_request()
-	{
-	# E-mails the submitted user request form to the team.
-	global $applicationname,$user_email,$baseurl,$email_notify,$lang,$customContents;
+    {
+    // E-mails the submitted user request form to the team.
+    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents;
 
-	# Build a message
+    // Get posted vars sanitized:
+    $name               = strip_tags(getvalescaped('name', ''));
+    $email              = strip_tags(getvalescaped('email', ''));
+    $userrequestcomment = strip_tags(getvalescaped('userrequestcomment', ''));
 
-	$message=$lang["userrequestnotification1"] . "\n\n" . $lang["name"] . ": " . getval("name","") . "\n\n" . $lang["email"] . ": " . getval("email","") . "\n\n" . $lang["comment"] . ": " . getval("userrequestcomment","") . "\n\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang["userrequestnotification2"] . "\n$baseurl";
-	
-	$notificationmessage=$lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . getvalescaped("name","") . "\n" . $lang["email"] . ": " . getvalescaped("email","") . "\n" . $lang["comment"] . ": " . getvalescaped("userrequestcomment","") . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
-	
-	$approval_notify_users=get_notification_users("USER_ADMIN"); 
-	$message_users=array();
-	foreach($approval_notify_users as $approval_notify_user)
-			{
-			get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);		  
-            if($send_message==false){continue;}		
-			
-			get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $approval_notify_user["email"]!="")
-				{
-				send_mail($approval_notify_user["email"],$applicationname . ": " . $lang["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"","",getval("name",""));
-				}        
-			else
-				{
-				$message_users[]=$approval_notify_user["ref"];
-				}
-			}
-		if (count($message_users)>0)
-			{
-			// Send a message with long timeout (30 days)
-            message_add($message_users,$notificationmessage,"",0,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
-			}
-	return true;
-	}
+    // Build a message
+    $message             = "{$lang['userrequestnotification1']}\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n{$lang['userrequestnotification2']}\n{$baseurl}";
+    $notificationmessage = $lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
+
+    $approval_notify_users = get_notification_users("USER_ADMIN"); 
+    $message_users         = array();
+
+    foreach($approval_notify_users as $approval_notify_user)
+        {
+        get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);		  
+
+        if(false == $send_message)
+            {
+            continue;
+            }		
+
+        get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email);
+
+        if($send_email && $approval_notify_user["email"]!="")
+            {
+            send_mail($approval_notify_user['email'], "{$applicationname}: {$lang['requestuserlogin']} - {$name}", $message, '', $user_email, '', '', $name);
+            }
+        else
+            {
+            $message_users[] = $approval_notify_user['ref'];
+            }
+        }
+
+    if(0 < count($message_users))
+        {
+        // Send a message with long timeout (30 days)
+        message_add($message_users,$notificationmessage,"",0,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
+        }
+
+    return true;
+    }
+
 
 function new_user($newuser)
 	{
@@ -1685,7 +1703,7 @@ function get_active_users()
         }
     
     # Returns a list of all active users, i.e. users still logged on with a last-active time within the last 2 hours.
-    return sql_query("select u.username,round((unix_timestamp(now())-unix_timestamp(u.last_active))/60,0) t from user u left outer join usergroup g on u.usergroup=g.ref $sql order by t;");
+    return sql_query("select u.ref, u.username,round((unix_timestamp(now())-unix_timestamp(u.last_active))/60,0) t from user u left outer join usergroup g on u.usergroup=g.ref $sql order by t;");
     }
 
 function get_all_site_text($findpage="",$findname="",$findtext="")
@@ -5614,32 +5632,4 @@ function user_set_usergroup($user,$usergroup)
     sql_query("update user set usergroup='" . escape_check($usergroup) . "' where ref='" . escape_check($user) . "'");
     }
 
-/**
-* Validate user - check we have a valid user based on SQL criteria e.g. session that is passed in as $user_select_sql
-* Will always return false if matches criteria but the user account is not approved or has expired
-*
-* $user_select_sql example u.session=$variable. 
-* Joins to usergroup table as g  which can be used in criteria
-*
-* @param	string	$user_select_sql		SQL to check - usually session hash e.g. (u.session=$variable) 
-* @param 	boolan	$getuserdata			default true. Return user data as required by authenticate.php
-* 
-* @return boolean|array
-*/
-function validate_user($user_select_sql, $getuserdata=true)
-	{
-	if($user_select_sql==""){return false;}
-	
-	$full_user_select_sql = "approved = 1 AND (account_expires IS NULL OR account_expires = '0000-00-00 00:00:00' OR account_expires > now()) " . ((strtoupper(trim(substr($user_select_sql,0,4)))=="AND")?" ":" AND ") .  $user_select_sql;
-	if($getuserdata)
-		{
-		$userdata=sql_query("SELECT u.ref, u.username, g.permissions, g.parent, u.usergroup, u.current_collection, u.last_active, timestampdiff(second, u.last_active, now()) idle_seconds, u.email, u.password, u.fullname, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, resource_defaults, u.password_last_change, g.config_options, g.request_mode, g.derestrict_filter, u.hidden_collections, u.accepted_terms FROM user u LEFT JOIN usergroup g on u.usergroup=g.ref WHERE " . $full_user_select_sql);
-		return $userdata;
-		}
-	else
-		{
-		$validuser=sql_value("SELECT u.ref value FROM user u LEFT JOIN usergroup g on u.usergroup=g.ref WHERE " . $full_user_select_sql,"");
-		if($validuser!=""){return true;}
-		}
-	return false;
-	}
+

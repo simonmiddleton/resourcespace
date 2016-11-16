@@ -32,7 +32,7 @@ if (getval("c","")!="")
 	{
 	# quick redirect to a collection (from e-mails, keep the URL nice and short)
 	$c=getvalescaped("c","");
-	$topurl="pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;;
+	$topurl="pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;
 	
 	if ($k!="")
 		{

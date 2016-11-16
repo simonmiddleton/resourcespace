@@ -175,9 +175,8 @@ if($submitdashtile)
                     // Already set to be specific to this user group, move on to next one
                     continue;
                     }
-
                 add_usergroup_dash_tile($user_group, $tile['ref'], $default_order_by);
-                build_usergroup_dash($user_group);
+                build_usergroup_dash($user_group,0,$tile['ref']);
                 }
 			}
 		else if(!$tile["all_users"] && !$all_users) # Not an all_users tile

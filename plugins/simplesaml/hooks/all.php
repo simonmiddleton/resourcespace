@@ -4,11 +4,16 @@ include dirname(__FILE__) . "/../include/simplesaml_functions.php";
 
 function HookSimplesamlAllPreheaderoutput()
     {
+    if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+        {
+        debug("simplesaml: plugin not configured.");
+        return false;
+        }
+        
 	global $simplesaml_site_block, $simplesaml_allow_public_shares, $simplesaml_allowedpaths;
-
+    
 	if(simplesaml_is_authenticated())
 		{
-
 		// Need to make sure we don't ask the user to type in a password, since we don't have it!
 		global $delete_requires_password;
 		$delete_requires_password=false;
@@ -44,8 +49,15 @@ function HookSimplesamlAllPreheaderoutput()
 
 function HookSimplesamlAllProvideusercredentials()
         {
-		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types;
-		// Use standard authentication if available
+        if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+            {
+            debug("simplesaml: plugin not configured.");
+            return false;
+            }
+		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
+        $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
+        $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator;
+        // Use standard authentication if available
 		if (isset($_COOKIE["user"])) {return true;}
 		
 		// Redirect to login page if not already authenticated and local login option is preferred
@@ -65,8 +77,7 @@ function HookSimplesamlAllProvideusercredentials()
 			}
 		$attributes = simplesaml_getattributes();
 
-		global $baseurl, $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute, $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator;
-
+	
 		$usernamesuffix = $simplesaml_username_suffix;
         
         if(strpos($simplesaml_username_attribute,",")!==false) // Do we have to join two fields together?
@@ -117,7 +128,7 @@ function HookSimplesamlAllProvideusercredentials()
 		if(isset($attributes[$simplesaml_email_attribute][0])){$email=$attributes[$simplesaml_email_attribute][0];}
 		$groups=$attributes[$simplesaml_group_attribute];
 
-		$password_hash= md5("RSSAML".$username);
+		$password_hash= md5("RSSAML" . $scramble_key . $username);
 
 		$userid = sql_value("select ref value from user where username='" . $username . "'",0);
 
@@ -172,18 +183,18 @@ function HookSimplesamlAllProvideusercredentials()
             
             # Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)
             rs_setcookie("user", $session_hash, intval($simplesaml_login_expiry), "", "", substr($baseurl,0,5)=="https", true);
-
-            # Set default resource types
-            rs_setcookie('restypes', $default_res_types);
-			return true;
+            return true;
 			}
-
 		return false;
-
         }
 
 function HookSimplesamlLoginLoginformlink()
         {
+        if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+            {
+            debug("simplesaml: plugin not configured.");
+            return false;
+            }
 		// Add a link to login.php, as this page may still be seen if $simplesaml_allow_standard_login is set to true
 		global $baseurl, $lang;
         ?>
@@ -195,7 +206,7 @@ function HookSimplesamlLoginLoginformlink()
 
 function HookSimplesamlLoginPostlogout()
         {
-	simplesaml_signout();
+        simplesaml_signout();
         }
 
 function HookSimplesamlLoginPostlogout2()

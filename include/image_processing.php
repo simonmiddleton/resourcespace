@@ -87,7 +87,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 					
 				$original_extension = $path_parts['extension'];
 
-				if($original_extension == $user_set_filename_path_parts['extension'])
+				if(isset($user_set_filename_path_parts['extension']) && $original_extension == $user_set_filename_path_parts['extension'])
 					{
 					$filename = $user_set_filename;
 					}
@@ -427,7 +427,11 @@ function extract_exif_comment($ref,$extension="")
 		$command = $exiftool_fullpath . " -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -G " . escapeshellarg($image);
         $output=run_command($command);
         $metalines = explode("\n",$output);
-        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $output);
+		
+		# Just get the first and last few lines of the output if it is large, otherwise the log can be overwhelmed by this output
+		if(count($metalines)>20)
+			{$summary=implode("\n", array_merge(array_slice($metalines, 0, 10),array("...","...","..."),array_slice($metalines, -10, 9)));}
+        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $summary);
 
         $metadata = array(); # an associative array to hold metadata field/value pairs
 		

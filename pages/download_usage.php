@@ -1,16 +1,29 @@
 <?php
 include "../include/db.php";
+include_once "../include/collections_functions.php";
 include_once "../include/general.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k = getvalescaped("k", '');
-if (($k == '') || (!check_access_key(getvalescaped("ref",'',true),$k))) {include "../include/authenticate.php";}
+$k           = getvalescaped('k', '');
+$ref         = getvalescaped('ref', '', true);
+$col         = getvalescaped('collection', getvalescaped('col', -1, true), true);
+$size        = getvalescaped('size', '');
+$ext         = getvalescaped('ext', '');
+$alternative = getvalescaped('alternative', -1);
 
-$ref  = getval("ref", '');
-$col  = getval('collection', -1, true);
-$size = getval("size", '');
-$ext  = getval("ext", '');
-$alternative = getval("alternative", -1);
+if(-1 != $col)
+    {
+    $need_to_authenticate = !check_access_key_collection($col, $k);
+    }
+else
+    {
+    $need_to_authenticate = !check_access_key($ref, $k);
+    }
+
+if('' == $k || $need_to_authenticate)
+    {
+    include '../include/authenticate.php';
+    }
 
 hook("pageevaluation");
 
@@ -22,9 +35,8 @@ if (getval("save",'') != '')
     $usagecomment = getvalescaped("usagecomment", '');
 
     $download_url_suffix .= ($download_url_suffix == '') ? '?' : '&';
-    if ($download_usage && getval('col', -1, true) != -1) 
+    if($download_usage && -1 != $col) 
         {
-        $col = getval('col', -1, true);
         $download_url_suffix .= "collection=" . urlencode($col);
         $redirect_url = "pages/collection_download.php";
         } 

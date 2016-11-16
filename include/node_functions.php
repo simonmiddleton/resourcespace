@@ -203,15 +203,17 @@ function get_node($ref, array &$returned_node)
 * @param  integer  $resource_type_field    ID of the metadata field
 * @param  integer  $parent                 ID of parent node
 * @param  boolean  $recursive              Set to true to get children nodes as well
+* @param  string   $name                   Filter by name of node
 * 
 * @return array
 */
-function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL)
+function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '')
     {
     $return_nodes = array();
 
     $query = sprintf('SELECT * FROM node WHERE resource_type_field = \'%s\' AND %s ORDER BY order_by ASC',
         escape_check($resource_type_field),
+        $filter_by_name,
         (trim($parent)=="") ? 'parent IS NULL' : "parent = '" . escape_check($parent) . "'",
         $limit
     );
@@ -1157,6 +1159,7 @@ function extract_node_options(array $nodes, $i18n = true, $index_with_node_id = 
 * 
 * Usefull to avoid querying the database multiple times 
 * if we already have a full detail array of nodes
+* @param string  $name                Filter by name of node
 * 
 * @param array   $nodes
 * @param string  $name

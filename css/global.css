@@ -107,7 +107,7 @@ button[type="submit"] { font-size: 1em; }
 #HeaderNav2 {float:left; padding-left: 30px;}
 #HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0.5em;}
 .HeaderImgLink{float:left;height:100%;}
-#HeaderImg{margin:0 0 0 5px;}
+#HeaderImg{margin:0 0 0 5px; height: 40px; }
 .HorizontalNav li,  .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
 .HorizontalNav li a, .HorizontalNav li a{display: inline-block;zoom: 1;*display: inline;}
 #SearchBarContainer {margin-top: 20px;}
@@ -195,7 +195,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #CentralSpace .SplitSearch {float: left; margin-left: 5px;margin-right: 5px;}
 
 .CollectionPanelShell {padding:0;float: left;margin: 0px 15px 5px 0px;width: 97px;height: 120px; text-align: left;}
-.CollectionPanelInfo{}
+.CollectionPanelInfo{padding-bottom:3px;}
 .CollectionResourceAlign {width:97px;height:85px;text-align: center;vertical-align: middle;}
 
 #CollectionMinTitle{float: left;margin: 4px 10px 0px 25px;}
@@ -266,7 +266,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a	{float: right;margin-right: 0.5em;text-decoration:none;}
+.ResourcePanelIcons a, .CollectionPanelInfo a	{float: right;margin-right: 0.5em;text-decoration:none;}
 .ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
 .ListTools a:hover	{text-decoration:none;}
@@ -292,7 +292,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .SearchSpace p {padding:0 0 0.5em; margin:0; font-size:1em; line-height:1.1em;}
 .SearchSpace form {padding:0; margin:0;}
 .SearchSpace .SearchWidth {width: 250px;font-size: 1em;margin: 3px 0px;padding: 0px;}
-.SearchSpace .SearchWidthHalf {width: 120px;margin: 5px 5px 5px 0;padding: 0px;}
+.SearchSpace .SearchWidthHalf {width: 120px;margin: 5px 4px 5px 0;padding: 0px;}
 .SearchSpace .SearchWidthRight {margin-right:0;}
 
 .SearchSpace .tick {margin:2px;}
@@ -1181,6 +1181,10 @@ form.FormFilter button {
     float: right;
 }
 
+form.FormFilter button.ClearButton {
+    margin-right: 10px;
+}
+
 .HiddenTile {
     border: 1px solid red !important;
     margin: -2px ;
@@ -1222,4 +1226,8 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 #AdminManageMetadataFieldOptions > .BottomInpageNav {
     width: 540px;
 }
-.tag-editor li { padding: initial; }
+
+
+/* Custom filters (extends the default form filters in ResourceSpace) */
+#FilterNodeOptions { width: 510px; }
+#FilterNodeOptions .FilterItemContainer > label { width: 150px; }.tag-editor li { padding: initial; }

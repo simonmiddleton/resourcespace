@@ -38,7 +38,7 @@ function HookEmuCron_copy_hitcountAddplugincronjob()
         {
         $command = "\"{$php_path}" . ($config_windows ? '/php.exe" ' : '/php" ') . dirname(__FILE__) . '/../pages/emu_script.php';
 
-        echo PHP_EOL . 'Running EMu script...' . PHP_EOL . 'COMMAND: "{$command}' . PHP_EOL;
+        echo PHP_EOL . 'Running EMu script...' . PHP_EOL . "COMMAND: '{$command}'" . PHP_EOL;
 
         run_command($command);
 
