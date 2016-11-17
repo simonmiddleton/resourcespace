@@ -319,9 +319,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 				
 				</script>
 				<div class="SearchItem">
-			<?php } 
-			# Add to the clear function so clicking 'clear' clears this box.
-			$clear_function.="document.getElementById('{$id}').value='';";
+			<?php }
+            
         break;
     
         case 2: 
