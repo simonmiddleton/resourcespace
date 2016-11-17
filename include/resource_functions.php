@@ -725,7 +725,7 @@ function save_resource_data_multi($collection)
                     if (getval("modeselect_" . $fields[$n]["ref"],"")=="AP")
                         {
                         $val=append_field_value($fields[$n],$origval,$existing);
-                        }
+                        }                        
                         
                     # Prepend text/option(s) mode?
                     elseif (getval("modeselect_" . $fields[$n]["ref"],"")=="PP")
