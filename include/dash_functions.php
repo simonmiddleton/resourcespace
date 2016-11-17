@@ -454,7 +454,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
 				  	  },
 			          update: function(event, ui) {
 			          	nonDraggableTiles = jQuery(".HomePanel").length - jQuery(".DashTileDraggable").length;
-			          	newIndex = (ui.item.index() - nonDraggableTiles);
+			          	newIndex = (ui.item.index() - nonDraggableTiles) + 1;
 			          	var id=jQuery(ui.item).attr("id").replace("tile","");
 			          	updateDashTileOrder(newIndex,id);
 			          }
