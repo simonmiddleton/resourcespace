@@ -296,14 +296,14 @@ if($responsive_ui)
 hook('responsiveheader');
  
 if($header_text_title) 
-        {?>
-        <div id="TextHeader"><?php if ($k=="" || $internal_share_access){?><a href="<?php echo $homepage_url?>"  onClick="return CentralSpaceLoad(this,true);"><?php } ?><?php echo $applicationname;?><?php if ($k=="" || $internal_share_access){?></a><?php } ?></div>
-        <?php if ($applicationdesc!="")
-                {?>
-                <div id="TextDesc"><?php echo i18n_get_translated($applicationdesc);?></div>
-                <?php 
-                }
-        }
+    {?>
+    <div id="TextHeader"><?php if ($k=="" || $internal_share_access){?><a href="<?php echo $homepage_url?>"  onClick="return CentralSpaceLoad(this,true);"><?php } ?><?php echo $applicationname;?><?php if ($k=="" || $internal_share_access){?></a><?php } ?></div>
+    <?php if ($applicationdesc!="")
+            {?>
+            <div id="TextDesc"><?php echo i18n_get_translated($applicationdesc);?></div>
+            <?php 
+            }
+    }
 else
 	{
 	if($linkedheaderimgsrc !="") 
@@ -334,15 +334,15 @@ else
 		$header_img_src = $baseurl.'/gfx/titles/title.svg';
 		}
 	if($header_link && ($k=="" || $internal_share_access))
-	{?>
-	<a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></a>
-	<?php
-	}
-else
-	{?>
-	<div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
-	<?php
-	}
+        {?>
+        <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></a>
+        <?php
+        }
+    else
+        {?>
+        <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
+        <?php
+        }
 	}
 
 // Responsive
