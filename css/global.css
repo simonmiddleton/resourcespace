@@ -1258,3 +1258,5 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 .CollectionPanelTools {visibility:hidden;}
 .CollectionPanelShell:hover .CollectionPanelTools {visibility:visible;}
 #FilterNodeOptions .FilterItemContainer > label { width: 150px; }.tag-editor li { padding: initial; }
+
+.ResponsiveViewFullSite { display: none; }
