@@ -26,7 +26,7 @@ include_once 'file_functions.php';
 
 
 # Switch on output buffering.
-ob_start(null,4096);
+ob_start(null,$php_ob_buffer_size);
 
 $pagetime_start = microtime();
 $pagetime_start = explode(' ', $pagetime_start);
