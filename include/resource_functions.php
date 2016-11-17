@@ -1363,15 +1363,6 @@ function update_field($resource, $field, $value, array $errors = array())
         sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
         }
 
-    if($value == "")
-        {
-        $value="null";
-        }
-    else
-        {
-        $value = "'" . $value . "'";
-        }
-
     # If this is a 'joined' field we need to add it to the resource column
     $joins = get_resource_table_joins();
 
