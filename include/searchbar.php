@@ -233,7 +233,7 @@ if ($display_user_rating_stars && $star_search){ ?>
             // if space addTag
             // if "word" then addTag
             // don't do anything if open " but not closed
-            jQuery('ul.tag-editor').keyup(function(e)
+            jQuery('ul.tag-editor').keydown(function(e)
                 {
                 var key          = e.keyCode || e.which;
                 var add_tag_flag = false;
