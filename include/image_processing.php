@@ -608,8 +608,8 @@ function extract_exif_comment($ref,$extension="")
 							$newval =  iptc_return_utf8($value);	
 							}
 
-						global $merge_filename_with_title, $lang;
-						if($merge_filename_with_title) {
+						global $merge_filename_with_title, $lang, $view_title_field;
+						if($merge_filename_with_title && $read_from[$i]['ref'] == $view_title_field) {
 
 							$merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
 							$merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
@@ -672,8 +672,8 @@ function extract_exif_comment($ref,$extension="")
 					} else {
 
 						// Process if no embedded title is found:
-						global $merge_filename_with_title, $lang;
-						if($merge_filename_with_title && $read_from[$i]['ref'] == 8) {
+						global $merge_filename_with_title, $lang, $view_title_field;
+						if($merge_filename_with_title && $read_from[$i]['ref'] == $view_title_field) {
 
 							$merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
 							$merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
