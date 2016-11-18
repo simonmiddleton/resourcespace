@@ -26,7 +26,7 @@ include_once 'file_functions.php';
 
 
 # Switch on output buffering.
-ob_start(null,4096);
+ob_start(null,$php_ob_buffer_size);
 
 $pagetime_start = microtime();
 $pagetime_start = explode(' ', $pagetime_start);
@@ -368,12 +368,33 @@ $hook_cache = array();
 $hook_cache_hits = 0;
 
 # Load the sysvars into an array. Useful so we can check migration status etc.
+// Note: We should really guard against this by using set_sysvar() and get_sysvar() instead.
+
 $systemvars = sql_query("SELECT name, value FROM sysvars");
 $sysvars = array();
 foreach($systemvars as $systemvar)
-	{
-	$sysvars[$systemvar["name"]] = $systemvar["value"];
-	}
+    {
+    $sysvars[$systemvar["name"]] = $systemvar["value"];
+    }
+
+// set a system variable (which is stored in the sysvars table) - set to null to remove
+function set_sysvar($name,$value=null)
+    {
+    $name=escape_check($name);
+    $value=escape_check($value);
+    sql_query("DELETE FROM `sysvars` WHERE `name`='{$name}'");
+    if($value!=null)
+        {
+        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$value}')");
+        }
+    }
+
+// get a system variable (which is received from the sysvars table)
+function get_sysvar($name)
+    {
+    $name=escape_check($name);
+    return sql_value("SELECT `value` FROM `sysvars` WHERE `name`='{$name}'",false);
+    }
 
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	{
@@ -1923,3 +1944,5 @@ function validate_user($user_select_sql, $getuserdata=true)
 		}
 	return false;
 	}
+
+include_once __DIR__ . '/../upgrade/upgrade.php';

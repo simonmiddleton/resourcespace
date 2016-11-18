@@ -234,6 +234,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #SearchBox {padding:0;float: right;width: 282px;margin: 0px 25px 0px 0px;display:inline;text-align:left;}
 #SearchBoxPanel {width: 280px;}
 #ResearchBoxPanel {width: 280px;margin-top: 15px;}
+#SearchBox .PopupCategoryTree { display: none; position: fixed; text-align: left; z-index: 999; }
 
 /*Resource Panel layout*/
 .ResourcePanelShell {padding:0;float: left;margin: 0px 15px 10px 0px;width: 174px;}
@@ -1256,5 +1257,6 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
     
 .CollectionPanelTools {visibility:hidden;}
 .CollectionPanelShell:hover .CollectionPanelTools {visibility:visible;}
+#FilterNodeOptions .FilterItemContainer > label { width: 150px; }.tag-editor li { padding: initial; }
 
 .ResponsiveViewFullSite { display: none; }

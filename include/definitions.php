@@ -1,24 +1,49 @@
 <?php
 
-// ------------------------- FIELD TYPES -------------------------
-$field_types=array(
-		0=>"fieldtype-text_box_single_line",
-		1=>"fieldtype-text_box_multi-line",
-		2=>"fieldtype-check_box_list",
-		3=>"fieldtype-drop_down_list",
-		4=>"fieldtype-date_and_optional_time",
-		5=>"fieldtype-text_box_large_multi-line",
-		6=>"fieldtype-expiry_date",
-		7=>"fieldtype-category_tree",
-		8=>"fieldtype-text_box_formatted_and_ckeditor",
-		9=>"fieldtype-dynamic_keywords_list",
-		10=>"fieldtype-date",
-		11=>"fieldtype-dynamic_tree_in_development",
-		12=>"fieldtype-radio_buttons",
-		13=>"fieldtype-warning_message"
-		);
+// current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
+define('SYSTEM_UPGRADE_LEVEL',2);
 
-$FIXED_LIST_FIELD_TYPES = array(2,3,7,9,12);
+// ------------------------- FIELD TYPES -------------------------
+
+define ('FIELD_TYPE_TEXT_BOX_SINGLE_LINE',              0);
+define ('FIELD_TYPE_TEXT_BOX_MULTI_LINE',               1);
+define ('FIELD_TYPE_CHECK_BOX_LIST',                    2);
+define ('FIELD_TYPE_DROP_DOWN_LIST',                    3);
+define ('FIELD_TYPE_DATE_AND_OPTIONAL_TIME',            4);
+define ('FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE',         5);
+define ('FIELD_TYPE_EXPIRY_DATE',                       6);
+define ('FIELD_TYPE_CATEGORY_TREE',                     7);
+define ('FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR',   8);
+define ('FIELD_TYPE_DYNAMIC_KEYWORDS_LIST',             9);
+define ('FIELD_TYPE_DATE',                             10);
+define ('FIELD_TYPE_DYNAMIC_TREE_IN_DEVELOPMENT',      11);
+define ('FIELD_TYPE_RADIO_BUTTONS',                    12);
+define ('FIELD_TYPE_WARNING_MESSAGE',                  13);
+
+$field_types = array(
+    FIELD_TYPE_TEXT_BOX_SINGLE_LINE             =>"fieldtype-text_box_single_line",
+    FIELD_TYPE_TEXT_BOX_MULTI_LINE              =>"fieldtype-text_box_multi-line",
+    FIELD_TYPE_CHECK_BOX_LIST                   =>"fieldtype-check_box_list",
+    FIELD_TYPE_DROP_DOWN_LIST                   =>"fieldtype-drop_down_list",
+    FIELD_TYPE_DATE_AND_OPTIONAL_TIME           =>"fieldtype-date_and_optional_time",
+    FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE        =>"fieldtype-text_box_large_multi-line",
+    FIELD_TYPE_EXPIRY_DATE                      =>"fieldtype-expiry_date",
+    FIELD_TYPE_CATEGORY_TREE                    =>"fieldtype-category_tree",
+    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR  =>"fieldtype-text_box_formatted_and_ckeditor",
+    FIELD_TYPE_DYNAMIC_KEYWORDS_LIST            =>"fieldtype-dynamic_keywords_list",
+    FIELD_TYPE_DATE                             =>"fieldtype-date",
+    FIELD_TYPE_DYNAMIC_TREE_IN_DEVELOPMENT      =>"fieldtype-dynamic_tree_in_development",
+    FIELD_TYPE_RADIO_BUTTONS                    =>"fieldtype-radio_buttons",
+    FIELD_TYPE_WARNING_MESSAGE                  =>"fieldtype-warning_message"
+);
+
+$FIXED_LIST_FIELD_TYPES = array(
+    FIELD_TYPE_CHECK_BOX_LIST,
+    FIELD_TYPE_DROP_DOWN_LIST,
+    FIELD_TYPE_CATEGORY_TREE,
+    FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,
+    FIELD_TYPE_RADIO_BUTTONS
+);
 
 // ------------------------- LOG_CODE_ -------------------------
 
@@ -33,6 +58,7 @@ define ('LOG_CODE_EDITED',				'e');
 define ('LOG_CODE_EMAILED',				'E');
 define ('LOG_CODE_LOGGED_IN',			'l');
 define ('LOG_CODE_MULTI_EDITED',		'm');
+define ('LOG_CODE_NODE_REVERT',			'N');
 define ('LOG_CODE_PAYED',				'p');
 define ('LOG_CODE_REVERTED_REUPLOADED',	'r');
 define ('LOG_CODE_REORDERED',			'R');
@@ -55,21 +81,6 @@ function LOG_CODE_get_all()
 	{
 	return definitions_get_by_prefix('LOG_CODE');
 	}
-
-// used internally
-function definitions_get_by_prefix($prefix)
-	{
-	$return_definitions = array();
-	foreach (get_defined_constants() as $key=>$value)
-		{
-		if (preg_match('/^' . $prefix . '/', $key))
-			{
-			$return_definitions[$key]=$value;
-			}
-		}
-	return $return_definitions;
-	}
-
 
 // ------------------------- SYSTEM NOTIFICATION TYPES -------------------------
 define ('MANAGED_REQUEST',		1);
@@ -98,10 +109,30 @@ define ('STATUS_COMPLETE',				2);
 define ('STATUS_ERROR',					5);
 
 // -------------------- General definitions --------------------
-
 define ('RESOURCE_LOG_APPEND_PREVIOUS', -1);    // used to specify that we want to append the previous resource_log entry
 
 // Global definition of link bullet carets - easy to change link caret style in the future.
 define('LINK_CARET','<i aria-hidden="true" class="fa fa-caret-right"></i>&nbsp;'); 
 define('LINK_CARET_BACK','<i aria-hidden="true" class="fa fa-caret-left"></i>&nbsp;');
+define ('NODE_TOKEN_PREFIX','@@');
+define ('NODE_TOKEN_OR','|');
+define ('NODE_TOKEN_NOT','!');
 
+// Simple Search pills' delimiter
+define ('TAG_EDITOR_DELIMITER', '¬');
+// --------------------------------------------------------------------------------
+
+// used internally within this file
+
+function definitions_get_by_prefix($prefix)
+    {
+    $return_definitions = array();
+    foreach (get_defined_constants() as $key=>$value)
+        {
+        if (preg_match('/^' . $prefix . '/', $key))
+            {
+            $return_definitions[$key]=$value;
+            }
+        }
+    return $return_definitions;
+    }

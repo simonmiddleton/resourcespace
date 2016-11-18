@@ -55,7 +55,7 @@ foreach ($resources as $resource)
 	$keyfield=$keyfields[0];
 
 	# Search for a matching resource
-    $ref = sql_value("SELECT resource `value` FROM resource_data WHERE resource_type_field = '" . escape_check($keyfield['attributes']['REF']) . "' AND value = '" . escape_check(trim($keyfield['value'])) . "' AND resource > 0", 0);
+    $ref = get_resources_by_resource_data_value(escape_check($keyfield['attributes']['REF']), escape_check(trim($keyfield['value'])));
 	if ($ref==0)
 		{
 		# No matching resource found. Insert a new resource.

@@ -36,7 +36,19 @@ if(is_numeric($start))
 		}
     }
 	
+$start = getvalescaped('start', '');
+if(is_numeric($start))
+    {
+    $sql= "where r.ref>=" . $start;
+	$end = getvalescaped('end', '');
+	if(is_numeric($end))
+		{
+		$sql.= " and r.ref<=" . $end;
+		}
+    }
+	
 $resources = sql_query("SELECT r.ref, u.username, u.fullname FROM resource AS r LEFT OUTER JOIN user AS u ON r.created_by = u.ref {$sql} ORDER BY ref");
+
 
 $time_start = microtime(true);
 
@@ -50,9 +62,22 @@ for($n = 0; $n < count($resources); $n++)
 
     echo "Done {$ref} ({$n}/" . count($resources) . ") - $words words<br />\n";
 
+
     @flush();
     @ob_flush();
     }
+
+    
+// Reindex nodes
+$nodes=sql_query("select n.ref, n.name, n.resource_type_field, f.partial_index from node n join resource_type_field f on n.resource_type_field=f.ref order by resource_type_field;");
+$count=count($nodes);
+for($n=0;$n<$count;$n++)
+		{
+		// Populate node_keyword table
+        remove_all_node_keyword_mappings($nodes[$n]['ref']);
+        add_node_keyword_mappings($nodes[$n], $nodes[$n]["partial_index"]);
+        }
+
 
 $time_end = microtime(true);
 $time     = $time_end - $time_start;

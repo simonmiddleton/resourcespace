@@ -650,7 +650,7 @@ function save_collection($ref)
 				name='" . rawurldecode(getvalescaped("name","")) . "',
 				".hook('savecollectionadditionalfields')."
 				keywords='" . getvalescaped("keywords","") . "',
-				public='" . $public . "',";
+				public=" . ($public==''?"null":"'" . $public . "'") . ",";
 		
 		for($n=1;$n<=$theme_category_levels;$n++){
 			if ($n==1){$themeindex="";} else {$themeindex=$n;}

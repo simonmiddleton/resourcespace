@@ -42,7 +42,63 @@ if ($k!="" && !$internal_share_access) {$use_checkboxes_for_selection=false;}
 $search = getvalescaped('search', '');
 $modal  = ('true' == getval('modal', ''));
 
+if(false !== strpos($search, TAG_EDITOR_DELIMITER))
+	{
+	$search = str_replace(TAG_EDITOR_DELIMITER, ' ', $search);
+	}
+
 hook("moresearchcriteria");
+
+if($simple_search_pills_view)
+    {
+    // When searching for specific field options we convert search into nodeID search format (@@nodeID)
+    // This is done because if we also have the field displayed and we search for country:France this needs to 
+    // convert to @@74 in order for the field to have this option selected
+    $keywords = split_keywords($search, false, false, false, false, true);
+
+    foreach($keywords as $keyword)
+        {
+        if('' == trim($keyword))
+            {
+            continue;
+            }
+
+        if(false === strpos($search, ':'))
+            {
+            continue;
+            }
+
+        $specific_field_search = explode(':', $keyword);
+
+        if(2 !== count($specific_field_search))
+            {
+            continue;
+            }
+
+        $field_shortname = trim($specific_field_search[0]);
+
+        if('' == $field_shortname)
+            {
+            continue;
+            }
+
+        $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
+
+        if(0 == $resource_type_field)
+            {
+            continue;
+            }
+
+        $nodes = get_nodes($resource_type_field, null, true);
+
+        $node_found = get_node_by_name($nodes, $specific_field_search[1]);
+
+        if(0 < count($node_found))
+            {
+            $search = str_replace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
+            }
+        }
+    }
 
 # create a display_fields array with information needed for detailed field highlighting
 $df=array();
@@ -119,6 +175,8 @@ foreach ($sort_fields as $sort_field)
 	}
 $n=0;	
 
+$saved_search=$search;
+
 # Append extra search parameters from the quick search.
 if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the search query is numeric, as users typically expect numeric searches to return the resource with that ID and ignore country/date filters.
 	{
@@ -127,10 +185,11 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 
 	foreach (array_merge($_GET, $_POST) as $key=>$value)
 		{
-		if (is_string($value))
+		if(is_string($value))
 		  {
-		  $value=trim($value);
+		  $value = trim($value);
 		  }
+
 		if ($value!="" && substr($key,0,6)=="field_")
 			{
 			if ((strpos($key,"_year")!==false)||(strpos($key,"_month")!==false)||(strpos($key,"_day")!==false))
@@ -177,8 +236,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				if (substr($value,0,1)==";") {$value=substr($value,1);}
 				
 				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,10) . ":" . $value;
-				}		
-
+				}
 			else
 				{
 				# Standard field
@@ -190,6 +248,38 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 					}
 				}
 			}
+        // Nodes can be searched directly when displayed on simple search bar
+		// Note: intially they come grouped by field as we need to know whether if
+		// there is a OR case involved (ie. @@101@@102)
+        else if('' != $value && substr($key, 0, 14) == 'nodes_searched')
+            {
+            $node_ref = '';
+
+            foreach($value as $searched_field_nodes)
+                {
+                // Fields that are displayed as a dropdown will only pass one node ID
+                if(!is_array($searched_field_nodes) && '' == $searched_field_nodes)
+                    {
+                    continue;
+                    }
+                else if(!is_array($searched_field_nodes))
+                    {
+                    $node_ref .= ', ' . NODE_TOKEN_PREFIX . escape_check($searched_field_nodes);
+
+                    continue;
+                    }
+
+                // For fields that can pass multiple node IDs at a time
+                $node_ref .= ', ';
+
+                foreach($searched_field_nodes as $searched_node_ref)
+                    {
+                    $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
+                    }
+                }
+
+            $search = ('' == $search ? '' : join(', ', split_keywords($search,false,false,false,false,true))) . $node_ref;
+            }
 		}
 
 	$year=getvalescaped("year","");
@@ -208,16 +298,15 @@ if (is_numeric(trim(getvalescaped("searchresourceid","")))){
 	
 hook("searchstringprocessing");
 
-
 # Fetch and set the values
 //setcookie("search",$search); # store the search in a cookie if not a special search
 $offset=getvalescaped("offset",0);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset);}
 if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 
 // Is this a collection search?
-$collectionsearch = substr($search,0,11)=="!collection"; // We want the default collection order to be applied
+$collectionsearch = strpos($search,"!collection")!==false; // We want the default collection order to be applied
 
-$order_by=getvalescaped("order_by","");if (strpos($search,"!")===false || substr($search,0,11)=="!properties") {rs_setcookie('saved_order_by', $order_by);}
+$order_by=getvalescaped("order_by","");if (strpos($search,"!")===false || strpos($search,"!properties")!==false) {rs_setcookie('saved_order_by', $order_by);}
 if ($order_by=="")
 	{
 	if ($collectionsearch) // We want the default collection order to be applied
@@ -352,9 +441,13 @@ if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties" && !$spe
 
 # Do the search!
 $search=refine_searchstring($search);
-if (strpos($search,"!")===false || substr($search,0,11)=="!properties") {rs_setcookie('search', $search);}
-hook('searchaftersearchcookie');
 
+if(false === strpos($search, '!') || '!properties' == substr($search, 0, 11))
+    {
+    rs_setcookie('search', $search);
+    }
+
+hook('searchaftersearchcookie');
 if ($search_includes_resources || substr($search,0,1)==="!")
 	{
 	$search_includes_resources=true; // Always enable resource display for special searches.

@@ -270,9 +270,21 @@ function check_view_display_condition($fields,$n)
 function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	{
 		
-	global $ref, $show_expiry_warning, $access, $search, $extra, $lang;
+	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES;
 	$value=$field["value"];
-			
+
+    if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        $value = array();
+
+        foreach(get_resource_nodes($ref, $field['ref'], true) as $node)
+            {
+            $value[] = i18n_get_translated($node['name']);
+            }
+
+        $value = implode(', ', $value);
+        }
+
 	$modified_field=hook("beforeviewdisplayfielddata_processing","",array($field));
 	if($modified_field){
 		$field=$modified_field;
@@ -543,8 +555,12 @@ if (!hook("replacetitleprefix","",array($resource["archive"]))) { switch ($resou
 	
 	
 	
-if (!hook("replaceviewtitle")){ echo highlightkeywords(htmlspecialchars(tidylist(i18n_get_translated(get_data_by_field($resource['ref'],$title_field)))),$search); } /* end hook replaceviewtitle */  
-?>&nbsp;</h1>
+
+if(!hook('replaceviewtitle'))
+    {
+    echo highlightkeywords(htmlspecialchars(i18n_get_translated(get_data_by_field($resource['ref'], $title_field))), $search);
+    } /* end hook replaceviewtitle */
+    ?>&nbsp;</h1>
 <?php } /* End of renderinnerresourceheader hook */ ?>
 </div>
 

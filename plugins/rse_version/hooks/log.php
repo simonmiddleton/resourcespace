@@ -26,7 +26,7 @@ function HookRse_versionLogLog_extra_columns_row()
 function HookRse_versionLogGet_resource_log_extra_fields()
     {
     # Extend get_resource_log so that the state of the previous value is fetched also.
-    return ",((r.previous_value is not null and (r.type='e' or r.type='m')) or (r.previous_file_alt_ref is not null and r.type='u')) revert_enabled";
+    return ",((r.previous_value is not null and (r.type='e' or r.type='m' or r.type='N')) or (r.previous_file_alt_ref is not null and r.type='u')) revert_enabled";
     }
 
 function HookRse_versionLogLog_diff_td_extra($ref)

@@ -67,10 +67,9 @@ if ($include_rs_header_info)
 <link rel="icon" type="image/png" href="<?php echo $baseurl."/".$header_favicon?>" />
 
 <!-- Load jQuery and jQueryUI -->
-<script src="<?php echo $baseurl?>/lib/js/jquery-1.7.2.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
-
+<script src="<?php echo $baseurl; ?>/lib/js/jquery-1.12.4.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 <script src="<?php echo $baseurl?>/lib/js/jquery-ui-1.10.2.custom.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
-<script src="<?php echo $baseurl?>/lib/js/jquery.layout.min.js"></script>
+<script src="<?php echo $baseurl; ?>/lib/js/jquery.layout.js"></script>
 <script src="<?php echo $baseurl?>/lib/js/easyTooltip.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <link type="text/css" href="<?php echo $baseurl?>/css/ui-lightness/jquery-ui-1.8.20.custom.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
 <script src="<?php echo $baseurl?>/lib/js/jquery.ui.touch-punch.min.js"></script>
@@ -104,8 +103,6 @@ if ($contact_sheet)
 <script type="text/javascript">
 	ajaxLoadingTimer=<?php echo $ajax_loading_timer;?>;
 </script>
-
-<script src="<?php echo $baseurl?>/lib/js/category_tree.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script>
 <?php if (!$disable_geocoding) { ?>
 <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
@@ -132,6 +129,15 @@ if($videojs && ($pagename=='search' && $keyboard_navigation_video_search) || ($p
 	<script type="text/javascript" src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?<?php echo $css_reload_key?>"></script>
     <?php
     }
+
+if($simple_search_pills_view)
+    {
+    ?>
+    <script src="<?php echo $baseurl_short; ?>lib/jquery_tag_editor/jquery.caret.min.js"></script>
+    <script src="<?php echo $baseurl_short; ?>lib/jquery_tag_editor/jquery.tag-editor.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jquery_tag_editor/jquery.tag-editor.css" />
+    <?php
+    }
 ?>
 
 <!-- FLOT for graphs -->
@@ -140,18 +146,22 @@ if($videojs && ($pagename=='search' && $keyboard_navigation_video_search) || ($p
 <script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.pie.js"></script>
 <script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.tooltip.min.js"></script>
 
+<!-- jsTree -->
+<link rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jstree/themes/default/style.min.css">
+<script src="<?php echo $baseurl_short; ?>lib/jstree/jstree.min.js"></script>
+<script src="<?php echo $baseurl_short; ?>lib/js/category_tree.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+
 <!-- Chosen support -->
 <?php 
 if ($chosen_dropdowns) 
-	{ 
-	?>
-	<script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
-	<?php
-	}
+        { 
+        ?>
+        <script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
+        <?php
+        }
 ?>
 
-    
 <script type="text/javascript">
 var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
@@ -269,9 +279,9 @@ if(isset($usergroup))
 $linkUrl=isset($header_link_url) ? $header_link_url : $homepage_url;
 ?>
 <div id="Header" class="<?php
-	echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
-	echo ((isset($slimheader_fixed_position) && $slimheader_fixed_position) ? ' SlimHeaderFixedPosition' : '');
-	echo " " . $header_size;
+        echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
+        echo ((isset($slimheader_fixed_position) && $slimheader_fixed_position) ? ' SlimHeaderFixedPosition' : '');
+        echo " " . $header_size;
 ?>"<?php
 if (isset($header_colour_style_override) && $header_colour_style_override!='') { ?> style="background: <?php echo $header_colour_style_override; ?>;"<?php } ?>>
 
@@ -282,18 +292,18 @@ if($responsive_ui)
     <div id="HeaderResponsive">
     <?php
     }
-
+	
 hook('responsiveheader');
-
+ 
 if($header_text_title) 
-	{?>
-	<div id="TextHeader"><?php if ($k=="" || $internal_share_access){?><a href="<?php echo $homepage_url?>"  onClick="return CentralSpaceLoad(this,true);"><?php } ?><?php echo $applicationname;?><?php if ($k=="" || $internal_share_access){?></a><?php } ?></div>
-	<?php if ($applicationdesc!="")
-		{?>
-		<div id="TextDesc"><?php echo i18n_get_translated($applicationdesc);?></div>
-		<?php 
-		}
-	}
+    {?>
+    <div id="TextHeader"><?php if ($k=="" || $internal_share_access){?><a href="<?php echo $homepage_url?>"  onClick="return CentralSpaceLoad(this,true);"><?php } ?><?php echo $applicationname;?><?php if ($k=="" || $internal_share_access){?></a><?php } ?></div>
+    <?php if ($applicationdesc!="")
+            {?>
+            <div id="TextDesc"><?php echo i18n_get_translated($applicationdesc);?></div>
+            <?php 
+            }
+    }
 else
 	{
 	if($linkedheaderimgsrc !="") 
@@ -324,15 +334,15 @@ else
 		$header_img_src = $baseurl.'/gfx/titles/title.svg';
 		}
 	if($header_link && ($k=="" || $internal_share_access))
-	{?>
-	<a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></a>
-	<?php
-	}
-else
-	{?>
-	<div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
-	<?php
-	}
+        {?>
+        <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></a>
+        <?php
+        }
+    else
+        {?>
+        <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
+        <?php
+        }
 	}
 
 // Responsive

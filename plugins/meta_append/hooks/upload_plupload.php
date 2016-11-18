@@ -19,13 +19,13 @@ function HookMeta_appendAllAfterpluploadfile()
 	
 	if ($found_meta_append_field && $found_meta_append_field==$meta_append_field_ref && $ref > 0)		// make sure that the passed value is legal and ref looks legal
 		{
-		$result = sql_query("select value from resource_data where resource={$ref} and resource_type_field={$meta_append_field_ref}");
+		$result = get_data_by_field($ref, $meta_append_field_ref);
 		
-		if (!isset($result[0]['value']))
+		if ('' != trim($result))
 			{
 			return;
 			}				
-		$value_string = $result[0]['value'];
+		$value_string = $result;
 		
 		$result = sql_query("select ref from resource where date(creation_date)=curdate() and created_by={$userref}");		
 		if (!isset($result[0]))

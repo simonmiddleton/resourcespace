@@ -58,8 +58,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
 				</div><!-- End of FeaturedSimpleTile_<?php echo $getthemes[$m]["ref"]; ?>-->		
 					
 			<?php
-			}
-		
+			}		
 		
 		}
 	else

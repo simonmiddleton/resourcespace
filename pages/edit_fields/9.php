@@ -1,92 +1,142 @@
-<?php /* -------- Dynamic Keywords List ----------- */ 
+<?php
+/* -------- Dynamic Keywords List ----------- */ 
+global $baseurl, $pagename, $edit_autosave;
 
-global $baseurl,$pagename,$edit_autosave;
+if(!isset($selected_nodes))
+    {
+    $selected_nodes = array();
+
+    if(isset($searched_nodes) && is_array($searched_nodes))
+        {
+        $selected_nodes = $searched_nodes;
+        }
+    }
 
 // Decide when the user can add new keywords to a dynamic keywords list
-$readonly=($pagename=="search_advanced");
+$readonly = false;
+if('search_advanced' == $pagename || checkperm('bdk' . $field['ref']))
+    {
+    $readonly = true;
+    }
 
-if(checkperm('bdk' . $field['ref'])) {
-	$readonly = true;
-}
-
-// In case we let new lines in our value, make sure to clean it for Dynamic keywords
-if(strpos($value, "\r\n") !== false)
-	{
-	$value = str_replace("\r\n", ' ', $value);
-	}
+$is_search                        = (isset($is_search) ? $is_search : false);
+$hidden_input_elements_name       = ($is_search ? 'nodes_searched' : 'nodes');
+$js_keywords_suffix               = "{$hidden_input_elements_name}_{$field['ref']}";
+$add_searched_nodes_function_call = '';
 ?>
-
 <div class="dynamickeywords ui-front">
-<input type="text" <?php if ($pagename=="search_advanced") { ?> class="SearchWidth" <?php } else {?>  class="stdwidth" <?php } ?> value="<?php echo $lang["starttypingkeyword"]?>" onFocus="<?php if ($pagename=="edit"){ echo "ShowHelp(" . $field["ref"] . ");";} ?>if (this.value=='<?php echo $lang["starttypingkeyword"]?>') {this.value='';}" onBlur="<?php if ($pagename=="edit"){ echo "HideHelp(" . $field["ref"] . ");";} ?>if (this.value=='') {this.value='<?php echo $lang["starttypingkeyword"]?>'}; if(typeof(UpdateResultCount) == 'function' && this.value!='' && this.value!='<?php echo $lang["starttypingkeyword"]?>'){this.value='<?php echo $lang["starttypingkeyword"]?>';}" name="<?php echo $name ?>_selector" id="<?php echo $name ?>_selector" />
+    <input id="<?php echo $name; ?>_selector" type="text" <?php if ($pagename=="search_advanced") { ?> class="SearchWidth" <?php } else {?>  class="stdwidth" <?php } ?>
+           name="<?php echo $name; ?>_selector"
+           value="<?php echo $lang['starttypingkeyword']; ?>"
+           onFocus="
+                <?php
+                if($pagename=="edit")
+                    {
+                    echo "ShowHelp(" . $field["ref"] . ");";
+                    }
+                    ?>
 
-<input type='hidden' name='<?php echo $name ?>' id='<?php echo $name ?>' value='<?php echo htmlspecialchars($value) ?>'/>
+                if(this.value=='<?php echo $lang["starttypingkeyword"]; ?>')
+                    {
+                    this.value='';
+                    }
+            "
+           onBlur="
+                <?php
+                if($pagename=="edit")
+                    {
+                    echo "HideHelp(" . $field["ref"] . ");";
+                    }
+                    ?>
 
+                if(this.value=='')
+                    {
+                    this.value='<?php echo $lang["starttypingkeyword"]; ?>'
+                    };
 
-<div id="<?php echo $name?>_selected" class="keywordsselected"></div>
+                if(typeof(UpdateResultCount) == 'function' && this.value!='' && this.value!='<?php echo $lang["starttypingkeyword"]; ?>')
+                    {
+                    this.value='<?php echo $lang["starttypingkeyword"]; ?>';
+                    }" />
+<?php
+foreach($field['nodes'] as $node)
+    {
+    // Deal with previously searched nodes
+    if(!in_array($node['ref'], $selected_nodes))
+        {
+        continue;
+        }
+
+    $i18n_node_name = i18n_get_translated($node['name']);
+
+    $add_searched_nodes_function_call .= "addKeyword_{$js_keywords_suffix}('{$node['ref']}', '{$i18n_node_name}');";
+    }
+    ?>
+    <div id="<?php echo $name; ?>_selected" class="keywordsselected"></div>
 </div>
-<div class="clearerleft"> </div>
+<div class="clearerleft"></div>
+<script>
+// Associative array with index being the node ID
+// Example: Keywords_nodes_3 = [232: United Kingdom, 233: United States]
+// or Keywords_nodes_searched_3 = [232: United Kingdom, 233: United States]
+var Keywords_<?php echo $js_keywords_suffix; ?> = [];
 
-<script type="text/javascript">
 
+function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
+    {
+    var html                  = '';
+    var hidden_input_elements = '';
 
-	var Keywords_<?php echo $name ?>= new Array();
-	var KeywordCounter_<?php echo $name ?>=0;
-	var KeywordsTranslated_<?php echo $name ?>= new Array();
+    Keywords_<?php echo $js_keywords_suffix; ?>.forEach(function (item, index)
+        {
+        hidden_input_elements += '<input id="<?php echo $hidden_input_elements_name; ?>_' + index + '" type="hidden" name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]" value="' + index + '">';
 
-	function selectKeyword_<?php echo $name ?>(event, ui)
-		{
-		// var keyword=document.getElementById("<?php echo $name ?>_selector").value;
-		var keyword=ui.item.value;
+        html += '<a href="#"';
+        html += ' onClick="removeKeyword_<?php echo $js_keywords_suffix; ?>(\'' + escape(index) + '\', true); return false;"';
+        html += '>[ x ]</a>&nbsp;' + Keywords_<?php echo $js_keywords_suffix; ?>[index] + '<br/>';
+        });
 
-		if (keyword.substring(0,<?php echo mb_strlen($lang["createnewentryfor"], 'UTF-8') ?>)=="<?php echo $lang["createnewentryfor"] ?>")
-			{
-			keyword=keyword.substring(<?php echo mb_strlen($lang["createnewentryfor"], 'UTF-8')+1 ?>);
+    // Update DOM with all our recent changes
+    var existing_hiddent_input_elements = document.getElementsByName('<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]');
+    while(existing_hiddent_input_elements[0])
+        {
+        existing_hiddent_input_elements[0].parentNode.removeChild(existing_hiddent_input_elements[0]);
+        }
+    document.getElementById('<?php echo $name; ?>_selected').insertAdjacentHTML('beforeBegin', hidden_input_elements);
+    document.getElementById('<?php echo $name; ?>_selected').innerHTML = html;
 
-			// Add the word.
-			args = {field: '<?php echo $field["ref"] ?>', keyword: keyword};
-			jQuery.ajax({
-				type: "POST",
-				url: '<?php echo $baseurl?>/pages/edit_fields/9_ajax/add_keyword.php',
-				data: args,
-				success: function(result) {
-					addKeyword_<?php echo $name ?>(keyword);
-					updateSelectedKeywords_<?php echo $name ?>(true);
-					document.getElementById('<?php echo $name ?>_selector').value='';
-					}
-				});
+    // Update the result counter, if the function is available (e.g. on Advanced Search).
+    if(typeof(UpdateResultCount) == 'function')
+        {
+        UpdateResultCount();
+        }
 
-			}
-		else if (keyword.substring(0,<?php echo mb_strlen($lang["noentryexists"], 'UTF-8') ?>)=="<?php echo $lang["noentryexists"] ?>"){
-			document.getElementById('<?php echo $name ?>_selector').value='';
-		}
-		else
-			{
-			addKeyword_<?php echo $name ?>(keyword);
-			updateSelectedKeywords_<?php echo $name ?>(true);
-			document.getElementById('<?php echo $name ?>_selector').value='';
-			}
-		return false;
-		}
+    <?php
+    if($edit_autosave)
+        {
+        ?>
+        if(user_action)
+            {
+            AutoSave('<?php echo $field["ref"]; ?>');
+            }
+            <?php
+        }
+        ?>
 
-	function addKeyword_<?php echo $name ?>(keyword)
-		{
-		removeKeyword_<?php echo $name ?>(keyword,false); // remove any existing match in the list.
-		Keywords_<?php echo $name ?>[KeywordCounter_<?php echo $name ?>]=keyword;
-		KeywordCounter_<?php echo $name ?>++;
-		}
+    // Trigger an event so we can chain actions once we've changed a dynamic keyword
+    document.getElementsByName('<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]').forEach(function (item)
+        {
+        document.getElementById('CentralSpace')
+            .dispatchEvent(new CustomEvent('dynamickKeywordChanged', {
+                detail: {
+                    node: item.value
+                },
+                bubbles: true,
+                cancelable: false
+            }));
+        });
+    }
 
-	function removeKeyword_<?php echo $name ?>(keyword,user_action)
-		{
-		var replacement=Keywords_<?php echo $name ?>;
-		counter=0;
-		for (var n=0;n<KeywordCounter_<?php echo $name ?>;n++)
-			{
-			if (keyword!=escape(Keywords_<?php echo $name ?>[n])) {replacement[counter]=Keywords_<?php echo $name ?>[n];counter++;}
-			}
-		Keywords_<?php echo $name ?> = replacement;
-		KeywordCounter_<?php echo $name ?> =counter;
-		updateSelectedKeywords_<?php echo $name ?>(user_action);
-		}
 
 	function updateSelectedKeywords_<?php echo $name ?>(user_action)
 		{
@@ -119,66 +169,118 @@ if(strpos($value, "\r\n") !== false)
 			}
 		}
 
-	<?php 
-	# Load translations - store original untranslated strings for each keyword, as this is what is actually set.
-	for ($m=0;$m<count($field['node_options']);$m++)
-		{
-		$trans=i18n_get_translated($field['node_options'][$m]);
-		
-		$trans=escape_check($trans);
-		if ($trans!="" && $trans!=$field['node_options'][$m]) # Only add if actually different (i.e., an i18n string)
-			{
-			?>
-			KeywordsTranslated_<?php echo $name ?>['<?php echo $trans ?>']='<?php echo escape_check(addslashes($field['node_options'][$m])) ?>';
-			<?php
-			}
-		}
+function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
+    {
+    var old_keywords = Keywords_<?php echo $js_keywords_suffix; ?>;
 
-	$selected_values = array();
-    if('' === trim($value) && (isset($ref) && 0 < $ref))
+
+    Keywords_<?php echo $js_keywords_suffix; ?> = [];
+
+    old_keywords.forEach(function(item, index)
         {
-        $selected_values = explode(',', $field['value']);
+        if(index != node_id)
+            {
+            Keywords_<?php echo $js_keywords_suffix; ?>[index] = item;
+            }
+        });
+
+    updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action);
+
+    // Trigger an event so we can chain actions once we've changed a dynamic keyword
+    document.getElementById('CentralSpace')
+        .dispatchEvent(new CustomEvent('dynamickKeywordChanged', {
+            detail: {
+                node: node_id
+            },
+            bubbles: true,
+            cancelable: false
+        }));
+    }
+
+
+function addKeyword_<?php echo $js_keywords_suffix; ?>(node_id, keyword)
+    {
+    removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, false);
+
+    Keywords_<?php echo $js_keywords_suffix; ?>[node_id] = keyword;
+    }
+
+
+function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
+    {
+    var found_suggested = true;
+    var keyword         = ui.item.label;
+    var node_id         = ui.item.value;
+
+    if(keyword.substring(0, <?php echo mb_strlen($lang['createnewentryfor'], 'UTF-8'); ?>) == '<?php echo $lang["createnewentryfor"]; ?>')
+        {
+        keyword = keyword.substring(<?php echo mb_strlen($lang['createnewentryfor'], 'UTF-8') + 1; ?>);
+
+        // Add the word.
+        args = {
+            field: '<?php echo $field["ref"]; ?>',
+            keyword: keyword
+            };
+
+        jQuery.ajax({
+            type    : 'POST',
+            url     : '<?php echo $baseurl?>/pages/edit_fields/9_ajax/add_keyword.php',
+            data    : args,
+            success : function(result) {
+                if(typeof result.new_node_id === 'undefined')
+                    {
+                    styledalert('Error', 'Could not determine new node ID!');
+
+                    return false;
+                    }
+
+                node_id = result.new_node_id;
+                }
+            });
         }
-	else
-	    {
-	    $selected_values = explode(',', $value);
-	    }
-    $selected_values = trim_array($selected_values);
+    else if(keyword.substring(0, <?php echo mb_strlen($lang['noentryexists'], 'UTF-8') ?>) == '<?php echo $lang["noentryexists"]; ?>')
+        {
+        document.getElementById('<?php echo $name; ?>_selector').value = '';
 
-	# Select all selected options
-	for ($m=0;$m<count($field['node_options']);$m++)
-		{
-		$trans=i18n_get_translated($field['node_options'][$m]);
-			
-		if ($trans!="" && in_array(trim($field['node_options'][$m]),$selected_values))
-			{
-			?>
-			addKeyword_<?php echo $name ?>('<?php echo escape_check($trans) ?>');
-			<?php
-			}
-		}
-	?>
+        found_suggested = false;
+        }
 
-	jQuery('#<?php echo $name?>_selector').autocomplete( { source: "<?php echo $baseurl?>/pages/edit_fields/9_ajax/suggest_keywords.php?field=<?php echo $field["ref"] ?>&readonly=<?php echo $readonly ?>", 
-		select : selectKeyword_<?php echo $name ?>
-		});
+    if(found_suggested)
+        {
+        addKeyword_<?php echo $js_keywords_suffix; ?>(node_id, keyword);
 
-	// prevent return in autocomplete field from submitting entire form
-	// we want the user to explicitly choose what they want to do
-	jQuery('#<?php echo $name?>_selector').keydown(function(event){ 
-			var keyCode = event.keyCode ? event.keyCode : event.which;
-			if (keyCode == 13) {
-				event.stopPropagation();
-				event.preventDefault();
-				return false;
-			}
-		 });
+        updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(true);
+
+        document.getElementById('<?php echo $name; ?>_selector').value = '';
+        }
+
+    return false;
+    }
 
 
-	updateSelectedKeywords_<?php echo $name ?>(false);
+jQuery('#<?php echo $name; ?>_selector').autocomplete(
+    {
+    source : "<?php echo $baseurl; ?>/pages/edit_fields/9_ajax/suggest_keywords.php?field=<?php echo $field['ref']; ?>&readonly=<?php echo $readonly; ?>",
+    select : selectKeyword_<?php echo $js_keywords_suffix; ?>
+    });
 
-</script>
+// prevent return in autocomplete field from submitting entire form
+// we want the user to explicitly choose what they want to do
+jQuery('#<?php echo $name; ?>_selector').keydown(function(event)
+    {
+    var keyCode = event.keyCode ? event.keyCode : event.which;
+    if(keyCode == 13)
+        {
+        event.stopPropagation();
+        event.preventDefault();
+
+        return false;
+        }
+    });
+
 <?php
-/* include dirname(__FILE__) . "/../../include/user_select.php"; 
-*/
+echo $add_searched_nodes_function_call;
 ?>
+
+updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(false);
+</script>

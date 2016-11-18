@@ -265,8 +265,8 @@ $('#tabs ul li a').click(function(){
 });
 $('#configstoragelocations').each(function(){
 	if (this.checked != true){
-		$('#storageurl').attr("disabled",true);
-		$('#storagedir').attr("disabled",true);
+		$('#storageurl').prop("disabled",true);
+		$('#storagedir').prop("disabled",true);
 	}
 	else {
 		$('#remstorageoptions').show();
@@ -279,8 +279,8 @@ $('#configstoragelocations').click(function(){
 		$('#remstorageoptions').slideDown("slow");
 	}
 	else{
-		$('#storageurl').attr("disabled",true);
-		$('#storagedir').attr("disabled",true);
+		$('#storageurl').prop("disabled",true);
+		$('#storagedir').prop("disabled",true);
 		$('#remstorageoptions').slideUp("slow");
 	}
 });
@@ -824,6 +824,13 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)))
     $suppress_headers = true;
 	include_once '../include/db.php';
 	check_db_structs();
+
+    // set the current upgrade level to current one specified in version.php
+    if (get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL)===false)
+        {
+        include_once(__DIR__ . '/../include/version.php');
+        set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL,SYSTEM_UPGRADE_LEVEL);
+        }
 
 	if(!empty($structural_plugin) && !$develmode)
 		{

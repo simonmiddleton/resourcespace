@@ -690,10 +690,10 @@ function ajax_download()
 	ifrm.src = "<?php echo $baseurl_short?>pages/collection_download.php?submitted=true&"+jQuery('#myform').serialize();
 
 	// Disable form controls -- this needs to happen after serializing the form or else they are ignored
-	jQuery('#downloadsize').attr('disabled', 'disabled');
-	jQuery('#use_original').attr('disabled', 'disabled');
-	jQuery('#text').attr('disabled', 'disabled');
-	jQuery('#archivesettings').attr('disabled', 'disabled');
+	jQuery('#downloadsize').prop('disabled', true);
+	jQuery('#use_original').prop('disabled', true);
+	jQuery('#text').prop('disabled', true);
+	jQuery('#archivesettings').prop('disabled', true);
 
 	progress= jQuery("progress3").PeriodicalUpdater("<?php echo $baseurl_short?>pages/ajax/collection_download_progress.php?id=<?php echo urlencode($uniqid) ?>&user=<?php echo urlencode($userref) ?>", {
         method: 'post',          // method; get or post

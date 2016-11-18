@@ -599,7 +599,7 @@ if(!$validpage)
 				{ ?>
 				<script>
 					jQuery("input:radio[name='tile_audience']").change(function(){
-						if(jQuery(this).attr("checked") && jQuery(this).val()=='false') {
+						if(jQuery(this).prop("checked") && jQuery(this).val()=='false') {
 							jQuery("#all_userseditchange").show();
 						} else {
 							jQuery("#all_userseditchange").hide();
@@ -622,14 +622,14 @@ if(!$validpage)
 	</div>
     <script>
     jQuery(document).ready(function() {
-        if(jQuery('#dash_tile_audience_user_group').attr('checked'))
+        if(jQuery('#dash_tile_audience_user_group').prop('checked'))
             {
             jQuery('#specific_user_groups').show();
             }
     });
 
     jQuery('input:radio[name="tile_audience"]').change(function() {
-        if(jQuery(this).attr('checked') && jQuery(this).val() == 'specific_user_groups')
+        if(jQuery(this).prop('checked') && jQuery(this).val() == 'specific_user_groups')
             {
             jQuery('#specific_user_groups').show();
             }

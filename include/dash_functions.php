@@ -1385,7 +1385,7 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         {
         ?>
         jQuery(document).ready(function() {
-            if(jQuery('#tile_style_<?php echo $tile_style; ?>').attr('checked'))
+            if(jQuery('#tile_style_<?php echo $tile_style; ?>').prop('checked'))
                 {
                 jQuery('#tile_style_colour_chooser').show();
                 update_tile_preview_colour('<?php echo $tile_colour; ?>');
@@ -1393,7 +1393,7 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         });
 
         jQuery('input:radio[name="tlstyle"]').change(function() {
-            if(jQuery(this).attr('checked') && jQuery(this).val() == '<?php echo $tile_style; ?>')
+            if(jQuery(this).prop('checked') && jQuery(this).val() == '<?php echo $tile_style; ?>')
                 {
                 jQuery('#tile_style_colour_chooser').show();
                 }

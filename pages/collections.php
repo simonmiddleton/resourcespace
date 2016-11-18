@@ -406,7 +406,7 @@ if ($add!="")
 				<script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
 				}
 			else
-				{
+				{		
 				# Log this	
 				daily_stat("Add resource to collection",$add);
 			
@@ -616,11 +616,11 @@ if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 if(!hook("clearmaincheckboxesfromcollectionframe")){
 	if ($use_checkboxes_for_selection ){?>
 	
-	<script type="text/javascript">
+	<script>
 	var checkboxes=jQuery('input.checkselect');
 	//clear all
 	checkboxes.each(function(box){
-		jQuery(checkboxes[box]).attr('checked',false);
+		jQuery(checkboxes[box]).prop('checked',false);
 		jQuery(checkboxes[box]).change();
 	});
 	</script>
@@ -630,14 +630,14 @@ if(!hook("clearmaincheckboxesfromcollectionframe")){
 if(!hook("updatemaincheckboxesfromcollectionframe")){
 		
 	if ($use_checkboxes_for_selection){?>
-	<script type="text/javascript"><?php
+	<script><?php
 	# update checkboxes in main window
 	for ($n=0;$n<count($result);$n++)			
 		{
 		$ref=$result[$n]["ref"];
 		?>
 		if (jQuery('#check<?php echo htmlspecialchars($ref) ?>')){
-		jQuery('#check<?php echo htmlspecialchars($ref) ?>').attr('checked',true);
+		jQuery('#check<?php echo htmlspecialchars($ref) ?>').prop('checked',true);
 		}
 			
 	<?php }

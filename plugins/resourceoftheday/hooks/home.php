@@ -29,10 +29,10 @@ function HookResourceofthedayHomeReplaceslideshow ()
 
 
     # Fetch title
-    $title = sql_value("select value from resource_data where resource='$rotd' and resource_type_field=$view_title_field","");
+    $title = get_data_by_field($rotd, $view_title_field);
 
 	# Fetch caption
-	$caption=sql_value("select value from resource_data where resource='$rotd' and resource_type_field=18","");
+	$caption = get_data_by_field($rotd, 18);
 
 	# Show resource!
 	$pre=get_resource_path($rotd,false,"pre",false,"jpg");

@@ -157,6 +157,8 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 $search=@$_COOKIE["search"];
 $keywords=explode(",",$search);
 $allwords="";$found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";
+$searched_nodes = array();
+
 foreach($advanced_search_properties as $advanced_search_property=>$code)
   {$$advanced_search_property="";}
  
@@ -173,6 +175,7 @@ else
 	{$restypes=get_search_default_restypes();}
   else
 		{$restypes=explode(",",getvalescaped("restypes",""));}
+
   for ($n=0;$n<count($keywords);$n++)
 	  {
 	  $keyword=trim($keywords[$n]);
@@ -207,7 +210,17 @@ else
 				$$fieldname=$propertyval;
 				}
 			  }
-		  } 
+		  }
+        // Nodes search
+        else if(strpos($keyword, NODE_TOKEN_PREFIX) !== false)
+            {
+            $nodes = resolve_nodes_from_string($keyword);
+
+            foreach($nodes as $node)
+                {
+                $searched_nodes[] = $node;
+                }
+            }
 	  else
 		  {
 		  if ($allwords=="") {$allwords=$keyword;} else {$allwords.=", " . $keyword;}
@@ -268,9 +281,9 @@ jQuery(document).ready(function()
 				jQuery('.ResTypeSection').hide();
 				
 				// Global has been checked, check all other checkboxes
-				jQuery('.SearchTypeItemCheckbox').attr('checked','checked');
+				jQuery('.SearchTypeItemCheckbox').prop('checked',true);
 				//Uncheck Collections
-				jQuery('#SearchCollectionsCheckbox').removeAttr('checked');	
+				jQuery('#SearchCollectionsCheckbox').prop('checked',false);	
 
 				jQuery('#AdvancedSearchTypeSpecificSectionGlobalHead').show();
 				if (getCookie('AdvancedSearchTypeSpecificSectionGlobal')!="collapsed"){jQuery("#AdvancedSearchTypeSpecificSectionGlobal").show();}				
@@ -283,8 +296,8 @@ jQuery(document).ready(function()
 
                 //Check Collections
 				selectedtypes=["Collections"];
-				jQuery('#SearchCollectionsCheckbox').attr('checked','checked');
-				jQuery('.tickboxcoll').attr('checked','checked');
+				jQuery('#SearchCollectionsCheckbox').prop('checked',true);
+				jQuery('.tickboxcoll').prop('checked',true);
 				
 
 				// Show collection search sections	
@@ -595,8 +608,7 @@ for ($n=0;$n<count($fields);$n++)
 	if (getval("resetform","")!="") {$value="";}
 	
 	# Render this field
-	render_search_field($fields[$n],$value,true,"SearchWidth");
-
+    render_search_field($fields[$n], $value, true, 'SearchWidth', false, array(), $searched_nodes);
 	}
 ?>
 </div>
@@ -664,12 +676,12 @@ if($advanced_search_contributed_by)
 function resetTickAllColl(){
 	var checkcount=0;
 	// set tickall to false, then check if it should be set to true.
-	jQuery('.rttickallcoll').attr('checked',false);
+	jQuery('.rttickallcoll').prop('checked',false);
 	var tickboxes=jQuery('#advancedform .tickboxcoll');
 		jQuery(tickboxes).each(function (elem) {
             if( tickboxes[elem].checked){checkcount=checkcount+1;}
         });
-	if (checkcount==tickboxes.length){jQuery('.rttickallcoll').attr('checked',true);}	
+	if (checkcount==tickboxes.length){jQuery('.rttickallcoll').prop('checked',true);}	
 }
 </script>
 <div class="Question">
@@ -679,7 +691,7 @@ $types=get_resource_types();
 $wrap=0;
 ?>
 <table><tr>
-<td align="middle"><input type='checkbox' class="rttickallcoll" id='rttickallcoll' name='rttickallcoll' <?php if (in_array("Collections",$restypes)) {?> checked <?php } ?> onclick='jQuery("#advancedform .tickboxcoll").each (function(index,Element) {jQuery(Element).attr("checked",(jQuery(".rttickallcoll").attr("checked")=="checked"));}); UpdateResultCount(); ' /><?php echo $lang['allcollectionssearchbar']?></td>
+<td align="middle"><input type='checkbox' class="rttickallcoll" id='rttickallcoll' name='rttickallcoll' <?php if (in_array("Collections",$restypes)) {?> checked <?php } ?> onclick='jQuery("#advancedform .tickboxcoll").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery(".rttickallcoll").prop("checked")));}); UpdateResultCount(); ' /><?php echo $lang['allcollectionssearchbar']?></td>
 
 <?php
 $clear_function="";

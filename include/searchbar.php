@@ -62,14 +62,12 @@ for ($n=0;$n<count($fields);$n++)
 # Process all keywords, putting set fieldname/value pairs into an associative array ready for setting later.
 # Also build a quicksearch string.
 
-# Recognise a quoted search, which is a search for an exact string
-$quoted_string=false;
-if (substr($quicksearch,0,1)=="\"" && substr($quicksearch,-1,1)=="\"") {$quoted_string=true;$quicksearch=substr($quicksearch,1,-1);}
+$quicksearch    = refine_searchstring($quicksearch);
+$keywords       = split_keywords($quicksearch,false,false,false,false,true);
 
-$quicksearch=refine_searchstring($quicksearch);
-$keywords=split_keywords($quicksearch);
-$set_fields=array();
-$simple=array();
+$set_fields     = array();
+$simple         = array();
+$searched_nodes = array();
 
 for ($n=0;$n<count($keywords);$n++)
 	{
@@ -82,6 +80,49 @@ for ($n=0;$n<count($keywords);$n++)
 			else {$set_fields[$s[0]]=$s[1];}
 			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);}
 			}
+        // Nodes search
+        else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
+            {
+            $nodes = resolve_nodes_from_string($keywords[$n]);
+
+            foreach($nodes as $node)
+                {
+                $searched_nodes[] = $node;
+                }
+
+            $searched_nodes = array_unique($searched_nodes);
+
+            foreach($searched_nodes as $searched_node)
+                {
+                $node = array();
+
+                if(!get_node($searched_node, $node))
+                    {
+                    continue;
+                    }
+
+                $field_index = array_search($node['resource_type_field'], array_column($fields, 'ref'));
+
+                if(false === $field_index)
+                    {
+                    $quicksearch = str_replace(NODE_TOKEN_PREFIX . $searched_node,
+                        rebuild_specific_field_search_from_node($node),
+                        $quicksearch);
+
+                    continue;
+                    }
+
+                $searched_field = $fields[$field_index];
+
+                // We already have a field on search bar so remove this keyword from search box
+                if(true == $searched_field['simple_search'])
+                    {
+                    $quicksearch = str_replace(NODE_TOKEN_PREFIX . $searched_node, '', $quicksearch);
+                    }
+                }
+
+            $initial_tags = explode(',', $quicksearch);
+            }
 		else
 			{
 			# Plain text (non field) search.
@@ -89,18 +130,10 @@ for ($n=0;$n<count($keywords);$n++)
 			}
 		}
 	}
-	
-	
+
 # Set the text search box to the stripped value.
 $quicksearch=join(" ",trim_array($simple));
-
-if (!$quoted_string)
-	{
-	$quicksearch=str_replace(",-"," -",$quicksearch);
-	}
-
-# Add the quotes back, if a quoted string
-if ($quoted_string) {$quicksearch="\"" . trim($quicksearch) . "\"";}
+$quicksearch=str_replace(",-"," -",$quicksearch);
 
 # Set the predefined date fields
 $found_year="";if (isset($set_fields["year"])) {$found_year=$set_fields["year"];}
@@ -157,24 +190,105 @@ if ($display_user_rating_stars && $star_search){ ?>
 	<label for="ssearchbox"><?php echo text("searchpanel")?></label>
 	
 	<form id="simple_search_form" method="post" action="<?php echo $baseurl?>/pages/search.php" onSubmit="return CentralSpacePost(this,true);">
-	<?php if (!hook("replacesearchbox")){ ?>
-		<div class="ui-widget">
+    <?php
+    if(!hook("replacesearchbox"))
+        {
+        ?>
+        <div class="ui-widget">
         <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo htmlspecialchars(stripslashes(@$quicksearch))?>">
         </div>
-	<?php } ?>
-<?php if ($autocomplete_search) { 
-# Auto-complete search functionality
-?>
-<script type="text/javascript">
-jQuery(document).ready(function () {
-	jQuery('#ssearchbox').autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php" } );
-	})
-</script>
+        <script>
+        <?php
+        $autocomplete_src = '';
+        if($autocomplete_search)
+            {
+            $autocomplete_src = "{$baseurl}/pages/ajax/autocomplete_search.php";
+            }
 
-<?php } ?>
+        if($simple_search_pills_view)
+            {
+            // $initial_tags is used for reloading search bar so that the tags will remain the same otherwise separate tags can become one big tag
+            $initial_tags = (isset($initial_tags) ? $initial_tags : array());
+            ?>
+            jQuery('#ssearchbox').tagEditor(
+                {
+                'initialTags': <?php echo json_encode($initial_tags); ?>,
+                'delimiter': '<?php echo TAG_EDITOR_DELIMITER; ?>',
+                'autocomplete': {
+                    'source': '<?php echo $autocomplete_src; ?>',
+                },
+                onChange: function(field, editor, tags)
+                    {
+                    jQuery(document).keyup(function(event)
+                        {
+                        if(event.key == 'Enter' && event.which === 13)
+                            {
+                            document.getElementById('simple_search_form').submit();
+                            }
+                        });
+                    }
+                });
 
+            // Decide when to add tags:
+            // if space addTag
+            // if "word" then addTag
+            // don't do anything if open " but not closed
+            jQuery('ul.tag-editor').keyup(function(e)
+                {
+                var key          = e.keyCode || e.which;
+                var add_tag_flag = false;
 
-<?php
+                // Get new tag value which is not yet finished/ rendered as a pill
+                var existing_tags = jQuery('#ssearchbox').tagEditor('getTags')[0].tags;
+                var all_tags      = jQuery('.tag-editor-tag:not(.deleted)', this).map(function(i, e)
+                                        {
+                                        var val = jQuery.trim(jQuery(this).hasClass('active') ? jQuery(this).find('input').val() : jQuery(e).text());
+
+                                        if(val)
+                                            {
+                                            return val;
+                                            }
+                                        }).get();
+                var new_tag       = (array_diff(existing_tags, all_tags)[0] || '');
+
+                // Find how many double quotes we have in our tag
+                // 1 => spaces are allowed
+                // 2 => add tag
+                var double_quotes_occurences = (new_tag.match(/"/g) || []).length;
+
+                // 32 is keyCode for " " (spacebar)
+                if(key == 32 && double_quotes_occurences == 0)
+                    {
+                    add_tag_flag = true;
+                    }
+                // 50 is keyCode for " (double quotes)
+                else if(key == 50 && double_quotes_occurences == 2)
+                    {
+                    add_tag_flag = true;
+                    }
+
+                if(add_tag_flag)
+                    {
+                    jQuery('#ssearchbox').tagEditor('addTag', new_tag);
+                    }
+
+                return;
+                });
+            <?php
+            }
+        else
+            {
+            ?>
+            jQuery(document).ready(function () {
+                jQuery('#ssearchbox').autocomplete({source: "<?php echo $autocomplete_src; ?>"});
+            });
+            <?php
+            }
+	        ?>
+        </script>
+        <?php
+        }
+
 $types=get_resource_types();
 
 if (!$basic_simple_search)
@@ -191,25 +305,25 @@ if (!$basic_simple_search)
 	function resetTickAll(){
 		var checkcount=0;
 		// set tickall to false, then check if it should be set to true.
-		jQuery('#rttickallres').attr('checked',false);
+		jQuery('#rttickallres').prop('checked',false);
 		var tickboxes=jQuery('#simple_search_form .tickbox');
 			jQuery(tickboxes).each(function (elem) {
                 if( tickboxes[elem].checked){checkcount=checkcount+1;}
             });
-		if (checkcount==tickboxes.length){jQuery('#rttickallres').attr('checked',true);}	
+		if (checkcount==tickboxes.length){jQuery('#rttickallres').prop('checked',true);}	
 	}
 	function resetTickAllColl(){
 		var checkcount=0;
 		// set tickall to false, then check if it should be set to true.
-		jQuery('#rttickallcoll').attr('checked',false);
+		jQuery('#rttickallcoll').prop('checked',false);
 		var tickboxes=jQuery('#simple_search_form .tickboxcoll');
 			jQuery(tickboxes).each(function (elem) {
 				if( tickboxes[elem].checked){checkcount=checkcount+1;}
 			});
-		if (checkcount==tickboxes.length){jQuery('#rttickallcoll').attr('checked',true);}	
+		if (checkcount==tickboxes.length){jQuery('#rttickallcoll').prop('checked',true);}	
 	}
 	</script>
-	<div class="tick"><input type='checkbox' id='rttickallres' name='rttickallres' checked onclick='jQuery("#simple_search_form .tickbox").each (function(index,Element) {jQuery(Element).attr("checked",(jQuery("#rttickallres").attr("checked")=="checked"));}); HideInapplicableSimpleSearchFields(true); '/>&nbsp;<?php echo $lang['allresourcessearchbar']?></div>
+	<div class="tick"><input type='checkbox' id='rttickallres' name='rttickallres' checked onclick='jQuery("#simple_search_form .tickbox").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallres").prop("checked")));}); HideInapplicableSimpleSearchFields(true); '/>&nbsp;<?php echo $lang['allresourcessearchbar']?></div>
 	<?php }?>
 	<?php
 	$rt=explode(",",@$restypes);
@@ -219,30 +333,30 @@ if (!$basic_simple_search)
 			if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
 		?>
 		<?php if (in_array($types[$n]["ref"],$separate_resource_types_in_searchbar)) { ?><div class="spacer"></div><?php } ?><div class="tick<?php if ($searchbar_selectall && (!in_array($types[$n]["ref"],$separate_resource_types_in_searchbar)) ){ ?> tickindent<?php } ?>"><input class="tickbox<?php if (in_array($types[$n]["ref"],$separate_resource_types_in_searchbar)) echo "sep"; ?>" id="TickBox<?php echo $types[$n]["ref"]?>" type="checkbox" name="resource<?php echo $types[$n]["ref"]?>" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || ($restypes=="Global") || (in_array($types[$n]["ref"],$rt))) {?>checked="checked"<?php } ?> onClick="HideInapplicableSimpleSearchFields(true);<?php if ($searchbar_selectall && (!in_array($types[$n]["ref"],$separate_resource_types_in_searchbar))){?>resetTickAll();<?php } ?>"/><label for="TickBox<?php echo $types[$n]["ref"]?>">&nbsp;<?php echo htmlspecialchars($types[$n]["name"]) ?></label></div><?php	
-		$clear_function.="document.getElementById('TickBox" . $types[$n]["ref"] . "').checked=true;";
+		$clear_function.="jQuery('#TickBox" . $types[$n]["ref"] . "').prop('checked',true);";
 		if ($searchbar_selectall && (!in_array($types[$n]["ref"],$separate_resource_types_in_searchbar))) {$clear_function.="resetTickAll();";}
 		}
 		?><div class="spacer"></div>
 		<?php if ($searchbar_selectall && ($search_includes_user_collections || $search_includes_public_collections || $search_includes_themes)) { ?>
-		<div class="tick"><input type='checkbox' id='rttickallcoll' name='rttickallcoll' checked onclick='jQuery("#simple_search_form .tickboxcoll").each (function(index,Element) {jQuery(Element).attr("checked",(jQuery("#rttickallcoll").attr("checked")=="checked"));}); HideInapplicableSimpleSearchFields(true); '/>&nbsp;<?php echo $lang['allcollectionssearchbar']?></div>
+		<div class="tick"><input type='checkbox' id='rttickallcoll' name='rttickallcoll' checked onclick='jQuery("#simple_search_form .tickboxcoll").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery("#rttickallcoll").prop("checked")));}); HideInapplicableSimpleSearchFields(true); '/>&nbsp;<?php echo $lang['allcollectionssearchbar']?></div>
 		<?php }?>
 		<?php if ($clear_button_unchecks_collections){$colcheck="false";}else {$colcheck="true";}
 		if ($search_includes_user_collections) 
 		    { ?>
 		    <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxMyCol" type="checkbox" name="resourcemycol" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("mycol",$rt))) {?>checked="checked"<?php } ?> onClick="HideInapplicableSimpleSearchFields(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxMyCol">&nbsp;<?php echo $lang["mycollections"]?></label></div><?php	
-		    $clear_function.="document.getElementById('TickBoxMyCol').checked=".$colcheck.";";
+		    $clear_function.="jQuery('#TickBoxMyCol').prop('checked'," . $colcheck . ");";
 		    if ($searchbar_selectall) {$clear_function.="resetTickAllColl();";}
 		    }
 	    if ($search_includes_public_collections) 
 	        { ?>
 	        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxPubCol" type="checkbox" name="resourcepubcol" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("pubcol",$rt))) {?>checked="checked"<?php } ?> onClick="HideInapplicableSimpleSearchFields(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxPubCol">&nbsp;<?php echo $lang["findpubliccollection"]?></label></div><?php	
-	        $clear_function.="document.getElementById('TickBoxPubCol').checked=".$colcheck.";";
+	        $clear_function.="jQuery('#TickBoxPubCol').prop('checked'," . $colcheck . ");";
 	        if ($searchbar_selectall) {$clear_function.="resetTickAllColl();";}
 	        }
 	    if ($search_includes_themes) 
 	        { ?>
 	        <div class="tick <?php if ($searchbar_selectall){ ?> tickindent <?php } ?>"><input class="tickboxcoll" id="TickBoxThemes" type="checkbox" name="resourcethemes" value="yes" <?php if (((count($rt)==1) && ($rt[0]=="")) || (in_array("themes",$rt))) {?>checked="checked"<?php } ?> onClick="HideInapplicableSimpleSearchFields(true);<?php if ($searchbar_selectall){?>resetTickAllColl();<?php } ?>"/><label for="TickBoxThemes">&nbsp;<?php echo $lang["findcollectionthemes"]?></label></div><?php	
-	        $clear_function.="document.getElementById('TickBoxThemes').checked=".$colcheck.";";
+	        $clear_function.="jQuery('#TickBoxThemes').prop('checked'," . $colcheck . ");";
 	        if ($searchbar_selectall) {$clear_function.="resetTickAllColl();";}
 	        }
 	   
@@ -292,7 +406,15 @@ elseif($restypes=='')
 
 	if(!$basic_simple_search)
         {
-        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"&nbsp;&nbsp;".$lang['clearbutton']."&nbsp;&nbsp;\" onClick=\"document.getElementById('ssearchbox').value='';$cleardate";
+        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"&nbsp;&nbsp;".$lang['clearbutton']."&nbsp;&nbsp;\" onClick=\"";
+
+        if($simple_search_pills_view)
+        	{
+    		$searchbuttons .= "removeSearchTagInputPills(jQuery('#ssearchbox'));";
+    		}
+
+		$searchbuttons .= $cleardate;
+
         if($display_user_rating_stars && $star_search)
             {
             $searchbuttons .= "StarSearchRatingDisplay(0,'StarCurrent');document.getElementById('starsearch').value='';window['StarSearchRatingDone']=true;";
@@ -307,7 +429,7 @@ elseif($restypes=='')
         }
     else
         {
-        $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick="document.getElementById(\'ssearchbox\').value=\'\';" />';
+        $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
         }
 
 	$searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"&nbsp;&nbsp;". $lang['searchbutton']."&nbsp;&nbsp;\" />";
@@ -328,7 +450,7 @@ elseif($restypes=='')
 	$optionfields=array();
 	$rendered_names=array();
 	$has_value=array();
-	//global $fields;
+
 	for ($n=0;$n<count($fields);$n++)
 		{
 		$render=true;
@@ -338,15 +460,21 @@ elseif($restypes=='')
 			$rendered_names[]=$fields[$n]["name"];
 			
 			# Fetch current value
-			$value="";
-			if (isset($set_fields[$fields[$n]["name"]])) {$value=$set_fields[$fields[$n]["name"]];}
-			$fields[$n]['value']=$value;
+			$value = '';
+
+			if(isset($set_fields[$fields[$n]["name"]]))
+                {
+                $value = $set_fields[$fields[$n]["name"]];
+                }
+
+			$fields[$n]['value'] = $value;
+
 			if($value!=='')
 				{
 				$has_value[]=$fields[$n]['ref'];
 				}
-			render_search_field($fields[$n],$value,false,"SearchWidth",true);
 
+			render_search_field($fields[$n], $value, false, 'SearchWidth', true, array(), $searched_nodes);
 			}
 		}
 	
@@ -378,13 +506,13 @@ elseif($restypes=='')
 			// When selecting resource type specific fields, automatically untick all other resource types, because selecting something from this field will never produce resources from the other resource types.
 			
 			// Always untick the Tick All box
-			if (jQuery('#rttickallres')) {jQuery('#rttickallres').attr('checked', false);}
+			if (jQuery('#rttickallres')) {jQuery('#rttickallres').prop('checked', false);}
 			<?php
 			# Untick all other resource types.
 			for ($n=0;$n<count($types);$n++)
 				{
 				?>
-				if (resourcetype!=<?php echo $types[$n]["ref"]?>) {jQuery("#TickBox<?php echo $types[$n]["ref"]?>").attr('checked', false);} else {jQuery("#TickBox<?php echo $types[$n]["ref"]?>").attr('checked', true);}
+				if (resourcetype!=<?php echo $types[$n]["ref"]?>) {jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', false);} else {jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', true);}
 				<?php
 				}
 				?>
@@ -470,7 +598,7 @@ elseif($restypes=='')
 					?>
 					}
 					
-				if (document.getElementById('TickBox<?php echo $fields[$n]["resource_type"] ?>') !== null && !document.getElementById('TickBox<?php echo $fields[$n]["resource_type"] ?>').checked)
+				if (document.getElementById('TickBox<?php echo $fields[$n]["resource_type"] ?>') !== null && !jQuery('#TickBox<?php echo $fields[$n]["resource_type"] ?>').prop('checked'))
 					{
 					document.getElementById('simplesearch_<?php echo $fields[$n]["ref"] ?>').style.display='none';
 					// Also deselect it.

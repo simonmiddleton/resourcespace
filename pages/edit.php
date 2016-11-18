@@ -423,7 +423,7 @@ jQuery(document).ready(function()
          }
          else
          {
-            e.preventDefault();
+            event.preventDefault();
             if(jQuery('#mainform'))
             {
                jQuery('.AutoSaveStatus').html('<?php echo $lang["saving"] ?>');
@@ -1253,14 +1253,39 @@ function display_field($n, $field, $newtab=false)
 
      hook("addfieldextras");
     # ----------------------------  Show field -----------------------------------
-     $type=$field["type"];
-    if ($type=="") {$type=0;} # Default to text type.
-    if (!hook("replacefield","",array($field["type"],$field["ref"],$n)))
-    	{
-		global $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
-		include "edit_fields/" . $type . ".php";
-		}
+    $type = $field['type'];
 
+    // Default to text type.
+    if('' == $type)
+        {
+        $type = 0;
+        }
+
+    if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
+        {
+        global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
+
+        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            {
+            $name = "nodes[{$field['ref']}]";
+
+            // Sometimes we need to pass multiple options
+            if(in_array($field['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE)))
+                {
+                $name = "nodes[{$field['ref']}][]";
+                }
+            else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
+                {
+                $name = "field_{$field['ref']}";
+                }
+
+            $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
+            }
+
+        $is_search = false;
+
+        include "edit_fields/{$type}.php";
+        }
     # ----------------------------------------------------------------------------
 
     # Display any error messages from previous save
@@ -1371,7 +1396,7 @@ if($collapsible_sections)
  <div class="Question" id="question_copyfrom">
     <label for="copyfrom"><?php echo $lang["batchcopyfrom"]?></label>
     <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
-    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="event.preventDefault();CentralSpacePost(document.getElementById('mainform'),true);">
+    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true);">
     <input type="submit" name="save" value="Save">
  </div><!-- end of question_copyfrom -->
  <?php

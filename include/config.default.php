@@ -954,6 +954,10 @@ $searchbar_buttons_at_bottom=true;
 # Hide the main simple search field in the searchbar (if using only simple search fields for the searchbar)
 $hide_main_simple_search=false;
 
+/*Display keywords as pills on Simple Search. Use tab to create new tags/ pills
+Note: full text strings are also accepted as a pill*/
+$simple_search_pills_view = false;
+
 # Custom top navigation links.
 # You can add as many panels as you like. They must be numbered sequentially starting from zero (0,1,2,3 etc.)
 # URL should be absolute, or include $baseurl as below, because a relative URL will not work from the Team Center.
@@ -3064,6 +3068,8 @@ $default_to_first_node_for_fields=array();
 # A list of groups for which the knowledge base will launch on login, until dismissed.
 $launch_kb_on_login_for_groups=array();
 
+# PHP output buffer chunk size (bytes)
+$php_ob_buffer_size=4096;
 # E-mail address to send a report to if any of the automated tests (tests/test.php) fail.
 # This is used by Montala to automatically test the RS trunk on a nightly basis.
 # $email_test_fails_to="example@example.com";
