@@ -2662,7 +2662,7 @@ $no_metadata_read_default=false; // If set to true and $metadata_read is false t
 $removenever=false; # Remove 'never' option for resource request access expiration and sets default expiry date to 7 days
 $hide_resource_share_link=false; // Configurable option to hide the "Share" link on the resource view page.
 
-# Option to email the contributor when their resources have been approved (moved from pending submission to active)
+# Option to email the contributor when their resources have been approved (moved from pending submission/review to active)
 $user_resources_approved_email=false; 
 
 # Set to true to move the Search button before the Clear button
