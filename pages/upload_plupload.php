@@ -951,7 +951,7 @@ var pluploadconfig = {
                             return false;
                          });
                         //Change URL if exif box status changes
-						jQuery('#no_exif').live('change', function(){
+						jQuery('#question_noexif').on('change', '#no_exif', function() {
 										if(jQuery(this).is(':checked')){
 												uploader.settings.url =ReplaceUrlParameter(uploader.settings.url,'no_exif','yes');
 										}
