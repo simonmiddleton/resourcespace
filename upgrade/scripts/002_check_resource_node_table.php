@@ -1,4 +1,4 @@
-  <?php
+<?php
 
 include_once __DIR__ . "/../../include/db.php";
 include_once __DIR__ . "/../../include/general.php";
@@ -14,7 +14,8 @@ $rnkeys = array_column($rnindexes,"Column_name");
 
 if(!in_array("resource",$rnkeys) || !in_array("node",$rnkeys))    
     {
-    // Copy to a temporary table and then rename to remove duplicates. Alows use of INSERT  - ON DUPLICATE KEY syntax when inserting new nodes
+    // Copy to a temporary table and then rename to remove duplicates. Allows use of INSERT  - ON DUPLICATE KEY syntax when inserting new nodes
+    sql_query("DROP TABLE IF EXISTS resource_node_deduped");
     db_begin_transaction();
     sql_query("CREATE TABLE resource_node_deduped like resource_node");
     sql_query("ALTER TABLE resource_node_deduped ADD PRIMARY KEY(resource,node)");
