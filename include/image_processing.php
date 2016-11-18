@@ -346,6 +346,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 		else
 			{
 			# Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
+            delete_previews($ref);
 			sql_query("update resource set has_image=0 where ref='$ref'");
 			}
 		}
