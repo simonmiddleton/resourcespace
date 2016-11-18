@@ -260,12 +260,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
 			
 
 		    // Required fields cannot have empty values
-		    if(1 == $fields[$n]['required'] && '' == $fields[$n]['display_condition'] && (('' == strip_leading_comma($val) && '' == $autosave_field) || (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($nodes_to_add)==0)))
+		    if(1 == $fields[$n]['required'] && '' == $fields[$n]['display_condition'] && (('' == strip_leading_comma($val) && '' == $autosave_field) || (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values)==0)))
                 {
                 $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang['requiredfield'];
                 continue;
                 }
-            else if(1 == $fields[$n]['required'] && '' == $fields[$n]['display_condition'] && (('' == strip_leading_comma($val) && '' != $autosave_field) || (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($nodes_to_add)==0)))
+            else if(1 == $fields[$n]['required'] && '' == $fields[$n]['display_condition'] && (('' == strip_leading_comma($val) && '' != $autosave_field) || (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values)==0)))
                 {
                 echo $lang['requiredfield'];
                 exit();
@@ -335,7 +335,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 			# Check required fields have been entered.
 			$exemptfields = getvalescaped("exemptfields","");
 			$exemptfields = explode(",",$exemptfields);
-			if ($fields[$n]["required"]==1 && ((in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($nodes_to_add)==0) ||($val=="" || $val==",")) && !in_array($fields[$n]["ref"],$exemptfields))
+			if ($fields[$n]["required"]==1 && ((in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values)==0) ||($val=="" || $val==",")) && !in_array($fields[$n]["ref"],$exemptfields))
 				{
 				global $lang;
 				$errors[$fields[$n]["ref"]]=i18n_get_translated($fields[$n]["title"]).": ".$lang["requiredfield"];
