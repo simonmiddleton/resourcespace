@@ -3068,8 +3068,6 @@ $default_to_first_node_for_fields=array();
 # A list of groups for which the knowledge base will launch on login, until dismissed.
 $launch_kb_on_login_for_groups=array();
 
-# PHP output buffer chunk size (bytes)
-$php_ob_buffer_size=4096;
 # E-mail address to send a report to if any of the automated tests (tests/test.php) fail.
 # This is used by Montala to automatically test the RS trunk on a nightly basis.
 # $email_test_fails_to="example@example.com";
