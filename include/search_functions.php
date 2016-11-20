@@ -182,7 +182,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             {
             case 0: # -------- Text boxes
             // handle numeric constraint field as number range search Convert minus sign to safer symbol 
-            if ($fields[$n]['field_constraint']==1){
+            if (isset($fields[$n]['field_constraint']) && $fields[$n]['field_constraint']==1){
 				$fieldname=sql_value("select name value from resource_type_field where ref='".$fields[$n]["ref"]."'","");
 				$value=getvalescaped('field_'.$fields[$n]["ref"],'');
 				$search.=$fieldname.":".$value;
