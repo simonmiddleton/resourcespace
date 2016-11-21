@@ -4,10 +4,11 @@ include_once '../include/general.php';
 include '../include/authenticate.php'; 
 include_once '../include/collections_functions.php';
 
-$collection     = getvalescaped('ref', '', true);
-$collectiondata = get_collection($collection);
-$ajax           = ('true' == getvalescaped('ajax', '') ? true : false);
-$sheetstyle     = getvalescaped('sheetstyle', 'thumbnails');
+$collection        = getvalescaped('ref', '', true);
+$collectiondata    = get_collection($collection);
+$ajax              = ('true' == getvalescaped('ajax', '') ? true : false);
+$sheetstyle        = getvalescaped('sheetstyle', 'thumbnails');
+$field_value_limit = getvalescaped('field_value_limit', 0);
 
 
 switch($sheetstyle)
@@ -79,6 +80,7 @@ if(!collection_readable($collection))
     preview image that can be judged before initiating a download of sometimes several MB.-->
     <form method="post" name="contactsheetform" id="contactsheetform" action="<?php echo $baseurl_short; ?>pages/ajax/contactsheet.php" >
         <input type=hidden name="c" value="<?php echo htmlspecialchars($collection); ?>">
+        <input type=hidden name="field_value_limit" value="<?php echo urlencode($field_value_limit); ?>">
         <!--<div name="error" id="error"></div>-->
         <div class="BasicsBox" style="width:450px;float:left;margin-top:0;" >
         

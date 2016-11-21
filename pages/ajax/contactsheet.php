@@ -12,19 +12,21 @@ include('../../include/image_processing.php');
 include('../../include/pdf_functions.php');
 require_once '../../lib/html2pdf/html2pdf.class.php';
 
-$collection    = getvalescaped('c', '');
-$size          = getvalescaped('size', '');
-$columns       = getvalescaped('columns', 1);
-$order_by      = getvalescaped('orderby', 'relevance');
-$sort          = getvalescaped('sort', 'asc');
-$orientation   = getvalescaped('orientation', '');
-$sheetstyle    = getvalescaped('sheetstyle', 'thumbnails');
-$preview       = ('true' == getvalescaped('preview', '') ? true : false);
-$previewpage   = getvalescaped('previewpage', 1);
-$includeheader = getvalescaped('includeheader', '');
-$addlink       = getvalescaped('addlink', '');
-$addlogo	   = getvalescaped('addlogo', '');
+$collection        = getvalescaped('c', '');
+$size              = getvalescaped('size', '');
+$columns           = getvalescaped('columns', 1);
+$order_by          = getvalescaped('orderby', 'relevance');
+$sort              = getvalescaped('sort', 'asc');
+$orientation       = getvalescaped('orientation', '');
+$sheetstyle        = getvalescaped('sheetstyle', 'thumbnails');
+$preview           = ('true' == getvalescaped('preview', '') ? true : false);
+$previewpage       = getvalescaped('previewpage', 1);
+$includeheader     = getvalescaped('includeheader', '');
+$addlink           = getvalescaped('addlink', '');
+$addlogo           = getvalescaped('addlogo', '');
 $force_watermark   = getvalescaped('force_watermark','');
+$field_value_limit = getvalescaped('field_value_limit', 0);
+
 if($force_watermark==='true'){
 	$force_watermark=true;
 }
@@ -162,6 +164,13 @@ foreach($results as $result_data)
             {
             $contact_sheet_value = trim(get_data_by_field($result_data['ref'], $contact_sheet_field['ref']));
 
+            // By default we don't limit the field but if HTML2PDF throws an error because of TD tags spreading across
+            // multiple pages, then truncate the value.
+            if(0 < $field_value_limit)
+                {
+                $contact_sheet_value = substr($contact_sheet_value, 0, $field_value_limit);
+                }
+
             // Clean fixed list types of their front comma
             if(in_array($contact_sheet_field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
@@ -212,6 +221,23 @@ catch(Html2PdfException $e)
     $formatter = new ExceptionFormatter($e);
 
     echo $formatter->getHtmlMessage();
+
+    exit();
+    }
+catch(Html2Pdf_exception $e)
+    {
+    // Starting point
+    if(0 == $field_value_limit)
+        {
+        $field_value_limit = 1100;
+        }
+
+    $parameters = array(
+        'ref'               => $collection,
+        'field_value_limit' => $field_value_limit - 200,
+    );
+
+    redirect(generateURL("{$baseurl}/pages/contactsheet_settings.php", $parameters));
 
     exit();
     }
