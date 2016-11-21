@@ -669,7 +669,8 @@ function extract_exif_comment($ref,$extension="")
 							hook("metadata_extract_addition","all",array($ref,$newval,$read_from,$i));
 						}
 
-					} else {
+					}	
+					else {
 
 						// Process if no embedded title is found:
 						global $merge_filename_with_title, $lang, $view_title_field;
@@ -732,6 +733,7 @@ function extract_exif_comment($ref,$extension="")
 					}
 
 				}
+				
 			}
 		if(!in_array($filename_field,$exif_updated_fields)) // We have not found an embedded value for this field so we need to modify the $filename variable which will be used to set the data later in the upload_file function
 			{
