@@ -8,8 +8,22 @@
 		{
 		include_once __DIR__ . "/../../include/db.php";
 		include_once __DIR__ . "/../../include/general.php";
-		
-
+		include __DIR__ . "/../../include/authenticate.php";	
+			
+		if(isset($_GET['user']))
+			{
+			$user=$_GET['user'];
+			if (is_numeric($user) && !checkperm_user_edit($user))
+				{
+				exit($lang["error-permissiondenied"]);
+				}
+			}
+		else
+			{
+			// no user specified so default to the current user
+			$user=$userref;
+			}
+			
 		// It is an acknowledgement so set as seen and get out of here
 		if (isset($_GET['seen']))
 			{
@@ -36,16 +50,15 @@
 			message_purge();
 			return;
 			}
-
-		if(isset($_GET['user']))
+		
+		// Delete a specific message from a single user
+		if (isset($_GET['deleteusrmsg']))
 			{
-			$user=$_GET['user'];
-			}
-		else
-			{
-			include __DIR__ . "/../../include/authenticate.php";	// no user specified so default to the current user
-			$user=$userref;
-			}
+			$usermessage = $_GET['deleteusrmsg'];
+			message_user_remove($usermessage);
+			return;
+			}	
+		
 
 		// Check if there are messages
 		$messages = array();

@@ -197,3 +197,10 @@ function message_remove_related($remote_activity=0,$remote_refs=array())
         sql_query("DELETE FROM user_message WHERE message in (" . implode(',',$relatedmessages) . ");");
         }
 	}
+
+// Remove an instance of a message from user_message table 
+function message_user_remove($usermessage)
+	{
+    global $userref;
+	sql_query("DELETE FROM user_message WHERE user={$userref} AND ref='{$usermessage}'");
+	}

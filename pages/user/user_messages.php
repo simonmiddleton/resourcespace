@@ -81,7 +81,7 @@ for ($n=0;$n<count($messages);$n++)
 			<td<?php echo $unread_css; ?>><?php echo $messages[$n]["owner"]; ?></td>
 			<td<?php echo $unread_css; ?>><a href="#Header" onclick="message_modal('<?php echo $message; ?>','<?php
 				echo $url_encoded; ?>',<?php echo $messages[$n]["ref"]; ?>,'<?php echo $messages[$n]["owner"] ?>');"><?php
-					echo nl2br(strip_tags($messages[$n]["message"],'<br><p>'));
+					echo nl2br($messages[$n]["message"]);
 					?></a></td>
 			<td<?php echo $unread_css; ?>><?php echo nicedate($messages[$n]["expires"]); ?></td>
 			<td<?php echo $unread_css; ?>><?php echo ($messages[$n]["seen"]==0 ? $lang['no'] : $lang['yes']); ?></td>
@@ -95,6 +95,11 @@ for ($n=0;$n<count($messages);$n++)
 							echo $baseurl; ?>/pages/ajax/message.php?<?php echo (($messages[$n]["seen"]==0)?"seen":"unseen") . "=" . $messages[$n]['ref'] ; ?>',function() { message_poll(); });
 							return CentralSpaceLoad(this,true);
 							"><?php echo LINK_CARET ?><?php echo (($messages[$n]["seen"]==0)?$lang["mymessages_markread"]:$lang["mymessages_markunread"]);?>
+					</a>
+					 <a href="<?php echo $baseurl_short?>pages/user/user_messages.php" onclick="jQuery.get('<?php
+							echo $baseurl; ?>/pages/ajax/message.php?deleteusrmsg=<?php echo $messages[$n]['ref'] ; ?>',function() { message_poll(); });
+							return CentralSpaceLoad(this,true);
+							"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]; ?>
 					</a>
 						  
 				</div>
