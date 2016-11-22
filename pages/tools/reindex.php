@@ -7,7 +7,20 @@
 #
 
 include "../../include/db.php";
-if (!(PHP_SAPI == 'cli')) {include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}}
+if (!(PHP_SAPI == 'cli'))
+	{
+	include "../../include/authenticate.php";
+	if (!checkperm("a")) {exit("Permission denied");}
+	$start = getval('ref', 0, true);
+	$end = getvalescaped('end', 0, true);
+	}
+elseif(isset($argv[1]) && is_numeric($argv[1]))
+	{
+	$start = $argv[1];
+	if(isset($argv[2]) && is_numeric($argv[2]))
+	$end = $argv[2];
+	}
+	
 include_once "../../include/general.php";
 include "../../include/resource_functions.php";
 include "../../include/image_processing.php";
@@ -16,39 +29,24 @@ include "../../include/image_processing.php";
 $mysql_log_transactions=false;
 
 $sql = '';
+
 if('' != getval('ref', ''))
     {
     $sql = "WHERE r.ref = '" . getvalescaped('ref', '', true) . "'";
     }
 
 set_time_limit(0);
-echo "<pre>";
+echo "<pre>" . PHP_EOL;
 
-
-$start = getvalescaped('start', '');
-if(is_numeric($start))
-    {
+if(isset($start))    {
     $sql= "where r.ref>=" . $start;
-	$end = getvalescaped('end', '');
-	if(is_numeric($end))
+	if(isset($end))
 		{
 		$sql.= " and r.ref<=" . $end;
 		}
-    }
-	
-$start = getvalescaped('start', '');
-if(is_numeric($start))
-    {
-    $sql= "where r.ref>=" . $start;
-	$end = getvalescaped('end', '');
-	if(is_numeric($end))
-		{
-		$sql.= " and r.ref<=" . $end;
-		}
-    }
+    }	
 	
 $resources = sql_query("SELECT r.ref, u.username, u.fullname FROM resource AS r LEFT OUTER JOIN user AS u ON r.created_by = u.ref {$sql} ORDER BY ref");
-
 
 $time_start = microtime(true);
 
@@ -60,7 +58,7 @@ for($n = 0; $n < count($resources); $n++)
 
     $words = sql_value("SELECT count(*) `value` FROM resource_keyword WHERE resource = '{$ref}'", 0);
 
-    echo "Done {$ref} ({$n}/" . count($resources) . ") - $words words<br />\n";
+    echo "Done {$ref} ({$n}/" . count($resources) . ") - $words words<br />" . PHP_EOL;
 
 
     @flush();
@@ -82,4 +80,4 @@ for($n=0;$n<$count;$n++)
 $time_end = microtime(true);
 $time     = $time_end - $time_start;
 
-echo "Reindex took $time seconds\n";
+echo "Reindex took $time seconds" . PHP_EOL;
