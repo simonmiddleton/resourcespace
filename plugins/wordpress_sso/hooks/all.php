@@ -171,7 +171,7 @@ function HookWordpress_ssoTeam_user_editPassword()
 
 function HookWordpress_ssoTeam_user_editTicktoemailpassword()
         {
-		global $ref;
+		global $ref, $lang;
 		$checkwpuser=sql_value("select wp_authrequest as value from user where ref='$ref'","");
         if  (strlen($checkwpuser)>0)
 			{
