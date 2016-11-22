@@ -1034,7 +1034,14 @@ function CheckDBStruct($path,$verbose=false)
 						$f2=fopen($path . "/" . $file,"r");
 						while (($col2 = fgetcsv($f2,5000)) !== false)
 							{
-							if ($col2[2]==$col[2]) {$cols[]=$col2[4];}
+							if ($col2[2]==$col[2]) # Matching column
+								{
+								# Add an index size if present, for indexing text fields
+								$indexsize="";
+                                                            	if (trim($col2[7])!="") {$indexsize="(" . $col2[7] . ")";}
+
+								$cols[]=$col2[4] . $indexsize;
+								}
 							}
 						
 						$sql="create index " . $col[2] . " on $table (" . join(",",$cols) . ")";
