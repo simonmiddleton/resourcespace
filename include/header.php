@@ -103,7 +103,10 @@ if ($contact_sheet)
 <script type="text/javascript">
 	ajaxLoadingTimer=<?php echo $ajax_loading_timer;?>;
 </script>
-<script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script>
+<?php
+global $enable_ckeditor;
+if ($enable_ckeditor){?>
+<script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script><?php } ?>
 <?php if (!$disable_geocoding) { ?>
 <script src="<?php echo $baseurl ?>/lib/OpenLayers/OpenLayers.js"></script>
 <?php if ($use_google_maps) { ?>
