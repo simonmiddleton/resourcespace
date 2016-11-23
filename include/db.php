@@ -24,6 +24,9 @@ include_once 'debug_functions.php';
 include_once 'log_functions.php';
 include_once 'file_functions.php';
 
+# Switch on output buffering.
+ob_start(null,4096);
+
 $pagetime_start = microtime();
 $pagetime_start = explode(' ', $pagetime_start);
 $pagetime_start = $pagetime_start[1] + $pagetime_start[0];
