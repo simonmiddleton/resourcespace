@@ -539,7 +539,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 $related = array_merge($related, $wildcards);
                                 if (count($related) > 0)
                                     {
-                                    $relatedsql = " or k" . $c . ".keyword IN ('" . join("','", $related) . "')";
+                                    $relatedsql = " or [keyword_match_table].keyword IN ('" . join("','", $related) . "')";
                                     }
     
                                 # Form join
@@ -627,7 +627,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
      
                                          $union = " SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_node rn[union_index]" .
                                              " LEFT OUTER JOIN `node_keyword` nk[union_index] ON rn[union_index].node=nk[union_index].node LEFT OUTER JOIN `node` n[union_index] ON rn[union_index].node=n[union_index].ref " .
-                                             " WHERE (nk[union_index].keyword={$keyref} {$relatedsql} {$union_restriction_clause_node})" .
+                                             " WHERE (nk[union_index].keyword={$keyref} " . str_replace("[keyword_match_table]","nk[union_index]", $relatedsql) . " {$union_restriction_clause_node})" .
                                              " GROUP BY resource,resource_type_field ";					    
                      
                                          // ----- resource_keyword sub query -----
@@ -635,7 +635,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                          // TODO: deprecate this once all field values are nodes  START
                                          
                                           $union .= " UNION SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_keyword k{$c}" .
-                                             " WHERE (k{$c}.keyword={$keyref} {$relatedsql} {$union_restriction_clause})" .
+                                             " WHERE (k{$c}.keyword={$keyref} " . str_replace("[keyword_match_table]","k" . $c, $relatedsql) . " {$union_restriction_clause})" .
                                              " GROUP BY resource, resource_type_field";
                                                                                                              
                                          // TODO: deprecate this once all field values are nodes  END
