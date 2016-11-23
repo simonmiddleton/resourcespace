@@ -9,7 +9,6 @@ include_once '../include/file_functions.php';
 include_once '../include/general.php';
 include_once '../include/collections_functions.php';
 if (!function_exists('filter_var')){  //If running on PHP without filter_var, define a do-fer function, otherwise use php's filter_var (PHP > 5.2.0)
-echo "!!!";
     define(FILTER_SANITIZE_STRING, 1);
     define(FILTER_SANITIZE_EMAIL, 2);
     define(FILTER_VALIDATE_EMAIL, 3);
@@ -244,7 +243,7 @@ if(get_post_bool('ajax'))
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link href="../css/global.css?csr=5" rel="stylesheet" type="text/css" /> 
 <link href="../css/colour.css?csr=5" rel="stylesheet" type="text/css" /> 
-<script type="text/javascript" src="../lib/js/jquery-1.7.2.min.js"></script> 
+<script src="../lib/js/jquery-1.12.4.min.js"></script>
 
 <script type="text/javascript"> 
  
