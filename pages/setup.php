@@ -824,11 +824,10 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)))
 	include_once '../include/db.php';
 	check_db_structs();
 
-    // set the current upgrade level to current one specified in version.php
-    if (get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL)===false)
+    // set the current upgrade level to current one specified in definitions.php
+    if(false == get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL))
         {
-        include_once(__DIR__ . '/../include/version.php');
-        set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL,SYSTEM_UPGRADE_LEVEL);
+        set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL, SYSTEM_UPGRADE_LEVEL);
         }
 
 	if(!empty($structural_plugin) && !$develmode)
