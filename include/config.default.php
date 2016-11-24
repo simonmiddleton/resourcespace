@@ -1628,7 +1628,7 @@ $top_nav_upload_type="plupload"; # The upload type. Options are plupload, ftp, l
 $plupload_chunk_size='5mb';
 
 # Use the JQuery UI Widget instead of the Queue interface (includes a stop button and optional thumbnail mode
-$plupload_widget=false;
+$plupload_widget=true;
 $plupload_widget_thumbnails=true;
 
 # Allow users to delete resources?
