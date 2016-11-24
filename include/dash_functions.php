@@ -691,7 +691,7 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
     // If client code has specified a user ID, then just add the tiles for it
     if(is_numeric($user_id) && 0 < $user_id)
         {
-        $starting_order = append_user_position($user_id);
+        $starting_order = 99999;
 
         foreach($user_group_tiles as $tile)
             {
@@ -705,7 +705,7 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
     $user_list = sql_array("SELECT ref AS `value` FROM user WHERE usergroup = '{$user_group}'");
     foreach($user_list as $user)
         {
-        $starting_order  = append_user_position($user);
+        $starting_order  = 99999;
         foreach($user_group_tiles as $tile)
             {
             add_user_dash_tile($user, $tile, $starting_order, false); // No need to reorder as we have already set the position
