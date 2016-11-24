@@ -1462,8 +1462,12 @@ function auto_create_user_account()
 
 	$newusername=escape_check(make_username(getval("name","")));
 
+    // Check valid email
+    if(!filter_var($user_email, FILTER_VALIDATE_EMAIL))
+        {return $lang['setup-emailerr'];}
+    
 	#check if account already exists
-	$check=sql_value("select email value from user where email = '$user_email'","");
+	$check=sql_value("select email value from user where email = '" . escape_check($user_email) . "'","");
 	if ($check!=""){return $lang["useremailalreadyexists"];}
 
 	# Prepare to create the user.
@@ -1571,8 +1575,8 @@ function auto_create_user_account()
 		
 		$templatevars['name']=getval("name","");
 		$templatevars['email']=getval("email","");
-		$templatevars['userrequestcomment']=getval("userrequestcomment","");
-		$templatevars['userrequestcustom']=$customContents;
+		$templatevars['userrequestcomment']=strip_tags(getval("userrequestcomment",""));
+		$templatevars['userrequestcustom']=strip_tags($customContents);
 		$templatevars['linktouser']="$baseurl?u=$new";
 
 		$message=$lang["userrequestnotification1"] . "\n\n" . $lang["name"] . ": " . $templatevars['name'] . "\n\n" . $lang["email"] . ": " . $templatevars['email'] . "\n\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang["userrequestnotification3"] . "\n$baseurl?u=$new";
