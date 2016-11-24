@@ -907,14 +907,15 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
             if (!$filter_not)
                 {
+                # Option for custom access to override search filters.
+                # For this resource, if custom access has been granted for the user or group, nullify the search filter for this particular resource effectively selecting "true".
+                global $custom_access_overrides_search_filter;
+
                 # Standard operation ('=' syntax)
 				if(count($ff)>0)
 					{
 					$sql_join.=" join resource_keyword filter" . $n . " on r.ref=filter" . $n . ".resource and filter" . $n . ".resource_type_field in ('" . join("','",$ff) . "') and ((filter" . $n . ".keyword in ('" .     join("','",$kw) . "')) ";
-					
-					# Option for custom access to override search filters.
-					# For this resource, if custom access has been granted for the user or group, nullify the search filter for this particular resource effectively selecting "true".
-					global $custom_access_overrides_search_filter;
+
 					if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
 						{
 						$sql_join.="or ((rca.access is not null and rca.access<>2) or (rca2.access is not null and rca2.access<>2))";
