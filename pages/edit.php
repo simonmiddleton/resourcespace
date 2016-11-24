@@ -984,27 +984,30 @@ $use=$ref;
 $originalref=$use;
 
 if (getval("copyfrom","")!="")
-{
-    # Copy from function
+  {
+  # Copy from function
   $copyfrom=getvalescaped("copyfrom","");
   $copyfrom_access=get_resource_access($copyfrom);
 
-    # Check access level
-    if ($copyfrom_access!=2) # Do not allow confidential resources (or at least, confidential to that user) to be copied from
+  # Check access level
+  if ($copyfrom_access!=2) # Do not allow confidential resources (or at least, confidential to that user) to be copied from
     {
-       $use=$copyfrom;
-       $original_fields=get_resource_field_data($ref,$multiple,true,-1,"",$tabs_on_edit);
+    $use=$copyfrom;
+    $original_fields=get_resource_field_data($ref,$multiple,true,-1,"",$tabs_on_edit);
+    $original_nodes = get_resource_nodes($ref);
     }
- }
+  }
 
- if (getval("metadatatemplate","")!="")
- {
+if (getval("metadatatemplate","")!="")
+  {
   $use=getvalescaped("metadatatemplate","");
   $original_fields=get_resource_field_data($ref,$multiple,true,-1,"",$tabs_on_edit);
-}
+  $original_nodes = get_resource_nodes($ref);
+  }
 
 # Load resource data
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
+$all_selected_nodes = get_resource_nodes($use);
 
 # if this is a metadata template, set the metadata template title field at the top
 if (isset($metadata_template_resource_type)&&(isset($metadata_template_title_field)) && $resource["resource_type"]==$metadata_template_resource_type){
@@ -1087,7 +1090,8 @@ function display_field($n, $field, $newtab=false)
   {
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
-  $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search;
+  $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
+  $all_selected_nodes,$original_nodes;
 
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
@@ -1104,6 +1108,11 @@ function display_field($n, $field, $newtab=false)
       {
       if ($original_field["ref"]==$field["ref"]) {$value=$original_field["value"];}
       }
+    $selected_nodes = $original_nodes;
+    }
+  else
+    {
+    $selected_nodes = $all_selected_nodes;
     }
 
   $displaycondition=true;
@@ -1278,8 +1287,6 @@ function display_field($n, $field, $newtab=false)
                 {
                 $name = "field_{$field['ref']}";
                 }
-
-            $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
             }
 
         $is_search = false;
