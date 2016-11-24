@@ -49,8 +49,17 @@
 																//Internal links can still open in the same tab				
 																else
 																				{
-																				$on_click = ' onClick="return CentralSpaceLoad(this, true);"';
-																				$target   = '';
+																				if( isset($custom_top_nav[$n]['modal']) && $custom_top_nav[$n]['modal'] )
+																							{
+																							$on_click = ' onClick="return ModalLoad(this, true);"';
+																							$target   = '';
+																							}	
+																				else if ( !isset($custom_top_nav[$n]['modal']) || ( isset($custom_top_nav[$n]['modal'])&& !$custom_top_nav[$n]['modal'] ) )
+																							{
+																							$on_click = ' onClick="return CentralSpaceLoad(this, true);"';
+																							$target   = '';
+																							}
+																			
 																				}
 																				if(strpos($custom_top_nav[$n]['title'], '(lang)') !== false)
 																								{
