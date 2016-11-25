@@ -1006,6 +1006,9 @@ div.video-js {margin:auto;}
     padding: 14px 20px 10px 20px;
 }
 
+#modal .BasicsBox .HelpHeader a { color: #e0e0e0; }
+#modal .BasicsBox .HelpHeader .backtoresults { margin-top: 15px; }
+
 /* Dropdown Actions */
 #CollectionMenu .ActionsContainer {
 	margin: 10px 0px;

@@ -23,7 +23,20 @@ if(!hook("replacehelp"))
 if('' == $section)
     {
     ?>
-  <h1><?php echo $lang["helpandadvice"]?></h1>
+    <div class="HelpHeader">
+    <?php
+    if($help_modal)
+        {
+        ?>
+        <div class="backtoresults">
+            <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
+        </div>
+        <?php
+        }
+        ?>
+        <h1><?php echo $lang['helpandadvice']; ?></h1>
+    </div>
+
   <p><?php echo text("introtext")?></p>
   
   <div class="VerticalNav">
