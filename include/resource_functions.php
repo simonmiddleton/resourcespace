@@ -162,6 +162,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						$existing_nodes_value .= ",{$node_options[$current_field_node]}";
 						}
 					resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $existing_nodes_value, $new_nodes_val);
+                    
+                    $val = $new_nodes_val;
+                    # If this is a 'joined' field it still needs to add it to the resource column
+                    $joins=get_resource_table_joins();
+                    if (in_array($fields[$n]["ref"],$joins))
+                        {
+                        if(substr($val,0,1)==","){$val=substr($val,1);}
+                        sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($new_nodes_val,1)))."' where ref='$ref'");
+                         }
 					}
                 }
 			else
@@ -318,12 +327,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     remove_all_keyword_mappings_for_field($ref,$fields[$n]["ref"]);
                     }
 				
-					# If this is a 'joined' field we need to add it to the resource column
-					$joins=get_resource_table_joins();
-					if (in_array($fields[$n]["ref"],$joins)){
-						if(substr($val,0,1)==","){$val=substr($val,1);}
-						sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
-					}
+                # If this is a 'joined' field we need to add it to the resource column
+                $joins=get_resource_table_joins();
+                if (in_array($fields[$n]["ref"],$joins))
+                    {
+                    if(substr($val,0,1)==","){$val=substr($val,1);}
+                    sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
+                    }
                                         
 				# Add any onchange code
 				if($fields[$n]["onchange_macro"]!="")
