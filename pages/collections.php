@@ -852,9 +852,11 @@ if (isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null  && ($k=='' || $in
 		<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><img border=0 width=56 height=75 src="<?php echo $iconurl?>"/></a></td>
 		</tr></table>
 		<?php if(!hook('replacesavedsearchtitle')){?>
-		<div class="CollectionPanelInfo"><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><?php echo tidy_trim($lang["savedsearch"],(13-strlen($n+1)))?> <?php echo $n+1?></a>&nbsp;</div><?php } ?>
+		<div class="CollectionPanelInfo">
+		<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><?php echo substr($lang["savedsearch"],6)?> <?php echo $n+1?></a>&nbsp;</div><?php } ?>
 		<?php if(!hook('replaceremovelink_savedsearch')){?>
-		<div class="CollectionPanelInfo"><a onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?removesearch=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>">x <?php echo $lang["action-remove"]?>
+		<div class="CollectionPanelTools">
+		<a class="removeFromCollection fa fa-minus-circle" onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?removesearch=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>">
 		</a></div>	<?php } ?>			
 		</div>
 		<?php		
