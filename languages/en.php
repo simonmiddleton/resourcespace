@@ -975,6 +975,7 @@ $lang["requiredfield"]="This is a required field";
 $lang["requiredfields"]="Please review the form and try again. The following fields were not completed:";
 $lang["requiredfields-general"]="Please complete all required fields";
 $lang["requiredantispam"]="The anti-spam code has not been entered correctly, please try again";
+$lang["expiredantispam"]="The anti-spam code has expired, please try again";
 $lang["viewduplicates"]="View duplicate resources";
 $lang["duplicateresources"]="Duplicate resources";
 $lang["duplicateresourcesfor"]="Duplicate resources for ";
