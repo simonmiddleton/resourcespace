@@ -265,13 +265,13 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     $return = array();
 	$fieldsSQL = "SELECT d.value,d.resource_type_field,f1.*,f1.required frequired,f1.ref fref, f1.field_constraint FROM resource_type_field f1 LEFT JOIN (SELECT * FROM resource_data WHERE resource='$ref') d ON d.resource_type_field=f1.ref AND d.resource='$ref' 
 	
-	WHERE (f1.type NOT IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND " . (($multi)?"1=1":"f1.resource_type=0 OR f1.resource_type=999 OR f1.resource_type='$rtype'") . ")
+	WHERE (f1.type NOT IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND (" . (($multi)?"1=1":"f1.resource_type=0 OR f1.resource_type=999 OR f1.resource_type='$rtype'") . "))
 	
 	UNION 
 	
-	SELECT group_concat(n.name) value, n.resource_type_field, f2.*,f2.required frequired, f2.ref, f2.field_constraint FROM resource_type_field f2 LEFT JOIN node n ON n.resource_type_field=f2.ref RIGHT JOIN resource_node rn ON rn.node=n.ref AND rn.resource='$ref'
+	SELECT group_concat(n.name) value, n.resource_type_field, f2.*,f2.required frequired, f2.ref, f2.field_constraint FROM resource_type_field f2 LEFT JOIN node n ON n.resource_type_field=f2.ref LEFT JOIN resource_node rn ON rn.node=n.ref AND rn.resource='$ref'
 	
-	WHERE (f2.type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND " . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ") group by ref order by ";
+	WHERE (f2.type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND (" . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ")) group by ref order by ";
     if ($ord_by) {
     	$fieldsSQL .= "order_by,resource_type,ref";
     } else {
