@@ -252,28 +252,35 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     # Find the resource type.
     if ($originalref==-1) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
-    $rtype = sql_value("select resource_type value from resource where ref='$originalref'",0);
+    $rtype = sql_value("select resource_type value FROM resource WHERE ref='$originalref'",0);
 
     # If using metadata templates, 
     $templatesql = "";
-    global $metadata_template_resource_type;
+    global $metadata_template_resource_type,$FIXED_LIST_FIELD_TYPES;
     if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$rtype) {
         # Show all resource fields, just as with editing multiple resources.
         $multi = true;
     }
 
     $return = array();
-	$fieldsSQL = "select d.value,d.resource_type_field,f.*,f.required frequired,f.ref fref, f.field_constraint from resource_type_field f left join (select * from resource_data where resource='$ref') d on d.resource_type_field=f.ref and d.resource='$ref' where ( " . (($multi)?"1=1":"f.resource_type=0 or f.resource_type=999 or f.resource_type='$rtype'") . ") group by f.ref order by ";
+	$fieldsSQL = "SELECT d.value,d.resource_type_field,f1.*,f1.required frequired,f1.ref fref, f1.field_constraint FROM resource_type_field f1 LEFT JOIN (SELECT * FROM resource_data WHERE resource='$ref') d ON d.resource_type_field=f1.ref AND d.resource='$ref' 
+	
+	WHERE (f1.type NOT IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND " . (($multi)?"1=1":"f1.resource_type=0 OR f1.resource_type=999 OR f1.resource_type='$rtype'") . ")
+	
+	UNION 
+	
+	SELECT group_concat(n.name) value, n.resource_type_field, f2.*,f2.required frequired, f2.ref, f2.field_constraint FROM resource_type_field f2 LEFT JOIN node n ON n.resource_type_field=f2.ref RIGHT JOIN resource_node rn ON rn.node=n.ref AND rn.resource='$ref'
+	
+	WHERE (f2.type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND " . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ") group by ref order by ";
     if ($ord_by) {
-    	$fieldsSQL .= "f.order_by,f.resource_type,f.ref";
+    	$fieldsSQL .= "order_by,resource_type,ref";
     } else {
-		$fieldsSQL .= "f.resource_type,f.order_by,f.ref";
+		$fieldsSQL .= "resource_type,order_by,ref";
 	    debug("use perms: ".!$use_permissions);
     }
 	$fields = sql_query($fieldsSQL);
-  
     # Build an array of valid types and only return fields of this type. Translate field titles. 
-    $validtypes = sql_array("select ref value from resource_type");
+    $validtypes = sql_array("SELECT ref value from resource_type");
     $validtypes[] = 0; $validtypes[] = 999; # Support archive and global.
     for ($n = 0;$n<count($fields);$n++) {
         if
@@ -304,7 +311,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
             $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-"); 
             $return[] = $fields[$n];
         }
-    }
+    }	
     return $return;
 	}
 }
