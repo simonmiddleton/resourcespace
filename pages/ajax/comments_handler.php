@@ -1,14 +1,18 @@
 <?php
-
 include "../../include/db.php";
 include_once "../../include/general.php";
 include "../../include/authenticate.php";
 include "../../include/comment_functions.php";
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") if (!empty($username)) comments_submit();	
+if('POST' == $_SERVER['REQUEST_METHOD'])
+    {
+    if(!empty($username))
+        {
+        comments_submit();
+        }
+    }
 
-$ref = (!empty ($_GET['ref'])) ? $_GET['ref'] : "";	
-$collection_mode = (!empty ($_GET['collection_mode']));				
-comments_show($ref, $collection_mode);				
-		
-?>
+$ref             = getvalescaped('ref', '');
+$collection_mode = ('' != getvalescaped('collection_mode', '') ? true : false);
+
+comments_show($ref, $collection_mode);
