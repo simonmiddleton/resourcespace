@@ -246,7 +246,7 @@ if(getval("save","")!="" && getval("delete","")=="")
 			}		
 		else
 			{
-			$val=getvalescaped($column,"");
+			$val=escape_check(trim(getval($column,"")));
 			//echo "GOT VALUE " . $val . " for " . $column . "<br>"; 
 			// Set shortnm if not already set
 			if($column=="name" && $val==""){$val="field" . $ref;}
@@ -259,6 +259,7 @@ if(getval("save","")!="" && getval("delete","")=="")
 			{
 			$sql="update resource_type_field set ";
 			}		
+		
 		$sql.="{$column}=" . (($val=="")?"NULL":"'{$val}'");
 		log_activity(null,LOG_CODE_EDITED,$val,'resource_type_field',$column,$ref);
 
