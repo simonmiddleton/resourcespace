@@ -889,6 +889,8 @@ $contactsheet_sorting=false;
 $contact_sheet_include_header=true;
 # Give user option to add header text to contact page?
 $contact_sheet_include_header_option=false;
+# Show the application name in the header?
+$contact_sheet_include_applicationname=true;
 
 # Add logo image to contact page? set contact_sheet_logo if set to true
 $include_contactsheet_logo=false;

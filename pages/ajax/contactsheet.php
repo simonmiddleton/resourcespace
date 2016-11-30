@@ -98,7 +98,8 @@ $placeholders      = array(
     'title'                         			=> $title,
     'columns'                       			=> $columns,
     'config_sheetthumb_include_ref' 			=> $config_sheetthumb_include_ref,
-    'contact_sheet_metadata_under_thumbnail'	=> $contact_sheet_metadata_under_thumbnail
+    'contact_sheet_metadata_under_thumbnail'	=> $contact_sheet_metadata_under_thumbnail,
+    'contact_sheet_include_applicationname'		=> $contact_sheet_include_applicationname
 );
 
 if($contactsheet_header)
