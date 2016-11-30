@@ -907,8 +907,6 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     }
     ?>
 
-</div>
-
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 <label for="download"> </label>
 
