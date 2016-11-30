@@ -1630,7 +1630,7 @@ function auto_create_user_account()
 function email_user_request()
     {
     // E-mails the submitted user request form to the team.
-    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents;
+    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getvalescaped('name', ''));
@@ -1638,8 +1638,8 @@ function email_user_request()
     $userrequestcomment = strip_tags(getvalescaped('userrequestcomment', ''));
 
     // Build a message
-    $message             = "{$lang['userrequestnotification1']}\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n{$lang['userrequestnotification2']}\n{$baseurl}";
-    $notificationmessage = $lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
+    $message             = "{" . ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "}\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n{" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "}\n{$baseurl}";
+    $notificationmessage = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
 
     $approval_notify_users = get_notification_users("USER_ADMIN"); 
     $message_users         = array();

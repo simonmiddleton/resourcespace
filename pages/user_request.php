@@ -74,7 +74,7 @@ if (getval("save","")!="")
 		$error=$lang["requiredantispam"];
 		}
 	# Check that the e-mail address doesn't already exist in the system
-	elseif (user_email_exists($user_email))
+	elseif (user_email_exists($user_email) && $account_email_exists_note)
 		{
 		# E-mail already exists
 		$error=$lang["accountemailalreadyexists"];$error_extra="<br/><a href=\"".$baseurl_short."pages/user_password.php?email=" . urlencode($user_email) . "\">" . $lang["forgottenpassword"] . "</a>";
@@ -87,6 +87,11 @@ if (getval("save","")!="")
 			{	
 			# Automatically create a new user account
 			$try=auto_create_user_account();
+			if($try!==true && !$account_email_exists_note)
+				{
+				// send an email about the user request
+				$try=email_user_request();
+				}
 			}
 		else
 			{

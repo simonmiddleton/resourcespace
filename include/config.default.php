@@ -1517,6 +1517,10 @@ $auto_approve_domains=array();
 # Note: user_account_auto_creation needs to be true.
 $user_account_fullname_create=false;
 
+# Show an error when someone tries to request an account with an email already in the system.
+# Hiding this error is useful if you consider this error to be a security issue (i.e. exposing that the email is linked to an account)
+$account_email_exists_note=true;
+
 # Display a larger preview image on the edit page?
 $edit_large_preview=true;
 
