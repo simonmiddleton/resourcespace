@@ -3115,11 +3115,10 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 	
 	global $userref,$usereditfilter,$edit_access_for_contributor;
 	if (hook("customediteaccess")) {return true;}
-	if (!is_array($resourcedata)) # Resource data  may not be passed 
+	if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data  may not be passed 
 		{
 		$resourcedata=get_resource_data($resource);		
 		}	
-		
 	if ($status==-999) # Archive status may not be passed 
 		{$status=$resourcedata["archive"];}
 		
