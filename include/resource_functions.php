@@ -3569,7 +3569,7 @@ function get_resource_files($ref,$includeorphan=false){
 if (!function_exists("reindex_resource")){
 function reindex_resource($ref)
 	{
-	global $index_contributed_by, $index_resource_type;
+	global $index_contributed_by, $index_resource_type,$FIXED_LIST_FIELD_TYPES;
 	# Reindex a resource. Delete all resource_keyword rows and create new ones.
 	
 	# Delete existing keywords
@@ -3579,7 +3579,7 @@ function reindex_resource($ref)
 	$data=get_resource_field_data($ref,false,false); # Fetch all fields and do not use permissions.
 	for ($m=0;$m<count($data);$m++)
 		{
-		if ($data[$m]["keywords_index"]==1)
+		if ($data[$m]["keywords_index"]==1 && !in_array($data[$m]["type"],$FIXED_LIST_FIELD_TYPES))
 			{
 			#echo $data[$m]["value"];
 			$value=$data[$m]["value"];
