@@ -269,9 +269,9 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 	
 	UNION 
 	
-	SELECT group_concat(n.name) value, n.resource_type_field, f2.*,f2.required frequired, f2.ref, f2.field_constraint FROM resource_type_field f2 LEFT JOIN node n ON n.resource_type_field=f2.ref LEFT JOIN resource_node rn ON rn.node=n.ref AND rn.resource='$ref'
+	SELECT group_concat(n.name) value, n.resource_type_field, f2.*,f2.required frequired, f2.ref, f2.field_constraint FROM resource_type_field f2 LEFT JOIN node n ON n.resource_type_field=f2.ref LEFT JOIN resource_node rn ON rn.node=n.ref
 	
-	WHERE (f2.type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND (" . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ")) group by ref order by ";
+	WHERE rn.resource='$ref' AND (f2.type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND (" . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ")) group by ref order by ";
     if ($ord_by) {
     	$fieldsSQL .= "order_by,resource_type,ref";
     } else {
