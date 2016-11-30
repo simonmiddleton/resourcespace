@@ -104,8 +104,6 @@ if(!hook("replace_footernavrightbottom"))
 <?php 
 } ?>
 
-<br />
-
 <?php echo $extrafooterhtml; ?>
 
 <?php } // end ajax ?>

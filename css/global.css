@@ -136,7 +136,7 @@ div#Header.SlimHeaderFixedPosition #HeaderNav2 li:last-child { margin-right: 40p
 div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 
-#Footer {clear: both; margin:20px 25px;padding:0;text-align:left;}
+#Footer {clear: both; margin:20px 25px 38px 25px;padding:0;text-align:left;}
 #FooterNavRight {float:right;text-align:right;margin-top: 10px;clear: right;}
 #FooterNavRightBottom {float:right;text-align:right;margin-top: 10px;clear: right;}
 #FooterNavLeft {float:left;text-align:left;margin-top: 10px;}
