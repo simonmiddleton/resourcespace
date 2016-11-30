@@ -183,8 +183,19 @@ foreach($results as $result_data)
 
     // Add the preview image
     $use_watermark = $force_watermark;
-    if($use_watermark==''){$use_watermark = check_use_watermark();}
+    if('' == $use_watermark)
+        {
+        $use_watermark = check_use_watermark();
+        }
+
     $img_path = get_resource_path($result_data['ref'], true, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
+
+    // If we can't find the size, drop back to preview size
+    if(!file_exists($img_path))
+        {
+        $img_path = get_resource_path($result_data['ref'], true, 'pre', false, $result_data['preview_extension'], -1, 1, $use_watermark);
+        }
+
     if(!file_exists($img_path))
         {
         $img_path = "../../gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false, true);
