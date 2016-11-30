@@ -124,12 +124,12 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
         ?>
 
     // Trigger an event so we can chain actions once we've changed a dynamic keyword
-    document.getElementsByName('<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]').forEach(function (item)
+    jQuery('[name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]"]').each(function(index, element)
         {
         document.getElementById('CentralSpace')
             .dispatchEvent(new CustomEvent('dynamickKeywordChanged', {
                 detail: {
-                    node: item.value
+                    node: element.value
                 },
                 bubbles: true,
                 cancelable: false
