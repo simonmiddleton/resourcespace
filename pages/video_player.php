@@ -110,52 +110,108 @@ if(!hook("swfplayer"))
 		<link href="<?php echo $baseurl_short?>lib/videojs/video-js.min.css?r=<?=$css_reload_key?>" rel="stylesheet">
         <script src="<?php echo $baseurl_short?>lib/videojs/video.min.js?r=<?=$css_reload_key?>"></script>
 		<script src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?r=<?=$css_reload_key?>"></script>		
+		<?php
+		if(isset($videojs_resolution_selection))
+			{
+			?>
+  			<link href="<?php echo $baseurl_short?>lib/videojs-resolution-switcher/videojs-resolution-switcher.css?r=<?=$css_reload_key?>" rel="stylesheet">
+  			<script src="<?php echo $baseurl_short?>lib/videojs-resolution-switcher/videojs-resolution-switcher.js?r=<?=$css_reload_key?>"></script>
+  			<?php
+  			}
+  		?>
 		<!-- START VIDEOJS -->
 		<div class="videojscontent">
-		<video 
-			id="<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref?>"
-			controls
-			data-setup='{ 
-				<?php if($play_on_hover){?>
-					"loadingSpinner" : false,
-					"TextTrackDisplay" : true,
-					"nativeTextTracks": false,
-					"children": { 
-						"bigPlayButton":false, 
-						<?php if($pagename=='search' && $display=='smallthumbs'){?>
-							"controlBar": false
-						<?php }
-						else{ ?>
-							"controlBar": { 
-								"children": { 
-									"playToggle": false, 
-									"volumeControl":false
+			<video 
+				id="<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref?>"
+				controls
+				data-setup='{ 
+					<?php if($play_on_hover){?>
+						"loadingSpinner" : false,
+						"TextTrackDisplay" : true,
+						"nativeTextTracks": false,
+						"children": { 
+							"bigPlayButton":false, 
+							<?php if($pagename=='search' && $display=='smallthumbs'){?>
+								"controlBar": false
+							<?php }
+							else{ ?>
+								"controlBar": { 
+									"children": { 
+										"playToggle": false, 
+										"volumeControl":false
+									}
 								}
-							}
+							<?php } ?>
+						}
+					<?php }
+					if(isset($videojs_resolution_selection)){
+						if($play_on_hover){?>,
 						<?php } ?>
+						"plugins": {
+								"videoJsResolutionSwitcher": {
+								  "default": "<?php echo $videojs_resolution_selection_default_res?>"
+								  <?php
+								  if($videojs_resolution_selection_dynamicLabel)
+								  	{
+								  	?>,
+								  	"dynamicLabel": true
+								  	<?php
+								  	}
+								  	?>
+								}
+							  }
+					<?php } ?>
+				}'
+				preload="<?php echo $preload?>"
+				width="<?php echo $width?>" 
+				height="<?php echo $height?>" 
+				class="video-js vjs-default-skin vjs-big-play-centered <?php if($pagename=='search'){echo "video-$display";}?>" 
+				poster="<?php echo $thumb_raw?>"
+				<?php if($play_on_hover){ ?>
+					onmouseout="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].pause();"
+					onmouseover="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].play();"
+				<?php } ?>
+			>
+				<?php
+				if(isset($videojs_resolution_selection)){
+					$s_count=count($videojs_resolution_selection);
+					for($s=0;$s<$s_count;$s++){
+						if($videojs_resolution_selection[$s]['name']==''){
+							$res_path=$flashpath_raw;
+							$res_ext=($flashfallback?"flv":$ffmpeg_preview_extension);
+						}
+						else{
+							$alt_data=sql_query("select * from resource_alt_files where resource={$ref} and name='{$videojs_resolution_selection[$s]['name']}'");
+							echo "alt data:";print_r($alt_data);echo"<br/>";
+							if(!empty($alt_data)){
+								$alt_data=$alt_data[0];
+								$res_path=get_resource_path($ref,false,"",false,$alt_data['file_extension'],-1,1,false,"",$alt_data['ref'],false);
+								$res_ext=$alt_data['file_extension'];
+							}
+						}
+						if(isset($res_path) && isset($res_ext)){
+							?>
+							<source src="<?php echo $res_path?>" type='video/<?php echo $res_ext?>' label="<?php echo $videojs_resolution_selection[$s]['label']?>" />
+							<?php
+						}
 					}
-				<?php } ?> 
-			}'
-			preload="<?php echo $preload?>"
-			width="<?php echo $width?>" 
-			height="<?php echo $height?>" 
-			class="video-js vjs-default-skin vjs-big-play-centered <?php if($pagename=='search'){echo "video-$display";}?>" 
-			poster="<?php echo $thumb_raw?>"
-			<?php if($play_on_hover){ ?>
-				onmouseout="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].pause();"
-				onmouseover="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].play();"
-			<?php } ?>
-		>
-		    <source src="<?php echo $flashpath_raw?>" type="video/<?php echo ($flashfallback?"flv":$ffmpeg_preview_extension) ?>" >
-			<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-			<?php hook("html5videoextra"); ?>
-		</video>
+				}
+				else{
+					?>
+					<source src="<?php echo $flashpath_raw?>" type='video/<?php echo ($flashfallback?"flv":$ffmpeg_preview_extension) ?>'/>
+					<?php
+				}
+				?>
+				<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+				<?php hook("html5videoextra"); ?>
+			</video>
 		
 		<?php if($play_on_hover){ ?>	
 				<script>
 				var videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?> = jQuery('#<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>');
 				</script>
 		<?php } ?>
+		
 		</div>
 		<!-- END VIDEOJS -->
 		<?php

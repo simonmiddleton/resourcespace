@@ -470,6 +470,26 @@ $pdf_split_pages_to_resources=false;
 # Use VideoJS for video playback (as opposed to FlashPlayer, which we are deprecating)
 $videojs=true;
 
+/*
+* Video Resolution selection: ability to use the original playback file and any files created via $ffmpeg_alternatives for resolution selection options on the view page.
+* Since $video_view_play_hover hides the control bar its use will override the use of resolution selection.
+*
+* "label": the resolution identifier as it should appear in the selection list.
+* "name": accepts names set in $ffmpeg_alternatives[]["name"]. For the main playback file leave empty.
+*
+* Example: The settings below use the original playback file for 'HD' playback and the $ffmpeg_alternatives file with name "standard"
+$videojs_resolution_selection[0]["label"]="HD";
+$videojs_resolution_selection[0]["name"]="";// 
+$videojs_resolution_selection[1]["label"]="SD";
+$videojs_resolution_selection[1]["name"]="standard";
+
+# The defaul resolution when using resolution selection. Must use the same value as one of the "lable" settings above
+$videojs_resolution_selection_default_res='HD';
+# dynamicLabel: If true current label will be displayed in control bar. If false gear icon is displayed.
+$videojs_resolution_selection_dynamicLabel=false;
+*/
+
+
 # Create a preview video for ffmpeg compatible files? A FLV (Flash Video) file will automatically be produced for supported file types (most video types - AVI, MOV, MPEG etc.)
 /* Examples of preview options to convert to different types (don't forget to set the extension as well):
 * MP4: $ffmpeg_preview_options = '-f mp4 -ar 22050 -b 650k -ab 32k -ac 1';
