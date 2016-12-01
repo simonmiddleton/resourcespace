@@ -303,8 +303,15 @@ if (count($inst_plugins)>0)
             echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '">' . LINK_CARET . $lang['groupaccess'].'</a> ';
             $p['enabled_groups'] = array($p['enabled_groups']);
             if ($p['config_url']!='')        
-               {               
-               echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl.$p['config_url'].'">' . LINK_CARET .$lang['options'].'</a> ';        
+               {
+               // Correct path to support plugins that are located in filestore/plugins
+               if(substr($p['config_url'],0,8)=="/plugins")
+                {
+                $plugin_config_url = str_replace("/plugins/" . $p['name'], get_plugin_path($p['name'],true), $p['config_url']);
+                }
+               else
+                {$plugin_config_url = $baseurl . $p['config_url'];}
+               echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '">' . LINK_CARET .$lang['options'].'</a> ';        
                if (sql_value("SELECT config_json as value from plugins where name='".$p['name']."'",'')!='' && function_exists('json_decode'))
                      {
                      echo '<a class="nowrap" href="'.$baseurl_short.'pages/team/team_download_plugin_config.php?pin='.$p['name'].'">' . LINK_CARET .$lang['plugins-download'].'</a> ';
