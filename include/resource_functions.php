@@ -569,20 +569,21 @@ function save_resource_data_multi($collection)
                     {
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
                     }
+
                 // Check nodes are valid for this field				
 				$fieldnodes = get_nodes($fields[$n]['ref']);
-				$validnodes=array();
-               // print_r($fieldnodes);
+				$validnodes = array();
+
 				foreach($fieldnodes as $fieldnode)
 					{
-					$validnodes[$fieldnode["name"]]=$fieldnode["ref"];
+					$validnodes[$fieldnode['name']] = $fieldnode['ref'];
 					}
-				
+
                 // Store selected/deselected values in array
-				$ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);
-                $ui_deselected_node_values=array_diff($validnodes,$ui_selected_node_values);
-				$node_options = array_flip($validnodes);
-				
+				$ui_selected_node_values   = array_intersect($ui_selected_node_values, $validnodes);
+                $ui_deselected_node_values = array_diff($validnodes, $ui_selected_node_values);
+				$node_options              = array_flip($validnodes);
+
                 // Append option(s) mode?
                 if (getval("modeselect_" . $fields[$n]["ref"],"")=="AP")
                    {
@@ -601,8 +602,8 @@ function save_resource_data_multi($collection)
                     $nodes_to_add  = $ui_selected_node_values;
                     $nodes_to_remove = $ui_deselected_node_values;
                     }
-                
-                $all_nodes_to_add = $all_nodes_to_add + $nodes_to_add;                
+
+                $all_nodes_to_add    = $all_nodes_to_add + $nodes_to_add;                
                 $all_nodes_to_remove = $all_nodes_to_remove + $nodes_to_remove;
                 
                 // Loop through all the resources and check current node values so we can check if we need to log this as a chsnge
@@ -611,20 +612,19 @@ function save_resource_data_multi($collection)
                     $ref            = $list[$m];
                     $value_changed  = false;
                     
-                    $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);
-                    //print_r($nodes_to_add);
-                    
-                    debug("Current nodes: " . implode(",",$current_field_nodes));
+                    $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);                    
+                    debug('Current nodes: ' . implode(',',$current_field_nodes));
+
                     $added_nodes = array_diff($nodes_to_add,$current_field_nodes);
-                    debug("Adding nodes: " . implode(",",$added_nodes));
-                    
+                    debug('Adding nodes: ' . implode(',',$added_nodes));
+
                     $removed_nodes = array_intersect($nodes_to_remove,$current_field_nodes);
-                    debug("Removed nodes: " . implode(",",$removed_nodes));
-                    
+                    debug('Removed nodes: ' . implode(',',$removed_nodes));
+    
                     // Work out what new nodes for this resource  will be
-                    $new_nodes = array_diff($current_field_nodes + $added_nodes,$removed_nodes);                    
-                    debug("New nodes: " . implode(",",$new_nodes));
-                    
+                    $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);      
+                    debug('New nodes: ' . implode(',',$new_nodes));
+
                     if(count($added_nodes)>0 || count($removed_nodes)>0){$value_changed  = true;}
                     
                    	if($value_changed)
@@ -644,6 +644,20 @@ function save_resource_data_multi($collection)
 							}
 
                         resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $existing_nodes_value, $new_nodes_val);
+
+                        $val = $new_nodes_val;
+
+                        // If this is a 'joined' field it still needs to add it to the resource column
+                        $joins = get_resource_table_joins();
+                        if(in_array($fields[$n]['ref'], $joins))
+                            {
+                            if(',' == substr($val, 0, 1))
+                                {
+                                $val = substr($val, 1);
+                                }
+
+                            sql_query("UPDATE resource SET field{$fields[$n]['ref']} = '" . escape_check(truncate_join_field_value(substr($new_nodes_val, 1)))."' WHERE ref = '{$ref}'");
+                            }
 						}
                     }
                 } // End of node section
@@ -819,7 +833,19 @@ function save_resource_data_multi($collection)
                             remove_keyword_mappings($ref,i18n_get_indexable($oldval),$fields[$n]["ref"],$fields[$n]["partial_index"],$is_date,'','',$is_html);
                             add_keyword_mappings($ref,i18n_get_indexable($newval),$fields[$n]["ref"],$fields[$n]["partial_index"],$is_date,'','',$is_html);
                             }
-                            
+
+                        // If this is a 'joined' field we need to add it to the resource column
+                        $joins = get_resource_table_joins();
+                        if(in_array($fields[$n]['ref'], $joins))
+                            {
+                            if(',' == substr($val, 0, 1))
+                                {
+                                $val = substr($val, 1);
+                                }
+
+                            sql_query("UPDATE resource SET field{$fields[$n]['ref']} = '" . escape_check(truncate_join_field_value($val)) . "' WHERE ref = '{$ref}'");
+                            }
+
                         # Add any onchange code
                         if($fields[$n]["onchange_macro"]!="")
                             {
@@ -830,7 +856,7 @@ function save_resource_data_multi($collection)
                 }  // End of non-node editing section
 			} // End of if edit this field
 		} // End of foreach field loop
-	
+
     // Add/remove nodes for all resources (we have already created log for this)
     if(count($all_nodes_to_add)>0)
         {
