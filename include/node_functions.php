@@ -19,10 +19,10 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     {
     if(!is_null($name))
         {
-        $name=trim($name);
+        $name = trim($name);
         }
 
-	if (is_null($resource_type_field) || $resource_type_field=='' || is_null($name) || $name=='')
+	if (is_null($resource_type_field) || '' == $resource_type_field || is_null($name) || '' == $name)
 		{
 		return false;
 		}
@@ -32,20 +32,12 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         $order_by = get_node_order_by($resource_type_field, (is_null($parent) || '' == $parent), $parent);            
         }
 
-    $query  = 'INSERT INTO node (`resource_type_field`, `name`, `parent`, `order_by`)';
-    $query .= ' SELECT \'' . escape_check($resource_type_field) . '\', \'' . escape_check($name) . '\'';
-
-    if(trim($parent)=='')
-        {
-        $query .= ', NULL';
-        }
-    else
-        {
-        $query .= ', \'' . escape_check($parent) . '\'';
-        }
-
-    $query .= ', \'' . escape_check($order_by) . '\' FROM DUAL';
-    $query .= ' WHERE NOT EXISTS (SELECT * FROM `node` WHERE `resource_type_field` = \'' . escape_check($resource_type_field) . '\' AND `name` = \'' . escape_check($name) . '\')';
+    $query = sprintf("INSERT INTO `node` (`resource_type_field`, `name`, `parent`, `order_by`) VALUES ('%s', '%s', %s, '%s')",
+        escape_check($resource_type_field),
+        escape_check($name),
+        ('' == trim($parent) ? 'NULL' : "'" . escape_check($parent) . "'"),
+        escape_check($order_by)
+    );
 
     // Check if we only need to save the record
     $current_node = array();
