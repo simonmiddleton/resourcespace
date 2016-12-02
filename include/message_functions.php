@@ -82,6 +82,8 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 // remove a message from message table and associated user_messages
 function message_remove($message)
 	{
+    $message = escape_check($message);
+
 	sql_query("DELETE FROM user_message WHERE message='{$message}'");
 	sql_query("DELETE FROM message WHERE ref='{$message}'");	
 	}
@@ -90,6 +92,9 @@ function message_remove($message)
 
 function message_seen($message,$seen_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)
 	{
+    $seen_type = escape_check($seen_type);
+    $message   = escape_check($message);
+
 	sql_query("UPDATE `user_message` SET seen=seen | {$seen_type} WHERE `ref`='{$message}'");
 	}
     
@@ -97,6 +102,8 @@ function message_seen($message,$seen_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)
 
 function message_unseen($message)
 	{
+    $message = escape_check($message);
+
 	sql_query("UPDATE `user_message` SET seen='0' WHERE `ref`='{$message}'");
 	}
 
@@ -200,7 +207,11 @@ function message_remove_related($remote_activity=0,$remote_refs=array())
 
 // Remove an instance of a message from user_message table 
 function message_user_remove($usermessage)
-	{
+    {
     global $userref;
-	sql_query("DELETE FROM user_message WHERE user={$userref} AND ref='{$usermessage}'");
-	}
+
+    $userref     = escape_check($userref);
+    $usermessage = escape_check($usermessage);
+
+    sql_query("DELETE FROM user_message WHERE user = {$userref} AND ref = '{$usermessage}'");
+    }
