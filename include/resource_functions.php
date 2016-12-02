@@ -93,11 +93,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
 	for ($n=0;$n<count($fields);$n++)
 		{
-			if(73 != $fields[$n]['ref'])
-				{
-				continue;
-				}
-
         if(!(
             checkperm('F' . $fields[$n]['ref'])
             || (checkperm("F*") && !checkperm('F-' . $fields[$n]['ref']))
