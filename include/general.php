@@ -5637,3 +5637,52 @@ function user_set_usergroup($user,$usergroup)
     {
     sql_query("update user set usergroup='" . escape_check($usergroup) . "' where ref='" . escape_check($user) . "'");
     }
+
+
+/**
+* Utility function to remove unwanted HTML tags and attributes.
+* Note: if $html is a full page, developers should allow html and body tags.
+* 
+* @param string $html       HTML string
+* @param array  $tags       Extra tags to be allowed
+* @param array  $attributes Extra attributes to be allowed
+*  
+* @return string|boolean
+*/
+function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
+    {
+    if(0 === strlen($html))
+        {
+        return false;
+        }
+
+    libxml_use_internal_errors(true);
+
+    $allowed_tags       = array_merge(array('div', 'span', 'h3', 'p', 'br', 'em'), $tags);
+    $allowed_attributes = array_merge(array('id', 'class', 'style'), $attributes);
+
+    $doc = new DOMDocument();
+
+    if($doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD))
+        {
+        foreach($doc->getElementsByTagName('*') as $tag)
+            {
+            if(!in_array($tag->tagName, $allowed_tags))
+                {
+                $tag->parentNode->removeChild($tag);
+
+                continue;
+                }
+
+            foreach($tag->attributes as $attr)
+                {
+                if(!in_array($attr->nodeName, $allowed_attributes))
+                    {
+                    $tag->removeAttribute($attr->nodeName);
+                    }
+                }
+            }
+        }
+
+    return $doc->saveHTML();
+    }
