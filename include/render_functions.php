@@ -369,7 +369,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     if('' != trim($node['name']))
                         {
                         ?>
-                        <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>" <?php if ((isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(cleanse_string($node['ref'], true), $set)) { ?>selected<?php } ?>><?php echo htmlspecialchars(trim($node['name'])); ?></option>
+                        <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>" <?php if ((isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(cleanse_string($node['ref'], true), $set)) { ?>selected<?php } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
                         <?php
                         }
                     }
@@ -443,7 +443,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                                         <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                                     </td>
                                     <td valign=middle>
-                                        <?php echo htmlspecialchars($node['name']); ?>&nbsp;&nbsp;
+                                        <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
                                     </td>
                                     <?php 
                                     }
