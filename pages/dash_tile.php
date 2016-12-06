@@ -345,7 +345,6 @@ if($create)
 		$resource_count=getvalescaped("resource_count",0,TRUE);
 
 		$link=$srch."&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&k=" . urlencode($k) . "&restypes=" . urlencode($restypes);
-		$title=preg_replace("/^.*search=/", "", $srch);
 		
 		$title_node = preg_replace("/^.*search=/", "", $srch);
 		$returned_title = array();
