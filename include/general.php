@@ -3309,7 +3309,7 @@ function check_display_condition($n, $field)
                         <script>
                         jQuery(document).ready(function()
                             {
-                            document.getElementById('CentralSpace').addEventListener('dynamickKeywordChanged', function(e)
+                            document.getElementById('CentralSpace').addEventListener('dynamicKeywordChanged', function(e)
                                 {
                                 checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
                                 });

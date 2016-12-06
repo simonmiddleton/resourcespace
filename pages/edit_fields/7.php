@@ -80,14 +80,14 @@ if(!(isset($treeonly) && true == $treeonly))
                     {
                     jQuery('#<?php echo $tree_id; ?>').jstree(true).deselect_all();
 
-                    <!-- remove the hidden inputs -->
+                    /* remove the hidden inputs */
                     var elements = document.getElementsByName('<?php echo $name; ?>');
                     while(elements[0])
                         {
                         elements[0].parentNode.removeChild(elements[0]);
                         }
 
-                    <!-- update status box -->
+                    /* update status box */
                     var node_statusbox = document.getElementById('<?php echo $status_box_id; ?>');
                     while(node_statusbox.lastChild)
                         {

@@ -67,7 +67,7 @@ foreach($field['nodes'] as $node)
         continue;
         }
 
-    $i18n_node_name = i18n_get_translated($node['name']);
+    $i18n_node_name = addslashes(i18n_get_translated($node['name']));
 
     $add_searched_nodes_function_call .= "addKeyword_{$js_keywords_suffix}('{$node['ref']}', '{$i18n_node_name}');";
     }
@@ -126,14 +126,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     // Trigger an event so we can chain actions once we've changed a dynamic keyword
     jQuery('[name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]"]').each(function(index, element)
         {
-        document.getElementById('CentralSpace')
-            .dispatchEvent(new CustomEvent('dynamickKeywordChanged', {
-                detail: {
-                    node: element.value
-                },
-                bubbles: true,
-                cancelable: false
-            }));
+       	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: element.value}]);
         });
     }
 
@@ -176,7 +169,7 @@ function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
 
     Keywords_<?php echo $js_keywords_suffix; ?> = [];
 
-    old_keywords.forEach(function(item, index)
+	old_keywords.forEach(function(item, index)
         {
         if(index != node_id)
             {
@@ -187,14 +180,7 @@ function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
     updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action);
 
     // Trigger an event so we can chain actions once we've changed a dynamic keyword
-    document.getElementById('CentralSpace')
-        .dispatchEvent(new CustomEvent('dynamickKeywordChanged', {
-            detail: {
-                node: node_id
-            },
-            bubbles: true,
-            cancelable: false
-        }));
+	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: node_id}]);
     }
 
 
