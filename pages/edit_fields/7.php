@@ -151,9 +151,9 @@ echo $hidden_input_elements;
         // Remove the value from the array
         else if(data.action == 'deselect_node')
             {
-            document.getElementById('<?php echo $hidden_input_elements_id_prefix; ?>' + data.node.id).remove();
+            jQuery('#<?php echo $hidden_input_elements_id_prefix; ?>' + data.node.id).remove();
             jQuery('#<?php echo $status_box_id;?>_option_' + data.node.id).next('br').remove();
-            document.getElementById('<?php echo $status_box_id;?>_option_' + data.node.id).remove();
+            jQuery('#<?php echo $status_box_id;?>_option_' + data.node.id).remove();
             }
 
         // Common actions for both selecting or deselecting a node
@@ -169,15 +169,8 @@ echo $hidden_input_elements;
             ?>
 
             // Trigger an event so we can chain actions once we've changed a category tree option
-            document.getElementById('CentralSpace')
-                    .dispatchEvent(new CustomEvent('categoryTreeChanged', {
-                        detail: {
-                            node: data.node.id
-                        },
-                        bubbles: true,
-                        cancelable: false
-                    }));
-            }
+            jQuery('#CentralSpace').trigger('categoryTreeChanged',[{node: data.node.id}]);
+			}
         });
     </script>
 </div>
