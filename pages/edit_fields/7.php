@@ -94,7 +94,14 @@ if(!(isset($treeonly) && true == $treeonly))
                         node_statusbox.removeChild(node_statusbox.lastChild);
                         }
 
-                    <?php echo $update_result_count_function_call; ?>
+                    <?php
+					if($edit_autosave)
+						{
+						echo "AutoSave('{$field['ref']}');";
+						}
+
+					echo $update_result_count_function_call;
+					?>
                     }
                 return false;"
         >&gt; <?php echo $lang['clearall']; ?></a>
