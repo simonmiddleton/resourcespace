@@ -346,6 +346,12 @@ if($create)
 
 		$link=$srch."&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&k=" . urlencode($k) . "&restypes=" . urlencode($restypes);
 		$title=preg_replace("/^.*search=/", "", $srch);
+		
+		$title_node = preg_replace("/^.*search=/", "", $srch);
+		$returned_title = array();
+		$tmp_title = get_node(resolve_nodes_from_string($title_node)[0],$returned_title);
+		$title = $returned_title["name"];
+		
 		if(substr($title,0,11)=="!collection")
 			{
 			include_once "../include/collections_functions.php";
