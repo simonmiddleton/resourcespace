@@ -5661,8 +5661,8 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     $allowed_tags       = array_merge(array('div', 'span', 'h3', 'p', 'br', 'em'), $tags);
     $allowed_attributes = array_merge(array('id', 'class', 'style'), $attributes);
 
+    // Step 1 - Check DOM
     $doc = new DOMDocument();
-
     if($doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD))
         {
         foreach($doc->getElementsByTagName('*') as $tag)
@@ -5674,15 +5674,37 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
                 continue;
                 }
 
-            foreach($tag->attributes as $attr)
+            if(!$tag->hasAttributes())
                 {
-                if(!in_array($attr->nodeName, $allowed_attributes))
+                continue;
+                }
+
+            foreach($tag->attributes as $attribute)
+                {
+                if(!in_array($attribute->nodeName, $allowed_attributes))
                     {
-                    $tag->removeAttribute($attr->nodeName);
+                    $tag->removeAttribute($attribute->nodeName);
                     }
                 }
             }
+
+        $html = $doc->saveHTML();
         }
 
-    return $doc->saveHTML();
+    // Step 2 - Use regular expressions
+    // Note: this step is required because PHP built-in functions for DOM sometimes don't
+    // pick up certain attributes. I was getting errors of "Not yet implemented." when debugging
+    preg_match_all('/[a-z]+=".+"/iU', $html, $attributes);
+
+    foreach($attributes[0] as $attribute)
+        {
+        $attribute_name = stristr($attribute, '=', true);
+
+        if(!in_array($attribute_name, $allowed_attributes))
+            {
+            $html = str_replace(' ' . $attribute, '', $html);
+            }
+        }
+
+    return $html;
     }
