@@ -113,7 +113,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 
 				// Work out nodes submitted by user
                 $ui_selected_node_values = array();
-
                 if(isset($user_set_values[$fields[$n]['ref']])
                     && !is_array($user_set_values[$fields[$n]['ref']])
                     && '' != $user_set_values[$fields[$n]['ref']]
@@ -128,7 +127,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
                 
 				 // Check nodes are valid for this field				
-				$fieldnodes = get_nodes($fields[$n]['ref']);
+				$fieldnodes = get_nodes($fields[$n]['ref'],'',true);
 				$validnodes=array();
 				foreach($fieldnodes as $fieldnode)
 					{
@@ -585,7 +584,7 @@ function save_resource_data_multi($collection)
                     }
 
                 // Check nodes are valid for this field				
-				$fieldnodes = get_nodes($fields[$n]['ref']);
+				$fieldnodes = get_nodes($fields[$n]['ref'],'',true);
 				$validnodes = array();
 
 				foreach($fieldnodes as $fieldnode)
