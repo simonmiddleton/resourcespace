@@ -90,7 +90,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/removed
     $user_set_values = getval('nodes', array());
-
+	
 	for ($n=0;$n<count($fields);$n++)
 		{
         if(!(
@@ -105,7 +105,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             // Fixed list  fields use node IDs directly
             if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
                 {
-                $val = '';
+               $val = '';
 
                 // Get currently selected nodes for this field 
                 $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']); 
@@ -113,6 +113,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 
 				// Work out nodes submitted by user
                 $ui_selected_node_values = array();
+				
                 if(isset($user_set_values[$fields[$n]['ref']])
                     && !is_array($user_set_values[$fields[$n]['ref']])
                     && '' != $user_set_values[$fields[$n]['ref']]
@@ -124,20 +125,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     && is_array($user_set_values[$fields[$n]['ref']]))
                     {
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
-                    }
-                
+					}
+					
 				 // Check nodes are valid for this field				
 				$fieldnodes = get_nodes($fields[$n]['ref'],'',true);
-				$validnodes=array();
-				foreach($fieldnodes as $fieldnode)
-					{
-					$validnodes[$fieldnode["name"]]=$fieldnode["ref"];
-					}
-
-				$node_options = array_flip($validnodes);
+				$node_options = array_column($fieldnodes,"name","ref");
+				$validnodes=array_column($fieldnodes,"ref");
 				
-				$ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);				
-					
+				$ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);	
+
                 $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
 
 				debug("Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
@@ -585,17 +581,12 @@ function save_resource_data_multi($collection)
 
                 // Check nodes are valid for this field				
 				$fieldnodes = get_nodes($fields[$n]['ref'],'',true);
-				$validnodes = array();
-
-				foreach($fieldnodes as $fieldnode)
-					{
-					$validnodes[$fieldnode['name']] = $fieldnode['ref'];
-					}
-
+				$node_options = array_column($fieldnodes,"name","ref");
+				$valid_nodes=array_column($fieldnodes,"ref");
+				
                 // Store selected/deselected values in array
-				$ui_selected_node_values   = array_intersect($ui_selected_node_values, $validnodes);
-                $ui_deselected_node_values = array_diff($validnodes, $ui_selected_node_values);
-				$node_options              = array_flip($validnodes);
+				$ui_selected_node_values=array_intersect($ui_selected_node_values,$valid_nodes);   
+				$ui_deselected_node_values = array_diff($validnodes, $ui_selected_node_values);
 
                 // Append option(s) mode?
                 if (getval("modeselect_" . $fields[$n]["ref"],"")=="AP")
