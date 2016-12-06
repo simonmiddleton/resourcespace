@@ -7,7 +7,7 @@
 ><?php if($value == strip_tags($value)){
 	$value=nl2br($value);
 }
-echo htmlspecialchars($value)?></textarea><?php
+echo htmlspecialchars(strip_tags_and_attributes($value))?></textarea><?php
 
 switch (strtolower($language))
     {

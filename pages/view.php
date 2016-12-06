@@ -352,13 +352,13 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 				$value=$value_mod_after_highlight;
 			}
 
-			# Use a display template to render this field
-			$template=$field["display_template"];
-			$template=str_replace("[title]",$title,$template);
-			$template=str_replace("[value]",$value,$template);
-			$template=str_replace("[value_unformatted]",$value_unformatted,$template);
-			$template=str_replace("[ref]",$ref,$template);
-			$extra.=$template;
+            # Use a display template to render this field
+            $template = $field['display_template'];
+            $template = str_replace('[title]', $title, $template);
+            $template = str_replace('[value]', strip_tags_and_attributes($value), $template);
+            $template = str_replace('[value_unformatted]', $value_unformatted, $template);
+            $template = str_replace('[ref]', $ref, $template);
+            $extra   .= $template;
 			}
 		else
 			{			
@@ -376,7 +376,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 				}
 				
 				?><div <?php if (!$valueonly){echo "class=\"itemNarrow\""; } elseif (isset($fixedwidth)) {echo "style=\"width:" . $fixedwidth . "px\""; } ?>>
-				<h3><?php echo $title?></h3><p><?php echo $value?></p></div><?php
+				<h3><?php echo $title?></h3><p><?php echo strip_tags_and_attributes($value); ?></p></div><?php
 				}
 			}
 		}
