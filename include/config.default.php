@@ -3115,8 +3115,8 @@ $collection_empty_on_submit=false;
 # Retina mode. Use the "next size up" when rending previews and thumbs for a more crisp display on high resolution screens. Note - uses much more bandwidth also.
 $retina_mode=false;
 
-# $xframe_options - set this to SAMEORIGIN or ALLOW-FROM with a URL to allow site to be used in an iframe
-$xframe_options = "DENY";
+# $xframe_options - set this to DENY (prevent all), SAMEORIGIN or ALLOW-FROM with a URL to allow site to be used in an iframe. To disable completely set to "";
+$xframe_options = "SAMEORIGIN";
 
 
 # FSTemplate - File System Template. Allows a system to contain an initial batch of resources that are stored elsewhere and read only.
