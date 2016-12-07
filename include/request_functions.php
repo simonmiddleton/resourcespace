@@ -56,10 +56,9 @@ function save_request($request)
                 {
                 get_config_option($assigned_to,'email_user_notifications', $send_email);
                 $assigned_to_user=get_user($assigned_to);
-                if($send_email && $assigned_to_user["email"]!="")
+                if($send_email && filter_var($assigned_to_user["email"], FILTER_VALIDATE_EMAIL))
                     {               
                     send_mail($assigned_to_user["email"],$applicationname . ": " . $lang["requestassignedtoyou"],$message);
-                    //send_mail($download_user['email'],$applicationname . ": " . $lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),"","",'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
                     }
                 else
                     {
@@ -74,7 +73,7 @@ function save_request($request)
                 if ($request_senduserupdates)
                     {
                     get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
-                    if($send_email && $currentrequest["email"]!="")
+                    if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
                         {    
                         send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestupdated"] . " - $request",$userconfirmmessage);
                         }
@@ -105,7 +104,7 @@ function save_request($request)
             }
                    
         get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
-        if($send_email && $currentrequest["email"]!="")
+        if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
             {
             send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus1"],$message);
             }
@@ -130,12 +129,11 @@ function save_request($request)
         # --------------- DECLINED -------------
         # Send declined e-mail
 
-        // $reason=str_replace(array("\\r","\\n"),"\n",$reason);$reason=str_replace("\n\n","\n",$reason); # Fix line breaks.
         $reason = unescape($reason);
         $message=$lang["requestdeclinedmail"] . "\n\n" . $lang["declinereason"] . ": ". $reason . "\n\n$baseurl/?c=" . $currentrequest["collection"] . "\n";
                
         get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
-        if($send_email && $currentrequest["email"]!="")
+        if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
             {
             send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus2"],$message);
             }
@@ -324,7 +322,7 @@ function email_collection_request($ref,$details)
     if ($request_senduserupdates)
         {
         get_config_option($userref,'email_user_notifications', $send_email);    
-        if($send_email && $useremail!="")
+        if($send_email && filter_var($useremail, FILTER_VALIDATE_EMAIL))
             {
             send_mail($useremail,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailusercollectionrequest",$templatevars);
             }        
@@ -637,7 +635,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 foreach ($assigned_to_users as $assigned_to_user)
                     {            
                     get_config_option($assigned_to_user["ref"],'email_user_notifications', $send_email);                    
-                    if($send_email)
+                    if($send_email && filter_var($assigned_to_user["email"], FILTER_VALIDATE_EMAIL))
                         {  
                         $assigned_to_user_emails[] = $assigned_to_user['email'];
                         }
@@ -722,7 +720,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             if($send_message==false){continue;}		
 			
 			get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $notify_user["email"]!="")
+			if($send_email && filter_var($notify_user["email"], FILTER_VALIDATE_EMAIL))
 				{
                 $admin_notify_emails[] = $notify_user['email'];	
 				}        
@@ -752,7 +750,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 		$userconfirm_notification = $lang["requestsenttext"] . "<br /><br />" . $message;
 		$userconfirmmessage = $userconfirm_notification . "<br /><br />" . $lang["clicktoviewresource"] . "<br />$baseurl/?c=$ref";
 		get_config_option($userref,'email_user_notifications', $send_email);    
-        if($send_email && $useremail!="")
+        if($send_email && filter_var($useremail, FILTER_VALIDATE_EMAIL))
             {
 			send_mail($useremail,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,"",$user_mail_template,$templatevars,$applicationname);
             }        
@@ -867,7 +865,7 @@ function email_resource_request($ref,$details)
             if($send_message==false){continue;}		
 			
 			get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $notify_user["email"]!="")
+			if($send_email && filter_var($notify_user["email"], FILTER_VALIDATE_EMAIL))
 				{
                 $admin_notify_emails[] = $notify_user['email'];				
 				}        
@@ -896,7 +894,7 @@ function email_resource_request($ref,$details)
 		if(isset($userref))
 			{
 	        get_config_option($userref,'email_user_notifications', $send_email);    
-			if($send_email && $useremail!="")
+			if($send_email && filter_var($useremail, FILTER_VALIDATE_EMAIL))
 				{
 				send_mail($useremail,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailusercollectionrequest",$templatevars);
 				}        
@@ -909,7 +907,7 @@ function email_resource_request($ref,$details)
 			{
 			$sender =  (!empty($useremail))? $useremail : (!empty($templatevars["formemail"]))? $templatevars["formemail"] :"";
 			
-			if($sender!=""){send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailuserresourcerequest",$templatevars);}  
+			if($sender!="" && filter_var($sender, FILTER_VALIDATE_EMAIL)){send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailuserresourcerequest",$templatevars);}  
 			}
         }
 	
