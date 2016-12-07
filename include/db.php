@@ -1071,35 +1071,27 @@ function getval($val,$default,$force_numeric=false)
 * 
 * @param string        $val
 * @param string|array  $default        The fallback value if not found
-* @param boolean       $force_numeric  Set to true if we want only numeric values. If returned value is not numeric
+* @param boolean       $force_numeric  Set to TRUE if we want only numeric values. If returned value is not numeric
 *                                      the function will return the default value
+* @param boolean       $allow_js       Set to TRUE to allow Javascript code
 * 
 * @return string|array
 */
-function getvalescaped($val, $default, $force_numeric = false)
+function getvalescaped($val, $default, $force_numeric = false, $allow_js = false)
     {
-    $value = getval($val, $default, $force_numeric);
+    $value        = getval($val, $default, $force_numeric);
+    $allowed_tags = ($allow_js ? array('script') : array());
 
     if(is_array($value))
         {
         foreach($value as &$item)
             {
-            $item = escape_check($item);
-
-            if(false !== strpos(strtolower($item), '<script'))
-                {
-                return $default;
-                }
+            $item = escape_check(strip_tags_and_attributes($item, $allowed_tags));
             }
         }
     else
         {
-        $value = escape_check($value);
-
-        if(false !== strpos(strtolower($value), '<script'))
-            {
-            return $default;
-            }
+        $value = escape_check(strip_tags_and_attributes($value, $allowed_tags));
         }
 
     return $value;
@@ -1970,4 +1962,92 @@ function validate_user($user_select_sql, $getuserdata=true)
 	return false;
 	}
 
+
+/**
+* Utility function to remove unwanted HTML tags and attributes.
+* Note: if $html is a full page, developers should allow html and body tags.
+* 
+* @param string $html       HTML string
+* @param array  $tags       Extra tags to be allowed
+* @param array  $attributes Extra attributes to be allowed
+*  
+* @return string
+*/
+function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
+    {
+    if(!is_string($html) || 0 === strlen($html))
+        {
+        return $html;
+        }
+
+    // Basic way of telling whether we had any tags previously
+    // This allows us to know that the returned value should actually be just text rather than HTML
+    // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
+    $is_html = ($html != strip_tags($html));
+
+    libxml_use_internal_errors(true);
+
+    $allowed_tags       = array_merge(array('div', 'span', 'h3', 'p', 'br', 'em'), $tags);
+    $allowed_attributes = array_merge(array('id', 'class', 'style'), $attributes);
+
+    // Step 1 - Check DOM
+    $doc = new DOMDocument();
+    $doc->encoding='UTF-8';
+
+    if($doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD))
+        {
+        foreach($doc->getElementsByTagName('*') as $tag)
+            {
+            if(!in_array($tag->tagName, $allowed_tags))
+                {
+                $tag->parentNode->removeChild($tag);
+
+                continue;
+                }
+
+            if(!$tag->hasAttributes())
+                {
+                continue;
+                }
+
+            foreach($tag->attributes as $attribute)
+                {
+                if(!in_array($attribute->nodeName, $allowed_attributes))
+                    {
+                    $tag->removeAttribute($attribute->nodeName);
+                    }
+                }
+            }
+
+        $html = $doc->saveHTML();
+        }
+
+    // Step 2 - Use regular expressions
+    // Note: this step is required because PHP built-in functions for DOM sometimes don't
+    // pick up certain attributes. I was getting errors of "Not yet implemented." when debugging
+    preg_match_all('/[a-z]+=".+"/iU', $html, $attributes);
+
+    foreach($attributes[0] as $attribute)
+        {
+        $attribute_name = stristr($attribute, '=', true);
+
+        if(!in_array($attribute_name, $allowed_attributes))
+            {
+            $html = str_replace(' ' . $attribute, '', $html);
+            }
+        }
+
+    $html = trim($html, "\r\n");
+
+    if(!$is_html)
+        {
+        $html = strip_tags($html);
+        }
+
+    return $html;
+    }
+
+
+
+// IMPORTANT: make sure the upgrade.php is the last line in this file
 include_once __DIR__ . '/../upgrade/upgrade.php';
