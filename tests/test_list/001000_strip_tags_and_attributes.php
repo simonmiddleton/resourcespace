@@ -5,7 +5,7 @@ if('cli' !== php_sapi_name())
     }
 
 // Case 1: 
-if(false !== strip_tags_and_attributes(''))
+if('' !== strip_tags_and_attributes(''))
     {
     return false;
     }

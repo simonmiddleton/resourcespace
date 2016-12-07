@@ -5647,13 +5647,13 @@ function user_set_usergroup($user,$usergroup)
 * @param array  $tags       Extra tags to be allowed
 * @param array  $attributes Extra attributes to be allowed
 *  
-* @return string|boolean
+* @return string
 */
 function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
     {
     if(0 === strlen($html))
         {
-        return false;
+        return $html;
         }
 
     libxml_use_internal_errors(true);
