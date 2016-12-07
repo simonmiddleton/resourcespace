@@ -358,6 +358,27 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $template = str_replace('[value]', strip_tags_and_attributes($value), $template);
             $template = str_replace('[value_unformatted]', $value_unformatted, $template);
             $template = str_replace('[ref]', $ref, $template);
+
+            /*Language strings
+            Format: [lang-language-name_here]
+            Example: [lang-resourcetype-photo]
+            */
+            preg_match_all('/\[lang-(.+?)\]/', $template, $template_language_matches);
+            $i = 0;
+            foreach($template_language_matches[0] as $template_language_match_placeholder)
+                {
+                $placeholder_value = $template_language_match_placeholder;
+
+                if(isset($lang[$template_language_matches[1][$i]]))
+                    {
+                    $placeholder_value = $lang[$template_language_matches[1][$i]];
+                    }
+
+                $template = str_replace($template_language_match_placeholder, $placeholder_value, $template);
+
+                $i++;
+                }
+
             $extra   .= $template;
 			}
 		else
