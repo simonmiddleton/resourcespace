@@ -1066,26 +1066,45 @@ function getval($val,$default,$force_numeric=false)
     return $default;
     }
 
-function getvalescaped($val,$default,$force_numeric=false)
-    {    
-    # return a value from get/post, escaped, SQL-safe and XSS-free
-    $value=getval($val,$default,$force_numeric);
-    if (is_array($value))
+/**
+* Return a value from get/post/cookie, escaped, SQL-safe and XSS-free
+* 
+* @param string        $val
+* @param string|array  $default        The fallback value if not found
+* @param boolean       $force_numeric  Set to true if we want only numeric values. If returned value is not numeric
+*                                      the function will return the default value
+* 
+* @return string|array
+*/
+function getvalescaped($val, $default, $force_numeric = false)
+    {
+    $value = getval($val, $default, $force_numeric);
+
+    if(is_array($value))
         {
-        foreach ($value as &$item)
+        foreach($value as &$item)
             {
-            $item=escape_check($item); 
-            if (strpos(strtolower($item),"<script")!==false) return $default;
+            $item = escape_check($item);
+
+            if(false !== strpos(strtolower($item), '<script'))
+                {
+                return $default;
+                }
             }
         }
     else
         {
-        $value=escape_check($value);
-        if (strpos(strtolower($value),"<script")!==false) {return $default;}
+        $value = escape_check($value);
+
+        if(false !== strpos(strtolower($value), '<script'))
+            {
+            return $default;
+            }
         }
+
     return $value;
     }
-    
+
 function getuid()
     {
     # generate a unique ID
