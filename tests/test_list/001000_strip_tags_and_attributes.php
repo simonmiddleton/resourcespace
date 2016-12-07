@@ -102,4 +102,14 @@ if($html_output !== strip_tags_and_attributes($html_input))
     return false;
     }
 
+
+// Case 8: Poorly formated tags (e.g. missing closing tags)
+$html_input  = '<p onmousedown="this.style.color=\'#FF0000\';">Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+$html_output = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>';
+
+if($html_output !== strip_tags_and_attributes($html_input))
+    {
+    return false;
+    }
+
 return true;
