@@ -1,12 +1,12 @@
 <?php
 include "../include/db.php";
-include "../include/general.php";
-include "../include/search_functions.php";
-include "../include/resource_functions.php";
-include "../include/collections_functions.php";
-include "../include/image_processing.php";
-include "../include/api_functions.php";
-include "../include/api_bindings.php";
+include_once "../include/general.php";
+include_once "../include/search_functions.php";
+include_once "../include/resource_functions.php";
+include_once "../include/collections_functions.php";
+include_once "../include/image_processing.php";
+include_once "../include/api_functions.php";
+include_once "../include/api_bindings.php";
 
 # Get parameters
 $user=getvalescaped("user","");
