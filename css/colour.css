@@ -91,7 +91,7 @@ input[readonly] {color: #000000;}
 	{color:#FFF;}
 .HomePanel h2{color:#FFF;}
 
-#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN {
+#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree {
 	background: rgba(0, 0, 0, 0.65);
 	color:#FFF;
 }
