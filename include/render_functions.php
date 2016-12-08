@@ -27,6 +27,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     $name="field_" . ($forsearchbar ? htmlspecialchars($field["name"]) : $field["ref"]);
     $id="field_" . $field["ref"];
 
+    $scriptconditions=array();
     
     if($forsearchbar)
     	{
