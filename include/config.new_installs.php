@@ -29,3 +29,5 @@ $themes_category_split_pages=true;
 $theme_category_levels=8;
 
 $simple_search_pills_view = true;
+
+$stemming=true;
