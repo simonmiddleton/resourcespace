@@ -607,7 +607,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
             $escaped_target = escapeshellarg(str_replace('snapshot', 'snapshot_%d', get_resource_path($ref, true, 'snapshot', false, 'jpg', -1, 1, false, '')));
 
             // Find video resolution, figure out whether it is landscape/ portrait and adjust the scaling for the snapshots accordingly
-            include dirname(__FILE__) . '/video_functions.php';
+            include_once dirname(__FILE__) . '/video_functions.php';
 
             $video_resolution = get_video_resolution($ffmpeg_fullpath, $file);
             $snapshot_size    = sql_query('SELECT width, height FROM preview_size WHERE id = "pre"');
