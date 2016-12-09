@@ -1,4 +1,4 @@
-ref,int(11),NO,PRI,NULL,auto_increment
+ref,int(11),NO,PRI,,auto_increment
 resource,int(11),YES,,NULL,
 usage_location,varchar(255),YES,,NULL,
 usage_medium,varchar(255),YES,,NULL,
