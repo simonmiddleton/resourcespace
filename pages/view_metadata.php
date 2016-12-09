@@ -137,9 +137,9 @@ if ($udata!==false)
 } // end hook replacecontributedby
 
 # Show field data
-$tabname="";
-$tabcount=0;
-$extra="";
+$tabname                        = '';
+$tabcount                       = 0;
+$extra                          = '';
 $show_default_related_resources = TRUE;
 
 foreach($fields_tab_names as $tabname)
@@ -153,13 +153,8 @@ foreach($fields_tab_names as $tabname)
             if(!hook('renderfield', '', array($fields[$i], $resource)))
                 {
                 display_field_data($fields[$i]);
-
-                // Show the fields with a display template now
-                echo $extra;
-                $extra = '';
                 }
             }
-
         }
 
     // Add related resources which have the same tab name:
@@ -176,6 +171,12 @@ foreach($fields_tab_names as $tabname)
     $tabcount++;
     if($tabcount != count($fields_tab_names))
         {
+        ?>
+        <div class="clearerleft"></div>
+        <?php
+        // Show the fields with a display template now
+        echo $extra;
+        $extra = '';
         ?>
         <div class="clearerleft"></div>
         </div>
