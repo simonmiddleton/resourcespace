@@ -297,9 +297,9 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		}
 	
 	# Handle warning messages
-	if (!$valueonly && $field["type"]==13 && trim($value)!="") 
+	if (!$valueonly && FIELD_TYPE_WARNING_MESSAGE == $field['type'] && '' != trim($value)) 
 		{
-		$extra.="<div class=\"RecordStory\"> <h1>" . $lang["fieldtype-warning_message"] . "</h1><p>" . nl2br(htmlspecialchars($value)) . "</p><br /><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">" . $lang["warningexpiredok"] . "</a></p></div><style>#RecordDownload {display:none;}</style>";
+		$extra.="<div class=\"RecordStory\"><h1>{$lang['fieldtype-warning_message']}</h1><p>" . nl2br(htmlspecialchars(i18n_get_translated($value))) . "</p><br /><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$lang['warningexpiredok']}</a></p></div><style>#RecordDownload {display:none;}</style>";
 		}
 	
 	# Process the value using a plugin. Might be processing an empty value so need to do before we remove the empty values
@@ -329,7 +329,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		if($field['type'] == 12) {
 			$value = str_replace(',', '', $value);
 		}
-				
+
 		$value_unformatted=$value; # store unformatted value for replacement also
 
 		if ($field["type"]!=8 || ($field["type"]==8 && $value == strip_tags($value))) # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to ckeditor that have not yet been edited.
@@ -382,7 +382,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $extra   .= $template;
 			}
 		else
-			{			
+			{
 			#There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
 			if ($value!=""){
 				# Draw this field normally.				
