@@ -1987,6 +1987,9 @@ $staticsync_defaultstate=0;
 # Archive state to set for resources where files have been deleted/moved from syncdir
 $staticsync_deleted_state=2;
 
+# staticsync_revive_state - if this is set then deleted items that later reappear will be moved to this archive state
+# $staticsync_revive_state=-1;
+
 # Uncomment and set to the ref of the user account that the staticsync resources will be 'created by' 
 # $staticsync_userref=-1;
 

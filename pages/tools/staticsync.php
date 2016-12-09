@@ -156,7 +156,7 @@ function ProcessFolder($folder)
            $staticsync_extension_mapping, $staticsync_mapped_category_tree, $staticsync_title_includes_path, 
            $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix, $theme_category_levels, $staticsync_defaultstate,
            $additional_archive_states,$staticsync_extension_mapping_append_values, $staticsync_deleted_state, $staticsync_alternative_file_text,
-           $resource_deletion_state, $alternativefiles;
+           $resource_deletion_state, $alternativefiles,$staticsync_revive_state;
     
     $collection = 0;
     
@@ -462,15 +462,16 @@ function ProcessFolder($folder)
                     echo " *** Skipping file - it was not possible to move the file (still being imported/uploaded?)" . PHP_EOL;
                     }
                 }
-            elseif (!isset($done[$shortpath]["archive"]) || $done[$shortpath]["archive"]!=$resource_deletion_state)
+            elseif (!isset($done[$shortpath]["archive"]) || $done[$shortpath]["archive"]!=$resource_deletion_state || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state))
                 {
-                # check modified date and update previews if necessary (not for deleted resources)
+                # check modified date and update previews if necessary (not for deleted resources unless $staticsync_revive_state is set)
                 $filemod = filemtime($fullpath);
                 if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"]))
                     {
+                    
                     $count++;
                     # File has been modified since we last created previews. Create again.
-                    $rd = sql_query("SELECT ref, has_image, file_modified, file_extension FROM resource 
+                    $rd = sql_query("SELECT ref, has_image, file_modified, file_extension, archive FROM resource 
                                         WHERE file_path='" . escape_check($shortpath) . "'");
                     if (count($rd) > 0)
                         {
@@ -497,9 +498,9 @@ function ProcessFolder($folder)
                             {
                             update_field($rref,$filename_field,$file);  
                             }
-
+    
                         create_previews($rref, false, $rd["file_extension"], false, false, -1, false, $staticsync_ingest);
-                        sql_query("UPDATE resource SET file_modified=NOW() WHERE ref='$rref'");
+                        sql_query("UPDATE resource SET file_modified=NOW() " . ((isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))?", archive='" . $staticsync_revive_state . "'":"") ." WHERE ref='$rref'");
                         }
                     }
                 }
