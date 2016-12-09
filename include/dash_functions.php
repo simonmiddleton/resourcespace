@@ -555,21 +555,21 @@ function get_managed_dash()
             }
 		?>
 		<a 
-			<?php 
-			# Check link for external or internal
-			if(mb_strtolower(substr($tile["link"],0,4))=="http")
-				{
-				$link = parse_dashtile_link($tile["link"]);
-				$newtab = true;
-				}
-			else
-				{
-				$link = $baseurl."/".htmlspecialchars(parse_dashtile_link($tile["link"]));
-				$newtab=false;
-				}
-			?>
+            <?php
+            # Check link for external or internal
+            if('http' == mb_strtolower(substr($tile['link'], 0, 4)))
+                {
+                $link   = parse_dashtile_link($tile['link']);
+                $newtab = true;
+                }
+            else
+                {
+                $link   = $baseurl . '/' . htmlspecialchars(parse_dashtile_link($tile['link']));
+                $newtab = false;
+                }
+                ?>
 			href="<?php echo $link?>" <?php echo $newtab ? "target='_blank'" : "";?>
-			onClick="if(dragging){dragging=false;e.defaultPrevented;}" 
+			onClick="<?php echo (!$newtab ? 'return CentralSpaceLoad(this, true);' : ''); ?>"
 			class="HomePanel DashTile DashTileDraggable" 
 			id="tile<?php echo htmlspecialchars($tile["tile"]);?>"
 		>
