@@ -413,7 +413,8 @@ elseif($restypes=='')
     		$searchbuttons .= "removeSearchTagInputPills(jQuery('#ssearchbox'));";
     		}
 
-		$searchbuttons .= $cleardate;
+        # Clear the standard fields
+		$searchbuttons .= "document.getElementById('ssearchbox').value='';" . $cleardate;
 
         if($display_user_rating_stars && $star_search)
             {
