@@ -655,7 +655,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         
         case 7:
         # ----- Category Tree
-        $options = $field['options'];
         $set     = preg_split('/[;\|]/', cleanse_string($value, true));
         $name    = "nodes_searched[{$field['ref']}][]";
 

@@ -698,12 +698,8 @@ function node_field_options_override(&$field,$resource_type_field=null)
         $category_tree_nodes = get_nodes($field['ref'], null, true);
         if (count($category_tree_nodes) > 0)
             {
-            $field['options'] = '';
             foreach ($category_tree_nodes as $node)
                 {
-                // for legacy category tree field rendering:
-                // $field['options'] .= $node['ref'] . ',' . (is_null($node['parent']) ? 0 : $node['parent']) . ',' . $node['name'] . PHP_EOL;
-
                 $field['nodes'][$node['ref']] = $node;
                 }
             }
@@ -713,13 +709,8 @@ function node_field_options_override(&$field,$resource_type_field=null)
         $nodes = get_nodes($field['ref']);
         if (count($nodes) > 0)
             {
-            $field['options'] = '';
             foreach ($nodes as $node)
                 {
-                // for legacy field rendering:
-                //$field['options'] .= ($field['options'] == '' ? '' : ',') . $node['name'];
-
-                // for new field rendering:
                 $field['nodes'][$node['ref']]=$node;
                 array_push($field['node_options'],$node['name']);
                 }
