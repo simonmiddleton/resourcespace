@@ -16,7 +16,6 @@ define ('FIELD_TYPE_CATEGORY_TREE',                     7);
 define ('FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR',   8);
 define ('FIELD_TYPE_DYNAMIC_KEYWORDS_LIST',             9);
 define ('FIELD_TYPE_DATE',                             10);
-define ('FIELD_TYPE_DYNAMIC_TREE_IN_DEVELOPMENT',      11);
 define ('FIELD_TYPE_RADIO_BUTTONS',                    12);
 define ('FIELD_TYPE_WARNING_MESSAGE',                  13);
 
@@ -32,7 +31,6 @@ $field_types = array(
     FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR  =>"fieldtype-text_box_formatted_and_ckeditor",
     FIELD_TYPE_DYNAMIC_KEYWORDS_LIST            =>"fieldtype-dynamic_keywords_list",
     FIELD_TYPE_DATE                             =>"fieldtype-date",
-    FIELD_TYPE_DYNAMIC_TREE_IN_DEVELOPMENT      =>"fieldtype-dynamic_tree_in_development",
     FIELD_TYPE_RADIO_BUTTONS                    =>"fieldtype-radio_buttons",
     FIELD_TYPE_WARNING_MESSAGE                  =>"fieldtype-warning_message"
 );

@@ -84,7 +84,6 @@ $lang["fieldtype-date_and_time"]="Date / time";
 $lang["fieldtype-expiry_date"]="Expiry date";
 $lang["fieldtype-category_tree"]="Category tree";
 $lang["fieldtype-dynamic_keywords_list"]="Dynamic keywords list";
-$lang["fieldtype-dynamic_tree_in_development"]="Dynamic tree (in development)";
 $lang["fieldtype-radio_buttons"]="Radio buttons";
 $lang["fieldtype-warning_message"]="Warning message";
 
