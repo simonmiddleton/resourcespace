@@ -1746,27 +1746,28 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
 	{
 	# Returns a list of all available editable site text (content).
 	# If $find is specified a search is performed across page, name and text fields.
-	global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder;	
-	$findname=trim($findname);
-	$findpage=trim($findpage);
-	$findtext=trim($findtext);
-	
-        $return=array();
-        
-        if ($findtext!="")
-            {
-            # When searching text, search all languages to pick up matches for languages other than the default. Add array so that default is first then we can skip adding duplicates.
-			$search_languages=array($defaultlanguage);
-            if($defaultlanguage!="en"){$search_languages[]="en";}
-			$search_languages = $search_languages + array_keys($languages);	
-			}
-        else
-            {
-            # Process only the default language when not searching.
-            $search_languages=array($defaultlanguage);
-            }
-			
-		
+	global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder;
+
+	$findname = trim($findname);
+	$findpage = trim($findpage);
+	$findtext = trim($findtext);
+
+    $return = array();
+
+    // en should always be included as it is the fallback language of the system
+    $search_languages = array('en');
+
+    if('en' != $defaultlanguage)
+        {
+        $search_languages[] = $defaultlanguage;
+        }
+
+    // When searching text, search all languages to pick up matches for languages other than the default. Add array so that default is first then we can skip adding duplicates.
+    if('' != $findtext)
+        {
+        $search_languages = $search_languages + array_keys($languages);	
+        }
+
 		global $language, $lang; // Need to save these for later so we can revert after search
 		$languagesaved=$language;
 		$langsaved=$lang;
@@ -1857,8 +1858,25 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
 				if(!$customisedtext)
 					{$return[]=$row;}				
                 }
-            }  
-        return $return;
+            }
+
+    // Clean returned array so it contains unique records by name
+    $unique_returned_records = array(); 
+    $existing_lang_names     = array();
+    $i                       = 0; 
+    foreach(array_reverse($return) as $returned_record)
+        {
+        if(!in_array($returned_record['name'], $existing_lang_names))
+            { 
+            $existing_lang_names[$i]     = $returned_record['name']; 
+            $unique_returned_records[$i] = $returned_record; 
+            }
+
+        $i++;
+        }
+    $return = $unique_returned_records;
+
+    return $return;
 	}
 
 function get_site_text($page,$name,$getlanguage,$group)
