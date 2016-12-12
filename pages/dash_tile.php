@@ -345,11 +345,7 @@ if($create)
 		$resource_count=getvalescaped("resource_count",0,TRUE);
 
 		$link=$srch."&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&k=" . urlencode($k) . "&restypes=" . urlencode($restypes);
-		
-		$title_node = preg_replace("/^.*search=/", "", $srch);
-		$returned_title = array();
-		$tmp_title = get_node(resolve_nodes_from_string($title_node)[0],$returned_title);
-		$title = $returned_title["name"];
+		$title=preg_replace("/^.*search=/", "", $srch);
 		
 		if(substr($title,0,11)=="!collection")
 			{
@@ -365,6 +361,17 @@ if($create)
 			$last = preg_replace("/^!last/", "", $title);
 			$title= ($last!="") ? $lang["last"]." ".$last : $lang["recent"];
 			}
+		else
+		{
+			$title_node = preg_replace("/^.*search=/", "", $srch);
+			$returned_title = array();
+			if (count(resolve_nodes_from_string($title_node))!=0)
+				{
+				$tmp_title = get_node(resolve_nodes_from_string($title_node)[0],$returned_title);
+				$title = $returned_title["name"];
+				}
+		}
+		
 		}
 
 	$pagetitle = $lang["createnewdashtile"];
