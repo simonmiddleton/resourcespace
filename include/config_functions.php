@@ -415,9 +415,9 @@ function config_add_html($content)
  * @param string $current the current value of the config variable being set.
  * @param boolean $password whether this is a "normal" text-entry field or a password-style
  *          field. Defaulted to false.
- * @param integer $width the width of the input field in pixels. Default: 300.
+ * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_text_input($name, $label, $current, $password = false, $width = 300, $textarea = false, $title = null, $autosave = false)
+function config_text_input($name, $label, $current, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false)
     {
     global $lang;
 
@@ -471,9 +471,9 @@ function config_text_input($name, $label, $current, $password = false, $width = 
  * @param string $label the user text displayed to label the text block. Usually a $lang string.
  * @param boolean $password whether this is a "normal" text-entry field or a password-style
  *          field. Defaulted to false.
- * @param integer $width the width of the input field in pixels. Default: 300.
+ * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_add_text_input($config_var, $label, $password = false, $width = 300, $textarea = false, $title = null, $autosave = false)
+function config_add_text_input($config_var, $label, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false)
     {
     return array('text_input', $config_var, $label, $password, $width, $textarea, $title, $autosave);
     }
@@ -485,9 +485,9 @@ function config_add_text_input($config_var, $label, $password = false, $width = 
 * @param string $name        HTML input file name attribute
 * @param string $label
 * @param string $form_action URL where the form should post to
-* @param int    $width       Wdidth of the input file HTML tag. Default - 300
+* @param int    $width       Wdidth of the input file HTML tag. Default - 420
 */
-function config_file_input($name, $label, $current, $form_action, $width = 300)
+function config_file_input($name, $label, $current, $form_action, $width = 420)
     {
     global $lang,$storagedir;
     
@@ -608,9 +608,9 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
 * @param string $name        HTML input file name attribute
 * @param string $label
 * @param string $form_action URL where the form should post to
-* @param int    $width       Width of the input file HTML tag. Default - 300
+* @param int    $width       Width of the input file HTML tag. Default - 420
 */
-function config_add_file_input($config_var, $label, $form_action, $width = 300)
+function config_add_file_input($config_var, $label, $form_action, $width = 420)
     {   
     return array('file_input', $config_var, $label, $form_action, $width);
     }
@@ -628,12 +628,12 @@ function config_add_file_input($config_var, $label, $form_action, $width = 300)
  * @param boolean       $usekeys   Tells whether to use the keys from $choices as the values of the options. If set
  *                                 to false the values from $choices will be used for both the values of the options and the text
  *                                 the user sees. Defaulted to true.
- * @param integer       $width     The width of the input field in pixels. Default: 300.
+ * @param integer       $width     The width of the input field in pixels. Default: 420.
  * @param string        $title     Title to be used for the label title. Default: null
  * @param boolean       $autosave  Flag to say whether the there should be an auto save message feedback through JS. Default: false
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
  */
-function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 300, $title = null, $autosave = false, $on_change_js=null)
+function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null)
     {
     global $lang;
     
@@ -685,9 +685,9 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
  * @param boolean $usekeys tells whether to use the keys from $choices as the values of the options. If set
  *          to false the values from $choices will be used for both the values of the options and the text
  *          the user sees. Defaulted to true.
- * @param integer $width the width of the input field in pixels. Default: 300.
+ * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_add_single_select($config_var, $label, $choices = '', $usekeys = true, $width = 300, $title = null, $autosave = false, $on_change_js=null)
+function config_add_single_select($config_var, $label, $choices = '', $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null)
     {
     return array('single_select', $config_var, $label, $choices, $usekeys, $width, $title, $autosave, $on_change_js);
     }
@@ -701,12 +701,12 @@ function config_add_single_select($config_var, $label, $choices = '', $usekeys =
  * @param boolean       $current   The current value (true or false) of the config variable being set.
  * @param string array  $choices   Array of the text to display for the two choices: False and True. Defaults
  *                                 to array('False', 'True') in the local language.
- * @param integer       $width     The width of the input field in pixels. Default: 300.
+ * @param integer       $width     The width of the input field in pixels. Default: 420.
  * @param string        $title     Title to be used for the label title. Default: null
  * @param boolean       $autosave  Flag to say whether the there should be an auto save message feedback through JS. Default: false
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
  */
-function config_boolean_select($name, $label, $current, $choices = '', $width = 300, $title = null, $autosave = false)
+function config_boolean_select($name, $label, $current, $choices = '', $width = 420, $title = null, $autosave = false)
     {
     global $lang;
 
@@ -755,9 +755,9 @@ function config_boolean_select($name, $label, $current, $choices = '', $width = 
  * @param string $label the user text displayed to label the select block. Usually a $lang string.
  * @param string array $choices array of the text to display for the two choices: False and True. Defaults
  *          to array('False', 'True') in the local language.
- * @param integer $width the width of the input field in pixels. Default: 300.
+ * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_add_boolean_select($config_var, $label, $choices = '', $width = 300, $title = null, $autosave = false)
+function config_add_boolean_select($config_var, $label, $choices = '', $width = 420, $title = null, $autosave = false)
     {
     return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave);
     }
