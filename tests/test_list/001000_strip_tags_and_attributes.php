@@ -112,4 +112,14 @@ if($html_output !== strip_tags_and_attributes($html_input))
     return false;
     }
 
+
+// Case 9: Text with new line feeds at the end
+$html_input  = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>' . PHP_EOL;
+$html_output = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>';
+
+if($html_output !== strip_tags_and_attributes($html_input))
+    {
+    return false;
+    }
+
 return true;
