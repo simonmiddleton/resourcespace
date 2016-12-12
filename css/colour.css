@@ -354,3 +354,10 @@ UL.jqueryFileTree A:hover {background-color:initial !important;}
 	background: rgba(30, 30, 30, 0.70);
 	color:#FFF;
 }
+
+/* Highlight selected keywords */
+input:checked + .customFieldLabel, .keywordselected
+  {
+  background-color: #ccc;
+  }
+

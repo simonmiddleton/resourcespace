@@ -91,9 +91,11 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
         {
         hidden_input_elements += '<input id="<?php echo $hidden_input_elements_name; ?>_' + index + '" type="hidden" name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]" value="' + index + '">';
 
+        html += '<div class="keywordselected">' + Keywords_<?php echo $js_keywords_suffix; ?>[index];
         html += '<a href="#"';
         html += ' onClick="removeKeyword_<?php echo $js_keywords_suffix; ?>(\'' + escape(index) + '\', true); return false;"';
-        html += '>[ x ]</a>&nbsp;' + Keywords_<?php echo $js_keywords_suffix; ?>[index] + '<br/>';
+        html += '>x</a></div>';
+        
         });
 
     // Update DOM with all our recent changes
@@ -129,38 +131,6 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
        	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: element.value}]);
         });
     }
-
-
-	function updateSelectedKeywords_<?php echo $name ?>(user_action)
-		{
-		var html='';
-		var value='';
-		for (var n=0;n<KeywordCounter_<?php echo $name ?>;n++)
-			{
-			html+='<a href="#" onClick="removeKeyword_<?php echo $name ?>(\'' + escape(Keywords_<?php echo $name ?>[n]) +'\',true);return false;">[ x ]</a> &nbsp;' + Keywords_<?php echo $name ?>[n] + '<br/>';
-			value+='|' + resolveTranslated_<?php echo $name ?>(Keywords_<?php echo $name ?>[n]);
-			}
-		document.getElementById('<?php echo $name?>_selected').innerHTML=html;
-		jQuery('input#<?php echo $name?>').val(value).change(); // Set value and call change to trigger a display condition check if required.
-		// Update the result counter, if the function is available (e.g. on Advanced Search).
-		if( typeof( UpdateResultCount ) == 'function' )
-			{
-			UpdateResultCount();
-			}
-		<?php if ($edit_autosave) {?>if (user_action) {AutoSave('<?php echo $field["ref"] ?>');}<?php } ?>
-		}
-		
-	function resolveTranslated_<?php echo $name ?>(keyword)
-		{
-		if (typeof KeywordsTranslated_<?php echo $name ?>[keyword]=='undefined')
-			{
-			return keyword;
-			}
-		else
-			{
-			return KeywordsTranslated_<?php echo $name ?>[keyword];
-			}
-		}
 
 function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
     {

@@ -85,11 +85,11 @@ if(!hook('customchkboxes', '', array($field)))
     if ($checkbox_ordered_vertically)
         {
         if(!hook('rendereditchkboxes')):
-        # ---------------- Vertical Ordering (only if configured) -----------
+        # ---------------- Vertical Ordering -----------
         ?>
         <fieldset class="customFieldset" name="<?php echo $field['title']; ?>">
             <legend class="accessibility-hidden"><?php echo $field['title']; ?></legend>
-            <table cellpadding=2 cellspacing=0>
+            <table cellpadding=3 cellspacing=0>
                 <tr>
             <?php
             $row = 1;
@@ -114,7 +114,7 @@ if(!hook('customchkboxes', '', array($field)))
 
                 $col++;
                     ?>
-                <td width="1">
+                <td>
                     <input type="checkbox"
                            id="nodes_<?php echo $node['ref']; ?>"
                            name="<?php echo $name; ?>"
@@ -133,10 +133,7 @@ if(!hook('customchkboxes', '', array($field)))
                             onChange="AutoSave('<?php echo $field['ref']; ?>');" onmousedown="checkbox_allow_save();"
                             <?php
                             }
-                            ?>>
-                </td>
-                <td>
-                    <label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
+                            ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
                 </td>
                 <?php
                 }
@@ -149,9 +146,11 @@ if(!hook('customchkboxes', '', array($field)))
         }
     else
         {
-        # ---------------- Horizontal Ordering (Standard) ---------------------             
+        # ---------------- Horizontal Ordering ---------------------             
         ?>
-        <table cellpadding=2 cellspacing=0>
+		<fieldset class="customFieldset" name="<?php echo $field['title']; ?>">
+        <legend class="accessibility-hidden"><?php echo $field['title']; ?></legend>
+        <table cellpadding=3 cellspacing=0>
             <tr>
         <?php
         foreach($field['nodes'] as $node)
@@ -166,10 +165,11 @@ if(!hook('customchkboxes', '', array($field)))
                 <?php
                 }
                 ?>
-            <td width="1">
+            <td>
                 <input type="checkbox"
                        name="<?php echo $name; ?>"
                        value="<?php echo $node['ref']; ?>"
+					   id="nodes_<?php echo $node['ref']; ?>"
                     <?php
                     if(in_array($node['ref'], $selected_nodes))
                         {
@@ -184,14 +184,13 @@ if(!hook('customchkboxes', '', array($field)))
                         onChange="AutoSave('<?php echo $field['ref']; ?>');"
                         <?php
                         }
-                        ?>>
-            </td>
-            <td><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;</td>
+                        ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label></td>
             <?php
             }
             ?>
             </tr>
         </table>
+		</fieldset>
         <?php
         }
     }
