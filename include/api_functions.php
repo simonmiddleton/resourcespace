@@ -51,7 +51,7 @@ function execute_api_call($query)
         if (array_key_exists("param" . $n,$params))
             {
             if ($n>1) {$eval.=",";}
-            $eval.="\"" . $params["param" . $n] . "\"";
+            $eval.="\"" . str_replace("\"","\\\"",$params["param" . $n]) . "\"";
             $n++;
             }
         else

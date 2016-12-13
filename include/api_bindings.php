@@ -24,10 +24,29 @@ function api_get_resource_field_data($resource)
    return get_resource_field_data($resource);
    }
 
-function api_create_resource($resource_type,$archive=999)
+function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,$revert=false,$autorotate=false,$metadata="")
     {
     # Create a new resource
-    return create_resource($resource_type,$archive);
+    $ref=create_resource($resource_type,$archive);
+    
+    # Also allow upload URL in the same pass (API specific, to reduce calls)
+    if ($url!="")
+        {     
+        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+        if ($return===false) {return false;}
+        }
+        
+    # Also allow metadata to be passed here.
+    if ($metadata!="")
+        {
+        $metadata=json_decode($metadata);
+        foreach ($metadata as $field=>$value)
+            {
+            update_field($ref,$field,$value);
+            }
+        }
+    
+    return $ref;
     }
 
 function api_update_field($resource,$field,$value)

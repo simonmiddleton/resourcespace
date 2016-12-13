@@ -11,7 +11,7 @@
  *   
 */
 
-$private_key="bfab0581232784c7b04a5c9e297232359d0110fdac2275ee97ce3a7c592eace6"; # <---  From RS user edit page for the user to log in as
+$private_key="e6ee5970359e1cfc24091aa7b0237feb25db1efb69a8b83d7959fb2f6b340ee0"; # <---  From RS user edit page for the user to log in as
 $user="admin"; # <-- RS username of the user you want to log in as
 
 # Some example function calls.
@@ -28,6 +28,8 @@ $query="user=" . $user . "&function=get_resource_field_data&param1=1"; # <--- Th
 #$query="user=" . $user . "&function=add_alternative_file&param1=2&param2=Test"; # <--- The function to execute, and parameters
 #$query="user=" . $user . "&function=get_resource_log&param1=2"; # <--- The function to execute, and parameters
 #$query="user=" . $user . "&function=upload_file_by_url&param1=2&param2=&param3=&param4=&param5=" . urlencode("http://www.montala.com/img/slideshow/montala-bg.jpg"); # <--- The function to execute, and parameters
+# Create resource, add a file and add metadata in one pass.
+$query="user=" . $user . "&function=create_resource&param1=1&param2=&param3=" . urlencode("http://www.montala.com/img/slideshow/montala-bg.jpg") . "&param4=&param5=&param6=&param7=" . urlencode(json_encode(array(1=>"Foo",8=>"Bar"))); # <--- The function to execute, and parameters
 
 # Sign the query using the private key
 $sign=hash("sha256",$private_key . $query);
