@@ -10,9 +10,9 @@ if(!isset($selected_nodes))
     {
     $selected_nodes = array();
 
-    if(isset($searched_nodes) && is_array($selected_nodes))
+    if(isset($searched_nodes) && is_array($searched_nodes))
         {
-        $selected_nodes = $selected_nodes;
+        $selected_nodes = $searched_nodes;
         }
     }
 

@@ -18,8 +18,8 @@
 function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array())
     {
     node_field_options_override($field);
-    
-    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml;
+	
+	global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES;
     
     // set this to zero since this does not apply to collections
     if (!isset($field['field_constraint'])){$field['field_constraint']=0;}
@@ -28,11 +28,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     $id="field_" . $field["ref"];
 
     $scriptconditions=array();
-    
-    if($forsearchbar)
-    	{
-    	}
-    
+        
     #Check if field has a display condition set
     $displaycondition=true;
     if ($field["display_condition"]!="" && (!$forsearchbar || ($forsearchbar && !empty($simple_search_display_condition) && in_array($field['ref'],$simple_search_display_condition))))
@@ -52,95 +48,105 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     
                     $scriptconditions[$condref]["field"] = $fields[$cf]["ref"];  # add new jQuery code to check value
                     $scriptconditions[$condref]['type'] = $fields[$cf]['type'];
-
-                    //$scriptconditions[$condref]['options'] = $fields[$cf]['options'];
+					$scriptconditions[$cf]['nodes'] = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
+                    $scriptconditions[$condref]['options'] = $fields[$cf]['options'];
 
                     $scriptconditions[$condref]['node_options'] = array();
-                    node_field_options_override($scriptconditions[$condref]['node_options'],$fields[$cf]['ref']);
 
                     $checkvalues=$s[1];
                     $validvalues=explode("|",strtoupper($checkvalues));
-                    $scriptconditions[$condref]["valid"]= "\"";
-                    $scriptconditions[$condref]["valid"].= implode("\",\"",$validvalues);
-                    $scriptconditions[$condref]["valid"].= "\"";
-                    if(isset($values[$fields[$cf]["name"]])) // Check if there is a matching value passed from search
-                        {
-                        $v=trim_array(explode(" ",strtoupper($values[$fields[$cf]["name"]])));
-                        foreach ($validvalues as $validvalue)
-                            {
-                            if (in_array($validvalue,$v)) {$displayconditioncheck=true;} # this is  a valid value
-                            }
-                        }
+					$scriptconditions[$condref]['valid'] = array();
+					foreach($validvalues as $validvalue)
+						{
+						$found_validvalue = get_node_by_name($scriptconditions[$cf]['nodes'], $validvalue);
+
+						if(0 != count($found_validvalue))
+							{
+							$scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
+
+							if(in_array($found_validvalue['ref'],$searched_nodes))
+								{
+								$displayconditioncheck = true;
+								}
+							}
+						}
+				
+
                     if (!$displayconditioncheck) {$displaycondition=false;}
-                    #add jQuery code to update on changes
-                        if (($fields[$cf]['type'] == 2 || $fields[$cf]['type'] == 3) && $fields[$cf]['display_as_dropdown'] == 0 && !$forsearchbar) # add onchange event to each checkbox field
-                            {
-                            # construct the value from the ticked boxes
-                            $val=","; # Note: it seems wrong to start with a comma, but this ensures it is treated as a comma separated list by split_keywords(), so if just one item is selected it still does individual word adding, so 'South Asia' is split to 'South Asia','South','Asia'.
-                            //$options=trim_array(explode(",",$fields[$cf]["options"]));
+					
+					// Certain fixed list types allow for multiple nodes to be passed at the same time
+					if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
+						{
+						if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
+							{
+							?>
+							<script>
+							jQuery(document).ready(function()
+								{
+								document.getElementById('CentralSpace').addEventListener('categoryTreeChanged', function(e)
+									{
+									checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
+									});
+								});
+							</script>
+							<?php
 
-                            $options=array();
-                            node_field_options_override($options,$fields[$cf]['ref']);
+							// Move on to the next field now
+							continue;
+							}
+						else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $fields[$cf]['type'])
+							{
+							?>
+							<script>
+							jQuery(document).ready(function()
+								{
+								document.getElementById('CentralSpace').addEventListener('dynamicKeywordChanged', function(e)
+									{
+									checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
+									});
+								});
+							</script>
+							<?php
 
-                            ?><script type="text/javascript">
-                            jQuery(document).ready(function() {<?php
-                                for ($m=0;$m<count($options);$m++)
-                                    {
-                                    $checkname=($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"]) . "_" . md5($options[$m]);
-									echo "jQuery('" . $display_condition_js_prepend . "input[name=\"" . $checkname . "\"]').change(function (){
-                                        checkSearchDisplayCondition" . $field["ref"] . "();
-                                        });";
-                                    }
-                                    ?>
-                                });
-                            </script><?php
-                            }
-                        # Handle Radio Buttons type:
-                        else if($fields[$cf]['type'] == 12 && $fields[$cf]['display_as_dropdown'] == 0) {
-                        ?>
-                            <script type="text/javascript">
-                            jQuery(document).ready(function() {
-                                // Check for radio buttons (default behaviour)
-                                jQuery('<?php echo $display_condition_js_prepend ?>input[name=field_<?php echo ($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"])  ?>]:radio').change(function() {
-                                    checkSearchDisplayCondition<?php echo $field["ref"];?>();
-                                });
+							// Move on to the next field now
+							continue;
+							}
 
-                                <?php
+						$checkname = "nodes_searched[{$fields[$cf]['ref']}][]";
 
-                                $options=array();
-                                node_field_options_override($options,$fields[$cf]['ref']);
-
-                                //$options = trim_array(explode(',', ['options']));
-
-                                foreach ($options as $option) {
-                                    $name = 'field_' . ($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"]) . '_' . sha1($option); ?>
-                                    
-                                    // Check for checkboxes (advanced search behaviour)
-                                    jQuery('<?php echo $display_condition_js_prepend ?>input[name=<?php echo $name; ?>]:checkbox').change(function() {
-                                        checkSearchDisplayCondition<?php echo $field['ref']; ?>();
-                                    });
-
-                                <?php
-                                }
-                                ?>
-                            });
-                            </script>
-
-                        <?php 
-                        } 
-                        else
-                            {
-                            ?>
-                            <script type="text/javascript">
-                            jQuery(document).ready(function() {
-                                jQuery('<?php echo $display_condition_js_prepend ?>#field_<?php echo $fields[$cf]["ref"];?>').change(function (){
-                                checkSearchDisplayCondition<?php echo $field["ref"];?>();
-                                });
-                            });
-                            </script>
-                        <?php
-                            }
-                    }
+						$jquery_selector = "input[name=\"{$checkname}\"]";
+						if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'])
+							{
+							$checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
+							$jquery_selector = "select[name=\"{$checkname}\"]";
+							}
+						?>
+						<script type="text/javascript">
+						jQuery(document).ready(function()
+							{
+							jQuery('<?php echo $jquery_selector; ?>').change(function ()
+								{
+								checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+								});
+							});
+						</script>
+						<?php
+						}
+					else
+						{
+						?>
+						<script type="text/javascript">
+						jQuery(document).ready(function()
+							{
+							jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
+								{
+								checkSearchDisplayCondition<?php echo $field['ref']; ?>();
+								});
+							});
+						</script>
+						<?php
+						}
+					}
                 } # see if next field needs to be checked
 
             $condref++;
@@ -149,98 +155,83 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         ?>
         <script type="text/javascript">
         
-        function checkSearchDisplayCondition<?php echo $field["ref"];?>() {
-            var questionField          = jQuery('#<?php echo ($forsearchbar ? "simplesearch_" . $field["ref"] : "question_" . $n );?>');
-            var fieldInput			   = jQuery('#<?php echo ($forsearchbar ? "simplesearch_" . $field["ref"] : "question_" . $n );?> #field_<?php echo $field["ref"]?>');
-            var fieldStatus            = questionField.css('display');
-            var newFieldStatus         = 'none';
-            var newFieldProvisional    = true;
-            var newFieldProvisionalTest;
-            <?php
-            foreach ($scriptconditions as $scriptcondition)
-                { ?>
+        function checkSearchDisplayCondition<?php echo $field["ref"];?>(node)
+			{
+            field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+			newfield<?php echo $field['ref']; ?>status = 'none';
+			newfield<?php echo $field['ref']; ?>show   = false;
+			<?php
+			foreach($scriptconditions as $scriptcondition)
+				{
+                /*
+                Example of $scriptcondition:
+                Array
+                    (
+                    [field] => 73
+                    [type] => 2
+                    [valid] => Array
+                        (
+                            [0] => 267
+                            [1] => 266
+                        )
+                    )
+                */
+				?>
+                fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+				<?php
+                ############################
+                ### Field type specific
+                ############################
+                if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    $jquery_condition_selector = "input[name=\"nodes_searched[{$scriptcondition['field']}][]\"]";
+                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(node) != -1";
 
-                newFieldProvisionalTest = false;
-
-                if (jQuery('#field_<?php echo $scriptcondition["field"]; ?>').length != 0) {
-                    fieldValues<?php echo $scriptcondition["field"]; ?> = jQuery('#field_<?php echo $scriptcondition["field"]; ?>').val().toUpperCase().split(',');
-                } else {
-                <?php
-                    # Handle Radio Buttons type:
-                    if($scriptcondition['type'] == 12) 
+                    if(in_array($scriptcondition['type'],array(FIELD_TYPE_CHECK_BOX_LIST,FIELD_TYPE_RADIO_BUTTONS)))
                         {
-                        //$scriptcondition["options"] = explode(',', $scriptcondition["options"]);
+                        $js_conditional_statement = "jQuery(this).prop('checked') && {$js_conditional_statement}";
+                        }
 
-                        $scriptcondition["options"]=array();
-                        node_field_options_override($scriptcondition["options"],$scriptcondition["field"]);
-
-                        foreach ($scriptcondition["options"] as $key => $radio_button_value)
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
+                        {
+                        $jquery_condition_selector = "select[name=\"nodes_searched[{$scriptcondition['field']}]\"] option:selected";
+                        }
+                    ?>
+                    if(!newfield<?php echo $field['ref']; ?>show)
+                        {
+                        jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
                             {
-                            $scriptcondition["options"][$key] = sha1($radio_button_value);
-                            }
-                        $scriptcondition["options"] = implode(',', $scriptcondition["options"]);
-
-                        ?>
-
-                        var options_string = '<?php echo $scriptcondition["options"]; ?>';
-                        var field<?php echo $scriptcondition["field"]; ?>_options = options_string.split(',');
-                        var checked = null;
-                        var fieldOkValues<?php echo $scriptcondition["field"]; ?> = [<?php echo $scriptcondition["valid"]; ?>];
-
-                        for(var i=0; i < field<?php echo $scriptcondition["field"]; ?>_options.length; i++) {
-                            if(jQuery('#field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i]).is(':checked')) {
-                                checked = jQuery('#field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i] + ':checked').val().toUpperCase();
-                                if(jQuery.inArray(checked, fieldOkValues<?php echo $scriptcondition["field"]; ?>) > -1) {
-                                    newFieldProvisionalTest = true;
+							 if(<?php echo $js_conditional_statement; ?>)
+                                {
+                                newfield<?php echo $field['ref']; ?>show = true;
                                 }
-                            }
+                            });
                         }
-
-                        <?php
-                        } # end of handling radio buttons type
-                        ?>
-
-                    fieldValues<?php echo $scriptcondition["field"]; ?> = new Array();
-                    checkedVals<?php echo $scriptcondition["field"]; ?> = jQuery('input[name^=<?php echo $scriptcondition["field"]; ?>_]');
-                
-                    jQuery.each(checkedVals<?php echo $scriptcondition["field"]; ?>, function() {
-                        if (jQuery(this).is(':checked')) {
-                            checkText<?php echo $scriptcondition["field"]; ?> = jQuery(this).parent().next().text().toUpperCase();
-                            fieldValues<?php echo $scriptcondition["field"]; ?>.push(jQuery.trim(checkText<?php echo $scriptcondition["field"]; ?>));
-                        }
-                    });
-                }
-                    
-                fieldOkValues<?php echo $scriptcondition["field"]; ?> = [<?php echo $scriptcondition["valid"]; ?>];
-                jQuery.each(fieldValues<?php echo $scriptcondition["field"]; ?>,function(f,v) {
-                    if ((jQuery.inArray(v,fieldOkValues<?php echo $scriptcondition["field"]; ?>))>-1 || (fieldValues<?php echo $scriptcondition["field"]; ?> == fieldOkValues<?php echo $scriptcondition["field"]; ?> )) {
-                        newFieldProvisionalTest = true;
+                    <?php
                     }
-                });
+                ############################
+                ############################
+                }
+                ?>
 
-                if (newFieldProvisionalTest == false) {
-                    newFieldProvisional = false;
-                }
-                    
-                <?php
-                } ?>
-            
-            if (newFieldProvisional == true) {
-                newFieldStatus = 'block'
-            }
-            if (newFieldStatus != fieldStatus) {
-                questionField.slideToggle();
-                if(newFieldStatus == 'block') {
-                	fieldInput.prop("disabled",false);
-                } else {
-                	fieldInput.prop("disabled","disabled");
-                }
-                if (questionField.css('display') == 'block') {
-                    questionField.css('border-top','');
-                } else {
-                    questionField.css('border-top','none');
-                }
-            }
+                if(newfield<?php echo $field['ref']; ?>show)
+                    {
+                    newfield<?php echo $field['ref']; ?>status = 'block';
+                    }
+
+                if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
+                    {
+                    jQuery('#question_<?php echo $n ?>').slideToggle();
+
+                    if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', '');
+                        }
+                    else
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', 'none');
+                        }
+                    }
         }
         </script>
     	<?php
@@ -279,10 +270,10 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     //hook("rendersearchhtml", "", array($field, $class, $value, $autoupdate));
 
     switch ($field["type"]) {
-        case 0: # -------- Text boxes
-        case 1:
-        case 5:
-        case 8:
+        case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
+        case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
+        case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
+        case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
         case ($forsearchbar && $field["type"]==9 && !$simple_search_show_dynamic_as_dropdown):
         if ($field['field_constraint']==0){ 
 			
@@ -324,9 +315,9 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             
         break;
     
-        case 2: 
-        case 3:
-        case ($forsearchbar && $field["type"]==9 && $simple_search_show_dynamic_as_dropdown):
+        case FIELD_TYPE_CHECK_BOX_LIST: 
+        case FIELD_TYPE_DROP_DOWN_LIST:
+        case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && $simple_search_show_dynamic_as_dropdown):
         if(!hook("customchkboxes", "", array($field, $value, $autoupdate, $class, $forsearchbar, $limit_keywords)))
             {
             # -------- Show a check list or dropdown for dropdowns and check lists?
@@ -434,10 +425,9 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                                         <?php
                                         }
                                     $col++;
-
                                     if(isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes))
                                         {
-                                        $set = $node['ref'];
+										$set = $node['ref'];
                                         }
                                         ?>
                                     <td valign=middle>
@@ -497,9 +487,9 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             }
         break;
         
-        case 4:
-        case 6: 
-        case 10: # ----- Date types
+        case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
+        case FIELD_TYPE_EXPIRY_DATE: 
+        case FIELD_TYPE_DATE: 
         $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day='';
         if (!$forsearchbar && $daterange_search)
             {
@@ -653,7 +643,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         break;
         
         
-        case 7:
+        case FIELD_TYPE_CATEGORY_TREE:
         # ----- Category Tree
         $set     = preg_split('/[;\|]/', cleanse_string($value, true));
         $name    = "nodes_searched[{$field['ref']}][]";
@@ -721,7 +711,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         break;
         
         // Dynamic keywords list
-        case 9:
+        case FIELD_TYPE_DYNAMIC_KEYWORDS_LIST:
             // Different syntax used for keyword separation when searching
             $value = str_replace(';', ',', $value);
 
@@ -729,7 +719,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         break;      
 
         // Radio buttons:
-        case 12:
+        case FIELD_TYPE_RADIO_BUTTONS:
             // auto save is not needed when searching
             $edit_autosave           = false;
             $display_as_radiobuttons = false;

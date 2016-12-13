@@ -180,7 +180,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         {
         switch ($fields[$n]["type"])
             {
-            case 0: # -------- Text boxes
+            case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes
             // handle numeric constraint field as number range search Convert minus sign to safer symbol 
             if (isset($fields[$n]['field_constraint']) && $fields[$n]['field_constraint']==1){
 				$fieldname=sql_value("select name value from resource_type_field where ref='".$fields[$n]["ref"]."'","");
@@ -189,9 +189,9 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 				break;
             }
             
-            case 1:
-            case 5:
-            case 8:
+            case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
+            case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
+            case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
             $name="field_" . $fields[$n]["ref"];
             $value=getvalescaped($name,"");
             if ($value!="")
@@ -205,8 +205,8 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 }
             break;
             
-            case 2: # -------- Dropdowns / check lists
-            case 3:                
+            case FIELD_TYPE_TEXT_BOX_MULTI_LINE: # -------- Dropdowns / check lists
+            case FIELD_TYPE_CHECK_BOX_LIST:
             if ($fields[$n]["display_as_dropdown"])
                 {
                 # Process dropdown box
@@ -232,8 +232,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 //$options=trim_array(explode(",",$fields[$n]["options"]));
                 $options=array();                
                 node_field_options_override($options,$fields[$n]['ref']);
-
-                $p="";
+				$p="";
                 $c=0;
                 for ($m=0;$m<count($options);$m++)
                     {
@@ -246,6 +245,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                         $p.=mb_strtolower(i18n_get_translated($options[$m]), 'UTF-8');
                         }
                     }
+                
                 if (($c==count($options) && !$checkbox_and) && (count($options)>1))
                     {
                     # all options ticked - omit from the search (unless using AND matching, or there is only one option intended as a boolean selection)
@@ -264,9 +264,9 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 }
             break;
 
-            case 4: # --------  Date and optional time
-            case 6: # --------  Expiry Date
-            case 10: #--------  Date
+            case FIELD_TYPE_DATE_AND_OPTIONAL_TIME: # --------  Date and optional time
+            case FIELD_TYPE_EXPIRY_DATE: # --------  Expiry Date
+            case FIELD_TYPE_DATE: #--------  Date
             $name="field_" . $fields[$n]["ref"];
             $datepart="";
             $value="";
@@ -359,7 +359,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
             break;
 
-            case 7:  # -------- Category tree
+            case FIELD_TYPE_CATEGORY_TREE:  # -------- Category tree
             $name="field_" . $fields[$n]["ref"];
             $value=getvalescaped($name,"");
             $selected=trim_array(explode(",",$value));
@@ -383,7 +383,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 }
             break;
         
-            case 9: # -------- Dynamic keywords
+            case FIELD_TYPE_DYNAMIC_KEYWORDS_LIST: # -------- Dynamic keywords
             $name="field_" . $fields[$n]["ref"];
             $value=getvalescaped($name,"");
             $selected=trim_array(explode("|",$value));
@@ -415,7 +415,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             break;
         
             // Radio buttons:
-            case 12:
+            case FIELD_TYPE_RADIO_BUTTONS:
                 if($fields[$n]['display_as_dropdown'])
                     {
                     // Process dropdown or checkboxes behaviour (with only one option ticked):
@@ -497,8 +497,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             else if(!is_array($searched_field_nodes))
                 {
                 $node_ref .= ', ' . NODE_TOKEN_PREFIX . escape_check($searched_field_nodes);
-
-                continue;
+				continue;
                 }
 
             // For fields that are displayed as checkboxes
@@ -506,6 +505,11 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
             foreach($searched_field_nodes as $searched_node_ref)
                 {
+				if($checkbox_and)
+					{
+					// Split into an additional search element to force a join since this is a separate condition
+					$node_ref .= ', ';
+					}
                 $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
                 }
             }
