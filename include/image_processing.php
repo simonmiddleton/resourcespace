@@ -610,10 +610,9 @@ function extract_exif_comment($ref,$extension="")
 
 						global $merge_filename_with_title, $lang, $view_title_field;
 						if($merge_filename_with_title && $read_from[$i]['ref'] == $view_title_field) {
-
-							$merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
-							$merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
-							$merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
+							$merge_filename_with_title_option             = urldecode(getval('merge_filename_with_title_option', ''));
+							$merge_filename_with_title_include_extensions = urldecode(getval('merge_filename_with_title_include_extensions', ''));
+							$merge_filename_with_title_spacer             = urldecode(getval('merge_filename_with_title_spacer', ''));
 
 							$original_filename = '';
 							if(isset($_REQUEST['name'])) {
@@ -635,7 +634,7 @@ function extract_exif_comment($ref,$extension="")
 							
 							switch ($merge_filename_with_title_option) {
 								case $lang['merge_filename_title_do_not_use']:
-									// Do nothing since the user doesn't want to use this feature
+									$newval = $oldval;
 									break;
 
 								case $lang['merge_filename_title_replace']:
@@ -659,7 +658,6 @@ function extract_exif_comment($ref,$extension="")
 									// Do nothing
 									break;
 								}
-
 							}
 							
 							if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
