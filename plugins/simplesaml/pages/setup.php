@@ -6,6 +6,7 @@
 include '../../../include/db.php';
 include_once '../../../include/general.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
+include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 
 $plugin_name = 'simplesaml';
 if(!in_array($plugin_name, $plugins))
@@ -32,6 +33,7 @@ if ((getval('submit','')!='') || (getval('save','')!=''))
 	$simplesaml['simplesaml_fullname_separator'] = getvalescaped('simplesaml_fullname_separator','');
 	$simplesaml['simplesaml_username_separator'] = getvalescaped('simplesaml_username_separator','');
     $simplesaml['simplesaml_custom_attributes'] = getvalescaped('simplesaml_custom_attributes', '');
+    $simplesaml['simplesaml_lib_path'] = getvalescaped('simplesaml_lib_path', '');
 	
 	$samlgroups = $_REQUEST['samlgroup'];
 	$rsgroups = $_REQUEST['rsgroup'];
@@ -68,23 +70,24 @@ global $baseurl;
 $rsgroups = sql_query('select ref, name from usergroup order by name asc');
 
 
-include "../../../include/header.php";
-
+include '../../../include/header.php';
 ?>
 <div class="BasicsBox"> 
   <h2>&nbsp;</h2>
   <h1><?php echo $lang['simplesaml_configuration'] ?></h1>
   
 <?php
- if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+ if(!(file_exists(simplesaml_get_lib_path() . '/config/config.php')))
             {
             echo "<div class='PageInfoMessage'>" . $lang['simplesaml_sp_configuration'] . ". <a href='" . $baseurl . "/plugins/simplesaml/pages/about.php'>" . $baseurl . "/plugins/simplesaml/pages/about.php</a></div>";
 			 }  
   
 ?>
 <form id="form1" name="form1" method="post" action="">
-
-<?php echo config_section_header($lang['simplesaml_main_options'],'');?>
+<?php
+echo config_section_header($lang['simplesaml_main_options'],'');
+echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path);
+?>
 <?php echo config_boolean_field("simplesaml_site_block",$lang['simplesaml_site_block'],$simplesaml_site_block,30);?>
 <?php echo config_boolean_field("simplesaml_allow_public_shares",$lang['simplesaml_allow_public_shares'],$simplesaml_allow_public_shares,30);?>
 <?php echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp);?>

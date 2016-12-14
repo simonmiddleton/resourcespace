@@ -31,3 +31,4 @@ $lang['simplesaml_custom_attributes'] = 'Custom attributes to record against the
 $lang['simplesaml_custom_attribute_label'] = 'SSO attribute - ';
 $lang["simplesaml_usercomment"] = "Created by SimpleSAML plugin";
 $lang["origin_simplesaml"] = "SimpleSAML plugin";
+$lang['simplesaml_lib_path_label'] = 'SAML lib path (please specify full server path)';
