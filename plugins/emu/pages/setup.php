@@ -71,6 +71,12 @@ $page_def[] = config_add_text_input('emu_api_server_port', $lang['emu_api_server
 // EMUu script
 $page_def[] = config_add_section_header($lang['emu_script_header']);
 $page_def[] = config_add_html(str_replace('%script_last_ran%', $emu_script_last_ran, $lang['emu_last_run_date']));
+$page_def[] = config_add_single_select('emu_script_mode',
+    $lang['emu_script_mode'], array(
+        EMU_SCRIPT_MODE_IMPORT => $lang['emu_script_mode_option_1'],
+        EMU_SCRIPT_MODE_SYNC   => $lang['emu_script_mode_option_2']
+    )
+);
 $page_def[] = config_add_boolean_select('emu_enable_script', $lang['emu_enable_script']);
 $page_def[] = config_add_boolean_select('emu_test_mode', $lang['emu_test_mode']);
 $page_def[] = config_add_text_input('emu_interval_run', $lang['emu_interval_run']);

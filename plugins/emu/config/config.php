@@ -1,10 +1,15 @@
 <?php
+define('EMU_SCRIPT_MODE_IMPORT', 100);
+define('EMU_SCRIPT_MODE_SYNC', 1000);
+
+
 // EMu Server connection settings
 $emu_api_server               = 'http://[server.address]';
 $emu_api_server_port          = 25040;
 
 // EMu script
 $emu_enable_script              = true;
+$emu_script_mode                = null;
 $emu_test_mode                  = false;
 $emu_email_notify               = '';
 $emu_interval_run               = ''; // see http://php.net/manual/en/datetime.formats.relative.php or http://php.net/manual/en/datetime.add.php

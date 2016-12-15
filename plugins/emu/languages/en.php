@@ -11,6 +11,9 @@ $lang['emu_script_failure_notify_days'] = 'Number of days after which to display
 
 $lang['emu_script_header'] = 'Enable script that will automatically update the EMu data whenever ResourceSpace runs its scheduled task (cron_copy_hitcount.php)';
 $lang['emu_last_run_date'] = '<div class="Question"><label><strong>Script last run</strong></label><input name="script_last_ran" type="text" value="%script_last_ran%" disabled style="width: 300px;"></div><div class="clearerleft"></div>';
+$lang['emu_script_mode'] = 'Script mode';
+$lang['emu_script_mode_option_1'] = 'Import metadata from EMu';
+$lang['emu_script_mode_option_2'] = 'Pull all EMu records and keep RS and EMu in sync';
 $lang['emu_enable_script'] = 'Enable EMu script';
 $lang['emu_test_mode'] = 'Test mode - Set to true and script will run but not update resources';
 $lang['emu_interval_run'] = 'Run script at the following interval (e.g. +1 day, +2 weeks, fortnight). Leave blank and it will run everytime cron_copy_hitcount.php runs)';
