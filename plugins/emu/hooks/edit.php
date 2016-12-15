@@ -5,9 +5,14 @@ include_once dirname(__FILE__) . '/../include/emu_functions.php';
 
 function HookEmuEditEdithidefield($field)
     {
-    global $ref, $resource, $emu_irn_field, $emu_resource_types;
+    global $ref, $resource, $emu_irn_field, $emu_resource_types, $emu_created_by_script_field;
 
     if($emu_irn_field == $field['ref'] && 0 > $ref && in_array($resource['resource_type'], $emu_resource_types))
+        {
+        return true;
+        }
+
+    if('' != $emu_created_by_script_field && $emu_created_by_script_field == $field['ref'])
         {
         return true;
         }
