@@ -1002,7 +1002,7 @@ function get_resources_by_resource_data_value($resource_type_field, $value)
 
 
 if (!function_exists("get_users")){		
-function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1)
+function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$notapproved=false,$returnsql=false, $selectcolumns="")
 {
     # Returns a user list. Group or search term is optional.
     # The standard user group names are translated using $lang. Custom user group names are i18n translated.
@@ -1028,6 +1028,12 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         $sql.= hook("getuseradditionalsql");
     }
 
+    if ($notapproved)
+        {
+        if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
+        $sql .= "u.approved=0";
+        }
+
     // Return users in both user's user group and children groups
     if ($usepermissions && checkperm('U') && !$U_perm_strict) {
     	$sql .= sprintf('
@@ -1037,8 +1043,10 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
     		$usergroup
     	);
     }
-    $query = "select u.*,g.name groupname,g.ref groupref,g.parent groupparent,u.approved,u.created from user u left outer join usergroup g on u.usergroup=g.ref $sql order by $order_by";
+    $select=($selectcolumns!="")?$selectcolumns:"u.ref, u.username,u.approved,u.created, u.*, g.name groupname,g.ref groupref,g.parent groupparent";
+    $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup=g.ref $sql order by $order_by";
     # Executes query.
+    if($returnsql){return $query;}
     $r = sql_query($query, false, $fetchrows);
 
     # Translates group names in the newly created array.
@@ -2204,7 +2212,7 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
 		# Send an e-mail to each resolved user
 		foreach($emails as $email)
 			{
-			if('' != $email)
+			if(filter_var($email, FILTER_VALIDATE_EMAIL))
 				{
 				send_mail($email,$subject,$body,$applicationname,$email_from,"emailbulk",$templatevars,$applicationname,"",$html);
 				}
@@ -2260,16 +2268,15 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
 		global $email_notify;
 		$bcc.="," . $email_notify;
 		}
-
+    # No/invalid email address? Exit.
+	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {return false;}
+    
 	# Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
 	global $use_phpmailer;
 	if ($use_phpmailer){
 		send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc); 
 		return true;
 		}
-	
-	# No email address? Exit.
-	if (trim($email)=="") {return false;}
 	
 	# Include footer
 	global $email_footer;
