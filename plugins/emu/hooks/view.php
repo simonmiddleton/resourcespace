@@ -6,7 +6,7 @@ function HookEmuViewRenderfield($field, $resource)
         return false;
         }
 
-    global $baseurl, $search, $ref, $emu_irn_field, $emu_resource_types;
+    global $baseurl, $search, $ref, $emu_irn_field, $emu_resource_types, $emu_created_by_script_field;
 
     if($field['ref'] == $emu_irn_field && in_array($resource['resource_type'], $emu_resource_types))
         {
@@ -21,6 +21,11 @@ function HookEmuViewRenderfield($field, $resource)
         </div>
         <?php
 
+        return true;
+        }
+
+    if('' != $emu_created_by_script_field && $emu_created_by_script_field == $field['ref'] && 'Script' == $field['value'])
+        {
         return true;
         }
 

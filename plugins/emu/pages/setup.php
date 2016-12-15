@@ -77,10 +77,11 @@ $page_def[] = config_add_text_input('emu_interval_run', $lang['emu_interval_run'
 $page_def[] = config_add_text_input('emu_email_notify', $lang['emu_email_notify']);
 $page_def[] = config_add_text_input('emu_script_failure_notify_days', $lang['emu_script_failure_notify_days']);
 $page_def[] = config_add_text_input('emu_log_directory', $lang['emu_log_directory']);
+$page_def[] = config_add_single_ftype_select('emu_created_by_script_field', $lang['emu_created_by_script_field']);
 
 // EMu settings
 $page_def[] = config_add_section_header($lang['emu_settings_header']);
-$page_def[] = config_add_single_ftype_select('emu_irn_field',$lang['emu_irn_field']);
+$page_def[] = config_add_single_ftype_select('emu_irn_field', $lang['emu_irn_field']);
 $page_def[] = config_add_multi_rtype_select('emu_resource_types', $lang['emu_resource_types']);
 
 // EMu - ResourceSpace mappings

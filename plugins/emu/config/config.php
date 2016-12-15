@@ -10,6 +10,7 @@ $emu_email_notify               = '';
 $emu_interval_run               = ''; // see http://php.net/manual/en/datetime.formats.relative.php or http://php.net/manual/en/datetime.add.php
 $emu_script_failure_notify_days = 3;
 $emu_log_directory              = '';
+$emu_created_by_script_field    = null;
 
 // EMu settings
 // metadata field used to store the EMu identifier (IRN)
