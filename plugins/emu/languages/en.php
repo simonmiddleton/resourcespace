@@ -22,6 +22,7 @@ $lang['emu_created_by_script_field'] = 'Metadata field used to store whether a r
 
 $lang['emu_settings_header'] = 'EMu settings';
 $lang['emu_irn_field'] = 'Metadata field used to store the EMu identifier (IRN)';
+$lang['emu_search_criteria'] = 'Search criteria for syncing EMu with ResourceSpace';
 
 $lang['emu_rs_mappings_header'] = 'EMu - ResourceSpace mapping rules';
 $lang['emu_module'] = 'EMu module';

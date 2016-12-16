@@ -132,3 +132,33 @@ function emu_script_log($message, $log_file_pointer)
 
     return;
     }
+
+
+/**
+* Utility function to figure out emu plugin configuration changed.
+* 
+* For example, can be used in cases when we need to check all records again because of
+* new mappings have been added.
+* 
+* @return boolean
+*/
+function check_config_changed()
+    {
+    global $emu_config_modified_timestamp;
+
+    $script_last_ran = sql_value('SELECT `value` FROM sysvars WHERE name = "last_emu_import"', '');
+
+    if('' == $script_last_ran)
+        {
+        return true;
+        }
+
+    $emu_script_last_ran = strtotime($script_last_ran);
+
+    if($emu_config_modified_timestamp > $emu_script_last_ran)
+        {
+        return true;
+        }
+
+    return false;
+    }

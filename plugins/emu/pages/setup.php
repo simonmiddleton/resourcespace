@@ -16,8 +16,9 @@ if(!in_array($plugin_name, $plugins))
     plugin_activate_for_setup($plugin_name);
     }
 
-$emu_rs_mappings     = unserialize(base64_decode($emu_rs_saved_mappings));
-$emu_script_last_ran = '';
+$emu_rs_mappings               = unserialize(base64_decode($emu_rs_saved_mappings));
+$emu_script_last_ran           = '';
+$emu_config_modified_timestamp = time();
 
 check_script_last_ran($emu_script_last_ran);
 
@@ -89,6 +90,10 @@ $page_def[] = config_add_single_ftype_select('emu_created_by_script_field', $lan
 $page_def[] = config_add_section_header($lang['emu_settings_header']);
 $page_def[] = config_add_single_ftype_select('emu_irn_field', $lang['emu_irn_field']);
 $page_def[] = config_add_multi_rtype_select('emu_resource_types', $lang['emu_resource_types']);
+if(EMU_SCRIPT_MODE_SYNC == $emu_script_mode)
+    {
+    $page_def[] = config_add_text_input('emu_search_criteria', $lang['emu_search_criteria']);
+    }
 
 // EMu - ResourceSpace mappings
 $page_def[] = config_add_section_header($lang['emu_rs_mappings_header']);
@@ -157,6 +162,7 @@ function addEmuRsMappingRow()
 <!-- end of Question -->";
 $page_def[] = config_add_html($emu_rs_mappings_html);
 $page_def[] = config_add_hidden('emu_rs_saved_mappings');
+$page_def[] = config_add_hidden('emu_config_modified_timestamp');
 
 
 

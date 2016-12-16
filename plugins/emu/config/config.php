@@ -19,9 +19,9 @@ $emu_created_by_script_field    = null;
 
 // EMu settings
 // metadata field used to store the EMu identifier (IRN)
-$emu_irn_field      = null;
-$emu_resource_types = array();
-
+$emu_irn_field       = null;
+$emu_resource_types  = array();
+$emu_search_criteria = '';
 
 /* EMu - ResourceSpace mappings
 IMPORTANT: ResourceSpace is expecting an atomic value for the field, anything else will fail
@@ -34,3 +34,7 @@ $emu_rs_saved_mappings['epublic']['ObjName'] = 17;
 $emu_rs_saved_mappings['emultimedia']['ChaAspectRatio'] = 32;
 */
 $emu_rs_saved_mappings = base64_encode(serialize(array()));
+
+// Modifying plugin configs requires bypassing the check for "modifiedTimeStamp" and forces 
+// ResourceSpace to get all records again so that newly added columns will be updated
+$emu_config_modified_timestamp = null;
