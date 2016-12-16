@@ -229,8 +229,8 @@ function add_search_criteria(IMuTerms $imu_terms)
                 if('' != $column && '' != $value)
                     {
                     $conditions['and'][] = array($column, $value);
-                    $search_criteria = str_replace("{$and_search_criteria} AND ", '', $search_criteria);
-                    $search_criteria = str_replace("{$and_search_criteria}", '', $search_criteria);
+                    $search_criteria     = str_replace("{$and_search_criteria} AND ", '', $search_criteria);
+                    $search_criteria     = str_replace("{$and_search_criteria}", '', $search_criteria);
                     }
                 }
             }
@@ -252,8 +252,8 @@ function add_search_criteria(IMuTerms $imu_terms)
                 if('' != $column && '' != $value)
                     {
                     $conditions['or'][] = array($column, $value);
-                    $search_criteria = str_replace("{$and_search_criteria} OR ", '', $search_criteria);
-                    $search_criteria = str_replace("{$and_search_criteria}", '', $search_criteria);
+                    $search_criteria    = str_replace("{$and_search_criteria} OR ", '', $search_criteria);
+                    $search_criteria    = str_replace("{$and_search_criteria}", '', $search_criteria);
                     }
                 }
             }
