@@ -119,13 +119,13 @@ function get_emu_data($emu_api_server, $emu_api_server_port, array $irns, array 
 * 
 * @return void
 */
-function emu_script_log($message, $log_file_pointer)
+function emu_script_log($message, $log_file_pointer = null)
     {
     $message .= PHP_EOL;
 
     echo $message;
 
-    if(is_resource($log_file_pointer) && 'file' == get_resource_type($log_file_pointer) || 'stream' == get_resource_type($log_file_pointer))
+    if(!is_null($log_file_pointer) && (is_resource($log_file_pointer) && 'file' == get_resource_type($log_file_pointer) || 'stream' == get_resource_type($log_file_pointer)))
         {
         fwrite($log_file_pointer, $message);
         }
