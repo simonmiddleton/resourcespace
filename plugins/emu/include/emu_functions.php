@@ -81,13 +81,14 @@ function get_emu_resources()
 */
 function get_emu_data($emu_api_server, $emu_api_server_port, array $irns, array $emu_rs_mappings)
     {
-    $return = array();
+    $return  = array();
+    $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port);
 
     foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
         {
         $columns_list = array_keys($emu_module_columns);
 
-        $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port, $emu_module);
+        $emu_api->setModule($emu_module);
         $emu_api->setColumns($columns_list);
 
         $objects_data = $emu_api->getObjectsByIrns($irns);

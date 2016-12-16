@@ -18,7 +18,7 @@ require_once IMu::$lib . '/Terms.php';
 *
 * @package EMuAPI
 * @author  Alin Cota
-* @version 1.0
+* @version 1.1
 * @access  public
 */
 class EMuAPI
@@ -30,22 +30,55 @@ class EMuAPI
 
 
     /**
-    * Initialises a connection to a EMu server
+    * Initialises a connection to an EMu server
     * 
-    * Creates a sessions for a given server address and port and sets
-    * a new Module and Terms object 
+    * Creates a sessions for a given server address and port 
     * 
     * @param string  $server_address KE EMu server address
     * @param integer $server_port    KE EMu server port to connect to
-    * @param string  $module         KE EMu table <=> Texpress database
     * 
     * @return void
     */
-    public function __construct($server_address, $server_port, $module)
+    public function __construct($server_address, $server_port)
         {
         $this->session = new IMuSession($server_address, $server_port);
-        $this->module  = new IMuModule($module, $this->session);
-        $this->terms   = new IMuTerms();
+
+        return;
+        }
+
+
+    /**
+    * Set module
+    * 
+    * @param string $name
+    * 
+    * @return boolean
+    */
+    public function setModule($name)
+        {
+        if('' == $name)
+            {
+            return false;
+            }
+
+        $this->module  = new IMuModule($name, $this->session);
+        $this->terms   = null;
+        $this->columns = array();
+
+        return true;
+        }
+
+
+    /**
+    * Set terms
+    * 
+    * @param IMuTerms $terms
+    * 
+    * @return void
+    */
+    public function setTerms(IMuTerms $terms)
+        {
+        $this->terms = $terms;
 
         return;
         }
@@ -160,16 +193,10 @@ class EMuAPI
         }
 
 
-    /**
-    * Test IMu API -- To be deleted once done
-    */
-    public function testSearch()
+    public function testSearchTerms()
         {
-        $this->terms->add('ClaInstitution', 'CMH');
         $this->module->findTerms($this->terms);
 
-        $result = $this->getResults('object_fields');
-
-        return $result;
+        return $this->getResults('object_fields');
         }
     }
