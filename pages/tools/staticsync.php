@@ -466,7 +466,7 @@ function ProcessFolder($folder)
                 {
                 # check modified date and update previews if necessary (not for deleted resources unless $staticsync_revive_state is set)
                 $filemod = filemtime($fullpath);
-                if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"]))
+                if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"]) || $done[$shortpath]["archive"]==$staticsync_deleted_state)
                     {
                     
                     $count++;
