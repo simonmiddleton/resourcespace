@@ -162,3 +162,122 @@ function check_config_changed()
 
     return false;
     }
+
+
+/**
+* Add search criteria to any existing IMuTerms object before doing a search on a module
+* Note: uses $emu_search_criteria which value is basic TexQL (currently only AND and OR
+* are supported, without support for nesting)
+* 
+* @param IMuTerms $imu_terms       Any IMuTerms object on which we want to add new search terms
+* 
+* @return IMuTerms
+*/
+function add_search_criteria(IMuTerms $imu_terms)
+    {
+    global $emu_search_criteria;
+
+    $search_criteria = trim($emu_search_criteria);
+
+    if(!is_string($search_criteria) && '' == $search_criteria)
+        {
+        return $imu_terms;
+        }
+
+    // One condition, add it and return IMuTerms object
+    if(false === strpos($search_criteria, ' AND ')
+        && false === strpos($search_criteria, ' OR ')
+        && false !== strpos($search_criteria, '='))
+        {
+        $condition = explode('=', $search_criteria);
+
+        if('' != $condition[0] && '' != $condition[1])
+            {
+            $imu_terms->add($condition[0], $condition[1]);
+            }
+
+        return $imu_terms;
+        }
+
+    /* Example
+    [
+        [and] = [
+            0 => [column, val]
+            1 => [column, val]
+        ]
+        [or]  = [
+            0 => [column, val]
+            1 => [column, val]
+        ]
+    ]
+    */
+    $conditions = array();
+
+    if(false !== strpos($search_criteria, ' AND '))
+        {
+        $and_search_criterias = explode(' AND ', $search_criteria);
+
+        foreach($and_search_criterias as $and_search_criteria)
+            {
+            // AND condition
+            if(false === strpos($and_search_criteria, ' OR ') && false !== strpos($and_search_criteria, '='))
+                {
+                $condition = explode('=', $and_search_criteria);
+                $column    = trim($condition[0]);
+                $value     = trim($condition[1]);
+
+                if('' != $column && '' != $value)
+                    {
+                    $conditions['and'][] = array($column, $value);
+                    $search_criteria = str_replace("{$and_search_criteria} AND ", '', $search_criteria);
+                    $search_criteria = str_replace("{$and_search_criteria}", '', $search_criteria);
+                    }
+                }
+            }
+        }
+
+    if(false !== strpos($search_criteria, ' OR '))
+        {
+        $and_search_criterias = explode(' OR ', $search_criteria);
+
+        foreach($and_search_criterias as $and_search_criteria)
+            {
+            // OR condition
+            if(false === strpos($and_search_criteria, ' OR ') && false !== strpos($and_search_criteria, '='))
+                {
+                $condition = explode('=', $and_search_criteria);
+                $column    = trim($condition[0]);
+                $value     = trim($condition[1]);
+
+                if('' != $column && '' != $value)
+                    {
+                    $conditions['or'][] = array($column, $value);
+                    $search_criteria = str_replace("{$and_search_criteria} OR ", '', $search_criteria);
+                    $search_criteria = str_replace("{$and_search_criteria}", '', $search_criteria);
+                    }
+                }
+            }
+        }
+
+    foreach($conditions as $condition => $available_criteria)
+        {
+        if('or' == $condition)
+            {
+            $or_terms = $imu_terms->addOr();
+            }
+
+        foreach($available_criteria as $criteria)
+            {
+            if('or' == $condition)
+                {
+                $or_terms->add($criteria[0], $criteria[1]);
+
+                continue;
+                }
+
+            $imu_terms->add($criteria[0], $criteria[1]);
+            }
+        }
+
+    return $imu_terms;
+    }
