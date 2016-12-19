@@ -442,6 +442,8 @@ if (strpos($search,"!")!==false &&  substr($search,0,11)!="!properties" && !$spe
 # Do the search!
 $search=refine_searchstring($search);
 
+$editable_only = getval("foredit","")=="true";
+
 if(false === strpos($search, '!') || '!properties' == substr($search, 0, 11))
     {
     rs_setcookie('search', $search);
@@ -453,7 +455,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
 	$search_includes_resources=true; // Always enable resource display for special searches.
 	if (!hook("replacesearch"))
 		{	
-		$result=do_search($search,$restypes,$order_by,$archive,$per_page+$offset,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""));
+		$result=do_search($search,$restypes,$order_by,$archive,$per_page+$offset,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only);
 		}
 	}
 else
