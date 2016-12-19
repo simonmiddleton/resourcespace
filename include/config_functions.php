@@ -761,6 +761,101 @@ function config_add_boolean_select($config_var, $label, $choices = '', $width = 
     {
     return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave);
     }
+	
+/**
+ * Generate an html checkbox options block
+ *
+ * @param string $name the name of the checkbox block.
+ * @param string $label the user text displayed to label the checkbox block. Usually a $lang string.
+ * @param string array $current the current array of selected values for the config variable being set.
+ * @param string array $choices the array of choices -- the list of checkboxes. The keys are
+ *          used to generate the values of the checkbox, and the values are the checkbox labels the user sees. (But see
+ *          $usekeys, below.) 
+ * @param boolean $usekeys tells whether to use the keys from $choices as the values of the options.
+ *          If set to false the values from $choices will be used for both the values of the options
+ *          and the text the user sees. Defaulted to true.
+ * @param integer $width the width of the input field in pixels. Default: 300. 
+ * @param integer $columns the number of columns to use 
+ */
+function config_checkbox_select($name, $label, $current, $choices, $usekeys=true, $width=300, $columns=1, $autosave = false)
+    {
+    global $lang;
+    $currentvalues=explode(",",$current);
+	$wrap = 0;
+	?>
+	<div class="Question">
+	<label for="<?php echo htmlspecialchars($name)?>" ><?php echo htmlspecialchars($label)?></label>
+		<?php
+        if($autosave)
+            {
+            ?>
+            <div class="AutoSaveStatus">
+                <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
+            </div>
+            <?php
+            }
+        ?>
+     
+        <table cellpadding=2 cellspacing=0>
+            <tr>
+        <?php
+        foreach($choices as $key => $choice)
+			{
+			$value=$usekeys?$key:$choice;
+            $wrap++;
+            if($wrap > $columns)
+                {
+                $wrap = 1;
+                ?>
+                </tr>
+                <tr>
+                <?php
+                }
+                ?>
+            <td width="1">
+                <input type="checkbox"
+                       name="<?php echo $name; ?>"
+                       value="<?php echo $value; ?>"
+                    <?php
+					if($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo $name; ?>');"<?php }
+                    if(in_array($value, $currentvalues))
+                        {
+                        ?>
+                        checked
+                        <?php
+                        }?>
+					>
+            </td>
+            <td><?php echo htmlspecialchars(i18n_get_translated($choice)); ?>&nbsp;</td>
+            <?php
+            }
+            ?>
+            </tr>
+        </table>
+  </div>
+  <div class="clearerleft"></div>
+<?php
+    }
+
+/**
+ * Return a data structure that will instruct the configuration page generator functions to
+ * add a multi select configuration variable to the setup page.
+ *
+ * @param string $config_var the name of the configuration variable to be added.
+ * @param string $label the user text displayed to label the select block. Usually a $lang string.
+ * @param string array $choices the array of choices -- the options in the select block. The keys are
+ *          used as the values of the options, and the values are the choices the user sees. (But see
+ *          $usekeys, below.) Usually a $lang entry whose value is an array of strings.
+ * @param boolean $usekeys tells whether to use the keys from $choices as the values of the options.
+ *          If set to false the values from $choices will be used for both the values of the options
+ *          and the text the user sees. Defaulted to true.
+ * @param integer $width the width of the input field in pixels. Default: 300.
+ */
+function config_add_checkbox_select($config_var, $label, $choices, $usekeys=true, $width=300, $columns=1, $autosave = false)
+    {
+    return array('checkbox_select', $config_var, $label, $choices, $usekeys, $width, $columns, $autosave);
+    }
+
 
 function config_add_colouroverride_input($config_var, $label='', $default='', $title='', $autosave=false, $on_change_js=null)
     {
@@ -783,7 +878,17 @@ function config_generate_AutoSaveConfigOption_function($post_url)
         jQuery('#AutoSaveStatus-' + option_name).html('<?php echo $lang["saving"]; ?>');
         jQuery('#AutoSaveStatus-' + option_name).show();
 
-        var option_value = jQuery('#' + option_name).val();
+        if (jQuery('input[name=' + option_name + ']').is(':checkbox')) {
+            var option_value = jQuery('input[name=' + option_name + ']:checked').map(function(){
+            return jQuery(this).val();
+          }).get().toString();
+        
+        }
+        
+        else {
+            var option_value = jQuery('#' + option_name).val();
+        }
+        
         var post_url  = '<?php echo $post_url; ?>';
         var post_data = {
             ajax: true,
@@ -942,6 +1047,10 @@ function config_generate_html(array $page_def)
 
             case 'single_select':
                 config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
+                break;
+			
+			 case 'checkbox_select':
+                config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7]);
                 break;
 
             case 'colouroverride_input':
