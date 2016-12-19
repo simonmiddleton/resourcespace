@@ -15,11 +15,12 @@ function get_request($request)
         }
     }
 
-function get_user_requests()
+function get_user_requests($excludecompleted=false,$returnsql=false)
     {
     global $userref;
     if (!is_numeric($userref)){ return false; }
-    return sql_query("select u.username,u.fullname,r.*,if(collection.ref is null,'0',collection.ref) collection_id, (select count(*) from collection_resource cr where cr.collection=r.collection) c from request r left outer join user u on r.user=u.ref left join collection on r.collection = collection.ref where r.user = '$userref' order by ref desc");
+    $sql="select u.username,u.fullname,r.*,if(collection.ref is null,'0',collection.ref) collection_id, (select count(*) from collection_resource cr where cr.collection=r.collection) c from request r left outer join user u on r.user=u.ref left join collection on r.collection = collection.ref where r.user = '" . $userref . "'" . ($excludecompleted?" AND status<>2":"") . " order by ref desc";
+    return $returnsql?$sql:sql_query($sql);
     }
     
 function save_request($request)
