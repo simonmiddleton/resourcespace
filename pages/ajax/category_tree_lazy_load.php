@@ -12,7 +12,7 @@ $selected_nodes = getvalescaped('selected_nodes', array());
 $opened_nodes   = array();
 $js_tree_data   = array();
 
-if(!metadata_field_edit_access($field))
+if(!metadata_field_edit_access($field) && !hook("showfieldedit","",array($field)))
     {
     header('HTTP/1.1 401 Unauthorized');
     die('Permission denied!');
