@@ -1451,7 +1451,7 @@ function email_reset_link($email,$newuser=false)
 }
 
 if (!function_exists("auto_create_user_account")){
-function auto_create_user_account()
+function auto_create_user_account($hash="")
 	{
 	# Automatically creates a user account (which requires approval unless $auto_approve_accounts is true).
 	global $applicationname, $user_email, $baseurl, $email_notify, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
@@ -1519,7 +1519,7 @@ function auto_create_user_account()
 		}
 
 	# Create the user
-	sql_query("insert into user (username,password,fullname,email,usergroup,comments,approved,lang) values ('" . $newusername . "','" . $password . "','" . getvalescaped("name","") . "','" . $email . "','" . $usergroup . "','" . ( escape_check($customContents) . "\n" . getvalescaped("userrequestcomment","")  ) . "'," . (($approve)?1:0) . ",'$language')");
+	sql_query("insert into user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) values ('" . $newusername . "','" . $password . "','" . getvalescaped("name","") . "','" . $email . "','" . $usergroup . "','" . ( escape_check($customContents) . "\n" . getvalescaped("userrequestcomment","")  ) . "'," . (($approve)?1:0) . ",'$language'," . ($hash!=""?"'" . $hash . "'":"null") . ")");
 	$new = sql_insert_id();
 
     // Create dash tiles for the new user
@@ -5679,3 +5679,31 @@ function generateSecureKey($length = 64)
 
     return $hex;
     }
+
+/**
+ * Validates the user entered antispam code
+ *  
+ * @param  string    			$spamcode The antispam hash to check against
+ * @param  string    			$usercode The antispam code the user entered
+ * @param  string    			$spamtime The antispam timestamp
+ * @return boolean         		Returnd tru if the code was successfully validated, otherwise false
+ */	
+function verify_antispam($spamcode="",$usercode="",$spamtime=0)
+	{
+	global $scramble_key,$password_brute_force_delay;
+	if($usercode=="" || $spamcode=="" || $spamtime==0){debug("antispam failed");return false;}
+	if($spamcode != hash("SHA256",strtoupper($usercode) . $scramble_key . $spamtime))
+		{
+		debug("antispam failed: invalid code entered. IP: " . get_ip());
+		sleep($password_brute_force_delay);
+		return false;
+		}
+	$prevhashes=sql_array("SELECT unique_hash value FROM user WHERE unique_hash IS NOT null","");
+	if(in_array(md5($usercode . $spamtime),$prevhashes))
+		{
+		debug("antispam failed: code has previously been used  IP: " . get_ip());
+		sleep($password_brute_force_delay);
+		return false;
+		}
+	return true;
+	}
