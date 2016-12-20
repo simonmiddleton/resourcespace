@@ -793,7 +793,7 @@ function compile_search_actions($top_actions)
 function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false)
 	{
 	# Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
-	
+	if(!is_array($archive)){$archive=explode(",",$archive);}
 	global $userref;
 	# Start with an empty string = an open query.
 	$sql_filter="";
@@ -900,7 +900,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			}
 		elseif ($search_all_workflow_states)
 			{hook("search_all_workflow_states_filter");}   
-		elseif ($archive==0 && $pending_review_visible_to_all)
+		elseif (count($archive)==1 and $archive[0]==0 && $pending_review_visible_to_all)
             {
             # If resources pending review are visible to all, when listing only active resources include
             # pending review (-1) resources too.
@@ -1011,17 +1011,14 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 				}
 			}
 
-		// Add code to hide resources in archive<0 unless contributed by user or has ert permission
-		if(in_array(0,$archive))
+		// Add code to hide resources in archive<0 unless contributed by user or has ert permission		
+		if ($sql_filter!="") {$sql_filter.=" and ";}
+		$sql_filter.="(archive not in (-2,-1) or (created_by='" . $userref . "' ";
+		if(count($rtexclusions)>0)
 			{
-			if ($sql_filter!="") {$sql_filter.=" and ";}
-			$sql_filter.="(archive not in (-2,-1) or (created_by='" . $userref . "' ";
-			if(count($rtexclusions)>0)
-				{
-				$sql_filter .= " or resource_type in (" . implode(",",$rtexclusions) . ")";				
-				}
-			$sql_filter .= "))";
+			$sql_filter .= " or resource_type in (" . implode(",",$rtexclusions) . ")";				
 			}
+		$sql_filter .= "))";
 			
 		if ($blockeditstates!="")
 			{
