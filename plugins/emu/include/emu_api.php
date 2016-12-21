@@ -103,6 +103,22 @@ class EMuAPI
 
 
     /**
+    * Get search results
+    * 
+    * @uses EMuAPI::getResults()
+    * 
+    * @param integer $offset
+    * @param integer $limit  Use default value (-1) to get all results back
+    * 
+    * @return array
+    */
+    public function getSearchResults($offset = 0, $limit = -1)
+        {
+        return $this->getResults('object_fields', $offset, $limit);
+        }
+
+
+    /**
     * Set IRN column
     * 
     * @return void
