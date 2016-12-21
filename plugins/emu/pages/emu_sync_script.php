@@ -56,13 +56,21 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
 
     if(!check_config_changed())
         {
-        $search_terms->add('modifiedTimeStamp', '2016-12-16T05:04:24');
+        $script_last_ran = sql_value('SELECT `value` FROM sysvars WHERE name = "last_emu_import"', '');
+
+        if('' != $script_last_ran)
+            {
+            $search_terms->add('modifiedTimeStamp', emu_format_date(strtotime($script_last_ran)), '>');
+            }
         }
 
-    // TODO: find a way to not return an empty AND kind.
     $search_terms = add_search_criteria($search_terms);
 
-    // $objects_data = $emu_api->runSearchHERE();
+    $emu_api->setTerms($search_terms);
+
+    $emu_records_found = $emu_api->runSearch();
+
+    emu_script_log("Found '{$emu_records_found}' records that match your search criteria in module '{$emu_module}'", $emu_log_file);
 
     // foreach($objects_data as $object_data)
     //     {
@@ -79,9 +87,8 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
     }
 
 
-// echo '<pre>';print_r($emu_api->testSearchTerms());echo '</pre>';
-die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
-    
+// echo '<pre>';print_r($objects_data);echo '</pre>';
+// die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
 
 
 
