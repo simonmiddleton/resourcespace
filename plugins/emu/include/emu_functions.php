@@ -169,7 +169,7 @@ function check_config_changed()
 * Note: uses $emu_search_criteria which value is basic TexQL (currently only AND and OR
 * are supported, without support for nesting)
 * 
-* @param IMuTerms $imu_terms       Any IMuTerms object on which we want to add new search terms
+* @param IMuTerms $imu_terms Any IMuTerms object on which we want to add new search terms
 * 
 * @return IMuTerms
 */
@@ -177,6 +177,7 @@ function add_search_criteria(IMuTerms $imu_terms)
     {
     global $emu_search_criteria;
 
+    $kind            = $imu_terms->getKind();
     $search_criteria = trim($emu_search_criteria);
 
     if(!is_string($search_criteria) && '' == $search_criteria)
@@ -259,18 +260,29 @@ function add_search_criteria(IMuTerms $imu_terms)
             }
         }
 
+    // Adding to the actual IMuTerms object based on what kind the original
+    // object was in order to end up with a correctly configured IMuTerms object
     foreach($conditions as $condition => $available_criteria)
         {
-        if('or' == $condition)
+        $use_separate_terms = false;
+
+        if('and' == $condition && 'and' != $kind)
             {
-            $or_terms = $imu_terms->addOr();
+            $separate_terms     = $imu_terms->addAnd();
+            $use_separate_terms = true;
+            }
+
+        if('or' == $condition && 'or' != $kind)
+            {
+            $separate_terms     = $imu_terms->addOr();
+            $use_separate_terms = true;
             }
 
         foreach($available_criteria as $criteria)
             {
-            if('or' == $condition)
+            if($use_separate_terms)
                 {
-                $or_terms->add($criteria[0], $criteria[1]);
+                $separate_terms->add($criteria[0], $criteria[1]);
 
                 continue;
                 }
