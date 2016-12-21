@@ -32,6 +32,34 @@ function check_script_last_ran(&$emu_script_last_ran = '')
 
 
 /**
+* Format date for EMu use (similar to the ISO8601 date format except
+* the time zone designator is not included)
+* 
+* @param string  $format    PHP's date() valid format
+* @param integer $timestamp
+* 
+* @return string
+*/
+function emu_format_date($timestamp, $format = 'c')
+    {
+    if(!is_string($format) || !is_integer($timestamp))
+        {
+        trigger_error('Wrong arguments passed to emu_format_date()');
+        }
+
+    $result = date($format, $timestamp);
+
+    if('c' == $format)
+        {
+        $result = substr($result, 0, -6);
+        }
+
+    return $result;
+    }
+
+
+
+/**
 * Function to retrieve all resources that have their IRN field set to a value
 * and that are within the allowed resource types for an EMu update
 * 
