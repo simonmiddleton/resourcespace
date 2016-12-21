@@ -85,6 +85,24 @@ class EMuAPI
 
 
     /**
+    * Search an EMu database using existing session in the current
+    * module using current search terms
+    * 
+    * @return integer An estimate of number of records found
+    */
+    public function runSearch()
+        {
+        // We require a module and terms, at least to run a search
+        if(is_null($this->module) || is_null($this->terms))
+            {
+            trigger_error('Could not run a search in EMu because the EMuAPI object does not have a module or search terms set!');
+            }
+
+        return $this->module->findTerms($this->terms);
+        }
+
+
+    /**
     * Set IRN column
     * 
     * @return void
@@ -190,13 +208,5 @@ class EMuAPI
     public function getResults($columns, $offset = 0, $count = 1)
         {
         return $this->module->fetch('start', $offset, $count, $columns)->rows;
-        }
-
-
-    public function testSearchTerms()
-        {
-        $this->module->findTerms($this->terms);
-
-        return $this->getResults('object_fields');
         }
     }
