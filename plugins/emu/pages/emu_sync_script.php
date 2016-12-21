@@ -53,7 +53,6 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
 
     // Build where clause
     $search_terms = new IMuTerms();
-
     if(!check_config_changed())
         {
         $script_last_ran = sql_value('SELECT `value` FROM sysvars WHERE name = "last_emu_import"', '');
@@ -63,14 +62,19 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
             $search_terms->add('modifiedTimeStamp', emu_format_date(strtotime($script_last_ran)), '>');
             }
         }
-
     $search_terms = add_search_criteria($search_terms);
-
     $emu_api->setTerms($search_terms);
 
     $emu_records_found = $emu_api->runSearch();
 
-    emu_script_log("Found '{$emu_records_found}' records that match your search criteria in module '{$emu_module}'", $emu_log_file);
+    // Skip modules that did not return any records back
+    if(0 >= $emu_records_found)
+        {
+        emu_script_log("Skip module '{$emu_module}' as it didn't return any records back for search criteria provided", $emu_log_file);
+        continue;
+        }
+
+    emu_script_log("Found '{$emu_records_found}' records that match your search criteria in '{$emu_module}' module", $emu_log_file);
 
     // foreach($objects_data as $object_data)
     //     {
