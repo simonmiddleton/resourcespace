@@ -9,9 +9,7 @@ $user_email=getval("email","");
 hook("preuserrequest");
 
 if (getval("save","")!="")
-	{
-    sleep($password_brute_force_delay);
-    
+	{    
 	# Check for required fields
 
 	# Required fields (name, email) not set?
@@ -59,6 +57,11 @@ if (getval("save","")!="")
 				}
 			}
 		}
+		
+	$spamcode = getval("antispamcode","");
+	$usercode = getval("antispam","");
+	$spamtime = getval("antispamtime",0);
+	
 	if (!empty($missingFields))
 		{
 		$error=$lang["requiredfields"] . ' ' . i18n_get_translated(implode(', ', $missingFields), true);
@@ -69,7 +72,8 @@ if (getval("save","")!="")
         $error=$lang["expiredantispam"];    
         }
 	# Check the anti-spam code is correct
-	elseif (!hook('replaceantispam_check') && getval("antispamcode","") != hash("SHA256",strtoupper(getval("antispam","")) . $scramble_key . getval("antispamtime",0)))
+	//elseif (!hook('replaceantispam_check') && getval("antispamcode","") != hash("SHA256",strtoupper(getval("antispam","")) . $scramble_key . getval("antispamtime",0)))
+	elseif (!hook('replaceantispam_check') && !verify_antispam($spamcode,$usercode,$spamtime))
 		{
 		$error=$lang["requiredantispam"];
 		}
@@ -86,7 +90,7 @@ if (getval("save","")!="")
 		if ($user_account_auto_creation)
 			{	
 			# Automatically create a new user account
-			$try=auto_create_user_account();
+			$try=auto_create_user_account(md5($usercode . $spamtime));
 			if($try!==true && !$account_email_exists_note)
 				{
 				// send an email about the user request

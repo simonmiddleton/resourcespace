@@ -688,14 +688,14 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 			$clear_function .= "
                     jQuery('#search_tree_{$field['ref']}').jstree(true).deselect_all();
 
-                    <!-- remove the hidden inputs -->
+                    /* remove the hidden inputs */
                     var elements = document.getElementsByName('nodes_searched[{$field['ref']}][]');
                     while(elements[0])
                         {
                         elements[0].parentNode.removeChild(elements[0]);
                         }
 
-                    <!-- update status box -->
+                    /* update status box */
                     var node_statusbox = document.getElementById('nodes_searched_{$field['ref']}_statusbox');
                     while(node_statusbox.lastChild)
                         {

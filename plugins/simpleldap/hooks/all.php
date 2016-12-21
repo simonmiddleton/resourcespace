@@ -23,17 +23,19 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 
 
 		
-	if ($auth) {
+	if ($auth)
+        {
+        $usersuffix    = $simpleldap['usersuffix'];
+        $addsuffix     = ($usersuffix=="")?"":"." . $usersuffix;
+        $username      = escape_check($uname . $addsuffix);
+        $password_hash = md5('RS' . $username . generateSecureKey());
+        $userid        = sql_value("SELECT ref AS `value` FROM user WHERE username = '{$username}'", 0);
+        $email         = escape_check($userinfo["email"]);
+        $phone         = escape_check($userinfo["phone"]);
+        $displayname   = escape_check($userinfo['displayname']);
 
-		$usersuffix = $simpleldap['usersuffix'];
-		$addsuffix=($usersuffix=="")?"":"." . $usersuffix;
-		$username=escape_check($uname . $addsuffix);
-		$password_hash= md5("RS".$username.$pword);
-		$userid = sql_value("select ref value from user where username='".$uname . $addsuffix ."'",0);
-		$email=escape_check($userinfo["email"]);
-		$phone=escape_check($userinfo["phone"]);
-		$displayname=escape_check($userinfo['displayname']);
 		debug ("LDAP - got user details email: " . $email . ", telephone: " . $phone);
+
 		// figure out group
 		$group = $simpleldap['fallbackusergroup'];
 		$groupmatch="";

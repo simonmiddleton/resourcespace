@@ -131,7 +131,7 @@ if ($search_titles)
                 }
             } 
         hook("collectionsearchtitlemod");
-        $search_title.= '<div align="left"><h1><div class="searchcrumbs">'.($is_theme?$theme_link." > ":"").'<span id="coltitle'.$collection.'"><a '.$alt_text.' href="'.$baseurl_short.'pages/search.php?search=!collection'.$collection.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.i18n_get_collection_name($collectiondata).($display_user_and_access?" <span class='CollectionUser'>(".$colusername.$colaccessmode.")</span>":"").'</a></span>'.$searchcrumbs.'</div></h1></div>';
+        $search_title.= '<div align="left"><h1><div class="searchcrumbs">'.($is_theme?$theme_link."&nbsp;" . LINK_CARET:"").'<span id="coltitle'.$collection.'"><a '.$alt_text.' href="'.$baseurl_short.'pages/search.php?search=!collection'.$collection.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.i18n_get_collection_name($collectiondata).($display_user_and_access?" <span class='CollectionUser'>(".$colusername.$colaccessmode.")</span>":"").'</a></span>'.$searchcrumbs.'</div></h1></div>';
         }
     elseif ($search=="" && $archive==0)
         {

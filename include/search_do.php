@@ -1,5 +1,5 @@
 <?php
-function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$access_override=false,$starsearch=0,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false) {
+function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$access_override=false,$starsearch=0,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false, $editable_only=false,$returnsql=false) {
 
     # Takes a search string $search, as provided by the user, and returns a results set
     # of matching resources.
@@ -7,7 +7,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     # $restypes is optionally used to specify which resource types to search.
     # $access_override is used by smart collections, so that all all applicable resources can be judged regardless of the final access-based results
 
-    debug("search=$search $go $fetchrows restypes=$restypes archive=$archive daylimit=$recent_search_daylimit");
+    debug("search=$search $go $fetchrows restypes=$restypes archive=$archive daylimit=$recent_search_daylimit editable_only=" . ($editable_only?"true":"false"));
 
     # globals needed for hooks
      global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
@@ -58,6 +58,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
             }
         $order[$order_by]="$order_by $sort";
         }
+		
+	$archive=explode(",",$archive); // Allows for searching in more than one archive state
 
     hook("modifyorderarray");
 
@@ -108,7 +110,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
         }
 
     # -- Build up filter SQL that will be used for all queries
-    $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage);
+    $sql_filter=search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage, $editable_only);
 
     # Initialise variables.
     $sql="";
@@ -968,7 +970,117 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                 }
             }
         }
+	
+	
+    if ($editable_only)
+		{
+		global $usereditfilter;			
+		if(strlen($usereditfilter)>0)
+			{
+			$ef=explode(";",$usereditfilter);
+			for ($n=0;$n<count($ef);$n++)
+				{
+				$s=explode("=",$ef[$n]);
+				if (count($s)!=2)
+					{
+					exit ("Edit filter is not correctly configured for this user group.");
+					}
+				
+				# Support for "NOT" matching. Return results only where the specified value or values are NOT set.
+				$filterfield=$s[0];$filter_not=false;
+				if (substr($filterfield,-1)=="!")
+					{
+					$filter_not=true;
+					$filterfield=substr($filterfield,0,-1);# Strip off the exclamation mark.
+					}
+					
+				// Check for resource_type filter
+				if($filterfield == "resource_type")
+					{
+					$restypes_editable=explode("|",$s[1]);
+					if ($sql_filter!="") {$sql_filter.=" and ";}
+					$sql_filter.="resource_type " . ($filter_not?"NOT ":"")  . "IN ('" . join("','",$restypes_editable) . "')";
+					continue;
+					}
 
+				# Support for multiple fields on the left hand side, pipe separated - allows OR matching across multiple fields in a basic way
+				$filterfields=explode("|",escape_check($filterfield));
+
+				# Find field(s) - multiple fields can be returned to support several fields with the same name.
+				$f=sql_query("select ref, type from resource_type_field where name in ('" . join("','",$filterfields) . "')");
+				if (count($f)==0)
+					{
+					exit ("Field(s) with short name '" . $filterfield . "' not found in user group search filter.");
+					}
+				foreach ($f as $fd)
+					{
+					$fn=array(); // Node filter fields
+					$ff=array(); // Free text filter fields
+					if(in_array($fd['type'], $FIXED_LIST_FIELD_TYPES))
+						{
+						$fn[] = $fd['ref'];
+						}
+					else
+						{
+						$ff[] = $fd['ref'];
+						}
+					}
+				# Find keyword(s)
+				$ks=explode("|",strtolower(escape_check($s[1])));
+				for($x=0;$x<count($ks);$x++)
+					{
+					# Cleanse the string as keywords are stored without special characters
+					$ks[$x]=cleanse_string($ks[$x],true);
+					global $stemming;
+					if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
+						{
+						$ks[$x]=GetStem($ks[$x]);
+						}
+					}
+
+				$kw=sql_array("select ref value from keyword where keyword in ('" . join("','",$ks) . "')");
+
+				if (!$filter_not)
+					{
+					# Option for custom access to override search filters.
+					# For this resource, if custom access has been granted for the user or group, nullify the search filter for this particular resource effectively selecting "true".
+					global $custom_access_overrides_search_filter;
+
+					# Standard operation ('=' syntax)
+					if(count($ff)>0)
+						{
+						$sql_join.=" join resource_keyword editfilter" . $n . " on r.ref=editfilter" . $n . ".resource and editfilter" . $n . ".resource_type_field in ('" . join("','",$ff) . "') and editfilter" . $n . ".keyword in ('" .     join("','",$kw) . "') ";
+						}
+					if(count($fn)>0)
+						{
+						$sql_join.=" join resource_node editfilterrn" . $n . " on r.ref=editfilterrn" . $n . ".resource join node editfiltern" . $n . " on editfiltern" . $n . ".ref=editfilterrn" . $n . ".node and editfiltern" . $n . ".resource_type_field in  ('" . join("','",$fn) . "') and editfiltern" . $n . ".name in ('" .     join("','",$ks) . "') ";
+						}
+					}
+				else
+					{
+					# Inverted NOT operation ('!=' syntax)
+					if(count($ff)>0)
+						{
+						if ($sql_filter!="")
+							{
+							$sql_filter.=" and ";
+							}
+						$sql_filter .= "((r.ref not in (select resource from resource_keyword where resource_type_field in ('" . join("','",$ff) . "') and keyword in ('" .    join("','",$kw) . "'))) "; # Filter out resources that do contain the keyword(s)
+						}
+					if(count($fn)>0)
+						{
+						if ($sql_filter!="")
+							{
+							$sql_filter.=" and ";
+							}
+						$sql_filter .= "((r.ref not in (select rn.resource from resource_node rn left join node n on rn.node=n.ref where n.resource_type_field in ('" . join("','",$fn) . "') and n.name in ('" .    join("','",$ks) . "'))) "; # Filter out resources that do contain the keyword(s)
+						}
+					$sql_filter.=")";
+					}
+				}
+			}
+		}		
+		
     $userownfilter=hook("userownfilter");
     if ($userownfilter)
         {
@@ -1137,16 +1249,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     # Debug
     debug('$results_sql=' . $results_sql);
 
-
-if(false)   // TODO: remove this completely
-    {
-//print_r ($sql_keyword_union);
-//print_r ($sql_keyword_union_aggregation);
-//print_r ($sql_keyword_union_criteria);
-//print_r ($sql_keyword_union_or);
-echo $results_sql;
-    }
-
     if($return_refs_only)
         {
         # Execute query but only ask for ref columns back from mysql_query();
@@ -1154,12 +1256,15 @@ echo $results_sql;
         global $mysql_verbatim_queries;
         $mysql_vq=$mysql_verbatim_queries;
         $mysql_verbatim_queries=true;
+        
+        if($returnsql){return $results_sql;}
         $result=sql_query($results_sql,false,$fetchrows,true,2,true,array('ref'));
         $mysql_verbatim_queries=$mysql_vq;
         }
     else
         {
         # Execute query as normal
+        if($returnsql){return $results_sql;}
         $result=sql_query($results_sql,false,$fetchrows);
 
         # Performance improvement - perform a second count-only query and pad the result array as necessary
