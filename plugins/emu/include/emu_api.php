@@ -28,6 +28,9 @@ class EMuAPI
     protected $terms;
     protected $columns = array();
 
+    // Constants
+    private $_MIME_TYPES = array('application', 'audio', 'image', 'text', 'video');
+
 
     /**
     * Initialises a connection to an EMu server

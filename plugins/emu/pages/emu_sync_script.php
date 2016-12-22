@@ -17,6 +17,7 @@ include_once dirname(__FILE__) . '/../include/emu_api.php';
 // Init
 ob_end_clean();
 set_time_limit($cron_job_time_limit);
+define('EMU_SCRIPT_SYNC_LOCK', 'emu_sync_mode_lock');
 
 // Use log file if set
 // IMPORTANT: running this script directly (without going via cron_copy_hitcount) may
@@ -35,16 +36,57 @@ if(EMU_SCRIPT_MODE_SYNC != $emu_script_mode)
     exit();
     }
 
+// TODO uncomment
+/*// Check if we need to clear locks or need help using the script
+if('cli' == $php_sapi_name && 2 == $argc)
+    {
+    if(in_array($argv[1], array('--help', '-help', '-h', '-?')))
+        {
+        emu_script_log('To clear the lock after a failed run, pass in "--clearlock", "-clearlock", "-c" or "--c"', $emu_log_file);
+        exit();
+        }
+    else if(in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')))
+        {
+        if(is_process_lock(EMU_SCRIPT_SYNC_LOCK))
+            {
+            clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
+            }
+        }
+    else
+        {
+        emu_script_log("Unknown argv: {$argv[1]}", $emu_log_file);
+        exit();
+        }
+    }
+
+// Check for a process lock
+if(is_process_lock(EMU_SCRIPT_SYNC_LOCK)) 
+    {
+    echo 'EMu script lock is in place. Deferring.' . PHP_EOL . 'To clear the lock after a failed run use --clearlock flag.' . PHP_EOL;
+
+    $emu_script_failed_subject = ($emu_test_mode ? 'TESTING MODE: ' : '') . 'EMu Import script - FAILED';
+    send_mail($email_notify, $emu_script_failed_subject, "The EMu script failed to run because a process lock was in place. This indicates that the previous run did not complete.\r\n\r\nIf you need to clear the lock after a failed run, run the script as follows:\r\n\r\nphp emu_script.php --clearlock\r\n", $email_from);
+    exit();
+    }
+set_process_lock(EMU_SCRIPT_SYNC_LOCK);*/
+
+
+
+
 // emu_script_log($message, $emu_log_file);
 
 
 
 $emu_rs_mappings       = unserialize(base64_decode($emu_rs_saved_mappings));
 $emu_script_start_time = microtime(true);
+$emu_records_limit     = 100;
 
+emu_script_log('Starting...', $emu_log_file);
 
 $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port);
 
+// Step 1 - Build the EMu Objects Data array
+emu_script_log('Step 1 - building EMu objects_data array', $emu_log_file);
 foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
     {
     $emu_api->setModule($emu_module);
@@ -78,14 +120,20 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
 
     emu_script_log("Found '{$emu_records_found}' records that match your search criteria in '{$emu_module}' module", $emu_log_file);
 
-    $objects_data = $emu_api->getSearchResults();
+    $emu_api->setColumns(array('multimedia.(master,resource)'));
 
-echo '<pre>';print_r($objects_data);echo '</pre>';
-die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
+    $offset = 0;
 
+    while($offset < $emu_records_found)
+        {
+        // Get objects data in batches otherwise you get End of Stream Exception
+        $objects_data = $emu_api->getSearchResults($offset, $emu_records_limit);
 
+        emu_script_log(print_r($objects_data, true), $emu_log_file);
 
-
+        // Ready to go to the next batch
+        $offset += $emu_records_limit;
+        }
 
     // foreach($objects_data as $object_data)
     //     {
@@ -100,15 +148,27 @@ die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
     //         }
     //     }
     }
-
-
-// echo '<pre>';print_r($objects_data);echo '</pre>';
-// die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
+emu_script_log('End of Step 1', $emu_log_file);
 
 
 
 
 
+
+// Step 2 - Get existing ResourceSpace resources created by "script" that have an IRN set
+
+// Step 3 - Add new resources (also add the original file (master))
+
+// Step 4 - Add as alternative file the EMu multimedia file if its checksum is different than the one we have in ResourceSpace for this resource
+
+
+
+fclose($emu_log_file);
+
+emu_script_log(sprintf("EMu Script completed in %01.2f seconds.", microtime(true) - $emu_script_start_time), $emu_log_file);
+
+// TODO uncomment
+// clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
 
 // sql_query('DELETE FROM sysvars WHERE name = "last_emu_import"');
 // sql_query('INSERT INTO sysvars VALUES ("last_emu_import", NOW())');
