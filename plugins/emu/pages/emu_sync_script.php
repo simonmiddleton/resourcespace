@@ -80,13 +80,14 @@ set_process_lock(EMU_SCRIPT_SYNC_LOCK);*/
 $emu_rs_mappings       = unserialize(base64_decode($emu_rs_saved_mappings));
 $emu_script_start_time = microtime(true);
 $emu_records_limit     = 100;
+$emu_records_data      = array();
 
 emu_script_log('Starting...', $emu_log_file);
 
 $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port);
 
 // Step 1 - Build the EMu Objects Data array
-emu_script_log('Step 1 - building EMu objects_data array', $emu_log_file);
+emu_script_log('Step 1 - building EMu found records data array', $emu_log_file);
 foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
     {
     $emu_api->setModule($emu_module);
@@ -120,7 +121,8 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
 
     emu_script_log("Found '{$emu_records_found}' records that match your search criteria in '{$emu_module}' module", $emu_log_file);
 
-    $emu_api->setColumns(array('multimedia.(master,resource)'));
+    $emu_api->setColumns(array('multimedia'));
+    $columns_list[] = 'multimedia';
 
     $offset = 0;
 
@@ -129,33 +131,48 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
         // Get objects data in batches otherwise you get End of Stream Exception
         $objects_data = $emu_api->getSearchResults($offset, $emu_records_limit);
 
-        emu_script_log(print_r($objects_data, true), $emu_log_file);
+        foreach($objects_data as $object_data)
+            {
+            foreach($object_data as $object_data_column => $object_data_column_value)
+                {
+                if(!in_array($object_data_column, $columns_list))
+                    {
+                    continue;
+                    }
+
+                $emu_records_data[$object_data['irn']][$object_data_column] = $object_data_column_value;
+                }
+            }
 
         // Ready to go to the next batch
         $offset += $emu_records_limit;
         }
-
-    // foreach($objects_data as $object_data)
-    //     {
-    //     foreach($columns_list as $column)
-    //         {
-    //         if(!array_key_exists($column, $object_data))
-    //             {
-    //             continue;
-    //             }
-
-    //         $return[$object_data['irn']][$column] = $object_data[$column];
-    //         }
-    //     }
     }
-emu_script_log('End of Step 1', $emu_log_file);
-
-
-
-
-
 
 // Step 2 - Get existing ResourceSpace resources created by "script" that have an IRN set
+emu_script_log(PHP_EOL . 'Step 2 - finding how many ResourceSpace resources created by "script" have an IRN set', $emu_log_file);
+/*
+Example:
+Array
+(
+    [0] => Array
+        (
+            [resource] => 1
+            [object_irn] => 74766
+        )
+
+    [1] => Array
+        (
+            [resource] => 5
+            [object_irn] => 904207
+        )
+)
+
+*/
+// TODO: add a filter based on $emu_created_by_script_field for get_emu_resources()
+$rs_resources_with_irn = get_emu_resources();
+
+// emu_script_log(print_r($rs_resources_with_irn, true), $emu_log_file);
 
 // Step 3 - Add new resources (also add the original file (master))
 
@@ -165,7 +182,7 @@ emu_script_log('End of Step 1', $emu_log_file);
 
 fclose($emu_log_file);
 
-emu_script_log(sprintf("EMu Script completed in %01.2f seconds.", microtime(true) - $emu_script_start_time), $emu_log_file);
+emu_script_log(PHP_EOL . sprintf("EMu Script completed in %01.2f seconds.", microtime(true) - $emu_script_start_time), $emu_log_file);
 
 // TODO uncomment
 // clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
