@@ -49,7 +49,7 @@ function HookSimplesamlAllPreheaderoutput()
 
 function HookSimplesamlAllProvideusercredentials()
         {
-        if(!(file_exists(dirname(__FILE__) . '/../lib/config/config.php')))
+    	if(!file_exists(simplesaml_get_lib_path() . '/config/config.php'))
             {
             debug("simplesaml: plugin not configured.");
             return false;
