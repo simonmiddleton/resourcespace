@@ -2,6 +2,7 @@
 include "../include/db.php";
 include_once "../include/general.php";
 include "../include/resource_functions.php";
+include "../include/search_functions.php";
 
 # Spider.php - provide a spiderable set of pages. Designed for the Google Appliance but should work with other
 # search engines / appliances.
