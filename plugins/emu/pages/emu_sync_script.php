@@ -31,6 +31,8 @@ if('' != $emu_log_directory)
 if(EMU_SCRIPT_MODE_SYNC != $emu_script_mode)
     {
     emu_script_log('ALERT - Trying to run script with wrong script mode set.', $emu_log_file);
+
+    exit();
     }
 
 // emu_script_log($message, $emu_log_file);
@@ -75,6 +77,15 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
         }
 
     emu_script_log("Found '{$emu_records_found}' records that match your search criteria in '{$emu_module}' module", $emu_log_file);
+
+    $objects_data = $emu_api->getSearchResults();
+
+echo '<pre>';print_r($objects_data);echo '</pre>';
+die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
+
+
+
+
 
     // foreach($objects_data as $object_data)
     //     {
