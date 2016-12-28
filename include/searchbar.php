@@ -214,6 +214,7 @@ if ($display_user_rating_stars && $star_search){ ?>
                 {
                 'initialTags': <?php echo json_encode($initial_tags); ?>,
                 'delimiter': '<?php echo TAG_EDITOR_DELIMITER; ?>',
+                'forceLowercase': false,
                 'autocomplete': {
                     'source': '<?php echo $autocomplete_src; ?>',
                 },
