@@ -176,7 +176,7 @@ echo $hidden_input_elements;
             ?>
 
             // Trigger an event so we can chain actions once we've changed a category tree option
-            jQuery('#CentralSpace').trigger('categoryTreeChanged',[{node: data.node.id}]);
+            jQuery('#CentralSpace').trigger('categoryTreeChanged',[data.node.id]);
 			}
         });
     </script>

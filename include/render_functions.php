@@ -48,17 +48,16 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     
                     $scriptconditions[$condref]["field"] = $fields[$cf]["ref"];  # add new jQuery code to check value
                     $scriptconditions[$condref]['type'] = $fields[$cf]['type'];
-					$scriptconditions[$cf]['nodes'] = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
-                    $scriptconditions[$condref]['options'] = $fields[$cf]['options'];
-
-                    $scriptconditions[$condref]['node_options'] = array();
+					$scriptconditionnodes = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
+                    
+                    //$scriptconditions[$condref]['node_options'] = array();
 
                     $checkvalues=$s[1];
                     $validvalues=explode("|",strtoupper($checkvalues));
 					$scriptconditions[$condref]['valid'] = array();
 					foreach($validvalues as $validvalue)
 						{
-						$found_validvalue = get_node_by_name($scriptconditions[$cf]['nodes'], $validvalue);
+						$found_validvalue = get_node_by_name($scriptconditionnodes, $validvalue);
 
 						if(0 != count($found_validvalue))
 							{
@@ -83,9 +82,9 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 							<script>
 							jQuery(document).ready(function()
 								{
-								document.getElementById('CentralSpace').addEventListener('categoryTreeChanged', function(e)
+								jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
 									{
-									checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
+									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
 									});
 								});
 							</script>
@@ -100,9 +99,9 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 							<script>
 							jQuery(document).ready(function()
 								{
-								document.getElementById('CentralSpace').addEventListener('dynamicKeywordChanged', function(e)
+								jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
 									{
-									checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
+									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
 									});
 								});
 							</script>
@@ -111,26 +110,28 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 							// Move on to the next field now
 							continue;
 							}
+                        else
+                            {
 
-						$checkname = "nodes_searched[{$fields[$cf]['ref']}][]";
-
-						$jquery_selector = "input[name=\"{$checkname}\"]";
-						if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'])
-							{
-							$checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
-							$jquery_selector = "select[name=\"{$checkname}\"]";
-							}
-						?>
-						<script type="text/javascript">
-						jQuery(document).ready(function()
-							{
-							jQuery('<?php echo $jquery_selector; ?>').change(function ()
-								{
-								checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
-								});
-							});
-						</script>
-						<?php
+                            $checkname = "nodes_searched[{$fields[$cf]['ref']}][]";
+                            $jquery_selector = "input[name=\"{$checkname}\"]";
+                            if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'])
+                                {
+                                $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
+                                $jquery_selector = "select[name=\"{$checkname}\"]";
+                                }
+                            ?>
+                            <script type="text/javascript">
+                            jQuery(document).ready(function()
+                                {
+                                jQuery('<?php echo $jquery_selector; ?>').change(function ()
+                                    {
+                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                                    });
+                                });
+                            </script>
+                            <?php
+                            }
 						}
 					else
 						{
@@ -318,11 +319,12 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         case FIELD_TYPE_CHECK_BOX_LIST: 
         case FIELD_TYPE_DROP_DOWN_LIST:
         case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && $simple_search_show_dynamic_as_dropdown):
-        if(!hook("customchkboxes", "", array($field, $value, $autoupdate, $class, $forsearchbar, $limit_keywords)))
+       if(!hook("customchkboxes", "", array($field, $value, $autoupdate, $class, $forsearchbar, $limit_keywords)))
             {
             # -------- Show a check list or dropdown for dropdowns and check lists?
             # By default show a checkbox list for both (for multiple selections this enabled OR functionality)
             
+            $setnames  = trim_array(explode(";",cleanse_string($value,true)));
             # Translate all options
             $adjusted_dropdownoptions=hook("adjustdropdownoptions");
             if ($adjusted_dropdownoptions){$options=$adjusted_dropdownoptions;}
@@ -350,7 +352,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             if ($field["display_as_dropdown"] || $forsearchbar)
                 {
                 # Show as a dropdown box
-                $set  = trim_array(explode(";",cleanse_string($value,true)));
                 $name = "nodes_searched[{$field['ref']}]";
                     ?>
                 <select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearchbar){?> onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>>
@@ -361,7 +362,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     if('' != trim($node['name']))
                         {
                         ?>
-                        <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>" <?php if ((isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(cleanse_string($node['ref'], true), $set)) { ?>selected<?php } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
+                        <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>" <?php if (0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) { ?>selected<?php } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
                         <?php
                         }
                     }
@@ -375,8 +376,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             else
                 {
                 # Show as a checkbox list (default)
-                
-                $set=trim_array(explode(";",cleanse_string($value,true)));
+                $setnames=trim_array(explode(";",$value));
                 $wrap=0;
 
                 $l=average_length($option_trans_simple);
@@ -425,13 +425,9 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                                         <?php
                                         }
                                     $col++;
-                                    if(isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes))
-                                        {
-										$set = $node['ref'];
-                                        }
-                                        ?>
+                                    ?>
                                     <td valign=middle>
-                                        <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if($node['ref'] == $set) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                        <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                                     </td>
                                     <td valign=middle>
                                         <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
@@ -469,7 +465,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                             {
                             ?>
                             <td valign=middle>
-                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((isset($searched_nodes) && 0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(cleanse_string(i18n_get_translated($option),true),$set)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
                             </td>
                             <td valign=middle>
                                 <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;

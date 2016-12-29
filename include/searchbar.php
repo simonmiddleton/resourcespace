@@ -120,7 +120,6 @@ for ($n=0;$n<count($keywords);$n++)
                     $quicksearch = str_replace(NODE_TOKEN_PREFIX . $searched_node, '', $quicksearch);
                     }
                 }
-
             $initial_tags = explode(',', $quicksearch);
             }
 		else

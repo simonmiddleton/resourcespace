@@ -55,7 +55,6 @@ if($simple_search_pills_view)
     // This is done because if we also have the field displayed and we search for country:France this needs to 
     // convert to @@74 in order for the field to have this option selected
     $keywords = split_keywords($search, false, false, false, false, true);
-
     foreach($keywords as $keyword)
         {
         if('' == trim($keyword))
@@ -67,8 +66,14 @@ if($simple_search_pills_view)
             {
             continue;
             }
-
-        $specific_field_search = explode(':', $keyword);
+        if(substr($keyword,0,1) =="\"" && substr($keyword,-1,1) == "\"")
+            {
+            $specific_field_search=explode(":",substr($keyword,1,-1));
+            }
+        else
+            {
+            $specific_field_search = explode(':', $keyword);
+            }
 
         if(2 !== count($specific_field_search))
             {
@@ -90,7 +95,6 @@ if($simple_search_pills_view)
             }
 
         $nodes = get_nodes($resource_type_field, null, true);
-
         $node_found = get_node_by_name($nodes, $specific_field_search[1]);
 
         if(0 < count($node_found))

@@ -3317,9 +3317,9 @@ function check_display_condition($n, $field)
                         <script>
                         jQuery(document).ready(function()
                             {
-                            document.getElementById('CentralSpace').addEventListener('categoryTreeChanged', function(e)
+                            jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
                                 {
-                                checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
+                                checkDisplayCondition<?php echo $field['ref']; ?>(node);
                                 });
                             });
                         </script>
@@ -3334,9 +3334,9 @@ function check_display_condition($n, $field)
                         <script>
                         jQuery(document).ready(function()
                             {
-                            document.getElementById('CentralSpace').addEventListener('dynamicKeywordChanged', function(e)
+                            jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
                                 {
-                                checkDisplayCondition<?php echo $field['ref']; ?>(e.detail.node);
+                                checkDisplayCondition<?php echo $field['ref']; ?>(node);
                                 });
                             });
                         </script>
