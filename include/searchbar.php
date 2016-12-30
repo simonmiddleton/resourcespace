@@ -127,6 +127,7 @@ for ($n=0;$n<count($keywords);$n++)
 			{
 			# Plain text (non field) search.
 			$simple[]=trim($keywords[$n]);
+			$initial_tags[] = trim($keywords[$n]);
 			}
 		}
 	}
