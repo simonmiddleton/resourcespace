@@ -540,9 +540,16 @@ function AddNode(parent)
 
             jQuery('.node_parent_chosen_selector').chosen({});
 
+        <?php
+        if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
+            {
+            ?>
             // Reload parent selectors to contain the new value
             new_option_response_element = jQuery(jQuery.parseHTML(response)).filter("table[id^='node_']");
             jQuery('#CentralSpace').trigger('reloadParentSelectors', [new_option_response_element[0].id.substring(5), initial_new_option_name]);
+            <?php
+            }
+            ?>
             }
         });
     }
@@ -595,7 +602,15 @@ function DeleteNode(ref)
     jQuery.post(post_url, post_data);
     jQuery('#node_' + ref).remove();
     jQuery('#node_' + ref + '_children').remove();
-    jQuery('#CentralSpace').trigger('reloadParentSelectors', ref);
+
+    <?php
+    if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
+        {
+        ?>
+        jQuery('#CentralSpace').trigger('reloadParentSelectors', ref);
+        <?php
+        }
+        ?>
 
     return true;
     }
@@ -696,43 +711,50 @@ function ToggleTreeNode(ref, field_ref)
 
 jQuery('.node_parent_chosen_selector').chosen({});
 
-// Update all parent selectors so that all of them have the same nodes as valid options
-jQuery('#CentralSpace').on('reloadParentSelectors', function (e, node_id, node_name)
+<?php
+if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
     {
-    if(typeof node_id === 'undefined')
+    ?>
+    // Update all parent selectors so that all of them have the same nodes as valid options
+    jQuery('#CentralSpace').on('reloadParentSelectors', function (e, node_id, node_name)
         {
-        return false;
-        }
-
-    var delete_option_name = false;
-    if(typeof node_name === 'undefined')
-        {
-        // this means the node_ref came from a delete action so remove option from select
-        delete_option_name = true;
-        }
-
-    jQuery('.node_parent_chosen_selector').each(function (index, element)
-        {
-        if(delete_option_name)
+        if(typeof node_id === 'undefined')
             {
-            jQuery(element).find("option[value='" + node_id + "']").remove();
-            return true;
+            return false;
             }
 
-        // Example of ID from jQuery(element)[0].id
-        // node_option_413_parent_select
-        current_node_id = jQuery(element)[0].id.substring(12).substring(0, jQuery(element)[0].id.indexOf('_') - 1);
-
-        if(current_node_id != '' && current_node_id == node_id)
+        var delete_option_name = false;
+        if(typeof node_name === 'undefined')
             {
-            return true;
+            // this means the node_ref came from a delete action so remove option from select
+            delete_option_name = true;
             }
 
-        jQuery(element).append('<option value="' + node_id + '">' + node_name + '</option>');
+        jQuery('.node_parent_chosen_selector').each(function (index, element)
+            {
+            if(delete_option_name)
+                {
+                jQuery(element).find("option[value='" + node_id + "']").remove();
+                return true;
+                }
+
+            // Example of ID from jQuery(element)[0].id
+            // node_option_413_parent_select
+            current_node_id = jQuery(element)[0].id.substring(12).substring(0, jQuery(element)[0].id.indexOf('_') - 1);
+
+            if(current_node_id != '' && current_node_id == node_id)
+                {
+                return true;
+                }
+
+            jQuery(element).append('<option value="' + node_id + '">' + node_name + '</option>');
+            });
+
+        jQuery('.node_parent_chosen_selector').trigger("chosen:updated");
         });
-
-    jQuery('.node_parent_chosen_selector').trigger("chosen:updated");
-    });
+    <?php
+    }
+    ?>
 </script>
 
 <div class="BasicsBox">
