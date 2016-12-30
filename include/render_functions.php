@@ -186,7 +186,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
                     {
                     $jquery_condition_selector = "input[name=\"nodes_searched[{$scriptcondition['field']}][]\"]";
-                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(node) != -1";
+                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
 
                     if(in_array($scriptcondition['type'],array(FIELD_TYPE_CHECK_BOX_LIST,FIELD_TYPE_RADIO_BUTTONS)))
                         {
@@ -197,7 +197,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                         {
                         $jquery_condition_selector = "select[name=\"nodes_searched[{$scriptcondition['field']}]\"] option:selected";
                         }
-                    ?>
+						
+						?>
                     if(!newfield<?php echo $field['ref']; ?>show)
                         {
                         jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
