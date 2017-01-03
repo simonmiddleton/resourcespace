@@ -75,9 +75,27 @@ function api_update_resource_type($resource,$type)
     return update_resource_type($resource,$type);
     }
 
-function api_get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jpg",$page=1,$watermarked=false,$alternative=-1)
+function api_get_resource_path($ref, $getfilepath, $size, $generate=true, $extension="jpg", $page=1, $watermarked=false, $alternative=-1)
     {
-    return get_resource_path($ref,$getfilepath,$size,$generate,$extension,-1,$page,$watermarked,"",$alternative,false);
+    $refs = json_decode($ref, true);
+    if(is_array($refs))
+        {
+        $return = array();
+
+        foreach($refs as $ref)
+            {
+            if(!is_numeric($ref))
+                {
+                continue;
+                }
+
+            $return[$ref] = get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
+            }
+
+        return $return;
+        }
+
+    return get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, "", $alternative, false);
     }
     
 function api_get_resource_data($resource)
