@@ -45,7 +45,7 @@ $FIXED_LIST_FIELD_TYPES = array(
 
 // ------------------------- LOG_CODE_ -------------------------
 
-// codes used for log entries (including resource and activity logs)
+// codes used for log entries (including resource, collection and activity logs)
 
 define ('LOG_CODE_ACCESS_CHANGED',		'a');
 define ('LOG_CODE_ALTERNATIVE_CREATED',	'b');
@@ -67,6 +67,23 @@ define ('LOG_CODE_UPLOADED',			'u');
 define ('LOG_CODE_UNSPECIFIED',			'U');
 define ('LOG_CODE_VIEWED',				'v');
 define ('LOG_CODE_DELETED',				'x');
+define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',				'r');
+define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',			'R');
+define ('LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES',		'D');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE',				'a');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_COPIED',		'c');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_COMMENT',		'r');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_RATING', 		'*');
+define ('LOG_CODE_COLLECTION_SHARED_COLLECTION',			'S');
+define ('LOG_CODE_COLLECTION_EMAILED_COLLECTION',			'E');
+define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',				'r');
+define ('LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION',	's');
+define ('LOG_CODE_COLLECTION_STOPPED_RESOURCE_ACCESS',		't');
+define ('LOG_CODE_COLLECTION_DELETED_COLLECTION',			'X');
+define ('LOG_CODE_COLLECTION_BATCH_TRANSFORMED',			'b');
+define ('LOG_CODE_COLLECTION_ACCESS_CHANGED',				'A');
+define ('LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED',		'Z');
+
 
 // validates LOG_CODE is legal
 function LOG_CODE_validate($log_code)

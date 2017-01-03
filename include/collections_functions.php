@@ -351,10 +351,12 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0)
 	}	
 }
 	
-function delete_collection($ref)
+function delete_collection($collection)
 	{
 	# Deletes the collection with reference $ref
-	global $home_dash;
+	global $home_dash, $lang;
+	if(!is_array($collection)){$collection=get_collection($collection);}
+	$ref=$collection["ref"];
 	
 	# Permissions check
 	if (!collection_writeable($ref)) {return false;}
@@ -375,7 +377,7 @@ function delete_collection($ref)
 			}
 		}
 	// log this
-	collection_log($ref,"X",0, "");
+	collection_log($ref,"X",0, $collection["name"] . " (" . $lang["owner"] . ":" . $collection["username"] . ")");
 	}
 	
 function refresh_collection_frame($collection="")
