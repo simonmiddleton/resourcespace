@@ -5,15 +5,18 @@ if('cli' !== php_sapi_name())
     }
 
 
+// Add a new node
 $resource_type_field = 2000;
 
-// Add a new node
 $node_id_1 = set_node(null, $resource_type_field, 'New option added via test', null, null);
 $node_id_2 = set_node(null, $resource_type_field, 'Option assigned order_by', null, 40);
 $node_id_3 = set_node(null, $resource_type_field, '', null, 40);
 $node_id_4 = set_node(null, $resource_type_field, null, null, null);
 $node_id_5 = set_node(null, '', 'Option with resource_type_field invalid', null, null);
 $node_id_6 = set_node(null, null, 'Option with resource_type_field invalid', null, null);
+$node_id_7a = set_node(null, $resource_type_field, 'Same node name test', null, null);
+$node_id_7b = set_node(null, $resource_type_field, 'Same node name test', null, null);
+$node_id_7c = set_node(null, $resource_type_field, 'Same node name test', null, null);
 
 // Have nodes been set? No other integrity check...
 $current_node = array();
@@ -46,6 +49,27 @@ if(false !== $node_id_3 || false !== $node_id_4 || false !== $node_id_5 || false
     return false;
     }
 
+// Check cases for multiple nodes with the same name
+$i = 0;
+foreach(get_nodes($resource_type_field, null, false, null, null, 'Same node name test') as $node)
+    {
+    if('Same node name test' != $node['name'])
+        {
+        continue;
+        }
+
+    if(!in_array($node['ref'], array($node_id_7a, $node_id_7b, $node_id_7c)))
+        {
+        return false;
+        }
+
+    $i++;
+    }
+// Something went wrong with creating these nodes
+if(0 === $i)
+    {
+    return false;
+    }
 
 // Creating some nodes to be used as parents or children
 $resource_type_field = 2001;
@@ -80,5 +104,7 @@ foreach(get_nodes($resource_type_field, null, true) as $nodes)
         return false;
         }
     }
+
+// TODO: check set_node() for updating capabilities (names, orders)
 
 return true;
