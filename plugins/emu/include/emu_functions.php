@@ -35,8 +35,8 @@ function check_script_last_ran(&$emu_script_last_ran = '')
 * Format date for EMu use (similar to the ISO8601 date format except
 * the time zone designator is not included)
 * 
-* @param string  $format    PHP's date() valid format
 * @param integer $timestamp
+* @param string  $format    PHP's date() valid format
 * 
 * @return string
 */
