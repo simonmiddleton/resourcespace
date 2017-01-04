@@ -68,6 +68,7 @@ $keywords       = split_keywords($quicksearch,false,false,false,false,true);
 $set_fields     = array();
 $simple         = array();
 $searched_nodes = array();
+$initial_tags = array();
 
 for ($n=0;$n<count($keywords);$n++)
 	{
@@ -84,14 +85,13 @@ for ($n=0;$n<count($keywords);$n++)
         else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
             {
             $nodes = resolve_nodes_from_string($keywords[$n]);
-
+            $searched_nodes=array();
             foreach($nodes as $node)
                 {
                 $searched_nodes[] = $node;
                 }
 
             $searched_nodes = array_unique($searched_nodes);
-
             foreach($searched_nodes as $searched_node)
                 {
                 $node = array();
@@ -105,10 +105,12 @@ for ($n=0;$n<count($keywords);$n++)
 
                 if(false === $field_index)
                     {
-                    $quicksearch = str_replace(NODE_TOKEN_PREFIX . $searched_node,
+                    $fieldsearchterm = str_replace(NODE_TOKEN_PREFIX . $searched_node,
                         rebuild_specific_field_search_from_node($node),
-                        $quicksearch);
-
+                        $keywords[$n]);
+						
+					$simple[]=$fieldsearchterm;
+					$initial_tags[] = $fieldsearchterm;
                     continue;
                     }
 
@@ -118,15 +120,14 @@ for ($n=0;$n<count($keywords);$n++)
                 if(true == $searched_field['simple_search'])
                     {
                     $quicksearch = str_replace(NODE_TOKEN_PREFIX . $searched_node, '', $quicksearch);
-                    }
+					}
                 }
-
-            $initial_tags = explode(',', $quicksearch);
             }
 		else
 			{
 			# Plain text (non field) search.
 			$simple[]=trim($keywords[$n]);
+			$initial_tags[] = trim($keywords[$n]);
 			}
 		}
 	}
@@ -214,6 +215,7 @@ if ($display_user_rating_stars && $star_search){ ?>
                 {
                 'initialTags': <?php echo json_encode($initial_tags); ?>,
                 'delimiter': '<?php echo TAG_EDITOR_DELIMITER; ?>',
+                'forceLowercase': false,
                 'autocomplete': {
                     'source': '<?php echo $autocomplete_src; ?>',
                 },

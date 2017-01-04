@@ -205,8 +205,9 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
             {
             $keyword=$keywords[$n];
             $quoted_string=(substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"";
-            
-            if(!$quoted_string)
+            $quoted_field_match=false;
+            $field_short_name_specified=false;
+            if(!$quoted_string || ($quoted_string && strpos($keyword,":")!==false)) // If quoted string with a field specified we first need to try and resolve it to a node
                 {            
                 if (substr($keyword,0,1)!="!" || substr($keyword,0,6)=="!empty")
                     {
@@ -214,50 +215,53 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                     $field=0;
                     //echo "<li>$keyword<br/>";
     
-                    $field_short_name_specified=false;
                     if (strpos($keyword,":")!==false)
                         {
                         $field_short_name_specified=true;
+                        
+                        
                         $kw=explode(":",$keyword,2);
                         # Fetch field info
                         global $fieldinfo_cache;
-                        if (isset($fieldinfo_cache[$kw[0]]))
+                        $fieldname=$quoted_string?substr($kw[0],1):$kw[0];
+                        $keystring=$quoted_string?substr($kw[1],0,-1):$kw[1];
+                        if (isset($fieldinfo_cache[$fieldname]))
                             {
-                            $fieldinfo=$fieldinfo_cache[$kw[0]];
+                            $fieldinfo=$fieldinfo_cache[$fieldname];
                             }
                         else
                             {
-                            $fieldinfo=sql_query("select ref,type from resource_type_field where name='" . escape_check($kw[0]) . "'",0);
-                            $fieldinfo_cache[$kw[0]]=$fieldinfo;
+                            $fieldinfo=sql_query("select ref,type from resource_type_field where name='" . escape_check($fieldname) . "'",0);
+                            $fieldinfo_cache[$fieldname]=$fieldinfo;
                             }
                         }
 
-                    if ($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && !in_array($fieldinfo['type'],array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE, FIELD_TYPE_TEXT_BOX_MULTI_LINE)))
+                    if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo['type']) && !in_array($fieldinfo['type'],array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE, FIELD_TYPE_TEXT_BOX_MULTI_LINE)))
                         {
                         // ********************************************************************************
                         //                                                                    Field keyword
                         // ********************************************************************************
     
                         global $datefieldinfo_cache;
-                        if (isset($datefieldinfo_cache[$kw[0]]))
+                        if (isset($datefieldinfo_cache[$fieldname]))
                             {
-                            $datefieldinfo=$datefieldinfo_cache[$kw[0]];
+                            $datefieldinfo=$datefieldinfo_cache[$fieldname];
                             }
                         else
                             {
-                            $datefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($kw[0]) . "' and type IN (4,6,10)",0);
-                            $datefieldinfo_cache[$kw[0]]=$datefieldinfo;
+                            $datefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($fieldname) . "' and type IN (4,6,10)",0);
+                            $datefieldinfo_cache[$fieldname]=$datefieldinfo;
                             }
     
                     // numrange search ie mynumberfield:numrange1|1234 indicates that mynumberfield needs a numrange search for 1 to 1234. 
-                    if (substr($kw[1],0,8)=="numrange")
+                    if (substr($keystring,0,8)=="numrange")
                             {
                             $c++;
-                            $rangefield=$kw[0];
-                            $rangefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($kw[0]) . "' and type IN (0)",0);
+                            $rangefield=$fieldname;
+                            $rangefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($fieldname) . "' and type IN (0)",0);
                             $rangefieldinfo=$rangefieldinfo[0];
                             $rangefield=$rangefieldinfo["ref"];
-                            $rangestring=substr($kw[1],8);
+                            $rangestring=substr($keystring,8);
                             $minmax=explode("|",$rangestring);$min=str_replace("neg","-",$minmax[0]);if (isset($minmax[1])){$max=str_replace("neg","-",$minmax[1]);} else {$max='';}
                             if ($max=='' || $min==''){      // if only one number is entered, do a direct search
                                     if ($sql_filter!="") {$sql_filter.=" and ";}
@@ -274,7 +278,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             }
  
  
-                    else if (count($datefieldinfo) && substr($kw[1],0,5)!="range")
+                    else if (count($datefieldinfo) && substr($keystring,0,5)!="range")
                             {
                             $c++;
                             $datefieldinfo=$datefieldinfo[0];
@@ -283,26 +287,26 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 {
                                 $sql_filter.=" and ";
                                 }
-                            $val=str_replace("n","_", $kw[1]);
+                            $val=str_replace("n","_", $keystring);
                             $val=str_replace("|","-", $val);
                             $sql_filter.="rd" . $c . ".value like '". $val . "%' ";
                             $sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $datefield . "'";
                             }
-                        elseif ($kw[0]=="day")
+                        elseif ($keystring=="day")
                             {
                             if ($sql_filter!="")
                                 {
                                 $sql_filter.=" and ";
                                 }
-                            $sql_filter.="r.field$date_field like '____-__-" . $kw[1] . "%' ";
+                            $sql_filter.="r.field$date_field like '____-__-" . $keystring . "%' ";
                             }
-                        elseif ($kw[0]=="month")
+                        elseif ($keystring=="month")
                             {
                             if ($sql_filter!="")
                                 {
                                 $sql_filter.=" and ";
                                 }
-                            $sql_filter.="r.field$date_field like '____-" . $kw[1] . "%' ";
+                            $sql_filter.="r.field$date_field like '____-" . $keystring . "%' ";
                             }
                         elseif('year' == $kw[0])
                             {
@@ -310,7 +314,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 {
                                 $sql_filter .= ' AND ';
                                 }
-                            $sql_filter.= "rd{$c}.resource_type_field = {$date_field} AND rd{$c}.value LIKE '{$kw[1]}%' ";
+                            $sql_filter.= "rd{$c}.resource_type_field = {$date_field} AND rd{$c}.value LIKE '{$keystring}%' ";
                             $sql_join .= " INNER JOIN resource_data rd{$c} ON rd{$c}.resource = r.ref AND rd{$c}.resource_type_field = '{$date_field}'";
                             }
                         elseif ($kw[0]=="startdate")
@@ -319,7 +323,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 {
                                 $sql_filter.=" and ";
                                 }
-                            $sql_filter.="r.field$date_field >= '" . $kw[1] . "' ";
+                            $sql_filter.="r.field$date_field >= '" . $keystring . "' ";
                             }
                         elseif ($kw[0]=="enddate")
                             {
@@ -327,15 +331,15 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 {
                                 $sql_filter.=" and ";
                                 }
-                            $sql_filter.="r.field$date_field <= '" . $kw[1] . " 23:59:59' ";
+                            $sql_filter.="r.field$date_field <= '" . $keystring . " 23:59:59' ";
                             }
                             # Additional date range filtering
-                        elseif (count($datefieldinfo) && substr($kw[1],0,5)=="range")
+                        elseif (count($datefieldinfo) && substr($keystring,0,5)=="range")
                             {
                             $c++;
                             $rangefield=$datefieldinfo[0]["ref"];
                             $daterange=false;
-                            $rangestring=substr($kw[1],5);
+                            $rangestring=substr($keystring,5);
                             if (strpos($rangestring,"start")!==FALSE )
                                 {
                                 $rangestartpos=strpos($rangestring,"start")+5;
@@ -346,7 +350,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                     }
                                 $sql_filter.="rd" . $c . ".value >= '" . $rangestart . "'";
                                 }
-                            if (strpos($kw[1],"end")!==FALSE )
+                            if (strpos($keystring,"end")!==FALSE )
                                 {
                                 $rangeend=str_replace(" ","-",$rangestring);
                                 if ($sql_filter!="")
@@ -366,11 +370,11 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     
                             if($fieldinfo[0]["type"]==FIELD_TYPE_CATEGORY_TREE)
                                 {
-                                $ckeywords=preg_split('/[\|;]/',$kw[1]);
+                                $ckeywords=preg_split('/[\|;]/',$keystring);
                                 }
                             else
                                 {
-                                $ckeywords=explode(";",$kw[1]);
+                                $ckeywords=explode(";",$keystring);
                                 }
     
                             # Create an array of matching field IDs.
@@ -390,7 +394,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             # Special handling for dates
                             if ($fieldinfo[0]["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME || $fieldinfo[0]["type"]==FIELD_TYPE_EXPIRY_DATE || $fieldinfo[0]["type"]==FIELD_TYPE_DATE)
                                 {
-                                $ckeywords=array(str_replace(" ","-",$kw[1]));
+                                $ckeywords=array(str_replace(" ","-",$keystring));
                                 }
     
                             */
@@ -402,15 +406,16 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         {
                         // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
                         $field_nodes      = get_nodes($fieldinfo[0]['ref'], null, false, true);
-                        $field_node_index = array_search($kw[1], array_column($field_nodes, 'name'));
+                        $field_node_index = array_search(mb_strtolower(i18n_get_translated($keystring)), array_map('mb_strtolower',array_column($field_nodes, 'name')));
      
                         // Take the ref of the node and put it in the node_bucket
                         if(false !== $field_node_index)
                             {
                             $node_bucket[][] = $field_nodes[$field_node_index]['ref'];
+                            $quoted_field_match=true; // String has been resolved to a node so even if it is quoted we don't need to process it as a quoted string now
                             }
                         }
-                    else
+                    elseif(!$quoted_string)
                         {
                         // ********************************************************************************
                         //                                             Normal keyword (not tied to a field)
@@ -421,7 +426,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     
                         if ($field_short_name_specified)
                             {
-                            $keyword=$kw[1];
+                            $keyword=$keystring;
                             }
     
                         $keywords_expanded=explode(';',$keyword);
@@ -667,16 +672,30 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         } // end normal keyword
                     } // end of check if special search                    
                 } // End of if not quoted string
-            else
-                {   
+            if ($quoted_string && !$quoted_field_match)
+                {
+                $quotedfieldid="";
 				// This keyword is a quoted string, split into keywords but don't preserve quotes this time
+                 if ($field_short_name_specified && isset($fieldinfo[0]['ref']))
+                    {
+                    // We have already parsed the keyword when looking for a node, get string and then filter on this field
+                    $quotedkeywords=split_keywords($keystring);
+                    $quotedfieldid= $fieldinfo[0]['ref'];
+                    } 
+                else
+                    {
+                    $quotedkeywords=split_keywords(substr($keyword,1,-1));
+                    } 
+                    
 				$omit = false;
                 if (substr($keyword, 0, 1) == "-")
 					{
 					$omit = true;
 					$keyword = substr($keyword, 1);
 					}
-				$quotedkeywords=split_keywords(substr($keyword,1,-1));  
+               
+                
+                
 				$qk=1; // Set the counter to the first keyword
 				foreach($quotedkeywords as $quotedkeyword)
 					{
@@ -708,6 +727,12 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 							{
 							$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
 							$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+							}
+                            
+                        if ($quotedfieldid != "")
+							{
+							$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field = '" . $quotedfieldid . "'";
+							$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node = '" . $quotedfieldid . "'";
 							}
 						 
 						if ($qk==1)

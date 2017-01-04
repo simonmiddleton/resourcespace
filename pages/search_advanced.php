@@ -85,7 +85,6 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 	# Build a search query from the search form
 	$search=search_form_to_search_query($fields);
 	$search=refine_searchstring($search);
-	    
 	hook("moresearchcriteria");
 
 	if (getval("countonly","")!="")
@@ -181,9 +180,19 @@ else
 	  $keyword=trim($keywords[$n]);
 	  if (strpos($keyword,":")!==false && substr($keyword,0,1)!="!")
 		  {
-		  $nk=explode(":",$keyword);
-		  $name=trim($nk[0]);
-		  $keyword=trim($nk[1]);
+            
+          if(substr($keyword,0,1) =="\"" && substr($keyword,-1,1) == "\"")
+            {
+            $nk=explode(":",substr($keyword,1,-1));
+            $name=trim($nk[0]);
+            $keyword = "\"" . trim($nk[1]) . "\"";
+            }
+		  else
+            {
+            $nk=explode(":",$keyword);
+            $name=trim($nk[0]);
+            $keyword=trim($nk[1]);
+            }
 		  if ($name=="day") {$found_day=$keyword;}
 		  if ($name=="month") {$found_month=$keyword;}
 		  if ($name=="year") {$found_year=$keyword;}
@@ -726,7 +735,7 @@ if (!$collection_search_includes_resource_metadata)
 	 if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
 	 if (getval("resetform","")!="") {$value="";}
 	 # Render this field
-	 render_search_field($fields[$n],$value,true,"SearchWidth");
+	 render_search_field($fields[$n],$value,true,"SearchWidth",false,array(),$searched_nodes);
 	 }
    }
 ?>

@@ -180,15 +180,16 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         {
         switch ($fields[$n]["type"])
             {
-            case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes
-            // handle numeric constraint field as number range search Convert minus sign to safer symbol 
-            if (isset($fields[$n]['field_constraint']) && $fields[$n]['field_constraint']==1){
-				$fieldname=sql_value("select name value from resource_type_field where ref='".$fields[$n]["ref"]."'","");
-				$value=getvalescaped('field_'.$fields[$n]["ref"],'');
-				$search.=$fieldname.":".$value;
-				break;
-            }
-            
+            case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes            
+			$value=getvalescaped('field_'.$fields[$n]["ref"],'');
+             if ($value!="")
+                {
+                if ($search!="") {$search.=", ";}
+                $search.= (strpos($value,"\"")===false)?($fields[$n]["name"] . ":" . $value):("\"" . $fields[$n]["name"] . ":" .substr($value,1,-1) . "\"");
+               // Move any quotes around whole field:value element so that they are kept together
+                }
+            break;
+                        
             case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
             case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
             case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
@@ -196,16 +197,16 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             $value=getvalescaped($name,"");
             if ($value!="")
                 {
-                $vs=split_keywords($value);
+                $vs=split_keywords($value, false, false, false, false, true);
                 for ($m=0;$m<count($vs);$m++)
                     {
                     if ($search!="") {$search.=", ";}
-                    $search.=$fields[$n]["name"] . ":" . strtolower($vs[$m]);
+                    $search.= ((strpos($vs[$m],"\"")===false)?$fields[$n]["name"] . ":" . $vs[$m]:"\"" . $fields[$n]["name"] . ":" . substr($vs[$m],1,-1) . "\""); // Move any quotes around whole field:value element so that they are kept together
                     }
                 }
             break;
             
-            case FIELD_TYPE_TEXT_BOX_MULTI_LINE: # -------- Dropdowns / check lists
+            case FIELD_TYPE_DROP_DOWN_LIST: # -------- Dropdowns / check lists
             case FIELD_TYPE_CHECK_BOX_LIST:
             if ($fields[$n]["display_as_dropdown"])
                 {
@@ -223,7 +224,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                         }
                     */
                     if ($search!="") {$search.=", ";}
-                    $search.=$fields[$n]["name"] . ":" . $value;                    
+                    $search.= ((strpos($value," ")===false)?$fields[$n]["name"] . ":" . $value:"\"" . $fields[$n]["name"] . ":" .substr($value,1,-1) . "\"");
                     }
                 }
             else
@@ -514,7 +515,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 }
             }
 
-        $search = ('' == $search ? '' : join(', ', split_keywords($search))) . $node_ref;
+        $search = ('' == $search ? '' : join(', ', split_keywords($search,false,false,false,false,true))) . $node_ref;
         ##### END OF NODES #####
 
         $propertysearchcodes=array();
@@ -541,7 +542,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     }
                 }
             }
-            
         return $search;
     }
 
@@ -1563,5 +1563,5 @@ function rebuild_specific_field_search_from_node(array $node)
 
     // Note: at the moment there is no need to return a specific field search by multiple options
     // Example: country:keyword1;keyword2
-    return "$field_shortname:{$node['name']}";
+    return ((strpos($node['name']," ")===false)?$field_shortname . ":" . i18n_get_translated($node['name']):"\"" . $field_shortname . ":" . i18n_get_translated($node['name']) . "\"");
     }

@@ -394,6 +394,11 @@ switch ($callback)
 			{
 			if (!isset($lang['log_code_' . $value]))
 				{
+				if (!isset($lang['collectionlog-' . $value]))
+					{
+					continue;
+					}
+				$when_statements .= " WHEN ASCII('" . escape_check($value) . "') THEN '" . escape_check($lang['collectionlog-' . $value]) . "'";
 				continue;
 				}
 			$when_statements .= " WHEN ASCII('" . escape_check($value) . "') THEN '" . escape_check($lang['log_code_' . $value]) . "'";
@@ -467,7 +472,42 @@ switch ($callback)
 				ELSE `resource_log`.`type`
 			END) LIKE '%{$filter}%')
 
-			ORDER BY 1 DESC
+		UNION
+
+		SELECT
+			`collection_log`.`date` AS '{$lang['fieldtype-date_and_time']}',
+			`user`.`username` AS '{$lang['user']}',
+			CASE ASCII(`collection_log`.`type`) $when_statements ELSE `collection_log`.`type` END AS '{$lang['property-operation']}',
+			`collection_log`.`notes` AS '{$lang['fieldtitle-notes']}',
+			'' AS '{$lang['property-resource-field']}',
+			'' AS '{$lang['property-old_value']}',
+			'' AS '{$lang['property-new_value']}',
+			'' AS '{$lang['difference']}',
+			if(`collection_log`.`resource` IS NULL,'collection','resource') AS '{$lang['property-table']}',
+			'ref' AS '{$lang['property-column']}',
+			if(`collection_log`.`resource` IS NULL,`collection_log`.`collection`,`collection_log`.`resource`) AS '{$lang['property-table_reference']}'
+		FROM
+			`collection_log`
+		LEFT OUTER JOIN `user`
+			ON `collection_log`.`user`=`user`.`ref`
+		LEFT OUTER JOIN `collection`
+			ON `collection_log`.`collection`=`collection`.`ref`
+
+		WHERE
+			" . ($actasuser == "" ? "" : "`collection_log`.`user`='{$actasuser}' AND " ) . "
+			(`collection_log`.`collection` LIKE '%{$filter}%' OR
+			`collection_log`.`date` LIKE '%{$filter}%' OR
+			`collection_log`.`notes` LIKE '%{$filter}%' OR
+			`collection_log`.`resource` LIKE '%{$filter}%' OR
+			`collection`.`name` LIKE '%{$filter}%' OR
+			`user`.`username` LIKE '%{$filter}%' OR
+			(CASE ASCII(`collection_log`.`type`)
+				$when_statements
+				ELSE `collection_log`.`type`
+			END) LIKE '%{$filter}%')
+			
+			
+		ORDER BY 1 DESC
 
 
 
