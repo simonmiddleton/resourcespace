@@ -128,7 +128,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     // Trigger an event so we can chain actions once we've changed a dynamic keyword
     jQuery('[name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]"]').each(function(index, element)
         {
-       	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[element.value]);
+       	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: element.value}]);
         });
     }
 
@@ -150,7 +150,7 @@ function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
     updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action);
 
     // Trigger an event so we can chain actions once we've changed a dynamic keyword
-	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node_id}]);
+	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: node_id}]);
     }
 
 
