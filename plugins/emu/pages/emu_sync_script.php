@@ -119,7 +119,7 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
         continue;
         }
 
-    emu_script_log("Found '{$emu_records_found}' records that match your search criteria in '{$emu_module}' module", $emu_log_file);
+    emu_script_log("Found {$emu_records_found} records that match your search criteria in '{$emu_module}' module", $emu_log_file);
 
     $emu_api->setColumns(array('multimedia'));
     $columns_list[] = 'multimedia';
@@ -149,8 +149,8 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
         }
     }
 
-// Step 2 - Get existing ResourceSpace resources created by "script" that have an IRN set
-emu_script_log(PHP_EOL . 'Step 2 - finding how many ResourceSpace resources created by "script" have an IRN set', $emu_log_file);
+// Step 2 - Get existing ResourceSpace resources with an IRN set
+emu_script_log(PHP_EOL . 'Step 2 - finding existing ResourceSpace resources with an IRN set', $emu_log_file);
 /*
 Example:
 Array
@@ -159,30 +159,68 @@ Array
         (
             [resource] => 1
             [object_irn] => 74766
+            [created_by_script_flag] => 
         )
 
     [1] => Array
         (
             [resource] => 5
             [object_irn] => 904207
+            [created_by_script_flag] => script
         )
 )
 
 */
-// TODO: add a filter based on $emu_created_by_script_field for get_emu_resources()
-$rs_resources_with_irn = get_emu_resources();
+$rs_emu_resources       = get_emu_resources();
+$rs_emu_resources_count = count($rs_emu_resources);
+emu_script_log("Found {$rs_emu_resources_count} resources in ResourceSpace with IRN set.", $emu_log_file);
 
-// emu_script_log(print_r($rs_resources_with_irn, true), $emu_log_file);
+/*
+Using step 1 & 2 to figure out how many:
+- existing resources created by SCRIPT and not found in the latest search need to be archived,
+- new resources need to be added,
+- multimedia files need to be added as alternatives in ResourceSpace because checksums don't match anymore
+- resources simply just need their metadata updated
+*/
+if(0 < $rs_emu_resources_count)
+    {
+    emu_script_log(PHP_EOL . 'Existing resources created by SCRIPT and not found in the latest search will need to be archived', $emu_log_file);
+
+    foreach($rs_emu_resources as $rs_emu_resource)
+        {
+        if(array_key_exists($rs_emu_resource['object_irn'], $emu_records_data))
+            {
+            continue;
+            }
+
+        if('script' != $rs_emu_resource['created_by_script_flag'])
+            {
+            continue;
+            }
+
+        emu_script_log("Resource ID {$rs_emu_resource['resource']} is being archived because IRN {$rs_emu_resource['object_irn']} was not found in the last search result set", $emu_log_file);
+
+        if($emu_test_mode)
+            {
+            emu_script_log("UPDATE resource SET archive = '2' WHERE ref = '{$rs_emu_resource['resource']}'", $emu_log_file);
+            }
+        else
+            {
+            sql_query("UPDATE resource SET archive = '2' WHERE ref = '{$rs_emu_resource['resource']}'");
+            }
+        }
+    }
+
 
 // Step 3 - Add new resources (also add the original file (master))
 
 // Step 4 - Add as alternative file the EMu multimedia file if its checksum is different than the one we have in ResourceSpace for this resource
 
+// emu_script_log(print_r($emu_records_data, true), $emu_log_file);
 
-
-fclose($emu_log_file);
 
 emu_script_log(PHP_EOL . sprintf("EMu Script completed in %01.2f seconds.", microtime(true) - $emu_script_start_time), $emu_log_file);
+fclose($emu_log_file);
 
 // TODO uncomment
 // clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
