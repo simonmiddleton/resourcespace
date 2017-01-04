@@ -1002,8 +1002,8 @@ function get_resources_by_resource_data_value($resource_type_field, $value)
 
 
 if (!function_exists("get_users")){		
-function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$notapproved=false,$returnsql=false, $selectcolumns="")
-{
+function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="")
+	{
     # Returns a user list. Group or search term is optional.
     # The standard user group names are translated using $lang. Custom user group names are i18n translated.
     global $usergroup, $U_perm_strict;
@@ -1028,10 +1028,10 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         $sql.= hook("getuseradditionalsql");
     }
 
-    if ($notapproved)
+    if (is_numeric($approvalstate))
         {
         if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-        $sql .= "u.approved=0";
+        $sql .= "u.approved='$approvalstate'";
         }
 
     // Return users in both user's user group and children groups
