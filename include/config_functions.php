@@ -285,6 +285,20 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
     return true;
     }
 
+	
+/**
+* Get all user refs with a specific configuration option set from database
+* 
+* @param  string  $option         	Parameter name
+* @param  string  $value         	Parameter value
+*
+* @return array 					Array of user  references
+*/
+function get_config_option_users($option,$value)
+    {
+    $users = sql_array("SELECT user value FROM user_preferences WHERE parameter = '" . escape_check($option). "' AND value='" . escape_check($value) . "'");
+    return $users;   
+    }
 
 /**
 * Get config option from database for a specific user or system wide
@@ -428,7 +442,7 @@ function config_text_input($name, $label, $current, $password = false, $width = 
         }
     ?>
 
-    <div class="Question">
+    <div class="Question" id="question_<?php echo $name; ?>">
         <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
     <?php
     if($autosave)
@@ -498,7 +512,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420)
 		}
 		
     ?>
-    <div class="Question">
+    <div class="Question" id="question_<?php echo $name; ?>">
         <form method="POST" action="<?php echo $form_action; ?>" enctype="multipart/form-data">
             <label for="<?php echo $name; ?>"><?php echo $label; ?></label>
             <div class="AutoSaveStatus">
@@ -544,7 +558,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420)
  * @param boolean $autosave     Automatically save the value on change
  * @param string on_change_js   JavaScript run onchange of value (useful for "live" previewing of changes)
  */
-function config_colouroverride_input($name, $label, $current, $default, $title=null, $autosave=false, $on_change_js=null)
+function config_colouroverride_input($name, $label, $current, $default, $title=null, $autosave=false, $on_change_js=null, $hidden=false)
     {
     global $lang;
     $checked=$current && $current!=$default;
@@ -553,7 +567,7 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
         // This is how it was used on plugins setup page. Makes sense for developers when trying to debug and not much for non-technical users
         $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
         }
-    ?><div class="Question" style="min-height: 1.5em;">
+    ?><div class="Question" style="min-height: 1.5em;" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
         <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
         <div class="AutoSaveStatus">
             <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
@@ -633,7 +647,7 @@ function config_add_file_input($config_var, $label, $form_action, $width = 420)
  * @param boolean       $autosave  Flag to say whether the there should be an auto save message feedback through JS. Default: false
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
  */
-function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null)
+function config_single_select($name, $label, $current, $choices, $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null,$hidden=false)
     {
     global $lang;
     
@@ -643,7 +657,7 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
         $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
         }
     ?>
-    <div class="Question">
+    <div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
         <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
         <?php
         if($autosave)
@@ -687,9 +701,9 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
  *          the user sees. Defaulted to true.
  * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_add_single_select($config_var, $label, $choices = '', $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null)
+function config_add_single_select($config_var, $label, $choices = '', $usekeys = true, $width = 420, $title = null, $autosave = false, $on_change_js=null, $hidden=false)
     {
-    return array('single_select', $config_var, $label, $choices, $usekeys, $width, $title, $autosave, $on_change_js);
+    return array('single_select', $config_var, $label, $choices, $usekeys, $width, $title, $autosave, $on_change_js, $hidden);
     }
 
 
@@ -706,7 +720,7 @@ function config_add_single_select($config_var, $label, $choices = '', $usekeys =
  * @param boolean       $autosave  Flag to say whether the there should be an auto save message feedback through JS. Default: false
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
  */
-function config_boolean_select($name, $label, $current, $choices = '', $width = 420, $title = null, $autosave = false)
+function config_boolean_select($name, $label, $current, $choices = '', $width = 420, $title = null, $autosave = false, $on_change_js=null, $hidden=false)
     {
     global $lang;
 
@@ -721,7 +735,7 @@ function config_boolean_select($name, $label, $current, $choices = '', $width = 
         $title = str_replace('%cvn', $name, $lang['plugins-configvar']);
         }
     ?>
-    <div class="Question">
+    <div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
         <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
 
         <?php
@@ -736,7 +750,7 @@ function config_boolean_select($name, $label, $current, $choices = '', $width = 
             ?>
         <select id="<?php echo $name; ?>"
                 name="<?php echo $name; ?>"
-                <?php if($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
+                <?php if($autosave) { ?> onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
                 style="width:<?php echo $width; ?>px">
             <option value="1"<?php if($current == '1') { ?> selected<?php } ?>><?php echo $choices[1]; ?></option>
             <option value="0"<?php if($current == '0') { ?> selected<?php } ?>><?php echo $choices[0]; ?></option>
@@ -757,9 +771,9 @@ function config_boolean_select($name, $label, $current, $choices = '', $width = 
  *          to array('False', 'True') in the local language.
  * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_add_boolean_select($config_var, $label, $choices = '', $width = 420, $title = null, $autosave = false)
+function config_add_boolean_select($config_var, $label, $choices = '', $width = 420, $title = null, $autosave = false,$on_change_js=null, $hidden=false)
     {
-    return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave);
+    return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave,$on_change_js,$hidden);
     }
 	
 /**
@@ -777,13 +791,13 @@ function config_add_boolean_select($config_var, $label, $choices = '', $width = 
  * @param integer $width the width of the input field in pixels. Default: 300. 
  * @param integer $columns the number of columns to use 
  */
-function config_checkbox_select($name, $label, $current, $choices, $usekeys=true, $width=300, $columns=1, $autosave = false)
+function config_checkbox_select($name, $label, $current, $choices, $usekeys=true, $width=300, $columns=1, $autosave = false,$on_change_js=null, $hidden=false)
     {
     global $lang;
     $currentvalues=explode(",",$current);
 	$wrap = 0;
 	?>
-	<div class="Question">
+	<div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
 	<label for="<?php echo htmlspecialchars($name)?>" ><?php echo htmlspecialchars($label)?></label>
 		<?php
         if($autosave)
@@ -817,7 +831,7 @@ function config_checkbox_select($name, $label, $current, $choices, $usekeys=true
                        name="<?php echo $name; ?>"
                        value="<?php echo $value; ?>"
                     <?php
-					if($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo $name; ?>');"<?php }
+					if($autosave) { ?> onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo $name; ?>');"<?php }
                     if(in_array($value, $currentvalues))
                         {
                         ?>
@@ -851,15 +865,15 @@ function config_checkbox_select($name, $label, $current, $choices, $usekeys=true
  *          and the text the user sees. Defaulted to true.
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_add_checkbox_select($config_var, $label, $choices, $usekeys=true, $width=300, $columns=1, $autosave = false)
+function config_add_checkbox_select($config_var, $label, $choices, $usekeys=true, $width=300, $columns=1, $autosave = false, $on_change_js=null, $hidden=false)
     {
-    return array('checkbox_select', $config_var, $label, $choices, $usekeys, $width, $columns, $autosave);
+    return array('checkbox_select', $config_var, $label, $choices, $usekeys, $width, $columns, $autosave, $on_change_js, $hidden);
     }
 
 
-function config_add_colouroverride_input($config_var, $label='', $default='', $title='', $autosave=false, $on_change_js=null)
+function config_add_colouroverride_input($config_var, $label='', $default='', $title='', $autosave=false, $on_change_js=null, $hidden=false)
     {
-    return array('colouroverride_input', $config_var, $label, $default, $title, $autosave, $on_change_js);
+    return array('colouroverride_input', $config_var, $label, $default, $title, $autosave, $on_change_js, $hidden);
     }
 
 /**
@@ -1027,6 +1041,7 @@ function config_generate_html(array $page_def)
 
     foreach($page_def as $def)
         {
+        if(!isset($def[0])){continue;}
         switch($def[0])
             {
             case 'html':
@@ -1034,7 +1049,7 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'text_input':
-                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7]);
+                config_text_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
                 break;
 
             case 'file_input':
@@ -1042,15 +1057,15 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'boolean_select':
-                config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6]);
+                config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
                 break;
 
             case 'single_select':
-                config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8]);
+                config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
 			
 			 case 'checkbox_select':
-                config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7]);
+                config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
 
             case 'colouroverride_input':
@@ -1061,7 +1076,10 @@ function config_generate_html(array $page_def)
                     <?php
                     $included_colour_picker_library=true;
                     }
-                config_colouroverride_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5],$def[6]);
+                config_colouroverride_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5],$def[6],$def[7]);
+                break;
+            case 'multi_rtype_select':
+                config_multi_rtype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4]);
                 break;
             }
         }
