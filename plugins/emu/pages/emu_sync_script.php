@@ -175,12 +175,6 @@ $rs_emu_resources       = get_emu_resources();
 $rs_emu_resources_count = count($rs_emu_resources);
 emu_script_log("Found {$rs_emu_resources_count} resources in ResourceSpace with IRN set.", $emu_log_file);
 
-
-// TODO: because we filter search results based on modifiedTimeStamp some resources may be seen as expired purely because they haven't been changed since the last
-// time we've ran the script.
-// Solution: extract all IRNs from $rs_emu_resources and query EMu again only by those IRNs and add the search criteria (use add_search_criteria()).
-// Then just compare results, and any IRNs not returned by this search should be expired.
-
 /*
 Using step 1 & 2 to figure out how many:
 - existing resources created by SCRIPT and not found in the latest search need to be archived,
@@ -190,7 +184,9 @@ Using step 1 & 2 to figure out how many:
 */
 if(0 < $rs_emu_resources_count)
     {
-    emu_script_log(PHP_EOL . 'Existing resources created by SCRIPT and not found in the latest search will need to be archived', $emu_log_file);
+    emu_script_log(PHP_EOL . 'Optional step - archiving resources', $emu_log_file);
+
+    $emu_api_expired_resources = new EMuAPI($emu_api_server, $emu_api_server_port);
 
     foreach($rs_emu_resources as $rs_emu_resource)
         {
@@ -202,6 +198,25 @@ if(0 < $rs_emu_resources_count)
         if('script' != $rs_emu_resource['created_by_script_flag'])
             {
             continue;
+            }
+
+        foreach(array_keys($emu_rs_mappings) as $module_name)
+            {
+            $emu_api_expired_resources->setModule($module_name);
+            $emu_api_expired_resources->setIrnColumn();
+
+            $search_terms = new IMuTerms();
+            $search_terms->add('irn', $rs_emu_resource['object_irn']);
+            $search_terms = add_search_criteria($search_terms);
+            $emu_api_expired_resources->setTerms($search_terms);
+
+            // A record has been found so skip this resource
+            if(0 < $emu_api_expired_resources->runSearch())
+                {
+                emu_script_log("Skipping resource ID {$rs_emu_resource['resource']} because a record was found when searching by IRN {$rs_emu_resource['object_irn']} and search criteria", $emu_log_file);
+
+                continue 2;
+                }
             }
 
         emu_script_log("Resource ID {$rs_emu_resource['resource']} is being archived because IRN {$rs_emu_resource['object_irn']} was not found in the last search result set", $emu_log_file);
