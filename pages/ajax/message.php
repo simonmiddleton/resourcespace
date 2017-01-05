@@ -8,7 +8,13 @@
 		{
 		include_once __DIR__ . "/../../include/db.php";
 		include_once __DIR__ . "/../../include/general.php";
-		include __DIR__ . "/../../include/authenticate.php";	
+		include __DIR__ . "/../../include/authenticate.php";
+		if($actions_enable)
+			{
+			include_once __DIR__ . "/../../include/search_functions.php";
+			include_once __DIR__ . "/../../include/action_functions.php";
+			include_once __DIR__ . "/../../include/request_functions.php";
+			}
 
         $user         = getvalescaped('user', 0, true);
         $seen         = getvalescaped('seen', 0, true);
@@ -67,6 +73,11 @@
 		// Check if there are messages
 		$messages = array();
 		message_get($messages,$user);	// note: messages are passed by reference
+		if($actions_enable)
+			{
+			$actioncount=get_user_actions(true);
+			$messages[]=array('ref'=>0,'actioncount'=>$actioncount);
+			}
 		ob_clean();	// just in case we have any stray whitespace at the start of this file
 		echo json_encode($messages);
 		return;
@@ -103,15 +114,23 @@
 			url: '<?php echo $baseurl; ?>/pages/ajax/message.php',
 			type: 'GET',
 			success: function(messages, textStatus, xhr) {
-				if(xhr.status==200 && isJson(messages) && (messages=jQuery.parseJSON(messages)) && messages.length>0)
-				{
-					jQuery('span.MessageCountPill').html(messages.length).click(function() {
+				if(xhr.status==200 && isJson(messages) && (messages=jQuery.parseJSON(messages)) && jQuery(messages).length>0)
+					{
+					messagecount=totalcount=jQuery(messages).length;
+					actioncount=0;
+					if (typeof(messages[messagecount-1]['actioncount']) !== 'undefined') // There are actions as well as messages
+						{
+						actioncount=parseInt(messages[messagecount-1]['actioncount']);
+						messagecount=messagecount-1;
+						totalcount=actioncount+messagecount;
+						}
+					jQuery('span.MessageTotalCountPill').html(totalcount).click(function() {
 						CentralSpaceLoad('<?php echo $baseurl; ?>/pages/user/user_messages.php',true);
 					}).fadeIn();
 					if (activeSeconds > 0 || message_poll_first_run)
-					{
-						for(var i=0; i < messages.length; i++)
 						{
+						for(var i=0; i < messagecount; i++)
+							{
 							var ref = messages[i]['ref'];
 							if (message_poll_first_run)
 							{
@@ -137,13 +156,31 @@
 								}
 								?>
 								message_poll();
+							}
 						}
+					if (actioncount>0)
+							{
+							jQuery('span.ActionCountPill').html(actioncount).fadeIn();;
+							}
+						else
+							{
+							jQuery('span.ActionCountPill').hide();	
+							}
+						if (messagecount>0)
+							{
+							jQuery('span.MessageCountPill').html(messagecount).fadeIn();;
+							}
+						else
+							{
+							jQuery('span.MessageCountPill').hide();	
+							}
 					}
-				}
 				else
-				{
+					{
+					jQuery('span.MessageTotalCountPill').hide();
 					jQuery('span.MessageCountPill').hide();
-				}
+					jQuery('span.ActionCountPill').hide();
+					}
 			}
 		}).done(function() {
 			<?php if ($message_polling_interval_seconds > 0)

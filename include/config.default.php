@@ -3131,3 +3131,12 @@ $fstemplate_alt_scramblekey=""; # The scramble key used by the template installa
 
 # Ability to switch off responsive on UI
 $responsive_ui = true;
+
+# Default action settings
+$actions_enable=true;
+$actions_resource_requests=true;
+$actions_account_requests=true;
+$actions_resource_review=true;
+$actions_notify_states="-1";
+$actions_resource_types="";
+$actions_approve_groups="";

@@ -184,15 +184,21 @@ function save_request($request)
     }
     
     
-function get_requests()
+function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=false)
     {
     # If permission Rb (accept resource request assignments) is set then limit the list to only those assigned to this user - EXCEPT for those that can assign requests, who can always see everything.
     $condition="";global $userref;
-    if (checkperm("Rb") && !checkperm("Ra")) {$condition="where r.assigned_to='" . $userref . "'";}
-    
-    return sql_query("select u.username,u.fullname,r.*,(select count(*) from collection_resource cr where cr.collection=r.collection) c,r.assigned_to,u2.username assigned_to_username from request r left outer join user u on r.user=u.ref left outer join user u2 on r.assigned_to=u2.ref $condition order by status,ref desc");
+    if (checkperm("Rb") && !checkperm("Ra")) {$condition="WHERE r.assigned_to='" . $userref . "'";}
+    elseif ($excludeassigned) // This only make sense if we are able to assign requests 
+        {
+        $condition = "WHERE r.assigned_to IS null"; 
+        }
+    if ($excludecompleted) {$condition .= (($condition!="")?" AND ":"WHERE") . " r.status=0";}
+        
+    $sql="SELECT u.username,u.fullname,r.*,(SELECT count(*) FROM collection_resource cr WHERE cr.collection=r.collection) c,u2.username assigned_to_username FROM request r LEFT OUTER JOIN user u ON r.user=u.ref LEFT OUTER JOIN user u2 ON r.assigned_to=u2.ref $condition  ORDER BY status,ref desc";
+    return $returnsql?$sql:sql_query($sql);
     }
-
+  
 function email_collection_request($ref,$details)
     {
     # Request mode 0

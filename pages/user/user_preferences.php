@@ -36,6 +36,18 @@ include "../../include/header.php";
         $xl_thumbs_display_fields,
         $small_thumbs_display_fields))
     );
+	
+	// Create an array for the archive states
+	$available_archive_states = array();
+	$all_archive_states=array_merge(range(-2,3),$additional_archive_states);
+	foreach($all_archive_states as $archive_state_ref)
+		{
+		if(checkperm("e" . $archive_state_ref))
+			{
+			$available_archive_states[$archive_state_ref] = (isset($lang["status" . $archive_state_ref]))?$lang["status" . $archive_state_ref]:$archive_state_ref;
+			}
+		}
+	
 
     // Create a sort_fields array with information for sort fields
     $n  = 0;
@@ -171,7 +183,7 @@ include "../../include/header.php";
 
 
 	// System notifications section - used to disable system generated messages 
-	$page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['mymessages'] . '</h2><div id="UserPreferenceAdminSection" class="CollapsibleSection">');
+	$page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['mymessages'] . '</h2><div id="UserPreferenceMessageSection" class="CollapsibleSection">');
 	$page_def[] = config_add_boolean_select('user_pref_show_notifications', $lang['user_pref_show_notifications'], $enable_disable_options, 300, '', true);
     $page_def[] = config_add_boolean_select('user_pref_resource_notifications', $lang['userpreference_resource_notifications'], $enable_disable_options, 300, '', true);
 	if(checkperm("a"))
@@ -189,7 +201,47 @@ include "../../include/header.php";
 		}
 
 	$page_def[] = config_add_html('</div>');
-
+	
+	// Actions section - used to configure the alerts that appear in 'My actions'
+	$page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['actions_myactions'] . '</h2><div id="UserPreferenceActionSection" class="CollapsibleSection">');
+	if(checkperm("R"))
+		{
+		$page_def[] = config_add_boolean_select('actions_resource_requests', $lang['actions_resource_requests'], $enable_disable_options, 300, '', true);
+		}
+	if(checkperm("u"))
+		{
+		$statesjs = "if(jQuery(this).val()==1){
+						jQuery('#question_actions_approve_groups').slideDown();
+						}
+					else {
+						jQuery('#question_actions_approve_groups').slideUp();
+						}";
+		$page_def[] = config_add_boolean_select('actions_account_requests', $lang['actions_account_requests'], $enable_disable_options, 300, '', true,$statesjs);
+		$page_def[] = config_add_checkbox_select('actions_approve_groups',$lang['actions_approve_groups'],get_usergroups(true,'',true),true,300,1,true,null,!$actions_account_requests);
+		}
+		
+	
+		$statesjs = "if(jQuery(this).val()==1){
+					jQuery('#question_actions_notify_states').slideDown();
+					jQuery('#question_actions_resource_types').slideDown();
+					}
+				else {
+					jQuery('#question_actions_notify_states').slideUp();
+					jQuery('#question_actions_resource_types').slideUp();
+					}";
+	$page_def[] = config_add_boolean_select('actions_resource_review', $lang['actions_resource_review'], $enable_disable_options, 300, '', true,$statesjs);
+									
+	$page_def[] = config_add_checkbox_select('actions_notify_states',$lang['actions_notify_states'],$available_archive_states,true,300,1,true,null,!$actions_resource_review);
+	//$page_def[] = config_add_multi_rtype_select('actions_notify_states',  $lang['actions_notify_states'], $width=300, !$actions_resource_review);
+	$rtypes=get_resource_types();
+	foreach($rtypes as $rtype)
+		{$actionrestypes[$rtype["ref"]]=$rtype["name"];}
+	$page_def[] = config_add_checkbox_select('actions_resource_types',$lang['actions_resource_types'],$actionrestypes,true,300,1,true,null,!$actions_resource_review);
+	
+	$page_def[] = "AFTER_ACTIONS_MARKER"; // Added so that hook add_user_preference_page_def can locate this positon in array
+	$page_def[] = config_add_html('</div>');
+	
+	// End of actions section
 
     // Metadata section
     if(!$force_exiftool_write_metadata)

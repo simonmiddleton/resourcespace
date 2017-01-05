@@ -147,7 +147,7 @@ function save_proposed_changes($ref)
                     {
                     # This value is different from the value we have on record. 
                     # Add this to the proposed changes table for the user                    
-                    sql_query("INSERT INTO propose_changes_data(resource, user, resource_type_field, value) VALUES('{$ref}','{$userref}', '{$fields[$n]['ref']}', '" . escape_check($val) . "')");
+                    sql_query("INSERT INTO propose_changes_data(resource, user, resource_type_field, value, date) VALUES('{$ref}','{$userref}', '{$fields[$n]['ref']}', '" . escape_check($val) . "',now())");
                     }            
             
             }
@@ -161,6 +161,7 @@ function get_proposed_changes($ref, $userid)
         $query = sprintf('
                     SELECT d.value,
                            d.resource_type_field,
+						   d.date,
                            f.*,
                            f.required AS frequired,
                            f.ref AS fref

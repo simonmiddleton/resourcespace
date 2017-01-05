@@ -139,58 +139,142 @@ function message_purge()
 
 function message_send_unread_emails()
 	{
-	global $lang, $applicationname;
+	global $lang, $applicationname,$actions_enable,$baseurl,$list_search_results_title_trim, $user_pref_daily_digest,$applicationname;
 	$lastrun = sql_value("select value from sysvars where name='daily_digest'",'');
 	
 	# Exit if already sent in last 24 hours;
 	if ($lastrun!="" && time()-strtotime($lastrun)<(60*60*24)) {return false;}
 	
-	# Get all unreads notifications. 
-	$unreadmessages=sql_query("select u.ref as userref, u.email, m.ref as messsageref, m.message, m.created, m.url from user_message um join user u on u.ref=um.user join message m on m.ref=um.message where um.seen=0 and u.email<>'' and m.created>'" . $lastrun . "' order by userref, m.created asc");
-		
-	$lastuseremail="";
-	
-	foreach($unreadmessages as $unreadmessage)
+	// Get all the users who have chosen to receive the digest email (or the ones that have opted out if set globally)
+	if($user_pref_daily_digest)
 		{
-		$currentuseremail = $unreadmessage["email"];	
-		if($currentuseremail != $lastuseremail)
+		$allusers=get_users("","","u.username","",-1,1);		
+		$nodigestusers = get_config_option_users('user_pref_daily_digest',0);
+		$digestusers=array_diff(array_column($allusers,"ref"),$nodigestusers);
+		}
+	else
+		{
+		$digestusers=get_config_option_users('user_pref_daily_digest',1);
+		}
+		
+	# Get all unread notifications. 
+	$unreadmessages=sql_query("select u.ref as userref, u.email, m.ref as messageref, m.message, m.created, m.url from user_message um join user u on u.ref=um.user join message m on m.ref=um.message where um.seen=0 and u.ref in ('" . implode("','",$digestusers) . "') AND u.email<>'' and m.created>'" . $lastrun . "' order by m.created desc");
+	
+	foreach($digestusers as $digestuser)
+		{
+		$messageflag=false;
+		$actionflag=false;
+		
+		// Set up an array of message to delete for this user if they have chosen to purge the messages
+		$messagerefs=array();
+		
+		// Start the new email
+		$message = $lang['email_daily_digest_text'] . "<br /><br />";
+		$message .= "<style>.InfoTable td {padding:5px; margin: 0px;border: 1px solid #000;}</style><table class='InfoTable'>";
+		$message .= "<tr><th>" . $lang["columnheader-date_and_time"] . "</th><th>" . $lang["message"] . "</th><th></th></tr>";
+		
+		foreach($unreadmessages as $unreadmessage)
 			{
-			// Send the last email if we have one and start a new email for the next user
-			if($lastuseremail!='')
+			if($unreadmessage["userref"] == $digestuser)
 				{
-				echo "Checking config for user: " . $lastuseremail . "\r\n";
-	            get_config_option($lastuserref,'user_pref_daily_digest', $send_message);		  
-				if($send_message)
-					{
-					echo "Sending summary\r\n";
-					$message .= "</table>";
-					// Send mail
-					send_mail($lastuseremail,$applicationname . ": " . $lang["email_daily_digest_subject"],$message); 
-
-					get_config_option($lastuserref,'user_pref_daily_digest_mark_read', $mark_read);
-					if($mark_read)
-						{
-						sql_query("update user_message set seen='" . MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL . "' where message in ('" . implode("','",$messagerefs) . "') and user = '" . $lastuserref . "'");
-						}
-					}
+				// Message applies to this user
+				$messageflag=true;
+				$usermail = $unreadmessage["email"];
+				$message .= "<tr><td>" . nicedate($unreadmessage["created"], true) . "</td><td>" . $unreadmessage["message"] . "</td><td><a href='" . $unreadmessage["url"] . "'>" . $lang["link"] . "</a></td></tr>";
+				$messagerefs[]=$unreadmessage["messageref"];
 				}
-			// Start the new email
-			$messagerefs=array();
-			$message = $lang['email_daily_digest_text'] . "<br /><br />";
-			$message .= "<style>.InfoTable td {padding:5px; margin: 0px;border: 1px solid #000;}</style><table class='InfoTable'>";
-			$message .= "<tr><th>" . $lang["columnheader-date_and_time"] . "</th><th>" . $lang["message"] . "</th><th></th></tr>";
-			$lastuseremail = $currentuseremail;	
-			$lastuserref = $unreadmessage["userref"];			
 			}
-		$message .= "<tr><td>" . nicedate($unreadmessage["created"], true) . "</td><td>" . $unreadmessage["message"] . "</td><td><a href='" . $unreadmessage["url"] . "'>" . $lang["link"] . "</a></td></tr>";
-		$messagerefs[]=$unreadmessage["messsageref"];
+		if($actions_enable)
+			{
+			echo "Checking actions for user " . $unreadmessage["userref"] . "\r\n";
+			$messageuser=get_user($digestuser);
+			$usermail = $messageuser["email"];
+			setup_user($messageuser);
+			$user_actions = get_user_actions(false);
+			if (count($user_actions)>0)		
+				{
+				$actionflag=true;
+				echo "Adding actions to message for user " . $usermail . "\r\n";
+				if($messageflag)
+					{
+					$message .= "</table><br /><br />";
+					}
+				$message .= $lang['email_daily_digest_actions'] . "<br /><br />". $lang["actions_introtext"] . "<br />";
+				$message .= "<style>.InfoTable td {padding:5px; margin: 0px;border: 1px solid #000;}</style><table class='InfoTable'>";
+				$message .= "<tr><th>" . $lang["date"] . "</th>";
+				$message .= "<th>" . $lang["property-reference"] . "</th>";
+				$message .= "<th>" . $lang["description"] . "</th>";
+				$message .= "<th>" . $lang["type"] . "</th></tr>";
+				
+				
+				foreach($user_actions as $user_action)
+					{
+					$actionlinks=hook("actioneditlink",'',array($user_action));
+					if($actionlinks)
+					  {
+					  $actioneditlink=$actionlinks["editlink"];
+					  $actionviewlink=$actionlinks["viewlink"];
+					  }
+					else
+					  {
+					  $actioneditlink = '';
+					  $actionviewlink = '';  
+					  }
+					
+					if($user_action["type"]=="resourcereview")
+					  {
+					  $actioneditlink = $baseurl . "/pages/edit.php";
+					  $actionviewlink = $baseurl . "/pages/view.php";
+					  }
+					elseif($user_action["type"]=="resourcerequest")
+					  {
+					  $actioneditlink = $baseurl . "/pages/edit.php";
+					  }
+					elseif($user_action["type"]=="userrequest")
+					  {
+					  $actioneditlink = $baseurl . "/pages/team/team_user_edit.php";
+					  } 
+					
+					$linkparams["ref"] = $user_action["ref"];                            
+					$editlink=($actioneditlink=='')?'':generateURL($actioneditlink,$linkparams);
+					$viewlink=($actionviewlink=='')?'':generateURL($actionviewlink,$linkparams);
+					$message .= "<tr>";
+					$message .= "<td>" . nicedate($user_action["date"],true) . "</td>";
+					$message .= "<td><a href=\"" . $editlink . "\" >" . $user_action["ref"] . "</a></td>";
+					$message .= "<td>" . tidy_trim(TidyList($user_action["description"]),$list_search_results_title_trim) . "</td>";
+					$message .= "<td>" . $lang["actions_type_" . $user_action["type"]] . "</td>";
+					$message .= "<td><div class=\"ListTools\">";
+					if($editlink!=""){$message .= "<a href=\"" . $editlink . "\" >&nbsp;&nbsp;" . $lang["action-edit"] . "</a>";}
+					if($viewlink!=""){$message .= "<a href=\"" . $viewlink . "\" >&nbsp;&nbsp;" . $lang["view"] . "</a>";}
+					$message .= "</div>";
+					$message .= "</td></tr>";
+					} // End of each $user_actions loop
+				}
+			}
+			
+		// Send the email			
+		echo "Sending summary\r\n";
+		$message .= "</table>";
+		
+		if($messageflag || $actionflag)
+			{
+			// Send mail
+			send_mail($usermail,$applicationname . ": " . $lang["email_daily_digest_subject"],$message); 
+			}
+
+		get_config_option($digestuser,'user_pref_daily_digest_mark_read', $mark_read);
+		if($mark_read)
+			{
+			sql_query("update user_message set seen='" . MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL . "' where message in ('" . implode("','",$messagerefs) . "') and user = '" . $digestuser . "'");
+			}
 		}
 		
 	sql_query("delete from sysvars where name='daily_digest'");
 	sql_query("insert into sysvars(name,value) values ('daily_digest',now())");
 	}
 
-    
+
+
 // ------------------------------------------------------------------------------------------------------------------------
 // Remove all messages related to a certain activity (e.g. resource request or resource submission) matching the given ref(s)
 function message_remove_related($remote_activity=0,$remote_refs=array())

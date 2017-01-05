@@ -8,7 +8,6 @@ include '../include/propose_changes_functions.php';
 
 
 $ref=getvalescaped("ref","",true);
-
 # Fetch search details (for next/back browsing and forwarding of search params)
 $search=getvalescaped("search","");
 $order_by=getvalescaped("order_by","relevance");
@@ -18,11 +17,12 @@ if (strpos($search,"!")!==false) {$restypes="";}
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-
 $archive=getvalescaped("archive",0,true);
+$modal=(getval("modal","")=="true");
 
 $errors=array(); # The results of the save operation (e.g. required field messages)
 $editaccess=get_edit_access($ref);
+
 
 if(!$propose_changes_always_allow)
 	{
@@ -52,7 +52,6 @@ else
     {
     $proposed_changes=get_proposed_changes($ref, $userref);
     }
-	
 
 # Fetch resource data.
 $resource=get_resource_data($ref);
@@ -61,8 +60,8 @@ $resource=get_resource_data($ref);
 $proposefields=get_resource_field_data($ref,false,true);
 
 // Save data
-if (getval("save","")!="")
-	{
+if (getval("save","")!="" || getval("submitted","")!="")
+	{	
 	if($editaccess)
 		{
 		// Set a list of the fields we actually want to change - otherwise any fields we don't submit will get wiped
@@ -153,14 +152,21 @@ if (getval("save","")!="")
 		$notifyuser=get_user($view_user);
 		send_mail($notifyuser["email"],$applicationname . ": " . $lang["propose_changes_proposed_changes_reviewed"],$message,"","","emailproposedchangesreviewed",$templatevars);
 			
-		 
-		redirect($baseurl_short."pages/view.php?ref=" . $ref . "&search=" . urlencode($search) . "&offset=" . $offset . "&order_by=" . $order_by . "&sort=".$sort."&archive=" . $archive . "&refreshcollectionframe=true");
+		if(!$modal)
+            {
+            redirect($baseurl_short."pages/view.php?ref=" . $ref . "&search=" . urlencode($search) . "&offset=" . $offset . "&order_by=" . $order_by . "&sort=".$sort."&archive=" . $archive . "&refreshcollectionframe=true");	
+            exit();
+            }
+        else
+            {
+            $resulttext=$lang["changessaved"];
+            }
 		
 		}
 	else
 		{
 		// No edit access, save the proposed changes
-		$save_errors=save_proposed_changes($ref);   
+		$save_errors=save_proposed_changes($ref);
 		$submittedchanges=array();
 		$submittedchangescount=0;		
         if ($save_errors===true)
@@ -263,7 +269,10 @@ if (getval("save","")!="")
 				}
              foreach($admin_notify_emails as $admin_notify_email)
                     {
-                    send_mail($admin_notify_email,$applicationname . ": " . $lang["propose_changes_proposed_changes_submitted"],$message,"","","emailproposedchanges",$templatevars);    
+					if(filter_var($admin_notify_email, FILTER_VALIDATE_EMAIL))
+						{
+						send_mail($admin_notify_email,$applicationname . ": " . $lang["propose_changes_proposed_changes_submitted"],$message,"","","emailproposedchanges",$templatevars);    
+						}
                     }
                 
                 if (count($admin_notify_users)>0)
@@ -273,14 +282,15 @@ if (getval("save","")!="")
             		
 			foreach($propose_changes_notify_addresses as $propose_changes_notify_address)
 				{
-				if($propose_changes_notify_address!="")
+				if(filter_var($propose_changes_notify_address, FILTER_VALIDATE_EMAIL))
 					{	
 					debug("propose_changes: sending submitted email to : ". $propose_changes_notify_address);
 					send_mail($propose_changes_notify_address,$applicationname . ": " . $lang["propose_changes_proposed_changes_submitted"],$message,"","","emailproposedchanges",$templatevars);
 					}
 				}					
 			$resulttext=$lang["propose_changes_proposed_changes_submitted"];			
-			}			
+			}	
+			
 		}
 	}
 
@@ -555,11 +565,12 @@ if (isset($resulttext))
 	echo "<div class=\"PageInformal \">" . $resulttext . "</div>";
 	}
 
-	
-?>
-
-<p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
-
+if(!$modal)
+    {?>
+    <p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return  <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <?php
+    }
+    ?>
 <div class="BasicsBox" id="propose_changes_box">
 <h1 id="editresource">
 <?php
@@ -607,10 +618,10 @@ if(!$editaccess)
 		{
 		?>
 		<div class="Question" id="ProposeChangesUsers">
-		<form id="propose_changes_select_user_form" method="post" action="<?php echo $baseurl_short . "plugins/propose_changes/pages/propose_changes.php" . "?ref=" . urlencode($ref) . "&amp;search=" . urlencode($search) . "&amp;offset=" . urlencode($offset) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive)?>"
+		<form id="propose_changes_select_user_form" method="post" action="<?php echo $baseurl_short . "plugins/propose_changes/pages/propose_changes.php" . "?ref=" . urlencode($ref) . "&amp;search=" . urlencode($search) . "&amp;offset=" . urlencode($offset) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive)?>" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
 			<label><?php echo $lang["propose_changes_view_user"]; ?>
 			</label>
-			<select class="stdwidth" name="proposeuser" id="proposeuser" onchange="CentralSpacePost(document.getElementById('propose_changes_form'),false);">
+			<select class="stdwidth" name="proposeuser" id="proposeuser" onchange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('propose_changes_form'),false);">
 			<?php 
 			foreach ($userproposals as $userproposal)
 				{
@@ -631,7 +642,8 @@ if(!$editaccess)
 
 		if (is_field_displayed($proposefields[$n]))
 			{
-			$display_any_fields=true;
+			$proposefields[$n]["display"]=true;
+            $display_any_fields=true;
 			break;
 			}
 		}
@@ -641,7 +653,7 @@ if(!$editaccess)
 		
 	<form id="propose_changes_form" method="post" action="<?php
     echo $baseurl_short . "plugins/propose_changes/pages/propose_changes.php" . "?ref=" . urlencode($ref) . "&amp;search=" . urlencode($search) . "&amp;offset=" . urlencode($offset) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive) ;
-    ?>">
+    ?>"  onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
 	<h2 id="ProposeChangesHead"><?php echo $lang["propose_changes_proposed_changes"] ?></h2><?php
 		?><div id="ProposeChangesSection">
                 <div class="Question ProposeChangesQuestion" id="propose_changes_field_header" >
@@ -681,14 +693,14 @@ if(!$editaccess)
 		node_field_options_override($proposefields[$n]);
 
 		# Should this field be displayed?
-		if (is_field_displayed($proposefields[$n]))
+		if ((isset($proposefields[$n]["display"]) && $proposefields[$n]["display"]==true) || is_field_displayed($proposefields[$n]))
 			{	
 			$fieldcount++;
 			display_field($n, $proposefields[$n]);
 			}
 		}	
 
-	// Let admin know there are no proposed changes anymore for this reosurces
+	// Let admin know there are no proposed changes anymore for this resources
 	// Can happen when another admin already reviewed the changes.
 	$changes_to_review_counter = 0;
 	foreach($proposefields as $propose_field)
@@ -724,6 +736,7 @@ if(!$editaccess)
             }
         else
             {?>
+			<input name="submitted" type="hidden" value="true" />
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" /><br />
             <?php
             }

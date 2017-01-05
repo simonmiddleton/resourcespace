@@ -23,6 +23,7 @@ if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 $modal=(getval("modal","")=="true");
 $single=getval("single","")!="" || getval("forcesingle","")!="";
+$disablenavlinks=getval("disablenav","")=="true";
 
 $archive=getvalescaped("archive",0,true); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
   
@@ -528,16 +529,22 @@ function AutoSave(field)
 # Resource next / back browsing.
 function EditNav() # Create a function so this can be repeated at the end of the form also.
 {
-  global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes;
+  global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes,$disablenavlinks;
   ?>
-  <div class="backtoresults">
-  <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;go=previous&amp;restypes=<?php echo $restypes; ?>"></a>
-  
-  <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php<?php if (strpos($search,"!")!==false) {?>?search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;restypes=<?php echo $restypes; ?><?php } ?>"><?php echo $lang["viewallresults"]?></a>
-  
-  <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;go=next&amp;restypes=<?php echo $restypes; ?>"></a>
-  
-  <?php if ($modal) { ?>
+  <div class="backtoresults"> 
+  <?php
+  if(!$disablenavlinks)
+    {
+    ?>
+    <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;go=previous&amp;restypes=<?php echo $restypes; ?>"></a>
+    
+    <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php<?php if (strpos($search,"!")!==false) {?>?search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;restypes=<?php echo $restypes; ?><?php } ?>"><?php echo $lang["viewallresults"]?></a>
+    
+    <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;go=next&amp;restypes=<?php echo $restypes; ?>"></a>
+    
+    <?php
+    }
+  if ($modal) { ?>
 &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;restypes=<?php echo $restypes; ?>" onClick="return CentralSpaceLoad(this);"></a>
 &nbsp;<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();"></a>
 <?php } ?>
@@ -609,7 +616,7 @@ if(0 > $ref)
          <div class="RecordHeader">
           <?php
          # Draw nav
-         if (!$multiple&&!hook("dontshoweditnav")) { EditNav(); }
+         if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
          ?>
          <h1 id="editresource"><?php echo $lang["editresource"]?></h1>
          
@@ -1911,7 +1918,7 @@ if(!hook('replacesubmitbuttons'))
     }
    
 # Duplicate navigation
-if (!$multiple && !$modal && $ref>0 &&!hook("dontshoweditnav")) {EditNav();}
+if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav")) {EditNav();}
 
 if(!$is_template && $show_required_field_label)
     {

@@ -2408,12 +2408,13 @@ $lang['error_check_html_first'] = 'Please Check HTML! The text used does not con
 $lang["maximise"]="Maximise";
 
 $lang["actions-select"]="";
-$lang['actions'] = 'Actions';
+$lang["actions"] = "Actions";
+$lang["actions-total"] = "Total actions";
 $lang["submit_review_prompt"]="Submit for review?";
 $lang["submit_dialog_text"]="The uploaded resources are now in the pending submission state. Submit the collection for review or continue editing?";
 $lang["action_submit_review"]="Submit for review";
 $lang["action_continue_editing"]="Continue editing";
-$lang['action-addrow']="Add row";
+$lang["action-addrow"]="Add row";
 
 /* Messaging */
 $lang["seen"]="Seen";
@@ -2458,6 +2459,7 @@ $lang['user_pref_show_notifications'] = "Show me system notifications on screen 
 $lang['user_pref_daily_digest'] = "Send me a daily email with all unread notifications from the last 24 hours";
 $lang['email_daily_digest_subject'] = "Notification summary";
 $lang['email_daily_digest_text'] = "This is a summary of your unread messages from the last 24 hours";
+$lang['email_daily_digest_actions'] = "You have the following actions outstanding.";
 $lang['user_pref_daily_digest_mark_read'] = "Mark messages as read once I have been sent the summary email";
 $lang['user_pref_email_and_user_notifications']="Send me emails in addition to system notifications";
 $lang['notification_email_subject']="Notification email";
@@ -2549,3 +2551,17 @@ $lang['linkedheaderimgsrc']="Location of the logo image in the header (Defaults 
 $lang['responsive_result_settings'] = 'Result Settings';
 $lang['responsive_view_full_site'] = 'View full site';
 // end of Responsive
+
+/* Actions */
+$lang["actions_myactions"] = "My actions";
+$lang["actions_introtext"] = "You can configure the criteria for actions that appear here by changing your user preferences";
+$lang["actions_noactions"] = "You have no outstanding actions";
+$lang["actions_resource_review"] = "Show me editable resources in my actions list";
+$lang["actions_notify_states"] = "Editable resources in the following states will be shown";
+$lang["actions_resource_types"] = "Editable resources of the following types will be shown";
+$lang["actions_resource_requests"] = "Show resource requests in my actions list";
+$lang["actions_account_requests"] = "Show user account requests in my actions list";
+$lang["actions_approve_groups"] = "Account requests for the following groups will be shown";
+$lang["actions_type_resourcereview"] = "Resource review";
+$lang["actions_type_resourcerequest"] = "Resource request";
+$lang["actions_type_userrequest"] = "Account request";
