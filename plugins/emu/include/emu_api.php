@@ -228,4 +228,25 @@ class EMuAPI
         {
         return $this->module->fetch('start', $offset, $count, $columns)->rows;
         }
+
+
+    /**
+    * Utility function used to check whether a particular MIME type
+    * is EMu valid
+    * 
+    * @param string $mime
+    * 
+    * @return boolean
+    */
+    public static function validMime($mime)
+        {
+        $mime = trim($mime);
+
+        if('' == $mime)
+            {
+            return false;
+            }
+
+        return in_array($mime, $_MIME_TYPES);
+        }
     }
