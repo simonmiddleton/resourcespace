@@ -87,7 +87,7 @@ emu_script_log('Starting...', $emu_log_file);
 $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port);
 
 // Step 1 - Build the EMu Objects Data array
-emu_script_log('Step 1 - building EMu found records data array', $emu_log_file);
+emu_script_log(PHP_EOL . 'Step 1 - building EMu found records data array', $emu_log_file);
 foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
     {
     $emu_api->setModule($emu_module);
@@ -175,6 +175,12 @@ $rs_emu_resources       = get_emu_resources();
 $rs_emu_resources_count = count($rs_emu_resources);
 emu_script_log("Found {$rs_emu_resources_count} resources in ResourceSpace with IRN set.", $emu_log_file);
 
+
+// TODO: because we filter search results based on modifiedTimeStamp some resources may be seen as expired purely because they haven't been changed since the last
+// time we've ran the script.
+// Solution: extract all IRNs from $rs_emu_resources and query EMu again only by those IRNs and add the search criteria (use add_search_criteria()).
+// Then just compare results, and any IRNs not returned by this search should be expired.
+
 /*
 Using step 1 & 2 to figure out how many:
 - existing resources created by SCRIPT and not found in the latest search need to be archived,
@@ -202,7 +208,7 @@ if(0 < $rs_emu_resources_count)
 
         if($emu_test_mode)
             {
-            emu_script_log("UPDATE resource SET archive = '2' WHERE ref = '{$rs_emu_resource['resource']}'", $emu_log_file);
+            emu_script_log("SQL: UPDATE resource SET archive = '2' WHERE ref = '{$rs_emu_resource['resource']}'", $emu_log_file);
             }
         else
             {
@@ -213,6 +219,25 @@ if(0 < $rs_emu_resources_count)
 
 
 // Step 3 - Add new resources (also add the original file (master))
+emu_script_log(PHP_EOL . 'Step 3 - Add new resources and their master media file as original file', $emu_log_file);
+foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
+    {
+    $irn_index_in_rs_emu_resources = array_search($emu_record_irn, array_column($rs_emu_resources, 'object_irn'));
+
+    if(false === $irn_index_in_rs_emu_resources)
+        {
+        continue;
+        }
+
+    emu_script_log("IRN {$emu_record_irn} was found at index {$irn_index_in_rs_emu_resources} in rs_emu_resources, proof: "
+        . PHP_EOL
+        . print_r($rs_emu_resources[$irn_index_in_rs_emu_resources], true)
+        . 'and will need to be updated (metadata and multimedia checksum checked)', $emu_log_file);
+    }
+
+
+
+
 
 // Step 4 - Add as alternative file the EMu multimedia file if its checksum is different than the one we have in ResourceSpace for this resource
 
