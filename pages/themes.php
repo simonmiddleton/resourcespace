@@ -898,7 +898,7 @@ if ($header=="" && !isset($themes[0]))
 
 if($simpleview)
 	{
-	if (!$public_collections_header_only)
+	if (!$public_collections_header_only && getval("theme","")=="" && getval("theme1","")=="")
 		{?>
 		<?php if (!checkperm("b") && $enable_public_collections)
 			{ ?>
