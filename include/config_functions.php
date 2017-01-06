@@ -487,9 +487,9 @@ function config_text_input($name, $label, $current, $password = false, $width = 
  *          field. Defaulted to false.
  * @param integer $width the width of the input field in pixels. Default: 420.
  */
-function config_add_text_input($config_var, $label, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false)
+function config_add_text_input($config_var, $label, $password = false, $width = 420, $textarea = false, $title = null, $autosave = false, $hidden=false)
     {
-    return array('text_input', $config_var, $label, $password, $width, $textarea, $title, $autosave);
+    return array('text_input', $config_var, $label, $password, $width, $textarea, $title, $autosave, $hidden);
     }
 
 
