@@ -62,9 +62,11 @@ $url=generateURL($baseurl . "/pages/user/user_actions.php",$url_params);
   
 ?>
 <div class="BasicsBox">
-	<form method="post" action="<?php echo $url ?>">
-		<div class="Question">  
-			<label for="actiontype"><?php echo $lang["filter_label"]; ?></label><div class="tickset">
+	
+	<form id="FilterActions" class="FormFilter"method="post" action="<?php echo $url ?>">
+		<fieldset>
+            <legend><?php echo $lang['filter_label']; ?></legend>  
+			<div class="tickset">
 				<div class="Inline">
 					<select name="actiontype" id="actiontype" onChange="this.form.submit();">
 						<option value=""<?php if ($actiontype == '') { echo " selected"; } ?>><?php echo $lang["all"]; ?></option>
@@ -78,11 +80,10 @@ $url=generateURL($baseurl . "/pages/user/user_actions.php",$url_params);
 					</select>
 				</div>
 			</div>
-			<div class="clearerleft"> </div>
-		</div>
+		</fieldset>
 	</form>
-  </div>
 
+</div>
 <div class="clearerleft"> </div>
 <div class="TopInpageNav"><div class="TopInpageNavLeft">
   
