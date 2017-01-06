@@ -76,7 +76,10 @@
 		if($actions_enable)
 			{
 			$actioncount=get_user_actions(true);
-			$messages[]=array('ref'=>0,'actioncount'=>$actioncount);
+			if($actioncount>0)
+				{
+				$messages[]=array('ref'=>0,'actioncount'=>$actioncount);
+				}
 			}
 		ob_clean();	// just in case we have any stray whitespace at the start of this file
 		echo json_encode($messages);
