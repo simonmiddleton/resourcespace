@@ -1979,7 +1979,9 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         {
         return $html;
         }
-
+	//Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
+	$html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+	
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
@@ -2043,7 +2045,9 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         {
         $html = strip_tags($html);
         }
-
+		
+	// Revert back to UTF-8
+	$html = mb_convert_encoding($html, 'UTF-8','HTML-ENTITIES');
     return $html;
     }
 
