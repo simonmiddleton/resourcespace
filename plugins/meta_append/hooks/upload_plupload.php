@@ -21,7 +21,7 @@ function HookMeta_appendAllAfterpluploadfile()
 		{
 		$result = get_data_by_field($ref, $meta_append_field_ref);
 		
-		if ('' != trim($result))
+		if ('' == trim($result))
 			{
 			return;
 			}				
