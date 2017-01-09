@@ -113,10 +113,43 @@ function api_get_resource_types()
     return get_resource_types("", true);
     }
 
-function api_add_alternative_file($resource,$name,$description="",$file_name="",$file_extension="",$file_size=0,$alt_type='')
-	{
-    return add_alternative_file($resource,$name,$description,$file_name,$file_extension,$file_size,$alt_type);
-	}
+function api_add_alternative_file($resource, $name, $description = '', $file_name = '', $file_extension = '', $file_size = 0, $alt_type = '', $file = '')
+    {
+    // Just insert record in the database
+    if('' == trim($file))
+        {
+        return add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
+        }
+
+    // A file has been specified so add it as alternative
+    $alternative_ref = add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
+
+    if(!$alternative_ref)
+        {
+        return false;
+        }
+
+    $rs_alternative_path = get_resource_path($resource, true, '', true, $file_extension, -1, 1, false, '', $alternative_ref);
+
+    if(!copy($file, $rs_alternative_path))
+        {
+        return false;
+        }
+
+    chmod($rs_alternative_path, 0777);
+
+    $file_size = @filesize_unlimited($rs_alternative_path);
+
+    sql_query("UPDATE resource_alt_files SET file_size='{$file_size}', creation_date = NOW() WHERE resource = '{$resource}' AND ref = '{$alternative_ref}'");
+
+    global $alternative_file_previews_batch;
+    if($alternative_file_previews_batch)
+        {
+        create_previews($resource, false, $file_extension, false, false, $alternative_ref);
+        }
+
+    return $alternative_ref;
+    }
 	
 function api_delete_alternative_file($resource,$ref)
 	{

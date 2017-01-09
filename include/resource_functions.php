@@ -2333,6 +2333,13 @@ function get_alternative_files($resource,$order_by="",$sort="")
 	
 function add_alternative_file($resource,$name,$description="",$file_name="",$file_extension="",$file_size=0,$alt_type='')
 	{
+    global $disable_alternative_files;
+
+    if($disable_alternative_files || (0 < $resource && (!get_edit_access($resource) || checkperm('A'))))
+        {
+        return false;
+        }
+
 	sql_query("insert into resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) values ('$resource','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check($file_size) . "','" . escape_check($alt_type) . "')");
 	return sql_insert_id();
 	}
