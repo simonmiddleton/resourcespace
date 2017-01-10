@@ -191,6 +191,29 @@ class EMuAPI
 
 
     /**
+    * Get EMu Multimedia resource object based on a multimedia IRN
+    * 
+    * @param integer $irn     Multimedia resource IRN
+    * @param array   $columns Optional, columns to fetch from EMu
+    * 
+    * @return array
+    */
+    public function getObjectMultimediaByIrn($irn, array $columns = array('resource'))
+        {
+        $multimedia_module = new IMuModule('emultimedia', $this->session);
+
+        $hits = $multimedia_module->findKey($irn);
+
+        if(0 == $hits)
+            {
+            return array();
+            }
+
+        return $multimedia_module->fetch('start', 0, 1, $columns)->rows[0];
+        }
+
+
+    /**
     * Get EMu objects based on an array of IRNs
     * 
     * @param array $irns Array of Unique KE EMu object identifiers
