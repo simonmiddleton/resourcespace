@@ -232,11 +232,11 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         else
                             {
                             $fieldinfo=sql_query("select ref,type from resource_type_field where name='" . escape_check($fieldname) . "'",0);
-                            $fieldinfo_cache[$fieldname]=$fieldinfo;
+                            $fieldinfo_cache[$fieldname]=$fieldinfo[0];
                             }
                         }
 
-                    if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo['type']) && !in_array($fieldinfo['type'],array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE, FIELD_TYPE_TEXT_BOX_MULTI_LINE)))
+                    if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo[0]['type']) && !in_array($fieldinfo[0]['type'],array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE, FIELD_TYPE_TEXT_BOX_MULTI_LINE)))
                         {
                         // ********************************************************************************
                         //                                                                    Field keyword
