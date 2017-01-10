@@ -905,7 +905,6 @@ if($simpleview)
 			</div><!-- End of FeaturedSimpleLinks -->
 			<div class="BasicsBox FeaturedSimpleLinks">
 			<h1><?php echo $lang["findpubliccollection"]?></h1>
-			<div class="clearerleft" />
 			<div id="FeaturedSimpleTile_public" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
 						<a href="<?php echo $baseurl_short?>pages/collection_public.php" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_public">
 							<div id="FeaturedSimpleTileContents_public"  class="FeaturedSimpleTileContents">
