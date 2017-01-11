@@ -3136,9 +3136,6 @@ $responsive_ui = true;
 Mappings between resource types and file extensions.
 Can be used to automatically create resources in the system based on
 the extension of the file.
-TODO: switch staticsync to use these instead of:
-- $staticsync_extension_mapping_default
-- $staticsync_extension_mapping
 */
 $resource_type_extension_mapping_default = 1;
 $resource_type_extension_mapping         = array(
