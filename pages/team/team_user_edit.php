@@ -11,6 +11,7 @@ include "../../include/authenticate.php";
 include "../../include/api_functions.php"; 
 
 $backurl=getval("backurl","");
+$modal=(getval("modal","")=="true");
 $url=$baseurl_short."pages/team/team_user_edit.php?ref=" .getvalescaped("ref","",true) . "&backurl=" . urlencode($backurl);
 if (!checkperm("u")) {redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));}
 
@@ -42,7 +43,12 @@ elseif (getval("save","")!="")
 	else
 		{
 		hook('aftersaveuser');
-		if (getval("save","")!="") {$backurl=getval("backurl",$baseurl_short ."pages/team/team_user.php?nc=" . time());redirect ($backurl);}
+		if (getval("save","")!="" && !$modal)
+			{
+			redirect ($backurl!=""?$backurl:$baseurl_short ."pages/team/team_user.php?nc=" . time());
+			exit();
+			}
+		$message=$lang["changessaved"];
 		}
 	}
 
@@ -52,7 +58,9 @@ if (($user["usergroup"]==3) && ($usergroup!=3)) {redirect($baseurl_short ."login
 
 if (!checkperm_user_edit($user))
 	{
-	redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));
+	if(!$modal){redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));}
+	else
+		{echo $lang["error-permissiondenied"];}
 	exit;
 }
 
@@ -79,14 +87,44 @@ if (getval("loginas","")!="")
 
 ?>
 <div class="BasicsBox">
-<p><a href="<?php echo $backurl?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["manageusers"]?></a></p>
-<h1><?php echo $lang["edituser"]?> <?php global $display_useredit_ref; echo $display_useredit_ref ? $ref : ""; ?></h1>
-<?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 
-<form method=post action="<?php echo $baseurl_short?>pages/team/team_user_edit.php">
+<div class="RecordHeader">
+<div class="backtoresults">	
+<?php if($modal)
+	{
+	?>
+	<a class="maxLink fa fa-expand" href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this);"></a>
+	&nbsp;
+	<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();"></a>
+	<?php
+	}
+	?>
+</div>
+
+<?php
+if(!$modal)
+	{?>
+	<p><a href="<?php echo ($backurl!=""?$backurl:$baseurl_short ."pages/team/team_user.php");?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $backurl!=""?$lang["back"]:$lang["manageusers"]; ?></a></p>
+	<?php
+	}
+	?>
+<h1><?php echo $lang["edituser"]?> <?php global $display_useredit_ref; echo $display_useredit_ref ? $ref : ""; ?></h1>
+</div>
+<?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
+<?php if (isset($message)) { ?><div class="PageInfoMessage"><?php echo $message?></div><?php } ?>
+
+<form method=post action="<?php echo $baseurl_short?>pages/team/team_user_edit.php" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+<?php if($modal)
+	{
+	?>
+	<input type=hidden name="modal" value="true">
+	<?php
+	}
+	?>
 <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
 <input type=hidden name=backurl value="<?php echo getval("backurl", $baseurl_short . "pages/team/team_user.php?nc=" . time())?>">
-<input name="save" type="submit" style="display:none;" value="save" /><!-- to capture default action -->
+<input type=hidden name="save" value="save" /><!-- to capture default action -->
+
 
 <?php
 if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user["login_last_try"]) > (time() - ($max_login_attempts_wait_minutes * 60))))
@@ -98,7 +136,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 	<div class="clearerleft"> </div>
 <?php } ?>
 
-<div class="Question"><label><?php echo $lang["username"]?></label><input name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
+<div class="Question" ><label><?php echo $lang["username"]?></label><input name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
 
 <?php if (!hook("password")) { ?>
 <div class="Question"><label><?php echo $lang["password"]?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo (strlen($user["password"])==64 || strlen($user["password"])==32)?$lang["hidden"]:$user["password"]?>">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo $lang["suggest"]?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>

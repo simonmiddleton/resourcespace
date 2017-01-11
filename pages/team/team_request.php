@@ -5,17 +5,17 @@
  * @package ResourceSpace
  * @subpackage Pages_Team
  */
+
+
 include "../../include/db.php";
 include_once "../../include/general.php";
 include "../../include/authenticate.php";if (!checkperm("R")) {exit ("Permission denied.");}
 include "../../include/request_functions.php";
 include_once "../../include/collections_functions.php";
+include "../../include/header.php";
 
 $offset=getvalescaped("offset",0);
-
-include "../../include/header.php";
 ?>
-
 
 <div class="BasicsBox"> 
   <h1><?php echo $lang["managerequestsorders"]?></h1>
@@ -68,7 +68,7 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
 	<td><?php echo $lang["resourcerequesttype" . $requests[$n]["request_mode"]] ?></td>
 	<td><?php echo $requests[$n]["assigned_to_username"] ?></td>
 	<td><?php echo $lang["resourcerequeststatus" . $requests[$n]["status"]] ?></td>
-	<td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_request_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a></a></div></td>
+	<td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_request_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a></a></div></td>
 <?php endif; ?>
 	</tr>
 	<?php
@@ -80,9 +80,6 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
 <div class="BottomInpageNav"><?php pager(false); ?></div>
 </div><!-- end of BasicsBox -->
 
-
-
-
 <?php
+
 include "../../include/footer.php";
-?>

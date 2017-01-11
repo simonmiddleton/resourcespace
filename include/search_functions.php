@@ -792,9 +792,12 @@ function compile_search_actions($top_actions)
 
 function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false)
 	{
+	global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
+	$heightmax,$widthmin,$widthmax,$filesizemin,$filesizemax,$fileextension,$haspreviewimage,$geo_search_restrict,$pending_review_visible_to_all,
+	$search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share;
+	
 	# Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
 	if(!is_array($archive)){$archive=explode(",",$archive);}
-	global $userref;
 	# Start with an empty string = an open query.
 	$sql_filter="";
 		
@@ -826,13 +829,12 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	    }
 	
 	# The ability to restrict access by the user that created the resource.
-	global $resource_created_by_filter;
 	if (isset($resource_created_by_filter) && count($resource_created_by_filter)>0)
 	    {
 	    $created_filter="";
 	    foreach ($resource_created_by_filter as $filter_user)
 		{
-		if ($filter_user==-1) {global $userref;$filter_user=$userref;} # '-1' can be used as an alias to the current user. I.e. they can only see their own resources in search results.
+		if ($filter_user==-1) {$filter_user=$userref;} # '-1' can be used as an alias to the current user. I.e. they can only see their own resources in search results.
 		if ($created_filter!="") {$created_filter.=" or ";} 
 		$created_filter.= "created_by = '" . $filter_user . "'";
 		}    
@@ -847,7 +849,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	# Geo zone exclusion
 	# A list of upper/lower long/lat bounds, defining areas that will be excluded from geo search results.
 	# Areas are defined as southwest lat, southwest long, northeast lat, northeast long
-	global $geo_search_restrict;    
 	if (count($geo_search_restrict)>0 && substr($search,0,4)=="!geo")
 	    {
 	    foreach ($geo_search_restrict   as $zone)
@@ -860,7 +861,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	
 	# append resource type restrictions based on 'T' permission 
 	# look for all 'T' permissions and append to the SQL filter.
-	global $userpermissions;
 	$rtfilter=array();
 	for ($n=0;$n<count($userpermissions);$n++)
 	    {
@@ -879,7 +879,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	# append "use" access rights, do not show confidential resources unless admin
 	if (!checkperm("v")&&!$access_override)
 	    {
-	    global $userref;
 	    if ($sql_filter!="") {$sql_filter.=" and ";}
 	    # Check both the resource access, but if confidential is returned, also look at the joined user-specific or group-specific custom access for rows.
 	    $sql_filter.="(r.access<>'2' or (r.access=2 and ((rca.access is not null and rca.access<>2) or (rca2.access is not null and rca2.access<>2))))";
@@ -888,11 +887,9 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	# append archive searching. Updated Jan 2016 to apply to collections as resources in a pending state that are in a shared collection could bypass approval process
 	if (!$access_override)
 	    {
-	    global $pending_review_visible_to_all,$search_all_workflow_states, $userref, $pending_submission_searchable_to_all;
 	    if(substr($search,0,11)=="!collection" || substr($search,0,5)=="!list")
 			{
 			# Resources in a collection or list may be in any archive state
-			global $collections_omit_archived;
 			if(substr($search,0,11)=="!collection" && $collections_omit_archived && !checkperm("e2"))
 				{
 				$sql_filter.= (($sql_filter!="")?" and ":"") . "archive<>2";
@@ -913,7 +910,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             if ($sql_filter!="") {$sql_filter.=" and ";}
             $sql_filter.="archive in (" . implode(",",$archive) . ")";
             }
-        global $k, $collection_allow_not_approved_share ;
         if (!checkperm("v") && !(substr($search,0,11)=="!collection" && $k!='' && $collection_allow_not_approved_share)) 
             {
             # Append standard filtering to hide resources in a pending state, whatever the search
@@ -933,7 +929,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			}
 	    }
 	
-	global $additional_archive_states;
 	foreach ($additional_archive_states as $additional_archive_state)
 	    {
 	    if(checkperm("z" . $additional_archive_state))
@@ -945,7 +940,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	
 	if ($filterblockstates!=""&&!$access_override)
 	    {
-	    global $uploader_view_override, $userref;
 	    if ($uploader_view_override)
 			{
 			if ($sql_filter!="") {$sql_filter.=" and ";}
@@ -960,7 +954,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	
 	
 	# Append media restrictions
-	global $heightmin,$heightmax,$widthmin,$widthmax,$filesizemin,$filesizemax,$fileextension,$haspreviewimage;
 	
 	if ($heightmin!='')
 		{		
@@ -980,7 +973,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 		{
 		# Construct resource type exclusion based on 'ert' permission 
 		# look for all 'ert' permissions and append to the exclusion array.
-		global $userpermissions;
 		$rtexclusions=array();
 		for ($n=0;$n<count($userpermissions);$n++)
 			{
@@ -1001,7 +993,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 				}
 			}
 	
-		global $additional_archive_states;
 		foreach ($additional_archive_states as $additional_archive_state)
 			{
 			if(!checkperm("e" . $n))

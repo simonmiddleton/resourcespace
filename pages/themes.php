@@ -898,14 +898,13 @@ if ($header=="" && !isset($themes[0]))
 
 if($simpleview)
 	{
-	if (!$public_collections_header_only)
+	if (!$public_collections_header_only && getval("theme","")=="" && getval("theme1","")=="")
 		{?>
 		<?php if (!checkperm("b") && $enable_public_collections)
 			{ ?>
 			</div><!-- End of FeaturedSimpleLinks -->
 			<div class="BasicsBox FeaturedSimpleLinks">
 			<h1><?php echo $lang["findpubliccollection"]?></h1>
-			<div class="clearerleft" />
 			<div id="FeaturedSimpleTile_public" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
 						<a href="<?php echo $baseurl_short?>pages/collection_public.php" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_public">
 							<div id="FeaturedSimpleTileContents_public"  class="FeaturedSimpleTileContents">

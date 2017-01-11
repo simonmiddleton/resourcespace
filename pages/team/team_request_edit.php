@@ -13,6 +13,9 @@ include "../../include/request_functions.php";
 include_once "../../include/collections_functions.php";
 
 $ref = getvalescaped("ref", "", true);
+$modal=(getval("modal","")=="true");
+$backurl=getval("backurl","");
+$url=$baseurl_short."pages/team/team_request_edit.php?ref=" . $ref . "&backurl=" . urlencode($backurl);
 
 if (getval("submitted","") != "")
     {
@@ -21,7 +24,16 @@ if (getval("submitted","") != "")
         {
         save_request($ref);
         }
-    redirect($baseurl_short . "pages/team/team_request.php?reload=true&nc=" . time());
+    if(!$modal)
+            {
+            redirect($baseurl_short . "pages/team/team_request.php?reload=true&nc=" . time());
+            exit();
+            }
+        else
+            {
+            $resulttext=$lang["changessaved"];
+            }
+    
     }
 
 # Fetch research request data
@@ -30,14 +42,40 @@ if ($request === false)
     {
     exit("Request " . htmlspecialchars($ref) . " not found.");
     }
-    
+  
 include "../../include/header.php";
+
 ?>
-<p><a href="<?php echo $baseurl_short?>pages/team/team_request.php"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"] ?></a></p>
 <div class="BasicsBox">
-    <h1><?php echo $lang["editrequestorder"]?></h1>
+    
+<div class="RecordHeader">
+<div class="backtoresults">	
+    <?php if($modal)
+        {
+        ?>
+        <a class="maxLink fa fa-expand" href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this);"></a>
+        &nbsp;
+        <a href="#"  class="closeLink fa fa-times" onClick="ModalClose();"></a>
+        <?php
+        }
+        ?>
+    </div>
 
     <?php
+    if(!$modal)
+        {?>
+        <p><a href="<?php echo ($backurl!=""?$backurl:$baseurl_short ."pages/team/team_request.php");?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $backurl!=""?$lang["back"]:$lang["managerequestsorders"]; ?></a></p>
+        <?php
+        }
+        ?>
+    <h1><?php echo $lang["editrequestorder"]?></h1>
+</div>
+<?php
+if (isset($resulttext))
+	{
+	echo "<div class=\"PageInformal \">" . $resulttext . "</div>";
+	}
+    
     # Check access
     if (checkperm("Rb") && $request["assigned_to"]!=$userref)
         {
@@ -47,7 +85,14 @@ include "../../include/header.php";
         {
         ?>
         
-    <form method="post" action="<?php echo $baseurl_short?>pages/team/team_request_edit.php" onSubmit="return CentralSpacePost(this,true);">
+    <form method="post" action="<?php echo $baseurl_short?>pages/team/team_request_edit.php" onSubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+        <?php if($modal)
+        {
+        ?>
+        <input type=hidden name="modal" value="true">
+        <?php
+        }
+        ?>
         <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>" />
         <input type="hidden" name="submitted" value="yes" />
 

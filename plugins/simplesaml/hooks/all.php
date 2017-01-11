@@ -130,14 +130,17 @@ function HookSimplesamlAllProvideusercredentials()
 
 		$password_hash= md5("RSSAML" . $scramble_key . $username);
 
-		$userid = sql_value("select ref value from user where username='" . $username . "'",0);
+		$userid=0;
+        $currentuser = sql_query("select ref, usergroup from user where username='" . $username . "'");
+        if(count($currentuser)>0) {$userid = $currentuser[0]["ref"];}
 
 		debug ("SimpleSAML - got user details username=" . $username . ", email: " . (isset($email)?$email:""));
 
 		// figure out group
 		$group = $simplesaml_fallback_group;
 		$currentpriority=0;
-		if (count($simplesaml_groupmap)>0){
+		if (count($simplesaml_groupmap)>0)
+            {
 			for ($i = 0; $i < count($simplesaml_groupmap); $i++)
 				{
 				for($g = 0; $g < count($groups); $g++)
@@ -146,10 +149,12 @@ function HookSimplesamlAllProvideusercredentials()
 						{
 						$group = $simplesaml_groupmap[$i]['rsgroup'];
 						$currentpriority=$simplesaml_groupmap[$i]['priority'];
+                        debug("simplesaml  - found mapping for SAML group: " . $groups[$g] . ", group #" . $simplesaml_groupmap[$i]['rsgroup'] . ". priority :"  . $simplesaml_groupmap[$i]['priority']);
 						}
 					}
 				}
 			}
+        debug("simplesaml  - using RS group #" . $group);
 
         // If custom attributes need to be recorded against a user record, do it now
         $custom_attributes = array();
@@ -174,7 +179,7 @@ function HookSimplesamlAllProvideusercredentials()
 			if(!isset($email) || $email==""){$email=sql_value("select email value from user where ref='$userid'","");} // Allows accounts without an email address to have one set by the admin without it getting overwritten
 			// user exists, so update info
 			global $simplesaml_update_group;
-			if($simplesaml_update_group)
+			if($simplesaml_update_group || (isset($currentuser[0]["usergroup"]) && $currentuser[0]["usergroup"]==""))
 				{
 				sql_query("update user set origin='simplesaml', password = '$password_hash', usergroup = '$group', fullname='" . escape_check($displayname) . "', email='" . escape_check($email) . "' where ref = '$userid'");
 				}

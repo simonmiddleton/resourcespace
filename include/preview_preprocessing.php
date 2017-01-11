@@ -604,7 +604,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
             $frame_rate     = '1/' . ceil($duration / $ffmpeg_snapshot_frames);
             $snapshot_scale = '';
             $escaped_file   = escapeshellarg($file);
-            $escaped_target = escapeshellarg(str_replace('snapshot', 'snapshot_%d', get_resource_path($ref, true, 'snapshot', false, 'jpg', -1, 1, false, '')));
+			$escaped_target = str_replace('snapshot', 'snapshot_%d', escapeshellarg(get_resource_path($ref, true, 'snapshot', false, 'jpg', -1, 1, false, '')));
 
             // Find video resolution, figure out whether it is landscape/ portrait and adjust the scaling for the snapshots accordingly
             include_once dirname(__FILE__) . '/video_functions.php';
