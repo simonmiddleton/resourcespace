@@ -3131,3 +3131,18 @@ $fstemplate_alt_scramblekey=""; # The scramble key used by the template installa
 
 # Ability to switch off responsive on UI
 $responsive_ui = true;
+
+/*
+Mappings between resource types and file extensions.
+Can be used to automatically create resources in the system based on
+the extension of the file.
+TODO: switch staticsync to use these instead of:
+- $staticsync_extension_mapping_default
+- $staticsync_extension_mapping
+*/
+$resource_type_extension_mapping_default = 1;
+$resource_type_extension_mapping         = array(
+    2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl'),
+    3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv'),
+    4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
+);
