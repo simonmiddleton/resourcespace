@@ -322,3 +322,47 @@ function add_search_criteria(IMuTerms $imu_terms)
 
     return $imu_terms;
     }
+
+
+/**
+* Update resource with the newly imported orginal file from EMu
+* 
+* @param integer $ref       Resource ID
+* @param integer $type      Resource type ID
+* @param string  $file_path Resource original file path
+* 
+* @return boolean
+*/
+function emu_update_resource($ref, $type, $file_path)
+    {
+    global $file_checksums, $file_checksums_50k, $file_checksums_offline, $enable_thumbnail_creation_on_upload;
+
+    /*Generate checksums now in order to make sure when the SCRIPT compares them against EMu records
+    there is a valid value to compare it against otherwise the SCRIPT might think files have been
+    changed and will add media files as alternatives*/
+    $file_checksums         = true;
+    $file_checksums_50k     = false;
+    $file_checksums_offline = false;
+
+    if(!is_numeric($ref) || 0 >= $ref || '' == trim($file_path))
+        {
+        return false;
+        }
+
+    update_resource_type($ref, $type);
+
+    $file_extension = pathinfo($file_path, PATHINFO_EXTENSION);
+
+    sql_query("UPDATE resource SET archive = 0, file_extension = '{$file_extension}', preview_extension = '{$file_extension}', file_modified = NOW() WHERE ref = '{$ref}'");
+
+    // Ensure folder is created, then create previews
+    get_resource_path($ref, false, 'pre', true, $file_extension);
+
+    // Generate previews / thumbnails (if configured - i.e if not completed by offline process 'create_previews.php')
+    if($enable_thumbnail_creation_on_upload && !create_previews($ref, false, $file_extension))
+        {
+        return false;
+        }
+
+    return true;
+    }
