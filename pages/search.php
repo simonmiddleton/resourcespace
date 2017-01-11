@@ -1107,7 +1107,8 @@ if($responsive_ui)
 	<?php hook("stickysearchresults"); ?> <!--the div TopInpageNavRight was added in after this hook so it may need to be adjusted -->
 	<div class="TopInpageNavRight">
 	<?php
-	    pager();
+		$url=generateURL($baseurl . "/pages/search.php",$searchparams); 
+		pager();
 		$draw_pager=true;
 	?>
 	</div>
@@ -1365,7 +1366,7 @@ if ($display=="strip")
         include 'search_views/strip_footer.php';
         }
     
-$url=generateURL($baseurl_short."pages/search.php",$searchparams); 
+$url=generateURL($baseurl . "/pages/search.php",$searchparams); 
 
 ?>
 </div> <!-- end of CentralSpaceResources -->
