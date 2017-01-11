@@ -272,4 +272,51 @@ class EMuAPI
 
         return in_array($mime, $_MIME_TYPES);
         }
+
+
+    /**
+    * Download media file from EMu
+    * 
+    * @param array   $multimedia
+    * @param string  $to          Path where TO save this file
+    * @param integer $length      Up to length number of bytes read
+    * 
+    * @return boolean
+    */
+    public static function getMediaFile(array $multimedia, $to, $length = 4096)
+        {
+        if(0 === count($multimedia)
+            || (!isset($multimedia['resource']['file']) || (isset($multimedia['resource']['file']) && 'stream' != get_resource_type($multimedia['resource']['file'])))
+            || '' == $to)
+            {
+            return false;
+            }
+
+        $file = $multimedia['resource']['file'];
+        $copy = fopen($to, 'wb');
+
+        if(false === $copy)
+            {
+            return false;
+            }
+
+        while($copy)
+            {
+            $data = fread($file, $length);
+
+            if(false === $data || 0 == strlen($data))
+                {
+                break;
+                }
+
+            fwrite($copy, $data);
+            }
+
+        fclose($copy);
+
+        return true;
+        }
+
+
+
     }
