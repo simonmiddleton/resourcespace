@@ -10,6 +10,7 @@ if('cli' != $php_sapi_name)
 include dirname(__FILE__) . '/../../../include/db.php';
 include_once dirname(__FILE__) . '/../../../include/general.php';
 include_once dirname(__FILE__) . '/../../../include/resource_functions.php';
+include_once dirname(__FILE__) . '/../../../include/image_processing.php';
 include_once dirname(__FILE__) . '/../include/emu_functions.php';
 include_once dirname(__FILE__) . '/../include/emu_api.php';
 
@@ -76,7 +77,7 @@ set_process_lock(EMU_SCRIPT_SYNC_LOCK);*/
 // emu_script_log($message, $emu_log_file);
 
 
-
+$test_skip_multiple    = 0;
 $emu_rs_mappings       = unserialize(base64_decode($emu_rs_saved_mappings));
 $emu_script_start_time = microtime(true);
 $emu_records_limit     = 100;
@@ -234,16 +235,148 @@ if(0 < $rs_emu_resources_count)
 
 
 // Step 3 - Add new resources (also add the original file (master))
-emu_script_log(PHP_EOL . 'Step 3 - Add new resources and their master media file as original file', $emu_log_file);
+emu_script_log(PHP_EOL . 'Step 3 - Add new resources (+ metadata) and their master media file as original file', $emu_log_file);
 foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
     {
     $irn_index_in_rs_emu_resources = array_search($emu_record_irn, array_column($rs_emu_resources, 'object_irn'));
 
     if(false === $irn_index_in_rs_emu_resources)
         {
+        // Processing new resource
+        emu_script_log("Processing new resource for IRN {$emu_record_irn}", $emu_log_file);
+
+        if($emu_test_mode)
+            {
+            emu_script_log('Created new resource', $emu_log_file);
+            }
+        else
+            {
+            // Add as image only for now
+            // TODO: add logic to create resources based on multimedia type EMuApi::validateMime()
+            
+            // create_resource() needs this to be false in order to work without being logged in
+            $always_record_resource_creator = false;
+            $new_resource_ref               = create_resource(1, 0);
+
+            emu_script_log("Created new resource with ID {$new_resource_ref}", $emu_log_file);
+            }
+
+        ########################################
+        // TODO: CRITICAL - remove once tested
+        if($emu_test_mode && 5 >= $test_skip_multiple)
+            {
+            $always_record_resource_creator = false;
+            $new_resource_ref = create_resource(1, 0);
+
+            emu_script_log("Created new resource with ID {$new_resource_ref}", $emu_log_file);
+            }
+        $test_skip_multiple++;
+        ########################################
+
+        if(!isset($new_resource_ref))
+            {
+            emu_script_log("Could not create new resource for IRN {$emu_record_irn}", $emu_log_file);
+
+            continue;
+            }
+
+        if(update_field($new_resource_ref, $emu_irn_field, $emu_record_irn))
+            {
+            emu_script_log("Set value '{$emu_record_irn}' to EMu IRN field for resource ID {$new_resource_ref}", $emu_log_file);
+            }
+
+        if(update_field($new_resource_ref, $emu_created_by_script_field, 'SCRIPT'))
+            {
+            emu_script_log("Set value 'SCRIPT' to created by script field for resource ID {$new_resource_ref}", $emu_log_file);
+            }
+
+        // Add master multimedia file as orginal file to the newly created resource
+        // Grab master multimedia file from EMu
+        if(0 === count($emu_record_fields['multimedia']))
+            {
+            emu_script_log("No multimedia files found for resource with IRN {$emu_record_irn}", $emu_log_file);
+
+            continue;
+            }
+
+        $emu_master_file = array();
+
+        foreach($emu_record_fields['multimedia'] as $emu_multimedia_record)
+            {
+            // Once we found a master file, we don't need to look for others
+            if(0 !== count($emu_master_file))
+                {
+                break;
+                }
+
+            $emu_master_file = $emu_api->getObjectMultimediaByIrn($emu_multimedia_record['irn'], array( 'irn', 'resource', 'AdmTimeModified','AdmDateModified'));
+            }
+
+        if(0 === count($emu_master_file))
+            {
+            emu_script_log("Could not get any of the multimedia files for IRN {$emu_record_irn}. Found multimedia files were: "
+                . PHP_EOL
+                . print_r($emu_record_fields['multimedia'], true), $emu_log_file);
+
+            continue;
+            }
+
+        // Get the path for the file we are downloading (generate path)
+        $rs_emu_file_path = get_resource_path($new_resource_ref, true, '', true, pathinfo($emu_master_file['resource']['identifier'], PATHINFO_EXTENSION));
+
+        emu_script_log("Preparing to download media file to {$rs_emu_file_path}", $emu_log_file);
+
+        ########################################
+        // TODO: CRITICAL - remove once tested
+        if($emu_test_mode && 5 >= $test_skip_multiple)
+            {
+            if(EMuAPI::getMediaFile($emu_master_file, $rs_emu_file_path))
+                {
+                emu_script_log('Sucessfully downloaded media file', $emu_log_file);
+
+                // Update basic resource/ file data and create previews
+                if(emu_update_resource($new_resource_ref, 1, $rs_emu_file_path))
+                    {
+                    emu_script_log('Sucessfully created previews', $emu_log_file);
+                    }
+                else
+                    {
+                    emu_script_log('Failed tp create previews', $emu_log_file);
+                    }
+                }
+            }
+        ########################################
+
+        if($emu_test_mode)
+            {
+            emu_script_log('Test mode: Sucessfully downloaded media file', $emu_log_file);
+            }
+        else if(!$emu_test_mode && EMuAPI::getMediaFile($emu_master_file, $rs_emu_file_path))
+            {
+            emu_script_log('Sucessfully downloaded media file', $emu_log_file);
+
+            // Update basic resource/ file data and create previews
+            if(emu_update_resource($new_resource_ref, 1, $rs_emu_file_path))
+                {
+                emu_script_log('Sucessfully created previews', $emu_log_file);
+                }
+            else
+                {
+                emu_script_log('Failed tp create previews', $emu_log_file);
+                }
+            }
+        else
+            {
+            emu_script_log('Failed to download media file', $emu_log_file);
+            }
+
+        // Temp forced exit
+        die();
+
         continue;
         }
 
+    // Processing existing resource
     emu_script_log("IRN {$emu_record_irn} was found at index {$irn_index_in_rs_emu_resources} in rs_emu_resources, proof: "
         . PHP_EOL
         . print_r($rs_emu_resources[$irn_index_in_rs_emu_resources], true)
