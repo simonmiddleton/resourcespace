@@ -1243,7 +1243,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 * 
 * @return boolean
 */
-function update_field($resource, $field, $value, array $errors = array())
+function update_field($resource, $field, $value, array &$errors = array())
     {
     global $FIXED_LIST_FIELD_TYPES;
     
