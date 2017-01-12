@@ -366,3 +366,126 @@ function emu_update_resource($ref, $type, $file_path)
 
     return true;
     }
+
+
+/**
+* Utility function to get the mapped ResourceSpace field from
+* the mapping we set for emu plugin
+* 
+* @param array  $rs_module_column_field_mappings 
+* @param string $column                          EMu column that should have a map to a ResourceSpace field
+* 
+* @return integer Returns 0 if could not find value
+*/
+function emu_get_rs_mapped_field_id($column, array $rs_module_column_field_mappings)
+    {
+    foreach($rs_module_column_field_mappings as $module_column_field_mappings)
+        {
+        if(isset($module_column_field_mappings[$column]) && is_numeric($module_column_field_mappings[$column]))
+            {
+            return $module_column_field_mappings[$column];
+            }
+        }
+
+    return 0;
+    }
+
+
+/**
+* Update a resource with all the information from an EMu record
+* which has mapped fields to ResourceSpace
+* 
+* @param integer $resource                        Resource ID
+* @param array   $record                          EMu record processed by emu plugin
+* @param array   $rs_module_column_field_mappings
+* 
+* @return boolean
+*/
+function emu_update_resource_metadata_from_record($resource, array $record, array $rs_module_column_field_mappings)
+    {
+    if(!is_numeric($resource) || 0 === count($record) || 0 === count($rs_module_column_field_mappings))
+        {
+        return false;
+        }
+
+    foreach($record as $record_field => $record_value)
+        {
+        $field = emu_get_rs_mapped_field_id($record_field, $rs_module_column_field_mappings);
+
+        // If the record contains other information we don't need to record (ie. not mapped), skip it
+        if(0 == $field)
+            {
+            continue;
+            }
+
+        emu_update_rs_field($resource, $field, $record_value);
+        }
+
+    return true;
+    }
+
+
+/**
+* Update ResourceSpace field based on an EMu record field value (atomic/ non-atomic)
+* Note: non-atomic values will be converted to a CSV value
+* 
+* @param integer      $ref          Resource ID
+* @param integer      $field        Field ID
+* @param string|array $record_value The value of the record field
+* 
+* @return boolean
+*/
+function emu_update_rs_field($ref, $field, $record_value)
+    {
+    // Atomic values can be saved upfront
+    if(is_string($record_value) && '' != $record_value && update_field($ref, $field, $record_value))
+        {
+        return true;
+        }
+
+    // Beyond this point, make sure we work with fields that are multi lines to allow
+    // big text chunks
+    $allowed_field_types = array(FIELD_TYPE_TEXT_BOX_MULTI_LINE, FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE);
+    $field_info          = get_field($field);
+
+    if(!in_array($field_info['type'], $allowed_field_types))
+        {
+        return false;
+        }
+
+    // Convert non-atomic values into a CSV value
+    $field_value = emu_convert_to_atomic($record_value);
+
+    if('' != $field_value && update_field($ref, $field, $field_value))
+        {
+        return true;
+        }
+
+    return false;
+    }
+
+
+/**
+* Utility function which allows ResourceSpace to convert any EMu record field to an
+* atomic field with its value formatted as CSV
+* 
+* @param string|array $values The value client code wants to convert to
+* 
+* @return string CSV formatted string
+*/
+function emu_convert_to_atomic($values)
+    {
+    $return = '';
+
+    if(!is_array($values))
+        {
+        return $values;
+        }
+
+    foreach($values as $value)
+        {
+        $return .= ',' . emu_convert_to_atomic($value);
+        }
+
+    return substr($return, 1);
+    }
