@@ -238,6 +238,22 @@ if(0 < $rs_emu_resources_count)
 emu_script_log(PHP_EOL . 'Step 3 - Add new resources (+ metadata) and their master media file as original file', $emu_log_file);
 foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
     {
+    #########################################
+    ## TODO: CRITICAL - remove once tested ##
+    #########################################
+    if(5 > $test_skip_multiple)
+        {
+        $emu_test_mode = false;
+        }
+    else
+        {
+        $emu_test_mode = true;
+        }
+
+    $test_skip_multiple++;
+    #########################################
+    #########################################
+
     $irn_index_in_rs_emu_resources = array_search($emu_record_irn, array_column($rs_emu_resources, 'object_irn'));
 
     if(false === $irn_index_in_rs_emu_resources)
@@ -247,39 +263,28 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
 
         if($emu_test_mode)
             {
-            emu_script_log('Created new resource', $emu_log_file);
-            }
-        else
-            {
-            // Add as image only for now
-            // TODO: add logic to create resources based on multimedia type EMuApi::validateMime()
-            
-            // create_resource() needs this to be false in order to work without being logged in
-            $always_record_resource_creator = false;
-            $new_resource_ref               = create_resource(1, 0);
+            emu_script_log('Test mode: Cannot create new resource, update metadata and import media file while testing', $emu_log_file);
 
-            emu_script_log("Created new resource with ID {$new_resource_ref}", $emu_log_file);
+            continue;
             }
 
-        ########################################
-        // TODO: CRITICAL - remove once tested
-        if($emu_test_mode && 5 >= $test_skip_multiple)
-            {
-            $always_record_resource_creator = false;
-            $new_resource_ref = create_resource(1, 0);
+        // Add as image only for now
+        // TODO: add logic to create resources based on multimedia type EMuApi::validateMime()
+        
+        // create_resource() needs this to be false in order to work without being logged in
+        $always_record_resource_creator = false;
+        $new_resource_ref               = create_resource(1, 0);
 
-            emu_script_log("Created new resource with ID {$new_resource_ref}", $emu_log_file);
-            }
-        $test_skip_multiple++;
-        ########################################
-
-        if(!isset($new_resource_ref))
+        if(!$new_resource_ref)
             {
             emu_script_log("Could not create new resource for IRN {$emu_record_irn}", $emu_log_file);
 
             continue;
             }
 
+        emu_script_log("Created new resource with ID {$new_resource_ref}", $emu_log_file);
+
+        // Update metadata fields for this resource
         if(update_field($new_resource_ref, $emu_irn_field, $emu_record_irn))
             {
             emu_script_log("Set value '{$emu_record_irn}' to EMu IRN field for resource ID {$new_resource_ref}", $emu_log_file);
@@ -288,6 +293,11 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
         if(update_field($new_resource_ref, $emu_created_by_script_field, 'SCRIPT'))
             {
             emu_script_log("Set value 'SCRIPT' to created by script field for resource ID {$new_resource_ref}", $emu_log_file);
+            }
+
+        if(emu_update_resource_metadata_from_record($new_resource_ref, $emu_record_fields, $emu_rs_mappings))
+            {
+            emu_script_log("Updated resource ID {$new_resource_ref} metadata from EMu record for IRN '{$emu_record_irn}'", $emu_log_file);
             }
 
         // Add master multimedia file as orginal file to the newly created resource
@@ -309,7 +319,7 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
                 break;
                 }
 
-            $emu_master_file = $emu_api->getObjectMultimediaByIrn($emu_multimedia_record['irn'], array( 'irn', 'resource', 'AdmTimeModified','AdmDateModified'));
+            $emu_master_file = $emu_api->getObjectMultimediaByIrn($emu_multimedia_record['irn']);
             }
 
         if(0 === count($emu_master_file))
@@ -326,32 +336,7 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
 
         emu_script_log("Preparing to download media file to {$rs_emu_file_path}", $emu_log_file);
 
-        ########################################
-        // TODO: CRITICAL - remove once tested
-        if($emu_test_mode && 5 >= $test_skip_multiple)
-            {
-            if(EMuAPI::getMediaFile($emu_master_file, $rs_emu_file_path))
-                {
-                emu_script_log('Sucessfully downloaded media file', $emu_log_file);
-
-                // Update basic resource/ file data and create previews
-                if(emu_update_resource($new_resource_ref, 1, $rs_emu_file_path))
-                    {
-                    emu_script_log('Sucessfully created previews', $emu_log_file);
-                    }
-                else
-                    {
-                    emu_script_log('Failed tp create previews', $emu_log_file);
-                    }
-                }
-            }
-        ########################################
-
-        if($emu_test_mode)
-            {
-            emu_script_log('Test mode: Sucessfully downloaded media file', $emu_log_file);
-            }
-        else if(!$emu_test_mode && EMuAPI::getMediaFile($emu_master_file, $rs_emu_file_path))
+        if(EMuAPI::getMediaFile($emu_master_file, $rs_emu_file_path))
             {
             emu_script_log('Sucessfully downloaded media file', $emu_log_file);
 
@@ -369,9 +354,6 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
             {
             emu_script_log('Failed to download media file', $emu_log_file);
             }
-
-        // Temp forced exit
-        die();
 
         continue;
         }
