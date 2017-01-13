@@ -63,6 +63,18 @@ if('' != getval('submit', '') || '' != getval('save', ''))
     $emu_rs_saved_mappings = base64_encode(serialize($emu_rs_mappings_new));
     }
 
+// Add test script functionality
+// For now, only for sync mode
+if(EMU_SCRIPT_MODE_SYNC == $emu_script_mode)
+    {
+    $scripts_test_functionality = '
+        <button type="button" style="font-size: 1em;">Test script</button>
+    ';
+    }
+$script_last_ran_content = str_replace('%script_last_ran%', $emu_script_last_ran, $lang['emu_last_run_date']);
+$script_last_ran_content = str_replace('%scripts_test_functionality%', (isset($scripts_test_functionality) ? $scripts_test_functionality : ''), $script_last_ran_content);
+
+
 
 // API server settings
 $page_def[] = config_add_section_header($lang['emu_api_settings']);
@@ -71,7 +83,7 @@ $page_def[] = config_add_text_input('emu_api_server_port', $lang['emu_api_server
 
 // EMUu script
 $page_def[] = config_add_section_header($lang['emu_script_header']);
-$page_def[] = config_add_html(str_replace('%script_last_ran%', $emu_script_last_ran, $lang['emu_last_run_date']));
+$page_def[] = config_add_html($script_last_ran_content);
 $page_def[] = config_add_single_select('emu_script_mode',
     $lang['emu_script_mode'], array(
         EMU_SCRIPT_MODE_IMPORT => $lang['emu_script_mode_option_1'],
