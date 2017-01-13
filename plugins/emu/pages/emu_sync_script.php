@@ -72,11 +72,6 @@ if(is_process_lock(EMU_SCRIPT_SYNC_LOCK))
 set_process_lock(EMU_SCRIPT_SYNC_LOCK);*/
 
 
-
-
-// emu_script_log($message, $emu_log_file);
-
-
 $test_skip_multiple    = 0;
 $emu_rs_mappings       = unserialize(base64_decode($emu_rs_saved_mappings));
 $emu_script_start_time = microtime(true);
@@ -88,7 +83,7 @@ emu_script_log('Starting...', $emu_log_file);
 $emu_api = new EMuAPI($emu_api_server, $emu_api_server_port);
 
 // Step 1 - Build the EMu Objects Data array
-emu_script_log(PHP_EOL . 'Step 1 - building EMu found records data array', $emu_log_file);
+emu_script_log(PHP_EOL . 'Building EMu found records data array', $emu_log_file);
 foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
     {
     $emu_api->setModule($emu_module);
@@ -151,7 +146,7 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
     }
 
 // Step 2 - Get existing ResourceSpace resources with an IRN set
-emu_script_log(PHP_EOL . 'Step 2 - finding existing ResourceSpace resources with an IRN set', $emu_log_file);
+emu_script_log(PHP_EOL . 'Finding existing ResourceSpace resources with an IRN set', $emu_log_file);
 /*
 Example:
 Array
@@ -185,7 +180,7 @@ Using step 1 & 2 to figure out how many:
 */
 if(0 < $rs_emu_resources_count)
     {
-    emu_script_log(PHP_EOL . 'Optional step - archiving resources', $emu_log_file);
+    emu_script_log(PHP_EOL . 'Archiving resources', $emu_log_file);
 
     $emu_api_expired_resources = new EMuAPI($emu_api_server, $emu_api_server_port);
 
@@ -235,12 +230,12 @@ if(0 < $rs_emu_resources_count)
 
 
 // Step 3 - Add new resources (also add the original file (master))
-emu_script_log(PHP_EOL . 'Step 3 - Add new resources (+ metadata) and their master media file as original file', $emu_log_file);
+emu_script_log(PHP_EOL . 'Process new/ existing resources', $emu_log_file);
 foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
     {
-    #########################################
-    ## TODO: CRITICAL - remove once tested ##
-    #########################################
+    ##########################################
+    ## TODO: CRITICAL - comment once tested ##
+    ##########################################
     if(5 > $test_skip_multiple)
         {
         $emu_test_mode = false;
@@ -359,20 +354,25 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
         }
 
     // Processing existing resource
+    $existing_resource_ref = $rs_emu_resources[$irn_index_in_rs_emu_resources]['resource'];
+
     emu_script_log("IRN {$emu_record_irn} was found at index {$irn_index_in_rs_emu_resources} in rs_emu_resources, proof: "
         . PHP_EOL
         . print_r($rs_emu_resources[$irn_index_in_rs_emu_resources], true)
         . 'and will need to be updated (metadata and multimedia checksum checked)', $emu_log_file);
+
+    // Update metadata for this resource and then check media file checksum. If != then add media file from EMu as alternative for this resource
+    if(!$emu_test_mode && emu_update_resource_metadata_from_record($existing_resource_ref, $emu_record_fields, $emu_rs_mappings))
+        {
+        emu_script_log("Updated resource ID {$existing_resource_ref} metadata from EMu record for IRN '{$emu_record_irn}'", $emu_log_file);
+        }
+    else
+        {
+        emu_script_log("Failed to update resource ID {$existing_resource_ref} metadata from EMu record for IRN '{$emu_record_irn}'", $emu_log_file);
+        }
+
+    // Step 4 - Add as alternative file the EMu multimedia file if its checksum is different than the one we have in ResourceSpace for this resource
     }
-
-
-
-
-
-// Step 4 - Add as alternative file the EMu multimedia file if its checksum is different than the one we have in ResourceSpace for this resource
-
-// emu_script_log(print_r($emu_records_data, true), $emu_log_file);
-
 
 emu_script_log(PHP_EOL . sprintf("EMu Script completed in %01.2f seconds.", microtime(true) - $emu_script_start_time), $emu_log_file);
 fclose($emu_log_file);
