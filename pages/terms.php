@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include_once "../include/db.php";
 include_once "../include/general.php";
 # External access support (authenticate only if no key provided)
 # No need to check access key for this page as it merely redirects to other pages

@@ -8,7 +8,7 @@
 include_once "../include/db.php";
 include_once "../include/general.php";
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include_once "../include/authenticate.php";}
+$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include "../include/authenticate.php";}
 include_once "../include/search_functions.php";
 include_once "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
