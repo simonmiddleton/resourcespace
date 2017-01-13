@@ -5307,12 +5307,22 @@ function emptyiszero($value)
 
 // Add array_column if <PHP 5.5
 if(!function_exists("array_column"))
-{
-   function array_column($array,$column_name)
     {
-        return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
+    function array_column($array,$column_name,$index_key=null)
+        {
+        if ($index_key == null)
+                {
+                return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
+                }
+                
+        $return=array();
+        foreach($array as $element)
+            {
+            $return[$element[$index_key]] = $element[$column_name];                
+            }
+        return $return;
+        }
     }
-}
 
 
 /**
