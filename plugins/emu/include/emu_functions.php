@@ -74,7 +74,8 @@ function get_emu_resources()
     $emu_resources = sql_query("
             SELECT rd.resource AS resource,
                    rd.value AS object_irn,
-                   (SELECT `value` FROM resource_data WHERE resource = rd.resource AND resource_type_field = '{$emu_created_by_script_field}') AS created_by_script_flag
+                   (SELECT `value` FROM resource_data WHERE resource = rd.resource AND resource_type_field = '{$emu_created_by_script_field}') AS created_by_script_flag,
+                   r.file_checksum
               FROM resource_data AS rd
         RIGHT JOIN resource AS r ON rd.resource = r.ref AND r.resource_type IN ({$resource_types_list})
              WHERE rd.resource > 0

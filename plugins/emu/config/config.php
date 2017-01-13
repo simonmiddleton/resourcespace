@@ -2,6 +2,9 @@
 define('EMU_SCRIPT_MODE_IMPORT', 100);
 define('EMU_SCRIPT_MODE_SYNC', 1000);
 
+// ID of user to run scripts as
+// Defaults to 1, which normally is Super Admin
+$emu_userref = 1;
 
 // EMu Server connection settings
 $emu_api_server               = 'http://[server.address]';

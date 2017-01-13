@@ -71,6 +71,14 @@ if(is_process_lock(EMU_SCRIPT_SYNC_LOCK))
     }
 set_process_lock(EMU_SCRIPT_SYNC_LOCK);*/
 
+// Run script as a user of the system
+if(isset($emu_userref))
+    {
+    $userref  = $emu_userref;
+    $userdata = get_user($userref);
+
+    setup_user($userdata);
+    }
 
 $test_skip_multiple    = 0;
 $emu_rs_mappings       = unserialize(base64_decode($emu_rs_saved_mappings));
@@ -156,6 +164,7 @@ Array
             [resource] => 1
             [object_irn] => 74766
             [created_by_script_flag] => 
+            [file_checksum] => 02b7d23bcd4eba8491049f56a64fe046
         )
 
     [1] => Array
@@ -163,6 +172,7 @@ Array
             [resource] => 5
             [object_irn] => 904207
             [created_by_script_flag] => script
+            [file_checksum] => be17ac47cc132f4dbb13e7b2633ea898
         )
 )
 
@@ -229,7 +239,7 @@ if(0 < $rs_emu_resources_count)
     }
 
 
-// Step 3 - Add new resources (also add the original file (master))
+// Step 3 - Process new/ existing resources (also add the original file (master) if required)
 emu_script_log(PHP_EOL . 'Process new/ existing resources', $emu_log_file);
 foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
     {
@@ -354,7 +364,8 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
         }
 
     // Processing existing resource
-    $existing_resource_ref = $rs_emu_resources[$irn_index_in_rs_emu_resources]['resource'];
+    $existing_resource_ref  = $rs_emu_resources[$irn_index_in_rs_emu_resources]['resource'];
+    $existing_file_checksum = $rs_emu_resources[$irn_index_in_rs_emu_resources]['file_checksum'];
 
     emu_script_log("IRN {$emu_record_irn} was found at index {$irn_index_in_rs_emu_resources} in rs_emu_resources, proof: "
         . PHP_EOL
@@ -366,13 +377,89 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
         {
         emu_script_log("Updated resource ID {$existing_resource_ref} metadata from EMu record for IRN '{$emu_record_irn}'", $emu_log_file);
         }
+    else if($emu_test_mode)
+        {
+        emu_script_log('Test mode: updating resource metadata fields based on EMu record column values', $emu_log_file);
+        }
     else
         {
         emu_script_log("Failed to update resource ID {$existing_resource_ref} metadata from EMu record for IRN '{$emu_record_irn}'", $emu_log_file);
         }
 
-    // Step 4 - Add as alternative file the EMu multimedia file if its checksum is different than the one we have in ResourceSpace for this resource
-    }
+    emu_script_log("Checking multimedia file for resource ID {$existing_resource_ref}...", $emu_log_file);
+
+    if(0 === count($emu_record_fields['multimedia']))
+        {
+        emu_script_log("No multimedia files found for resource with IRN {$emu_record_irn}", $emu_log_file);
+
+        continue;
+        }
+
+    $emu_master_info = array();
+    $emu_master_file = array();
+
+    foreach($emu_record_fields['multimedia'] as $emu_multimedia_record)
+        {
+        // Once we found a master file, we don't need to look for others
+        if(0 !== count($emu_master_file))
+            {
+            break;
+            }
+
+        $emu_master_info = $emu_api->getObjectMultimediaByIrn($emu_multimedia_record['irn'], array('master'));
+        }
+
+    if(0 === count($emu_master_info) || !isset($emu_master_info['master']))
+        {
+        emu_script_log("Could not get any of the multimedia master information for IRN {$emu_record_irn}. Found multimedia files were: "
+            . PHP_EOL
+            . print_r($emu_record_fields['multimedia'], true), $emu_log_file);
+
+        continue;
+        }
+
+    // New file is being used as master, add it as an alternative for this resource
+    if($existing_file_checksum != $emu_master_info['master']['md5Checksum'])
+        {
+        emu_script_log('Checksums are not the same. Adding new file as alternative...', $emu_log_file);
+
+        if($emu_test_mode)
+            {
+            emu_script_log('Test mode: cannot move forward and create alternatives.'
+                . PHP_EOL
+                . 'Skipping to next step...', $emu_log_file);
+
+            continue;
+            }
+
+        $emu_master_file           = $emu_api->getObjectMultimediaByIrn($emu_master_info['irn']);
+        $emu_master_file_extension = pathinfo($emu_master_file['resource']['identifier'], PATHINFO_EXTENSION);
+        $alternative_ref           = add_alternative_file(
+                                        $existing_resource_ref,
+                                        'New file found',
+                                        ($date_d_m_y ? date('d/m/Y @ H:m') : date('m/d/Y @ H:m')),
+                                        $emu_master_file['resource']['identifier'],
+                                        $emu_master_file_extension,
+                                        $emu_master_file['resource']['size'],
+                                        $emu_master_file['resource']['mimeType']
+                                    );
+
+        if(!$alternative_ref)
+            {
+            emu_script_log("Could not create an alternative record for media file with IRN {$emu_master_info['irn']}", $emu_log_file);
+            continue;
+            }
+
+        $rs_emu_file_path = get_resource_path($existing_resource_ref, true, '', true, $emu_master_file_extension, -1, 1, false, '', $alternative_ref);
+
+        if(EMuAPI::getMediaFile($emu_master_file, $rs_emu_file_path))
+            {
+            emu_script_log("New media file downloaded as an alternative to {$rs_emu_file_path}", $emu_log_file);
+
+            create_previews($existing_resource_ref, false, $emu_master_file_extension, false, false, $alternative_ref);
+            }
+        }
+    } /* end of Process new/ existing resources */
 
 emu_script_log(PHP_EOL . sprintf("EMu Script completed in %01.2f seconds.", microtime(true) - $emu_script_start_time), $emu_log_file);
 fclose($emu_log_file);
