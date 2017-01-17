@@ -99,7 +99,7 @@ if($simple_search_pills_view)
 
         if(0 < count($node_found))
             {
-            $search = str_replace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
+            $search = str_ireplace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
             }
         }
     }
