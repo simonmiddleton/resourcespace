@@ -1979,13 +1979,15 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         {
         return $html;
         }
-	//Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
-	$html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
-	
+
+    //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
+    $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
-    $is_html = ($html != strip_tags($html));
+    $is_html           = ($html != strip_tags($html));
+    $compatibility_5_3 = false;
 
     libxml_use_internal_errors(true);
 
@@ -1994,9 +1996,23 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 
     // Step 1 - Check DOM
     $doc = new DOMDocument();
-    $doc->encoding='UTF-8';
+    $doc->encoding = 'UTF-8';
 
-    if($doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD))
+    if(version_compare(PHP_VERSION, '5.3.0', '>'))
+        {
+        $process_html = $doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        }
+    else
+        {
+        // Compatibility with PHP 5.3
+        // we allow HTML and BODY because libxml doesn not have some required constants and then we extract
+        // the text between BODY tags
+        $allowed_tags      = array_merge(array('html', 'body', 'div', 'span', 'h3', 'p', 'br', 'em'), $tags);
+        $process_html      = $doc->loadHTML($html);
+        $compatibility_5_3 = true;
+        }
+
+    if($process_html)
         {
         foreach($doc->getElementsByTagName('*') as $tag)
             {
@@ -2022,6 +2038,16 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
             }
 
         $html = $doc->saveHTML();
+
+        if($compatibility_5_3)
+            {
+            preg_match('/<body>(.*?)<\/body>/', $html, $matches);
+
+            if(0 < count($matches[1]))
+                {
+                $html = $matches[1];
+                }
+            }
         }
 
     // Step 2 - Use regular expressions
@@ -2045,9 +2071,10 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         {
         $html = strip_tags($html);
         }
-		
-	// Revert back to UTF-8
-	$html = mb_convert_encoding($html, 'UTF-8','HTML-ENTITIES');
+
+    // Revert back to UTF-8
+    $html = mb_convert_encoding($html, 'UTF-8','HTML-ENTITIES');
+
     return $html;
     }
 
