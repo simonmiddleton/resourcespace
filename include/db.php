@@ -1998,7 +1998,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     $doc = new DOMDocument();
     $doc->encoding = 'UTF-8';
 
-    if(version_compare(PHP_VERSION, '5.3.0', '>'))
+    if(version_compare(PHP_VERSION, '5.4.0', '>='))
         {
         $process_html = $doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         }
@@ -2043,7 +2043,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
             {
             preg_match('/<body>(.*?)<\/body>/', $html, $matches);
 
-            if(0 < count($matches[1]))
+            if(isset($matches[1]) && 0 < count($matches[1]))
                 {
                 $html = $matches[1];
                 }
