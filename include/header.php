@@ -474,7 +474,11 @@ include (dirname(__FILE__) . "/header_links.php");
 $omit_searchbar_pages=array("index","preview_all","search_advanced","preview","admin_header","login");
 $modified_omit_searchbar_pages=hook("modifyomitsearchbarpages");
 if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}
-if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer")) 	
+
+$user = get_user_by_username($username);
+$user_attr = get_user($user);
+
+if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") && $user_attr['accepted_terms']!=0) 	
 	{
 	?>
     <div id="SearchBarContainer">
