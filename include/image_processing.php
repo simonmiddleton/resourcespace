@@ -434,6 +434,12 @@ function extract_exif_comment($ref,$extension="")
 		resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $summary);
 
         $metadata = array(); # an associative array to hold metadata field/value pairs
+        
+        if (!$disable_geocoding)
+			{
+			# Set vars
+            $dec_long=0;$dec_lat=0;
+            }
 		
 		# go through each line and split field/value using the first
 		# occurrance of ": ".  The keys in the associative array is converted
@@ -479,11 +485,31 @@ function extract_exif_comment($ref,$extension="")
 					$groupname=strtoupper(substr($s[0],1));
 					$tagname=strtoupper(trim($s[1]));
 					
+					if (!$disable_geocoding)
+						{
+						if ($tagname=='GPSLATITUDE' && preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $value, $latitude))
+							{
+							$dec_lat = $latitude['degrees'] + ($latitude['minutes']/60) + ($latitude['seconds']/(60*60));
+							if (strpos($value,'S')!==false)
+								{
+								$dec_lat = -1 * $dec_lat;
+								}	
+							}
+						elseif ($tagname=='GPSLONGITUDE' && preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $value, $longitude))
+							{
+							$dec_long = $longitude['degrees'] + ($longitude['minutes']/60) + ($longitude['seconds']/(60*60));
+							if (strpos($value,'W')!==false) 
+								{
+								$dec_long = -1 * $dec_long;
+								}
+							}
+						}
+					debug("Exiftool: extracted field before escape check '$groupname:$tagname', value is '" . $value ."'",RESOURCE_LOG_APPEND_PREVIOUS);
 					# Store both tag data under both tagname and groupname:tagname, to support both formats when mapping fields. 
 					$metadata[$tagname] = escape_check($value);
 					$metadata[$groupname . ":" . $tagname] = escape_check($value);
 
-					debug("Exiftool: extracted field '$groupname:$tagname', value is '$value'",RESOURCE_LOG_APPEND_PREVIOUS);
+					debug("Exiftool: extracted field '$groupname:$tagname', value is '".$value."'",RESOURCE_LOG_APPEND_PREVIOUS);
 					}
 				}
 			}
@@ -504,29 +530,10 @@ function extract_exif_comment($ref,$extension="")
 		if (isset($metadata['FILENAME'])) {$metadata['STRIPPEDFILENAME'] = strip_extension($metadata['FILENAME']);}
 
 		# Geolocation Metadata Support
-		if (!$disable_geocoding && isset($metadata['GPSLATITUDE']))
-			{
-			# Set vars
-            $dec_long=0;$dec_lat=0;
-
-            #Convert latititude to decimal.
-            if (preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $metadata['GPSLATITUDE'], $latitude)){
-                $dec_lat = $latitude['degrees'] + $latitude['minutes']/60 + $latitude['seconds']/(60*60);
+		if (!$disable_geocoding && $dec_long!=0 && $dec_lat!=0)
+            {
+             sql_query("update resource set geo_long='" . escape_check($dec_long) . "',geo_lat='" . escape_check($dec_lat) . "' where ref='$ref'");
             }
-            if (preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $metadata['GPSLONGITUDE'], $longitude)){
-                $dec_long = $longitude['degrees'] + $longitude['minutes']/60 + $longitude['seconds']/(60*60);           
-            }
-           
-            if (strpos($metadata['GPSLATITUDE'],'S')!==false)
-                $dec_lat = -1 * $dec_lat;
-            if (strpos($metadata['GPSLONGITUDE'],'W')!==false) 
-                $dec_long = -1 * $dec_long;
-
-            if ($dec_long!=0 && $dec_lat!=0)
-            	{
-                sql_query("update resource set geo_long='" . escape_check($dec_long) . "',geo_lat='" . escape_check($dec_lat) . "' where ref='$ref'");
-            	}
-			}
         
         # Update portrait_landscape_field (when reverting metadata this was getting lost)
         update_portrait_landscape_field($ref);
