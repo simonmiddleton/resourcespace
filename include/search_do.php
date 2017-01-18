@@ -243,7 +243,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             }
                         }
 
-                    if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo[0]['type']) && !in_array($fieldinfo[0]['type'],array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE, FIELD_TYPE_TEXT_BOX_MULTI_LINE)))
+                    if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo[0]['type']) && !in_array($fieldinfo[0]['type'],array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE, FIELD_TYPE_TEXT_BOX_MULTI_LINE)) && !in_array($fieldinfo[0]['type'], $FIXED_LIST_FIELD_TYPES))
                         {
                         // ********************************************************************************
                         //                                                                    Field keyword
