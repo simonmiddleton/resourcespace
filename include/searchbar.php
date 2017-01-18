@@ -4,6 +4,11 @@ include_once 'render_functions.php';
 
 if ($simple_search_reset_after_search)
     {
+    $stored_restypes=(isset($restypes)?$restypes:'');
+    $stored_search=(isset($search)?$search:'');
+    $stored_quicksearch=(isset($quicksearch)?$quicksearch:'');
+    $stored_starsearch=(isset($starsearch)?$starsearch:'');
+
     $restypes    = '';
     $search      = '';
     $quicksearch = '';
@@ -861,4 +866,18 @@ elseif($restypes=='')
 
 </div>
 
-<?php hook("searchbarbottom"); ?>
+<?php hook("searchbarbottom");
+
+
+if ($simple_search_reset_after_search)
+    {
+    # Restore the blanked values if resetting after search, so the search page still draws correctly with the current search.
+    $restypes=$stored_restypes;
+    $search=$stored_search;
+    $quicksearch=$stored_quicksearch;
+    $starsearch=$stored_starsearch;
+    }
+
+
+
+ ?>
