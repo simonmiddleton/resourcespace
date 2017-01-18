@@ -354,7 +354,35 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 {
                 # Show as a dropdown box
                 $name = "nodes_searched[{$field['ref']}]";
-                    ?>
+
+                ##### Reordering options #####
+                $reordered_options = array();
+                foreach($field['nodes'] as $node)
+                    {
+                    $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
+                    }
+
+                if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
+                    {
+                    if($auto_order_checkbox_case_insensitive)
+                        {
+                        natcasesort($reordered_options);
+                        }
+                    else
+                        {
+                        asort($reordered_options);
+                        }
+                    }
+
+                $new_node_order = array();
+                foreach($reordered_options as $reordered_node_id => $reordered_node_option)
+                    {
+                    $new_node_order[$reordered_node_id] = $field['nodes'][array_search($reordered_node_id, array_column($field['nodes'], 'ref', 'ref'))];
+                    }
+
+                $field['nodes'] = $new_node_order;
+                ##### End of reordering options #####
+                ?>
                 <select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearchbar){?> onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>>
                     <option value=""></option>
                 <?php
