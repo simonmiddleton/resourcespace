@@ -586,7 +586,7 @@ function save_resource_data_multi($collection)
 				
                 // Store selected/deselected values in array
 				$ui_selected_node_values=array_intersect($ui_selected_node_values,$valid_nodes);   
-				$ui_deselected_node_values = array_diff($validnodes, $ui_selected_node_values);
+				$ui_deselected_node_values = array_diff($valid_nodes, $ui_selected_node_values);
 
                 // Append option(s) mode?
                 if (getval("modeselect_" . $fields[$n]["ref"],"")=="AP")
