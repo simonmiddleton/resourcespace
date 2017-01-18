@@ -5475,6 +5475,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
 function form_value_display($row,$name,$default="")
     {
     # Returns a sanitised row from the table in a safe form for use in a form value, suitable overwritten by POSTed data if it has been supplied.
+    if (!is_array($row)) {return false;}
     if (array_key_exists($name,$row)) {$default=$row[$name];}
     return htmlspecialchars(getval($name,$default));
     }
