@@ -43,6 +43,20 @@ $FIXED_LIST_FIELD_TYPES = array(
     FIELD_TYPE_RADIO_BUTTONS
 );
 
+$TEXT_FIELD_TYPES = array(
+    FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
+    FIELD_TYPE_TEXT_BOX_MULTI_LINE,
+    FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
+    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
+    FIELD_TYPE_WARNING_MESSAGE
+);
+
+$DATE_FIELD_TYPES = array(
+    FIELD_TYPE_DATE_AND_OPTIONAL_TIME,
+    FIELD_TYPE_EXPIRY_DATE,
+    FIELD_TYPE_DATE
+);
+
 // ------------------------- LOG_CODE_ -------------------------
 
 // codes used for log entries (including resource, collection and activity logs)

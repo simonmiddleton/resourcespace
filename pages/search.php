@@ -212,23 +212,20 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
                 $value="";
 				if (strpos($search, $field.":")===false) 
 				    {
-                $key_year=$key_part."_year";
-				$value_year=getvalescaped($key_year,"");
-				if ($value_year!="") $value=$value_year;
-				else $value="nnnn";
-				
-				$key_month=$key_part."_month";
-				$value_month=getvalescaped($key_month,"");
-				if ($value_month=="") $value_month.="nn";
-				
-				$key_day=$key_part."_day";
-				$value_day=getvalescaped($key_day,"");
-				if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
-				elseif ($value_month!="nn") $value.="|" . $value_month;
-    				
-    
+					$key_year=$key_part."_year";
+					$value_year=getvalescaped($key_year,"");
+					if ($value_year!="") $value=$value_year;
+					else $value="nnnn";
+					
+					$key_month=$key_part."_month";
+					$value_month=getvalescaped($key_month,"");
+					if ($value_month=="") $value_month.="nn";
+					
+					$key_day=$key_part."_day";
+					$value_day=getvalescaped($key_day,"");
+					if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
+					elseif ($value_month!="nn") $value.="|" . $value_month;
     				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . $field . ":" . $value;
-
 				    }
 	            				
 				}
@@ -236,7 +233,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				{
 				# Dropdown field
 				# Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
-				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,11) . ":" . $value;
+				$search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,11) . ":" . $value;
 				}		
 			elseif (strpos($key,"_cat_")!==false)
 				{
@@ -245,7 +242,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				$value=str_replace(",",";",$value);
 				if (substr($value,0,1)==";") {$value=substr($value,1);}
 				
-				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,10) . ":" . $value;
+				$search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,10) . ":" . $value;
 				}
 			else
 				{
@@ -254,7 +251,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				foreach ($values as $value)
 					{
 					# Standard field
-					$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,6) . ":" . $value;
+					$search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,6) . ":" . $value;
 					}
 				}
 			}
@@ -1184,6 +1181,7 @@ if($responsive_ui)
 					<p><?php if (strpos($search,"country:")!==false) { ?><p><?php echo $lang["tryselectingallcountries"]?> <?php } 
 					elseif (strpos($search,"year:")!==false) { ?><p><?php echo $lang["tryselectinganyyear"]?> <?php } 
 					elseif (strpos($search,"month:")!==false) { ?><p><?php echo $lang["tryselectinganymonth"]?> <?php } 
+					elseif (strpos($search,":")!==false) { ?><p><?php echo $lang["field_search_no_results"]; } 
 					else 		{?><?php echo $lang["trybeinglessspecific"]?><?php } ?> <?php echo $lang["enteringfewerkeywords"]?></p>
 					<?php
 					}
