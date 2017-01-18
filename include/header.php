@@ -9,6 +9,8 @@ if(!isset($internal_share_access))
 	}
 
 $logout=getvalescaped("logout","");
+$loginas=getvalescaped("loginas","");
+
 # Do not display header / footer when dynamically loading CentralSpace contents.
 $ajax=getval("ajax","");
 
@@ -475,13 +477,13 @@ $omit_searchbar_pages=array("index","preview_all","search_advanced","preview","a
 $modified_omit_searchbar_pages=hook("modifyomitsearchbarpages");
 if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}
 
-if ($logout!=true)
+if ($logout!=true && $loginas=='')
 	{
 	$user = get_user_by_username($username);
 	$user_attr = get_user($user);
 	}
 	
-if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") && $user_attr['accepted_terms']!=0) 	
+if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") && ( isset($user_attr) && $user_attr['accepted_terms']!=0) ) 	
 	{
 	?>
     <div id="SearchBarContainer">
