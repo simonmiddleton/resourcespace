@@ -2392,20 +2392,10 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 
 	# Include footer
 	global $email_footer,$storagedir;
-	$phpversion=phpversion();
-	if ($phpversion>='5.3') {
-	if (file_exists(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php")){
-		include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php");
-		include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/extras/class.html2text.php");
-		}
-	} else {
-	// less than 5.3
-	if (file_exists(dirname(__FILE__)."/../lib/phpmailer/class.phpmailer.php")){
-		include_once(dirname(__FILE__)."/../lib/phpmailer/class.phpmailer.php");
-		include_once(dirname(__FILE__)."/../lib/phpmailer/class.html2text.php");
-		}
-	}
-		
+	
+	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php");
+	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/extras/class.html2text.php");
+	
 	global $email_from;
 	if ($from=="") {$from=$email_from;}
 	if ($reply_to=="") {$reply_to=$email_from;}
