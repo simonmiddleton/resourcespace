@@ -93,6 +93,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	
 	for ($n=0;$n<count($fields);$n++)
 		{
+        debug("save_resource_data(): Checking nodes to add/ remove for field {$fields[$n]['ref']} - {$fields[$n]['title']}");
+
         if(!(
             checkperm('F' . $fields[$n]['ref'])
             || (checkperm("F*") && !checkperm('F-' . $fields[$n]['ref']))
@@ -109,7 +111,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                 // Get currently selected nodes for this field 
                 $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']); 
-                debug("Current nodes for resource " . $ref . ": " . implode(",",$current_field_nodes));
+                debug("save_resource_data(): Current nodes for resource " . $ref . ": " . implode(",",$current_field_nodes));
                 
 				// Work out nodes submitted by user
                 $ui_selected_node_values = array();
@@ -136,13 +138,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                 $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
 
-				debug("Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
-                $nodes_to_add = $nodes_to_add + $added_nodes;
+                debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
+                $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
 				
                 $removed_nodes = array_diff($current_field_nodes,$ui_selected_node_values);    
 
-				debug("Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
-                $nodes_to_remove = $nodes_to_remove + $removed_nodes;				
+                debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));           
+                $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
 								
 				if(count($added_nodes)>0 || count($removed_nodes)>0)
 					{  
