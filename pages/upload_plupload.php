@@ -801,7 +801,7 @@ var pluploadconfig = {
                                             uploaderrormessage = 'Server side error! Please contact the administrator!';
                                             }
                                         file.status = plupload.FAILED;
-										if(uploadError.error.code=108)
+										if(uploadError.error.code==108)
 											{
 											styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadError.error.duplicates);	
 											}
@@ -836,10 +836,14 @@ var pluploadconfig = {
                         uploader.bind('BeforeUpload', function(up, files) {
                             // Add index of file in queue so we can know which file is being processed
                             uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'queue_index',uploader.total.uploaded);
-                            if(uploader.total.uploaded == uploader.files.length-1)
+							if(uploader.total.uploaded == uploader.files.length-1)
                                 {
                                 uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'lastqueued','true');
                                 }
+							else
+								{
+								uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'lastqueued','');                                	
+								}
                             <?php hook('beforeupload_end'); ?>
                         });       
                 
