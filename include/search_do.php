@@ -240,12 +240,13 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 								{
 								return;
 								}
-                            $fieldinfo_cache[$fieldname]=$fieldinfo[0];
+							$fieldinfo=$fieldinfo[0];
+                            $fieldinfo_cache[$fieldname]=$fieldinfo;
                             }
                         }
 						
 					//First try and process special keyword types
-                    if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo[0]['type']) && in_array($fieldinfo[0]['type'],$DATE_FIELD_TYPES))
+                    if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'],$DATE_FIELD_TYPES))
                         {
                         // ********************************************************************************
                         // Date field keyword
@@ -347,7 +348,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             }
 						$keywordprocessed=true;
                         }
-                    elseif ($field_short_name_specified && substr($keystring,0,8)=="numrange" && !$quoted_string && !$ignore_filters && isset($fieldinfo[0]['type']) && $fieldinfo[0]['type']==0)
+                    elseif ($field_short_name_specified && substr($keystring,0,8)=="numrange" && !$quoted_string && !$ignore_filters && isset($fieldinfo['type']) && $fieldinfo['type']==0)
                         {
                         // Text field numrange search ie mynumberfield:numrange1|1234 indicates that mynumberfield needs a numrange search for 1 to 1234. 
 						$c++;
@@ -376,10 +377,10 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 						$keywordprocessed=true;
                         }
                     // Convert legacy fixed list field search to new format for nodes (@@NodeID)
-                    else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo[0]['type']) && in_array($fieldinfo[0]['type'], $FIXED_LIST_FIELD_TYPES))
+                    else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
                         {
                         // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
-                        $field_nodes      = get_nodes($fieldinfo[0]['ref'], null, false, true);
+                        $field_nodes      = get_nodes($fieldinfo['ref'], null, false, true);
                         $field_node_index = array_search(mb_strtolower(i18n_get_translated($keystring)), array_map('mb_strtolower',array_column($field_nodes, 'name')));
      
                         // Take the ref of the node and put it in the node_bucket
@@ -394,7 +395,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                      if($field_short_name_specified) // Need this also for string matching in a named text field
                             {
                             $keyword=$keystring;
-                            $search_field_restrict=$fieldinfo[0]['ref'];
+                            $search_field_restrict=$fieldinfo['ref'];
                             }
 							
                     
@@ -656,11 +657,11 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                 {
                 $quotedfieldid="";
 				// This keyword is a quoted string, split into keywords but don't preserve quotes this time
-                 if ($field_short_name_specified && isset($fieldinfo[0]['ref']))
+                 if ($field_short_name_specified && isset($fieldinfo['ref']))
                     {
                     // We have already parsed the keyword when looking for a node, get string and then filter on this field
                     $quotedkeywords=split_keywords($keystring);
-                    $quotedfieldid= $fieldinfo[0]['ref'];
+                    $quotedfieldid= $fieldinfo['ref'];
                     } 
                 else
                     {
