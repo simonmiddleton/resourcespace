@@ -8,7 +8,9 @@ include_once dirname(__FILE__) . "/../include/action_functions.php";
 include_once dirname(__FILE__) . "/../include/request_functions.php";
 
 set_time_limit($cron_job_time_limit);
-
+ob_end_flush();
+ob_implicit_flush();
+echo "Starting cron process...<br />\n";
 
 // grab a list of files to run as part of the upgrade process
 $new_system_version_files=array();
@@ -20,7 +22,7 @@ for($i=0; $i<=999; $i++)
         {
         if(preg_match('/^' . str_pad($i,3,'0',STR_PAD_LEFT) . '_.*\.php/', $file))
             {
-            echo "Executing job: " . $file . "<br />";
+            echo "Executing job: " . $file . "<br />\n";flush();ob_flush();
             include __DIR__ .  '/cron_jobs/' . $file;
             }
         }
