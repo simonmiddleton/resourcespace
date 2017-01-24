@@ -175,7 +175,7 @@ function get_node($ref, array &$returned_node)
     $query = "SELECT * FROM node WHERE ref = '" . escape_check($ref) . "';";
     $node  = sql_query($query);
 
-    if($node=="")
+    if(count($node)==0)
         {
         return false;
         }
