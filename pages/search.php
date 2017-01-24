@@ -49,60 +49,57 @@ if(false !== strpos($search, TAG_EDITOR_DELIMITER))
 
 hook("moresearchcriteria");
 
-if($simple_search_pills_view)
-    {
-    // When searching for specific field options we convert search into nodeID search format (@@nodeID)
-    // This is done because if we also have the field displayed and we search for country:France this needs to 
-    // convert to @@74 in order for the field to have this option selected
-    $keywords = split_keywords($search, false, false, false, false, true);
-    foreach($keywords as $keyword)
-        {
-        if('' == trim($keyword))
-            {
-            continue;
-            }
+// When searching for specific field options we convert search into nodeID search format (@@nodeID)
+// This is done because if we also have the field displayed and we search for country:France this needs to 
+// convert to @@74 in order for the field to have this option selected
+$keywords = split_keywords($search, false, false, false, false, true);
+foreach($keywords as $keyword)
+	{
+	if('' == trim($keyword))
+		{
+		continue;
+		}
 
-        if(false === strpos($search, ':'))
-            {
-            continue;
-            }
-        if(substr($keyword,0,1) =="\"" && substr($keyword,-1,1) == "\"")
-            {
-            $specific_field_search=explode(":",substr($keyword,1,-1));
-            }
-        else
-            {
-            $specific_field_search = explode(':', $keyword);
-            }
+	if(false === strpos($search, ':'))
+		{
+		continue;
+		}
+	if(substr($keyword,0,1) =="\"" && substr($keyword,-1,1) == "\"")
+		{
+		$specific_field_search=explode(":",substr($keyword,1,-1));
+		}
+	else
+		{
+		$specific_field_search = explode(':', $keyword);
+		}
 
-        if(2 !== count($specific_field_search))
-            {
-            continue;
-            }
+	if(2 !== count($specific_field_search))
+		{
+		continue;
+		}
 
-        $field_shortname = trim($specific_field_search[0]);
+	$field_shortname = trim($specific_field_search[0]);
 
-        if('' == $field_shortname)
-            {
-            continue;
-            }
+	if('' == $field_shortname)
+		{
+		continue;
+		}
 
-        $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
+	$resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
 
-        if(0 == $resource_type_field)
-            {
-            continue;
-            }
+	if(0 == $resource_type_field)
+		{
+		continue;
+		}
 
-        $nodes = get_nodes($resource_type_field, null, true);
-        $node_found = get_node_by_name($nodes, $specific_field_search[1]);
+	$nodes = get_nodes($resource_type_field, null, true);
+	$node_found = get_node_by_name($nodes, $specific_field_search[1]);
 
-        if(0 < count($node_found))
-            {
-            $search = str_ireplace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
-            }
-        }
-    }
+	if(0 < count($node_found))
+		{
+		$search = str_ireplace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
+		}
+	}
 
 # create a display_fields array with information needed for detailed field highlighting
 $df=array();
@@ -284,9 +281,8 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
                     $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
                     }
                 }
-
             $search = ('' == $search ? '' : join(', ', split_keywords($search,false,false,false,false,true))) . $node_ref;
-            }
+			}
 		}
 
 	$year=getvalescaped("year","");

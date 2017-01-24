@@ -439,7 +439,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 	if ((substr($ns,0,1)==",") ||  ($index==false && strpos($ns,":")!==false)) # special 'constructed' query type, split using comma so
 	# we support keywords with spaces.
 		{	
-		if(!$index && $keepquotes && strpos($ns,"\"")!==false)
+		if(!$index && $keepquotes)
             {
             preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
             $return=trim_array($matches[0],$config_trimchars . ",");
