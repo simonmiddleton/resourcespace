@@ -836,6 +836,7 @@ if ($header=="" && !isset($themes[0]))
 				for ($m=0;$m<count($themes);$m++)
 					{
 					$s=$headers[$n]["name"] . ":" . $themes[$m]["name"];
+					if(strpos($s," ")!==false){$s="\"" . $s . "\"";}
 
 					# Indent this item?
 					$indent = str_pad('', $themes[$m]['indent'] * 5, ' ');
