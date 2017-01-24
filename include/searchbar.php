@@ -66,7 +66,6 @@ for ($n=0;$n<count($fields);$n++)
 			
 # Process all keywords, putting set fieldname/value pairs into an associative array ready for setting later.
 # Also build a quicksearch string.
-
 $quicksearch    = refine_searchstring($quicksearch);
 $keywords       = split_keywords($quicksearch,false,false,false,false,true);
 
@@ -110,10 +109,9 @@ for ($n=0;$n<count($keywords);$n++)
 
                 if(false === $field_index)
                     {
-                    $fieldsearchterm = str_replace(NODE_TOKEN_PREFIX . $searched_node,
-                        rebuild_specific_field_search_from_node($node),
-                        $keywords[$n]);
-						
+                    $fieldsearchterm = rebuild_specific_field_search_from_node($node);
+					if(strpos(" ",$fieldsearchterm)!==false)
+						{ $fieldsearchterm = "\"" . $fieldsearchterm . "\"";}	
 					$simple[]=$fieldsearchterm;
 					$initial_tags[] = $fieldsearchterm;
                     continue;
