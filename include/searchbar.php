@@ -134,10 +134,11 @@ for ($n=0;$n<count($keywords);$n++)
 			}
 		}
 	}
-
+	
 # Set the text search box to the stripped value.
-$quicksearch=join(" ",trim_array($simple));
+
 $quicksearch=str_replace(",-"," -",$quicksearch);
+$quicksearch=join($simple_search_pills_view?TAG_EDITOR_DELIMITER:" ",trim_array($simple));
 
 # Set the predefined date fields
 $found_year="";if (isset($set_fields["year"])) {$found_year=$set_fields["year"];}
