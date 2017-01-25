@@ -83,7 +83,7 @@ for ($n=0;$n<count($keywords);$n++)
 			$s=explode(":",$keywords[$n]);
 			if (isset($set_fields[$s[0]])){$set_fields[$s[0]].=" ".$s[1];}
 			else {$set_fields[$s[0]]=$s[1];}
-			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);}
+			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);$initial_tags[] =trim($keywords[$n]);}
 			}
         // Nodes search
         else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
@@ -138,7 +138,7 @@ for ($n=0;$n<count($keywords);$n++)
 # Set the text search box to the stripped value.
 
 $quicksearch=str_replace(",-"," -",$quicksearch);
-$quicksearch=join($simple_search_pills_view?TAG_EDITOR_DELIMITER:" ",trim_array($simple));
+$quicksearch=join(" ",trim_array($simple));
 
 # Set the predefined date fields
 $found_year="";if (isset($set_fields["year"])) {$found_year=$set_fields["year"];}
