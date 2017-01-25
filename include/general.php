@@ -435,7 +435,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 	$search=str_replace("\\n"," ",$search);
 
 	$ns=trim_spaces($search);
-	
+
 	if ((substr($ns,0,1)==",") ||  ($index==false && strpos($ns,":")!==false)) # special 'constructed' query type, split using comma so
 	# we support keywords with spaces.
 		{	
@@ -532,6 +532,19 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
         # Also makes the string lower case ready for indexing.
         global $config_separators;
         $separators=$config_separators;
+
+        // Replace some HTML entities with empty space
+        // Most of them should already be in $config_separators
+        // but others, like &shy; don't have an actual character that we can copy and paste
+        // to $config_separators
+        $string = htmlentities($string, null, 'UTF-8');
+        $string = str_replace('&nbsp;', ' ', $string);
+        $string = str_replace('&shy;', ' ', $string);
+        $string = str_replace('&lsquo;', ' ', $string);
+        $string = str_replace('&rsquo;', ' ', $string);
+        $string = str_replace('&ldquo;', ' ', $string);
+        $string = str_replace('&rdquo;', ' ', $string);
+        $string = str_replace('&ndash;', ' ', $string);
 
 		  if($is_html)
 		  	{

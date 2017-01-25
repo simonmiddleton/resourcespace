@@ -1470,7 +1470,8 @@ $default_home_page="home.php";
 # Configures separators to use when splitting keywords (in other words - characters to treat as white space)
 # You must reindex after altering this if you have existing data in the system (via pages/tools/reindex.php)
 # 'Space' is included by default and does not need to be specified below.
-$config_separators=array("/","_",".","; ","-","(",")","'","\"","\\", "?");
+# Note: leave non breaking space in
+$config_separators=array("/","_",".","; ","-","(",")","'","\"","\\", "?", '’', '“', ' ');
 
 # trim characters - will be removed from the beginning or end of the string, but not the middle
 # when indexing. Format for this argument is as described in PHP trim() documentation.
