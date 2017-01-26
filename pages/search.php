@@ -329,7 +329,18 @@ if(empty($per_page))
     }
 rs_setcookie('per_page', $per_page);
 
-$archive = getvalescaped('archive', 0);
+// Construct archive string and array
+$archive_choices=getvalescaped("archive","");
+$archive_standard = $archive_choices=="";
+
+if(!is_array($archive_choices)){$archive_choices=explode(",",$archive_choices);}
+foreach($archive_choices as $archive_choice)
+    {
+    if(is_numeric($archive_choice)) {$selected_archive_states[] = $archive_choice;}  
+    }
+
+$archive = implode(",",$selected_archive_states);
+$archivesearched = in_array(2,$selected_archive_states);
 
 // Disable search through all workflow states when an archive state is specifically requested
 // This prevents links like View deleted resources to show the user resources in all states
@@ -394,7 +405,7 @@ else
 	rs_setcookie('restypes', $restypes);
 
 	# This is a new search, log this activity
-	if ($archive==2) {daily_stat("Archive search",0);} else {daily_stat("Search",0);}
+	if ($archivesearched) {daily_stat("Archive search",0);} else {daily_stat("Search",0);}
 	}
 $modified_restypes=hook("modifyrestypes_aftercookieset");
 if($modified_restypes){$restypes=$modified_restypes;}
@@ -425,7 +436,13 @@ if (!array_key_exists("search",$_GET) && !array_key_exists("search",$_POST))
 		}
 	rs_setcookie('saved_order_by', $order_by);
 	$sort=getvalescaped("saved_sort","");rs_setcookie('saved_sort', $sort);
-	$archive=getvalescaped("saved_archive",0);rs_setcookie('saved_archive', $archive);
+	$archivechoices=getvalescaped("saved_archive",0);rs_setcookie('saved_archive', $archivechoices);
+    if(!is_array($archivechoices)){$archivechoices=explode(",",$archivechoices);}
+    foreach($archivechoices as $archivechoice)
+        {
+        if(is_numeric($archivechoice)) {$selected_archive_states[] = $archivechoice;}  
+        }
+    $archive=implode(",",$selected_archive_states);
 	}
 	
 hook("searchparameterhandler");	
@@ -482,7 +499,7 @@ else
 	$result=array(); # Do not return resources (e.g. for collection searching only)
 	}
 
-if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive==0){$collections=do_collections_search($search,$restypes,0,$order_by,$sort);} // don't do this for external shares
+if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive_standard){$collections=do_collections_search($search,$restypes,0,$order_by,$sort);} // don't do this for external shares
 
 # Allow results to be processed by a plugin
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
@@ -1122,7 +1139,7 @@ if($responsive_ui)
 	hook("beforesearchresults");
 	
 	# Archive link
-	if (($archive==0) && (strpos($search,"!")===false) && $archive_search) 
+	if ((!$archivesearched) && (strpos($search,"!")===false) && $archive_search) 
 		{ 
 		$arcresults=do_search($search,$restypes,$order_by,2,0);
 		if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
@@ -1222,7 +1239,7 @@ if($responsive_ui)
 		<?php
 		}
 		# Include public collections and themes in the main search, if configured.		
-		if ($offset==0 && isset($collections)&& strpos($search,"!")===false && $archive==0 && !hook('replacesearchpublic','',array($search,$collections)))
+		if ($offset==0 && isset($collections)&& strpos($search,"!")===false && $archive_standard && !hook('replacesearchpublic','',array($search,$collections)))
 			{
 			include "../include/search_public.php";
 			}
