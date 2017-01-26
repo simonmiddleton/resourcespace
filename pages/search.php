@@ -786,7 +786,7 @@ if (isset($result_title_height))
 
 #if (is_array($result)||(isset($collections)&&(count($collections)>0)))
 
-if(!$search_titles && isset($theme_link) && $k=="")
+if($enable_theme_breadcrumbs && !$search_titles && isset($theme_link) && $k=="")
 	{
 	// Show the themes breadcrumbs if they exist, but not if we are using the search_titles
 	echo "<div class='SearchBreadcrumbs'>" . $theme_link . "&nbsp;" . LINK_CARET . "<span id=\"coltitle" . $collection . "\"><a  href=\"" . generateURL($baseurl_short."pages/search.php",array("search"=>"!collection" . $collection)) . "\" onClick=\"return CentralSpaceLoad(this,true);\">" . i18n_get_collection_name($collectiondata) . "</a></span></div>" ;
