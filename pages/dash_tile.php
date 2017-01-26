@@ -367,8 +367,9 @@ if($create)
 			$returned_title = array();
 			if (count(resolve_nodes_from_string($title_node))!=0)
 				{
-				$tmp_title = get_node(resolve_nodes_from_string($title_node)[0],$returned_title);
-				$title = $returned_title["name"];
+                $resolved_nodes = resolve_nodes_from_string($title_node);
+                $tmp_title      = get_node($resolved_nodes[0], $returned_title);
+                $title          = $returned_title['name'];
 				}
 		}
 		

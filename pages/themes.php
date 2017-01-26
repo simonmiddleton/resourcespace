@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include_once "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php";
 include_once "../include/collections_functions.php";
@@ -836,6 +836,7 @@ if ($header=="" && !isset($themes[0]))
 				for ($m=0;$m<count($themes);$m++)
 					{
 					$s=$headers[$n]["name"] . ":" . $themes[$m]["name"];
+					if(strpos($s," ")!==false){$s="\"" . $s . "\"";}
 
 					# Indent this item?
 					$indent = str_pad('', $themes[$m]['indent'] * 5, ' ');
@@ -905,7 +906,6 @@ if($simpleview)
 			</div><!-- End of FeaturedSimpleLinks -->
 			<div class="BasicsBox FeaturedSimpleLinks">
 			<h1><?php echo $lang["findpubliccollection"]?></h1>
-			<div class="clearerleft" />
 			<div id="FeaturedSimpleTile_public" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
 						<a href="<?php echo $baseurl_short?>pages/collection_public.php" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_public">
 							<div id="FeaturedSimpleTileContents_public"  class="FeaturedSimpleTileContents">

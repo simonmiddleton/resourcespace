@@ -1,8 +1,8 @@
 <?php
-include "../include/db.php";
+include_once "../include/db.php";
 include_once "../include/general.php";
-include "../include/resource_functions.php"; //for checking scr access
-include "../include/search_functions.php";
+include_once "../include/resource_functions.php"; //for checking scr access
+include_once "../include/search_functions.php";
 include_once "../include/collections_functions.php";
 include_once '../include/render_functions.php';
 
@@ -49,60 +49,57 @@ if(false !== strpos($search, TAG_EDITOR_DELIMITER))
 
 hook("moresearchcriteria");
 
-if($simple_search_pills_view)
-    {
-    // When searching for specific field options we convert search into nodeID search format (@@nodeID)
-    // This is done because if we also have the field displayed and we search for country:France this needs to 
-    // convert to @@74 in order for the field to have this option selected
-    $keywords = split_keywords($search, false, false, false, false, true);
-    foreach($keywords as $keyword)
-        {
-        if('' == trim($keyword))
-            {
-            continue;
-            }
+// When searching for specific field options we convert search into nodeID search format (@@nodeID)
+// This is done because if we also have the field displayed and we search for country:France this needs to 
+// convert to @@74 in order for the field to have this option selected
+$keywords = split_keywords($search, false, false, false, false, true);
+foreach($keywords as $keyword)
+	{
+	if('' == trim($keyword))
+		{
+		continue;
+		}
 
-        if(false === strpos($search, ':'))
-            {
-            continue;
-            }
-        if(substr($keyword,0,1) =="\"" && substr($keyword,-1,1) == "\"")
-            {
-            $specific_field_search=explode(":",substr($keyword,1,-1));
-            }
-        else
-            {
-            $specific_field_search = explode(':', $keyword);
-            }
+	if(false === strpos($search, ':'))
+		{
+		continue;
+		}
+	if(substr($keyword,0,1) =="\"" && substr($keyword,-1,1) == "\"")
+		{
+		$specific_field_search=explode(":",substr($keyword,1,-1));
+		}
+	else
+		{
+		$specific_field_search = explode(':', $keyword);
+		}
 
-        if(2 !== count($specific_field_search))
-            {
-            continue;
-            }
+	if(2 !== count($specific_field_search))
+		{
+		continue;
+		}
 
-        $field_shortname = trim($specific_field_search[0]);
+	$field_shortname = trim($specific_field_search[0]);
 
-        if('' == $field_shortname)
-            {
-            continue;
-            }
+	if('' == $field_shortname)
+		{
+		continue;
+		}
 
-        $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
+	$resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
 
-        if(0 == $resource_type_field)
-            {
-            continue;
-            }
+	if(0 == $resource_type_field)
+		{
+		continue;
+		}
 
-        $nodes = get_nodes($resource_type_field, null, true);
-        $node_found = get_node_by_name($nodes, $specific_field_search[1]);
+	$nodes = get_nodes($resource_type_field, null, true);
+	$node_found = get_node_by_name($nodes, $specific_field_search[1]);
 
-        if(0 < count($node_found))
-            {
-            $search = str_replace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
-            }
-        }
-    }
+	if(0 < count($node_found))
+		{
+		$search = str_ireplace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
+		}
+	}
 
 # create a display_fields array with information needed for detailed field highlighting
 $df=array();
@@ -212,23 +209,20 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
                 $value="";
 				if (strpos($search, $field.":")===false) 
 				    {
-                $key_year=$key_part."_year";
-				$value_year=getvalescaped($key_year,"");
-				if ($value_year!="") $value=$value_year;
-				else $value="nnnn";
-				
-				$key_month=$key_part."_month";
-				$value_month=getvalescaped($key_month,"");
-				if ($value_month=="") $value_month.="nn";
-				
-				$key_day=$key_part."_day";
-				$value_day=getvalescaped($key_day,"");
-				if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
-				elseif ($value_month!="nn") $value.="|" . $value_month;
-    				
-    
+					$key_year=$key_part."_year";
+					$value_year=getvalescaped($key_year,"");
+					if ($value_year!="") $value=$value_year;
+					else $value="nnnn";
+					
+					$key_month=$key_part."_month";
+					$value_month=getvalescaped($key_month,"");
+					if ($value_month=="") $value_month.="nn";
+					
+					$key_day=$key_part."_day";
+					$value_day=getvalescaped($key_day,"");
+					if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
+					elseif ($value_month!="nn") $value.="|" . $value_month;
     				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . $field . ":" . $value;
-
 				    }
 	            				
 				}
@@ -236,7 +230,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				{
 				# Dropdown field
 				# Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
-				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,11) . ":" . $value;
+				$search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,11) . ":" . $value;
 				}		
 			elseif (strpos($key,"_cat_")!==false)
 				{
@@ -245,7 +239,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				$value=str_replace(",",";",$value);
 				if (substr($value,0,1)==";") {$value=substr($value,1);}
 				
-				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,10) . ":" . $value;
+				$search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,10) . ":" . $value;
 				}
 			else
 				{
@@ -254,7 +248,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				foreach ($values as $value)
 					{
 					# Standard field
-					$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,6) . ":" . $value;
+					$search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,6) . ":" . $value;
 					}
 				}
 			}
@@ -287,9 +281,8 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
                     $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
                     }
                 }
-
             $search = ('' == $search ? '' : join(', ', split_keywords($search,false,false,false,false,true))) . $node_ref;
-            }
+			}
 		}
 
 	$year=getvalescaped("year","");
@@ -1107,7 +1100,8 @@ if($responsive_ui)
 	<?php hook("stickysearchresults"); ?> <!--the div TopInpageNavRight was added in after this hook so it may need to be adjusted -->
 	<div class="TopInpageNavRight">
 	<?php
-	    pager();
+		$url=generateURL($baseurl . "/pages/search.php",$searchparams); 
+		pager();
 		$draw_pager=true;
 	?>
 	</div>
@@ -1183,6 +1177,7 @@ if($responsive_ui)
 					<p><?php if (strpos($search,"country:")!==false) { ?><p><?php echo $lang["tryselectingallcountries"]?> <?php } 
 					elseif (strpos($search,"year:")!==false) { ?><p><?php echo $lang["tryselectinganyyear"]?> <?php } 
 					elseif (strpos($search,"month:")!==false) { ?><p><?php echo $lang["tryselectinganymonth"]?> <?php } 
+					elseif (strpos($search,":")!==false) { ?><p><?php echo $lang["field_search_no_results"]; } 
 					else 		{?><?php echo $lang["trybeinglessspecific"]?><?php } ?> <?php echo $lang["enteringfewerkeywords"]?></p>
 					<?php
 					}
@@ -1365,7 +1360,7 @@ if ($display=="strip")
         include 'search_views/strip_footer.php';
         }
     
-$url=generateURL($baseurl_short."pages/search.php",$searchparams); 
+$url=generateURL($baseurl . "/pages/search.php",$searchparams); 
 
 ?>
 </div> <!-- end of CentralSpaceResources -->

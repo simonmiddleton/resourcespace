@@ -11,5 +11,5 @@ while ($c>0)
 	{
 	sql_query("delete from resource_keyword where resource_type_field in (select ref from resource_type_field where type in ('" . join("','",$FIXED_LIST_FIELD_TYPES) . "')) limit 1000");
 	$c=sql_value($count_query,0);
-	set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$c . " rows remaining to delete");
+	echo ($c . " rows remaining to delete");
 	}

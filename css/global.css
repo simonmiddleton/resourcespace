@@ -1269,5 +1269,8 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 .keywordselected {display:inline;}
 .keywordselected a {padding-left:8px;}
 
+#photoholder {	
+	margin: 1px;
+}
 
 

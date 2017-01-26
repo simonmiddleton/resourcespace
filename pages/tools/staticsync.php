@@ -99,7 +99,7 @@ if (isset($staticsync_mapped_category_tree))
     {
     $treefield=get_resource_type_field($staticsync_mapped_category_tree);
     migrate_resource_type_field_check($treefield);
-    $tree = get_nodes($staticsync_mapped_category_tree);
+    $tree = get_nodes($staticsync_mapped_category_tree,'',TRUE);
     }
 
 function touch_category_tree_level($path_parts)
@@ -110,23 +110,24 @@ function touch_category_tree_level($path_parts)
     $parent_search = '';
     $nodename      = '';
 	$order_by =10;
-    
+    $treenodes = array();
     for ($n=0;$n<count($path_parts);$n++)
         {
-        # The node name should contain all the subsequent parts of the path
-        if ($n > 0) { $nodename .= "~"; }
-        $nodename .= $path_parts[$n];
+        $nodename = $path_parts[$n];
         
+        echo " - Looking for folder '" . $nodename . "' @ level " . $n  . " in linked metadata field... ";
         # Look for this node in the tree.       
         $found = false;
         foreach($tree as $treenode)
             {
 			if($treenode["parent"]==$parent_search)
                 {
-				if ($treenode["name"]==$nodename)
+        		if ($treenode["name"]==$nodename)
 					{
 					# A match!
+					echo "FOUND" . PHP_EOL;
 					$found = true;
+                    $treenodes[]=$treenode["ref"];
 					$parent_search = $treenode["ref"]; # Search for this as the parent node on the pass for the next level.
 					}
 				else
@@ -138,15 +139,16 @@ function touch_category_tree_level($path_parts)
             }
         if (!$found)
             {
-            echo "Not found: " . $nodename . " @ level " . $n  . PHP_EOL;
+            echo "NOT FOUND. Updating tree field" .PHP_EOL;
             # Add this node
             $newnode=set_node(NULL, $staticsync_mapped_category_tree, $nodename, $parent_search, $order_by);
        	    $tree[]=array("ref"=>$newnode,"parent"=>$parent_search,"name"=>$nodename,"order_by"=>$order_by);
             $parent_search = $newnode; # Search for this as the parent node on the pass for the next level.
+            $treenodes[]=$newnode;
             }
         }
-    // Return the last found node ref, we will use this in phase 2 of nodes work to save node ref instead of string
-    return $parent_search;
+    // Return the matching path nodes
+    return $treenodes;
     }
 
 function ProcessFolder($folder)
@@ -159,6 +161,7 @@ function ProcessFolder($folder)
            $resource_deletion_state, $alternativefiles,$staticsync_revive_state;
     
     $collection = 0;
+    $treeprocessed=false;
     
     echo "Processing Folder: " . $folder . PHP_EOL;
     
@@ -194,11 +197,12 @@ function ProcessFolder($folder)
             }
        
         
-        if ($staticsync_mapped_category_tree)
+        if ($staticsync_mapped_category_tree && !$treeprocessed)
             {
             $path_parts = explode("/", $shortpath);
             array_pop($path_parts);
-            touch_category_tree_level($path_parts);
+            $treenodes=touch_category_tree_level($path_parts);
+            $treeprocessed=true;
             }   
 
         # -----FOLDERS-------------
@@ -302,24 +306,10 @@ function ProcessFolder($folder)
                 if ($r !== false)
                     {
                     # Add to mapped category tree (if configured)
-                    if (isset($staticsync_mapped_category_tree))
+                    if (isset($staticsync_mapped_category_tree) && isset($treenodes))
                         {
-                        $basepath = '';
-                        # Save tree position to category tree field
-
-                        # For each node level, expand it back to the root so the full path is stored.
-                        for ($n=0;$n<count($path_parts);$n++)
-                            {
-                            if ($basepath != '') 
-                                { 
-                                $basepath .= "~";
-                                }
-                            $basepath .= $path_parts[$n];
-                            $path_parts[$n] = $basepath;
-                            }
-
-                        # Save tree position to category tree field                        
-                        update_field($r, $staticsync_mapped_category_tree, "," . join(",", $path_parts));
+                        // Add path nodes to resource
+                        add_resource_nodes($r,$treenodes);
                         }           
 
                     # default access level. This may be overridden by metadata mapping.

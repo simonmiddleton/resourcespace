@@ -8,6 +8,8 @@ if(!isset($internal_share_access))
 	$internal_share_access = ($k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
 	}
 
+$logout=getvalescaped("logout","");
+$loginas=getvalescaped("loginas","");
 
 # Do not display header / footer when dynamically loading CentralSpace contents.
 $ajax=getval("ajax","");
@@ -471,10 +473,11 @@ include (dirname(__FILE__) . "/header_links.php");
 
 <?php
 # Include simple search sidebar?
-$omit_searchbar_pages=array("index","preview_all","search_advanced","preview","admin_header","login");
+$omit_searchbar_pages=array("terms","index","preview_all","search_advanced","preview","admin_header","login");
 $modified_omit_searchbar_pages=hook("modifyomitsearchbarpages");
 if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}
-if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer")) 	
+	
+if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") ) 	
 	{
 	?>
     <div id="SearchBarContainer">

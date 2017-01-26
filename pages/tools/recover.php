@@ -29,6 +29,12 @@ Caveats:
 
 */
 
+$sapi_type = php_sapi_name();
+if (substr($sapi_type, 0, 3) != 'cli')
+    {
+    exit("Command line execution only.");
+    }
+
 //----------------------CONFIG -------------------------//
 
 // old filestore to recover files from (include trailing slash)

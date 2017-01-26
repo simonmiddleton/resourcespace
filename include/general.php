@@ -435,11 +435,11 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 	$search=str_replace("\\n"," ",$search);
 
 	$ns=trim_spaces($search);
-	
+
 	if ((substr($ns,0,1)==",") ||  ($index==false && strpos($ns,":")!==false)) # special 'constructed' query type, split using comma so
 	# we support keywords with spaces.
 		{	
-		if($keepquotes)
+		if(!$index && $keepquotes)
             {
             preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
             $return=trim_array($matches[0],$config_trimchars . ",");
@@ -485,7 +485,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 	else
 		{
 		# split using spaces and similar chars (according to configured whitespace characters)
-        if($keepquotes)
+		if(!$index && $keepquotes && strpos($ns,"\"")!==false)
             {
             preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
             
@@ -532,6 +532,19 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
         # Also makes the string lower case ready for indexing.
         global $config_separators;
         $separators=$config_separators;
+
+        // Replace some HTML entities with empty space
+        // Most of them should already be in $config_separators
+        // but others, like &shy; don't have an actual character that we can copy and paste
+        // to $config_separators
+        $string = htmlentities($string, null, 'UTF-8');
+        $string = str_replace('&nbsp;', ' ', $string);
+        $string = str_replace('&shy;', ' ', $string);
+        $string = str_replace('&lsquo;', ' ', $string);
+        $string = str_replace('&rsquo;', ' ', $string);
+        $string = str_replace('&ldquo;', ' ', $string);
+        $string = str_replace('&rdquo;', ' ', $string);
+        $string = str_replace('&ndash;', ' ', $string);
 
 		  if($is_html)
 		  	{
@@ -2392,20 +2405,10 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 
 	# Include footer
 	global $email_footer,$storagedir;
-	$phpversion=phpversion();
-	if ($phpversion>='5.3') {
-	if (file_exists(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php")){
-		include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php");
-		include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/extras/class.html2text.php");
-		}
-	} else {
-	// less than 5.3
-	if (file_exists(dirname(__FILE__)."/../lib/phpmailer/class.phpmailer.php")){
-		include_once(dirname(__FILE__)."/../lib/phpmailer/class.phpmailer.php");
-		include_once(dirname(__FILE__)."/../lib/phpmailer/class.html2text.php");
-		}
-	}
-		
+	
+	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php");
+	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/extras/class.html2text.php");
+	
 	global $email_from;
 	if ($from=="") {$from=$email_from;}
 	if ($reply_to=="") {$reply_to=$email_from;}
@@ -5307,12 +5310,22 @@ function emptyiszero($value)
 
 // Add array_column if <PHP 5.5
 if(!function_exists("array_column"))
-{
-   function array_column($array,$column_name)
     {
-        return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
+    function array_column($array,$column_name,$index_key=null)
+        {
+        if ($index_key == null)
+                {
+                return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
+                }
+                
+        $return=array();
+        foreach($array as $element)
+            {
+            $return[$element[$index_key]] = $element[$column_name];                
+            }
+        return $return;
+        }
     }
-}
 
 
 /**
@@ -5465,6 +5478,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
 function form_value_display($row,$name,$default="")
     {
     # Returns a sanitised row from the table in a safe form for use in a form value, suitable overwritten by POSTed data if it has been supplied.
+    if (!is_array($row)) {return false;}
     if (array_key_exists($name,$row)) {$default=$row[$name];}
     return htmlspecialchars(getval($name,$default));
     }

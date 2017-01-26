@@ -4,6 +4,11 @@ include_once 'render_functions.php';
 
 if ($simple_search_reset_after_search)
     {
+    $stored_restypes=(isset($restypes)?$restypes:'');
+    $stored_search=(isset($search)?$search:'');
+    $stored_quicksearch=(isset($quicksearch)?$quicksearch:'');
+    $stored_starsearch=(isset($starsearch)?$starsearch:'');
+
     $restypes    = '';
     $search      = '';
     $quicksearch = '';
@@ -61,7 +66,6 @@ for ($n=0;$n<count($fields);$n++)
 			
 # Process all keywords, putting set fieldname/value pairs into an associative array ready for setting later.
 # Also build a quicksearch string.
-
 $quicksearch    = refine_searchstring($quicksearch);
 $keywords       = split_keywords($quicksearch,false,false,false,false,true);
 
@@ -79,7 +83,7 @@ for ($n=0;$n<count($keywords);$n++)
 			$s=explode(":",$keywords[$n]);
 			if (isset($set_fields[$s[0]])){$set_fields[$s[0]].=" ".$s[1];}
 			else {$set_fields[$s[0]]=$s[1];}
-			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);}
+			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);$initial_tags[] =trim($keywords[$n]);}
 			}
         // Nodes search
         else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
@@ -105,10 +109,9 @@ for ($n=0;$n<count($keywords);$n++)
 
                 if(false === $field_index)
                     {
-                    $fieldsearchterm = str_replace(NODE_TOKEN_PREFIX . $searched_node,
-                        rebuild_specific_field_search_from_node($node),
-                        $keywords[$n]);
-						
+                    $fieldsearchterm = rebuild_specific_field_search_from_node($node);
+					if(strpos(" ",$fieldsearchterm)!==false)
+						{ $fieldsearchterm = "\"" . $fieldsearchterm . "\"";}	
 					$simple[]=$fieldsearchterm;
 					$initial_tags[] = $fieldsearchterm;
                     continue;
@@ -131,10 +134,11 @@ for ($n=0;$n<count($keywords);$n++)
 			}
 		}
 	}
-
+	
 # Set the text search box to the stripped value.
-$quicksearch=join(" ",trim_array($simple));
+
 $quicksearch=str_replace(",-"," -",$quicksearch);
+$quicksearch=join(" ",trim_array($simple));
 
 # Set the predefined date fields
 $found_year="";if (isset($set_fields["year"])) {$found_year=$set_fields["year"];}
@@ -428,7 +432,7 @@ elseif($restypes=='')
             $searchbuttons .= " document.getElementById('searchresourceid').value='';";
             }
 
-        $searchbuttons .= "ResetTicks();\"/>";
+        $searchbuttons .= "ResetTicks();HideInapplicableSimpleSearchFields();\"/>";
         }
     else
         {
@@ -571,15 +575,15 @@ elseif($restypes=='')
 					<?php
 					switch($fields[$n]['type'])
 						{
-						case '7':
+						case FIELD_TYPE_CATEGORY_TREE:
 							?>
 							document.getElementById('<?php echo htmlspecialchars($fields[$n]["name"]) ?>_category').value='';
 							document.getElementById('<?php echo htmlspecialchars($fields[$n]["name"]) ?>_statusbox').innerHTML='<?php echo $lang["nocategoriesselected"]?>';
 							<?php
 							break;
-						case '4':
-						case '6':
-						case '10':
+						case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
+						case FIELD_TYPE_EXPIRY_DATE:
+						case FIELD_TYPE_DATE:
 							?>
 							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_year').value='';
 							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_month').value='';
@@ -591,6 +595,13 @@ elseif($restypes=='')
 								<?php
 								}
 							break;
+                        case FIELD_TYPE_CHECK_BOX_LIST: 
+                        case FIELD_TYPE_DROP_DOWN_LIST:
+                        case FIELD_TYPE_RADIO_BUTTONS:
+                            ?>
+                            jQuery('select[name="nodes_searched[<?php echo $fields[$n]["ref"]; ?>]"]').val('');
+                            <?php                            
+                            break;  
 						default:
 							if ($fields[$n]['field_constraint']==1){?>
 							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';	
@@ -608,9 +619,9 @@ elseif($restypes=='')
 					<?php
 					switch($fields[$n]['type'])
 						{
-						case '4':
-						case '6':
-						case '10':
+						case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
+						case FIELD_TYPE_EXPIRY_DATE:
+						case FIELD_TYPE_DATE:
 							?>
 							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_year').value='';
 							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["ref"]) ?>_month').value='';
@@ -622,11 +633,18 @@ elseif($restypes=='')
 								<?php
 								}
 							break;
-						case '7':
+						case FIELD_TYPE_CATEGORY_TREE:
 							?>
 							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';
 							<?php
 							break;
+                        case FIELD_TYPE_CHECK_BOX_LIST: 
+                        case FIELD_TYPE_DROP_DOWN_LIST:
+                        case FIELD_TYPE_RADIO_BUTTONS:
+                            ?>
+                            jQuery('select[name="nodes_searched[<?php echo $fields[$n]["ref"]; ?>]"]').val('');
+                            <?php                            
+                            break;  
 						default:
 							if ($fields[$n]['field_constraint']==1){?>
 							document.getElementById('field_<?php echo htmlspecialchars($fields[$n]["name"]) ?>').value='';	
@@ -847,4 +865,18 @@ elseif($restypes=='')
 
 </div>
 
-<?php hook("searchbarbottom"); ?>
+<?php hook("searchbarbottom");
+
+
+if ($simple_search_reset_after_search)
+    {
+    # Restore the blanked values if resetting after search, so the search page still draws correctly with the current search.
+    $restypes=$stored_restypes;
+    $search=$stored_search;
+    $quicksearch=$stored_quicksearch;
+    $starsearch=$stored_starsearch;
+    }
+
+
+
+ ?>

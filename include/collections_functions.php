@@ -936,21 +936,7 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
         {
         return $return;
         }
-
-    // Return a list of keywords that are in use for this field
-    $keywords_in_use_sql = 'SELECT k.keyword AS `value` FROM keyword k JOIN resource_keyword rk ON k.ref = rk.keyword';
-    if($smart_themes_omit_archived)
-        {
-        $keywords_in_use_sql .= ' JOIN resource r ON rk.resource = r.ref';
-        }
-    $keywords_in_use_sql .= " WHERE resource_type_field = '{$field}' AND resource > 0";
-    if($smart_themes_omit_archived)
-        {
-        $keywords_in_use_sql .= " AND archive = 0";
-        }
-    $keywords_in_use_sql .= ' GROUP BY MD5(k.keyword)';
-    $keywords_in_use = sql_array($keywords_in_use_sql);
-
+  
     /*
     Tidy list so it matches the storage format used for keywords
     The translated version is fetched as each option will be indexed in the local language version of each option
@@ -967,11 +953,6 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
         //$cleaned_option_base = str_replace('-', ' ', $options_base[$n]);
         $cleaned_option_base = preg_replace('/\W/',' ',$options_base[$n]);      // replace any non-word characters with a space
         $cleaned_option_base = trim($cleaned_option_base);      // trim (just in case prepended / appended space characters)
-
-        if(!in_array($cleaned_option_base, $keywords_in_use))
-            {
-            continue;
-            }
 
         $tree_node_depth    = 0;
         $parent_node_to_use = 0;

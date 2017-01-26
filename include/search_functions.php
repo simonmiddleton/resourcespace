@@ -180,16 +180,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         {
         switch ($fields[$n]["type"])
             {
-            case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes            
-			$value=getvalescaped('field_'.$fields[$n]["ref"],'');
-             if ($value!="")
-                {
-                if ($search!="") {$search.=", ";}
-                $search.= (strpos($value,"\"")===false)?($fields[$n]["name"] . ":" . $value):("\"" . $fields[$n]["name"] . ":" .substr($value,1,-1) . "\"");
-               // Move any quotes around whole field:value element so that they are kept together
-                }
-            break;
-                        
             case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
             case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
             case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
@@ -480,7 +470,22 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
                     }
             break;
-            }
+            
+			case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes  
+			default: 
+				$value=getvalescaped('field_'.$fields[$n]["ref"],'');
+				if ($value!="")
+					{
+					$valueparts=split_keywords($value, false, false, false, false, true);
+					foreach($valueparts as $valuepart)
+						{
+						if ($search!="") {$search.=", ";}
+						// Move any quotes around whole field:value element so that they are kept together
+						$search.= (strpos($valuepart,"\"")===false)?($fields[$n]["name"] . ":" . $valuepart):("\"" . $fields[$n]["name"] . ":" .substr($valuepart,1,-1) . "\"");
+						}
+					}
+            break;
+			}
         }
 
         ##### NODES #####
@@ -1098,7 +1103,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection_filter.=")";
         
         # Formulate SQL
-        $sql="select distinct c.* from collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref and cr.collection=c.ref where $sql_filter and $collection_filter group by c.ref order by $order_by ";#echo $search . " " . $sql;
+        $sql="select distinct c.*, r.hit_count score from collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref and cr.collection=c.ref where $sql_filter and $collection_filter group by c.ref order by $order_by ";#echo $search . " " . $sql;
         return $returnsql?$sql:sql_query($sql);
         }
     

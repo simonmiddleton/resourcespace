@@ -1,8 +1,8 @@
 <?php
-include "../include/db.php";
+include_once "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php"; if (!checkperm("s")) {exit ("Permission denied.");}
-include "../include/search_functions.php";
+include_once "../include/search_functions.php";
 include_once "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
 include_once dirname(__FILE__) . '/../include/render_functions.php';
@@ -154,7 +154,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 
 # Reconstruct a values array based on the search keyword, so we can pre-populate the form from the current search
 $search=@$_COOKIE["search"];
-$keywords=explode(",",$search);
+$keywords=split_keywords($search,false,false,false,false,true);
 $allwords="";$found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";
 $searched_nodes = array();
 

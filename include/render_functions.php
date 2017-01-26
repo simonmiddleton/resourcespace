@@ -276,10 +276,10 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
         case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
-        case ($forsearchbar && $field["type"]==9 && !$simple_search_show_dynamic_as_dropdown):
+        case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$simple_search_show_dynamic_as_dropdown):
         if ($field['field_constraint']==0){ 
 			
-			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}" <?php } ?> ><?php 
+			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);}"<?php } ?>><?php 
 			# Add to the clear function so clicking 'clear' clears this box.
 			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : $field["name"]) . "').value='';";
 		}
@@ -354,7 +354,35 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 {
                 # Show as a dropdown box
                 $name = "nodes_searched[{$field['ref']}]";
-                    ?>
+
+                ##### Reordering options #####
+                $reordered_options = array();
+                foreach($field['nodes'] as $node)
+                    {
+                    $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
+                    }
+
+                if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
+                    {
+                    if($auto_order_checkbox_case_insensitive)
+                        {
+                        natcasesort($reordered_options);
+                        }
+                    else
+                        {
+                        asort($reordered_options);
+                        }
+                    }
+
+                $new_node_order = array();
+                foreach($reordered_options as $reordered_node_id => $reordered_node_option)
+                    {
+                    $new_node_order[$reordered_node_id] = $field['nodes'][array_search($reordered_node_id, array_column($field['nodes'], 'ref', 'ref'))];
+                    }
+
+                $field['nodes'] = $new_node_order;
+                ##### End of reordering options #####
+                ?>
                 <select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearchbar){?> onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>>
                     <option value=""></option>
                 <?php

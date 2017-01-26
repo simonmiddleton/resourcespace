@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 3);
+define('SYSTEM_UPGRADE_LEVEL', 2);
 
 // ------------------------- FIELD TYPES -------------------------
 
@@ -41,6 +41,20 @@ $FIXED_LIST_FIELD_TYPES = array(
     FIELD_TYPE_CATEGORY_TREE,
     FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,
     FIELD_TYPE_RADIO_BUTTONS
+);
+
+$TEXT_FIELD_TYPES = array(
+    FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
+    FIELD_TYPE_TEXT_BOX_MULTI_LINE,
+    FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
+    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
+    FIELD_TYPE_WARNING_MESSAGE
+);
+
+$DATE_FIELD_TYPES = array(
+    FIELD_TYPE_DATE_AND_OPTIONAL_TIME,
+    FIELD_TYPE_EXPIRY_DATE,
+    FIELD_TYPE_DATE
 );
 
 // ------------------------- LOG_CODE_ -------------------------

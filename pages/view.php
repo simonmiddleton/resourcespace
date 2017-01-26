@@ -8,7 +8,7 @@
 include_once "../include/db.php";
 include_once "../include/general.php";
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include_once "../include/authenticate.php";}
+$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include "../include/authenticate.php";}
 include_once "../include/search_functions.php";
 include_once "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
@@ -387,17 +387,20 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			if ($value!=""){
 				# Draw this field normally.				
 				
-					
+				// Strip tags moved before highlighting as was being corrupted
+				$value=strip_tags_and_attributes($value);
+				
 				# Highlight keywords
 				$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
 				
 				$value_mod_after_highlight=hook('value_mod_after_highlight', '', array($field,$value));
-				if($value_mod_after_highlight){
+				if($value_mod_after_highlight)
+					{
 					$value=$value_mod_after_highlight;
-				}
+					}
 				
 				?><div <?php if (!$valueonly){echo "class=\"itemNarrow\""; } elseif (isset($fixedwidth)) {echo "style=\"width:" . $fixedwidth . "px\""; } ?>>
-				<h3><?php echo $title?></h3><p><?php echo strip_tags_and_attributes($value); ?></p></div><?php
+				<h3><?php echo $title?></h3><p><?php echo $value; ?></p></div><?php
 				}
 			}
 		}
