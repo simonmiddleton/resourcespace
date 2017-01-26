@@ -799,7 +799,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	{
 	global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
 	$heightmax,$widthmin,$widthmax,$filesizemin,$filesizemax,$fileextension,$haspreviewimage,$geo_search_restrict,$pending_review_visible_to_all,
-	$search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share;
+	$search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
 	
 	# Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
 	if(!is_array($archive)){$archive=explode(",",$archive);}
@@ -902,10 +902,10 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			}
 		elseif ($search_all_workflow_states)
 			{hook("search_all_workflow_states_filter");}   
-		elseif (count($archive)==1 and $archive[0]==0 && $pending_review_visible_to_all)
+		elseif ($archive_standard && $pending_review_visible_to_all)
             {
-            # If resources pending review are visible to all, when listing only active resources include
-            # pending review (-1) resources too.
+            # If resources pending review are visible to all, when performing a default search with no archive specified 
+            # that normally returns only active resources, include pending review (-1) resources too.
             if ($sql_filter!="") {$sql_filter.=" and ";}
             $sql_filter.="archive in('0','-1')";
             } 

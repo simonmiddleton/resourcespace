@@ -332,7 +332,7 @@ rs_setcookie('per_page', $per_page);
 // Construct archive string and array
 $archive_choices=getvalescaped("archive","");
 $archive_standard = $archive_choices=="";
-
+$selected_archive_states = array();
 if(!is_array($archive_choices)){$archive_choices=explode(",",$archive_choices);}
 foreach($archive_choices as $archive_choice)
     {
