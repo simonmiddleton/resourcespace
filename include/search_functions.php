@@ -912,7 +912,16 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 		else
             {
             # Append normal filtering - extended as advanced search now allows searching by archive state
-            if ($sql_filter!="") {$sql_filter.=" and ";}
+            if($sql_filter!="")
+                {
+                $sql_filter.=" and ";
+                }
+
+            if('' == implode(',', $archive))
+                {
+                $archive = array(0);
+                }
+
             $sql_filter.="archive in (" . implode(",",$archive) . ")";
             }
         if (!checkperm("v") && !(substr($search,0,11)=="!collection" && $k!='' && $collection_allow_not_approved_share)) 
