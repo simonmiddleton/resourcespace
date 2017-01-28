@@ -1987,7 +1987,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     // This allows us to know that the returned value should actually be just text rather than HTML
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
     $is_html           = ($html != strip_tags($html));
-    $compatibility_5_3 = false;
+    $compatibility_libxml_2_7_8 = false;
 
     libxml_use_internal_errors(true);
 
@@ -1998,18 +1998,18 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     $doc = new DOMDocument();
     $doc->encoding = 'UTF-8';
 
-    if(version_compare(PHP_VERSION, '5.4.0', '>='))
+    if(defined ('LIBXML_HTML_NOIMPLIED') && defined ('LIBXML_HTML_NODEFDTD'))
         {
         $process_html = $doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         }
     else
         {
-        // Compatibility with PHP 5.3
+        // Compatibility with libxml <2.7.8
         // we allow HTML and BODY because libxml doesn not have some required constants and then we extract
         // the text between BODY tags
         $allowed_tags      = array_merge(array('html', 'body', 'div', 'span', 'h3', 'p', 'br', 'em'), $tags);
         $process_html      = $doc->loadHTML($html);
-        $compatibility_5_3 = true;
+        $compatibility_libxml_2_7_8 = true;
         }
 
     if($process_html)
@@ -2039,7 +2039,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 
         $html = $doc->saveHTML();
 
-        if($compatibility_5_3)
+        if($compatibility_libxml_2_7_8)
             {
             preg_match('/<body>(.*?)<\/body>/', $html, $matches);
 
