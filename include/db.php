@@ -1067,31 +1067,32 @@ function getval($val,$default,$force_numeric=false)
     }
 
 /**
-* Return a value from get/post/cookie, escaped, SQL-safe and XSS-free
+* Return a value from get/post/cookie, escaped and SQL-safe
+* 
+* It should not be relied upon for XSS. Sanitising outup should be done when needed
+* by the debeloper
 * 
 * @param string        $val
 * @param string|array  $default        The fallback value if not found
 * @param boolean       $force_numeric  Set to TRUE if we want only numeric values. If returned value is not numeric
 *                                      the function will return the default value
-* @param boolean       $allow_js       Set to TRUE to allow Javascript code
 * 
 * @return string|array
 */
-function getvalescaped($val, $default, $force_numeric = false, $allow_js = false)
+function getvalescaped($val, $default, $force_numeric = false)
     {
-    $value        = getval($val, $default, $force_numeric);
-    $allowed_tags = ($allow_js ? array('script') : array());
+    $value = getval($val, $default, $force_numeric);
 
     if(is_array($value))
         {
         foreach($value as &$item)
             {
-            $item = escape_check(strip_tags_and_attributes($item, $allowed_tags));
+            $item = escape_check($item);
             }
         }
     else
         {
-        $value = escape_check(strip_tags_and_attributes($value, $allowed_tags));
+        $value = escape_check($value);
         }
 
     return $value;
