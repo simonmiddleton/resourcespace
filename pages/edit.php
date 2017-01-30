@@ -1144,8 +1144,10 @@ function display_field($n, $field, $newtab=false)
       }
     $lastrt=$field["resource_type"];
 
-    # Blank form if 'reset form' has been clicked.
-    if('' != getval('resetform', ''))
+    # Blank form if 'reset form' has been clicked
+    # OR
+    # If config option $blank_edit_template is set, always show a blank form for user edit templates.
+    if('' != getval('resetform', '') || (0 > $ref && $blank_edit_template && '' == getval('submitted', '')))
         {
         $value = '';
 
@@ -1154,9 +1156,6 @@ function display_field($n, $field, $newtab=false)
             $selected_nodes = array();
             }
         }
-
-    # If config option $blank_edit_template is set, always show a blank form for user edit templates.
-    if ($ref<0 && $blank_edit_template && getval("submitted","")=="") {$value="";}
 
     /****************************** Errors on saving ***************************************/
     $field_save_error = FALSE;
