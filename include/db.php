@@ -1069,8 +1069,7 @@ function getval($val,$default,$force_numeric=false)
 /**
 * Return a value from get/post/cookie, escaped and SQL-safe
 * 
-* It should not be relied upon for XSS. Sanitising outup should be done when needed
-* by the debeloper
+* It should not be relied upon for XSS. Sanitising output should be done when needed by developer
 * 
 * @param string        $val
 * @param string|array  $default        The fallback value if not found
