@@ -1098,7 +1098,7 @@ function display_field($n, $field, $newtab=false)
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
-  $all_selected_nodes,$original_nodes;
+  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES;
 
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
@@ -1145,7 +1145,15 @@ function display_field($n, $field, $newtab=false)
     $lastrt=$field["resource_type"];
 
     # Blank form if 'reset form' has been clicked.
-    if (getval("resetform","")!="") {$value="";}
+    if('' != getval('resetform', ''))
+        {
+        $value = '';
+
+        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            {
+            $selected_nodes = array();
+            }
+        }
 
     # If config option $blank_edit_template is set, always show a blank form for user edit templates.
     if ($ref<0 && $blank_edit_template && getval("submitted","")=="") {$value="";}
