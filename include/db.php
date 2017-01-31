@@ -1986,7 +1986,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
-    $is_html           = ($html != strip_tags($html));
+    $is_html                    = ($html != strip_tags($html));
     $compatibility_libxml_2_7_8 = false;
 
     libxml_use_internal_errors(true);
@@ -2005,10 +2005,10 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     else
         {
         // Compatibility with libxml <2.7.8
-        // we allow HTML and BODY because libxml doesn not have some required constants and then we extract
+        // we allow HTML and BODY because libxml does not have some required constants and then we extract
         // the text between BODY tags
-        $allowed_tags      = array_merge(array('html', 'body', 'div', 'span', 'h3', 'p', 'br', 'em'), $tags);
-        $process_html      = $doc->loadHTML($html);
+        $allowed_tags               = array_merge(array('html', 'body', 'div', 'span', 'h3', 'p', 'br', 'em'), $tags);
+        $process_html               = $doc->loadHTML($html);
         $compatibility_libxml_2_7_8 = true;
         }
 
@@ -2039,14 +2039,12 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 
         $html = $doc->saveHTML();
 
-        if($compatibility_libxml_2_7_8)
+        if($compatibility_libxml_2_7_8 && false !== strpos($html, '<body>'))
             {
-            preg_match('/<body>(.*?)<\/body>/', $html, $matches);
+            $body_o_tag_pos = strpos($html, '<body>');
+            $body_c_tag_pos = strpos($html, '</body>');
 
-            if(isset($matches[1]) && 0 < count($matches[1]))
-                {
-                $html = $matches[1];
-                }
+            $html = substr($html, $body_o_tag_pos + 6, $body_c_tag_pos - ($body_o_tag_pos + 6));
             }
         }
 
