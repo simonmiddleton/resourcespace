@@ -322,6 +322,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && $simple_search_show_dynamic_as_dropdown):
        if(!hook("customchkboxes", "", array($field, $value, $autoupdate, $class, $forsearchbar, $limit_keywords)))
             {
+            global $checkbox_ordered_vertically;
+
             # -------- Show a check list or dropdown for dropdowns and check lists?
             # By default show a checkbox list for both (for multiple selections this enabled OR functionality)
             
@@ -334,54 +336,55 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             	{
             	$optionfields[]=$field["name"]; # Append to the option fields array, used by the AJAX dropdown filtering
             	}
-            
-            $option_trans=array();
-            $option_trans_simple=array();
-            for ($m=0;$m<count($field["node_options"]);$m++)
+
+            ##### Reordering options #####
+            $reordered_options = array();
+            $node_options      = array();
+            foreach($field['nodes'] as $node)
                 {
-                $trans=i18n_get_translated($field["node_options"][$m]);
-                $option_trans[$field["node_options"][$m]]=$trans;
-                $option_trans_simple[]=$trans;
+                // Filter the options array for blank values and ignored keywords
+                if('' !== $node['name'] && 0 !== count($limit_keywords) && !in_array(strval($node['name']), $limit_keywords))
+                    {
+                    continue;
+                    }
+
+                $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
+                $node_options[]                  = $node['name'];
                 }
 
-            if ($auto_order_checkbox && !hook("ajust_auto_order_checkbox","",array($field))) {
-                if($auto_order_checkbox_case_insensitive){natcasesort($option_trans);}
-                else{asort($option_trans);}
-            }
-            $options=array_keys($option_trans); # Set the options array to the keys, so it is now effectively sorted by translated string       
-            
+            if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
+                {
+                if($auto_order_checkbox_case_insensitive)
+                    {
+                    natcasesort($reordered_options);
+                    }
+                else
+                    {
+                    natsort($reordered_options);
+                    }
+                }
+
+            $new_node_order    = array();
+            $order_by_resetter = 0;
+            foreach($reordered_options as $reordered_node_id => $reordered_node_option)
+                {
+                $new_node_order[$reordered_node_id] = $field['nodes'][array_search($reordered_node_id, array_column($field['nodes'], 'ref', 'ref'))];
+
+                // Special case for vertically ordered checkboxes.
+                // Order by needs to be reset as per the new order so that we can reshuffle them using the order by as a reference
+                if($checkbox_ordered_vertically)
+                    {
+                    $new_node_order[$reordered_node_id]['order_by'] = $order_by_resetter++;
+                    }
+                }
+
+            $field['nodes'] = $new_node_order;
+            ##### End of reordering options #####
+
             if ($field["display_as_dropdown"] || $forsearchbar)
                 {
                 # Show as a dropdown box
                 $name = "nodes_searched[{$field['ref']}]";
-
-                ##### Reordering options #####
-                $reordered_options = array();
-                foreach($field['nodes'] as $node)
-                    {
-                    $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
-                    }
-
-                if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
-                    {
-                    if($auto_order_checkbox_case_insensitive)
-                        {
-                        natcasesort($reordered_options);
-                        }
-                    else
-                        {
-                        asort($reordered_options);
-                        }
-                    }
-
-                $new_node_order = array();
-                foreach($reordered_options as $reordered_node_id => $reordered_node_option)
-                    {
-                    $new_node_order[$reordered_node_id] = $field['nodes'][array_search($reordered_node_id, array_column($field['nodes'], 'ref', 'ref'))];
-                    }
-
-                $field['nodes'] = $new_node_order;
-                ##### End of reordering options #####
                 ?>
                 <select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearchbar){?> onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>>
                     <option value=""></option>
@@ -408,25 +411,18 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 $setnames=trim_array(explode(";",$value));
                 $wrap=0;
 
-                $l=average_length($option_trans_simple);
-                $cols=10;
-                if ($l>5)  {$cols=6;}
-                if ($l>10) {$cols=4;}
-                if ($l>15) {$cols=3;}
-                if ($l>25) {$cols=2;}
-                # Filter the options array for blank values and ignored keywords.
-                $newoptions=array();
-                foreach ($options as $option)
+                $l    = average_length($node_options);
+                switch($l)
                     {
-                    if ($option!=="" && (count($limit_keywords)==0 || in_array(strval($option), $limit_keywords)))
-                        {
-                        $newoptions[]=$option;
-                        }
+                    case($l > 40): $cols = 1; break; 
+                    case($l > 25): $cols = 2; break;
+                    case($l > 15): $cols = 3; break;
+                    case($l > 10): $cols = 4; break;
+                    case($l > 5):  $cols = 5; break;
+                    default:       $cols = 10;
                     }
-					
-                $options=$newoptions;
-				
-                $height=ceil(count($options)/$cols);
+
+                $height = ceil(count($field['nodes']) / $cols);
 
                 global $checkbox_ordered_vertically, $checkbox_vertical_columns;
                 if($checkbox_ordered_vertically)
@@ -434,6 +430,29 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     if(!hook('rendersearchchkboxes'))
                         {
                         # ---------------- Vertical Ordering (only if configured) -----------
+
+                        ##### Vertical shuffling #####
+                        $reshuffled_nodes    = array();
+
+                        for($i = 0; $i < $height; $i++)
+                            {
+                            for($j = 0; $j < $cols; $j++)
+                                {
+                                $order_by = ($height * $j) + $i;
+
+                                $node_index_to_be_reshuffled = array_search($order_by, array_column($field['nodes'], 'order_by', 'ref'));
+
+                                if(false === $node_index_to_be_reshuffled)
+                                    {
+                                    continue;
+                                    }
+
+                                $reshuffled_nodes[$field['nodes'][$node_index_to_be_reshuffled]['ref']] = $field['nodes'][$node_index_to_be_reshuffled];
+                                }
+                            }
+
+                        $field['nodes'] = $reshuffled_nodes;
+                        ##### End of vertical shuffling #####
                         ?>
                         <table cellpadding=2 cellspacing=0>
                             <tbody>
