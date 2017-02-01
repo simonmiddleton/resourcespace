@@ -95,82 +95,56 @@ if(!hook('customchkboxes', '', array($field)))
         if(!hook('rendereditchkboxes'))
             {
             # ---------------- Vertical Ordering -----------
-
-            ##### Vertical shuffling #####
-            $reshuffled_nodes    = array();
-
-            for($i = 0; $i < $rows; $i++)
-                {
-                for($j = 0; $j < $cols; $j++)
-                    {
-                    $order_by = ($rows * $j) + $i;
-
-                    $node_index_to_be_reshuffled = array_search($order_by, array_column($field['nodes'], 'order_by', 'ref'));
-
-                    if(false === $node_index_to_be_reshuffled)
-                        {
-                        continue;
-                        }
-
-                    $reshuffled_nodes[$field['nodes'][$node_index_to_be_reshuffled]['ref']] = $field['nodes'][$node_index_to_be_reshuffled];
-                    }
-                }
-
-            $field['nodes'] = $reshuffled_nodes;
-            ##### End of vertical shuffling #####
             ?>
             <fieldset class="customFieldset" name="<?php echo $field['title']; ?>">
                 <legend class="accessibility-hidden"><?php echo $field['title']; ?></legend>
                 <table cellpadding=3 cellspacing=0>
                     <tr>
                 <?php
-                $row = 1;
-                $col = 1;
-
-                foreach($field['nodes'] as $node)
+                for($i = 0; $i < $rows; $i++)
                     {
-                    if('' == $node['name'])
+                    for($j = 0; $j < $cols; $j++)
                         {
-                        continue;
-                        }
+                        $order_by = ($rows * $j) + $i;
 
-                    if($col > $cols) 
-                        {
-                        $col = 1;
-                        $row++;
+                        $node_index_to_be_reshuffled = array_search($order_by, array_column($field['nodes'], 'order_by', 'ref'));
+
+                        if(false === $node_index_to_be_reshuffled)
+                            {
+                            continue;
+                            }
+
+                        $node = $field['nodes'][$node_index_to_be_reshuffled];
                         ?>
-                        </tr>
-                        <tr>
-                        <?php 
+                        <td>
+                            <input type="checkbox"
+                                   id="nodes_<?php echo $node['ref']; ?>"
+                                   name="<?php echo $name; ?>"
+                                   value="<?php echo $node['ref']; ?>"
+                                <?php
+                                if(in_array($node['ref'], $selected_nodes))
+                                    {
+                                    ?>
+                                    checked
+                                    <?php
+                                    }
+
+                                if($edit_autosave)
+                                    {
+                                    ?>
+                                    onChange="AutoSave('<?php echo $field['ref']; ?>');" onmousedown="checkbox_allow_save();"
+                                    <?php
+                                    }
+                                    ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
+                        </td>
+                        <?php
                         }
-
-                    $col++;
                         ?>
-                    <td>
-                        <input type="checkbox"
-                               id="nodes_<?php echo $node['ref']; ?>"
-                               name="<?php echo $name; ?>"
-                               value="<?php echo $node['ref']; ?>"
-                            <?php
-                            if(in_array($node['ref'], $selected_nodes))
-                                {
-                                ?>
-                                checked
-                                <?php
-                                }
-
-                            if($edit_autosave)
-                                {
-                                ?>
-                                onChange="AutoSave('<?php echo $field['ref']; ?>');" onmousedown="checkbox_allow_save();"
-                                <?php
-                                }
-                                ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
-                    </td>
+                    </tr>
+                    <tr>
                     <?php
                     }
                     ?>
-                    </tr>
                 </table>
             </fieldset>
             <?php
