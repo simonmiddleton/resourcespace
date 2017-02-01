@@ -297,8 +297,7 @@ if (!hook("renderresultthumb"))
 							<?php 
 							} ?> 
 						onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')==false){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
-					>
-					&nbsp;
+					>&nbsp;
 					<?php 
 					}
 				else
