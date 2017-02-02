@@ -3309,6 +3309,10 @@ function check_display_condition($n, $field)
                     {
                     $displaycondition = true;
                     }
+                else
+                    {
+                    $required_fields_exempt[]=$field["ref"];
+                    }
 
                 // Check display conditions
                 // Certain fixed list types allow for multiple nodes to be passed at the same time
