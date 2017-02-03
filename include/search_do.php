@@ -203,6 +203,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
         {
         for ($n=0;$n<count($keywords);$n++)
             {
+            $search_field_restrict="";
             $keyword=$keywords[$n];
             $quoted_string=(substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"";
             $quoted_field_match=false;
