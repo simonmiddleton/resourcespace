@@ -436,7 +436,14 @@ elseif($restypes=='')
         }
     else
         {
-        $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
+		if(!$simple_search_pills_view)
+			{
+			$searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
+			}
+		else
+			{
+			$searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
+			}
         }
 
 	$searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"&nbsp;&nbsp;". $lang['searchbutton']."&nbsp;&nbsp;\" />";
