@@ -1991,7 +1991,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 
     libxml_use_internal_errors(true);
 
-    $allowed_tags       = array_merge(array('div', 'span', 'h3', 'p', 'br', 'em'), $tags);
+    $allowed_tags       = array_merge(array('div', 'span', 'h3', 'p', 'br', 'em', 'strong', 'b' ), $tags);
     $allowed_attributes = array_merge(array('id', 'class', 'style'), $attributes);
 
     // Step 1 - Check DOM
