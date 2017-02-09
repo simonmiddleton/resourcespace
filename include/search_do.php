@@ -569,20 +569,20 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     
                                     if (!empty($sql_exclude_fields))
                                         {
-                                        $union_restriction_clause .= " and k" . $c . ".resource_type_field not in (" . $sql_exclude_fields . ")";
-                                        $union_restriction_clause_node .= " AND nk{$c}.node NOT IN (SELECT ref FROM node WHERE nk{$c}.node=node.ref AND node.resource_type_field IN (" . $sql_exclude_fields .  "))";
+                                        $union_restriction_clause .= " and k[union_index].resource_type_field not in (" . $sql_exclude_fields . ")";
+                                        $union_restriction_clause_node .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field IN (" . $sql_exclude_fields .  "))";
                                         }
     
                                     if (count($hidden_indexed_fields) > 0)
                                         {
-                                        $union_restriction_clause .= " and k" . $c . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
-                                        $union_restriction_clause_node .= " AND nk{$c}.node NOT IN (SELECT ref FROM node WHERE nk{$c}.node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+                                        $union_restriction_clause .= " and k[union_index].resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
+                                        $union_restriction_clause_node .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
                                         }
                                         
                                     if (isset($search_field_restrict) && $search_field_restrict!="") // Search is looking for a keyword in a specifed field
                                         {
-                                        $union_restriction_clause .= " AND k" . $c . ".resource_type_field = '" . $search_field_restrict  . "' ";
-                                        $union_restriction_clause_node .= " AND nk{$c}.node IN (SELECT ref FROM node WHERE nk{$c}.node=node.ref AND node.resource_type_field = '" . $search_field_restrict  . "')";
+                                        $union_restriction_clause .= " AND k[union_index].resource_type_field = '" . $search_field_restrict  . "' ";
+                                        $union_restriction_clause_node .= " AND nk[union_index].node IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field = '" . $search_field_restrict  . "')";
                                         }
     
                                     if ($empty)  // we are dealing with a special search checking if a field is empty
@@ -592,23 +592,22 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                             {
                                             if ($rtype == 999)
                                                 {
-                                                $restypesql = "and (r" . $c . ".archive=1 or r" . $c . ".archive=2) and ";
+                                                $restypesql = "and (r[union_index].archive=1 or r[union_index].archive=2) and ";
                                                 if ($sql_filter != "")
                                                     {
                                                     $sql_filter .= " and ";
                                                     }
-                                                $sql_filter .= str_replace("r" . $c . ".archive='0'", "(r" . $c . ".archive=1 or r" . $c . ".archive=2)", $sql_filter);
+                                                $sql_filter .= str_replace("r[union_index].archive='0'", "(r[union_index].archive=1 or r[union_index].archive=2)", $sql_filter);
                                                 } else
                                                 {
-                                                $restypesql = "and r" . $c . ".resource_type ='$rtype' ";
+                                                $restypesql = "and r[union_index].resource_type ='$rtype' ";
                                                 }
                                             } else
                                             {
                                             $restypesql = "";
                                             }
-                                        $union = "select ref as resource, [bit_or_condition] 1 as score from resource r" . $c . " left outer join resource_data rd" . $c . " on r" . $c . ".ref=rd" . $c .
-                                            ".resource and rd" . $c . ".resource_type_field='$nodatafield' where  (rd" . $c . ".value ='' or rd" . $c .
-                                            ".value is null or rd" . $c . ".value=',') $restypesql  and r" . $c . ".ref>0 group by r" . $c . ".ref ";
+                                        $union = "select ref as resource, [bit_or_condition] 1 as score from resource r[union_index] left outer join resource_data rd[union_index] on r[union_index].ref=rd[union_index].resource and rd[union_index].resource_type_field='$nodatafield' where  (rd[union_index].value ='' or
+                                            rd[union_index].value is null or rd[union_index].value=',') $restypesql  and r[union_index].ref>0 group by r[union_index].ref ";
                                         $union .= $union_restriction_clause;
                                         $sql_keyword_union[] = $union;
                                         }
@@ -625,8 +624,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                      
                                          // TODO: deprecate this once all field values are nodes  START
                                          
-                                          $union .= " UNION SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_keyword k{$c}" .
-                                             " WHERE (k{$c}.keyword={$keyref} " . str_replace("[keyword_match_table]","k" . $c, $relatedsql) . " {$union_restriction_clause})" .
+                                          $union .= " UNION SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_keyword k[union_index]
+                                          WHERE (k[union_index].keyword={$keyref} " . str_replace("[keyword_match_table]","k" . "[union_index]", $relatedsql) . " {$union_restriction_clause})" .
                                              " GROUP BY resource, resource_type_field";
                                                                                                              
                                          // TODO: deprecate this once all field values are nodes  END
@@ -699,44 +698,44 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
 						if (!empty($sql_exclude_fields))
 							{
-							$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in (" . $sql_exclude_fields . ")";
-							$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . $sql_exclude_fields .  "))";
+							$union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field not in (" . $sql_exclude_fields . ")";
+							$union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . $sql_exclude_fields .  "))";
 							}
 
 						if (count($hidden_indexed_fields) > 0)
 							{
-							$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
-							$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+							$union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
+							$union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
 							}
                             
                         if ($quotedfieldid != "")
 							{
-							$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field = '" . $quotedfieldid . "'";
-							$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node = '" . $quotedfieldid . "'";
+							$union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field = '" . $quotedfieldid . "'";
+							$union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node = '" . $quotedfieldid . "'";
 							}
 						 
 						if ($qk==1)
 							{
-							$freeunion = " SELECT qrk_" . $c . "_" . $qk . ".resource, [bit_or_condition] qrk_" . $c . "_" . $qk . ".hit_count AS score FROM resource_keyword qrk_" . $c . "_" . $qk;                                                
+							$freeunion = " SELECT qrk_[union_index]_" . $qk . ".resource, [bit_or_condition] qrk_[union_index]_" . $qk . ".hit_count AS score FROM resource_keyword qrk_[union_index]_" . $qk;                                                
 							// Add code to find matching nodes in resource_node
-							$fixedunion = " SELECT rn_" . $c . "_" . $qk . ".resource, [bit_or_condition] rn_" . $c . "_" . $qk . ".hit_count AS score FROM resource_node rn_" . $c . 
-								"_" . $qk . " LEFT OUTER JOIN `node_keyword` nk_" . $c . "_" . $qk . " ON rn_" . $c . "_" . $qk . ".node=nk_" . $c . "_" . $qk . ".node LEFT OUTER JOIN `node` nn" . $c . "_" . $qk . " ON rn_" . $c . "_" . $qk . ".node=nn" . $c . "_" . $qk . ".ref " .
-								" AND (nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node . ")"; 
-							$freeunioncondition="qrk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
-							$fixedunioncondition="nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node ;
+							$fixedunion = " SELECT rn_[union_index]_" . $qk . ".resource, [bit_or_condition] rn_[union_index]_" . $qk . ".hit_count AS score FROM resource_node rn_[union_index]_" . $qk .
+                                " LEFT OUTER JOIN `node_keyword` nk_[union_index]_" . $qk . " ON rn_[union_index]_" . $qk . ".node=nk_[union_index]_" . $qk . ".node LEFT OUTER JOIN `node` nn[union_index]_" . $qk . " ON rn_[union_index]_" . $qk . ".node=nn[union_index]_" . $qk . ".ref " .
+								" AND (nk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node . ")"; 
+							$freeunioncondition="qrk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
+							$fixedunioncondition="nk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node ;
 							}
 						else
 							{
 							# For keywords other than the first one, check the position is next to the previous keyword.                                           
-							$freeunion .= " JOIN resource_keyword qrk_" . $c . "_" . $qk . "
-								ON qrk_" . $c . "_" . $qk . ".resource = qrk_" . $c . "_" . ($qk-1) . ".resource
-								AND qrk_" . $c . "_" . $qk . ".keyword = '" .$keyref . "'
-								AND qrk_" . $c . "_" . $qk . ".position = qrk_" . $c . "_" . ($qk-1) . ".position + " . $last_key_offset . "
-								AND qrk_" . $c . "_" . $qk . ".resource_type_field = qrk_" . $c . "_" . ($qk-1) . ".resource_type_field";    
+							$freeunion .= " JOIN resource_keyword qrk_[union_index]_" . $qk . "
+								ON qrk_[union_index]_" . $qk . ".resource = qrk_[union_index]_" . ($qk-1) . ".resource
+								AND qrk_[union_index]_" . $qk . ".keyword = '" .$keyref . "'
+								AND qrk_[union_index]_" . $qk . ".position = qrk_[union_index]_" . ($qk-1) . ".position + " . $last_key_offset . "
+								AND qrk_[union_index]_" . $qk . ".resource_type_field = qrk_[union_index]_" . ($qk-1) . ".resource_type_field";    
 						   
 						   # For keywords other than the first one, check the position is next to the previous keyword.
 							# Also check these occurances are within the same field.
-							$fixedunion .=" JOIN `node_keyword` nk_" . $c . "_" . $qk . " ON nk_" . $c . "_" . $qk . ".node = nk_" . $c . "_" . ($qk-1) . ".node AND nk_" . $c . "_" . $qk . ".keyword = '" . $keyref . "' AND  nk_" . $c . "_" . $qk . ".position=nk_" . $c . "_" . ($qk-1) . ".position+" . $last_key_offset ;
+							$fixedunion .=" JOIN `node_keyword` nk_[union_index]_" . $qk . " ON nk_[union_index]_" . $qk . ".node = nk_[union_index]_" . ($qk-1) . ".node AND nk_[union_index]_" . $qk . ".keyword = '" . $keyref . "' AND  nk_[union_index]_" . $qk . ".position=nk_[union_index]_" . ($qk-1) . ".position+" . $last_key_offset ;
 							}
 						$qk++;
 						} // End of if keyword not excluded (not in $noadd array)
@@ -748,7 +747,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 						{
 						$sql_filter .= " and ";
 						}		
-					$sql_filter .= str_replace("[bit_or_condition]",""," r.ref not in (select resource from (" . $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . ") qfilter" . $c . ") "); # Instead of adding to the union, filter out resources that do contain the quoted string.
+					$sql_filter .= str_replace("[bit_or_condition]",""," r.ref not in (select resource from (" . $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
 					}
 				else
 					{
