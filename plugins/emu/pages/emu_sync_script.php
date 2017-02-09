@@ -284,10 +284,10 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
             continue;
             }
 
-        // Add as image only for now
-        // TODO: add logic to create resources based on multimedia type EMuApi::validateMime()
-
-        $new_resource_ref = create_resource(1, 0, $userref);
+        // Add as default resource type
+        // Note: when processing multimedia files, the system will try and detect what resource type it should be based
+        // on the extension of the file and update it using update_resource_type()
+        $new_resource_ref = create_resource($resource_type_extension_mapping_default, 0, $userref);
 
         if(!$new_resource_ref)
             {
@@ -355,7 +355,15 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
             emu_script_log('Sucessfully downloaded media file', $emu_log_file);
 
             // Update basic resource/ file data and create previews
-            if(emu_update_resource($new_resource_ref, 1, $rs_emu_file_path))
+            if(emu_update_resource(
+                $new_resource_ref,
+                get_resource_type_from_extension(
+                    pathinfo($emu_master_file['resource']['identifier'], PATHINFO_EXTENSION),
+                    $resource_type_extension_mapping,
+                    $resource_type_extension_mapping_default
+                ),
+                $rs_emu_file_path)
+            )
                 {
                 emu_script_log('Sucessfully created previews', $emu_log_file);
                 }
