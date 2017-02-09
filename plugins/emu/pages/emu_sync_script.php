@@ -31,7 +31,7 @@ $cli_long_options  = array(
     'emu_test_mode:',
     'emu_userref:'
 );
-    
+
 
 // Use log file if set
 // IMPORTANT: running this script directly (without going via cron_copy_hitcount) may
@@ -286,10 +286,8 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
 
         // Add as image only for now
         // TODO: add logic to create resources based on multimedia type EMuApi::validateMime()
-        
-        // create_resource() needs this to be false in order to work without being logged in
-        $always_record_resource_creator = false;
-        $new_resource_ref               = create_resource(1, 0);
+
+        $new_resource_ref = create_resource(1, 0, $userref);
 
         if(!$new_resource_ref)
             {
