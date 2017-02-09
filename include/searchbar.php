@@ -879,3 +879,4 @@ elseif($restypes=='')
 $restypes=$stored_restypes;
 $search=$stored_search;
 $quicksearch=$stored_quicksearch;
+$starsearch=$stored_starsearch;
