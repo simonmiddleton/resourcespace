@@ -1,6 +1,19 @@
 <?php
+// EMu Constants:
 define('EMU_SCRIPT_MODE_IMPORT', 100);
 define('EMU_SCRIPT_MODE_SYNC', 1000);
+
+$SCRIPTS = array(
+    EMU_SCRIPT_MODE_IMPORT => array(
+        'file' => 'emu_script.php',
+        'name' => 'EMu import script',
+    ),
+    EMU_SCRIPT_MODE_SYNC   => array(
+        'file' => 'emu_sync_script.php',
+        'name' => 'EMu sync script',
+    )
+);
+
 
 // ID of user to run scripts as
 // Defaults to 1, which normally is Super Admin

@@ -40,6 +40,8 @@ $lang['emu_add_mapping'] = 'Add mapping';
 
 $lang['emu_upload_emu_field_label'] = 'EMu IRN';
 $lang['emu_confirm_upload_nodata'] = 'Please check the box to confirm you wish to proceed with the upload';
+$lang['emu_test_script_title'] = 'Test/ Run script';
+$lang['emu_run_script'] = 'Process';
 
 // Errors
 $lang['emu_script_problem'] = 'WARNING - the EMu script has not successfully completed within the last %days% days. Last run time: ';

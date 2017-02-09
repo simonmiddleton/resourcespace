@@ -1,7 +1,5 @@
 <?php
-$php_sapi_name = php_sapi_name();
-
-if('cli' != $php_sapi_name)
+if('cli' != PHP_SAPI)
     {
     header('HTTP/1.1 401 Unauthorized');
     exit('Access denied');
@@ -20,6 +18,21 @@ ob_end_clean();
 set_time_limit($cron_job_time_limit);
 define('EMU_SCRIPT_SYNC_LOCK', 'emu_sync_mode_lock');
 
+$test_skip_multiple    = 0;
+$emu_rs_mappings       = unserialize(base64_decode($emu_rs_saved_mappings));
+$emu_script_start_time = microtime(true);
+$emu_records_limit     = 100;
+$emu_records_data      = array();
+
+$cli_short_options = 'hc';
+$cli_long_options  = array(
+    'help',
+    'clearlock',
+    'emu_test_mode:',
+    'emu_userref:'
+);
+    
+
 // Use log file if set
 // IMPORTANT: running this script directly (without going via cron_copy_hitcount) may
 // not guarantee log directory is set properly, with required permissions in place
@@ -37,27 +50,30 @@ if(EMU_SCRIPT_MODE_SYNC != $emu_script_mode)
     exit();
     }
 
-// TODO uncomment
-/*// Check if we need to clear locks or need help using the script
-if('cli' == $php_sapi_name && 2 == $argc)
+// CLI options check
+foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option_value)
     {
-    if(in_array($argv[1], array('--help', '-help', '-h', '-?')))
+    if(in_array($option_name, array('h', 'help')))
         {
         emu_script_log('To clear the lock after a failed run, pass in "--clearlock", "-clearlock", "-c" or "--c"', $emu_log_file);
         exit();
         }
-    else if(in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')))
+
+    if(in_array($option_name, array('c', 'clearlock')))
         {
         if(is_process_lock(EMU_SCRIPT_SYNC_LOCK))
             {
             clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
             }
         }
-    else
+
+    // Allow CLI options to override $emu_* variables
+    if('emu' != substr($option_name, 0, 3))
         {
-        emu_script_log("Unknown argv: {$argv[1]}", $emu_log_file);
-        exit();
+        continue;
         }
+
+    $$option_name = $option_value;
     }
 
 // Check for a process lock
@@ -69,7 +85,7 @@ if(is_process_lock(EMU_SCRIPT_SYNC_LOCK))
     send_mail($email_notify, $emu_script_failed_subject, "The EMu script failed to run because a process lock was in place. This indicates that the previous run did not complete.\r\n\r\nIf you need to clear the lock after a failed run, run the script as follows:\r\n\r\nphp emu_script.php --clearlock\r\n", $email_from);
     exit();
     }
-set_process_lock(EMU_SCRIPT_SYNC_LOCK);*/
+set_process_lock(EMU_SCRIPT_SYNC_LOCK);
 
 // Run script as a user of the system
 if(isset($emu_userref))
@@ -80,11 +96,6 @@ if(isset($emu_userref))
     setup_user($userdata);
     }
 
-$test_skip_multiple    = 0;
-$emu_rs_mappings       = unserialize(base64_decode($emu_rs_saved_mappings));
-$emu_script_start_time = microtime(true);
-$emu_records_limit     = 100;
-$emu_records_data      = array();
 
 emu_script_log('Starting...', $emu_log_file);
 
@@ -464,8 +475,7 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
 emu_script_log(PHP_EOL . sprintf("EMu Script completed in %01.2f seconds.", microtime(true) - $emu_script_start_time), $emu_log_file);
 fclose($emu_log_file);
 
-// TODO uncomment
-// clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
+clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
 
 // sql_query('DELETE FROM sysvars WHERE name = "last_emu_import"');
 // sql_query('INSERT INTO sysvars VALUES ("last_emu_import", NOW())');

@@ -67,9 +67,7 @@ if('' != getval('submit', '') || '' != getval('save', ''))
 // For now, only for sync mode
 if(EMU_SCRIPT_MODE_SYNC == $emu_script_mode)
     {
-    $scripts_test_functionality = '
-        <button type="button" style="font-size: 1em;">Test script</button>
-    ';
+    $scripts_test_functionality = '<button type="button" onclick="testScript(document.getElementById(\'emu_script_mode\').value);" style="font-size: 1em;">Test script</button>';
     }
 $script_last_ran_content = str_replace('%script_last_ran%', $emu_script_last_ran, $lang['emu_last_run_date']);
 $script_last_ran_content = str_replace('%scripts_test_functionality%', (isset($scripts_test_functionality) ? $scripts_test_functionality : ''), $script_last_ran_content);
@@ -160,16 +158,6 @@ $emu_rs_mappings_html .= "
 </table>
 
 <a onclick='addEmuRsMappingRow();'>{$lang['emu_add_mapping']}</a>
-<script>
-function addEmuRsMappingRow()
-    {
-    var table    = document.getElementById('emuRsMappingTable');
-    var rowCount = table.rows.length;
-    var row      = table.insertRow(rowCount);
-
-    row.innerHTML = document.getElementById('newrow').innerHTML;
-    }
-</script>
 </div>
 <!-- end of Question -->";
 $page_def[] = config_add_html($emu_rs_mappings_html);
@@ -185,4 +173,28 @@ if(isset($error))
     echo "<div class=\"PageInformal\">{$error}</div>";
     }
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $lang['emu_configuration']);
+?>
+<script>
+function addEmuRsMappingRow()
+    {
+    var table    = document.getElementById('emuRsMappingTable');
+    var rowCount = table.rows.length;
+    var row      = table.insertRow(rowCount);
+
+    row.innerHTML = document.getElementById('newrow').innerHTML;
+    }
+
+function testScript(script)
+    {
+    if(script <= 0)
+        {
+        return false;
+        }
+
+    ModalLoad('<?php echo $baseurl; ?>/plugins/emu/pages/emu_test_script.php?script=' + script);
+
+    return true;
+    }
+</script>
+<?php
 include '../../../include/footer.php';
