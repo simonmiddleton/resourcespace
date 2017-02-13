@@ -135,7 +135,7 @@ echo $hidden_input_elements;
             'checkbox'
         ],
         'checkbox' : {
-            'three_state' : <?php echo ($cat_tree_singlebranch ? 'true' : 'false'); ?> // to tick checkboxes individually
+            'three_state' : <?php echo (!$cat_tree_singlebranch ? 'true' : 'false'); ?> // to tick checkboxes individually
         }
     });
 
