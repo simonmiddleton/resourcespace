@@ -1,6 +1,6 @@
 <?php
 /* -------- Category Tree ------------------- */ 
-global $lang, $baseurl, $css_reload_key, $category_tree_show_status_window, $category_tree_open, $is_search;
+global $lang, $baseurl, $css_reload_key, $category_tree_show_status_window, $category_tree_open, $is_search, $cat_tree_singlebranch;
 
 $is_search      = (isset($is_search) ? $is_search : false);
 $forsearchbar   = (isset($forsearchbar) ? $forsearchbar : false);
@@ -135,7 +135,7 @@ echo $hidden_input_elements;
             'checkbox'
         ],
         'checkbox' : {
-            'three_state' : false // to tick checkboxes individually
+            'three_state' : <?php echo ($cat_tree_singlebranch ? 'true' : 'false'); ?> // to tick checkboxes individually
         }
     });
 
