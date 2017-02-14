@@ -381,30 +381,53 @@ function get_resource_types($types = "", $translate = true)
 function get_resource_top_keywords($resource,$count)
 	{
 	# Return the top $count keywords (by hitcount) used by $resource.
-	# This is for the 'Find Similar' search.
-
-        # These are now derived from resource data for fixed keyword lists, rather than from the resource_keyword table
-        # which produced very mixed results and didn't work with stemming or diacritic normalisation.
+	# This section is for the 'Find Similar' search.
+	# These are now derived from a join of node and resource_node for fixed keyword lists and resource_data for free text fields
+	# Currently the date fields are not used for this feature
         
     $return=array();
-	$keywords=sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (2,3,7,9,11,12) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
-	foreach ($keywords as $keyword)
+	
+	$keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (1,5,6,8,10,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
+    
+    $fixed_dynamic_keywords = sql_query("select distinct n.ref, n.name, n.resource_type_field from node n inner join resource_node rn on n.ref=rn.node where rn.resource='$resource' order by new_hit_count desc limit $count");
+    
+    $combined = array_merge($keywords,$fixed_dynamic_keywords);
+    
+	foreach ( $combined as $keyword )
 		{
-		# Apply permissions and strip out any results the user does not have access to.
-		if ((checkperm("f*") || checkperm("f" . $keyword["field"]))
-		&& !checkperm("f-" . $keyword["field"]) && !checkperm("T" . $keyword["resource_type"]))
-			{
-			# Has access to this field.
-                        $r=$keyword["keyword"];
-                        if (substr($r,0,1)==",") {$r=substr($r,1);}
-                        $s=explode(",",$r);
-                        foreach ($s as $a)
-                            {
-                            if(!empty($a))
-                            	{$return[]=$a;}
-                            }
-			}
-		}
+        # If isset($keyword['keyword']) this means that the value is coming free text in general    
+        if ( isset($keyword['keyword']) )
+            {
+            # Apply permissions and strip out any results the user does not have access to.
+            if ((checkperm("f*") || checkperm("f" . $keyword["field"]))
+            && !checkperm("f-" . $keyword["field"]) && !checkperm("T" . $keyword["resource_type"]))
+                {
+                $r =  $keyword["keyword"] ;
+                }   
+            }
+            
+        else
+            {
+            # In this case the keyword is coming from nodes
+            # Apply permissions and strip out any results the user does not have access to.
+            if ( (checkperm("f*") || checkperm("f" . $keyword["field"]))
+            && !checkperm("f-" . $keyword["resource_type_field"]) && !checkperm("T" . $resource) )
+                {
+                $r =  $keyword["name"] ;   
+                }
+            }
+            
+        if (substr($r,0,1)==","){$r=substr($r,1);}
+        $s=explode(",",$r);
+        foreach ($s as $a)
+            {
+            if(!empty($a))
+                {
+                $return[]=$a;
+                }
+            }
+		}	
+			
 	return $return;
 	}
 
