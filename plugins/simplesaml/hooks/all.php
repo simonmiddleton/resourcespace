@@ -212,10 +212,9 @@ function HookSimplesamlAllProvideusercredentials()
 			$user_select_sql="and u.username='$username'";
             
             # Generate a new session hash.
+            include_once dirname(__FILE__) . '/../../../include/login_functions.php';
             $session_hash=generate_session_hash($password_hash);
-            
-            # Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)
-            rs_setcookie("user", $session_hash, intval($simplesaml_login_expiry), "", "", substr($baseurl,0,5)=="https", true);
+
             return true;
 			}
 		return false;
