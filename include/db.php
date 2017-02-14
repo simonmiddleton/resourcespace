@@ -1991,7 +1991,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 
     libxml_use_internal_errors(true);
 
-    $allowed_tags       = array_merge(array('div', 'span', 'h3', 'p', 'br', 'em', 'strong', 'b', 'u' ), $tags);
+    $allowed_tags       = array_merge(array('div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'em', 'strong', 'b', 'u', 'ol', 'ul', 'li' ), $tags);
     $allowed_attributes = array_merge(array('id', 'class', 'style'), $attributes);
 
     // Step 1 - Check DOM
@@ -2007,7 +2007,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         // Compatibility with libxml <2.7.8
         // we allow HTML and BODY because libxml does not have some required constants and then we extract
         // the text between BODY tags
-        $allowed_tags               = array_merge(array('html', 'body', 'div', 'span', 'h3', 'p', 'br', 'em'), $tags);
+        $allowed_tags               = array_merge(array('html', 'body', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'em', 'strong', 'b', 'u', 'ol', 'ul', 'li'), $tags);
         $process_html               = $doc->loadHTML($html);
         $compatibility_libxml_2_7_8 = true;
         }
