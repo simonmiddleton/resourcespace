@@ -295,7 +295,7 @@ if (getval("save","")!="" || getval("submitted","")!="")
 		}
 	}
 
-function is_field_displayed($field)
+function propose_changes_is_field_displayed($field)
 	{
 	global $ref, $resource, $editaccess;
 	return !(
@@ -311,7 +311,7 @@ function is_field_displayed($field)
 
 
 # Allows language alternatives to be entered for free text metadata fields.
-function display_multilingual_text_field($n, $field, $translations)
+function propose_changes_display_multilingual_text_field($n, $field, $translations)
 	{
 	global $language, $languages, $lang;
 	?>
@@ -349,7 +349,7 @@ function display_multilingual_text_field($n, $field, $translations)
 	?></table><?php
 	}
 
-function display_field($n, $field)
+function propose_changes_display_field($n, $field)
 	{
 	
 	global $ref, $original_fields, $multilingual_text_fields, $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess, $FIXED_LIST_FIELD_TYPES;
@@ -538,7 +538,7 @@ function display_field($n, $field)
 	# If enabled, include code to produce extra fields to allow multilingual free text to be entered.
 	if ($multilingual_text_fields && ($field["type"]==0 || $field["type"]==1 || $field["type"]==5))
 		{
-		display_multilingual_text_field($n, $field, $translations);
+		propose_changes_display_multilingual_text_field($n, $field, $translations);
 		}
 	?>
 	<div class="clearerleft"> </div>
@@ -641,7 +641,7 @@ if(!$editaccess)
 		{
 		node_field_options_override($proposefields[$n]);
 
-		if (is_field_displayed($proposefields[$n]))
+		if (propose_changes_is_field_displayed($proposefields[$n]))
 			{
 			$proposefields[$n]["display"]=true;
             $display_any_fields=true;
@@ -694,10 +694,10 @@ if(!$editaccess)
 		node_field_options_override($proposefields[$n]);
 
 		# Should this field be displayed?
-		if ((isset($proposefields[$n]["display"]) && $proposefields[$n]["display"]==true) || is_field_displayed($proposefields[$n]))
+		if ((isset($proposefields[$n]["display"]) && $proposefields[$n]["display"]==true) || propose_changes_is_field_displayed($proposefields[$n]))
 			{	
 			$fieldcount++;
-			display_field($n, $proposefields[$n]);
+			propose_changes_display_field($n, $proposefields[$n]);
 			}
 		}	
 
