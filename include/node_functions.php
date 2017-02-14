@@ -300,7 +300,7 @@ function get_tree_node_level($ref)
 
         $depth_level++;
         }
-    while('' != trim($parent));
+    while('' != trim($parent) & $parent!=0);
 
     return $depth_level;
     }
