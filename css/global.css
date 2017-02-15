@@ -323,9 +323,14 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .Inline label { float: none; font-weight: normal; margin-top: 0; width: auto; }
 .Question .tickset {float: left;}
 .Question .OptionTable, .Question .OptionToggle {margin: 0 0 0 190px;padding:0;}
-.Question .InnerLabel {width:60px; margin-top:  0px;}
+.Question .InnerLabel {width:90px; margin-top:  0px;}
 .Question .ExifOptions {margin: 0 0 0 290px;padding:0;}
 
+
+.Question .indent {
+    float:left;
+    width: 700px;
+}
 
 .FormWide .Question label{width: 20%}
 .FormWide .Question .Inline label { width: auto; }
@@ -1272,5 +1277,4 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 #photoholder {	
 	margin: 1px;
 }
-
 

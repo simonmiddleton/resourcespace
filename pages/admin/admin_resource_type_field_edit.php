@@ -37,9 +37,21 @@ if($backurl=="")
     $backurl=$baseurl . "/pages/admin/admin_resource_type_fields.php?ref=" . urlencode($ref) . "&restypefilter=" . urlencode($restypefilter) . "&field_sort=" . urlencode($field_sort) . "&find=" . urlencode($find);
     }
 	
-function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type, $currentvalue)
+function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type, $currentvalue,$fieldtype)
 	{
-	global $ref,$lang, $baseurl_short;
+	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $daterange_edtf_support;
+	if($propertyname=="linked_data_field")
+		{
+		if($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
+			{
+			// The linked_data_field column is is only used for date range fields at present
+			$propertytitle = $lang["property-field_raw_edtf"];
+			}
+		else
+			{
+			return;
+			}
+		}
 	?>
 	<div class="Question" >
 		<label><?php echo ($propertytitle!="")?$propertytitle:$propertyname ?></label>
@@ -86,7 +98,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				</select>
 			</div>
             <?php
-            if (in_array($currentvalue, array(2, 3, 7, 9, 12)))
+            if (in_array($currentvalue, $FIXED_LIST_FIELD_TYPES))
                 {
                 ?>
                 <div class="clearerleft"></div>
@@ -97,7 +109,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                 <span><a href="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['property-options_edit_link']; ?></a></span>
                 <?php
                 }            
-            if (in_array($currentvalue, array(0)))
+            elseif (in_array($currentvalue, array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE)))
                 { // create constraints selector
 				$addconstraint=true;
 				$constraint=sql_value("select field_constraint value from resource_type_field where ref='$ref'",0);?>
@@ -111,9 +123,18 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				<option value="1" <?php if ($constraint==1) { echo " selected"; } ?>><?php echo $lang["property-field_constraint-number"]?></option>
 				</select>
                 <?php
-                }
-            ?>
-			<?php
+                }			
+			}
+		elseif($propertyname=="linked_data_field")
+			{
+			if ($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
+				{
+				// The linked_data_field column is is only used for date range fields at present			
+				// Used to store the raw EDTF string submitted
+				?>
+				<input name="linked_data_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($currentvalue)?>">
+				<?php
+				}
 			}
 		elseif($propertyname=="sync_field")
 			{
@@ -187,6 +208,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 $fieldcolumns=array("title"=>array($lang["property-title"],"",0,1),
 					"resource_type"=>array($lang["property-resource_type"],"",0,0),
 					"type"=>array($lang["property-field_type"],"",0,1),
+					"linked_data_field"=>array($lang["property-field_raw_edtf"],"",0,1),
 					"name"=>array($lang["property-shorthand_name"],$lang["information-shorthand_name"],0,1),
 					"required"=>array($lang["property-required"],"",1,1),
 					"order_by"=>array($lang["property-order_by"],"",0,1),
@@ -234,8 +256,6 @@ if($modify_resource_type_field_columns!=''){
 if(getval("save","")!="" && getval("delete","")=="")
 	{
 	# Save field config
-	//TODO 	sync field
-	//__then__  sync_field='%3' or ref='[sync_with_field]' or sync_field='[sync_with_field]
 	$sync_field=getvalescaped("sync_field",0);
 	
 	foreach ($fieldcolumns as $column=>$column_detail)		
@@ -246,9 +266,8 @@ if(getval("save","")!="" && getval("delete","")=="")
 			}		
 		else
 			{
-			$val=escape_check(trim(getval($column,"")));
-			//echo "GOT VALUE " . $val . " for " . $column . "<br>"; 
-			// Set shortnm if not already set
+			$val=escape_check(trim(getval($column,""))); 
+			// Set shortname if not already set
 			if($column=="name" && $val==""){$val="field" . $ref;}
 			}
 		if (isset($sql))
@@ -401,7 +420,7 @@ else
 			<div class="CollapsibleSection" id="admin_hidden_field_properties" >	 
 			<?php
 			}
-	    admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column]);
+	    admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],$fielddata["type"]);
 	    }
     ?>
     

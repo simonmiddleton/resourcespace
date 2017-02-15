@@ -12,10 +12,11 @@ include_once 'migration_functions.php';
 * @param  string   $name                  Node name to be used (international)
 * @param  integer  $parent                ID of the parent of this node
 * @param  integer  $order_by              Value of the order in the list (e.g. 10)
+* @param  boolean  $returnexisting        Return an existing node if a match is found for this field. Duplicate nodes may be required for category trees but are not desirable for non-fixed list fields
 *
 * @return boolean|integer
 */
-function set_node($ref, $resource_type_field, $name, $parent, $order_by)
+function set_node($ref, $resource_type_field, $name, $parent, $order_by,$returnexisting=false)
     {
     if(!is_null($name))
         {
@@ -87,6 +88,15 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
         }
 
+		
+	if($returnexisting)
+		{
+		// Check for an existing match
+		$existingnode=sql_value("SELECT ref value FROM node WHERE resource_type_field ='" . escape_check($resource_type_field) . "' AND name ='" . escape_check($name) . "'",0);
+		if($existingnode > 0)
+			{return $existingnode;}
+		}
+		
     sql_query($query);
 	$new_ref = sql_insert_id();
 	if ($new_ref == 0 || $new_ref === false)
@@ -1203,7 +1213,7 @@ function extract_node_options(array $nodes, $i18n = true, $index_with_node_id = 
 /**
 * Search an array of nodes by name
 * 
-* Usefull to avoid querying the database multiple times 
+* Useful to avoid querying the database multiple times 
 * if we already have a full detail array of nodes
 * @param string  $name                Filter by name of node
 * 
@@ -1239,4 +1249,3 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
 
     return array();
     }    
-

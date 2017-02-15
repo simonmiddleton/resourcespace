@@ -233,7 +233,7 @@ function update_hitcount($ref)
 function get_resource_type_field($field)
 	{
 	# Returns field data from resource_type_field for the given field.
-	$return=sql_query("select * from resource_type_field where ref='$field'");
+	$return=sql_query("select *,linked_data_field from resource_type_field where ref='$field'");
 	if (count($return)==0)
 		{
 		return false;
@@ -256,22 +256,23 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     # If using metadata templates, 
     $templatesql = "";
-    global $metadata_template_resource_type,$FIXED_LIST_FIELD_TYPES;
+    global $metadata_template_resource_type,$NODE_FIELDS;
     if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$rtype) {
         # Show all resource fields, just as with editing multiple resources.
         $multi = true;
     }
 
     $return = array();
+	
 	$fieldsSQL = "SELECT d.value,d.resource_type_field,f1.*,f1.required frequired,f1.ref fref, f1.field_constraint FROM resource_type_field f1 LEFT JOIN (SELECT * FROM resource_data WHERE resource='$ref') d ON d.resource_type_field=f1.ref AND d.resource='$ref' 
 	
-	WHERE (f1.type NOT IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND (" . (($multi)?"1=1":"f1.resource_type=0 OR f1.resource_type=999 OR f1.resource_type='$rtype'") . "))
+	WHERE (f1.type NOT IN (" . implode(",",$NODE_FIELDS) . ") AND (" . (($multi)?"1=1":"f1.resource_type=0 OR f1.resource_type=999 OR f1.resource_type='$rtype'") . "))
 	
 	UNION 
 	
 	SELECT group_concat(if(rn.resource = '$ref',n.name,NULL)) value, n.resource_type_field, f2.*,f2.required frequired, f2.ref, f2.field_constraint FROM resource_type_field f2 LEFT JOIN node n ON n.resource_type_field=f2.ref LEFT JOIN resource_node rn ON rn.node=n.ref
 	
-	AND rn.resource='$ref' WHERE (f2.type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND (" . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ")) group by ref order by ";
+	AND rn.resource='$ref' WHERE (f2.type IN (" . implode(",",$NODE_FIELDS) . ") AND (" . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ")) group by ref order by ";
     if ($ord_by) {
     	$fieldsSQL .= "order_by,resource_type,ref";
     } else {

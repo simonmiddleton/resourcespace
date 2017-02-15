@@ -255,9 +255,10 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 }
             break;
 
-            case FIELD_TYPE_DATE_AND_OPTIONAL_TIME: # --------  Date and optional time
-            case FIELD_TYPE_EXPIRY_DATE: # --------  Expiry Date
-            case FIELD_TYPE_DATE: #--------  Date
+            case FIELD_TYPE_DATE_AND_OPTIONAL_TIME: 
+            case FIELD_TYPE_EXPIRY_DATE: 
+            case FIELD_TYPE_DATE:
+            case FIELD_TYPE_DATE_RANGE:
             $name="field_" . $fields[$n]["ref"];
             $datepart="";
             $value="";
@@ -282,66 +283,70 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     if ($search!="") {$search.=", ";}
                     $search.=$fields[$n]["name"] . ":" . $value;
                     }
-                
-
                 }
-//          if (getval($name . "_year","")!="")
-//              {
-//              $datepart.=getval($name . "_year","");
-//              if (getval($name . "_month","")!="")
-//                  {
-//                  $datepart.="-" . getval($name . "_month","");
-//                  if (getval($name . "_day","")!="")
-//                      {
-//                      $datepart.="-" . getval($name . "_day","");
-//                      }
-//                  }
-//              }           
                 
-            #Date range search -  start date
-            if (getval($name . "_startyear","")!="")
+            if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
                 {
-                $datepart.= "start" . getval($name . "_startyear","");
-                if (getval($name . "_startmonth","")!="")
+                // We have been passed the range in EDTF format, check it is in the correct format
+                $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
+                if(!preg_match($rangeregex,$date_edtf,$matches))
                     {
-                    $datepart.="-" . getval($name . "_startmonth","");
-                    if (getval($name . "_startday","")!="")
+                    //ignore this string as it is not a valid EDTF string
+                    continue;
+                    }
+                $rangedates = explode("/",$date_edtf);
+                $rangestart=str_pad($rangedates[0],  10, "-00");
+                $rangeendparts=explode("-",$rangedates[1]);
+                $rangeend=$rangeendparts[0] . "-" . (isset($rangeendparts[1])?$rangeendparts[1]:"12") . "-" . (isset($rangeendparts[2])?$rangeendparts[2]:"99");
+                $datepart = "start" . $rangestart . "end" . $rangeend;
+                debug("BANG " . $datepart);
+                }
+            else
+                {
+                #Date range search -  start date
+                if (getval($name . "_startyear","")!="")
+                    {
+                    $datepart.= "start" . getval($name . "_startyear","");
+                    if (getval($name . "_startmonth","")!="")
                         {
-                        $datepart.="-" . getval($name . "_startday","");
+                        $datepart.="-" . getval($name . "_startmonth","");
+                        if (getval($name . "_startday","")!="")
+                            {
+                            $datepart.="-" . getval($name . "_startday","");
+                            }
+                        else
+                            {
+                            $datepart.="";
+                            }
                         }
                     else
                         {
                         $datepart.="";
                         }
-                    }
-                else
+                    }           
+                    
+                #Date range search -  end date  
+                if (getval($name . "_endyear","")!="")
                     {
-                    $datepart.="";
-                    }
-                }           
-                
-            #Date range search -  end date  
-            if (getval($name . "_endyear","")!="")
-                {
-                $datepart.= "end" . getval($name . "_endyear","");
-                if (getval($name . "_endmonth","")!="")
-                    {
-                    $datepart.="-" . getval($name . "_endmonth","");
-                    if (getval($name . "_endday","")!="")
+                    $datepart.= "end" . getval($name . "_endyear","");
+                    if (getval($name . "_endmonth","")!="")
                         {
-                        $datepart.="-" . getval($name . "_endday","");
+                        $datepart.="-" . getval($name . "_endmonth","");
+                        if (getval($name . "_endday","")!="")
+                            {
+                            $datepart.="-" . getval($name . "_endday","");
+                            }
+                        else
+                            {
+                            $datepart.="-31";
+                            }
                         }
                     else
                         {
-                        $datepart.="-31";
+                        $datepart.="-12-31";
                         }
-                    }
-                else
-                    {
-                    $datepart.="-12-31";
-                    }
-                }   
-                
+                    }   
+                }
             if ($datepart!="")
                 {               
                 if ($search!="") {$search.=", ";}

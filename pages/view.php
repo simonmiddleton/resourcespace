@@ -270,7 +270,7 @@ function check_view_display_condition($fields,$n)
 function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	{
 		
-	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES;
+	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES,$range_separator;
 	$value=$field["value"];
 
     if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
@@ -291,7 +291,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	}
 	
 	# Handle expiry fields
-	if (!$valueonly && $field["type"]==6 && $value!="" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
+	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value!="" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
 		{
 		$extra.="<div class=\"RecordStory\"> <h1>" . $lang["warningexpired"] . "</h1><p>" . $lang["warningexpiredtext"] . "</p><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">" . $lang["warningexpiredok"] . "</a></p></div><style>#RecordDownload {display:none;}</style>";
 		}
@@ -307,11 +307,16 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	
 	if ($field['value_filter']!="")	{eval($field['value_filter']);}
 	else if (file_exists($plugin)) {include $plugin;}
-	else if ($field["type"]==4 && strpos($value,":")!=false){$value=nicedate($value,true,true);} // Show the time as well as date if entered
-	else if ($field["type"]==4 || $field["type"]==6 || $field["type"]==10) {$value=nicedate($value,false,true);}
-		
+	else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false){$value=nicedate($value,true,true);} // Show the time as well as date if entered
+	else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME || $field["type"]==FIELD_TYPE_EXPIRY_DATE || $field["type"]==FIELD_TYPE_DATE) {$value=nicedate($value,false,true);}
+	else if ($field["type"]==FIELD_TYPE_DATE_RANGE) 
+		{
+		$rangedates = explode(",",$value);		
+		natsort($rangedates);
+		$value=implode($range_separator,$rangedates);
+		}
 	
-	if (($field["type"]==2) || ($field["type"]==3) || ($field["type"]==7) || ($field["type"]==9)) {$value=TidyList($value);}
+	if (($field["type"]==FIELD_TYPE_CHECK_BOX_LIST) || ($field["type"]==FIELD_TYPE_DROP_DOWN_LIST) || ($field["type"]==FIELD_TYPE_CATEGORY_TREE) || ($field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)) {$value=TidyList($value);}
 	
 	if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
 		{			
@@ -320,19 +325,19 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		else {$title="";}
 
 		# Value formatting
-		if (($field["type"]==2) || ($field["type"]==7) || ($field["type"]==9))
+		if (($field["type"]==FIELD_TYPE_CHECK_BOX_LIST) || ($field["type"]==FIELD_TYPE_CATEGORY_TREE) || ($field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))
 			{$i18n_split_keywords =true;}
 		else 	{$i18n_split_keywords =false;}
 		$value=i18n_get_translated($value,$i18n_split_keywords );
 		
 		// Don't display the comma for radio buttons:
-		if($field['type'] == 12) {
+		if($field['type'] == FIELD_TYPE_RADIO_BUTTONS) {
 			$value = str_replace(',', '', $value);
 		}
 
 		$value_unformatted=$value; # store unformatted value for replacement also
 
-		if ($field["type"]!=8 || ($field["type"]==8 && $value == strip_tags($value))) # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to ckeditor that have not yet been edited.
+		if ($field["type"]!=FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR || ($field["type"]==FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value == strip_tags($value))) # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to ckeditor that have not yet been edited.
 			{
 			$value=nl2br(htmlspecialchars($value));
 			}

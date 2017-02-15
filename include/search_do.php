@@ -260,7 +260,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             }
                         else
                             {
-                            $datefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($fieldname) . "' and type IN (4,6,10)",0);
+                            $datefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($fieldname) . "' and type IN (" . FIELD_TYPE_DATE_AND_OPTIONAL_TIME . "," . FIELD_TYPE_EXPIRY_DATE . "," . FIELD_TYPE_DATE . "," . FIELD_TYPE_DATE_RANGE . ")",0);
                             $datefieldinfo_cache[$fieldname]=$datefieldinfo;
                             }
     
@@ -269,14 +269,23 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             $c++;
                             $datefieldinfo=$datefieldinfo[0];
                             $datefield=$datefieldinfo["ref"];
-                            if ($sql_filter!="")
+                            
+                            $val=str_replace("n","_", $keystring);
+                            $val=str_replace("|","-", $val);
+							if($fieldinfo['type']==FIELD_TYPE_DATE_RANGE)
+								{
+								// Find where the searched value is between the range values
+								$sql_join.=" join resource_node drrn" . $c . "s on drrn" . $c . "s.resource=r.ref join node drn" . $c . "s on drn" . $c . "s.ref=drrn" . $c . "s.node and drn" . $c . "s.resource_type_field='" . $datefield . "' and drn" . $c . "s.name>='" . $val . "' join resource_node drrn" . $c . "e on drrn" . $c . "e.resource=r.ref join node drn" . $c . "e on drn" . $c . "e.ref=drrn" . $c . "e.node and drn" . $c . "e.resource_type_field='" . $datefield . "' and drn" . $c . "e.name<='" . $val . "'";
+								}
+							else
+								{
+								if ($sql_filter!="")
                                 {
                                 $sql_filter.=" and ";
                                 }
-                            $val=str_replace("n","_", $keystring);
-                            $val=str_replace("|","-", $val);
-                            $sql_filter.="rd" . $c . ".value like '". $val . "%' ";
-                            $sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $datefield . "'";
+								$sql_filter.= ($sql_filter!=""?" and ":"") . "rd" . $c . ".value like '". $val . "%' ";
+								$sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $datefield . "'";
+								}
                             }
                         else if('day' == $kw[0])
                             {
@@ -330,22 +339,35 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 {
                                 $rangestartpos=strpos($rangestring,"start")+5;
                                 $rangestart=str_replace(" ","-",substr($rangestring,$rangestartpos,strpos($rangestring,"end")?strpos($rangestring,"end")-$rangestartpos:10));
-                                if ($sql_filter!="")
-                                    {
-                                    $sql_filter.=" and ";
-                                    }
-                                $sql_filter.="rd" . $c . ".value >= '" . $rangestart . "'";
+								if($fieldinfo['type']!=FIELD_TYPE_DATE_RANGE)
+									{$sql_filter.=($sql_filter!=""?" and ":"") . "rd" . $c . ".value >= '" . $rangestart . "'";}
                                 }
                             if (strpos($keystring,"end")!==FALSE )
                                 {
                                 $rangeend=str_replace(" ","-",$rangestring);
-                                if ($sql_filter!="")
-                                    {
-                                    $sql_filter.=" and ";
-                                    }
-                                $sql_filter.="rd" . $c . ".value <= '" . substr($rangeend,strpos($rangeend,"end")+3,10) . " 23:59:59'";
+								$rangeend=substr($rangeend,strpos($rangeend,"end")+3,10) . " 23:59:59";
+								if($fieldinfo['type']!=FIELD_TYPE_DATE_RANGE)
+									{$sql_filter.= ($sql_filter!=""?" and ":"") . "rd" . $c . ".value <= '" . $rangeend . "'";}
                                 }
-                            $sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $rangefield . "'";
+								
+							if($fieldinfo['type']==FIELD_TYPE_DATE_RANGE)
+								{
+								// Find where the start value or the end value  is between the range values
+								if(isset($rangestart))
+									{
+									// Need to check for a date greater than the start date 
+									$sql_join.=" join resource_node drrn" . $c . "s on drrn" . $c . "s.resource=r.ref join node drn" . $c . "s on drn" . $c . "s.ref=drrn" . $c . "s.node and drn" . $c . "s.resource_type_field='" . $fieldinfo['ref'] . "' and drn" . $c . "s.name>='" . $rangestart . "' "; 
+									}
+								if(isset($rangeend))
+									{
+									// Need to check for a date earlier than the end date
+									$sql_join.=" join resource_node drrn" . $c . "e on drrn" . $c . "e.resource=r.ref join node drn" . $c . "e on drn" . $c . "e.ref=drrn" . $c . "e.node and drn" . $c . "e.resource_type_field='" . $fieldinfo['ref'] . "' and drn" . $c . "e.name<='" . $rangeend . "'";
+									}
+								}
+							else
+								{
+								$sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $rangefield . "'";
+								}
                             }
 						$keywordprocessed=true;
                         }
@@ -409,19 +431,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     							
                         $keywords_expanded=explode(';',$keyword);
                         $keywords_expanded_or=count($keywords_expanded) > 1;
-    
-                        // TODO: restrict by field name
-    
-                        // TODO: do we need to kill of $ignore_filters ?
-    
-                        //echo "keyword={$keyword}" . PHP_EOL;
-    
-                        /*
-                        if (strpos($keyword,":")!==false && $ignore_filters)
-                            {
-                            $s=explode(":",$keyword);$keyword=$s[1];
-                            }
-                        */
     
                         # Omit resources containing this keyword?
                         $omit = false;

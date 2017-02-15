@@ -3146,3 +3146,9 @@ $actions_resource_review=true;
 $actions_notify_states="-1";
 $actions_resource_types="";
 $actions_approve_groups="";
+
+# Separator to use when rendering date range field values
+$range_separator = " / ";
+
+# Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)
+$daterange_edtf_support=false;
