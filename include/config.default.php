@@ -3091,6 +3091,9 @@ $replace_resource_preserve_option=false;
 # $replace_resource_preserve_default - if $replace_resource_preserve_option is enabled, should the option be checked by default?
 $replace_resource_preserve_default=false;
 
+# Option to allow replacement of multiple resources by filename using the "Replace resource batch" functionality
+$replace_batch_existing = false;
+
 # When searching collections, return results based on the metadata of the resources inside also
 $collection_search_includes_resource_metadata=false;
 
