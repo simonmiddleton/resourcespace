@@ -664,68 +664,100 @@ elseif ($resource['file_extension']=="swf" && $display_swf){
 		</div><?php
 		}
 	}
-elseif ($resource["has_image"]==1)
-	{
-	$use_watermark=check_use_watermark();
-	$imagepath=get_resource_path($ref,true,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
-	if (!file_exists($imagepath))
-		{
-		$imageurl=get_resource_path($ref,false,"thm",false,$resource["preview_extension"],-1,1,$use_watermark);
-		}
-	else
-		{
-		$imageurl=get_resource_path($ref,false,($retina_mode?"scr":"pre"),false,$resource["preview_extension"],-1,1,$use_watermark);
-		}
-	
-	?>
-	<div id="previewimagewrapper"><a style="position:relative;" class="enterLink" id="previewimagelink" href="<?php echo generateURL($baseurl_short . "pages/preview.php",$urlparams,array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>" title="<?php echo $lang["fullscreenpreview"]?>">
-	<?php
-	if (file_exists($imagepath))
-		{ 
-		?><img src="<?php echo $imageurl?>" alt="<?php echo $lang["fullscreenpreview"]?>" class="Picture" GALLERYIMG="no" id="previewimage"
-		<?php if ($retina_mode) { ?>onload="this.width/=1.8;this.onload=null;"<?php } ?>											   
-		/><?php 
-		} 
-	?><?php hook("aftersearchimg","",array($ref))?></a><?php
-	if(isset($previewcaption))
-		{
-		echo "<div class=\"clearerleft\"> </div>";	
-		@list($pw) = @getimagesize($imagepath);
-		display_field_data($previewcaption, true, $pw);
-		}
-	hook("previewextras");
-	?></div><?php 
-	if ($image_preview_zoom)
-		{ 
-		$previewurl=get_resource_path($ref,false,"scr",false,$resource["preview_extension"],-1,1,$use_watermark);		
-		?>
-		<script>
-		jQuery(document).ready(function(){
-			jQuery('#previewimage')
-			        .wrap('<span style="display:inline-block"></span>')
-			        .css('display', 'block')
-			        .parent()
-			        .zoom({url: '<?php echo $previewurl ?>' });
-			});
-		</script>
-		<?php
-		}
-	}
-else
-	{
-	?>
-	<div id="previewimagewrapper">
-	<img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture" style="border:none;" id="previewimage" />
-	<?php
-	if(isset($previewcaption))
-		{	
-		echo "<div class=\"clearerleft\"> </div>";	
-		display_field_data($previewcaption, true);
-		}
-	hook("previewextras");
-	?></div><?php	
-	}
+else if(1 == $resource['has_image'])
+    {
+    $use_watermark = check_use_watermark();
+    $imagepath     = get_resource_path($ref, true, 'pre', false, $resource['preview_extension'], -1, 1, $use_watermark);
 
+    if(!file_exists($imagepath))
+        {
+        $imageurl = get_resource_path($ref, false, 'thm', false, $resource['preview_extension'], -1, 1, $use_watermark);
+        }
+    else
+        {
+        $imageurl = get_resource_path($ref, false, ($retina_mode ? 'scr' : 'pre'), false, $resource['preview_extension'], -1, 1, $use_watermark);
+        }
+        ?>
+    <div id="previewimagewrapper">
+        <a id="previewimagelink"
+           class="enterLink"
+           href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams, array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>"
+           title="<?php echo $lang["fullscreenpreview"]; ?>"
+           style="position:relative;">
+    <?php
+    if(file_exists($imagepath))
+        {
+        ?>
+        <img id="previewimage"
+             class="Picture"
+             src="<?php echo $imageurl?>" 
+             alt="<?php echo $lang["fullscreenpreview"]?>" 
+             GALLERYIMG="no"
+        <?php 
+        if($retina_mode)
+            {
+            ?>
+             onload="this.width/=1.8;this.onload=null;"
+            <?php
+            }
+            ?>/>
+        <?php 
+        }
+
+    hook('aftersearchimg', '', array($ref));
+    ?>
+        </a>
+    <?php
+    if(isset($previewcaption))
+        {
+        ?>
+        <div class="clearerleft"></div>
+        <?php
+        @list($pw) = @getimagesize($imagepath);
+
+        display_field_data($previewcaption, true, $pw);
+        }
+
+    hook('previewextras');
+    ?>
+    </div>
+    <?php
+    if($image_preview_zoom)
+        {
+        $previewurl = get_resource_path($ref, false, 'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);		
+        ?>
+        <script>
+        jQuery(document).ready(function()
+            {
+            jQuery('#previewimage')
+            .wrap('<span style="display:inline-block"></span>')
+            .css('display', 'block')
+            .parent()
+            .zoom({url: '<?php echo $previewurl ?>' });
+            });
+        </script>
+        <?php
+        }
+    }
+else
+    {
+    ?>
+    <div id="previewimagewrapper">
+        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture" style="border:none;" id="previewimage" />
+    <?php
+    if(isset($previewcaption))
+        {
+        ?>
+        <div class="clearerleft"></div>
+        <?php
+        display_field_data($previewcaption, true);
+        }
+
+    hook("previewextras");
+    ?>
+    </div>
+    <?php
+    }
 ?>
 <?php } /* End of renderinnerresourcepreview hook */ ?>
 <?php } /* End of replacerenderinnerresourcepreview hook */ ?>
