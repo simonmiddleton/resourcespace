@@ -2,13 +2,14 @@
 include_once 'search_functions.php';
 include_once 'render_functions.php';
 
+# Store key variables to revert later so that we don't interfere with values that still need to be processed by search.php
+$stored_restypes=(isset($restypes)?$restypes:'');
+$stored_search=(isset($search)?$search:'');
+$stored_quicksearch=(isset($quicksearch)?$quicksearch:'');
+$stored_starsearch=(isset($starsearch)?$starsearch:'');
+
 if ($simple_search_reset_after_search)
     {
-    $stored_restypes=(isset($restypes)?$restypes:'');
-    $stored_search=(isset($search)?$search:'');
-    $stored_quicksearch=(isset($quicksearch)?$quicksearch:'');
-    $stored_starsearch=(isset($starsearch)?$starsearch:'');
-
     $restypes    = '';
     $search      = '';
     $quicksearch = '';
@@ -436,7 +437,14 @@ elseif($restypes=='')
         }
     else
         {
-        $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
+		if(!$simple_search_pills_view)
+			{
+			$searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
+			}
+		else
+			{
+			$searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
+			}
         }
 
 	$searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"&nbsp;&nbsp;". $lang['searchbutton']."&nbsp;&nbsp;\" />";
@@ -867,16 +875,8 @@ elseif($restypes=='')
 
 <?php hook("searchbarbottom");
 
-
-if ($simple_search_reset_after_search)
-    {
-    # Restore the blanked values if resetting after search, so the search page still draws correctly with the current search.
-    $restypes=$stored_restypes;
-    $search=$stored_search;
-    $quicksearch=$stored_quicksearch;
-    $starsearch=$stored_starsearch;
-    }
-
-
-
- ?>
+# Restore original values that may have been affected by processsing so the search page still draws correctly with the current search.
+$restypes=$stored_restypes;
+$search=$stored_search;
+$quicksearch=$stored_quicksearch;
+$starsearch=$stored_starsearch;

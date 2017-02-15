@@ -10,6 +10,7 @@ include_once dirname(__FILE__) . "/../include/request_functions.php";
 set_time_limit($cron_job_time_limit);
 ob_end_flush();
 ob_implicit_flush();
+ob_start();
 echo "Starting cron process...<br />\n";
 
 // grab a list of files to run as part of the upgrade process

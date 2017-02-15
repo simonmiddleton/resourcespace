@@ -369,8 +369,9 @@ if (!$themes_category_split_pages && !$theme_direct_jump) { ?>
   <style>.ListviewTitleBoxed {background-color:#fff;}</style>
 
 <?php
+global $enable_theme_breadcrumbs;
 if(!hook('replacethemesbacklink')){
-if ($themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
+if ($enable_theme_breadcrumbs && $themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
 	{
 	echo "<div class='SearchBreadcrumbs'>";
 	# Display breadcrumb links

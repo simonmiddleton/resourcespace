@@ -609,8 +609,8 @@ function save_resource_data_multi($collection)
                     $nodes_to_remove = $ui_deselected_node_values;
                     }
 
-                $all_nodes_to_add    = $all_nodes_to_add + $nodes_to_add;                
-                $all_nodes_to_remove = $all_nodes_to_remove + $nodes_to_remove;
+                $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);                
+                $all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
                 
                 // Loop through all the resources and check current node values so we can check if we need to log this as a chsnge
                 for ($m=0;$m<count($list);$m++)

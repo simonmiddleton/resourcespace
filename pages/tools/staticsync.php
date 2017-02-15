@@ -567,7 +567,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
         {
         // An existing alternative file has changed, update previews if required
         debug("Alternative file changed, recreating previews");
-		create_previews($ref, false,  $alt["extension"], false, false, $alternative, false, $staticsync_ingest);
+		create_previews($ref, false,  pathinfo($alternativefile, PATHINFO_EXTENSION), false, false, $alternative, false, $staticsync_ingest);
         sql_query("UPDATE resource_alt_files SET creation_date=NOW() WHERE ref='$alternative'"); 
         $done[$shortpath]["processed"]=true;           
         }	

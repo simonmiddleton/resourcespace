@@ -799,7 +799,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	{
 	global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
 	$heightmax,$widthmin,$widthmax,$filesizemin,$filesizemax,$fileextension,$haspreviewimage,$geo_search_restrict,$pending_review_visible_to_all,
-	$search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share;
+	$search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
 	
 	# Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
 	if(!is_array($archive)){$archive=explode(",",$archive);}
@@ -902,17 +902,26 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			}
 		elseif ($search_all_workflow_states)
 			{hook("search_all_workflow_states_filter");}   
-		elseif (count($archive)==1 and $archive[0]==0 && $pending_review_visible_to_all)
+		elseif ($archive_standard && $pending_review_visible_to_all)
             {
-            # If resources pending review are visible to all, when listing only active resources include
-            # pending review (-1) resources too.
+            # If resources pending review are visible to all, when performing a default search with no archive specified 
+            # that normally returns only active resources, include pending review (-1) resources too.
             if ($sql_filter!="") {$sql_filter.=" and ";}
             $sql_filter.="archive in('0','-1')";
             } 
 		else
             {
             # Append normal filtering - extended as advanced search now allows searching by archive state
-            if ($sql_filter!="") {$sql_filter.=" and ";}
+            if($sql_filter!="")
+                {
+                $sql_filter.=" and ";
+                }
+
+            if('' == implode(',', $archive))
+                {
+                $archive = array(0);
+                }
+
             $sql_filter.="archive in (" . implode(",",$archive) . ")";
             }
         if (!checkperm("v") && !(substr($search,0,11)=="!collection" && $k!='' && $collection_allow_not_approved_share)) 
@@ -1103,7 +1112,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection_filter.=")";
         
         # Formulate SQL
-        $sql="select distinct c.*, r.hit_count score from collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref and cr.collection=c.ref where $sql_filter and $collection_filter group by c.ref order by $order_by ";#echo $search . " " . $sql;
+        $sql="select distinct c.*, sum(r.hit_count) score, sum(r.hit_count) total_hit_count from collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref and cr.collection=c.ref where $sql_filter and $collection_filter group by c.ref order by $order_by ";#echo $search . " " . $sql;
         return $returnsql?$sql:sql_query($sql);
         }
     
