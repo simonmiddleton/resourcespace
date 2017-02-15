@@ -730,6 +730,7 @@ $lang["action"]="Action";
 $lang["treeobjecttype-field"]=$lang["field"]="Field";
 $lang["save"]="Save";
 $lang["revert"]="Revert";
+$lang['continue'] = 'Continue';
 $lang["cancel"]="Cancel";
 $lang["view"]="View";
 $lang["type"]="Type";
@@ -2566,3 +2567,5 @@ $lang["actions_type_resourcereview"] = "Resource review";
 $lang["actions_type_resourcerequest"] = "Resource request";
 $lang["actions_type_userrequest"] = "Account request";
 $lang["field_search_no_results"] = "Try without specifying a metadata field, or";
+
+/* Annotations */

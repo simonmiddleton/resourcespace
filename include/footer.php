@@ -320,11 +320,10 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
         echo "</script>";
     }
     hook("additional_title_pages");
-}
-   
-?><script src="<?php echo $baseurl?>/lib/js/Placeholders.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script><?php
-
-
+}   
+?>
+<script src="<?php echo $baseurl?>/lib/js/Placeholders.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
+<?php
 if (getval("ajax","")=="") {
 	// don't show closing tags if we're in ajax mode
 	?>
@@ -639,8 +638,23 @@ try{
   });
 </script>
 <!-- End of chosen support -->
-<?php } ?>
+<?php
+}
 
+if($annotate_enabled)
+    {
+    ?>
+    <!-- Annotorious -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.min.js"></script>
+
+    <!-- Annotorious plugin(s) -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <!-- End of Annotorious -->
+    <?php
+    }
+	?>
 </body>
 </html>
 <?php } // end if !ajax ?>
