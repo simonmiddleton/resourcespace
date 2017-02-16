@@ -1730,9 +1730,8 @@ function delete_resource($ref)
 	if (file_exists("$dirpath/metadump.xml")){
 		unlink("$dirpath/metadump.xml");
 	}
-	@rmdir($dirpath); // try to delete directory, but if it has stuff in it fail silently for now
-			  // fixme - should we try to handle if there are other random files still there?
-	
+	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
+    
 	# Log the deletion of this resource for any collection it was in. 
 	$in_collections=sql_query("select * from collection_resource where resource = '$ref'");
 	if (count($in_collections)>0){
