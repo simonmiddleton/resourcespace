@@ -654,7 +654,7 @@ if($annotate_enabled)
     <!-- End of Annotorious -->
     <?php
     }
-	?>
+    ?>
 </body>
 </html>
 <?php } // end if !ajax ?>
