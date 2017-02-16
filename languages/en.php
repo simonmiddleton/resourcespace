@@ -86,6 +86,7 @@ $lang["fieldtype-category_tree"]="Category tree";
 $lang["fieldtype-dynamic_keywords_list"]="Dynamic keywords list";
 $lang["fieldtype-radio_buttons"]="Radio buttons";
 $lang["fieldtype-warning_message"]="Warning message";
+$lang["fieldtype-date_range"]="Date Range";
 
 # Property labels (for the default properties)
 $lang["documentation-permissions"]="See <a href=../../documentation/permissions.txt target=_blank>the permissions help text file</a> for further information on permissions.";
@@ -110,6 +111,7 @@ $lang["information-allowed_extensions"]="If set, only files with the specified e
 $lang["property-allowed_extensions"]="Allowed extensions";
 $lang["information-resource_type_config_override"]="Allows custom configuration values for each resource type, affecting search results, resource view and edit pages. Don't forget to revert any settings changed here in the config override for the other resource types.";
 
+# Metadata field properties
 $lang["property-field_id"]="Field id";
 $lang["property-title"]="Title";
 $lang["property-resource_type"]="Resource type";
@@ -117,6 +119,7 @@ $lang["property-field_type"]="Field type";
 $lang["property-field_constraint"]="Field Constraint";
 $lang["property-field_constraint-none"]="None";
 $lang["property-field_constraint-number"]="Number";
+$lang["property-field_raw_edtf"]="If date range is input in EDTF format store raw data in this field";
 
 $lang["property-options"]="Comma separated list of options. The first option will be the default option. If you do not wish to set a default value, use a starting comma to default to blank. E.g. <br />,Option1,Option2 - will default to blank.";
 $lang['property-options_edit_link'] = 'Manage options';

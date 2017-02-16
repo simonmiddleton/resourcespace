@@ -3091,6 +3091,9 @@ $replace_resource_preserve_option=false;
 # $replace_resource_preserve_default - if $replace_resource_preserve_option is enabled, should the option be checked by default?
 $replace_resource_preserve_default=false;
 
+# Option to allow replacement of multiple resources by filename using the "Replace resource batch" functionality
+$replace_batch_existing = false;
+
 # When searching collections, return results based on the metadata of the resources inside also
 $collection_search_includes_resource_metadata=false;
 
@@ -3143,3 +3146,9 @@ $actions_resource_review=true;
 $actions_notify_states="-1";
 $actions_resource_types="";
 $actions_approve_groups="";
+
+# Separator to use when rendering date range field values
+$range_separator = " / ";
+
+# Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)
+$daterange_edtf_support=false;

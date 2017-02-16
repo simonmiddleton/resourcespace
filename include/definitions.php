@@ -18,6 +18,7 @@ define ('FIELD_TYPE_DYNAMIC_KEYWORDS_LIST',             9);
 define ('FIELD_TYPE_DATE',                             10);
 define ('FIELD_TYPE_RADIO_BUTTONS',                    12);
 define ('FIELD_TYPE_WARNING_MESSAGE',                  13);
+define ('FIELD_TYPE_DATE_RANGE',                       14);
 
 $field_types = array(
     FIELD_TYPE_TEXT_BOX_SINGLE_LINE             =>"fieldtype-text_box_single_line",
@@ -32,7 +33,8 @@ $field_types = array(
     FIELD_TYPE_DYNAMIC_KEYWORDS_LIST            =>"fieldtype-dynamic_keywords_list",
     FIELD_TYPE_DATE                             =>"fieldtype-date",
     FIELD_TYPE_RADIO_BUTTONS                    =>"fieldtype-radio_buttons",
-    FIELD_TYPE_WARNING_MESSAGE                  =>"fieldtype-warning_message"
+    FIELD_TYPE_WARNING_MESSAGE                  =>"fieldtype-warning_message",
+    FIELD_TYPE_DATE_RANGE                       =>"fieldtype-date_range"
 );
 
 $FIXED_LIST_FIELD_TYPES = array(
@@ -54,8 +56,17 @@ $TEXT_FIELD_TYPES = array(
 $DATE_FIELD_TYPES = array(
     FIELD_TYPE_DATE_AND_OPTIONAL_TIME,
     FIELD_TYPE_EXPIRY_DATE,
-    FIELD_TYPE_DATE
+    FIELD_TYPE_DATE,
+    FIELD_TYPE_DATE_RANGE
 );
+
+// Array of fields that do not have fixed value options but data is stil stored using node/resource_node rather than resource_data. 
+// This is now the default for new fields and will include all fields once node development is complete.
+$NODE_MIGRATED_FIELD_TYPES = array(
+    FIELD_TYPE_DATE_RANGE                 
+);
+
+$NODE_FIELDS=array_merge($FIXED_LIST_FIELD_TYPES,$NODE_MIGRATED_FIELD_TYPES);
 
 // ------------------------- LOG_CODE_ -------------------------
 

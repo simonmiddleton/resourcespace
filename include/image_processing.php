@@ -154,10 +154,15 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 	if (!$revert){
     if ($filename!="")
     	{
-	    if ($file_path!="")
+		global $replace_batch_existing;
+	    if (!$replace_batch_existing && $file_path!="")
 			{
 			# File path has been specified. Let's use that directly.
 			$result=rename($file_path, $filepath);
+			}
+		elseif ($file_path!="" && $replace_batch_existing)
+			{
+			$result=copy($file_path, $filepath);	
 			}
 		else
 			{
