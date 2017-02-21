@@ -66,7 +66,5 @@ foreach(get_nodes($resource_type_field, null, true, null, $rows, $name) as $node
     $current_node_pointer++;
     }
 
-echo count($return);
-
 echo json_encode($return);
 exit();
