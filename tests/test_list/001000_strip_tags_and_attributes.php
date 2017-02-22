@@ -11,8 +11,8 @@ if('' !== strip_tags_and_attributes(''))
     }
 
 
-// Case 2: 
-$html_input  = '<h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h1>';
+// Case 2: Tag not allowed by default
+$html_input  = '<header>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</header>';
 $html_output = '';
 
 if($html_output !== strip_tags_and_attributes($html_input))
