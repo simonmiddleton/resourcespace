@@ -405,7 +405,7 @@ function ProcessFolder($folder)
                             $filetype = filetype($altpath . "/" . $altfile);
                             if (($filetype == "file") && (substr($file,0,1) != ".") && (strtolower($file) != "thumbs.db"))
                                 {
-                                # Create alternative file                               
+                                # Create alternative file
                                 # Find extension
                                 $ext = explode(".", $altfile);
                                 $ext = $ext[count($ext)-1];
@@ -428,7 +428,7 @@ function ProcessFolder($folder)
 						$altfiles = glob($altfilematch);
 						foreach ($altfiles as $altfile)
 							{
-                            staticsync_process_alt($altfile,$r);			
+                            staticsync_process_alt($altfile,$r);
 							echo "Processed alternative: " . $shortpath . PHP_EOL;
                             }
 						continue;
@@ -452,11 +452,12 @@ function ProcessFolder($folder)
                     echo " *** Skipping file - it was not possible to move the file (still being imported/uploaded?)" . PHP_EOL;
                     }
                 }
-            elseif (!isset($done[$shortpath]["archive"]) || $done[$shortpath]["archive"]!=$resource_deletion_state || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state))
+            elseif (!isset($done[$shortpath]["archive"]) // Check modified times and and update previews if no existing archive state is set,
+                    || (isset($resource_deletion_state) && $done[$shortpath]["archive"]!=$resource_deletion_state) // or if resource is not in system deleted state,
+                    || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state)) // or resource is currently in staticsync deleted state and needs to be reinstated
                 {
-                # check modified date and update previews if necessary (not for deleted resources unless $staticsync_revive_state is set)
                 $filemod = filemtime($fullpath);
-                if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"]) || $done[$shortpath]["archive"]==$staticsync_deleted_state)
+                if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"]) || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state))
                     {
                     
                     $count++;
@@ -488,9 +489,15 @@ function ProcessFolder($folder)
                             {
                             update_field($rref,$filename_field,$file);  
                             }
-    
+
                         create_previews($rref, false, $rd["file_extension"], false, false, -1, false, $staticsync_ingest);
                         sql_query("UPDATE resource SET file_modified=NOW() " . ((isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))?", archive='" . $staticsync_revive_state . "'":"") ." WHERE ref='$rref'");
+
+                        if(isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))
+                            {
+                            # Log this
+                            resource_log($rref,LOG_CODE_STATUS_CHANGED,'','',$staticsync_deleted_state,$staticsync_revive_state);
+                            }
                         }
                     }
                 }
@@ -613,10 +620,11 @@ if (!$staticsync_ingest)
     $n=0;
     foreach($done as $syncedfile=>$synceddetails)    
         {
-        if(!isset($synceddetails["processed"]) && isset($synceddetails["archive"]) && $synceddetails["archive"]!=$staticsync_deleted_state || isset($synceddetails["alternative"]))
+        if(!isset($synceddetails["processed"]) && isset($synceddetails["archive"]) && !(isset($staticsync_ignore_deletion_states) && in_array($synceddetails["archive"],$staticsync_ignore_deletion_states)) && $synceddetails["archive"]!=$staticsync_deleted_state || isset($synceddetails["alternative"]))
             {
             $resources_to_archive[$n]["file_path"]=$syncedfile;
             $resources_to_archive[$n]["ref"]=$synceddetails["ref"];
+            $resources_to_archive[$n]["archive"]=isset($synceddetails["archive"])?$synceddetails["archive"]:"";
             if(isset($synceddetails["alternative"]))
                 {$resources_to_archive[$n]["alternative"]=$synceddetails["alternative"];}
             $n++;
@@ -625,7 +633,7 @@ if (!$staticsync_ingest)
         
     # ***for modified syncdir directories:
     $syncdonemodified = hook("modifysyncdonerf");
-    if (!empty($syncdonemodified)) { $resources_to_archive = $syncdonemodified; } 
+    if (!empty($syncdonemodified)) { $resources_to_archive = $syncdonemodified; }
     
     foreach ($resources_to_archive as $rf)
         {
@@ -643,13 +651,19 @@ if (!$staticsync_ingest)
                 echo "File no longer exists: " . $rf["ref"] . " " . $fp . PHP_EOL;
                 # Set to archived.
                 sql_query("UPDATE resource SET archive='" . $staticsync_deleted_state . "' WHERE ref='{$rf["ref"]}'");
-                sql_query("DELETE FROM collection_resource WHERE resource='{$rf["ref"]}'");                
+                if(isset($resource_deletion_state) && $staticsync_deleted_state==$resource_deletion_state)
+                    {
+                    // Only remove from collections if we are really deleting this. Some configurations may have a separate state or synced resources may be temporarily absent
+                    sql_query("DELETE FROM collection_resource WHERE resource='{$rf["ref"]}'");
+                    }
+                # Log this
+                resource_log($rf['ref'],LOG_CODE_STATUS_CHANGED,'','',$rf["archive"],$staticsync_deleted_state);
                 } 
             else
                 {
                 echo "Alternative file no longer exists: resource " . $rf["ref"] . " alt:" . $rf["alternative"] . " " . $fp . PHP_EOL;
                 sql_query("DELETE FROM resource_alt_files WHERE ref='" . $rf["alternative"] . "'");
-                }                  
+                }
             }
         }
         

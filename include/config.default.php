@@ -1989,6 +1989,8 @@ $autorotate_ingest=false;
 $staticsync_defaultstate=0;
 # Archive state to set for resources where files have been deleted/moved from syncdir
 $staticsync_deleted_state=2;
+# Optional array of archive states for which missing files will be ignored and not marked as deleted, useful when using offline_archive plugin.
+//$staticsync_ignore_deletion_states=array(2,3);
 
 # staticsync_revive_state - if this is set then deleted items that later reappear will be moved to this archive state
 # $staticsync_revive_state=-1;
