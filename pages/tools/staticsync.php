@@ -158,7 +158,7 @@ function ProcessFolder($folder)
            $staticsync_extension_mapping, $staticsync_mapped_category_tree, $staticsync_title_includes_path, 
            $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix, $theme_category_levels, $staticsync_defaultstate,
            $additional_archive_states,$staticsync_extension_mapping_append_values, $staticsync_deleted_state, $staticsync_alternative_file_text,
-           $resource_deletion_state, $alternativefiles,$staticsync_revive_state;
+           $resource_deletion_state, $alternativefiles,$staticsync_revive_state,$enable_thumbnail_creation_on_upload;
     
     $collection = 0;
     $treeprocessed=false;
@@ -302,7 +302,7 @@ function ProcessFolder($folder)
                 if ($modified_title !== false) { $title = $modified_title; }
 
                 # Import this file
-                $r = import_resource($shortpath, $type, $title, $staticsync_ingest);
+                $r = import_resource($shortpath, $type, $title, $staticsync_ingest,$enable_thumbnail_creation_on_upload);
                 if ($r !== false)
                     {
                     # Add to mapped category tree (if configured)
@@ -393,7 +393,7 @@ function ProcessFolder($folder)
                         }
 
                     # update access level
-                    sql_query("UPDATE resource SET access = '$accessval',archive='$staticsync_defaultstate' WHERE ref = '$r'");
+                    sql_query("UPDATE resource SET access = '$accessval',archive='$staticsync_defaultstate' " . ((!$enable_thumbnail_creation_on_upload)?", has_image=0, preview_attempts=0 ":"") . " WHERE ref = '$r'");
 
                     # Add any alternative files
                     $altpath = $fullpath . $staticsync_alternatives_suffix;
@@ -489,9 +489,11 @@ function ProcessFolder($folder)
                             {
                             update_field($rref,$filename_field,$file);  
                             }
-
-                        create_previews($rref, false, $rd["file_extension"], false, false, -1, false, $staticsync_ingest);
-                        sql_query("UPDATE resource SET file_modified=NOW() " . ((isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))?", archive='" . $staticsync_revive_state . "'":"") ." WHERE ref='$rref'");
+                        if($enable_thumbnail_creation_on_upload)
+                            {
+                            create_previews($rref, false, $rd["file_extension"], false, false, -1, false, $staticsync_ingest);
+                            }
+                        sql_query("UPDATE resource SET file_modified=NOW() " . ((isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))?", archive='" . $staticsync_revive_state . "'":"") . ((!$enable_thumbnail_creation_on_upload)?", has_image=0, preview_attempts=0 ":"") . " WHERE ref='$rref'");
 
                         if(isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))
                             {
