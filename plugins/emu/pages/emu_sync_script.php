@@ -212,7 +212,7 @@ if(0 < $rs_emu_resources_count)
             continue;
             }
 
-        if('script' != $rs_emu_resource['created_by_script_flag'])
+        if('SCRIPT' != $rs_emu_resource['created_by_script_flag'])
             {
             continue;
             }
