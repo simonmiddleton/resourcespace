@@ -165,6 +165,10 @@ $page_def[] = config_add_hidden('emu_rs_saved_mappings');
 $page_def[] = config_add_hidden('emu_config_modified_timestamp');
 
 
+if(!isset($php_path) || '' == $php_path)
+    {
+    $error = '$php_path config option MUST be set in order for testing scripts functionality to work!';
+    }
 
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
