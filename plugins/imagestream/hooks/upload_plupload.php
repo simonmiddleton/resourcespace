@@ -111,7 +111,7 @@ function HookImagestreamUpload_pluploadInitialuploadprocessing()
 						global $icc_extraction, $icc_preview_profile, $icc_preview_options,$ffmpeg_supported_extensions;
 						if ($icc_extraction){
 							$iccpath = $targetDir . DIRECTORY_SEPARATOR . $imagestream_file .'.icc';
-							if (!file_exists($iccpath) && !isset($iccfound) && $extension!="pdf" && !in_array($imagestream_file_ext,$ffmpeg_supported_extensions)) {
+							if (!file_exists($iccpath) && !isset($iccfound) && $rawext!="pdf" && !in_array($imagestream_file_ext,$ffmpeg_supported_extensions)) {
 								// extracted profile doesn't exist. Try extracting.
 								if (extract_icc_profile($ref,$imagestream_file_ext)){
 									$iccfound = true;
@@ -193,7 +193,7 @@ function HookImagestreamUpload_pluploadInitialuploadprocessing()
 			$aref=add_alternative_file($ref,"MP4 version");	
 			$imagestreamqtfile=get_resource_path($ref,true,"",false,"mp4", -1, 1, false, "", $aref); 		
 			$shell_exec_cmd = $ffmpeg_fullpath . " -loglevel panic -y -r " . $imagestream_transitiontime . " -i " . $imagestream_workingfiles . DIRECTORY_SEPARATOR . "imagestream%3d.jpg -r " . $imagestream_transitiontime . " -s {$width}x{$height} " . $imagestreamqtfile;
-			echo ("Running command: " . $shell_exec_cmd);
+			
 			if ($config_windows)
 				{
 				$shell_exec_cmd = $ffmpeg_fullpath . " -loglevel panic -y -r " . $imagestream_transitiontime . " -i " . $imagestream_workingfiles . DIRECTORY_SEPARATOR . "imagestream%%3d.jpg -r " . $imagestream_transitiontime . " -s {$width}x{$height} " . $imagestreamqtfile;

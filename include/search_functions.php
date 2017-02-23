@@ -180,16 +180,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         {
         switch ($fields[$n]["type"])
             {
-            case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes            
-			$value=getvalescaped('field_'.$fields[$n]["ref"],'');
-             if ($value!="")
-                {
-                if ($search!="") {$search.=", ";}
-                $search.= (strpos($value,"\"")===false)?($fields[$n]["name"] . ":" . $value):("\"" . $fields[$n]["name"] . ":" .substr($value,1,-1) . "\"");
-               // Move any quotes around whole field:value element so that they are kept together
-                }
-            break;
-                        
             case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
             case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
             case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
@@ -265,9 +255,10 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 }
             break;
 
-            case FIELD_TYPE_DATE_AND_OPTIONAL_TIME: # --------  Date and optional time
-            case FIELD_TYPE_EXPIRY_DATE: # --------  Expiry Date
-            case FIELD_TYPE_DATE: #--------  Date
+            case FIELD_TYPE_DATE_AND_OPTIONAL_TIME: 
+            case FIELD_TYPE_EXPIRY_DATE: 
+            case FIELD_TYPE_DATE:
+            case FIELD_TYPE_DATE_RANGE:
             $name="field_" . $fields[$n]["ref"];
             $datepart="";
             $value="";
@@ -292,66 +283,70 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     if ($search!="") {$search.=", ";}
                     $search.=$fields[$n]["name"] . ":" . $value;
                     }
-                
-
                 }
-//          if (getval($name . "_year","")!="")
-//              {
-//              $datepart.=getval($name . "_year","");
-//              if (getval($name . "_month","")!="")
-//                  {
-//                  $datepart.="-" . getval($name . "_month","");
-//                  if (getval($name . "_day","")!="")
-//                      {
-//                      $datepart.="-" . getval($name . "_day","");
-//                      }
-//                  }
-//              }           
                 
-            #Date range search -  start date
-            if (getval($name . "_startyear","")!="")
+            if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
                 {
-                $datepart.= "start" . getval($name . "_startyear","");
-                if (getval($name . "_startmonth","")!="")
+                // We have been passed the range in EDTF format, check it is in the correct format
+                $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
+                if(!preg_match($rangeregex,$date_edtf,$matches))
                     {
-                    $datepart.="-" . getval($name . "_startmonth","");
-                    if (getval($name . "_startday","")!="")
+                    //ignore this string as it is not a valid EDTF string
+                    continue;
+                    }
+                $rangedates = explode("/",$date_edtf);
+                $rangestart=str_pad($rangedates[0],  10, "-00");
+                $rangeendparts=explode("-",$rangedates[1]);
+                $rangeend=$rangeendparts[0] . "-" . (isset($rangeendparts[1])?$rangeendparts[1]:"12") . "-" . (isset($rangeendparts[2])?$rangeendparts[2]:"99");
+                $datepart = "start" . $rangestart . "end" . $rangeend;
+                debug("BANG " . $datepart);
+                }
+            else
+                {
+                #Date range search -  start date
+                if (getval($name . "_startyear","")!="")
+                    {
+                    $datepart.= "start" . getval($name . "_startyear","");
+                    if (getval($name . "_startmonth","")!="")
                         {
-                        $datepart.="-" . getval($name . "_startday","");
+                        $datepart.="-" . getval($name . "_startmonth","");
+                        if (getval($name . "_startday","")!="")
+                            {
+                            $datepart.="-" . getval($name . "_startday","");
+                            }
+                        else
+                            {
+                            $datepart.="";
+                            }
                         }
                     else
                         {
                         $datepart.="";
                         }
-                    }
-                else
+                    }           
+                    
+                #Date range search -  end date  
+                if (getval($name . "_endyear","")!="")
                     {
-                    $datepart.="";
-                    }
-                }           
-                
-            #Date range search -  end date  
-            if (getval($name . "_endyear","")!="")
-                {
-                $datepart.= "end" . getval($name . "_endyear","");
-                if (getval($name . "_endmonth","")!="")
-                    {
-                    $datepart.="-" . getval($name . "_endmonth","");
-                    if (getval($name . "_endday","")!="")
+                    $datepart.= "end" . getval($name . "_endyear","");
+                    if (getval($name . "_endmonth","")!="")
                         {
-                        $datepart.="-" . getval($name . "_endday","");
+                        $datepart.="-" . getval($name . "_endmonth","");
+                        if (getval($name . "_endday","")!="")
+                            {
+                            $datepart.="-" . getval($name . "_endday","");
+                            }
+                        else
+                            {
+                            $datepart.="-31";
+                            }
                         }
                     else
                         {
-                        $datepart.="-31";
+                        $datepart.="-12-31";
                         }
-                    }
-                else
-                    {
-                    $datepart.="-12-31";
-                    }
-                }   
-                
+                    }   
+                }
             if ($datepart!="")
                 {               
                 if ($search!="") {$search.=", ";}
@@ -480,7 +475,22 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
                     }
             break;
-            }
+            
+			case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes  
+			default: 
+				$value=getvalescaped('field_'.$fields[$n]["ref"],'');
+				if ($value!="")
+					{
+					$valueparts=split_keywords($value, false, false, false, false, true);
+					foreach($valueparts as $valuepart)
+						{
+						if ($search!="") {$search.=", ";}
+						// Move any quotes around whole field:value element so that they are kept together
+						$search.= (strpos($valuepart,"\"")===false)?($fields[$n]["name"] . ":" . $valuepart):("\"" . $fields[$n]["name"] . ":" .substr($valuepart,1,-1) . "\"");
+						}
+					}
+            break;
+			}
         }
 
         ##### NODES #####
@@ -794,7 +804,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	{
 	global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
 	$heightmax,$widthmin,$widthmax,$filesizemin,$filesizemax,$fileextension,$haspreviewimage,$geo_search_restrict,$pending_review_visible_to_all,
-	$search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share;
+	$search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
 	
 	# Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
 	if(!is_array($archive)){$archive=explode(",",$archive);}
@@ -897,17 +907,26 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			}
 		elseif ($search_all_workflow_states)
 			{hook("search_all_workflow_states_filter");}   
-		elseif (count($archive)==1 and $archive[0]==0 && $pending_review_visible_to_all)
+		elseif ($archive_standard && $pending_review_visible_to_all)
             {
-            # If resources pending review are visible to all, when listing only active resources include
-            # pending review (-1) resources too.
+            # If resources pending review are visible to all, when performing a default search with no archive specified 
+            # that normally returns only active resources, include pending review (-1) resources too.
             if ($sql_filter!="") {$sql_filter.=" and ";}
             $sql_filter.="archive in('0','-1')";
             } 
 		else
             {
             # Append normal filtering - extended as advanced search now allows searching by archive state
-            if ($sql_filter!="") {$sql_filter.=" and ";}
+            if($sql_filter!="")
+                {
+                $sql_filter.=" and ";
+                }
+
+            if('' == implode(',', $archive))
+                {
+                $archive = array(0);
+                }
+
             $sql_filter.="archive in (" . implode(",",$archive) . ")";
             }
         if (!checkperm("v") && !(substr($search,0,11)=="!collection" && $k!='' && $collection_allow_not_approved_share)) 
@@ -1098,7 +1117,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection_filter.=")";
         
         # Formulate SQL
-        $sql="select distinct c.* from collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref and cr.collection=c.ref where $sql_filter and $collection_filter group by c.ref order by $order_by ";#echo $search . " " . $sql;
+        $sql="select distinct c.*, sum(r.hit_count) score, sum(r.hit_count) total_hit_count from collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref and cr.collection=c.ref where $sql_filter and $collection_filter group by c.ref order by $order_by ";#echo $search . " " . $sql;
         return $returnsql?$sql:sql_query($sql);
         }
     

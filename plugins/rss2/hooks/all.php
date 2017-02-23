@@ -4,12 +4,13 @@ function HookRss2AllPreheaderoutput()
 	{
 	if(!function_exists("get_api_key"))
 		{
-		include __DIR__ . "/../../../include/api_functions.php";
+		include_once __DIR__ . "/../../../include/api_functions.php";
 		}
 	}
 
 function HookRss2AllSearchbarbeforebottomlinks()
 	{
+	include_once __DIR__ . "/../../../include/api_functions.php";	
  	global $baseurl,$lang,$userpassword,$username,$userref,$api_scramble_key;
 	
 	$query="user=" . base64_encode($username) . "&search=!last50";

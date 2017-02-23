@@ -26,6 +26,10 @@ function api_get_resource_field_data($resource)
 
 function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,$revert=false,$autorotate=false,$metadata="")
     {
+    $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
+    $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
+    $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
+
     # Create a new resource
     $ref=create_resource($resource_type,$archive);
     
@@ -158,11 +162,19 @@ function api_delete_alternative_file($resource,$ref)
 
 function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="")
     {
+    $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
+    $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
+    $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
+
     return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);
     }
     
 function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url="")
     {
+    $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
+    $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
+    $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
+
     return upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
     }
 
@@ -205,9 +217,8 @@ function api_delete_collection($ref)
     
 function api_search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false)
     {
+    $exclude_themes = filter_var($exclude_themes, FILTER_VALIDATE_BOOLEAN);
+    $exclude_public = filter_var($exclude_public, FILTER_VALIDATE_BOOLEAN);
+
     return search_public_collections($search, $order_by, $sort, $exclude_themes, $exclude_public);
     }
-    
-
-    
-    

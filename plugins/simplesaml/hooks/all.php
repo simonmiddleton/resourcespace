@@ -57,7 +57,7 @@ function HookSimplesamlAllProvideusercredentials()
 		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
         $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
         $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
-        $simplesaml_custom_attributes;
+        $simplesaml_custom_attributes,$lang;
         // Use standard authentication if available
 		if (isset($_COOKIE["user"])) {return true;}
 		
@@ -212,10 +212,9 @@ function HookSimplesamlAllProvideusercredentials()
 			$user_select_sql="and u.username='$username'";
             
             # Generate a new session hash.
+            include_once dirname(__FILE__) . '/../../../include/login_functions.php';
             $session_hash=generate_session_hash($password_hash);
-            
-            # Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)
-            rs_setcookie("user", $session_hash, intval($simplesaml_login_expiry), "", "", substr($baseurl,0,5)=="https", true);
+
             return true;
 			}
 		return false;

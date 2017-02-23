@@ -8,7 +8,13 @@
 require dirname(__FILE__) . "/../../include/db.php";
 require_once dirname(__FILE__) . "/../../include/general.php";
 
-$newline = (substr(php_sapi_name(), 0, 3) == 'cli') ? PHP_EOL : '<br /><br />';
+if('cli' != php_sapi_name())
+    {
+    header('HTTP/1.1 401 Unauthorized');
+    exit('Access denied');
+    }
+
+$newline = PHP_EOL;
 
 sql_query("DELETE FROM collection WHERE public<>1 AND user NOT IN (SELECT ref FROM user)");
 echo number_format(sql_affected_rows()) . " orphaned collections deleted." . $newline;

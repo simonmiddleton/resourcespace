@@ -233,7 +233,7 @@ function update_hitcount($ref)
 function get_resource_type_field($field)
 	{
 	# Returns field data from resource_type_field for the given field.
-	$return=sql_query("select * from resource_type_field where ref='$field'");
+	$return=sql_query("select *,linked_data_field from resource_type_field where ref='$field'");
 	if (count($return)==0)
 		{
 		return false;
@@ -256,22 +256,23 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     # If using metadata templates, 
     $templatesql = "";
-    global $metadata_template_resource_type,$FIXED_LIST_FIELD_TYPES;
+    global $metadata_template_resource_type,$NODE_FIELDS;
     if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$rtype) {
         # Show all resource fields, just as with editing multiple resources.
         $multi = true;
     }
 
     $return = array();
+	
 	$fieldsSQL = "SELECT d.value,d.resource_type_field,f1.*,f1.required frequired,f1.ref fref, f1.field_constraint FROM resource_type_field f1 LEFT JOIN (SELECT * FROM resource_data WHERE resource='$ref') d ON d.resource_type_field=f1.ref AND d.resource='$ref' 
 	
-	WHERE (f1.type NOT IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND (" . (($multi)?"1=1":"f1.resource_type=0 OR f1.resource_type=999 OR f1.resource_type='$rtype'") . "))
+	WHERE (f1.type NOT IN (" . implode(",",$NODE_FIELDS) . ") AND (" . (($multi)?"1=1":"f1.resource_type=0 OR f1.resource_type=999 OR f1.resource_type='$rtype'") . "))
 	
 	UNION 
 	
 	SELECT group_concat(if(rn.resource = '$ref',n.name,NULL)) value, n.resource_type_field, f2.*,f2.required frequired, f2.ref, f2.field_constraint FROM resource_type_field f2 LEFT JOIN node n ON n.resource_type_field=f2.ref LEFT JOIN resource_node rn ON rn.node=n.ref
 	
-	AND rn.resource='$ref' WHERE (f2.type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ") AND (" . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ")) group by ref order by ";
+	AND rn.resource='$ref' WHERE (f2.type IN (" . implode(",",$NODE_FIELDS) . ") AND (" . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ")) group by ref order by ";
     if ($ord_by) {
     	$fieldsSQL .= "order_by,resource_type,ref";
     } else {
@@ -381,30 +382,53 @@ function get_resource_types($types = "", $translate = true)
 function get_resource_top_keywords($resource,$count)
 	{
 	# Return the top $count keywords (by hitcount) used by $resource.
-	# This is for the 'Find Similar' search.
-
-        # These are now derived from resource data for fixed keyword lists, rather than from the resource_keyword table
-        # which produced very mixed results and didn't work with stemming or diacritic normalisation.
+	# This section is for the 'Find Similar' search.
+	# These are now derived from a join of node and resource_node for fixed keyword lists and resource_data for free text fields
+	# Currently the date fields are not used for this feature
         
     $return=array();
-	$keywords=sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (2,3,7,9,11,12) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
-	foreach ($keywords as $keyword)
+	
+	$keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (1,5,6,8,10,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
+    
+    $fixed_dynamic_keywords = sql_query("select distinct n.ref, n.name, n.resource_type_field from node n inner join resource_node rn on n.ref=rn.node where rn.resource='$resource' order by new_hit_count desc limit $count");
+    
+    $combined = array_merge($keywords,$fixed_dynamic_keywords);
+    
+	foreach ( $combined as $keyword )
 		{
-		# Apply permissions and strip out any results the user does not have access to.
-		if ((checkperm("f*") || checkperm("f" . $keyword["field"]))
-		&& !checkperm("f-" . $keyword["field"]) && !checkperm("T" . $keyword["resource_type"]))
-			{
-			# Has access to this field.
-                        $r=$keyword["keyword"];
-                        if (substr($r,0,1)==",") {$r=substr($r,1);}
-                        $s=explode(",",$r);
-                        foreach ($s as $a)
-                            {
-                            if(!empty($a))
-                            	{$return[]=$a;}
-                            }
-			}
-		}
+        # If isset($keyword['keyword']) this means that the value is coming free text in general    
+        if ( isset($keyword['keyword']) )
+            {
+            # Apply permissions and strip out any results the user does not have access to.
+            if ((checkperm("f*") || checkperm("f" . $keyword["field"]))
+            && !checkperm("f-" . $keyword["field"]) && !checkperm("T" . $keyword["resource_type"]))
+                {
+                $r =  $keyword["keyword"] ;
+                }   
+            }
+            
+        else
+            {
+            # In this case the keyword is coming from nodes
+            # Apply permissions and strip out any results the user does not have access to.
+            if ( (checkperm("f*") || checkperm("f" . $keyword["field"]))
+            && !checkperm("f-" . $keyword["resource_type_field"]) && !checkperm("T" . $resource) )
+                {
+                $r =  $keyword["name"] ;   
+                }
+            }
+            
+        if (substr($r,0,1)==","){$r=substr($r,1);}
+        $s=explode(",",$r);
+        foreach ($s as $a)
+            {
+            if(!empty($a))
+                {
+                $return[]=$a;
+                }
+            }
+		}	
+			
 	return $return;
 	}
 
@@ -435,11 +459,11 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 	$search=str_replace("\\n"," ",$search);
 
 	$ns=trim_spaces($search);
-	
+
 	if ((substr($ns,0,1)==",") ||  ($index==false && strpos($ns,":")!==false)) # special 'constructed' query type, split using comma so
 	# we support keywords with spaces.
 		{	
-		if($keepquotes)
+		if(!$index && $keepquotes)
             {
             preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
             $return=trim_array($matches[0],$config_trimchars . ",");
@@ -485,7 +509,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 	else
 		{
 		# split using spaces and similar chars (according to configured whitespace characters)
-        if($keepquotes)
+		if(!$index && $keepquotes && strpos($ns,"\"")!==false)
             {
             preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
             
@@ -532,6 +556,19 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
         # Also makes the string lower case ready for indexing.
         global $config_separators;
         $separators=$config_separators;
+
+        // Replace some HTML entities with empty space
+        // Most of them should already be in $config_separators
+        // but others, like &shy; don't have an actual character that we can copy and paste
+        // to $config_separators
+        $string = htmlentities($string, null, 'UTF-8');
+        $string = str_replace('&nbsp;', ' ', $string);
+        $string = str_replace('&shy;', ' ', $string);
+        $string = str_replace('&lsquo;', ' ', $string);
+        $string = str_replace('&rsquo;', ' ', $string);
+        $string = str_replace('&ldquo;', ' ', $string);
+        $string = str_replace('&rdquo;', ' ', $string);
+        $string = str_replace('&ndash;', ' ', $string);
 
 		  if($is_html)
 		  	{
@@ -2391,21 +2428,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	# need to be available.
 
 	# Include footer
-	global $email_footer,$storagedir;
-	$phpversion=phpversion();
-	if ($phpversion>='5.3') {
-	if (file_exists(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php")){
-		include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php");
-		include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/extras/class.html2text.php");
-		}
-	} else {
-	// less than 5.3
-	if (file_exists(dirname(__FILE__)."/../lib/phpmailer/class.phpmailer.php")){
-		include_once(dirname(__FILE__)."/../lib/phpmailer/class.phpmailer.php");
-		include_once(dirname(__FILE__)."/../lib/phpmailer/class.html2text.php");
-		}
-	}
-		
+	global $email_footer, $storagedir, $mime_type_by_extension;
+	
+	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php");
+	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/extras/class.html2text.php");
+	
 	global $email_from;
 	if ($from=="") {$from=$email_from;}
 	if ($reply_to=="") {$reply_to=$email_from;}
@@ -2499,22 +2526,27 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 					$$variable="<img src='cid:".basename(substr($variable,15))."'/>";
 					$images[]=dirname(__FILE__).substr($variable,15);
 				}
-				
-				# embed images - ex [img_gfx/whitegry/titles/title.gif]
-				else if (substr($variable,0,4)=="img_"){
-					
-					$image_path=substr($variable,4);
-					if (substr($image_path,0,1)=="/"){ // absolute paths
-						$images[]=$image_path;
-					}
-					else { // relative paths
-						$image_path=str_replace("../","",$image_path);
-						$images[]=dirname(__FILE__)."/../".$image_path;
-					}
-					$$variable="<img src='cid:".basename($image_path)."'/>";
-					$images[]=$image_path;
-				}
-				
+
+                // embed images - ex [img_gfx/whitegry/titles/title.gif]
+                else if('img_' == substr($variable, 0, 4))
+                    {
+                    $image_path = substr($variable, 4);
+
+                    // absolute paths
+                    if('/' == substr($image_path, 0, 1))
+                        {
+                        $images[] = $image_path;
+                        }
+                    // relative paths
+                    else
+                        {
+                        $image_path = str_replace('../', '', $image_path);
+                        $images[]   = dirname(__FILE__) . '/../' . $image_path;
+                        }
+
+                    $$variable = '<img src="cid:' . basename($image_path) . '"/>';
+                    }
+
 				# attach files (ex [attach_/var/www/resourcespace/gfx/whitegry/titles/title.gif])
 				else if (substr($variable,0,7)=="attach_"){
 					$$variable="";
@@ -2646,10 +2678,23 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	if (isset($embed_thumbnail)&&isset($templatevars['thumbnail'])){
 		$mail->AddEmbeddedImage($templatevars['thumbnail'],$thumbcid,$thumbcid,'base64','image/jpeg'); 
 		}
-	if (isset($images)){
-		foreach ($images as $image){	
-		$mail->AddEmbeddedImage($image,basename($image),basename($image),'base64','image/gif');}
-	}	
+
+    if(isset($images))
+        {
+        foreach($images as $image)
+            {
+            $image_extension = pathinfo($image, PATHINFO_EXTENSION);
+
+            // Set mime type based on the image extension
+            if(array_key_exists($image_extension, $mime_type_by_extension))
+                {
+                $mime_type = $mime_type_by_extension[$image_extension];
+                }
+
+            $mail->AddEmbeddedImage($image, basename($image), basename($image), 'base64', $mime_type);
+            }
+        }
+
 	if (isset($attachments)){
 		foreach ($attachments as $attachment){
 		$mail->AddAttachment($attachment,basename($attachment));}
@@ -3305,6 +3350,10 @@ function check_display_condition($n, $field)
                  if($displayconditioncheck)
                     {
                     $displaycondition = true;
+                    }
+                else
+                    {
+                    $required_fields_exempt[]=$field["ref"];
                     }
 
                 // Check display conditions
@@ -5307,12 +5356,22 @@ function emptyiszero($value)
 
 // Add array_column if <PHP 5.5
 if(!function_exists("array_column"))
-{
-   function array_column($array,$column_name)
     {
-        return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
+    function array_column($array,$column_name,$index_key=null)
+        {
+        if ($index_key == null)
+                {
+                return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
+                }
+                
+        $return=array();
+        foreach($array as $element)
+            {
+            $return[$element[$index_key]] = $element[$column_name];                
+            }
+        return $return;
+        }
     }
-}
 
 
 /**
@@ -5465,6 +5524,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
 function form_value_display($row,$name,$default="")
     {
     # Returns a sanitised row from the table in a safe form for use in a form value, suitable overwritten by POSTed data if it has been supplied.
+    if (!is_array($row)) {return false;}
     if (array_key_exists($name,$row)) {$default=$row[$name];}
     return htmlspecialchars(getval($name,$default));
     }

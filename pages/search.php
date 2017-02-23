@@ -1,8 +1,8 @@
 <?php
-include "../include/db.php";
+include_once "../include/db.php";
 include_once "../include/general.php";
-include "../include/resource_functions.php"; //for checking scr access
-include "../include/search_functions.php";
+include_once "../include/resource_functions.php"; //for checking scr access
+include_once "../include/search_functions.php";
 include_once "../include/collections_functions.php";
 include_once '../include/render_functions.php';
 
@@ -49,60 +49,57 @@ if(false !== strpos($search, TAG_EDITOR_DELIMITER))
 
 hook("moresearchcriteria");
 
-if($simple_search_pills_view)
-    {
-    // When searching for specific field options we convert search into nodeID search format (@@nodeID)
-    // This is done because if we also have the field displayed and we search for country:France this needs to 
-    // convert to @@74 in order for the field to have this option selected
-    $keywords = split_keywords($search, false, false, false, false, true);
-    foreach($keywords as $keyword)
-        {
-        if('' == trim($keyword))
-            {
-            continue;
-            }
+// When searching for specific field options we convert search into nodeID search format (@@nodeID)
+// This is done because if we also have the field displayed and we search for country:France this needs to 
+// convert to @@74 in order for the field to have this option selected
+$keywords = split_keywords($search, false, false, false, false, true);
+foreach($keywords as $keyword)
+	{
+	if('' == trim($keyword))
+		{
+		continue;
+		}
 
-        if(false === strpos($search, ':'))
-            {
-            continue;
-            }
-        if(substr($keyword,0,1) =="\"" && substr($keyword,-1,1) == "\"")
-            {
-            $specific_field_search=explode(":",substr($keyword,1,-1));
-            }
-        else
-            {
-            $specific_field_search = explode(':', $keyword);
-            }
+	if(false === strpos($search, ':'))
+		{
+		continue;
+		}
+	if(substr($keyword,0,1) =="\"" && substr($keyword,-1,1) == "\"")
+		{
+		$specific_field_search=explode(":",substr($keyword,1,-1));
+		}
+	else
+		{
+		$specific_field_search = explode(':', $keyword);
+		}
 
-        if(2 !== count($specific_field_search))
-            {
-            continue;
-            }
+	if(2 !== count($specific_field_search))
+		{
+		continue;
+		}
 
-        $field_shortname = trim($specific_field_search[0]);
+	$field_shortname = trim($specific_field_search[0]);
 
-        if('' == $field_shortname)
-            {
-            continue;
-            }
+	if('' == $field_shortname)
+		{
+		continue;
+		}
 
-        $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
+	$resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
 
-        if(0 == $resource_type_field)
-            {
-            continue;
-            }
+	if(0 == $resource_type_field)
+		{
+		continue;
+		}
 
-        $nodes = get_nodes($resource_type_field, null, true);
-        $node_found = get_node_by_name($nodes, $specific_field_search[1]);
+	$nodes = get_nodes($resource_type_field, null, true);
+	$node_found = get_node_by_name($nodes, $specific_field_search[1]);
 
-        if(0 < count($node_found))
-            {
-            $search = str_replace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
-            }
-        }
-    }
+	if(0 < count($node_found))
+		{
+		$search = str_ireplace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
+		}
+	}
 
 # create a display_fields array with information needed for detailed field highlighting
 $df=array();
@@ -212,23 +209,20 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
                 $value="";
 				if (strpos($search, $field.":")===false) 
 				    {
-                $key_year=$key_part."_year";
-				$value_year=getvalescaped($key_year,"");
-				if ($value_year!="") $value=$value_year;
-				else $value="nnnn";
-				
-				$key_month=$key_part."_month";
-				$value_month=getvalescaped($key_month,"");
-				if ($value_month=="") $value_month.="nn";
-				
-				$key_day=$key_part."_day";
-				$value_day=getvalescaped($key_day,"");
-				if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
-				elseif ($value_month!="nn") $value.="|" . $value_month;
-    				
-    
+					$key_year=$key_part."_year";
+					$value_year=getvalescaped($key_year,"");
+					if ($value_year!="") $value=$value_year;
+					else $value="nnnn";
+					
+					$key_month=$key_part."_month";
+					$value_month=getvalescaped($key_month,"");
+					if ($value_month=="") $value_month.="nn";
+					
+					$key_day=$key_part."_day";
+					$value_day=getvalescaped($key_day,"");
+					if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
+					elseif ($value_month!="nn") $value.="|" . $value_month;
     				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . $field . ":" . $value;
-
 				    }
 	            				
 				}
@@ -236,7 +230,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				{
 				# Dropdown field
 				# Add keyword exactly as it is as the full value is indexed as a single keyword for dropdown boxes.
-				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,11) . ":" . $value;
+				$search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,11) . ":" . $value;
 				}		
 			elseif (strpos($key,"_cat_")!==false)
 				{
@@ -245,7 +239,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				$value=str_replace(",",";",$value);
 				if (substr($value,0,1)==";") {$value=substr($value,1);}
 				
-				$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,10) . ":" . $value;
+				$search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,10) . ":" . $value;
 				}
 			else
 				{
@@ -254,7 +248,7 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
 				foreach ($values as $value)
 					{
 					# Standard field
-					$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . substr($key,6) . ":" . $value;
+					$search=(($search=="")?"":join(", ",split_keywords($search, false, false, false, false, true)) . ", ") . substr($key,6) . ":" . $value;
 					}
 				}
 			}
@@ -287,9 +281,8 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
                     $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
                     }
                 }
-
             $search = ('' == $search ? '' : join(', ', split_keywords($search,false,false,false,false,true))) . $node_ref;
-            }
+			}
 		}
 
 	$year=getvalescaped("year","");
@@ -336,7 +329,18 @@ if(empty($per_page))
     }
 rs_setcookie('per_page', $per_page);
 
-$archive = getvalescaped('archive', 0);
+// Construct archive string and array
+$archive_choices=getvalescaped("archive","");
+$archive_standard = $archive_choices=="";
+$selected_archive_states = array();
+if(!is_array($archive_choices)){$archive_choices=explode(",",$archive_choices);}
+foreach($archive_choices as $archive_choice)
+    {
+    if(is_numeric($archive_choice)) {$selected_archive_states[] = $archive_choice;}  
+    }
+
+$archive = implode(",",$selected_archive_states);
+$archivesearched = in_array(2,$selected_archive_states);
 
 // Disable search through all workflow states when an archive state is specifically requested
 // This prevents links like View deleted resources to show the user resources in all states
@@ -401,7 +405,7 @@ else
 	rs_setcookie('restypes', $restypes);
 
 	# This is a new search, log this activity
-	if ($archive==2) {daily_stat("Archive search",0);} else {daily_stat("Search",0);}
+	if ($archivesearched) {daily_stat("Archive search",0);} else {daily_stat("Search",0);}
 	}
 $modified_restypes=hook("modifyrestypes_aftercookieset");
 if($modified_restypes){$restypes=$modified_restypes;}
@@ -432,7 +436,13 @@ if (!array_key_exists("search",$_GET) && !array_key_exists("search",$_POST))
 		}
 	rs_setcookie('saved_order_by', $order_by);
 	$sort=getvalescaped("saved_sort","");rs_setcookie('saved_sort', $sort);
-	$archive=getvalescaped("saved_archive",0);rs_setcookie('saved_archive', $archive);
+	$archivechoices=getvalescaped("saved_archive",0);rs_setcookie('saved_archive', $archivechoices);
+    if(!is_array($archivechoices)){$archivechoices=explode(",",$archivechoices);}
+    foreach($archivechoices as $archivechoice)
+        {
+        if(is_numeric($archivechoice)) {$selected_archive_states[] = $archivechoice;}  
+        }
+    $archive=implode(",",$selected_archive_states);
 	}
 	
 hook("searchparameterhandler");	
@@ -489,7 +499,7 @@ else
 	$result=array(); # Do not return resources (e.g. for collection searching only)
 	}
 
-if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive==0){$collections=do_collections_search($search,$restypes,0,$order_by,$sort);} // don't do this for external shares
+if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive_standard){$collections=do_collections_search($search,$restypes,0,$order_by,$sort);} // don't do this for external shares
 
 # Allow results to be processed by a plugin
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
@@ -793,7 +803,7 @@ if (isset($result_title_height))
 
 #if (is_array($result)||(isset($collections)&&(count($collections)>0)))
 
-if(!$search_titles && isset($theme_link) && $k=="")
+if($enable_theme_breadcrumbs && !$search_titles && isset($theme_link) && $k=="")
 	{
 	// Show the themes breadcrumbs if they exist, but not if we are using the search_titles
 	echo "<div class='SearchBreadcrumbs'>" . $theme_link . "&nbsp;" . LINK_CARET . "<span id=\"coltitle" . $collection . "\"><a  href=\"" . generateURL($baseurl_short."pages/search.php",array("search"=>"!collection" . $collection)) . "\" onClick=\"return CentralSpaceLoad(this,true);\">" . i18n_get_collection_name($collectiondata) . "</a></span></div>" ;
@@ -1129,7 +1139,7 @@ if($responsive_ui)
 	hook("beforesearchresults");
 	
 	# Archive link
-	if (($archive==0) && (strpos($search,"!")===false) && $archive_search) 
+	if ((!$archivesearched) && (strpos($search,"!")===false) && $archive_search) 
 		{ 
 		$arcresults=do_search($search,$restypes,$order_by,2,0);
 		if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
@@ -1184,6 +1194,7 @@ if($responsive_ui)
 					<p><?php if (strpos($search,"country:")!==false) { ?><p><?php echo $lang["tryselectingallcountries"]?> <?php } 
 					elseif (strpos($search,"year:")!==false) { ?><p><?php echo $lang["tryselectinganyyear"]?> <?php } 
 					elseif (strpos($search,"month:")!==false) { ?><p><?php echo $lang["tryselectinganymonth"]?> <?php } 
+					elseif (strpos($search,":")!==false) { ?><p><?php echo $lang["field_search_no_results"]; } 
 					else 		{?><?php echo $lang["trybeinglessspecific"]?><?php } ?> <?php echo $lang["enteringfewerkeywords"]?></p>
 					<?php
 					}
@@ -1228,7 +1239,7 @@ if($responsive_ui)
 		<?php
 		}
 		# Include public collections and themes in the main search, if configured.		
-		if ($offset==0 && isset($collections)&& strpos($search,"!")===false && $archive==0 && !hook('replacesearchpublic','',array($search,$collections)))
+		if ($offset==0 && isset($collections)&& strpos($search,"!")===false && $archive_standard && !hook('replacesearchpublic','',array($search,$collections)))
 			{
 			include "../include/search_public.php";
 			}

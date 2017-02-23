@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include_once "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php";
 include_once "../include/collections_functions.php";
@@ -369,8 +369,9 @@ if (!$themes_category_split_pages && !$theme_direct_jump) { ?>
   <style>.ListviewTitleBoxed {background-color:#fff;}</style>
 
 <?php
+global $enable_theme_breadcrumbs;
 if(!hook('replacethemesbacklink')){
-if ($themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
+if ($enable_theme_breadcrumbs && $themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
 	{
 	echo "<div class='SearchBreadcrumbs'>";
 	# Display breadcrumb links
@@ -836,6 +837,7 @@ if ($header=="" && !isset($themes[0]))
 				for ($m=0;$m<count($themes);$m++)
 					{
 					$s=$headers[$n]["name"] . ":" . $themes[$m]["name"];
+					if(strpos($s," ")!==false){$s="\"" . $s . "\"";}
 
 					# Indent this item?
 					$indent = str_pad('', $themes[$m]['indent'] * 5, ' ');

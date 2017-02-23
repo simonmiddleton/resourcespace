@@ -2,6 +2,12 @@
 include_once 'search_functions.php';
 include_once 'render_functions.php';
 
+# Store key variables to revert later so that we don't interfere with values that still need to be processed by search.php
+$stored_restypes=(isset($restypes)?$restypes:'');
+$stored_search=(isset($search)?$search:'');
+$stored_quicksearch=(isset($quicksearch)?$quicksearch:'');
+$stored_starsearch=(isset($starsearch)?$starsearch:'');
+
 if ($simple_search_reset_after_search)
     {
     $restypes    = '';
@@ -61,7 +67,6 @@ for ($n=0;$n<count($fields);$n++)
 			
 # Process all keywords, putting set fieldname/value pairs into an associative array ready for setting later.
 # Also build a quicksearch string.
-
 $quicksearch    = refine_searchstring($quicksearch);
 $keywords       = split_keywords($quicksearch,false,false,false,false,true);
 
@@ -79,13 +84,12 @@ for ($n=0;$n<count($keywords);$n++)
 			$s=explode(":",$keywords[$n]);
 			if (isset($set_fields[$s[0]])){$set_fields[$s[0]].=" ".$s[1];}
 			else {$set_fields[$s[0]]=$s[1];}
-			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);}
+			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);$initial_tags[] =trim($keywords[$n]);}
 			}
         // Nodes search
         else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
             {
             $nodes = resolve_nodes_from_string($keywords[$n]);
-            $searched_nodes=array();
             foreach($nodes as $node)
                 {
                 $searched_nodes[] = $node;
@@ -105,10 +109,9 @@ for ($n=0;$n<count($keywords);$n++)
 
                 if(false === $field_index)
                     {
-                    $fieldsearchterm = str_replace(NODE_TOKEN_PREFIX . $searched_node,
-                        rebuild_specific_field_search_from_node($node),
-                        $keywords[$n]);
-						
+                    $fieldsearchterm = rebuild_specific_field_search_from_node($node);
+					if(strpos(" ",$fieldsearchterm)!==false)
+						{ $fieldsearchterm = "\"" . $fieldsearchterm . "\"";}	
 					$simple[]=$fieldsearchterm;
 					$initial_tags[] = $fieldsearchterm;
                     continue;
@@ -131,10 +134,11 @@ for ($n=0;$n<count($keywords);$n++)
 			}
 		}
 	}
-
+	
 # Set the text search box to the stripped value.
-$quicksearch=join(" ",trim_array($simple));
+
 $quicksearch=str_replace(",-"," -",$quicksearch);
+$quicksearch=join(" ",trim_array($simple));
 
 # Set the predefined date fields
 $found_year="";if (isset($set_fields["year"])) {$found_year=$set_fields["year"];}
@@ -432,7 +436,14 @@ elseif($restypes=='')
         }
     else
         {
-        $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
+		if(!$simple_search_pills_view)
+			{
+			$searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
+			}
+		else
+			{
+			$searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
+			}
         }
 
 	$searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"&nbsp;&nbsp;". $lang['searchbutton']."&nbsp;&nbsp;\" />";
@@ -861,4 +872,10 @@ elseif($restypes=='')
 
 </div>
 
-<?php hook("searchbarbottom"); ?>
+<?php hook("searchbarbottom");
+
+# Restore original values that may have been affected by processsing so the search page still draws correctly with the current search.
+$restypes=$stored_restypes;
+$search=$stored_search;
+$quicksearch=$stored_quicksearch;
+$starsearch=$stored_starsearch;

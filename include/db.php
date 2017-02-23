@@ -1067,31 +1067,31 @@ function getval($val,$default,$force_numeric=false)
     }
 
 /**
-* Return a value from get/post/cookie, escaped, SQL-safe and XSS-free
+* Return a value from get/post/cookie, escaped and SQL-safe
+* 
+* It should not be relied upon for XSS. Sanitising output should be done when needed by developer
 * 
 * @param string        $val
 * @param string|array  $default        The fallback value if not found
 * @param boolean       $force_numeric  Set to TRUE if we want only numeric values. If returned value is not numeric
 *                                      the function will return the default value
-* @param boolean       $allow_js       Set to TRUE to allow Javascript code
 * 
 * @return string|array
 */
-function getvalescaped($val, $default, $force_numeric = false, $allow_js = false)
+function getvalescaped($val, $default, $force_numeric = false)
     {
-    $value        = getval($val, $default, $force_numeric);
-    $allowed_tags = ($allow_js ? array('script') : array());
+    $value = getval($val, $default, $force_numeric);
 
     if(is_array($value))
         {
         foreach($value as &$item)
             {
-            $item = escape_check(strip_tags_and_attributes($item, $allowed_tags));
+            $item = escape_check($item);
             }
         }
     else
         {
-        $value = escape_check(strip_tags_and_attributes($value, $allowed_tags));
+        $value = escape_check($value);
         }
 
     return $value;
@@ -1979,24 +1979,40 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         {
         return $html;
         }
-	//Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
-	$html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
-	
+
+    //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
+    $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
-    $is_html = ($html != strip_tags($html));
+    $is_html                    = ($html != strip_tags($html));
+    $compatibility_libxml_2_7_8 = false;
 
     libxml_use_internal_errors(true);
 
-    $allowed_tags       = array_merge(array('div', 'span', 'h3', 'p', 'br', 'em'), $tags);
+    $allowed_tags       = array_merge(array('div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'em', 'strong', 'b', 'u', 'ol', 'ul', 'li'), $tags);
     $allowed_attributes = array_merge(array('id', 'class', 'style'), $attributes);
 
     // Step 1 - Check DOM
     $doc = new DOMDocument();
-    $doc->encoding='UTF-8';
+    $doc->encoding = 'UTF-8';
 
-    if($doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD))
+    if(defined ('LIBXML_HTML_NOIMPLIED') && defined ('LIBXML_HTML_NODEFDTD'))
+        {
+        $process_html = $doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        }
+    else
+        {
+        // Compatibility with libxml <2.7.8
+        // we allow HTML and BODY because libxml does not have some required constants and then we extract
+        // the text between BODY tags
+        $allowed_tags               = array_merge(array('html', 'body'), $allowed_tags);
+        $process_html               = $doc->loadHTML($html);
+        $compatibility_libxml_2_7_8 = true;
+        }
+
+    if($process_html)
         {
         foreach($doc->getElementsByTagName('*') as $tag)
             {
@@ -2022,6 +2038,14 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
             }
 
         $html = $doc->saveHTML();
+
+        if($compatibility_libxml_2_7_8 && false !== strpos($html, '<body>'))
+            {
+            $body_o_tag_pos = strpos($html, '<body>');
+            $body_c_tag_pos = strpos($html, '</body>');
+
+            $html = substr($html, $body_o_tag_pos + 6, $body_c_tag_pos - ($body_o_tag_pos + 6));
+            }
         }
 
     // Step 2 - Use regular expressions
@@ -2045,9 +2069,10 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         {
         $html = strip_tags($html);
         }
-		
-	// Revert back to UTF-8
-	$html = mb_convert_encoding($html, 'UTF-8','HTML-ENTITIES');
+
+    // Revert back to UTF-8
+    $html = mb_convert_encoding($html, 'UTF-8','HTML-ENTITIES');
+
     return $html;
     }
 

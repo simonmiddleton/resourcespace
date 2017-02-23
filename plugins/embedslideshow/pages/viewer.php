@@ -36,7 +36,7 @@ $use_watermark=check_use_watermark();
 <html>
 <head>
 <link href="../css/embedslideshow.css" rel="stylesheet" type="text/css" media="screen,projection,print" /> 
-<script src="../../../lib/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+<script src="../../../lib/js/jquery-1.12.4.min.js" type="text/javascript"></script>
 </head>
 <body>
 

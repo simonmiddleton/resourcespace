@@ -271,7 +271,7 @@ if ($_FILES)
 	// Clean the filename for security reasons
 	if($replace){$origuploadedfilename=escape_check($plfilename);}
 	$plfilename = preg_replace('/[^\w\._]+/', '_', $plfilename);
-
+	
 	// Make sure the fileName is unique but only if chunking is disabled
 	if ($chunks < 2 && file_exists($targetDir . DIRECTORY_SEPARATOR . $plfilename)) {
 		$ext = strrpos($plfilename, '.');
@@ -282,11 +282,11 @@ if ($_FILES)
 		while (file_exists($targetDir . DIRECTORY_SEPARATOR . $plfilename_a . '_' . $count . $plfilename_b))
 			$count++;
 
-		$plfilename = $plfilename_a . '_' . $count . $plfilename_b;
+		$plfilename = $plfilename_a . '_' . $count . $plfilename_b; 
 	}
 
 	$plfilepath = $targetDir . DIRECTORY_SEPARATOR . $plfilename;
-
+	
 	// Create target dir
 	if (!file_exists($targetDir))
             {
@@ -636,16 +636,30 @@ if ($_FILES)
 								else
 									{
 									// Multiple resources found with the same filename
+									// but we are going to replace them because $replace_batch_existing is set to true
 									$resourcelist=implode(",",$target_resource);
-									header('Content-Type: application/json');
-									die('{"jsonrpc" : "2.0", "error" : {"code": 107, "message": "ERROR - multiple resources found with filename ' . $origuploadedfilename . '. Resource IDs : ' . $resourcelist . '"}, "id" : "id" }');
-									unlink($plfilepath);
+									if ($replace_batch_existing)
+										{
+										echo 'Substituting multiple resources found with filename ' . $origuploadedfilename . '. Resource IDs : ' . $resourcelist . "\r\n" ;
+										foreach ($target_resource as $replaced)
+											{
+											$status = upload_file($replaced, ('yes' == getval('no_exif', '') && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
+											echo "SUCCESS: " . htmlspecialchars($replaced) . "\r\n";
+											}
+										unlink($plfilepath);
+										}
+									else
+										{
+										// Multiple resources found with the same filename
+										header('Content-Type: application/json');
+										die('{"jsonrpc" : "2.0", "error" : {"code": 107, "message": "ERROR - multiple resources found with filename ' . $origuploadedfilename . '. Resource IDs : ' . $resourcelist . '"}, "id" : "id" }');
+										unlink($plfilepath);
+										}
 									}
 								}
                                 else
                                     {
                                     # Overwrite an existing resource using the number from the filename.
-
                                     # Extract the number from the filename
                                     $plfilename=strtolower(str_replace(" ","_",$plfilename));
                                     $s=explode(".",$plfilename);
@@ -801,7 +815,7 @@ var pluploadconfig = {
                                             uploaderrormessage = 'Server side error! Please contact the administrator!';
                                             }
                                         file.status = plupload.FAILED;
-										if(uploadError.error.code=108)
+										if(uploadError.error.code==108)
 											{
 											styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadError.error.duplicates);	
 											}
@@ -836,10 +850,14 @@ var pluploadconfig = {
                         uploader.bind('BeforeUpload', function(up, files) {
                             // Add index of file in queue so we can know which file is being processed
                             uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'queue_index',uploader.total.uploaded);
-                            if(uploader.total.uploaded == uploader.files.length-1)
+							if(uploader.total.uploaded == uploader.files.length-1)
                                 {
                                 uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'lastqueued','true');
                                 }
+							else
+								{
+								uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'lastqueued','');                                	
+								}
                             <?php hook('beforeupload_end'); ?>
                         });       
                 

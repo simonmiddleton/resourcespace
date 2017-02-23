@@ -12,6 +12,11 @@
 
 include "../../include/db.php";
 include "../../include/authenticate.php";
+if(!checkperm('a'))
+    {
+    header('HTTP/1.1 401 Unauthorized');
+    exit($lang['error-permissiondenied']);
+    }
 include_once "../../include/general.php";
 include "../../include/resource_functions.php";
 include "../../include/image_processing.php";

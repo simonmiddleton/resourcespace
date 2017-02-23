@@ -12,7 +12,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     # globals needed for hooks
      global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
            $search_sql_double_pass_mode, $usergroup, $search_filter_strict, $default_sort, 
-           $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES;
+           $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES;
 		   
     $alternativeresults = hook("alternativeresults", "", array($go));
     if ($alternativeresults)
@@ -203,43 +203,54 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
         {
         for ($n=0;$n<count($keywords);$n++)
             {
+            $search_field_restrict="";
             $keyword=$keywords[$n];
             $quoted_string=(substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"";
             $quoted_field_match=false;
             $field_short_name_specified=false;
-            if(!$quoted_string || ($quoted_string && strpos($keyword,":")!==false)) // If quoted string with a field specified we first need to try and resolve it to a node
+            if(!$quoted_string || ($quoted_string && strpos($keyword,":")!==false)) // If quoted string with a field specified we first need to try and resolve it to a node instead of working out keyword positions etc.
                 {            
                 if (substr($keyword,0,1)!="!" || substr($keyword,0,6)=="!empty")
                     {
                     global $date_field;
                     $field=0;
-                    //echo "<li>$keyword<br/>";
-    
+					$keywordprocessed=false;
+                    
                     if (strpos($keyword,":")!==false)
                         {
                         $field_short_name_specified=true;
-                        
-                        
-                        $kw=explode(":",$keyword,2);
+                        $kw=explode(":",($quoted_string?substr($keyword,1,-1):$keyword),2);
                         # Fetch field info
                         global $fieldinfo_cache;
-                        $fieldname=$quoted_string?substr($kw[0],1):$kw[0];
-                        $keystring=$quoted_string?substr($kw[1],0,-1):$kw[1];
+                        $fieldname=$kw[0];
+						$keystring=$kw[1];
                         if (isset($fieldinfo_cache[$fieldname]))
                             {
                             $fieldinfo=$fieldinfo_cache[$fieldname];
                             }
                         else
                             {
-                            $fieldinfo=sql_query("select ref,type from resource_type_field where name='" . escape_check($fieldname) . "'",0);
-                            $fieldinfo_cache[$fieldname]=$fieldinfo[0];
+                            $fieldinfo = sql_query("SELECT ref, `type` FROM resource_type_field WHERE name = '" . escape_check($fieldname) . "'", 0);
+
+                            // Checking for date from Simple Search will result with a fieldname like 'year' which obviously does not exist
+                            if(0 === count($fieldinfo) && ('year' == $kw[0] || 'month' == $kw[0] || 'day' == $kw[0]))
+                                {
+                                $fieldinfo = sql_query("SELECT ref, `type` FROM resource_type_field WHERE ref = '{$date_field}'", 0);
+                                }
+							if(0 === count($fieldinfo))
+								{
+								return;
+								}
+							$fieldinfo=$fieldinfo[0];
+                            $fieldinfo_cache[$fieldname]=$fieldinfo;
                             }
                         }
-
-                    if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo[0]['type']) && !in_array($fieldinfo[0]['type'],array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE, FIELD_TYPE_TEXT_BOX_MULTI_LINE)))
+						
+					//First try and process special keyword types
+                    if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'],$DATE_FIELD_TYPES))
                         {
                         // ********************************************************************************
-                        //                                                                    Field keyword
+                        // Date field keyword
                         // ********************************************************************************
     
                         global $datefieldinfo_cache;
@@ -249,50 +260,34 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             }
                         else
                             {
-                            $datefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($fieldname) . "' and type IN (4,6,10)",0);
+                            $datefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($fieldname) . "' and type IN (" . FIELD_TYPE_DATE_AND_OPTIONAL_TIME . "," . FIELD_TYPE_EXPIRY_DATE . "," . FIELD_TYPE_DATE . "," . FIELD_TYPE_DATE_RANGE . ")",0);
                             $datefieldinfo_cache[$fieldname]=$datefieldinfo;
                             }
     
-                    // numrange search ie mynumberfield:numrange1|1234 indicates that mynumberfield needs a numrange search for 1 to 1234. 
-                    if (substr($keystring,0,8)=="numrange")
-                            {
-                            $c++;
-                            $rangefield=$fieldname;
-                            $rangefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($fieldname) . "' and type IN (0)",0);
-                            $rangefieldinfo=$rangefieldinfo[0];
-                            $rangefield=$rangefieldinfo["ref"];
-                            $rangestring=substr($keystring,8);
-                            $minmax=explode("|",$rangestring);$min=str_replace("neg","-",$minmax[0]);if (isset($minmax[1])){$max=str_replace("neg","-",$minmax[1]);} else {$max='';}
-                            if ($max=='' || $min==''){      // if only one number is entered, do a direct search
-                                    if ($sql_filter!="") {$sql_filter.=" and ";}
-                                    $sql_filter.="rd" . $c . ".value = " . max($min,$max) . " ";
-                            } else { // else use min and max values as a range search
-                                    if ($sql_filter!="") {$sql_filter.=" and ";}
-                                    $sql_filter.="rd" . $c . ".value >= " . $min . " ";
-                                    if ($sql_filter!="") {$sql_filter.=" and ";}
-                                    $sql_filter.="rd" . $c . ".value <= " . $max." ";
-                            }
-                                    
-                            $sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" .$rangefield . "'";
-
-                            }
- 
- 
-                    else if (count($datefieldinfo) && substr($keystring,0,5)!="range")
+						if (count($datefieldinfo) && substr($keystring,0,5)!="range")
                             {
                             $c++;
                             $datefieldinfo=$datefieldinfo[0];
                             $datefield=$datefieldinfo["ref"];
-                            if ($sql_filter!="")
+                            
+                            $val=str_replace("n","_", $keystring);
+                            $val=str_replace("|","-", $val);
+							if($fieldinfo['type']==FIELD_TYPE_DATE_RANGE)
+								{
+								// Find where the searched value is between the range values
+								$sql_join.=" join resource_node drrn" . $c . "s on drrn" . $c . "s.resource=r.ref join node drn" . $c . "s on drn" . $c . "s.ref=drrn" . $c . "s.node and drn" . $c . "s.resource_type_field='" . $datefield . "' and drn" . $c . "s.name>='" . $val . "' join resource_node drrn" . $c . "e on drrn" . $c . "e.resource=r.ref join node drn" . $c . "e on drn" . $c . "e.ref=drrn" . $c . "e.node and drn" . $c . "e.resource_type_field='" . $datefield . "' and drn" . $c . "e.name<='" . $val . "'";
+								}
+							else
+								{
+								if ($sql_filter!="")
                                 {
                                 $sql_filter.=" and ";
                                 }
-                            $val=str_replace("n","_", $keystring);
-                            $val=str_replace("|","-", $val);
-                            $sql_filter.="rd" . $c . ".value like '". $val . "%' ";
-                            $sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $datefield . "'";
+								$sql_filter.= ($sql_filter!=""?" and ":"") . "rd" . $c . ".value like '". $val . "%' ";
+								$sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $datefield . "'";
+								}
                             }
-                        elseif ($keystring=="day")
+                        else if('day' == $kw[0])
                             {
                             if ($sql_filter!="")
                                 {
@@ -300,7 +295,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 }
                             $sql_filter.="r.field$date_field like '____-__-" . $keystring . "%' ";
                             }
-                        elseif ($keystring=="month")
+                        else if('month' == $kw[0])
                             {
                             if ($sql_filter!="")
                                 {
@@ -344,68 +339,71 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 {
                                 $rangestartpos=strpos($rangestring,"start")+5;
                                 $rangestart=str_replace(" ","-",substr($rangestring,$rangestartpos,strpos($rangestring,"end")?strpos($rangestring,"end")-$rangestartpos:10));
-                                if ($sql_filter!="")
-                                    {
-                                    $sql_filter.=" and ";
-                                    }
-                                $sql_filter.="rd" . $c . ".value >= '" . $rangestart . "'";
+								if($fieldinfo['type']!=FIELD_TYPE_DATE_RANGE)
+									{$sql_filter.=($sql_filter!=""?" and ":"") . "rd" . $c . ".value >= '" . $rangestart . "'";}
                                 }
                             if (strpos($keystring,"end")!==FALSE )
                                 {
                                 $rangeend=str_replace(" ","-",$rangestring);
-                                if ($sql_filter!="")
-                                    {
-                                    $sql_filter.=" and ";
-                                    }
-                                $sql_filter.="rd" . $c . ".value <= '" . substr($rangeend,strpos($rangeend,"end")+3,10) . " 23:59:59'";
+								$rangeend=substr($rangeend,strpos($rangeend,"end")+3,10) . " 23:59:59";
+								if($fieldinfo['type']!=FIELD_TYPE_DATE_RANGE)
+									{$sql_filter.= ($sql_filter!=""?" and ":"") . "rd" . $c . ".value <= '" . $rangeend . "'";}
                                 }
-                            $sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $rangefield . "'";
+								
+							if($fieldinfo['type']==FIELD_TYPE_DATE_RANGE)
+								{
+								// Find where the start value or the end value  is between the range values
+								if(isset($rangestart))
+									{
+									// Need to check for a date greater than the start date 
+									$sql_join.=" join resource_node drrn" . $c . "s on drrn" . $c . "s.resource=r.ref join node drn" . $c . "s on drn" . $c . "s.ref=drrn" . $c . "s.node and drn" . $c . "s.resource_type_field='" . $fieldinfo['ref'] . "' and drn" . $c . "s.name>='" . $rangestart . "' "; 
+									}
+								if(isset($rangeend))
+									{
+									// Need to check for a date earlier than the end date
+									$sql_join.=" join resource_node drrn" . $c . "e on drrn" . $c . "e.resource=r.ref join node drn" . $c . "e on drn" . $c . "e.ref=drrn" . $c . "e.node and drn" . $c . "e.resource_type_field='" . $fieldinfo['ref'] . "' and drn" . $c . "e.name<='" . $rangeend . "'";
+									}
+								}
+							else
+								{
+								$sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $rangefield . "'";
+								}
                             }
-                        else if (!hook('customsearchkeywordfilter', null, array($kw)))
+						$keywordprocessed=true;
+                        }
+                    elseif ($field_short_name_specified && substr($keystring,0,8)=="numrange" && !$quoted_string && !$ignore_filters && isset($fieldinfo['type']) && $fieldinfo['type']==0)
+                        {
+                        // Text field numrange search ie mynumberfield:numrange1|1234 indicates that mynumberfield needs a numrange search for 1 to 1234. 
+						$c++;
+                        $rangefield=$fieldname;
+                        $rangefieldinfo=sql_query("select ref from resource_type_field where name='" . escape_check($fieldname) . "' and type IN (0)",0);
+                        $rangefieldinfo=$rangefieldinfo[0];
+                        $rangefield=$rangefieldinfo["ref"];
+                        $rangestring=substr($keystring,8);
+                        $minmax=explode("|",$rangestring);$min=str_replace("neg","-",$minmax[0]);if (isset($minmax[1])){$max=str_replace("neg","-",$minmax[1]);} else {$max='';}
+                        if ($max=='' || $min=='')
                             {
-    
-                            // TODO: suss this out
-    
-                            /*
-    
-                            if($fieldinfo[0]["type"]==FIELD_TYPE_CATEGORY_TREE)
-                                {
-                                $ckeywords=preg_split('/[\|;]/',$keystring);
-                                }
-                            else
-                                {
-                                $ckeywords=explode(";",$keystring);
-                                }
-    
-                            # Create an array of matching field IDs.
-                            $fields=array();
-                            foreach ($fieldinfo as $fi)
-                                {
-                                if (in_array($fi["ref"], $hidden_indexed_fields))
-                                    {
-                                    # Attempt to directly search field that the user does not have access to.
-                                    return false;
-                                    }
-    
-                                # Add to search array
-                                $fields[]=$fi["ref"];
-                                }
-    
-                            # Special handling for dates
-                            if ($fieldinfo[0]["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME || $fieldinfo[0]["type"]==FIELD_TYPE_EXPIRY_DATE || $fieldinfo[0]["type"]==FIELD_TYPE_DATE)
-                                {
-                                $ckeywords=array(str_replace(" ","-",$keystring));
-                                }
-    
-                            */
-    
+                            // if only one number is entered, do a direct search
+                            if ($sql_filter!="") {$sql_filter.=" and ";}
+                                $sql_filter.="rd" . $c . ".value = " . max($min,$max) . " ";
                             }
+                        else
+                            {
+                            // else use min and max values as a range search
+                            if ($sql_filter!="") {$sql_filter.=" and ";}
+                            $sql_filter.="rd" . $c . ".value >= " . $min . " ";
+                            if ($sql_filter!="") {$sql_filter.=" and ";}
+                            $sql_filter.="rd" . $c . ".value <= " . $max." ";
+                            }
+                            
+                        $sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" .$rangefield . "'";
+						$keywordprocessed=true;
                         }
                     // Convert legacy fixed list field search to new format for nodes (@@NodeID)
-                    else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo[0]['type']) && in_array($fieldinfo[0]['type'], $FIXED_LIST_FIELD_TYPES))
+                    else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
                         {
                         // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
-                        $field_nodes      = get_nodes($fieldinfo[0]['ref'], null, false, true);
+                        $field_nodes      = get_nodes($fieldinfo['ref'], null, false, true);
                         $field_node_index = array_search(mb_strtolower(i18n_get_translated($keystring)), array_map('mb_strtolower',array_column($field_nodes, 'name')));
      
                         // Take the ref of the node and put it in the node_bucket
@@ -413,37 +411,26 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                             {
                             $node_bucket[][] = $field_nodes[$field_node_index]['ref'];
                             $quoted_field_match=true; // String has been resolved to a node so even if it is quoted we don't need to process it as a quoted string now
+							$keywordprocessed=true;
                             }
                         }
-                    elseif(!$quoted_string)
-                        {
-                        // ********************************************************************************
-                        //                                             Normal keyword (not tied to a field)
-                        // ********************************************************************************
-    
-                        # Searches all fields that the user has access to
-                        # If ignoring field specifications then remove them.
-    
-                        if ($field_short_name_specified)
+                    
+                     if($field_short_name_specified) // Need this also for string matching in a named text field
                             {
                             $keyword=$keystring;
+                            $search_field_restrict=$fieldinfo['ref'];
                             }
-    
+							
+                    
+                    if(!$quoted_string && !$keywordprocessed && !($field_short_name_specified && hook('customsearchkeywordfilter', null, array($kw)))) // Need this also for string matching in a named text field
+                        {
+                        // Normal keyword
+                        //
+                        // Searches all fields that the user has access to
+                        // If ignoring field specifications then remove them.
+    							
                         $keywords_expanded=explode(';',$keyword);
                         $keywords_expanded_or=count($keywords_expanded) > 1;
-    
-                        // TODO: restrict by field name
-    
-                        // TODO: do we need to kill of $ignore_filters ?
-    
-                        //echo "keyword={$keyword}" . PHP_EOL;
-    
-                        /*
-                        if (strpos($keyword,":")!==false && $ignore_filters)
-                            {
-                            $s=explode(":",$keyword);$keyword=$s[1];
-                            }
-                        */
     
                         # Omit resources containing this keyword?
                         $omit = false;
@@ -474,7 +461,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                         global $noadd, $wildcard_always_applied, $wildcard_always_applied_leading;
                         if (in_array($keyword, $noadd)) # skip common words that are excluded from indexing
                             {
-                            $skipped_last = true;       // TODO: sort this out
+                            $skipped_last = true;
                             }
                         else
                             {
@@ -591,14 +578,20 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     
                                     if (!empty($sql_exclude_fields))
                                         {
-                                        $union_restriction_clause .= " and k" . $c . ".resource_type_field not in (" . $sql_exclude_fields . ")";
-                                        $union_restriction_clause_node .= " AND nk{$c}.node NOT IN (SELECT ref FROM node WHERE nk{$c}.node=node.ref AND node.resource_type_field IN (" . $sql_exclude_fields .  "))";
+                                        $union_restriction_clause .= " and k[union_index].resource_type_field not in (" . $sql_exclude_fields . ")";
+                                        $union_restriction_clause_node .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field IN (" . $sql_exclude_fields .  "))";
                                         }
     
                                     if (count($hidden_indexed_fields) > 0)
                                         {
-                                        $union_restriction_clause .= " and k" . $c . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
-                                        $union_restriction_clause_node .= " AND nk{$c}.node NOT IN (SELECT ref FROM node WHERE nk{$c}.node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+                                        $union_restriction_clause .= " and k[union_index].resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
+                                        $union_restriction_clause_node .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+                                        }
+                                        
+                                    if (isset($search_field_restrict) && $search_field_restrict!="") // Search is looking for a keyword in a specifed field
+                                        {
+                                        $union_restriction_clause .= " AND k[union_index].resource_type_field = '" . $search_field_restrict  . "' ";
+                                        $union_restriction_clause_node .= " AND nk[union_index].node IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field = '" . $search_field_restrict  . "')";
                                         }
     
                                     if ($empty)  // we are dealing with a special search checking if a field is empty
@@ -608,23 +601,22 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                             {
                                             if ($rtype == 999)
                                                 {
-                                                $restypesql = "and (r" . $c . ".archive=1 or r" . $c . ".archive=2) and ";
+                                                $restypesql = "and (r[union_index].archive=1 or r[union_index].archive=2) and ";
                                                 if ($sql_filter != "")
                                                     {
                                                     $sql_filter .= " and ";
                                                     }
-                                                $sql_filter .= str_replace("r" . $c . ".archive='0'", "(r" . $c . ".archive=1 or r" . $c . ".archive=2)", $sql_filter);
+                                                $sql_filter .= str_replace("r[union_index].archive='0'", "(r[union_index].archive=1 or r[union_index].archive=2)", $sql_filter);
                                                 } else
                                                 {
-                                                $restypesql = "and r" . $c . ".resource_type ='$rtype' ";
+                                                $restypesql = "and r[union_index].resource_type ='$rtype' ";
                                                 }
                                             } else
                                             {
                                             $restypesql = "";
                                             }
-                                        $union = "select ref as resource, [bit_or_condition] 1 as score from resource r" . $c . " left outer join resource_data rd" . $c . " on r" . $c . ".ref=rd" . $c .
-                                            ".resource and rd" . $c . ".resource_type_field='$nodatafield' where  (rd" . $c . ".value ='' or rd" . $c .
-                                            ".value is null or rd" . $c . ".value=',') $restypesql  and r" . $c . ".ref>0 group by r" . $c . ".ref ";
+                                        $union = "select ref as resource, [bit_or_condition] 1 as score from resource r[union_index] left outer join resource_data rd[union_index] on r[union_index].ref=rd[union_index].resource and rd[union_index].resource_type_field='$nodatafield' where  (rd[union_index].value ='' or
+                                            rd[union_index].value is null or rd[union_index].value=',') $restypesql  and r[union_index].ref>0 group by r[union_index].ref ";
                                         $union .= $union_restriction_clause;
                                         $sql_keyword_union[] = $union;
                                         }
@@ -641,8 +633,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                      
                                          // TODO: deprecate this once all field values are nodes  START
                                          
-                                          $union .= " UNION SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_keyword k{$c}" .
-                                             " WHERE (k{$c}.keyword={$keyref} " . str_replace("[keyword_match_table]","k" . $c, $relatedsql) . " {$union_restriction_clause})" .
+                                          $union .= " UNION SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_keyword k[union_index]
+                                          WHERE (k[union_index].keyword={$keyref} " . str_replace("[keyword_match_table]","k" . "[union_index]", $relatedsql) . " {$union_restriction_clause})" .
                                              " GROUP BY resource, resource_type_field";
                                                                                                              
                                          // TODO: deprecate this once all field values are nodes  END
@@ -650,9 +642,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                          
                                          $sql_keyword_union[] = $union;
      
-                                         // ---- end of resource_node -> node_keyword sub query -----
-     
-                                         //TODO: Test this with <search term> <quoted search term>, i.e. quoted after first keyword
+                                         // ---- end of resource_node -> node_keyword sub query -----     
                                          $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
                                          $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";
      
@@ -676,11 +666,11 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                 {
                 $quotedfieldid="";
 				// This keyword is a quoted string, split into keywords but don't preserve quotes this time
-                 if ($field_short_name_specified && isset($fieldinfo[0]['ref']))
+                 if ($field_short_name_specified && isset($fieldinfo['ref']))
                     {
                     // We have already parsed the keyword when looking for a node, get string and then filter on this field
                     $quotedkeywords=split_keywords($keystring);
-                    $quotedfieldid= $fieldinfo[0]['ref'];
+                    $quotedfieldid= $fieldinfo['ref'];
                     } 
                 else
                     {
@@ -694,9 +684,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 					$keyword = substr($keyword, 1);
 					}
                
-                
-                
-				$qk=1; // Set the counter to the first keyword
+                $qk=1; // Set the counter to the first keyword
 				foreach($quotedkeywords as $quotedkeyword)
 					{
 					global $noadd, $wildcard_always_applied, $wildcard_always_applied_leading;
@@ -719,44 +707,44 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
 						if (!empty($sql_exclude_fields))
 							{
-							$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in (" . $sql_exclude_fields . ")";
-							$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . $sql_exclude_fields .  "))";
+							$union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field not in (" . $sql_exclude_fields . ")";
+							$union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . $sql_exclude_fields .  "))";
 							}
 
 						if (count($hidden_indexed_fields) > 0)
 							{
-							$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
-							$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+							$union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
+							$union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node NOT IN (SELECT ref FROM node WHERE node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
 							}
                             
                         if ($quotedfieldid != "")
 							{
-							$union_restriction_clause .= " AND qrk_" . $c . "_" . $qk . ".resource_type_field = '" . $quotedfieldid . "'";
-							$union_restriction_clause_node .= " AND nk_" . $c . "_" . $qk . ".node = '" . $quotedfieldid . "'";
+							$union_restriction_clause .= " AND qrk_[union_index]_" . $qk . ".resource_type_field = '" . $quotedfieldid . "'";
+							$union_restriction_clause_node .= " AND nk_[union_index]_" . $qk . ".node = '" . $quotedfieldid . "'";
 							}
 						 
 						if ($qk==1)
 							{
-							$freeunion = " SELECT qrk_" . $c . "_" . $qk . ".resource, [bit_or_condition] qrk_" . $c . "_" . $qk . ".hit_count AS score FROM resource_keyword qrk_" . $c . "_" . $qk;                                                
+							$freeunion = " SELECT qrk_[union_index]_" . $qk . ".resource, [bit_or_condition] qrk_[union_index]_" . $qk . ".hit_count AS score FROM resource_keyword qrk_[union_index]_" . $qk;                                                
 							// Add code to find matching nodes in resource_node
-							$fixedunion = " SELECT rn_" . $c . "_" . $qk . ".resource, [bit_or_condition] rn_" . $c . "_" . $qk . ".hit_count AS score FROM resource_node rn_" . $c . 
-								"_" . $qk . " LEFT OUTER JOIN `node_keyword` nk_" . $c . "_" . $qk . " ON rn_" . $c . "_" . $qk . ".node=nk_" . $c . "_" . $qk . ".node LEFT OUTER JOIN `node` nn" . $c . "_" . $qk . " ON rn_" . $c . "_" . $qk . ".node=nn" . $c . "_" . $qk . ".ref " .
-								" AND (nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node . ")"; 
-							$freeunioncondition="qrk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
-							$fixedunioncondition="nk_" . $c . "_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node ;
+							$fixedunion = " SELECT rn_[union_index]_" . $qk . ".resource, [bit_or_condition] rn_[union_index]_" . $qk . ".hit_count AS score FROM resource_node rn_[union_index]_" . $qk .
+                                " LEFT OUTER JOIN `node_keyword` nk_[union_index]_" . $qk . " ON rn_[union_index]_" . $qk . ".node=nk_[union_index]_" . $qk . ".node LEFT OUTER JOIN `node` nn[union_index]_" . $qk . " ON rn_[union_index]_" . $qk . ".node=nn[union_index]_" . $qk . ".ref " .
+								" AND (nk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node . ")"; 
+							$freeunioncondition="qrk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause ;
+							$fixedunioncondition="nk_[union_index]_" . $qk . ".keyword=" . $keyref . $union_restriction_clause_node ;
 							}
 						else
 							{
 							# For keywords other than the first one, check the position is next to the previous keyword.                                           
-							$freeunion .= " JOIN resource_keyword qrk_" . $c . "_" . $qk . "
-								ON qrk_" . $c . "_" . $qk . ".resource = qrk_" . $c . "_" . ($qk-1) . ".resource
-								AND qrk_" . $c . "_" . $qk . ".keyword = '" .$keyref . "'
-								AND qrk_" . $c . "_" . $qk . ".position = qrk_" . $c . "_" . ($qk-1) . ".position + " . $last_key_offset . "
-								AND qrk_" . $c . "_" . $qk . ".resource_type_field = qrk_" . $c . "_" . ($qk-1) . ".resource_type_field";    
+							$freeunion .= " JOIN resource_keyword qrk_[union_index]_" . $qk . "
+								ON qrk_[union_index]_" . $qk . ".resource = qrk_[union_index]_" . ($qk-1) . ".resource
+								AND qrk_[union_index]_" . $qk . ".keyword = '" .$keyref . "'
+								AND qrk_[union_index]_" . $qk . ".position = qrk_[union_index]_" . ($qk-1) . ".position + " . $last_key_offset . "
+								AND qrk_[union_index]_" . $qk . ".resource_type_field = qrk_[union_index]_" . ($qk-1) . ".resource_type_field";    
 						   
 						   # For keywords other than the first one, check the position is next to the previous keyword.
 							# Also check these occurances are within the same field.
-							$fixedunion .=" JOIN `node_keyword` nk_" . $c . "_" . $qk . " ON nk_" . $c . "_" . $qk . ".node = nk_" . $c . "_" . ($qk-1) . ".node AND nk_" . $c . "_" . $qk . ".keyword = '" . $keyref . "' AND  nk_" . $c . "_" . $qk . ".position=nk_" . $c . "_" . ($qk-1) . ".position+" . $last_key_offset ;
+							$fixedunion .=" JOIN `node_keyword` nk_[union_index]_" . $qk . " ON nk_[union_index]_" . $qk . ".node = nk_[union_index]_" . ($qk-1) . ".node AND nk_[union_index]_" . $qk . ".keyword = '" . $keyref . "' AND  nk_[union_index]_" . $qk . ".position=nk_[union_index]_" . ($qk-1) . ".position+" . $last_key_offset ;
 							}
 						$qk++;
 						} // End of if keyword not excluded (not in $noadd array)
@@ -768,7 +756,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 						{
 						$sql_filter .= " and ";
 						}		
-					$sql_filter .= str_replace("[bit_or_condition]",""," r.ref not in (select resource from (" . $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . ") qfilter" . $c . ") "); # Instead of adding to the union, filter out resources that do contain the quoted string.
+					$sql_filter .= str_replace("[bit_or_condition]",""," r.ref not in (select resource from (" . $freeunion .  " WHERE " . $freeunioncondition . " GROUP BY resource UNION " .  $fixedunion . " WHERE " . $fixedunioncondition . ") qfilter[union_index]) "); # Instead of adding to the union, filter out resources that do contain the quoted string.
 					}
 				else
 					{
@@ -913,17 +901,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 				}
             # Find keyword(s)
             $ks=explode("|",strtolower(escape_check($s[1])));
-            for($x=0;$x<count($ks);$x++)
-                {
-                # Cleanse the string as keywords are stored without special characters
-                $ks[$x]=cleanse_string($ks[$x],true);
-
-                global $stemming;
-                if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
-                    {
-                    $ks[$x]=GetStem($ks[$x]);
-                    }
-                }
 
             $modifiedsearchfilter=hook("modifysearchfilter");
             if ($modifiedsearchfilter)
@@ -995,8 +972,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                 }
             }
         }
-	
-	
+
     if ($editable_only)
 		{
 		global $usereditfilter;			
@@ -1052,16 +1028,6 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 					}
 				# Find keyword(s)
 				$ks=explode("|",strtolower(escape_check($s[1])));
-				for($x=0;$x<count($ks);$x++)
-					{
-					# Cleanse the string as keywords are stored without special characters
-					$ks[$x]=cleanse_string($ks[$x],true);
-					global $stemming;
-					if ($stemming && function_exists("GetStem")) // Stemming enabled. Highlight any words matching the stem.
-						{
-						$ks[$x]=GetStem($ks[$x]);
-						}
-					}
 
 				$kw=sql_array("select ref value from keyword where keyword in ('" . join("','",$ks) . "')");
 
@@ -1175,8 +1141,9 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
         if(count($sql_keyword_union_or)!=count($sql_keyword_union_criteria))
             {
-                print_r($sql_keyword_union_or) . "\n"  . print_r($sql_keyword_union_criteria);
-            die("Search error - union criteria mismatch");
+            //print_r($sql_keyword_union_or) . "\n"  . print_r($sql_keyword_union_criteria);
+            //die("Search error - union criteria mismatch");
+			return "ERROR";
             }
 
 

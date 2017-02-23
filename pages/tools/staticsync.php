@@ -99,7 +99,7 @@ if (isset($staticsync_mapped_category_tree))
     {
     $treefield=get_resource_type_field($staticsync_mapped_category_tree);
     migrate_resource_type_field_check($treefield);
-    $tree = get_nodes($staticsync_mapped_category_tree);
+    $tree = get_nodes($staticsync_mapped_category_tree,'',TRUE);
     }
 
 function touch_category_tree_level($path_parts)
@@ -110,23 +110,24 @@ function touch_category_tree_level($path_parts)
     $parent_search = '';
     $nodename      = '';
 	$order_by =10;
-    
+    $treenodes = array();
     for ($n=0;$n<count($path_parts);$n++)
         {
-        # The node name should contain all the subsequent parts of the path
-        if ($n > 0) { $nodename .= "~"; }
-        $nodename .= $path_parts[$n];
+        $nodename = $path_parts[$n];
         
+        echo " - Looking for folder '" . $nodename . "' @ level " . $n  . " in linked metadata field... ";
         # Look for this node in the tree.       
         $found = false;
         foreach($tree as $treenode)
             {
 			if($treenode["parent"]==$parent_search)
                 {
-				if ($treenode["name"]==$nodename)
+        		if ($treenode["name"]==$nodename)
 					{
 					# A match!
+					echo "FOUND" . PHP_EOL;
 					$found = true;
+                    $treenodes[]=$treenode["ref"];
 					$parent_search = $treenode["ref"]; # Search for this as the parent node on the pass for the next level.
 					}
 				else
@@ -138,15 +139,16 @@ function touch_category_tree_level($path_parts)
             }
         if (!$found)
             {
-            echo "Not found: " . $nodename . " @ level " . $n  . PHP_EOL;
+            echo "NOT FOUND. Updating tree field" .PHP_EOL;
             # Add this node
             $newnode=set_node(NULL, $staticsync_mapped_category_tree, $nodename, $parent_search, $order_by);
        	    $tree[]=array("ref"=>$newnode,"parent"=>$parent_search,"name"=>$nodename,"order_by"=>$order_by);
             $parent_search = $newnode; # Search for this as the parent node on the pass for the next level.
+            $treenodes[]=$newnode;
             }
         }
-    // Return the last found node ref, we will use this in phase 2 of nodes work to save node ref instead of string
-    return $parent_search;
+    // Return the matching path nodes
+    return $treenodes;
     }
 
 function ProcessFolder($folder)
@@ -156,9 +158,10 @@ function ProcessFolder($folder)
            $staticsync_extension_mapping, $staticsync_mapped_category_tree, $staticsync_title_includes_path, 
            $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix, $theme_category_levels, $staticsync_defaultstate,
            $additional_archive_states,$staticsync_extension_mapping_append_values, $staticsync_deleted_state, $staticsync_alternative_file_text,
-           $resource_deletion_state, $alternativefiles,$staticsync_revive_state;
+           $resource_deletion_state, $alternativefiles,$staticsync_revive_state,$enable_thumbnail_creation_on_upload;
     
     $collection = 0;
+    $treeprocessed=false;
     
     echo "Processing Folder: " . $folder . PHP_EOL;
     
@@ -194,11 +197,12 @@ function ProcessFolder($folder)
             }
        
         
-        if ($staticsync_mapped_category_tree)
+        if ($staticsync_mapped_category_tree && !$treeprocessed)
             {
             $path_parts = explode("/", $shortpath);
             array_pop($path_parts);
-            touch_category_tree_level($path_parts);
+            $treenodes=touch_category_tree_level($path_parts);
+            $treeprocessed=true;
             }   
 
         # -----FOLDERS-------------
@@ -298,28 +302,14 @@ function ProcessFolder($folder)
                 if ($modified_title !== false) { $title = $modified_title; }
 
                 # Import this file
-                $r = import_resource($shortpath, $type, $title, $staticsync_ingest);
+                $r = import_resource($shortpath, $type, $title, $staticsync_ingest,$enable_thumbnail_creation_on_upload);
                 if ($r !== false)
                     {
                     # Add to mapped category tree (if configured)
-                    if (isset($staticsync_mapped_category_tree))
+                    if (isset($staticsync_mapped_category_tree) && isset($treenodes))
                         {
-                        $basepath = '';
-                        # Save tree position to category tree field
-
-                        # For each node level, expand it back to the root so the full path is stored.
-                        for ($n=0;$n<count($path_parts);$n++)
-                            {
-                            if ($basepath != '') 
-                                { 
-                                $basepath .= "~";
-                                }
-                            $basepath .= $path_parts[$n];
-                            $path_parts[$n] = $basepath;
-                            }
-
-                        # Save tree position to category tree field                        
-                        update_field($r, $staticsync_mapped_category_tree, "," . join(",", $path_parts));
+                        // Add path nodes to resource
+                        add_resource_nodes($r,$treenodes);
                         }           
 
                     # default access level. This may be overridden by metadata mapping.
@@ -403,7 +393,7 @@ function ProcessFolder($folder)
                         }
 
                     # update access level
-                    sql_query("UPDATE resource SET access = '$accessval',archive='$staticsync_defaultstate' WHERE ref = '$r'");
+                    sql_query("UPDATE resource SET access = '$accessval',archive='$staticsync_defaultstate' " . ((!$enable_thumbnail_creation_on_upload)?", has_image=0, preview_attempts=0 ":"") . " WHERE ref = '$r'");
 
                     # Add any alternative files
                     $altpath = $fullpath . $staticsync_alternatives_suffix;
@@ -415,7 +405,7 @@ function ProcessFolder($folder)
                             $filetype = filetype($altpath . "/" . $altfile);
                             if (($filetype == "file") && (substr($file,0,1) != ".") && (strtolower($file) != "thumbs.db"))
                                 {
-                                # Create alternative file                               
+                                # Create alternative file
                                 # Find extension
                                 $ext = explode(".", $altfile);
                                 $ext = $ext[count($ext)-1];
@@ -438,7 +428,7 @@ function ProcessFolder($folder)
 						$altfiles = glob($altfilematch);
 						foreach ($altfiles as $altfile)
 							{
-                            staticsync_process_alt($altfile,$r);			
+                            staticsync_process_alt($altfile,$r);
 							echo "Processed alternative: " . $shortpath . PHP_EOL;
                             }
 						continue;
@@ -462,11 +452,12 @@ function ProcessFolder($folder)
                     echo " *** Skipping file - it was not possible to move the file (still being imported/uploaded?)" . PHP_EOL;
                     }
                 }
-            elseif (!isset($done[$shortpath]["archive"]) || $done[$shortpath]["archive"]!=$resource_deletion_state || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state))
+            elseif (!isset($done[$shortpath]["archive"]) // Check modified times and and update previews if no existing archive state is set,
+                    || (isset($resource_deletion_state) && $done[$shortpath]["archive"]!=$resource_deletion_state) // or if resource is not in system deleted state,
+                    || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state)) // or resource is currently in staticsync deleted state and needs to be reinstated
                 {
-                # check modified date and update previews if necessary (not for deleted resources unless $staticsync_revive_state is set)
                 $filemod = filemtime($fullpath);
-                if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"]) || $done[$shortpath]["archive"]==$staticsync_deleted_state)
+                if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"]) || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state))
                     {
                     
                     $count++;
@@ -498,9 +489,17 @@ function ProcessFolder($folder)
                             {
                             update_field($rref,$filename_field,$file);  
                             }
-    
-                        create_previews($rref, false, $rd["file_extension"], false, false, -1, false, $staticsync_ingest);
-                        sql_query("UPDATE resource SET file_modified=NOW() " . ((isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))?", archive='" . $staticsync_revive_state . "'":"") ." WHERE ref='$rref'");
+                        if($enable_thumbnail_creation_on_upload)
+                            {
+                            create_previews($rref, false, $rd["file_extension"], false, false, -1, false, $staticsync_ingest);
+                            }
+                        sql_query("UPDATE resource SET file_modified=NOW() " . ((isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))?", archive='" . $staticsync_revive_state . "'":"") . ((!$enable_thumbnail_creation_on_upload)?", has_image=0, preview_attempts=0 ":"") . " WHERE ref='$rref'");
+
+                        if(isset($staticsync_revive_state) && ($rd["archive"]==$staticsync_deleted_state))
+                            {
+                            # Log this
+                            resource_log($rref,LOG_CODE_STATUS_CHANGED,'','',$staticsync_deleted_state,$staticsync_revive_state);
+                            }
                         }
                     }
                 }
@@ -577,7 +576,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
         {
         // An existing alternative file has changed, update previews if required
         debug("Alternative file changed, recreating previews");
-		create_previews($ref, false,  $alt["extension"], false, false, $alternative, false, $staticsync_ingest);
+		create_previews($ref, false,  pathinfo($alternativefile, PATHINFO_EXTENSION), false, false, $alternative, false, $staticsync_ingest);
         sql_query("UPDATE resource_alt_files SET creation_date=NOW() WHERE ref='$alternative'"); 
         $done[$shortpath]["processed"]=true;           
         }	
@@ -623,10 +622,11 @@ if (!$staticsync_ingest)
     $n=0;
     foreach($done as $syncedfile=>$synceddetails)    
         {
-        if(!isset($synceddetails["processed"]) && isset($synceddetails["archive"]) && $synceddetails["archive"]!=$staticsync_deleted_state || isset($synceddetails["alternative"]))
+        if(!isset($synceddetails["processed"]) && isset($synceddetails["archive"]) && !(isset($staticsync_ignore_deletion_states) && in_array($synceddetails["archive"],$staticsync_ignore_deletion_states)) && $synceddetails["archive"]!=$staticsync_deleted_state || isset($synceddetails["alternative"]))
             {
             $resources_to_archive[$n]["file_path"]=$syncedfile;
             $resources_to_archive[$n]["ref"]=$synceddetails["ref"];
+            $resources_to_archive[$n]["archive"]=isset($synceddetails["archive"])?$synceddetails["archive"]:"";
             if(isset($synceddetails["alternative"]))
                 {$resources_to_archive[$n]["alternative"]=$synceddetails["alternative"];}
             $n++;
@@ -635,7 +635,7 @@ if (!$staticsync_ingest)
         
     # ***for modified syncdir directories:
     $syncdonemodified = hook("modifysyncdonerf");
-    if (!empty($syncdonemodified)) { $resources_to_archive = $syncdonemodified; } 
+    if (!empty($syncdonemodified)) { $resources_to_archive = $syncdonemodified; }
     
     foreach ($resources_to_archive as $rf)
         {
@@ -653,13 +653,19 @@ if (!$staticsync_ingest)
                 echo "File no longer exists: " . $rf["ref"] . " " . $fp . PHP_EOL;
                 # Set to archived.
                 sql_query("UPDATE resource SET archive='" . $staticsync_deleted_state . "' WHERE ref='{$rf["ref"]}'");
-                sql_query("DELETE FROM collection_resource WHERE resource='{$rf["ref"]}'");                
+                if(isset($resource_deletion_state) && $staticsync_deleted_state==$resource_deletion_state)
+                    {
+                    // Only remove from collections if we are really deleting this. Some configurations may have a separate state or synced resources may be temporarily absent
+                    sql_query("DELETE FROM collection_resource WHERE resource='{$rf["ref"]}'");
+                    }
+                # Log this
+                resource_log($rf['ref'],LOG_CODE_STATUS_CHANGED,'','',$rf["archive"],$staticsync_deleted_state);
                 } 
             else
                 {
                 echo "Alternative file no longer exists: resource " . $rf["ref"] . " alt:" . $rf["alternative"] . " " . $fp . PHP_EOL;
                 sql_query("DELETE FROM resource_alt_files WHERE ref='" . $rf["alternative"] . "'");
-                }                  
+                }
             }
         }
         
