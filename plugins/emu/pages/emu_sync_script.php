@@ -275,6 +275,7 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
     if(false === $irn_index_in_rs_emu_resources)
         {
         // Processing new resource
+        emu_script_log('################################################################################', $emu_log_file);
         emu_script_log("Processing new resource for IRN {$emu_record_irn}", $emu_log_file);
 
         if($emu_test_mode)
@@ -301,12 +302,12 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
         // Update metadata fields for this resource
         if(update_field($new_resource_ref, $emu_irn_field, $emu_record_irn))
             {
-            emu_script_log("Set value '{$emu_record_irn}' to EMu IRN field for resource ID {$new_resource_ref}", $emu_log_file);
+            emu_script_log("Set EMu IRN field value to '{$emu_record_irn}' for resource ID {$new_resource_ref}", $emu_log_file);
             }
 
         if(update_field($new_resource_ref, $emu_created_by_script_field, 'SCRIPT'))
             {
-            emu_script_log("Set value 'SCRIPT' to created by script field for resource ID {$new_resource_ref}", $emu_log_file);
+            emu_script_log("Set created by script field value to 'SCRIPT' for resource ID {$new_resource_ref}", $emu_log_file);
             }
 
         if(emu_update_resource_metadata_from_record($new_resource_ref, $emu_record_fields, $emu_rs_mappings))
@@ -384,10 +385,14 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
     $existing_resource_ref  = $rs_emu_resources[$irn_index_in_rs_emu_resources]['resource'];
     $existing_file_checksum = $rs_emu_resources[$irn_index_in_rs_emu_resources]['file_checksum'];
 
-    emu_script_log("IRN {$emu_record_irn} was found at index {$irn_index_in_rs_emu_resources} in rs_emu_resources, proof: "
-        . PHP_EOL
-        . print_r($rs_emu_resources[$irn_index_in_rs_emu_resources], true)
-        . 'and will need to be updated (metadata and multimedia checksum checked)', $emu_log_file);
+    emu_script_log('################################################################################', $emu_log_file);
+    emu_script_log("Processing existing resource for IRN {$emu_record_irn}", $emu_log_file);
+    emu_script_log("IRN {$emu_record_irn} was found at index {$irn_index_in_rs_emu_resources} in \$rs_emu_resources, proof: ", $emu_log_file);
+    foreach($rs_emu_resources[$irn_index_in_rs_emu_resources] as $key => $value)
+        {
+        emu_script_log(" * {$key} = {$value}", $emu_log_file);
+        }
+    emu_script_log('and will need to be updated (metadata and multimedia checksum checked)', $emu_log_file);
 
     // Update metadata for this resource and then check media file checksum. If != then add media file from EMu as alternative for this resource
     if(!$emu_test_mode && emu_update_resource_metadata_from_record($existing_resource_ref, $emu_record_fields, $emu_rs_mappings))
