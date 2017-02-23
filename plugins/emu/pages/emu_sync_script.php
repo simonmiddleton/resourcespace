@@ -326,6 +326,15 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
 
         $emu_master_file = array();
 
+        // Order multimedia files ascending by their IRN
+        // This means we always consider the first multimedia file (ie. lowest IRN of a multimedia record) the original file
+        $multimedia_irns = array();
+        foreach($emu_record_fields['multimedia'] as $emu_multimedia_record_key => $emu_multimedia_record)
+            {
+            $multimedia_irns[$emu_multimedia_record_key] = $emu_multimedia_record['irn'];
+            }
+        array_multisort($multimedia_irns, SORT_ASC, $emu_record_fields['multimedia']);
+
         foreach($emu_record_fields['multimedia'] as $emu_multimedia_record)
             {
             // Once we found a master file, we don't need to look for others
@@ -420,10 +429,19 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
     $emu_master_info = array();
     $emu_master_file = array();
 
+    // Order multimedia files ascending by their IRN
+    // This means we always consider the first multimedia file (ie. lowest IRN of a multimedia record) the original file
+    $multimedia_irns = array();
+    foreach($emu_record_fields['multimedia'] as $emu_multimedia_record_key => $emu_multimedia_record)
+        {
+        $multimedia_irns[$emu_multimedia_record_key] = $emu_multimedia_record['irn'];
+        }
+    array_multisort($multimedia_irns, SORT_ASC, $emu_record_fields['multimedia']);
+
     foreach($emu_record_fields['multimedia'] as $emu_multimedia_record)
         {
         // Once we found a master file, we don't need to look for others
-        if(0 !== count($emu_master_file))
+        if(0 !== count($emu_master_info))
             {
             break;
             }
