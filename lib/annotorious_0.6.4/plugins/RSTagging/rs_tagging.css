@@ -1,0 +1,8 @@
+.RSTagging-tag {
+    float: left;
+    margin: 0px 5px 5px 0px;
+    border-radius: 3px;
+    padding: 2px 4px;
+    background-color: #79BC41;
+    color: #000;
+}

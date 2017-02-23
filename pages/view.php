@@ -739,6 +739,21 @@ else if(1 == $resource['has_image'])
                     <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
                 </a>
                 <script>
+                // Setup Annotorious
+                jQuery(document).ready(function()
+                    {
+                    anno.addPlugin('RSTagging',
+                            {
+                            nodes_endpoint: '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php'
+                            }
+                        );
+
+                    anno.setProperties(
+                        {
+                        editable: false
+                        });
+                    });
+
                 function toggleAnnotationsOption(element)
                     {
                     var option             = jQuery(element);
@@ -768,6 +783,48 @@ else if(1 == $resource['has_image'])
                     preview_image_link.hide();
 
                     anno.makeAnnotatable(document.getElementById(img_copy_id));
+
+                    console.warn('TODO: use Annotorious API to add all annotations for this preview');
+                    var test_anno = {
+                        src: preview_image_copy.attr('src'),
+                        text: 'Default test annotation',
+                        shapes: [{
+                            type: 'rect',
+                            units: 'pixel',
+                            geometry: {
+                                x: 10,
+                                y: 10,
+                                width: 40,
+                                height: 40
+                            }
+                        }],
+                        // Tags are basically nodes objects
+                        tags: [{
+                            ref: 181,
+                            resource_type_field: 3,
+                            name: 'Romania',
+                            parent: '',
+                            order_by: 1810
+                        },{
+                            ref: 182,
+                            resource_type_field: 3,
+                            name: 'France',
+                            parent: '',
+                            order_by: 1820
+                        },{
+                            ref: 183,
+                            resource_type_field: 3,
+                            name: 'United Kingdom',
+                            parent: '',
+                            order_by: 1830
+                        },]
+                    }
+                    anno.addAnnotation(test_anno);
+
+                    // anno.addHandler('onPopupShown', function(annotation)
+                    //     {
+                    //     console.log(annotation);
+                    //     });
 
                     toggleMode(element);
 
@@ -816,23 +873,6 @@ else if(1 == $resource['has_image'])
                 ?>
             </div>
             <script>
-            // Setup Annotorious
-            jQuery(document).ready(function()
-                {
-                anno.addPlugin('RSTagging',
-                        {
-                        endpoint_url: '<?php echo $baseurl; ?>/pages/edit_fields/9_ajax/suggest_keywords.php'
-                        }
-                    );
-
-                anno.setProperties(
-                    {
-                    // stroke: 'red',
-                    // stroke_width: 2,
-                    editable: false
-                    });
-                });
-
             function showHidePreviewTools()
                 {
                 var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
