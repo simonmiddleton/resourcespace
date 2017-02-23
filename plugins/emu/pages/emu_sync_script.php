@@ -314,7 +314,7 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
             emu_script_log("Updated resource ID {$new_resource_ref} metadata from EMu record for IRN '{$emu_record_irn}'", $emu_log_file);
             }
 
-        // Add master multimedia file as orginal file to the newly created resource
+        // Add master multimedia file as original file to the newly created resource
         // Grab master multimedia file from EMu
         if(0 === count($emu_record_fields['multimedia']))
             {
