@@ -727,7 +727,11 @@ else if(1 == $resource['has_image'])
 
     if(canSeePreviewTools($edit_access))
         {
-        ?>
+    	if($annotate_enabled)
+    		{
+			include_once '../include/annotation_functions.php';
+    		}
+        	?>
         <!-- Available tools to manipulate previews -->
         <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
             <div id="PreviewToolsOptionsWrapper" class="Hidden">
@@ -747,11 +751,6 @@ else if(1 == $resource['has_image'])
                             nodes_endpoint: '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php'
                             }
                         );
-
-                    anno.setProperties(
-                        {
-                        editable: false
-                        });
                     });
 
                 function toggleAnnotationsOption(element)
@@ -760,11 +759,17 @@ else if(1 == $resource['has_image'])
                     var preview_image      = jQuery('#previewimage');
                     var preview_image_link = jQuery('#previewimagelink');
                     var img_copy_id        = 'previewimagecopy';
+                    var img_src            = preview_image.attr('src');
+
+                    if(img_src.indexOf('?') != -1)
+                        {
+                        img_src = img_src.substring(0, img_src.indexOf('?'));
+                        }
 
                     // Feature enabled? Then disable it.
                     if(option.hasClass('Enabled'))
                         {
-                        anno.destroy(preview_image.attr('src'));
+                        anno.destroy(img_src);
 
                         // Remove the copy and show the linked image again
                         jQuery('#' + img_copy_id).remove();
@@ -779,47 +784,17 @@ else if(1 == $resource['has_image'])
                     // Hide the linked image for now and use a copy of it to annotate
                     var preview_image_copy = preview_image.clone(true);
                     preview_image_copy.prop('id', img_copy_id);
+                    preview_image_copy.prop('src', img_src);
                     preview_image_copy.appendTo(preview_image_link.parent());
                     preview_image_link.hide();
 
                     anno.makeAnnotatable(document.getElementById(img_copy_id));
 
-                    console.warn('TODO: use Annotorious API to add all annotations for this preview');
-                    var test_anno = {
-                        src: preview_image_copy.attr('src'),
-                        text: 'Default test annotation',
-                        shapes: [{
-                            type: 'rect',
-                            units: 'pixel',
-                            geometry: {
-                                x: 10,
-                                y: 10,
-                                width: 40,
-                                height: 40
-                            }
-                        }],
-                        // Tags are basically nodes objects
-                        tags: [{
-                            ref: 181,
-                            resource_type_field: 3,
-                            name: 'Romania',
-                            parent: '',
-                            order_by: 1810
-                        },{
-                            ref: 182,
-                            resource_type_field: 3,
-                            name: 'France',
-                            parent: '',
-                            order_by: 1820
-                        },{
-                            ref: 183,
-                            resource_type_field: 3,
-                            name: 'United Kingdom',
-                            parent: '',
-                            order_by: 1830
-                        },]
-                    }
-                    anno.addAnnotation(test_anno);
+                    var resource_annotations = <?php echo json_encode(getAnnotoriousResourceAnnotations($ref)); ?>;
+                    for(var key in resource_annotations)
+                        {
+                        anno.addAnnotation(resource_annotations[key]);
+                        }
 
                     // anno.addHandler('onPopupShown', function(annotation)
                     //     {
