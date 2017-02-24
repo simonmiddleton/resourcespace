@@ -5767,3 +5767,30 @@ function verify_antispam($spamcode="",$usercode="",$spamtime=0)
 		}
 	return true;
 	}
+
+
+/**
+* Get resource type ID based on extension
+* $mappings = array(resource_type_id => array(allowed_extensions));
+* 
+* Example of mapping array:
+* $mappings = array(2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl'));
+* 
+* @param string  $extension                        Extension we search by (ie. "mp4")
+* @param array   $resource_type_extension_mapping  Maps between resource types and extensions
+* @param integer $default                          The default value to use in case we can't find it the mappings
+* 
+* @return integer  Resource type ID
+*/
+function get_resource_type_from_extension($extension, array $resource_type_extension_mapping, $default)
+    {
+    foreach($resource_type_extension_mapping as $resource_type_id => $allowed_extensions)
+        {
+        if(in_array($extension, $allowed_extensions))
+            {
+            return $resource_type_id;
+            }
+        }
+
+    return $default;
+    }
