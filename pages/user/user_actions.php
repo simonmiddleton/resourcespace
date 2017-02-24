@@ -22,11 +22,10 @@ include "../../include/header.php";
 </div>
 <?php }
 
-
 $actiontypes=array();
 if($actions_resource_review){$actiontypes[]="resourcereview";}
-if($actions_account_requests){$actiontypes[]="userrequest";}
-if($actions_resource_requests){$actiontypes[]="resourcerequest";}
+if($actions_account_requests && checkperm("u")){$actiontypes[]="userrequest";}
+if($actions_resource_requests && checkperm("R")){$actiontypes[]="resourcerequest";}
 $updatedactiontypes=hook("updateactiontypes",'',array($actiontypes));
 if(is_array($updatedactiontypes)){$actiontypes=$updatedactiontypes;}
 
@@ -59,32 +58,43 @@ $url_params=array(
    );
 
 $url=generateURL($baseurl . "/pages/user/user_actions.php",$url_params);
-  
-?>
-<div class="BasicsBox">
-	
-	<form id="FilterActions" class="FormFilter"method="post" action="<?php echo $url ?>">
-		<fieldset>
-            <legend><?php echo $lang['filter_label']; ?></legend>  
-			<div class="tickset">
-				<div class="Inline">
-					<select name="actiontype" id="actiontype" onChange="this.form.submit();">
-						<option value=""<?php if ($actiontype == '') { echo " selected"; } ?>><?php echo $lang["all"]; ?></option>
-						<?php
-						foreach($actiontypes as $action_type_option){
-							?>
-							<option value="<?php echo $action_type_option; ?>"<?php if ($actiontype == $action_type_option) { echo " selected"; } ?>><?php echo $lang["actions_type_" . $action_type_option]; ?></option>
-							<?php
-						}
-						?>
-					</select>
-				</div>
-			</div>
-		</fieldset>
-	</form>
 
-</div>
-<div class="clearerleft"> </div>
+if(count($actiontypes)>1)
+	{
+	?>
+	<div class="BasicsBox">
+		
+		<form id="FilterActions" class="FormFilter" method="post" action="<?php echo $url ?>">
+			<fieldset>
+				<legend><?php echo $lang['filter_label']; ?></legend>  
+				<div class="tickset">
+					<div class="Inline">
+						<select name="actiontype" id="actiontype" onChange="this.form.submit();">
+							<option value=""<?php if ($actiontype == '') { echo " selected"; } ?>><?php echo $lang["all"]; ?></option>
+							<?php
+							foreach($actiontypes as $action_type_option){
+								?>
+								<option value="<?php echo $action_type_option; ?>"<?php if ($actiontype == $action_type_option) { echo " selected"; } ?>><?php echo $lang["actions_type_" . $action_type_option]; ?></option>
+								<?php
+							}
+							?>
+						</select>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	
+	</div>
+	<div class="clearerleft"> </div>
+	<?php
+	}
+else
+	{
+	?>
+	<div class="spacer"> </div>
+	<?php
+	}
+	?>
 <div class="TopInpageNav"><div class="TopInpageNavLeft">
   
 	<div class="InpageNavLeftBlock"><?php echo $lang["actions-total"] . ": <strong>" . $results; ?> </strong></div>
