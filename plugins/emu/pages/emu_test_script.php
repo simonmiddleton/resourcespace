@@ -25,7 +25,7 @@ if($ajax && $run_mode)
 
 if(file_exists($SCRIPTS[$script]['file']))
     {
-    $command = "\"{$php_path}" . ($config_windows ? '/php.exe" ' : '/php" ') . $SCRIPTS[$script]['file'];
+    $command = "\"{$php_path}" . ($config_windows ? '/php.exe" ' : '/php" ') . "{$SCRIPTS[$script]['file']} --emu_test_mode=true --emu_userref={$userref}";
     $output  = run_external($command, $return_code);
     }
 else

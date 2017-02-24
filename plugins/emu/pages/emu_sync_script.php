@@ -257,16 +257,16 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
     ##########################################
     ## TODO: CRITICAL - comment once tested ##
     ##########################################
-    if(5 > $test_skip_multiple)
-        {
-        $emu_test_mode = false;
-        }
-    else
-        {
-        $emu_test_mode = true;
-        }
+    // if(5 > $test_skip_multiple)
+    //     {
+    //     $emu_test_mode = false;
+    //     }
+    // else
+    //     {
+    //     $emu_test_mode = true;
+    //     }
 
-    $test_skip_multiple++;
+    // $test_skip_multiple++;
     #########################################
     #########################################
 
@@ -506,5 +506,5 @@ fclose($emu_log_file);
 
 clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
 
-// sql_query('DELETE FROM sysvars WHERE name = "last_emu_import"');
-// sql_query('INSERT INTO sysvars VALUES ("last_emu_import", NOW())');
+sql_query('DELETE FROM sysvars WHERE name = "last_emu_import"');
+sql_query('INSERT INTO sysvars VALUES ("last_emu_import", NOW())');
