@@ -6,3 +6,7 @@
     background-color: #79BC41;
     color: #000;
 }
+
+.RSTagging-tag .fa-exclamation-triangle {
+	margin-right: 3px;
+}
