@@ -253,16 +253,29 @@ function DisplayTheme($themes=array(), $simpleview=false)
 				<td class="created"><?php echo nicedate($getthemes[$m]["created"],true)?></td>
 				<?php } ?>
 				<td class="count" width="5%"><?php echo $getthemes[$m]["c"]?></td>
-				<?php hook('beforecollectiontoolscolumn'); ?>
-				<td class="tools" nowrap>
-					<div class="ListTools">
-					<?php
-					hook('render_themes_list_tools', '', array($getthemes[$m]));
-					render_actions($getthemes[$m], false, false);
+				<?php hook('beforecollectiontoolscolumn');
+				
+				 $action_selection_id = 'themes_action_selection' . $getthemes[$m]["ref"] . "_bottom_" . $getthemes[$m]["ref"] ;
+				
 					?>
+				<td class="tools" nowrap>
+					<div class="ListTools" >
+						<?php hook('render_themes_list_tools', '', array($getthemes[$m])); ?>
+						<div class="ActionsContainer  ">
+						<div class="DropdownActionsLabel">Actions:</div>
+						<select class="themeactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+						</select>
+						</div>					
+						</div>
 					</div>
 				</td>
 				</tr>
+				<script>
+				jQuery('#<?php echo $action_selection_id ?>').bind({
+					mouseenter:function(e){
+					LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $getthemes[$m]["ref"] ?>');
+					}});
+				</script>
 				<?php
 				}
 			?>

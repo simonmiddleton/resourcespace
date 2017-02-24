@@ -869,7 +869,7 @@ function render_dropdown_option($value, $label, array $data_attr = array(), $ext
 * 
 */
 if (!function_exists("render_actions")){
-function render_actions(array $collection_data, $top_actions = true, $two_line = true, $id = '',$resource_data=array())
+function render_actions(array $collection_data, $top_actions = true, $two_line = true, $id = '',$resource_data=array(),$optionsonly=false, $forpage="")
     {
     if(hook('prevent_running_render_actions'))
         {
@@ -882,7 +882,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
     // globals that could also be passed as a reference
     global $result /*search result*/;
 
-    $action_selection_id = $pagename . '_action_selection' . $id;
+    $action_selection_id = ($forpage!=""?$forpage:$pagename) . '_action_selection' . $id;
     if(!$top_actions)
         {
         $action_selection_id .= '_bottom';
@@ -891,25 +891,29 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         {
         $action_selection_id .= '_' . $collection_data['ref'];
         }
-        ?>
-
-    <div class="ActionsContainer  <?php if($top_actions) { echo 'InpageNavLeftBlock'; } ?>">
-		<?php
-		if (!hook("modifyactionslabel","",array($collection_data,$top_actions)))
-			{
-			?>
-			<div class="DropdownActionsLabel"><?php echo $lang['actions']; ?>:</div>
-			<?php
-			}
-
-    if($two_line)
-        {
-        ?>
-        <br />
-        <?php
-        }
-        ?>
-        <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?>>
+        
+        
+    if(!$optionsonly)
+            {?>
+    
+            <div class="ActionsContainer  <?php if($top_actions) { echo 'InpageNavLeftBlock'; } ?>">
+                <?php
+                if (!hook("modifyactionslabel","",array($collection_data,$top_actions)))
+                    {
+                    ?>
+                    <div class="DropdownActionsLabel"><?php echo $lang['actions']; ?>:</div>
+                    <?php
+                    }
+        
+                if($two_line)
+                    {
+                    ?>
+                    <br />
+                    <?php
+                    }
+                    ?>
+                <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?>>
+            <?php } ?>
             <option class="SelectAction" value=""><?php echo $lang["actions-select"]?></option>
             <?php
 
@@ -964,8 +968,11 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 				}
 
 			echo $options;
-            ?>
-        </select>
+            
+            if(!$optionsonly)
+                { ?>
+                </select>
+                <?php } ?>
         <script>
         function action_onchange_<?php echo $action_selection_id; ?>(v)
             {
@@ -1160,9 +1167,12 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
         }
         </script>
-    </div>
-    
-    <?php
+        
+    <?php if (!$optionsonly)
+        {?>
+        </div>
+        <?php
+        }
     return;
     }
 }
