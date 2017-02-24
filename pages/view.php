@@ -748,7 +748,9 @@ else if(1 == $resource['has_image'])
                     {
                     anno.addPlugin('RSTagging',
                             {
-                            nodes_endpoint: '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php'
+                            annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
+                            nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
+                            resource            : <?php echo (int) $ref; ?>
                             }
                         );
                     });
@@ -789,17 +791,6 @@ else if(1 == $resource['has_image'])
                     preview_image_link.hide();
 
                     anno.makeAnnotatable(document.getElementById(img_copy_id));
-
-                    var resource_annotations = <?php echo json_encode(getAnnotoriousResourceAnnotations($ref)); ?>;
-                    for(var key in resource_annotations)
-                        {
-                        anno.addAnnotation(resource_annotations[key]);
-                        }
-
-                    // anno.addHandler('onPopupShown', function(annotation)
-                    //     {
-                    //     console.log(annotation);
-                    //     });
 
                     toggleMode(element);
 

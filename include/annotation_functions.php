@@ -8,6 +8,11 @@
 */
 function getResourceAnnotations($resource)
     {
+    if(0 >= $resource)
+        {
+        return array();
+        }
+
     $resource = escape_check($resource);
 
     return sql_query("SELECT * FROM annotation WHERE resource = '{$resource}'");
