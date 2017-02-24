@@ -12,11 +12,6 @@ function HookEmuEditEdithidefield($field)
         return true;
         }
 
-    if('' != $emu_created_by_script_field && $emu_created_by_script_field == $field['ref'])
-        {
-        return true;
-        }
-
     return false;
     }
 

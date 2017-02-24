@@ -46,8 +46,9 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     {
                     $display_condition_js_prepend=($forsearchbar ? "#simplesearch_".$fields[$cf]["ref"]." " : "");
                     
-                    $scriptconditions[$condref]["field"] = $fields[$cf]["ref"];  # add new jQuery code to check value
-                    $scriptconditions[$condref]['type'] = $fields[$cf]['type'];
+                    $scriptconditions[$condref]["field"]               = $fields[$cf]["ref"];  # add new jQuery code to check value
+                    $scriptconditions[$condref]['type']                = $fields[$cf]['type'];
+                    $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
 					$scriptconditionnodes = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
                     
                     //$scriptconditions[$condref]['node_options'] = array();
@@ -115,7 +116,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 
                             $checkname = "nodes_searched[{$fields[$cf]['ref']}][]";
                             $jquery_selector = "input[name=\"{$checkname}\"]";
-                            if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'])
+                            if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'] && true == $fields[$cf]['display_as_dropdown'])
                                 {
                                 $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
                                 $jquery_selector = "select[name=\"{$checkname}\"]";
@@ -188,12 +189,13 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     $jquery_condition_selector = "input[name=\"nodes_searched[{$scriptcondition['field']}][]\"]";
                     $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
 
-                    if(in_array($scriptcondition['type'],array(FIELD_TYPE_CHECK_BOX_LIST,FIELD_TYPE_RADIO_BUTTONS)))
+                    if(in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS))
+                        || (FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'] && false == $scriptcondition['display_as_dropdown']))
                         {
                         $js_conditional_statement = "jQuery(this).prop('checked') && {$js_conditional_statement}";
                         }
 
-                    if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'] && true == $scriptcondition['display_as_dropdown'])
                         {
                         $jquery_condition_selector = "select[name=\"nodes_searched[{$scriptcondition['field']}]\"] option:selected";
                         }
@@ -1454,7 +1456,7 @@ function display_field($n, $field, $newtab=false)
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
-  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES;
+  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES;
 
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
@@ -1540,28 +1542,28 @@ function display_field($n, $field, $newtab=false)
       <select id="modeselectinput_<?php echo $n?>" name="modeselect_<?php echo $field["ref"]?>" class="stdwidth" onChange="var fr=document.getElementById('findreplace_<?php echo $n?>');var q=document.getElementById('question_<?php echo $n?>');<?php if ($field["type"]==7){?>if (this.value=='RM'){branch_limit_field['field_<?php echo $field["ref"]?>']=1;}else{branch_limit_field['field_<?php echo $field["ref"]?>']=0;}<?php } ?>if (this.value=='FR') {fr.style.display='block';q.style.display='none';} else {fr.style.display='none';q.style.display='block';}<?php hook ("edit_all_mode_js"); ?>">
       <option value="RT"><?php echo $lang["replacealltext"]?></option>
       <?php
-      if (in_array($field["type"], array("0","1","5","8")))
+      if (in_array($field["type"], $TEXT_FIELD_TYPES ))
         {
-        # Find and replace appies to text boxes only.
+        # Find and replace applies to text boxes only.
         ?>
         <option value="FR" <?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo $lang["findandreplace"]?></option>
         <?php
         }
-      if (in_array($field["type"], array("0","1","5","8")))
+      if (in_array($field["type"], $TEXT_FIELD_TYPES))
         {
         # Prepend applies to text boxes only.
         ?>
         <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
         <?php
         }
-      if (in_array($field["type"], array("0","1","2","5","7","8","9")))
+      if (in_array($field["type"], array_merge($TEXT_FIELD_TYPES,array("7","9"))))
         {
         # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields only.
         ?>
         <option value="AP"<?php if(getval("modeselect_" . $field["ref"],"")=="AP"){?> selected<?php } ?>><?php echo $lang["appendtext"]?></option>
         <?php
         }
-      if (in_array($field["type"], array("0","1","2","3","5","7","9")))
+      if (in_array($field["type"], array_merge($TEXT_FIELD_TYPES,array("2","3","7","9"))))
         {
         # Remove applies to text boxes, checkboxes, dropdowns, category trees and dynamic keywords only. 
         ?>

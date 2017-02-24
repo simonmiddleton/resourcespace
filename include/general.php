@@ -2428,7 +2428,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	# need to be available.
 
 	# Include footer
-	global $email_footer,$storagedir;
+	global $email_footer, $storagedir, $mime_type_by_extension;
 	
 	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php");
 	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/extras/class.html2text.php");
@@ -2526,22 +2526,27 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 					$$variable="<img src='cid:".basename(substr($variable,15))."'/>";
 					$images[]=dirname(__FILE__).substr($variable,15);
 				}
-				
-				# embed images - ex [img_gfx/whitegry/titles/title.gif]
-				else if (substr($variable,0,4)=="img_"){
-					
-					$image_path=substr($variable,4);
-					if (substr($image_path,0,1)=="/"){ // absolute paths
-						$images[]=$image_path;
-					}
-					else { // relative paths
-						$image_path=str_replace("../","",$image_path);
-						$images[]=dirname(__FILE__)."/../".$image_path;
-					}
-					$$variable="<img src='cid:".basename($image_path)."'/>";
-					$images[]=$image_path;
-				}
-				
+
+                // embed images - ex [img_gfx/whitegry/titles/title.gif]
+                else if('img_' == substr($variable, 0, 4))
+                    {
+                    $image_path = substr($variable, 4);
+
+                    // absolute paths
+                    if('/' == substr($image_path, 0, 1))
+                        {
+                        $images[] = $image_path;
+                        }
+                    // relative paths
+                    else
+                        {
+                        $image_path = str_replace('../', '', $image_path);
+                        $images[]   = dirname(__FILE__) . '/../' . $image_path;
+                        }
+
+                    $$variable = '<img src="cid:' . basename($image_path) . '"/>';
+                    }
+
 				# attach files (ex [attach_/var/www/resourcespace/gfx/whitegry/titles/title.gif])
 				else if (substr($variable,0,7)=="attach_"){
 					$$variable="";
@@ -2673,10 +2678,23 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	if (isset($embed_thumbnail)&&isset($templatevars['thumbnail'])){
 		$mail->AddEmbeddedImage($templatevars['thumbnail'],$thumbcid,$thumbcid,'base64','image/jpeg'); 
 		}
-	if (isset($images)){
-		foreach ($images as $image){	
-		$mail->AddEmbeddedImage($image,basename($image),basename($image),'base64','image/gif');}
-	}	
+
+    if(isset($images))
+        {
+        foreach($images as $image)
+            {
+            $image_extension = pathinfo($image, PATHINFO_EXTENSION);
+
+            // Set mime type based on the image extension
+            if(array_key_exists($image_extension, $mime_type_by_extension))
+                {
+                $mime_type = $mime_type_by_extension[$image_extension];
+                }
+
+            $mail->AddEmbeddedImage($image, basename($image), basename($image), 'base64', $mime_type);
+            }
+        }
+
 	if (isset($attachments)){
 		foreach ($attachments as $attachment){
 		$mail->AddAttachment($attachment,basename($attachment));}
@@ -5750,6 +5768,32 @@ function verify_antispam($spamcode="",$usercode="",$spamtime=0)
 	return true;
 	}
 
+
+/**
+* Get resource type ID based on extension
+* $mappings = array(resource_type_id => array(allowed_extensions));
+* 
+* Example of mapping array:
+* $mappings = array(2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl'));
+* 
+* @param string  $extension                        Extension we search by (ie. "mp4")
+* @param array   $resource_type_extension_mapping  Maps between resource types and extensions
+* @param integer $default                          The default value to use in case we can't find it the mappings
+* 
+* @return integer  Resource type ID
+*/
+function get_resource_type_from_extension($extension, array $resource_type_extension_mapping, $default)
+    {
+    foreach($resource_type_extension_mapping as $resource_type_id => $allowed_extensions)
+        {
+        if(in_array($extension, $allowed_extensions))
+            {
+            return $resource_type_id;
+            }
+        }
+
+    return $default;
+    }
 
 /**
 * Helper function for Preview tools feature. Checks all necessary permissions or options

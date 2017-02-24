@@ -33,7 +33,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
     
     if($hookactionsql != false){$actionsql = (($actionsql!="")?$actionsql . " UNION ":"") . $hookactionsql;}
     
-    if($actionsql==""){return array();}
+    if($actionsql==""){return $countonly?0:array();}
     
     if ($countonly)
         {return sql_value("SELECT COUNT(*) value FROM (" . $actionsql . ") allactions",0);}

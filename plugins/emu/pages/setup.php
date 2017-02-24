@@ -16,8 +16,9 @@ if(!in_array($plugin_name, $plugins))
     plugin_activate_for_setup($plugin_name);
     }
 
-$emu_rs_mappings     = unserialize(base64_decode($emu_rs_saved_mappings));
-$emu_script_last_ran = '';
+$emu_rs_mappings               = unserialize(base64_decode($emu_rs_saved_mappings));
+$emu_script_last_ran           = '';
+$emu_config_modified_timestamp = time();
 
 check_script_last_ran($emu_script_last_ran);
 
@@ -62,6 +63,16 @@ if('' != getval('submit', '') || '' != getval('save', ''))
     $emu_rs_saved_mappings = base64_encode(serialize($emu_rs_mappings_new));
     }
 
+// Add test script functionality
+// For now, only for sync mode
+if(EMU_SCRIPT_MODE_SYNC == $emu_script_mode)
+    {
+    $scripts_test_functionality = '<button type="button" onclick="testScript(document.getElementById(\'emu_script_mode\').value);" style="font-size: 1em;">Test script</button>';
+    }
+$script_last_ran_content = str_replace('%script_last_ran%', $emu_script_last_ran, $lang['emu_last_run_date']);
+$script_last_ran_content = str_replace('%scripts_test_functionality%', (isset($scripts_test_functionality) ? $scripts_test_functionality : ''), $script_last_ran_content);
+
+
 
 // API server settings
 $page_def[] = config_add_section_header($lang['emu_api_settings']);
@@ -70,7 +81,13 @@ $page_def[] = config_add_text_input('emu_api_server_port', $lang['emu_api_server
 
 // EMUu script
 $page_def[] = config_add_section_header($lang['emu_script_header']);
-$page_def[] = config_add_html(str_replace('%script_last_ran%', $emu_script_last_ran, $lang['emu_last_run_date']));
+$page_def[] = config_add_html($script_last_ran_content);
+$page_def[] = config_add_single_select('emu_script_mode',
+    $lang['emu_script_mode'], array(
+        EMU_SCRIPT_MODE_IMPORT => $lang['emu_script_mode_option_1'],
+        EMU_SCRIPT_MODE_SYNC   => $lang['emu_script_mode_option_2']
+    )
+);
 $page_def[] = config_add_boolean_select('emu_enable_script', $lang['emu_enable_script']);
 $page_def[] = config_add_boolean_select('emu_test_mode', $lang['emu_test_mode']);
 $page_def[] = config_add_text_input('emu_interval_run', $lang['emu_interval_run']);
@@ -83,6 +100,10 @@ $page_def[] = config_add_single_ftype_select('emu_created_by_script_field', $lan
 $page_def[] = config_add_section_header($lang['emu_settings_header']);
 $page_def[] = config_add_single_ftype_select('emu_irn_field', $lang['emu_irn_field']);
 $page_def[] = config_add_multi_rtype_select('emu_resource_types', $lang['emu_resource_types']);
+if(EMU_SCRIPT_MODE_SYNC == $emu_script_mode)
+    {
+    $page_def[] = config_add_text_input('emu_search_criteria', $lang['emu_search_criteria']);
+    }
 
 // EMu - ResourceSpace mappings
 $page_def[] = config_add_section_header($lang['emu_rs_mappings_header']);
@@ -137,6 +158,26 @@ $emu_rs_mappings_html .= "
 </table>
 
 <a onclick='addEmuRsMappingRow();'>{$lang['emu_add_mapping']}</a>
+</div>
+<!-- end of Question -->";
+$page_def[] = config_add_html($emu_rs_mappings_html);
+$page_def[] = config_add_hidden('emu_rs_saved_mappings');
+$page_def[] = config_add_hidden('emu_config_modified_timestamp');
+
+
+if(!isset($php_path) || '' == $php_path)
+    {
+    $error = '$php_path config option MUST be set in order for testing scripts functionality to work!';
+    }
+
+$upload_status = config_gen_setup_post($page_def, $plugin_name);
+include '../../../include/header.php';
+if(isset($error))
+    {
+    echo "<div class=\"PageInformal\">{$error}</div>";
+    }
+config_gen_setup_html($page_def, $plugin_name, $upload_status, $lang['emu_configuration']);
+?>
 <script>
 function addEmuRsMappingRow()
     {
@@ -146,19 +187,18 @@ function addEmuRsMappingRow()
 
     row.innerHTML = document.getElementById('newrow').innerHTML;
     }
-</script>
-</div>
-<!-- end of Question -->";
-$page_def[] = config_add_html($emu_rs_mappings_html);
-$page_def[] = config_add_hidden('emu_rs_saved_mappings');
 
-
-
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
-include '../../../include/header.php';
-if(isset($error))
+function testScript(script)
     {
-    echo "<div class=\"PageInformal\">{$error}</div>";
+    if(script <= 0)
+        {
+        return false;
+        }
+
+    ModalLoad('<?php echo $baseurl; ?>/plugins/emu/pages/emu_test_script.php?script=' + script);
+
+    return true;
     }
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $lang['emu_configuration']);
+</script>
+<?php
 include '../../../include/footer.php';

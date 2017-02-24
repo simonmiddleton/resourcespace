@@ -1413,20 +1413,21 @@ $show_access_on_upload_perm = "return true;";
 # Mime types by extensions.
 # used by pages/download.php to detect the mime type of the file proposed to download.
 $mime_type_by_extension = array(
-    'mov'   => 'video/quicktime',
-    '3gp'   => 'video/3gpp',
-    'mpg'   => 'video/mpeg',
-    'mp4'   => 'video/mp4',
-    'avi'   => 'video/msvideo',
-    'mp3'   => 'audio/mpeg',
-    'wav'   => 'audio/x-wav',
-    'jpg'   => 'image/jpeg',
-    'jpeg'  => 'image/jpeg',
-    'gif'   => 'image/gif',
-    'png'   => 'image/png',
-    'odt' => 'application/vnd.oasis.opendocument.text',
-    'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-    'odp' => 'application/vnd.oasis.opendocument.presentation'
+    'mov'  => 'video/quicktime',
+    '3gp'  => 'video/3gpp',
+    'mpg'  => 'video/mpeg',
+    'mp4'  => 'video/mp4',
+    'avi'  => 'video/msvideo',
+    'mp3'  => 'audio/mpeg',
+    'wav'  => 'audio/x-wav',
+    'jpg'  => 'image/jpeg',
+    'jpeg' => 'image/jpeg',
+    'gif'  => 'image/gif',
+    'png'  => 'image/png',
+    'odt'  => 'application/vnd.oasis.opendocument.text',
+    'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
+    'odp'  => 'application/vnd.oasis.opendocument.presentation',
+    'svg'  => 'image/svg+xml',
   );
 
 # PHP execution time limit
@@ -1989,6 +1990,8 @@ $autorotate_ingest=false;
 $staticsync_defaultstate=0;
 # Archive state to set for resources where files have been deleted/moved from syncdir
 $staticsync_deleted_state=2;
+# Optional array of archive states for which missing files will be ignored and not marked as deleted, useful when using offline_archive plugin.
+//$staticsync_ignore_deletion_states=array(2,3);
 
 # staticsync_revive_state - if this is set then deleted items that later reappear will be moved to this archive state
 # $staticsync_revive_state=-1;
@@ -3152,3 +3155,15 @@ $range_separator = " / ";
 
 # Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)
 $daterange_edtf_support=false;
+
+/*
+Mappings between resource types and file extensions.
+Can be used to automatically create resources in the system based on
+the extension of the file.
+*/
+$resource_type_extension_mapping_default = 1;
+$resource_type_extension_mapping         = array(
+    2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl'),
+    3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv'),
+    4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
+);

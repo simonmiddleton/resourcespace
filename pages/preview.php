@@ -74,6 +74,7 @@ if ($go!="")
 
 
 $resource=get_resource_data($ref);
+if ($resource===false) {exit($lang['resourcenotfound']);}
 $ext="jpg";
 
 if ($ext!="" && $ext!="gif" && $ext!="jpg" && $ext!="png") {$ext="jpg";$border=false;} # Supports types that have been created using ImageMagick

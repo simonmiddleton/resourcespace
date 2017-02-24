@@ -52,7 +52,7 @@ foreach($nodes as $node)
     $js_tree_data[] = array(
             'id'     => $node['ref'],
             'parent' => ('' == $node['parent'] ? '#' : $node['parent']),
-            'text'   => $node['name'],
+            'text'   => i18n_get_translated($node['name']),
             'state'  => array(
                 'opened'   => $node_opened,
                 'selected' => in_array($node['ref'], $selected_nodes)
