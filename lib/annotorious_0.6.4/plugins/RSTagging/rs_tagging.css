@@ -1,3 +1,7 @@
+#RSTagging-tags {
+    clear: right;
+}
+
 .RSTagging-tag {
     float: left;
     margin: 0px 5px 5px 0px;
@@ -8,5 +12,9 @@
 }
 
 .RSTagging-tag .fa-exclamation-triangle {
-	margin-right: 3px;
+    margin-right: 3px;
+}
+
+.annotorious-popup-field {
+    clear: both;
 }
