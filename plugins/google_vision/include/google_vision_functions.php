@@ -2,15 +2,14 @@
 
 function google_visionProcess($resource)
     {
-    global $google_vision_api_key,$google_vision_label_field;
+    global $google_vision_api_key,$google_vision_label_field,$google_vision_landmarks_field,$google_vision_text_field;
     
     # API URL
     $url="https://vision.googleapis.com/v1/images:annotate?key=" . $google_vision_api_key;
     
     # Find a suitable file
-    $file=get_resource_path($resource,true,"scr"); # Try screen size preview.
-    if (!file_exists($file)) {$file=get_resource_path($resource,true,"pre");} # Try a smaller preview.
-    if (!file_exists($file)) {return false;} # No suitable size.
+    $file=get_resource_path($resource,true,"pre");
+    if (!file_exists($file)) {return false;} # No suitable file.
     
     # Fetch and encode the file.
     $data = file_get_contents($file);
@@ -26,6 +25,12 @@ function google_visionProcess($resource)
           "features": [
             {
               "type": "LABEL_DETECTION"
+            },
+            {
+              "type": "LANDMARK_DETECTION"
+            },
+            {
+              "type": "TEXT_DETECTION"
             }
           ]
         }
@@ -62,12 +67,15 @@ function google_visionProcess($resource)
     
     $result=json_decode($result,true); # Parse and return as associative arrays
     
-    #echo "<pre>";
-    #print_r($result);
-    #echo "</pre>";
+    # echo "<pre>";
+    # print_r($result);
+    # echo "</pre>";
     
     $nodes=array();
     
+    #--------------------------------------------------------
+    # Process annotations
+    #--------------------------------------------------------
     if (isset($result["responses"][0]["labelAnnotations"]))      
         {
         # Keywords found. Loop through them and resolve node IDs for each, or add new nodes if no matching node exists.
@@ -80,10 +88,38 @@ function google_visionProcess($resource)
                 
         add_resource_nodes($resource,$nodes);
         #print_r($nodes);
-        return true;
         }
-    else
+  
+    #--------------------------------------------------------
+    # Process landmarks
+    #--------------------------------------------------------
+    if (isset($result["responses"][0]["landmarkAnnotations"]))      
         {
-        return false;
-        }
+        # Keywords found. Loop through them and resolve node IDs for each, or add new nodes if no matching node exists.
+        $landmarks=array();
+        foreach ($result["responses"][0]["landmarkAnnotations"] as $label)
+            {
+            $landmarks[]=$label["description"];
+            }
+        update_field($resource,$google_vision_landmarks_field,join(", ",$landmarks));
+        }  
+        
+    #--------------------------------------------------------
+    # Process text
+    #--------------------------------------------------------
+    if (isset($result["responses"][0]["textAnnotations"]))      
+        {
+        # Keywords found. Loop through them and resolve node IDs for each, or add new nodes if no matching node exists.
+        $text=array();
+        foreach ($result["responses"][0]["textAnnotations"] as $label)
+            {
+            $text[]=$label["description"];
+            break; # Stop here because the first one seems to be the most useful, being a sensible grouping of all available text in aproximate reading order.
+            }
+        update_field($resource,$google_vision_text_field,join(", ",$text));
+        }   
+        
+        
+        
+    return true;
     }

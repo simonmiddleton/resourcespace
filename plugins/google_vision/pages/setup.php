@@ -14,7 +14,9 @@ $page_intro = '';
 
 // Build configuration variable descriptions
 $page_def[] = config_add_text_input("google_vision_api_key",$lang["google_vision_api_key"]);
-$page_def[]= config_add_single_ftype_select("google_vision_label_field", $lang["google_vision_label_field"]); 
+$page_def[]= config_add_single_ftype_select("google_vision_label_field", $lang["google_vision_label_field"],300,false,$FIXED_LIST_FIELD_TYPES); 
+$page_def[]= config_add_single_ftype_select("google_vision_landmarks_field", $lang["google_vision_landmarks_field"],300,false,$TEXT_FIELD_TYPES); 
+$page_def[]= config_add_single_ftype_select("google_vision_text_field", $lang["google_vision_text_field"],300,false,$TEXT_FIELD_TYPES); 
 
 // Do the page generation ritual
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
