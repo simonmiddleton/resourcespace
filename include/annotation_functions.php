@@ -51,7 +51,9 @@ function getAnnotoriousResourceAnnotations($resource)
                     )
                 ),
                 'editable' => annotationEditable($annotation),
-                // Note: tags is a custom property of Annotation object
+
+                // Custom ResourceSpace properties for Annotation object
+                'ref'  => (int) $annotation['ref'],
                 'tags' => getAnnotationTags($annotation),
             );
         }
