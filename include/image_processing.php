@@ -359,7 +359,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 	# Update file dimensions
 	get_original_imagesize($ref,$filepath,$extension);
 	
-	hook("Uploadfilesuccess", "", array( "resourceId" => $ref ) );
+	hook("uploadfilesuccess", "", array( "resourceId" => $ref ) );
 	
 	# Update disk usage
 	update_disk_usage($ref);
