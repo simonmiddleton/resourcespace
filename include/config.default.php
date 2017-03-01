@@ -3167,3 +3167,7 @@ $resource_type_extension_mapping         = array(
     3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv'),
     4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
 );
+
+# New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
+$upload_then_edit=false;
+

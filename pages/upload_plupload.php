@@ -30,7 +30,7 @@ if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_r
 resource_type_config_override($resource_type);
 
 # Create a new collection?
-if ($collection_add==-1)
+if ($collection_add==-1 && !$upload_then_edit)
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
@@ -45,7 +45,13 @@ if ($collection_add==-1)
 		collection_set_themes($collection_add,$themearr);
 		}
 	}
-	
+elseif ($upload_then_edit)
+	{
+	# Switch to the user's special upload collection.
+	$collection_add=0-$userref;
+	$ci=get_collection($collection_add);
+	if ($ci===false) {create_collection($userref,"New uploads",1,1,0-$userref);}
+	}
 	
 $uploadparams= array(
     'replace'                                => $replace,
@@ -122,7 +128,7 @@ $allowed_extensions="";
 if ($resource_type!="") {$allowed_extensions=get_allowed_extensions_by_type($resource_type);}
 
 
-if ($collection_add!="")
+if ($collection_add!=="")
 	{
 	# Switch to the selected collection (existing or newly created) and refresh the frame.
  	set_user_collection($userref,$collection_add);
