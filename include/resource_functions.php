@@ -1838,21 +1838,28 @@ function delete_resource($ref)
 	hook("beforedeleteresourcefromdb","",array($ref));
 
 	# Delete all database entries
+    clear_resource($resource);
 	sql_query("delete from resource where ref='$ref'");
-	sql_query("delete from resource_data where resource='$ref'");
-	sql_query("delete from resource_dimensions where resource='$ref'");
-	sql_query("delete from resource_keyword where resource='$ref'");
-	sql_query("delete from resource_related where resource='$ref' or related='$ref'");
-	sql_query("delete from collection_resource where resource='$ref'");
-	sql_query("delete from resource_custom_access where resource='$ref'");
-	sql_query("delete from external_access_keys where resource='$ref'");
+    sql_query("delete from collection_resource where resource='$ref'");
+    sql_query("delete from resource_custom_access where resource='$ref'");
+    sql_query("delete from external_access_keys where resource='$ref'");
 	sql_query("delete from resource_alt_files where resource='$ref'");
-    delete_all_resource_nodes($ref);
-		
 	hook("afterdeleteresource");
 	
 	return true;
 	}
+    
+function clear_resource_data($resource)
+    {
+    # Clears stored data for a resource.
+    sql_query("delete from resource_data where resource='$resource'");
+	sql_query("delete from resource_dimensions where resource='$resource'");
+	sql_query("delete from resource_keyword where resource='$resource'");
+	sql_query("delete from resource_related where resource='$resource' or related='$resource'");
+    delete_all_resource_nodes($resource); 
+        
+    return true;
+    }
 
 function get_max_resource_ref()
 	{

@@ -59,7 +59,7 @@ elseif ($upload_then_edit)
 	$redirecturl=$baseurl . "/pages/edit.php?upload_review_mode=true";
 	
 	# Clear the user template
-	delete_resource(0-$userref);
+	clear_resource_data(0-$userref);
 	}
 	
 $uploadparams= array(
