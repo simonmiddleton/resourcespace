@@ -36,13 +36,15 @@ $collection     = getvalescaped('collection', '', true);
 $collection_add = getvalescaped('collection_add', '');
 
 # Are we in upload review mode?
-$upload_review_mode=(getval("upload_review_mode","")!="") || $collection==0-$userref;
+$upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collection-" . $userref);
 if ($upload_review_mode && $ref=="")
   {
   # Set the collection and ref if not already set.
   $collection=0-$userref;
   # Start reviewing at the first resource.
-  $collection_contents=do_search("!collection" . $collection);if (isset($collection_contents[0]["ref"])) {$ref=$collection_contents[0]["ref"];}
+  $collection_contents=do_search("!collection" . $collection);
+  # Set the resource to the first ref number. If the collection is empty then tagging is complete. Go to the recently added page.
+  if (isset($collection_contents[0]["ref"])) {$ref=$collection_contents[0]["ref"];} else {redirect("pages/search.php?search=!last1000");}
   }
 
 
@@ -304,6 +306,13 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             {
             # Log this
             daily_stat("Resource edit",$ref);
+            if ($upload_review_mode)
+              {
+              # Drop this resource from the collection and redirect thus picking the next resource.
+              remove_resource_from_collection($ref,0-$userref);refresh_collection_frame();
+              ?><script>CentralSpaceLoad('<?php echo $baseurl_short . "pages/edit.php?upload_review_mode=true" ?>',true);</script>
+              <?php exit();
+              }
             if (!hook('redirectaftersave') && !$modal)
               {
               redirect($baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&search=" . urlencode($search) . "&offset=" . urlencode($offset) . "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&refreshcollectionframe=true");
@@ -541,11 +550,11 @@ function AutoSave(field)
 # Resource next / back browsing.
 function EditNav() # Create a function so this can be repeated at the end of the form also.
 {
-  global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes,$disablenavlinks;
+  global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes,$disablenavlinks,$upload_review_mode;
   ?>
   <div class="backtoresults"> 
   <?php
-  if(!$disablenavlinks)
+  if(!$disablenavlinks && !$upload_review_mode)
     {
     ?>
     <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;go=previous&amp;restypes=<?php echo $restypes; ?>"></a>
@@ -565,7 +574,7 @@ function EditNav() # Create a function so this can be repeated at the end of the
 }
 function SaveAndClearButtons($extraclass="")
    { 
-   global $lang,$multiple,$ref,$clearbutton_on_edit;
+   global $lang,$multiple,$ref,$clearbutton_on_edit,$upload_review_mode;
    ?>
    <div class="QuestionSubmit <?php echo $extraclass ?>">
    <?php
@@ -575,7 +584,7 @@ function SaveAndClearButtons($extraclass="")
       <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
       <?php
       } ?>
-      <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo ($ref>0)?$lang["save"]:$lang["next"]?>&nbsp;&nbsp;" /><br><br>
+      <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo ($ref>0)?($upload_review_mode?$lang["saveandnext"]:$lang["save"]):$lang["next"]?>&nbsp;&nbsp;" /><br><br>
      <div class="clearerleft"> </div>
      </div>
    <?php 
@@ -602,7 +611,7 @@ if(0 > $ref)
 ?>
 
 <form method="post" action="<?php echo $form_action; ?>" id="mainform" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
-
+<input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
    <div class="BasicsBox">
     
       <input type="hidden" name="submitted" value="true">
@@ -1577,27 +1586,7 @@ if (!$edit_upload_options_at_top){include '../include/edit_upload_options.php';}
 <?php
 if(!hook('replacesubmitbuttons'))
     {
-    ?>
-    <div class="QuestionSubmit">
-    <?php
-    global $clearbutton_on_upload;
-    if(($clearbutton_on_upload && $ref < 0 && !$multiple) || ($ref > 0 && $clearbutton_on_edit))
-        {
-        ?>
-        <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
-        <?php
-        }
-
-        $save_btn_value = (0 < $ref) ? $lang['save'] : $lang['next'];
-        if(0 > $ref && in_array($resource['resource_type'], $data_only_resource_types))
-            {
-            $save_btn_value = $lang['create'];
-            }
-        ?>
-        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" /><br><br>
-        <div class="clearerleft"> </div>
-    </div>
-    <?php 
+SaveAndClearButtons("NoPaddingSaveClear");
     }
    
 # Duplicate navigation
