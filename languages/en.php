@@ -2574,6 +2574,7 @@ $lang["refinemetadata"]="Refine metadata";
 $lang["saveandnext"]="Save and next";
 
 $lang["upload_sequence"]="Upload sequence";
+$lang["default_upload_sequence"]="Default upload sequence";
 $lang["upload_first_then_set_metadata"]="Upload first, then set metadata";
 $lang["set_metadata_then_upload"]="Set metadata first, then upload";
 
