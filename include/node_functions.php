@@ -10,7 +10,7 @@ include_once 'migration_functions.php';
 * @param  integer  $ref                   ID of the node. To insert new record ID should be NULL
 * @param  integer  $resource_type_field   ID of the metadata field
 * @param  string   $name                  Node name to be used (international)
-* @param  integer  $parent                ID of the parent of this node
+* @param  integer  $parent                ID of the parent of this node (null for non trees)
 * @param  integer  $order_by              Value of the order in the list (e.g. 10)
 * @param  boolean  $returnexisting        Return an existing node if a match is found for this field. Duplicate nodes may be required for category trees but are not desirable for non-fixed list fields
 *

@@ -39,7 +39,7 @@ if ($current_system_upgrade_level>=SYSTEM_UPGRADE_LEVEL)
     return;
     }
 
-set_time_limit(60 * 60);
+set_time_limit(60 * 60 * 4);
 $process_locks_max_seconds=60 * 60;     // allow 1 hour for the upgrade of a single script
 if (is_process_lock(PROCESS_LOCK_UPGRADE_IN_PROGRESS))
     {
@@ -102,13 +102,30 @@ ignore_user_abort(true);
 
 $notification_users = get_notification_users();
 $total_processed=1;
+$out = "The system has been upgraded. Please wait whilst the necessary upgrade tasks are completed." . PHP_EOL;
+if ($cli)
+	{
+	echo $out;
+	}
+else
+	{
+	echo nl2br(str_pad($out,4096));
+	}
+ob_flush();flush();
+
 foreach($new_system_version_files as $new_system_version=>$files)
     {
+    $out="Performing upgrade tasks for system version: {$new_system_version}" . PHP_EOL;
     if ($cli)
         {
-        echo "Upgrading to system version: {$new_system_version}" . PHP_EOL;
-        ob_flush();
+	echo $out;
         }
+    else
+	{
+	echo nl2br(str_pad($out,4096));
+	}
+    ob_flush();flush();
+
     foreach ($files as $file)
         {
         set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Started');
@@ -116,10 +133,15 @@ foreach($new_system_version_files as $new_system_version=>$files)
         round (($total_processed / $total_upgrade_files) * 100,2) . "%) {$file}";
         set_sysvar(SYSVAR_UPGRADE_PROGRESS_OVERALL,$upgrade_progress_overall);
         if ($cli)
-            {
-            echo $upgrade_progress_overall . PHP_EOL;
-            }
-        ob_flush();
+		{
+		echo $upgrade_progress_overall;
+		}
+	else
+		{
+		echo nl2br(str_pad($upgrade_progress_overall,4096));
+		}
+        ob_flush();flush();
+
         if(!is_process_lock(PROCESS_LOCK_UPGRADE_IN_PROGRESS))
             {
             set_process_lock(PROCESS_LOCK_UPGRADE_IN_PROGRESS);
@@ -166,6 +188,19 @@ foreach($notification_users as $notification_user)
     }
 
 if($cli)
-    {
-    echo "Upgrade complete" . PHP_EOL;
-    }
+    	{
+    	echo "Upgrade complete" . PHP_EOL;
+    	}
+else
+	{
+	echo PHP_EOL . "Upgrade complete. Please wait for redirect<br />
+	<script src=\"" . $baseurl . "/lib/js/jquery-1.12.4.min.js?css_reload_key=" . $css_reload_key . "\"></script>
+	<script>
+	jQuery(document).ready(function () {
+		setTimeout(function () {
+			window.location.href = '" . $baseurl . "'
+			}, 5000);
+		});
+	</script>";
+	exit();
+	}
