@@ -1765,8 +1765,6 @@ function delete_resource($ref)
 	{
 	# Delete the resource, all related entries in tables and all files on disk
 	
-	if ($ref<0) {return false;} # Can't delete the template
-
 	$resource=get_resource_data($ref);
 	if (!$resource) {return false;} # Resource not found in database
 	

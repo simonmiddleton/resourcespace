@@ -889,7 +889,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         }
     if(isset($collection_data['ref']))
         {
-        $action_selection_id .= '_' . $collection_data['ref'];
+        $action_selection_id .= '_' . str_replace("-","_",$collection_data['ref']);
         }
         
         

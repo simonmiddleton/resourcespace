@@ -57,6 +57,9 @@ elseif ($upload_then_edit)
 	
 	# Set the redirect after upload to the start of the edit process
 	$redirecturl=$baseurl . "/pages/edit.php?upload_review_mode=true";
+	
+	# Clear the user template
+	delete_resource(0-$userref);
 	}
 	
 $uploadparams= array(
