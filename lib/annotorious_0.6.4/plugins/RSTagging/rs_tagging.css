@@ -18,3 +18,7 @@
 .annotorious-popup-field {
     clear: both;
 }
+
+.annotorious-editor-field {
+	padding: 6px;
+}
