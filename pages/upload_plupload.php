@@ -20,6 +20,9 @@ $alternative                            = getvalescaped('alternative', ''); # Ba
 $replace                                = getvalescaped('replace', ''); # Replace Resource Batch
 $replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
+$redirecturl = getval("redirecturl","");
+if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
+
 
 if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_readonly($replace_resource)))
     {
@@ -51,6 +54,9 @@ elseif ($upload_then_edit)
 	$collection_add=0-$userref;
 	$ci=get_collection($collection_add);
 	if ($ci===false) {create_collection($userref,"New uploads",1,1,0-$userref);}
+	
+	# Set the redirect after upload to the start of the edit process
+	$redirecturl=$baseurl . "/pages/edit.php?upload_review_mode=true";
 	}
 	
 $uploadparams= array(
@@ -117,8 +123,7 @@ if($replace_resource_preserve_option && '' != $replace_resource)
 
 $uploadurl=generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams) . hook('addtopluploadurl');
 
-$redirecturl = getval("redirecturl","");
-if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
+
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
@@ -896,7 +901,7 @@ var pluploadconfig = {
 				  if ($redirecturl!=""){?>
                                   //remove the completed files once complete
                                   uploader.bind('UploadComplete', function(up, files) {
-                                  window.location.href='<?php echo $redirecturl ?>';
+                                  CentralSpaceLoad('<?php echo $redirecturl ?>',true);
                                   });
                                 
                           <?php }                          

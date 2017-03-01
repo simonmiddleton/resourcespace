@@ -2569,3 +2569,5 @@ $lang["actions_type_resourcereview"] = "Resource review";
 $lang["actions_type_resourcerequest"] = "Resource request";
 $lang["actions_type_userrequest"] = "Account request";
 $lang["field_search_no_results"] = "Try without specifying a metadata field, or";
+
+$lang["refinemetadata"]="Refine metadata";
