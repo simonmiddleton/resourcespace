@@ -38,6 +38,36 @@ if('delete' == $action && isset($annotation))
     $return['data'] = deleteAnnotation($annotation);
     }
 
+// Get available fields (white listed) for annotations
+if('get_allowed_fields' == $action)
+    {
+    foreach($annotate_fields as $annotate_field)
+        {
+        $field_data = get_resource_type_field($annotate_field);
+
+        // Make sure user has access to this field
+        if((checkperm('f*') || checkperm("f{$annotate_field}"))
+            && !checkperm("f-{$annotate_field}")
+        )
+            {
+            $field_data['title'] = i18n_get_translated($field_data['title']);
+
+            $return['data'][] = $field_data;
+            }
+        }
+
+    if(!isset($return['data']))
+        {
+        $return['error'] = array(
+            'status' => 404,
+            'title'  => 'Not Found',
+            'detail' => '$annotate_fields config option does not have any fields set (i.e. it is empty)');
+
+        echo json_encode($return);
+        exit();
+        }
+    }
+
 
 
 // If by this point we still don't have a response for the request,
