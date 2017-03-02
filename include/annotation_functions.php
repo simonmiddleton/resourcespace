@@ -80,8 +80,9 @@ function getAnnotoriousResourceAnnotations($resource)
                 'editable' => annotationEditable($annotation),
 
                 // Custom ResourceSpace properties for Annotation object
-                'ref'  => (int) $annotation['ref'],
-                'tags' => getAnnotationTags($annotation),
+                'ref'                 => (int) $annotation['ref'],
+                'resource_type_field' => (int) $annotation['resource_type_field'],
+                'tags'                => getAnnotationTags($annotation),
             );
         }
 

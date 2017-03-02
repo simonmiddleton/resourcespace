@@ -22,3 +22,7 @@
 .annotorious-editor-field {
 	padding: 6px;
 }
+
+#RSTagging-field-selector {
+    width: 100%;
+}
