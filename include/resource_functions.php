@@ -4421,3 +4421,8 @@ function resource_file_readonly($ref)
     global $fstemplate_alt_threshold;
     return ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold);
     }
+	
+function delete_resource_custom_user_access($resource,$user)
+    {
+    sql_query("delete from resource_custom_access where resource='$resource' and user='$user'");
+    }

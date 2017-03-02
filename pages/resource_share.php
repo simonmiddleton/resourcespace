@@ -48,6 +48,15 @@ if ('' != $deleteaccess)
     resource_log($ref, LOG_CODE_SYSTEM, '', '', '', str_replace('%access_key', $deleteaccess, $lang['access_key_deleted']));
     }
 
+# Process deletion of custom user access
+$deleteusercustomaccess = getvalescaped('deleteusercustomaccess', '');
+$user = getvalescaped('user', '');
+if ($deleteusercustomaccess!='' && checkperm('v'))
+    {
+    delete_resource_custom_user_access($ref, $user);
+    resource_log($ref, LOG_CODE_SYSTEM, '', '', '', str_replace('%access_key', $deleteaccess, $lang['access_key_deleted']));
+    }
+	
 include "../include/header.php";
 hook("resource_share_afterheader");
 
@@ -82,6 +91,8 @@ if($editing && !$editexternalurl)
             <input type="hidden" name="editexpiration" id="editexpiration" value="">
             <input type="hidden" name="editgroup" id="editgroup" value="">
             <input type="hidden" name="editaccesslevel" id="editaccesslevel" value="">
+			<input type="hidden" name="user" id="user" value="">
+			<input type="hidden" name="deleteusercustomaccess" id="deleteusercustomaccess" value="">
 
             <div class="VerticalNav">
                 <ul>
@@ -359,6 +370,14 @@ if($editing && !$editexternalurl)
 			        CentralSpacePost(document.getElementById('resourceshareform'),true);
 			        return false;
 			    }
+				function resourceShareDeleteUserCustomAccess(user) {
+			        if (confirm('<?php echo $lang["confirmdeleteusercustomaccessresource"] ?>')) {
+			            document.getElementById('deleteusercustomaccess').value = 'yes';
+						document.getElementById('user').value = user;
+			            document.getElementById('resourceshareform').submit(); 
+			        }
+			        return false;
+			    }
 			</script>
             <?php
             }
@@ -376,7 +395,7 @@ if($editing && !$editexternalurl)
                 <p><?php echo $lang["remove_custom_access_no_users_found"] ?></p>
                 <?php
                 }
-            else
+            elseif ( (count($custom_access_rows) > 0) && checkperm('v') )
                 {
                 ?>
                 <div class="Listview">
@@ -386,7 +405,7 @@ if($editing && !$editexternalurl)
 							<td><?php echo $lang["property-user_group"];        ?></td>
 							<td><?php echo $lang["expires"];  ?></td>
 							<td><?php echo $lang["access"];    ?></td>
-							<!-- Future support for tools (e.g. delete) <td><div class="ListTools"><?php echo $lang["tools"]?></div></td> -->
+							<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
 						</tr>
 					<?php
 						foreach ($custom_access_rows as $ca)
@@ -398,6 +417,7 @@ if($editing && !$editexternalurl)
 							<td><?php echo htmlspecialchars($ca["usergroup"]); ?></td>
 							<td><?php echo htmlspecialchars($expires); ?></td>
 							<td><?php echo htmlspecialchars($access); ?></td>
+							<td><div class="ListTools"><a href="#" onClick="return resourceShareDeleteUserCustomAccess(<?php echo get_user_by_username($ca["user"]) ?>);"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a> </td>
 						</tr>
 						<?php
 						}
