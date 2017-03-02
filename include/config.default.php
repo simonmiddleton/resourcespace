@@ -1214,8 +1214,17 @@ $category_tree_open=false;
 # Should the category tree status window be shown?
 $category_tree_show_status_window=true;
 
-# Should searches using the category tree use AND for heirarchical keys?
+# Should searches using the category tree use AND for hierarchical keys?
 $category_tree_search_use_and=false;
+
+# Option to force single branch selection in category tree selection 
+$cat_tree_singlebranch=false;
+
+# Force selection of parent nodes when selecting a sub node?
+$category_tree_add_parents=true;
+
+# Force deselection of child nodes when deselecting a node?
+$category_tree_remove_children=true;
 
 # Length of a user session. This is used for statistics (user sessions per day) and also for auto-log out if $session_autologout is set.
 $session_length=30;
@@ -2687,9 +2696,6 @@ $comments_view_panel_show_marker=true;			# show an astrisk by the comment view p
 
 # show the login panel for anonymous users
 $show_anonymous_login_panel=true;
-
-# force single branch selection in category tree selection 
-$cat_tree_singlebranch=false;
 
 $regex_email = "[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}";	# currently exclusively used for comments functionality - checking of valid (anonymous) email addresses entered in JS and in back-end PHP
 

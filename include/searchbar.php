@@ -85,10 +85,10 @@ for ($n=0;$n<count($keywords);$n++)
 			if (isset($set_fields[$s[0]])){$set_fields[$s[0]].=" ".$s[1];}
 			else {$set_fields[$s[0]]=$s[1];}
 			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);$initial_tags[] =trim($keywords[$n]);}
-			}
+            }
         // Nodes search
         else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
-            {
+            {                
             $nodes = resolve_nodes_from_string($keywords[$n]);
             foreach($nodes as $node)
                 {
@@ -107,7 +107,7 @@ for ($n=0;$n<count($keywords);$n++)
 
                 $field_index = array_search($node['resource_type_field'], array_column($fields, 'ref'));
 
-                if(false === $field_index)
+                if(false === $field_index) // Node is not from a simple search field
                     {
                     $fieldsearchterm = rebuild_specific_field_search_from_node($node);
 					if(strpos(" ",$fieldsearchterm)!==false)
@@ -136,8 +136,9 @@ for ($n=0;$n<count($keywords);$n++)
 	}
 	
 # Set the text search box to the stripped value.
-
-$quicksearch=str_replace(",-"," -",$quicksearch);
+;
+$simple=array_unique($simple);
+$initial_tags=array_unique($initial_tags);
 $quicksearch=join(" ",trim_array($simple));
 
 # Set the predefined date fields
