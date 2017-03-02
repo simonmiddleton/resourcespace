@@ -29,6 +29,11 @@ $current_node_pointer = 0;
 
 if(0 == $node && '' == $name)
     {
+    $return['error'] = array(
+        'status' => 400,
+        'title'  => 'Bad Request',
+        'detail' => 'Node ID or name incorrect!');
+
     echo json_encode($return);
     exit();
     }
@@ -37,7 +42,9 @@ if(0 < $node && get_node($node, $found_node_by_ref))
     {
     $found_node_by_ref['name'] = i18n_get_translated($found_node_by_ref['name']);
 
-    echo json_encode($found_node_by_ref);
+    $return['data'] = $found_node_by_ref;
+
+    echo json_encode($return);
     exit();
     }
 
@@ -60,10 +67,20 @@ foreach(get_nodes($resource_type_field, null, true, null, $rows, $name) as $node
 
     $node['name'] = $i18l_name;
 
-    $return[] = $node;
+    $return['data'][] = $node;
 
     // Increment only when valid nodes have been added to the result set
     $current_node_pointer++;
+    }
+
+// If by this point we still don't have a response for the request,
+// create one now telling client code this is a bad request
+if(0 === count($return))
+    {
+    $return['error'] = array(
+        'status' => 400,
+        'title'  => 'Bad Request',
+        'detail' => 'The request could not be handled by get_nodes.php!');
     }
 
 echo json_encode($return);
