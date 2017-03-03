@@ -51,10 +51,10 @@ if ('' != $deleteaccess)
 # Process deletion of custom user access
 $deleteusercustomaccess = getvalescaped('deleteusercustomaccess', '');
 $user = getvalescaped('user', '');
-if ($deleteusercustomaccess!='' && checkperm('v'))
+if ($deleteusercustomaccess=='yes' && checkperm('v'))
     {
     delete_resource_custom_user_access($ref, $user);
-    resource_log($ref, LOG_CODE_SYSTEM, '', '', '', str_replace('%access_key', $deleteaccess, $lang['access_key_deleted']));
+    resource_log($ref,'a', '', $lang['log-removedcustomuseraccess'] . $user);
     }
 	
 include "../include/header.php";

@@ -583,6 +583,7 @@ $lang["log-b"]="Created alternate";
 $lang["log-y"]="Deleted alternate";
 $lang["log-missinglang"]="[type] (missing lang)"; # [type] will be replaced.
 $lang['log-adminpermissionsrequired'] = 'Full admin permission required!';
+$lang['log-removedcustomuseraccess'] = 'Removed custom access for user: ';
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"]="Access changed";
