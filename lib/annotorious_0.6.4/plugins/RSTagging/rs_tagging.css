@@ -11,6 +11,11 @@
     color: #000;
 }
 
+.suggested {
+    background-color: #e8793e;
+    color: #000;
+}
+
 .RSTagging-tag .fa-exclamation-triangle {
     margin-right: 3px;
 }
