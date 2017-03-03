@@ -1575,3 +1575,36 @@ function rebuild_specific_field_search_from_node(array $node)
     // Example: country:keyword1;keyword2
     return ((strpos($node['name']," ")===false)?$field_shortname . ":" . i18n_get_translated($node['name']):"\"" . $field_shortname . ":" . i18n_get_translated($node['name']) . "\"");
     }
+
+    
+function search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$access_override=false,$starsearch=0,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false, $editable_only=false,$returnsql=false,$getsizes=array(),$previewextension="jpg")
+   {
+   # Search capability.
+   # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
+   $results= do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort,$access_override,$starsearch,$ignore_filters,$return_disk_usage,$recent_search_daylimit,$go,$stats_logging,$return_refs_only,$editable_only,$returnsql);
+   if(is_string($getsizes)){$getsizes=explode(",",$getsizes);}
+   if(is_array($getsizes) && count($getsizes)>0)
+        {
+        $resultcount=count($results);
+        for($n=0;$n<$resultcount;$n++)
+            {
+            global $access;
+            $access=get_resource_access($results[$n]);
+            $use_watermark=check_use_watermark();
+            
+            if($results[$n]["access"]==2){continue;} // No images for confidential resources
+            $available=get_all_image_sizes(true,($access==1));
+            foreach ($getsizes as $getsize)
+                {
+                if(!(in_array($getsize,array_column($available,"id")))){continue;}
+                $resfile=get_resource_path($results[$n]["ref"],true,$getsize,false,$previewextension,-1,1,$use_watermark);
+                if(file_exists($resfile))
+                    {
+                    $results[$n]["url_" . $getsize]=get_resource_path($results[$n]["ref"],false,$getsize,false,$previewextension,-1,1,$use_watermark);
+                    }
+                }		
+
+            }
+        }
+   return $results;
+   }
