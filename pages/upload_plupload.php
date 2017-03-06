@@ -982,15 +982,20 @@ var pluploadconfig = {
                     
                             return false;
                          });
+
                         //Change URL if exif box status changes
-						jQuery('#question_noexif').on('change', '#no_exif', function() {
-										if(jQuery(this).is(':checked')){
-												uploader.settings.url =ReplaceUrlParameter(uploader.settings.url,'no_exif','yes');
-										}
-										else {
-												uploader.settings.url =ReplaceUrlParameter(uploader.settings.url,'no_exif','');
-										}
-						});
+                        jQuery('#no_exif').on('change', function ()
+                            {
+                            if(jQuery(this).is(':checked'))
+                                {
+                                uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'no_exif', 'yes');
+                                }
+                            else
+                                {
+                                uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'no_exif', '');
+                                }
+                            });
+
 						<?php
 						if($replace_resource_preserve_option)
 								{
