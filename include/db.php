@@ -395,6 +395,9 @@ function get_sysvar($name)
     return sql_value("SELECT `value` FROM `sysvars` WHERE `name`='{$name}'",false);
     }
 
+// If you need to replace the hook() function via a plugin, you'll have to do this in its config.php
+// file, as that's evaluated early enough.
+if (!function_exists('hook')) {
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	{
 	# Plugin architecture.  Look for hooks with this name (and corresponding page, if applicable) and run them sequentially.
@@ -510,6 +513,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	# do a callback to run the function(s) - this will not cause an infinite loop as we have just added to cache for execution.
 	return hook($name, $pagename, $params, $last_hook_value_wins);
 	}
+}
 
 # Indicate that from now on we want to group together DML statements into one transaction (faster as only one commit at end).
 function db_begin_transaction()
