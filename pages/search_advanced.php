@@ -247,7 +247,8 @@ else
 		  if ($allwords=="") {$allwords=$keyword;} else {$allwords.=", " . $keyword;}
 		  }
 	  }
-   $allwords=str_replace(", ","",$allwords);
+
+    $allwords = str_replace(', ', ' ', $allwords);
   }
 
 function render_advanced_search_buttons() {
