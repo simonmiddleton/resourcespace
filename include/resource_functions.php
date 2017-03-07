@@ -2752,7 +2752,7 @@ function notify_user_contributed_submitted($refs,$collection=0)
 		global $userref;
 		if($collection!=0)
 			{
-			message_add($message_users,$notificationmessage,$baseurl . "/pages/search.php?search=!contributions" . $userref . "&archive=-1",$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_COLLECTION,$collection);
+			message_add($message_users,$notificationmessage,$baseurl . "/pages/search.php?search=!collection" . $collection,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_COLLECTION,$collection);
 			}
 		else
 			{
