@@ -1984,3 +1984,30 @@ $lang["user_password__introtext"]="Bitte geben Sie Ihre E-Mail Adresse ein. Ihre
 $lang["user_request__introtext"]="Um einen Zugang anzufordern, füllen Sie bitte das untenstehende Formular aus.";
 $lang["view__storyextract"]="Story:";
 
+$lang["systemlog"]="Systemlog";
+$lang["system_performance"]="Systemleistung";
+$lang["mysql_throughput"]="MySQL Durchsatz";
+$lang["cpu_benchmark"]="CPU Leistung";
+$lang["disk_write_speed"]="Disk Schreibgeschwindigkeit";
+
+/* System Config */
+$lang['systemconfig'] = 'Systemkonfiguration';
+$lang['systemconfig_description'] = 'Die Optionen auf dieser Seite gelten systemweit und betreffen auch Benutzern zugängliche Funktionen. Bitte berücksichtigen Sie, dass einige Optionen benutzerabhängig sind, und von diesen überschrieben werden können.';
+
+/* System Console */
+$lang["systemconsole"]="Systemmonitor";
+
+/* Manage slideshows */
+$lang["manage_slideshow"] = "Slideshow anpassen";
+$lang["action-add-new"] = "Neues Bild hinzufügen";
+$lang['action-replace'] = 'Ersetzen';
+$lang["action-submit-button-label"] = "Hinzufügen";
+$lang["slideshow_use_static_image"] = "Zeige nur ein zufälliges Bild aus der Auswahl (das Bild ändert sich dann nur beim Neuladen der Seite)";
+
+/* Manage external shares */
+$lang['permission_manage_external_shares'] = 'Kann externe Links mit Ablaufdatum "Nie" verwalten';
+$lang['manage_external_shares'] = 'Externe Links verwalten';
+
+/* Dash */
+$lang["managedefaultdash"]="Kacheln für alle Benutzer verwalten";
+$lang["manage_user_group_dash_tiles"]="Kacheln für Benutzergruppen verwalten";
