@@ -176,11 +176,18 @@ var applicationname = "<?php echo $applicationname?>";
 var branch_limit="<?php echo $cat_tree_singlebranch?>";
 var branch_limit_field = new Array();
 var global_cookies = "<?php echo $global_cookies?>";
-var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad -->';
+var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
+<?php
+if (!hook("replacetrashbin", "", array("js" => true)))
+	{
+?>
     global_trash_html += '<div id="trash_bin">';
     global_trash_html += '<span class="trash_bin_text"><?php echo $lang["trash_bin_title"]; ?></span>';
     global_trash_html += '</div>';
     global_trash_html += '<div id="trash_bin_delete_dialog" style="display: none;"></div>';
+<?php
+	}
+?>
 oktext="<?php echo $lang["ok"] ?>";
 var scrolltopElementCentral='.ui-layout-center';
 var scrolltopElementCollection='.ui-layout-south';

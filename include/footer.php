@@ -23,10 +23,12 @@ if (getval("ajax","")=="" && !hook("replace_footer"))
 <span role="status" aria-live="assertive" class="ui-helper-hidden-accessible"></span>
 
 <!-- Global Trash Bin -->
+<?php if (!hook("replacetrashbin")) { ?>
 <div id="trash_bin">
 	<span class="trash_bin_text"><?php echo $lang['trash_bin_title']; ?></span>
 </div>
 <div id="trash_bin_delete_dialog" style="display: none;"></div>
+<?php } ?>
 
 <div class="clearerleft"></div>
 </div><!--End div-CentralSpace-->
