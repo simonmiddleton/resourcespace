@@ -1219,7 +1219,7 @@ if($upload_no_file)
 	<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/upload_plupload.php?createblank=true&replace=<?php echo urlencode($replace) ?>&alternative=<?php echo urlencode($alternative) ?>&collection_add=<?php echo urlencode($collection_add)?>&resource_type=<?php echo urlencode($resource_type)?>&replace_resource=<?php echo urlencode($replace_resource)?>"> &gt; <?php echo $lang["create_empty_resource"]; ?></a></p>
 	<?php
 	}?>
-
+	
 <?php if ($show_upload_log){
     ?>
     <div id="showlog" ><a href="" onClick="jQuery('#upload_results').show();jQuery('#showlog').hide();jQuery('#hidelog').show();return false;" >&#x25B8;&nbsp;Show upload log</a></div>
@@ -1232,6 +1232,9 @@ if($upload_no_file)
     }
     ?>    
 
+<?php if ($upload_then_edit) { ?>
+<p><a href="edit.php?ref=<?php echo 0-$userref ?>" onClick="return ModalLoad(this);">&#x25B8;&nbsp;<?php echo $lang["specifydefaultcontent"] ?></a></p>
+<?php } ?>
 
 </div>
 

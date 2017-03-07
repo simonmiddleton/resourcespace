@@ -603,7 +603,7 @@ li.plupload_droptext {font-size: 1.1em;}
 .plupload_view_list .plupload_filelist_footer {padding-right:15px;}
 .plupload_view_list .plupload_filelist_footer .plupload_file_action {padding-right:21px;padding-left:6px;}
 
-#showlog {margin-top:10px;}
+#showlog,#hidelog {margin-top:10px;}
 
 .ui-layout-pane {
     overflow: auto;
