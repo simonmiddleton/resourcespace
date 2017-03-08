@@ -20,7 +20,7 @@ function HookAction_datesPagestoolscron_copy_hitcountAddplugincronjob()
 			if($action_dates_email_admin_days!="") # Set up email notification to admin of expiring resources
 				{
 				$action_dates_email_admin_seconds=intval($action_dates_email_admin_days)*60*60*24;	
-				if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])-$action_dates_email_admin_seconds+86400)))		
+				if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])+$action_dates_email_admin_seconds)))		
 					{  			
 					$emailrefs[]=$ref;		
 					}
@@ -70,7 +70,7 @@ function HookAction_datesPagestoolscron_copy_hitcountAddplugincronjob()
 				}
 			foreach($admin_notify_emails as $admin_notify_email)
 						{
-						send_mail($admin_notify_email,$applicationname . ": " . $lang["propose_changes_proposed_changes_submitted"],$message,"","","emailproposedchanges",$templatevars);    
+						send_mail($admin_notify_email,$applicationname . ": " . $lang['action_dates_notification_subject'],$message,"","","emailproposedchanges",$templatevars);    
 						}
 					
 					if (count($admin_notify_users)>0)

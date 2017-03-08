@@ -689,7 +689,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
 if (($ffmpeg_fullpath!=false) && in_array($extension, $ffmpeg_audio_extensions))
 	{
 	# Produce the MP3 preview.
-	$mp3file = get_resource_path($ref,true,"",false,"mp3");
+	$mp3file = get_resource_path($ref,true,"",false,"mp3",1,1,false,"",$alternative);
 
     $cmd=$ffmpeg_fullpath . " -y -i " . escapeshellarg($file) . " " . $ffmpeg_audio_params . " " . escapeshellarg($mp3file);
     $output = run_command($cmd);

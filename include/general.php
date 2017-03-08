@@ -2938,9 +2938,11 @@ function get_all_image_sizes($internal=false,$restricted=false)
 {
     # Returns all image sizes available.
     # Standard image sizes are translated using $lang.  Custom image sizes are i18n translated.
-
+    $condition=($internal)?"":"WHERE internal!=1";
+    if($restricted){$condition .= ($condition!=""?" AND ":" WHERE ") . " allow_restricted=1";}
+    
     # Executes query.
-    $r = sql_query("select * from preview_size " . (($internal)?"":"where internal!=1") . (($restricted)?" and allow_restricted=1":"") . " order by width asc");
+    $r = sql_query("select * from preview_size " . $condition . " order by width asc");
 
     # Translates image sizes in the newly created array.
     $return = array();

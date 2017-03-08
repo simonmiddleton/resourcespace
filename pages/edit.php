@@ -35,6 +35,19 @@ $uploadparams.="&redirecturl=" . urlencode(getval("redirecturl",""));
 $collection     = getvalescaped('collection', '', true);
 $collection_add = getvalescaped('collection_add', '');
 
+# Are we in upload review mode?
+$upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collection-" . $userref);
+if ($upload_review_mode && $ref=="")
+  {
+  # Set the collection and ref if not already set.
+  $collection=0-$userref;
+  # Start reviewing at the first resource.
+  $collection_contents=do_search("!collection" . $collection);
+  # Set the resource to the first ref number. If the collection is empty then tagging is complete. Go to the recently added page.
+  if (isset($collection_contents[0]["ref"])) {$ref=$collection_contents[0]["ref"];} else {redirect("pages/search.php?search=!last1000");}
+  }
+
+
 global $merge_filename_with_title;
 if($merge_filename_with_title && $ref < 0) {
 
@@ -58,7 +71,7 @@ if($merge_filename_with_title && $ref < 0) {
 
 global $tabs_on_edit;
 $collapsible_sections=true;
-if($tabs_on_edit){$collapsible_sections=false;}
+if($tabs_on_edit || $upload_review_mode){$collapsible_sections=false;}
 
 $errors=array(); # The results of the save operation (e.g. required field messages)
 
@@ -293,6 +306,13 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             {
             # Log this
             daily_stat("Resource edit",$ref);
+            if ($upload_review_mode)
+              {
+              # Drop this resource from the collection and redirect thus picking the next resource.
+              remove_resource_from_collection($ref,0-$userref);refresh_collection_frame();
+              ?><script>CentralSpaceLoad('<?php echo $baseurl_short . "pages/edit.php?upload_review_mode=true" ?>',true);</script>
+              <?php exit();
+              }
             if (!hook('redirectaftersave') && !$modal)
               {
               redirect($baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&search=" . urlencode($search) . "&offset=" . urlencode($offset) . "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&refreshcollectionframe=true");
@@ -530,11 +550,11 @@ function AutoSave(field)
 # Resource next / back browsing.
 function EditNav() # Create a function so this can be repeated at the end of the form also.
 {
-  global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes,$disablenavlinks;
+  global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes,$disablenavlinks,$upload_review_mode;
   ?>
   <div class="backtoresults"> 
   <?php
-  if(!$disablenavlinks)
+  if(!$disablenavlinks && !$upload_review_mode)
     {
     ?>
     <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;go=previous&amp;restypes=<?php echo $restypes; ?>"></a>
@@ -554,7 +574,7 @@ function EditNav() # Create a function so this can be repeated at the end of the
 }
 function SaveAndClearButtons($extraclass="")
    { 
-   global $lang,$multiple,$ref,$clearbutton_on_edit;
+   global $lang,$multiple,$ref,$clearbutton_on_edit,$upload_review_mode;
    ?>
    <div class="QuestionSubmit <?php echo $extraclass ?>">
    <?php
@@ -564,7 +584,7 @@ function SaveAndClearButtons($extraclass="")
       <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
       <?php
       } ?>
-      <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo ($ref>0)?$lang["save"]:$lang["next"]?>&nbsp;&nbsp;" /><br><br>
+      <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo ($ref>0)?($upload_review_mode?$lang["saveandnext"]:$lang["save"]):$lang["next"]?>&nbsp;&nbsp;" /><br><br>
      <div class="clearerleft"> </div>
      </div>
    <?php 
@@ -591,7 +611,7 @@ if(0 > $ref)
 ?>
 
 <form method="post" action="<?php echo $form_action; ?>" id="mainform" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
-
+<input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
    <div class="BasicsBox">
     
       <input type="hidden" name="submitted" value="true">
@@ -608,7 +628,7 @@ if(0 > $ref)
       } 
    elseif ($ref>0)
       {
-      if (!hook('replacebacklink') && !$modal) 
+      if (!hook('replacebacklink') && !$modal && !$upload_review_mode) 
          {?>
          <p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p><?php
          }
@@ -618,20 +638,26 @@ if(0 > $ref)
           <?php
          # Draw nav
          if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
-         ?>
-         <h1 id="editresource"><?php echo $lang["editresource"]?></h1>
          
+         if (!$upload_review_mode) { ?>
+         <h1 id="editresource"><?php echo $lang["editresource"]?></h1>
+         <?php } else { ?>
+        <h1 id="editresource"><?php echo $lang["refinemetadata"]?></h1>
+        <?php } ?>
         
          </div><!-- end of RecordHeader -->
          <?php
-         if ($edit_show_save_clear_buttons_at_top) { SaveAndClearButtons("NoPaddingSaveClear");}
-         ?>
-         <div class="Question" id="resource_ref_div" style="border-top:none;">
-            <label><?php echo $lang["resourceid"]?></label>
-            <div class="Fixed"><?php echo urlencode($ref) ?></div>
-            <div class="clearerleft"> </div>
-         </div>
-         <?php 
+         if ($edit_show_save_clear_buttons_at_top || $upload_review_mode) { SaveAndClearButtons("NoPaddingSaveClear");}
+         
+         if (!$upload_review_mode)
+            { ?>
+            <div class="Question" id="resource_ref_div" style="border-top:none;">
+               <label><?php echo $lang["resourceid"]?></label>
+               <div class="Fixed"><?php echo urlencode($ref) ?></div>
+               <div class="clearerleft"> </div>
+            </div>
+            <?php
+            }
          }
       hook("custompermshowfile");
       if ((!$is_template && !checkperm("F*"))||$custompermshowfile) 
@@ -693,7 +719,7 @@ if(0 > $ref)
             }
 
         // Allow to upload only if resource is not a data only type
-        if(0 < $ref && !in_array($resource['resource_type'], $data_only_resource_types) && !$resource_file_readonly)
+        if (0 < $ref && !in_array($resource['resource_type'], $data_only_resource_types) && !$resource_file_readonly && !$upload_review_mode)
             {
             ?>
             <a href="<?php echo $baseurl_short?>pages/upload_<?php echo $replace_upload_type ?>.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>&replace_resource=<?php echo urlencode($ref)  ?>&resource_type=<?php echo $resource['resource_type']?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (($resource["file_extension"]!="")?$lang["replacefile"]:$lang["uploadafile"]) ?></a>
@@ -703,11 +729,11 @@ if(0 > $ref)
             {hook("afterreplacefile");} 
          else 
             {hook("afteruploadfile");}
-         if (!$disable_upload_preview && !$resource_file_readonly) 
+         if (!$disable_upload_preview && !$resource_file_readonly && !$upload_review_mode) 
             { ?>
             <br />
      <a href="<?php echo $baseurl_short?>pages/upload_preview.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["uploadpreview"]?></a><?php } ?>
-     <?php if (!$disable_alternative_files && !checkperm('A')) { ?><br />
+     <?php if (!$disable_alternative_files && !checkperm('A') && !$upload_review_mode) { ?><br />
      <a href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["managealternativefiles"]?></a><?php } ?>
      <?php if ($allow_metadata_revert){?><br />
      <a href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&exif=true&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');">&gt; 
@@ -720,7 +746,7 @@ if(0 > $ref)
   <?php }
   hook("beforeimagecorrection");
 
-  if (!checkperm("F*") && !$resource_file_readonly) { ?>
+  if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode) { ?>
   <div class="Question" id="question_imagecorrection">
    <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
    <option value=""><?php echo $lang["select"]?></option>
@@ -982,7 +1008,7 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
 <?php   
 }
 
-if ($edit_upload_options_at_top){include '../include/edit_upload_options.php';}
+if ($edit_upload_options_at_top || $upload_review_mode){include '../include/edit_upload_options.php';}
 
 
 $use=$ref;
@@ -1066,7 +1092,7 @@ if($collapsible_sections)
  if ($display_any_fields)
  {
     # "copy data from" feature
-  if ($enable_copy_data_from && !checkperm("F*"))
+  if ($enable_copy_data_from && !checkperm("F*") && !$upload_review_mode)
     { ?>
  <div class="Question" id="question_copyfrom">
     <label for="copyfrom"><?php echo $lang["batchcopyfrom"]?></label>
@@ -1075,7 +1101,12 @@ if($collapsible_sections)
     <input type="submit" name="save" value="Save">
  </div><!-- end of question_copyfrom -->
  <?php
-} ?><br /><br /><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
+} ?>
+
+<?php if (!$upload_review_mode) { ?>
+<br /><br /><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
+ } 
+
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
 
@@ -1555,27 +1586,7 @@ if (!$edit_upload_options_at_top){include '../include/edit_upload_options.php';}
 <?php
 if(!hook('replacesubmitbuttons'))
     {
-    ?>
-    <div class="QuestionSubmit">
-    <?php
-    global $clearbutton_on_upload;
-    if(($clearbutton_on_upload && $ref < 0 && !$multiple) || ($ref > 0 && $clearbutton_on_edit))
-        {
-        ?>
-        <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
-        <?php
-        }
-
-        $save_btn_value = (0 < $ref) ? $lang['save'] : $lang['next'];
-        if(0 > $ref && in_array($resource['resource_type'], $data_only_resource_types))
-            {
-            $save_btn_value = $lang['create'];
-            }
-        ?>
-        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" /><br><br>
-        <div class="clearerleft"> </div>
-    </div>
-    <?php 
+SaveAndClearButtons("NoPaddingSaveClear");
     }
    
 # Duplicate navigation

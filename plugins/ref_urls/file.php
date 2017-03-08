@@ -14,8 +14,8 @@ $k = getvalescaped('k', '');
 if (!empty($k))
 	{
 	# External access - check how this was shared.
-	$externalAccess = sql_value("select access value from external_access_keys where resource="
-			. $ref . " and access_key='" . escape_check($k) . "'", -1);
+	$externalAccess = sql_value("select access value from external_access_keys where resource='"
+			. $ref . "' and access_key='" . escape_check($k) . "'", -1);
 	if ($externalAccess != 0)
 		{
 		http_response_code(403);

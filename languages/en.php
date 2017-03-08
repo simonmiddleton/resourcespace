@@ -471,7 +471,7 @@ $lang["restoreoriginal"]="Restore original";
 $lang["createpreviews"]="Create previews";
 $lang["recreatepreviews"]="Recreate previews";
 $lang["retrypreviews"]="Retry preview creation";
-$lang["specifydefaultcontent"]="Specify default content for new resources";
+$lang["specifydefaultcontent"]="Specify default metadata";
 $lang["properties"]="Properties";
 $lang["relatedresources"]="Related resources";
 $lang["relatedresources-filename_extension"]="Related resources - %EXTENSION"; # Use %EXTENSION, %extension or %Extension as a placeholder. The placeholder will be replaced with the filename extension, using the same case. E.g. "Related resources - %EXTENSION" -> "Related resources - JPG"
@@ -583,6 +583,7 @@ $lang["log-b"]="Created alternate";
 $lang["log-y"]="Deleted alternate";
 $lang["log-missinglang"]="[type] (missing lang)"; # [type] will be replaced.
 $lang['log-adminpermissionsrequired'] = 'Full admin permission required!';
+$lang['log-removedcustomuseraccess'] = 'Removed custom access for user: ';
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"]="Access changed";
@@ -895,6 +896,7 @@ $lang["editingexternalshare"]="Editing external share";
 $lang["noexternalsharing"]="No external sharing.";
 $lang["sharedcollectionaddwarning"]="Warning: This collection has been shared with external users. The resource you have added has now been made available to these users. Click 'share' to manage the external access for this collection.";
 $lang["sharedcollectionaddwarningupload"]="Warning: The selected collection has been shared with external users. The resources you upload will be made available to these users. Click 'share' in the bottom bar to manage the external access for this collection.";
+$lang["confirmdeleteusercustomaccessresource"]='Are you sure you wish to delete custom access for this user?';
 
 $lang["sharedcollectionaddblocked"]="You are not permitted to add resources to a collection that has been shared with external users.";
 $lang["restrictedsharecollection"]="You have restricted access to one or more of the resources in this collection and therefore sharing is prohibited.";
@@ -2570,5 +2572,14 @@ $lang["actions_type_resourcereview"] = "Resource review";
 $lang["actions_type_resourcerequest"] = "Resource request";
 $lang["actions_type_userrequest"] = "Account request";
 $lang["field_search_no_results"] = "Try without specifying a metadata field, or";
+
+$lang["refinemetadata"]="Refine metadata";
+$lang["saveandnext"]="Save and next";
+
+$lang["upload_sequence"]="Upload sequence";
+$lang["default_upload_sequence"]="Default upload sequence";
+$lang["upload_first_then_set_metadata"]="Upload first, then set metadata";
+$lang["set_metadata_then_upload"]="Set metadata first, then upload";
+
 
 /* Annotations */

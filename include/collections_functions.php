@@ -132,6 +132,8 @@ function get_collection($ref)
 		
 		$return["request_feedback"]=$request_feedback;
 		return $return;}
+	
+	return false;
 	}
 }
 
@@ -329,7 +331,7 @@ function set_user_collection($user,$collection)
 	}
 	
 if (!function_exists("create_collection")){	
-function create_collection($userid,$name,$allowchanges=0,$cant_delete=0)
+function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0)
 	{
 	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
 	if($username==$anonymous_login && $anonymous_user_session_collection)
@@ -341,9 +343,9 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0)
 		{	
 		$rs_session="";
 		}
-		
+
 	# Creates a new collection and returns the reference
-	sql_query("insert into collection (name,user,created,allow_changes,cant_delete,session_id) values ('" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . ")");
+	sql_query("insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id) values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . ")");
 	$ref=sql_insert_id();
 
 	index_collection($ref);	
@@ -397,7 +399,6 @@ function refresh_collection_frame($collection="")
 	CollectionDivLoad(\"" . $baseurl . "/pages/collections.php" . ((getval("k","")!="")?"?collection=" . urlencode(getval("collection",$collection)) . "&k=" . urlencode(getval("k","")) . "&":"?") . "nc=" . time() . "\");
 	</script>";
 	}
-
     }
 
 if (!function_exists("search_public_collections")){	

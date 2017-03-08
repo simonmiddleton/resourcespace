@@ -1765,8 +1765,6 @@ function delete_resource($ref)
 	{
 	# Delete the resource, all related entries in tables and all files on disk
 	
-	if ($ref<0) {return false;} # Can't delete the template
-
 	$resource=get_resource_data($ref);
 	if (!$resource) {return false;} # Resource not found in database
 	
@@ -1840,21 +1838,28 @@ function delete_resource($ref)
 	hook("beforedeleteresourcefromdb","",array($ref));
 
 	# Delete all database entries
+    clear_resource($resource);
 	sql_query("delete from resource where ref='$ref'");
-	sql_query("delete from resource_data where resource='$ref'");
-	sql_query("delete from resource_dimensions where resource='$ref'");
-	sql_query("delete from resource_keyword where resource='$ref'");
-	sql_query("delete from resource_related where resource='$ref' or related='$ref'");
-	sql_query("delete from collection_resource where resource='$ref'");
-	sql_query("delete from resource_custom_access where resource='$ref'");
-	sql_query("delete from external_access_keys where resource='$ref'");
+    sql_query("delete from collection_resource where resource='$ref'");
+    sql_query("delete from resource_custom_access where resource='$ref'");
+    sql_query("delete from external_access_keys where resource='$ref'");
 	sql_query("delete from resource_alt_files where resource='$ref'");
-    delete_all_resource_nodes($ref);
-		
 	hook("afterdeleteresource");
 	
 	return true;
 	}
+    
+function clear_resource_data($resource)
+    {
+    # Clears stored data for a resource.
+    sql_query("delete from resource_data where resource='$resource'");
+	sql_query("delete from resource_dimensions where resource='$resource'");
+	sql_query("delete from resource_keyword where resource='$resource'");
+	sql_query("delete from resource_related where resource='$resource' or related='$resource'");
+    delete_all_resource_nodes($resource); 
+        
+    return true;
+    }
 
 function get_max_resource_ref()
 	{
@@ -2747,7 +2752,7 @@ function notify_user_contributed_submitted($refs,$collection=0)
 		global $userref;
 		if($collection!=0)
 			{
-			message_add($message_users,$notificationmessage,$baseurl . "/pages/search.php?search=!contributions" . $userref . "&archive=-1",$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_COLLECTION,$collection);
+			message_add($message_users,$notificationmessage,$baseurl . "/pages/search.php?search=!collection" . $collection,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_COLLECTION,$collection);
 			}
 		else
 			{
@@ -4415,4 +4420,9 @@ function resource_file_readonly($ref)
     # Even if the user has edit access to a resource, the main file may be read only.
     global $fstemplate_alt_threshold;
     return ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold);
+    }
+	
+function delete_resource_custom_user_access($resource,$user)
+    {
+    sql_query("delete from resource_custom_access where resource='$resource' and user='$user'");
     }

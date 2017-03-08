@@ -108,7 +108,7 @@ include "../../include/header.php";
         <?php
         }
 
-    if((checkperm('h') && !checkperm('hdta')) || (checkperm('dta') && !checkperm('h')))
+    if($home_dash && ((checkperm('h') && !checkperm('hdta')) || (checkperm('dta') && !checkperm('h'))))
         {
         ?>
         <li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['managedefaultdash']; ?></a></li>
@@ -116,7 +116,7 @@ include "../../include/header.php";
         }
 
     // Manage user group dash tiles
-    if(checkperm('h') && checkperm('hdt_ug'))
+    if($home_dash && checkperm('h') && checkperm('hdt_ug'))
         {
         ?>
         <li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php?show_usergroups_dash=true" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['manage_user_group_dash_tiles']; ?></a></li>

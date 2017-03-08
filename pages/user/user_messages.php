@@ -71,7 +71,7 @@ if (getval("allseen","")!="")
 <?php
 for ($n=0;$n<count($messages);$n++)
 	{
-	$message=escape_check($messages[$n]["message"]);
+	$message=escape_check(strip_tags_and_attributes($messages[$n]["message"]));
 	$message=htmlspecialchars($message,ENT_QUOTES);
 	$url_encoded=urlencode($messages[$n]["url"]);
 	$unread_css = ($messages[$n]["seen"]==0 ? " class='MessageUnread'" : "");

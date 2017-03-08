@@ -20,6 +20,9 @@ $alternative                            = getvalescaped('alternative', ''); # Ba
 $replace                                = getvalescaped('replace', ''); # Replace Resource Batch
 $replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
+$redirecturl = getval("redirecturl","");
+if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
+
 
 if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_readonly($replace_resource)))
     {
@@ -30,7 +33,7 @@ if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_r
 resource_type_config_override($resource_type);
 
 # Create a new collection?
-if ($collection_add==-1)
+if ($collection_add==-1 && !$upload_then_edit)
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
@@ -45,7 +48,19 @@ if ($collection_add==-1)
 		collection_set_themes($collection_add,$themearr);
 		}
 	}
+elseif ($upload_then_edit)
+	{
+	# Switch to the user's special upload collection.
+	$collection_add=0-$userref;
+	$ci=get_collection($collection_add);
+	if ($ci===false) {create_collection($userref,"New uploads",1,1,0-$userref);}
 	
+	# Set the redirect after upload to the start of the edit process
+	$redirecturl=$baseurl . "/pages/edit.php?upload_review_mode=true";
+	
+	# Clear the user template
+	clear_resource_data(0-$userref);
+	}
 	
 $uploadparams= array(
     'replace'                                => $replace,
@@ -111,8 +126,7 @@ if($replace_resource_preserve_option && '' != $replace_resource)
 
 $uploadurl=generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams) . hook('addtopluploadurl');
 
-$redirecturl = getval("redirecturl","");
-if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
+
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
@@ -122,7 +136,7 @@ $allowed_extensions="";
 if ($resource_type!="") {$allowed_extensions=get_allowed_extensions_by_type($resource_type);}
 
 
-if ($collection_add!="")
+if ($collection_add!=="")
 	{
 	# Switch to the selected collection (existing or newly created) and refresh the frame.
  	set_user_collection($userref,$collection_add);
@@ -890,7 +904,7 @@ var pluploadconfig = {
 				  if ($redirecturl!=""){?>
                                   //remove the completed files once complete
                                   uploader.bind('UploadComplete', function(up, files) {
-                                  window.location.href='<?php echo $redirecturl ?>';
+                                  CentralSpaceLoad('<?php echo $redirecturl ?>',true);
                                   });
                                 
                           <?php }                          
@@ -968,15 +982,20 @@ var pluploadconfig = {
                     
                             return false;
                          });
+
                         //Change URL if exif box status changes
-						jQuery('#question_noexif').on('change', '#no_exif', function() {
-										if(jQuery(this).is(':checked')){
-												uploader.settings.url =ReplaceUrlParameter(uploader.settings.url,'no_exif','yes');
-										}
-										else {
-												uploader.settings.url =ReplaceUrlParameter(uploader.settings.url,'no_exif','');
-										}
-						});
+                        jQuery('#no_exif').on('change', function ()
+                            {
+                            if(jQuery(this).is(':checked'))
+                                {
+                                uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'no_exif', 'yes');
+                                }
+                            else
+                                {
+                                uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'no_exif', '');
+                                }
+                            });
+
 						<?php
 						if($replace_resource_preserve_option)
 								{
@@ -1200,7 +1219,7 @@ if($upload_no_file)
 	<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/upload_plupload.php?createblank=true&replace=<?php echo urlencode($replace) ?>&alternative=<?php echo urlencode($alternative) ?>&collection_add=<?php echo urlencode($collection_add)?>&resource_type=<?php echo urlencode($resource_type)?>&replace_resource=<?php echo urlencode($replace_resource)?>"> &gt; <?php echo $lang["create_empty_resource"]; ?></a></p>
 	<?php
 	}?>
-
+	
 <?php if ($show_upload_log){
     ?>
     <div id="showlog" ><a href="" onClick="jQuery('#upload_results').show();jQuery('#showlog').hide();jQuery('#hidelog').show();return false;" >&#x25B8;&nbsp;Show upload log</a></div>
@@ -1213,6 +1232,9 @@ if($upload_no_file)
     }
     ?>    
 
+<?php if ($upload_then_edit) { ?>
+<p><a href="edit.php?ref=<?php echo 0-$userref ?>" onClick="return ModalLoad(this);">&#x25B8;&nbsp;<?php echo $lang["specifydefaultcontent"] ?></a></p>
+<?php } ?>
 
 </div>
 
