@@ -1464,6 +1464,16 @@ $staticsync_deleted_state=2; # Archive state to set for resources where files ha
 #$email_notify_usergroups=array(); # Use of email_notify is deprecated as system notifications are now sent to the appropriate users based on permissions and user preferences. This variable can be set to an array of usergroup references and will take precedence.
 #$use_zip_extension=false; //use php-zip extension instead of $archiver or $zipcommand
 
+<<<<<<< .mine
+<<<<<<< .mine
+# Options to show/hide the tiles on the home page
+$home_themeheaders=false;
+$home_themes=true;
+$home_mycollections=true;
+$home_helpadvice=true;
+$home_advancedsearch=false;
+$home_mycontributions=false;
+||||||| .r9727
 # Options to show/hide the tiles on the home page
 #$home_themeheaders=false;
 #$home_themes=true;
@@ -1471,6 +1481,18 @@ $staticsync_deleted_state=2; # Archive state to set for resources where files ha
 #$home_helpadvice=true;
 #$home_advancedsearch=false;
 #$home_mycontributions=false;
+=======
+>>>>>>> .r9726
+||||||| .r9726
+=======
+# Options to show/hide the tiles on the home page
+#$home_themeheaders=false;
+#$home_themes=true;
+#$home_mycollections=true;
+#$home_helpadvice=true;
+#$home_advancedsearch=false;
+#$home_mycontributions=false;
+>>>>>>> .r9727
 
 # Custom panels for the home page. You can add as many panels as you like. They must be numbered sequentially starting from zero (0,1,2,3 etc.). You may want to turn off $home_themes etc. above if you want ONLY your own custom panels to appear on the home page. Examples:
 # $custom_home_panels[0]["title"]="Custom Panel A";
