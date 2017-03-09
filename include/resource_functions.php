@@ -1838,7 +1838,7 @@ function delete_resource($ref)
 	hook("beforedeleteresourcefromdb","",array($ref));
 
 	# Delete all database entries
-    clear_resource($resource);
+    clear_resource_data($resource);
 	sql_query("delete from resource where ref='$ref'");
     sql_query("delete from collection_resource where resource='$ref'");
     sql_query("delete from resource_custom_access where resource='$ref'");
