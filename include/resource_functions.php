@@ -4304,7 +4304,6 @@ function delete_resources_in_collection($collection) {
 		foreach ($resources_in_deleted_state as $resource_in_deleted_state) {
 			delete_resource($resource_in_deleted_state);
 		}
-        debug("BANG here");
 		collection_log($collection,'D', '', 'Resource ' . $resource_in_deleted_state . ' deleted permanently.');
 	}
     
