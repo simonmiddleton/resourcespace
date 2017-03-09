@@ -11,13 +11,14 @@ if(!$annotate_enabled)
     exit($lang['error-permissiondenied']);
     }
 
-$return        = array();
+$return   = array();
 
-$action        = getvalescaped('action', '');
-$resource      = getvalescaped('resource', 0, true);
+$action   = getvalescaped('action', '');
+$resource = getvalescaped('resource', 0, true);
 
 // Get annotation data if an ID has been provided
 $annotation_id = getvalescaped('annotation_id', 0, true);
+$annotation    = getval('annotation', array());
 if(0 < $annotation_id)
     {
     $annotation = getAnnotation($annotation_id);
@@ -28,12 +29,38 @@ if('get_resource_annotations' == $action)
     $return['data'] = getAnnotoriousResourceAnnotations($resource);
     }
 
-/*if('add' == $action)
+// Create new annotation
+if('create' == $action && 0 < $resource)
     {
-    // 
-    }*/
+    if(0 === count($annotation))
+        {
+        $return['error'] = array(
+            'status' => 400,
+            'title'  => 'Bad Request',
+            'detail' => 'ResourceSpace expects an annotation object');
 
-if('delete' == $action && isset($annotation))
+        echo json_encode($return);
+        exit();
+        }
+
+    $annotation_id = createAnnotation($annotation);
+
+    if(false === $annotation_id)
+        {
+        $return['error'] = array(
+            'status' => 500,
+            'title'  => 'Internal Server Error',
+            'detail' => 'ResourceSpace was not able to create the annotation.');
+
+        echo json_encode($return);
+        exit();
+        }
+
+    $return['data'] = $annotation_id;
+    }
+
+// Delete annotation
+if('delete' == $action && 0 < $annotation_id && 0 !== count($annotation))
     {
     $return['data'] = deleteAnnotation($annotation);
     }

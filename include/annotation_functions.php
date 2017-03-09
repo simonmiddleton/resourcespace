@@ -181,3 +181,91 @@ function deleteAnnotation(array $annotation)
 
     return true;
     }
+
+
+/**
+* Create new annotations based on Annotorious annotation
+* 
+* NOTE: Annotorious annotation shape is an array but at the moment they use only the first shape found
+* 
+* @param array $annotation
+* 
+* @return boolean|integer Returns false on failure OR the ref of the newly created annotation
+*/
+function createAnnotation(array $annotation)
+    {
+    global $userref;
+
+    // Temp properties needed only here
+    $src_width  = (isset($annotation['src_width']) ? escape_check($annotation['src_width']) : 100);
+    $src_height = (isset($annotation['src_height']) ? escape_check($annotation['src_height']) : 100);
+
+    // Annotorious annotation
+    $x                   = escape_check($annotation['shapes'][0]['geometry']['x']) * $src_width;
+    $y                   = escape_check($annotation['shapes'][0]['geometry']['y']) * $src_height;
+    $width               = escape_check($annotation['shapes'][0]['geometry']['width']) * $src_width;
+    $height              = escape_check($annotation['shapes'][0]['geometry']['height']) * $src_height;
+    $src                 = escape_check($annotation['src']);
+
+    // ResourceSpace specific properties
+    $resource            = escape_check($annotation['resource']);
+    $resource_type_field = escape_check($annotation['resource_type_field']);
+    $tags                = (isset($annotation['tags']) ? $annotation['tags'] : array());
+    // $page                = escape_check($annotation['page']);
+
+    $query = "INSERT INTO annotation (resource, resource_type_field, user, x, y, width, height, page, src)
+                   VALUES ('{$resource}', '{$resource_type_field}', '{$userref}', '{$x}', '{$y}', '{$width}', '{$height}', NULL, '{$src}')";
+    sql_query($query);
+
+    $annotation_ref = sql_insert_id();
+
+    if(0 == $annotation_ref)
+        {
+        return false;
+        }
+
+    // Add any tags associated with it
+    if(0 < count($tags))
+        {
+        addAnnotationNodes($annotation_ref, $tags);
+        add_resource_nodes($resource, array_column($tags, 'ref'));
+        }
+
+    return $annotation_ref;
+    }
+
+
+/**
+* 
+*/
+function updateAnnotation()
+    {
+    }
+
+
+/**
+* Add relations between nodes and annotation
+* 
+* @param integer $annotation_ref
+* @param array   $nodes
+* 
+* @return boolean
+*/
+function addAnnotationNodes($annotation_ref, array $nodes)
+    {
+    if(0 === count($nodes))
+        {
+        return false;
+        }
+
+    $query_insert_values = '';
+    foreach($nodes as $node)
+        {
+        $query_insert_values .= ',(' . escape_check($annotation_ref) . ', ' . escape_check($node['ref']) . ')';
+        }
+    $query_insert_values = substr($query_insert_values, 1);
+
+    sql_query("INSERT INTO annotation_node (annotation, node) VALUES  {$query_insert_values}");
+
+    return true;
+    }
