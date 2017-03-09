@@ -2,7 +2,7 @@
 
 function google_visionProcess($resource)
     {
-    global $google_vision_api_key,$google_vision_label_field,$google_vision_landmarks_field,$google_vision_text_field,$google_vision_restypes,$google_vision_features;
+    global $google_vision_api_key,$google_vision_label_field,$google_vision_landmarks_field,$google_vision_text_field,$google_vision_restypes,$baseurl,$google_vision_features;
     
     $resource_data=get_resource_data($resource); # Load resource data (cached).
     if ($resource_data===false || !in_array($resource_data["resource_type"],$google_vision_restypes)) {return false;} # Valid resources only.
@@ -10,7 +10,7 @@ function google_visionProcess($resource)
     # API URL
     if (substr($google_vision_api_key,0,4)=="http")
         {
-        $url=$google_vision_api_key; # Proxy support. Forward all requests via an intermediate service. Useful for RS hosts wishing to centralise image processing and also avoid revealing their key to all RS installations.
+        $url=$google_vision_api_key . "?baseurl=" . urlencode($baseurl); # Proxy support. Forward all requests via an intermediate service. Useful for RS hosts wishing to centralise image processing and also avoid revealing their key to all RS installations.
         }
     else
         {
