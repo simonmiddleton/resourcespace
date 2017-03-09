@@ -58,22 +58,26 @@ function getAnnotoriousResourceAnnotations($resource)
     {
     $annotations = array();
 
-    // Build an annotations array of Annotorious annotation objects
-    // IMPORTANT: until ResourceSpace will have text fields implemented as nodes, text should be left blank
+    /*
+    Build an annotations array of Annotorious annotation objects
+
+    IMPORTANT: until ResourceSpace will have text fields implemented as nodes, text should be left blank.
+    Also, leave src empty as this is handled client side. This will allow us to have the same annotation 
+    for multiple sizes of the same image (e.g: pre and scr)
+    */
     foreach(getResourceAnnotations(escape_check($resource)) as $annotation)
         {
         $annotations[] = array(
-                'src'    => $annotation['src'],
+                'src'    => '',
                 'text'   => '',
                 'shapes' => array(
                     array(
                         'type'     => 'rect',
-                        'units'    => 'pixel',
                         'geometry' => array(
-                            'x'      => (int) $annotation['x'],
-                            'y'      => (int) $annotation['y'],
-                            'width'  => (int) $annotation['width'],
-                            'height' => (int) $annotation['height'],
+                            'x'      => (float) $annotation['x'],
+                            'y'      => (float) $annotation['y'],
+                            'width'  => (float) $annotation['width'],
+                            'height' => (float) $annotation['height'],
                         )
                     )
                 ),
@@ -196,16 +200,11 @@ function createAnnotation(array $annotation)
     {
     global $userref;
 
-    // Temp properties needed only here
-    $src_width  = (isset($annotation['src_width']) ? escape_check($annotation['src_width']) : 100);
-    $src_height = (isset($annotation['src_height']) ? escape_check($annotation['src_height']) : 100);
-
     // Annotorious annotation
-    $x                   = escape_check($annotation['shapes'][0]['geometry']['x']) * $src_width;
-    $y                   = escape_check($annotation['shapes'][0]['geometry']['y']) * $src_height;
-    $width               = escape_check($annotation['shapes'][0]['geometry']['width']) * $src_width;
-    $height              = escape_check($annotation['shapes'][0]['geometry']['height']) * $src_height;
-    $src                 = escape_check($annotation['src']);
+    $x                   = escape_check($annotation['shapes'][0]['geometry']['x']);
+    $y                   = escape_check($annotation['shapes'][0]['geometry']['y']);
+    $width               = escape_check($annotation['shapes'][0]['geometry']['width']);
+    $height              = escape_check($annotation['shapes'][0]['geometry']['height']);
 
     // ResourceSpace specific properties
     $resource            = escape_check($annotation['resource']);
@@ -213,8 +212,8 @@ function createAnnotation(array $annotation)
     $tags                = (isset($annotation['tags']) ? $annotation['tags'] : array());
     // $page                = escape_check($annotation['page']);
 
-    $query = "INSERT INTO annotation (resource, resource_type_field, user, x, y, width, height, page, src)
-                   VALUES ('{$resource}', '{$resource_type_field}', '{$userref}', '{$x}', '{$y}', '{$width}', '{$height}', NULL, '{$src}')";
+    $query = "INSERT INTO annotation (resource, resource_type_field, user, x, y, width, height, page)
+                   VALUES ('{$resource}', '{$resource_type_field}', '{$userref}', '{$x}', '{$y}', '{$width}', '{$height}', NULL)";
     sql_query($query);
 
     $annotation_ref = sql_insert_id();
