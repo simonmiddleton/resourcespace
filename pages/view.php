@@ -743,17 +743,7 @@ else if(1 == $resource['has_image'])
                     <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
                 </a>
                 <script>
-                // Setup Annotorious
-                jQuery(document).ready(function()
-                    {
-                    anno.addPlugin('RSTagging',
-                            {
-                            annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
-                            nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
-                            resource            : <?php echo (int) $ref; ?>
-                            }
-                        );
-                    });
+                var rs_tagging_plugin_added = false;
 
                 function toggleAnnotationsOption(element)
                     {
@@ -762,6 +752,29 @@ else if(1 == $resource['has_image'])
                     var preview_image_link = jQuery('#previewimagelink');
                     var img_copy_id        = 'previewimagecopy';
                     var img_src            = preview_image.attr('src');
+
+                    // Setup Annotorious (has to be done only once)
+                    if(!rs_tagging_plugin_added)
+                        {
+                        anno.addPlugin('RSTagging',
+                            {
+                            annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
+                            nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
+                            resource            : <?php echo (int) $ref; ?>
+                            });
+
+                        rs_tagging_plugin_added = true;
+
+                        // We have to wait for initialisation process to finish as this does ajax calls
+                        // in order to set itself up
+                        setTimeout(function ()
+                            {
+                            toggleAnnotationsOption(element);
+                            }, 
+                            1000);
+
+                        return false;
+                        }
 
                     if(img_src.indexOf('?') != -1)
                         {
@@ -1867,6 +1880,20 @@ for ($n=0;$n<count($keywords);$n++)
 <?php 
 	hook("afterviewfindsimilar");
 }
+
+if($annotate_enabled)
+    {
+    ?>
+    <!-- Annotorious -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.min.js"></script>
+
+    <!-- Annotorious plugin(s) -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <!-- End of Annotorious -->
+    <?php
+    }
 
 include "../include/footer.php";
 ?>

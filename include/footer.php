@@ -642,21 +642,7 @@ try{
 <!-- End of chosen support -->
 <?php
 }
-
-if($annotate_enabled)
-    {
-    ?>
-    <!-- Annotorious -->
-    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
-    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.min.js"></script>
-
-    <!-- Annotorious plugin(s) -->
-    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
-    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
-    <!-- End of Annotorious -->
-    <?php
-    }
-    ?>
+?>
 </body>
 </html>
 <?php } // end if !ajax ?>
