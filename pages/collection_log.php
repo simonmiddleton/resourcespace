@@ -75,7 +75,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
 			##  Translate the standard texts
 			$standard = array('#all_users', '#new_resource');
 			$translated   = array($lang["all_users"], $lang["new_resource"]);
-			$newnotes = str_replace($standard, $translated, $log[$n]["notes"]);
+			$newnotes = " - " . str_replace($standard, $translated, $log[$n]["notes"]);
 			echo $newnotes;
 		}
 		?></td>

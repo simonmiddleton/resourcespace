@@ -187,6 +187,8 @@ if ($display_user_rating_stars && $star_search){ ?>
 
 <?php hook("searchbartoptoolbar"); ?>
 
+<?php if (!hook("searchbarremove")) { ?>
+
 <div class="SearchSpace" <?php if (!$basic_simple_search){?>id="searchspace"<?php } ?>>
 
 <?php if (!hook("searchbarreplace")) { ?>
@@ -817,6 +819,7 @@ elseif($restypes=='')
 	
 	<?php } ?> <!-- END of Searchbarreplace hook -->
 	</div>
+	<?php } ?> <!-- END of Searchbarremove hook -->
 	</div>
 	
 <?php } ?>	

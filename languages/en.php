@@ -584,6 +584,7 @@ $lang["log-y"]="Deleted alternate";
 $lang["log-missinglang"]="[type] (missing lang)"; # [type] will be replaced.
 $lang['log-adminpermissionsrequired'] = 'Full admin permission required!';
 $lang['log-removedcustomuseraccess'] = 'Removed custom access for user: ';
+$lang['log-deleted_all'] = 'All resources of this collection deleted (moved to state %ARCHIVE)';
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"]="Access changed";
