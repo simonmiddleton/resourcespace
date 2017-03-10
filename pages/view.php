@@ -739,7 +739,7 @@ else if(1 == $resource['has_image'])
             if($annotate_enabled)
                 {
                 ?>
-                <a class="ToolsOptionLink" href="#" onclick="toggleAnnotationsOption(this);">
+                <a class="ToolsOptionLink" href="#" onclick="toggleAnnotationsOption(this); return false;">
                     <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
                 </a>
                 <script>
@@ -804,7 +804,7 @@ else if(1 == $resource['has_image'])
                 {
                 $previewurl = get_resource_path($ref, false, 'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
                 ?>
-                <a class="ToolsOptionLink" href="#" onclick="toggleImagePreviewZoomOption(this);">
+                <a class="ToolsOptionLink" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
                 </a>
                 <script>
