@@ -59,6 +59,23 @@ if('create' == $action && 0 < $resource)
     $return['data'] = $annotation_id;
     }
 
+// Update annotation
+if('update' == $action && 0 < $resource)
+    {
+    if(0 === count($annotation))
+        {
+        $return['error'] = array(
+            'status' => 400,
+            'title'  => 'Bad Request',
+            'detail' => 'ResourceSpace expects an annotation object');
+
+        echo json_encode($return);
+        exit();
+        }
+
+    $return['data'] = updateAnnotation($annotation);
+    }
+
 // Delete annotation
 if('delete' == $action && 0 < $annotation_id && 0 !== count($annotation))
     {

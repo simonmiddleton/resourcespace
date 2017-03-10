@@ -85,7 +85,9 @@ function getAnnotoriousResourceAnnotations($resource)
 
                 // Custom ResourceSpace properties for Annotation object
                 'ref'                 => (int) $annotation['ref'],
+                'resource'            => (int) $annotation['resource'],
                 'resource_type_field' => (int) $annotation['resource_type_field'],
+                'page'                => (int) $annotation['page'],
                 'tags'                => getAnnotationTags($annotation),
             );
         }
@@ -210,10 +212,10 @@ function createAnnotation(array $annotation)
     $resource            = escape_check($annotation['resource']);
     $resource_type_field = escape_check($annotation['resource_type_field']);
     $tags                = (isset($annotation['tags']) ? $annotation['tags'] : array());
-    // $page                = escape_check($annotation['page']);
+    $page                = (isset($annotation['page']) ? '\'' . escape_check($annotation['page']) . '\'' : 'NULL');
 
     $query = "INSERT INTO annotation (resource, resource_type_field, user, x, y, width, height, page)
-                   VALUES ('{$resource}', '{$resource_type_field}', '{$userref}', '{$x}', '{$y}', '{$width}', '{$height}', NULL)";
+                   VALUES ('{$resource}', '{$resource_type_field}', '{$userref}', '{$x}', '{$y}', '{$width}', '{$height}', {$page})";
     sql_query($query);
 
     $annotation_ref = sql_insert_id();
@@ -235,15 +237,86 @@ function createAnnotation(array $annotation)
 
 
 /**
+* Update annotation and its tags if needed
 * 
+* @uses annotationEditable()
+* @uses getAnnotationTags()
+* @uses delete_resource_nodes()
+* @uses addAnnotationNodes()
+* @uses add_resource_nodes()
+* @uses db_begin_transaction()
+* @uses db_end_transaction()
+* 
+* @param array $annotation
+* 
+* @return boolean
 */
-function updateAnnotation()
+function updateAnnotation(array $annotation)
     {
+    if(!isset($annotation['ref']) || !annotationEditable($annotation))
+        {
+        return false;
+        }
+
+    global $userref;
+
+    // Annotorious annotation
+    $x                   = escape_check($annotation['shapes'][0]['geometry']['x']);
+    $y                   = escape_check($annotation['shapes'][0]['geometry']['y']);
+    $width               = escape_check($annotation['shapes'][0]['geometry']['width']);
+    $height              = escape_check($annotation['shapes'][0]['geometry']['height']);
+
+    // ResourceSpace specific properties
+    $annotation_ref      = escape_check($annotation['ref']);
+    $resource            = escape_check($annotation['resource']);
+    $resource_type_field = escape_check($annotation['resource_type_field']);
+    $tags                = (isset($annotation['tags']) ? $annotation['tags'] : array());
+    $page                = (isset($annotation['page']) ? '\'' . escape_check($annotation['page']) . '\'' : 'NULL');
+
+    $update_query = "
+        UPDATE annotation
+           SET
+               resource_type_field = '{$resource_type_field}',
+               user = '{$userref}',
+               x = '{$x}',
+               y = '{$y}',
+               width = '{$width}',
+               height = '{$height}',
+               page = {$page}
+         WHERE ref = '{$annotation_ref}'";
+    sql_query($update_query);
+
+    // Add any tags associated with it
+    if(0 < count($tags))
+        {
+        $nodes_to_remove = array();
+        foreach(getAnnotationTags($annotation) as $tag)
+            {
+            $nodes_to_remove[] = $tag['ref'];
+            }
+
+        db_begin_transaction();
+
+        // Delete existing associations
+        if(0 < count($nodes_to_remove))
+            {
+            delete_resource_nodes($resource, $nodes_to_remove);
+            }
+        sql_query("DELETE FROM annotation_node WHERE annotation = '{$annotation_ref}'");
+
+        // Add new associations
+        addAnnotationNodes($annotation_ref, $tags);
+        add_resource_nodes($resource, array_column($tags, 'ref'));
+
+        db_end_transaction();
+        }
+
+    return true;
     }
 
 
 /**
-* Add relations between nodes and annotation
+* Add relations between annotation and nodes
 * 
 * @param integer $annotation_ref
 * @param array   $nodes
