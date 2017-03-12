@@ -1316,11 +1316,11 @@ function remove_keyword_from_resource($ref,$keyword,$resource_type_field,$option
         if($keyword!=$kworig && $unnormalized_index)
 			{
 			// $keyword has been changed by normalizing, also remove the original value
-			remove_keyword_from_resource($ref,$keyword,$resource_type_field,$optional_column='',$optional_value='',true);
+			remove_keyword_from_resource($ref,$kworig,$resource_type_field,$optional_column='',$optional_value='',true);
 			}
         }		
 	
-        $keyref=resolve_keyword($keyword,true);
+        $keyref=resolve_keyword($keyword,true, false);
 	if ($optional_column<>'' && $optional_value<>'')	# Check if any optional column value passed and include this condition
 		{
 		sql_query("delete from resource_keyword where resource='$ref' and keyword='$keyref' and resource_type_field='$resource_type_field'" . (($position!="")?" and position='" . $position ."'":"") . " and $optional_column= $optional_value");
@@ -1348,7 +1348,6 @@ function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=f
         }
 
     $keywords = split_keywords($string, true, $partial_index, $is_date, $is_html);
-
     add_verbatim_keywords($keywords, $string, $resource_type_field); // add in any verbatim keywords (found using regex).
 
     for($n = 0; $n < count($keywords); $n++)
@@ -1385,11 +1384,11 @@ function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$o
                     add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,true);
                     }
         }
+	
     global $noadd,$use_mysqli_prepared;
     if (!(in_array($keyword,$noadd)))
             {           
-            debug("adding " . $keyword);
-            $keyref=resolve_keyword($keyword,true);			
+            $keyref=resolve_keyword($keyword,true,false); // 3rd param set to false as already normalized	
             
             # create mapping, increase hit count.
             if ($optional_column<>'' && $optional_value<>'')	# Check if any optional column value passed and add this
