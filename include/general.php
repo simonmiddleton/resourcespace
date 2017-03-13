@@ -570,10 +570,8 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
         $string = str_replace('&rdquo;', ' ', $string);
         $string = str_replace('&ndash;', ' ', $string);
 
-		  if($is_html)
-		  	{
-		  	$string= html_entity_decode($string,ENT_QUOTES,'UTF-8');
-		  	} 			       
+		// Revert the htmlentities as otherwise we lose ability to identify certain text e.g. diacritics
+	  	$string= html_entity_decode($string,ENT_QUOTES,'UTF-8');
         
         if ($preserve_hyphen)
         	{
@@ -605,14 +603,14 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
 }
 
 if (!function_exists("resolve_keyword")){
-function resolve_keyword($keyword,$create=false)
+function resolve_keyword($keyword,$create=false,$normalize=true)
 	{
 	debug("resolving keyword " . $keyword  . ". Create=" . (($create)?"true":"false"));
 	
         $keyword=substr($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
     
 	global $quoted_string;	
-	if(!$quoted_string)
+	if(!$quoted_string && $normalize)
 		{
 		$keyword=normalize_keyword($keyword);		
 		debug("resolving normalized keyword " . $keyword  . ".");
@@ -1248,7 +1246,7 @@ function save_user($ref)
         {
         sql_query("DELETE FROM user WHERE ref = '{$ref}'");
 
-        include dirname(__FILE__) ."/dash_functions.php";
+        include_once dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
 
         log_activity("{$current_user_data['username']} ({$ref})", LOG_CODE_DELETED, null, 'user', null, $ref);
@@ -1359,7 +1357,7 @@ function save_user($ref)
                 sql_query("DELETE FROM user_dash_tile WHERE user = '{$ref}' AND dash_tile IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup = '{$current_user_data['usergroup']}')");
                 }
 
-            include __DIR__ . '/dash_functions.php';
+            include_once __DIR__ . '/dash_functions.php';
             build_usergroup_dash($usergroup, $ref);
             }
 

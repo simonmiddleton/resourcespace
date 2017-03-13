@@ -144,7 +144,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
 	<td><?php
     if($log[$n]["diff"]!=="")
         {
-        echo nl2br(format_string_more_link(htmlspecialchars($log[$n]["diff"])));
+        echo nl2br(format_string_more_link(htmlspecialchars(wordwrap($log[$n]["diff"],75,"\n",true))));
         }
     if ($log[$n]["usageoption"]!="-1")
         {
