@@ -857,7 +857,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
     //
     // *******************************************************************************
 
-    global $usersearchfilter;
+    global $usersearchfilter, $stemming;
     if (strlen($usersearchfilter)>0)
         {
         $sf=explode(";",$usersearchfilter);
@@ -907,7 +907,17 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                 {
                 $ks=$modifiedsearchfilter;
                 }
-            $kw=sql_array("select ref value from keyword where keyword in ('" . join("','",$ks) . "')");
+
+            $ks_stemming = array();
+            if($stemming && function_exists('GetStem'))
+                {
+                foreach($ks as $ks_value)
+                    {
+                    $ks_stemming[] = GetStem($ks_value);
+                    }
+                }
+
+            $kw = sql_array("SELECT ref AS `value` FROM keyword WHERE keyword IN ('" . join("', '", array_unique(array_merge($ks, $ks_stemming))) . "')");
 
             if (!$filter_not)
                 {
@@ -1029,7 +1039,16 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 				# Find keyword(s)
 				$ks=explode("|",strtolower(escape_check($s[1])));
 
-				$kw=sql_array("select ref value from keyword where keyword in ('" . join("','",$ks) . "')");
+                $ks_stemming = array();
+                if($stemming && function_exists('GetStem'))
+                    {
+                    foreach($ks as $ks_value)
+                        {
+                        $ks_stemming[] = GetStem($ks_value);
+                        }
+                    }
+
+                $kw = sql_array("SELECT ref AS `value` FROM keyword WHERE keyword IN ('" . join("', '", array_unique(array_merge($ks, $ks_stemming))) . "')");
 
 				if (!$filter_not)
 					{
@@ -1309,7 +1328,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 
     if ($lsql!="")
         {
-        $least=sql_value("select keyword value from keyword where $lsql order by hit_count asc limit 1","");
+        $least = sql_value("SELECT keyword AS `value` FROM keyword WHERE {$lsql} ORDER BY hit_count ASC LIMIT 1", '');
+
         return trim_spaces(str_replace(" " . $least . " "," "," " . join(" ",$keywords) . " "));
         }
     else
