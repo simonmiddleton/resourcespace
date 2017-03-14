@@ -465,8 +465,8 @@ $search=refine_searchstring($search);
 $editable_only = getval("foredit","")=="true";
 
 $searchparams= array(
+	'search'                            		=> $search,
 	'k' 		                           		=> $k,
-    'search'                            		=> $search,
     'modal'										=> $modal,	
     'display'									=> $display,
     'order_by'									=> $order_by,
@@ -1080,6 +1080,8 @@ if($responsive_ui)
 			{
 			$collectiondata = array();
 			}
+		
+		$url=generateURL($baseurl . "/pages/search.php",$searchparams); // Moved above render_actions as $url is used to render search actions
 		render_actions($collectiondata,true);
 
 		hook("search_header_after_actions");
@@ -1117,7 +1119,6 @@ if($responsive_ui)
 	<?php hook("stickysearchresults"); ?> <!--the div TopInpageNavRight was added in after this hook so it may need to be adjusted -->
 	<div class="TopInpageNavRight">
 	<?php
-		$url=generateURL($baseurl . "/pages/search.php",$searchparams); 
 		pager();
 		$draw_pager=true;
 	?>
