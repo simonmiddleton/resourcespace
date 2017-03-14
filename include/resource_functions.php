@@ -3465,7 +3465,7 @@ function log_diff($fromvalue, $tovalue)
     $tovalue   = str_replace("\\", '', $tovalue);
 
     // Work a different way for fixed lists
-    if(',' == substr($fromvalue, 0, 1))
+    if(',' == substr($fromvalue, 0, 1) || ',' == substr($tovalue, 0, 1))
         {
         $fromvalue = explode(',', i18n_get_translated($fromvalue));
         $tovalue   = explode(',', i18n_get_translated($tovalue));
