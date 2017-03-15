@@ -156,9 +156,10 @@ function ProcessFolder($folder)
     global $lang, $syncdir, $nogo, $staticsync_max_files, $count, $done, $lastsync, $ffmpeg_preview_extension, 
            $staticsync_autotheme, $staticsync_folder_structure, $staticsync_extension_mapping_default, 
            $staticsync_extension_mapping, $staticsync_mapped_category_tree, $staticsync_title_includes_path, 
-           $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix, $theme_category_levels, $staticsync_defaultstate,
-           $additional_archive_states,$staticsync_extension_mapping_append_values, $staticsync_deleted_state, $staticsync_alternative_file_text,
-           $resource_deletion_state, $alternativefiles,$staticsync_revive_state,$enable_thumbnail_creation_on_upload;
+           $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix, $theme_category_levels,
+           $staticsync_defaultstate, $additional_archive_states, $staticsync_extension_mapping_append_values,
+           $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
+           $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload;
     
     $collection = 0;
     $treeprocessed=false;
@@ -391,6 +392,11 @@ function ProcessFolder($folder)
                                 }
                             }
                         }
+                        
+                    if(isset($staticsync_filepath_to_field))
+						{
+						update_field($r,$staticsync_filepath_to_field,$shortpath);
+						}
 
                     # update access level
                     sql_query("UPDATE resource SET access = '$accessval',archive='$staticsync_defaultstate' " . ((!$enable_thumbnail_creation_on_upload)?", has_image=0, preview_attempts=0 ":"") . " WHERE ref = '$r'");
