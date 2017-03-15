@@ -2529,7 +2529,7 @@ function add_alternative_file($resource,$name,$description="",$file_name="",$fil
 	{
     global $disable_alternative_files;
 
-    if($disable_alternative_files || (0 < $resource && (!get_edit_access($resource) || checkperm('A'))))
+    if($disable_alternative_files || (0 < $resource && (!get_resource_access($resource) || checkperm('A'))))
         {
         return false;
         }
