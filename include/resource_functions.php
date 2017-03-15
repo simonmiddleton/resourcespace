@@ -3188,34 +3188,8 @@ function get_resource_access($resource)
 	if ((trim($usersearchfilter)!="") && $search_filter_strict)
 		{
 		# A search filter has been set. Perform filter processing to establish if the user can view this resource.		
-		# Always load metadata, because the provided metadata may be missing fields due to permissions.
-                
-                
-                /*
-                
-                # ***** OLD METHOD ***** - used filter_match() - required duplication and was very difficult to implement OR matching for the field name supporting OR across fields
-                
-		$metadata=get_resource_field_data($ref,false,false);
-		for ($n=0;$n<count($metadata);$n++)
-			{
-			$name=$metadata[$n]["name"];
-			$value=$metadata[$n]["value"];			
-			if ($name!="")
-				{
-				$match=filter_match($usersearchfilter,$name,$value);
-                                echo "<br />$name/$value = $match";
-				if ($match==1) {return 2;} # The match for this field was incorrect, always show as confidential in this event.
-				}
-			}
-			
-		# Also check resource type	
-		# Disabled until also implented in do_search() - future feature - syntax supported in edit filter only for now.
-		/*
-		$match=filter_match($usersearchfilter,"resource_type",$resource_type);
-		if ($match==1) {return 2;} # The match for this field was incorrect, always show as confidential in this event.
-		*/
-                
-                # ***** NEW METHOD ***** - search for the resource, utilising the existing filter matching in do_search to avoid duplication.
+                # Apply filters by searching for the resource, utilising the existing filter matching in do_search to avoid duplication of logic.
+
                 global $search_all_workflow_states;
                 $search_all_workflow_states_cache = $search_all_workflow_states;
                 $search_all_workflow_states = TRUE;
