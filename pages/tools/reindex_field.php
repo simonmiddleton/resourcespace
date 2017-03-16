@@ -27,7 +27,23 @@ $startid=getvalescaped("startid", "");
 
 # Fetch field info
 $fieldinfo=sql_query("select * from resource_type_field where ref='$field'");$fieldinfo=$fieldinfo[0];
-if (!$fieldinfo["keywords_index"]) {exit("Field is not set to be indexed.");}
+
+if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
+    {
+    // Always reindex nodes for these field types
+    $nodes=sql_query("select n.ref, n.name, n.resource_type_field, f.partial_index from resource_type_field f LEFT JOIN node n on n.resource_type_field=f.ref WHERE f.ref = " . $field . ";");
+    $count=count($nodes);
+    for($n=0;$n<$count;$n++)
+            {
+            // Populate node_keyword table
+            remove_all_node_keyword_mappings($nodes[$n]['ref']);
+            add_node_keyword_mappings($nodes[$n], $nodes[$n]["partial_index"]);
+            }
+    
+	exit("Reindex complete");
+    }
+
+if (!in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES) && !$fieldinfo["keywords_index"]) {exit("Field is not set to be indexed.");}
 
 if (getval("submit","")!="")
 	{
@@ -62,13 +78,7 @@ if (getval("submit","")!="")
 				$n++;
 				$ref=$row["resource"];
 				$value=$row["value"];
-			
-				if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES) && strpos(",",$value)!==0)
-					{
-					# Prepend a comma when indexing dropdowns to ensure full value is also indexed
-					$value="," . $value;
-					}
-				
+							
 				# Date field? These need indexing differently.
 				$is_date=($fieldinfo["type"]==4 || $fieldinfo["type"]==6);
 				

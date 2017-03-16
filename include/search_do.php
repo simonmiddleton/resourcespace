@@ -486,7 +486,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 $wildcards = sql_array("select ref value from keyword where keyword like '" . escape_check(str_replace("*", "%", $keyword)) . "' order by hit_count desc limit " . $wildcard_expand_limit);
                                 }
     
-                            $keyref = resolve_keyword(str_replace('*', '', $keyword)); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
+                            $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
                             if ($keyref === false && !$omit && !$empty && count($wildcards) == 0)
                                 {
     
@@ -515,7 +515,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 if ($keyref === false)
                                     {
                                     # make a new keyword
-                                    $keyref = resolve_keyword(str_replace('*', '', $keyword), true);
+                                    $keyref = resolve_keyword(str_replace('*', '', $keyword), true,true,false);
                                     }
                                 # Key match, add to query.
                                 $c++;
@@ -693,7 +693,12 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 						$last_key_offset=1;
 						if (isset($skipped_last) && $skipped_last) {$last_key_offset=2;} # Support skipped keywords - if the last keyword was skipped (listed in $noadd), increase the allowed position from the previous keyword. Useful for quoted searches that contain $noadd words, e.g. "black and white" where "and" is a skipped keyword.
 						
-						$keyref = resolve_keyword($quotedkeyword, true); # Resolve keyword.	
+						$keyref = resolve_keyword($quotedkeyword, false,true,false); # Resolve keyword.
+                        if ($keyref === false)
+                            {
+                            # make a new keyword
+                            $keyref = resolve_keyword($quotedkeyword, true,true,false);
+                            }
 											
 						 // Add code to find matching keywords in non-fixed list fields  
 						$union_restriction_clause = "";
