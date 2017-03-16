@@ -117,7 +117,8 @@ $ghostscript_executable='gs';
 # $archiver_listfile_argument = "@";
 
 $use_zip_extension=false; //use php-zip extension instead of $archiver or $zipcommand
-
+$collection_download_tar_size = 100; // Use tar to speed up large collection downloads. Sets the minimum size in MB. Set value to 0 to disable tar downloads
+$collection_download_tar_option=true; // Default option for using tar downloads
 
 /* ---------------------------------------------------
 OTHER PARAMETERS

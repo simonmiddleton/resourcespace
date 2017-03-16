@@ -2529,7 +2529,7 @@ function add_alternative_file($resource,$name,$description="",$file_name="",$fil
 	{
     global $disable_alternative_files;
 
-    if($disable_alternative_files || (0 < $resource && (!get_edit_access($resource) || checkperm('A'))))
+    if($disable_alternative_files || (0 < $resource && (!get_resource_access($resource) || checkperm('A'))))
         {
         return false;
         }
@@ -3188,34 +3188,8 @@ function get_resource_access($resource)
 	if ((trim($usersearchfilter)!="") && $search_filter_strict)
 		{
 		# A search filter has been set. Perform filter processing to establish if the user can view this resource.		
-		# Always load metadata, because the provided metadata may be missing fields due to permissions.
-                
-                
-                /*
-                
-                # ***** OLD METHOD ***** - used filter_match() - required duplication and was very difficult to implement OR matching for the field name supporting OR across fields
-                
-		$metadata=get_resource_field_data($ref,false,false);
-		for ($n=0;$n<count($metadata);$n++)
-			{
-			$name=$metadata[$n]["name"];
-			$value=$metadata[$n]["value"];			
-			if ($name!="")
-				{
-				$match=filter_match($usersearchfilter,$name,$value);
-                                echo "<br />$name/$value = $match";
-				if ($match==1) {return 2;} # The match for this field was incorrect, always show as confidential in this event.
-				}
-			}
-			
-		# Also check resource type	
-		# Disabled until also implented in do_search() - future feature - syntax supported in edit filter only for now.
-		/*
-		$match=filter_match($usersearchfilter,"resource_type",$resource_type);
-		if ($match==1) {return 2;} # The match for this field was incorrect, always show as confidential in this event.
-		*/
-                
-                # ***** NEW METHOD ***** - search for the resource, utilising the existing filter matching in do_search to avoid duplication.
+                # Apply filters by searching for the resource, utilising the existing filter matching in do_search to avoid duplication of logic.
+
                 global $search_all_workflow_states;
                 $search_all_workflow_states_cache = $search_all_workflow_states;
                 $search_all_workflow_states = TRUE;
@@ -3465,7 +3439,7 @@ function log_diff($fromvalue, $tovalue)
     $tovalue   = str_replace("\\", '', $tovalue);
 
     // Work a different way for fixed lists
-    if(',' == substr($fromvalue, 0, 1))
+    if(',' == substr($fromvalue, 0, 1) || ',' == substr($tovalue, 0, 1))
         {
         $fromvalue = explode(',', i18n_get_translated($fromvalue));
         $tovalue   = explode(',', i18n_get_translated($tovalue));

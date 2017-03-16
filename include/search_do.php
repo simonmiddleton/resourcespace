@@ -279,12 +279,8 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 								}
 							else
 								{
-								if ($sql_filter!="")
-                                {
-                                $sql_filter.=" and ";
-                                }
-								$sql_filter.= ($sql_filter!=""?" and ":"") . "rd" . $c . ".value like '". $val . "%' ";
-								$sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $datefield . "'";
+								$sql_filter.= ($sql_filter!=""?" and ":"") . "rdf" . $c . ".value like '". $val . "%' ";
+								$sql_join.=" JOIN resource_data rdf" . $c . " on rdf" . $c . ".resource=r.ref and rdf" . $c . ".resource_type_field='" . $datefield . "'";
 								}
                             }
                         else if('day' == $kw[0])
@@ -366,7 +362,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 								}
 							else
 								{
-								$sql_join.=" join resource_data rd" . $c . " on rd" . $c . ".resource=r.ref and rd" . $c . ".resource_type_field='" . $rangefield . "'";
+								$sql_join.=" join resource_data rdr" . $c . " on rdr" . $c . ".resource=r.ref and rdr" . $c . ".resource_type_field='" . $rangefield . "'";
 								}
                             }
 						$keywordprocessed=true;

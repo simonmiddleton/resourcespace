@@ -36,9 +36,9 @@ debug("vehiclenode: " . $vehiclenode . "\n");
 debug("personnode: " . $personnode . "\n");
 
 // Add nodes to resource a
-add_resource_nodes($resourcea,array($buildingnode, $landscapenode));
+add_resource_nodes($resourcea,array($buildingnode, $landscapenode, 232));
 // Add node to resource b
-add_resource_nodes($resourceb,array($buildingnode));
+add_resource_nodes($resourceb,array($buildingnode, 232));
 // Add nodes to resource c
 add_resource_nodes($resourcec,array($vehiclenode, $buildingnode));
 // Add nodes to resource d
@@ -77,7 +77,7 @@ $results=do_search('');  // this should return all the library assets
 if (in_array($resourcec,array_column($results,'ref'))) return false;
 // ----- And Or Combination ------
 
-$usersearchfilter='subject=building;title=building|boat';
+$usersearchfilter='subject=building;country=france|united kingdom';
 
 $results=do_search('');
 
