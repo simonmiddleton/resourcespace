@@ -342,7 +342,7 @@ else
 			}
 		
         $headerimginfo=getimagesize($header_img_src);
-        $headerwidth=isset($headerimginfo[1])?($headerimginfo[0]/$headerimginfo[1])*50:236;
+        $headerwidth=isset($headerimginfo[1])?floor(($headerimginfo[0]/$headerimginfo[1])*50):236;
         }
 	else 
 		{
