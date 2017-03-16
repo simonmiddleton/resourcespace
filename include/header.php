@@ -340,19 +340,23 @@ else
 				$header_img_src = $baseurl_short . $header_img_src;
 				}
 			}
-		}
+		
+        $headerimginfo=getimagesize($header_img_src);
+        $headerwidth=isset($headerimginfo[1])?($headerimginfo[0]/$headerimginfo[1])*50:236;
+        }
 	else 
 		{
 		$header_img_src = $baseurl.'/gfx/titles/title.svg';
+        $headerwidth=236;
 		}
 	if($header_link && ($k=="" || $internal_share_access))
         {?>
-        <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></a>
+        <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"  style="width:<?php echo $headerwidth; ?>px;"></img></a>
         <?php
         }
     else
         {?>
-        <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
+        <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" style="width:<?php echo $headerwidth; ?>px;"></img></div>
         <?php
         }
 	}
