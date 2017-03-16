@@ -212,7 +212,7 @@ function createAnnotation(array $annotation)
     $resource            = escape_check($annotation['resource']);
     $resource_type_field = escape_check($annotation['resource_type_field']);
     $tags                = (isset($annotation['tags']) ? $annotation['tags'] : array());
-    $page                = (isset($annotation['page']) ? '\'' . escape_check($annotation['page']) . '\'' : 'NULL');
+    $page                = (isset($annotation['page']) && 0 < $annotation['page'] ? '\'' . escape_check($annotation['page']) . '\'' : 'NULL');
 
     $query = "INSERT INTO annotation (resource, resource_type_field, user, x, y, width, height, page)
                    VALUES ('{$resource}', '{$resource_type_field}', '{$userref}', '{$x}', '{$y}', '{$width}', '{$height}', {$page})";
