@@ -97,7 +97,9 @@ function getAnnotoriousResourceAnnotations($resource)
 
 
 /**
-* Check if an annotation can be editable (edit/ remove) by the user
+* Check if an annotation can be editable (add/ edit/ remove) by the user
+* 
+* @uses checkPermission_anonymoususer()
 * 
 * @param array $annotation
 * 
@@ -105,18 +107,20 @@ function getAnnotoriousResourceAnnotations($resource)
 */
 function annotationEditable(array $annotation)
     {
-    global $userref;
+    global $userref, $annotate_read_only, $annotate_crud_anonymous;
 
-    // TODO: add more checks
-    /*
-    User can edit an annotation if:
-     - they are an admin
-     - they created it
-    */
-    return (
-            checkperm('a')
-            || $userref == $annotation['user']
-        );
+    if($annotate_read_only)
+        {
+        return false;
+        }
+
+    // Anonymous users cannot edit by default. They can only edit if they are allowed CRUD operations
+    if(checkPermission_anonymoususer())
+        {
+        return $annotate_crud_anonymous && $userref == $annotation['user'];
+        }
+
+    return checkperm('a') || $userref == $annotation['user'];
     }
 
 
@@ -201,6 +205,11 @@ function deleteAnnotation(array $annotation)
 function createAnnotation(array $annotation)
     {
     global $userref;
+
+    if(!annotationEditable($annotation))
+        {
+        return false;
+        }
 
     // Annotorious annotation
     $x                   = escape_check($annotation['shapes'][0]['geometry']['x']);

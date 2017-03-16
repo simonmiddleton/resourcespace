@@ -760,7 +760,8 @@ else if(1 == $resource['has_image'])
                             {
                             annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                             nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
-                            resource            : <?php echo (int) $ref; ?>
+                            resource            : <?php echo (int) $ref; ?>,
+                            read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>
                             });
 
                         rs_tagging_plugin_added = true;
