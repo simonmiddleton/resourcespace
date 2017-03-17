@@ -30,10 +30,11 @@ function getAnnotation($ref)
 * Get annotations for a specific resource
 * 
 * @param integer $resource Resource ID
+* @param integer $page     Page number of a document. Non documents will have 0
 * 
 * @return array
 */
-function getResourceAnnotations($resource)
+function getResourceAnnotations($resource, $page = 0)
     {
     if(0 >= $resource)
         {
@@ -41,8 +42,15 @@ function getResourceAnnotations($resource)
         }
 
     $resource = escape_check($resource);
+    $page     = escape_check($page);
 
-    return sql_query("SELECT * FROM annotation WHERE resource = '{$resource}'");
+    $sql_page_filter = 'AND `page` IS NULL';
+    if(0 < $page)
+        {
+        $sql_page_filter = "AND `page` IS NOT NULL AND `page` = '{$page}'";
+        }
+
+    return sql_query("SELECT * FROM annotation WHERE resource = '{$resource}' {$sql_page_filter}");
     }
 
 
@@ -51,10 +59,11 @@ function getResourceAnnotations($resource)
 * directly to Annotorious
 * 
 * @param integer $resource Resource ID
+* @param integer $page     Page number of a document
 * 
 * @return array
 */
-function getAnnotoriousResourceAnnotations($resource)
+function getAnnotoriousResourceAnnotations($resource, $page = 0)
     {
     $annotations = array();
 
@@ -65,7 +74,7 @@ function getAnnotoriousResourceAnnotations($resource)
     Also, leave src empty as this is handled client side. This will allow us to have the same annotation 
     for multiple sizes of the same image (e.g: pre and scr)
     */
-    foreach(getResourceAnnotations(escape_check($resource)) as $annotation)
+    foreach(getResourceAnnotations($resource, $page) as $annotation)
         {
         $annotations[] = array(
                 'src'    => '',

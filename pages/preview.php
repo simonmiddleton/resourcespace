@@ -292,7 +292,9 @@ if($annotate_enabled)
                 annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                 nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
                 resource            : <?php echo (int) $ref; ?>,
-                read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>
+                read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>,
+                // First page of a document is exactly the same as the preview
+                page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>
                 });
 
             rs_tagging_plugin_added = true;

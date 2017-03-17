@@ -15,6 +15,7 @@ $return   = array();
 
 $action   = getvalescaped('action', '');
 $resource = getvalescaped('resource', 0, true);
+$page     = getvalescaped('page', 0, true);
 
 // Get annotation data if an ID has been provided
 $annotation_id = getvalescaped('annotation_id', 0, true);
@@ -26,7 +27,7 @@ if(0 < $annotation_id)
 
 if('get_resource_annotations' == $action)
     {
-    $return['data'] = getAnnotoriousResourceAnnotations($resource);
+    $return['data'] = getAnnotoriousResourceAnnotations($resource, $page);
     }
 
 // Create new annotation
