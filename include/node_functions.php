@@ -740,22 +740,35 @@ function node_field_options_override(&$field,$resource_type_field=null)
 *  
 * @return boolean
 */
-function add_node_keyword($node, $keyword, $position, $normalized = false)
+function add_node_keyword($node, $keyword, $position, $normalize = true, $stem = true)
     {
-    global $unnormalized_index, $noadd;
+    global $unnormalized_index, $noadd, $stemming;
 
-    if(!$normalized)
+    debug("add_node_keyword: node:" . $node . ", keyword: " . $keyword . ", position: " . $position . ", normalize:" . ($normalize?"TRUE":"FALSE") . ", stem:" . ($stem?"TRUE":"FALSE"));
+    if($normalize)
         {
         $original_keyword = $keyword;
-        $keyword          = normalize_keyword($keyword);
-
+        $kworig          = normalize_keyword($keyword);
         // if $keyword has changed after normalizing it, then index the original value as well
-        if($keyword != $original_keyword && $unnormalized_index)
+        if($keyword != $kworig && $unnormalized_index)
             {
-            add_node_keyword($node, $original_keyword, $position, true);
+            add_node_keyword($node, $kworig, $position, false, $stem);
             }
         }
-
+        
+     if ($stem && $stemming && function_exists("GetStem"))
+        {
+        $unstemmed=$keyword;
+        $keyword=GetStem($keyword);
+        if($keyword!=$unstemmed)
+            {
+            // $keyword has been changed by stemming, also index the original value
+            debug("add_node_keyword - adding unstemmed: " . $unstemmed);
+            add_node_keyword($node, $unstemmed, $position, $normalize,false);
+            }
+        }       
+        
+        
     // $keyword should not be indexed if it can be found in the $noadd array, no need to continue
     if(in_array($keyword, $noadd))
         {
@@ -763,7 +776,7 @@ function add_node_keyword($node, $keyword, $position, $normalized = false)
         return false;
         }
 
-    $keyword_ref = resolve_keyword($keyword, true);
+    $keyword_ref = resolve_keyword($keyword, true,$normalize,$stem);
 
     sql_query("INSERT INTO node_keyword (node, keyword, position) VALUES ('" . escape_check($node) . "', '" . escape_check($keyword_ref) . "', '" . escape_check($position) . "')");
     sql_query("UPDATE keyword SET hit_count = hit_count + 1 WHERE ref = '" . escape_check($keyword_ref) . "'");

@@ -1371,24 +1371,36 @@ function add_keyword_mappings($ref,$string,$resource_type_field,$partial_index=f
     }
 }
 
-function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$optional_column='',$optional_value='',$normalized=false)
+function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$optional_column='',$optional_value='',$normalized=false,$stemmed=false)
     {
+    global $unnormalized_index,$stemming,$noadd,$use_mysqli_prepared;
+    
+    debug("add_keyword_to_resource: resource:" . $ref . ", keyword: " . $keyword);
     if(!$normalized)
         {
-		global $unnormalized_index;
         $kworig=$keyword;
         $keyword=normalize_keyword($keyword);
         if($keyword!=$kworig && $unnormalized_index)
-                    {
-                    // $keyword has been changed by normalizing, also index the original value
-                    add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,true);
-                    }
+            {
+            // $keyword has been changed by normalizing, also index the original value
+            add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,true,$stemmed);
+            }
+        }
+        
+    if (!$stemmed && $stemming && function_exists("GetStem"))
+        {
+        $kworig=$keyword;
+        $keyword=GetStem($keyword);
+        if($keyword!=$kworig)
+            {
+            // $keyword has been changed by stemming, also index the original value
+            add_keyword_to_resource($ref,$kworig,$resource_type_field,$position,$optional_column,$optional_value,$normalized,true);
+            }
         }
 	
-    global $noadd,$use_mysqli_prepared;
     if (!(in_array($keyword,$noadd)))
             {           
-            $keyref=resolve_keyword($keyword,true,false); // 3rd param set to false as already normalized	
+            $keyref=resolve_keyword($keyword,true,false,$stemmed); // 3rd param set to false as already normalized	
             
             # create mapping, increase hit count.
             if ($optional_column<>'' && $optional_value<>'')	# Check if any optional column value passed and add this
