@@ -28,7 +28,7 @@ if($collection_download_tar_option && !$config_windows && !$tardisabled)
 		{$collection_download_tar=true;}
 	}
 	
-$settings_id=(count($collection_download_settings)>1)?getvalescaped("settings",""):0;
+$settings_id=(isset($collection_download_settings) && count($collection_download_settings)>1)?getvalescaped("settings",""):0;
 $uniqid=getval("id",uniqid("Col".$collection."-"));
 
 $usage = getvalescaped('usage', '-1');
