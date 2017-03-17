@@ -163,7 +163,7 @@ if($annotate_enabled)
     ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="#" onclick="toggleAnnotationsOption(this); return false;">
         <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
-        <span>Annotate mode</span>
+        <span><?php echo $lang['annotate_text_link_label']; ?></span>
     </a>
     <?php
     }

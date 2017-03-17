@@ -2589,3 +2589,4 @@ $lang["set_metadata_then_upload"]="Set metadata first, then upload";
 
 
 /* Annotations */
+$lang['annotate_text_link_label'] = 'Annotate mode toggle';
