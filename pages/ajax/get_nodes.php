@@ -60,7 +60,7 @@ foreach(get_nodes($resource_type_field, null, true, null, $rows, $name) as $node
     $i18l_name = i18n_get_translated($node['name']);
 
     // Skip any translated (i18l) names that don't contain what client code searched for
-    if(false === mb_strpos(mb_strtolower($i18l_name), $name))
+    if(false === mb_strpos(mb_strtolower($i18l_name), mb_strtolower($name)))
         {
         continue;
         }
