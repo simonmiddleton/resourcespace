@@ -20,7 +20,13 @@ $rows                = getvalescaped('rows', 10, true);
 if(!(checkperm("f{$resource_type_field}") || (checkperm('f*') && !checkperm("f-{$resource_type_field}"))))
     {
     header('HTTP/1.1 401 Unauthorized');
-    exit($lang['error-permissiondenied']);
+    $return['error'] = array(
+        'status' => 401,
+        'title'  => 'Unauthorized',
+        'detail' => $lang['error-permissiondenied']);
+
+    echo json_encode($return);
+    exit();
     }
 
 $return               = array();
@@ -71,6 +77,12 @@ foreach(get_nodes($resource_type_field, null, true, null, $rows, $name) as $node
 
     // Increment only when valid nodes have been added to the result set
     $current_node_pointer++;
+    }
+
+// Search did not return any results back. This is still considered a successful request!
+if(!isset($return['data']) && 0 === count($return))
+    {
+    $return['data'] = array();
     }
 
 // If by this point we still don't have a response for the request,

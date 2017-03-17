@@ -243,11 +243,15 @@ function createAnnotation(array $annotation)
         return false;
         }
 
+    // Prepare tags before association by adding new nodes to 
+    // dynamic keywords list (if permissions allow it)
+    $prepared_tags = prepareTags($tags);
+
     // Add any tags associated with it
     if(0 < count($tags))
         {
-        addAnnotationNodes($annotation_ref, $tags);
-        add_resource_nodes($resource, array_column($tags, 'ref'));
+        addAnnotationNodes($annotation_ref, $prepared_tags);
+        add_resource_nodes($resource, array_column($prepared_tags, 'ref'));
         }
 
     return $annotation_ref;
@@ -289,7 +293,7 @@ function updateAnnotation(array $annotation)
     $resource            = escape_check($annotation['resource']);
     $resource_type_field = escape_check($annotation['resource_type_field']);
     $tags                = (isset($annotation['tags']) ? $annotation['tags'] : array());
-    $page                = (isset($annotation['page']) ? '\'' . escape_check($annotation['page']) . '\'' : 'NULL');
+    $page                = (isset($annotation['page']) && 0 < $annotation['page'] ? '\'' . escape_check($annotation['page']) . '\'' : 'NULL');
 
     $update_query = "
         UPDATE annotation
@@ -322,9 +326,13 @@ function updateAnnotation(array $annotation)
             }
         sql_query("DELETE FROM annotation_node WHERE annotation = '{$annotation_ref}'");
 
+        // Prepare tags before association by adding new nodes to 
+        // dynamic keywords list (if permissions allow it)
+        $prepared_tags = prepareTags($tags);
+
         // Add new associations
-        addAnnotationNodes($annotation_ref, $tags);
-        add_resource_nodes($resource, array_column($tags, 'ref'));
+        addAnnotationNodes($annotation_ref, $prepared_tags);
+        add_resource_nodes($resource, array_column($prepared_tags, 'ref'));
 
         db_end_transaction();
         }
@@ -358,4 +366,96 @@ function addAnnotationNodes($annotation_ref, array $nodes)
     sql_query("INSERT INTO annotation_node (annotation, node) VALUES  {$query_insert_values}");
 
     return true;
+    }
+
+
+/**
+* Utility function which allows annotation tags to be prepared (i.e make sure they are all valid nodes)
+* before creating associations between annotations and tags
+* 
+* @uses 
+* 
+* @param array $dirty_tags Original array of tags. These can be (in)valid tags/ new tags.
+*                          IMPORTANT: a tag should have the same structure as a node
+* 
+* @return array
+*/
+function prepareTags(array $dirty_tags)
+    {
+    if(0 === count($dirty_tags))
+        {
+        return array();
+        }
+
+    global $annotate_fields;
+
+    $clean_tags = array();
+
+    foreach($dirty_tags as $dirty_tag)
+        {
+        // Check minimum required information for a node
+        if(!isset($dirty_tag['resource_type_field'])
+            || 0 >= $dirty_tag['resource_type_field']
+            || !in_array($dirty_tag['resource_type_field'], $annotate_fields)
+        )
+            {
+            continue;
+            }
+
+        if((!isset($dirty_tag['name']) || '' == $dirty_tag['name']))
+            {
+            continue;
+            }
+
+        // No access to field? Next...
+        if(
+            !(
+                (checkperm('f*') || checkperm("f{$dirty_tag['resource_type_field']}"))
+                && !checkperm("f-{$dirty_tag['resource_type_field']}")
+            )
+        )
+            {
+            continue;
+            }
+
+        // New node?
+        if(is_null($dirty_tag['ref']) || (is_string($dirty_tag['ref']) && '' == $dirty_tag['ref']))
+            {
+            $dirty_field_data = get_resource_type_field($dirty_tag['resource_type_field']);
+
+            // Only dynamic keywords lists are allowed to create new options from annotations if permission allows it
+            if(
+                !(
+                    FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $dirty_field_data['type'] 
+                    && !checkperm("bdk{$dirty_tag['resource_type_field']}")
+                )
+            )
+                {
+                continue;
+                }
+
+            // Create new node but avoid duplicates
+            $new_node_id = set_node(null, $dirty_tag['resource_type_field'], $dirty_tag['name'], null, null, true);
+            if(false !== $new_node_id && is_numeric($new_node_id))
+                {
+                $dirty_tag['ref'] = $new_node_id;
+
+                $clean_tags[] = $dirty_tag;
+                }
+
+            continue;
+            }
+
+        // Existing tags
+        $found_node = array();
+        if(get_node((int) $dirty_tag['ref'], $found_node))
+            {
+            if($found_node['resource_type_field'] == $dirty_tag['resource_type_field'])
+                {
+                $clean_tags[] = $found_node;
+                }
+            }
+        }
+
+    return $clean_tags;
     }

@@ -8,7 +8,13 @@ include_once dirname(__FILE__) . '/../../include/annotation_functions.php';
 if(!$annotate_enabled)
     {
     header('HTTP/1.1 401 Unauthorized');
-    exit($lang['error-permissiondenied']);
+    $return['error'] = array(
+        'status' => 401,
+        'title'  => 'Unauthorized',
+        'detail' => $lang['error-permissiondenied']);
+
+    echo json_encode($return);
+    exit();
     }
 
 $return   = array();
@@ -112,6 +118,39 @@ if('get_allowed_fields' == $action)
         exit();
         }
     }
+
+// Check if this user can add new tags to a field
+// REQUIRES: check if field is dynamic keyword list and user has bermission to add new fields
+if('check_allow_new_tags' == $action)
+    {
+    $resource_type_field = getvalescaped('resource_type_field', 0, true);
+
+    if(0 == $resource_type_field || !in_array($resource_type_field, $annotate_fields))
+        {
+        $return['data'] = false;
+
+        echo json_encode($return);
+        exit();
+        }
+
+    $field_data = get_resource_type_field($resource_type_field);
+
+    if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field_data['type'] && !checkperm("bdk{$resource_type_field}"))
+        {
+        $return['data'] = true;
+
+        echo json_encode($return);
+        exit();
+        }
+
+    $return['data'] = false;
+
+    echo json_encode($return);
+    exit();
+    }
+
+
+
 
 
 

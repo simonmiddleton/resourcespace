@@ -16,7 +16,8 @@
     color: #000;
 }
 
-.RSTagging-tag .fa-exclamation-triangle {
+.RSTagging-tag .fa-exclamation-triangle,
+.RSTagging-tag .fa-plus {
     margin-right: 3px;
 }
 
