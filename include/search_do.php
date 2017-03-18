@@ -56,7 +56,12 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
             {
             exit("Order field incorrect.");
             }
-        $order[$order_by]="$order_by $sort";
+        # check for field type and modify sort order (if numeric)
+        $field_order_check=sql_value("select field_constraint value from resource_type_field where ref=".str_replace("field","",$order_by),"");
+        if ($field_order_check==1)
+			{
+			$order[$order_by]="$order_by +0 $sort";
+			}
         }
 		
 	$archive=explode(",",$archive); // Allows for searching in more than one archive state
