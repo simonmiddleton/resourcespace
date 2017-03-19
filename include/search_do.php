@@ -62,6 +62,9 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
 			{
 			$order[$order_by]="$order_by +0 $sort";
 			}
+		else {
+			$order[$order_by]="$order_by $sort";
+		}
         }
 		
 	$archive=explode(",",$archive); // Allows for searching in more than one archive state
