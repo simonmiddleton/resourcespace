@@ -398,7 +398,10 @@ function addAnnotationNodes($annotation_ref, array $nodes)
 * Utility function which allows annotation tags to be prepared (i.e make sure they are all valid nodes)
 * before creating associations between annotations and tags
 * 
-* @uses 
+* @uses checkperm()
+* @uses get_resource_type_field()
+* @uses set_node()
+* @uses get_node()
 * 
 * @param array $dirty_tags Original array of tags. These can be (in)valid tags/ new tags.
 *                          IMPORTANT: a tag should have the same structure as a node
