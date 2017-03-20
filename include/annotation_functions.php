@@ -333,24 +333,24 @@ function updateAnnotation(array $annotation)
          WHERE ref = '{$annotation_ref}'";
     sql_query($update_query);
 
-    // Add any tags associated with it
+    // Delete existing associations
+    $nodes_to_remove = array();
+    foreach(getAnnotationTags($annotation) as $tag)
+        {
+        $nodes_to_remove[] = $tag['ref'];
+        }
+
+    db_begin_transaction();
+
+    if(0 < count($nodes_to_remove))
+        {
+        delete_resource_nodes($resource, $nodes_to_remove);
+        }
+    sql_query("DELETE FROM annotation_node WHERE annotation = '{$annotation_ref}'");
+
+    // Add any tags associated with this annotation
     if(0 < count($tags))
         {
-        $nodes_to_remove = array();
-        foreach(getAnnotationTags($annotation) as $tag)
-            {
-            $nodes_to_remove[] = $tag['ref'];
-            }
-
-        db_begin_transaction();
-
-        // Delete existing associations
-        if(0 < count($nodes_to_remove))
-            {
-            delete_resource_nodes($resource, $nodes_to_remove);
-            }
-        sql_query("DELETE FROM annotation_node WHERE annotation = '{$annotation_ref}'");
-
         // Prepare tags before association by adding new nodes to 
         // dynamic keywords list (if permissions allow it)
         $prepared_tags = prepareTags($tags);
@@ -358,9 +358,9 @@ function updateAnnotation(array $annotation)
         // Add new associations
         addAnnotationNodes($annotation_ref, $prepared_tags);
         add_resource_nodes($resource, array_column($prepared_tags, 'ref'));
-
-        db_end_transaction();
         }
+
+    db_end_transaction();
 
     return true;
     }
