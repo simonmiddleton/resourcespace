@@ -167,7 +167,6 @@ $lang["download_click__introtext"]="ファイルをダウンロードするに�
 $lang["download_progress__introtext"]="あなたのダウンロードはまもなく、始まるでしょう。 ダウンロード完了後、継続するには以下のリンクを使用してください。";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="どのフィールドを上書きしたいかを選択してください。 あなたが選択しないフィールドはそのままの状態でおかれるでしょう。";
-$lang["help__introtext"]="<p>本サイトを最大限に活用してください。 これらのガイドは、あなたが、より効果的にシステムとリソースを使用するのを助けるでしょう。 </p>    <p>テーマを使用して、テーマでリソースをブラウズするか、または単純検索を使用して、特定のリソースを検索してください。</p>   <p><a href=http://www.montala.net/downloads/ResourceSpace-GettingStarted.pdf>Download the user guide (PDF file)</a></p>   <p><a target=_blank href=http://www.resourcespace.com/knowledge-base/>Online Documentation (Wiki)</a></p>";
 $lang["home__help"]="本サイトを最大限に活用するためのヘルプと助言。";
 $lang["home__mycollections"]="リソースの組織化、共同化、共有化してください。 より効果的に働けるようにこれらのツールを活用してください。";
 $lang["home__restrictedtext"]="あなたのために選択されたリソースにアクセスするためにメールされたリンクをクリックしてください。";
@@ -788,7 +787,6 @@ $lang["download_click__introtext"]="ファイルをダウンロードするに�
 $lang["download_progress__introtext"]="あなたのダウンロードはまもなく、始まるでしょう。 ダウンロード完了後、継続するには以下のリンクを使用してください。";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="どのフィールドを上書きしたいかを選択してください。 あなたが選択しないフィールドはそのままの状態でおかれるでしょう。";
-$lang["help__introtext"]="<p>本サイトを最大限に活用してください。 これらのガイドは、あなたが、より効果的にシステムとリソースを使用するのを助けるでしょう。 </p>    <p>テーマを使用して、テーマでリソースをブラウズするか、または単純検索を使用して、特定のリソースを検索してください。</p>   <p><a href=http://www.montala.net/downloads/ResourceSpace-GettingStarted.pdf>Download the user guide (PDF file)</a></p>   <p><a target=_blank href=http://www.resourcespace.com/knowledge-base/>Online Documentation (Wiki)</a></p>";
 $lang["home__help"]="本サイトを最大限に活用するためのヘルプと助言。";
 $lang["home__mycollections"]="リソースの組織化、共同化、共有化してください。 より効果的に働けるようにこれらのツールを活用してください。";
 $lang["home__restrictedtext"]="あなたのために選択されたリソースにアクセスするためにメールされたリンクをクリックしてください。";
