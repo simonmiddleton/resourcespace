@@ -189,6 +189,35 @@ if (!hook("renderresultlargethumb"))
 				{} ?> 
 			<!-- END HOOK Rendertitlelargethumb -->			
 			<?php
+            if($annotate_enabled)
+                {
+                $annotations_count = getResourceAnnotationsCount($ref);
+                $message           = '';
+
+                if(1 < $annotations_count)
+                    {
+                    $message = $annotations_count . ' ' . mb_strtolower($lang['annotate_annotations_label']);
+                    }
+                else if(1 == $annotations_count)
+                    {
+                    $message = $annotations_count . ' ' . mb_strtolower($lang['annotate_annotation_label']);
+                    }
+                ?>
+                <div class="ResourcePanelInfo AnnotationInfo">
+                <?php
+                if(0 < $annotations_count)
+                    {
+                    ?>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <span><?php echo $message; ?></span>
+                    <?php
+                    }
+                    ?>
+                &nbsp;
+                </div>
+                <?php
+                }
+
 			$df_alt=hook("displayfieldsalt");
 			$df_normal=$df;
 			if ($df_alt)

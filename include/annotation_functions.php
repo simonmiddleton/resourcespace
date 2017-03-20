@@ -27,6 +27,31 @@ function getAnnotation($ref)
 
 
 /**
+* Get number of annotations available for a resource.
+* 
+* Note: multi page resources will show the total number (ie. all pages)
+* 
+* @uses escape_check()
+* @uses sql_value()
+* 
+* @param integer $resource Resource ID
+* 
+* @return integer
+*/
+function getResourceAnnotationsCount($resource)
+    {
+    if(!is_numeric($resource) || 0 >= $resource)
+        {
+        return 0;
+        }
+
+    $resource = escape_check($resource);
+
+    return (int) sql_value("SELECT count(ref) AS `value` FROM annotation WHERE resource = '{$resource}'", 0);
+    }
+
+
+/**
 * Get annotations for a specific resource
 * 
 * @param integer $resource Resource ID

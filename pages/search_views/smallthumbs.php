@@ -163,6 +163,26 @@ if (!hook("renderresultsmallthumb"))
 				{
 				hook("icons");
 				} //end hook replaceicons
+
+            if($annotate_enabled)
+                {
+                $annotations_count = getResourceAnnotationsCount($ref);
+                ?>
+                <div class="ResourcePanelInfo AnnotationInfo">
+                <?php
+                if(0 < $annotations_count)
+                    {
+                    ?>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <span><?php echo $annotations_count; ?></span>
+                    <?php
+                    }
+                    ?>
+                &nbsp;
+                </div>
+                <?php
+                }
+
 			$df_alt=hook("displayfieldsalt");
 			$df_normal=$df;
 			if ($df_alt){$df=$df_alt;}
