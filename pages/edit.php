@@ -293,7 +293,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 
         if ($upload_collection_name_required)
             {
-            if (getvalescaped("entercolname","")=="" && getval("collection_add","")==-1)
+            if (getvalescaped("entercolname","")=="" && getval("collection_add","")=="new")
               { 
               if (!is_array($save_errors)){$save_errors=array();} 
               $save_errors['collectionname']=$lang["requiredfield"];
@@ -326,7 +326,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
               if ((getval("noupload","")!="")&&(getval("save","")!=""))
                 {
                 $ref=copy_resource(0-$userref);
-                if($collection_add!="")
+                if(is_numeric($collection_add))
                     {
                     add_resource_to_collection($ref, $collection_add,false,"",$resource_type);
                     set_user_collection($userref, $collection_add);
@@ -493,7 +493,7 @@ function ShowHelp(field)
 
  jQuery(document).ready(function() {
     jQuery('#collection_add').change(function (){
-      if(jQuery('#collection_add').val()==-1){
+      if(jQuery('#collection_add').val()=='new'){
         jQuery('#collectioninfo').fadeIn();
      } 
      else {
@@ -1537,7 +1537,7 @@ if ($multiple && !$disable_geocoding)
 {
     # Multiple method of changing location.
  ?>
-</div><h2 <?php echo ($collapsible_sections)?" class=\"CollapsibleSectionHead\"":""?> id="location_title"><?php echo $lang["location-title"] ?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="LocationSection<?php if ($ref==-1) echo "Upload"; ?>">
+</div><h2 <?php echo ($collapsible_sections)?" class=\"CollapsibleSectionHead\"":""?> id="location_title"><?php echo $lang["location-title"] ?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="LocationSection<?php if ($ref=="new") echo "Upload"; ?>">
 <div><input name="editlocation" id="editlocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editlocation_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editlocation"><?php echo $lang["location"] ?></label></div>
 <div class="Question" style="display:none;" id="editlocation_question">
   <label for="location"><?php echo $lang["latlong"]?></label>

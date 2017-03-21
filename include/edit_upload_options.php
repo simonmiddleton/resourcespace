@@ -61,14 +61,15 @@ if ($ref<0)
 			if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle){
 				$non_col_options++;
 			}
-			?><option value="-1" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo $lang["createnewcollection"]?>)</option><?php } ?>
+			?><option value="new" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo $lang["createnewcollection"]?>)</option><?php } ?>
 		<?php if ($upload_do_not_add_to_new_collection_opt && !hook("remove_do_not_add_to_collection")) {
 			if($hidden_collections_hide_on_upload && $hidden_collections_upload_toggle){
 				$non_col_options++;
 			}
-			?><option value="" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default){ ?>selected <?php }?>><?php echo $lang["batchdonotaddcollection"]?></option><?php } ?>
+			?><option value="false" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default || $collection_add=='false'){ ?>selected <?php }?>><?php echo $lang["batchdonotaddcollection"]?></option><?php } ?>
 		
 		<?php
+		
 		if ($upload_force_mycollection)
 			{
 			$list=get_user_collections($userref,"My Collection");}
@@ -96,7 +97,7 @@ if ($ref<0)
 		$currentfound=false;
 		
 	        // make sure it's possible to set the collection with collection_add (compact style "upload to this collection"
-	        if ($collection_add!="" && getval("resetform","")=="" && (!isset($save_errors) || !$save_errors))
+	        if (is_numeric($collection_add) && getval("resetform","")=="" && (!isset($save_errors) || !$save_errors))
 	               {
 	               # Switch to the selected collection (existing or newly created) and refresh the frame.
 	               set_user_collection($userref,$collection_add);
@@ -167,7 +168,7 @@ if ($ref<0)
 				{
                 $currentfound = true;
 				?>
-				<option value="<?php echo htmlspecialchars($usercollection) ?>" <?php if ($usercollection==$collection_add){?>selected <?php } ?>><?php echo i18n_get_collection_name($cc)?></option>
+				<option value="<?php echo htmlspecialchars($usercollection) ?>" <?php if (is_numeric($collection_add) && $usercollection==$collection_add){?>selected <?php } ?>><?php echo i18n_get_collection_name($cc)?></option>
 				<?php
 				}
 			}

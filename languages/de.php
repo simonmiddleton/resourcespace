@@ -1947,7 +1947,6 @@ $lang["download_click__introtext"]="Um die Datei herunterzuladen, klicken Sie bi
 $lang["download_progress__introtext"]="Ihr Download wird in Kürze starten. Nachdem der Download abgeschlossen ist, wählen Sie bitte einen der folgenden Links.";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="Bitte wählen Sie die Felder aus, die Sie verändern wollen. Felder, die Sie nicht anwählen, werden nicht verändert.";
-$lang["help__introtext"]="Diese Anleitungen helfen Ihnen, ResourceSpace und Ihre Medien effektiv zu nutzen.</p>\n<p>Benutzen Sie \"Themen\", um Ressourcen nach Themen zu erkunden oder nutzen Sie die Suche um spezifische Ressourcen zu finden.</p>\n<p><a href=\"http://www.montala.net/downloads/resourcespace-GettingStarted.pdf\">User Guide</a> (PDF, englisch)<br /><a target=\"_blank\" href=\"http://www.resourcespace.com/knowledge-base/\">Online Dokumentation</a> (Wiki)</p>";
 $lang["home__help"]="Hilfe für die Arbeit mit ResourceSpace";
 $lang["home__mycollections"]="Hier können Sie Ihre Kollektionen organisieren, verwalten und weitergeben.";
 $lang["home__restrictedtext"]="Bitte klicken Sie auf den Link, den Sie per E-Mail erhalten haben, um auf die für Sie ausgesuchten Ressourcen zuzugreifen.";

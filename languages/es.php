@@ -631,7 +631,6 @@ $lang["download_click__introtext"]="Para bajar el archivo adjunto pincha en el e
 $lang["download_progress__introtext"]="La descarga comenzará en pocos segundos";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="Selecciona los campos que desees editar de la lista de abajo. Los que selecciones se sobreescribirán sobre el material que estés editando. Cualquier campo no selecciónado será ignorado.";
-$lang["help__introtext"]="Obtén el máximo rendimiento del Espacio de Material. Estas guías te ayudarán a usar el sistema con mayor efectividad.";
 $lang["home__help"]="";
 $lang["home__mycollections"]="Esta herramienta te permite seleccionar, organizar y compartir tu material. ";
 $lang["home__restrictedtext"]="Por favor, pincha en el enlace que te envíamos a tu correo para acceder a los materiales seleccionados para ti";
