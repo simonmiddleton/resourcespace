@@ -4245,27 +4245,38 @@ function resource_type_config_override($resource_type)
 * 
 * @return void
 */
-function update_archive_status($resource,$archive,$existingstates=array())
+function update_archive_status($resource, $archive, $existingstates = array())
     {
     global $userref;
-    
+
     if(!is_array($resource))
         {
-        $resource=array($resource);
-        $existingstates=array($existingstates);
+        $resource = array($resource);
         }
-            
-    $count=count($resource);
-    for($n=0;$n<$count;$n++)
+
+    if(!is_array($existingstates))
         {
-        if(!is_numeric($resource[$n])){continue;}
-        resource_log($resource[$n],"s",0,"",isset($existingstates[$n])?$existingstates[$n]:'',$archive);    
+        $existingstates = array($existingstates);
         }
-    sql_query("update resource set archive='" . escape_check($archive) .  "' where ref in ('" . implode("','",$resource) . "')");
+
+    $count = count($resource);
+
+    for($n = 0; $n < $count; $n++)
+        {
+        if(!is_numeric($resource[$n]))
+            {
+            continue;
+            }
+
+        resource_log($resource[$n], 's', 0, '', isset($existingstates[$n]) ? $existingstates[$n] : '', $archive);    
+        }
+
+    sql_query("UPDATE resource SET archive = '" . escape_check($archive) .  "' WHERE ref IN ('" . implode("', '", $resource) . "')");
     
     return;
     }
-        
+
+
 function delete_resources_in_collection($collection) {
 
 	global $resource_deletion_state,$userref,$lang;
