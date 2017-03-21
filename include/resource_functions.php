@@ -1520,14 +1520,13 @@ function update_field($resource, $field, $value, array &$errors = array())
         foreach($newvalues as $newvalue)
             {
             # Check if each new value exists in current options list
-            if('' != $newvalue && !in_array($newvalue,$currentoptions))
+            if('' != $newvalue && !in_array($newvalue, $currentoptions))
                 {
                 # Append the option and update the field
-                //sql_query("update resource_type_field set options=concat(ifnull(options,''), ', " . escape_check(trim($newvalue)) . "') where ref='$field'");
-                $newnode = set_node(null,$field,escape_check(trim($newvalue)),null,null);
-                $nodes_to_add[] = $newnode;
+                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                $nodes_to_add[]   = $newnode;
+                $currentoptions[] = trim($newvalue);
 
-                $currentoptions[]=trim($newvalue);
                 debug("update_field: field option added: '" . trim($newvalue) . "'<br>");
                 }
             }
