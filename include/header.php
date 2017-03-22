@@ -433,7 +433,7 @@ else
 	
 	<!-- Team centre link -->
 	<?php if (checkperm("t")) { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-bars fa-fw"></i>&nbsp;<?php echo $lang["teamcentre"]?></a>
-	<?php if (!$actions_enable &&$team_centre_alert_icon && (checkperm("R")||checkperm("r")))
+	<?php if (!$actions_enable && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
 			{
 			# Show pill count if there are any pending requests
 			$pending=sql_value("select sum(thecount) value from (select count(*) thecount from request where status = 0 union select count(*) thecount from research_request where status = 0) as theunion",0);
