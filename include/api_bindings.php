@@ -126,6 +126,13 @@ function api_get_resource_types()
 
 function api_add_alternative_file($resource, $name, $description = '', $file_name = '', $file_extension = '', $file_size = 0, $alt_type = '', $file = '')
     {
+    global $disable_alternative_files;
+
+    if($disable_alternative_files || (0 < $resource && (!get_resource_access($resource) || checkperm('A'))))
+        {
+        return false;
+        }
+
     // Just insert record in the database
     if('' == trim($file))
         {
@@ -133,13 +140,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         }
 
     // A file has been specified so add it as alternative
-    $alternative_ref = add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
-
-    if(!$alternative_ref)
-        {
-        return false;
-        }
-
+    $alternative_ref     = add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
     $rs_alternative_path = get_resource_path($resource, true, '', true, $file_extension, -1, 1, false, '', $alternative_ref);
 
     if(!copy($file, $rs_alternative_path))
@@ -151,6 +152,8 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
 
     $file_size = @filesize_unlimited($rs_alternative_path);
 
+    $resource = escape_check($resource);
+
     sql_query("UPDATE resource_alt_files SET file_size='{$file_size}', creation_date = NOW() WHERE resource = '{$resource}' AND ref = '{$alternative_ref}'");
 
     global $alternative_file_previews_batch;
@@ -161,7 +164,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
 
     return $alternative_ref;
     }
-	
+
 function api_delete_alternative_file($resource,$ref)
 	{
 	return delete_alternative_file($resource,$ref);
