@@ -62,7 +62,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	# Also re-index all keywords from indexable fields.
 		
 	global $lang, $auto_order_checkbox, $userresourcedefaults, $multilingual_text_fields,
-           $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$range_separator;
+           $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,
+           $DATE_FIELD_TYPES, $range_separator, $reset_date_field, $reset_date_upload_template;
 
 	hook("befsaveresourcedata", "", array($ref));
 
@@ -318,6 +319,16 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     else 
                         {
                         $val.="-00-00 00:00";
+                        }
+
+                    // Upload template: always reset to today's date, if configured and field is hidden
+                    if(0 > $ref 
+                        && $reset_date_upload_template
+                        && $reset_date_field == $fields[$n]['ref']
+                        && $fields[$n]['hide_when_uploading']
+                    )
+                        {
+                        $val = date('Y-m-d H:i:s');
                         }
                     }
 				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
