@@ -1232,9 +1232,6 @@ if($upload_no_file)
     }
     ?>    
 
-<?php if ($upload_then_edit) { ?>
-<p><a href="edit.php?ref=<?php echo 0-$userref ?>" onClick="return ModalLoad(this);">&#x25B8;&nbsp;<?php echo $lang["specifydefaultcontent"] ?></a></p>
-<?php } ?>
 
 </div>
 
