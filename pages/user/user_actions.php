@@ -4,6 +4,7 @@ include "../../include/db.php";
 include_once "../../include/general.php";
 include_once "../../include/search_functions.php";
 include_once "../../include/request_functions.php";
+include_once "../../include/collections_functions.php";
 include_once "../../include/action_functions.php";
 include "../../include/authenticate.php";
 
@@ -16,11 +17,26 @@ include "../../include/header.php";
   <h1><?php echo $lang["actions_myactions"]?></h1>
   <p><?php echo $lang["actions_introtext"] ?></p>
   
-<?php if ($user_preferences){?>
+<div class="BasicsBox">
 <div class="VerticalNav">
-<a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . "&nbsp;" . $lang["userpreferences"];?></a>
-</div>
-<?php }
+<ul>
+<?php
+if ($user_preferences)
+	{?>
+	<li><a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . "&nbsp;" . $lang["userpreferences"];?></a></li>
+	<?php 
+	} 
+if ($actions_resource_review)
+	{
+	$add_editable_resources_url = $baseurl_short . "pages/collections.php?addsearch=&mode=resources&restypes=" . $actions_resource_types . "&archive=" . $actions_notify_states . "&foredit=true";
+	?>
+	<li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_add_editable_to_collection']?></a></li>
+	<?php 
+	}?>
+</ul>
+</div><!-- End of VerticalNav -->
+</div><!-- End of BasicsBox -->
+<?php
 
 $actiontypes=array();
 if($actions_resource_review){$actiontypes[]="resourcereview";}
@@ -135,18 +151,21 @@ else
 		  if($actionlinks)
 			{
 			$actioneditlink=$actionlinks["editlink"];
-			$actionviewlink=$actionlinks["viewlink"];
+			$actionviewlink=$actionlinks["viewlink"]; 
+			$actionaddlink=$actionlinks["addlink"];
 			}
 		  else
 			{
 			$actioneditlink = '';
 			$actionviewlink = '';  
+			$actionaddlink = '';  
 			}
 		  
 		  if($all_actions[$n]["type"]=="resourcereview")
 			{
 			$actioneditlink = $baseurl_short . "pages/edit.php";
 			$actionviewlink = $baseurl_short . "pages/view.php";
+			$actionaddlink = add_to_collection_link($all_actions[$n]["ref"],'','','','fa fa-plus-circle');
 			}
 		  elseif($all_actions[$n]["type"]=="resourcerequest")
 			{
@@ -171,8 +190,10 @@ else
 				<td><?php echo $lang["actions_type_" . $all_actions[$n]["type"]]; ?></td>
 				<td>
 					<div class="ListTools">
-					  <?php if($editlink!=""){?><a aria-hidden="true" href="<?php echo $editlink; ?>" onClick="actionsreload=true;return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-pencil" title="<?php echo $lang["action-edit"]; ?>"></a><?php } ?>
-					  <?php if($viewlink!=""){?><a aria-hidden="true" href="<?php echo $viewlink; ?>" onClick="actionsreload=true;return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-expand" title="<?php echo $lang["view"]; ?>"></a><?php } ?>
+					  <?php
+					  if($actionaddlink!=""){echo $actionaddlink;}
+					  if($editlink!=""){?><a aria-hidden="true" href="<?php echo $editlink; ?>" onClick="actionsreload=true;return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-pencil" title="<?php echo $lang["action-edit"]; ?>"></a><?php }
+					  if($viewlink!=""){?><a aria-hidden="true" href="<?php echo $viewlink; ?>" onClick="actionsreload=true;return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-expand" title="<?php echo $lang["view"]; ?>"></a><?php }?>
 					</div>
 				</td>
 			</tr>
@@ -181,6 +202,7 @@ else
 	  }
   ?></table>
   </div>
+    
 </div> <!-- End of BasicsBox -->
 <script>
 actionsreload=false;

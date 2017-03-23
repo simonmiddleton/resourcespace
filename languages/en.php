@@ -2575,6 +2575,7 @@ $lang["actions_approve_groups"] = "Account requests for the following groups wil
 $lang["actions_type_resourcereview"] = "Resource review";
 $lang["actions_type_resourcerequest"] = "Resource request";
 $lang["actions_type_userrequest"] = "Account request";
+$lang["actions_add_editable_to_collection"] = "Add all editable resources to collection";
 $lang["field_search_no_results"] = "Try without specifying a metadata field, or";
 
 $lang["refinemetadata"]="Refine metadata";
