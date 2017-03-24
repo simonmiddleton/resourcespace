@@ -927,7 +927,7 @@ $lang["copy"]="Copy";
 $lang["zipall"]="Download";
 $lang["downloadzip"]="Download collection as an archive";
 $lang["collection_download_format"] = "Download file format";
-$lang["collection_download_no_tar"] = "Do not download as tar archive (this option may delay your download)";
+$lang["collection_download_no_tar"] = "Standard archive download";
 $lang["collection_download_use_tar"] = "tar archive";
 $lang["collection_download_tar_info"] = "tar files will start downloading instantly. If you do not use this option you may find that your download is limited.";
 $lang["collection_download_tar_applink"] = "Can't open tar files? Get the open source 7-zip <a href='http://www.7-zip.org/download.html' target='_blank'>here</a>";
@@ -2148,7 +2148,7 @@ $lang["all__footer"]="Powered by <a target=\"_blank\" href=\"http://www.resource
 $lang["all__researchrequest"]="Let our resources team find the resources you need.";
 $lang["all__searchpanel"]="Search using descriptions, keywords and resource numbers";
 $lang["change_language__introtext"]="Please select your language below.";
-$lang['collection_download__write_metadata_on_download_label'] = 'Embed resource metadata in the downloaded file(s)?';
+$lang['collection_download__write_metadata_on_download_label'] = 'Embed resource metadata in the downloaded file(s)? Enabling this will slow down your download.';
 $lang["collection_edit__introtext"]="Organise and manage your work by grouping resources together. Create 'Collections' to suit your way of working.\n\n<br />\n\nAll the collections in your list appear in the 'My Collections' panel at the bottom of the screen\n\n<br /><br />\n\n<strong>Private Access</strong> allows only you and and selected users to see the collection. Ideal for grouping resources under projects that you are working on independently and share resources amongst a project team.\n\n<br /><br />\n\n<strong>Public Access</strong> allows all users of the system to search and see the collection. Useful if you wish to share collections of resources that you think others would benefit from using.\n\n<br /><br />\n\nYou can choose whether you allow other users (public or users you have added to your private collection) to add and remove resources or simply view them for reference.";
 $lang["collection_email__introtext"]="Please complete the form below. The recipients will receive an email containing links to the collections rather than file attachments so they can choose and download the appropriate resources.";
 $lang["collection_email__introtextthemeshare"]="Complete the form below to e-mail the featured collections in this featured collection category. The recipients will receive an email containing links to each of the featured collections.";

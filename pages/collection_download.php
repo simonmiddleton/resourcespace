@@ -19,13 +19,25 @@ $useoriginal=getvalescaped("use_original","no");
 $collectiondata=get_collection($collection);
 $tardisabled=getvalescaped("tardownload","")=="off";
 
-$collection_download_tar=false;
-if($collection_download_tar_option && !$config_windows && !$tardisabled)
+$collection_download_tar=true;
+
+// Has tar been disabled or is it not available
+if($collection_download_tar_size=="" || $config_windows || $tardisabled)
 	{
-	$results=do_search("!collection" . $collection,"","relevance","",-1,"",false,0,false,true,"");
-	$disk_usage=$results[0]["total_disk_usage"];
-	if($disk_usage >= $collection_download_tar_size*1024*1024)
-		{$collection_download_tar=true;}
+	$collection_download_tar=false;
+	}
+else
+	{
+	if(!$collection_download_tar_option)
+		{
+		// Set tar as default above certain collection size
+		$results=do_search("!collection" . $collection,"","relevance","",-1,"",false,0,false,true,"");
+		$disk_usage=$results[0]["total_disk_usage"];
+		if($disk_usage >= $collection_download_tar_size*1024*1024)
+			{
+			$collection_download_tar_option=true;
+			}
+		}
 	}
 	
 $settings_id=(isset($collection_download_settings) && count($collection_download_settings)>1)?getvalescaped("settings",""):0;
@@ -146,6 +158,45 @@ $used_resources=array();
 $subbed_original_resources = array();
 if ($submitted != "")
 	{
+	if($exiftool_write && !$force_exiftool_write_metadata && !$collection_download_tar)
+		{
+		$exiftool_write_option = false;
+		if('yes' == getvalescaped('write_metadata_on_download', ''))
+			{
+			$exiftool_write_option = true;
+			}
+		}
+					
+	# Estimate the total volume of files to zip
+	$totalsize=0;
+	for ($n=0;$n<count($result);$n++)
+		{
+		$usesize = ($size == 'original') ? "" : $usesize=$size;
+		$use_watermark=check_use_watermark();
+		
+		# Find file to use
+		$f=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
+		if (!file_exists($f))
+			{
+			# Selected size doesn't exist, use original file
+			$f=get_resource_path($ref,true,'',false,$result[$n]['file_extension'],-1,1,$use_watermark);
+			}
+		if (file_exists($f))
+			{
+			$totalsize+=filesize_unlimited($f);
+			}
+		}
+	if ($totalsize>$collection_download_max_size  && !$collection_download_tar)
+		{
+		?>
+		<script>
+		alert("<?php echo $lang["collection_download_too_large"] ?>");
+		history.go(-1);
+		</script>
+		<?php
+		exit();
+		}
+	
 	$id=getvalescaped("id","");
 	// Get a temporary directory for this download - $id should be unique
 	$usertempdir=get_temp_dir(false,"rs_" . $userref . "_" . $id);
@@ -206,38 +257,7 @@ if ($submitted != "")
 	$path="";
 	$deletion_array=array();
 	// set up an array to store the filenames as they are found (to analyze dupes)
-	$filenames=array();
-	
-	
-	# Estimate the total volume of files to zip
-	$totalsize=0;
-	for ($n=0;$n<count($result);$n++)
-		{
-		$usesize = ($size == 'original') ? "" : $usesize=$size;
-		$use_watermark=check_use_watermark();
-		
-		# Find file to use
-		$f=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
-		if (!file_exists($f))
-			{
-			# Selected size doesn't exist, use original file
-			$f=get_resource_path($ref,true,'',false,$result[$n]['file_extension'],-1,1,$use_watermark);
-			}
-		if (file_exists($f))
-			{
-			$totalsize+=filesize_unlimited($f);
-			}
-		}
-	if ($totalsize>$collection_download_max_size && !$collection_download_tar)
-		{
-		?>
-		<script>
-		alert("<?php echo $lang["collection_download_too_large"] ?>");
-		history.go(-1);
-		</script>
-		<?php
-		exit();
-		}
+	$filenames=array();	
 	
 	# Build a list of files to download
 	for ($n=0;$n<count($result);$n++)
@@ -286,25 +306,21 @@ if ($submitted != "")
 					) && resource_download_allowed($ref,$usesize,$result[$n]['resource_type']))
 				{
 				$used_resources[]=$ref;
-				# when writing metadata, we take an extra security measure by copying the files to tmp
-                $tmpfile = false;
-
-                if($exiftool_write && !$force_exiftool_write_metadata)
-                    {
-                    $exiftool_write_option = false;
-                    if('yes' == getvalescaped('write_metadata_on_download', ''))
-                        {
-                        $exiftool_write_option = true;
-                        }
-                    }
-
-				$tmpfile = write_metadata($p, $ref, $id); // copies file
-
-				if($tmpfile!==false && file_exists($tmpfile)){
-					$p=$tmpfile; // file already in tmp, just rename it
-				} else if (!$replaced_file) {
-					$copy=true; // copy the file from filestore rather than renaming
-				}
+				$tmpfile = false;
+				if($exiftool_write_option)
+					{
+					# when writing metadata, we take an extra security measure by copying the files to tmp
+					$tmpfile = write_metadata($p, $ref, $id); // copies file
+	
+					if($tmpfile!==false && file_exists($tmpfile))
+						{
+						$p=$tmpfile; // file already in tmp, just rename it
+						}
+					else if (!$replaced_file)
+						{
+						$copy=true; // copy the file from filestore rather than renaming
+						}
+					}
 
 				# if the tmpfile is made, from here on we are working with that. 
 				
@@ -582,7 +598,13 @@ if ($submitted != "")
 		fwrite($csv_fh, $csv_content);
 		fclose($csv_fh);
 
-		if($use_zip_extension)
+		// Add link to file for use by tar to prevent full paths being included.
+		if($collection_download_tar)
+			{
+			debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
+			@symlink($csv_file, $usertempdir . DIRECTORY_SEPARATOR . 'Col-' . $collection . '-metadata-export.csv');
+			}
+		elseif($use_zip_extension)
 			{
 			$zip->addFile($csv_file, 'Col-' . $collection . '-metadata-export.csv');
 			}
@@ -945,38 +967,34 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     {
     ?>
     <!-- Let user say (if allowed - ie. not enforced by system admin) whether metadata should be written to the file or not -->
-    <div class="Question">
+    <div class="Question" id="exiftool_question" <?php if($collection_download_tar_option){echo "style=\"display:none;\"";} ?>>
         <label for="write_metadata_on_download"><?php echo $lang['collection_download__write_metadata_on_download_label']; ?></label>
         <input type="checkbox" id="write_metadata_on_download" name="write_metadata_on_download" value="yes" >
     </div>
     <div class="clearerleft"></div>
     <?php
     }
+?>
+	
+<div class="Question">
+<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
+<div class="tickset">
+<select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){ajax_on=true;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{ajax_on=false;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
+	   <option value="off"><?php echo $lang["collection_download_no_tar"]; ?></option>
+	   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option>	   
+</select>
 
-	
-if($collection_download_tar)
-    { ?>
-    <div class="Question">
-    <label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
-    <div class="tickset">
-    <select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){jQuery('#archivesettings_question').slideDown();}else{jQuery('#archivesettings_question').slideUp();}">
-           <option value="on"><?php echo$lang["collection_download_use_tar"]; ?></option>
-        <option value="off"><?php echo$lang["collection_download_no_tar"]; ?></option>
-    </select>
-	
-    <div class="clearerleft"></div></div><br>
-	<div class="clearerleft"></div>
-	<label for="tarinfo"></label>
-	<div class="Fixed"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div>
-    </div>
-	<div class="clearerleft"></div>
-	<?php
-    }?>
+<div class="clearerleft"></div></div><br>
+<div class="clearerleft"></div>
+<label for="tarinfo"></label>
+<div class="Fixed"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div>
+</div>
+<div class="clearerleft"></div>
 	
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 <label for="download"> </label>
-
-<input type="submit" onclick="<?php echo $collection_download_tar?"":"ajax_download();return false;"; ?>;" value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
+<script>var ajax_on=<?php echo ($collection_download_tar)?"true":"false"; ?>;</script>
+<input type="submit" onclick="if(ajax_on){ajax_download();return false;}" value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
 
 <div class="clearerleft"> </div>
 </div>
