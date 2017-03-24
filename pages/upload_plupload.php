@@ -33,7 +33,7 @@ if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_r
 resource_type_config_override($resource_type);
 
 # Create a new collection?
-if ($collection_add==-1 && !$upload_then_edit)
+if ($collection_add=="new" && !$upload_then_edit)
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
