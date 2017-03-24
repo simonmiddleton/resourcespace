@@ -139,7 +139,7 @@ function message_purge()
 
 function message_send_unread_emails()
 	{
-	global $lang, $applicationname,$actions_enable,$baseurl,$list_search_results_title_trim, $user_pref_daily_digest,$applicationname;
+	global $lang, $applicationname,$actions_enable,$baseurl,$list_search_results_title_trim, $user_pref_daily_digest,$applicationname,$actions_on;
 	$lastrun = sql_value("select value from sysvars where name='daily_digest'",'');
 	
 	# Exit if already sent in last 24 hours;
@@ -190,6 +190,7 @@ function message_send_unread_emails()
 			$messageuser=get_user($digestuser);
 			$usermail = $messageuser["email"];
 			setup_user($messageuser);
+            if(!$actions_on){break;}
 			$user_actions = get_user_actions(false);
 			if (count($user_actions)>0)		
 				{

@@ -3,13 +3,13 @@
 
 function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC")
 	{
-    global $actions_notify_states, $actions_resource_types, $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_groups,
-    $actions_resource_review,$actions_resource_requests,$actions_account_requests, $view_title_field;
+    global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups,
+    $actions_resource_review,$actions_resource_requests,$actions_account_requests, $view_title_field, $actions_on;
         
-    $actionsql="";
-    
+    $actionsql="";    
     $filtered = $type!="";
     
+    if(!$actions_on){return array();}
         
     if($actions_resource_review && (!$filtered || 'resourcereview'==$type))
         {
@@ -25,7 +25,9 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         }
     if(checkperm("u") && $actions_account_requests && (!$filtered || 'userrequest'==$type))
         {
-        $account_requests_sql = get_users($actions_approve_groups,"","u.created",true,-1,0,true,"u.ref,u.created,u.fullname,u.email,u.username"); 
+        $availgroups=get_usergroups(true);
+        $get_groups=implode(",",array_diff(array_column($availgroups,"ref"),explode(",",$actions_approve_hide_groups)));
+        $account_requests_sql = get_users($get_groups,"","u.created",true,-1,0,true,"u.ref,u.created,u.fullname,u.email,u.username"); 
         $actionsql .= (($actionsql!="")?" UNION ":"") . "SELECT created as date,ref,concat(fullname,if(email<>'',concat('(',email,')'),'')) as description,'userrequest' as type FROM (" . $account_requests_sql . ") users";
         }
         
@@ -45,16 +47,12 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
     
 function get_editable_resource_sql()
 	{
-	global $actions_notify_states, $actions_resource_types, $default_display, $list_display_fields, $search_all_workflow_states;
+	global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states;
     $default_display	= $list_display_fields;
     $search_all_workflow_states = false;
-	$editable_resource_sql=do_search("",$actions_resource_types,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
+    $rtypes=get_resource_types();
+    $searchable_restypes=implode(",",array_diff(array_column($rtypes,"ref"),explode(",",$actions_resource_types_hide)));
+	$editable_resource_sql=do_search("",$searchable_restypes,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
     return $editable_resource_sql;
 	}
     
-function get_account_request_sql($countonly=false)
-	{
-    global $actions_approve_groups;
-    $approve_accounts = get_users($actions_approve_groups,"","u.created",true,-1,true);    
-    return $countonly?count($approve_accounts):$approve_accounts;
-	}

@@ -3160,8 +3160,8 @@ $actions_resource_requests=true;
 $actions_account_requests=true;
 $actions_resource_review=true;
 $actions_notify_states="-1";
-$actions_resource_types="";
-$actions_approve_groups="";
+$actions_resource_types_hide="";  // Resource types to exclude from notifications
+$actions_approve_hide_groups=""; // Groups to exclude from notifications
 
 # Separator to use when rendering date range field values
 $range_separator = " / ";

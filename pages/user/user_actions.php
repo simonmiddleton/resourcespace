@@ -11,40 +11,12 @@ include "../../include/authenticate.php";
 if(!$actions_enable){exit("access denied");}
 $modal=$resource_view_modal;
 
-include "../../include/header.php";
-
-?>
-  <h1><?php echo $lang["actions_myactions"]?></h1>
-  <p><?php echo $lang["actions_introtext"] ?></p>
-  
-<div class="BasicsBox">
-<div class="VerticalNav">
-<ul>
-<?php
-if ($user_preferences)
-	{?>
-	<li><a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . "&nbsp;" . $lang["userpreferences"];?></a></li>
-	<?php 
-	} 
-if ($actions_resource_review)
-	{
-	$add_editable_resources_url = $baseurl_short . "pages/collections.php?addsearch=&mode=resources&restypes=" . $actions_resource_types . "&archive=" . $actions_notify_states . "&foredit=true";
-	?>
-	<li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_add_editable_to_collection']?></a></li>
-	<?php 
-	}?>
-</ul>
-</div><!-- End of VerticalNav -->
-</div><!-- End of BasicsBox -->
-<?php
-
 $actiontypes=array();
 if($actions_resource_review){$actiontypes[]="resourcereview";}
 if($actions_account_requests && checkperm("u")){$actiontypes[]="userrequest";}
 if($actions_resource_requests && checkperm("R")){$actiontypes[]="resourcerequest";}
 $updatedactiontypes=hook("updateactiontypes",'',array($actiontypes));
 if(is_array($updatedactiontypes)){$actiontypes=$updatedactiontypes;}
-
 $actiontype=getvalescaped("actiontype",''); // Set to ascertain if we are filtering on type
 $offset=getvalescaped("offset",0);
 $order_by=getvalescaped("actions_order_by","date");
@@ -74,6 +46,35 @@ $url_params=array(
    );
 
 $url=generateURL($baseurl . "/pages/user/user_actions.php",$url_params);
+
+include "../../include/header.php";
+
+?>
+  <h1><?php echo $lang["actions_myactions"]?></h1>
+  <p><?php echo $lang["actions_introtext"] ?></p>
+  
+<div class="BasicsBox">
+<div class="VerticalNav">
+<ul>
+<?php
+if ($user_preferences)
+	{?>
+	<li><a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . "&nbsp;" . $lang["userpreferences"];?></a></li>
+	<?php 
+	} 
+if ($actions_resource_review)
+	{
+	$rtypes=get_resource_types();
+    $searchable_restypes=implode(",",array_diff(array_column($rtypes,"ref"),explode(",",$actions_resource_types_hide)));
+	$add_editable_resources_url = $baseurl_short . "pages/collections.php?addsearch=&mode=resources&restypes=" . $actions_resource_types . "&archive=" . $actions_notify_states . "&foredit=true";
+	?>
+	<li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_add_editable_to_collection']?></a></li>
+	<?php 
+	}?>
+</ul>
+</div><!-- End of VerticalNav -->
+</div><!-- End of BasicsBox -->
+<?php
 
 if(count($actiontypes)>1)
 	{

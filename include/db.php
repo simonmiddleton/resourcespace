@@ -1819,7 +1819,7 @@ function setup_user($userdata)
     global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms, $anonymous_user_session_collection, 
            $global_permissions_mask, $user_preferences, $userrequestmode, $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, 
-           $userresourcedefaults, $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences, $userorigin,$actions_enable,$actions_permissions;
+           $userresourcedefaults, $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences, $userorigin,$actions_enable,$actions_permissions,$actions_on;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -1832,6 +1832,7 @@ function setup_user($userdata)
 	$userpermissions=array_diff(array_merge(explode(",",trim($global_permissions)),explode(",",trim($userdata["permissions"]))),explode(",",trim($global_permissions_mask))); 
 	$userpermissions=array_values($userpermissions);# Resequence array as the above array_diff() causes out of step keys.
 	
+	$actions_on=$actions_enable;
 	# Enable actions functionality if based on user permissions
 	if(!$actions_enable && count($actions_permissions)>0)
 		{
@@ -1839,7 +1840,7 @@ function setup_user($userdata)
 			{
 			if(in_array($actions_permission,$userpermissions))
 					{
-					$actions_enable=true;
+					$actions_on=true;
 					break;
 					}
 			}
