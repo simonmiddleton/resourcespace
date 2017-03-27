@@ -224,11 +224,11 @@ include "../../include/header.php";
 	
 		$statesjs = "if(jQuery(this).val()==1){
 					jQuery('#question_actions_notify_states').slideDown();
-					jQuery('#question_actions_resource_types').slideDown();
+					jQuery('#question_actions_resource_types_hide').slideDown();
 					}
 				else {
 					jQuery('#question_actions_notify_states').slideUp();
-					jQuery('#question_actions_resource_types').slideUp();
+					jQuery('#question_actions_resource_types_hide').slideUp();
 					}";
 	$page_def[] = config_add_boolean_select('actions_resource_review', $lang['actions_resource_review'], $enable_disable_options, 300, '', true,$statesjs);
 									
