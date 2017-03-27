@@ -80,7 +80,7 @@ if (!hook("renderresultlargethumb"))
 							style="position:relative;" 
 							href="<?php echo $url?>"  
 							onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
-							title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field])))?>"
+							title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field])))))?>"
 						>
 							<?php 
 							if ($result[$n]["has_image"]==1) 
@@ -107,7 +107,7 @@ if (!hook("renderresultlargethumb"))
 										} ?>
 										src="<?php echo $pre_url ?>" 
 										class="ImageBorder"
-										alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))); ?>"
+										alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))); ?>"
 								/>
 								<?php
                                 // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
@@ -227,7 +227,7 @@ if (!hook("renderresultlargethumb"))
 									<a 
 										href="<?php echo $url?>"  
 										onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);"
-										title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value)))?>"
+										title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
 										>
 									<?php 
 									} //end link
@@ -258,12 +258,12 @@ if (!hook("renderresultlargethumb"))
 								{ // add link if necessary ?>
 								<a 
 									href="<?php echo $url?>"  
-									onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);"									    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value)))?>"
+									onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
 									
 								>
 								<?php 
 								} //end link
-							echo highlightkeywords(tidy_trim(TidyList(i18n_get_translated($value)),$xl_search_results_title_trim),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
+							echo highlightkeywords(tidy_trim(TidyList(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))),$xl_search_results_title_trim),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
 							if ($x==0)
 								{ // add link if necessary ?>
 								</a>
