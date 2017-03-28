@@ -1,53 +1,124 @@
 <?php
 # Video player - plays the preview file created to preview video resources.
 
-global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,$video_player_thumbs_view_alt,$video_player_thumbs_view_alt_name,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview;
+global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,$video_player_thumbs_view_alt,$video_player_thumbs_view_alt_name,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,$video_hls_streams,$video_preview_player_hls,$video_preview_hls_support;
 
 # Check for search page and the use of an alt file for video playback
 $use_video_alts=false;
-if($video_player_thumbs_view_alt && isset($video_player_thumbs_view_alt_name) && $pagename=='search' && $display!='list'){
+if($video_player_thumbs_view_alt && isset($video_player_thumbs_view_alt_name) && $pagename=='search' && $display!='list')
+	{
 	$use_video_alts=true;
 	#  get the alt ref
 	$alternative=sql_value("select ref value from resource_alt_files where resource={$ref} and name='{$video_player_thumbs_view_alt_name}'","");
-}
-
-# First we look for a preview video with the expected extension.
-$flashfile=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative);
-$flashfallback=false;
-if (file_exists($flashfile))
-	{
-	$flashpath=get_resource_path($ref,false,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative,false);
-	}
-elseif ($ffmpeg_preview_extension!="flv")
-	{
-	# Still no file. For legacy systems that are not using MP4 previews, next we look for an FLV preview.
-	$flashfile=get_resource_path($ref,true,"pre",false,"flv",-1,1,false,"",$alternative);
-	$flashpath=get_resource_path($ref,false,"pre",false,"flv",-1,1,false,"",$alternative,false);
-	$flashfallback=true;
 	}
 
-if (!file_exists($flashfile) || $video_preview_original)
-    {
-	$flashfallback=false;
-	# Back out to playing the source file direct (not a preview). For direct MP4/FLV upload support - the file itself is an FLV/MP4. Or, with the preview functionality disabled, we simply allow playback of uploaded video files.
-	$origvideofile=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative);
-	if(file_exists($origvideofile))
-	  {
-	  $flashpath=get_resource_path($ref,false,"",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative,false);
-	  }
-	else
+//Create array of video sources
+$video_preview_sources=array();
+$vidindex=0;
+
+if($video_preview_hls_support!=1 || !$video_preview_player_hls) 
+	{
+	// Look for a standard preview video with the expected extension.
+	$video_preview=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative);
+	if (file_exists($video_preview))
 		{
-		$flashpath='';
+		$video_preview_path=get_resource_path($ref,false,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative,false);
+		$video_preview_type="video/" . $ffmpeg_preview_extension;
+		}		
+	elseif (!file_exists($video_preview) && $ffmpeg_preview_extension!="flv")
+		{
+		// No preview file of the default type found. For legacy systems that were not using MP4 previews there may be an FLV preview.
+		$video_preview=get_resource_path($ref,true,"pre",false,"flv",-1,1,false,"",$alternative);
+		if (file_exists($video_preview))
+			{
+			$video_preview_path=get_resource_path($ref,false,"pre",false,"flv",-1,1,false,"",$alternative,false);
+			$video_preview_type="video/flv";
+			}
+		}
+			
+	if ((!file_exists($video_preview) || $video_preview_original) && get_resource_access($ref))
+		{
+		# Attempt to play the source file direct (not a preview). For direct MP4/FLV upload support - the file itself is an FLV/MP4. Or, with the preview functionality disabled, we simply allow playback of uploaded video files.
+		$origvideofile=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative);
+		if(file_exists($origvideofile))
+			{
+			$video_preview_path=get_resource_path($ref,false,"",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative,false);
+			$video_preview_type="video/" . $ffmpeg_preview_extension;
+			}
+		}
+	if (isset($video_preview_path))
+		{
+		$video_preview_sources[$vidindex]["url"]=$video_preview_path;
+		$video_preview_sources[$vidindex]["url_encoded"]=urlencode($video_preview_path);
+		$video_preview_sources[$vidindex]["type"]=$video_preview_type;
+		$video_preview_sources[$vidindex]["label"]="";
+		$vidindex++;
 		}
 	}
-
-$flashpath_raw=$flashpath;     
-$flashpath=urlencode($flashpath);
-
-if($use_video_alts){
+	
+if($video_preview_hls_support!=0)
+	{
+	$playlistfile=get_resource_path($ref,true,"pre",false,"m3u8",-1,1,false,"",$alternative,false);
+	if(file_exists($playlistfile))
+		{
+		$playlisturl=get_resource_path($ref,false,"pre",false,"m3u8",-1,1,false,"",$alternative,false);
+		$video_preview_sources[$vidindex]["url"]=$playlisturl;
+		$video_preview_sources[$vidindex]["type"]="application/x-mpegURL";
+		$video_preview_sources[$vidindex]["label"]="Auto";
+		$vidindex++;
+		}
+	$videojs_resolution_selection_default_res="Auto";
+	}		
+	
+if($use_video_alts)
+	{
 	# blank alt variable to use proper preview image
 	$alternative='';
-}
+	}
+	
+if(isset($videojs_resolution_selection))
+	{
+	// Add in each version of the hls stream
+	foreach ($video_hls_streams as $video_hls_stream)
+		{
+		$hlsfile=get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8");
+		if(file_exists($hlsfile))
+			{
+			$hlsurl=get_resource_path($ref,false,"pre_" . $video_hls_stream["id"],false,"m3u8");
+			$video_preview_sources[$vidindex]["url"]=$hlsurl;
+			$video_preview_sources[$vidindex]["type"]="application/x-mpegURL";
+			$video_preview_sources[$vidindex]["label"]=i18n_get_translated($video_hls_stream['label']);
+			$vidindex++;
+			}
+		}
+	
+	// Add in each of the videojs_resolution_selection items that use alternative files	for previews
+	$s_count=count($videojs_resolution_selection);
+	for($s=0;$s<$s_count;$s++)
+		{
+		if($videojs_resolution_selection[$s]['name']=='' && isset($video_preview_path))
+			{
+			// The default source was set earlier, just update the label
+			$video_preview_sources[0]["label"]=isset($videojs_resolution_selection[$s]['label'])?$videojs_resolution_selection[$s]['label']:"";
+			}
+		else{
+			$alt_data=sql_query("select * from resource_alt_files where resource={$ref} and name='{$videojs_resolution_selection[$s]['name']}'");
+			if(!empty($alt_data))
+				{
+				$alt_data=$alt_data[0];
+				$res_path=get_resource_path($ref,false,"",false,$alt_data['file_extension'],-1,1,false,"",$alt_data['ref'],false);
+				$res_ext=$alt_data['file_extension'];
+				}
+			}
+		if(isset($res_path) && isset($res_ext))
+			{
+			$video_preview_sources[$vidindex]["url"]=$res_path;
+			$video_preview_sources[$vidindex]["type"]="video/" . $res_ext;
+			$video_preview_sources[$vidindex]["label"]=i18n_get_translated($videojs_resolution_selection[$s]['label']);
+			$vidindex++;
+			}
+		}
+	}
 
 $thumb=get_resource_path($ref,false,"pre",false,"jpg",-1,1,false,"",$alternative); 
 $thumb_raw=$thumb;
@@ -83,34 +154,43 @@ if ($pagename=="search"){
 }
 // play video on hover?
 $play_on_hover=false;
-if(($pagename=='search' && $video_search_play_hover) || ($pagename=='view' && $video_view_play_hover) || (($pagename=='preview' || $pagename=='preview_all') && $video_preview_play_hover)){
+if(($pagename=='search' && $video_search_play_hover) || ($pagename=='view' && $video_view_play_hover) || (($pagename=='preview' || $pagename=='preview_all') && $video_preview_play_hover))
+	{
 	$play_on_hover=true;
-}
+	}
+	
 // using keyboard hotkeys?
 $playback_hotkeys=false;
-if(($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || (($pagename=='preview' || $pagename=='preview_all') && $keyboard_navigation_video_preview)){
+if(($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || (($pagename=='preview' || $pagename=='preview_all') && $keyboard_navigation_video_preview))
+	{
 	$playback_hotkeys=true;
-}
+	}
 
 if(!hook("swfplayer"))
 	{
-	if (!$videojs) 
+	if (!$videojs && isset($video_preview_sources[0]["url"])) 
 		{ ?>
 		<object type="application/x-shockwave-flash" data="<?php echo $baseurl_short?>lib/flashplayer/player_flv_maxi.swf?t=<?php echo time() ?>" width="<?php echo $width?>" height="<?php echo $height?>" class="Picture">
 		     <param name="allowFullScreen" value="true" />
 		     <param name="movie" value="<?php echo $baseurl_short?>lib/flashplayer/player_flv_maxi.swf" />
-		     <param name="FlashVars" value="flv=<?php echo $flashpath?>&amp;width=<?php echo $width?>&amp;height=<?php echo $height?>&amp;margin=0&amp;showvolume=1&amp;volume=200&amp;showtime=2&amp;autoload=1&amp;<?php if ($pagename!=="search"){?>showfullscreen=1<?php } ?>&amp;showstop=1&amp;buttoncolor=<?php echo $buttoncolor?>&playercolor=<?php echo $color?>&bgcolor=<?php echo $color?>&bgcolor1=<?php echo $bgcolor1?>&bgcolor2=<?php echo $bgcolor2?>&startimage=<?php echo $thumb?>&playeralpha=75&autoload=1&buffermessage=&buffershowbg=0" />
+		     <param name="FlashVars" value="flv=<?php echo $video_preview_sources[0]["url_encoded"]; ?>&amp;width=<?php echo $width?>&amp;height=<?php echo $height?>&amp;margin=0&amp;showvolume=1&amp;volume=200&amp;showtime=2&amp;autoload=1&amp;<?php if ($pagename!=="search"){?>showfullscreen=1<?php } ?>&amp;showstop=1&amp;buttoncolor=<?php echo $buttoncolor?>&playercolor=<?php echo $color?>&bgcolor=<?php echo $color?>&bgcolor1=<?php echo $bgcolor1?>&bgcolor2=<?php echo $bgcolor2?>&startimage=<?php echo $thumb?>&playeralpha=75&autoload=1&buffermessage=&buffershowbg=0" />
 		</object>
 		<?php 
 		} 
 	else 
 		{ 
-		global $ffmpeg_preview_extension,$css_reload_key,$context;
+		global $ffmpeg_preview_extension,$css_reload_key,$context,$video_preview_hls_support;
 		?>
 		<link href="<?php echo $baseurl_short?>lib/videojs/video-js.min.css?r=<?=$css_reload_key?>" rel="stylesheet">
-        <script src="<?php echo $baseurl_short?>lib/videojs/video.min.js?r=<?=$css_reload_key?>"></script>
-		<script src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?r=<?=$css_reload_key?>"></script>		
+		<script src="<?php echo $baseurl_short?>lib/videojs/video.min.js?r=<?=$css_reload_key?>"></script>
+		<script src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?r=<?=$css_reload_key?>"></script>
 		<?php
+		if($video_preview_hls_support!=0)
+			{
+			?>
+			<script src="<?php echo $baseurl_short?>lib/js/videojs-contrib-hls.js?<?php echo $css_reload_key?>"></script>
+			<?php		
+			}
 		if(isset($videojs_resolution_selection))
 			{
 			?>
@@ -118,6 +198,9 @@ if(!hook("swfplayer"))
   			<script src="<?php echo $baseurl_short?>lib/videojs-resolution-switcher/videojs-resolution-switcher.js?r=<?=$css_reload_key?>"></script>
   			<?php
   			}
+			
+			
+			
   		?>
 		<!-- START VIDEOJS -->
 		<div class="videojscontent">
@@ -144,9 +227,8 @@ if(!hook("swfplayer"))
 							<?php } ?>
 						}
 					<?php }
-					if(isset($videojs_resolution_selection)){
-						if($play_on_hover){?>,
-						<?php } ?>
+					if(isset($videojs_resolution_selection) && count($video_preview_sources)>0)
+						{?>
 						"plugins": {
 								"videoJsResolutionSwitcher": {
 								  "default": "<?php echo $videojs_resolution_selection_default_res?>"
@@ -171,37 +253,14 @@ if(!hook("swfplayer"))
 					onmouseout="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].pause();"
 					onmouseover="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].play();"
 				<?php } ?>
-			>
-				<?php
-				if(isset($videojs_resolution_selection)){
-					$s_count=count($videojs_resolution_selection);
-					for($s=0;$s<$s_count;$s++){
-						if($videojs_resolution_selection[$s]['name']==''){
-							$res_path=$flashpath_raw;
-							$res_ext=($flashfallback?"flv":$ffmpeg_preview_extension);
-						}
-						else{
-							$alt_data=sql_query("select * from resource_alt_files where resource={$ref} and name='{$videojs_resolution_selection[$s]['name']}'");
-							echo "alt data:";print_r($alt_data);echo"<br/>";
-							if(!empty($alt_data)){
-								$alt_data=$alt_data[0];
-								$res_path=get_resource_path($ref,false,"",false,$alt_data['file_extension'],-1,1,false,"",$alt_data['ref'],false);
-								$res_ext=$alt_data['file_extension'];
-							}
-						}
-						if(isset($res_path) && isset($res_ext)){
-							?>
-							<source src="<?php echo $res_path?>" type='video/<?php echo $res_ext?>' label="<?php echo $videojs_resolution_selection[$s]['label']?>" />
-							<?php
-						}
-					}
-				}
-				else{
+				>
+				<?php				
+				foreach($video_preview_sources as $video_preview_source)
+					{
 					?>
-					<source src="<?php echo $flashpath_raw?>" type='video/<?php echo ($flashfallback?"flv":$ffmpeg_preview_extension) ?>'/>
-					<?php
-				}
-				?>
+					<source src="<?php echo $video_preview_source["url"] ?>" type='<?php echo $video_preview_source["type"]; ?>' label='<?php echo ($video_preview_source["label"]!=""?$video_preview_source["label"]:$lang["preview"]); ?>'/>
+					<?php	
+					}?>
 				<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 				<?php hook("html5videoextra"); ?>
 			</video>

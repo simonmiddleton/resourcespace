@@ -150,6 +150,7 @@ $page_def[] = config_add_html('</div>');
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_workflow'] . '</h3><div id="SystemConfigWorkflowSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('research_request', $lang['researchrequest'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
+z
 
 // Actions section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['actions'] . '</h3><div id="SystemConfigActionsSection" class="CollapsibleSection">');

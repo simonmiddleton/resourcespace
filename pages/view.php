@@ -608,7 +608,7 @@ $download_multisize=true;
 <?php
 
 # Try to find a preview file.
-$flvfile=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
+$flvfile=get_resource_path($ref,true,"pre",false,($video_preview_hls_support==1 || $video_preview_hls_support==2)?"m3u8":$ffmpeg_preview_extension);
 
 if (!file_exists($flvfile) && $ffmpeg_preview_extension!="flv") {$flvfile=get_resource_path($ref,true,"pre",false,"flv");} # Try FLV, for legacy systems.
 if (!file_exists($flvfile)) {$flvfile=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);}

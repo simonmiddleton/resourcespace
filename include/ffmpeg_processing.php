@@ -73,6 +73,7 @@ if ($ffmpeg_get_par) {
     resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . $output);
   
   preg_match('/PAR ([0-9]+):([0-9]+)/m', $output, $matches);
+  
   if (@intval($matches[1]) > 0 && @intval($matches[2]) > 0) {
     $par = $matches[1] / $matches[2];
     if($par < 1) {
@@ -83,8 +84,6 @@ if ($ffmpeg_get_par) {
     }
   }  
 }
-
-
 
 if($height<$ffmpeg_preview_min_height)
 	{
@@ -116,30 +115,82 @@ if ($height % 2) {$height++;}
 $tmp = hook("ffmpegbeforeexec", "", array($ffmpeg_fullpath, $file));
 if (is_array($tmp) and $tmp) {list($width, $height) = $tmp;}
 
-if (!hook("replacetranscode","",array($file,$targetfile,$ffmpeg_global_options,$ffmpeg_preview_options,$width,$height))){
-	
-} else { 
+if (hook("replacetranscode","",array($file,$targetfile,$ffmpeg_global_options,$ffmpeg_preview_options,$width,$height)))
+	{
 	exit(); // Do not proceed, replacetranscode hook intends to avoid everything below
-	}	
+	}
 	
-	$shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " $ffmpeg_preview_options -t $ffmpeg_preview_seconds -s {$width}x{$height} " . escapeshellarg($targetfile);
-
-
-	if (isset($ffmpeg_command_prefix))
-		{$shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;}
-
-	$tmp = hook("ffmpegmodpreparams", "", array($shell_exec_cmd, $ffmpeg_fullpath, $file));
-	if ($tmp) {$shell_exec_cmd = $tmp;}
-
-	if ($config_windows)
+	if($video_preview_hls_support!=0)
 		{
-		# Windows systems have a hard time with the long paths used for video generation. This work-around creates a batch file containing the command, then executes that.
-		file_put_contents(get_temp_dir() . "/ffmpeg.bat",$shell_exec_cmd);
-		$shell_exec_cmd=get_temp_dir() . "/ffmpeg.bat";
-		}
+		// Start the content for the main m3u8 file
+		$hlscontent="#EXTM3U\n";
+		$hlscontent="#EXT-X-VERSION:3\n";		
 
-    $output=run_command($shell_exec_cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . $output);
+		$n=1;
+		// Generate the separate video chunks for HTTP Live streaming support
+		foreach ($video_hls_streams as $video_hls_stream)
+			{
+			$hlsfile=get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative);
+			if($video_hls_stream["resolution"]==""){$video_hls_stream["resolution"]= $width . "x" . $height;}
+			$shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " $ffmpeg_hls_preview_options -b " . $video_hls_stream["bitrate"] . "k -ab " . $video_hls_stream["audio_bitrate"] . "k -t $ffmpeg_preview_seconds -s " . $video_hls_stream["resolution"] . " " . escapeshellarg($hlsfile);
+			if (isset($ffmpeg_command_prefix))
+			{$shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;}
+
+			$tmp = hook("ffmpegmodpreparams", "", array($shell_exec_cmd, $ffmpeg_fullpath, $file));
+			if ($tmp) {$shell_exec_cmd = $tmp;}
+
+			if ($config_windows)
+				{
+				# Windows systems have a hard time with the long paths used for video generation. This work-around creates a batch file containing the command, then executes that.
+				file_put_contents(get_temp_dir() . "/ffmpeg.bat",$shell_exec_cmd);
+				$shell_exec_cmd=get_temp_dir() . "/ffmpeg.bat";
+				}
+				
+			$output=run_command($shell_exec_cmd);
+			resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . $output);
+			if(file_exists($hlsfile))
+				{
+				if(!isset($hls_codec_info))
+				  {
+				  // Get codec profile and level to add to CODECS element for stream in M3U8 file. Set to profile:high, level:5.1  if not worked out so that a high bitrate stream is not used in error
+				  $ffprobe_array=get_video_info($hlsfile);
+				  $hls_codec_info["profile"]=(isset($ffprobe_array["streams"][0]["profile"]) && isset($h264_profiles[$ffprobe_array["streams"][0]["profile"]]))?$h264_profiles[$ffprobe_array["streams"][0]["profile"]]:"58A0";				  
+				  $hls_codec_info["level"]=isset($ffprobe_array["streams"][0]["level"])?dechex($ffprobe_array["streams"][0]["level"]):"33";
+				  }
+				// Set stream info, allowing for overhead of bitrate (this is why it is not 1024)
+				$hlscontent.="#EXT-X-STREAM-INF:PROGRAM-ID=" . $n . ",BANDWIDTH=" . (($video_hls_stream["bitrate"] + $video_hls_stream["audio_bitrate"])*1200) . (isset($hls_codec_info)?",CODECS=\"mp4a.40.2, avc1." . $hls_codec_info["profile"] . $hls_codec_info["level"] . "\"":"") . ",RESOLUTION=" . $video_hls_stream["resolution"] . "\n";
+				$hlsfileparts=pathinfo($hlsfile);
+				$hlscontent.=$hlsfileparts["basename"] ."\n";
+				}
+			unset($hls_codec_info);
+			}
+		$hlsmainfile=get_resource_path($ref,true,"pre",false,"m3u8",-1,1,false,"",$alternative); 
+		
+		file_put_contents($hlsmainfile,$hlscontent);
+
+		}
+	
+	if($video_preview_hls_support!=1)
+		{
+		$shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " $ffmpeg_preview_options -t $ffmpeg_preview_seconds -s {$width}x{$height} " . escapeshellarg($targetfile);
+
+
+		if (isset($ffmpeg_command_prefix))
+			{$shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;}
+
+		$tmp = hook("ffmpegmodpreparams", "", array($shell_exec_cmd, $ffmpeg_fullpath, $file));
+		if ($tmp) {$shell_exec_cmd = $tmp;}
+
+		if ($config_windows)
+			{
+			# Windows systems have a hard time with the long paths used for video generation. This work-around creates a batch file containing the command, then executes that.
+			file_put_contents(get_temp_dir() . "/ffmpeg.bat",$shell_exec_cmd);
+			$shell_exec_cmd=get_temp_dir() . "/ffmpeg.bat";
+			}
+
+		$output=run_command($shell_exec_cmd);
+		resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . $output);
+		}
 
 
 if ($ffmpeg_get_par && (isset($snapshotcheck) && $snapshotcheck==false)) {

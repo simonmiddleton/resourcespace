@@ -4128,11 +4128,9 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 			global $ffmpeg_supported_extensions;
 			if (in_array(strtolower($extension), $ffmpeg_supported_extensions) && function_exists('json_decode'))
 			    {
-			    $ffprobe_fullpath = get_utility_path("ffprobe");
-
 			    $file=get_resource_path($ref,true,"",false,$extension);
-			    $ffprobe_output=run_command($ffprobe_fullpath . " -v 0 " . escapeshellarg($file) . " -show_streams -of json");
-			    $ffprobe_array=json_decode($ffprobe_output, true);
+			    $ffprobe_array=get_video_info($file);
+                
 			    # Different versions of ffprobe store the dimensions in different parts of the json output. Test both.
 			    if (!empty($ffprobe_array['width'] )) { $sw = intval($ffprobe_array['width']);  }
 			    if (!empty($ffprobe_array['height'])) { $sh = intval($ffprobe_array['height']); }
@@ -4435,4 +4433,13 @@ function resource_file_readonly($ref)
 function delete_resource_custom_user_access($resource,$user)
     {
     sql_query("delete from resource_custom_access where resource='$resource' and user='$user'");
+    }
+
+    
+function get_video_info($file)
+    {
+    $ffprobe_fullpath = get_utility_path("ffprobe");
+    $ffprobe_output=run_command($ffprobe_fullpath . " -v 0 " . escapeshellarg($file) . " -show_streams -of json");
+    $ffprobe_array=json_decode($ffprobe_output, true);
+    return ($ffprobe_array);
     }
