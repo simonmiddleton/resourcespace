@@ -18,21 +18,25 @@ $page_def[] = config_add_file_input(
     $baseurl . '/pages/admin/admin_system_config.php',
     420
 );
-
+$page_def[] = config_add_file_input(
+    'header_favicon',
+    $lang['systemconfig_header_favicon_label'],
+    $baseurl . '/pages/admin/admin_system_config.php',
+    420
+);
 $page_def[] = config_add_single_select(
     'header_size',
     $lang['userpreference_headersize'],
     array(
         'HeaderSmall' => $lang['headersmall'],
-        'HeaderMid'      => $lang['headermid'],
-        'HeaderLarge'    => $lang['headerlarge']
+        'HeaderMid'   => $lang['headermid'],
+        'HeaderLarge' => $lang['headerlarge']
     ),
     true,
     420,
     '',
     true,"jQuery('#Header').removeClass('HeaderSmall');jQuery('#Header').removeClass('HeaderMid');jQuery('#Header').removeClass('HeaderLarge');jQuery('#Header').addClass(this.value);"
 );
-
 $page_def[] = config_add_colouroverride_input(
     'header_colour_style_override',
     $lang["setup-headercolourstyleoverride"],
@@ -41,7 +45,6 @@ $page_def[] = config_add_colouroverride_input(
     true,
     "jQuery('#Header').css('background',value);"
 );
-
 $page_def[] = config_add_colouroverride_input(
     'header_link_style_override',
     $lang["setup-headerlinkstyleoverride"],
@@ -50,7 +53,6 @@ $page_def[] = config_add_colouroverride_input(
     true,
     "jQuery('#HeaderNav1 a').css('color',value);jQuery('#HeaderNav2 a').css('color',value);jQuery('#HeaderNav2 li').css('border-color', value);"
 );
-
 $page_def[] = config_add_text_input('email_from', $lang['setup-emailfrom'], false, 420, false, '', true);
 $page_def[] = config_add_text_input('email_notify', $lang['setup-emailnotify'], false, 420, false, '', true);
 $page_def[] = config_add_html('</div>');

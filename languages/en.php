@@ -2369,6 +2369,7 @@ $lang['userpreference_exiftool_write_metadata_label'] = 'Write embedded metadata
 /* System Config */
 $lang['systemconfig'] = 'System configuration';
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
+$lang['systemconfig_header_favicon_label'] = 'Application favicon';
 $lang['systemconfig_description'] = 'The options on this page are system wide and can change some of the functionality available to the users. Please note that any option that is also user specific will take precedence if set.';
 $lang['systemconfig_multilingual'] = 'Multilingual';
 $lang['systemconfig_default_language_label'] = 'Default language';

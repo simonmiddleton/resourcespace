@@ -66,7 +66,20 @@ if ($include_rs_header_info)
 <?php hook('extra_meta'); ?>
 
 <title><?php echo htmlspecialchars($applicationname)?></title>
-<link rel="icon" type="image/png" href="<?php echo $baseurl."/".$header_favicon?>" />
+<?php
+if('' == $header_favicon)
+    {
+    $header_favicon = 'gfx/interface/favicon.png';
+    }
+
+$favicon = "{$baseurl}/{$header_favicon}";
+
+if(strpos($header_favicon, '[storage_url]') !== false)
+    {
+    $favicon = str_replace('[storage_url]', $storageurl, $header_favicon);
+    }
+?>
+<link rel="icon" type="image/png" href="<?php echo $favicon; ?>" />
 
 <!-- Load jQuery and jQueryUI -->
 <script src="<?php echo $baseurl; ?>/lib/js/jquery-1.12.4.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
