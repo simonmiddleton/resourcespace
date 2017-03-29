@@ -9,7 +9,7 @@ include_once "../include/collections_functions.php";
 $overquota                              = overquota();
 $status                                 = '';
 $resource_type                          = getvalescaped('resource_type', '');
-$collection_add                         = getvalescaped('collection_add', '');
+$collection_add                         = getvalescaped('collection_add', 'false');
 $collectionname                         = getvalescaped('entercolname', '');
 $search                                 = getvalescaped('search', '');
 $offset                                 = getvalescaped('offset', '', true);
@@ -33,7 +33,7 @@ if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_r
 resource_type_config_override($resource_type);
 
 # Create a new collection?
-if ($collection_add==-1 && !$upload_then_edit)
+if ($collection_add=="new" && !$upload_then_edit)
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
@@ -136,7 +136,7 @@ $allowed_extensions="";
 if ($resource_type!="") {$allowed_extensions=get_allowed_extensions_by_type($resource_type);}
 
 
-if ($collection_add!=="")
+if ($collection_add!=="false")
 	{
 	# Switch to the selected collection (existing or newly created) and refresh the frame.
  	set_user_collection($userref,$collection_add);
@@ -527,7 +527,7 @@ if ($_FILES)
                                 }
                             
                             # Add to collection?
-                            if ($collection_add!="")
+                            if ($collection_add!="false")
                                     {
                                     add_resource_to_collection($ref,$collection_add,false,"",$resource_type);
                                     }
@@ -719,7 +719,7 @@ elseif ($upload_no_file && getval("createblank","")!="")
 	{
     $ref=copy_resource(0-$userref);    
 	# Add to collection?
-	if ($collection_add!="")
+	if ($collection_add!="false")
 		{
 		add_resource_to_collection($ref,$collection_add);
 		}
@@ -923,7 +923,7 @@ var pluploadconfig = {
                                   uploader.bind('UploadComplete', function(up, files) {
                                         jQuery('.plupload_done').slideUp('2000', function() {
                                                         uploader.splice();
-                                                        window.location.href='<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo urlencode($userref) ?>&archive=<?php echo urlencode($setarchivestate); if ($setarchivestate == -2 && $pending_submission_prompt_review && $collection_add!="" && checkperm("e-1")){echo "&promptsubmit=true" . "&collection_add=" . $collection_add;} ?>';
+                                                        window.location.href='<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo urlencode($userref) ?>&archive=<?php echo urlencode($setarchivestate); if ($setarchivestate == -2 && $pending_submission_prompt_review && $collection_add!="false" && checkperm("e-1")){echo "&promptsubmit=true" . "&collection_add=" . $collection_add;} ?>';
                                                         
                                         });
                                   });
@@ -1033,7 +1033,7 @@ jQuery(document).ready(function () {
 
 <?php
 # If adding to a collection that has been externally shared, show a warning.
-if ($collection_add!="" && count(get_collection_external_access($collection_add))>0)
+if ($collection_add!="false" && count(get_collection_external_access($collection_add))>0)
     {
     # Show warning.
     ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php
@@ -1232,9 +1232,6 @@ if($upload_no_file)
     }
     ?>    
 
-<?php if ($upload_then_edit) { ?>
-<p><a href="edit.php?ref=<?php echo 0-$userref ?>" onClick="return ModalLoad(this);">&#x25B8;&nbsp;<?php echo $lang["specifydefaultcontent"] ?></a></p>
-<?php } ?>
 
 </div>
 

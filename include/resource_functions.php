@@ -62,7 +62,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	# Also re-index all keywords from indexable fields.
 		
 	global $lang, $auto_order_checkbox, $userresourcedefaults, $multilingual_text_fields,
-           $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$range_separator;
+           $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,
+           $DATE_FIELD_TYPES, $range_separator, $reset_date_field, $reset_date_upload_template;
 
 	hook("befsaveresourcedata", "", array($ref));
 
@@ -318,6 +319,16 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     else 
                         {
                         $val.="-00-00 00:00";
+                        }
+
+                    // Upload template: always reset to today's date, if configured and field is hidden
+                    if(0 > $ref 
+                        && $reset_date_upload_template
+                        && $reset_date_field == $fields[$n]['ref']
+                        && $fields[$n]['hide_when_uploading']
+                    )
+                        {
+                        $val = date('Y-m-d H:i:s');
                         }
                     }
 				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
@@ -1520,14 +1531,13 @@ function update_field($resource, $field, $value, array &$errors = array())
         foreach($newvalues as $newvalue)
             {
             # Check if each new value exists in current options list
-            if('' != $newvalue && !in_array($newvalue,$currentoptions))
+            if('' != $newvalue && !in_array($newvalue, $currentoptions))
                 {
                 # Append the option and update the field
-                //sql_query("update resource_type_field set options=concat(ifnull(options,''), ', " . escape_check(trim($newvalue)) . "') where ref='$field'");
-                $newnode = set_node(null,$field,escape_check(trim($newvalue)),null,null);
-                $nodes_to_add[] = $newnode;
+                $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                $nodes_to_add[]   = $newnode;
+                $currentoptions[] = trim($newvalue);
 
-                $currentoptions[]=trim($newvalue);
                 debug("update_field: field option added: '" . trim($newvalue) . "'<br>");
                 }
             }
@@ -2539,13 +2549,6 @@ function get_alternative_files($resource,$order_by="",$sort="")
 	
 function add_alternative_file($resource,$name,$description="",$file_name="",$file_extension="",$file_size=0,$alt_type='')
 	{
-    global $disable_alternative_files;
-
-    if($disable_alternative_files || (0 < $resource && (!get_resource_access($resource) || checkperm('A'))))
-        {
-        return false;
-        }
-
 	sql_query("insert into resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) values ('$resource','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check($file_size) . "','" . escape_check($alt_type) . "')");
 	return sql_insert_id();
 	}
@@ -4125,11 +4128,9 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 			global $ffmpeg_supported_extensions;
 			if (in_array(strtolower($extension), $ffmpeg_supported_extensions) && function_exists('json_decode'))
 			    {
-			    $ffprobe_fullpath = get_utility_path("ffprobe");
-
 			    $file=get_resource_path($ref,true,"",false,$extension);
-			    $ffprobe_output=run_command($ffprobe_fullpath . " -v 0 " . escapeshellarg($file) . " -show_streams -of json");
-			    $ffprobe_array=json_decode($ffprobe_output, true);
+			    $ffprobe_array=get_video_info($file);
+                
 			    # Different versions of ffprobe store the dimensions in different parts of the json output. Test both.
 			    if (!empty($ffprobe_array['width'] )) { $sw = intval($ffprobe_array['width']);  }
 			    if (!empty($ffprobe_array['height'])) { $sh = intval($ffprobe_array['height']); }
@@ -4219,8 +4220,8 @@ function resource_type_config_override($resource_type)
     {
     # Pull in the necessary config for a given resource type
     # As this could be called many times, e.g. during search result display, only execute if the passed resourcetype is different from the previous.
-    global $resource_type_config_override_last,$resource_type_config_override_snapshot;
-    
+    global $resource_type_config_override_last,$resource_type_config_override_snapshot, $ffmpeg_alternatives;
+
     # If the resource type has changed or if this is the first resource....
     if (!isset($resource_type_config_override_last) || $resource_type_config_override_last!=$resource_type)
         {
@@ -4245,27 +4246,38 @@ function resource_type_config_override($resource_type)
 * 
 * @return void
 */
-function update_archive_status($resource,$archive,$existingstates=array())
+function update_archive_status($resource, $archive, $existingstates = array())
     {
     global $userref;
-    
+
     if(!is_array($resource))
         {
-        $resource=array($resource);
-        $existingstates=array($existingstates);
+        $resource = array($resource);
         }
-            
-    $count=count($resource);
-    for($n=0;$n<$count;$n++)
+
+    if(!is_array($existingstates))
         {
-        if(!is_numeric($resource[$n])){continue;}
-        resource_log($resource[$n],"s",0,"",isset($existingstates[$n])?$existingstates[$n]:'',$archive);    
+        $existingstates = array($existingstates);
         }
-    sql_query("update resource set archive='" . escape_check($archive) .  "' where ref in ('" . implode("','",$resource) . "')");
+
+    $count = count($resource);
+
+    for($n = 0; $n < $count; $n++)
+        {
+        if(!is_numeric($resource[$n]))
+            {
+            continue;
+            }
+
+        resource_log($resource[$n], 's', 0, '', isset($existingstates[$n]) ? $existingstates[$n] : '', $archive);    
+        }
+
+    sql_query("UPDATE resource SET archive = '" . escape_check($archive) .  "' WHERE ref IN ('" . implode("', '", $resource) . "')");
     
     return;
     }
-        
+
+
 function delete_resources_in_collection($collection) {
 
 	global $resource_deletion_state,$userref,$lang;
@@ -4421,4 +4433,13 @@ function resource_file_readonly($ref)
 function delete_resource_custom_user_access($resource,$user)
     {
     sql_query("delete from resource_custom_access where resource='$resource' and user='$user'");
+    }
+
+    
+function get_video_info($file)
+    {
+    $ffprobe_fullpath = get_utility_path("ffprobe");
+    $ffprobe_output=run_command($ffprobe_fullpath . " -v 0 " . escapeshellarg($file) . " -show_streams -of json");
+    $ffprobe_array=json_decode($ffprobe_output, true);
+    return ($ffprobe_array);
     }

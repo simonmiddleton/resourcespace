@@ -214,8 +214,15 @@ function get_resource_data($ref,$cache=true)
                 }
             }
         }
-	$get_resource_data_cache[$ref]=$resource[0];
-	return $resource[0];
+	if (isset($resource[0]))
+		{
+		$get_resource_data_cache[$ref]=$resource[0];
+		return $resource[0];
+		}
+	else
+		{
+		return false;
+		}
 	}
 
 function update_hitcount($ref)

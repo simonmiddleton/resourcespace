@@ -195,7 +195,7 @@ if ($display_user_rating_stars && $star_search){ ?>
 
   <?php if (!hook("replacesimplesearchheader")){?><h2><?php echo $lang["simplesearch"]?></h2><?php } ?>
 
-	<label for="ssearchbox"><?php echo text("searchpanel")?></label>
+	<p><label for="ssearchbox"><?php echo text("searchpanel")?></label></p>
 	
 	<form id="simple_search_form" method="post" action="<?php echo $baseurl?>/pages/search.php" onSubmit="return CentralSpacePost(this,true);">
     <?php

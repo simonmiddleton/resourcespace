@@ -177,3 +177,10 @@ function definitions_get_by_prefix($prefix)
         }
     return $return_definitions;
     }
+
+$h264_profiles=array(
+    "Baseline"=>"242E0",
+    "Main"=>"4D40",
+    "High"=>"6400",
+    "Extended"=>"58A0"    
+    );

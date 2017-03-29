@@ -261,8 +261,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 						continue;
 						}		
 					foreach($cell_values as $cell_actual_value)
-						{		
-						if (count($meta[$field_resource_type][$field_name]['options'])>0 && array_search(trim($cell_actual_value),$meta[$field_resource_type][$field_name]['options'])===false) // there are options but value does not match any of them
+						{
+						// there are options but value does not match any of them
+						if (count($meta[$field_resource_type][$field_name]['options'])>0 && array_search(trim($cell_actual_value),$meta[$field_resource_type][$field_name]['options'])===false)
 							{
 							if($meta[$field_resource_type][$field_name]['type']==9)
 								{
@@ -283,19 +284,17 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 
                 if($processcsv)
                     {
+                    if(is_null($cell_value) || '' == $cell_value)
+                        {
+                        continue;
+                        }
+
                     $cell_value = mb_convert_encoding($cell_value, 'UTF-8');
 
                     // Prefix value with comma as this is required for indexing and rendering selected options
                     if(in_array($meta[$field_resource_type][$field_name]['type'], $FIXED_LIST_FIELD_TYPES) && substr($cell_value, 0, 1) <> ',')
                         {
                         $cell_value = ',' . $cell_value;
-                        }
-
-                    if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $meta[$field_resource_type][$field_name]['type'] && !$update_dynamic_field)
-                        {
-                        array_push($messages, "Skip updating field {$meta[$field_resource_type][$field_name]['remote_ref']} with value '{$cell_value}'");
-
-                        continue;
                         }
 
                     update_field($newref, $meta[$field_resource_type][$field_name]['remote_ref'], $cell_value);

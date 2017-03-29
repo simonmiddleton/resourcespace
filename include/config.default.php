@@ -117,8 +117,8 @@ $ghostscript_executable='gs';
 # $archiver_listfile_argument = "@";
 
 $use_zip_extension=false; //use php-zip extension instead of $archiver or $zipcommand
-$collection_download_tar_size = 100; // Use tar to speed up large collection downloads. Sets the minimum size in MB. Set value to 0 to disable tar downloads
-$collection_download_tar_option=true; // Default option for using tar downloads
+$collection_download_tar_size = 100; // Use tar to speed up large collection downloads. Enter value in MB. Downloads above this size will default to using tar. Set value to 0 to disable tar downloads
+$collection_download_tar_option=false; // Default to using tar downloads for all downloads
 
 /* ---------------------------------------------------
 OTHER PARAMETERS
@@ -483,15 +483,15 @@ $videojs_resolution_selection[0]["label"]="HD";
 $videojs_resolution_selection[0]["name"]="";// 
 $videojs_resolution_selection[1]["label"]="SD";
 $videojs_resolution_selection[1]["name"]="standard";
+*/
 
-# The defaul resolution when using resolution selection. Must use the same value as one of the "lable" settings above
+# The default resolution when using resolution selection. Must use the same
+# Use label from preferred $ffmpeg_hls_streams entry or value as one of the "label" settings from $videojs_resolution_selection. This will be ignored (i.e. set to 'Auto') if $video_preview_hls_support is enabled.
 $videojs_resolution_selection_default_res='HD';
 # dynamicLabel: If true current label will be displayed in control bar. If false gear icon is displayed.
 $videojs_resolution_selection_dynamicLabel=false;
-*/
 
-
-# Create a preview video for ffmpeg compatible files? A FLV (Flash Video) file will automatically be produced for supported file types (most video types - AVI, MOV, MPEG etc.)
+# Create a standard preview video for ffmpeg compatible files? A FLV (Flash Video) file will automatically be produced for supported file types (most video types - AVI, MOV, MPEG etc.)
 /* Examples of preview options to convert to different types (don't forget to set the extension as well):
 * MP4: $ffmpeg_preview_options = '-f mp4 -ar 22050 -b 650k -ab 32k -ac 1';
 */
@@ -500,9 +500,50 @@ $ffmpeg_preview_seconds=120; # how many seconds to preview
 $ffmpeg_preview_extension="flv";
 $ffmpeg_preview_min_width=32;
 $ffmpeg_preview_min_height=18;
-$ffmpeg_preview_max_width=480;
-$ffmpeg_preview_max_height=270;
+$ffmpeg_preview_max_width=700;
+$ffmpeg_preview_max_height=394;
 $ffmpeg_preview_options="-f flv -ar 22050 -b 650k -ab 32k -ac 1";
+
+# HLS SUPPORT
+# Option to generate HTTP Live Streaming (HLS) compatible previews separate sections with an m3u8 playlist to support adaptive bitrate streaming). 
+# Requires $videojs to be enabled
+# Please test if compatible with your target browsers before enabling. A sample video is at https://videojs.github.io/videojs-contrib-hls/ 
+# 0 = no HLS support
+# 1 = Create HLS previews
+# 2 = Create both HLS and standard preview for incompatible clients to use (this option will take up more disk space)
+$video_preview_hls_support=0; 
+$video_preview_player_hls=0; 
+$video_hls_preview_options=" -ar 22050 -ac 1 -hls_list_size 0 -hls_time 5 ";
+
+# Set the following to configure the HLS preview streams (variants) that will be generated.
+# There is a lot of online advice on recommended variants and these should be adjusted depending on your expected client capabilities
+# Be aware when adding extra variants that these will take up more disk space
+# 
+# Array keys as follows:-
+# 'label' - How the stream will appear if the resolution switcher is enabled
+# 'id' - unique code for the stream  - keep this lower case with only letters as per preview size codes
+# 'resolution'  - desired resolution as WIDTHxHEIGHT e.g. 320x180. Leave as '' to match resolution of resource 
+# 'bitrate'  - desired video bitrate in kb/s of stream
+# 'audio_bitrate'  - desired audio bitrate in kb/s of stream
+
+$video_hls_streams[0]["label"]="Low";
+$video_hls_streams[0]["id"]="lo";
+$video_hls_streams[0]["resolution"]="320x180";
+$video_hls_streams[0]["bitrate"]="140";
+$video_hls_streams[0]["audio_bitrate"]="32";
+
+$video_hls_streams[1]["label"]="SD";
+$video_hls_streams[1]["id"]="sd";
+$video_hls_streams[1]["resolution"]="768x432";
+$video_hls_streams[1]["bitrate"]="1200";
+$video_hls_streams[1]["audio_bitrate"]="128";
+
+$video_hls_streams[2]["label"]="HQ";
+$video_hls_streams[2]["id"]="hi";
+$video_hls_streams[2]["resolution"]="";
+$video_hls_streams[2]["bitrate"]="2000";
+$video_hls_streams[2]["audio_bitrate"]="256";
+
 # ffmpeg_global_options: options to be applied to every ffmpeg command. 
 #$ffmpeg_global_options = "-loglevel panic"; # can be used for recent versions of ffmpeg when verbose output prevents run_command completing
 #$ffmpeg_global_options = "-v panic"; # use for older versions of ffmpeg  as above
@@ -3154,8 +3195,8 @@ $actions_resource_requests=true;
 $actions_account_requests=true;
 $actions_resource_review=true;
 $actions_notify_states="-1";
-$actions_resource_types="";
-$actions_approve_groups="";
+$actions_resource_types_hide="";  // Resource types to exclude from notifications
+$actions_approve_hide_groups=""; // Groups to exclude from notifications
 
 # Separator to use when rendering date range field values
 $range_separator = " / ";

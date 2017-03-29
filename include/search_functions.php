@@ -956,7 +956,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			$filterblockstates .= $additional_archive_state;
 			}
 	    }
-	
 	if ($filterblockstates!=""&&!$access_override)
 	    {
 	    if ($uploader_view_override)
@@ -1021,15 +1020,18 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 				}
 			}
 
-		// Add code to hide resources in archive<0 unless contributed by user or has ert permission		
-		if ($sql_filter!="") {$sql_filter.=" and ";}
-		$sql_filter.="(archive not in (-2,-1) or (created_by='" . $userref . "' ";
-		if(count($rtexclusions)>0)
+		// Add code to hide resources in archive<0 unless has 't' permission, resource has been contributed by user or has ert permission		
+		if(!checkperm("t"))
 			{
-			$sql_filter .= " or resource_type in (" . implode(",",$rtexclusions) . ")";				
-			}
-		$sql_filter .= "))";
-			
+			if ($sql_filter!="") {$sql_filter.=" and ";}
+			$sql_filter.="(archive not in (-2,-1) or (created_by='" . $userref . "' ";
+			if(count($rtexclusions)>0)
+				{
+				$sql_filter .= " or resource_type in (" . implode(",",$rtexclusions) . ")";				
+				}
+			$sql_filter .= "))";
+			}	
+				
 		if ($blockeditstates!="")
 			{
 			$blockeditoverride="";
@@ -1046,8 +1048,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			if ($sql_filter!="") {$sql_filter.=" and ";}
 			$sql_filter.="(archive not in ('$blockeditstates')" . (($blockeditoverride!="")?" or " . $blockeditoverride:"") . ")";
 			
-			}
-			
+			}			
 		}
 
 	return $sql_filter;

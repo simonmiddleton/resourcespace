@@ -1319,6 +1319,7 @@ function add_saved_search_items($collection)
 		}
 	$results=do_search(getvalescaped("addsearch",""), getvalescaped("restypes",""), "relevance", $archivesearch,-1,'',false,getvalescaped("starsearch",""),false,false,getvalescaped("daylimit",""));
 
+	if(!is_array($results) || count($results)==0){return false;}
 	# Check if this collection has already been shared externally. If it has, we must add a further entry
 	# for this specific resource, and warn the user that this has happened.
 	$keys=get_collection_external_access($collection);
