@@ -131,8 +131,26 @@ if (hook("replacetranscode","",array($file,$targetfile,$ffmpeg_global_options,$f
 		foreach ($video_hls_streams as $video_hls_stream)
 			{
 			$hlsfile=get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative);
-			if($video_hls_stream["resolution"]==""){$video_hls_stream["resolution"]= $width . "x" . $height;}
-			$shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " $ffmpeg_hls_preview_options -b " . $video_hls_stream["bitrate"] . "k -ab " . $video_hls_stream["audio_bitrate"] . "k -t $ffmpeg_preview_seconds -s " . $video_hls_stream["resolution"] . " " . escapeshellarg($hlsfile);
+			if($video_hls_stream["resolution"]==""){$hlswidth= $width;$hlsheight=$height;}
+			else
+			  {
+			  $tgt_res=explode("x",$video_hls_stream["resolution"]);
+			  $hlswidth=$tgt_res[0];
+			  $hlsheight=$tgt_res[1];
+			  $aspect_ratio=$width/$height;
+			  if($hlswidth/$hlsheight > $aspect_ratio)
+				  {
+				  $hlswidth=floor($hlsheight*$aspect_ratio);
+				  }
+			  elseif($hlswidth/$hlsheight < $aspect_ratio)
+				  {
+				  $hlsheight=floor($hlswidth/$aspect_ratio);
+				  }
+			  # Frame size must be a multiple of two
+			  if ($hlswidth % 2){$hlswidth++;}
+			  if ($hlsheight % 2) {$hlsheight++;}
+			  }
+			$shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " $ffmpeg_hls_preview_options -b " . $video_hls_stream["bitrate"] . "k -ab " . $video_hls_stream["audio_bitrate"] . "k -t $ffmpeg_preview_seconds -s " .  $hlswidth . "x" . $hlsheight . " " . escapeshellarg($hlsfile);
 			if (isset($ffmpeg_command_prefix))
 			{$shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;}
 
