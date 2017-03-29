@@ -9,7 +9,7 @@ include_once "../include/collections_functions.php";
 $overquota                              = overquota();
 $status                                 = '';
 $resource_type                          = getvalescaped('resource_type', '');
-$collection_add                         = getvalescaped('collection_add', 'false');
+$collection_add                         = $enable_add_collection_on_upload?getvalescaped('collection_add', 'false'):"false";
 $collectionname                         = getvalescaped('entercolname', '');
 $search                                 = getvalescaped('search', '');
 $offset                                 = getvalescaped('offset', '', true);
