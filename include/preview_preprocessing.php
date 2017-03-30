@@ -597,9 +597,9 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
                 }
             }
 
-        // Generate snapshots for the whole video
+        // Generate snapshots for the whole video (not for alternatives)
         // Custom target used ONLY for captured snapshots during the video
-        if(1 < $ffmpeg_snapshot_frames)
+        if(1 < $ffmpeg_snapshot_frames && $alternative==-1)
             {
             $frame_rate     = '1/' . ceil($duration / $ffmpeg_snapshot_frames);
             $snapshot_scale = '';

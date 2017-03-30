@@ -1188,13 +1188,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		# Set thumbonly=true to (re)generate thumbnails only.
 		if($previewbased || ($autorotate_no_ingest && !$ingested))
 			{
-			$file=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,""); 
+			$file=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative); 
 			if (!file_exists($file))
 				{
-				$file=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"");		
+				$file=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative);		
 				if (!file_exists($file))
 					{
-					$file=get_resource_path($ref,true,"pre",false,"jpg",-1,1,false,"");		
+					$file=get_resource_path($ref,true,"pre",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative);		
 					/* staged, but not needed in testing
 					if(!file_exists($file) && $autorotate_no_ingest && !$ingested)
 						{
@@ -1431,7 +1431,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				# EXPERIMENTAL CODE TO USE EXISTING ICC PROFILE IF PRESENT
 				global $icc_extraction, $icc_preview_profile, $icc_preview_options,$ffmpeg_supported_extensions;
 				if ($icc_extraction){
-					$iccpath = get_resource_path($ref,true,'',false,$extension).'.icc';
+					$iccpath = get_resource_path($ref,true,'',false,$extension,-1,1,false,"",$alternative).'.icc';
 					if (!file_exists($iccpath) && !isset($iccfound) && $extension!="pdf" && !in_array($extension,$ffmpeg_supported_extensions)) {
 						// extracted profile doesn't exist. Try extracting.
 						if (extract_icc_profile($ref,$extension)){
@@ -2724,13 +2724,14 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
  * @param $resource array|integer Resource array or resource ID to delete preview files for
  *
  */	
-function delete_previews($resource)
+function delete_previews($resource,$alternative=-1)
 	{
 	global $ffmpeg_preview_extension;
 	
 	// If a resource array has been passed we already have the extensions
 	if(is_array($resource))
 		{
+		$resource_data=$resource;
 		$extension=$resource["file_extension"];
 		$resource=$resource["ref"];
 		}
@@ -2740,7 +2741,7 @@ function delete_previews($resource)
 		$extension=$resource_data["file_extension"];
 		}
 	
-	$fullsizejpgpath=get_resource_path($resource,true,"",false,"jpg",-1,1,false,"",-1);			
+	$fullsizejpgpath=get_resource_path($resource,true,"",false,"jpg",-1,1,false,"",$alternative);			
 	# Delete the full size original if not a JPG resource
 	if($extension!="" && strtolower($extension)!="jpg" && file_exists($fullsizejpgpath))
 		{
@@ -2752,10 +2753,17 @@ function delete_previews($resource)
 
 	$presizes=sql_array("select id value from preview_size");
 	$presizes[]="snapshot"; // To include any video snapshots
-	
+	$pagecount=get_page_count($resource_data,$alternative);
 	foreach($presizes as $presize)
 		{
-		array_map('unlink', glob($resourcefolder . "/" . $resource . $presize . "*"));
+		for($page=1;$page<=$pagecount;$page++)
+			{
+			$previewpath=get_resource_path($resource,true,$presize,false,"jpg",-1,$page,false,"",$alternative);
+			if(file_exists($previewpath))
+				{
+				unlink($previewpath);
+				}
+			}
 		}
 	}
 
