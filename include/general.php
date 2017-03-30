@@ -1530,6 +1530,7 @@ function auto_create_user_account($hash="")
 	# Prepare to create the user.
 	$email=trim(getvalescaped("email","")) ;
 	$password=make_password();
+	$password = hash('sha256', md5('RS' . $newusername . $password));
 
 	# Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
 	$approve=false;
