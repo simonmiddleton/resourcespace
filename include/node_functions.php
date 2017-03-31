@@ -405,6 +405,56 @@ function reorder_node(array $nodes_new_order)
 
 
 /**
+* Virtually re-order nodes
+* 
+* Temporarily re-order nodes (mostly) for display purposes
+* 
+* 
+* @param array $unordered_nodes Original nodes array
+* 
+* @return array
+*/
+function reorder_nodes(array $unordered_nodes)
+    {
+    // Put $auto_order_checkbox and $auto_order_checkbox_case_insensitive as global 
+    // to future proof function for when we will drop globals for easier refactoring
+    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive;
+
+    $reordered_options = array();
+    $use_index_key     = array();
+    foreach($unordered_nodes as $unordered_node_index => $node)
+        {
+        $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
+        $use_index_key[$node['ref']]     = ($unordered_node_index == $node['ref']);
+        }
+
+    if(isset($auto_order_checkbox) && $auto_order_checkbox && $auto_order_checkbox_case_insensitive)
+        {
+        natcasesort($reordered_options);
+        }
+    else
+        {
+        natsort($reordered_options);
+        }
+
+    $reordered_nodes = array();
+    foreach($reordered_options as $reordered_node_id => $reordered_node_option)
+        {
+        if(!$use_index_key[$reordered_node_id])
+            {
+            $reordered_nodes[$reordered_node_id] = $unordered_nodes[array_search($reordered_node_id, array_column($unordered_nodes, 'ref'))];
+            }
+        else
+            {
+            $reordered_nodes[$reordered_node_id] = $unordered_nodes[array_search($reordered_node_id, array_column($unordered_nodes, 'ref', 'ref'))];
+            }
+        }
+
+    return $reordered_nodes;
+    }
+
+
+/**
 * Renders HTML for adding a new node record in the database
 *
 * @param  string   $form_action          Set the action path of the form

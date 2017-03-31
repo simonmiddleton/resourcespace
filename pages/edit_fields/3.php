@@ -15,33 +15,10 @@ if(!isset($selected_nodes))
         }
     }
 
-##### Reordering options #####
-$reordered_options = array();
-foreach($field['nodes'] as $node)
+if((bool) $field['automatic_nodes_ordering'])
     {
-    $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
+    $field['nodes'] = reorder_nodes($field['nodes']);
     }
-
-if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
-    {
-    if($auto_order_checkbox_case_insensitive)
-        {
-        natcasesort($reordered_options);
-        }
-    else
-        {
-        asort($reordered_options);
-        }
-    }
-
-$new_node_order = array();
-foreach($reordered_options as $reordered_node_id => $reordered_node_option)
-    {
-    $new_node_order[$reordered_node_id] = $field['nodes'][array_search($reordered_node_id, array_column($field['nodes'], 'ref', 'ref'))];
-    }
-
-$field['nodes'] = $new_node_order;
-##### End of reordering options #####
 ?>
 <select class="stdwidth"
         name="<?php echo $name; ?>"
