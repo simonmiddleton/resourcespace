@@ -1688,19 +1688,31 @@ function <?php echo $context ?>UpdateFSResultCount()
 <input type="hidden" name="countonly" id="<?php echo $context ?>countonly" value="">
 <?php
 $keywords=get_resource_top_keywords($ref,50);
-for ($n=0;$n<count($keywords);$n++)
+if (count($keywords)!=0)
 	{
-	?>
-	<div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n])?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
-	onClick="<?php echo $context ?>UpdateFSResultCount();"><label for="similar_search_<?php echo urlencode($keywords[$n])?>">&nbsp;<?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
-	<?php
+		for ($n=0;$n<count($keywords);$n++)
+			{
+			?>
+			<div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n])?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
+			onClick="<?php echo $context ?>UpdateFSResultCount();"><label for="similar_search_<?php echo urlencode($keywords[$n])?>">&nbsp;<?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
+			<?php
+			}
+	
+		?>
+		<div class="clearerleft"> </div>
+		<br />
+		<input name="search" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
+		<iframe src="<?php echo $baseurl_short?>pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
+		</form>
+		<?php
 	}
-?>
-<div class="clearerleft"> </div>
-<br />
-<input name="search" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
-<iframe src="<?php echo $baseurl_short?>pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
-</form>
+	
+else
+	{
+	echo $lang["nosimilarresources"];	
+	}
+	?>
+
 <div class="clearerleft"> </div>
 </div>
 </div>
