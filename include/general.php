@@ -397,7 +397,7 @@ function get_resource_top_keywords($resource,$count)
 	
 	$keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (1,5,6,8,10,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
     
-    $fixed_dynamic_keywords = sql_query("select distinct n.ref, n.name, n.resource_type_field from node n inner join resource_node rn on n.ref=rn.node where rn.resource='$resource' order by new_hit_count desc limit $count");
+    $fixed_dynamic_keywords = sql_query("select distinct n.ref, n.name, n.resource_type_field from node n inner join resource_node rn on n.ref=rn.node where (rn.resource='$resource' and n.resource_type_field in (select rtf.ref from resource_type_field rtf where use_for_similar=1) ) order by new_hit_count desc limit $count");
     
     $combined = array_merge($keywords,$fixed_dynamic_keywords);
     
@@ -1530,6 +1530,7 @@ function auto_create_user_account($hash="")
 	# Prepare to create the user.
 	$email=trim(getvalescaped("email","")) ;
 	$password=make_password();
+	$password = hash('sha256', md5('RS' . $newusername . $password));
 
 	# Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
 	$approve=false;

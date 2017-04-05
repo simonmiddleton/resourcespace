@@ -18,21 +18,25 @@ $page_def[] = config_add_file_input(
     $baseurl . '/pages/admin/admin_system_config.php',
     420
 );
-
+$page_def[] = config_add_file_input(
+    'header_favicon',
+    $lang['systemconfig_header_favicon_label'],
+    $baseurl . '/pages/admin/admin_system_config.php',
+    420
+);
 $page_def[] = config_add_single_select(
     'header_size',
     $lang['userpreference_headersize'],
     array(
         'HeaderSmall' => $lang['headersmall'],
-        'HeaderMid'      => $lang['headermid'],
-        'HeaderLarge'    => $lang['headerlarge']
+        'HeaderMid'   => $lang['headermid'],
+        'HeaderLarge' => $lang['headerlarge']
     ),
     true,
     420,
     '',
     true,"jQuery('#Header').removeClass('HeaderSmall');jQuery('#Header').removeClass('HeaderMid');jQuery('#Header').removeClass('HeaderLarge');jQuery('#Header').addClass(this.value);"
 );
-
 $page_def[] = config_add_colouroverride_input(
     'header_colour_style_override',
     $lang["setup-headercolourstyleoverride"],
@@ -41,7 +45,6 @@ $page_def[] = config_add_colouroverride_input(
     true,
     "jQuery('#Header').css('background',value);"
 );
-
 $page_def[] = config_add_colouroverride_input(
     'header_link_style_override',
     $lang["setup-headerlinkstyleoverride"],
@@ -50,7 +53,6 @@ $page_def[] = config_add_colouroverride_input(
     true,
     "jQuery('#HeaderNav1 a').css('color',value);jQuery('#HeaderNav2 a').css('color',value);jQuery('#HeaderNav2 li').css('border-color', value);"
 );
-
 $page_def[] = config_add_text_input('email_from', $lang['setup-emailfrom'], false, 420, false, '', true);
 $page_def[] = config_add_text_input('email_notify', $lang['setup-emailnotify'], false, 420, false, '', true);
 $page_def[] = config_add_html('</div>');
@@ -140,6 +142,7 @@ $page_def[] = config_add_html('</div>');
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="SystemConfigUserInterfaceSection" class="CollapsibleSection">');
 $page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['showthumbnails'], 'hide' => $lang['hidethumbnails']), true, 420, '', true);
 $page_def[] = config_add_boolean_select('resource_view_modal', $lang['userpreference_resource_view_modal_label'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_boolean_select('modal_default', $lang['systemconfig_modal_default'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('basic_simple_search', $lang['userpreference_basic_simple_search_label'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('comments_resource_enable', $lang['systemconfig_comments'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_single_select('upload_then_edit', $lang['default_upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 420, '', true);
@@ -150,6 +153,7 @@ $page_def[] = config_add_html('</div>');
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_workflow'] . '</h3><div id="SystemConfigWorkflowSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('research_request', $lang['researchrequest'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
+
 
 // Actions section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['actions'] . '</h3><div id="SystemConfigActionsSection" class="CollapsibleSection">');

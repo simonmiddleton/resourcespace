@@ -81,10 +81,10 @@ if(isset($videojs_resolution_selection))
 	// Add in each version of the hls stream
 	foreach ($video_hls_streams as $video_hls_stream)
 		{
-		$hlsfile=get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8");
+		$hlsfile=get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative,false);
 		if(file_exists($hlsfile))
 			{
-			$hlsurl=get_resource_path($ref,false,"pre_" . $video_hls_stream["id"],false,"m3u8");
+			$hlsurl=get_resource_path($ref,false,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative,false);
 			$video_preview_sources[$vidindex]["url"]=$hlsurl;
 			$video_preview_sources[$vidindex]["type"]="application/x-mpegURL";
 			$video_preview_sources[$vidindex]["label"]=i18n_get_translated($video_hls_stream['label']);
