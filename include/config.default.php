@@ -3225,3 +3225,21 @@ $resource_type_extension_mapping         = array(
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
 
+
+#######################################
+########################## Annotations:
+#######################################
+// Ability to annotate images or documents previews.
+// Annotations are linked to nodes, the user needs to specify which field a note is bind to.
+$annotate_enabled = false;
+
+// Specify which fields can be used to bind to annotations
+$annotate_fields = array();
+
+// The user can see existing annotations in read-only mode
+$annotate_read_only = false;
+
+// When using anonymous users, set to TRUE to allow anonymous users to add/ edit/ delete annotations
+$annotate_crud_anonymous = false;
+#######################################
+#######################################

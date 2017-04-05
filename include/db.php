@@ -1767,16 +1767,24 @@ function show_pagetime(){
 	echo $total_time." sec";
 }
 
-/*
- * Permissions Functions
- * Each function encapsulates a more complex combination of permissions
- *
+
+/**
+ * Returns whether a user is anonymous or not
+ * 
+ * @return boolean
  */
 function checkPermission_anonymoususer()
-	{
-	global $anonymous_login,$username;
-	return (isset($anonymous_login) && $anonymous_login==$username);
-	}
+    {
+    global $baseurl, $anonymous_login, $username;
+
+    return (
+        isset($anonymous_login)
+        && (
+            (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
+            || (is_array($anonymous_login) && array_key_exists($baseurl, $anonymous_login) && $anonymous_login[$baseurl] == $username)
+            )
+        );
+    }
 
 
 # Dash Permissions

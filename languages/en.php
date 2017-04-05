@@ -735,6 +735,7 @@ $lang["action"]="Action";
 $lang["treeobjecttype-field"]=$lang["field"]="Field";
 $lang["save"]="Save";
 $lang["revert"]="Revert";
+$lang['continue'] = 'Continue';
 $lang["cancel"]="Cancel";
 $lang["view"]="View";
 $lang["type"]="Type";
@@ -2594,3 +2595,8 @@ $lang["default_upload_sequence"]="Default upload sequence";
 $lang["upload_first_then_set_metadata"]="Upload first, then set metadata";
 $lang["set_metadata_then_upload"]="Set metadata first, then upload";
 
+
+/* Annotations */
+$lang['annotate_text_link_label'] = 'Annotate mode toggle';
+$lang['annotate_annotation_label'] = 'Annotation';
+$lang['annotate_annotations_label'] = 'Annotations';

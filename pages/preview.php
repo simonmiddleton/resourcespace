@@ -7,7 +7,8 @@ $k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",
 
 include "../include/search_functions.php";
 include_once "../include/collections_functions.php";
-include "../include/resource_functions.php";
+include_once '../include/resource_functions.php';
+include_once '../include/annotation_functions.php';
 
 # Save Existing Thumb Cookie Status Then Hide the collection Bar 
 # - Restores Status on Unload (See Foot of page)
@@ -155,8 +156,19 @@ include "../include/header.php";
 <?php if (!checkperm("b") && !(($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size) && !in_array($resource["resource_type"],$collection_block_restypes)) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php echo add_to_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;<?php echo $lang["action-addtocollection"]?></a><?php } ?>
-<?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-minus-circle"></i>&nbsp;<?php echo $lang["action-removefromcollection"]?></a><?php } ?>
-<?php } ?>
+<?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-minus-circle"></i>&nbsp;<?php echo $lang["action-removefromcollection"]?></a><?php }
+
+if($annotate_enabled)
+    {
+    ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#" onclick="toggleAnnotationsOption(this); return false;">
+        <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
+        <span><?php echo $lang['annotate_text_link_label']; ?></span>
+    </a>
+    <?php
+    }
+}
+?>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/preview.php?from=<?php echo urlencode(getval("from",""))?>&ref=<?php echo urlencode($ref) ?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&go=previous&<?php echo hook("nextpreviousextraurl") ?>" title="<?php echo $lang["previousresult"]?>"></a>
@@ -213,24 +225,33 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
 	elseif ($use_mp3_player && file_exists($mp3realpath) && hook("custommp3player")){
 		// leave player to place image
 		}	
-    else{?>
-
-
-<?php if (!hook("replacepreviewimage")) { ?> 
-<td><a onClick="return CentralSpaceLoad(this);" href="<?php echo ((getval("from","")=="search")?$baseurl_short."pages/search.php?":$baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&")?>search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>"><img class="Picture" src="<?php echo $url?>" alt=""/></a><?php hook('afterpreviewimage'); ?></td>
-<?php } // end hook replacepreviewimage ?> 
-
-
-<?php } ?>
-
+    else
+        {
+        if(!hook('replacepreviewimage'))
+            {
+            ?>
+            <td>
+                <a onClick="return CentralSpaceLoad(this);" href="<?php echo ((getval("from","")=="search")?$baseurl_short."pages/search.php?":$baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&")?>search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>">
+                    <img id="PreviewImageLarge" class="Picture" src="<?php echo $url; ?>" alt=""/>
+                </a>
+                <?php
+                hook('afterpreviewimage');
+                ?>
+            </td>
+            <?php
+            } // end hook replacepreviewimage 
+        }
+        ?>
 <td valign="middle"><?php if ($nextpage!=-1 && resource_download_allowed($ref,"scr",$resource["resource_type"]) || $use_watermark) { ?><a onClick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>&ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&page=<?php echo urlencode($nextpage)?>" class="PDFnav pageNext">&gt;</a><?php } ?></td>
 </tr></table>
 
 <?php } // end hook previewimage2 ?>
 <?php } // end hook previewimage ?>
 
-<?php
 
+
+
+<?php
 if ($show_resource_title_in_titlebar){
 	$title =  htmlspecialchars(i18n_get_translated(get_data_by_field($ref,$view_title_field)));
 	if (strlen($title) > 0){
@@ -239,6 +260,98 @@ if ($show_resource_title_in_titlebar){
 		echo "</script>";
 	}
 }
+
+if($annotate_enabled)
+    {
+    ?>
+    <!-- Annotorious -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.min.js"></script>
+
+    <!-- Annotorious plugin(s) -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <!-- End of Annotorious -->
+
+    <script>
+    var rs_tagging_plugin_added = false;
+
+    function toggleAnnotationsOption(element)
+        {
+        var option             = jQuery(element);
+        var preview_image      = jQuery('#PreviewImageLarge');
+        var preview_image_link = preview_image.parent();
+        var img_copy_id        = 'previewimagecopy';
+        var img_src            = preview_image.attr('src');
+
+        // Setup Annotorious (has to be done only once)
+        if(!rs_tagging_plugin_added)
+            {
+            anno.addPlugin('RSTagging',
+                {
+                annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
+                nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
+                resource            : <?php echo (int) $ref; ?>,
+                read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>,
+                // First page of a document is exactly the same as the preview
+                page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>
+                });
+
+            rs_tagging_plugin_added = true;
+
+            // We have to wait for initialisation process to finish as this does ajax calls
+            // in order to set itself up
+            setTimeout(function ()
+                {
+                toggleAnnotationsOption(element);
+                }, 
+                1000);
+
+            return false;
+            }
+
+        if(img_src.indexOf('?') != -1)
+            {
+            img_src = img_src.substring(0, img_src.indexOf('?'));
+            }
+
+        // Feature enabled? Then disable it.
+        if(option.hasClass('Enabled'))
+            {
+            anno.destroy(img_src);
+
+            // Remove the copy and show the linked image again
+            jQuery('#' + img_copy_id).remove();
+            preview_image_link.show();
+
+            toggleMode(element);
+
+            return false;
+            }
+
+        // Enable feature
+        // Hide the linked image for now and use a copy of it to annotate
+        var preview_image_copy = preview_image.clone(true);
+        preview_image_copy.prop('id', img_copy_id);
+        preview_image_copy.prop('src', img_src);
+        preview_image_copy.appendTo(preview_image_link.parent());
+        preview_image_link.hide();
+
+        anno.makeAnnotatable(document.getElementById(img_copy_id));
+
+        toggleMode(element);
+
+        return false;
+        }
+
+
+    function toggleMode(element)
+        {
+        jQuery(element).toggleClass('Enabled');
+        }
+    </script>
+    <?php
+    }
 
 include "../include/footer.php";
 ?>

@@ -344,7 +344,7 @@ div.MessageBox a {
 }
 UL.jqueryFileTree A {color:#000;background-color:initial;}
 UL.jqueryFileTree A:hover {background-color:initial !important;}
-#previewimage { border: 1px solid #CCC; }
+#previewimage, #previewimagecopy { border: 1px solid #CCC; }
 
 /* chosen collection div */
 #CollectionDiv #MinColDrop .chosen-single:hover, #CollectionDiv #colselect .chosen-single:hover {color:#444;}
@@ -360,4 +360,3 @@ input:checked + .customFieldLabel, .keywordselected
   {
   background-color: #ccc;
   }
-

@@ -669,68 +669,239 @@ elseif ($resource['file_extension']=="swf" && $display_swf){
 		</div><?php
 		}
 	}
-elseif ($resource["has_image"]==1)
-	{
-	$use_watermark=check_use_watermark();
-	$imagepath=get_resource_path($ref,true,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
-	if (!file_exists($imagepath))
-		{
-		$imageurl=get_resource_path($ref,false,"thm",false,$resource["preview_extension"],-1,1,$use_watermark);
-		}
-	else
-		{
-		$imageurl=get_resource_path($ref,false,($retina_mode?"scr":"pre"),false,$resource["preview_extension"],-1,1,$use_watermark);
-		}
-	
-	?>
-	<div id="previewimagewrapper"><a style="position:relative;" class="enterLink" id="previewimagelink" href="<?php echo generateURL($baseurl_short . "pages/preview.php",$urlparams,array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>" title="<?php echo $lang["fullscreenpreview"]?>">
-	<?php
-	if (file_exists($imagepath))
-		{ 
-		?><img src="<?php echo $imageurl?>" alt="<?php echo $lang["fullscreenpreview"]?>" class="Picture" GALLERYIMG="no" id="previewimage"
-		<?php if ($retina_mode) { ?>onload="this.width/=1.8;this.onload=null;"<?php } ?>											   
-		/><?php 
-		} 
-	?><?php hook("aftersearchimg","",array($ref))?></a><?php
-	if(isset($previewcaption))
-		{
-		echo "<div class=\"clearerleft\"> </div>";	
-		@list($pw) = @getimagesize($imagepath);
-		display_field_data($previewcaption, true, $pw);
-		}
-	hook("previewextras");
-	?></div><?php 
-	if ($image_preview_zoom)
-		{ 
-		$previewurl=get_resource_path($ref,false,"scr",false,$resource["preview_extension"],-1,1,$use_watermark);		
-		?>
-		<script>
-		jQuery(document).ready(function(){
-			jQuery('#previewimage')
-			        .wrap('<span style="display:inline-block"></span>')
-			        .css('display', 'block')
-			        .parent()
-			        .zoom({url: '<?php echo $previewurl ?>' });
-			});
-		</script>
-		<?php
-		}
-	}
-else
-	{
-	?>
-	<div id="previewimagewrapper">
-	<img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture" style="border:none;" id="previewimage" />
-	<?php
-	if(isset($previewcaption))
-		{	
-		echo "<div class=\"clearerleft\"> </div>";	
-		display_field_data($previewcaption, true);
-		}
-	hook("previewextras");
-	?></div><?php	
-	}
+else if(1 == $resource['has_image'])
+    {
+    $use_watermark = check_use_watermark();
+    $imagepath     = get_resource_path($ref, true, 'pre', false, $resource['preview_extension'], -1, 1, $use_watermark);
 
+    if(!file_exists($imagepath))
+        {
+        $imageurl = get_resource_path($ref, false, 'thm', false, $resource['preview_extension'], -1, 1, $use_watermark);
+        }
+    else
+        {
+        $imageurl = get_resource_path($ref, false, ($retina_mode ? 'scr' : 'pre'), false, $resource['preview_extension'], -1, 1, $use_watermark);
+        }
+        ?>
+    <div id="previewimagewrapper">
+        <a id="previewimagelink"
+           class="enterLink"
+           href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams, array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>"
+           title="<?php echo $lang["fullscreenpreview"]; ?>"
+           style="position:relative;">
+    <?php
+    if(file_exists($imagepath))
+        {
+        ?>
+        <img id="previewimage"
+             class="Picture"
+             src="<?php echo $imageurl; ?>" 
+             alt="<?php echo $lang['fullscreenpreview']; ?>" 
+             GALLERYIMG="no"
+        <?php 
+        if($retina_mode)
+            {
+            ?>
+             onload="this.width/=1.8;this.onload=null;"
+            <?php
+            }
+            ?>/>
+        <?php 
+        }
+
+    hook('aftersearchimg', '', array($ref));
+    ?>
+        </a>
+    <?php
+    if(isset($previewcaption))
+        {
+        ?>
+        <div class="clearerleft"></div>
+        <?php
+        @list($pw) = @getimagesize($imagepath);
+
+        display_field_data($previewcaption, true, $pw);
+        }
+
+    hook('previewextras');
+
+    if(canSeePreviewTools($edit_access))
+        {
+    	if($annotate_enabled)
+    		{
+			include_once '../include/annotation_functions.php';
+    		}
+        	?>
+        <!-- Available tools to manipulate previews -->
+        <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
+            <div id="PreviewToolsOptionsWrapper" class="Hidden">
+            <?php
+            if($annotate_enabled)
+                {
+                ?>
+                <a class="ToolsOptionLink" href="#" onclick="toggleAnnotationsOption(this); return false;">
+                    <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
+                </a>
+                <script>
+                var rs_tagging_plugin_added = false;
+
+                function toggleAnnotationsOption(element)
+                    {
+                    var option             = jQuery(element);
+                    var preview_image      = jQuery('#previewimage');
+                    var preview_image_link = jQuery('#previewimagelink');
+                    var img_copy_id        = 'previewimagecopy';
+                    var img_src            = preview_image.attr('src');
+
+                    // Setup Annotorious (has to be done only once)
+                    if(!rs_tagging_plugin_added)
+                        {
+                        anno.addPlugin('RSTagging',
+                            {
+                            annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
+                            nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
+                            resource            : <?php echo (int) $ref; ?>,
+                            read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>
+                            });
+
+                        rs_tagging_plugin_added = true;
+
+                        // We have to wait for initialisation process to finish as this does ajax calls
+                        // in order to set itself up
+                        setTimeout(function ()
+                            {
+                            toggleAnnotationsOption(element);
+                            }, 
+                            1000);
+
+                        return false;
+                        }
+
+                    if(img_src.indexOf('?') != -1)
+                        {
+                        img_src = img_src.substring(0, img_src.indexOf('?'));
+                        }
+
+                    // Feature enabled? Then disable it.
+                    if(option.hasClass('Enabled'))
+                        {
+                        anno.destroy(img_src);
+
+                        // Remove the copy and show the linked image again
+                        jQuery('#' + img_copy_id).remove();
+                        preview_image_link.show();
+
+                        toggleMode(element);
+
+                        return false;
+                        }
+
+                    // Enable feature
+                    // Hide the linked image for now and use a copy of it to annotate
+                    var preview_image_copy = preview_image.clone(true);
+                    preview_image_copy.prop('id', img_copy_id);
+                    preview_image_copy.prop('src', img_src);
+                    preview_image_copy.appendTo(preview_image_link.parent());
+                    preview_image_link.hide();
+
+                    anno.makeAnnotatable(document.getElementById(img_copy_id));
+
+                    toggleMode(element);
+
+                    return false;
+                    }
+                </script>
+                <?php
+                }
+
+            if($image_preview_zoom)
+                {
+                $previewurl = get_resource_path($ref, false, 'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+                ?>
+                <a class="ToolsOptionLink" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
+                    <i class='fa fa-search-plus' aria-hidden="true"></i>
+                </a>
+                <script>
+                function toggleImagePreviewZoomOption(element)
+                    {
+                    var option = jQuery(element);
+
+                    // Feature enabled? Then disable it.
+                    if(option.hasClass('Enabled'))
+                        {
+                        jQuery('#previewimage').trigger('zoom.destroy');
+
+                        toggleMode(element);
+
+                        return false;
+                        }
+
+                    // Enable
+                    jQuery('#previewimage')
+                        .wrap('<span style="display: inline-block;"></span>')
+                        .css('display', 'block')
+                        .parent()
+                        .zoom({url: '<?php echo $previewurl; ?>'});
+
+                    toggleMode(element);
+
+                    return false;
+                    }
+                </script>
+                <?php
+                }
+                ?>
+            </div>
+            <script>
+            function showHidePreviewTools()
+                {
+                var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
+                var tools_options = tools_wrapper.find('.ToolsOptionLink');
+
+                // If any of the tools are enabled do not close Preview tools box
+                if(tools_options.length > 0 && tools_options.hasClass('Enabled'))
+                    {
+                    tools_wrapper.removeClass('Hidden');
+
+                    return false;
+                    }
+
+                tools_wrapper.toggleClass('Hidden');
+
+                return false;
+                }
+
+            function toggleMode(element)
+                {
+                jQuery(element).toggleClass('Enabled');
+                }
+            </script>
+        </div>
+        <?php
+        } /* end of canSeePreviewTools() */
+        ?>
+    </div>
+    <?php
+    }
+else
+    {
+    ?>
+    <div id="previewimagewrapper">
+        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture" style="border:none;" id="previewimage" />
+    <?php
+    if(isset($previewcaption))
+        {
+        ?>
+        <div class="clearerleft"></div>
+        <?php
+        display_field_data($previewcaption, true);
+        }
+
+    hook("previewextras");
+    ?>
+    </div>
+    <?php
+    }
 ?>
 <?php } /* End of renderinnerresourcepreview hook */ ?>
 <?php } /* End of replacerenderinnerresourcepreview hook */ ?>
@@ -1722,6 +1893,20 @@ else
 <?php 
 	hook("afterviewfindsimilar");
 }
+
+if($annotate_enabled)
+    {
+    ?>
+    <!-- Annotorious -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.min.js"></script>
+
+    <!-- Annotorious plugin(s) -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <!-- End of Annotorious -->
+    <?php
+    }
 
 include "../include/footer.php";
 ?>
