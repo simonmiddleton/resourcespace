@@ -3032,15 +3032,15 @@ $previews_allow_enlarge=false;
 $static_slideshow_image=false;
 
 # User preference - user_pref_resource_notifications. Option to receive notifications about resource management e.g. archive state changes 
-$user_pref_resource_notifications=true;
+$user_pref_resource_notifications=false;
 # User preference - user_pref_resource_access_notifications. Option to receive notifications about resource access e.g. resource requests
-$user_pref_resource_access_notifications=true;
+$user_pref_resource_access_notifications=false;
 
 # Administrator default for receiving notifications about resource access e.g. resource requests. Can't use user_pref_resource_access_notifications since this will pick up setting of requesting user
-$admin_resource_access_notifications=true;
+$admin_resource_access_notifications=false;
 
 # User preference - user_pref_user_management_notifications (user admins only). Option to receive notifications about user management changes e.g. account requests
-$user_pref_user_management_notifications=true;
+$user_pref_user_management_notifications=false;
 # User preference - user_pref_system_management_notifications (System admins only). Option to receive notifications about system events e.g. low disk space
 $user_pref_system_management_notifications=true;
 
@@ -3193,7 +3193,9 @@ $fstemplate_alt_scramblekey=""; # The scramble key used by the template installa
 $responsive_ui = true;
 
 # Default action settings
-$actions_enable=true;
+$actions_enable=false;
+# If $actions_enable is false, option to enable actions only for users with certain permissions, To enable actions based on users having more than one permission, separate with a comma.
+$actions_permissions=array("a","t","R","u","e0");
 $actions_resource_requests=true;
 $actions_account_requests=true;
 $actions_resource_review=true;
