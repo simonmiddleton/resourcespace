@@ -2971,6 +2971,9 @@ $password_reset_link_expiry =1;
 # Show the resource view in a modal when accessed from search results.
 $resource_view_modal=true;
 
+# Option to show other standard pages e.g. resource requests in a modal
+$modal_default=false;
+
 # Show the resource edit in a modal when accessed from resource view modal.
 $resource_edit_modal_from_view_modal=false;
 
@@ -3197,6 +3200,9 @@ $actions_resource_review=true;
 $actions_notify_states="-1";
 $actions_resource_types_hide="";  // Resource types to exclude from notifications
 $actions_approve_hide_groups=""; // Groups to exclude from notifications
+
+# Option to show action links e.g. user requests, resource requests in a modal
+$actions_modal=true;
 
 # Separator to use when rendering date range field values
 $range_separator = " / ";

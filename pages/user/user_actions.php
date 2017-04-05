@@ -9,7 +9,7 @@ include_once "../../include/action_functions.php";
 include "../../include/authenticate.php";
 
 if(!$actions_enable){exit("access denied");}
-$modal=$resource_view_modal;
+$modal=getval("modal","")=="true";
 
 $actiontypes=array();
 if($actions_resource_review){$actiontypes[]="resourcereview";}
@@ -129,7 +129,7 @@ else
 
 
 <div class="BasicsBox">
-  <div class="Listview" id="<?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>_resource_actions">
+  <div class="Listview" id="<?php echo ($modal?"Modal":"CentralSpace") ?>_resource_actions">
 	  <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 		  <tr class="ListviewTitleStyle">
 			  <td><?php if ($order_by=="date"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"date")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo $lang["date"]; ?></a></td>
@@ -179,22 +179,22 @@ else
 		  
 		  $linkparams["ref"] = $all_actions[$n]["ref"];
 		  $linkparams["disablenav"]="true";
-		  if($modal){$linkparams["modal"]="true";}
+		  if($actions_modal){$linkparams["modal"]="true";}
 		  
 		  $editlink=($actioneditlink=='')?'':generateURL($actioneditlink,$linkparams);
 		  $viewlink=($actionviewlink=='')?'':generateURL($actionviewlink,$linkparams);
 		  ?>
 			<tr>
 				<td><?php echo nicedate($all_actions[$n]["date"],true); ?></td>
-				<td><a href="<?php echo $editlink; ?>" onClick="actionreload=true;return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" ><?php echo $all_actions[$n]["ref"]; ?></a></td>
+				<td><a href="<?php echo $editlink; ?>" onClick="actionreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" ><?php echo $all_actions[$n]["ref"]; ?></a></td>
 				<td><?php echo tidy_trim(TidyList($all_actions[$n]["description"]),$list_search_results_title_trim) ; ?></td>
 				<td><?php echo $lang["actions_type_" . $all_actions[$n]["type"]]; ?></td>
 				<td>
 					<div class="ListTools">
 					  <?php
 					  if($actionaddlink!=""){echo $actionaddlink;}
-					  if($editlink!=""){?><a aria-hidden="true" href="<?php echo $editlink; ?>" onClick="actionsreload=true;return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-pencil" title="<?php echo $lang["action-edit"]; ?>"></a><?php }
-					  if($viewlink!=""){?><a aria-hidden="true" href="<?php echo $viewlink; ?>" onClick="actionsreload=true;return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-expand" title="<?php echo $lang["view"]; ?>"></a><?php }?>
+					  if($editlink!=""){?><a aria-hidden="true" href="<?php echo $editlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-pencil" title="<?php echo $lang["action-edit"]; ?>"></a><?php }
+					  if($viewlink!=""){?><a aria-hidden="true" href="<?php echo $viewlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" class="maxLink fa fa-expand" title="<?php echo $lang["view"]; ?>"></a><?php }?>
 					</div>
 				</td>
 			</tr>

@@ -2355,6 +2355,7 @@ $lang['userpreference_default_perpage_label'] = 'Default per page';
 $lang['userpreference_default_display_label'] = 'Default display';
 $lang['userpreference_use_checkboxes_for_selection_label'] = 'Use checkboxes to add to collection';
 $lang['userpreference_resource_view_modal_label'] = 'Resource view modal';
+$lang["userpreference_modal_default"] = "Show standard pages in a modal (popup) window where enabled?";
 $lang['userpreference_thumbs_default_label'] = 'Default collection bar display';
 $lang['userpreference_basic_simple_search_label'] = 'Basic simple search';
 $lang['userpreference_cc_me_label'] = 'CC me when sending resources and collections';
@@ -2411,6 +2412,7 @@ $lang['systemconfig_themes_simple_view'] = 'Enable Featured Collections simple v
 $lang['systemconfig_themes_category_split_pages'] = 'Display Featured Collection categories as links, and Featured Collections on separate pages?';
 $lang['systemconfig_theme_category_levels'] = 'How many levels of theme category to show?';
 $lang['systemconfig_enable_themes'] = 'Enable Featured Collections';
+$lang["systemconfig_modal_default"] = "Enable modals for standard pages where configured? User preferences may override this.";
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
@@ -2569,6 +2571,7 @@ $lang["actions_myactions"] = "My actions";
 $lang["actions_introtext"] = "You can configure the criteria for actions that appear here by changing your user preferences";
 $lang["actions_noactions"] = "You have no outstanding actions";
 $lang["actions_resource_review"] = "Show me editable resources in my actions list";
+$lang["actions_modal"] = "Show action links e.g. user requests, resource requests in a modal (popup) window?";
 $lang["actions_resource_review_default"] = "Show editable resources by default in action lists";
 $lang["actions_notify_states"] = "Editable resources in the following states will be shown";
 $lang["actions_resource_types_hide"] = "Do not show editable resources of the following types";
