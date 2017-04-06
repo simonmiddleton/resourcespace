@@ -6,15 +6,69 @@ include_once 'message_functions.php';
 include_once 'node_functions.php';
 
 $GLOBALS['get_resource_path_fpcache'] = array();
-function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jpg",$scramble=-1,$page=1,$watermarked=false,$file_modified="",$alternative=-1,$includemodified=true)
+/**
+* Get resource path/ resource URL/ download URL for this resource
+* 
+* IMPORTANT: the download URL should always be used client side (public)
+*            whilst filstore path is private for internal use only
+* 
+* 
+* @uses sql_value()
+* @uses get_alternative_file()
+* @uses get_resource_data()
+* 
+* 
+* @param integer $ref             Resource ID 
+* @param boolean $getfilepath     Set to TRUE to get the filestore (physical) path
+* @param string  $size            Specify which size of the resource should be returned. Use '' for original file
+* @param boolean $generate        Generate folder if not found
+* @param string  $extension       Extension of the file we are looking for. For original file, this would be the file
+*                                 extension, otherwise use the preview extension (e.g image preview will have JPG
+*                                 while video preview can have FLV/MP4 or others)
+* @param boolean $scramble        Set to TRUE to get the scrambled folder (requires scramble key for it to work)
+* @param integer $page            For documents, use the page number we are trying to get the preview of.
+* @param boolean $watermarked     Get the watermark version?
+* @param string  $file_modified   Specify when the file was last modified
+* @param integer $alternative     ID of the alternative file
+* @param boolean $includemodified Show when the file was last modified
+* 
+* 
+* @return string
+*/
+function get_resource_path(
+    $ref,
+    $getfilepath,
+    $size,
+    $generate = true,
+    $extension = 'jpg',
+    $scramble = -1,
+    $page = 1,
+    $watermarked = false,
+    $file_modified = '',
+    $alternative = -1,
+    $includemodified = true
+)
 	{
 	# returns the correct path to resource $ref of size $size ($size==empty string is original resource)
 	# If one or more of the folders do not exist, and $generate=true, then they are generated
-	if(!preg_match('/^[a-zA-Z0-9]+$/', $extension)){$extension="jpg";}
-	$override=hook("get_resource_path_override","",array($ref,$getfilepath,$size,$generate,$extension,$scramble,$page,$watermarked,$file_modified,$alternative,$includemodified));
-	if (is_string($override)) {return $override;}
+    if(!preg_match('/^[a-zA-Z0-9]+$/', $extension))
+        {
+        $extension = 'jpg';
+        }
 
-	global $storagedir,$originals_separate_storage,$fstemplate_alt_threshold,$fstemplate_alt_storagedir,$fstemplate_alt_storageurl,$fstemplate_alt_scramblekey;
+    $override = hook(
+        'get_resource_path_override',
+        '',
+        array($ref, $getfilepath, $size, $generate, $extension, $scramble, $page, $watermarked, $file_modified, $alternative, $includemodified)
+    );
+
+    if(is_string($override))
+        {
+        return $override;
+        }
+
+    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
+           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey;
 
 	if ($size=="")
 		{
