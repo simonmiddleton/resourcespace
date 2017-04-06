@@ -322,11 +322,10 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
         echo "</script>";
     }
     hook("additional_title_pages");
-}
-   
-?><script src="<?php echo $baseurl?>/lib/js/Placeholders.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script><?php
-
-
+}   
+?>
+<script src="<?php echo $baseurl?>/lib/js/Placeholders.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
+<?php
 if (getval("ajax","")=="") {
 	// don't show closing tags if we're in ajax mode
 	?>
@@ -641,8 +640,9 @@ try{
   });
 </script>
 <!-- End of chosen support -->
-<?php } ?>
-
+<?php
+}
+?>
 </body>
 </html>
 <?php } // end if !ajax ?>

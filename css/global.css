@@ -363,7 +363,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {float: left;margin: 0px 0px 0px 0px;}
-#previewimagewrapper {float:left;margin: 0px 20px 15px 0px;}
+#previewimagewrapper {float:left;margin: 0px 20px 15px 0px; position: relative;}
 
 .RecordPanel .PictureDoc {float: left;margin: 50px 130px;}
 
@@ -1278,3 +1278,41 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 	margin: 1px;
 }
 
+
+#PreviewTools {
+    height: 41px;
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    z-index: 1;
+}
+
+#PreviewToolsOptionsWrapper {
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    color: #FFF;
+    font-size: 26px;
+}
+
+.ToolsOptionLink {
+    float: right;
+    margin: 5px 10px 0px 0px;
+}
+
+.ToolsOptionLink:link, .ToolsOptionLink:visited {
+    color: #FFF;
+}
+
+.ToolsOptionLink:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.ToolsOptionLink.Enabled {
+    color: #000;
+}
+
+a.Enabled, a:visited.Enabled {
+    color: #000;
+    text-decoration: underline;
+}

@@ -5,6 +5,11 @@ include_once "../include/resource_functions.php"; //for checking scr access
 include_once "../include/search_functions.php";
 include_once "../include/collections_functions.php";
 include_once '../include/render_functions.php';
+if($annotate_enabled)
+    {
+    include_once '../include/annotation_functions.php';
+    }
+
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $s=explode(" ",getvalescaped("search",""));
