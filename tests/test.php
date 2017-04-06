@@ -108,7 +108,7 @@ if (!file_exists($storagedir))
     {
     mkdir($storagedir);
     }
-$storagedir .= "/rs_test/";
+$storagedir .= '/rs_test';
 if (!file_exists($storagedir))
     {
     mkdir($storagedir);
