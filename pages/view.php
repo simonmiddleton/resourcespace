@@ -672,15 +672,15 @@ elseif ($resource['file_extension']=="swf" && $display_swf){
 else if(1 == $resource['has_image'])
     {
     $use_watermark = check_use_watermark();
-    $imagepath     = get_resource_path($ref, true, 'pre', false, $resource['preview_extension'], -1, 1, $use_watermark);
+    $imagepath     = get_resource_path($ref, true, 'pre', false, $resource['preview_extension'], true, 1, $use_watermark);
 
     if(!file_exists($imagepath))
         {
-        $imageurl = get_resource_path($ref, false, 'thm', false, $resource['preview_extension'], -1, 1, $use_watermark);
+        $imageurl = get_resource_path($ref, false, 'thm', false, $resource['preview_extension'], true, 1, $use_watermark, '', -1, true, true);
         }
     else
         {
-        $imageurl = get_resource_path($ref, false, ($retina_mode ? 'scr' : 'pre'), false, $resource['preview_extension'], -1, 1, $use_watermark);
+        $imageurl = get_resource_path($ref, false, ($retina_mode ? 'scr' : 'pre'), false, $resource['preview_extension'], true, 1, $use_watermark, '', -1, true, true);
         }
         ?>
     <div id="previewimagewrapper">
