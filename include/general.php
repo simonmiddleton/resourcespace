@@ -71,7 +71,7 @@ function get_resource_path(
         {
         global $baseurl, $k;
 
-        return "{$baseurl}/pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&page={$page}&alternative={$alternative}&k={$k}";
+        return "{$baseurl}/pages/download.php?ref={$ref}&size={$size}&ext={$extension}&page={$page}&alternative={$alternative}&noattach=true&k={$k}";
         }
 
     global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
