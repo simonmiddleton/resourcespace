@@ -106,13 +106,26 @@ if($comments_resource_enable && $comments_view_panel_show_marker){
 }
 
 // Set $use_mp3_player switch if appropriate
-$use_mp3_player = (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && ((in_array($resource["file_extension"],$ffmpeg_audio_extensions) || $resource["file_extension"]=="mp3") && $mp3_player));
-if ($use_mp3_player)
-	{
-	$mp3realpath=get_resource_path($ref,true,"",false,"mp3");
-	if (file_exists($mp3realpath))
-		{$mp3path=get_resource_path($ref,false,"",false,"mp3");}
-	}
+$use_mp3_player = (
+    !(isset($resource['is_transcoding']) && 1 == $resource['is_transcoding'])
+    && (
+            (
+                in_array($resource['file_extension'], $ffmpeg_audio_extensions) 
+                || 'mp3' == $resource['file_extension']
+            )
+            && $mp3_player
+        )
+);
+
+if($use_mp3_player)
+    {
+    $mp3realpath = get_resource_path($ref, true, '', false, 'mp3');
+    if(file_exists($mp3realpath))
+        {
+        $mp3path = get_resource_path($ref, false, '', false, 'mp3', true, 1, false, '', -1, true, true);
+        }
+    }
+
 # Load access level
 $access=get_resource_access($resource);
 hook("beforepermissionscheck");
