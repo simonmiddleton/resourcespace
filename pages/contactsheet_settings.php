@@ -10,32 +10,49 @@ $ajax              = ('true' == getvalescaped('ajax', '') ? true : false);
 $sheetstyle        = getvalescaped('sheetstyle', 'thumbnails');
 $field_value_limit = getvalescaped('field_value_limit', 0);
 
+if($contactsheet_use_field_templates && !isset($contactsheet_field_template))
+	{
+	$contactsheet_use_field_templates=false;
+	}
+	
+if($contactsheet_use_field_templates)
+	{
+	$field_template = getvalescaped('field_template', 0, true);
+	$sheetstyle_fields = $contactsheet_field_template[$field_template]['fields'];
+	}
+else
+	{
+	switch($sheetstyle)
+		{
+		case 'thumbnails':
+			$sheetstyle_fields = $config_sheetthumb_fields;
+			break;
 
-switch($sheetstyle)
-    {
-    case 'thumbnails':
-        $sheetstyle_fields = $config_sheetthumb_fields;
-        break;
+		case 'list':
+			$sheetstyle_fields = $config_sheetlist_fields;
+			break;
 
-    case 'list':
-        $sheetstyle_fields = $config_sheetlist_fields;
-        break;
-
-    case 'single':
-        $sheetstyle_fields = $config_sheetsingle_fields;
-        break;
-    }
+		case 'single':
+			$sheetstyle_fields = $config_sheetsingle_fields;
+			break;
+		}
+	}
 
 /* Depending on the style, users get different fields to select from.
 Super Admins decide what fields they can see based on config options (e.g. $config_sheetthumb_fields)and permissions
 Note: By default we use thumbnails fields
 */
-$available_contact_sheet_fields = array(
-    0 => array(
-        'ref'   => '',
-        'title' => $lang['allfields']
-    )
-);
+
+$available_contact_sheet_fields=array();
+
+if(!$contactsheet_use_field_templates)
+	{
+	$available_contact_sheet_fields[]= array(
+		'ref'   => '',
+		'title' => $lang['allfields']
+	);
+	}
+
 foreach(get_fields($sheetstyle_fields) as $field_data)
     {
     $available_contact_sheet_fields[] = $field_data;
@@ -231,25 +248,114 @@ if($contact_sheet_add_link_option)
     </div>
     <?php
     }
+
+if($contact_sheet_field_name_option)
+    {
+    ?>	
+    <div class="Question">
+        <label><?php echo $lang["contact_sheet-field_name_option"]; ?></label>
+        <select class="shrtwidth" name="addfieldname" id="addfieldname" onChange="jQuery().rsContactSheet('revert');">
+            <option value="true"><?php echo $lang["yes"]; ?></option>
+            <option value="false"><?php echo $lang["no"]; ?></option>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+    }
+    
+if($contactsheet_use_field_templates)
+	{
+	?>
+	<div class="Question">
+        <label><?php echo $lang['contact_sheet_field_template']; ?></label>
+		<select id="field_template" class="shrtwidth" name="field_template" onChange="updateAvailableContactSheetFieldsTemplate(jQuery('#field_template').val());jQuery().rsContactSheet('revert');">
+			<?php
+			$t_count=count($contactsheet_field_template);
+			for($t=0;$t<$t_count;$t++)
+				{
+				?>
+				<option value="<?php echo $t; ?>"<?php echo ($field_template==$t ? 'selected' : ''); ?>><?php echo $contactsheet_field_template[$t]['name']; ?></option>
+				<?php
+				}
+			?>
+		</select>
+		<script>
+                function updateAvailableContactSheetFieldsTemplate(template)
+                    {
+                    var contact_sheet_fields_selector = jQuery('#selected_contact_sheet_fields');
+
+                    var post_url  = '<?php echo $baseurl; ?>/pages/contactsheet_settings.php';
+                    var post_data = 
+                        {
+                        ajax: true,
+                        field_template: template,
+                        action: 'get_sheetstyle_fields',
+                        };
+
+                    jQuery.post(post_url, post_data, function(response)
+                        {
+                        if(typeof response !== 'undefined')
+                            {
+                            var response_obj = JSON.parse(response);
+
+                            // Remove all options
+                            contact_sheet_fields_selector.empty();
+
+                            var x;
+                            for(x in response_obj)
+                                {
+                                var contact_sheet_field_obj = response_obj[x];
+								
+                                contact_sheet_fields_selector.append(contact_sheet_field_obj.title + '<br/>');
+                                }
+
+                            return true;
+                            }
+                        });
+
+                    return false;
+                    }
+                </script>
+	</div>
+	<?php
+	}
     ?>
 
     <div class="Question">
-        <label><?php echo $lang['contact_sheet_select_fields']; ?></label>
-        <select id="selected_contact_sheet_fields" class="shrtwidth" name="selected_contact_sheet_fields[]" multiple>
-            <?php
-            foreach($available_contact_sheet_fields as $contact_sheet_field)
-                {
-                $selected = '';
-                if('' == $contact_sheet_field['ref'])
-                    {
-                    $selected = 'selected';
-                    }
-                ?>
-                <option value="<?php echo $contact_sheet_field['ref']; ?>"<?php echo $selected; ?>><?php echo $contact_sheet_field['title']; ?></option>
-                <?php
-                }
-            ?>
-        </select>
+        <label><?php echo ($contactsheet_use_field_templates ? $lang['contact_sheet_field_template_fields'] : $lang['contact_sheet_select_fields']); ?></label>
+        <?php
+        if($contactsheet_use_field_templates)
+			{
+			$fieldlist='';
+			foreach($available_contact_sheet_fields as $contact_sheet_field)
+				{
+				$fieldlist.=$contact_sheet_field['title'] . '<br/>';
+				}
+			?>
+			<span id="selected_contact_sheet_fields"><?php echo $fieldlist ?></span>
+			<?php
+			}
+		else
+			{
+			?>
+        	<select id="selected_contact_sheet_fields" class="shrtwidth" name="selected_contact_sheet_fields[]" multiple>
+				<?php
+				foreach($available_contact_sheet_fields as $contact_sheet_field)
+					{
+					$selected = '';
+					if('' == $contact_sheet_field['ref'])
+						{
+						$selected = 'selected';
+						}
+					?>
+					<option value="<?php echo $contact_sheet_field['ref']; ?>"<?php echo $selected; ?>><?php echo $contact_sheet_field['title']; ?></option>
+					<?php
+					}
+				?>
+			</select>
+			<?php
+			}
+			?>
         <div class="clearerleft"></div>
     </div>
 

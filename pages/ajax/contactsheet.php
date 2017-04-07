@@ -24,6 +24,7 @@ $previewpage       = getvalescaped('previewpage', 1);
 $includeheader     = getvalescaped('includeheader', '');
 $addlink           = getvalescaped('addlink', '');
 $addlogo           = getvalescaped('addlogo', '');
+$addfieldname	   = getvalescaped('addfieldname','');
 $force_watermark   = getvalescaped('force_watermark','');
 $field_value_limit = getvalescaped('field_value_limit', 0);
 
@@ -44,6 +45,7 @@ if(!collection_readable($collection))
 $contactsheet_header           = ('' != $includeheader ? filter_var($includeheader, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_include_header);
 $add_contactsheet_logo         = ('' != $addlogo ?  filter_var($addlogo, FILTER_VALIDATE_BOOLEAN) : $include_contactsheet_logo);
 $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_add_link);
+$contact_sheet_field_name      = ('' != $addfieldname ? filter_var($addfieldname, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_field_name);
 $selected_contact_sheet_fields = getvalescaped('selected_contact_sheet_fields', '');
 
 
@@ -61,20 +63,33 @@ if(is_numeric($order_by))
     }
 $results = do_search("!collection{$collection}", '', $order_by, 0, -1, $sort);
 
-switch($sheetstyle)
-    {
-    case 'thumbnails':
-        $getfields = $config_sheetthumb_fields;
-        break;
+if($contactsheet_use_field_templates && !isset($contactsheet_field_template))
+	{
+	$contactsheet_use_field_templates=false;
+	}
+	
+if($contactsheet_use_field_templates)
+	{
+	$field_template = getvalescaped('field_template', 0, true);
+	$getfields = $contactsheet_field_template[$field_template]['fields'];
+	}
+else
+	{
+	switch($sheetstyle)
+		{
+		case 'thumbnails':
+			$getfields = $config_sheetthumb_fields;
+			break;
 
-    case 'list':
-        $getfields = $config_sheetlist_fields;
-        break;
+		case 'list':
+			$getfields = $config_sheetlist_fields;
+			break;
 
-    case 'single':
-        $getfields = $config_sheetsingle_fields;
-        break;
-    }
+		case 'single':
+			$getfields = $config_sheetsingle_fields;
+			break;
+		}
+	}
 
 // If user has specified which fields to show, then respect it
 if('' != $selected_contact_sheet_fields && '' != $selected_contact_sheet_fields[0])
@@ -178,7 +193,7 @@ foreach($results as $result_data)
                 $contact_sheet_value = tidylist($contact_sheet_value);
                 }
 
-            $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = tidylist($contact_sheet_value);
+            $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = ($contact_sheet_field_name ? $contact_sheet_field['title'] . ': ' : '') . tidylist($contact_sheet_value);
             }
         }
 
