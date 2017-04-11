@@ -344,14 +344,14 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                 $rangestartpos=strpos($rangestring,"start")+5;
                                 $rangestart=str_replace(" ","-",substr($rangestring,$rangestartpos,strpos($rangestring,"end")?strpos($rangestring,"end")-$rangestartpos:10));
 								if($fieldinfo['type']!=FIELD_TYPE_DATE_RANGE)
-									{$sql_filter.=($sql_filter!=""?" and ":"") . "rd" . $c . ".value >= '" . $rangestart . "'";}
+									{$sql_filter.=($sql_filter!=""?" and ":"") . "rdr" . $c . ".value >= '" . $rangestart . "'";}
                                 }
                             if (strpos($keystring,"end")!==FALSE )
                                 {
                                 $rangeend=str_replace(" ","-",$rangestring);
 								$rangeend=substr($rangeend,strpos($rangeend,"end")+3,10) . " 23:59:59";
 								if($fieldinfo['type']!=FIELD_TYPE_DATE_RANGE)
-									{$sql_filter.= ($sql_filter!=""?" and ":"") . "rd" . $c . ".value <= '" . $rangeend . "'";}
+									{$sql_filter.= ($sql_filter!=""?" and ":"") . "rdr" . $c . ".value <= '" . $rangeend . "'";}
                                 }
 								
 							if($fieldinfo['type']==FIELD_TYPE_DATE_RANGE)
