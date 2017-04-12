@@ -924,6 +924,17 @@ $config_sheetthumb_include_ref=true;
 # If making a contact sheet with one resource per page sheet style, use these fields in contact sheet:
 $config_sheetsingle_fields = array(8);
 $config_sheetsingle_include_ref=true;
+
+# Use templates rather than setting contactsheet fields by display style?
+$contactsheet_use_field_templates=false;
+# If $contactsheet_use_field_templates=true uncomment and set:
+# 'name' is the displayed name of the template
+# 'fields' is an array of fields to use. Fields will be displayed in setting order.
+#$contactsheet_field_template[0]['name']='Title only';
+#$contactsheet_field_template[0]['fields']=array(8);
+#$contactsheet_field_template[0]['name']='Title & Filename';
+#$contactsheet_field_template[0]['fields']=array(8,51);
+
 # experimental sorting (doesn't include ASC/DESC yet).
 $contactsheet_sorting=false;
 
@@ -952,7 +963,8 @@ $contact_sheet_footer = false;
 $contact_sheet_add_link=true;
 # Give user option to enable links?
 $contact_sheet_add_link_option=false;
-
+# Give user option to show field name in front of field data
+$contact_sheet_field_name_option=false;
 # Use watermarked previews for contact sheets? If set to 'true' watermarks will be forced rather than judged based on user credentials.
 $contact_sheet_force_watermarks=false;
 # Give user option to force watermarks?
