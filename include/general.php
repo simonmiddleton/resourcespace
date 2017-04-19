@@ -5540,7 +5540,7 @@ function form_value_display($row,$name,$default="")
 function get_download_filename($ref,$size,$alternative,$ext)
 	{
 	# Constructs a filename for download
-	global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,$download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,$prefix_filename_string;
+	global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,$download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,$prefix_filename_string, $filename;
 	
 	$filename = $ref . $size . ($alternative>0?"_" . $alternative:"") . "." . $ext;
 	
