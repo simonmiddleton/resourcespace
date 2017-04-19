@@ -34,7 +34,7 @@ $introtext=text("introtext");
 		<?php if (!checkperm("b")){?>
 		<li><i aria-hidden="true" class="fa fa-fw fa-shopping-bag"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["mycollections"]?></a></li>
 		<?php }
-		if($actions_enable)
+		if($actions_on)
 		  {?>
 		<li><i aria-hidden="true" class="fa fa-fw fa-check-square-o"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/user/user_actions.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["actions_myactions"]; 
 		?></a><span style="display: none;" class="ActionCountPill Pill"></span></li>

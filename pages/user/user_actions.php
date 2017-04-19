@@ -8,7 +8,7 @@ include_once "../../include/collections_functions.php";
 include_once "../../include/action_functions.php";
 include "../../include/authenticate.php";
 
-if(!$actions_enable){exit("access denied");}
+if(!$actions_on){exit("access denied");}
 $modal=getval("modal","")=="true";
 
 $actiontypes=array();
