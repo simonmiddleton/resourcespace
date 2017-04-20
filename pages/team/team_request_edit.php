@@ -38,9 +38,9 @@ if (getval("submitted","") != "")
 
 # Fetch research request data
 $request = get_request($ref);
-if ($request === false) 
+if ($request === false && !isset($resulttext))
     {
-    exit("Request " . htmlspecialchars($ref) . " not found.");
+    $resulttext = "Request " . htmlspecialchars($ref) . " not found.";
     }
   
 include "../../include/header.php";
@@ -75,7 +75,9 @@ if (isset($resulttext))
 	{
 	echo "<div class=\"PageInformal \">" . $resulttext . "</div>";
 	}
-    
+
+if ($request !== false)
+	{
     # Check access
     if (checkperm("Rb") && $request["assigned_to"]!=$userref)
         {
@@ -269,7 +271,8 @@ if (isset($resulttext))
     </form>
 
     <?php       
-    } ?>
+    }
+	}?>
 </div> <!-- .BasicsBox -->
 <?php
 include "../../include/footer.php";
