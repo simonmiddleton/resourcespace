@@ -184,7 +184,7 @@ function message_send_unread_emails()
 				$messagerefs[]=$unreadmessage["messageref"];
 				}
 			}
-		if($actions_enable)
+		if($actions_on)
 			{
 			echo "Checking actions for user " . $unreadmessage["userref"] . "\r\n";
 			$messageuser=get_user($digestuser);

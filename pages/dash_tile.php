@@ -153,12 +153,7 @@ if($submitdashtile)
             log_activity($lang['manage_all_dash'], LOG_CODE_EDITED, $title . ($text == '' ? '' : " ({$text})"),'dash_tile',null,$tile['ref']);
             update_dash_tile($tile,$buildurl,$link,$title,$reload_interval,$all_users,$default_order_by,$resource_count,$text);
 
-			if($tile["all_users"]==1 && $tile_audience=='specific_user_groups')
-				{
-				// Was already an all users/usergroup dash tile, delete any existing user entries
-				sql_query("DELETE FROM user_dash_tile WHERE dash_tile = '{$tile['ref']}'");
-				}		
-            if($tile_audience=='true')
+			if($tile_audience=='true')
 				{
 				// This is an all users dash tile, delete any existing usergroup entries
 				sql_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = '{$tile['ref']}'");
@@ -168,28 +163,27 @@ if($submitdashtile)
 				// This is a usergroup specific dash tile
 				// If admin decides a tile is not meant for a specific user group, remove it from the users immediately
 				$current_specific_user_groups = get_tile_user_groups($tile['ref']);
-				foreach($current_specific_user_groups as $current_specific_user_group)
+                    
+                if(count($specific_user_groups)==0)
+                    {
+                    // This was an all users/usergroup dash tile, delete any existing user entries
+                    sql_query("DELETE FROM user_dash_tile WHERE dash_tile = '{$tile['ref']}'");
+                    }
+                    
+                // Remove tile from old user groups                    
+				foreach(array_diff($current_specific_user_groups,$specific_user_groups) as $remove_group)
+					{					
+                    delete_usergroup_dash_tile($tile['ref'],$remove_group);
+					}                
+                
+				// Newly selected user groups.
+				foreach(array_diff($specific_user_groups,$current_specific_user_groups) as $add_group)
 					{
-					if(in_array($current_specific_user_group, $specific_user_groups))
-						{
-						continue;
-						}
-					sql_query("DELETE FROM usergroup_dash_tile WHERE usergroup = '{$current_specific_user_group}' AND dash_tile = '{$tile['ref']}'");
-					}
-
-				// Newly selected user groups. Note (these can also be old user groups for which this tile is still valid)
-				foreach($specific_user_groups as $user_group)
-					{
-					if(in_array($user_group, $current_specific_user_groups))
-						{
-						// Already set to be specific to this user group, move on to next one
-						continue;
-						}
-					add_usergroup_dash_tile($user_group, $tile['ref'], $default_order_by);
-					build_usergroup_dash($user_group,0,$tile['ref']);
+					add_usergroup_dash_tile($add_group, $tile['ref'], $default_order_by);
+					build_usergroup_dash($add_group,0,$tile['ref']);
 					}
 				}
-		}
+            }
 		else if(!$tile["all_users"] && !$all_users) # Not an all_users tile
 			{
 			$newtile = create_dash_tile($buildurl,$link,$title,$reload_interval,$all_users,$default_order_by,$resource_count,$text);

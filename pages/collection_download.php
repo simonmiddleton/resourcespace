@@ -22,7 +22,7 @@ $tardisabled=getvalescaped("tardownload","")=="off";
 $collection_download_tar=true;
 
 // Has tar been disabled or is it not available
-if($collection_download_tar_size=="" || $config_windows || $tardisabled)
+if($collection_download_tar_size==0 || $config_windows || $tardisabled)
 	{
 	$collection_download_tar=false;
 	}
@@ -976,7 +976,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     }
 ?>
 	
-<div class="Question">
+<div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
 <label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
 <div class="tickset">
 <select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){ajax_on=true;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{ajax_on=false;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">

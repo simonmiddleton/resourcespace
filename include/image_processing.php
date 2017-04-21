@@ -52,7 +52,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 		sql_query("update resource set ".$clear_fields." where ref=$ref");
 		#also add the ref back into keywords:
 		add_keyword_mappings($ref, $ref , -1);
-		$extension=sql_value("select file_extension value from resource where ref=$ref","");
+		$extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
 		$filename=get_resource_path($ref,true,"",false,$extension);
 		$processfile['tmp_name']=$filename; }
 	else{
@@ -130,7 +130,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
     hook("beforeremoveexistingfile", "", array( "resourceId" => $ref ) );
 
-    $old_extension=sql_value("select file_extension value from resource where ref='$ref'","");
+    $old_extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
     if ($old_extension!="")	
     	{
     	$old_path=get_resource_path($ref,true,"",true,$old_extension);
@@ -920,7 +920,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 
 	if (!$previewonly) {
 		// make sure the extension is the same as the original so checksums aren't done for previews
-		$o_ext=sql_value("select file_extension value from resource where ref={$ref}","");
+		$o_ext=sql_value("select file_extension value from resource where ref='{$ref}'","");
 		if($extension==$o_ext && $checksum_required)
 			{
 			debug("create_previews - generate checksum for $ref",RESOURCE_LOG_APPEND_PREVIOUS);
@@ -2525,7 +2525,7 @@ function AutoRotateImage($src_image, $ref = false)
         if ($ref != false) 
             {
             # use the original file to get the orientation info
-            $extension = sql_value("select file_extension value from resource where ref=$ref", '');
+            $extension = sql_value("select file_extension value from resource where ref='{$ref}'", '');
             $file = get_resource_path($ref, true, "", false, $extension, -1, 1, false, "", -1);
             # get the orientation
             $orientation = get_image_orientation($file);
