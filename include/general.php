@@ -66,16 +66,26 @@ function get_resource_path(
         return $override;
         }
 
+    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
+           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath;
+
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
-    if($use_download_url)
+    if(!$getfilepath && $hide_real_filepath)
         {
         global $baseurl, $k;
 
-        return "{$baseurl}/pages/download.php?ref={$ref}&size={$size}&ext={$extension}&page={$page}&alternative={$alternative}&noattach=true&k={$k}";
+        return generateURL(
+            "$baseurl/pages/download.php",
+            array(
+                'ref'         => $ref,
+                'size'        => $size,
+                'ext'         => $extension,
+                'page'        => $page,
+                'alternative' => $alternative,
+                'k'           => $k,
+                'noattach'    => 'true',
+            ));
         }
-
-    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
-           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key;
 
 	if ($size=="")
 		{
@@ -5195,23 +5205,34 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
 	}
 
 
-function generateURL($url,$parameters=array(),$setparams=array())
+/**
+* Utility function to generate URLs with query strings easier, with the ability
+* to override existing query string parameters when needed.
+* 
+* @param  string  $url
+* @param  array   $parameters  Default query string params (e.g "k", which appears on most of ResourceSpace URLs)
+* @param  array   $set_params  Override existing query string params
+* 
+* @return string
+*/
+function generateURL($url, $parameters = array(), $set_params = array())
     {
-    foreach($setparams as $setparam=>$setvalue)
+    foreach($set_params as $set_param => $set_value)
         {
-        if($setparam!="")
-            {$parameters[$setparam]=$setvalue;}
+        if('' != $set_param)
+            {
+            $parameters[$set_param] = $set_value;
+            }
         }
-    $querystringparams=array();
-    foreach($parameters as $parameter=>$parametervalue)
+
+    $query_string_params = array();
+
+    foreach($parameters as $parameter => $parameter_value)
         {
-        $querystringparams[]= $parameter . "=" . urlencode($parametervalue);
+        $query_string_params[] = $parameter . '=' . urlencode($parameter_value);
         }
-    $querystring="?" . implode ("&", $querystringparams);
-    
-    $returnurl= $url . $querystring;
-    return $returnurl;
-     
+
+    return $url . '?' . implode ('&', $query_string_params);
     }
 
 function notify_resource_change($resource)
