@@ -29,7 +29,6 @@ $GLOBALS['get_resource_path_fpcache'] = array();
 * @param string  $file_modified    Specify when the file was last modified
 * @param integer $alternative      ID of the alternative file
 * @param boolean $includemodified  Show when the file was last modified
-* @param boolean $use_download_url Return URL to download.php in order to hide the real path of the resource/ preview
 * 
 * @return string
 */
@@ -44,8 +43,7 @@ function get_resource_path(
     $watermarked = false,
     $file_modified = '',
     $alternative = -1,
-    $includemodified = true,
-    $use_download_url = false
+    $includemodified = true
 )
 	{
 	# returns the correct path to resource $ref of size $size ($size==empty string is original resource)

@@ -25,6 +25,10 @@ $scramble_key          = 'c8cf6994c288cf9d75c64017c57d16b24a0fdb4f0b826c66bfa7da
 // Reset cache because otherwise we will not pick up the file_modified we set for this test
 $get_resource_data_cache = array();
 
+// For most of these cases, we are expecting either a physical path/ URL to filestore,
+// so set this config option to false. Enable it only when testing hiding the real file path
+$hide_real_filepath = false;
+
 // Original file path/ URL
 if("{$storagedir}/1_6326bb8314c6c21/1_71a3211b5d04a88.jpg" != get_resource_path(1, true, '')
     || "{$storageurl}/1_6326bb8314c6c21/1_71a3211b5d04a88.jpg?v={$file_modified}" != get_resource_path(1, false, '')
