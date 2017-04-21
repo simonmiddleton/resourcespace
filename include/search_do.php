@@ -619,10 +619,40 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                             {
                                             $restypesql = "";
                                             }
-                                        $union = "select ref as resource, [bit_or_condition] 1 as score from resource r[union_index] left outer join resource_data rd[union_index] on r[union_index].ref=rd[union_index].resource and rd[union_index].resource_type_field='$nodatafield' where  (rd[union_index].value ='' or
-                                            rd[union_index].value is null or rd[union_index].value=',') $restypesql  and r[union_index].ref>0 group by r[union_index].ref ";
-                                        $union .= $union_restriction_clause;
-                                        $sql_keyword_union[] = $union;
+										
+										$nodatafieldtype = sql_value("SELECT  `type` value FROM resource_type_field WHERE ref = '{$nodatafield}'", 0);	
+										if(in_array($nodatafieldtype,$FIXED_LIST_FIELD_TYPES))
+											{
+											// Check that nodes are empty
+											$union = "select ref as resource, [bit_or_condition] 1 as score from resource r[union_index] where r[union_index].ref not in 
+													(
+													select rn.resource from  
+													node n 
+													right join resource_node rn on rn.node=n.ref  
+													where  n.resource_type_field='" . $nodatafield . "'
+													group by rn.resource
+													)";
+											$union .= $union_restriction_clause_node;
+											
+											$sql_keyword_union[] = $union;									
+											$sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+											$sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`"; 
+											$sql_keyword_union_or[]="";
+												
+											}
+										else
+											{
+											// Check that resource data is empty
+											$union = "select ref as resource, [bit_or_condition] 1 as score from resource r[union_index] left outer join resource_data rd[union_index] on r[union_index].ref=rd[union_index].resource and rd[union_index].resource_type_field='$nodatafield' where  (rd[union_index].value ='' or
+												rd[union_index].value is null or rd[union_index].value=',') $restypesql  and r[union_index].ref>0 group by r[union_index].ref ";
+											$union .= $union_restriction_clause;
+											
+											$sql_keyword_union[] = $union;										
+											$sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
+											$sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";     
+											$sql_keyword_union_or[]="";
+											}					
+										
                                         }
                                     else  // we are dealing with a standard keyword match
                                         {  
@@ -1184,7 +1214,7 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
             $sql_filter.=$sql_keyword_union_criteria[$i];
             }
 
-        $sql_filter.=")";
+        $sql_filter.=")";	
 
         # Use amalgamated resource_keyword hitcounts for scoring (relevance matching based on previous user activity)
         $score="h.score";
