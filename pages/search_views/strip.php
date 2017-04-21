@@ -18,10 +18,7 @@ $thm_url = get_resource_path(
     true,
     1,
     $use_watermark,
-    $result[$n]['file_modified'],
-    -1,
-    true,
-    true
+    $result[$n]['file_modified']
 );
 
 if(isset($result[$n]['thm_url']))

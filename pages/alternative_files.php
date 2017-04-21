@@ -71,7 +71,7 @@ if($alternative_file_resource_preview)
     if(file_exists(get_resource_path($resource['ref'], true, 'col', false)))
         {
         ?>
-        <img src="<?php echo get_resource_path($resource['ref'], false, 'col', false, 'jpg', true, 1, false, '', -1, true, true); ?>"/>
+        <img src="<?php echo get_resource_path($resource['ref'], false, 'col', false); ?>"/>
         <?php
         } 
     }

@@ -105,15 +105,15 @@ $path = get_resource_path($ref, true, 'scr', false, $ext, true, $page, $use_wate
 
 if(file_exists($path) && (resource_download_allowed($ref, 'scr', $resource['resource_type']) || $use_watermark))
     {
-    $url = get_resource_path($ref, false, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative, true, true);
+    $url = get_resource_path($ref, false, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
     }
 else
     {
-    $path = get_resource_path($ref, true, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative, true, true);
+    $path = get_resource_path($ref, true, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative);
 
     if(file_exists($path))
         {
-        $url = get_resource_path($ref, false, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative, true, true);
+        $url = get_resource_path($ref, false, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative);
         }
     }
 

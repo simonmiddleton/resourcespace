@@ -101,7 +101,7 @@ $previews_exist = false;
 if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, false, '', $ref, true)))
     {
     $previews_exist=true;
-    $fileurl = get_resource_path($resource, false, 'thm', true, 'jpg', true, 1, false, date('Y-m-d H:i:s'), $ref, true, true);
+    $fileurl = get_resource_path($resource, false, 'thm', true, 'jpg', true, 1, false, date('Y-m-d H:i:s'), $ref);
     ?>
     <div class="Question" style="border:0px;"><img id="preview" align="top" src="<?php echo $fileurl; ?>" class="ImageBorder" style="margin-right:10px;"/><br /><br /><div class="clearerleft"> </div></div>
     <?php 

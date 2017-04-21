@@ -82,10 +82,7 @@ if (!hook("renderresultlargethumb"))
                             true,
                             1,
                             $use_watermark,
-                            $result[$n]['file_modified'],
-                            -1,
-                            true,
-                            true
+                            $result[$n]['file_modified']
                         );
 
                         if(isset($result[$n]['pre_url']))

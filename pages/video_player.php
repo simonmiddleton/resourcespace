@@ -23,7 +23,7 @@ if($video_preview_hls_support!=1 || !$video_preview_player_hls)
 
 	if(file_exists($video_preview))
 		{
-		$video_preview_path = get_resource_path($ref, false, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, false, true);
+		$video_preview_path = get_resource_path($ref, false, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, false);
 		// $video_preview_path = 'http://localhost/dev3/resumable_download.php';
 		$video_preview_type = "video/{$ffmpeg_preview_extension}";
 		}		
@@ -34,7 +34,7 @@ if($video_preview_hls_support!=1 || !$video_preview_player_hls)
 
 		if(file_exists($video_preview))
 			{
-			$video_preview_path = get_resource_path($ref, false, 'pre', false, 'flv', true, 1, false, '', $alternative, false, true);
+			$video_preview_path = get_resource_path($ref, false, 'pre', false, 'flv', true, 1, false, '', $alternative, false);
 			$video_preview_type = 'video/flv';
 			}
 		}
@@ -46,7 +46,7 @@ if($video_preview_hls_support!=1 || !$video_preview_player_hls)
 
 		if(file_exists($origvideofile))
 			{
-			$video_preview_path = get_resource_path($ref, false, '', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, false, true);
+			$video_preview_path = get_resource_path($ref, false, '', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, false);
 			$video_preview_type = "video/{$ffmpeg_preview_extension}";
 			}
 		}
@@ -67,15 +67,19 @@ if($video_preview_hls_support!=0)
 	$playlistfile=get_resource_path($ref,true,"pre",false,"m3u8",-1,1,false,"",$alternative,false);
 	if(file_exists($playlistfile))
 		{
+        $hide_real_filepath = false;
+
 		$playlisturl=get_resource_path($ref,false,"pre",false,"m3u8",-1,1,false,"",$alternative,false);
 		$video_preview_sources[$vidindex]["url"]=$playlisturl;
 		$video_preview_sources[$vidindex]["type"]="application/x-mpegURL";
 		$video_preview_sources[$vidindex]["label"]="Auto";
 		$vidindex++;
+
+        $hide_real_filepath = true;
 		}
 	$videojs_resolution_selection_default_res="Auto";
 	}		
-	
+
 if($use_video_alts)
 	{
 	# blank alt variable to use proper preview image
@@ -90,11 +94,15 @@ if(isset($videojs_resolution_selection))
 		$hlsfile=get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative,false);
 		if(file_exists($hlsfile))
 			{
+            $hide_real_filepath = false;
+
 			$hlsurl=get_resource_path($ref,false,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative,false);
 			$video_preview_sources[$vidindex]["url"]=$hlsurl;
 			$video_preview_sources[$vidindex]["type"]="application/x-mpegURL";
 			$video_preview_sources[$vidindex]["label"]=i18n_get_translated($video_hls_stream['label']);
 			$vidindex++;
+
+            $hide_real_filepath = true;
 			}
 		}
 	
@@ -112,7 +120,7 @@ if(isset($videojs_resolution_selection))
 			if(!empty($alt_data))
 				{
 				$alt_data = $alt_data[0];
-				$res_path = get_resource_path($ref, false, '', false, $alt_data['file_extension'], true, 1, false, '', $alt_data['ref'], false, true);
+				$res_path = get_resource_path($ref, false, '', false, $alt_data['file_extension'], true, 1, false, '', $alt_data['ref'], false);
 				$res_ext  = $alt_data['file_extension'];
 				}
 			}
@@ -126,7 +134,7 @@ if(isset($videojs_resolution_selection))
 		}
 	}
 
-$thumb     = get_resource_path($ref, false, 'pre', false, 'jpg', true, 1, false, '', $alternative, true, true);
+$thumb     = get_resource_path($ref, false, 'pre', false, 'jpg', true, 1, false, '', $alternative);
 $thumb_raw = $thumb;
 $thumb     = urlencode($thumb);
 

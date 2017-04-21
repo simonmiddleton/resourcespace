@@ -122,7 +122,7 @@ if($use_mp3_player)
     $mp3realpath = get_resource_path($ref, true, '', false, 'mp3');
     if(file_exists($mp3realpath))
         {
-        $mp3path = get_resource_path($ref, false, '', false, 'mp3', true, 1, false, '', -1, true, true);
+        $mp3path = get_resource_path($ref, false, '', false, 'mp3');
         }
     }
 
@@ -702,11 +702,11 @@ else if(1 == $resource['has_image'])
 
     if(!file_exists($imagepath))
         {
-        $imageurl = get_resource_path($ref, false, 'thm', false, $resource['preview_extension'], true, 1, $use_watermark, '', -1, true, true);
+        $imageurl = get_resource_path($ref, false, 'thm', false, $resource['preview_extension'], true, 1, $use_watermark);
         }
     else
         {
-        $imageurl = get_resource_path($ref, false, ($retina_mode ? 'scr' : 'pre'), false, $resource['preview_extension'], true, 1, $use_watermark, '', -1, true, true);
+        $imageurl = get_resource_path($ref, false, ($retina_mode ? 'scr' : 'pre'), false, $resource['preview_extension'], true, 1, $use_watermark);
         }
         ?>
     <div id="previewimagewrapper">
