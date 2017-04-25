@@ -688,7 +688,8 @@ else if(1 == $resource['has_image'])
            class="enterLink"
            href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams, array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>"
            title="<?php echo $lang["fullscreenpreview"]; ?>"
-           style="position:relative;">
+           style="position:relative;"
+           onclick="return CentralSpaceLoad(this);">
     <?php
     if(file_exists($imagepath))
         {
