@@ -70,10 +70,19 @@ function get_resource_path(
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
     if(!$getfilepath && $hide_real_filepath)
         {
-        global $baseurl, $k;
+        global $baseurl, $k, $get_resource_path_extra_download_query_string_params;
+
+        if(
+        	!isset($get_resource_path_extra_download_query_string_params)
+        	|| is_null($get_resource_path_extra_download_query_string_params)
+        	|| !is_array($get_resource_path_extra_download_query_string_params)
+    	)
+        	{
+    		$get_resource_path_extra_download_query_string_params = array();
+        	}
 
         return generateURL(
-            "$baseurl/pages/download.php",
+            "{$baseurl}/pages/download.php",
             array(
                 'ref'         => $ref,
                 'size'        => $size,
@@ -82,7 +91,8 @@ function get_resource_path(
                 'alternative' => $alternative,
                 'k'           => $k,
                 'noattach'    => 'true',
-            ));
+            ),
+            $get_resource_path_extra_download_query_string_params);
         }
 
 	if ($size=="")

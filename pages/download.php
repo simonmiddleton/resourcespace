@@ -34,13 +34,14 @@ if(!($direct_download_noauth && $direct))
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
 $internal_share_access = ('' != $k && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
 
-$ref          = getvalescaped('ref', '', true);
-$size         = getvalescaped('size', '');
-$alternative  = getvalescaped('alternative', -1);
-$page         = getvalescaped('page', 1);
-$usage        = getvalescaped('usage', '-1');
-$usagecomment = getvalescaped('usagecomment', '');
-$ext          = getvalescaped('ext', '');
+$ref            = getvalescaped('ref', '', true);
+$size           = getvalescaped('size', '');
+$alternative    = getvalescaped('alternative', -1);
+$page           = getvalescaped('page', 1);
+$usage          = getvalescaped('usage', '-1');
+$usagecomment   = getvalescaped('usagecomment', '');
+$ext            = getvalescaped('ext', '');
+$snapshot_frame = getvalescaped('snapshot_frame', 0, true);
 
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     {
@@ -96,6 +97,12 @@ else
 
     $noattach = getval('noattach','');
     $path     = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
+
+    // Snapshots taken for videos? Make sure we convert to the real snapshot file
+    if(1 < $ffmpeg_snapshot_frames && 0 < $snapshot_frame)
+        {
+        $path = str_replace('snapshot', "snapshot_{$snapshot_frame}", $path);
+        }
 
     hook('modifydownloadpath');
         
