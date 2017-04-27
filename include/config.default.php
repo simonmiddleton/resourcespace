@@ -117,7 +117,8 @@ $ghostscript_executable='gs';
 # $archiver_listfile_argument = "@";
 
 $use_zip_extension=false; //use php-zip extension instead of $archiver or $zipcommand
-
+$collection_download_tar_size = 100; // Use tar to speed up large collection downloads. Enter value in MB. Downloads above this size will default to using tar. Set value to 0 to disable tar downloads
+$collection_download_tar_option=false; // Default to using tar downloads for all downloads
 
 /* ---------------------------------------------------
 OTHER PARAMETERS
@@ -400,6 +401,9 @@ Note: this honours $exiftool_write so if that option is false, this will not wor
 $force_exiftool_write_metadata = false;
 $exiftool_write_option         = false;
 
+#Option to strip tags from rich fields when downloading metadata, by default is FALSE (keeping the tags added by CKEDITOR)
+$strip_rich_field_tags = false;
+
 # Set metadata_read to false to omit the option to extract metadata.
 $metadata_read=true;
 
@@ -467,7 +471,27 @@ $pdf_split_pages_to_resources=false;
 # Use VideoJS for video playback (as opposed to FlashPlayer, which we are deprecating)
 $videojs=true;
 
-# Create a preview video for ffmpeg compatible files? A FLV (Flash Video) file will automatically be produced for supported file types (most video types - AVI, MOV, MPEG etc.)
+/*
+* Video Resolution selection: ability to use the original playback file and any files created via $ffmpeg_alternatives for resolution selection options on the view page.
+* Since $video_view_play_hover hides the control bar its use will override the use of resolution selection.
+*
+* "label": the resolution identifier as it should appear in the selection list.
+* "name": accepts names set in $ffmpeg_alternatives[]["name"]. For the main playback file leave empty.
+*
+* Example: The settings below use the original playback file for 'HD' playback and the $ffmpeg_alternatives file with name "standard"
+$videojs_resolution_selection[0]["label"]="HD";
+$videojs_resolution_selection[0]["name"]="";// 
+$videojs_resolution_selection[1]["label"]="SD";
+$videojs_resolution_selection[1]["name"]="standard";
+*/
+
+# The default resolution when using resolution selection. Must use the same
+# Use label from preferred $ffmpeg_hls_streams entry or value as one of the "label" settings from $videojs_resolution_selection. This will be ignored (i.e. set to 'Auto') if $video_preview_hls_support is enabled.
+$videojs_resolution_selection_default_res='HD';
+# dynamicLabel: If true current label will be displayed in control bar. If false gear icon is displayed.
+$videojs_resolution_selection_dynamicLabel=false;
+
+# Create a standard preview video for ffmpeg compatible files? A FLV (Flash Video) file will automatically be produced for supported file types (most video types - AVI, MOV, MPEG etc.)
 /* Examples of preview options to convert to different types (don't forget to set the extension as well):
 * MP4: $ffmpeg_preview_options = '-f mp4 -ar 22050 -b 650k -ab 32k -ac 1';
 */
@@ -476,9 +500,50 @@ $ffmpeg_preview_seconds=120; # how many seconds to preview
 $ffmpeg_preview_extension="flv";
 $ffmpeg_preview_min_width=32;
 $ffmpeg_preview_min_height=18;
-$ffmpeg_preview_max_width=480;
-$ffmpeg_preview_max_height=270;
+$ffmpeg_preview_max_width=700;
+$ffmpeg_preview_max_height=394;
 $ffmpeg_preview_options="-f flv -ar 22050 -b 650k -ab 32k -ac 1";
+
+# HLS SUPPORT
+# Option to generate HTTP Live Streaming (HLS) compatible previews separate sections with an m3u8 playlist to support adaptive bitrate streaming). 
+# Requires $videojs to be enabled
+# Please test if compatible with your target browsers before enabling. A sample video is at https://videojs.github.io/videojs-contrib-hls/ 
+# 0 = no HLS support
+# 1 = Create HLS previews
+# 2 = Create both HLS and standard preview for incompatible clients to use (this option will take up more disk space)
+$video_preview_hls_support=0; 
+$video_preview_player_hls=0; 
+$video_hls_preview_options=" -ar 22050 -ac 1 -hls_list_size 0 -hls_time 5 ";
+
+# Set the following to configure the HLS preview streams (variants) that will be generated.
+# There is a lot of online advice on recommended variants and these should be adjusted depending on your expected client capabilities
+# Be aware when adding extra variants that these will take up more disk space
+# 
+# Array keys as follows:-
+# 'label' - How the stream will appear if the resolution switcher is enabled
+# 'id' - unique code for the stream  - keep this lower case with only letters as per preview size codes
+# 'resolution'  - desired resolution as WIDTHxHEIGHT e.g. 320x180. Leave as '' to match resolution of resource 
+# 'bitrate'  - desired video bitrate in kb/s of stream
+# 'audio_bitrate'  - desired audio bitrate in kb/s of stream
+
+$video_hls_streams[0]["label"]="Low";
+$video_hls_streams[0]["id"]="lo";
+$video_hls_streams[0]["resolution"]="320x180";
+$video_hls_streams[0]["bitrate"]="140";
+$video_hls_streams[0]["audio_bitrate"]="32";
+
+$video_hls_streams[1]["label"]="SD";
+$video_hls_streams[1]["id"]="sd";
+$video_hls_streams[1]["resolution"]="768x432";
+$video_hls_streams[1]["bitrate"]="1200";
+$video_hls_streams[1]["audio_bitrate"]="128";
+
+$video_hls_streams[2]["label"]="HQ";
+$video_hls_streams[2]["id"]="hi";
+$video_hls_streams[2]["resolution"]="";
+$video_hls_streams[2]["bitrate"]="2000";
+$video_hls_streams[2]["audio_bitrate"]="256";
+
 # ffmpeg_global_options: options to be applied to every ffmpeg command. 
 #$ffmpeg_global_options = "-loglevel panic"; # can be used for recent versions of ffmpeg when verbose output prevents run_command completing
 #$ffmpeg_global_options = "-v panic"; # use for older versions of ffmpeg  as above
@@ -859,6 +924,17 @@ $config_sheetthumb_include_ref=true;
 # If making a contact sheet with one resource per page sheet style, use these fields in contact sheet:
 $config_sheetsingle_fields = array(8);
 $config_sheetsingle_include_ref=true;
+
+# Use templates rather than setting contactsheet fields by display style?
+$contactsheet_use_field_templates=false;
+# If $contactsheet_use_field_templates=true uncomment and set:
+# 'name' is the displayed name of the template
+# 'fields' is an array of fields to use. Fields will be displayed in setting order.
+#$contactsheet_field_template[0]['name']='Title only';
+#$contactsheet_field_template[0]['fields']=array(8);
+#$contactsheet_field_template[0]['name']='Title & Filename';
+#$contactsheet_field_template[0]['fields']=array(8,51);
+
 # experimental sorting (doesn't include ASC/DESC yet).
 $contactsheet_sorting=false;
 
@@ -866,6 +942,8 @@ $contactsheet_sorting=false;
 $contact_sheet_include_header=true;
 # Give user option to add header text to contact page?
 $contact_sheet_include_header_option=false;
+# Show the application name in the header?
+$contact_sheet_include_applicationname=true;
 
 # Add logo image to contact page? set contact_sheet_logo if set to true
 $include_contactsheet_logo=false;
@@ -885,7 +963,8 @@ $contact_sheet_footer = false;
 $contact_sheet_add_link=true;
 # Give user option to enable links?
 $contact_sheet_add_link_option=false;
-
+# Give user option to show field name in front of field data
+$contact_sheet_field_name_option=false;
 # Use watermarked previews for contact sheets? If set to 'true' watermarks will be forced rather than judged based on user credentials.
 $contact_sheet_force_watermarks=false;
 # Give user option to force watermarks?
@@ -950,6 +1029,10 @@ $searchbar_buttons_at_bottom=true;
 
 # Hide the main simple search field in the searchbar (if using only simple search fields for the searchbar)
 $hide_main_simple_search=false;
+
+/*Display keywords as pills on Simple Search. Use tab to create new tags/ pills
+Note: full text strings are also accepted as a pill*/
+$simple_search_pills_view = false;
 
 # Custom top navigation links.
 # You can add as many panels as you like. They must be numbered sequentially starting from zero (0,1,2,3 etc.)
@@ -1185,8 +1268,17 @@ $category_tree_open=false;
 # Should the category tree status window be shown?
 $category_tree_show_status_window=true;
 
-# Should searches using the category tree use AND for heirarchical keys?
+# Should searches using the category tree use AND for hierarchical keys?
 $category_tree_search_use_and=false;
+
+# Option to force single branch selection in category tree selection 
+$cat_tree_singlebranch=false;
+
+# Force selection of parent nodes when selecting a sub node?
+$category_tree_add_parents=true;
+
+# Force deselection of child nodes when deselecting a node?
+$category_tree_remove_children=true;
 
 # Length of a user session. This is used for statistics (user sessions per day) and also for auto-log out if $session_autologout is set.
 $session_length=30;
@@ -1384,20 +1476,21 @@ $show_access_on_upload_perm = "return true;";
 # Mime types by extensions.
 # used by pages/download.php to detect the mime type of the file proposed to download.
 $mime_type_by_extension = array(
-    'mov'   => 'video/quicktime',
-    '3gp'   => 'video/3gpp',
-    'mpg'   => 'video/mpeg',
-    'mp4'   => 'video/mp4',
-    'avi'   => 'video/msvideo',
-    'mp3'   => 'audio/mpeg',
-    'wav'   => 'audio/x-wav',
-    'jpg'   => 'image/jpeg',
-    'jpeg'  => 'image/jpeg',
-    'gif'   => 'image/gif',
-    'png'   => 'image/png',
-    'odt' => 'application/vnd.oasis.opendocument.text',
-    'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-    'odp' => 'application/vnd.oasis.opendocument.presentation'
+    'mov'  => 'video/quicktime',
+    '3gp'  => 'video/3gpp',
+    'mpg'  => 'video/mpeg',
+    'mp4'  => 'video/mp4',
+    'avi'  => 'video/msvideo',
+    'mp3'  => 'audio/mpeg',
+    'wav'  => 'audio/x-wav',
+    'jpg'  => 'image/jpeg',
+    'jpeg' => 'image/jpeg',
+    'gif'  => 'image/gif',
+    'png'  => 'image/png',
+    'odt'  => 'application/vnd.oasis.opendocument.text',
+    'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
+    'odp'  => 'application/vnd.oasis.opendocument.presentation',
+    'svg'  => 'image/svg+xml',
   );
 
 # PHP execution time limit
@@ -1441,7 +1534,8 @@ $default_home_page="home.php";
 # Configures separators to use when splitting keywords (in other words - characters to treat as white space)
 # You must reindex after altering this if you have existing data in the system (via pages/tools/reindex.php)
 # 'Space' is included by default and does not need to be specified below.
-$config_separators=array("/","_",".","; ","-","(",")","'","\"","\\", "?");
+# Note: leave non breaking space in
+$config_separators=array("/","_",".","; ","-","(",")","'","\"","\\", "?", '’', '“', ' ');
 
 # trim characters - will be removed from the beginning or end of the string, but not the middle
 # when indexing. Format for this argument is as described in PHP trim() documentation.
@@ -1489,6 +1583,10 @@ $auto_approve_domains=array();
 # Allows for usernames to be created based on full name (eg. John Mac -> John_Mac)
 # Note: user_account_auto_creation needs to be true.
 $user_account_fullname_create=false;
+
+# Show an error when someone tries to request an account with an email already in the system.
+# Hiding this error is useful if you consider this error to be a security issue (i.e. exposing that the email is linked to an account)
+$account_email_exists_note=true;
 
 # Display a larger preview image on the edit page?
 $edit_large_preview=true;
@@ -1621,7 +1719,7 @@ $top_nav_upload_type="plupload"; # The upload type. Options are plupload, ftp, l
 $plupload_chunk_size='5mb';
 
 # Use the JQuery UI Widget instead of the Queue interface (includes a stop button and optional thumbnail mode
-$plupload_widget=false;
+$plupload_widget=true;
 $plupload_widget_thumbnails=true;
 
 # Allow users to delete resources?
@@ -1762,6 +1860,8 @@ $public_collections_confine_group=false;
 
 # Show public collections in the top nav?
 $public_collections_top_nav=false;
+
+$enable_theme_breadcrumbs = true;
 
 # Themes simple view - option to show featured collection categories and featured collections (themes) as basic tiles wih no images.
 # Can be tested or used for custom link by adding querystring parameter simpleview=true to themes.php e.g. pages/themes.php?simpleview=true
@@ -1953,6 +2053,11 @@ $autorotate_ingest=false;
 $staticsync_defaultstate=0;
 # Archive state to set for resources where files have been deleted/moved from syncdir
 $staticsync_deleted_state=2;
+# Optional array of archive states for which missing files will be ignored and not marked as deleted, useful when using offline_archive plugin.
+//$staticsync_ignore_deletion_states=array(2,3);
+
+# staticsync_revive_state - if this is set then deleted items that later reappear will be moved to this archive state
+# $staticsync_revive_state=-1;
 
 # Uncomment and set to the ref of the user account that the staticsync resources will be 'created by' 
 # $staticsync_userref=-1;
@@ -2438,6 +2543,7 @@ $sharing_userlists=false; // enable users to save/select predefined lists of use
 $attach_user_smart_groups=true; //enable user attach to include 'smart group option', different from the default "users in group" method (which will still be available)
 $public_collections_header_only=false; // show public collections page in header, omit from Themes and Manage Collections
 
+$enable_ckeditor = true;
 $ckeditor_toolbars="'Styles', 'Bold', 'Italic', 'Underline','FontSize', 'RemoveFormat', 'TextColor','BGColor'";
 $ckeditor_content_toolbars="
 	{ name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','RemoveFormat' ] },
@@ -2645,9 +2751,6 @@ $comments_view_panel_show_marker=true;			# show an astrisk by the comment view p
 # show the login panel for anonymous users
 $show_anonymous_login_panel=true;
 
-# force single branch selection in category tree selection 
-$cat_tree_singlebranch=false;
-
 $regex_email = "[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}";	# currently exclusively used for comments functionality - checking of valid (anonymous) email addresses entered in JS and in back-end PHP
 
 $do_not_add_to_new_collection_default=false;  # will set "do not add to a collection" as the default option for upload option
@@ -2655,7 +2758,7 @@ $no_metadata_read_default=false; // If set to true and $metadata_read is false t
 $removenever=false; # Remove 'never' option for resource request access expiration and sets default expiry date to 7 days
 $hide_resource_share_link=false; // Configurable option to hide the "Share" link on the resource view page.
 
-# Option to email the contributor when their resources have been approved (moved from pending submission to active)
+# Option to email the contributor when their resources have been approved (moved from pending submission/review to active)
 $user_resources_approved_email=false; 
 
 # Set to true to move the Search button before the Clear button
@@ -2880,6 +2983,9 @@ $password_reset_link_expiry =1;
 # Show the resource view in a modal when accessed from search results.
 $resource_view_modal=true;
 
+# Option to show other standard pages e.g. resource requests in a modal
+$modal_default=false;
+
 # Show the resource edit in a modal when accessed from resource view modal.
 $resource_edit_modal_from_view_modal=false;
 
@@ -2938,15 +3044,15 @@ $previews_allow_enlarge=false;
 $static_slideshow_image=false;
 
 # User preference - user_pref_resource_notifications. Option to receive notifications about resource management e.g. archive state changes 
-$user_pref_resource_notifications=true;
+$user_pref_resource_notifications=false;
 # User preference - user_pref_resource_access_notifications. Option to receive notifications about resource access e.g. resource requests
-$user_pref_resource_access_notifications=true;
+$user_pref_resource_access_notifications=false;
 
 # Administrator default for receiving notifications about resource access e.g. resource requests. Can't use user_pref_resource_access_notifications since this will pick up setting of requesting user
-$admin_resource_access_notifications=true;
+$admin_resource_access_notifications=false;
 
 # User preference - user_pref_user_management_notifications (user admins only). Option to receive notifications about user management changes e.g. account requests
-$user_pref_user_management_notifications=true;
+$user_pref_user_management_notifications=false;
 # User preference - user_pref_system_management_notifications (System admins only). Option to receive notifications about system events e.g. low disk space
 $user_pref_system_management_notifications=true;
 
@@ -3051,6 +3157,9 @@ $replace_resource_preserve_option=false;
 # $replace_resource_preserve_default - if $replace_resource_preserve_option is enabled, should the option be checked by default?
 $replace_resource_preserve_default=false;
 
+# Option to allow replacement of multiple resources by filename using the "Replace resource batch" functionality
+$replace_batch_existing = false;
+
 # When searching collections, return results based on the metadata of the resources inside also
 $collection_search_includes_resource_metadata=false;
 
@@ -3081,5 +3190,70 @@ $collection_empty_on_submit=false;
 # Retina mode. Use the "next size up" when rending previews and thumbs for a more crisp display on high resolution screens. Note - uses much more bandwidth also.
 $retina_mode=false;
 
-# $xframe_options - set this to SAMEORIGIN or ALLOW-FROM with a URL to allow site to be used in an iframe
-$xframe_options = "DENY";
+# $xframe_options - set this to DENY (prevent all), SAMEORIGIN or ALLOW-FROM with a URL to allow site to be used in an iframe. To disable completely set to "";
+$xframe_options = "SAMEORIGIN";
+
+
+# FSTemplate - File System Template. Allows a system to contain an initial batch of resources that are stored elsewhere and read only.
+# Used by Montala for the ResourceSpace trial account templates, so each templated installation doesn't need to completely copy all the sample assets.
+$fstemplate_alt_threshold=0; # Applies to resource IDs BELOW this number only. Set the system so the user created resources start at 1000.
+$fstemplate_alt_storagedir=""; # Alternative filestore location for the sample files. The location of the template installation.
+$fstemplate_alt_storageurl="";
+$fstemplate_alt_scramblekey=""; # The scramble key used by the template installation, so paths must be scrambled using this instead for the sample images.
+
+# Ability to switch off responsive on UI
+$responsive_ui = true;
+
+# Default action settings
+$actions_enable=false;
+# If $actions_enable is false, option to enable actions only for users with certain permissions, To enable actions based on users having more than one permission, separate with a comma.
+$actions_permissions=array("a","t","R","u","e0");
+$actions_resource_requests=true;
+$actions_account_requests=true;
+$actions_resource_review=true;
+$actions_notify_states="-1";
+$actions_resource_types_hide="";  // Resource types to exclude from notifications
+$actions_approve_hide_groups=""; // Groups to exclude from notifications
+
+# Option to show action links e.g. user requests, resource requests in a modal
+$actions_modal=true;
+
+# Separator to use when rendering date range field values
+$range_separator = " / ";
+
+# Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)
+$daterange_edtf_support=false;
+
+/*
+Mappings between resource types and file extensions.
+Can be used to automatically create resources in the system based on
+the extension of the file.
+*/
+$resource_type_extension_mapping_default = 1;
+$resource_type_extension_mapping         = array(
+    2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl'),
+    3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv'),
+    4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
+);
+
+# New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
+$upload_then_edit=false;
+
+
+#######################################
+########################## Annotations:
+#######################################
+// Ability to annotate images or documents previews.
+// Annotations are linked to nodes, the user needs to specify which field a note is bind to.
+$annotate_enabled = false;
+
+// Specify which fields can be used to bind to annotations
+$annotate_fields = array();
+
+// The user can see existing annotations in read-only mode
+$annotate_read_only = false;
+
+// When using anonymous users, set to TRUE to allow anonymous users to add/ edit/ delete annotations
+$annotate_crud_anonymous = false;
+#######################################
+#######################################

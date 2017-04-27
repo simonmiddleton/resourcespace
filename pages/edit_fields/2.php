@@ -1,119 +1,202 @@
-<?php /* -------- Check box list ------------------ */ 
+<?php
+/* -------- Check box list ------------------ */
+if(!hook('customchkboxes', '', array($field)))
+    {
+    global $checkbox_ordered_vertically;
 
-if(!hook("customchkboxes","",array($field))):
+    // Selected nodes should be used most of the times.
+    // When searching, an array of searched_nodes can be found instead
+    // which represent the same thing (ie. already selected values)
+    if(!isset($selected_nodes))
+        {
+        $selected_nodes = array();
 
-# Translate all options
+        if(isset($searched_nodes) && is_array($selected_nodes))
+            {
+            $selected_nodes = $selected_nodes;
+            }
+        }
 
-$modified_options=hook("modify_field_options","",array($field));
-if($modified_options!=""){$field['node_options']=$modified_options;}
+    $node_options = array();
+    foreach($field['nodes'] as $node)
+        {
+        $node_options[] = $node['name'];
+        }
 
-$option_trans=array();
-$option_trans_simple=array();
-for ($m=0;$m<count($field['node_options']);$m++)
-	{
-	$trans=i18n_get_translated($field['node_options'][$m]);
-	if ($trans!=""){
-		$option_trans[$field['node_options'][$m]]=$trans;
-		$option_trans_simple[]=$trans;
-	}
-	}
+    // Work out an appropriate number of columns based on the average length of the options.
+    $l = average_length($node_options);
+    switch($l)
+        {
+        case($l > 40): $cols = 1; break; 
+        case($l > 25): $cols = 2; break;
+        case($l > 15): $cols = 3; break;
+        case($l > 10): $cols = 4; break;
+        case($l > 5):  $cols = 5; break;
+        default:       $cols = 10;
+        }
+
+    ##### Reordering options #####
+    $reordered_options = array();
+    foreach($field['nodes'] as $node)
+        {
+        $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
+        }
 	
-if ($auto_order_checkbox && !hook("ajust_auto_order_checkbox","",array($field))) {
-	if($auto_order_checkbox_case_insensitive){natcasesort($option_trans);}
-	else{natsort($option_trans);}
-}
-$field['node_options']=array_keys($option_trans); # Set the options array to the keys, so it is now effectively sorted by translated string	
-$field['node_options']=array_diff($field['node_options'], array(''));
-//$set=trim_array(explode(",",$value));
-$set=array_unique(preg_split('/,|\~\w+\:/',$value));        // this will remove language variants such as "~en:my option in english"
-$wrap=0;
+    if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
+        {
+        if($auto_order_checkbox_case_insensitive)
+            {
+            natcasesort($reordered_options);
+            }
+        else
+            {
+            natsort($reordered_options);
+            }
+        }
 
-# Work out an appropriate number of columns based on the average length of the options.
-$l=average_length($option_trans_simple);
-switch ($l)
-	{
-	case ($l>40): 	$cols=1; break;	
-	case ($l>25): 	$cols=2; break;
-	case ($l>15): 	$cols=3; break;
-	case ($l>10): 	$cols=4; break;
-	case ($l>5): 	$cols=5; break;
-	default: 	$cols=10;
-	}
+    $new_node_order    = array();
+    $order_by_resetter = 0;
+    foreach($reordered_options as $reordered_node_id => $reordered_node_option)
+        {
+        $new_node_order[$reordered_node_id] = $field['nodes'][array_search($reordered_node_id, array_column($field['nodes'], 'ref', 'ref'))];
 
-$height=ceil(count($field['node_options'])/$cols);
+        // Special case for vertically ordered checkboxes.
+        // Order by needs to be reset as per the new order so that we can reshuffle them using the order by as a reference
+        if($checkbox_ordered_vertically)
+            {
+            $new_node_order[$reordered_node_id]['order_by'] = $order_by_resetter++;
+            }
+        }
 
-if ($edit_autosave) { ?>
-	<script type="text/javascript">
-		// Function to allow checkboxes to save automatically when $edit_autosave from config is set: 
-		function checkbox_allow_save() {
-			preventautosave=false;
-			
-			setTimeout(function () {
-		        preventautosave=true;
-		    }, 500);
-		}
-	</script>
-<?php }
+    $field['nodes'] = $new_node_order;
+    ##### End of reordering options #####
 
-array_filter($field['node_options']);
-array_filter($option_trans);
+    $wrap = 0;
+    $rows = ceil(count($field['nodes']) / $cols);
 
-global $checkbox_ordered_vertically;
-if ($checkbox_ordered_vertically)
-	{
-	if(!hook('rendereditchkboxes')):
-	# ---------------- Vertical Ordering (only if configured) -----------
-	?>
-	<fieldset class="customFieldset" name="<?php echo $field['title']; ?>">
-		<legend class="accessibility-hidden"><?php echo $field['title']; ?></legend>
-		<table cellpadding=2 cellspacing=0><tr><?php
-	for ($y=0;$y<$height;$y++)
-		{
-		for ($x=0;$x<$cols;$x++)
-			{
-			# Work out which option to fetch.
-			$o=($x*$height)+$y;
-			if ($o<count($field['node_options']))
-				{
-				$option=$field['node_options'][$o];
-				$trans=$option_trans[$option];
+    if($edit_autosave)
+        {
+        ?>
+        <script type="text/javascript">
+            // Function to allow checkboxes to save automatically when $edit_autosave from config is set: 
+            function checkbox_allow_save() {
+                preventautosave=false;
+                
+                setTimeout(function () {
+                    preventautosave=true;
+                }, 500);
+            }
+        </script>
+        <?php
+        }
 
-				$name=$field["ref"] . "_" . md5($option);
-				if ($option!="")
-					{
-					/*if(!hook("replace_checkbox_vertical_rendering","",array($name,$option,$ref=$field["ref"],$set))){*/
-						?>
-						<td width="1"><input type="checkbox" id="<?php echo $name; ?>" name="<?php echo $name?>" value="yes" <?php if (in_array($trans,$set)) {?>checked<?php } ?> 
-						<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"] ?>');" onmousedown="checkbox_allow_save();"<?php } ?>
-						/></td><td><label class="customFieldLabel" for="<?php echo $name; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars($trans)?></label></td>
-						<?php
-						/*} # end hook("replace_checkbox_vertical_rendering")*/
-					}
-				}
-			}
-		?></tr><tr><?php
-		}
-	?></tr></table></fieldset><?php
-	endif;
-	}
-else
-	{				
-	# ---------------- Horizontal Ordering (Standard) ---------------------				
-	?>
-	<table cellpadding=2 cellspacing=0><tr>
-	<?php
+    if($checkbox_ordered_vertically)
+        {
+        if(!hook('rendereditchkboxes'))
+            {
+            # ---------------- Vertical Ordering -----------
+            ?>
+            <fieldset class="customFieldset" name="<?php echo $field['title']; ?>">
+                <legend class="accessibility-hidden"><?php echo $field['title']; ?></legend>
+                <table cellpadding=3 cellspacing=0>
+                    <tr>
+                <?php
+                for($i = 0; $i < $rows; $i++)
+                    {
+                    for($j = 0; $j < $cols; $j++)
+                        {
+                        $order_by = ($rows * $j) + $i;
 
-	foreach ($option_trans as $option=>$trans)
-		{
-		$name=$field["ref"] . "_" . md5($option);
-		$wrap++;if ($wrap>$cols) {$wrap=1;?></tr><tr><?php }
-		?>
-		<td width="1"><input type="checkbox" name="<?php echo $name?>" value="yes" <?php if (in_array($trans,$set)) {?>checked<?php } ?>
-		<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"] ?>');"<?php } ?>
-		 /></td><td><?php echo htmlspecialchars($trans)?>&nbsp;</td>
-		<?php
-		}
-	?></tr></table><?php
-	}
-	
-endif;
+                        $node_index_to_be_reshuffled = array_search($order_by, array_column($field['nodes'], 'order_by', 'ref'));
+
+                        if(false === $node_index_to_be_reshuffled)
+                            {
+                            continue;
+                            }
+
+                        $node = $field['nodes'][$node_index_to_be_reshuffled];
+                        ?>
+                        <td>
+                            <input type="checkbox"
+                                   id="nodes_<?php echo $node['ref']; ?>"
+                                   name="<?php echo $name; ?>"
+                                   value="<?php echo $node['ref']; ?>"
+                                <?php
+                                if(in_array($node['ref'], $selected_nodes))
+                                    {
+                                    ?>
+                                    checked
+                                    <?php
+                                    }
+
+                                if($edit_autosave)
+                                    {
+                                    ?>
+                                    onChange="AutoSave('<?php echo $field['ref']; ?>');" onmousedown="checkbox_allow_save();"
+                                    <?php
+                                    }
+                                    ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
+                        </td>
+                        <?php
+                        }
+                        ?>
+                    </tr>
+                    <tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+            </fieldset>
+            <?php
+            }
+        }
+    else
+        {
+        # ---------------- Horizontal Ordering ---------------------             
+        ?>
+		<fieldset class="customFieldset" name="<?php echo $field['title']; ?>">
+        <legend class="accessibility-hidden"><?php echo $field['title']; ?></legend>
+        <table cellpadding=3 cellspacing=0>
+            <tr>
+        <?php
+        foreach($field['nodes'] as $node)
+            {
+            $wrap++;
+            if($wrap > $cols)
+                {
+                $wrap = 1;
+                ?>
+                </tr>
+                <tr>
+                <?php
+                }
+                ?>
+            <td>
+                <input type="checkbox"
+                       name="<?php echo $name; ?>"
+                       value="<?php echo $node['ref']; ?>"
+					   id="nodes_<?php echo $node['ref']; ?>"
+                    <?php
+                    if(in_array($node['ref'], $selected_nodes))
+                        {
+                        ?>
+                        checked
+                        <?php
+                        }
+
+                    if($edit_autosave)
+                        {
+                        ?>
+                        onChange="AutoSave('<?php echo $field['ref']; ?>');"
+                        <?php
+                        }
+                        ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label></td>
+            <?php
+            }
+            ?>
+            </tr>
+        </table>
+		</fieldset>
+        <?php
+        }
+    }

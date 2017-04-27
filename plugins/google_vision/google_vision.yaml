@@ -1,0 +1,6 @@
+name: google_vision
+author: Montala Limited
+version: 1.0
+desc: Image recognition capability. Passes uploaded images to the Google Cloud Vision API and sets suggested metadata.
+config_url: /plugins/google_vision/pages/setup.php
+category: asset processing

@@ -15,11 +15,12 @@ function get_request($request)
         }
     }
 
-function get_user_requests()
+function get_user_requests($excludecompleted=false,$returnsql=false)
     {
     global $userref;
     if (!is_numeric($userref)){ return false; }
-    return sql_query("select u.username,u.fullname,r.*,if(collection.ref is null,'0',collection.ref) collection_id, (select count(*) from collection_resource cr where cr.collection=r.collection) c from request r left outer join user u on r.user=u.ref left join collection on r.collection = collection.ref where r.user = '$userref' order by ref desc");
+    $sql="select u.username,u.fullname,r.*,if(collection.ref is null,'0',collection.ref) collection_id, (select count(*) from collection_resource cr where cr.collection=r.collection) c from request r left outer join user u on r.user=u.ref left join collection on r.collection = collection.ref where r.user = '" . $userref . "'" . ($excludecompleted?" AND status<>2":"") . " order by ref desc";
+    return $returnsql?$sql:sql_query($sql);
     }
     
 function save_request($request)
@@ -56,10 +57,9 @@ function save_request($request)
                 {
                 get_config_option($assigned_to,'email_user_notifications', $send_email);
                 $assigned_to_user=get_user($assigned_to);
-                if($send_email && $assigned_to_user["email"]!="")
+                if($send_email && filter_var($assigned_to_user["email"], FILTER_VALIDATE_EMAIL))
                     {               
                     send_mail($assigned_to_user["email"],$applicationname . ": " . $lang["requestassignedtoyou"],$message);
-                    //send_mail($download_user['email'],$applicationname . ": " . $lang["notify_resource_change_email_subject"],str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_email"]),"","",'notify_resource_change_email',array("days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource));
                     }
                 else
                     {
@@ -74,7 +74,7 @@ function save_request($request)
                 if ($request_senduserupdates)
                     {
                     get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
-                    if($send_email && $currentrequest["email"]!="")
+                    if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
                         {    
                         send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestupdated"] . " - $request",$userconfirmmessage);
                         }
@@ -105,7 +105,7 @@ function save_request($request)
             }
                    
         get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
-        if($send_email && $currentrequest["email"]!="")
+        if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
             {
             send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus1"],$message);
             }
@@ -130,12 +130,11 @@ function save_request($request)
         # --------------- DECLINED -------------
         # Send declined e-mail
 
-        // $reason=str_replace(array("\\r","\\n"),"\n",$reason);$reason=str_replace("\n\n","\n",$reason); # Fix line breaks.
         $reason = unescape($reason);
         $message=$lang["requestdeclinedmail"] . "\n\n" . $lang["declinereason"] . ": ". $reason . "\n\n$baseurl/?c=" . $currentrequest["collection"] . "\n";
                
         get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
-        if($send_email && $currentrequest["email"]!="")
+        if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
             {
             send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus2"],$message);
             }
@@ -185,15 +184,21 @@ function save_request($request)
     }
     
     
-function get_requests()
+function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=false)
     {
     # If permission Rb (accept resource request assignments) is set then limit the list to only those assigned to this user - EXCEPT for those that can assign requests, who can always see everything.
     $condition="";global $userref;
-    if (checkperm("Rb") && !checkperm("Ra")) {$condition="where r.assigned_to='" . $userref . "'";}
-    
-    return sql_query("select u.username,u.fullname,r.*,(select count(*) from collection_resource cr where cr.collection=r.collection) c,r.assigned_to,u2.username assigned_to_username from request r left outer join user u on r.user=u.ref left outer join user u2 on r.assigned_to=u2.ref $condition order by status,ref desc");
+    if (checkperm("Rb") && !checkperm("Ra")) {$condition="WHERE r.assigned_to='" . $userref . "'";}
+    elseif ($excludeassigned) // This only make sense if we are able to assign requests 
+        {
+        $condition = "WHERE r.assigned_to IS null"; 
+        }
+    if ($excludecompleted) {$condition .= (($condition!="")?" AND ":"WHERE") . " r.status=0";}
+        
+    $sql="SELECT u.username,u.fullname,r.*,(SELECT count(*) FROM collection_resource cr WHERE cr.collection=r.collection) c,u2.username assigned_to_username FROM request r LEFT OUTER JOIN user u ON r.user=u.ref LEFT OUTER JOIN user u2 ON r.assigned_to=u2.ref $condition  ORDER BY status,ref desc";
+    return $returnsql?$sql:sql_query($sql);
     }
-
+  
 function email_collection_request($ref,$details)
     {
     # Request mode 0
@@ -266,6 +271,12 @@ function email_collection_request($ref,$details)
             $message.=i18n_get_translated($custom[$n]) . ": " . getval("custom" . $n,"") . "\n\n";
             }
         }
+        
+    $amendedmessage=hook('amend_request_message','', array($userref, $ref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
+    if($amendedmessage)
+        {
+        $message=$amendedmessage;
+        }
     
     $templatevars["requestreason"]=$message;
     
@@ -318,7 +329,7 @@ function email_collection_request($ref,$details)
     if ($request_senduserupdates)
         {
         get_config_option($userref,'email_user_notifications', $send_email);    
-        if($send_email && $useremail!="")
+        if($send_email && filter_var($useremail, FILTER_VALIDATE_EMAIL))
             {
             send_mail($useremail,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailusercollectionrequest",$templatevars);
             }        
@@ -437,6 +448,12 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             }
         }
     
+    $amendedmessage=hook('amend_request_message','', array($userref, $ref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
+    if($amendedmessage)
+        {
+        $message=$amendedmessage;
+        }
+        
     # Create the request
     global $request_query;
     $request_query = "insert into request(user,collection,created,request_mode,status,comments) values ('$userref','$ref',now(),1,0,'" . escape_check($message) . "')";
@@ -444,6 +461,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     global $notify_manage_request_admin, $assigned_to_user, $admin_resource_access_notifications;
     $notify_manage_request_admin = false;
 	$notification_sent = false;
+    
     // Manage individual requests of resources:
     hook('autoassign_individual_requests', '', array($userref, $ref, $message, isset($collectiondata)));
     if(isset($manage_request_admin) && $ref_is_resource)
@@ -479,12 +497,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             );
 			$notify_manage_request_admin = true;
 			}
-		}
-    $amendedmessage=hook('amend_request_message','', array($userref, $ref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
-    if($amendedmessage)
-        {
-        $message=$amendedmessage;
-        }
+		}   
     
     // Manage collection requests:
     hook('autoassign_collection_requests', '', array($userref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
@@ -629,7 +642,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 foreach ($assigned_to_users as $assigned_to_user)
                     {            
                     get_config_option($assigned_to_user["ref"],'email_user_notifications', $send_email);                    
-                    if($send_email)
+                    if($send_email && filter_var($assigned_to_user["email"], FILTER_VALIDATE_EMAIL))
                         {  
                         $assigned_to_user_emails[] = $assigned_to_user['email'];
                         }
@@ -714,7 +727,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             if($send_message==false){continue;}		
 			
 			get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $notify_user["email"]!="")
+			if($send_email && filter_var($notify_user["email"], FILTER_VALIDATE_EMAIL))
 				{
                 $admin_notify_emails[] = $notify_user['email'];	
 				}        
@@ -744,7 +757,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 		$userconfirm_notification = $lang["requestsenttext"] . "<br /><br />" . $message;
 		$userconfirmmessage = $userconfirm_notification . "<br /><br />" . $lang["clicktoviewresource"] . "<br />$baseurl/?c=$ref";
 		get_config_option($userref,'email_user_notifications', $send_email);    
-        if($send_email && $useremail!="")
+        if($send_email && filter_var($useremail, FILTER_VALIDATE_EMAIL))
             {
 			send_mail($useremail,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,"",$user_mail_template,$templatevars,$applicationname);
             }        
@@ -859,7 +872,7 @@ function email_resource_request($ref,$details)
             if($send_message==false){continue;}		
 			
 			get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $notify_user["email"]!="")
+			if($send_email && filter_var($notify_user["email"], FILTER_VALIDATE_EMAIL))
 				{
                 $admin_notify_emails[] = $notify_user['email'];				
 				}        
@@ -888,7 +901,7 @@ function email_resource_request($ref,$details)
 		if(isset($userref))
 			{
 	        get_config_option($userref,'email_user_notifications', $send_email);    
-			if($send_email && $useremail!="")
+			if($send_email && filter_var($useremail, FILTER_VALIDATE_EMAIL))
 				{
 				send_mail($useremail,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailusercollectionrequest",$templatevars);
 				}        
@@ -901,7 +914,7 @@ function email_resource_request($ref,$details)
 			{
 			$sender =  (!empty($useremail))? $useremail : (!empty($templatevars["formemail"]))? $templatevars["formemail"] :"";
 			
-			if($sender!=""){send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailuserresourcerequest",$templatevars);}  
+			if($sender!="" && filter_var($sender, FILTER_VALIDATE_EMAIL)){send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailuserresourcerequest",$templatevars);}  
 			}
         }
 	

@@ -153,32 +153,37 @@ if($submitdashtile)
             log_activity($lang['manage_all_dash'], LOG_CODE_EDITED, $title . ($text == '' ? '' : " ({$text})"),'dash_tile',null,$tile['ref']);
             update_dash_tile($tile,$buildurl,$link,$title,$reload_interval,$all_users,$default_order_by,$resource_count,$text);
 
-            $current_specific_user_groups = get_tile_user_groups($tile['ref']);
-
-            // If admin decides a tile is not meant for a specific user group, remove it from the users immediately
-            foreach($current_specific_user_groups as $current_specific_user_group)
-                {
-                if(in_array($current_specific_user_group, $specific_user_groups))
+			if($tile_audience=='true')
+				{
+				// This is an all users dash tile, delete any existing usergroup entries
+				sql_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = '{$tile['ref']}'");
+				}
+			else
+				{
+				// This is a usergroup specific dash tile
+				// If admin decides a tile is not meant for a specific user group, remove it from the users immediately
+				$current_specific_user_groups = get_tile_user_groups($tile['ref']);
+                    
+                if(count($specific_user_groups)==0)
                     {
-                    continue;
+                    // This was an all users/usergroup dash tile, delete any existing user entries
+                    sql_query("DELETE FROM user_dash_tile WHERE dash_tile = '{$tile['ref']}'");
                     }
+                    
+                // Remove tile from old user groups                    
+				foreach(array_diff($current_specific_user_groups,$specific_user_groups) as $remove_group)
+					{					
+                    delete_usergroup_dash_tile($tile['ref'],$remove_group);
+					}                
                 
-                sql_query("DELETE FROM user_dash_tile WHERE dash_tile = '{$tile['ref']}'");
-                sql_query("DELETE FROM usergroup_dash_tile WHERE usergroup = '{$current_specific_user_group}' AND dash_tile = '{$tile['ref']}'");
-                }
-
-            // Newly selected user groups. Note (these can also be old user groups for which this tile is still valid)
-            foreach($specific_user_groups as $user_group)
-                {
-                if(in_array($user_group, $current_specific_user_groups))
-                    {
-                    // Already set to be specific to this user group, move on to next one
-                    continue;
-                    }
-                add_usergroup_dash_tile($user_group, $tile['ref'], $default_order_by);
-                build_usergroup_dash($user_group,0,$tile['ref']);
-                }
-			}
+				// Newly selected user groups.
+				foreach(array_diff($specific_user_groups,$current_specific_user_groups) as $add_group)
+					{
+					add_usergroup_dash_tile($add_group, $tile['ref'], $default_order_by);
+					build_usergroup_dash($add_group,0,$tile['ref']);
+					}
+				}
+            }
 		else if(!$tile["all_users"] && !$all_users) # Not an all_users tile
 			{
 			$newtile = create_dash_tile($buildurl,$link,$title,$reload_interval,$all_users,$default_order_by,$resource_count,$text);
@@ -260,7 +265,7 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
         }
 	?>
 	<div class="Question">
-		<label for="tltype" class="stdwidth"><?php echo $lang["dashtilestyle"];?></label> 
+		<label for="tltype"><?php echo $lang["dashtilestyle"];?></label> 
 		<table>
 			<tbody>
 				<tr>
@@ -346,6 +351,7 @@ if($create)
 
 		$link=$srch."&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&k=" . urlencode($k) . "&restypes=" . urlencode($restypes);
 		$title=preg_replace("/^.*search=/", "", $srch);
+		
 		if(substr($title,0,11)=="!collection")
 			{
 			include_once "../include/collections_functions.php";
@@ -360,6 +366,18 @@ if($create)
 			$last = preg_replace("/^!last/", "", $title);
 			$title= ($last!="") ? $lang["last"]." ".$last : $lang["recent"];
 			}
+		else
+		{
+			$title_node = preg_replace("/^.*search=/", "", $srch);
+			$returned_title = array();
+			if (count(resolve_nodes_from_string($title_node))!=0)
+				{
+                $resolved_nodes = resolve_nodes_from_string($title_node);
+                $tmp_title      = get_node($resolved_nodes[0], $returned_title);
+                $title          = $returned_title['name'];
+				}
+		}
+		
 		}
 
 	$pagetitle = $lang["createnewdashtile"];
@@ -436,7 +454,7 @@ if(!$validpage)
 		{ 
 		?>
 		<div class="Question">
-			<label for="link" class="stdwidth"><?php echo $lang["dashtilelink"];?></label> 
+			<label for="link"><?php echo $lang["dashtilelink"];?></label> 
 			<input type="text" name="link" value="<?php echo htmlspecialchars($link);?>"/>
 			<div class="clearerleft"></div>
 		</div>
@@ -450,7 +468,7 @@ if(!$validpage)
 	if(!$notitle)
 		{ ?>
 		<div class="Question">
-			<label for="title" class="stdwidth"><?php echo $lang["dashtiletitle"];?></label> 
+			<label for="title"><?php echo $lang["dashtiletitle"];?></label> 
 			<input type="text" id="previewtitle" name="title" value="<?php echo htmlspecialchars(ucfirst ($title));?>"/>
 			<div class="clearerleft"></div>
 		</div>
@@ -468,7 +486,7 @@ if(!$validpage)
 			{$freetext="";}
 		?>
 		<div class="Question">
-			<label for="freetext" class="stdwidth"><?php echo $lang["dashtiletext"];?></label> 
+			<label for="freetext"><?php echo $lang["dashtiletext"];?></label> 
 			<input type="text" id="previewtext" name="freetext" value="<?php echo htmlspecialchars(ucfirst($freetext));?>"/>
 			<div class="clearerleft"></div>
 		</div>
@@ -495,7 +513,7 @@ if(!$validpage)
 	if($tile_type=="srch")
 		{?>
 		<div class="Question" id="showresourcecount" >
-			<label for="tltype" class="stdwidth"><?php echo $lang["showresourcecount"];?></label> 
+			<label for="tltype"><?php echo $lang["showresourcecount"];?></label> 
 			<table>
 				<tbody>
 					<tr>
@@ -567,7 +585,7 @@ if(!$validpage)
 		{
         ?>
 		<div class="Question">
-			<label for="tile_audience" class="stdwidth"><?php echo $lang['who_should_see_dash_tile']; ?></label> 
+			<label for="tile_audience"><?php echo $lang['who_should_see_dash_tile']; ?></label> 
 			<table>
 				<tbody>
 					<tr>
@@ -599,7 +617,7 @@ if(!$validpage)
 				{ ?>
 				<script>
 					jQuery("input:radio[name='tile_audience']").change(function(){
-						if(jQuery(this).attr("checked") && jQuery(this).val()=='false') {
+						if(jQuery(this).prop("checked") && jQuery(this).val()=='false') {
 							jQuery("#all_userseditchange").show();
 						} else {
 							jQuery("#all_userseditchange").hide();
@@ -622,14 +640,14 @@ if(!$validpage)
 	</div>
     <script>
     jQuery(document).ready(function() {
-        if(jQuery('#dash_tile_audience_user_group').attr('checked'))
+        if(jQuery('#dash_tile_audience_user_group').prop('checked'))
             {
             jQuery('#specific_user_groups').show();
             }
     });
 
     jQuery('input:radio[name="tile_audience"]').change(function() {
-        if(jQuery(this).attr('checked') && jQuery(this).val() == 'specific_user_groups')
+        if(jQuery(this).prop('checked') && jQuery(this).val() == 'specific_user_groups')
             {
             jQuery('#specific_user_groups').show();
             }

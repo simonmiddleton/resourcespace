@@ -24,7 +24,6 @@ include_once 'debug_functions.php';
 include_once 'log_functions.php';
 include_once 'file_functions.php';
 
-
 # Switch on output buffering.
 ob_start(null,4096);
 
@@ -103,7 +102,7 @@ if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FIL
 if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
 
-if(!isset($suppress_headers) || !$suppress_headers)
+if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
     {
     // Add X-Frame-Options to HTTP header, so that page cannot be shown in an iframe unless specifically set in config.
     header('X-Frame-Options: ' . $xframe_options);
@@ -368,12 +367,33 @@ $hook_cache = array();
 $hook_cache_hits = 0;
 
 # Load the sysvars into an array. Useful so we can check migration status etc.
+// Note: We should really guard against this by using set_sysvar() and get_sysvar() instead.
+
 $systemvars = sql_query("SELECT name, value FROM sysvars");
 $sysvars = array();
 foreach($systemvars as $systemvar)
-	{
-	$sysvars[$systemvar["name"]] = $systemvar["value"];
-	}
+    {
+    $sysvars[$systemvar["name"]] = $systemvar["value"];
+    }
+
+// set a system variable (which is stored in the sysvars table) - set to null to remove
+function set_sysvar($name,$value=null)
+    {
+    $name=escape_check($name);
+    $value=escape_check($value);
+    sql_query("DELETE FROM `sysvars` WHERE `name`='{$name}'");
+    if($value!=null)
+        {
+        sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$value}')");
+        }
+    }
+
+// get a system variable (which is received from the sysvars table)
+function get_sysvar($name)
+    {
+    $name=escape_check($name);
+    return sql_value("SELECT `value` FROM `sysvars` WHERE `name`='{$name}'",false);
+    }
 
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	{
@@ -1017,7 +1037,14 @@ function CheckDBStruct($path,$verbose=false)
 						$f2=fopen($path . "/" . $file,"r");
 						while (($col2 = fgetcsv($f2,5000)) !== false)
 							{
-							if ($col2[2]==$col[2]) {$cols[]=$col2[4];}
+							if ($col2[2]==$col[2]) # Matching column
+								{
+								# Add an index size if present, for indexing text fields
+								$indexsize="";
+                                                            	if (trim($col2[7])!="") {$indexsize="(" . $col2[7] . ")";}
+
+								$cols[]=$col2[4] . $indexsize;
+								}
 							}
 						
 						$sql="create index " . $col[2] . " on $table (" . join(",",$cols) . ")";
@@ -1039,26 +1066,37 @@ function getval($val,$default,$force_numeric=false)
     return $default;
     }
 
-function getvalescaped($val,$default,$force_numeric=false)
-    {    
-    # return a value from get/post, escaped, SQL-safe and XSS-free
-    $value=getval($val,$default,$force_numeric);
-    if (is_array($value))
+/**
+* Return a value from get/post/cookie, escaped and SQL-safe
+* 
+* It should not be relied upon for XSS. Sanitising output should be done when needed by developer
+* 
+* @param string        $val
+* @param string|array  $default        The fallback value if not found
+* @param boolean       $force_numeric  Set to TRUE if we want only numeric values. If returned value is not numeric
+*                                      the function will return the default value
+* 
+* @return string|array
+*/
+function getvalescaped($val, $default, $force_numeric = false)
+    {
+    $value = getval($val, $default, $force_numeric);
+
+    if(is_array($value))
         {
-        foreach ($value as &$item)
+        foreach($value as &$item)
             {
-            $item=escape_check($item); 
-            if (strpos(strtolower($item),"<script")!==false) return $default;
+            $item = escape_check($item);
             }
         }
     else
         {
-        $value=escape_check($value);
-        if (strpos(strtolower($value),"<script")!==false) {return $default;}
+        $value = escape_check($value);
         }
+
     return $value;
     }
-    
+
 function getuid()
     {
     # generate a unique ID
@@ -1729,16 +1767,24 @@ function show_pagetime(){
 	echo $total_time." sec";
 }
 
-/*
- * Permissions Functions
- * Each function encapsulates a more complex combination of permissions
- *
+
+/**
+ * Returns whether a user is anonymous or not
+ * 
+ * @return boolean
  */
 function checkPermission_anonymoususer()
-	{
-	global $anonymous_login,$username;
-	return (isset($anonymous_login) && $anonymous_login==$username);
-	}
+    {
+    global $baseurl, $anonymous_login, $username;
+
+    return (
+        isset($anonymous_login)
+        && (
+            (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
+            || (is_array($anonymous_login) && array_key_exists($baseurl, $anonymous_login) && $anonymous_login[$baseurl] == $username)
+            )
+        );
+    }
 
 
 # Dash Permissions
@@ -1781,7 +1827,7 @@ function setup_user($userdata)
     global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms, $anonymous_user_session_collection, 
            $global_permissions_mask, $user_preferences, $userrequestmode, $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, 
-           $userresourcedefaults, $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences;
+           $userresourcedefaults, $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences, $userorigin,$actions_enable,$actions_permissions,$actions_on;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -1792,7 +1838,21 @@ function setup_user($userdata)
 	
 	# Create userpermissions array for checkperm() function
 	$userpermissions=array_diff(array_merge(explode(",",trim($global_permissions)),explode(",",trim($userdata["permissions"]))),explode(",",trim($global_permissions_mask))); 
-	$userpermissions=array_values($userpermissions);# Resquence array as the above array_diff() causes out of step keys.
+	$userpermissions=array_values($userpermissions);# Resequence array as the above array_diff() causes out of step keys.
+	
+	$actions_on=$actions_enable;
+	# Enable actions functionality if based on user permissions
+	if(!$actions_enable && count($actions_permissions)>0)
+		{
+		foreach($actions_permissions as $actions_permission)
+			{
+			if(in_array($actions_permission,$userpermissions))
+					{
+					$actions_on=true;
+					break;
+					}
+			}
+		}
 	
 	$usergroup=$userdata["usergroup"];
 	$usergroupname=$userdata["groupname"];
@@ -1800,6 +1860,7 @@ function setup_user($userdata)
         $useremail=$userdata["email"];
         $userpassword=$userdata["password"];
         $userfullname=$userdata["fullname"];
+        $userorigin=$userdata["origin"];
 
         $ip_restrict_group=trim($userdata["ip_restrict_group"]);
         $ip_restrict_user=trim($userdata["ip_restrict_user"]);
@@ -1912,7 +1973,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 	$full_user_select_sql = "approved = 1 AND (account_expires IS NULL OR account_expires = '0000-00-00 00:00:00' OR account_expires > now()) " . ((strtoupper(trim(substr($user_select_sql,0,4)))=="AND")?" ":" AND ") .  $user_select_sql;
 	if($getuserdata)
 		{
-		$userdata=sql_query("SELECT u.ref, u.username, g.permissions, g.parent, u.usergroup, u.current_collection, u.last_active, timestampdiff(second, u.last_active, now()) idle_seconds, u.email, u.password, u.fullname, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, resource_defaults, u.password_last_change, g.config_options, g.request_mode, g.derestrict_filter, u.hidden_collections, u.accepted_terms FROM user u LEFT JOIN usergroup g on u.usergroup=g.ref WHERE " . $full_user_select_sql);
+		$userdata=sql_query("SELECT u.ref, u.username, u.origin, g.permissions, g.parent, u.usergroup, u.current_collection, u.last_active, timestampdiff(second, u.last_active, now()) idle_seconds, u.email, u.password, u.fullname, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, resource_defaults, u.password_last_change, g.config_options, g.request_mode, g.derestrict_filter, u.hidden_collections, u.accepted_terms FROM user u LEFT JOIN usergroup g on u.usergroup=g.ref WHERE " . $full_user_select_sql);
 		return $userdata;
 		}
 	else
@@ -1922,3 +1983,122 @@ function validate_user($user_select_sql, $getuserdata=true)
 		}
 	return false;
 	}
+
+
+/**
+* Utility function to remove unwanted HTML tags and attributes.
+* Note: if $html is a full page, developers should allow html and body tags.
+* 
+* @param string $html       HTML string
+* @param array  $tags       Extra tags to be allowed
+* @param array  $attributes Extra attributes to be allowed
+*  
+* @return string
+*/
+function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
+    {
+    if(!is_string($html) || 0 === strlen($html))
+        {
+        return $html;
+        }
+
+    //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
+    $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
+    // Basic way of telling whether we had any tags previously
+    // This allows us to know that the returned value should actually be just text rather than HTML
+    // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
+    $is_html                    = ($html != strip_tags($html));
+    $compatibility_libxml_2_7_8 = false;
+
+    libxml_use_internal_errors(true);
+
+    $allowed_tags       = array_merge(array('div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'em', 'strong', 'b', 'u', 'ol', 'ul', 'li'), $tags);
+    $allowed_attributes = array_merge(array('id', 'class', 'style'), $attributes);
+
+    // Step 1 - Check DOM
+    $doc = new DOMDocument();
+    $doc->encoding = 'UTF-8';
+
+    if(defined ('LIBXML_HTML_NOIMPLIED') && defined ('LIBXML_HTML_NODEFDTD'))
+        {
+        $process_html = $doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        }
+    else
+        {
+        // Compatibility with libxml <2.7.8
+        // we allow HTML and BODY because libxml does not have some required constants and then we extract
+        // the text between BODY tags
+        $allowed_tags               = array_merge(array('html', 'body'), $allowed_tags);
+        $process_html               = $doc->loadHTML($html);
+        $compatibility_libxml_2_7_8 = true;
+        }
+
+    if($process_html)
+        {
+        foreach($doc->getElementsByTagName('*') as $tag)
+            {
+            if(!in_array($tag->tagName, $allowed_tags))
+                {
+                $tag->parentNode->removeChild($tag);
+
+                continue;
+                }
+
+            if(!$tag->hasAttributes())
+                {
+                continue;
+                }
+
+            foreach($tag->attributes as $attribute)
+                {
+                if(!in_array($attribute->nodeName, $allowed_attributes))
+                    {
+                    $tag->removeAttribute($attribute->nodeName);
+                    }
+                }
+            }
+
+        $html = $doc->saveHTML();
+
+        if($compatibility_libxml_2_7_8 && false !== strpos($html, '<body>'))
+            {
+            $body_o_tag_pos = strpos($html, '<body>');
+            $body_c_tag_pos = strpos($html, '</body>');
+
+            $html = substr($html, $body_o_tag_pos + 6, $body_c_tag_pos - ($body_o_tag_pos + 6));
+            }
+        }
+
+    // Step 2 - Use regular expressions
+    // Note: this step is required because PHP built-in functions for DOM sometimes don't
+    // pick up certain attributes. I was getting errors of "Not yet implemented." when debugging
+    preg_match_all('/[a-z]+=".+"/iU', $html, $attributes);
+
+    foreach($attributes[0] as $attribute)
+        {
+        $attribute_name = stristr($attribute, '=', true);
+
+        if(!in_array($attribute_name, $allowed_attributes))
+            {
+            $html = str_replace(' ' . $attribute, '', $html);
+            }
+        }
+
+    $html = trim($html, "\r\n");
+
+    if(!$is_html)
+        {
+        $html = strip_tags($html);
+        }
+
+    // Revert back to UTF-8
+    $html = mb_convert_encoding($html, 'UTF-8','HTML-ENTITIES');
+
+    return $html;
+    }
+
+
+
+// IMPORTANT: make sure the upgrade.php is the last line in this file
+include_once __DIR__ . '/../upgrade/upgrade.php';

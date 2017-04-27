@@ -132,6 +132,8 @@ function get_collection($ref)
 		
 		$return["request_feedback"]=$request_feedback;
 		return $return;}
+	
+	return false;
 	}
 }
 
@@ -329,7 +331,7 @@ function set_user_collection($user,$collection)
 	}
 	
 if (!function_exists("create_collection")){	
-function create_collection($userid,$name,$allowchanges=0,$cant_delete=0)
+function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0)
 	{
 	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
 	if($username==$anonymous_login && $anonymous_user_session_collection)
@@ -341,9 +343,9 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0)
 		{	
 		$rs_session="";
 		}
-		
+
 	# Creates a new collection and returns the reference
-	sql_query("insert into collection (name,user,created,allow_changes,cant_delete,session_id) values ('" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . ")");
+	sql_query("insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id) values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . ")");
 	$ref=sql_insert_id();
 
 	index_collection($ref);	
@@ -351,10 +353,12 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0)
 	}	
 }
 	
-function delete_collection($ref)
+function delete_collection($collection)
 	{
 	# Deletes the collection with reference $ref
-	global $home_dash;
+	global $home_dash, $lang;
+	if(!is_array($collection)){$collection=get_collection($collection);}
+	$ref=$collection["ref"];
 	
 	# Permissions check
 	if (!collection_writeable($ref)) {return false;}
@@ -375,7 +379,7 @@ function delete_collection($ref)
 			}
 		}
 	// log this
-	collection_log($ref,"X",0, "");
+	collection_log($ref,"X",0, $collection["name"] . " (" . $lang["owner"] . ":" . $collection["username"] . ")");
 	}
 	
 function refresh_collection_frame($collection="")
@@ -395,7 +399,6 @@ function refresh_collection_frame($collection="")
 	CollectionDivLoad(\"" . $baseurl . "/pages/collections.php" . ((getval("k","")!="")?"?collection=" . urlencode(getval("collection",$collection)) . "&k=" . urlencode(getval("k","")) . "&":"?") . "nc=" . time() . "\");
 	</script>";
 	}
-
     }
 
 if (!function_exists("search_public_collections")){	
@@ -463,7 +466,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
         
         global $search_public_collections_ref;
         if ($search_public_collections_ref && is_numeric($search)){$spcr="or c.ref='$search'";} else {$spcr="";}    
-		//$sql.="and (c.name rlike '$search' or u.username rlike '$search' or u.fullname rlike '$search' $spcr )";
+		//$sql.="and (c.name rlike '%$search%' or u.username rlike '%$search%' or u.fullname rlike '%$search%' $spcr )";
 		}
 
 	if ($exclude_themes) # Include only public collections.
@@ -495,12 +498,11 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 	# Run the query
 	if ($include_resources)
 		{    
-            return sql_query("select distinct c.*,u.username,u.fullname, count( DISTINCT cr.resource ) count from collection c left join collection_resource cr on c.ref=cr.collection left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by $order_by $sort");
-           
+        return sql_query("select distinct c.*,u.username,u.fullname, count( DISTINCT cr.resource ) count from collection c left join collection_resource cr on c.ref=cr.collection left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by $order_by $sort");
 		}
 	else
 		{
-		    return sql_query("select distinct c.*,u.username,u.fullname from collection c left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by $order_by $sort");
+		return sql_query("select distinct c.*,u.username,u.fullname from collection c left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by $order_by $sort");
 		}
 	}
 }
@@ -650,7 +652,7 @@ function save_collection($ref)
 				name='" . rawurldecode(getvalescaped("name","")) . "',
 				".hook('savecollectionadditionalfields')."
 				keywords='" . getvalescaped("keywords","") . "',
-				public='" . $public . "',";
+				public=" . ($public==''?"null":"'" . $public . "'") . ",";
 		
 		for($n=1;$n<=$theme_category_levels;$n++){
 			if ($n==1){$themeindex="";} else {$themeindex=$n;}
@@ -935,21 +937,7 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
         {
         return $return;
         }
-
-    // Return a list of keywords that are in use for this field
-    $keywords_in_use_sql = 'SELECT k.keyword AS `value` FROM keyword k JOIN resource_keyword rk ON k.ref = rk.keyword';
-    if($smart_themes_omit_archived)
-        {
-        $keywords_in_use_sql .= ' JOIN resource r ON rk.resource = r.ref';
-        }
-    $keywords_in_use_sql .= " WHERE resource_type_field = '{$field}' AND resource > 0";
-    if($smart_themes_omit_archived)
-        {
-        $keywords_in_use_sql .= " AND archive = 0";
-        }
-    $keywords_in_use_sql .= ' GROUP BY MD5(k.keyword)';
-    $keywords_in_use = sql_array($keywords_in_use_sql);
-
+  
     /*
     Tidy list so it matches the storage format used for keywords
     The translated version is fetched as each option will be indexed in the local language version of each option
@@ -966,11 +954,6 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
         //$cleaned_option_base = str_replace('-', ' ', $options_base[$n]);
         $cleaned_option_base = preg_replace('/\W/',' ',$options_base[$n]);      // replace any non-word characters with a space
         $cleaned_option_base = trim($cleaned_option_base);      // trim (just in case prepended / appended space characters)
-
-        if(!in_array($cleaned_option_base, $keywords_in_use))
-            {
-            continue;
-            }
 
         $tree_node_depth    = 0;
         $parent_node_to_use = 0;
@@ -1336,6 +1319,7 @@ function add_saved_search_items($collection)
 		}
 	$results=do_search(getvalescaped("addsearch",""), getvalescaped("restypes",""), "relevance", $archivesearch,-1,'',false,getvalescaped("starsearch",""),false,false,getvalescaped("daylimit",""));
 
+	if(!is_array($results) || count($results)==0){return false;}
 	# Check if this collection has already been shared externally. If it has, we must add a further entry
 	# for this specific resource, and warn the user that this has happened.
 	$keys=get_collection_external_access($collection);
@@ -2319,7 +2303,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
     // Edit all
     # If this collection is (fully) editable, then display an edit all link
-    if(($k=="" || $internal_share_access) && $show_edit_all_link && (count($result) > 0))
+    if(($k=="" || $internal_share_access) && $show_edit_all_link && $count_result>0)
         {
         if(!$edit_all_checkperms || $allow_multi_edit)
             {

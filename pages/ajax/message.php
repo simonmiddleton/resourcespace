@@ -8,48 +8,79 @@
 		{
 		include_once __DIR__ . "/../../include/db.php";
 		include_once __DIR__ . "/../../include/general.php";
-		
+		include __DIR__ . "/../../include/authenticate.php";
+		if($actions_on)
+			{
+			include_once __DIR__ . "/../../include/search_functions.php";
+			include_once __DIR__ . "/../../include/action_functions.php";
+			include_once __DIR__ . "/../../include/request_functions.php";
+			}
+
+        $user         = getvalescaped('user', 0, true);
+        $seen         = getvalescaped('seen', 0, true);
+        $unseen       = getvalescaped('unseen', 0, true);
+        $allseen      = getvalescaped('allseen', 0, true);
+        $deleteusrmsg = getvalescaped('deleteusrmsg', 0, true);
+
+		if(0 < $user)
+			{
+			if(is_numeric($user) && !checkperm_user_edit($user))
+				{
+				exit($lang['error-permissiondenied']);
+				}
+			}
+		else
+			{
+			// no user specified so default to the current user
+			$user = $userref;
+			}
 
 		// It is an acknowledgement so set as seen and get out of here
-		if (isset($_GET['seen']))
+		if (0 < $seen)
 			{
-			message_seen($_GET['seen']);
+			message_seen($seen);
 			return;
 			}
 			
-		if (isset($_GET['unseen']))
+		if (0 < $unseen)
 			{
-			message_unseen($_GET['unseen']);
+			message_unseen($unseen);
 			return;
 			}
 
 		// Acknowledgement all messages then get out of here
-		if (isset($_GET['allseen']))
+		if (0 < $allseen)
 			{
-			message_seen_all($_GET['allseen']);
+			message_seen_all($allseen);
 			return;
 			}
 
 		// Purge messages that have an expired TTL then get out of here
-		if (isset($_GET['purge']))
+		if ('' != getval('purge', ''))
 			{
 			message_purge();
 			return;
 			}
-
-		if(isset($_GET['user']))
+		
+		// Delete a specific message from a single user
+		if (0 < $deleteusrmsg)
 			{
-			$user=$_GET['user'];
-			}
-		else
-			{
-			include __DIR__ . "/../../include/authenticate.php";	// no user specified so default to the current user
-			$user=$userref;
-			}
+			message_user_remove($deleteusrmsg);
+			return;
+			}	
+		
 
 		// Check if there are messages
 		$messages = array();
 		message_get($messages,$user);	// note: messages are passed by reference
+		if($actions_on)
+			{
+			$actioncount=get_user_actions(true);
+			if($actioncount>0)
+				{
+				$messages[]=array('ref'=>0,'actioncount'=>$actioncount);
+				}
+			}
 		ob_clean();	// just in case we have any stray whitespace at the start of this file
 		echo json_encode($messages);
 		return;
@@ -86,15 +117,23 @@
 			url: '<?php echo $baseurl; ?>/pages/ajax/message.php',
 			type: 'GET',
 			success: function(messages, textStatus, xhr) {
-				if(xhr.status==200 && isJson(messages) && (messages=jQuery.parseJSON(messages)) && messages.length>0)
-				{
-					jQuery('span.MessageCountPill').html(messages.length).click(function() {
+				if(xhr.status==200 && isJson(messages) && (messages=jQuery.parseJSON(messages)) && jQuery(messages).length>0)
+					{
+					messagecount=totalcount=jQuery(messages).length;
+					actioncount=0;
+					if (typeof(messages[messagecount-1]['actioncount']) !== 'undefined') // There are actions as well as messages
+						{
+						actioncount=parseInt(messages[messagecount-1]['actioncount']);
+						messagecount=messagecount-1;
+						totalcount=actioncount+messagecount;
+						}
+					jQuery('span.MessageTotalCountPill').html(totalcount).click(function() {
 						CentralSpaceLoad('<?php echo $baseurl; ?>/pages/user/user_messages.php',true);
 					}).fadeIn();
 					if (activeSeconds > 0 || message_poll_first_run)
-					{
-						for(var i=0; i < messages.length; i++)
 						{
+						for(var i=0; i < messagecount; i++)
+							{
 							var ref = messages[i]['ref'];
 							if (message_poll_first_run)
 							{
@@ -120,13 +159,31 @@
 								}
 								?>
 								message_poll();
+							}
 						}
+					if (actioncount>0)
+							{
+							jQuery('span.ActionCountPill').html(actioncount).fadeIn();;
+							}
+						else
+							{
+							jQuery('span.ActionCountPill').hide();	
+							}
+						if (messagecount>0)
+							{
+							jQuery('span.MessageCountPill').html(messagecount).fadeIn();;
+							}
+						else
+							{
+							jQuery('span.MessageCountPill').hide();	
+							}
 					}
-				}
 				else
-				{
+					{
+					jQuery('span.MessageTotalCountPill').hide();
 					jQuery('span.MessageCountPill').hide();
-				}
+					jQuery('span.ActionCountPill').hide();
+					}
 			}
 		}).done(function() {
 			<?php if ($message_polling_interval_seconds > 0)

@@ -5,6 +5,8 @@ include_once "../../include/general.php";
 include "../../include/authenticate.php";
 include "../../include/header.php";
 
+global $user_preferences;
+
 if (getval("allseen","")!="")
   {
   // Acknowledgement all messages
@@ -15,13 +17,13 @@ if (getval("allseen","")!="")
   <h1><?php echo $lang["mymessages"]?></h1>
   <p><?php echo $lang["mymessages_introtext"] ?></p>
 
-
+<?php if ($user_preferences){?>
 <div class="VerticalNav">
 <ul>
 <li>
 <a href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["userpreferences"];?></a>
 </li>
-<?php
+<?php }
 	$messages=array();
 	if (!message_get($messages,$userref,true,true))		// if no messages get out of here with a message
 		{
@@ -69,7 +71,7 @@ if (getval("allseen","")!="")
 <?php
 for ($n=0;$n<count($messages);$n++)
 	{
-	$message=escape_check($messages[$n]["message"]);
+	$message=escape_check(strip_tags_and_attributes($messages[$n]["message"]));
 	$message=htmlspecialchars($message,ENT_QUOTES);
 	$url_encoded=urlencode($messages[$n]["url"]);
 	$unread_css = ($messages[$n]["seen"]==0 ? " class='MessageUnread'" : "");
@@ -79,7 +81,7 @@ for ($n=0;$n<count($messages);$n++)
 			<td<?php echo $unread_css; ?>><?php echo $messages[$n]["owner"]; ?></td>
 			<td<?php echo $unread_css; ?>><a href="#Header" onclick="message_modal('<?php echo $message; ?>','<?php
 				echo $url_encoded; ?>',<?php echo $messages[$n]["ref"]; ?>,'<?php echo $messages[$n]["owner"] ?>');"><?php
-					echo nl2br(strip_tags($messages[$n]["message"],'<br><p>'));
+					echo nl2br($messages[$n]["message"]);
 					?></a></td>
 			<td<?php echo $unread_css; ?>><?php echo nicedate($messages[$n]["expires"]); ?></td>
 			<td<?php echo $unread_css; ?>><?php echo ($messages[$n]["seen"]==0 ? $lang['no'] : $lang['yes']); ?></td>
@@ -93,6 +95,11 @@ for ($n=0;$n<count($messages);$n++)
 							echo $baseurl; ?>/pages/ajax/message.php?<?php echo (($messages[$n]["seen"]==0)?"seen":"unseen") . "=" . $messages[$n]['ref'] ; ?>',function() { message_poll(); });
 							return CentralSpaceLoad(this,true);
 							"><?php echo LINK_CARET ?><?php echo (($messages[$n]["seen"]==0)?$lang["mymessages_markread"]:$lang["mymessages_markunread"]);?>
+					</a>
+					 <a href="<?php echo $baseurl_short?>pages/user/user_messages.php" onclick="jQuery.get('<?php
+							echo $baseurl; ?>/pages/ajax/message.php?deleteusrmsg=<?php echo $messages[$n]['ref'] ; ?>',function() { message_poll(); });
+							return CentralSpaceLoad(this,true);
+							"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]; ?>
 					</a>
 						  
 				</div>

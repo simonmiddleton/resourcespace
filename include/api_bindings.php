@@ -17,17 +17,47 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
    # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
    return do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort);
    }
-
+   
+function api_search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$recent_search_daylimit="",$getsizes="",$previewext="jpg")
+   {
+   # Extension to search capability that also returns the URLs of preview file sizes requested using the $getsizes parameter that match the requested extension.
+   $getsizes=explode(",",$getsizes);
+   return search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,0,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
+   }
+  
 function api_get_resource_field_data($resource)
    {
    # Get all field data for a resource
    return get_resource_field_data($resource);
    }
 
-function api_create_resource($resource_type,$archive=999)
+function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,$revert=false,$autorotate=false,$metadata="")
     {
+    $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
+    $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
+    $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
+
     # Create a new resource
-    return create_resource($resource_type,$archive);
+    $ref=create_resource($resource_type,$archive);
+    
+    # Also allow upload URL in the same pass (API specific, to reduce calls)
+    if ($url!="")
+        {     
+        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+        if ($return===false) {return false;}
+        }
+        
+    # Also allow metadata to be passed here.
+    if ($metadata!="")
+        {
+        $metadata=json_decode($metadata);
+        foreach ($metadata as $field=>$value)
+            {
+            update_field($ref,$field,$value);
+            }
+        }
+    
+    return $ref;
     }
 
 function api_update_field($resource,$field,$value)
@@ -56,9 +86,27 @@ function api_update_resource_type($resource,$type)
     return update_resource_type($resource,$type);
     }
 
-function api_get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jpg",$page=1,$watermarked=false,$alternative=-1)
+function api_get_resource_path($ref, $getfilepath, $size, $generate=true, $extension="jpg", $page=1, $watermarked=false, $alternative=-1)
     {
-    return get_resource_path($ref,$getfilepath,$size,$generate,$extension,-1,$page,$watermarked,"",$alternative,false);
+    $refs = json_decode($ref, true);
+    if(is_array($refs))
+        {
+        $return = array();
+
+        foreach($refs as $ref)
+            {
+            if(!is_numeric($ref))
+                {
+                continue;
+                }
+
+            $return[$ref] = get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
+            }
+
+        return $return;
+        }
+
+    return get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, "", $alternative, false);
     }
     
 function api_get_resource_data($resource)
@@ -76,11 +124,47 @@ function api_get_resource_types()
     return get_resource_types("", true);
     }
 
-function api_add_alternative_file($resource,$name,$description="",$file_name="",$file_extension="",$file_size=0,$alt_type='')
-	{
-    return add_alternative_file($resource,$name,$description,$file_name,$file_extension,$file_size,$alt_type);
-	}
-	
+function api_add_alternative_file($resource, $name, $description = '', $file_name = '', $file_extension = '', $file_size = 0, $alt_type = '', $file = '')
+    {
+    global $disable_alternative_files;
+
+    if($disable_alternative_files || (0 < $resource && (!get_resource_access($resource) || checkperm('A'))))
+        {
+        return false;
+        }
+
+    // Just insert record in the database
+    if('' == trim($file))
+        {
+        return add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
+        }
+
+    // A file has been specified so add it as alternative
+    $alternative_ref     = add_alternative_file($resource, $name, $description, $file_name, $file_extension, $file_size, $alt_type);
+    $rs_alternative_path = get_resource_path($resource, true, '', true, $file_extension, -1, 1, false, '', $alternative_ref);
+
+    if(!copy($file, $rs_alternative_path))
+        {
+        return false;
+        }
+
+    chmod($rs_alternative_path, 0777);
+
+    $file_size = @filesize_unlimited($rs_alternative_path);
+
+    $resource = escape_check($resource);
+
+    sql_query("UPDATE resource_alt_files SET file_size='{$file_size}', creation_date = NOW() WHERE resource = '{$resource}' AND ref = '{$alternative_ref}'");
+
+    global $alternative_file_previews_batch;
+    if($alternative_file_previews_batch)
+        {
+        create_previews($resource, false, $file_extension, false, false, $alternative_ref);
+        }
+
+    return $alternative_ref;
+    }
+
 function api_delete_alternative_file($resource,$ref)
 	{
 	return delete_alternative_file($resource,$ref);
@@ -88,11 +172,19 @@ function api_delete_alternative_file($resource,$ref)
 
 function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="")
     {
+    $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
+    $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
+    $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
+
     return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);
     }
     
 function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url="")
     {
+    $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
+    $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
+    $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
+
     return upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
     }
 
@@ -135,9 +227,8 @@ function api_delete_collection($ref)
     
 function api_search_public_collections($search="", $order_by="name", $sort="ASC", $exclude_themes=true, $exclude_public=false)
     {
+    $exclude_themes = filter_var($exclude_themes, FILTER_VALIDATE_BOOLEAN);
+    $exclude_public = filter_var($exclude_public, FILTER_VALIDATE_BOOLEAN);
+
     return search_public_collections($search, $order_by, $sort, $exclude_themes, $exclude_public);
     }
-    
-
-    
-    

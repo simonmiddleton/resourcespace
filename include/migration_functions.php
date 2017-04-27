@@ -141,7 +141,8 @@ function populate_resource_nodes($startingref=0)
 						select resource, '" . $nodes[$n]['ref'] . "','1' hit_count, '1' new_hit_count, 1 found from resource_data
 						where 
 						resource_type_field='" . $nodes[$n]['resource_type_field'] . "' and resource>0 and find_in_set('" . escape_check($nodes[$n]['name']) . "',value))
-					fn where fn.found=1 group by fn.resource;");
+					fn where fn.found=1 group by fn.resource
+					ON DUPLICATE KEY UPDATE hit_count=hit_count");
 		
 		sql_query("delete from sysvars where name='resource_node_migration_state'");
 		sql_query("insert into sysvars (name, value) values ('resource_node_migration_state', '$n')");

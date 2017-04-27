@@ -75,7 +75,7 @@ button[type="submit"] { font-size: 1em; }
 .checkboxtext {margin-right: 2px;width: 160px;display: inline-block;*display:inline;*zoom: 1;}
 .checkboxes{margin-top: 5px;padding-left: 300px;}
 .verticalcheckboxes {padding-left: 300px;}
-.checkboxtext .customFieldLabel {float:none;}
+
 .editcheckboxes {float:left;padding-left: 300px;}
 
 .radioblock { float: left;padding-left: 300px;clear: left;margin-top: -1em;}
@@ -107,7 +107,7 @@ button[type="submit"] { font-size: 1em; }
 #HeaderNav2 {float:left; padding-left: 30px;}
 #HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0.5em;}
 .HeaderImgLink{float:left;height:100%;}
-#HeaderImg{margin:0 0 0 5px; height: 40px; }
+#HeaderImg{margin:0; height: 40px; }
 .HorizontalNav li,  .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
 .HorizontalNav li a, .HorizontalNav li a{display: inline-block;zoom: 1;*display: inline;}
 #SearchBarContainer {margin-top: 20px;}
@@ -136,7 +136,7 @@ div#Header.SlimHeaderFixedPosition #HeaderNav2 li:last-child { margin-right: 40p
 div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 
-#Footer {clear: both; margin:20px 25px;padding:0;text-align:left;}
+#Footer {clear: both; margin:20px 25px 38px 25px;padding:0;text-align:left;}
 #FooterNavRight {float:right;text-align:right;margin-top: 10px;clear: right;}
 #FooterNavRightBottom {float:right;text-align:right;margin-top: 10px;clear: right;}
 #FooterNavLeft {float:left;text-align:left;margin-top: 10px;}
@@ -144,7 +144,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 
 #CentralSpaceContainer {margin:0px 25px 20px;padding:0 282px 0 0;text-align:left;}
 #CentralSpaceContainerRestrict {margin:0px 15px 20px 25px;padding:0;text-align:left;}
-#CentralSpaceLogin {margin: 2em auto 4em;padding:0;width: 700px;text-align:left;}
+#CentralSpaceLogin {margin: 2em auto 4em;padding:0;width: 760px;text-align:left;}
 #CentralSpace {text-align:left;position:relative;}
 
 .TopInpageNav {clear: left;padding-bottom: 5px;margin-bottom:10px;margin-right: 15px;position:relative;}
@@ -193,6 +193,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #CentralSpace .SearchWidth {width: 550px;font-size: 0.9em ;margin: 0px 0px;padding: 0px;}
 #CentraSpace .SearchWidthExp {width:200px;font-size: 0.9em ;margin: 0px 0px;padding: 0px;}
 #CentralSpace .SplitSearch {float: left; margin-left: 5px;margin-right: 5px;}
+.NumberSearchWidth {font-size: 0.9em;width:80px;font-size: 0.9em;margin: 0px 0px;padding: 0px;margin-bottom:3px;}
 
 .CollectionPanelShell {padding:0;float: left;margin: 0px 15px 5px 0px;width: 97px;height: 120px; text-align: left;}
 .CollectionPanelInfo{padding-bottom:3px;}
@@ -233,6 +234,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #SearchBox {padding:0;float: right;width: 282px;margin: 0px 25px 0px 0px;display:inline;text-align:left;}
 #SearchBoxPanel {width: 280px;}
 #ResearchBoxPanel {width: 280px;margin-top: 15px;}
+#SearchBox .PopupCategoryTree { display: none; position: fixed; text-align: left; z-index: 999; }
 
 /*Resource Panel layout*/
 .ResourcePanelShell {padding:0;float: left;margin: 0px 15px 10px 0px;width: 174px;}
@@ -265,7 +267,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a, .CollectionPanelInfo a	{float: right;margin-right: 0.5em;text-decoration:none;}
+.ResourcePanelIcons a, .CollectionPanelTools a	{;margin-right: 0.5em;text-decoration:none;}
 .ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
 .ListTools a:hover	{text-decoration:none;}
@@ -311,7 +313,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .customFieldset { padding: 0; border: 0;}
 .Question #capswarning { margin-left: 190px; display: none; color: red;font-weight: bold;}
 .Question .Lineup {margin: 3px 0px;}
-.Question .stdwidth,.stdwidth{width: 360px;font-size: 1em;margin: 3px 0px;}
+.Question .stdwidth,.stdwidth{width: 420px;font-size: 1em;margin: 3px 0px;}
 .Question select {font-size: 1em ;margin: 3px 0px;}
 .Question .medwidth,.medwidth{width: 250px;font-size: 1em;margin: 3px 0px;}
 .Question .shrtwidth,.shrtwidth{width: 145px;font-size: 1em;margin: 3px 0px;}
@@ -321,9 +323,14 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .Inline label { float: none; font-weight: normal; margin-top: 0; width: auto; }
 .Question .tickset {float: left;}
 .Question .OptionTable, .Question .OptionToggle {margin: 0 0 0 190px;padding:0;}
-.Question .InnerLabel {width:60px; margin-top:  0px;}
+.Question .InnerLabel {width:90px; margin-top:  0px;}
 .Question .ExifOptions {margin: 0 0 0 290px;padding:0;}
 
+
+.Question .indent {
+    float:left;
+    width: 700px;
+}
 
 .FormWide .Question label{width: 20%}
 .FormWide .Question .Inline label { width: auto; }
@@ -356,7 +363,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {float: left;margin: 0px 0px 0px 0px;}
-#previewimagewrapper {float:left;margin: 0px 20px 15px 0px;}
+#previewimagewrapper {float:left;margin: 0px 20px 15px 0px; position: relative;}
 
 .RecordPanel .PictureDoc {float: left;margin: 50px 130px;}
 
@@ -460,10 +467,10 @@ behavior: url('../css/iepngfix.htc');
 .Breadcrumbs {float:left;margin-top:4px;}
 .SearchBreadcrumbs {margin-bottom:10px;}
 
-.CategoryBox {overflow:auto;width:360px;height:80px;padding:2px;font-size:1em;}
+.CategoryBox {overflow:auto;width:420px;height:80px;padding:2px;font-size:1em;}
 .MiniCategoryBox {overflow:auto;width:auto;height:80px;padding:2px;font-size:1em;}
  
-.CategoryTree {overflow:auto;width:360px;height:400px;display:none;}
+.CategoryTree {overflow:auto;width:420px;height:400px;display:none;}
 .backline {
 	background-image: url(../gfx/interface/line.gif);
 	background-position: 14px 0px;
@@ -529,7 +536,7 @@ div.autocomplete ul li {
 #overlay{position: absolute; top: 0; left: 0; z-index: 90; width: 100%; height: 500px;}
 
 .FormHelp{margin: 0px 0px 10px 300px;padding: 0;}
-.FormHelpInner{width:360px;padding:5px;margin:10px 0 0 0;}
+.FormHelpInner{width:420px;padding:5px;margin:10px 0 0 0;}
 
 #ThemeBox {padding:0;margin:0;text-align:left;width: 170px;}
 #ThemeBoxPanel {width: 170px;padding:0;margin:0;}
@@ -554,7 +561,7 @@ div.autocomplete ul li {
 #advancedTooltip{
 	padding:5px;
 	width: auto;
-	max-width: 360px;
+	max-width: 420px;
 	}
 	
 #LoadingBox
@@ -596,7 +603,7 @@ li.plupload_droptext {font-size: 1.1em;}
 .plupload_view_list .plupload_filelist_footer {padding-right:15px;}
 .plupload_view_list .plupload_filelist_footer .plupload_file_action {padding-right:21px;padding-left:6px;}
 
-#showlog {margin-top:10px;}
+#showlog,#hidelog {margin-top:10px;}
 
 .ui-layout-pane {
     overflow: auto;
@@ -682,7 +689,7 @@ margin-bottom:10px;
 	margin-bottom:10px;
 }
 
-.smalllisticon, .smalllisticonactive, .xlthumbsicon, .xlthumbsiconactive, .smallthumbsicon, .smallthumbsiconactive, .largethumbsicon, .largethumbsiconactive {
+.smalllisticon, .smalllisticonactive, .xlthumbsicon, .xlthumbsiconactive, .smallthumbsicon, .smallthumbsiconactive, .largethumbsicon, .largethumbsiconactive, .stripicon, .stripiconactive {
 width: 20px;
 display: block;
 height: 20px;
@@ -697,7 +704,7 @@ margin-bottom: 10px;
 }
 
 .icondisplay {
-width: 90px;
+width: 110px;
 }
 
 .smalllisticon{background: url(../gfx/interface/listicon.png) no-repeat 0px;}
@@ -708,6 +715,8 @@ width: 90px;
 .smallthumbsicon{background: url(../gfx/interface/smallicon.png) no-repeat 0px;}
 .largethumbsicon{background: url(../gfx/interface/largeicon.png) no-repeat 0px;}
 .largethumbsiconactive{background: url(../gfx/interface/largeiconactive.png) no-repeat 0px;}
+.stripiconactive{background: url(../gfx/interface/stripiconactive.png) no-repeat 0px;}
+.stripicon{background: url(../gfx/interface/stripicon.png) no-repeat 0px;}
 
 #contactadminbox  textarea{
 	width:100%;
@@ -1002,6 +1011,9 @@ div.video-js {margin:auto;}
     padding: 14px 20px 10px 20px;
 }
 
+#modal .BasicsBox .HelpHeader a { color: #e0e0e0; }
+#modal .BasicsBox .HelpHeader .backtoresults { margin-top: 15px; }
+
 /* Dropdown Actions */
 #CollectionMenu .ActionsContainer {
 	margin: 10px 0px;
@@ -1230,3 +1242,77 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 /* Custom filters (extends the default form filters in ResourceSpace) */
 #FilterNodeOptions { width: 510px; }
 #FilterNodeOptions .FilterItemContainer > label { width: 150px; }
+
+
+.ImageStrip
+    {
+    height:150px;
+    width:auto;
+    margin:10px 10px 0 0;
+    }
+#CentralSpaceResources  
+    {
+    text-align:justify;
+    }
+.ImageTools
+    {
+    position:absolute;display:inline;background-color:black;visibility:hidden;
+    }
+.ImageStripLink:hover .ImageTools
+    {
+    visibility:visible;
+    }
+    
+.CollectionPanelTools {visibility:hidden;}
+.CollectionPanelShell:hover .CollectionPanelTools {visibility:visible;}
+#FilterNodeOptions .FilterItemContainer > label { width: 150px; }.tag-editor li { padding: initial; }
+
+/* Pill-like display for keywords */
+.ResponsiveViewFullSite { display: none; }
+.Question .customFieldLabel, .keywordselected {float:none;border-radius:8px;margin-right:10px;padding:2px 6px;margin-left:0;}
+.customFieldset input[type=checkbox] {margin:0 2px 0 0;}
+.keywordselected {display:inline;}
+.keywordselected a {padding-left:8px;}
+
+#photoholder {	
+	margin: 1px;
+}
+
+
+#PreviewTools {
+    height: 41px;
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    z-index: 1;
+}
+
+#PreviewToolsOptionsWrapper {
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    color: #FFF;
+    font-size: 26px;
+}
+
+.ToolsOptionLink {
+    float: right;
+    margin: 5px 10px 0px 0px;
+}
+
+.ToolsOptionLink:link, .ToolsOptionLink:visited {
+    color: #FFF;
+}
+
+.ToolsOptionLink:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.ToolsOptionLink.Enabled {
+    color: #000;
+}
+
+a.Enabled, a:visited.Enabled {
+    color: #000;
+    text-decoration: underline;
+}

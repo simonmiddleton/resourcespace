@@ -5,5 +5,4 @@
 #
 User-agent: *
 Crawl-delay: 10
-Allow: /pages/spider.php
-Disallow: /
+Disallow : /filestore

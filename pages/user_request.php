@@ -2,7 +2,6 @@
 include "../include/db.php";
 include_once "../include/general.php";
 
-
 $error=false;
 $error_extra="";
 
@@ -10,7 +9,7 @@ $user_email=getval("email","");
 hook("preuserrequest");
 
 if (getval("save","")!="")
-	{
+	{    
 	# Check for required fields
 
 	# Required fields (name, email) not set?
@@ -58,18 +57,28 @@ if (getval("save","")!="")
 				}
 			}
 		}
-
+		
+	$spamcode = getval("antispamcode","");
+	$usercode = getval("antispam","");
+	$spamtime = getval("antispamtime",0);
+	
 	if (!empty($missingFields))
 		{
 		$error=$lang["requiredfields"] . ' ' . i18n_get_translated(implode(', ', $missingFields), true);
 		}
+    # Check the anti-spam time is recent
+    elseif(getval("antispamtime",0)<(time()-180) ||  getval("antispamtime",0)>time())
+        {
+        $error=$lang["expiredantispam"];    
+        }
 	# Check the anti-spam code is correct
-	elseif (!hook('replaceantispam_check') && getval("antispamcode","")!=md5(getval("antispam","")))
+	//elseif (!hook('replaceantispam_check') && getval("antispamcode","") != hash("SHA256",strtoupper(getval("antispam","")) . $scramble_key . getval("antispamtime",0)))
+	elseif (!hook('replaceantispam_check') && !verify_antispam($spamcode,$usercode,$spamtime))
 		{
 		$error=$lang["requiredantispam"];
 		}
 	# Check that the e-mail address doesn't already exist in the system
-	elseif (user_email_exists($user_email))
+	elseif (user_email_exists($user_email) && $account_email_exists_note)
 		{
 		# E-mail already exists
 		$error=$lang["accountemailalreadyexists"];$error_extra="<br/><a href=\"".$baseurl_short."pages/user_password.php?email=" . urlencode($user_email) . "\">" . $lang["forgottenpassword"] . "</a>";
@@ -81,7 +90,12 @@ if (getval("save","")!="")
 		if ($user_account_auto_creation)
 			{	
 			# Automatically create a new user account
-			$try=auto_create_user_account();
+			$try=auto_create_user_account(md5($usercode . $spamtime));
+			if($try!==true && !$account_email_exists_note)
+				{
+				// send an email about the user request
+				$try=email_user_request();
+				}
 			}
 		else
 			{
@@ -291,13 +305,58 @@ $groups=get_registration_selectable_usergroups();
 <?php
 if(!hook("replaceantispam"))
 	{
-	$code=rand(1000,9999);
-	?>
-	<input type="hidden" name="antispamcode" value="<?php echo md5($code)?>">
+    $rndword = array_merge(range('0', '9'), range('A', 'Z'));
+    shuffle($rndword);
+    $timestamp=time();
+    $rndwordarray=  array_slice ($rndword , 0,6);
+    $rndcode= hash("SHA256",implode("",$rndwordarray) .  $scramble_key . $timestamp);
+    $height = 50; //CAPTCHA image height
+    $width = 160; //CAPTCHA image width
+    $font_size = 25; //CAPTCHA Font size
+    $font=dirname(__FILE__). "/../gfx/fonts/vera.ttf";
+    
+    $capimage = imagecreate($width, $height);
+    $graybg = imagecolorallocate($capimage, 245, 245, 245);
+    $textcolor = imagecolorallocate($capimage, 34, 34, 34);
+    $green = ImageColorAllocate($capimage, 121, 188, 65); 
+    ImageRectangle($capimage,0,0,$width-1,$height-1,$green); 
+    imageline($capimage, 0, $height/2, $width, $height/2, $green); 
+    imageline($capimage, $width*4/5, 2, $width*4/5, $height, $green);
+    imageline($capimage, $width*3/5, 2, $width*3/5, $height, $green);
+    imageline($capimage, $width*2/5, 2, $width*2/5, $height, $green);
+    imageline($capimage, $width/5, 2, $width/5, $height, $green);
+    
+    $n=0;
+    foreach($rndwordarray as $rndletter)
+        {
+        imagefttext($capimage, $font_size,rand(-20, 20), 10 + (24*$n), rand(25, 45), $textcolor, $font, $rndletter);
+        $n++;
+        }
+        
+    ob_start();
+    imagegif($capimage);
+    $imagedata = ob_get_contents();
+    ob_end_clean();
+
+   	?>
+	<input type="hidden" name="antispamcode" value="<?php echo $rndcode ?>">
+	<input type="hidden" name="antispamtime" value="<?php echo $timestamp ?>">
 	<div class="Question">
-	<label for="antispam"><?php echo $lang["enterantispamcode"] . " " . $code ?></label>
-	<input type=text name="antispam" id="antispam" class="stdwidth" value="">
+        <label for="antispam"><?php echo $lang["enterantispamcode"] ?></label> 
+        <input type=text name="antispam" class="stdwidth" value="">
+        
+        
 	<div class="clearerleft"> </div>
+        <div style="
+            margin:0 0 .1em;
+        background: url(data:image/gif;base64,<?php echo base64_encode($imagedata) ?>) top left no-repeat;
+        height:50px;
+        margin-left: 300px;
+        text-indent:1.5em;
+        ">    
+    </div>
+        
+	<div class="clearerleft"> </div>    	
 	</div>
 	<?php
 	}

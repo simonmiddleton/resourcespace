@@ -52,7 +52,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 		sql_query("update resource set ".$clear_fields." where ref=$ref");
 		#also add the ref back into keywords:
 		add_keyword_mappings($ref, $ref , -1);
-		$extension=sql_value("select file_extension value from resource where ref=$ref","");
+		$extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
 		$filename=get_resource_path($ref,true,"",false,$extension);
 		$processfile['tmp_name']=$filename; }
 	else{
@@ -130,7 +130,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
     hook("beforeremoveexistingfile", "", array( "resourceId" => $ref ) );
 
-    $old_extension=sql_value("select file_extension value from resource where ref='$ref'","");
+    $old_extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
     if ($old_extension!="")	
     	{
     	$old_path=get_resource_path($ref,true,"",true,$old_extension);
@@ -154,10 +154,15 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 	if (!$revert){
     if ($filename!="")
     	{
-	    if ($file_path!="")
+		global $replace_batch_existing;
+	    if (!$replace_batch_existing && $file_path!="")
 			{
 			# File path has been specified. Let's use that directly.
 			$result=rename($file_path, $filepath);
+			}
+		elseif ($file_path!="" && $replace_batch_existing)
+			{
+			$result=copy($file_path, $filepath);	
 			}
 		else
 			{
@@ -266,7 +271,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 							break;
 					}
 
-					update_field($ref, $read_from[$i]['ref'], $newval);
+					if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
 				
 				}
 
@@ -346,6 +351,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 		else
 			{
 			# Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
+            delete_previews($ref);
 			sql_query("update resource set has_image=0 where ref='$ref'");
 			}
 		}
@@ -353,7 +359,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 	# Update file dimensions
 	get_original_imagesize($ref,$filepath,$extension);
 	
-	hook("Uploadfilesuccess", "", array( "resourceId" => $ref ) );
+	hook("uploadfilesuccess", "", array( "resourceId" => $ref ) );
 	
 	# Update disk usage
 	update_disk_usage($ref);
@@ -385,10 +391,6 @@ function extract_exif_comment($ref,$extension="")
 	if (($exiftool_fullpath!=false) && !in_array($extension,$exiftool_no_process))
 		{
 		$resource=get_resource_data($ref);
-		
-		# Field 8 is used in a special way for staticsync; don't overwrite.
-		if ($resource['file_path']!=""){$omit_title_for_staticsync=true;} else {$omit_title_for_staticsync=false;}
-		
 		hook("beforeexiftoolextraction");
 		
 		if ($exiftool_resolution_calc)
@@ -437,6 +439,12 @@ function extract_exif_comment($ref,$extension="")
 		resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $summary);
 
         $metadata = array(); # an associative array to hold metadata field/value pairs
+        
+        if (!$disable_geocoding)
+			{
+			# Set vars
+            $dec_long=0;$dec_lat=0;
+            }
 		
 		# go through each line and split field/value using the first
 		# occurrance of ": ".  The keys in the associative array is converted
@@ -482,11 +490,31 @@ function extract_exif_comment($ref,$extension="")
 					$groupname=strtoupper(substr($s[0],1));
 					$tagname=strtoupper(trim($s[1]));
 					
+					if (!$disable_geocoding)
+						{
+						if ($tagname=='GPSLATITUDE' && preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $value, $latitude))
+							{
+							$dec_lat = $latitude['degrees'] + ($latitude['minutes']/60) + ($latitude['seconds']/(60*60));
+							if (strpos($value,'S')!==false)
+								{
+								$dec_lat = -1 * $dec_lat;
+								}	
+							}
+						elseif ($tagname=='GPSLONGITUDE' && preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $value, $longitude))
+							{
+							$dec_long = $longitude['degrees'] + ($longitude['minutes']/60) + ($longitude['seconds']/(60*60));
+							if (strpos($value,'W')!==false) 
+								{
+								$dec_long = -1 * $dec_long;
+								}
+							}
+						}
+					debug("Exiftool: extracted field before escape check '$groupname:$tagname', value is '" . $value ."'",RESOURCE_LOG_APPEND_PREVIOUS);
 					# Store both tag data under both tagname and groupname:tagname, to support both formats when mapping fields. 
 					$metadata[$tagname] = escape_check($value);
 					$metadata[$groupname . ":" . $tagname] = escape_check($value);
 
-					debug("Exiftool: extracted field '$groupname:$tagname', value is '$value'",RESOURCE_LOG_APPEND_PREVIOUS);
+					debug("Exiftool: extracted field '$groupname:$tagname', value is '".$value."'",RESOURCE_LOG_APPEND_PREVIOUS);
 					}
 				}
 			}
@@ -507,29 +535,10 @@ function extract_exif_comment($ref,$extension="")
 		if (isset($metadata['FILENAME'])) {$metadata['STRIPPEDFILENAME'] = strip_extension($metadata['FILENAME']);}
 
 		# Geolocation Metadata Support
-		if (!$disable_geocoding && isset($metadata['GPSLATITUDE']))
-			{
-			# Set vars
-            $dec_long=0;$dec_lat=0;
-
-            #Convert latititude to decimal.
-            if (preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $metadata['GPSLATITUDE'], $latitude)){
-                $dec_lat = $latitude['degrees'] + $latitude['minutes']/60 + $latitude['seconds']/(60*60);
+		if (!$disable_geocoding && $dec_long!=0 && $dec_lat!=0)
+            {
+             sql_query("update resource set geo_long='" . escape_check($dec_long) . "',geo_lat='" . escape_check($dec_lat) . "' where ref='$ref'");
             }
-            if (preg_match("/^(?<degrees>\d+) deg (?<minutes>\d+)' (?<seconds>\d+\.?\d*)\"/", $metadata['GPSLONGITUDE'], $longitude)){
-                $dec_long = $longitude['degrees'] + $longitude['minutes']/60 + $longitude['seconds']/(60*60);           
-            }
-           
-            if (strpos($metadata['GPSLATITUDE'],'S')!==false)
-                $dec_lat = -1 * $dec_lat;
-            if (strpos($metadata['GPSLONGITUDE'],'W')!==false) 
-                $dec_long = -1 * $dec_long;
-
-            if ($dec_long!=0 && $dec_lat!=0)
-            	{
-                sql_query("update resource set geo_long='" . escape_check($dec_long) . "',geo_lat='" . escape_check($dec_lat) . "' where ref='$ref'");
-            	}
-			}
         
         # Update portrait_landscape_field (when reverting metadata this was getting lost)
         update_portrait_landscape_field($ref);
@@ -570,7 +579,8 @@ function extract_exif_comment($ref,$extension="")
 						}
 					
 					# Read the data.				
-					if ($read) {
+					if ($read)
+						{
 						$plugin=dirname(__FILE__)."/../plugins/exiftool_filter_" . $read_from[$i]['name'] . ".php";
 						if ($read_from[$i]['exiftool_filter']!="")
 							{
@@ -578,108 +588,103 @@ function extract_exif_comment($ref,$extension="")
 							}
 						if (file_exists($plugin)) {include $plugin;}
 		
-						# Field 8 is used in a special way for staticsync; don't overwrite field 8 in this case
-						if (!($omit_title_for_staticsync && $read_from[$i]['ref']==8))
-							{				
-							$exiffieldoption=$exifoption;
-							
-							if($exifoption=="custom"  || (isset($embedded_data_user_select_fields)  && in_array($read_from[$i]['ref'],$embedded_data_user_select_fields)))
-								{									
-								debug ("EXIF - custom option for field " . $read_from[$i]['ref'] . " : " . $exifoption,RESOURCE_LOG_APPEND_PREVIOUS);
-								$exiffieldoption=getval("exif_option_" . $read_from[$i]['ref'],$exifoption);	
-								}
-							
-							debug ("EXIF - option for field " . $read_from[$i]['ref'] . " : " . $exiffieldoption,RESOURCE_LOG_APPEND_PREVIOUS);
-							
-							if($exiffieldoption=="no")
-								{continue;}
-							
-							elseif($exiffieldoption=="append")
-								{
-								$spacechar=($read_from[$i]["type"]==2 || $read_from[$i]["type"]==3)?", ":" ";
-								$oldval = get_data_by_field($ref,$read_from[$i]['ref']);
-								if(strpos($oldval, $value)!==false){continue;}
-								$newval =  $oldval . $spacechar . iptc_return_utf8($value) ;									
-								}
-							elseif($exiffieldoption=="prepend")
-								{
-								$spacechar=($read_from[$i]["type"]==2 || $read_from[$i]["type"]==3)?", ":" ";
-								$oldval = get_data_by_field($ref,$read_from[$i]['ref']);
-								if(strpos($oldval, $value)!==false){continue;}
-								$newval =  iptc_return_utf8($value) . $spacechar . $oldval;
-								}							
-							else
-								{
-								$newval =  iptc_return_utf8($value);	
-								}
+						$exiffieldoption=$exifoption;
+						
+						if($exifoption=="custom"  || (isset($embedded_data_user_select_fields)  && in_array($read_from[$i]['ref'],$embedded_data_user_select_fields)))
+							{									
+							debug ("EXIF - custom option for field " . $read_from[$i]['ref'] . " : " . $exifoption,RESOURCE_LOG_APPEND_PREVIOUS);
+							$exiffieldoption=getval("exif_option_" . $read_from[$i]['ref'],$exifoption);	
+							}
+						
+						debug ("EXIF - option for field " . $read_from[$i]['ref'] . " : " . $exiffieldoption,RESOURCE_LOG_APPEND_PREVIOUS);
+						
+						if($exiffieldoption=="no")
+							{continue;}
+						
+						elseif($exiffieldoption=="append")
+							{
+							$spacechar=($read_from[$i]["type"]==2 || $read_from[$i]["type"]==3)?", ":" ";
+							$oldval = get_data_by_field($ref,$read_from[$i]['ref']);
+							if(strpos($oldval, $value)!==false){continue;}
+							$newval =  $oldval . $spacechar . iptc_return_utf8($value) ;									
+							}
+						elseif($exiffieldoption=="prepend")
+							{
+							$spacechar=($read_from[$i]["type"]==2 || $read_from[$i]["type"]==3)?", ":" ";
+							$oldval = get_data_by_field($ref,$read_from[$i]['ref']);
+							if(strpos($oldval, $value)!==false){continue;}
+							$newval =  iptc_return_utf8($value) . $spacechar . $oldval;
+							}							
+						else
+							{
+							$newval =  iptc_return_utf8($value);	
+							}
 
-							global $merge_filename_with_title, $lang;
-							if($merge_filename_with_title) {
+						global $merge_filename_with_title, $lang, $view_title_field;
+						if($merge_filename_with_title && $read_from[$i]['ref'] == $view_title_field) {
+							$merge_filename_with_title_option             = urldecode(getval('merge_filename_with_title_option', ''));
+							$merge_filename_with_title_include_extensions = urldecode(getval('merge_filename_with_title_include_extensions', ''));
+							$merge_filename_with_title_spacer             = urldecode(getval('merge_filename_with_title_spacer', ''));
 
-								$merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
-								$merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
-								$merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
+							$original_filename = '';
+							if(isset($_REQUEST['name'])) {
+								$original_filename = $_REQUEST['name'];
+							} else {
+								$original_filename = $processfile['name'];
+							}
 
-								$original_filename = '';
-								if(isset($_REQUEST['name'])) {
-									$original_filename = $_REQUEST['name'];
-								} else {
-									$original_filename = $processfile['name'];
-								}
+							if($merge_filename_with_title_include_extensions == 'yes') {
+								$merged_filename = $original_filename;
+							} else {
+								$merged_filename = strip_extension($original_filename);
+							}
 
-								if($merge_filename_with_title_include_extensions == 'yes') {
-									$merged_filename = $original_filename;
-								} else {
-									$merged_filename = strip_extension($original_filename);
-								}
-
-								$oldval = get_data_by_field($ref, $read_from[$i]['ref']);
-								if(strpos($oldval, $value) !== FALSE) {
-									continue;
-								}
-								
-								switch ($merge_filename_with_title_option) {
-									case $lang['merge_filename_title_do_not_use']:
-										// Do nothing since the user doesn't want to use this feature
-										break;
-
-									case $lang['merge_filename_title_replace']:
-										$newval = $merged_filename;
-										break;
-
-									case $lang['merge_filename_title_prefix']:
-										$newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
-										if($oldval == '') {
-											$newval = $merged_filename;
-										}
-										break;
-									case $lang['merge_filename_title_suffix']:
-										$newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
-										if($oldval == '') {
-											$newval = $merged_filename;
-										}
-										break;
-
-									default:
-										// Do nothing
-										break;
-								}
-
+							$oldval = get_data_by_field($ref, $read_from[$i]['ref']);
+							if($value=="" || strpos($oldval, $value) !== FALSE) {
+								continue;
 							}
 							
-							update_field($ref,$read_from[$i]['ref'],$newval);
+							switch ($merge_filename_with_title_option) {
+								case $lang['merge_filename_title_do_not_use']:
+									$newval = $oldval;
+									break;
+
+								case $lang['merge_filename_title_replace']:
+									$newval = $merged_filename;
+									break;
+
+								case $lang['merge_filename_title_prefix']:
+									$newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
+									if($oldval == '') {
+										$newval = $merged_filename;
+									}
+									break;
+								case $lang['merge_filename_title_suffix']:
+									$newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
+									if($oldval == '') {
+										$newval = $merged_filename;
+									}
+									break;
+
+								default:
+									// Do nothing
+									break;
+								}
+							}
+							
+							if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
 							$exif_updated_fields[]=$read_from[$i]['ref'];
 							
 							
 							hook("metadata_extract_addition","all",array($ref,$newval,$read_from,$i));
-							}
 						}
 
-					} else {
+					}	
+					else {
 
 						// Process if no embedded title is found:
-						global $merge_filename_with_title, $lang;
-						if($merge_filename_with_title && $read_from[$i]['ref'] == 8) {
+						global $merge_filename_with_title, $lang, $view_title_field;
+						if($merge_filename_with_title && $read_from[$i]['ref'] == $view_title_field) {
 
 							$merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
 							$merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
@@ -730,7 +735,7 @@ function extract_exif_comment($ref,$extension="")
 									break;
 							}
 							
-							update_field($ref,$read_from[$i]['ref'],$newval);
+							if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
 							$exif_updated_fields[]=$read_from[$i]['ref'];
 
 						}
@@ -738,6 +743,7 @@ function extract_exif_comment($ref,$extension="")
 					}
 
 				}
+				
 			}
 		if(!in_array($filename_field,$exif_updated_fields)) // We have not found an embedded value for this field so we need to modify the $filename variable which will be used to set the data later in the upload_file function
 			{
@@ -914,7 +920,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 
 	if (!$previewonly) {
 		// make sure the extension is the same as the original so checksums aren't done for previews
-		$o_ext=sql_value("select file_extension value from resource where ref={$ref}","");
+		$o_ext=sql_value("select file_extension value from resource where ref='{$ref}'","");
 		if($extension==$o_ext && $checksum_required)
 			{
 			debug("create_previews - generate checksum for $ref",RESOURCE_LOG_APPEND_PREVIOUS);
@@ -1182,13 +1188,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		# Set thumbonly=true to (re)generate thumbnails only.
 		if($previewbased || ($autorotate_no_ingest && !$ingested))
 			{
-			$file=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,""); 
+			$file=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative); 
 			if (!file_exists($file))
 				{
-				$file=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"");		
+				$file=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative);		
 				if (!file_exists($file))
 					{
-					$file=get_resource_path($ref,true,"pre",false,"jpg",-1,1,false,"");		
+					$file=get_resource_path($ref,true,"pre",false,"jpg",-1,1,false,"",-1,1,false,"",$alternative);		
 					/* staged, but not needed in testing
 					if(!file_exists($file) && $autorotate_no_ingest && !$ingested)
 						{
@@ -1351,7 +1357,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $convert_fullpath = get_utility_path("im-convert");
             if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
 
-			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif") {
+			if( $prefix == "cr2:" || $prefix == "nef:" || $extension=="png" || $extension=="gif" || getval("noflatten","")!="") {
 			    $flatten = "";
 			} else {
 			    $flatten = "-flatten";
@@ -1425,7 +1431,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				# EXPERIMENTAL CODE TO USE EXISTING ICC PROFILE IF PRESENT
 				global $icc_extraction, $icc_preview_profile, $icc_preview_options,$ffmpeg_supported_extensions;
 				if ($icc_extraction){
-					$iccpath = get_resource_path($ref,true,'',false,$extension).'.icc';
+					$iccpath = get_resource_path($ref,true,'',false,$extension,-1,1,false,"",$alternative).'.icc';
 					if (!file_exists($iccpath) && !isset($iccfound) && $extension!="pdf" && !in_array($extension,$ffmpeg_supported_extensions)) {
 						// extracted profile doesn't exist. Try extracting.
 						if (extract_icc_profile($ref,$extension)){
@@ -2519,7 +2525,7 @@ function AutoRotateImage($src_image, $ref = false)
         if ($ref != false) 
             {
             # use the original file to get the orientation info
-            $extension = sql_value("select file_extension value from resource where ref=$ref", '');
+            $extension = sql_value("select file_extension value from resource where ref='{$ref}'", '');
             $file = get_resource_path($ref, true, "", false, $extension, -1, 1, false, "", -1);
             # get the orientation
             $orientation = get_image_orientation($file);
@@ -2711,8 +2717,56 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
 	copy($url, $file_path); # Download the file.
 	return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);	# Process as a normal upload...
 	}
+
+/**
+ * Delete all preview files for specified resource id or resource data array
+ * 
+ * @param $resource array|integer Resource array or resource ID to delete preview files for
+ *
+ */	
+function delete_previews($resource,$alternative=-1)
+	{
+	global $ffmpeg_preview_extension;
 	
+	// If a resource array has been passed we already have the extensions
+	if(is_array($resource))
+		{
+		$resource_data=$resource;
+		$extension=$resource["file_extension"];
+		$resource=$resource["ref"];
+		}
+	else
+		{
+		$resource_data=get_resource_data($resource);
+		$extension=$resource_data["file_extension"];
+		}
 	
+	$fullsizejpgpath=get_resource_path($resource,true,"",false,"jpg",-1,1,false,"",$alternative);			
+	# Delete the full size original if not a JPG resource
+	if($extension!="" && strtolower($extension)!="jpg" && file_exists($fullsizejpgpath) && $alternative==-1)
+		{
+		unlink($fullsizejpgpath);
+		}			
+	
+	$dirinfo=pathinfo($fullsizejpgpath);	
+	$resourcefolder = $dirinfo["dirname"];
+
+	$presizes=sql_array("select id value from preview_size");
+	$presizes[]="snapshot"; // To include any video snapshots
+	$pagecount=get_page_count($resource_data,$alternative);
+	foreach($presizes as $presize)
+		{
+		for($page=1;$page<=$pagecount;$page++)
+			{
+			$previewpath=get_resource_path($resource,true,$presize,false,"jpg",-1,$page,false,"",$alternative);
+			if(file_exists($previewpath))
+				{
+				unlink($previewpath);
+				}
+			}
+		}
+	}
+
 	
 	
 	

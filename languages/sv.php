@@ -1842,7 +1842,6 @@ $lang["download_click__introtext"]="Högerklicka på länken nedan och välj <b>
 $lang["download_progress__introtext"]="Din hämtning startas inom kort. När hämtningen är klar kan du fortsätta genom att klicka på länkarna nedan.";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="Markera de fält du vill uppdatera med ny information. Omarkerade fält lämnas oförändrade.";
-$lang["help__introtext"]="Få ut det mesta möjliga av ResourceSpace. Instruktionerna nedan hjälper dig att använda systemet och materialen effektivare.</p>\n\n<p>Använd Teman om du vill bläddra bland material per tema eller använd Enkel sökning om du vill söka efter specifikt material.</p>\n\n<p><a target=\"_blank\" href=\"http://www.montala.net/downloads/resourcespace-GettingStarted.pdf\">Hämta den engelska användarhandboken (pdf-fil)</a>\n\n<p><a target=\"_blank\" href=\"http://www.resourcespace.com/knowledge-base/\">Dokumentation på webben (engelskspråkig wiki)</a>";
 $lang["home__help"]="Hjälp och tips som ser till att du får ut det mesta möjliga av ResourceSpace.";
 $lang["home__mycollections"]="Organisera dina material och samarbeta med andra. De här verktygen hjälper dig att arbeta mer effektivt.";
 $lang["home__restrictedtext"]="Klicka på webblänken som skickades till dig om du vill komma åt materialen som är utvalda för dig.";
@@ -1878,3 +1877,11 @@ $lang["upload_swf__introtext"]="";
 $lang["user_password__introtext"]="Fyll i din e-postadress och ditt användarnamn så kommer ett nytt lösenord att skickas till dig.";
 $lang["user_request__introtext"]="Fyll i formuläret nedan om du vill ansöka om ett användarkonto.";
 $lang["view__storyextract"]="Textutdrag:";
+
+// Responsive
+$lang["responsive_main_menu"]="Meny";
+$lang["responsive_settings_menu"]="Konto";
+$lang["responsive_more"]="Mer...";
+$lang["responsive_less"]="Mindre...";
+$lang['responsive_collectiontogglehide'] = "Dölja";
+// end of Responsive

@@ -14,7 +14,7 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 	$override=hook("get_resource_path_override","",array($ref,$getfilepath,$size,$generate,$extension,$scramble,$page,$watermarked,$file_modified,$alternative,$includemodified));
 	if (is_string($override)) {return $override;}
 
-	global $storagedir,$originals_separate_storage;
+	global $storagedir,$originals_separate_storage,$fstemplate_alt_threshold,$fstemplate_alt_storagedir,$fstemplate_alt_storageurl,$fstemplate_alt_scramblekey;
 
 	if ($size=="")
 		{
@@ -68,9 +68,18 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 		# Create a scrambled path using the scramble key
 		# It should be very difficult or impossible to work out the scramble key, and therefore access
 		# other resources, based on the scrambled path of a single resource.
-		$scramblepath=substr(md5($ref . "_" . $scramble_key),0,15);
+		$skey=$scramble_key;
+        
+        # FSTemplate support - for trial system templates
+        if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
+            {
+            $skey=$fstemplate_alt_scramblekey;
+            }
+            
+		$scramblepath=substr(md5($ref . "_" . $skey),0,15);
 		}
 	
+    
 	if ($extension=="") {$extension="jpg";}
 	
 	$folder="";
@@ -110,9 +119,16 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 	# Add the watermarked url too
 	if ($watermarked) {$p.="_wm";}
 	
-	
+	$sdir=$storagedir;
+    
+    # FSTemplate support - for trial system templates
+    if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
+        {
+        $sdir=$fstemplate_alt_storagedir;
+        }
+            
 		
-	$filefolder=$storagedir . $path_suffix . $folder;
+	$filefolder=$sdir . $path_suffix . $folder;
 	
 	# Fetching the file path? Add the full path to the file
 	if ($getfilepath)
@@ -121,15 +137,22 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 	    }
 	else
 	    {
-	    global $storageurl;
-	    $folder=$storageurl . $path_suffix . $folder;
+	    global $storageurl;$surl=$storageurl;
+        
+        # FSTemplate support - for trial system templates
+        if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
+            {
+            $surl=$fstemplate_alt_storageurl;
+            }
+        
+	    $folder=$surl . $path_suffix . $folder;
 	    }
 	
 	if ($scramble)
 		{
 		$file_old=$filefolder . $ref . $size . $p . $a . "." . $extension;
-		$file_new=$filefolder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $scramble_key),0,15) . "." . $extension;
-		$file=$folder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $scramble_key),0,15) . "." . $extension;
+		$file_new=$filefolder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
+		$file=$folder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
 		if (file_exists($file_old))
 		  	{
 			rename($file_old, $file_new);
@@ -156,7 +179,8 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 		}
 	return  $file;
 	}
-	
+
+
 $GLOBALS['get_resource_data_cache'] = array();
 function get_resource_data($ref,$cache=true)
 	{
@@ -190,8 +214,15 @@ function get_resource_data($ref,$cache=true)
                 }
             }
         }
-	$get_resource_data_cache[$ref]=$resource[0];
-	return $resource[0];
+	if (isset($resource[0]))
+		{
+		$get_resource_data_cache[$ref]=$resource[0];
+		return $resource[0];
+		}
+	else
+		{
+		return false;
+		}
 	}
 
 function update_hitcount($ref)
@@ -209,7 +240,7 @@ function update_hitcount($ref)
 function get_resource_type_field($field)
 	{
 	# Returns field data from resource_type_field for the given field.
-	$return=sql_query("select * from resource_type_field where ref='$field'");
+	$return=sql_query("select *,linked_data_field from resource_type_field where ref='$field'");
 	if (count($return)==0)
 		{
 		return false;
@@ -228,28 +259,36 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     # Find the resource type.
     if ($originalref==-1) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
-    $rtype = sql_value("select resource_type value from resource where ref='$originalref'",0);
+    $rtype = sql_value("select resource_type value FROM resource WHERE ref='$originalref'",0);
 
     # If using metadata templates, 
     $templatesql = "";
-    global $metadata_template_resource_type;
+    global $metadata_template_resource_type,$NODE_FIELDS;
     if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$rtype) {
         # Show all resource fields, just as with editing multiple resources.
         $multi = true;
     }
 
     $return = array();
-	$fieldsSQL = "select d.value,d.resource_type_field,f.*,f.required frequired,f.ref fref from resource_type_field f left join (select * from resource_data where resource='$ref') d on d.resource_type_field=f.ref and d.resource='$ref' where ( " . (($multi)?"1=1":"f.resource_type=0 or f.resource_type=999 or f.resource_type='$rtype'") . ") group by f.ref order by ";
+	
+	$fieldsSQL = "SELECT d.value,d.resource_type_field,f1.*,f1.required frequired,f1.ref fref, f1.field_constraint FROM resource_type_field f1 LEFT JOIN (SELECT * FROM resource_data WHERE resource='$ref') d ON d.resource_type_field=f1.ref AND d.resource='$ref' 
+	
+	WHERE (f1.type NOT IN (" . implode(",",$NODE_FIELDS) . ") AND (" . (($multi)?"1=1":"f1.resource_type=0 OR f1.resource_type=999 OR f1.resource_type='$rtype'") . "))
+	
+	UNION 
+	
+	SELECT group_concat(if(rn.resource = '$ref',n.name,NULL)) value, n.resource_type_field, f2.*,f2.required frequired, f2.ref, f2.field_constraint FROM resource_type_field f2 LEFT JOIN node n ON n.resource_type_field=f2.ref LEFT JOIN resource_node rn ON rn.node=n.ref
+	
+	AND rn.resource='$ref' WHERE (f2.type IN (" . implode(",",$NODE_FIELDS) . ") AND (" . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ")) group by ref order by ";
     if ($ord_by) {
-    	$fieldsSQL .= "f.order_by,f.resource_type,f.ref";
+    	$fieldsSQL .= "order_by,resource_type,ref";
     } else {
-		$fieldsSQL .= "f.resource_type,f.order_by,f.ref";
+		$fieldsSQL .= "resource_type,order_by,ref";
 	    debug("use perms: ".!$use_permissions);
     }
 	$fields = sql_query($fieldsSQL);
-  
     # Build an array of valid types and only return fields of this type. Translate field titles. 
-    $validtypes = sql_array("select ref value from resource_type");
+    $validtypes = sql_array("SELECT ref value from resource_type");
     $validtypes[] = 0; $validtypes[] = 999; # Support archive and global.
     for ($n = 0;$n<count($fields);$n++) {
         if
@@ -280,7 +319,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
             $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-"); 
             $return[] = $fields[$n];
         }
-    }
+    }	
     return $return;
 	}
 }
@@ -293,7 +332,7 @@ function get_resource_field_data_batch($refs)
 	# resource data for a list of resources (e.g. search result display for a page of resources).
 	if (count($refs)==0) {return array();} # return an empty array if no resources specified (for empty result sets)
 	$refsin=join(",",$refs);
-	$results=sql_query("select d.resource,f.*,d.value from resource_type_field f left join resource_data d on d.resource_type_field=f.ref and d.resource in ($refsin) where (f.resource_type=0 or f.resource_type in (select resource_type from resource where ref=d.resource)) order by d.resource,f.order_by,f.ref");
+	$results=sql_query("select d.resource,f.*, f.field_constraint,d.value from resource_type_field f left join resource_data d on d.resource_type_field=f.ref and d.resource in ($refsin) where (f.resource_type=0 or f.resource_type in (select resource_type from resource where ref=d.resource)) order by d.resource,f.order_by,f.ref");
 	$return=array();
 	$res=0;
 	for ($n=0;$n<count($results);$n++)
@@ -350,35 +389,58 @@ function get_resource_types($types = "", $translate = true)
 function get_resource_top_keywords($resource,$count)
 	{
 	# Return the top $count keywords (by hitcount) used by $resource.
-	# This is for the 'Find Similar' search.
-
-        # These are now derived from resource data for fixed keyword lists, rather than from the resource_keyword table
-        # which produced very mixed results and didn't work with stemming or diacritic normalisation.
+	# This section is for the 'Find Similar' search.
+	# These are now derived from a join of node and resource_node for fixed keyword lists and resource_data for free text fields
+	# Currently the date fields are not used for this feature
         
     $return=array();
-	$keywords=sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (2,3,7,9,11,12) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
-	foreach ($keywords as $keyword)
+	
+	$keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (1,5,6,8,10,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
+    
+    $fixed_dynamic_keywords = sql_query("select distinct n.ref, n.name, n.resource_type_field from node n inner join resource_node rn on n.ref=rn.node where (rn.resource='$resource' and n.resource_type_field in (select rtf.ref from resource_type_field rtf where use_for_similar=1) ) order by new_hit_count desc limit $count");
+    
+    $combined = array_merge($keywords,$fixed_dynamic_keywords);
+    
+	foreach ( $combined as $keyword )
 		{
-		# Apply permissions and strip out any results the user does not have access to.
-		if ((checkperm("f*") || checkperm("f" . $keyword["field"]))
-		&& !checkperm("f-" . $keyword["field"]) && !checkperm("T" . $keyword["resource_type"]))
-			{
-			# Has access to this field.
-                        $r=$keyword["keyword"];
-                        if (substr($r,0,1)==",") {$r=substr($r,1);}
-                        $s=explode(",",$r);
-                        foreach ($s as $a)
-                            {
-                            if(!empty($a))
-                            	{$return[]=$a;}
-                            }
-			}
-		}
+        # If isset($keyword['keyword']) this means that the value is coming free text in general    
+        if ( isset($keyword['keyword']) )
+            {
+            # Apply permissions and strip out any results the user does not have access to.
+            if ((checkperm("f*") || checkperm("f" . $keyword["field"]))
+            && !checkperm("f-" . $keyword["field"]) && !checkperm("T" . $keyword["resource_type"]))
+                {
+                $r =  $keyword["keyword"] ;
+                }   
+            }
+            
+        else
+            {
+            # In this case the keyword is coming from nodes
+            # Apply permissions and strip out any results the user does not have access to.
+            if ( (checkperm("f*") || checkperm("f" . $keyword["field"]))
+            && !checkperm("f-" . $keyword["resource_type_field"]) && !checkperm("T" . $resource) )
+                {
+                $r =  $keyword["name"] ;   
+                }
+            }
+            
+        if (substr($r,0,1)==","){$r=substr($r,1);}
+        $s=explode(",",$r);
+        foreach ($s as $a)
+            {
+            if(!empty($a))
+                {
+                $return[]=$a;
+                }
+            }
+		}	
+			
 	return $return;
 	}
 
 if (!function_exists("split_keywords")){
-function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false)
+function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false, $keepquotes=false)
 	{
 	# Takes $search and returns an array of individual keywords.
 	global $config_trimchars;
@@ -404,14 +466,22 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 	$search=str_replace("\\n"," ",$search);
 
 	$ns=trim_spaces($search);
-	
+
 	if ((substr($ns,0,1)==",") ||  ($index==false && strpos($ns,":")!==false)) # special 'constructed' query type, split using comma so
 	# we support keywords with spaces.
-		{
-		if (strpos($ns,"startdate")==false && strpos($ns,"enddate")==false)
-			{$ns=cleanse_string($ns,true,!$index,$is_html);}
-	
-		$return=explode(",",$ns);
+		{	
+		if(!$index && $keepquotes)
+            {
+            preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
+            $return=trim_array($matches[0],$config_trimchars . ",");
+            }
+        else
+            {
+            if (strpos($ns,"startdate")==false && strpos($ns,"enddate")==false)
+                {$ns=cleanse_string($ns,true,!$index,$is_html);}
+            $return=explode(",",$ns);
+            }
+        
 		# If we are indexing, append any values that contain spaces.
         
 		# Important! Solves the searching for keywords with spaces issue.
@@ -433,21 +503,50 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 					}
 				}
 				
-			$return2=trim_array($return2,$config_trimchars);
+			$return2=trim_array($return2,$config_trimchars . ",");
 			if ($partial_index) {return add_partial_index($return2);}
 			return $return2;
 			}
 		else
 			{
-			return trim_array($return,$config_trimchars);
+            // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
+            return trim_array($return,$config_trimchars . ($keepquotes?",":""));
 			}
 		}
 	else
 		{
 		# split using spaces and similar chars (according to configured whitespace characters)
-		$ns=explode(" ",cleanse_string($ns,false,!$index,$is_html));                
-		
-        $ns=trim_array($ns,$config_trimchars);
+		if(!$index && $keepquotes && strpos($ns,"\"")!==false)
+            {
+            preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
+            
+            $splits=$matches[0];
+            $ns=array();
+            foreach ($splits as $split)
+                {
+                if(!(substr($split,0,1)=="\"" && substr($split,-1,1)=="\"") && strpos($split,",")!==false)
+                    {
+                    $split=explode(",",$split);
+                    $ns = array_merge($ns,$split);
+                    }
+                else
+                    {
+                    $ns[] = $split;   
+                    }
+                }
+            
+        
+            }
+        else
+            { 
+            # split using spaces and similar chars (according to configured whitespace characters)
+            $ns=explode(" ",cleanse_string($ns,false,!$index,$is_html));
+            }
+        
+        
+        $ns=trim_array($ns,$config_trimchars . ($keepquotes?",":""));
+        
+//print_r($ns) . "<br /><br />";
 		if ($index && $partial_index) {
 			return add_partial_index($ns);
 		}
@@ -465,10 +564,21 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
         global $config_separators;
         $separators=$config_separators;
 
-		  if($is_html)
-		  	{
-		  	$string= html_entity_decode($string,ENT_QUOTES,'UTF-8');
-		  	} 			       
+        // Replace some HTML entities with empty space
+        // Most of them should already be in $config_separators
+        // but others, like &shy; don't have an actual character that we can copy and paste
+        // to $config_separators
+        $string = htmlentities($string, null, 'UTF-8');
+        $string = str_replace('&nbsp;', ' ', $string);
+        $string = str_replace('&shy;', ' ', $string);
+        $string = str_replace('&lsquo;', ' ', $string);
+        $string = str_replace('&rsquo;', ' ', $string);
+        $string = str_replace('&ldquo;', ' ', $string);
+        $string = str_replace('&rdquo;', ' ', $string);
+        $string = str_replace('&ndash;', ' ', $string);
+
+		// Revert the htmlentities as otherwise we lose ability to identify certain text e.g. diacritics
+	  	$string= html_entity_decode($string,ENT_QUOTES,'UTF-8');
         
         if ($preserve_hyphen)
         	{
@@ -483,7 +593,7 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
                 // If we have the exclamation mark configured as a config separator but we are doing a special search we don't want to remove it
                 $separators=array_diff($separators,array("!")); 
                 }
-        
+				
         if ($preserve_separators)
                 {
                 return mb_strtolower(trim_spaces(str_replace($separators," ",$string)),'UTF-8');
@@ -500,26 +610,26 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
 }
 
 if (!function_exists("resolve_keyword")){
-function resolve_keyword($keyword,$create=false)
+function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
 	{
-	debug("resolving keyword " . $keyword  . ". Create=" . (($create)?"true":"false"));
-	
-        $keyword=substr($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
+	global $quoted_string, $stemming;
     
-	global $quoted_string;	
-	if(!$quoted_string)
+    debug("resolving keyword " . $keyword  . ". Create=" . (($create)?"true":"false") . ", normalize:" . ($normalize?"TRUE":"FALSE") . ", stem:" . ($stem?"TRUE":"FALSE"));
+	$keyword=substr($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
+    		
+	if(!$quoted_string && $normalize)
 		{
 		$keyword=normalize_keyword($keyword);		
 		debug("resolving normalized keyword " . $keyword  . ".");
 		}
 	
-        # Stemming support. If enabled and a stemmer is available for the current language, index the stem of the keyword not the keyword itself.
-        # This means plural/singular (and other) forms of a word are treated as equivalents.
-        global $stemming;
-        if ($stemming && function_exists("GetStem"))
-            {
-            $keyword=GetStem($keyword);
-            }
+    # Stemming support. If enabled and a stemmer is available for the current language, index the stem of the keyword not the keyword itself.
+    # This means plural/singular (and other) forms of a word are treated as equivalents.
+   
+    if ($stem && $stemming && function_exists("GetStem"))
+        {
+        $keyword=GetStem($keyword);
+        }
 
 	# Returns the keyword reference for $keyword, or false if no such keyword exists.
 	$return=sql_value("select ref value from keyword where keyword='" . trim(escape_check($keyword)) . "'",false);
@@ -756,8 +866,12 @@ function trim_array($array,$trimchars='')
 			// also trim off extra characters they want gone
 			$el=trim($el,$trimchars);
 			}
-		$array_trimmed[$index]=$el;
-		$index++;
+        // Add to the returned array if there is anything left
+        if (strlen($el) > 0)
+			{
+            $array_trimmed[$index]=$el;
+            $index++;
+            }
 		}
 	if(isset($unshiftblank)){array_unshift($array_trimmed,"");}
 	return $array_trimmed;
@@ -839,34 +953,99 @@ function get_field_options($ref)
 	
 	return $options;
 	}
-	
-function get_data_by_field($resource,$field){
-	# Return the resource data for field $field in resource $resource
-	# $field can also be a shortname
-	global $rt_fieldtype_cache;
-	if (is_numeric($field)){
-		$value=sql_value("select value from resource_data where resource='$resource' and resource_type_field='".escape_check($field)."'","");
-		if (!isset($rt_fieldtype_cache[$field])){
-			$rt_fieldtype_cache[$field]=sql_value("select type value from resource_type_field where ref='".escape_check($field)."'","");
-		} 
-			
-	} else {
-		$value=sql_value("select value from resource_data where resource='$resource' and resource_type_field=(select ref from resource_type_field where name='".escape_check($field)."' limit 1)","");
-		if (!isset($rt_fieldtype_cache[$field])){
-			$rt_fieldtype_cache[$field]=sql_value("select type value from resource_type_field where name='".escape_check($field)."'","");
-		}
-	}
 
-	if($rt_fieldtype_cache[$field]==8){
-		$value=strip_tags($value);
-		$value=str_replace("&nbsp;"," ",$value);
-	}
-	return $value;
-}
-	
+
+/**
+* Get the resource data value for a field and a specific resource
+* or get the specified field for all resources in the system
+* 
+* @param integer        $resource Resource ID. Use NULL to retrieve all resources 
+*                                 records for the specified field
+* @param integer|string $field    Resource type field ID. Can also be a shortname.
+* 
+* @return string|array
+*/
+function get_data_by_field($resource, $field)
+    {
+    global $rt_fieldtype_cache;
+
+    $return              = '';
+    $resource_type_field = escape_check($field);
+
+    $sql_select   = 'SELECT *';
+    $sql_from     = 'FROM resource_data AS rd';
+    $sql_join     = '';
+    // $sql_join     = 'LEFT JOIN resource AS r ON rd.resource = r.ref';
+    $sql_where    = 'WHERE';
+    $sql_order_by = '';
+    $sql_limit    = '';
+
+    // Let's first check how we deal with the field value we've got
+    // Integer values => search for a specific ID
+    // String values => search by using a shortname
+    if(is_numeric($field))
+        {
+        $sql_select = 'SELECT rd.`value`';
+        $sql_where .= " rd.resource = '{$resource}'";
+        $sql_where .= " AND rd.resource_type_field = '{$resource_type_field}'";
+        }
+    else
+        {
+        $sql_select = 'SELECT rd.`value`';
+        $sql_where .= " rd.resource = '{$resource}'";
+        $sql_where .= " AND rd.resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)";
+        }
+
+    $results = sql_query("{$sql_select} {$sql_from} {$sql_join} {$sql_where} {$sql_order_by} {$sql_limit}");
+    if(0 !== count($results))
+        {
+        $return = !is_null($resource) ? $results[0]['value'] : $return;
+        }
+    // Default values: '' when we are looking for a specific resource and empty array when looking through all resources
+    else
+        {
+        $return = !is_null($resource) ? $return : array();
+        }
+
+    // Update cache
+    if(!isset($rt_fieldtype_cache[$field]))
+        {
+        $rt_fieldtype_cache[$field] = sql_value("SELECT type AS `value` FROM resource_type_field WHERE ref = '{$resource_type_field}' OR name = '{$resource_type_field}'", null);
+        }
+
+    if(!is_array($return) && 8 == $rt_fieldtype_cache[$field])
+        {
+        $return = strip_tags($return);
+        $return = str_replace('&nbsp;', ' ', $return);
+        }
+
+    return $return;
+    }
+
+
+/**
+* Get all resources by resource_type_field and value
+* 
+* @param string $resource_type_field
+* @param string $value
+* 
+* @return array
+*/
+function get_resources_by_resource_data_value($resource_type_field, $value)
+    {
+    return sql_value("
+        SELECT rd.resource AS `value`
+          FROM resource_data AS rd
+         WHERE rd.resource > 0
+           AND resource_type_field = '{$resource_type_field}'
+           AND rd.`value` = '$value'
+    ", 0);
+    }
+
+
 if (!function_exists("get_users")){		
-function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1)
-{
+function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="")
+	{
     # Returns a user list. Group or search term is optional.
     # The standard user group names are translated using $lang. Custom user group names are i18n translated.
     global $usergroup, $U_perm_strict;
@@ -891,6 +1070,12 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         $sql.= hook("getuseradditionalsql");
     }
 
+    if (is_numeric($approvalstate))
+        {
+        if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
+        $sql .= "u.approved='$approvalstate'";
+        }
+
     // Return users in both user's user group and children groups
     if ($usepermissions && checkperm('U') && !$U_perm_strict) {
     	$sql .= sprintf('
@@ -900,8 +1085,10 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
     		$usergroup
     	);
     }
-    $query = "select u.*,g.name groupname,g.ref groupref,g.parent groupparent,u.approved,u.created from user u left outer join usergroup g on u.usergroup=g.ref $sql order by $order_by";
+    $select=($selectcolumns!="")?$selectcolumns:"u.ref, u.username,u.approved,u.created, u.*, g.name groupname,g.ref groupref,g.parent groupparent";
+    $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup=g.ref $sql order by $order_by";
     # Executes query.
+    if($returnsql){return $query;}
     $r = sql_query($query, false, $fetchrows);
 
     # Translates group names in the newly created array.
@@ -1066,7 +1253,7 @@ function save_user($ref)
         {
         sql_query("DELETE FROM user WHERE ref = '{$ref}'");
 
-        include dirname(__FILE__) ."/dash_functions.php";
+        include_once dirname(__FILE__) ."/dash_functions.php";
         empty_user_dash($ref);
 
         log_activity("{$current_user_data['username']} ({$ref})", LOG_CODE_DELETED, null, 'user', null, $ref);
@@ -1177,7 +1364,7 @@ function save_user($ref)
                 sql_query("DELETE FROM user_dash_tile WHERE user = '{$ref}' AND dash_tile IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup = '{$current_user_data['usergroup']}')");
                 }
 
-            include __DIR__ . '/dash_functions.php';
+            include_once __DIR__ . '/dash_functions.php';
             build_usergroup_dash($usergroup, $ref);
             }
 
@@ -1306,7 +1493,7 @@ function email_reset_link($email,$newuser=false)
 }
 
 if (!function_exists("auto_create_user_account")){
-function auto_create_user_account()
+function auto_create_user_account($hash="")
 	{
 	# Automatically creates a user account (which requires approval unless $auto_approve_accounts is true).
 	global $applicationname, $user_email, $baseurl, $email_notify, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
@@ -1332,13 +1519,18 @@ function auto_create_user_account()
 
 	$newusername=escape_check(make_username(getval("name","")));
 
+    // Check valid email
+    if(!filter_var($user_email, FILTER_VALIDATE_EMAIL))
+        {return $lang['setup-emailerr'];}
+    
 	#check if account already exists
-	$check=sql_value("select email value from user where email = '$user_email'","");
+	$check=sql_value("select email value from user where email = '" . escape_check($user_email) . "'","");
 	if ($check!=""){return $lang["useremailalreadyexists"];}
 
 	# Prepare to create the user.
 	$email=trim(getvalescaped("email","")) ;
 	$password=make_password();
+	$password = hash('sha256', md5('RS' . $newusername . $password));
 
 	# Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
 	$approve=false;
@@ -1370,7 +1562,7 @@ function auto_create_user_account()
 		}
 
 	# Create the user
-	sql_query("insert into user (username,password,fullname,email,usergroup,comments,approved,lang) values ('" . $newusername . "','" . $password . "','" . getvalescaped("name","") . "','" . $email . "','" . $usergroup . "','" . ( escape_check($customContents) . "\n" . getvalescaped("userrequestcomment","")  ) . "'," . (($approve)?1:0) . ",'$language')");
+	sql_query("insert into user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) values ('" . $newusername . "','" . $password . "','" . getvalescaped("name","") . "','" . $email . "','" . $usergroup . "','" . ( escape_check($customContents) . "\n" . getvalescaped("userrequestcomment","")  ) . "'," . (($approve)?1:0) . ",'$language'," . ($hash!=""?"'" . $hash . "'":"null") . ")");
 	$new = sql_insert_id();
 
     // Create dash tiles for the new user
@@ -1441,8 +1633,8 @@ function auto_create_user_account()
 		
 		$templatevars['name']=getval("name","");
 		$templatevars['email']=getval("email","");
-		$templatevars['userrequestcomment']=getval("userrequestcomment","");
-		$templatevars['userrequestcustom']=$customContents;
+		$templatevars['userrequestcomment']=strip_tags(getval("userrequestcomment",""));
+		$templatevars['userrequestcustom']=strip_tags($customContents);
 		$templatevars['linktouser']="$baseurl?u=$new";
 
 		$message=$lang["userrequestnotification1"] . "\n\n" . $lang["name"] . ": " . $templatevars['name'] . "\n\n" . $lang["email"] . ": " . $templatevars['email'] . "\n\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang["userrequestnotification3"] . "\n$baseurl?u=$new";
@@ -1489,7 +1681,7 @@ function auto_create_user_account()
 function email_user_request()
     {
     // E-mails the submitted user request form to the team.
-    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents;
+    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getvalescaped('name', ''));
@@ -1497,8 +1689,8 @@ function email_user_request()
     $userrequestcomment = strip_tags(getvalescaped('userrequestcomment', ''));
 
     // Build a message
-    $message             = "{$lang['userrequestnotification1']}\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n{$lang['userrequestnotification2']}\n{$baseurl}";
-    $notificationmessage = $lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
+    $message             = "{" . ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "}\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n{" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "}\n{$baseurl}";
+    $notificationmessage = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
 
     $approval_notify_users = get_notification_users("USER_ADMIN"); 
     $message_users         = array();
@@ -1605,27 +1797,28 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
 	{
 	# Returns a list of all available editable site text (content).
 	# If $find is specified a search is performed across page, name and text fields.
-	global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder;	
-	$findname=trim($findname);
-	$findpage=trim($findpage);
-	$findtext=trim($findtext);
-	
-        $return=array();
-        
-        if ($findtext!="")
-            {
-            # When searching text, search all languages to pick up matches for languages other than the default. Add array so that default is first then we can skip adding duplicates.
-			$search_languages=array($defaultlanguage);
-            if($defaultlanguage!="en"){$search_languages[]="en";}
-			$search_languages = $search_languages + array_keys($languages);	
-			}
-        else
-            {
-            # Process only the default language when not searching.
-            $search_languages=array($defaultlanguage);
-            }
-			
-		
+	global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder;
+
+	$findname = trim($findname);
+	$findpage = trim($findpage);
+	$findtext = trim($findtext);
+
+    $return = array();
+
+    // en should always be included as it is the fallback language of the system
+    $search_languages = array('en');
+
+    if('en' != $defaultlanguage)
+        {
+        $search_languages[] = $defaultlanguage;
+        }
+
+    // When searching text, search all languages to pick up matches for languages other than the default. Add array so that default is first then we can skip adding duplicates.
+    if('' != $findtext)
+        {
+        $search_languages = $search_languages + array_keys($languages);	
+        }
+
 		global $language, $lang; // Need to save these for later so we can revert after search
 		$languagesaved=$language;
 		$langsaved=$lang;
@@ -1716,8 +1909,25 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
 				if(!$customisedtext)
 					{$return[]=$row;}				
                 }
-            }  
-        return $return;
+            }
+
+    // Clean returned array so it contains unique records by name
+    $unique_returned_records = array(); 
+    $existing_lang_names     = array();
+    $i                       = 0; 
+    foreach(array_reverse($return) as $returned_record)
+        {
+        if(!in_array($returned_record['name'], $existing_lang_names))
+            { 
+            $existing_lang_names[$i]     = $returned_record['name']; 
+            $unique_returned_records[$i] = $returned_record; 
+            }
+
+        $i++;
+        }
+    $return = array_values($unique_returned_records);
+
+    return $return;
 	}
 
 function get_site_text($page,$name,$getlanguage,$group)
@@ -2045,7 +2255,7 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
 		# Send an e-mail to each resolved user
 		foreach($emails as $email)
 			{
-			if('' != $email)
+			if(filter_var($email, FILTER_VALIDATE_EMAIL))
 				{
 				send_mail($email,$subject,$body,$applicationname,$email_from,"emailbulk",$templatevars,$applicationname,"",$html);
 				}
@@ -2101,16 +2311,15 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
 		global $email_notify;
 		$bcc.="," . $email_notify;
 		}
-
+    # No/invalid email address? Exit.
+	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {return false;}
+    
 	# Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
 	global $use_phpmailer;
 	if ($use_phpmailer){
 		send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc); 
 		return true;
 		}
-	
-	# No email address? Exit.
-	if (trim($email)=="") {return false;}
 	
 	# Include footer
 	global $email_footer;
@@ -2225,21 +2434,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	# need to be available.
 
 	# Include footer
-	global $email_footer,$storagedir;
-	$phpversion=phpversion();
-	if ($phpversion>='5.3') {
-	if (file_exists(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php")){
-		include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php");
-		include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/extras/class.html2text.php");
-		}
-	} else {
-	// less than 5.3
-	if (file_exists(dirname(__FILE__)."/../lib/phpmailer/class.phpmailer.php")){
-		include_once(dirname(__FILE__)."/../lib/phpmailer/class.phpmailer.php");
-		include_once(dirname(__FILE__)."/../lib/phpmailer/class.html2text.php");
-		}
-	}
-		
+	global $email_footer, $storagedir, $mime_type_by_extension;
+	
+	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php");
+	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/extras/class.html2text.php");
+	
 	global $email_from;
 	if ($from=="") {$from=$email_from;}
 	if ($reply_to=="") {$reply_to=$email_from;}
@@ -2333,22 +2532,27 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 					$$variable="<img src='cid:".basename(substr($variable,15))."'/>";
 					$images[]=dirname(__FILE__).substr($variable,15);
 				}
-				
-				# embed images - ex [img_gfx/whitegry/titles/title.gif]
-				else if (substr($variable,0,4)=="img_"){
-					
-					$image_path=substr($variable,4);
-					if (substr($image_path,0,1)=="/"){ // absolute paths
-						$images[]=$image_path;
-					}
-					else { // relative paths
-						$image_path=str_replace("../","",$image_path);
-						$images[]=dirname(__FILE__)."/../".$image_path;
-					}
-					$$variable="<img src='cid:".basename($image_path)."'/>";
-					$images[]=$image_path;
-				}
-				
+
+                // embed images - ex [img_gfx/whitegry/titles/title.gif]
+                else if('img_' == substr($variable, 0, 4))
+                    {
+                    $image_path = substr($variable, 4);
+
+                    // absolute paths
+                    if('/' == substr($image_path, 0, 1))
+                        {
+                        $images[] = $image_path;
+                        }
+                    // relative paths
+                    else
+                        {
+                        $image_path = str_replace('../', '', $image_path);
+                        $images[]   = dirname(__FILE__) . '/../' . $image_path;
+                        }
+
+                    $$variable = '<img src="cid:' . basename($image_path) . '"/>';
+                    }
+
 				# attach files (ex [attach_/var/www/resourcespace/gfx/whitegry/titles/title.gif])
 				else if (substr($variable,0,7)=="attach_"){
 					$$variable="";
@@ -2480,10 +2684,23 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	if (isset($embed_thumbnail)&&isset($templatevars['thumbnail'])){
 		$mail->AddEmbeddedImage($templatevars['thumbnail'],$thumbcid,$thumbcid,'base64','image/jpeg'); 
 		}
-	if (isset($images)){
-		foreach ($images as $image){	
-		$mail->AddEmbeddedImage($image,basename($image),basename($image),'base64','image/gif');}
-	}	
+
+    if(isset($images))
+        {
+        foreach($images as $image)
+            {
+            $image_extension = pathinfo($image, PATHINFO_EXTENSION);
+
+            // Set mime type based on the image extension
+            if(array_key_exists($image_extension, $mime_type_by_extension))
+                {
+                $mime_type = $mime_type_by_extension[$image_extension];
+                }
+
+            $mail->AddEmbeddedImage($image, basename($image), basename($image), 'base64', $mime_type);
+            }
+        }
+
 	if (isset($attachments)){
 		foreach ($attachments as $attachment){
 		$mail->AddAttachment($attachment,basename($attachment));}
@@ -2727,9 +2944,11 @@ function get_all_image_sizes($internal=false,$restricted=false)
 {
     # Returns all image sizes available.
     # Standard image sizes are translated using $lang.  Custom image sizes are i18n translated.
-
+    $condition=($internal)?"":"WHERE internal!=1";
+    if($restricted){$condition .= ($condition!=""?" AND ":" WHERE ") . " allow_restricted=1";}
+    
     # Executes query.
-    $r = sql_query("select * from preview_size " . (($internal)?"":"where internal!=1") . (($restricted)?" and allow_restricted=1":"") . " order by width asc");
+    $r = sql_query("select * from preview_size " . $condition . " order by width asc");
 
     # Translates image sizes in the newly created array.
     $return = array();
@@ -3080,272 +3299,248 @@ function get_simple_search_fields()
 }
 
 function check_display_condition($n, $field)
-{
-  global $fields, $scriptconditions, $required_fields_exempt, $blank_edit_template, $ref, $use;
-
-  $displaycondition=true;
-  $s=explode(";",$field["display_condition"]);
-  $condref=0;
-    foreach ($s as $condition) # Check each condition
     {
-       $displayconditioncheck=false;
-       $s=explode("=",$condition);
-        for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
+    global $fields, $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
+
+    $displaycondition = false;
+    $s                = explode(';', $field['display_condition']);
+    $condref          = 0;
+
+    // echo "<b>{$field['title']}</b>";
+    // echo '<pre>';print_r($s);echo '</pre>';
+    
+    foreach ($s as $condition) # Check each condition
         {
-            node_field_options_override($fields[$cf]);
-            if ($s[0]==$fields[$cf]["name"]) # this field needs to be checked
+        $displayconditioncheck = false;
+        $s                     = explode('=', $condition);
+
+        // echo "sField = $s[0]<br>";
+        // echo "sCondition = $s[1]<br>";
+
+        for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
             {
-                $scriptconditions[$condref]["field"] = $fields[$cf]["ref"];  # add new jQuery code to check value
-                $scriptconditions[$condref]['type'] = $fields[$cf]['type'];
-                $scriptconditions[$condref]['options'] = (in_array($fields[$cf]['type'],array(2, 3, 7, 9, 12))?implode(",",$fields[$cf]['node_options']):$fields[$cf]['options']);
+            if($s[0] == $fields[$cf]['name']) # this field needs to be checked
+                {
+                // echo "Field '{$fields[$cf]['name']}' needs to be checked<br><br>";
+                $fields[$cf]['nodes'] = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
+
+                $node_options = extract_node_options($fields[$cf]['nodes']);
+
+                $scriptconditions[$condref]['field'] = $fields[$cf]['ref'];
+                $scriptconditions[$condref]['type']  = $fields[$cf]['type'];
 
                 $checkvalues=$s[1];
                 $validvalues=explode("|",mb_strtoupper($checkvalues));
-                $scriptconditions[$condref]["valid"]= "\"";
-                $scriptconditions[$condref]["valid"].= implode("\",\"",$validvalues);
-                $scriptconditions[$condref]["valid"].= "\"";
-                $v=trim_array(explode(",",mb_strtoupper($fields[$cf]["value"])));
+                $scriptconditions[$condref]['valid'] = array();
+                $v = trim_array(get_resource_nodes($ref, $fields[$cf]['ref']));
 
                 // If blank edit template is used, on upload form the dependent fields should be hidden
-                if($blank_edit_template && $ref < 0 && $use === '-1') {
-                   $v = array();
-                }
-                
-                foreach ($validvalues as $validvalue)
-                {
-                    if (in_array($validvalue,$v)) {$displayconditioncheck=true;} # this is  a valid value
-                 }
-                 if (!$displayconditioncheck) {$displaycondition=false;$required_fields_exempt[]=$field["ref"];}
-                #add jQuery code to update on changes
-                    if ($fields[$cf]["type"]==2) # add onchange event to each checkbox field
+                if($blank_edit_template && $ref < 0 && $use == $ref)
                     {
-                        # construct the value from the ticked boxes
-                        # Note: it seems wrong to start with a comma, but this ensures it is treated as a comma separated list by split_keywords(), so if just one item is selected it still does individual word adding, so 'South Asia' is split to 'South Asia','South','Asia'.
-                     $options=trim_array($fields[$cf]["node_options"]);
-                     ?><script type="text/javascript">
-                     jQuery(document).ready(function() {<?php
-                       for ($m=0;$m<count($options);$m++)
-                       {
-                         $checkname=$fields[$cf]["ref"] . "_" . md5($options[$m]);
-                         echo "
-                         jQuery('.Question input[name=\"" . $checkname . "\"]').change(function (){
-                           checkDisplayCondition" . $field["ref"] . "();
-                        });";
-                  }
-                  ?>
-               });
-                     </script><?php
-                  }
-                        # add onChange event to each radio button
-                  else if($fields[$cf]['type'] == 12) {
+                    $v = array();
+                    }
 
-                    $options = $fields[$cf]['node_options'];?>
-					
+                foreach($validvalues as $validvalue)
+                    {
+                    $found_validvalue = get_node_by_name($fields[$cf]['nodes'], $validvalue);
+
+                    if(0 != count($found_validvalue))
+                        {
+                        $scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
+
+                        if(in_array($found_validvalue['ref'], $v))
+                            {
+                            $displayconditioncheck = true;
+                            }
+                        }
+                    }
+
+                 if($displayconditioncheck)
+                    {
+                    $displaycondition = true;
+                    }
+                else
+                    {
+                    $required_fields_exempt[]=$field["ref"];
+                    }
+
+                // Check display conditions
+                // Certain fixed list types allow for multiple nodes to be passed at the same time
+                if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
+                        {
+                        ?>
+                        <script>
+                        jQuery(document).ready(function()
+                            {
+                            jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
+                                {
+                                checkDisplayCondition<?php echo $field['ref']; ?>(node);
+                                });
+                            });
+                        </script>
+                        <?php
+
+                        // Move on to the next field now
+                        continue;
+                        }
+                    else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $fields[$cf]['type'])
+                        {
+                        ?>
+                        <script>
+                        jQuery(document).ready(function()
+                            {
+                            jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
+                                {
+                                checkDisplayCondition<?php echo $field['ref']; ?>(node);
+                                });
+                            });
+                        </script>
+                        <?php
+
+                        // Move on to the next field now
+                        continue;
+                        }
+
+                    $checkname = "nodes[{$fields[$cf]['ref']}][]";
+
+                    if(FIELD_TYPE_RADIO_BUTTONS == $fields[$cf]['type'])
+                        {
+                        $checkname = "nodes[{$fields[$cf]['ref']}]";
+                        }
+
+                    $jquery_selector = "input[name=\"{$checkname}\"]";
+
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'])
+                        {
+                        $checkname       = "nodes[{$fields[$cf]['ref']}]";
+                        $jquery_selector = "select[name=\"{$checkname}\"]";
+                        }
+                    ?>
                     <script type="text/javascript">
-                    jQuery(document).ready(function() {
-
-                       <?php
-                       foreach ($options as $option) {
-                         $element_id = 'field_' . $fields[$cf]['ref'] . '_' . sha1($option);
-                         $jquery = sprintf('
-                          jQuery("#%s").change(function() {
-                            checkDisplayCondition%s();
-                         });
-                         ',
-                         $element_id,
-                         $field["ref"]
-                         );
-                         echo $jquery;
-                      } ?>
-
-                   });
+                    jQuery(document).ready(function()
+                        {
+                        jQuery('<?php echo $jquery_selector; ?>').change(function ()
+                            {
+                            checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                            });
+                        });
                     </script>
-
                     <?php
-                 }
-                 else
-                 {
-                  ?>
-                  <script type="text/javascript">
-                  jQuery(document).ready(function() {
-                    jQuery('.Question #field_<?php echo $fields[$cf]["ref"];?>').change(function (){
+                    }
+                else
+                    {
+                    ?>
+                    <script type="text/javascript">
+                    jQuery(document).ready(function()
+                        {
+                        jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
+                            {
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            });
+                        });
+                    </script>
+                    <?php
+                    }
+                }
 
-                       checkDisplayCondition<?php echo $field["ref"];?>();
+        } # see if next field needs to be checked
 
-                    });
-                 });
-                  </script>
-                  <?php
-               }
-            }
+    $condref++;
 
-            } # see if next field needs to be checked
-
-            $condref++;
-        } # check next condition
-
-        ?>
+    } # check next condition
+    // echo '<pre>';print_r($scriptconditions);echo '</pre>';
+    ?>
         <script type="text/javascript">
-        function checkDisplayCondition<?php echo $field["ref"];?>()
+        function checkDisplayCondition<?php echo $field["ref"];?>(node)
 			{
-			field<?php echo $field["ref"]?>status=jQuery('#question_<?php echo $n ?>').css('display');
-			newfield<?php echo $field["ref"]?>status='none';
-			newfield<?php echo $field["ref"]?>provisional=true;
-			
+			field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+			newfield<?php echo $field['ref']; ?>status = 'none';
+			newfield<?php echo $field['ref']; ?>show   = false;
 			<?php
-			foreach ($scriptconditions as $scriptcondition)
+			foreach($scriptconditions as $scriptcondition)
 				{
+                /*
+                Example of $scriptcondition:
+                Array
+                    (
+                    [field] => 73
+                    [type] => 2
+                    [valid] => Array
+                        (
+                            [0] => 267
+                            [1] => 266
+                        )
+                    )
+                */
 				?>
-				newfield<?php echo $field["ref"]?>provisionaltest=false;
-				if (jQuery('.Question #field_<?php echo $scriptcondition["field"]?>').length!=0)
-					{
-					<?php
-					if($scriptcondition['type'] == 12) {
-						?>
-						
-						var options_string = '<?php echo htmlspecialchars($scriptcondition["options"]); ?>';
-						var field<?php echo $scriptcondition["field"]; ?>_options = options_string.split(',');
-						var checked = null;
-						
-						for(var i=0; i < field<?php echo $scriptcondition["field"]; ?>_options.length; i++)
-							{
-							if(jQuery('.Question #field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i]).is(':checked')) 
-								{
-								checked = jQuery('.Question #field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i] + ':checked').val();
-								checked = checked.toUpperCase();
-								}
-							}
-						
-						fieldvalues<?php echo $scriptcondition["field"]?>=checked.split(',');
-						fieldokvalues<?php echo $scriptcondition["field"]; ?> = [<?php echo $scriptcondition["valid"]; ?>];
+                fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+                <?php
+                ############################
+                ### Field type specific
+                ############################
+                if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}][]\"]";
+                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
 
-						if(checked !== null && jQuery.inArray(checked, fieldokvalues<?php echo $scriptcondition["field"]; ?>) > -1) 
-							{
-							newfield<?php echo $field["ref"]; ?>provisionaltest = true;
-							}
-						<?php
-						}
-					else
-						{
-						?>
-						fieldcheck<?php echo $scriptcondition["field"]?>=jQuery('.Question #field_<?php echo $scriptcondition["field"]?>').val().toUpperCase();
-						fieldvalues<?php echo $scriptcondition["field"]?>=fieldcheck<?php echo $scriptcondition["field"]?>.split(',');
-						//alert(fieldvalues<?php echo $scriptcondition["field"]?>);
-						<?php
-						}
-					?>
-					}
-				else
-					{
-					<?php
+                    if(FIELD_TYPE_CHECK_BOX_LIST == $scriptcondition['type'])
+                        {
+                        $js_conditional_statement = "element.checked && {$js_conditional_statement}";
+                        }
 
-					# Handle Radio Buttons type: not sure if this is needed here anymore
-					if($scriptcondition['type'] == 12) {
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'])
+                        {
+                        $jquery_condition_selector = "select[name=\"nodes[{$scriptcondition['field']}]\"] option:selected";
+                        }
 
-						$scriptcondition["options"] = explode(',', $scriptcondition["options"]);
+                    if(FIELD_TYPE_RADIO_BUTTONS == $scriptcondition['type'])
+                        {
+                        $jquery_condition_selector = "input[name=\"nodes[{$scriptcondition['field']}]\"]:checked";
+                        }
+                    ?>
+                    if(!newfield<?php echo $field['ref']; ?>show)
+                        {
+                        jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
+                            {
+                            if(<?php echo $js_conditional_statement; ?>)
+                                {
+                                newfield<?php echo $field['ref']; ?>show = true;
+                                }
+                            });
+                        }
+                    <?php
+                    }
+                ############################
+                ############################
+                }
+                ?>
 
-						foreach ($scriptcondition["options"] as $key => $value) 
-							{
-							$scriptcondition["options"][$key] = sha1($value);
-							}
+                if(newfield<?php echo $field['ref']; ?>show)
+                    {
+                    newfield<?php echo $field['ref']; ?>status = 'block';
+                    }
 
-						$scriptcondition["options"] = implode(',', $scriptcondition["options"]);
-						?>
-						
-						var options_string = '<?php echo $scriptcondition["options"]; ?>';
-						var field<?php echo $scriptcondition["field"]; ?>_options = options_string.split(',');
-						var checked = null;
-						
-						for(var i=0; i < field<?php echo $scriptcondition["field"]; ?>_options.length; i++)
-							{
-							if(jQuery('.Question #field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i]).is(':checked')) 
-								{
-								checked = jQuery('.Question #field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i] + ':checked').val();
-								checked = checked.toUpperCase();
-								}
-							}
+                if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
+                    {
+                    jQuery('#question_<?php echo $n ?>').slideToggle();
 
-						fieldokvalues<?php echo $scriptcondition["field"]; ?> = [<?php echo $scriptcondition["valid"]; ?>];
+                    if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', '');
+                        }
+                    else
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', 'none');
+                        }
+                    }
+            }
+        </script>
+    <?php
 
-						if(checked !== null && jQuery.inArray(checked, fieldokvalues<?php echo $scriptcondition["field"]; ?>) > -1) 
-							{
-							newfield<?php echo $field["ref"]; ?>provisionaltest = true;
-							}
-						<?php
-						}
-					?>
-					fieldvalues<?php echo $scriptcondition["field"]?>=new Array();
-					checkedvals<?php echo $scriptcondition["field"]?>=jQuery('.Question input[name^=<?php echo $scriptcondition["field"]?>_]');
-      
-					jQuery.each(checkedvals<?php echo $scriptcondition["field"]?>,function()
-						{
-						if (jQuery(this).is(':checked'))
-							{
-							checktext<?php echo $scriptcondition["field"]?>=jQuery(this).parent().next().text().toUpperCase();
-							checktext<?php echo $scriptcondition["field"]?> = jQuery.trim(checktext<?php echo $scriptcondition["field"]?>);
-							fieldvalues<?php echo $scriptcondition["field"]?>.push(checktext<?php echo $scriptcondition["field"]?>);
-							//alert(fieldvalues<?php echo $scriptcondition["field"]?>);
-							}
-						});
-					}
-		
-				fieldokvalues<?php echo $scriptcondition["field"]?>=new Array();
-				fieldokvalues<?php echo $scriptcondition["field"]?>=[<?php echo $scriptcondition["valid"]?>];
-		
-				jQuery.each(fieldvalues<?php echo $scriptcondition["field"]?>,function(f,v)
-					{
-					//alert("checking value " + fieldvalues<?php echo $scriptcondition["field"]?> + " against " + fieldokvalues<?php echo $scriptcondition["field"]?>);
-					//alert(jQuery.inArray(fieldvalues<?php echo $scriptcondition["field"]?>,fieldokvalues<?php echo $scriptcondition["field"]?>));
-					if ((jQuery.inArray(v,fieldokvalues<?php echo $scriptcondition["field"]?>))>-1 || (fieldvalues<?php echo $scriptcondition["field"]?> ==fieldokvalues<?php echo  $scriptcondition["field"]?>))
-						{
-						newfield<?php echo $field["ref"]?>provisionaltest=true;
-						}
-					});
-
-				if (newfield<?php echo $field["ref"]?>provisionaltest==false)
-					{
-					newfield<?php echo $field["ref"]?>provisional=false;
-					}
-				<?php
-				}
-			?>
-			exemptfieldsval=jQuery('#exemptfields').val();
-			exemptfieldsarr=exemptfieldsval.split(',');
-			
-			if (newfield<?php echo $field["ref"]?>provisional==true)
-				{
-				if (jQuery.inArray(<?php echo $field["ref"]?>,exemptfieldsarr))
-					{
-					exemptfieldsarr.splice(jQuery.inArray(<?php echo $field["ref"]?>, exemptfieldsarr), 1 );
-					}
-				newfield<?php echo $field["ref"]?>status='block';
-				}
-			else
-				{
-				if ((jQuery.inArray(<?php echo $field["ref"]?>,exemptfieldsarr))==-1)
-					{
-					exemptfieldsarr.push(<?php echo $field["ref"]?>);
-					}
-				}
-			jQuery('#exemptfields').val(exemptfieldsarr.join(","));
-
-			if (newfield<?php echo $field["ref"]?>status!=field<?php echo $field["ref"]?>status)
-				{
-				jQuery('#question_<?php echo $n ?>').slideToggle();
-				if (jQuery('#question_<?php echo $n ?>').css('display')=='block')
-					{
-					jQuery('#question_<?php echo $n ?>').css('border-top','');
-					}
-				else
-					{
-					jQuery('#question_<?php echo $n ?>').css('border-top','none');
-					}
-				}
-			}
-		</script>
-		<?php
-return $displaycondition;
-}
+    return $displaycondition;
+    }
 
 function check_access_key($resource,$key)
 	{
@@ -3392,7 +3587,7 @@ function check_access_key($resource,$key)
 		$userinfo=sql_query("select g.ref usergroup,g.permissions,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
 		if (count($userinfo)>0)
 			{
-                        $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
+            $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
 			$userpermissions=explode(",",$userinfo[0]["permissions"]);
 			$usersearchfilter=$userinfo[0]["search_filter"];
 
@@ -3426,7 +3621,7 @@ function check_access_key($resource,$key)
 				
 			}
 			
-			if($external_share_groups_config_options || stripos(trim($userinfo[0]["config_options"]),"external_share_groups_config_options=true")!==false)
+			if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
 				{
 				# Apply config override options
 				$config_options=trim($userinfo[0]["config_options"]);
@@ -5169,12 +5364,22 @@ function emptyiszero($value)
 
 // Add array_column if <PHP 5.5
 if(!function_exists("array_column"))
-{
-   function array_column($array,$column_name)
     {
-        return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
+    function array_column($array,$column_name,$index_key=null)
+        {
+        if ($index_key == null)
+                {
+                return array_map(function($element) use($column_name){return $element[$column_name];}, $array);
+                }
+                
+        $return=array();
+        foreach($array as $element)
+            {
+            $return[$element[$index_key]] = $element[$column_name];                
+            }
+        return $return;
+        }
     }
-}
 
 
 /**
@@ -5327,6 +5532,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
 function form_value_display($row,$name,$default="")
     {
     # Returns a sanitised row from the table in a safe form for use in a form value, suitable overwritten by POSTed data if it has been supplied.
+    if (!is_array($row)) {return false;}
     if (array_key_exists($name,$row)) {$default=$row[$name];}
     return htmlspecialchars(getval($name,$default));
     }
@@ -5334,7 +5540,7 @@ function form_value_display($row,$name,$default="")
 function get_download_filename($ref,$size,$alternative,$ext)
 	{
 	# Constructs a filename for download
-	global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,$download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,$prefix_filename_string;
+	global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,$download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,$prefix_filename_string, $filename;
 	
 	$filename = $ref . $size . ($alternative>0?"_" . $alternative:"") . "." . $ext;
 	
@@ -5526,3 +5732,92 @@ function user_set_usergroup($user,$usergroup)
     }
 
 
+/**
+ * Generates a random string of requested length.
+ * 
+ * Used to generate initial spider and scramble keys.
+ * 
+ * @param  int    $length Optional, default=12
+ * @return string         Random character string.
+ */
+function generateSecureKey($length = 64)
+    {
+    $bytes = openssl_random_pseudo_bytes($length / 2);
+    $hex   = substr(bin2hex($bytes), 0, 64); 
+
+    return $hex;
+    }
+
+/**
+ * Validates the user entered antispam code
+ *  
+ * @param  string    			$spamcode The antispam hash to check against
+ * @param  string    			$usercode The antispam code the user entered
+ * @param  string    			$spamtime The antispam timestamp
+ * @return boolean         		Returnd tru if the code was successfully validated, otherwise false
+ */	
+function verify_antispam($spamcode="",$usercode="",$spamtime=0)
+	{
+	global $scramble_key,$password_brute_force_delay;
+	if($usercode=="" || $spamcode=="" || $spamtime==0){debug("antispam failed");return false;}
+	if($spamcode != hash("SHA256",strtoupper($usercode) . $scramble_key . $spamtime))
+		{
+		debug("antispam failed: invalid code entered. IP: " . get_ip());
+		sleep($password_brute_force_delay);
+		return false;
+		}
+	$prevhashes=sql_array("SELECT unique_hash value FROM user WHERE unique_hash IS NOT null","");
+	if(in_array(md5($usercode . $spamtime),$prevhashes))
+		{
+		debug("antispam failed: code has previously been used  IP: " . get_ip());
+		sleep($password_brute_force_delay);
+		return false;
+		}
+	return true;
+	}
+
+
+/**
+* Get resource type ID based on extension
+* $mappings = array(resource_type_id => array(allowed_extensions));
+* 
+* Example of mapping array:
+* $mappings = array(2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl'));
+* 
+* @param string  $extension                        Extension we search by (ie. "mp4")
+* @param array   $resource_type_extension_mapping  Maps between resource types and extensions
+* @param integer $default                          The default value to use in case we can't find it the mappings
+* 
+* @return integer  Resource type ID
+*/
+function get_resource_type_from_extension($extension, array $resource_type_extension_mapping, $default)
+    {
+    foreach($resource_type_extension_mapping as $resource_type_id => $allowed_extensions)
+        {
+        if(in_array($extension, $allowed_extensions))
+            {
+            return $resource_type_id;
+            }
+        }
+
+    return $default;
+    }
+
+/**
+* Helper function for Preview tools feature. Checks all necessary permissions or options
+* in order to tell the system whether PreviewTools panel should be displayed
+* 
+* @param boolean $edit_access Does user have the permissions to edit this resource
+* 
+* @return boolean
+*/
+function canSeePreviewTools($edit_access)
+    {
+    global $annotate_enabled, $image_preview_zoom;
+
+    return
+        (
+           ($annotate_enabled && $edit_access)
+        || $image_preview_zoom
+        );
+    }

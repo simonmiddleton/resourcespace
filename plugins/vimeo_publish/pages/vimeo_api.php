@@ -64,7 +64,7 @@ if(getvalescaped('upload', false))
 
 if(0 < $vimeo_publish_vimeo_link_field)
     {
-    $vimeo_url = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$ref}' AND resource_type_field = '{$vimeo_publish_vimeo_link_field}'", '');
+    $vimeo_url = get_data_by_field($ref, $vimeo_publish_vimeo_link_field);
 
     // Show confirmation message
     if($successfully_uploaded && '' !== $vimeo_url)
@@ -80,17 +80,17 @@ if(0 < $vimeo_publish_vimeo_link_field)
 
 if(0 < $vimeo_publish_video_title_field)
     {
-    $default_video_title = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$ref}' AND resource_type_field = '{$vimeo_publish_video_title_field}'", '');
+    $default_video_title = get_data_by_field($ref, $vimeo_publish_video_title_field);
     }
 
 if(0 < $vimeo_publish_video_description_field)
     {
-    $default_video_description = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$ref}' AND resource_type_field = '{$vimeo_publish_video_description_field}'", '');
+    $default_video_description = get_data_by_field($ref, $vimeo_publish_video_description_field);
     }
 
 if(0 < $vimeo_publish_video_tags_field)
     {
-    $default_video_tags = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$ref}' AND resource_type_field = '{$vimeo_publish_video_tags_field}'", '');
+    $default_video_tags = get_data_by_field($ref, $vimeo_publish_video_tags_field);
     }
 
 

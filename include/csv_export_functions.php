@@ -10,7 +10,7 @@
 * @return string
 */
 function generateResourcesMetadataCSV(array $resources)
-{
+    {
     global $lang, $csv_export_add_original_size_url_column;
 
     $return                 = '';
@@ -88,7 +88,7 @@ function generateResourcesMetadataCSV(array $resources)
         }
 
     return $return;
-}
+    }
 
 
 /**

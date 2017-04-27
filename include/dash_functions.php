@@ -509,7 +509,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
  */
 function get_managed_dash()
 	{
-	global $baseurl,$baseurl_short,$lang,$anonymous_login,$username,$dash_tile_shadows, $anonymous_default_dash, $userref, $usergroup, $dash_tile_colour, $dash_tile_colour_options;
+	global $baseurl,$baseurl_short,$lang,$anonymous_login,$username,$dash_tile_shadows, $anonymous_default_dash, $userref, $usergroup, $dash_tile_colour, $dash_tile_colour_options, $managed_home_dash;
 	#Build Tile Templates
 	if(checkPermission_anonymoususer() && !$anonymous_default_dash)
         {
@@ -542,34 +542,34 @@ function get_managed_dash()
     foreach($tiles as $tile)
 		{
         $tile_custom_style = '';
-
-        if($dash_tile_colour)
+    if($dash_tile_colour)
             {
             $buildstring = explode('?', $tile['url']);
             parse_str(str_replace('&amp;', '&', $buildstring[1]), $buildstring);
-
+            
             if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
                 {
                 $tile_custom_style .= get_tile_custom_style($buildstring);
+                
                 }
             }
 		?>
 		<a 
-			<?php 
-			# Check link for external or internal
-			if(mb_strtolower(substr($tile["link"],0,4))=="http")
-				{
-				$link = $tile["link"];
-				$newtab = true;
-				}
-			else
-				{
-				$link = $baseurl."/".htmlspecialchars($tile["link"]);
-				$newtab=false;
-				}
-			?>
+            <?php
+            # Check link for external or internal
+            if('http' == mb_strtolower(substr($tile['link'], 0, 4)))
+                {
+                $link   = parse_dashtile_link($tile['link']);
+                $newtab = true;
+                }
+            else
+                {
+                $link   = $baseurl . '/' . htmlspecialchars(parse_dashtile_link($tile['link']));
+                $newtab = false;
+                }
+                ?>
 			href="<?php echo $link?>" <?php echo $newtab ? "target='_blank'" : "";?>
-			onClick="if(dragging){dragging=false;e.defaultPrevented;}" 
+			onClick="<?php echo (!$newtab ? 'return CentralSpaceLoad(this, true);' : ''); ?>"
 			class="HomePanel DashTile DashTileDraggable" 
 			id="tile<?php echo htmlspecialchars($tile["tile"]);?>"
 		>
@@ -691,7 +691,7 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
     // If client code has specified a user ID, then just add the tiles for it
     if(is_numeric($user_id) && 0 < $user_id)
         {
-        $starting_order = append_user_position($user_id);
+        $starting_order = 99999;
 
         foreach($user_group_tiles as $tile)
             {
@@ -705,7 +705,7 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
     $user_list = sql_array("SELECT ref AS `value` FROM user WHERE usergroup = '{$user_group}'");
     foreach($user_list as $user)
         {
-        $starting_order  = append_user_position($user);
+        $starting_order  = 99999;
         foreach($user_group_tiles as $tile)
             {
             add_user_dash_tile($user, $tile, $starting_order, false); // No need to reorder as we have already set the position
@@ -1385,7 +1385,7 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         {
         ?>
         jQuery(document).ready(function() {
-            if(jQuery('#tile_style_<?php echo $tile_style; ?>').attr('checked'))
+            if(jQuery('#tile_style_<?php echo $tile_style; ?>').prop('checked'))
                 {
                 jQuery('#tile_style_colour_chooser').show();
                 update_tile_preview_colour('<?php echo $tile_colour; ?>');
@@ -1393,7 +1393,7 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         });
 
         jQuery('input:radio[name="tlstyle"]').change(function() {
-            if(jQuery(this).attr('checked') && jQuery(this).val() == '<?php echo $tile_style; ?>')
+            if(jQuery(this).prop('checked') && jQuery(this).val() == '<?php echo $tile_style; ?>')
                 {
                 jQuery('#tile_style_colour_chooser').show();
                 }
@@ -1448,3 +1448,17 @@ function get_tile_custom_style($buildstring)
         }
     }
 
+/*
+ * Delete a tile from the dash for all users in a group
+* 
+* @param integer $tile ID of tile to delete
+* @param integer $group ref of usergroup to delete tile from
+* 
+* @return boolean
+*/
+function delete_usergroup_dash_tile($tile,$group)
+	{
+	if(!is_numeric($tile) || !is_numeric($group)){return false;}	
+    sql_query("DELETE FROM usergroup_dash_tile WHERE usergroup = '{$group}' AND dash_tile = '{$tile}'");					
+	sql_query("DELETE ud.* FROM user_dash_tile ud LEFT JOIN user u ON ud.user=u.ref LEFT JOIN usergroup ug ON ug.ref=u.usergroup WHERE ud.dash_tile='" . $tile . "' and ug.ref='" . $group . "'");
+	}

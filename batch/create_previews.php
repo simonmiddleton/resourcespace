@@ -214,7 +214,7 @@ foreach($resources as $resource) // For each resources
 		if ($resource['preview_attempts']>3 && $resourceage<1000){echo "Just added so may not have finished copying, resetting attempts \n";sql_query("UPDATE resource SET preview attempts=0 WHERE ref='" . $resource['ref'] . "'");continue;} 
 		
 		#check whether resource already has mp3 preview in which case we set preview_attempts to 5
-		if ($resource['file_extension']!="mp3" && file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")))	
+		if ($resource['file_extension']!="mp3" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")))	
 			{
 			$ref=$resource['ref'];
 			echo "Resource already has mp3 preview\n";

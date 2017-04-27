@@ -174,7 +174,7 @@ if($show_usergroups_dash)
 			);
 		}
 		function changeTile(tile,all_users) {
-			if(!jQuery("#tile"+tile+" .tilecheck").attr("checked")) {
+			if(!jQuery("#tile"+tile+" .tilecheck").prop("checked")) {
 				if(jQuery("#tile"+tile).hasClass("conftile")) {
 					jQuery("#delete_permanent_dialog").dialog({
 						title:'<?php echo $lang["dashtiledelete"]; ?>',
@@ -202,7 +202,7 @@ if($show_usergroups_dash)
 					dialogClass: 'confirm-dialog no-close',
                     buttons: {
 						"<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {processTileChange(tile,true); jQuery(this).dialog( "close" );},
-                        "<?php echo $lang['cancel'] ?>":  function() { jQuery(".tilecheck[value="+tile+"]").attr('checked', true); jQuery(this).dialog('close'); }
+                        "<?php echo $lang['cancel'] ?>":  function() { jQuery(".tilecheck[value="+tile+"]").prop('checked', true); jQuery(this).dialog('close'); }
                     }
 					});
 				}

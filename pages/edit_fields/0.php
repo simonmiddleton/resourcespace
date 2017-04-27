@@ -1,10 +1,12 @@
 <?php /* -------- Text Box (single line) ---------- */ ?>
 
 <?php
-global $merge_filename_with_title,$merge_filename_with_title_default;
+global $merge_filename_with_title,$merge_filename_with_title_default,$view_title_field;
 
-if($merge_filename_with_title && $field['title'] == 'Title' && $ref < 0) {
+$show_merge_options = $merge_filename_with_title && $field['ref'] == $view_title_field && $ref < 0;
 
+if($show_merge_options)
+	{
 	$do_not_use = FALSE;
 	$replace = FALSE;
 	$prefix = FALSE;
@@ -76,11 +78,9 @@ if($merge_filename_with_title && $field['title'] == 'Title' && $ref < 0) {
 </table>
 <?php } ?>
 
-<input class="stdwidth" type=text name="<?php echo $name?>" id="<?php echo $name?>" value="<?php echo htmlspecialchars($value)?>" <?php echo $help_js; ?>
+<input <?php if ($field['field_constraint']==1){?>type=number<?php } ?> class="stdwidth" type=text name="<?php echo $name?>" id="<?php echo $name?>" value="<?php echo htmlspecialchars(strip_tags(strip_tags_and_attributes($value))); ?>" <?php echo $help_js; ?>
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"] ?>');"<?php } ?>
 >
 
 <?php 
-if($merge_filename_with_title && $field['title'] == 'Title' && $ref < 0) { ?>
-	</div>
-<?php } ?>
+if($show_merge_options) { echo "</div>";}

@@ -42,13 +42,13 @@ include "../include/header.php";
     <h1><?php echo $lang["findpubliccollection"]?></h1>
     <p class="tight"><?php echo text("introtext")?></p>
 <div class="BasicsBox">
-    <form method="post" action="<?php echo $baseurl_short?>pages/collection_public.php">
+    <form method="post" id="pc_searchform" onSubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_public.php">
 		<div class="Question">
 			<label for="find"><?php echo $lang["searchpubliccollections"]?></label>
-			<div class="tickset">
+			<div class="xtickset">
 			 <div class="Inline"><input type=text name="find" id="find" value="<?php echo htmlspecialchars(unescape($find)) ?>" maxlength="100" class="shrtwidth" /></div>
 			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" /></div>
-			<div class="Inline"><input name="Clear" type="button" onclick="document.getElementById('find').value='';submit();" value="&nbsp;&nbsp;<?php echo $lang["clearbutton"]?>&nbsp;&nbsp;" /></div>
+			<div class="Inline"><input name="Clear" type="button" onclick="document.getElementById('find').value='';CentralSpacePost(document.getElementById('pc_searchform'),true);" value="&nbsp;&nbsp;<?php echo $lang["clearbutton"]?>&nbsp;&nbsp;" /></div>
 			</div>
 			<div class="clearerleft"> </div>
 		</div>
@@ -120,7 +120,7 @@ $url=$baseurl_short."pages/collection_public.php?paging=true&col_order_by=".urle
 	<div class="clearerleft"></div>
 </div>
 
-<form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_public.php">
+<form method=post id="collectionform" onSubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_public.php">
 <input type=hidden name="add" id="collectionadd" value="">
 
 <?php

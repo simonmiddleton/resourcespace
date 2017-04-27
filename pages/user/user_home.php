@@ -17,7 +17,7 @@ $introtext=text("introtext");
 	<div class="VerticalNav">
 	<ul>
 	
-	<?php if ($allow_password_change && !checkperm("p")) { ?>
+	<?php if ($allow_password_change && !checkperm("p") && $userorigin=="") { ?>
         <li><i aria-hidden="true" class="fa fa-fw fa-key"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/user/user_change_password.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["changeyourpassword"]?></a></li>
         <?php } ?>
 	
@@ -33,6 +33,11 @@ $introtext=text("introtext");
 		<?php } ?>
 		<?php if (!checkperm("b")){?>
 		<li><i aria-hidden="true" class="fa fa-fw fa-shopping-bag"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["mycollections"]?></a></li>
+		<?php }
+		if($actions_on)
+		  {?>
+		<li><i aria-hidden="true" class="fa fa-fw fa-check-square-o"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/user/user_actions.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["actions_myactions"]; 
+		?></a><span style="display: none;" class="ActionCountPill Pill"></span></li>
 		<?php } ?>
 		<script>message_poll();</script>
 		<li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["mymessages"]; 

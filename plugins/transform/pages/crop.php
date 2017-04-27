@@ -748,7 +748,7 @@ if(!$cropperestricted)
     }
     ?>	
     <div id="cropbox"  style='float:left; margin-left:20px'>
-      <form name='dimensionsform' id="dimensionsForm" action="<?php echo $baseurl_short?>plugins/transform/pages/crop.php" onsubmit='return validate_transform(this);'>
+      <form name='dimensionsform' id="dimensionsForm" action="<?php echo $baseurl_short?>plugins/transform/pages/crop.php" onsubmit="return validate_transform(this);">
 	<input type='hidden' name='action' value='docrop' />
 	<input type='hidden' name='xcoord' id='xcoord' value='0' />
 	<input type='hidden' name='ycoord' id='ycoord' value='0' />
@@ -792,8 +792,16 @@ if(!$cropperestricted)
 		</tr>
 	    <tr>
             <td colspan="4">
-                <input type="submit" name="submit" value="<?php echo $lang['replaceslideshowimage']; ?>"
-                    onclick="if(check_cropper_selection()) { jQuery('#dimensionsForm').submit(); }; return false;">
+                <input type="submit"
+                       name="submitTransformAction"
+                       value="<?php echo $lang['replaceslideshowimage']; ?>"
+                       onclick="
+                       if(check_cropper_selection() && validate_transform(jQuery('#dimensionsForm')))
+                            {
+                            CentralSpacePost(jQuery('#dimensionsForm'));
+                            };
+
+                        return false;">
             </td>
         </tr>
 	</table>

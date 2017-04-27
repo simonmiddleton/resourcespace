@@ -29,8 +29,15 @@ if(isset($contactsheet_header))
     <page_header>
         <table cellspacing="0" style="width: 100%;">
             <tr>
-                <td style="width: 60%;"><h1><?php echo $applicationname; ?></h1></td>
-            <?php
+            	<?php
+            	if($contact_sheet_include_applicationname)
+                	{
+                	?>
+                	<td style="width: 60%;">
+                		<h1><?php echo $applicationname; ?></h1>
+                	</td>
+                	<?php
+                	}
             if(isset($add_contactsheet_logo))
                 {
                 ?>

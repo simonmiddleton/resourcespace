@@ -8,7 +8,7 @@
 include_once "../include/db.php";
 include_once "../include/general.php";
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include_once "../include/authenticate.php";}
+$k=getvalescaped("k","");if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include "../include/authenticate.php";}
 include_once "../include/search_functions.php";
 include_once "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
@@ -270,24 +270,36 @@ function check_view_display_condition($fields,$n)
 function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	{
 		
-	global $ref, $show_expiry_warning, $access, $search, $extra, $lang;
+	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES,$range_separator;
 	$value=$field["value"];
-			
+
+    if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        $value = array();
+
+        foreach(get_resource_nodes($ref, $field['ref'], true) as $node)
+            {
+            $value[] = i18n_get_translated($node['name']);
+            }
+
+        $value = implode(', ', $value);
+        }
+
 	$modified_field=hook("beforeviewdisplayfielddata_processing","",array($field));
 	if($modified_field){
 		$field=$modified_field;
 	}
 	
 	# Handle expiry fields
-	if (!$valueonly && $field["type"]==6 && $value!="" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
+	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value!="" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
 		{
 		$extra.="<div class=\"RecordStory\"> <h1>" . $lang["warningexpired"] . "</h1><p>" . $lang["warningexpiredtext"] . "</p><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">" . $lang["warningexpiredok"] . "</a></p></div><style>#RecordDownload {display:none;}</style>";
 		}
 	
 	# Handle warning messages
-	if (!$valueonly && $field["type"]==13 && trim($value)!="") 
+	if (!$valueonly && FIELD_TYPE_WARNING_MESSAGE == $field['type'] && '' != trim($value)) 
 		{
-		$extra.="<div class=\"RecordStory\"> <h1>" . $lang["fieldtype-warning_message"] . "</h1><p>" . nl2br(htmlspecialchars($value)) . "</p><br /><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">" . $lang["warningexpiredok"] . "</a></p></div><style>#RecordDownload {display:none;}</style>";
+		$extra.="<div class=\"RecordStory\"><h1>{$lang['fieldtype-warning_message']}</h1><p>" . nl2br(htmlspecialchars(i18n_get_translated($value))) . "</p><br /><p id=\"WarningOK\"><a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$lang['warningexpiredok']}</a></p></div><style>#RecordDownload {display:none;}</style>";
 		}
 	
 	# Process the value using a plugin. Might be processing an empty value so need to do before we remove the empty values
@@ -295,11 +307,16 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	
 	if ($field['value_filter']!="")	{eval($field['value_filter']);}
 	else if (file_exists($plugin)) {include $plugin;}
-	else if ($field["type"]==4 && strpos($value,":")!=false){$value=nicedate($value,true,true);} // Show the time as well as date if entered
-	else if ($field["type"]==4 || $field["type"]==6 || $field["type"]==10) {$value=nicedate($value,false,true);}
-		
+	else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos($value,":")!=false){$value=nicedate($value,true,true);} // Show the time as well as date if entered
+	else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME || $field["type"]==FIELD_TYPE_EXPIRY_DATE || $field["type"]==FIELD_TYPE_DATE) {$value=nicedate($value,false,true);}
+	else if ($field["type"]==FIELD_TYPE_DATE_RANGE) 
+		{
+		$rangedates = explode(",",$value);		
+		natsort($rangedates);
+		$value=implode($range_separator,$rangedates);
+		}
 	
-	if (($field["type"]==2) || ($field["type"]==3) || ($field["type"]==7) || ($field["type"]==9)) {$value=TidyList($value);}
+	if (($field["type"]==FIELD_TYPE_CHECK_BOX_LIST) || ($field["type"]==FIELD_TYPE_DROP_DOWN_LIST) || ($field["type"]==FIELD_TYPE_CATEGORY_TREE) || ($field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)) {$value=TidyList($value);}
 	
 	if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
 		{			
@@ -308,19 +325,19 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		else {$title="";}
 
 		# Value formatting
-		if (($field["type"]==2) || ($field["type"]==7) || ($field["type"]==9))
+		if (($field["type"]==FIELD_TYPE_CHECK_BOX_LIST) || ($field["type"]==FIELD_TYPE_CATEGORY_TREE) || ($field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))
 			{$i18n_split_keywords =true;}
 		else 	{$i18n_split_keywords =false;}
 		$value=i18n_get_translated($value,$i18n_split_keywords );
 		
 		// Don't display the comma for radio buttons:
-		if($field['type'] == 12) {
+		if($field['type'] == FIELD_TYPE_RADIO_BUTTONS) {
 			$value = str_replace(',', '', $value);
 		}
-				
+
 		$value_unformatted=$value; # store unformatted value for replacement also
 
-		if ($field["type"]!=8 || ($field["type"]==8 && $value == strip_tags($value))) # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to ckeditor that have not yet been edited.
+		if ($field["type"]!=FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR || ($field["type"]==FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value == strip_tags($value))) # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to ckeditor that have not yet been edited.
 			{
 			$value=nl2br(htmlspecialchars($value));
 			}
@@ -340,31 +357,55 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 				$value=$value_mod_after_highlight;
 			}
 
-			# Use a display template to render this field
-			$template=$field["display_template"];
-			$template=str_replace("[title]",$title,$template);
-			$template=str_replace("[value]",$value,$template);
-			$template=str_replace("[value_unformatted]",$value_unformatted,$template);
-			$template=str_replace("[ref]",$ref,$template);
-			$extra.=$template;
+            # Use a display template to render this field
+            $template = $field['display_template'];
+            $template = str_replace('[title]', $title, $template);
+            $template = str_replace('[value]', strip_tags_and_attributes($value,array("a"),array("href","target")), $template);
+            $template = str_replace('[value_unformatted]', $value_unformatted, $template);
+            $template = str_replace('[ref]', $ref, $template);
+
+            /*Language strings
+            Format: [lang-language-name_here]
+            Example: [lang-resourcetype-photo]
+            */
+            preg_match_all('/\[lang-(.+?)\]/', $template, $template_language_matches);
+            $i = 0;
+            foreach($template_language_matches[0] as $template_language_match_placeholder)
+                {
+                $placeholder_value = $template_language_match_placeholder;
+
+                if(isset($lang[$template_language_matches[1][$i]]))
+                    {
+                    $placeholder_value = $lang[$template_language_matches[1][$i]];
+                    }
+
+                $template = str_replace($template_language_match_placeholder, $placeholder_value, $template);
+
+                $i++;
+                }
+
+            $extra   .= $template;
 			}
 		else
-			{			
+			{
 			#There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
 			if ($value!=""){
 				# Draw this field normally.				
 				
-					
+				// Strip tags moved before highlighting as was being corrupted
+				$value=strip_tags_and_attributes($value);
+				
 				# Highlight keywords
 				$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
 				
 				$value_mod_after_highlight=hook('value_mod_after_highlight', '', array($field,$value));
-				if($value_mod_after_highlight){
+				if($value_mod_after_highlight)
+					{
 					$value=$value_mod_after_highlight;
-				}
+					}
 				
 				?><div <?php if (!$valueonly){echo "class=\"itemNarrow\""; } elseif (isset($fixedwidth)) {echo "style=\"width:" . $fixedwidth . "px\""; } ?>>
-				<h3><?php echo $title?></h3><p><?php echo $value?></p></div><?php
+				<h3><?php echo $title?></h3><p><?php echo $value; ?></p></div><?php
 				}
 			}
 		}
@@ -543,8 +584,12 @@ if (!hook("replacetitleprefix","",array($resource["archive"]))) { switch ($resou
 	
 	
 	
-if (!hook("replaceviewtitle")){ echo highlightkeywords(htmlspecialchars(tidylist(i18n_get_translated(get_data_by_field($resource['ref'],$title_field)))),$search); } /* end hook replaceviewtitle */  
-?>&nbsp;</h1>
+
+if(!hook('replaceviewtitle'))
+    {
+    echo highlightkeywords(htmlspecialchars(i18n_get_translated(strip_tags_and_attributes(get_data_by_field($resource['ref'], $title_field)))), $search);
+    } /* end hook replaceviewtitle */
+    ?>&nbsp;</h1>
 <?php } /* End of renderinnerresourceheader hook */ ?>
 </div>
 
@@ -563,7 +608,7 @@ $download_multisize=true;
 <?php
 
 # Try to find a preview file.
-$flvfile=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
+$flvfile=get_resource_path($ref,true,"pre",false,($video_preview_hls_support==1 || $video_preview_hls_support==2)?"m3u8":$ffmpeg_preview_extension);
 
 if (!file_exists($flvfile) && $ffmpeg_preview_extension!="flv") {$flvfile=get_resource_path($ref,true,"pre",false,"flv");} # Try FLV, for legacy systems.
 if (!file_exists($flvfile)) {$flvfile=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);}
@@ -624,68 +669,240 @@ elseif ($resource['file_extension']=="swf" && $display_swf){
 		</div><?php
 		}
 	}
-elseif ($resource["has_image"]==1)
-	{
-	$use_watermark=check_use_watermark();
-	$imagepath=get_resource_path($ref,true,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
-	if (!file_exists($imagepath))
-		{
-		$imageurl=get_resource_path($ref,false,"thm",false,$resource["preview_extension"],-1,1,$use_watermark);
-		}
-	else
-		{
-		$imageurl=get_resource_path($ref,false,($retina_mode?"scr":"pre"),false,$resource["preview_extension"],-1,1,$use_watermark);
-		}
-	
-	?>
-	<div id="previewimagewrapper"><a style="position:relative;" class="enterLink" id="previewimagelink" href="<?php echo generateURL($baseurl_short . "pages/preview.php",$urlparams,array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>" title="<?php echo $lang["fullscreenpreview"]?>">
-	<?php
-	if (file_exists($imagepath))
-		{ 
-		?><img src="<?php echo $imageurl?>" alt="<?php echo $lang["fullscreenpreview"]?>" class="Picture" GALLERYIMG="no" id="previewimage"
-		<?php if ($retina_mode) { ?>onload="this.width/=1.8;this.onload=null;"<?php } ?>											   
-		/><?php 
-		} 
-	?><?php hook("aftersearchimg","",array($ref))?></a><?php
-	if(isset($previewcaption))
-		{
-		echo "<div class=\"clearerleft\"> </div>";	
-		@list($pw) = @getimagesize($imagepath);
-		display_field_data($previewcaption, true, $pw);
-		}
-	hook("previewextras");
-	?></div><?php 
-	if ($image_preview_zoom)
-		{ 
-		$previewurl=get_resource_path($ref,false,"scr",false,$resource["preview_extension"],-1,1,$use_watermark);		
-		?>
-		<script>
-		jQuery(document).ready(function(){
-			jQuery('#previewimage')
-			        .wrap('<span style="display:inline-block"></span>')
-			        .css('display', 'block')
-			        .parent()
-			        .zoom({url: '<?php echo $previewurl ?>' });
-			});
-		</script>
-		<?php
-		}
-	}
-else
-	{
-	?>
-	<div id="previewimagewrapper">
-	<img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture" style="border:none;" id="previewimage" />
-	<?php
-	if(isset($previewcaption))
-		{	
-		echo "<div class=\"clearerleft\"> </div>";	
-		display_field_data($previewcaption, true);
-		}
-	hook("previewextras");
-	?></div><?php	
-	}
+else if(1 == $resource['has_image'])
+    {
+    $use_watermark = check_use_watermark();
+    $imagepath     = get_resource_path($ref, true, 'pre', false, $resource['preview_extension'], -1, 1, $use_watermark);
 
+    if(!file_exists($imagepath))
+        {
+        $imageurl = get_resource_path($ref, false, 'thm', false, $resource['preview_extension'], -1, 1, $use_watermark);
+        }
+    else
+        {
+        $imageurl = get_resource_path($ref, false, ($retina_mode ? 'scr' : 'pre'), false, $resource['preview_extension'], -1, 1, $use_watermark);
+        }
+        ?>
+    <div id="previewimagewrapper">
+        <a id="previewimagelink"
+           class="enterLink"
+           href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams, array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>"
+           title="<?php echo $lang["fullscreenpreview"]; ?>"
+           style="position:relative;"
+           onclick="return CentralSpaceLoad(this);">
+    <?php
+    if(file_exists($imagepath))
+        {
+        ?>
+        <img id="previewimage"
+             class="Picture"
+             src="<?php echo $imageurl; ?>" 
+             alt="<?php echo $lang['fullscreenpreview']; ?>" 
+             GALLERYIMG="no"
+        <?php 
+        if($retina_mode)
+            {
+            ?>
+             onload="this.width/=1.8;this.onload=null;"
+            <?php
+            }
+            ?>/>
+        <?php 
+        }
+
+    hook('aftersearchimg', '', array($ref));
+    ?>
+        </a>
+    <?php
+    if(isset($previewcaption))
+        {
+        ?>
+        <div class="clearerleft"></div>
+        <?php
+        @list($pw) = @getimagesize($imagepath);
+
+        display_field_data($previewcaption, true, $pw);
+        }
+
+    hook('previewextras');
+
+    if(canSeePreviewTools($edit_access))
+        {
+    	if($annotate_enabled)
+    		{
+			include_once '../include/annotation_functions.php';
+    		}
+        	?>
+        <!-- Available tools to manipulate previews -->
+        <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
+            <div id="PreviewToolsOptionsWrapper" class="Hidden">
+            <?php
+            if($annotate_enabled)
+                {
+                ?>
+                <a class="ToolsOptionLink" href="#" onclick="toggleAnnotationsOption(this); return false;">
+                    <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
+                </a>
+                <script>
+                var rs_tagging_plugin_added = false;
+
+                function toggleAnnotationsOption(element)
+                    {
+                    var option             = jQuery(element);
+                    var preview_image      = jQuery('#previewimage');
+                    var preview_image_link = jQuery('#previewimagelink');
+                    var img_copy_id        = 'previewimagecopy';
+                    var img_src            = preview_image.attr('src');
+
+                    // Setup Annotorious (has to be done only once)
+                    if(!rs_tagging_plugin_added)
+                        {
+                        anno.addPlugin('RSTagging',
+                            {
+                            annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
+                            nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
+                            resource            : <?php echo (int) $ref; ?>,
+                            read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>
+                            });
+
+                        rs_tagging_plugin_added = true;
+
+                        // We have to wait for initialisation process to finish as this does ajax calls
+                        // in order to set itself up
+                        setTimeout(function ()
+                            {
+                            toggleAnnotationsOption(element);
+                            }, 
+                            1000);
+
+                        return false;
+                        }
+
+                    if(img_src.indexOf('?') != -1)
+                        {
+                        img_src = img_src.substring(0, img_src.indexOf('?'));
+                        }
+
+                    // Feature enabled? Then disable it.
+                    if(option.hasClass('Enabled'))
+                        {
+                        anno.destroy(img_src);
+
+                        // Remove the copy and show the linked image again
+                        jQuery('#' + img_copy_id).remove();
+                        preview_image_link.show();
+
+                        toggleMode(element);
+
+                        return false;
+                        }
+
+                    // Enable feature
+                    // Hide the linked image for now and use a copy of it to annotate
+                    var preview_image_copy = preview_image.clone(true);
+                    preview_image_copy.prop('id', img_copy_id);
+                    preview_image_copy.prop('src', img_src);
+                    preview_image_copy.appendTo(preview_image_link.parent());
+                    preview_image_link.hide();
+
+                    anno.makeAnnotatable(document.getElementById(img_copy_id));
+
+                    toggleMode(element);
+
+                    return false;
+                    }
+                </script>
+                <?php
+                }
+
+            if($image_preview_zoom)
+                {
+                $previewurl = get_resource_path($ref, false, 'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+                ?>
+                <a class="ToolsOptionLink" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
+                    <i class='fa fa-search-plus' aria-hidden="true"></i>
+                </a>
+                <script>
+                function toggleImagePreviewZoomOption(element)
+                    {
+                    var option = jQuery(element);
+
+                    // Feature enabled? Then disable it.
+                    if(option.hasClass('Enabled'))
+                        {
+                        jQuery('#previewimage').trigger('zoom.destroy');
+
+                        toggleMode(element);
+
+                        return false;
+                        }
+
+                    // Enable
+                    jQuery('#previewimage')
+                        .wrap('<span style="display: inline-block;"></span>')
+                        .css('display', 'block')
+                        .parent()
+                        .zoom({url: '<?php echo $previewurl; ?>'});
+
+                    toggleMode(element);
+
+                    return false;
+                    }
+                </script>
+                <?php
+                }
+                ?>
+            </div>
+            <script>
+            function showHidePreviewTools()
+                {
+                var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
+                var tools_options = tools_wrapper.find('.ToolsOptionLink');
+
+                // If any of the tools are enabled do not close Preview tools box
+                if(tools_options.length > 0 && tools_options.hasClass('Enabled'))
+                    {
+                    tools_wrapper.removeClass('Hidden');
+
+                    return false;
+                    }
+
+                tools_wrapper.toggleClass('Hidden');
+
+                return false;
+                }
+
+            function toggleMode(element)
+                {
+                jQuery(element).toggleClass('Enabled');
+                }
+            </script>
+        </div>
+        <?php
+        } /* end of canSeePreviewTools() */
+        ?>
+    </div>
+    <?php
+    }
+else
+    {
+    ?>
+    <div id="previewimagewrapper">
+        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture" style="border:none;" id="previewimage" />
+    <?php
+    if(isset($previewcaption))
+        {
+        ?>
+        <div class="clearerleft"></div>
+        <?php
+        display_field_data($previewcaption, true);
+        }
+
+    hook("previewextras");
+    ?>
+    </div>
+    <?php
+    }
 ?>
 <?php } /* End of renderinnerresourcepreview hook */ ?>
 <?php } /* End of replacerenderinnerresourcepreview hook */ ?>
@@ -1379,7 +1596,7 @@ if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_acce
         <div class="RecordBox">
         <div class="RecordPanel">  
         <div class="Title"><?php echo $lang['metadata-report']?></div>
-        <div id="<?php echo $context ?>metadata_report"><a onclick="metadataReport(<?php echo htmlspecialchars($ref)?>,'<?php echo $context ?>');document.getElementById('<?php echo $context ?>metadata_report').innerHTML='<?php echo $lang['pleasewait']?>';return false;" class="itemNarrow" href="#">&gt; <?php echo $lang['viewreport'];?></a><br></div>
+        <div id="<?php echo $context ?>metadata_report"><a onclick="metadataReport(<?php echo htmlspecialchars($ref)?>,'<?php echo $context ?>');document.getElementById('<?php echo $context ?>metadata_report').innerHTML='<?php echo $lang['pleasewait']?>';return false;" class="itemNarrow" href="#"> <?php echo LINK_CARET . $lang['viewreport'];?></a><br></div>
         </div>
         
         </div>
@@ -1643,19 +1860,31 @@ function <?php echo $context ?>UpdateFSResultCount()
 <input type="hidden" name="countonly" id="<?php echo $context ?>countonly" value="">
 <?php
 $keywords=get_resource_top_keywords($ref,50);
-for ($n=0;$n<count($keywords);$n++)
+if (count($keywords)!=0)
 	{
-	?>
-	<div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n])?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
-	onClick="<?php echo $context ?>UpdateFSResultCount();"><label for="similar_search_<?php echo urlencode($keywords[$n])?>">&nbsp;<?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
-	<?php
+		for ($n=0;$n<count($keywords);$n++)
+			{
+			?>
+			<div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n])?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
+			onClick="<?php echo $context ?>UpdateFSResultCount();"><label for="similar_search_<?php echo urlencode($keywords[$n])?>">&nbsp;<?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
+			<?php
+			}
+	
+		?>
+		<div class="clearerleft"> </div>
+		<br />
+		<input name="search" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
+		<iframe src="<?php echo $baseurl_short?>pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
+		</form>
+		<?php
 	}
-?>
-<div class="clearerleft"> </div>
-<br />
-<input name="search" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
-<iframe src="<?php echo $baseurl_short?>pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
-</form>
+	
+else
+	{
+	echo $lang["nosimilarresources"];	
+	}
+	?>
+
 <div class="clearerleft"> </div>
 </div>
 </div>
@@ -1665,6 +1894,20 @@ for ($n=0;$n<count($keywords);$n++)
 <?php 
 	hook("afterviewfindsimilar");
 }
+
+if($annotate_enabled)
+    {
+    ?>
+    <!-- Annotorious -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.min.js"></script>
+
+    <!-- Annotorious plugin(s) -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <!-- End of Annotorious -->
+    <?php
+    }
 
 include "../include/footer.php";
 ?>

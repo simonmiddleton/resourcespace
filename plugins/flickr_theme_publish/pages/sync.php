@@ -82,8 +82,8 @@ if ($validtoken){
 		<!-- Public/private? -->
 		<p><?php echo $lang["flickr_publish_as"] ?>
 		<select name="private">
-		<option value="0"><?php echo $lang["flickr-publish-public"] . "&nbsp;&nbsp;" ?></option>
 		<option value="1" <?php if (getval("private","")==1) { ?>selected<?php } ?>><?php echo $lang["flickr-publish-private"] . "&nbsp;&nbsp;" ?></option>
+		<option value="0"><?php echo $lang["flickr-publish-public"] . "&nbsp;&nbsp;" ?></option>
 		</select>
 		</p>
 		

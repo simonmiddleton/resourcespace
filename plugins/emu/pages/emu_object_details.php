@@ -32,14 +32,10 @@ include '../../../include/header.php';
         {
         foreach($emu_data[$irn] as $key => $value)
             {
-            if(is_array($value))
-                {
-                $value = 'Non-atomic value <=> Array()';
-                }
-                ?>
+            ?>
             <tr> 
             <td><strong><?php echo $key; ?></strong></td>
-            <td><?php echo $value; ?></td> 
+            <td><?php echo emu_convert_to_atomic($value); ?></td> 
             </tr>
             <?php
             }

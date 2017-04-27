@@ -12,19 +12,22 @@ include('../../include/image_processing.php');
 include('../../include/pdf_functions.php');
 require_once '../../lib/html2pdf/html2pdf.class.php';
 
-$collection    = getvalescaped('c', '');
-$size          = getvalescaped('size', '');
-$columns       = getvalescaped('columns', 1);
-$order_by      = getvalescaped('orderby', 'relevance');
-$sort          = getvalescaped('sort', 'asc');
-$orientation   = getvalescaped('orientation', '');
-$sheetstyle    = getvalescaped('sheetstyle', 'thumbnails');
-$preview       = ('true' == getvalescaped('preview', '') ? true : false);
-$previewpage   = getvalescaped('previewpage', 1);
-$includeheader = getvalescaped('includeheader', '');
-$addlink       = getvalescaped('addlink', '');
-$addlogo	   = getvalescaped('addlogo', '');
+$collection        = getvalescaped('c', '');
+$size              = getvalescaped('size', '');
+$columns           = getvalescaped('columns', 1);
+$order_by          = getvalescaped('orderby', 'relevance');
+$sort              = getvalescaped('sort', 'asc');
+$orientation       = getvalescaped('orientation', '');
+$sheetstyle        = getvalescaped('sheetstyle', 'thumbnails');
+$preview           = ('true' == getvalescaped('preview', '') ? true : false);
+$previewpage       = getvalescaped('previewpage', 1);
+$includeheader     = getvalescaped('includeheader', '');
+$addlink           = getvalescaped('addlink', '');
+$addlogo           = getvalescaped('addlogo', '');
+$addfieldname	   = getvalescaped('addfieldname','');
 $force_watermark   = getvalescaped('force_watermark','');
+$field_value_limit = getvalescaped('field_value_limit', 0);
+
 if($force_watermark==='true'){
 	$force_watermark=true;
 }
@@ -42,6 +45,7 @@ if(!collection_readable($collection))
 $contactsheet_header           = ('' != $includeheader ? filter_var($includeheader, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_include_header);
 $add_contactsheet_logo         = ('' != $addlogo ?  filter_var($addlogo, FILTER_VALIDATE_BOOLEAN) : $include_contactsheet_logo);
 $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_add_link);
+$contact_sheet_field_name      = ('' != $addfieldname ? filter_var($addfieldname, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_field_name);
 $selected_contact_sheet_fields = getvalescaped('selected_contact_sheet_fields', '');
 
 
@@ -59,20 +63,33 @@ if(is_numeric($order_by))
     }
 $results = do_search("!collection{$collection}", '', $order_by, 0, -1, $sort);
 
-switch($sheetstyle)
-    {
-    case 'thumbnails':
-        $getfields = $config_sheetthumb_fields;
-        break;
+if($contactsheet_use_field_templates && !isset($contactsheet_field_template))
+	{
+	$contactsheet_use_field_templates=false;
+	}
+	
+if($contactsheet_use_field_templates)
+	{
+	$field_template = getvalescaped('field_template', 0, true);
+	$getfields = $contactsheet_field_template[$field_template]['fields'];
+	}
+else
+	{
+	switch($sheetstyle)
+		{
+		case 'thumbnails':
+			$getfields = $config_sheetthumb_fields;
+			break;
 
-    case 'list':
-        $getfields = $config_sheetlist_fields;
-        break;
+		case 'list':
+			$getfields = $config_sheetlist_fields;
+			break;
 
-    case 'single':
-        $getfields = $config_sheetsingle_fields;
-        break;
-    }
+		case 'single':
+			$getfields = $config_sheetsingle_fields;
+			break;
+		}
+	}
 
 // If user has specified which fields to show, then respect it
 if('' != $selected_contact_sheet_fields && '' != $selected_contact_sheet_fields[0])
@@ -96,7 +113,8 @@ $placeholders      = array(
     'title'                         			=> $title,
     'columns'                       			=> $columns,
     'config_sheetthumb_include_ref' 			=> $config_sheetthumb_include_ref,
-    'contact_sheet_metadata_under_thumbnail'	=> $contact_sheet_metadata_under_thumbnail
+    'contact_sheet_metadata_under_thumbnail'	=> $contact_sheet_metadata_under_thumbnail,
+    'contact_sheet_include_applicationname'		=> $contact_sheet_include_applicationname
 );
 
 if($contactsheet_header)
@@ -162,20 +180,38 @@ foreach($results as $result_data)
             {
             $contact_sheet_value = trim(get_data_by_field($result_data['ref'], $contact_sheet_field['ref']));
 
+            // By default we don't limit the field but if HTML2PDF throws an error because of TD tags spreading across
+            // multiple pages, then truncate the value.
+            if(0 < $field_value_limit)
+                {
+                $contact_sheet_value = substr($contact_sheet_value, 0, $field_value_limit);
+                }
+
             // Clean fixed list types of their front comma
             if(in_array($contact_sheet_field['type'], $FIXED_LIST_FIELD_TYPES))
                 {
                 $contact_sheet_value = tidylist($contact_sheet_value);
                 }
 
-            $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = tidylist($contact_sheet_value);
+            $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = ($contact_sheet_field_name ? $contact_sheet_field['title'] . ': ' : '') . tidylist($contact_sheet_value);
             }
         }
 
     // Add the preview image
     $use_watermark = $force_watermark;
-    if($use_watermark==''){$use_watermark = check_use_watermark();}
+    if('' == $use_watermark)
+        {
+        $use_watermark = check_use_watermark();
+        }
+
     $img_path = get_resource_path($result_data['ref'], true, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
+
+    // If we can't find the size, drop back to preview size
+    if(!file_exists($img_path))
+        {
+        $img_path = get_resource_path($result_data['ref'], true, 'pre', false, $result_data['preview_extension'], -1, 1, $use_watermark);
+        }
+
     if(!file_exists($img_path))
         {
         $img_path = "../../gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false, true);
@@ -212,6 +248,23 @@ catch(Html2PdfException $e)
     $formatter = new ExceptionFormatter($e);
 
     echo $formatter->getHtmlMessage();
+
+    exit();
+    }
+catch(Html2Pdf_exception $e)
+    {
+    // Starting point
+    if(0 == $field_value_limit)
+        {
+        $field_value_limit = 1100;
+        }
+
+    $parameters = array(
+        'ref'               => $collection,
+        'field_value_limit' => $field_value_limit - 200,
+    );
+
+    redirect(generateURL("{$baseurl}/pages/contactsheet_settings.php", $parameters));
 
     exit();
     }

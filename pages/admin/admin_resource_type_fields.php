@@ -293,10 +293,10 @@ function ReorderResourceTypeFields(idsInOrder)
 	  success: function() {
 		
 		//jQuery('.movelink').show();
-	  	jQuery('.movedownlink:last').attr( "disabled", "true" );
-		jQuery('.moveuplink:first').attr( "disabled", "true" );
-	  	jQuery('.movedownlink:not(:last)').removeAttr( "disabled" )
-		jQuery('.moveuplink:not(:first)').removeAttr( "disabled")
+	  	jQuery('.movedownlink:last').prop( "disabled", true );
+		jQuery('.moveuplink:first').prop( "disabled", true );
+	  	jQuery('.movedownlink:not(:last)').prop( "disabled",false )
+		jQuery('.moveuplink:not(:first)').prop( "disabled", false)
 		//$( "input:not(:checked) + span" )
 		//alert("SUCCESS");
 		//var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
@@ -377,9 +377,9 @@ function enableFieldsort(){
 enableFieldsort();
 
 jQuery(".moveuplink").click(function() {
-    if (jQuery(this).attr('disabled')) {
-	      e.preventDefault();
-	      e.stopImmediatePropagation();
+    if (jQuery(this).prop('disabled')) {
+	      event.preventDefault();
+	      event.stopImmediatePropagation();
 	  }
       curvalue=parseInt(jQuery(this).parents(".resource_type_field_row").children('.order_by_value').html());
       parentvalue=parseInt(jQuery(this).parents(".resource_type_field_row").prev().children('.order_by_value').html());
@@ -392,9 +392,9 @@ jQuery(".moveuplink").click(function() {
     });
    
 jQuery(".movedownlink").click(function() {
-   if (jQuery(this).attr('disabled')) {
-	      e.preventDefault();
-	      e.stopImmediatePropagation();
+   if (jQuery(this).prop('disabled')) {
+	      event.preventDefault();
+	      event.stopImmediatePropagation();
 	  }
       curvalue=parseInt(jQuery(this).parents(".resource_type_field_row").children('.order_by_value').html());
       childvalue=parseInt(jQuery(this).parents(".resource_type_field_row").next().children('.order_by_value').html());

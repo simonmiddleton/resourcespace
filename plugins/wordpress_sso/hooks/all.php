@@ -57,7 +57,7 @@ function HookWordpress_ssoAllProvideusercredentials()
 									debug("wordpress_sso - need to get email details. Redirecting to WordPress");
 									wordpress_sso_redirect(true,false);
 									}
-								sql_query("insert into user (username,password,fullname,email,usergroup,comments,approved) values ('" . $username . "','" . $hash . "','" . $wpdisplayname . "','" . $wpemail . "','" . $wordpress_sso_auto_create_group . "','" . $lang['wordpress_sso_auto_created'] . "'," . (($wordpress_sso_auto_approve)?1:0) . ")");
+								sql_query("insert into user (username,password,origin,fullname,email,usergroup,comments,approved) values ('" . $username . "','" . $hash . "','wordpress_sso','" . $wpdisplayname . "','" . $wpemail . "','" . $wordpress_sso_auto_create_group . "','" . $lang['wordpress_sso_auto_created'] . "'," . (($wordpress_sso_auto_approve)?1:0) . ")");
 								}
 							else // not current user, need to redirect
 								{
@@ -157,12 +157,12 @@ function HookWordpress_ssoLoginInitialise()
 
 function HookWordpress_ssoTeam_user_editPassword()
         {
-		global $ref;
+		global $ref, $lang;
 		$checkwpuser=sql_value("select wp_authrequest as value from user where ref='$ref'","");
         if  (strlen($checkwpuser)>0)
 			{
 			?>
-			<input type="hidden" name="password" value="notused1234">
+			<input type="hidden" name="password" value="<?php echo $lang['hidden'] ?>">
 			<?php
 			return true;
 			}
@@ -171,7 +171,7 @@ function HookWordpress_ssoTeam_user_editPassword()
 
 function HookWordpress_ssoTeam_user_editTicktoemailpassword()
         {
-		global $ref;
+		global $ref, $lang;
 		$checkwpuser=sql_value("select wp_authrequest as value from user where ref='$ref'","");
         if  (strlen($checkwpuser)>0)
 			{

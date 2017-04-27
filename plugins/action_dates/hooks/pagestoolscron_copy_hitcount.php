@@ -2,7 +2,9 @@
 
 function HookAction_datesPagestoolscron_copy_hitcountAddplugincronjob()
 	{
-	global $lang, $action_dates_restrictfield,$action_dates_deletefield, $resource_deletion_state, $action_dates_reallydelete, $action_dates_email_admin_days, $email_notify, $email_from,$applicationname;
+	global $lang, $action_dates_restrictfield,$action_dates_deletefield, $resource_deletion_state,
+           $action_dates_reallydelete, $action_dates_email_admin_days, $email_notify, $email_from,
+           $applicationname, $action_dates_new_state;
 	
 	
 	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)");
@@ -18,7 +20,7 @@ function HookAction_datesPagestoolscron_copy_hitcountAddplugincronjob()
 			if($action_dates_email_admin_days!="") # Set up email notification to admin of expiring resources
 				{
 				$action_dates_email_admin_seconds=intval($action_dates_email_admin_days)*60*60*24;	
-				if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])-$action_dates_email_admin_seconds+86400)))		
+				if ((time()>=(strtotime($resource["value"])-$action_dates_email_admin_seconds)) && (time()<=(strtotime($resource["value"])+$action_dates_email_admin_seconds)))		
 					{  			
 					$emailrefs[]=$ref;		
 					}
@@ -68,7 +70,7 @@ function HookAction_datesPagestoolscron_copy_hitcountAddplugincronjob()
 				}
 			foreach($admin_notify_emails as $admin_notify_email)
 						{
-						send_mail($admin_notify_email,$applicationname . ": " . $lang["propose_changes_proposed_changes_submitted"],$message,"","","emailproposedchanges",$templatevars);    
+						send_mail($admin_notify_email,$applicationname . ": " . $lang['action_dates_notification_subject'],$message,"","","emailproposedchanges",$templatevars);    
 						}
 					
 					if (count($admin_notify_users)>0)
@@ -79,37 +81,64 @@ function HookAction_datesPagestoolscron_copy_hitcountAddplugincronjob()
 			}
 		}
 	if(in_array($action_dates_deletefield, $allowable_fields))
-		{
-		if ($action_dates_reallydelete)
-                	{
-			$delete_resources=sql_query("select resource, value from resource_data where resource_type_field = '$action_dates_deletefield' and value <>'' and value is not null");
-			}
-		else
-			{
-            if (!isset($resource_deletion_state)){$resource_deletion_state=3;}
-			$delete_resources=sql_query("select rd.resource, rd.value from resource r left join resource_data rd on r.ref=rd.resource and r.archive!='" . $resource_deletion_state  . "' where rd.resource_type_field = '$action_dates_deletefield' and value <>'' and rd.value is not null");
-			}
-		foreach ($delete_resources as $resource)
-			{
-			$ref=$resource["resource"];                       
-			if (time()>=strtotime($resource["value"]))		
-                            {
-                            # Delete the resource as date has been reached
-                            echo "deleting resource " . $ref ."\r\n";
-                            if ($action_dates_reallydelete)
-                                {
-                                delete_resource($ref);
-				}
-                            else
-                                {
-                                sql_query("update resource set archive='" . $resource_deletion_state . "' where ref='" . $ref . "'");
-                                }
-                            # Remove the resource from any collections
-                            sql_query("delete from collection_resource where resource='$ref'");
-                            resource_log($ref,'x','',$lang['action_dates_delete_logtext']);			
-                            }	
-			}
-		}
+        {
+        $change_archive_state = false;
+
+        if($action_dates_reallydelete)
+            {
+            $delete_resources = sql_query("SELECT resource, value FROM resource_data WHERE resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND value IS NOT NULL");
+            }
+        else
+            {
+            if(!isset($resource_deletion_state))
+                {
+                $resource_deletion_state = 3;
+                }
+
+            // The new state should be by default 3 - Deleted state
+            // If this is different, it means we only want to move 
+            // resources to that state
+            if($action_dates_new_state != $resource_deletion_state)
+                {
+                $resource_deletion_state = $action_dates_new_state;
+                $change_archive_state    = true;
+                }
+
+            $delete_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource AND r.archive != '{$resource_deletion_state}' WHERE rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
+            }
+
+        foreach($delete_resources as $resource)
+            {
+            $ref = $resource['resource'];
+
+            if (time() >= strtotime($resource['value']))
+                {
+                if(!$change_archive_state)
+                    {
+                    // Delete the resource as date has been reached
+                    echo "deleting resource {$ref}\r\n";
+                    }
+                else
+                    {
+                    echo "Moving resource with ID {$ref} to archive state '{$resource_deletion_state}'\r\n";
+                    }
+                
+                if ($action_dates_reallydelete)
+                    {
+                    delete_resource($ref);
+                    }
+                else
+                    {
+                    sql_query("UPDATE resource SET archive = '{$resource_deletion_state}' WHERE ref = '{$ref}'");
+                    }
+
+                // Remove the resource from any collections
+                sql_query("delete from collection_resource where resource='$ref'");
+
+                resource_log($ref,'x','',$lang['action_dates_delete_logtext']);
+                }
+            }
+        }
 	}
 function HookAction_datesCron_copy_hitcountAddplugincronjob()
 	{

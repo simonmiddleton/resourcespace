@@ -3,7 +3,7 @@ if (!hook("renderresultsmallthumb"))
 	{ ?>
 	<!--Resource Panel-->
 	<div class="ResourcePanelShellSmall" <?php if ($display_user_rating_stars && $k==""){?> <?php } ?>id="ResourceShell<?php echo htmlspecialchars($ref)?>"  <?php echo hook('resourcepanelshell_attributes')?> >
-		<div class="ResourcePanelSmall  <?php hook('smallthumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
+		<div class="ResourcePanelSmall  ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('smallthumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
 			<?php  
 			if ($resource_type_icons) 
 				{ ?>
@@ -91,7 +91,7 @@ if (!hook("renderresultsmallthumb"))
 					style="position:relative" 
 					href="<?php echo $url?>"  
 					onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
-					title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field])))?>"
+					title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field])))))?>"
 				>
 					<?php 
 					if ($result[$n]["has_image"]==1) 
@@ -99,7 +99,7 @@ if (!hook("renderresultsmallthumb"))
 						<img  
 							src="<?php echo $col_url ?>" 
 							class="ImageBorder"  
-							alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))); ?>"
+							alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))); ?>"
 								    <?php 
 									if ($result[$n]["thumb_width"]!="" && $result[$n]["thumb_width"]!=0 && $result[$n]["thumb_height"]!="") 
 										{ 
@@ -163,6 +163,26 @@ if (!hook("renderresultsmallthumb"))
 				{
 				hook("icons");
 				} //end hook replaceicons
+
+            if($annotate_enabled)
+                {
+                $annotations_count = getResourceAnnotationsCount($ref);
+                ?>
+                <div class="ResourcePanelInfo AnnotationInfo">
+                <?php
+                if(0 < $annotations_count)
+                    {
+                    ?>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <span><?php echo $annotations_count; ?></span>
+                    <?php
+                    }
+                    ?>
+                &nbsp;
+                </div>
+                <?php
+                }
+
 			$df_alt=hook("displayfieldsalt");
 			$df_normal=$df;
 			if ($df_alt){$df=$df_alt;}
@@ -201,7 +221,7 @@ if (!hook("renderresultsmallthumb"))
 								<a 
 									href="<?php echo $url?>"  
 									onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);"
-									title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value)))?>"	
+									title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"	
 								>
 								<?php 
 								} //end link
@@ -234,11 +254,11 @@ if (!hook("renderresultsmallthumb"))
 								<a 
 									href="<?php echo $url?>"  
 									onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
-									title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value)))?>"
+									title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
 								> 
 								<?php 
 								} //end link  
-							echo highlightkeywords(tidy_trim(TidyList(i18n_get_translated($value)),28),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
+							echo highlightkeywords(tidy_trim(TidyList(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))),28),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
 							if ($x==0)
 								{ // add link if necessary ?>
 								</a>
@@ -274,7 +294,7 @@ if (!hook("renderresultsmallthumb"))
 										checked
 										<?php 
 										} ?> 
-									onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
+									onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')==false){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
 								>
 								&nbsp;
 								<?php 

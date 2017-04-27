@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include_once "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php";
 include_once "../include/collections_functions.php";
@@ -58,8 +58,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
 				</div><!-- End of FeaturedSimpleTile_<?php echo $getthemes[$m]["ref"]; ?>-->		
 					
 			<?php
-			}
-		
+			}		
 		
 		}
 	else
@@ -254,16 +253,29 @@ function DisplayTheme($themes=array(), $simpleview=false)
 				<td class="created"><?php echo nicedate($getthemes[$m]["created"],true)?></td>
 				<?php } ?>
 				<td class="count" width="5%"><?php echo $getthemes[$m]["c"]?></td>
-				<?php hook('beforecollectiontoolscolumn'); ?>
-				<td class="tools" nowrap>
-					<div class="ListTools">
-					<?php
-					hook('render_themes_list_tools', '', array($getthemes[$m]));
-					render_actions($getthemes[$m], false, false);
+				<?php hook('beforecollectiontoolscolumn');
+				
+				 $action_selection_id = 'themes_action_selection' . $getthemes[$m]["ref"] . "_bottom_" . $getthemes[$m]["ref"] ;
+				
 					?>
+				<td class="tools" nowrap>
+					<div class="ListTools" >
+						<?php hook('render_themes_list_tools', '', array($getthemes[$m])); ?>
+						<div class="ActionsContainer  ">
+						<div class="DropdownActionsLabel">Actions:</div>
+						<select class="themeactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+						</select>
+						</div>					
+						</div>
 					</div>
 				</td>
 				</tr>
+				<script>
+				jQuery('#<?php echo $action_selection_id ?>').bind({
+					mouseenter:function(e){
+					LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $getthemes[$m]["ref"] ?>');
+					}});
+				</script>
 				<?php
 				}
 			?>
@@ -370,8 +382,9 @@ if (!$themes_category_split_pages && !$theme_direct_jump) { ?>
   <style>.ListviewTitleBoxed {background-color:#fff;}</style>
 
 <?php
+global $enable_theme_breadcrumbs;
 if(!hook('replacethemesbacklink')){
-if ($themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
+if ($enable_theme_breadcrumbs && $themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
 	{
 	echo "<div class='SearchBreadcrumbs'>";
 	# Display breadcrumb links
@@ -837,6 +850,7 @@ if ($header=="" && !isset($themes[0]))
 				for ($m=0;$m<count($themes);$m++)
 					{
 					$s=$headers[$n]["name"] . ":" . $themes[$m]["name"];
+					if(strpos($s," ")!==false){$s="\"" . $s . "\"";}
 
 					# Indent this item?
 					$indent = str_pad('', $themes[$m]['indent'] * 5, ' ');
@@ -899,6 +913,25 @@ if ($header=="" && !isset($themes[0]))
 
 if($simpleview)
 	{
+	if (!$public_collections_header_only && getval("theme","")=="" && getval("theme1","")=="")
+		{?>
+		<?php if (!checkperm("b") && $enable_public_collections)
+			{ ?>
+			</div><!-- End of FeaturedSimpleLinks -->
+			<div class="BasicsBox FeaturedSimpleLinks">
+			<h1><?php echo $lang["findpubliccollection"]?></h1>
+			<div id="FeaturedSimpleTile_public" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
+						<a href="<?php echo $baseurl_short?>pages/collection_public.php" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_public">
+							<div id="FeaturedSimpleTileContents_public"  class="FeaturedSimpleTileContents">
+							<div class="FeaturedSimpleTileText">
+								<h2><?php echo $lang["findpubliccollection"]; ?></h2>
+							</div>
+							</div><!-- End of FeaturedSimpleTileContents_public -->
+						</a>
+			</div><!-- End of FeaturedSimpleTile_public -->
+			<?php
+			} 
+		} 
 	?>
 	</div><!-- End of FeaturedSimpleLinks -->
 	<?php

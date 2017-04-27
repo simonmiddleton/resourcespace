@@ -1,4 +1,10 @@
 <?php
+if('cli' != PHP_SAPI)
+    {
+    header('HTTP/1.1 401 Unauthorized');
+    exit('Command line execution only');
+    }
+
 $_SERVER["HTTP_HOST"]=$argv[2];
 
 require dirname(__FILE__)."/../../include/db.php";

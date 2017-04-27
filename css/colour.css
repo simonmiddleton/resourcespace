@@ -91,7 +91,7 @@ input[readonly] {color: #000000;}
 	{color:#FFF;}
 .HomePanel h2{color:#FFF;}
 
-#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN {
+#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree {
 	background: rgba(0, 0, 0, 0.65);
 	color:#FFF;
 }
@@ -281,9 +281,9 @@ li.plupload_droptext {color:#999;}
 .ui-draggable-dragging {border: 2px solid;}
 
 /* Responsive SpriteSheet */
-.glyph_user {background:url('../plugins/rse_responsive/gfx/responsive_spritesheet_charcoal.png') -20px 0;}
-.glyph_menu {background:url('../plugins/rse_responsive/gfx/responsive_spritesheet_charcoal.png') 0 0;}
-.glyph_result {background:url('../plugins/rse_responsive/gfx/responsive_spritesheet_charcoal.png') -40px 0;}
+.glyph_user { background: url(../gfx/responsive_spritesheet_charcoal.png) -20px 0; }
+.glyph_menu { background: url(../gfx/responsive_spritesheet_charcoal.png) 0 0; }
+.glyph_result { background: url(../gfx/responsive_spritesheet_charcoal.png) -40px 0; }
 
 
 /* Modal */
@@ -344,7 +344,7 @@ div.MessageBox a {
 }
 UL.jqueryFileTree A {color:#000;background-color:initial;}
 UL.jqueryFileTree A:hover {background-color:initial !important;}
-#previewimage { border: 1px solid #CCC; }
+#previewimage, #previewimagecopy { border: 1px solid #CCC; }
 
 /* chosen collection div */
 #CollectionDiv #MinColDrop .chosen-single:hover, #CollectionDiv #colselect .chosen-single:hover {color:#444;}
@@ -354,3 +354,9 @@ UL.jqueryFileTree A:hover {background-color:initial !important;}
 	background: rgba(30, 30, 30, 0.70);
 	color:#FFF;
 }
+
+/* Highlight selected keywords */
+input:checked + .customFieldLabel, .keywordselected
+  {
+  background-color: #ccc;
+  }

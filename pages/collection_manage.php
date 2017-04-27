@@ -40,7 +40,7 @@ if ($name!="" && $collection_allow_creation)
 $delete=getvalescaped("delete","");
 if ($delete != '')
 	{
-	// Check user is actually allowed to delete the resource first
+	// Check user is actually allowed to delete the collection first
 	$collection_data = get_collection($delete);
 	if(!($k == '' && (($userref == $collection_data['user']) || checkperm('h')) && $collection_data['cant_delete'] == 0))
 		{
@@ -49,7 +49,7 @@ if ($delete != '')
 		}
 
 	# Delete collection
-	delete_collection($delete);
+	delete_collection($collection_data);
 
 	# Get count of collections
 	$c=get_user_collections($userref);

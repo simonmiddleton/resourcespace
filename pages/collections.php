@@ -70,16 +70,16 @@ else
 	$basket=false;
 	}
 
-$collection=getvalescaped("collection","",true);
+$collection=getvalescaped("collection","");
 $entername=getvalescaped("entername","");
-		
+
 # ------------ Change the collection, if a collection ID has been provided ----------------
 if ($collection!="")
 	{
 	hook("prechangecollection");
 	#change current collection
 	
-	if (($k=="" || $internal_share_access) && $collection==-1)
+	if (($k=="" || $internal_share_access) && $collection=="new")
 		{
 		# Create new collection
 		if ($entername!=""){ $name=$entername;} 
@@ -227,10 +227,29 @@ else { ?>
 			jQuery('.CollectionPanelShell').enableSelection();			
 		});	
 	</script>
-	<?php } 
-	hook("responsivethumbsloaded");
+	<?php 
+	} 
 
-?>
+	hook('collections_thumbs_loaded');
+
+    if($responsive_ui)
+        {
+        ?>
+        <!-- Responsive -->
+        <script type="text/javascript">
+        jQuery(document).ready(function()
+            {
+            if(typeof responsive_newpage !== 'undefined' && responsive_newpage === true)
+                {
+                hideMyCollectionsCols();
+                responsiveCollectionBar();
+                responsive_newpage = false;
+                }
+            }); 
+        </script>
+        <?php
+        }
+        ?>
 	<!-- Drag and Drop -->
 	<script>
 		jQuery('#CentralSpace').on('prepareTrash', function() {
@@ -387,7 +406,7 @@ if ($add!="")
 				<script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php
 				}
 			else
-				{
+				{		
 				# Log this	
 				daily_stat("Add resource to collection",$add);
 			
@@ -597,11 +616,11 @@ if (($userrequestmode==2 || $userrequestmode==3) && $basket_stores_size)
 if(!hook("clearmaincheckboxesfromcollectionframe")){
 	if ($use_checkboxes_for_selection ){?>
 	
-	<script type="text/javascript">
+	<script>
 	var checkboxes=jQuery('input.checkselect');
 	//clear all
 	checkboxes.each(function(box){
-		jQuery(checkboxes[box]).attr('checked',false);
+		jQuery(checkboxes[box]).prop('checked',false);
 		jQuery(checkboxes[box]).change();
 	});
 	</script>
@@ -611,14 +630,14 @@ if(!hook("clearmaincheckboxesfromcollectionframe")){
 if(!hook("updatemaincheckboxesfromcollectionframe")){
 		
 	if ($use_checkboxes_for_selection){?>
-	<script type="text/javascript"><?php
+	<script><?php
 	# update checkboxes in main window
 	for ($n=0;$n<count($result);$n++)			
 		{
 		$ref=$result[$n]["ref"];
 		?>
 		if (jQuery('#check<?php echo htmlspecialchars($ref) ?>')){
-		jQuery('#check<?php echo htmlspecialchars($ref) ?>').attr('checked',true);
+		jQuery('#check<?php echo htmlspecialchars($ref) ?>').prop('checked',true);
 		}
 			
 	<?php }
@@ -713,9 +732,9 @@ elseif ($k!="" && !$internal_share_access)
 
 <?php if (!hook("thumbsmenu")) { ?>
   <?php if (!hook("replacecollectiontitle") && !hook("replacecollectiontitlemax")) { ?><h2 id="CollectionsPanelHeader"><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_manage.php"><?php echo $lang["mycollections"]?></a></h2><?php } ?>
-  <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#entername').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=-1&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
+  <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#entername').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
 		<div class="SearchItem" style="padding:0;margin:0;"><?php echo $lang["currentcollection"]?>&nbsp;(<strong><?php echo $count_result?></strong>&nbsp;<?php if ($count_result==1){echo $lang["item"];} else {echo $lang["items"];}?>): 
-		<select name="collection" id="collection" onchange="if(document.getElementById('collection').value==-1){document.getElementById('entername').style.display='block';document.getElementById('entername').focus();return false;} <?php if (!checkperm("b")){ ?>ChangeCollection(jQuery(this).val(),'<?php echo urlencode($k)  ?>','<?php echo urlencode($usercollection) ?>','<?php echo $change_col_url?>');<?php } else { ?>document.getElementById('colselect').submit();<?php } ?>" <?php if ($collection_dropdown_user_access_mode){?>class="SearchWidthExp"<?php } else { ?> class="SearchWidth"<?php } ?>>
+		<select name="collection" id="collection" onchange="if(document.getElementById('collection').value=='new'){document.getElementById('entername').style.display='block';document.getElementById('entername').focus();return false;} <?php if (!checkperm("b")){ ?>ChangeCollection(jQuery(this).val(),'<?php echo urlencode($k)  ?>','<?php echo urlencode($usercollection) ?>','<?php echo $change_col_url?>');<?php } else { ?>document.getElementById('colselect').submit();<?php } ?>" <?php if ($collection_dropdown_user_access_mode){?>class="SearchWidthExp"<?php } else { ?> class="SearchWidth"<?php } ?>>
 		<?php
 		$found=false;
 		for ($n=0;$n<count($list);$n++)
@@ -767,7 +786,7 @@ elseif ($k!="" && !$internal_share_access)
 			}
 		
 		if ($collection_allow_creation) { ?>
-			<option value="-1">(<?php echo $lang["createnewcollection"]?>)</option>
+			<option value="new">(<?php echo $lang["createnewcollection"]?>)</option>
 		<?php } ?>
 
 		</select>
@@ -833,9 +852,11 @@ if (isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null  && ($k=='' || $in
 		<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><img border=0 width=56 height=75 src="<?php echo $iconurl?>"/></a></td>
 		</tr></table>
 		<?php if(!hook('replacesavedsearchtitle')){?>
-		<div class="CollectionPanelInfo"><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><?php echo tidy_trim($lang["savedsearch"],(13-strlen($n+1)))?> <?php echo $n+1?></a>&nbsp;</div><?php } ?>
+		<div class="CollectionPanelInfo">
+		<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><?php echo substr($lang["savedsearch"],6)?> <?php echo $n+1?></a>&nbsp;</div><?php } ?>
 		<?php if(!hook('replaceremovelink_savedsearch')){?>
-		<div class="CollectionPanelInfo"><a onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?removesearch=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>">x <?php echo $lang["action-remove"]?>
+		<div class="CollectionPanelTools">
+		<a class="removeFromCollection fa fa-minus-circle" onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?removesearch=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>">
 		</a></div>	<?php } ?>			
 		</div>
 		<?php		
@@ -859,15 +880,21 @@ if ($count_result>0)
 		<?php $access=get_resource_access($result[$n]);
 		$use_watermark=check_use_watermark();?>
 		<table border="0" class="CollectionResourceAlign"><tr><td>
-		<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>"><?php if ($result[$n]["has_image"]==1) { 
-		
-		$colimgpath=get_resource_path($ref,false,($retina_mode?"thm":"col"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])
-		?>
-		<img border=0 src="<?php echo $colimgpath?>" class="CollectImageBorder" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
-                   <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> />
-			<?php
-		
-		} else { ?><img border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" /><?php } ?><?php hook("aftersearchimg","",array($result[$n]))?></a></td>
+				<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
+				<?php if ($result[$n]["has_image"]==1 && file_exists(get_resource_path($ref,true,($retina_mode?"thm":"col"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])))
+						{
+						$colimgpath=get_resource_path($ref,false,($retina_mode?"thm":"col"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
+						?>		
+						<img border=0 src="<?php echo $colimgpath?>" class="CollectImageBorder" title="<?php echo htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))?>" alt="<?php echo htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))?>"
+						<?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> /><?php
+						}
+				else
+						{?>
+						<img border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" />
+						<?php
+						}
+						hook("aftersearchimg","",array($result[$n]))?>
+						</a></td>
 		</tr></table>
 		<?php } /* end hook rendercollectionthumb */?>
 		
@@ -890,19 +917,19 @@ if ($count_result>0)
 		}
 		?>	
 		<?php if (!hook("replacecolresourcetitle")){?>
-		<div class="CollectionPanelInfo"><a onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?></a>&nbsp;</div>
+		<div class="CollectionPanelInfo"><a onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated(strip_tags(strip_tags_and_attributes($title))),14));?></a>&nbsp;</div>
 		<?php } ?>
 		
 		<?php if ($k!="" && $feedback) { # Allow feedback for external access key users
 		?>
 		<div class="CollectionPanelInfo">
-		<span class="IconComment <?php if ($result[$n]["commentset"]>0) { ?>IconCommentAnim<?php } ?>"><a onclick="return ModalLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref) ?>&collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><img src="<?php echo $baseurl_short?>gfx/interface/sp.gif" alt="" width="14" height="12" /></a></span>		
+		<span>  <a aria-hidden="true" class="fa fa-comment"onclick="return ModalLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref) ?>&collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"/></span>		
 		</div>
 		<?php } ?>
 	
-		<?php if ($k=="" || $internal_share_access) { ?><div class="CollectionPanelInfo">
+		<?php if ($k=="" || $internal_share_access) { ?><div class="CollectionPanelTools">
 		<?php if (($feedback) || (($collection_reorder_caption || $collection_commenting))) { ?>
-		<span class="IconComment <?php if ($result[$n]["commentset"]>0) { ?>IconCommentAnim<?php } ?>"><a onclick="return ModalLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref) ?>&collection=<?php echo urlencode($usercollection) ?>"><img src="<?php echo $baseurl_short?>gfx/interface/sp.gif" alt="" width="14" height="12" /></a></span>		
+		<span>  <a aria-hidden="true" class="fa fa-comment"  onclick="return ModalLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref) ?>&collection=<?php echo urlencode($usercollection) ?>"/></span>		
 		<?php } ?>
 
 		<?php if (!isset($cinfo['savedsearch'])||(isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null)){ // add 'remove' link only if this is not a smart collection 
@@ -1071,11 +1098,11 @@ hook("thumblistextra");
 		<div id="CollectionMinDrop">
 	 		<form method="get"
 	 			  id="colselect2" 
-	 			  onsubmit="newcolname=encodeURIComponent(jQuery('#entername2').val());CollectionDivLoad('<?php echo $baseurl_short; ?>pages/collections.php?thumbs=hide&collection=-1&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k); ?>&search=<?php echo urlencode($search)?>&entername='+newcolname);return false;">
+	 			  onsubmit="newcolname=encodeURIComponent(jQuery('#entername2').val());CollectionDivLoad('<?php echo $baseurl_short; ?>pages/collections.php?thumbs=hide&collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k); ?>&search=<?php echo urlencode($search)?>&entername='+newcolname);return false;">
 				<div class="MinSearchItem" id="MinColDrop">
 					<input type=text id="entername2" name="entername" placeholder="<?php echo $lang['entercollectionname']; ?>" style="display:inline;display:none;" class="SearchWidthExp">
 				</div>
-				<script>jQuery('#collection').clone().attr('id','collection2').attr('onChange',"if(document.getElementById('collection2').value==-1){document.getElementById('entername2').style.display='inline';document.getElementById('entername2').focus();return false;}<?php if (!checkperm('b')){ ?>ChangeCollection(jQuery(this).val(),'<?php echo urlencode($k) ?>','<?php echo urlencode($usercollection) ?>','<?php echo $change_col_url ?>');<?php } else { ?>document.getElementById('colselect2').submit();<?php } ?>").prependTo('#MinColDrop');</script>
+				<script>jQuery('#collection').clone().attr('id','collection2').attr('onChange',"if(document.getElementById('collection2').value=='new'){document.getElementById('entername2').style.display='inline';document.getElementById('entername2').focus();return false;}<?php if (!checkperm('b')){ ?>ChangeCollection(jQuery(this).val(),'<?php echo urlencode($k) ?>','<?php echo urlencode($usercollection) ?>','<?php echo $change_col_url ?>');<?php } else { ?>document.getElementById('colselect2').submit();<?php } ?>").prependTo('#MinColDrop');</script>
 	  		</form>
 		</div>
 		<?php

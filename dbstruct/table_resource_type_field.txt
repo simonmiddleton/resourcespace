@@ -1,6 +1,7 @@
 ref,int(11),NO,PRI,,auto_increment
 name,varchar(50),YES,,,
 title,varchar(400),YES,,,
+field_constraint,int(11),NO,,,
 type,int(11),YES,,,
 order_by,int(11),NO,,0,
 keywords_index,int(11),NO,,0,
@@ -31,3 +32,4 @@ regexp_filter,varchar(400),YES,,,
 sync_field,int(11),YES,,,
 display_condition,varchar(400),YES,,,
 onchange_macro,text,YES,,,
+linked_data_field,text,YES,,,

@@ -8,7 +8,6 @@ include '../include/propose_changes_functions.php';
 
 
 $ref=getvalescaped("ref","",true);
-
 # Fetch search details (for next/back browsing and forwarding of search params)
 $search=getvalescaped("search","");
 $order_by=getvalescaped("order_by","relevance");
@@ -18,11 +17,12 @@ if (strpos($search,"!")!==false) {$restypes="";}
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-
 $archive=getvalescaped("archive",0,true);
+$modal=(getval("modal","")=="true");
 
 $errors=array(); # The results of the save operation (e.g. required field messages)
 $editaccess=get_edit_access($ref);
+
 
 if(!$propose_changes_always_allow)
 	{
@@ -30,6 +30,7 @@ if(!$propose_changes_always_allow)
 	$proposeallowed=sql_value("select r.ref value from resource r left join collection_resource cr on r.ref='$ref' and cr.resource=r.ref left join user_collection uc on uc.user='$userref' and uc.collection=cr.collection left join collection c on c.ref=uc.collection where c.propose_changes=1","");
         if($proposeallowed=="" && $propose_changes_allow_open)
             {
+			include '../../../include/search_do.php';
             $proposeallowed=(get_resource_access($ref)==0)?$ref:"";
             }
 	}
@@ -52,7 +53,6 @@ else
     {
     $proposed_changes=get_proposed_changes($ref, $userref);
     }
-	
 
 # Fetch resource data.
 $resource=get_resource_data($ref);
@@ -61,8 +61,8 @@ $resource=get_resource_data($ref);
 $proposefields=get_resource_field_data($ref,false,true);
 
 // Save data
-if (getval("save","")!="")
-	{
+if (getval("save","")!="" || getval("submitted","")!="")
+	{	
 	if($editaccess)
 		{
 		// Set a list of the fields we actually want to change - otherwise any fields we don't submit will get wiped
@@ -86,7 +86,8 @@ if (getval("save","")!="")
 		$deletedchanges=array();
 		$deletedchangescount=0;		
 		
-		$proposefields=get_resource_field_data($ref,false,true); // Get updated data after save so we can send email with values
+		$proposefields = get_resource_field_data($ref, false, true);
+
 		for ($n=0;$n<count($proposefields);$n++)
 			{
 			node_field_options_override($proposefields[$n]);
@@ -98,9 +99,11 @@ if (getval("save","")!="")
 				$acceptedchanges[$acceptedchangescount]["field"]=$proposefields[$n]["title"];
 				$acceptedchanges[$acceptedchangescount]["value"]=$proposefields[$n]["value"];
 				$acceptedchangescount++;
+
 				// remove this from the list of proposed changes
-				sql_query("delete from propose_changes_data where user='$view_user' and resource_type_field='" . $proposefields[$n]["ref"] . "'");
+				sql_query("DELETE FROM propose_changes_data WHERE user = '{$view_user}' AND resource_type_field = '{$proposefields[$n]['ref']}'");
 				}
+
 			# Has this field been deleted?
 			if (getval("delete_change_" . $proposefields[$n]["ref"],"")!="")
 				{					
@@ -114,10 +117,9 @@ if (getval("save","")!="")
 						$deletedchangescount++;
 						}                
 					}					
-					
-				
+
 				// remove this from the list of proposed changes
-				sql_query("delete from propose_changes_data where user='$view_user' and resource_type_field='" . $proposefields[$n]["ref"] . "'");
+				sql_query("DELETE FROM propose_changes_data WHERE user = '{$view_user}' AND resource_type_field = '{$proposefields[$n]['ref']}'");
 				}
 			}	
 			
@@ -151,37 +153,67 @@ if (getval("save","")!="")
 		$notifyuser=get_user($view_user);
 		send_mail($notifyuser["email"],$applicationname . ": " . $lang["propose_changes_proposed_changes_reviewed"],$message,"","","emailproposedchangesreviewed",$templatevars);
 			
-		 
-		redirect($baseurl_short."pages/view.php?ref=" . $ref . "&search=" . urlencode($search) . "&offset=" . $offset . "&order_by=" . $order_by . "&sort=".$sort."&archive=" . $archive . "&refreshcollectionframe=true");
+		if(!$modal)
+            {
+            redirect($baseurl_short."pages/view.php?ref=" . $ref . "&search=" . urlencode($search) . "&offset=" . $offset . "&order_by=" . $order_by . "&sort=".$sort."&archive=" . $archive . "&refreshcollectionframe=true");	
+            exit();
+            }
+        else
+            {
+            $resulttext=$lang["changessaved"];
+            }
 		
 		}
 	else
 		{
 		// No edit access, save the proposed changes
-		$save_errors=save_proposed_changes($ref);   
+		$save_errors=save_proposed_changes($ref);
 		$submittedchanges=array();
 		$submittedchangescount=0;		
         if ($save_errors===true)
-			{
-			
+			{			
 			$proposed_changes=get_proposed_changes($ref, $userref);
-			
+
 			for ($n=0;$n<count($proposefields);$n++)
 				{
 				# Has a change to this field been proposed?
 				foreach($proposed_changes as $proposed_change)
 					{
-					if($proposed_change["resource_type_field"]==$proposefields[$n]["ref"])
-						{
-						$submittedchanges[$submittedchangescount]["field"]=$proposefields[$n]["title"];
-						$submittedchanges[$submittedchangescount]["value"]=htmlspecialchars($proposed_change["value"]);
-						$submittedchangescount++;; 
-						}                
+                    if($proposed_change['resource_type_field'] != $proposefields[$n]['ref'])
+                        {
+                        continue;
+                        }
+
+                    $proposed_change_value = $proposed_change['value'];
+
+                    if(in_array($proposed_change['type'], $FIXED_LIST_FIELD_TYPES) && '' != $proposed_change_value)
+                        {
+                        $field_node_options    = extract_node_options(get_nodes($proposefields[$n]['ref'], null, true));
+                        $proposed_change_value = array();
+
+                        foreach(explode(', ', $proposed_change['value']) as $proposed_change_node_id)
+                            {
+                            if('' == $proposed_change_node_id)
+                                {
+                                continue;
+                                }
+
+                            $proposed_change_value[] = $field_node_options[$proposed_change_node_id];
+                            }
+
+                        if(is_array($proposed_change_value) && 0 < count($proposed_change_value))
+                            {
+                            $proposed_change_value = implode(', ', $proposed_change_value);
+                            }
+                        }
+
+                    $submittedchanges[$submittedchangescount]["field"] = $proposefields[$n]["title"];
+                    $submittedchanges[$submittedchangescount]["value"] = htmlspecialchars($proposed_change_value);
+                    $submittedchangescount++;
 					}
-				}	
-			
+				}
+
 			// send email to admin/resource owner with link	
-			
 			$templatevars['changesummary']=$lang["propose_changes_summary_changes"] . "<br>";
 			for($n=0;$n<$submittedchangescount;$n++)
 				{
@@ -238,7 +270,10 @@ if (getval("save","")!="")
 				}
              foreach($admin_notify_emails as $admin_notify_email)
                     {
-                    send_mail($admin_notify_email,$applicationname . ": " . $lang["propose_changes_proposed_changes_submitted"],$message,"","","emailproposedchanges",$templatevars);    
+					if(filter_var($admin_notify_email, FILTER_VALIDATE_EMAIL))
+						{
+						send_mail($admin_notify_email,$applicationname . ": " . $lang["propose_changes_proposed_changes_submitted"],$message,"","","emailproposedchanges",$templatevars);    
+						}
                     }
                 
                 if (count($admin_notify_users)>0)
@@ -248,18 +283,19 @@ if (getval("save","")!="")
             		
 			foreach($propose_changes_notify_addresses as $propose_changes_notify_address)
 				{
-				if($propose_changes_notify_address!="")
+				if(filter_var($propose_changes_notify_address, FILTER_VALIDATE_EMAIL))
 					{	
 					debug("propose_changes: sending submitted email to : ". $propose_changes_notify_address);
 					send_mail($propose_changes_notify_address,$applicationname . ": " . $lang["propose_changes_proposed_changes_submitted"],$message,"","","emailproposedchanges",$templatevars);
 					}
 				}					
 			$resulttext=$lang["propose_changes_proposed_changes_submitted"];			
-			}			
+			}	
+			
 		}
 	}
 
-function is_field_displayed($field)
+function propose_changes_is_field_displayed($field)
 	{
 	global $ref, $resource, $editaccess;
 	return !(
@@ -275,7 +311,7 @@ function is_field_displayed($field)
 
 
 # Allows language alternatives to be entered for free text metadata fields.
-function display_multilingual_text_field($n, $field, $translations)
+function propose_changes_display_multilingual_text_field($n, $field, $translations)
 	{
 	global $language, $languages, $lang;
 	?>
@@ -313,10 +349,10 @@ function display_multilingual_text_field($n, $field, $translations)
 	?></table><?php
 	}
 
-function display_field($n, $field)
+function propose_changes_display_field($n, $field)
 	{
 	
-	global $ref, $original_fields, $multilingual_text_fields, $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess;
+	global $ref, $original_fields, $multilingual_text_fields, $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess, $FIXED_LIST_FIELD_TYPES;
 	
     $edit_autosave=false;
 	$name="field_" . $field["ref"];
@@ -326,9 +362,9 @@ function display_field($n, $field)
 	# is there a proposed value set for this field?
 	foreach($proposed_changes as $proposed_change)
 		{
-		if($proposed_change["resource_type_field"]==$field["ref"])
+		if($proposed_change['resource_type_field'] == $field['ref'])
 			{
-			$proposed_value=$proposed_change["value"]; 
+			$proposed_value = $proposed_change['value'];
 			}                
 		}
 
@@ -368,9 +404,24 @@ function display_field($n, $field)
 	
 	// ------------------------------
 	// Show existing value so can edit
-	
 	$value=preg_replace("/^,/","",$field["value"]);
-    $realvalue=$value; // Store this in case it gets changed by view processing
+
+    if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        $resource_nodes = array();
+
+        foreach(get_resource_nodes($ref, $field['ref'], true) as $resource_node)
+            {
+            $resource_nodes[] = i18n_get_translated($resource_node['name']);
+            }
+
+        if(0 < count($resource_nodes))
+            {
+            $value = implode(', ', $resource_nodes);
+            }
+        }
+
+    $realvalue = $value; // Store this in case it gets changed by view processing
 	if ($value!="")
             {
             # Draw this field normally.			
@@ -407,28 +458,57 @@ function display_field($n, $field)
         
 	<div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if($proposed_value==""){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo $field["ref"] ?>">
     <input type="hidden" id="propose_change_<?php echo $field["ref"] ?>" name="propose_change_<?php echo $field["ref"] ?>" value="true" <?php if($proposed_value==""){echo "disabled=\"disabled\""; } ?> />                                                          
-        <?php                                                            
-	# ----------------------------  Show field -----------------------------------
+    <?php
+    # ----------------------------  Show field -----------------------------------
+    // Checkif we have a proposed value for this field
+    if('' != $proposed_value)
+        {
+        $value = $proposed_value;
+        }
+    else
+        {
+        $value = $realvalue;
+        }
 
-	# Checkif we have a proposed value for this field
-	if ($proposed_value!="")
-		{
-		$value=$proposed_value;
-		}
-	else
-		{
-		$value = $realvalue;   
-		}
-        
-	$type=$field["type"];
-	if ($type=="") {$type=0;} # Default to text type.
-	if (!hook("replacefield","",array($field["type"],$field["ref"],$n)))
-		{
-		global $auto_order_checkbox, $auto_order_checkbox_case_insensitive;
-		include dirname(__FILE__) . "/../../../pages/edit_fields/" . $type . ".php";
-		}
-	# ----------------------------------------------------------------------------
-        ?>
+    $type = $field['type'];
+
+    if('' == $type)
+        {
+        $type = 0;
+        }
+
+    if (!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
+        {
+        global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
+
+        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            {
+            $name = "nodes[{$field['ref']}]";
+
+            // Sometimes we need to pass multiple options
+            if(in_array($field['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE)))
+                {
+                $name = "nodes[{$field['ref']}][]";
+                }
+            else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
+                {
+                $name = "field_{$field['ref']}";
+                }
+
+            $selected_nodes = explode(', ', $proposed_value);
+
+            if(!$editaccess && '' == $proposed_value)
+                {
+                $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
+                }
+            }
+
+        $is_search = false;
+
+        include dirname(__FILE__) . "/../../../pages/edit_fields/{$type}.php";
+        }
+    # ----------------------------------------------------------------------------
+    ?>
         </div><!-- close proposed_change_<?php echo $field["ref"] ?> -->
         <?php
         if($editaccess)
@@ -458,7 +538,7 @@ function display_field($n, $field)
 	# If enabled, include code to produce extra fields to allow multilingual free text to be entered.
 	if ($multilingual_text_fields && ($field["type"]==0 || $field["type"]==1 || $field["type"]==5))
 		{
-		display_multilingual_text_field($n, $field, $translations);
+		propose_changes_display_multilingual_text_field($n, $field, $translations);
 		}
 	?>
 	<div class="clearerleft"> </div>
@@ -486,11 +566,12 @@ if (isset($resulttext))
 	echo "<div class=\"PageInformal \">" . $resulttext . "</div>";
 	}
 
-	
-?>
-
-<p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
-
+if(!$modal)
+    {?>
+    <p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return  <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <?php
+    }
+    ?>
 <div class="BasicsBox" id="propose_changes_box">
 <h1 id="editresource">
 <?php
@@ -538,10 +619,10 @@ if(!$editaccess)
 		{
 		?>
 		<div class="Question" id="ProposeChangesUsers">
-		<form id="propose_changes_select_user_form" method="post" action="<?php echo $baseurl_short . "plugins/propose_changes/pages/propose_changes.php" . "?ref=" . urlencode($ref) . "&amp;search=" . urlencode($search) . "&amp;offset=" . urlencode($offset) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive)?>"
+		<form id="propose_changes_select_user_form" method="post" action="<?php echo $baseurl_short . "plugins/propose_changes/pages/propose_changes.php" . "?ref=" . urlencode($ref) . "&amp;search=" . urlencode($search) . "&amp;offset=" . urlencode($offset) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive)?>" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
 			<label><?php echo $lang["propose_changes_view_user"]; ?>
 			</label>
-			<select class="stdwidth" name="proposeuser" id="proposeuser" onchange="CentralSpacePost(document.getElementById('propose_changes_form'),false);">
+			<select class="stdwidth" name="proposeuser" id="proposeuser" onchange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('propose_changes_form'),false);">
 			<?php 
 			foreach ($userproposals as $userproposal)
 				{
@@ -560,9 +641,10 @@ if(!$editaccess)
 		{
 		node_field_options_override($proposefields[$n]);
 
-		if (is_field_displayed($proposefields[$n]))
+		if (propose_changes_is_field_displayed($proposefields[$n]))
 			{
-			$display_any_fields=true;
+			$proposefields[$n]["display"]=true;
+            $display_any_fields=true;
 			break;
 			}
 		}
@@ -572,7 +654,7 @@ if(!$editaccess)
 		
 	<form id="propose_changes_form" method="post" action="<?php
     echo $baseurl_short . "plugins/propose_changes/pages/propose_changes.php" . "?ref=" . urlencode($ref) . "&amp;search=" . urlencode($search) . "&amp;offset=" . urlencode($offset) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive) ;
-    ?>">
+    ?>"  onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
 	<h2 id="ProposeChangesHead"><?php echo $lang["propose_changes_proposed_changes"] ?></h2><?php
 		?><div id="ProposeChangesSection">
                 <div class="Question ProposeChangesQuestion" id="propose_changes_field_header" >
@@ -612,14 +694,14 @@ if(!$editaccess)
 		node_field_options_override($proposefields[$n]);
 
 		# Should this field be displayed?
-		if (is_field_displayed($proposefields[$n]))
+		if ((isset($proposefields[$n]["display"]) && $proposefields[$n]["display"]==true) || propose_changes_is_field_displayed($proposefields[$n]))
 			{	
 			$fieldcount++;
-			display_field($n, $proposefields[$n]);
+			propose_changes_display_field($n, $proposefields[$n]);
 			}
 		}	
 
-	// Let admin know there are no proposed changes anymore for this reosurces
+	// Let admin know there are no proposed changes anymore for this resources
 	// Can happen when another admin already reviewed the changes.
 	$changes_to_review_counter = 0;
 	foreach($proposefields as $propose_field)
@@ -655,6 +737,7 @@ if(!$editaccess)
             }
         else
             {?>
+			<input name="submitted" type="hidden" value="true" />
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" /><br />
             <?php
             }
@@ -698,15 +781,15 @@ function UpdateProposals(checkbox, fieldref)
     {
     if (checkbox.checked)
         {
-        jQuery('#field_' + fieldref).removeAttr('disabled'); 
-		jQuery('#propose_change_' + fieldref).removeAttr('disabled')
+        jQuery('#field_' + fieldref).prop('disabled',false); 
+		jQuery('#propose_change_' + fieldref).prop('disabled',false);
 		checkprefix="input[id^=" + fieldref + "_]";		
-		jQuery(checkprefix).removeAttr('disabled');//enable checkboxes
+		jQuery(checkprefix).prop('disabled',false);//enable checkboxes
         }
     else
         {        
-        jQuery('#field_' + fieldref).attr('disabled','disabled'); 
-        jQuery('#propose_change_' + fieldref).attr('disabled','disabled');      
+        jQuery('#field_' + fieldref).prop('disabled',true); 
+        jQuery('#propose_change_' + fieldref).prop('disabled',true);      
         }
     }
     
@@ -714,15 +797,15 @@ function DeleteProposal(checkbox, fieldref)
     {
 	if (checkbox.checked)
         {            
-        jQuery('#field_' + fieldref).attr('disabled','disabled'); 
+        jQuery('#field_' + fieldref).prop('disabled',true); 
 		checkprefix="input[id^=" + fieldref + "_]";
-		jQuery(checkprefix).attr('disabled','disabled'); //disable checkboxes
-        jQuery('#accept_change_' + fieldref).removeAttr('checked');    
-        jQuery('#accept_change_' + fieldref).attr('disabled','disabled'); 
+		jQuery(checkprefix).prop('disabled',true); //disable checkboxes
+        jQuery('#accept_change_' + fieldref).prop('checked',false);    
+        jQuery('#accept_change_' + fieldref).prop('disabled',true); 
         }
     else
         {  
-        jQuery('#accept_change_' + fieldref).removeAttr('disabled');              
+        jQuery('#accept_change_' + fieldref).prop('disabled',false);              
         }
     }
     
@@ -731,13 +814,13 @@ function ProposeChangesUpdateAll(checkbox)
     {
     if (checkbox.checked)
         {
-        jQuery('.ProposeChangesAcceptCheckbox').attr('checked','checked'); 		
-        jQuery('.ProposeChangesDeleteCheckbox').removeAttr('checked'); 
-        jQuery('.ProposeChangesAcceptCheckbox').removeAttr('disabled');
+        jQuery('.ProposeChangesAcceptCheckbox').prop('checked',true); 		
+        jQuery('.ProposeChangesDeleteCheckbox').prop('checked',false); 
+        jQuery('.ProposeChangesAcceptCheckbox').prop('disabled',false);
         }
     else
         {  
-        jQuery('.ProposeChangesAcceptCheckbox').removeAttr('checked'); 
+        jQuery('.ProposeChangesAcceptCheckbox').prop('checked',false); 
         }
     
     jQuery('.ProposeChangesAcceptCheckbox').trigger('change');
@@ -747,14 +830,14 @@ function ProposeChangesDeleteAll(checkbox)
     {
     if (checkbox.checked)
         {
-        jQuery('.ProposeChangesDeleteCheckbox').attr('checked','checked');  
-        jQuery('.ProposeChangesAcceptCheckbox').removeAttr('checked');  
-        jQuery('.ProposeChangesAcceptCheckbox').attr('disabled','disabled'); 		
+        jQuery('.ProposeChangesDeleteCheckbox').prop('checked',true);  
+        jQuery('.ProposeChangesAcceptCheckbox').prop('checked',false);  
+        jQuery('.ProposeChangesAcceptCheckbox').prop('disabled',true); 		
         }
     else
         {  
-        jQuery('.ProposeChangesDeleteCheckbox').removeAttr('checked'); 
-        jQuery('.ProposeChangesAcceptCheckbox').removeAttr('disabled');    
+        jQuery('.ProposeChangesDeleteCheckbox').prop('checked',false); 
+        jQuery('.ProposeChangesAcceptCheckbox').prop('disabled',false);    
         }
     
     jQuery('.ProposeChangesAcceptCheckbox').trigger('change');

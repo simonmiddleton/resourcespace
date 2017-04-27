@@ -1,8 +1,4 @@
 <?php
-include "../include/db.php";
-include "../include/general.php";
-include "../include/resource_functions.php";
-include "../include/collections_functions.php";
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 /*
@@ -14,6 +10,13 @@ if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
   utilised by later tests.
 
   */
+
+include_once "../include/db.php";
+include_once "../include/general.php";
+include_once "../include/resource_functions.php";
+include_once "../include/collections_functions.php";
+
+$suppress_headers=true;
 
 $argv=preg_replace('/^(-|--|\/)/','',$argv);    // remove leading /, -- or -
 
@@ -40,34 +43,51 @@ foreach($argv as $arg)
         array_push($specific_tests, str_pad($arg,6,'0',STR_PAD_LEFT));
         }
     }
+    
+function create_new_db($db_name)
+    {
+    global $db;
+    # Create a database for testing purposes
+    echo "Creating database $db_name\n";
+    mysqli_query($db,"drop database if exists `$db_name`");
+    mysqli_query($db,"create database `$db_name`");
+    mysqli_query($db,"CREATE TABLE `{$db_name}`.`sysvars`(`name` VARCHAR(50) NOT NULL, `value` TEXT NULL, PRIMARY KEY (`name`))");
+    mysqli_query($db,"INSERT INTO `{$db_name}`.`sysvars`(`name`,`value`) VALUE ('upgrade_system_level',999)");
+    }
+
+// Used to check that search results return the expected resources
+function match_values( $arraya , $arrayb ) 
+	{ 
+    sort( $arraya ); 
+    sort( $arrayb ); 
+	return $arraya == $arrayb; 
+	} 
 
 $mysql_db = "rs_test_db";
 $test_user_name = "admin";
+$test_user_password = "admin123";
 $inst_plugins = sql_query('SELECT name FROM plugins WHERE inst_version>=0 order by name');
 
 if(array_search('nosetup',$argv)===false)
     {
+    # this has to be done in its own function as it includes the config.php and don't want to scope those vars globally
+    create_new_db($mysql_db);
+    }
 
-    # Create a database for testing purposes
-    echo "Creating database $mysql_db\n";
-    ob_flush();
-    sql_query("drop database if exists `$mysql_db`");
-    sql_query("create database `$mysql_db`");
-
+sql_connect();
+if(array_search('nosetup',$argv)===false)
+    {
     # Connect and create standard tables.
     echo "Creating default database tables...";
     ob_flush();
-    sql_connect();
     check_db_structs(true);
     echo "...done\n";
-
     # Insert a new user and run as them.
     $u = new_user($test_user_name);
+    sql_query("UPDATE `user` SET `password`='{$test_user_password }'");
     }
 else
     {
-    sql_connect();
-
     # Try to retrieve the ref of the existing user
     $u = sql_value("SELECT `ref` AS value FROM `user` WHERE `username`='{$test_user_name}'",-1);
     if ($u==-1)
@@ -84,6 +104,10 @@ echo "Now running as user $userref\n";
 ob_flush();
 
 # Use an alternative filestore path
+if (!file_exists($storagedir))
+    {
+    mkdir($storagedir);
+    }
 $storagedir .= "/rs_test/";
 if (!file_exists($storagedir))
     {

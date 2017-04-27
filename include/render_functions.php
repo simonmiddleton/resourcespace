@@ -5,10 +5,6 @@
 * @package ResourceSpace
 */
 
-/*
-TO DO: add here other functions used for rendering such as:
-- render_search_field from search_functions.php (completed)
-*/
 
 /**
 * Renders the HTML for the provided $field for inclusion in a search form, for example the
@@ -17,22 +13,22 @@ TO DO: add here other functions used for rendering such as:
 * $field    an associative array of field data, i.e. a row from the resource_type_field table.
 * $name     the input name to use in the form (post name)
 * $value    the default value to set for this field, if any
+* @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$forsearchbar=false,$limit_keywords=array())
+function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array())
     {
     node_field_options_override($field);
+	
+	global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES;
     
-    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml;
-    
+    // set this to zero since this does not apply to collections
+    if (!isset($field['field_constraint'])){$field['field_constraint']=0;}
+      
     $name="field_" . ($forsearchbar ? htmlspecialchars($field["name"]) : $field["ref"]);
     $id="field_" . $field["ref"];
-    
-    if($forsearchbar)
-    	{
-    	// need to check simple search specifics
-    	
-    	}
-    
+
+    $scriptconditions=array();
+        
     #Check if field has a display condition set
     $displaycondition=true;
     if ($field["display_condition"]!="" && (!$forsearchbar || ($forsearchbar && !empty($simple_search_display_condition) && in_array($field['ref'],$simple_search_display_condition))))
@@ -50,97 +46,109 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     {
                     $display_condition_js_prepend=($forsearchbar ? "#simplesearch_".$fields[$cf]["ref"]." " : "");
                     
-                    $scriptconditions[$condref]["field"] = $fields[$cf]["ref"];  # add new jQuery code to check value
-                    $scriptconditions[$condref]['type'] = $fields[$cf]['type'];
-
-                    //$scriptconditions[$condref]['options'] = $fields[$cf]['options'];
-
-                    $scriptconditions[$condref]['node_options'] = array();
-                    node_field_options_override($scriptconditions[$condref]['node_options'],$fields[$cf]['ref']);
+                    $scriptconditions[$condref]["field"]               = $fields[$cf]["ref"];  # add new jQuery code to check value
+                    $scriptconditions[$condref]['type']                = $fields[$cf]['type'];
+                    $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
+					$scriptconditionnodes = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
+                    
+                    //$scriptconditions[$condref]['node_options'] = array();
 
                     $checkvalues=$s[1];
                     $validvalues=explode("|",strtoupper($checkvalues));
-                    $scriptconditions[$condref]["valid"]= "\"";
-                    $scriptconditions[$condref]["valid"].= implode("\",\"",$validvalues);
-                    $scriptconditions[$condref]["valid"].= "\"";
-                    if(isset($values[$fields[$cf]["name"]])) // Check if there is a matching value passed from search
-                        {
-                        $v=trim_array(explode(" ",strtoupper($values[$fields[$cf]["name"]])));
-                        foreach ($validvalues as $validvalue)
-                            {
-                            if (in_array($validvalue,$v)) {$displayconditioncheck=true;} # this is  a valid value
-                            }
-                        }
+					$scriptconditions[$condref]['valid'] = array();
+					foreach($validvalues as $validvalue)
+						{
+						$found_validvalue = get_node_by_name($scriptconditionnodes, $validvalue);
+
+						if(0 != count($found_validvalue))
+							{
+							$scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
+
+							if(in_array($found_validvalue['ref'],$searched_nodes))
+								{
+								$displayconditioncheck = true;
+								}
+							}
+						}
+				
+
                     if (!$displayconditioncheck) {$displaycondition=false;}
-                    #add jQuery code to update on changes
-                        if (($fields[$cf]['type'] == 2 || $fields[$cf]['type'] == 3) && $fields[$cf]['display_as_dropdown'] == 0 && !$forsearchbar) # add onchange event to each checkbox field
-                            {
-                            # construct the value from the ticked boxes
-                            $val=","; # Note: it seems wrong to start with a comma, but this ensures it is treated as a comma separated list by split_keywords(), so if just one item is selected it still does individual word adding, so 'South Asia' is split to 'South Asia','South','Asia'.
-                            //$options=trim_array(explode(",",$fields[$cf]["options"]));
+					
+					// Certain fixed list types allow for multiple nodes to be passed at the same time
+					if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
+						{
+						if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
+							{
+							?>
+							<script>
+							jQuery(document).ready(function()
+								{
+								jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
+									{
+									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
+									});
+								});
+							</script>
+							<?php
 
-                            $options=array();
-                            node_field_options_override($options,$fields[$cf]['ref']);
+							// Move on to the next field now
+							continue;
+							}
+						else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $fields[$cf]['type'])
+							{
+							?>
+							<script>
+							jQuery(document).ready(function()
+								{
+								jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
+									{
+									checkSearchDisplayCondition<?php echo $field['ref']; ?>(node);
+									});
+								});
+							</script>
+							<?php
 
-                            ?><script type="text/javascript">
-                            jQuery(document).ready(function() {<?php
-                                for ($m=0;$m<count($options);$m++)
-                                    {
-                                    $checkname=($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"]) . "_" . md5($options[$m]);
-									echo "jQuery('" . $display_condition_js_prepend . "input[name=\"" . $checkname . "\"]').change(function (){
-                                        checkSearchDisplayCondition" . $field["ref"] . "();
-                                        });";
-                                    }
-                                    ?>
-                                });
-                            </script><?php
-                            }
-                        # Handle Radio Buttons type:
-                        else if($fields[$cf]['type'] == 12 && $fields[$cf]['display_as_dropdown'] == 0) {
-                        ?>
-                            <script type="text/javascript">
-                            jQuery(document).ready(function() {
-                                // Check for radio buttons (default behaviour)
-                                jQuery('<?php echo $display_condition_js_prepend ?>input[name=field_<?php echo ($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"])  ?>]:radio').change(function() {
-                                    checkSearchDisplayCondition<?php echo $field["ref"];?>();
-                                });
-
-                                <?php
-
-                                $options=array();
-                                node_field_options_override($options,$fields[$cf]['ref']);
-
-                                //$options = trim_array(explode(',', ['options']));
-
-                                foreach ($options as $option) {
-                                    $name = 'field_' . ($forsearchbar ? $fields[$cf]["name"] : $fields[$cf]["ref"]) . '_' . sha1($option); ?>
-                                    
-                                    // Check for checkboxes (advanced search behaviour)
-                                    jQuery('<?php echo $display_condition_js_prepend ?>input[name=<?php echo $name; ?>]:checkbox').change(function() {
-                                        checkSearchDisplayCondition<?php echo $field['ref']; ?>();
-                                    });
-
-                                <?php
-                                }
-                                ?>
-                            });
-                            </script>
-
-                        <?php 
-                        } 
+							// Move on to the next field now
+							continue;
+							}
                         else
                             {
+
+                            $checkname = "nodes_searched[{$fields[$cf]['ref']}][]";
+                            $jquery_selector = "input[name=\"{$checkname}\"]";
+                            if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'] && true == $fields[$cf]['display_as_dropdown'])
+                                {
+                                $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
+                                $jquery_selector = "select[name=\"{$checkname}\"]";
+                                }
                             ?>
                             <script type="text/javascript">
-                            jQuery(document).ready(function() {
-                                jQuery('<?php echo $display_condition_js_prepend ?>#field_<?php echo $fields[$cf]["ref"];?>').change(function (){
-                                checkSearchDisplayCondition<?php echo $field["ref"];?>();
+                            jQuery(document).ready(function()
+                                {
+                                jQuery('<?php echo $jquery_selector; ?>').change(function ()
+                                    {
+                                    checkSearchDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                                    });
                                 });
-                            });
                             </script>
-                        <?php
+                            <?php
                             }
-                    }
+						}
+					else
+						{
+						?>
+						<script type="text/javascript">
+						jQuery(document).ready(function()
+							{
+							jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
+								{
+								checkSearchDisplayCondition<?php echo $field['ref']; ?>();
+								});
+							});
+						</script>
+						<?php
+						}
+					}
                 } # see if next field needs to be checked
 
             $condref++;
@@ -149,98 +157,85 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         ?>
         <script type="text/javascript">
         
-        function checkSearchDisplayCondition<?php echo $field["ref"];?>() {
-            var questionField          = jQuery('#<?php echo ($forsearchbar ? "simplesearch_" . $field["ref"] : "question_" . $n );?>');
-            var fieldInput			   = jQuery('#<?php echo ($forsearchbar ? "simplesearch_" . $field["ref"] : "question_" . $n );?> #field_<?php echo $field["ref"]?>');
-            var fieldStatus            = questionField.css('display');
-            var newFieldStatus         = 'none';
-            var newFieldProvisional    = true;
-            var newFieldProvisionalTest;
-            <?php
-            foreach ($scriptconditions as $scriptcondition)
-                { ?>
+        function checkSearchDisplayCondition<?php echo $field["ref"];?>(node)
+			{
+            field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+			newfield<?php echo $field['ref']; ?>status = 'none';
+			newfield<?php echo $field['ref']; ?>show   = false;
+			<?php
+			foreach($scriptconditions as $scriptcondition)
+				{
+                /*
+                Example of $scriptcondition:
+                Array
+                    (
+                    [field] => 73
+                    [type] => 2
+                    [valid] => Array
+                        (
+                            [0] => 267
+                            [1] => 266
+                        )
+                    )
+                */
+				?>
+                fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+				<?php
+                ############################
+                ### Field type specific
+                ############################
+                if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
+                    {
+                    $jquery_condition_selector = "input[name=\"nodes_searched[{$scriptcondition['field']}][]\"]";
+                    $js_conditional_statement  = "fieldokvalues{$scriptcondition['field']}.indexOf(element.value) != -1";
 
-                newFieldProvisionalTest = false;
-
-                if (jQuery('#field_<?php echo $scriptcondition["field"]; ?>').length != 0) {
-                    fieldValues<?php echo $scriptcondition["field"]; ?> = jQuery('#field_<?php echo $scriptcondition["field"]; ?>').val().toUpperCase().split(',');
-                } else {
-                <?php
-                    # Handle Radio Buttons type:
-                    if($scriptcondition['type'] == 12) 
+                    if(in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS))
+                        || (FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'] && false == $scriptcondition['display_as_dropdown']))
                         {
-                        //$scriptcondition["options"] = explode(',', $scriptcondition["options"]);
+                        $js_conditional_statement = "jQuery(this).prop('checked') && {$js_conditional_statement}";
+                        }
 
-                        $scriptcondition["options"]=array();
-                        node_field_options_override($scriptcondition["options"],$scriptcondition["field"]);
-
-                        foreach ($scriptcondition["options"] as $key => $radio_button_value)
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $scriptcondition['type'] && true == $scriptcondition['display_as_dropdown'])
+                        {
+                        $jquery_condition_selector = "select[name=\"nodes_searched[{$scriptcondition['field']}]\"] option:selected";
+                        }
+						
+						?>
+                    if(!newfield<?php echo $field['ref']; ?>show)
+                        {
+                        jQuery('<?php echo $jquery_condition_selector; ?>').each(function(index, element)
                             {
-                            $scriptcondition["options"][$key] = sha1($radio_button_value);
-                            }
-                        $scriptcondition["options"] = implode(',', $scriptcondition["options"]);
-
-                        ?>
-
-                        var options_string = '<?php echo $scriptcondition["options"]; ?>';
-                        var field<?php echo $scriptcondition["field"]; ?>_options = options_string.split(',');
-                        var checked = null;
-                        var fieldOkValues<?php echo $scriptcondition["field"]; ?> = [<?php echo $scriptcondition["valid"]; ?>];
-
-                        for(var i=0; i < field<?php echo $scriptcondition["field"]; ?>_options.length; i++) {
-                            if(jQuery('#field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i]).is(':checked')) {
-                                checked = jQuery('#field_<?php echo $scriptcondition["field"]; ?>_' + field<?php echo $scriptcondition["field"]; ?>_options[i] + ':checked').val().toUpperCase();
-                                if(jQuery.inArray(checked, fieldOkValues<?php echo $scriptcondition["field"]; ?>) > -1) {
-                                    newFieldProvisionalTest = true;
+							 if(<?php echo $js_conditional_statement; ?>)
+                                {
+                                newfield<?php echo $field['ref']; ?>show = true;
                                 }
-                            }
+                            });
                         }
-
-                        <?php
-                        } # end of handling radio buttons type
-                        ?>
-
-                    fieldValues<?php echo $scriptcondition["field"]; ?> = new Array();
-                    checkedVals<?php echo $scriptcondition["field"]; ?> = jQuery('input[name^=<?php echo $scriptcondition["field"]; ?>_]');
-                
-                    jQuery.each(checkedVals<?php echo $scriptcondition["field"]; ?>, function() {
-                        if (jQuery(this).is(':checked')) {
-                            checkText<?php echo $scriptcondition["field"]; ?> = jQuery(this).parent().next().text().toUpperCase();
-                            fieldValues<?php echo $scriptcondition["field"]; ?>.push(jQuery.trim(checkText<?php echo $scriptcondition["field"]; ?>));
-                        }
-                    });
-                }
-                    
-                fieldOkValues<?php echo $scriptcondition["field"]; ?> = [<?php echo $scriptcondition["valid"]; ?>];
-                jQuery.each(fieldValues<?php echo $scriptcondition["field"]; ?>,function(f,v) {
-                    if ((jQuery.inArray(v,fieldOkValues<?php echo $scriptcondition["field"]; ?>))>-1 || (fieldValues<?php echo $scriptcondition["field"]; ?> == fieldOkValues<?php echo $scriptcondition["field"]; ?> )) {
-                        newFieldProvisionalTest = true;
+                    <?php
                     }
-                });
+                ############################
+                ############################
+                }
+                ?>
 
-                if (newFieldProvisionalTest == false) {
-                    newFieldProvisional = false;
-                }
-                    
-                <?php
-                } ?>
-            
-            if (newFieldProvisional == true) {
-                newFieldStatus = 'block'
-            }
-            if (newFieldStatus != fieldStatus) {
-                questionField.slideToggle();
-                if(newFieldStatus == 'block') {
-                	fieldInput.prop("disabled",false);
-                } else {
-                	fieldInput.prop("disabled","disabled");
-                }
-                if (questionField.css('display') == 'block') {
-                    questionField.css('border-top','');
-                } else {
-                    questionField.css('border-top','none');
-                }
-            }
+                if(newfield<?php echo $field['ref']; ?>show)
+                    {
+                    newfield<?php echo $field['ref']; ?>status = 'block';
+                    }
+
+                if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
+                    {
+                    jQuery('#question_<?php echo $n ?>').slideToggle();
+
+                    if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', '');
+                        }
+                    else
+                        {
+                        jQuery('#question_<?php echo $n ?>').css('border-top', 'none');
+                        }
+                    }
         }
         </script>
     	<?php
@@ -279,12 +274,34 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     //hook("rendersearchhtml", "", array($field, $class, $value, $autoupdate));
 
     switch ($field["type"]) {
-        case 0: # -------- Text boxes
-        case 1:
-        case 5:
-        case 8:
-        case ($forsearchbar && $field["type"]==9 && !$simple_search_show_dynamic_as_dropdown):
-        ?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}" <?php } ?> ><?php 
+        case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
+        case FIELD_TYPE_TEXT_BOX_MULTI_LINE:
+        case FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE:
+        case FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR:
+        case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$simple_search_show_dynamic_as_dropdown):
+        if ($field['field_constraint']==0){ 
+			
+			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo htmlspecialchars($value)?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);}"<?php } ?>><?php 
+			# Add to the clear function so clicking 'clear' clears this box.
+			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : $field["name"]) . "').value='';";
+		}
+        // number view - manipulate the form value (don't send these but send a compiled numrange value instead
+        else if ($field['field_constraint']==1){ // parse value for to/from simple search
+			$minmax=explode('|',str_replace("numrange","",$value));
+			($minmax[0]=='')?$minvalue='':$minvalue=str_replace("neg","-",$minmax[0]);
+			(isset($minmax[1]))?$maxvalue=str_replace("neg","-",$minmax[1]):$maxvalue='';
+			?>
+			<input id="<?php echo $name ?>_min" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo $name?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($minvalue)?>"> ...
+			<input id="<?php echo $name ?>_max" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery('#<?php echo $name?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo htmlspecialchars($maxvalue)?>">
+			<input id="<?php echo $name?>" name="<?php echo $name?>" type="hidden" value="<?php echo $value?>">
+		<?php 
+			# Add to the clear function so clicking 'clear' clears this box.
+			 $clear_function.="document.getElementById('".$name."_max').value='';";
+			 $clear_function.="document.getElementById('".$name."_min').value='';";
+			 $clear_function.="document.getElementById('".$name."').value='';";
+		}
+		
+
         
         if ($forsearchbar && $autocomplete_search) { 
 				# Auto-complete search functionality
@@ -298,19 +315,21 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 				
 				</script>
 				<div class="SearchItem">
-			<?php } 
-			# Add to the clear function so clicking 'clear' clears this box.
-			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : $field["name"]) . "').value='';";
+			<?php }
+            
         break;
     
-        case 2: 
-        case 3:
-        case ($forsearchbar && $field["type"]==9 && $simple_search_show_dynamic_as_dropdown):
-        if(!hook("customchkboxes", "", array($field, $value, $autoupdate, $class, $forsearchbar, $limit_keywords)))
+        case FIELD_TYPE_CHECK_BOX_LIST: 
+        case FIELD_TYPE_DROP_DOWN_LIST:
+        case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && $simple_search_show_dynamic_as_dropdown):
+       if(!hook("customchkboxes", "", array($field, $value, $autoupdate, $class, $forsearchbar, $limit_keywords)))
             {
+            global $checkbox_ordered_vertically;
+
             # -------- Show a check list or dropdown for dropdowns and check lists?
             # By default show a checkbox list for both (for multiple selections this enabled OR functionality)
             
+            $setnames  = trim_array(explode(";",cleanse_string($value,true)));
             # Translate all options
             $adjusted_dropdownoptions=hook("adjustdropdownoptions");
             if ($adjusted_dropdownoptions){$options=$adjusted_dropdownoptions;}
@@ -319,222 +338,190 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             	{
             	$optionfields[]=$field["name"]; # Append to the option fields array, used by the AJAX dropdown filtering
             	}
-            
-            $option_trans=array();
-            $option_trans_simple=array();
-            for ($m=0;$m<count($field["node_options"]);$m++)
+
+            ##### Reordering options #####
+            $reordered_options = array();
+            $node_options      = array();
+            foreach($field['nodes'] as $node)
                 {
-                $trans=i18n_get_translated($field["node_options"][$m]);
-                $option_trans[$field["node_options"][$m]]=$trans;
-                $option_trans_simple[]=$trans;
+                // Filter the options array for blank values and ignored keywords
+                if('' !== $node['name'] && 0 !== count($limit_keywords) && !in_array(strval($node['name']), $limit_keywords))
+                    {
+                    continue;
+                    }
+
+                $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
+                $node_options[]                  = $node['name'];
                 }
 
-            if ($auto_order_checkbox && !hook("ajust_auto_order_checkbox","",array($field))) {
-                if($auto_order_checkbox_case_insensitive){natcasesort($option_trans);}
-                else{asort($option_trans);}
-            }
-            $options=array_keys($option_trans); # Set the options array to the keys, so it is now effectively sorted by translated string       
-            
+            if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
+                {
+                if($auto_order_checkbox_case_insensitive)
+                    {
+                    natcasesort($reordered_options);
+                    }
+                else
+                    {
+                    natsort($reordered_options);
+                    }
+                }
+
+            $new_node_order    = array();
+            $order_by_resetter = 0;
+            foreach($reordered_options as $reordered_node_id => $reordered_node_option)
+                {
+                $new_node_order[$reordered_node_id] = $field['nodes'][array_search($reordered_node_id, array_column($field['nodes'], 'ref', 'ref'))];
+
+                // Special case for vertically ordered checkboxes.
+                // Order by needs to be reset as per the new order so that we can reshuffle them using the order by as a reference
+                if($checkbox_ordered_vertically)
+                    {
+                    $new_node_order[$reordered_node_id]['order_by'] = $order_by_resetter++;
+                    }
+                }
+
+            $field['nodes'] = $new_node_order;
+            ##### End of reordering options #####
+
             if ($field["display_as_dropdown"] || $forsearchbar)
                 {
                 # Show as a dropdown box
-                $set=trim_array(explode(";",cleanse_string($value,true)));
-                if($forsearchbar)
-                	{
-                	$name="field_drop_" . htmlspecialchars($field["name"]);
-                	}
-                ?><select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearchbar){?> onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>><option value=""></option><?php
-                foreach ($option_trans as $option=>$trans)
+                $name = "nodes_searched[{$field['ref']}]";
+                ?>
+                <select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>" <?php if($forsearchbar && !$displaycondition) { ?> disabled <?php } ?> <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearchbar){?> onChange="FilterBasicSearchOptions('<?php echo htmlspecialchars($field["name"]) ?>',<?php echo htmlspecialchars($field["resource_type"]) ?>);" <?php } ?>>
+                    <option value=""></option>
+                <?php
+                foreach($field['nodes'] as $node)
                     {
-                    if (trim($trans)!="")
+                    if('' != trim($node['name']))
                         {
                         ?>
-                        <option value="<?php echo htmlspecialchars(trim($trans))?>" <?php if (in_array(cleanse_string($trans,true),$set)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim($trans))?></option>
+                        <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>" <?php if (0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) { ?>selected<?php } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
                         <?php
                         }
                     }
                 ?></select><?php
                 if($forsearchbar)
                 	{
-                	# Add to the clear function so clicking 'clear' clears this box.
-					$clear_function.="document.getElementById('field_" . ($forsearchbar ? $field["ref"] : $field["name"]) . "').selectedIndex=0;";
+                	// Add to the clear function so clicking 'clear' clears this box.
+					$clear_function .= "document.getElementById('{$id}').selectedIndex = -1;";
                 	}
                 }
             else
                 {
                 # Show as a checkbox list (default)
-                
-                $set=trim_array(explode(";",cleanse_string($value,true)));
+                $setnames=trim_array(explode(";",$value));
                 $wrap=0;
 
-                $l=average_length($option_trans_simple);
-                $cols=10;
-                if ($l>5)  {$cols=6;}
-                if ($l>10) {$cols=4;}
-                if ($l>15) {$cols=3;}
-                if ($l>25) {$cols=2;}
-                # Filter the options array for blank values and ignored keywords.
-                $newoptions=array();
-                foreach ($options as $option)
+                $l    = average_length($node_options);
+                switch($l)
                     {
-                    if ($option!=="" && (count($limit_keywords)==0 || in_array(strval($option), $limit_keywords)))
-                        {
-                        $newoptions[]=$option;
-                        }
+                    case($l > 40): $cols = 1; break; 
+                    case($l > 25): $cols = 2; break;
+                    case($l > 15): $cols = 3; break;
+                    case($l > 10): $cols = 4; break;
+                    case($l > 5):  $cols = 5; break;
+                    default:       $cols = 10;
                     }
-					
-                $options=$newoptions;
-				
-                $height=ceil(count($options)/$cols);
+
+                $height = ceil(count($field['nodes']) / $cols);
 
                 global $checkbox_ordered_vertically, $checkbox_vertical_columns;
-                if ($checkbox_ordered_vertically)
-                    {                   
+                if($checkbox_ordered_vertically)
+                    {
                     if(!hook('rendersearchchkboxes'))
                         {
                         # ---------------- Vertical Ordering (only if configured) -----------
-                        ?><table cellpadding=2 cellspacing=0><tr><?php
-                        for ($y=0;$y<$height;$y++)
-                            {
-                            for ($x=0;$x<$cols;$x++)
-                                {
-                                # Work out which option to fetch.
-                                $o=($x*$height)+$y;
-                                if ($o<count($options))
+                        ?>
+                        <table cellpadding=2 cellspacing=0>
+                            <tbody>
+                                <tr>
+                                <?php
+                                for($i = 0; $i < $height; $i++)
                                     {
-                                    $option=$options[$o];
-                                    $trans=$option_trans[$option];
-
-                                    $name=$field["ref"] . "_" . md5($option);
-                                    if ($option!=="")
+                                    for($j = 0; $j < $cols; $j++)
                                         {
-                                        ?>
-                                        <td valign=middle><input type=checkbox id="<?php echo htmlspecialchars($name) ?>" name="<?php echo ($name) ?>" value="yes" <?php if (in_array(cleanse_string($trans,true),$set)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>></td><td valign=middle><?php echo htmlspecialchars($trans)?>&nbsp;&nbsp;</td>
+                                        $order_by = ($height * $j) + $i;
 
+                                        $node_index_to_be_reshuffled = array_search($order_by, array_column($field['nodes'], 'order_by', 'ref'));
+
+                                        if(false === $node_index_to_be_reshuffled)
+                                            {
+                                            continue;
+                                            }
+
+                                        $node = $field['nodes'][$node_index_to_be_reshuffled];
+                                        ?>
+                                        <td valign=middle>
+                                            <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) { ?>checked<?php } ?> <?php if($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                                        </td>
+                                        <td valign=middle>
+                                            <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
+                                        </td>
                                         <?php
                                         }
-                                    else
-                                        {
-                                        ?><td></td><td></td><?php
-                                        }
+                                        ?>
+                                    </tr>
+                                    <tr>
+                                    <?php
                                     }
-                                }?></tr><tr><?php
-                            }
-                        ?></tr></table><?php
+                                    ?>
+                            </tbody>
+                        </table>
+                        <?php
                         }
                     }
                 else
                     {
                     # ---------------- Horizontal Ordering (Standard) ---------------------             
-                    ?><table cellpadding=2 cellspacing=0><tr><?php
-                    foreach ($option_trans as $option=>$trans)
+                    ?>
+                    <table cellpadding=2 cellspacing=0>
+                        <tr>
+                    <?php
+                    foreach($field['nodes'] as $node)
                         {
-                        $wrap++;if ($wrap>$cols) {$wrap=1;?></tr><tr><?php }
-                        $name=$field["ref"] . "_" . md5($option);
-                        if ($option!=="")
+                        $wrap++;
+
+                        if($wrap > $cols)
+                            {
+                            $wrap = 1;
+                            ?>
+                            </tr>
+                            <tr>
+                            <?php
+                            }
+
+                        if('' != $node['name'])
                             {
                             ?>
-                            <td valign=middle><input type=checkbox id="<?php echo htmlspecialchars($name) ?>" name="<?php echo htmlspecialchars($name) ?>" value="yes" <?php if (in_array(cleanse_string(i18n_get_translated($option),true),$set)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>></td><td valign=middle><?php echo htmlspecialchars($trans)?>&nbsp;&nbsp;</td>
+                            <td valign=middle>
+                                <input id="nodes_searched_<?php echo $node['ref']; ?>" type="checkbox" name="nodes_searched[<?php echo $field['ref']; ?>][]" value="<?php echo $node['ref']; ?>" <?php if ((0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) || in_array(i18n_get_translated($node['name']),$setnames)) {?>checked<?php } ?> <?php if ($autoupdate) { ?>onClick="UpdateResultCount();"<?php } ?>>
+                            </td>
+                            <td valign=middle>
+                                <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
+                            </td>
                             <?php
                             }
                         }
-                    ?></tr></table><?php
+                        ?>
+                        </tr>
+                    </table>
+                    <?php
                     }
                     
                 }
             }
         break;
         
-        case 4:
-        case 6: 
-        case 10: # ----- Date types
+        case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
+        case FIELD_TYPE_EXPIRY_DATE: 
+        case FIELD_TYPE_DATE: 
+        case FIELD_TYPE_DATE_RANGE: 
         $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day='';
         if (!$forsearchbar && $daterange_search)
             {
-            $startvalue=substr($value,strpos($value,"start")+5,10);
-            $ss=explode(" ",$startvalue);
-            if (count($ss)>=3)
-                {
-                $found_start_year=$ss[0];
-                $found_start_month=$ss[1];
-                $found_start_day=$ss[2];
-                }
-            $endvalue=substr($value,strpos($value,"end")+3,10);
-            $se=explode(" ",$endvalue);
-            if (count($se)>=3)
-                {
-                $found_end_year=$se[0];
-                $found_end_month=$se[1];
-                $found_end_day=$se[2];
-                }
-            ?>
-            <!--  date range search start -->           
-            <div><label class="InnerLabel"><?php echo $lang["fromdate"]?></label>
-            <select name="<?php echo htmlspecialchars($name) ?>_startyear" class="SearchWidth" style="width:100px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
-              <option value=""><?php echo $lang["anyyear"]?></option>
-              <?php
-              $y=date("Y");
-              for ($d=$y;$d>=$minyear;$d--)
-                {
-                ?><option <?php if ($d==$found_start_year) { ?>selected<?php } ?>><?php echo $d?></option><?php
-                }
-              ?>
-            </select>
-            <select name="<?php echo $name?>_startmonth" class="SearchWidth" style="width:100px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
-              <option value=""><?php echo $lang["anymonth"]?></option>
-              <?php
-              for ($d=1;$d<=12;$d++)
-                {
-                $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
-                }
-              ?>
-            </select>
-            <select name="<?php echo $name?>_startday" class="SearchWidth" style="width:100px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
-              <option value=""><?php echo $lang["anyday"]?></option>
-              <?php
-              for ($d=1;$d<=31;$d++)
-                {
-                $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                ?><option <?php if ($d==$found_start_day) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
-                }
-              ?>
-            </select>   
-            </div><br><div><label></label><label class="InnerLabel"><?php echo $lang["todate"]?></label><select name="<?php echo $name?>_endyear" class="SearchWidth" style="width:100px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
-              <option value=""><?php echo $lang["anyyear"]?></option>
-              <?php
-              $y=date("Y");
-              for ($d=$y;$d>=$minyear;$d--)
-                {
-                ?><option <?php if ($d==$found_end_year ) { ?>selected<?php } ?>><?php echo $d?></option><?php
-                }
-              ?>
-            </select>
-            <select name="<?php echo $name?>_endmonth" class="SearchWidth" style="width:100px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
-              <option value=""><?php echo $lang["anymonth"]?></option>
-              <?php
-              $md=date("n");
-              for ($d=1;$d<=12;$d++)
-                {
-                $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
-                }
-              ?>
-            </select>
-            <select name="<?php echo $name?>_endday" class="SearchWidth" style="width:100px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
-              <option value=""><?php echo $lang["anyday"]?></option>
-              <?php
-              $td=date("d");
-              for ($d=1;$d<=31;$d++)
-                {
-                $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                ?><option <?php if ($d==$found_end_day) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
-                }
-              ?>
-            </select>
-            <!--  date range search end date-->         
-            </div>
-            <?php }
+			render_date_range_field($name,$value,true, $autoupdate);
+            }
         else
             {
             $s=explode("|",$value);
@@ -601,77 +588,65 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         break;
         
         
-        case 7: # ----- Category Tree
-        $options=$field["options"];
+        case FIELD_TYPE_CATEGORY_TREE:
+        # ----- Category Tree
+        $set     = preg_split('/[;\|]/', cleanse_string($value, true));
+        $name    = "nodes_searched[{$field['ref']}][]";
 
-        //$set=trim_array(explode(";",cleanse_string($value,true)));
-        $set=preg_split('/[;\|]/',cleanse_string($value,true));
-
-        if ($forsearchbar)
+        if($forsearchbar)
             {
-            
-            ?>
-			<div id="field_<?php echo htmlspecialchars($field["name"]) ?>" >
-			<div id="<?php echo htmlspecialchars($field["name"]) ?>_statusbox" class="MiniCategoryBox">
-                <script>UpdateStatusBox("<?php echo htmlspecialchars($field["name"]) ?>", false);</script>
-            </div>
-			<input type="hidden" name="field_cat_<?php echo htmlspecialchars($field["name"]) ?>" id="<?php echo htmlspecialchars($field["name"]) ?>_category" value="<?php echo htmlspecialchars(implode('|',$set)); ?>">
-			
-			
-			<?php
-            if (!isset($extrafooterhtml))
-                {
-                $extrafooterhtml='';
-                }
-			# Add floating frame HTML. This must go in the footer otherwise it appears in the wrong place in IE due to it existing within a floated parent (the search bar).
-			$extrafooterhtml.="
-			<div class=\"RecordPanel\" style=\"display:none;position:fixed;top:100px;left:200px;text-align:left;\" id=\"cattree_" . $fields[$n]["name"] . "\">" . $lang["pleasewait"] . "</div>
-			<script type=\"text/javascript\">
-			// Load Category Tree
-			jQuery(document).ready(function () {
-				jQuery('#cattree_" . $field["name"] . "').load('" . $baseurl_short . "pages/ajax/category_tree_popup.php?field=" . $field["ref"] . "&value=" . urlencode($value) . "&nc=" . time() . "');
-				})
-			</script>
-			";
-			
-			echo "<a href=\"#\" onClick=\"jQuery('#cattree_" . $field["name"] . "').css('top', (jQuery(this).position().top)-200);jQuery('#cattree_" . $field["name"] . "').css('left', (jQuery(this).position().left)-400);jQuery('#cattree_" . $field["name"] . "').css('position', 'fixed');jQuery('#cattree_" . $field["name"] . "').show();jQuery('#cattree_" . $field["name"] . "').draggable();return false;\">" . $lang["select"] . "</a></div>";
+            $category_tree_open  = true;
+            $treeonly            = true;
+            $status_box_elements = '';
 
-			# Add to clear function
-			$clear_function.="DeselectAll('" . $field["name"] ."', true);";
-            
-            /*# On the search bar?
-            # Produce a smaller version of the category tree in a single dropdown - max two levels
-            ?>
-            <select class="<?php echo $class ?>" name="field_<?php echo $field["ref"]?>"><option value=""></option><?php
-            $class=explode("\n",$options);
-
-            for ($t=0;$t<count($class);$t++)
+            foreach($field['nodes'] as $node)
                 {
-                $s=explode(",",$class[$t]);
-                if (count($s)==3 && $s[1]==0)
+                if(!in_array($node['ref'], $searched_nodes))
                     {
-                    # Found a first level
-                    ?>
-                    <option <?php if (in_array(cleanse_string($s[2],true),$set)) {?>selected<?php } ?>><?php echo htmlspecialchars($s[2]) ?></option>
-                    <?php
-                    
-                    # Parse tree again looking for level twos at this point
-                    for ($u=0;$u<count($class);$u++)
-                        {
-                        $v=explode(",",$class[$u]);
-                        if (count($v)==3 && $v[1]==$s[0])
-                            {
-                            # Found a first level
-                            ?>
-                            <option value="<?php echo htmlspecialchars($s[2]) . "," . htmlspecialchars($v[2]) ?>" <?php if (in_array(cleanse_string($s[2],true),$set) && in_array(cleanse_string($v[2],true),$set)) {?>selected<?php } ?>>&nbsp;-&nbsp;<?php echo htmlspecialchars($v[2]) ?></option>
-                            <?php
-                            }                       
-                        }
+                    continue;
                     }
-                }           
+
+                // Show previously searched options on the status box
+                $status_box_elements .= "<span id=\"nodes_searched_{$field['ref']}_statusbox_option_{$node['ref']}\">{$node['name']}</span><br>";
+                }
             ?>
-            </select>
-            <?php*/
+			<div id="field_<?php echo htmlspecialchars($field['name']); ?>">
+    			<div id="nodes_searched_<?php echo $field['ref']; ?>_statusbox" class="MiniCategoryBox">
+                    <?php echo $status_box_elements; ?>
+                </div>
+                <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
+                    <p align="right">
+                        <a href="#" onClick="document.getElementById('cattree_<?php echo $field['name']; ?>').style.display='none'; return false;"><?php echo $lang['close']; ?></a>
+                    </p>
+                    <?php include __DIR__ . '/../pages/edit_fields/7.php'; ?>
+                 </div>
+                <a href="#"
+                   onClick="
+                        jQuery('#cattree_<?php echo $field['name']; ?>').css('top', (jQuery(this).position().top) - 200);
+                        jQuery('#cattree_<?php echo $field['name']; ?>').css('left', (jQuery(this).position().left) - 400);
+                        jQuery('#cattree_<?php echo $field['name']; ?>').show();
+                        jQuery('#cattree_<?php echo $field['name']; ?>').draggable();
+                        return false;"><?php echo $lang['select']; ?></a>
+            </div>
+			<?php
+			# Add to clear function
+			$clear_function .= "
+                    jQuery('#search_tree_{$field['ref']}').jstree(true).deselect_all();
+
+                    /* remove the hidden inputs */
+                    var elements = document.getElementsByName('nodes_searched[{$field['ref']}][]');
+                    while(elements[0])
+                        {
+                        elements[0].parentNode.removeChild(elements[0]);
+                        }
+
+                    /* update status box */
+                    var node_statusbox = document.getElementById('nodes_searched_{$field['ref']}_statusbox');
+                    while(node_statusbox.lastChild)
+                        {
+                        node_statusbox.removeChild(node_statusbox.lastChild);
+                        }
+                ";
             }
         else
             {
@@ -680,23 +655,30 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             }
         break;
         
-        case 9: #-- Dynamic keywords list
-        $value=str_replace(";",",",$value); # Different syntax used for keyword separation when searching.
-        include __DIR__ . "/../pages/edit_fields/9.php";
+        // Dynamic keywords list
+        case FIELD_TYPE_DYNAMIC_KEYWORDS_LIST:
+            // Different syntax used for keyword separation when searching
+            $value = str_replace(';', ',', $value);
+
+            include __DIR__ . '/../pages/edit_fields/9.php';
         break;      
 
         // Radio buttons:
-        case 12:
+        case FIELD_TYPE_RADIO_BUTTONS:
             // auto save is not needed when searching
-            $edit_autosave = FALSE;
-             
-            $display_as_radiobuttons = FALSE;
-            $display_as_checkbox = TRUE;
+            $edit_autosave           = false;
+            $display_as_radiobuttons = false;
+            $display_as_checkbox     = true;
+            $name                    = "nodes_searched[{$field['ref']}][]";
 
-            if($field['display_as_dropdown'] || $forsearchbar) {
-                $display_as_dropdown = TRUE;
-                $display_as_checkbox = FALSE;
-            }
+            if($forsearchbar || $field['display_as_dropdown'])
+                {
+                $display_as_dropdown = true;
+                $display_as_checkbox = false;
+                $name                = "nodes_searched[{$field['ref']}]";
+
+                $clear_function .= "document.getElementsByName('{$name}')[0].selectedIndex = -1;";
+                }
             
             include __DIR__ . '/../pages/edit_fields/12.php';
             // need to adjust the field's name value
@@ -887,7 +869,7 @@ function render_dropdown_option($value, $label, array $data_attr = array(), $ext
 * 
 */
 if (!function_exists("render_actions")){
-function render_actions(array $collection_data, $top_actions = true, $two_line = true, $id = '',$resource_data=array())
+function render_actions(array $collection_data, $top_actions = true, $two_line = true, $id = '',$resource_data=array(),$optionsonly=false, $forpage="")
     {
     if(hook('prevent_running_render_actions'))
         {
@@ -900,34 +882,38 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
     // globals that could also be passed as a reference
     global $result /*search result*/;
 
-    $action_selection_id = $pagename . '_action_selection' . $id;
+    $action_selection_id = ($forpage!=""?$forpage:$pagename) . '_action_selection' . $id;
     if(!$top_actions)
         {
         $action_selection_id .= '_bottom';
         }
     if(isset($collection_data['ref']))
         {
-        $action_selection_id .= '_' . $collection_data['ref'];
+        $action_selection_id .= '_' . str_replace("-","_",$collection_data['ref']);
         }
-        ?>
-
-    <div class="ActionsContainer  <?php if($top_actions) { echo 'InpageNavLeftBlock'; } ?>">
-		<?php
-		if (!hook("modifyactionslabel","",array($collection_data,$top_actions)))
-			{
-			?>
-			<div class="DropdownActionsLabel"><?php echo $lang['actions']; ?>:</div>
-			<?php
-			}
-
-    if($two_line)
-        {
-        ?>
-        <br />
-        <?php
-        }
-        ?>
-        <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?>>
+        
+        
+    if(!$optionsonly)
+            {?>
+    
+            <div class="ActionsContainer  <?php if($top_actions) { echo 'InpageNavLeftBlock'; } ?>">
+                <?php
+                if (!hook("modifyactionslabel","",array($collection_data,$top_actions)))
+                    {
+                    ?>
+                    <div class="DropdownActionsLabel"><?php echo $lang['actions']; ?>:</div>
+                    <?php
+                    }
+        
+                if($two_line)
+                    {
+                    ?>
+                    <br />
+                    <?php
+                    }
+                    ?>
+                <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?>>
+            <?php } ?>
             <option class="SelectAction" value=""><?php echo $lang["actions-select"]?></option>
             <?php
 
@@ -982,8 +968,11 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 				}
 
 			echo $options;
-            ?>
-        </select>
+            
+            if(!$optionsonly)
+                { ?>
+                </select>
+                <?php } ?>
         <script>
         function action_onchange_<?php echo $action_selection_id; ?>(v)
             {
@@ -1164,9 +1153,9 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     CentralSpaceLoad(option_url, true);
                     break;
                 }
-
+				
                 // Go back to no action option
-                jQuery('#<?php echo $action_selection_id; ?> option[value=""]').attr('selected', 'selected');
+                jQuery('#<?php echo $action_selection_id; ?> option[value=""]').prop('selected', true);
                 <?php
                 if($chosen_dropdowns)
                 	{
@@ -1178,9 +1167,12 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
         }
         </script>
-    </div>
-    
-    <?php
+        
+    <?php if (!$optionsonly)
+        {?>
+        </div>
+        <?php
+        }
     return;
     }
 }
@@ -1412,3 +1404,648 @@ function render_access_key_tr(array $record)
 
     return;
     }
+
+# The functions is_field_displayed, display_multilingual_text_field and display_field below moved from edit.php
+function is_field_displayed($field)
+    {
+    global $ref, $resource;
+  
+    # Field is an archive only field
+    return !(($resource["archive"]==0 && $field["resource_type"]==999)
+      # Field has write access denied
+      || (checkperm("F*") && !checkperm("F-" . $field["ref"])
+       && !($ref < 0 && checkperm("P" . $field["ref"])))
+      || checkperm("F" . $field["ref"])
+      # Upload only field
+      || ($ref < 0 && $field["hide_when_uploading"] && $field["required"]==0)
+      || hook('edithidefield', '', array('field' => $field))
+      || hook('edithidefield2', '', array('field' => $field)));
+    }
+
+# Allows language alternatives to be entered for free text metadata fields.
+function display_multilingual_text_field($n, $field, $translations)
+  {
+  global $language, $languages, $lang;
+  ?>
+  <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo $lang["showtranslations"]?>';} else {l.style.display='block';this.innerHTML='<?php echo $lang["hidetranslations"]?>';} return false;"><?php echo $lang["showtranslations"]?></a></p>
+  <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
+     <?php
+     reset($languages);
+     foreach ($languages as $langkey => $langname)
+     {
+       if ($language!=$langkey)
+       {
+         if (array_key_exists($langkey,$translations)) {$transval=$translations[$langkey];} else {$transval="";}
+         ?>
+         <tr>
+            <td nowrap valign="top"><?php echo htmlspecialchars($langname)?>&nbsp;&nbsp;</td>
+
+            <?php
+            if ($field["type"]==0)
+            {
+              ?>
+              <td><input type="text" class="stdwidth" name="multilingual_<?php echo $n?>_<?php echo $langkey?>" value="<?php echo htmlspecialchars($transval)?>"></td>
+              <?php
+           }
+           else
+           {
+              ?>
+              <td><textarea rows=6 cols=50 name="multilingual_<?php echo $n?>_<?php echo $langkey?>"><?php echo htmlspecialchars($transval)?></textarea></td>
+              <?php
+           }
+           ?>
+        </tr>
+        <?php
+     }
+  }
+  ?></table><?php
+  }
+
+function display_field($n, $field, $newtab=false)
+  {
+  global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
+  $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
+  $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
+  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES;
+
+  // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
+  $is_search=false;
+  
+  $name="field_" . $field["ref"];
+  $value=$field["value"];
+  $value=trim($value);
+
+  if ($field["omit_when_copying"] && $use!=$ref)
+    {
+    # Omit when copying - return this field back to the value it was originally, instead of using the current value which has been fetched from the new resource.
+    reset($original_fields);
+    foreach ($original_fields as $original_field)
+      {
+      if ($original_field["ref"]==$field["ref"]) {$value=$original_field["value"];}
+      }
+    $selected_nodes = $original_nodes;
+    }
+  else
+    {
+    $selected_nodes = $all_selected_nodes;
+    }
+
+  $displaycondition=true;
+  if ($field["display_condition"]!="")
+    {
+    #Check if field has a display condition set
+    $displaycondition=check_display_condition($n,$field);
+    }
+
+  if ($multilingual_text_fields)
+    {
+    # Multilingual text fields - find all translations and display the translation for the current language.
+    $translations=i18n_get_translations($value);
+    if (array_key_exists($language,$translations)) {$value=$translations[$language];} else {$value="";}
+    }
+
+  if ($multiple && (getval("copyfrom","")=="" || str_replace(array(" ",","),"",$value)=="")) {$value="";} # Blank the value for multi-edits  unless copying data from resource.
+
+  if ($field["resource_type"]!=$lastrt && $lastrt!=-1 && $collapsible_sections)
+      {
+      ?></div><h2 class="CollapsibleSectionHead" id="resource_type_properties"><?php echo htmlspecialchars(get_resource_type_name($field["resource_type"]))?> <?php echo $lang["properties"]?></h2><div class="CollapsibleSection" id="ResourceProperties<?php if ($ref==-1) echo "Upload"; ?><?php echo $field["resource_type"]; ?>Section"><?php
+      }
+    $lastrt=$field["resource_type"];
+
+    # Blank form if 'reset form' has been clicked
+    # OR
+    # If config option $blank_edit_template is set, always show a blank form for user edit templates.
+    if('' != getval('resetform', '') || (0 > $ref && $blank_edit_template && '' == getval('submitted', '')))
+        {
+        $value = '';
+
+        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            {
+            $selected_nodes = array();
+            }
+        }
+
+    /****************************** Errors on saving ***************************************/
+    $field_save_error = FALSE;
+    if (isset($show_error) && isset($save_errors))
+      {
+      if(array_key_exists($field['ref'], $save_errors))
+        {
+        $field_save_error = TRUE;
+        }
+      }
+     
+    if ($multiple && !hook("replace_edit_all_checkbox","",array($field["ref"])))
+      {
+      # Multiple items, a toggle checkbox appears which activates the question
+      ?>
+      <div class="edit_multi_checkbox"><input name="editthis_<?php echo htmlspecialchars($name) ?>" id="editthis_<?php echo $n?>" type="checkbox" value="yes"<?php if($field_save_error){?> checked<?php }?> onClick="var q=document.getElementById('question_<?php echo $n?>');var m=document.getElementById('modeselect_<?php echo $n?>');var f=document.getElementById('findreplace_<?php echo $n?>');if (this.checked) {q.style.display='block';m.style.display='block';} else {q.style.display='none';m.style.display='none';f.style.display='none';document.getElementById('modeselectinput_<?php echo $n?>').selectedIndex=0;}" <?php if(getval("copyfrom","")!="" && $value!=""){echo " checked" ;} ?>>&nbsp;<label for="editthis<?php echo $n?>"><?php echo htmlspecialchars($field["title"]) ?></label></div><!-- End of edit_multi_checkbox -->
+      <?php
+      }
+      
+  if ($multiple && !hook("replace_edit_all_mode_select","",array($field["ref"])))
+      {
+      # When editing multiple, give option to select Replace All Text or Find and Replace
+      ?>
+      <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
+      <label for="modeselectinput"><?php echo $lang["editmode"]?></label>
+      <select id="modeselectinput_<?php echo $n?>" name="modeselect_<?php echo $field["ref"]?>" class="stdwidth" onChange="var fr=document.getElementById('findreplace_<?php echo $n?>');var q=document.getElementById('question_<?php echo $n?>');<?php if ($field["type"]==7){?>if (this.value=='RM'){branch_limit_field['field_<?php echo $field["ref"]?>']=1;}else{branch_limit_field['field_<?php echo $field["ref"]?>']=0;}<?php } ?>if (this.value=='FR') {fr.style.display='block';q.style.display='none';} else {fr.style.display='none';q.style.display='block';}<?php hook ("edit_all_mode_js"); ?>">
+      <option value="RT"><?php echo $lang["replacealltext"]?></option>
+      <?php
+      if (in_array($field["type"], $TEXT_FIELD_TYPES ))
+        {
+        # Find and replace applies to text boxes only.
+        ?>
+        <option value="FR" <?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo $lang["findandreplace"]?></option>
+        <?php
+        }
+      if (in_array($field["type"], $TEXT_FIELD_TYPES))
+        {
+        # Prepend applies to text boxes only.
+        ?>
+        <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
+        <?php
+        }
+      if(in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))))
+        {
+        # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields only.
+        ?>
+        <option value="AP"<?php if(getval("modeselect_" . $field["ref"],"")=="AP"){?> selected<?php } ?>><?php echo $lang["appendtext"]?></option>
+        <?php
+        }
+      if(in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))))
+        {
+        # Remove applies to text boxes, checkboxes, dropdowns, category trees and dynamic keywords only. 
+        ?>
+        <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
+        <?php
+        }
+        hook ("edit_all_extra_modes");
+        ?>
+        </select>
+      </div><!-- End of modeselect_<?php echo $n?> -->
+
+      <div class="Question" id="findreplace_<?php echo $n?>" style="display:none;border-top:none;">
+        <label>&nbsp;</label>
+        <?php echo $lang["find"]?> <input type="text" name="find_<?php echo $field["ref"]?>" class="shrtwidth">
+        <?php echo $lang["andreplacewith"]?> <input type="text" name="replace_<?php echo $field["ref"]?>" class="shrtwidth">
+      </div><!-- End of findreplace_<?php echo $n?> -->
+
+      <?php hook ("edit_all_after_findreplace","",array($field,$n)); 
+      }
+      ?>
+
+      <div class="Question <?php if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n?>" <?php
+      if (($multiple && !$field_save_error) || !$displaycondition || $newtab)
+        {?>style="border-top:none;<?php 
+        if (($multiple && $value=="") || !$displaycondition) # Hide this
+        {
+        ?>
+        display:none;
+        <?php
+        }
+        ?>"<?php
+        }
+     ?>>
+     <?php 
+     $labelname = $name;
+
+     // Add _selector to label so it will keep working:
+     if($field['type'] == 9)
+      {
+      $labelname .= '_selector';
+      }
+
+      // Add -d to label so it will keep working
+     if($field['type'] == 4)
+        {
+        $labelname .= '-d';
+        }
+        ?>
+     <label for="<?php echo htmlspecialchars($labelname)?>" ><?php if (!$multiple) {?><?php echo htmlspecialchars($field["title"])?> <?php if (!$is_template && $field["required"]==1) { ?><sup>*</sup><?php } ?><?php } ?></label>
+
+     <?php
+    # Autosave display
+     if ($edit_autosave || $ctrls_to_save)
+      {
+      ?>
+      <div class="AutoSaveStatus">
+      <span id="AutoSaveStatus<?php echo $field["ref"] ?>" style="display:none;"></span>
+      </div>
+      <?php
+      } 
+    # Define some Javascript for help actions (applies to all fields)
+     $help_js="onBlur=\"HideHelp(" . $field["ref"] . ");return false;\" onFocus=\"ShowHelp(" . $field["ref"] . ");return false;\"";
+
+    #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
+     $modified_field_type="";
+     $modified_field_type=(hook("modifyfieldtype"));
+     if ($modified_field_type){$field["type"]=$modified_field_type-1;}
+
+     hook("addfieldextras");
+    # ----------------------------  Show field -----------------------------------
+    $type = $field['type'];
+
+    // Default to text type.
+    if('' == $type)
+        {
+        $type = 0;
+        }
+
+    if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
+        {
+        global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
+
+        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            {
+            $name = "nodes[{$field['ref']}]";
+
+            // Sometimes we need to pass multiple options
+            if(in_array($field['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE)))
+                {
+                $name = "nodes[{$field['ref']}][]";
+                }
+            else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
+                {
+                $name = "field_{$field['ref']}";
+                }
+            }
+
+        $is_search = false;
+
+        include "edit_fields/{$type}.php";
+        }
+    # ----------------------------------------------------------------------------
+
+    # Display any error messages from previous save
+    if (array_key_exists($field["ref"],$errors))
+      {
+       ?>
+       <div class="FormError">!! <?php echo $errors[$field["ref"]]?> !!</div>
+       <?php
+      }
+
+    if (trim($field["help_text"]!=""))
+     {
+        # Show inline help for this field.
+        # For certain field types that have no obvious focus, the help always appears.
+       ?>
+       <div class="FormHelp" style="padding:0;<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?> display:none;<?php } else { ?> clear:left;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"],false)))?></div></div>
+       <?php
+     }
+
+    # If enabled, include code to produce extra fields to allow multilingual free text to be entered.
+    if ($multilingual_text_fields && ($field["type"]==0 || $field["type"]==1 || $field["type"]==5))
+      {
+       display_multilingual_text_field($n, $field, $translations);
+      }
+    
+    if(($embedded_data_user_select || (isset($embedded_data_user_select_fields) && in_array($field["ref"],$embedded_data_user_select_fields))) && ($ref<0 && !$multiple))
+    {
+      ?>
+      <table id="exif_<?php echo $field["ref"] ?>" class="ExifOptions" cellpadding="3" cellspacing="3" <?php if ($embedded_data_user_select){?> style="display: none;" <?php } ?>>                    
+         <tbody>
+           <tr>        
+             <td>
+                <?php echo "&nbsp;&nbsp;" . $lang["embeddedvalue"] . ": " ?>
+             </td>
+             <td width="10" valign="middle">
+               <input type="radio" id="exif_extract_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="yes" checked>
+            </td>
+            <td align="left" valign="middle">
+               <label class="customFieldLabel" for="exif_extract_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_extract_option"] ?></label>
+            </td>
+
+
+            <td width="10" valign="middle">
+               <input type="radio" id="no_exif_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="no">
+            </td>
+            <td align="left" valign="middle">
+               <label class="customFieldLabel" for="no_exif_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_donot_extract_option"] ?></label>
+            </td>
+
+
+            <td width="10" valign="middle">
+               <input type="radio" id="exif_append_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="append">
+            </td>
+            <td align="left" valign="middle">
+               <label class="customFieldLabel" for="exif_append_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_append_option"] ?></label>
+            </td>
+
+
+            <td width="10" valign="middle">
+               <input type="radio" id="exif_prepend_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="prepend">
+            </td>
+            <td align="left" valign="middle">
+               <label class="customFieldLabel" for="exif_prepend_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_prepend_option"] ?></label>
+            </td>
+
+         </tr>
+      </tbody>
+   </table>        
+   <?php
+  }
+  ?>
+  <div class="clearerleft"> </div>
+  </div><!-- end of question_<?php echo $n?> div -->
+  <?php     
+  
+  hook('afterfielddisplay', '', array($n, $field));
+  }
+
+	
+function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false,$field=array())
+	{
+	$found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
+	global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $tabs_on_edit,$edit_autosave,$forsearchbar;
+	if($forsearch)
+		{
+		// Get the start/end date from the string
+		$startvalue=strpos($value,"start")!==false?substr($value,strpos($value,"start")+5,10):"";
+		$endvalue=strpos($value,"end")!==false?substr($value,strpos($value,"end")+3,10):"";
+		//exit($value);
+		}
+	else
+		{
+		if($value!="" && strpos($value,",")!==false)
+			{
+			// Extract the start date from the value obtained from get_resource_field_data
+			$rangevalues = explode(",",$value);
+			$startvalue = $rangevalues[0];
+			$endvalue = $rangevalues[1];
+			}
+		else
+			{
+			$startvalue = "";
+			$endvalue = "";
+			}
+		}
+				
+	$ss=explode("-",$startvalue);
+	if (count($ss)>=3)
+		{
+		$found_start_year=$ss[0];
+		$found_start_month=$ss[1];
+		$found_start_day=$ss[2];
+		}
+	$se=explode("-",$endvalue);
+	if (count($se)>=3)
+		{
+		$found_end_year=$se[0];
+		$found_end_month=$se[1];
+		$found_end_day=$se[2];
+		}
+	
+	if($daterange_edtf_support)
+		{
+		// Use EDTF format for date input
+		?>		
+		<input class="<?php echo $forsearch?"SearchWidth":"stdwidth"; ?>"  name="<?php echo $name?>_edtf" id="<?php echo $name?>_edtf" type="text" value="<?php echo ($startvalue!=""|$endvalue!="")?$startvalue . "/" . $endvalue:""; ?>" style="display:none;" disabled <?php if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearch && !$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } else if (!$forsearch  && $edit_autosave){?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
+		<?php
+		}?>
+    <!--  date range search start -->   		
+    <!--- start date -->	
+    <div class="stdwidth indent <?php echo $name?>_range" id="<?php echo $name?>_from">
+    <label class="InnerLabel"><?php echo $lang["fromdate"]?></label>
+    
+        <?php 		
+        if($date_d_m_y)
+            {  
+            ?>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_startday"><?php echo $lang["day"]; ?></label>
+            <select name="<?php echo $name?>_startday"
+             <?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateDay"<?php }
+            if ($forsearch && $autoupdate) 
+                    { ?>onChange="UpdateResultCount();"<?php }
+            else if (!$forsearch  && $edit_autosave)
+            {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+              >
+              <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
+              <?php
+              for ($d=1;$d<=31;$d++)
+                {
+                $m=str_pad($d,2,"0",STR_PAD_LEFT);
+                ?><option <?php if ($d==$found_start_day) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
+                }
+              ?>
+            </select>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_startmonth"><?php echo $lang["month"]; ?></label>
+            <select name="<?php echo $name?>_startmonth"
+                <?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateMonth"<?php }
+                if ($forsearch && $autoupdate) 
+                    { ?>onChange="UpdateResultCount();"<?php }
+                else if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    >
+                <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
+                <?php
+                for ($d=1;$d<=12;$d++)
+                    {
+                    $m=str_pad($d,2,"0",STR_PAD_LEFT);
+                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
+                    }?>
+            </select>
+            <?php
+            }
+        else
+            { 
+            ?>		
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_startmonth"><?php echo $lang["month"]; ?></label>
+            <select name="<?php echo $name?>_startmonth"
+                <?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateMonth"<?php }
+                if ($forsearch && $autoupdate) 
+                    { ?>onChange="UpdateResultCount();"<?php }
+                else if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    >					
+                <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
+                <?php
+                for ($d=1;$d<=12;$d++)
+                    {
+                    $m=str_pad($d,2,"0",STR_PAD_LEFT);
+                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
+                    }?>
+            </select>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_startday"><?php echo $lang["day"]; ?></label>
+            <select name="<?php echo $name?>_startday"
+              <?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateDay"<?php }
+                if ($forsearch && $autoupdate) 
+                    { ?>onChange="UpdateResultCount();"<?php }
+                else if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    >
+              <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
+              <?php
+              for ($d=1;$d<=31;$d++)
+                {
+                $m=str_pad($d,2,"0",STR_PAD_LEFT);
+                ?><option <?php if ($d==$found_start_day) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
+                }
+              ?>
+            </select>
+            <?php			
+            }
+        if($forsearch)
+            {?>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_endyear"><?php echo $lang["year"]; ?></label>
+            <select name="<?php echo htmlspecialchars($name) ?>_startyear"
+                <?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateMonth"<?php } 
+                if ($forsearch && $autoupdate) 
+                        { ?>onChange="UpdateResultCount();"<?php }
+                else if (!$forsearch  && $edit_autosave)
+                {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                >
+                <option value=""><?php echo $forsearch?$lang["anyyear"]:$lang["year"]; ?></option>
+                <?php
+                $y=date("Y");
+                for ($d=$y;$d>=$minyear;$d--)
+                    {
+                    ?><option <?php if ($d==$found_start_year) { ?>selected<?php } ?>><?php echo $d?></option><?php
+                    }?>
+            </select>
+            <?php
+            }
+        else
+            {?>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_endyear"><?php echo $lang["year"]; ?></label>
+            <input size="5" name="<?php echo htmlspecialchars($name) ?>_startyear" id="<?php echo htmlspecialchars($name) ?>_startyear" type="text" value="<?php echo $found_start_year ?>"
+                <?php
+                if ($forsearch && $autoupdate)
+                    { ?>onChange="UpdateResultCount();"<?php }
+                if($forsearch && !$forsearchbar)
+                    { ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php }
+                else if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
+		    <?php
+            }?>
+    </div>
+    
+    <div class="clearerleft"> </div>
+    
+    <!--- to date -->
+    <label></label>
+    
+    
+    
+    <div class="stdwidth indent <?php echo $name?>_range" id="<?php echo $name?>_to" >
+    <label class="InnerLabel"><?php echo $lang["todate"]?></label>
+    <?php 		
+        if($date_d_m_y)
+            {
+            ?>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_endday"><?php echo $lang["day"]; ?></label>
+            <select name="<?php echo $name?>_endday"
+              <?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateDay"<?php }
+                if ($forsearch && $autoupdate) 
+                    { ?>onChange="UpdateResultCount();"<?php }
+                else if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    >
+                <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
+                <?php
+                for ($d=1;$d<=31;$d++)
+                    {
+                    $m=str_pad($d,2,"0",STR_PAD_LEFT);
+                    ?><option <?php if ($d==$found_end_day) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
+                    }?>
+            </select>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_endmonth"><?php echo $lang["month"]; ?></label>
+            <select name="<?php echo $name?>_endmonth"
+                <?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateMonth"<?php }
+                if ($forsearch && $autoupdate) 
+                    { ?>onChange="UpdateResultCount();"<?php }
+                else if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    >
+                <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
+                <?php
+                for ($d=1;$d<=12;$d++)
+                    {
+                    $m=str_pad($d,2,"0",STR_PAD_LEFT);
+                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
+                    }?>
+            </select>
+            <?php
+            }
+        else
+            {
+            ?>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_endmonth"><?php echo $lang["month"]; ?></label>
+            <select name="<?php echo $name?>_endmonth"
+                <?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateMonth"<?php }
+                if ($forsearch && $autoupdate) 
+                    { ?>onChange="UpdateResultCount();"<?php }
+                else if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    >					
+                <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
+                <?php
+                for ($d=1;$d<=12;$d++)
+                    {
+                    $m=str_pad($d,2,"0",STR_PAD_LEFT);
+                    ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$d-1]?></option><?php
+                    }?>
+            </select>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_endday"><?php echo $lang["day"]; ?></label>
+            <select name="<?php echo $name?>_endday"
+              <?php if ($chosen_dropdowns && $tabs_on_edit) {?>class="ChosenDateDay"<?php }
+                if ($forsearch && $autoupdate) 
+                    { ?>onChange="UpdateResultCount();"<?php }
+                else if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    >
+              <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
+              <?php
+              for ($d=1;$d<=31;$d++)
+                {
+                $m=str_pad($d,2,"0",STR_PAD_LEFT);
+                ?><option <?php if ($d==$found_end_day) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
+                }
+              ?>
+            </select>
+            <?php			
+            }
+        if($forsearch)
+            {?>
+            <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_endyear"><?php echo $lang["year"]; ?></label>
+            <select name="<?php echo $name?>_endyear" 
+            <?php if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
+                else if (!$forsearch  && $edit_autosave)
+                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    >
+              <option value=""><?php echo $forsearch?$lang["anyyear"]:$lang["year"]?></option>
+              <?php
+              $y=date("Y");
+              for ($d=$y;$d>=$minyear;$d--)
+                {
+                ?><option <?php if ($d==$found_end_year ) { ?>selected<?php } ?>><?php echo $d?></option><?php
+                }
+              ?>
+            </select>
+             <?php
+                }
+            else
+                {?>
+                <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_endyear"><?php echo $lang["year"]; ?></label>
+                <input size="5" name="<?php echo htmlspecialchars($name) ?>_endyear" id="<?php echo htmlspecialchars($name) ?>_endyear" type="text" value="<?php echo $found_end_year ?>"
+                    <?php
+                    if ($forsearch && $autoupdate)
+                        { ?>onChange="UpdateResultCount();"<?php }
+                    if($forsearch && !$forsearchbar)
+                        { ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php }
+                    else if (!$forsearch  && $edit_autosave)
+                        {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
+                <?php
+                }?>
+    <!--  date range search end date-->         
+    </div>
+    <div class="clearerleft"></div>
+    <?php if($daterange_edtf_support)
+		{?>
+        <a href="#" onclick="if(jQuery('#<?php echo $name ?>_edtf').prop('disabled')){jQuery('#<?php echo $name ?>_edtf').prop('disabled',false);jQuery('#<?php echo $name ?>_edtf').show();jQuery('.<?php echo $name ?>_range').hide();}else{jQuery('#<?php echo $name ?>_edtf').prop('disabled',true);jQuery('#<?php echo $name ?>_edtf').hide();jQuery('.<?php echo $name ?>_range').show();}return false;">
+            <i aria-hidden="true" class="fa fa-caret-right"></i>
+            <?php echo "EDTF"; ?>
+        </a>
+        <?php
+        }
+	}

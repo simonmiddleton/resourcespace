@@ -1,8 +1,8 @@
 <?php
-include "../include/db.php";
+include_once "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php"; if (!checkperm("s")) {exit ("Permission denied.");}
-include "../include/search_functions.php";
+include_once "../include/search_functions.php";
 include_once "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
 include_once dirname(__FILE__) . '/../include/render_functions.php';
@@ -56,8 +56,20 @@ function get_search_open_sections()
 
     return $opensections;
     }
-	
-$archive=getvalescaped("archive",0,true);
+
+$selected_archive_states=array();
+
+
+$archivechoices=getvalescaped("archive",getvalescaped("saved_archive",array(0)));
+if(!is_array($archivechoices)){$archivechoices=explode(",",$archivechoices);}
+foreach($archivechoices as $archivechoice)
+    {
+    if(is_numeric($archivechoice)) {$selected_archive_states[] = $archivechoice;}  
+    }
+
+$archive=implode(",",$selected_archive_states);
+$archiveonly=count(array_intersect($selected_archive_states,array(1,2)))>0;
+
 $starsearch=getvalescaped("starsearch","");	
 rs_setcookie('starsearch', $starsearch);
 
@@ -85,7 +97,6 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 	# Build a search query from the search form
 	$search=search_form_to_search_query($fields);
 	$search=refine_searchstring($search);
-	    
 	hook("moresearchcriteria");
 
 	if (getval("countonly","")!="")
@@ -147,7 +158,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 		# Log this			
 		daily_stat("Advanced search",$userref);
 
-		redirect($baseurl_short."pages/search.php?search=" . urlencode($search) . "&archive=" . $archive . "&restypes=" . urlencode($restypes));
+		redirect($baseurl_short."pages/search.php?search=" . urlencode($search) . "&archive=" . urlencode($archive) . "&restypes=" . urlencode($restypes));
 		}
 	}
 
@@ -155,8 +166,10 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 
 # Reconstruct a values array based on the search keyword, so we can pre-populate the form from the current search
 $search=@$_COOKIE["search"];
-$keywords=explode(",",$search);
+$keywords=split_keywords($search,false,false,false,false,true);
 $allwords="";$found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";
+$searched_nodes = array();
+
 foreach($advanced_search_properties as $advanced_search_property=>$code)
   {$$advanced_search_property="";}
  
@@ -173,14 +186,25 @@ else
 	{$restypes=get_search_default_restypes();}
   else
 		{$restypes=explode(",",getvalescaped("restypes",""));}
+
   for ($n=0;$n<count($keywords);$n++)
 	  {
-	  $keyword=$keywords[$n];
+	  $keyword=trim($keywords[$n]);
 	  if (strpos($keyword,":")!==false && substr($keyword,0,1)!="!")
 		  {
-		  $nk=explode(":",$keyword);
-		  $name=trim($nk[0]);
-		  $keyword=trim($nk[1]);
+            
+          if(substr($keyword,0,1) =="\"" && substr($keyword,-1,1) == "\"")
+            {
+            $nk=explode(":",substr($keyword,1,-1));
+            $name=trim($nk[0]);
+            $keyword = "\"" . trim($nk[1]) . "\"";
+            }
+		  else
+            {
+            $nk=explode(":",$keyword);
+            $name=trim($nk[0]);
+            $keyword=trim($nk[1]);
+            }
 		  if ($name=="day") {$found_day=$keyword;}
 		  if ($name=="month") {$found_month=$keyword;}
 		  if ($name=="year") {$found_year=$keyword;}
@@ -207,13 +231,24 @@ else
 				$$fieldname=$propertyval;
 				}
 			  }
-		  } 
+		  }
+        // Nodes search
+        else if(strpos($keyword, NODE_TOKEN_PREFIX) !== false)
+            {
+            $nodes = resolve_nodes_from_string($keyword);
+
+            foreach($nodes as $node)
+                {
+                $searched_nodes[] = $node;
+                }
+            }
 	  else
 		  {
 		  if ($allwords=="") {$allwords=$keyword;} else {$allwords.=", " . $keyword;}
 		  }
 	  }
-   $allwords=str_replace(", ","",$allwords);
+
+    $allwords = str_replace(', ', ' ', $allwords);
   }
 
 function render_advanced_search_buttons() {
@@ -268,9 +303,9 @@ jQuery(document).ready(function()
 				jQuery('.ResTypeSection').hide();
 				
 				// Global has been checked, check all other checkboxes
-				jQuery('.SearchTypeItemCheckbox').attr('checked','checked');
+				jQuery('.SearchTypeItemCheckbox').prop('checked',true);
 				//Uncheck Collections
-				jQuery('#SearchCollectionsCheckbox').removeAttr('checked');	
+				jQuery('#SearchCollectionsCheckbox').prop('checked',false);	
 
 				jQuery('#AdvancedSearchTypeSpecificSectionGlobalHead').show();
 				if (getCookie('AdvancedSearchTypeSpecificSectionGlobal')!="collapsed"){jQuery("#AdvancedSearchTypeSpecificSectionGlobal").show();}				
@@ -283,8 +318,8 @@ jQuery(document).ready(function()
 
                 //Check Collections
 				selectedtypes=["Collections"];
-				jQuery('#SearchCollectionsCheckbox').attr('checked','checked');
-				jQuery('.tickboxcoll').attr('checked','checked');
+				jQuery('#SearchCollectionsCheckbox').prop('checked',true);
+				jQuery('.tickboxcoll').prop('checked',true);
 				
 
 				// Show collection search sections	
@@ -385,7 +420,7 @@ jQuery(document).ready(function()
     });
 </script>
 <div class="BasicsBox">
-<h1><?php echo ($archive==0)?$lang["advancedsearch"]:$lang["archiveonlysearch"]?> </h1>
+<h1><?php echo ($archiveonly)?$lang["archiveonlysearch"]:$lang["advancedsearch"];?> </h1>
 <p class="tight"><?php echo text("introtext")?></p>
 <form method="post" id="advancedform" action="<?php echo $baseurl ?>/pages/search_advanced.php" >
 <input type="hidden" name="submitted" id="submitted" value="yes">
@@ -546,7 +581,7 @@ if (!$daterange_search)
 <iframe src="blank.html" name="resultcount" id="resultcount" style="visibility:hidden;" width=1 height=1></iframe>
 <?php
 # Fetch fields
-$fields=get_advanced_search_fields($archive>0);
+$fields=get_advanced_search_fields($archiveonly);
 $showndivide=-1;
 
 # Preload resource types
@@ -595,8 +630,7 @@ for ($n=0;$n<count($fields);$n++)
 	if (getval("resetform","")!="") {$value="";}
 	
 	# Render this field
-	render_search_field($fields[$n],$value,true,"SearchWidth");
-
+    render_search_field($fields[$n], $value, true, 'SearchWidth', false, array(), $searched_nodes);
 	}
 ?>
 </div>
@@ -605,24 +639,49 @@ for ($n=0;$n<count($fields);$n++)
 global $advanced_search_archive_select;
 if($advanced_search_archive_select)
 	{
+    // Create an array for the archive states
+	$available_archive_states = array();
+	$all_archive_states=array_merge(range(-2,3),$additional_archive_states);
+	foreach($all_archive_states as $archive_state_ref)
+		{
+		if(!checkperm("z" . $archive_state_ref))
+			{
+			$available_archive_states[$archive_state_ref] = (isset($lang["status" . $archive_state_ref]))?$lang["status" . $archive_state_ref]:$archive_state_ref;
+			}
+		}
 	?>
-	<div class="Question">
+    
+    <div class="Question" id="question_archive" >
 		<label><?php echo $lang["status"]?></label>
-		<select class="SearchWidth" name="archive" id="archive" onChange="UpdateResultCount();">
-			<?php 
-			for ($n=-2;$n<=3;$n++)
-				{
-				if (!checkperm("z" . $n)) { ?><option value="<?php echo $n?>" <?php if ($archive==$n) { ?>selected<?php } ?>><?php echo $lang["status" . $n]?></option><?php }
-				}
-			foreach ($additional_archive_states as $additional_archive_state)
-				{
-				if (!checkperm("z" . $additional_archive_state)) { ?><option value="<?php echo $additional_archive_state?>" <?php if ($archive==$additional_archive_state) { ?>selected<?php } ?>><?php echo isset($lang["status" . $additional_archive_state])?$lang["status" . $additional_archive_state]:$additional_archive_state ?></option><?php }
-				}			
-			?>
-
-		</select>
-	</div>
-	<?php
+		<table cellpadding=2 cellspacing=0>
+            
+            <?php
+            foreach ($available_archive_states as $archive_state=>$state_name)
+                {
+                ?>
+                  <tr>
+                    <td width="1">
+                   <input type="checkbox"
+                          name="archive[]"
+                          value="<?php echo $archive_state; ?>"
+                          onChange="UpdateResultCount();"<?php 
+                       if (in_array($archive_state,$selected_archive_states))
+                           {
+                           ?>
+                           checked
+                           <?php
+                           }?>
+                       >
+               </td>
+               <td><?php echo htmlspecialchars(i18n_get_translated($state_name)); ?>&nbsp;</td>
+               </tr>
+                <?php  
+                }
+            ?>
+        </table>
+    </div>
+    <div class="clearerleft"></div>
+    <?php
 	}
 else
 	{?>
@@ -636,8 +695,7 @@ if($advanced_search_contributed_by)
     <div class="Question">
         <label><?php echo $lang["contributedby"]; ?></label>
         <?php
-        preg_match('/^![a-zA-Z]+(\d+)/',getval('search',''),$matches);
-        $single_user_select_field_value=isset($matches[1]) ? $matches[1] : '';
+        $single_user_select_field_value=$properties_contributor;
         $single_user_select_field_id='properties_contributor';
         $single_user_select_field_onchange='UpdateResultCount();';
     	$userselectclass="searchWidth";
@@ -664,12 +722,12 @@ if($advanced_search_contributed_by)
 function resetTickAllColl(){
 	var checkcount=0;
 	// set tickall to false, then check if it should be set to true.
-	jQuery('.rttickallcoll').attr('checked',false);
+	jQuery('.rttickallcoll').prop('checked',false);
 	var tickboxes=jQuery('#advancedform .tickboxcoll');
 		jQuery(tickboxes).each(function (elem) {
             if( tickboxes[elem].checked){checkcount=checkcount+1;}
         });
-	if (checkcount==tickboxes.length){jQuery('.rttickallcoll').attr('checked',true);}	
+	if (checkcount==tickboxes.length){jQuery('.rttickallcoll').prop('checked',true);}	
 }
 </script>
 <div class="Question">
@@ -679,7 +737,7 @@ $types=get_resource_types();
 $wrap=0;
 ?>
 <table><tr>
-<td align="middle"><input type='checkbox' class="rttickallcoll" id='rttickallcoll' name='rttickallcoll' <?php if (in_array("Collections",$restypes)) {?> checked <?php } ?> onclick='jQuery("#advancedform .tickboxcoll").each (function(index,Element) {jQuery(Element).attr("checked",(jQuery(".rttickallcoll").attr("checked")=="checked"));}); UpdateResultCount(); ' /><?php echo $lang['allcollectionssearchbar']?></td>
+<td align="middle"><input type='checkbox' class="rttickallcoll" id='rttickallcoll' name='rttickallcoll' <?php if (in_array("Collections",$restypes)) {?> checked <?php } ?> onclick='jQuery("#advancedform .tickboxcoll").each (function(index,Element) {jQuery(Element).prop("checked",(jQuery(".rttickallcoll").prop("checked")));}); UpdateResultCount(); ' /><?php echo $lang['allcollectionssearchbar']?></td>
 
 <?php
 $clear_function="";
@@ -714,7 +772,7 @@ if (!$collection_search_includes_resource_metadata)
 	 if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
 	 if (getval("resetform","")!="") {$value="";}
 	 # Render this field
-	 render_search_field($fields[$n],$value,true,"SearchWidth");
+	 render_search_field($fields[$n],$value,true,"SearchWidth",false,array(),$searched_nodes);
 	 }
    }
 ?>

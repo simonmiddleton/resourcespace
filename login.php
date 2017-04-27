@@ -1,9 +1,9 @@
 <?php
 include "include/db.php";
 include_once 'include/general.php';
-include "include/resource_functions.php";
-include "include/collections_functions.php";
-include "include/login_functions.php";
+include_once "include/resource_functions.php";
+include_once "include/collections_functions.php";
+include_once "include/login_functions.php";
 
 $url=getval("url","index.php");
 
@@ -227,7 +227,7 @@ if (!hook("replaceloginform")) {
   <form id="loginform" method="post" action="<?php echo $baseurl_short?>login.php" <?php if (!$login_autocomplete) { ?>AUTOCOMPLETE="OFF"<?php } ?><?php if($modal){?>onsubmit="return ModalPost(this,true,true);" <?php } ?>>
   <input type="hidden" name="langupdate" id="langupdate" value="">  
   <input type="hidden" name="url" value="<?php echo htmlspecialchars($url)?>">
-  <input type="hidden" name="modal" value="<?php echo $modal?>">
+  <input type="hidden" name="modal" value="<?php echo ($modal=="true"?"true":"") ?>">
 
 <?php if ($disable_languages==false) { ?>	
 		<div class="Question">
@@ -307,8 +307,9 @@ jQuery(document).ready(function() {
 
 <?php
 }
-hook("afterlogin");
-hook("responsivescripts");
+
+hook('afterlogin');
+
 //include_once "./include/footer.php"; AJAX Check Ignores Footer
 //Closing tags as the footer has not been included
 if($login_background)

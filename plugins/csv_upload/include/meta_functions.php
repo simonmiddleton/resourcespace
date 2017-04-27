@@ -8,6 +8,9 @@ function meta_get_map()		// returns array of [resource_type][table][attributes],
 	
 	foreach (sql_query("SELECT ref, upper(title) AS `name`, `type`, title as `nicename`, resource_type, (SELECT GROUP_CONCAT(`name` SEPARATOR ',') FROM node WHERE resource_type_field = resource_type_field.ref) AS `options`, required FROM resource_type_field WHERE name IS NOT NULL AND `name` <> '' AND (resource_type IN (SELECT ref FROM resource_type) OR resource_type = 0)") as $field)
 	{
+		# Get translated - support i18n - upload columns must be in user's local language.
+		$field['name']=trim(i18n_get_translated($field['name']));
+		
 		if (!isset($meta[$field['resource_type']])) $meta[$field['resource_type']]=array();		// make meta[<resource_type>] if does not exist			
 		$meta[$field['resource_type']][$field['name']]['remote_table']="resource_data";			// add meta[<resource_type>][<field>]=>attributes (remote_table,remote_ref,required,options):
 		$meta[$field['resource_type']][$field['name']]['remote_ref']=$field['ref'];

@@ -9,7 +9,6 @@ include_once '../include/file_functions.php';
 include_once '../include/general.php';
 include_once '../include/collections_functions.php';
 if (!function_exists('filter_var')){  //If running on PHP without filter_var, define a do-fer function, otherwise use php's filter_var (PHP > 5.2.0)
-echo "!!!";
     define(FILTER_SANITIZE_STRING, 1);
     define(FILTER_SANITIZE_EMAIL, 2);
     define(FILTER_VALIDATE_EMAIL, 3);
@@ -63,30 +62,8 @@ function ResolveKB($value) { //Copied from includes/db.php
         }
     return $value;
 }
-/**
- * Generates a random string of requested length.
- * 
- * Used to generate initial spider and scramble keys.
- * 
- * @param int $length Optional, default=12
- * @return string Random character string.
- */
-function generatePassword($length=12) { 
-    $vowels = 'aeuyAEUY';
-    $consonants = 'bdghjmnpqrstvzBDGHJLMNPQRSTVWXZ23456789';
-    $password = '';
-    $alt = time() % 2;
-    for ($i = 0; $i < $length; $i++) {
-        if ($alt == 1) {
-            $password .= $consonants[(rand() % strlen($consonants))];
-            $alt = 0;
-        } else {
-            $password .= $vowels[(rand() % strlen($vowels))];
-            $alt = 1;
-        }
-    }
-    return $password;
-}
+
+
 /**
  * Santitizes input from a given request key.
  * 
@@ -244,7 +221,7 @@ if(get_post_bool('ajax'))
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link href="../css/global.css?csr=5" rel="stylesheet" type="text/css" /> 
 <link href="../css/colour.css?csr=5" rel="stylesheet" type="text/css" /> 
-<script type="text/javascript" src="../lib/js/jquery-1.7.2.min.js"></script> 
+<script src="../lib/js/jquery-1.12.4.min.js"></script>
 
 <script type="text/javascript"> 
  
@@ -265,8 +242,8 @@ $('#tabs ul li a').click(function(){
 });
 $('#configstoragelocations').each(function(){
 	if (this.checked != true){
-		$('#storageurl').attr("disabled",true);
-		$('#storagedir').attr("disabled",true);
+		$('#storageurl').prop("disabled",true);
+		$('#storagedir').prop("disabled",true);
 	}
 	else {
 		$('#remstorageoptions').show();
@@ -279,8 +256,8 @@ $('#configstoragelocations').click(function(){
 		$('#remstorageoptions').slideDown("slow");
 	}
 	else{
-		$('#storageurl').attr("disabled",true);
-		$('#storagedir').attr("disabled",true);
+		$('#storageurl').prop("disabled",true);
+		$('#storagedir').prop("disabled",true);
 		$('#remstorageoptions').slideUp("slow");
 	}
 });
@@ -692,9 +669,9 @@ h2#dbaseconfig{  min-height: 32px;}
 
 		// Set random keys. These used to be requested on the setup form but there was no reason to ask the user for these.
                 $config_output .= "# Secure keys\r\n";
-                $config_output .= "\$spider_password = '" . generatePassword() . "';\r\n";
-                $config_output .= "\$scramble_key = '" . generatePassword() . "';\r\n";
-                $config_output .= "\$api_scramble_key = '" . generatePassword() . "';\r\n\r\n";
+                $config_output .= "\$spider_password = '" . generateSecureKey(64) . "';\r\n";
+                $config_output .= "\$scramble_key = '" . generateSecureKey(64) . "';\r\n";
+                $config_output .= "\$api_scramble_key = '" . generateSecureKey(64) . "';\r\n\r\n";
 		
 		$config_output .= "# Paths\r\n";
 		//Verify paths actually point to a useable binary
@@ -824,6 +801,12 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)))
     $suppress_headers = true;
 	include_once '../include/db.php';
 	check_db_structs();
+
+    // set the current upgrade level to current one specified in definitions.php
+    if(false == get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL))
+        {
+        set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL, SYSTEM_UPGRADE_LEVEL);
+        }
 
 	if(!empty($structural_plugin) && !$develmode)
 		{

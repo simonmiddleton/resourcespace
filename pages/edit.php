@@ -1,12 +1,13 @@
 <?php
-include "../include/db.php";
+include_once "../include/db.php";
 include_once "../include/general.php";
 include "../include/authenticate.php"; 
-include "../include/resource_functions.php";
+include_once "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
-include "../include/search_functions.php";
-include "../include/image_processing.php";
+include_once "../include/search_functions.php";
+include_once "../include/image_processing.php";
 include_once '../include/node_functions.php';
+include_once '../include/render_functions.php';
 
 # Editing resource or collection of resources (multiple)?
 $ref=getvalescaped("ref","",true);
@@ -23,6 +24,7 @@ if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 $modal=(getval("modal","")=="true");
 $single=getval("single","")!="" || getval("forcesingle","")!="";
+$disablenavlinks=getval("disablenav","")=="true";
 
 $archive=getvalescaped("archive",0,true); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
   
@@ -32,6 +34,19 @@ $uploadparams.="&redirecturl=" . urlencode(getval("redirecturl",""));
 
 $collection     = getvalescaped('collection', '', true);
 $collection_add = getvalescaped('collection_add', '');
+
+# Are we in upload review mode?
+$upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collection-" . $userref);
+if ($upload_review_mode && $ref=="")
+  {
+  # Set the collection and ref if not already set.
+  $collection=0-$userref;
+  # Start reviewing at the first resource.
+  $collection_contents=do_search("!collection" . $collection);
+  # Set the resource to the first ref number. If the collection is empty then tagging is complete. Go to the recently added page.
+  if (isset($collection_contents[0]["ref"])) {$ref=$collection_contents[0]["ref"];} else {redirect("pages/search.php?search=!last1000");}
+  }
+
 
 global $merge_filename_with_title;
 if($merge_filename_with_title && $ref < 0) {
@@ -56,7 +71,7 @@ if($merge_filename_with_title && $ref < 0) {
 
 global $tabs_on_edit;
 $collapsible_sections=true;
-if($tabs_on_edit){$collapsible_sections=false;}
+if($tabs_on_edit || $upload_review_mode){$collapsible_sections=false;}
 
 $errors=array(); # The results of the save operation (e.g. required field messages)
 
@@ -147,6 +162,9 @@ $setarchivestate = getvalescaped('status', $resource["archive"], TRUE);
 
 # Allow alternative configuration settings for this resource type.
 resource_type_config_override($resource["resource_type"]);
+
+# File readonly?
+$resource_file_readonly=resource_file_readonly($ref);
 
 # If upload template, check if the user has upload permission.
 if ($ref<0 && !(checkperm("c") || checkperm("d")))
@@ -275,7 +293,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 
         if ($upload_collection_name_required)
             {
-            if (getvalescaped("entercolname","")=="" && getval("collection_add","")==-1)
+            if (getvalescaped("entercolname","")=="" && getval("collection_add","")=="new")
               { 
               if (!is_array($save_errors)){$save_errors=array();} 
               $save_errors['collectionname']=$lang["requiredfield"];
@@ -288,6 +306,13 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             {
             # Log this
             daily_stat("Resource edit",$ref);
+            if ($upload_review_mode)
+              {
+              # Drop this resource from the collection and redirect thus picking the next resource.
+              remove_resource_from_collection($ref,0-$userref);refresh_collection_frame();
+              ?><script>CentralSpaceLoad('<?php echo $baseurl_short . "pages/edit.php?upload_review_mode=true" ?>',true);</script>
+              <?php exit();
+              }
             if (!hook('redirectaftersave') && !$modal)
               {
               redirect($baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&search=" . urlencode($search) . "&offset=" . urlencode($offset) . "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&refreshcollectionframe=true");
@@ -301,7 +326,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
               if ((getval("noupload","")!="")&&(getval("save","")!=""))
                 {
                 $ref=copy_resource(0-$userref);
-                if($collection_add!="")
+                if(is_numeric($collection_add))
                     {
                     add_resource_to_collection($ref, $collection_add,false,"",$resource_type);
                     set_user_collection($userref, $collection_add);
@@ -350,7 +375,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 if (getval("autosave","")!="") {exit("SAVED");}
 
 
-if (getval("tweak","")!="")
+if (getval("tweak","")!="" && !$resource_file_readonly)
    {
    $tweak=getval("tweak","");
    switch($tweak)
@@ -368,17 +393,18 @@ if (getval("tweak","")!="")
          tweak_preview_images($ref,0,0.7,$resource["preview_extension"]);
          break;
       case "restore":
-         sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
-         if ($enable_thumbnail_creation_on_upload)
+		delete_previews($resource);
+        sql_query("update resource set has_image=0, preview_attempts=0 WHERE ref='" . $ref . "'");
+        if ($enable_thumbnail_creation_on_upload)
             {
             create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
             refresh_collection_frame();
             }
-         else
+        else
             {
             sql_query("update resource set preview_attempts=0, has_image=0 where ref='$ref'");
             }
-         break;
+        break;
       }
    hook("moretweakingaction", "", array($tweak, $ref, $resource));
    # Reload resource data.
@@ -419,7 +445,7 @@ jQuery(document).ready(function()
          }
          else
          {
-            e.preventDefault();
+            event.preventDefault();
             if(jQuery('#mainform'))
             {
                jQuery('.AutoSaveStatus').html('<?php echo $lang["saving"] ?>');
@@ -467,7 +493,7 @@ function ShowHelp(field)
 
  jQuery(document).ready(function() {
     jQuery('#collection_add').change(function (){
-      if(jQuery('#collection_add').val()==-1){
+      if(jQuery('#collection_add').val()=='new'){
         jQuery('#collectioninfo').fadeIn();
      } 
      else {
@@ -524,16 +550,22 @@ function AutoSave(field)
 # Resource next / back browsing.
 function EditNav() # Create a function so this can be repeated at the end of the form also.
 {
-  global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes;
+  global $baseurl_short,$ref,$search,$offset,$order_by,$sort,$archive,$lang,$modal,$restypes,$disablenavlinks,$upload_review_mode;
   ?>
-  <div class="backtoresults">
-  <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;go=previous&amp;restypes=<?php echo $restypes; ?>"></a>
-  
-  <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php<?php if (strpos($search,"!")!==false) {?>?search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;restypes=<?php echo $restypes; ?><?php } ?>"><?php echo $lang["viewallresults"]?></a>
-  
-  <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;go=next&amp;restypes=<?php echo $restypes; ?>"></a>
-  
-  <?php if ($modal) { ?>
+  <div class="backtoresults"> 
+  <?php
+  if(!$disablenavlinks && !$upload_review_mode)
+    {
+    ?>
+    <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;go=previous&amp;restypes=<?php echo $restypes; ?>"></a>
+    
+    <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php<?php if (strpos($search,"!")!==false) {?>?search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;restypes=<?php echo $restypes; ?><?php } ?>"><?php echo $lang["viewallresults"]?></a>
+    
+    <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset) ?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>&amp;go=next&amp;restypes=<?php echo $restypes; ?>"></a>
+    
+    <?php
+    }
+  if ($modal) { ?>
 &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;restypes=<?php echo $restypes; ?>" onClick="return CentralSpaceLoad(this);"></a>
 &nbsp;<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();"></a>
 <?php } ?>
@@ -542,7 +574,7 @@ function EditNav() # Create a function so this can be repeated at the end of the
 }
 function SaveAndClearButtons($extraclass="")
    { 
-   global $lang,$multiple,$ref,$clearbutton_on_edit;
+   global $lang,$multiple,$ref,$clearbutton_on_edit,$upload_review_mode;
    ?>
    <div class="QuestionSubmit <?php echo $extraclass ?>">
    <?php
@@ -552,7 +584,7 @@ function SaveAndClearButtons($extraclass="")
       <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
       <?php
       } ?>
-      <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo ($ref>0)?$lang["save"]:$lang["next"]?>&nbsp;&nbsp;" /><br><br>
+      <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo ($ref>0)?($upload_review_mode?$lang["saveandnext"]:$lang["save"]):$lang["next"]?>&nbsp;&nbsp;" /><br><br>
      <div class="clearerleft"> </div>
      </div>
    <?php 
@@ -579,7 +611,7 @@ if(0 > $ref)
 ?>
 
 <form method="post" action="<?php echo $form_action; ?>" id="mainform" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
-
+<input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
    <div class="BasicsBox">
     
       <input type="hidden" name="submitted" value="true">
@@ -596,7 +628,7 @@ if(0 > $ref)
       } 
    elseif ($ref>0)
       {
-      if (!hook('replacebacklink') && !$modal) 
+      if (!hook('replacebacklink') && !$modal && !$upload_review_mode) 
          {?>
          <p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p><?php
          }
@@ -605,21 +637,27 @@ if(0 > $ref)
          <div class="RecordHeader">
           <?php
          # Draw nav
-         if (!$multiple&&!hook("dontshoweditnav")) { EditNav(); }
-         ?>
-         <h1 id="editresource"><?php echo $lang["editresource"]?></h1>
+         if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
          
+         if (!$upload_review_mode) { ?>
+         <h1 id="editresource"><?php echo $lang["editresource"]?></h1>
+         <?php } else { ?>
+        <h1 id="editresource"><?php echo $lang["refinemetadata"]?></h1>
+        <?php } ?>
         
          </div><!-- end of RecordHeader -->
          <?php
-         if ($edit_show_save_clear_buttons_at_top) { SaveAndClearButtons("NoPaddingSaveClear");}
-         ?>
-         <div class="Question" id="resource_ref_div" style="border-top:none;">
-            <label><?php echo $lang["resourceid"]?></label>
-            <div class="Fixed"><?php echo urlencode($ref) ?></div>
-            <div class="clearerleft"> </div>
-         </div>
-         <?php 
+         if ($edit_show_save_clear_buttons_at_top || $upload_review_mode) { SaveAndClearButtons("NoPaddingSaveClear");}
+         
+         if (!$upload_review_mode)
+            { ?>
+            <div class="Question" id="resource_ref_div" style="border-top:none;">
+               <label><?php echo $lang["resourceid"]?></label>
+               <div class="Fixed"><?php echo urlencode($ref) ?></div>
+               <div class="clearerleft"> </div>
+            </div>
+            <?php
+            }
          }
       hook("custompermshowfile");
       if ((!$is_template && !checkperm("F*"))||$custompermshowfile) 
@@ -681,7 +719,7 @@ if(0 > $ref)
             }
 
         // Allow to upload only if resource is not a data only type
-        if(0 < $ref && !in_array($resource['resource_type'], $data_only_resource_types))
+        if (0 < $ref && !in_array($resource['resource_type'], $data_only_resource_types) && !$resource_file_readonly && !$upload_review_mode)
             {
             ?>
             <a href="<?php echo $baseurl_short?>pages/upload_<?php echo $replace_upload_type ?>.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>&replace_resource=<?php echo urlencode($ref)  ?>&resource_type=<?php echo $resource['resource_type']?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (($resource["file_extension"]!="")?$lang["replacefile"]:$lang["uploadafile"]) ?></a>
@@ -691,11 +729,11 @@ if(0 > $ref)
             {hook("afterreplacefile");} 
          else 
             {hook("afteruploadfile");}
-         if (! $disable_upload_preview) 
+         if (!$disable_upload_preview && !$resource_file_readonly && !$upload_review_mode) 
             { ?>
             <br />
      <a href="<?php echo $baseurl_short?>pages/upload_preview.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["uploadpreview"]?></a><?php } ?>
-     <?php if (!$disable_alternative_files && !checkperm('A')) { ?><br />
+     <?php if (!$disable_alternative_files && !checkperm('A') && !$upload_review_mode) { ?><br />
      <a href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["managealternativefiles"]?></a><?php } ?>
      <?php if ($allow_metadata_revert){?><br />
      <a href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&exif=true&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return confirm('<?php echo $lang["confirm-revertmetadata"]?>');">&gt; 
@@ -708,7 +746,7 @@ if(0 > $ref)
   <?php }
   hook("beforeimagecorrection");
 
-  if (!checkperm("F*")) { ?>
+  if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode) { ?>
   <div class="Question" id="question_imagecorrection">
    <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
    <option value=""><?php echo $lang["select"]?></option>
@@ -970,7 +1008,7 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
 <?php   
 }
 
-if ($edit_upload_options_at_top){include '../include/edit_upload_options.php';}
+if ($edit_upload_options_at_top || $upload_review_mode){include '../include/edit_upload_options.php';}
 
 
 $use=$ref;
@@ -980,27 +1018,30 @@ $use=$ref;
 $originalref=$use;
 
 if (getval("copyfrom","")!="")
-{
-    # Copy from function
+  {
+  # Copy from function
   $copyfrom=getvalescaped("copyfrom","");
   $copyfrom_access=get_resource_access($copyfrom);
 
-    # Check access level
-    if ($copyfrom_access!=2) # Do not allow confidential resources (or at least, confidential to that user) to be copied from
+  # Check access level
+  if ($copyfrom_access!=2) # Do not allow confidential resources (or at least, confidential to that user) to be copied from
     {
-       $use=$copyfrom;
-       $original_fields=get_resource_field_data($ref,$multiple,true,-1,"",$tabs_on_edit);
+    $use=$copyfrom;
+    $original_fields=get_resource_field_data($ref,$multiple,true,-1,"",$tabs_on_edit);
+    $original_nodes = get_resource_nodes($ref);
     }
- }
+  }
 
- if (getval("metadatatemplate","")!="")
- {
+if (getval("metadatatemplate","")!="")
+  {
   $use=getvalescaped("metadatatemplate","");
   $original_fields=get_resource_field_data($ref,$multiple,true,-1,"",$tabs_on_edit);
-}
+  $original_nodes = get_resource_nodes($ref);
+  }
 
 # Load resource data
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
+$all_selected_nodes = get_resource_nodes($use);
 
 # if this is a metadata template, set the metadata template title field at the top
 if (isset($metadata_template_resource_type)&&(isset($metadata_template_title_field)) && $resource["resource_type"]==$metadata_template_resource_type){
@@ -1023,317 +1064,6 @@ $fields=$newfields;
 }
 
 $required_fields_exempt=array(); # new array to contain required fields that have not met the display condition
-
-function is_field_displayed($field)
-{
-  global $ref, $resource;
-
-    # Field is an archive only field
-  return !(($resource["archive"]==0 && $field["resource_type"]==999)
-    # Field has write access denied
-    || (checkperm("F*") && !checkperm("F-" . $field["ref"])
-     && !($ref < 0 && checkperm("P" . $field["ref"])))
-    || checkperm("F" . $field["ref"])
-    # Upload only field
-    || ($ref < 0 && $field["hide_when_uploading"] && $field["required"]==0)
-    || hook('edithidefield', '', array('field' => $field))
-    || hook('edithidefield2', '', array('field' => $field)));
-}
-
-# Allows language alternatives to be entered for free text metadata fields.
-function display_multilingual_text_field($n, $field, $translations)
-  {
-  global $language, $languages, $lang;
-  ?>
-  <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo $lang["showtranslations"]?>';} else {l.style.display='block';this.innerHTML='<?php echo $lang["hidetranslations"]?>';} return false;"><?php echo $lang["showtranslations"]?></a></p>
-  <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
-     <?php
-     reset($languages);
-     foreach ($languages as $langkey => $langname)
-     {
-       if ($language!=$langkey)
-       {
-         if (array_key_exists($langkey,$translations)) {$transval=$translations[$langkey];} else {$transval="";}
-         ?>
-         <tr>
-            <td nowrap valign="top"><?php echo htmlspecialchars($langname)?>&nbsp;&nbsp;</td>
-
-            <?php
-            if ($field["type"]==0)
-            {
-              ?>
-              <td><input type="text" class="stdwidth" name="multilingual_<?php echo $n?>_<?php echo $langkey?>" value="<?php echo htmlspecialchars($transval)?>"></td>
-              <?php
-           }
-           else
-           {
-              ?>
-              <td><textarea rows=6 cols=50 name="multilingual_<?php echo $n?>_<?php echo $langkey?>"><?php echo htmlspecialchars($transval)?></textarea></td>
-              <?php
-           }
-           ?>
-        </tr>
-        <?php
-     }
-  }
-  ?></table><?php
-  }
-
-function display_field($n, $field, $newtab=false)
-  {
-  global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
-  $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
-  $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search;
-
-  // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
-  $is_search=false;
-  
-  $name="field_" . $field["ref"];
-  $value=$field["value"];
-  $value=trim($value);
-
-  if ($field["omit_when_copying"] && $use!=$ref)
-    {
-    # Omit when copying - return this field back to the value it was originally, instead of using the current value which has been fetched from the new resource.
-    reset($original_fields);
-    foreach ($original_fields as $original_field)
-      {
-      if ($original_field["ref"]==$field["ref"]) {$value=$original_field["value"];}
-      }
-    }
-
-  $displaycondition=true;
-  if ($field["display_condition"]!="")
-    {
-    #Check if field has a display condition set
-    $displaycondition=check_display_condition($n,$field);
-    }
-
-  if ($multilingual_text_fields)
-    {
-    # Multilingual text fields - find all translations and display the translation for the current language.
-    $translations=i18n_get_translations($value);
-    if (array_key_exists($language,$translations)) {$value=$translations[$language];} else {$value="";}
-    }
-
-  if ($multiple && (getval("copyfrom","")=="" || str_replace(array(" ",","),"",$value)=="")) {$value="";} # Blank the value for multi-edits  unless copying data from resource.
-
-  if ($field["resource_type"]!=$lastrt && $lastrt!=-1 && $collapsible_sections)
-      {
-      ?></div><h2 class="CollapsibleSectionHead" id="resource_type_properties"><?php echo htmlspecialchars(get_resource_type_name($field["resource_type"]))?> <?php echo $lang["properties"]?></h2><div class="CollapsibleSection" id="ResourceProperties<?php if ($ref==-1) echo "Upload"; ?><?php echo $field["resource_type"]; ?>Section"><?php
-      }
-    $lastrt=$field["resource_type"];
-
-    # Blank form if 'reset form' has been clicked.
-    if (getval("resetform","")!="") {$value="";}
-
-    # If config option $blank_edit_template is set, always show a blank form for user edit templates.
-    if ($ref<0 && $blank_edit_template && getval("submitted","")=="") {$value="";}
-
-    /****************************** Errors on saving ***************************************/
-    $field_save_error = FALSE;
-    if (isset($show_error) && isset($save_errors))
-      {
-      if(array_key_exists($field['ref'], $save_errors))
-        {
-        $field_save_error = TRUE;
-        }
-      }
-     
-    if ($multiple && !hook("replace_edit_all_checkbox","",array($field["ref"])))
-      {
-      # Multiple items, a toggle checkbox appears which activates the question
-      ?>
-      <div class="edit_multi_checkbox"><input name="editthis_<?php echo htmlspecialchars($name) ?>" id="editthis_<?php echo $n?>" type="checkbox" value="yes"<?php if($field_save_error){?> checked<?php }?> onClick="var q=document.getElementById('question_<?php echo $n?>');var m=document.getElementById('modeselect_<?php echo $n?>');var f=document.getElementById('findreplace_<?php echo $n?>');if (this.checked) {q.style.display='block';m.style.display='block';} else {q.style.display='none';m.style.display='none';f.style.display='none';document.getElementById('modeselectinput_<?php echo $n?>').selectedIndex=0;}" <?php if(getval("copyfrom","")!="" && $value!=""){echo " checked" ;} ?>>&nbsp;<label for="editthis<?php echo $n?>"><?php echo htmlspecialchars($field["title"]) ?></label></div><!-- End of edit_multi_checkbox -->
-      <?php
-      }
-      
-  if ($multiple && !hook("replace_edit_all_mode_select","",array($field["ref"])))
-      {
-      # When editing multiple, give option to select Replace All Text or Find and Replace
-      ?>
-      <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
-      <label for="modeselectinput"><?php echo $lang["editmode"]?></label>
-      <select id="modeselectinput_<?php echo $n?>" name="modeselect_<?php echo $field["ref"]?>" class="stdwidth" onChange="var fr=document.getElementById('findreplace_<?php echo $n?>');var q=document.getElementById('question_<?php echo $n?>');<?php if ($field["type"]==7){?>if (this.value=='RM'){branch_limit_field['field_<?php echo $field["ref"]?>']=1;}else{branch_limit_field['field_<?php echo $field["ref"]?>']=0;}<?php } ?>if (this.value=='FR') {fr.style.display='block';q.style.display='none';} else {fr.style.display='none';q.style.display='block';}<?php hook ("edit_all_mode_js"); ?>">
-      <option value="RT"><?php echo $lang["replacealltext"]?></option>
-      <?php
-      if (in_array($field["type"], array("0","1","5","8")))
-        {
-        # Find and replace appies to text boxes only.
-        ?>
-        <option value="FR" <?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo $lang["findandreplace"]?></option>
-        <?php
-        }
-      if (in_array($field["type"], array("0","1","5","8")))
-        {
-        # Prepend applies to text boxes only.
-        ?>
-        <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
-        <?php
-        }
-      if (in_array($field["type"], array("0","1","2","5","7","8","9")))
-        {
-        # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields only.
-        ?>
-        <option value="AP"<?php if(getval("modeselect_" . $field["ref"],"")=="AP"){?> selected<?php } ?>><?php echo $lang["appendtext"]?></option>
-        <?php
-        }
-      if (in_array($field["type"], array("0","1","2","3","5","7","9")))
-        {
-        # Remove applies to text boxes, checkboxes, dropdowns, category trees and dynamic keywords only. 
-        ?>
-        <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
-        <?php
-        }
-        hook ("edit_all_extra_modes");
-        ?>
-        </select>
-      </div><!-- End of modeselect_<?php echo $n?> -->
-
-      <div class="Question" id="findreplace_<?php echo $n?>" style="display:none;border-top:none;">
-        <label>&nbsp;</label>
-        <?php echo $lang["find"]?> <input type="text" name="find_<?php echo $field["ref"]?>" class="shrtwidth">
-        <?php echo $lang["andreplacewith"]?> <input type="text" name="replace_<?php echo $field["ref"]?>" class="shrtwidth">
-      </div><!-- End of findreplace_<?php echo $n?> -->
-
-      <?php hook ("edit_all_after_findreplace","",array($field,$n)); 
-      }
-      ?>
-
-      <div class="Question <?php if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n?>" <?php
-      if (($multiple && !$field_save_error) || !$displaycondition || $newtab)
-        {?>style="border-top:none;<?php 
-        if (($multiple && $value=="") || !$displaycondition) # Hide this
-        {
-        ?>
-        display:none;
-        <?php
-        }
-        ?>"<?php
-        }
-     ?>>
-     <?php 
-     $labelname = $name;
-
-     // Add _selector to label so it will keep working:
-     if($field['type'] == 9)
-      {
-      $labelname .= '_selector';
-      }
-
-      // Add -d to label so it will keep working
-     if($field['type'] == 4)
-        {
-        $labelname .= '-d';
-        }
-        ?>
-     <label for="<?php echo htmlspecialchars($labelname)?>" ><?php if (!$multiple) {?><?php echo htmlspecialchars($field["title"])?> <?php if (!$is_template && $field["required"]==1) { ?><sup>*</sup><?php } ?><?php } ?></label>
-
-     <?php
-    # Autosave display
-     if ($edit_autosave || $ctrls_to_save)
-      {
-      ?>
-      <div class="AutoSaveStatus">
-      <span id="AutoSaveStatus<?php echo $field["ref"] ?>" style="display:none;"></span>
-      </div>
-      <?php
-      } 
-    # Define some Javascript for help actions (applies to all fields)
-     $help_js="onBlur=\"HideHelp(" . $field["ref"] . ");return false;\" onFocus=\"ShowHelp(" . $field["ref"] . ");return false;\"";
-
-    #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
-     $modified_field_type="";
-     $modified_field_type=(hook("modifyfieldtype"));
-     if ($modified_field_type){$field["type"]=$modified_field_type-1;}
-
-     hook("addfieldextras");
-    # ----------------------------  Show field -----------------------------------
-     $type=$field["type"];
-    if ($type=="") {$type=0;} # Default to text type.
-    if (!hook("replacefield","",array($field["type"],$field["ref"],$n)))
-    	{
-		global $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
-		include "edit_fields/" . $type . ".php";
-		}
-
-    # ----------------------------------------------------------------------------
-
-    # Display any error messages from previous save
-    if (array_key_exists($field["ref"],$errors))
-      {
-       ?>
-       <div class="FormError">!! <?php echo $errors[$field["ref"]]?> !!</div>
-       <?php
-      }
-
-    if (trim($field["help_text"]!=""))
-     {
-        # Show inline help for this field.
-        # For certain field types that have no obvious focus, the help always appears.
-       ?>
-       <div class="FormHelp" style="padding:0;<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?> display:none;<?php } else { ?> clear:left;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"],false)))?></div></div>
-       <?php
-     }
-
-    # If enabled, include code to produce extra fields to allow multilingual free text to be entered.
-    if ($multilingual_text_fields && ($field["type"]==0 || $field["type"]==1 || $field["type"]==5))
-      {
-       display_multilingual_text_field($n, $field, $translations);
-      }
-    
-    if(($embedded_data_user_select || (isset($embedded_data_user_select_fields) && in_array($field["ref"],$embedded_data_user_select_fields))) && ($ref<0 && !$multiple))
-    {
-      ?>
-      <table id="exif_<?php echo $field["ref"] ?>" class="ExifOptions" cellpadding="3" cellspacing="3" <?php if ($embedded_data_user_select){?> style="display: none;" <?php } ?>>                    
-         <tbody>
-           <tr>        
-             <td>
-                <?php echo "&nbsp;&nbsp;" . $lang["embeddedvalue"] . ": " ?>
-             </td>
-             <td width="10" valign="middle">
-               <input type="radio" id="exif_extract_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="yes" checked>
-            </td>
-            <td align="left" valign="middle">
-               <label class="customFieldLabel" for="exif_extract_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_extract_option"] ?></label>
-            </td>
-
-
-            <td width="10" valign="middle">
-               <input type="radio" id="no_exif_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="no">
-            </td>
-            <td align="left" valign="middle">
-               <label class="customFieldLabel" for="no_exif_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_donot_extract_option"] ?></label>
-            </td>
-
-
-            <td width="10" valign="middle">
-               <input type="radio" id="exif_append_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="append">
-            </td>
-            <td align="left" valign="middle">
-               <label class="customFieldLabel" for="exif_append_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_append_option"] ?></label>
-            </td>
-
-
-            <td width="10" valign="middle">
-               <input type="radio" id="exif_prepend_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="prepend">
-            </td>
-            <td align="left" valign="middle">
-               <label class="customFieldLabel" for="exif_prepend_<?php echo $field["ref"] ?>"><?php echo $lang["embedded_metadata_prepend_option"] ?></label>
-            </td>
-
-         </tr>
-      </tbody>
-   </table>        
-   <?php
-  }
-  ?>
-  <div class="clearerleft"> </div>
-  </div><!-- end of question_<?php echo $n?> div -->
-  <?php     
-  
-  hook('afterfielddisplay', '', array($n, $field));
-  }
 
 ?>
 </div>
@@ -1362,16 +1092,21 @@ if($collapsible_sections)
  if ($display_any_fields)
  {
     # "copy data from" feature
-  if ($enable_copy_data_from && !checkperm("F*"))
+  if ($enable_copy_data_from && !checkperm("F*") && !$upload_review_mode)
     { ?>
  <div class="Question" id="question_copyfrom">
     <label for="copyfrom"><?php echo $lang["batchcopyfrom"]?></label>
     <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
-    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="event.preventDefault();CentralSpacePost(document.getElementById('mainform'),true);">
+    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true);">
     <input type="submit" name="save" value="Save">
  </div><!-- end of question_copyfrom -->
  <?php
-} ?><br /><br /><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
+} ?>
+
+<?php if (!$upload_review_mode) { ?>
+<br /><br /><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
+ } 
+
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
 
@@ -1802,7 +1537,7 @@ if ($multiple && !$disable_geocoding)
 {
     # Multiple method of changing location.
  ?>
-</div><h2 <?php echo ($collapsible_sections)?" class=\"CollapsibleSectionHead\"":""?> id="location_title"><?php echo $lang["location-title"] ?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="LocationSection<?php if ($ref==-1) echo "Upload"; ?>">
+</div><h2 <?php echo ($collapsible_sections)?" class=\"CollapsibleSectionHead\"":""?> id="location_title"><?php echo $lang["location-title"] ?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="LocationSection<?php if ($ref=="new") echo "Upload"; ?>">
 <div><input name="editlocation" id="editlocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editlocation_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editlocation"><?php echo $lang["location"] ?></label></div>
 <div class="Question" style="display:none;" id="editlocation_question">
   <label for="location"><?php echo $lang["latlong"]?></label>
@@ -1851,31 +1586,11 @@ if (!$edit_upload_options_at_top){include '../include/edit_upload_options.php';}
 <?php
 if(!hook('replacesubmitbuttons'))
     {
-    ?>
-    <div class="QuestionSubmit">
-    <?php
-    global $clearbutton_on_upload;
-    if(($clearbutton_on_upload && $ref < 0 && !$multiple) || ($ref > 0 && $clearbutton_on_edit))
-        {
-        ?>
-        <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
-        <?php
-        }
-
-        $save_btn_value = (0 < $ref) ? $lang['save'] : $lang['next'];
-        if(0 > $ref && in_array($resource['resource_type'], $data_only_resource_types))
-            {
-            $save_btn_value = $lang['create'];
-            }
-        ?>
-        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" /><br><br>
-        <div class="clearerleft"> </div>
-    </div>
-    <?php 
+SaveAndClearButtons("NoPaddingSaveClear");
     }
    
 # Duplicate navigation
-if (!$multiple && !$modal && $ref>0 &&!hook("dontshoweditnav")) {EditNav();}
+if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav")) {EditNav();}
 
 if(!$is_template && $show_required_field_label)
     {

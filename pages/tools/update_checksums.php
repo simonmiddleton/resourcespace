@@ -9,8 +9,13 @@
 #
 $cwd = dirname(__FILE__);
 include "$cwd/../../include/db.php";
-//include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include_once "$cwd/../../include/general.php";
+include "$cwd/../../include/authenticate.php";
+if(!checkperm('a'))
+    {
+    header('HTTP/1.1 401 Unauthorized');
+    exit($lang['error-permissiondenied']);
+    }
 include "$cwd/../../include/image_processing.php";
 include "$cwd/../../include/resource_functions.php";
 

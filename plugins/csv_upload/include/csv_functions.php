@@ -6,7 +6,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 	// foreach($resource_types as $restype) {echo $restype. ", ";}
 	// echo "Override:" . $override . "<br>";
 	// if($processcsv){echo "Processing CSV file<br>";}
-	
+
+    global $FIXED_LIST_FIELD_TYPES;
+
 	$file=fopen($filename,'r');
 	$line_count=0;
 
@@ -38,10 +40,16 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 
 	foreach (array_keys($resource_types) as $resource_type)		// check what fields are supported by comparing header fields with required fields per resource_type
 		{
-		if (!isset($meta[$resource_type])) continue;
+		if (!isset($meta[$resource_type])){
+            //this will facilitate csv uploads where there might exist a resource type with no resource type specific fields
+            array_push($messages,"Info: Found that resource_type {$resource_type}({$resource_types[$resource_type]}) has no resource type specific fields");
+            array_push($resource_types_allowed,$resource_type);
+            continue;
+            }
 		$missing_fields=array();
 		foreach ($meta[$resource_type] as $field_name=>$field_attributes)
 			{
+
 			if ($override!="" && $resource_type_filter!=$resource_type && $resource_type!=0)
 				{
 				continue;
@@ -64,7 +72,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 				array_push($messages,"Warning: resource_type {$resource_type}({$resource_types[$resource_type]}) has missing field headers (" . implode(",",$missing_fields) . ") and will be ignored");
 				}
 		}
-		
+	
 	if ($override!="" && (array_search($resource_type_filter,$resource_types_allowed)===false))
 		{
 		array_push($messages, "Error: override resource_type {$resource_type_filter}({$resource_types[$resource_type_filter]}) not found or headers are incomplete");
@@ -253,8 +261,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 						continue;
 						}		
 					foreach($cell_values as $cell_actual_value)
-						{		
-						if (count($meta[$field_resource_type][$field_name]['options'])>0 && array_search(trim($cell_actual_value),$meta[$field_resource_type][$field_name]['options'])===false) // there are options but value does not match any of them
+						{
+						// there are options but value does not match any of them
+						if (count($meta[$field_resource_type][$field_name]['options'])>0 && array_search(trim($cell_actual_value),$meta[$field_resource_type][$field_name]['options'])===false)
 							{
 							if($meta[$field_resource_type][$field_name]['type']==9)
 								{
@@ -272,33 +281,24 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 							}
 						}
 					}				
-							
-				if($processcsv)	
-					{	
-					$cell_value = mb_convert_encoding($cell_value, "UTF-8");
-					// Prefix value with comma as this is required for indexing and rendering selected options
-					if (in_array($meta[$field_resource_type][$field_name]['type'], array(2,3,7,9,12)) && substr($cell_value,0,1) <> ',')
-						{
-						$cell_value = ','.$cell_value;
-						}
-					update_field($newref,$meta[$field_resource_type][$field_name]['remote_ref'],$cell_value);
-					
-					if($meta[$field_resource_type][$field_name]['type']==9 && $update_dynamic_field) 
-						{
-						debug("updating dynamic field options for field " . $field_name);
 
-                        /*
-                        sql_query("update resource_type_field set options='," . escape_check(implode(",",$meta[$field_resource_type][$field_name]['options'])) .
-                            "' where ref='" . $meta[$field_resource_type][$field_name]['remote_ref'] .  "'");
-                        */
-
-                        foreach ($meta[$field_resource_type][$field_name]['options'] as $option)
-                            {
-                            set_node(null,$meta[$field_resource_type][$field_name]['remote_ref'],$option,null,null);
-                            }
-
+                if($processcsv)
+                    {
+                    if(is_null($cell_value) || '' == $cell_value)
+                        {
+                        continue;
                         }
-					}
+
+                    $cell_value = mb_convert_encoding($cell_value, 'UTF-8');
+
+                    // Prefix value with comma as this is required for indexing and rendering selected options
+                    if(in_array($meta[$field_resource_type][$field_name]['type'], $FIXED_LIST_FIELD_TYPES) && substr($cell_value, 0, 1) <> ',')
+                        {
+                        $cell_value = ',' . $cell_value;
+                        }
+
+                    update_field($newref, $meta[$field_resource_type][$field_name]['remote_ref'], $cell_value);
+                    }
 				}
 				
 		ob_flush();	

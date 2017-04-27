@@ -21,7 +21,7 @@ if ($refinements[0]!=""){
 		}
 		
 		$search_title_element=str_replace(";"," OR ",$refinements[$n]);
-		if ($n!=0 || $archive!=0){$searchcrumbs.=" > </count> </count> </count> ";}
+		if ($n!=0 || !$archive_standard){$searchcrumbs.=" > </count> </count> </count> ";}
 		$searchcrumbs.="<a href=\"".$baseurl_short."pages/search.php?search=";
 		for ($x=0;$x<=$n;$x++){
 			$searchcrumbs.=urlencode($refinements[$x]);
@@ -62,7 +62,7 @@ if ($refinements[0]!=""){
 		}
 		
 		
-		$searchcrumbs.="&amp;order_by=" . htmlspecialchars($order_by) . "&amp;sort=" . htmlspecialchars($sort) . "&amp;offset=" . htmlspecialchars($offset) . "&amp;archive=" . htmlspecialchars($archive) . "&amp;sort=" . htmlspecialchars($sort) . "\" onClick='return CentralSpaceLoad(this,true);'>".$search_title_element."</a>";
+		$searchcrumbs.="&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;offset=" . urlencode($offset) . "&amp;archive=" . urlencode($archive) . "&amp;sort=" . urlencode($sort) . "\" onClick='return CentralSpaceLoad(this,true);'>".$search_title_element."</a>";
 	}
 }
 }
@@ -71,7 +71,8 @@ if (isset($collectiondata["theme"]) && strlen($collectiondata["theme"])>0)
 		{
 		$colaccessmode = $lang["themes"];
 		$is_theme=true;						
-		$theme_link="<a onClick='return CentralSpaceLoad(this,true);' href='" . $baseurl . "/pages/themes.php'>".$lang['themes']."</a> &gt; <a onClick='return CentralSpaceLoad(this,true);' href='".$baseurl . "/pages/themes.php?theme1=" . urlencode($collectiondata["theme"]) . "'>" . str_replace("*","",i18n_get_translated($collectiondata["theme"])) . "</a>";
+		$theme_link="<a onClick='return CentralSpaceLoad(this,true);' href='" . $baseurl . "/pages/themes.php'>".$lang['themes']."</a>" . "&nbsp;" . LINK_CARET .  "<a onClick='return CentralSpaceLoad(this,true);' href='".$baseurl . "/pages/themes.php?theme1=" . urlencode($collectiondata["theme"]) . "'>" . str_replace("*","",i18n_get_translated($collectiondata["theme"])) . "</a>";
+		
 		global $theme_category_levels;
 		for($x=2;$x<=$theme_category_levels;$x++)
 			{					
@@ -82,7 +83,7 @@ if (isset($collectiondata["theme"]) && strlen($collectiondata["theme"])>0)
 					{
 					$theme_link_url .= "&theme" . $l . "=" . urlencode($collectiondata['theme' . $l]);
 					}
-				$theme_link .= " &gt; <a onClick='return CentralSpaceLoad(this, true);' href='" . $theme_link_url . "'>" . str_replace("*","",i18n_get_translated($collectiondata['theme' . $x])) . "</a>";
+				$theme_link .="&nbsp;" .  LINK_CARET . "<a onClick='return CentralSpaceLoad(this, true);' href='" . $theme_link_url . "'>" . str_replace("*","",i18n_get_translated($collectiondata['theme' . $x])) . "</a>";
 				}
 			}			
 		}
@@ -130,9 +131,9 @@ if ($search_titles)
                 }
             } 
         hook("collectionsearchtitlemod");
-        $search_title.= '<div align="left"><h1><div class="searchcrumbs">'.($is_theme?$theme_link." > ":"").'<span id="coltitle'.$collection.'"><a '.$alt_text.' href="'.$baseurl_short.'pages/search.php?search=!collection'.$collection.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.i18n_get_collection_name($collectiondata).($display_user_and_access?" <span class='CollectionUser'>(".$colusername.$colaccessmode.")</span>":"").'</a></span>'.$searchcrumbs.'</div></h1></div>';
+        $search_title.= '<div align="left"><h1><div class="searchcrumbs">'.($is_theme?$theme_link."&nbsp;" . LINK_CARET:"").'<span id="coltitle'.$collection.'"><a '.$alt_text.' href="'.$baseurl_short.'pages/search.php?search=!collection'.$collection.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.i18n_get_collection_name($collectiondata).($display_user_and_access?" <span class='CollectionUser'>(".$colusername.$colaccessmode.")</span>":"").'</a></span>'.$searchcrumbs.'</div></h1></div>';
         }
-    elseif ($search=="" && $archive==0)
+    elseif ($search=="" && $archive_standard)
         {
         # Which resource types (if any) are selected?
         $searched_types_refs_array = explode(",", $restypes); # Searched resource types and collection types
@@ -291,7 +292,7 @@ if ($search_titles)
             $udata=get_user($cuser);
             $displayname=htmlspecialchars($udata["fullname"]);
             if (trim($displayname)=="") $displayname=htmlspecialchars($udata["username"]);
-            $search_title = '<h1 class="searchcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!contributions'.$cuser.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["contributedby"]." ".$displayname." - ".$lang["status".intval($archive)].'</a>'.$searchcrumbs.'</h1> ';
+            $search_title = '<h1 class="searchcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!contributions'.$cuser.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["contributedby"]." ".$displayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"") .'</a>'.$searchcrumbs.'</h1> ';
             }
         }
 	 elseif (substr($search,0,8)=="!hasdata")
@@ -300,9 +301,9 @@ if ($search_titles)
 		$fieldinfo=get_resource_type_field($fieldref);
 		$displayname=i18n_get_translated($fieldinfo["title"]);
 		if (trim($displayname)=="") $displayname=$fieldinfo["ref"];
-		$search_title = '<h1 class="searchcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!hasdata'.$fieldref.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["search_title_hasdata"]." ".$displayname." - ".$lang["status".intval($archive)].'</a>'.$searchcrumbs.'</h1> ';            
+		$search_title = '<h1 class="searchcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!hasdata'.$fieldref.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["search_title_hasdata"]." ".$displayname . ((strpos($archive,",")==false && !$archive_standard)?" - " . $lang["status".intval($archive)]:"" ).'</a>'.$searchcrumbs.'</h1> ';            
         }
-    else if ($archive!=0)
+    else if (!$archive_standard && strpos(",",$archive)===false) // Don't construct title if more than one archive state is selected
         {
         switch ($archive)
             {

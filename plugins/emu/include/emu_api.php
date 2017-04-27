@@ -18,7 +18,7 @@ require_once IMu::$lib . '/Terms.php';
 *
 * @package EMuAPI
 * @author  Alin Cota
-* @version 1.0
+* @version 1.1
 * @access  public
 */
 class EMuAPI
@@ -28,26 +28,96 @@ class EMuAPI
     protected $terms;
     protected $columns = array();
 
+    // Constants
+    private $_MIME_TYPES = array('application', 'audio', 'image', 'text', 'video');
+
 
     /**
-    * Initialises a connection to a EMu server
+    * Initialises a connection to an EMu server
     * 
-    * Creates a sessions for a given server address and port and sets
-    * a new Module and Terms object 
+    * Creates a sessions for a given server address and port 
     * 
     * @param string  $server_address KE EMu server address
     * @param integer $server_port    KE EMu server port to connect to
-    * @param string  $module         KE EMu table <=> Texpress database
     * 
     * @return void
     */
-    public function __construct($server_address, $server_port, $module)
+    public function __construct($server_address, $server_port)
         {
         $this->session = new IMuSession($server_address, $server_port);
-        $this->module  = new IMuModule($module, $this->session);
-        $this->terms   = new IMuTerms();
 
         return;
+        }
+
+
+    /**
+    * Set module
+    * 
+    * @param string $name
+    * 
+    * @return boolean
+    */
+    public function setModule($name)
+        {
+        if('' == $name)
+            {
+            return false;
+            }
+
+        $this->module  = new IMuModule($name, $this->session);
+        $this->terms   = null;
+        $this->columns = array();
+
+        return true;
+        }
+
+
+    /**
+    * Set terms
+    * 
+    * @param IMuTerms $terms
+    * 
+    * @return void
+    */
+    public function setTerms(IMuTerms $terms)
+        {
+        $this->terms = $terms;
+
+        return;
+        }
+
+
+    /**
+    * Search an EMu database using existing session in the current
+    * module using current search terms
+    * 
+    * @return integer An estimate of number of records found
+    */
+    public function runSearch()
+        {
+        // We require a module and terms, at least to run a search
+        if(is_null($this->module) || is_null($this->terms))
+            {
+            trigger_error('Could not run a search in EMu because the EMuAPI object does not have a module or search terms set!');
+            }
+
+        return $this->module->findTerms($this->terms);
+        }
+
+
+    /**
+    * Get search results
+    * 
+    * @uses EMuAPI::getResults()
+    * 
+    * @param integer $offset
+    * @param integer $limit  Use default value (-1) to get all results back
+    * 
+    * @return array
+    */
+    public function getSearchResults($offset = 0, $limit = -1)
+        {
+        return $this->getResults('object_fields', $offset, $limit);
         }
 
 
@@ -121,6 +191,29 @@ class EMuAPI
 
 
     /**
+    * Get EMu Multimedia resource object based on a multimedia IRN
+    * 
+    * @param integer $irn     Multimedia resource IRN
+    * @param array   $columns Optional, columns to fetch from EMu
+    * 
+    * @return array
+    */
+    public function getObjectMultimediaByIrn($irn, array $columns = array('resource'))
+        {
+        $multimedia_module = new IMuModule('emultimedia', $this->session);
+
+        $hits = $multimedia_module->findKey($irn);
+
+        if(0 == $hits)
+            {
+            return array();
+            }
+
+        return $multimedia_module->fetch('start', 0, 1, $columns)->rows[0];
+        }
+
+
+    /**
     * Get EMu objects based on an array of IRNs
     * 
     * @param array $irns Array of Unique KE EMu object identifiers
@@ -161,15 +254,69 @@ class EMuAPI
 
 
     /**
-    * Test IMu API -- To be deleted once done
+    * Utility function used to check whether a particular MIME type
+    * is EMu valid
+    * 
+    * @param string $mime
+    * 
+    * @return boolean
     */
-    public function testSearch()
+    public static function validMime($mime)
         {
-        $this->terms->add('ClaInstitution', 'CMH');
-        $this->module->findTerms($this->terms);
+        $mime = trim($mime);
 
-        $result = $this->getResults('object_fields');
+        if('' == $mime)
+            {
+            return false;
+            }
 
-        return $result;
+        return in_array($mime, $_MIME_TYPES);
         }
+
+
+    /**
+    * Download media file from EMu
+    * 
+    * @param array   $multimedia
+    * @param string  $to          Path where TO save this file
+    * @param integer $length      Up to length number of bytes read
+    * 
+    * @return boolean
+    */
+    public static function getMediaFile(array $multimedia, $to, $length = 4096)
+        {
+        if(0 === count($multimedia)
+            || (!isset($multimedia['resource']['file']) || (isset($multimedia['resource']['file']) && 'stream' != get_resource_type($multimedia['resource']['file'])))
+            || '' == $to)
+            {
+            return false;
+            }
+
+        $file = $multimedia['resource']['file'];
+        $copy = fopen($to, 'wb');
+
+        if(false === $copy)
+            {
+            return false;
+            }
+
+        while($copy)
+            {
+            $data = fread($file, $length);
+
+            if(false === $data || 0 == strlen($data))
+                {
+                break;
+                }
+
+            fwrite($copy, $data);
+            }
+
+        fclose($copy);
+
+        return true;
+        }
+
+
+
     }

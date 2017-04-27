@@ -23,17 +23,19 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 
 
 		
-	if ($auth) {
+	if ($auth)
+        {
+        $usersuffix    = $simpleldap['usersuffix'];
+        $addsuffix     = ($usersuffix=="")?"":"." . $usersuffix;
+        $username      = escape_check($uname . $addsuffix);
+        $password_hash = md5('RS' . $username . generateSecureKey());
+        $userid        = sql_value("SELECT ref AS `value` FROM user WHERE username = '{$username}'", 0);
+        $email         = escape_check($userinfo["email"]);
+        $phone         = escape_check($userinfo["phone"]);
+        $displayname   = escape_check($userinfo['displayname']);
 
-		$usersuffix = $simpleldap['usersuffix'];
-		$addsuffix=($usersuffix=="")?"":"." . $usersuffix;
-		$username=escape_check($uname . $addsuffix);
-		$password_hash= md5("RS".$username.$pword);
-		$userid = sql_value("select ref value from user where username='".$uname . $addsuffix ."'",0);
-		$email=escape_check($userinfo["email"]);
-		$phone=escape_check($userinfo["phone"]);
-		$displayname=escape_check($userinfo['displayname']);
 		debug ("LDAP - got user details email: " . $email . ", telephone: " . $phone);
+
 		// figure out group
 		$group = $simpleldap['fallbackusergroup'];
 		$groupmatch="";
@@ -55,12 +57,12 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 			// user exists, so update info
 			if($simpleldap['update_group'])
 				{
-				sql_query("update user set password = '$password_hash', usergroup = '$group', fullname='$displayname', email='$email', telephone='$phone' where ref = '$userid'");
+				sql_query("update user set origin='simpleldap', password = '$password_hash', usergroup = '$group', fullname='$displayname', email='$email', telephone='$phone' where ref = '$userid'");
 				
 				}
 			else
 				{
-				sql_query("update user set password = '$password_hash', fullname='$displayname', email='$email', telephone='$phone' where ref = '$userid'");
+				sql_query("update user set origin='simpleldap', password = '$password_hash', fullname='$displayname', email='$email', telephone='$phone' where ref = '$userid'");
 				}
 			return true;
 		} else {
@@ -77,11 +79,11 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 						debug("LDAP - user authenticated with matching email for existing user . " . $email . ", updating user account " . $email_matches[0]["username"] . " to new username " . $username);
 						if($simpleldap['update_group'])
 							{
-							sql_query("update user set username='$username', password='$password_hash', fullname='$displayname',email='$email',telephone='$phone',usergroup='$group',comments=concat(comments,'\n" . date("Y-m-d") . " Updated to LDAP user by SimpleLDAP.') where ref='" . $email_matches[0]["ref"] . "'");
+							sql_query("update user set origin='simpleldap',username='$username', password='$password_hash', fullname='$displayname',email='$email',telephone='$phone',usergroup='$group',comments=concat(comments,'\n" . date("Y-m-d") . " " . $lang["simpleldap_usermatchcomment"] . "') where ref='" . $email_matches[0]["ref"] . "'");
 							}
 						else
 							{
-							sql_query("update user set username='$username', password='$password_hash', fullname='$displayname',email='$email',telephone='$phone',comments=concat(comments,'\n" . date("Y-m-d") . " Updated to LDAP user by SimpleLDAP.') where ref='" . $email_matches[0]["ref"] . "'");
+							sql_query("update user set origin='simpleldap',username='$username', password='$password_hash', fullname='$displayname',email='$email',telephone='$phone',comments=concat(comments,'\n" . date("Y-m-d") . " Updated to LDAP user by SimpleLDAP.') where ref='" . $email_matches[0]["ref"] . "'");
 							}
 						return true;
 						}
@@ -139,7 +141,7 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 				
 				// Update with information from LDAP	
 				$rsgroupname=sql_value("select name value from usergroup where ref='$group'",'');
-				sql_query("update user set password='$password_hash', fullname='$displayname',email='$email',telephone='$phone',usergroup='$group',comments='Auto create from SimpleLDAP." . (($groupmatch!="")?"\r\nLDAP group: " . escape_check($groupmatch):"") . "\r\nAdded to RS group " . escape_check($rsgroupname) . "(" . $group . ")' where ref='$ref'");
+				sql_query("update user set origin='simpleldap', password='$password_hash', fullname='$displayname',email='$email',telephone='$phone',usergroup='$group',comments='" . $lang["simpleldap_usercomment"] . (($groupmatch!="")?"\r\nLDAP group: " . escape_check($groupmatch):"") . "\r\nAdded to RS group " . escape_check($rsgroupname) . "(" . $group . ")' where ref='$ref'");
 						
 				
 				return true;

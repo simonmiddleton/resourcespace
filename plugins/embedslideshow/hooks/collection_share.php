@@ -4,7 +4,7 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
 	{
 	global $ref,$lang,$baseurl,$embedslideshow_min_size,$embedslideshow_max_size;
 	?>
-	<li><a onClick="return CentralSpaceLoad(this,true);" href="collection_share.php?ref=<?php echo $ref?>&embedslideshow=true"><?php echo $lang["embedslideshow"]?></a></li>
+	<li><i aria-hidden="true" class="fa fa-fw fa-slideshare"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="collection_share.php?ref=<?php echo $ref?>&embedslideshow=true"><?php echo $lang["embedslideshow"]?></a></li>
 	<?php
 	
 	if (getval("embedslideshow","")!="" )

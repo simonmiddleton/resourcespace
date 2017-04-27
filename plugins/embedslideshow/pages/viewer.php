@@ -1,4 +1,6 @@
 <?php
+$suppress_headers=true; # Suppress headers including the XFRAME limitation so that this page can be remotely embedded.
+
 include "../../../include/db.php";
 include_once "../../../include/general.php";
 include "../../../include/resource_functions.php";
@@ -36,7 +38,7 @@ $use_watermark=check_use_watermark();
 <html>
 <head>
 <link href="../css/embedslideshow.css" rel="stylesheet" type="text/css" media="screen,projection,print" /> 
-<script src="../../../lib/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+<script src="../../../lib/js/jquery-1.12.4.min.js" type="text/javascript"></script>
 </head>
 <body>
 

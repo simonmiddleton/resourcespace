@@ -1,28 +1,76 @@
 <?php
 
-// ------------------------- FIELD TYPES -------------------------
-$field_types=array(
-		0=>"fieldtype-text_box_single_line",
-		1=>"fieldtype-text_box_multi-line",
-		2=>"fieldtype-check_box_list",
-		3=>"fieldtype-drop_down_list",
-		4=>"fieldtype-date_and_optional_time",
-		5=>"fieldtype-text_box_large_multi-line",
-		6=>"fieldtype-expiry_date",
-		7=>"fieldtype-category_tree",
-		8=>"fieldtype-text_box_formatted_and_ckeditor",
-		9=>"fieldtype-dynamic_keywords_list",
-		10=>"fieldtype-date",
-		11=>"fieldtype-dynamic_tree_in_development",
-		12=>"fieldtype-radio_buttons",
-		13=>"fieldtype-warning_message"
-		);
+// current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
+define('SYSTEM_UPGRADE_LEVEL', 2);
 
-$FIXED_LIST_FIELD_TYPES = array(2,3,7,9,12);
+// ------------------------- FIELD TYPES -------------------------
+
+define ('FIELD_TYPE_TEXT_BOX_SINGLE_LINE',              0);
+define ('FIELD_TYPE_TEXT_BOX_MULTI_LINE',               1);
+define ('FIELD_TYPE_CHECK_BOX_LIST',                    2);
+define ('FIELD_TYPE_DROP_DOWN_LIST',                    3);
+define ('FIELD_TYPE_DATE_AND_OPTIONAL_TIME',            4);
+define ('FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE',         5);
+define ('FIELD_TYPE_EXPIRY_DATE',                       6);
+define ('FIELD_TYPE_CATEGORY_TREE',                     7);
+define ('FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR',   8);
+define ('FIELD_TYPE_DYNAMIC_KEYWORDS_LIST',             9);
+define ('FIELD_TYPE_DATE',                             10);
+define ('FIELD_TYPE_RADIO_BUTTONS',                    12);
+define ('FIELD_TYPE_WARNING_MESSAGE',                  13);
+define ('FIELD_TYPE_DATE_RANGE',                       14);
+
+$field_types = array(
+    FIELD_TYPE_TEXT_BOX_SINGLE_LINE             =>"fieldtype-text_box_single_line",
+    FIELD_TYPE_TEXT_BOX_MULTI_LINE              =>"fieldtype-text_box_multi-line",
+    FIELD_TYPE_CHECK_BOX_LIST                   =>"fieldtype-check_box_list",
+    FIELD_TYPE_DROP_DOWN_LIST                   =>"fieldtype-drop_down_list",
+    FIELD_TYPE_DATE_AND_OPTIONAL_TIME           =>"fieldtype-date_and_optional_time",
+    FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE        =>"fieldtype-text_box_large_multi-line",
+    FIELD_TYPE_EXPIRY_DATE                      =>"fieldtype-expiry_date",
+    FIELD_TYPE_CATEGORY_TREE                    =>"fieldtype-category_tree",
+    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR  =>"fieldtype-text_box_formatted_and_ckeditor",
+    FIELD_TYPE_DYNAMIC_KEYWORDS_LIST            =>"fieldtype-dynamic_keywords_list",
+    FIELD_TYPE_DATE                             =>"fieldtype-date",
+    FIELD_TYPE_RADIO_BUTTONS                    =>"fieldtype-radio_buttons",
+    FIELD_TYPE_WARNING_MESSAGE                  =>"fieldtype-warning_message",
+    FIELD_TYPE_DATE_RANGE                       =>"fieldtype-date_range"
+);
+
+$FIXED_LIST_FIELD_TYPES = array(
+    FIELD_TYPE_CHECK_BOX_LIST,
+    FIELD_TYPE_DROP_DOWN_LIST,
+    FIELD_TYPE_CATEGORY_TREE,
+    FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,
+    FIELD_TYPE_RADIO_BUTTONS
+);
+
+$TEXT_FIELD_TYPES = array(
+    FIELD_TYPE_TEXT_BOX_SINGLE_LINE,
+    FIELD_TYPE_TEXT_BOX_MULTI_LINE,
+    FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,
+    FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
+    FIELD_TYPE_WARNING_MESSAGE
+);
+
+$DATE_FIELD_TYPES = array(
+    FIELD_TYPE_DATE_AND_OPTIONAL_TIME,
+    FIELD_TYPE_EXPIRY_DATE,
+    FIELD_TYPE_DATE,
+    FIELD_TYPE_DATE_RANGE
+);
+
+// Array of fields that do not have fixed value options but data is stil stored using node/resource_node rather than resource_data. 
+// This is now the default for new fields and will include all fields once node development is complete.
+$NODE_MIGRATED_FIELD_TYPES = array(
+    FIELD_TYPE_DATE_RANGE                 
+);
+
+$NODE_FIELDS=array_merge($FIXED_LIST_FIELD_TYPES,$NODE_MIGRATED_FIELD_TYPES);
 
 // ------------------------- LOG_CODE_ -------------------------
 
-// codes used for log entries (including resource and activity logs)
+// codes used for log entries (including resource, collection and activity logs)
 
 define ('LOG_CODE_ACCESS_CHANGED',		'a');
 define ('LOG_CODE_ALTERNATIVE_CREATED',	'b');
@@ -33,6 +81,7 @@ define ('LOG_CODE_EDITED',				'e');
 define ('LOG_CODE_EMAILED',				'E');
 define ('LOG_CODE_LOGGED_IN',			'l');
 define ('LOG_CODE_MULTI_EDITED',		'm');
+define ('LOG_CODE_NODE_REVERT',			'N');
 define ('LOG_CODE_PAYED',				'p');
 define ('LOG_CODE_REVERTED_REUPLOADED',	'r');
 define ('LOG_CODE_REORDERED',			'R');
@@ -43,6 +92,24 @@ define ('LOG_CODE_UPLOADED',			'u');
 define ('LOG_CODE_UNSPECIFIED',			'U');
 define ('LOG_CODE_VIEWED',				'v');
 define ('LOG_CODE_DELETED',				'x');
+define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',				'r');
+define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',		'R');
+define ('LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES',		'D');
+define ('LOG_CODE_COLLECTION_DELETED_RESOURCE',		        'd');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE',				'a');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_COPIED',		'c');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_COMMENT',		'm');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_RATING', 		'*');
+define ('LOG_CODE_COLLECTION_SHARED_COLLECTION',			'S');
+define ('LOG_CODE_COLLECTION_EMAILED_COLLECTION',			'E');
+define ('LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH',			's');
+define ('LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION',	'T');
+define ('LOG_CODE_COLLECTION_STOPPED_RESOURCE_ACCESS',		't');
+define ('LOG_CODE_COLLECTION_DELETED_COLLECTION',			'X');
+define ('LOG_CODE_COLLECTION_BATCH_TRANSFORMED',			'b');
+define ('LOG_CODE_COLLECTION_ACCESS_CHANGED',				'A');
+define ('LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED',		'Z');
+
 
 // validates LOG_CODE is legal
 function LOG_CODE_validate($log_code)
@@ -55,21 +122,6 @@ function LOG_CODE_get_all()
 	{
 	return definitions_get_by_prefix('LOG_CODE');
 	}
-
-// used internally
-function definitions_get_by_prefix($prefix)
-	{
-	$return_definitions = array();
-	foreach (get_defined_constants() as $key=>$value)
-		{
-		if (preg_match('/^' . $prefix . '/', $key))
-			{
-			$return_definitions[$key]=$value;
-			}
-		}
-	return $return_definitions;
-	}
-
 
 // ------------------------- SYSTEM NOTIFICATION TYPES -------------------------
 define ('MANAGED_REQUEST',		1);
@@ -98,10 +150,37 @@ define ('STATUS_COMPLETE',				2);
 define ('STATUS_ERROR',					5);
 
 // -------------------- General definitions --------------------
-
 define ('RESOURCE_LOG_APPEND_PREVIOUS', -1);    // used to specify that we want to append the previous resource_log entry
 
 // Global definition of link bullet carets - easy to change link caret style in the future.
 define('LINK_CARET','<i aria-hidden="true" class="fa fa-caret-right"></i>&nbsp;'); 
 define('LINK_CARET_BACK','<i aria-hidden="true" class="fa fa-caret-left"></i>&nbsp;');
+define ('NODE_TOKEN_PREFIX','@@');
+define ('NODE_TOKEN_OR','|');
+define ('NODE_TOKEN_NOT','!');
 
+// Simple Search pills' delimiter
+define ('TAG_EDITOR_DELIMITER', '~');
+// --------------------------------------------------------------------------------
+
+// used internally within this file
+
+function definitions_get_by_prefix($prefix)
+    {
+    $return_definitions = array();
+    foreach (get_defined_constants() as $key=>$value)
+        {
+        if (preg_match('/^' . $prefix . '/', $key))
+            {
+            $return_definitions[$key]=$value;
+            }
+        }
+    return $return_definitions;
+    }
+
+$h264_profiles=array(
+    "Baseline"=>"242E0",
+    "Main"=>"4D40",
+    "High"=>"6400",
+    "Extended"=>"58A0"    
+    );

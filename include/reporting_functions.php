@@ -329,7 +329,7 @@ function send_periodic_report_emails()
 			$email = $user['email'];
 
 			# Do not send to original report user, as they receive the mail with the unsubscribe link above.
-			if(($user['approved'] && $email == $report['email']) || !$user['approved'])
+			if(($user['approved'] && $email == $report['email']) || !$user['approved'] || !filter_var($email, FILTER_VALIDATE_EMAIL))
 				{
 				continue;
 				}

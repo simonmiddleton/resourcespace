@@ -5,7 +5,7 @@
 #
 
 $lang['propose_changes_configuration']="Propose changes - plugin configuration - allow users to propose metadata changes";
-$lang['propose_changes_notify_admin']="Notify resource adminsitrators when proposed changes are submitted";
+$lang['propose_changes_notify_admin']="Notify resource administrators when proposed changes are submitted";
 $lang['propose_changes_notify_contributor']="Notify resource contributor when proposed changes are submitted";
 $lang['propose_changes_notify_addresses']="Other addresses to notify when proposed changes are submitted (comma separated)";
 
@@ -30,4 +30,6 @@ $lang["propose_changes_proposed_changes_submitted"]="Proposed changes have been 
 $lang["propose_changes_proposed_changes_submitted_text"]=" has proposed changes to resource id #";
 $lang["propose_changes_always_allow"]="Allows users to propose changes to any resource. If set to false a collection must be shared with users and an additional option checked";
 $lang["propose_changes_allow_open"]="Always allow users with open access to a resource to propose changes";
-$lang['propose_changes_no_changes_to_review'] = '<h1 style="text-align: center;">There are no proposed changes to review.</h1>';
+$lang["propose_changes_no_changes_to_review"] = '<h1 style="text-align: center;">There are no proposed changes to review.</h1>';
+$lang["actions_type_proposed_change"] = "Proposed edit";
+$lang["actions_propose_changes"] = "Show me user proposed changes in  my actions list";

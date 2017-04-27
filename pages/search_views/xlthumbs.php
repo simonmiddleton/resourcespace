@@ -3,7 +3,7 @@ if (!hook("renderresultlargethumb"))
 	{ ?>
 	<!--Resource Panel-->
 	<div class="ResourcePanelShellLarge" id="ResourceShell<?php echo htmlspecialchars($ref)?>"  <?php echo hook('resourcepanelshell_attributes')?>>
-		<div class="ResourcePanelLarge <?php hook('xlthumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
+		<div class="ResourcePanelLarge ArchiveState<?php echo $result[$n]['archive'];?><?php hook('xlthumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
     		<?php  
     		if ($resource_type_icons) 
     			{ ?>
@@ -80,7 +80,7 @@ if (!hook("renderresultlargethumb"))
 							style="position:relative;" 
 							href="<?php echo $url?>"  
 							onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
-							title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field])))?>"
+							title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field])))))?>"
 						>
 							<?php 
 							if ($result[$n]["has_image"]==1) 
@@ -107,7 +107,7 @@ if (!hook("renderresultlargethumb"))
 										} ?>
 										src="<?php echo $pre_url ?>" 
 										class="ImageBorder"
-										alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))); ?>"
+										alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))); ?>"
 								/>
 								<?php
                                 // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
@@ -189,6 +189,35 @@ if (!hook("renderresultlargethumb"))
 				{} ?> 
 			<!-- END HOOK Rendertitlelargethumb -->			
 			<?php
+            if($annotate_enabled)
+                {
+                $annotations_count = getResourceAnnotationsCount($ref);
+                $message           = '';
+
+                if(1 < $annotations_count)
+                    {
+                    $message = $annotations_count . ' ' . mb_strtolower($lang['annotate_annotations_label']);
+                    }
+                else if(1 == $annotations_count)
+                    {
+                    $message = $annotations_count . ' ' . mb_strtolower($lang['annotate_annotation_label']);
+                    }
+                ?>
+                <div class="ResourcePanelInfo AnnotationInfo">
+                <?php
+                if(0 < $annotations_count)
+                    {
+                    ?>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <span><?php echo $message; ?></span>
+                    <?php
+                    }
+                    ?>
+                &nbsp;
+                </div>
+                <?php
+                }
+
 			$df_alt=hook("displayfieldsalt");
 			$df_normal=$df;
 			if ($df_alt)
@@ -227,7 +256,7 @@ if (!hook("renderresultlargethumb"))
 									<a 
 										href="<?php echo $url?>"  
 										onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);"
-										title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value)))?>"
+										title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
 										>
 									<?php 
 									} //end link
@@ -258,12 +287,12 @@ if (!hook("renderresultlargethumb"))
 								{ // add link if necessary ?>
 								<a 
 									href="<?php echo $url?>"  
-									onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);"									    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value)))?>"
+									onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
 									
 								>
 								<?php 
 								} //end link
-							echo highlightkeywords(tidy_trim(TidyList(i18n_get_translated($value)),$xl_search_results_title_trim),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
+							echo highlightkeywords(tidy_trim(TidyList(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))),$xl_search_results_title_trim),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
 							if ($x==0)
 								{ // add link if necessary ?>
 								</a>
@@ -298,7 +327,7 @@ if (!hook("renderresultlargethumb"))
 									checked
 									<?php 
 									} ?> 
-								onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')=='checked'){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').attr('checked')!='checked'){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
+								onclick="if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')){ AddResourceToCollection(event,<?php echo htmlspecialchars($ref)?>); } else if (jQuery('#check<?php echo htmlspecialchars($ref)?>').prop('checked')==false){ RemoveResourceFromCollection(event,<?php echo htmlspecialchars($ref)?>); }"
 							>
 							&nbsp;
 							<?php 
