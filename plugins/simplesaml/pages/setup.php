@@ -16,6 +16,7 @@ if ((getval('submit','')!='') || (getval('save','')!=''))
 	{
 		
 	$simplesaml['simplesaml_site_block'] = getvalescaped('simplesaml_site_block','');
+	$simplesaml['simplesaml_login'] = getvalescaped('simplesaml_login','');
 	$simplesaml['simplesaml_allow_public_shares'] = getvalescaped('simplesaml_allow_public_shares','');
 	$simplesaml['simplesaml_allowedpaths'] = explode(",",getvalescaped('simplesaml_allowedpaths',''));
 	$simplesaml['simplesaml_allow_standard_login'] = getvalescaped('simplesaml_allow_standard_login','');
@@ -89,6 +90,7 @@ echo config_section_header($lang['simplesaml_main_options'],'');
 echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path);
 ?>
 <?php echo config_boolean_field("simplesaml_site_block",$lang['simplesaml_site_block'],$simplesaml_site_block,30);?>
+<?php echo config_boolean_field("simplesaml_login",$lang['simplesaml_login'],$simplesaml_login,30);?>
 <?php echo config_boolean_field("simplesaml_allow_public_shares",$lang['simplesaml_allow_public_shares'],$simplesaml_allow_public_shares,30);?>
 <?php echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp);?>
 <?php echo config_text_input("simplesaml_login_expiry",$lang['simplesaml_login_expiry'],$simplesaml_login_expiry);?>

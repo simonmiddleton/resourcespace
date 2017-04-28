@@ -1,6 +1,7 @@
 <?php
 
 $simplesaml_site_block=false;
+$simplesaml_login=true;
 $simplesaml_allow_public_shares=true;
 $simplesaml_allowedpaths=array("plugins/api_core","plugins/api_search","plugins/api_upload","plugins/api_log","plugins/api_alt_file");
 $simplesaml_allow_standard_login=true;
