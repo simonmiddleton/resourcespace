@@ -719,13 +719,21 @@ else if(1 == $resource['has_image'])
     <?php
     if(file_exists($imagepath))
         {
+        list($image_width, $image_height) = @getimagesize($imagepath);
         ?>
         <img id="previewimage"
              class="Picture"
              src="<?php echo $imageurl; ?>" 
              alt="<?php echo $lang['fullscreenpreview']; ?>" 
              GALLERYIMG="no"
-        <?php 
+        <?php
+        if($annotate_enabled)
+            {
+            ?>
+             data-original="<?php echo "{$baseurl}/annotation/resource/{$ref}"; ?>"
+            <?php
+            }
+
         if($retina_mode)
             {
             ?>
@@ -763,7 +771,7 @@ else if(1 == $resource['has_image'])
         <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
             <div id="PreviewToolsOptionsWrapper" class="Hidden">
             <?php
-            if($annotate_enabled)
+            if($annotate_enabled && file_exists($imagepath))
                 {
                 ?>
                 <a class="ToolsOptionLink" href="#" onclick="toggleAnnotationsOption(this); return false;">
@@ -804,15 +812,10 @@ else if(1 == $resource['has_image'])
                         return false;
                         }
 
-                    if(img_src.indexOf('?') != -1)
-                        {
-                        img_src = img_src.substring(0, img_src.indexOf('?'));
-                        }
-
                     // Feature enabled? Then disable it.
                     if(option.hasClass('Enabled'))
                         {
-                        anno.destroy(img_src);
+                        anno.destroy(preview_image.data('original'));
 
                         // Remove the copy and show the linked image again
                         jQuery('#' + img_copy_id).remove();
@@ -828,6 +831,13 @@ else if(1 == $resource['has_image'])
                     var preview_image_copy = preview_image.clone(true);
                     preview_image_copy.prop('id', img_copy_id);
                     preview_image_copy.prop('src', img_src);
+
+                    // Set the width and height of the image otherwise if the source of the file
+                    // is fetched from download.php, Annotorious will not be able to determine its
+                    // size
+                    preview_image_copy.width(<?php echo $image_width; ?>);
+                    preview_image_copy.height(<?php echo $image_height; ?>);
+
                     preview_image_copy.appendTo(preview_image_link.parent());
                     preview_image_link.hide();
 
