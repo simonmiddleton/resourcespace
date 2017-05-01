@@ -17,6 +17,7 @@ if(isset($titlefontsize))
 
 #logo { height: 50px; max-width: 100%; }
 .centeredText { text-align: center; }
+.contactsheet_textbold {font-weight: bold;}
 </style>
 <?php
 foreach($resources as $resource_ref => $resource)

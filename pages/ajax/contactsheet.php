@@ -45,7 +45,7 @@ if(!collection_readable($collection))
 $contactsheet_header           = ('' != $includeheader ? filter_var($includeheader, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_include_header);
 $add_contactsheet_logo         = ('' != $addlogo ?  filter_var($addlogo, FILTER_VALIDATE_BOOLEAN) : $include_contactsheet_logo);
 $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_add_link);
-$contact_sheet_field_name      = ('' != $addfieldname ? filter_var($addfieldname, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_field_name);
+$contact_sheet_field_name      = ('' != $addfieldname ? filter_var($addfieldname, FILTER_VALIDATE_BOOLEAN) : false);
 $selected_contact_sheet_fields = getvalescaped('selected_contact_sheet_fields', '');
 
 
@@ -192,8 +192,17 @@ foreach($results as $result_data)
                 {
                 $contact_sheet_value = tidylist($contact_sheet_value);
                 }
-
-            $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = ($contact_sheet_field_name ? $contact_sheet_field['title'] . ': ' : '') . tidylist($contact_sheet_value);
+			$field_name='';
+			if($contact_sheet_field_name){
+				if($contact_sheet_field_name_bold){
+					$field_name.='<span class="contactsheet_textbold">';
+				}
+				$field_name.=$contact_sheet_field['title'] . ': ';
+				if($contact_sheet_field_name_bold){
+					$field_name.='</span>';
+				}
+			}
+            $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = $field_name . tidylist($contact_sheet_value);
             }
         }
 
