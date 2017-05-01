@@ -969,6 +969,10 @@ $contact_sheet_field_name_option=false;
 $contact_sheet_force_watermarks=false;
 # Give user option to force watermarks?
 $contact_sheet_force_watermark_option=false;
+# Contactsheet include time with dates?
+$contact_sheet_date_include_time=true;
+# Contactsheet wordy dates?
+$contact_sheet_date_wordy=true;
 
 # Show contact sheet metadata under preview? For thumbnail view only
 $contact_sheet_metadata_under_thumbnail=false;

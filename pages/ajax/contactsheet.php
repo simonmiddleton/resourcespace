@@ -54,7 +54,7 @@ $resources      = array();
 
 $collectiondata = get_collection($collection);
 $user           = get_user($collectiondata['user']);
-$title          = i18n_get_collection_name($collectiondata) . ' - ' . nicedate(date('Y-m-d H:i:s'), true, true);
+$title          = i18n_get_collection_name($collectiondata) . ' - ' . nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy);
 
 // Get data
 if(is_numeric($order_by))
@@ -107,7 +107,7 @@ foreach($getfields as $field_id)
 $pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
 $PDF_filename      = get_temp_dir() . '/contactsheet.pdf';
 $placeholders      = array(
-    'date'                          			=> date('Y-m-d H:i:s'),
+    'date'                          			=> nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy),
     'titlefontsize'                 			=> $titlefontsize,
     'refnumberfontsize'             			=> $refnumberfontsize,
     'title'                         			=> $title,
@@ -317,7 +317,7 @@ if($contact_sheet_resource)
     {
     $new_resource = create_resource(1, 0);
 
-    update_field($new_resource, 8, i18n_get_collection_name($collectiondata) . ' ' . date('Y-m-d H:i:s'));
+    update_field($new_resource, 8, i18n_get_collection_name($collectiondata) . ' ' . nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy));
     update_field($new_resource, $filename_field, "{$new_resource}.pdf");
 
     // Relate all resources in collection to the new contact sheet resource

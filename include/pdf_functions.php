@@ -63,7 +63,7 @@ function get_pdf_template_path($resource_type, $template_name = '')
 */
 function generate_pdf($html_template_path, $filename, array $bind_placeholders = array(), $save_on_server = false, array $pdf_properties = array())
     {
-    global $applicationname, $baseurl, $baseurl_short, $storagedir, $date_d_m_y, $linkedheaderimgsrc, $language;
+    global $applicationname, $baseurl, $baseurl_short, $storagedir, $linkedheaderimgsrc, $language, $contact_sheet_date_include_time, $contact_sheet_date_wordy;
 
     $html2pdf_path = dirname(__FILE__) . '/../lib/html2pdf/html2pdf.class.php';
     if(!file_exists($html2pdf_path))
@@ -91,7 +91,7 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
         'baseurl_short'   => $baseurl_short,
         'filestore'       => $storagedir,
         'filename'        => (!$save_on_server ? $filename : basename($filename)),
-        'date'            => ($date_d_m_y ? date('d/m/Y') : date('m/d/Y')),
+        'date'            => nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy),
     );
 
     if('' != $linkedheaderimgsrc)
@@ -254,7 +254,7 @@ function get_template_path($template_name, $template_namespace)
 */
 function process_template($template_path, array $bind_placeholders = array())
     {
-    global $applicationname, $baseurl, $baseurl_short, $storagedir, $lang, $date_d_m_y, $linkedheaderimgsrc;
+    global $applicationname, $baseurl, $baseurl_short, $storagedir, $lang, $linkedheaderimgsrc, $contact_sheet_date_include_time, $contact_sheet_date_wordy;
 
     // General placeholders available to templates
     $general_params = array(
@@ -263,7 +263,7 @@ function process_template($template_path, array $bind_placeholders = array())
         'baseurl_short'   => $baseurl_short,
         'filestore'       => $storagedir,
         'lang'            => $lang,
-        'date'            => ($date_d_m_y ? date('d/m/Y') : date('m/d/Y')),
+        'date'            => nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy),
     );
 
     if('' != $linkedheaderimgsrc)
