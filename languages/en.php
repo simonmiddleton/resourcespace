@@ -2603,3 +2603,9 @@ $lang["set_metadata_then_upload"]="Set metadata first, then upload";
 $lang['annotate_text_link_label'] = 'Annotate mode toggle';
 $lang['annotate_annotation_label'] = 'Annotation';
 $lang['annotate_annotations_label'] = 'Annotations';
+
+/* IIIF */
+$lang['systemconfig_api'] = "API";
+$lang["iiif_enable_option"] = "Enable IIIF support";
+$lang["iiif_disabled"] = "IIIF is not enabled";
+

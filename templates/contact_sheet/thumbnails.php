@@ -20,6 +20,7 @@ if(isset($titlefontsize))
 
 .resourceContainer { vertical-align: top; }
 .resourcePreview { width: <?php echo $column_width; ?>px; }
+.contactsheet_textbold {font-weight: bold;}
 </style>
 <page backtop="25mm" backbottom="25mm">
 <?php

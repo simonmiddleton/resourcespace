@@ -45,7 +45,7 @@ if(!collection_readable($collection))
 $contactsheet_header           = ('' != $includeheader ? filter_var($includeheader, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_include_header);
 $add_contactsheet_logo         = ('' != $addlogo ?  filter_var($addlogo, FILTER_VALIDATE_BOOLEAN) : $include_contactsheet_logo);
 $contact_sheet_add_link        = ('' != $addlink ? filter_var($addlink, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_add_link);
-$contact_sheet_field_name      = ('' != $addfieldname ? filter_var($addfieldname, FILTER_VALIDATE_BOOLEAN) : $contact_sheet_field_name);
+$contact_sheet_field_name      = ('' != $addfieldname ? filter_var($addfieldname, FILTER_VALIDATE_BOOLEAN) : false);
 $selected_contact_sheet_fields = getvalescaped('selected_contact_sheet_fields', '');
 
 
@@ -54,7 +54,7 @@ $resources      = array();
 
 $collectiondata = get_collection($collection);
 $user           = get_user($collectiondata['user']);
-$title          = i18n_get_collection_name($collectiondata) . ' - ' . nicedate(date('Y-m-d H:i:s'), true, true);
+$title          = i18n_get_collection_name($collectiondata) . ' - ' . nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy);
 
 // Get data
 if(is_numeric($order_by))
@@ -107,7 +107,7 @@ foreach($getfields as $field_id)
 $pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
 $PDF_filename      = get_temp_dir() . '/contactsheet.pdf';
 $placeholders      = array(
-    'date'                          			=> date('Y-m-d H:i:s'),
+    'date'                          			=> nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy),
     'titlefontsize'                 			=> $titlefontsize,
     'refnumberfontsize'             			=> $refnumberfontsize,
     'title'                         			=> $title,
@@ -192,8 +192,17 @@ foreach($results as $result_data)
                 {
                 $contact_sheet_value = tidylist($contact_sheet_value);
                 }
-
-            $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = ($contact_sheet_field_name ? $contact_sheet_field['title'] . ': ' : '') . tidylist($contact_sheet_value);
+			$field_name='';
+			if($contact_sheet_field_name){
+				if($contact_sheet_field_name_bold){
+					$field_name.='<span class="contactsheet_textbold">';
+				}
+				$field_name.=$contact_sheet_field['title'] . ': ';
+				if($contact_sheet_field_name_bold){
+					$field_name.='</span>';
+				}
+			}
+            $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = $field_name . tidylist($contact_sheet_value);
             }
         }
 
@@ -317,7 +326,7 @@ if($contact_sheet_resource)
     {
     $new_resource = create_resource(1, 0);
 
-    update_field($new_resource, 8, i18n_get_collection_name($collectiondata) . ' ' . date('Y-m-d H:i:s'));
+    update_field($new_resource, 8, i18n_get_collection_name($collectiondata) . ' ' . nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy));
     update_field($new_resource, $filename_field, "{$new_resource}.pdf");
 
     // Relate all resources in collection to the new contact sheet resource
