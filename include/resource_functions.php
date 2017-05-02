@@ -2087,18 +2087,58 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         }
 	}
 
-function get_resource_log($resource, $fetchrows=-1)
+function get_resource_log($resource, $fetchrows = -1)
     {
-    # Returns the log for a given resource.
-    # The standard field titles are translated using $lang. Custom field titles are i18n translated.
-    $extrafields=hook("get_resource_log_extra_fields");
-    if (!$extrafields) {$extrafields="";}
-    
-	$log = sql_query("select r.ref,r.date,u.username,u.fullname,r.type,rtf.type resource_type_field, f.title,r.notes,r.diff,r.usageoption,r.purchase_price,r.purchase_size,ps.name size, r.access_key,ekeys_u.fullname shared_by" . $extrafields . " from resource_log r left outer join user u on u.ref=r.user left outer join resource_type_field f on f.ref=r.resource_type_field left outer join external_access_keys ekeys on r.access_key=ekeys.access_key and r.resource=ekeys.resource left outer join user ekeys_u on ekeys.user=ekeys_u.ref left join preview_size ps on r.purchase_size=ps.id left outer join resource_type_field rtf on r.resource_type_field=rtf.ref where r.resource='$resource' group by r.ref order by r.date desc",false,$fetchrows); 
-    for ($n = 0;$n<count($log);$n++)
+    // Logs can sometimes contain confidential information and the user 
+    // looking at them must have admin permissions set
+    if(!checkperm('v'))
         {
-        $log[$n]["title"] = lang_or_i18n_get_translated($log[$n]["title"], "fieldtitle-");
+        return array();
         }
+
+    // Returns the log for a given resource.
+    // The standard field titles are translated using $lang. Custom field titles are i18n translated.
+    $extrafields = hook('get_resource_log_extra_fields');
+
+    if(!$extrafields)
+        {
+        $extrafields = '';
+        }
+
+    $log = sql_query(
+                "SELECT r.ref,
+                        r.date,
+                        u.username,
+                        u.fullname,
+                        r.type,
+                        rtf.type AS resource_type_field,
+                        f.title,
+                        r.notes,
+                        r.diff,
+                        r.usageoption,
+                        r.purchase_price,
+                        r.purchase_size,
+                        ps.name AS size,
+                        r.access_key,
+                        ekeys_u.fullname AS shared_by{$extrafields}
+                   FROM resource_log AS r 
+        LEFT OUTER JOIN user AS u ON u.ref = r.user
+        LEFT OUTER JOIN resource_type_field AS f ON f.ref = r.resource_type_field
+        LEFT OUTER JOIN external_access_keys AS ekeys ON r.access_key = ekeys.access_key AND r.resource = ekeys.resource
+        LEFT OUTER JOIN user AS ekeys_u ON ekeys.user = ekeys_u.ref
+              LEFT JOIN preview_size AS ps ON r.purchase_size = ps.id
+        LEFT OUTER JOIN resource_type_field AS rtf ON r.resource_type_field = rtf.ref
+                  WHERE r.resource = '{$resource}'
+               GROUP BY r.ref
+               ORDER BY r.date DESC",
+        false,
+        $fetchrows);
+
+    for($n = 0; $n < count($log); $n++)
+        {
+        $log[$n]['title'] = lang_or_i18n_get_translated($log[$n]['title'], 'fieldtitle-');
+        }
+
     return $log;
     }
 
