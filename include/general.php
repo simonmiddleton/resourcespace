@@ -395,7 +395,7 @@ function get_resource_top_keywords($resource,$count)
         
     $return=array();
 	
-	$keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (1,5,6,8,10,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
+	$keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (0,1,5,8,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
     
     $fixed_dynamic_keywords = sql_query("select distinct n.ref, n.name, n.resource_type_field from node n inner join resource_node rn on n.ref=rn.node where (rn.resource='$resource' and n.resource_type_field in (select rtf.ref from resource_type_field rtf where use_for_similar=1) ) order by new_hit_count desc limit $count");
     
@@ -418,22 +418,25 @@ function get_resource_top_keywords($resource,$count)
             {
             # In this case the keyword is coming from nodes
             # Apply permissions and strip out any results the user does not have access to.
-            if ( (checkperm("f*") || checkperm("f" . $keyword["field"]))
+            if ( (checkperm("f*") || checkperm("f" . $keyword["resource_type_field"]))
             && !checkperm("f-" . $keyword["resource_type_field"]) && !checkperm("T" . $resource) )
                 {
                 $r =  $keyword["name"] ;   
                 }
             }
             
-        if (substr($r,0,1)==","){$r=substr($r,1);}
-        $s=explode(",",$r);
-        foreach ($s as $a)
-            {
-            if(!empty($a))
-                {
-                $return[]=$a;
-                }
-            }
+        if(isset($r) && count($r)!=0)
+			{    
+			if (substr($r,0,1)==","){$r=substr($r,1);}
+			$s=explode(",",$r);
+			foreach ($s as $a)
+				{
+				if(!empty($a))
+					{
+					$return[]=$a;
+					}
+				}
+			}
 		}	
 			
 	return $return;
