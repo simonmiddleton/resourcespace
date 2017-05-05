@@ -21,6 +21,7 @@ if(isset($titlefontsize))
 #resourcesTable { width: 100%; vertical-align: top; }
 .resourcePreviewContainer { width: <?php echo $available_width * 0.3; ?>px; height: 150px; padding-bottom: 20px; }
 .resourceDataContainer { width: 70%; padding-bottom: 20px; }
+.contactsheet_textbold {font-weight: bold;}
 </style>
 <page backtop="25mm" backbottom="25mm">
 <?php

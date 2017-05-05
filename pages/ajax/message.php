@@ -9,7 +9,7 @@
 		include_once __DIR__ . "/../../include/db.php";
 		include_once __DIR__ . "/../../include/general.php";
 		include __DIR__ . "/../../include/authenticate.php";
-		if($actions_enable)
+		if($actions_on)
 			{
 			include_once __DIR__ . "/../../include/search_functions.php";
 			include_once __DIR__ . "/../../include/action_functions.php";
@@ -73,7 +73,7 @@
 		// Check if there are messages
 		$messages = array();
 		message_get($messages,$user);	// note: messages are passed by reference
-		if($actions_enable)
+		if($actions_on)
 			{
 			$actioncount=get_user_actions(true);
 			if($actioncount>0)

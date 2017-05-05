@@ -3,7 +3,7 @@ if (!hook("renderresultthumb"))
 	{ ?>
 	<!--Resource Panel-->
 	<div class="ResourcePanelShell" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>>
-		<div class="ResourcePanel <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
+		<div class="ResourcePanel ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
 		<?php  
 		if ($resource_type_icons) 
 			{ ?>
@@ -22,8 +22,23 @@ if (!hook("renderresultthumb"))
 				{
 				$use_watermark=false;	
 				}
-			$thm_url=get_resource_path($ref,false,($retina_mode?"pre":"thm"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
-			if (isset($result[$n]["thm_url"])) {$thm_url=$result[$n]["thm_url"];} # Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
+
+            $thm_url = get_resource_path(
+                $ref,
+                false,
+                ($retina_mode ? 'pre' : 'thm'),
+                false,
+                $result[$n]['preview_extension'],
+                true,
+                1,
+                $use_watermark,
+                $result[$n]['file_modified']
+            );
+
+            if(isset($result[$n]['thm_url']))
+                {
+                $thm_url = $result[$n]['thm_url'];
+                } # Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
 			?>
 			<table border="0" class="ResourceAlign icon_type_<?php echo $result[$n]["resource_type"]; ?> icon_extension_<?php echo $result[$n]['file_extension']; ?><?php if(!hook("replaceresourcetypeicon")){ if (in_array($result[$n]["resource_type"],$videotypes)) { ?> IconVideo<?php } ?><?php } hook('searchdecorateresourcetableclass'); ?>">
 			<?php hook("resourcetop")?>
@@ -181,8 +196,38 @@ if (!hook("renderresultthumb"))
 			{
 			hook("icons");
 			} //end hook replaceicons
-		if (!hook("rendertitlethumb")) {} ?> <!-- END HOOK Rendertitlethumb -->			
+		if (!hook("rendertitlethumb")) {} ?> <!-- END HOOK Rendertitlethumb -->
 		<?php
+
+        if($annotate_enabled)
+            {
+            $annotations_count = getResourceAnnotationsCount($ref);
+            $message           = '';
+
+            if(1 < $annotations_count)
+                {
+                $message = $annotations_count . ' ' . mb_strtolower($lang['annotate_annotations_label']);
+                }
+            else if(1 == $annotations_count)
+                {
+                $message = $annotations_count . ' ' . mb_strtolower($lang['annotate_annotation_label']);
+                }
+            ?>
+            <div class="ResourcePanelInfo AnnotationInfo">
+            <?php
+            if(0 < $annotations_count)
+                {
+                ?>
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                <span><?php echo $message; ?></span>
+                <?php
+                }
+                ?>
+            &nbsp;
+            </div>
+            <?php
+            }
+
 		$df_alt=hook("displayfieldsalt");
 		$df_normal=$df;
 		if ($df_alt){$df=$df_alt;}

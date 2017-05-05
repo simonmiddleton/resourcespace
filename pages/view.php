@@ -106,13 +106,26 @@ if($comments_resource_enable && $comments_view_panel_show_marker){
 }
 
 // Set $use_mp3_player switch if appropriate
-$use_mp3_player = (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && ((in_array($resource["file_extension"],$ffmpeg_audio_extensions) || $resource["file_extension"]=="mp3") && $mp3_player));
-if ($use_mp3_player)
-	{
-	$mp3realpath=get_resource_path($ref,true,"",false,"mp3");
-	if (file_exists($mp3realpath))
-		{$mp3path=get_resource_path($ref,false,"",false,"mp3");}
-	}
+$use_mp3_player = (
+    !(isset($resource['is_transcoding']) && 1 == $resource['is_transcoding'])
+    && (
+            (
+                in_array($resource['file_extension'], $ffmpeg_audio_extensions) 
+                || 'mp3' == $resource['file_extension']
+            )
+            && $mp3_player
+        )
+);
+
+if($use_mp3_player)
+    {
+    $mp3realpath = get_resource_path($ref, true, '', false, 'mp3');
+    if(file_exists($mp3realpath))
+        {
+        $mp3path = get_resource_path($ref, false, '', false, 'mp3');
+        }
+    }
+
 # Load access level
 $access=get_resource_access($resource);
 hook("beforepermissionscheck");
@@ -608,10 +621,23 @@ $download_multisize=true;
 <?php
 
 # Try to find a preview file.
-$flvfile=get_resource_path($ref,true,"pre",false,($video_preview_hls_support==1 || $video_preview_hls_support==2)?"m3u8":$ffmpeg_preview_extension);
+$flvfile = get_resource_path(
+    $ref,
+    true,
+    'pre',
+    false,
+    (1 == $video_preview_hls_support || 2 == $video_preview_hls_support) ? 'm3u8' : $ffmpeg_preview_extension
+);
 
-if (!file_exists($flvfile) && $ffmpeg_preview_extension!="flv") {$flvfile=get_resource_path($ref,true,"pre",false,"flv");} # Try FLV, for legacy systems.
-if (!file_exists($flvfile)) {$flvfile=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);}
+if(!file_exists($flvfile) && 'flv' != $ffmpeg_preview_extension)
+    {
+    $flvfile = get_resource_path($ref, true, 'pre', false, 'flv');
+    } # Try FLV, for legacy systems.
+
+if(!file_exists($flvfile))
+    {
+    $flvfile = get_resource_path($ref, true, '', false, $ffmpeg_preview_extension);
+    }
 
 if (file_exists("../players/type" . $resource["resource_type"] . ".php"))
 	{
@@ -669,68 +695,250 @@ elseif ($resource['file_extension']=="swf" && $display_swf){
 		</div><?php
 		}
 	}
-elseif ($resource["has_image"]==1)
-	{
-	$use_watermark=check_use_watermark();
-	$imagepath=get_resource_path($ref,true,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
-	if (!file_exists($imagepath))
-		{
-		$imageurl=get_resource_path($ref,false,"thm",false,$resource["preview_extension"],-1,1,$use_watermark);
-		}
-	else
-		{
-		$imageurl=get_resource_path($ref,false,($retina_mode?"scr":"pre"),false,$resource["preview_extension"],-1,1,$use_watermark);
-		}
-	
-	?>
-	<div id="previewimagewrapper"><a style="position:relative;" class="enterLink" id="previewimagelink" href="<?php echo generateURL($baseurl_short . "pages/preview.php",$urlparams,array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>" title="<?php echo $lang["fullscreenpreview"]?>">
-	<?php
-	if (file_exists($imagepath))
-		{ 
-		?><img src="<?php echo $imageurl?>" alt="<?php echo $lang["fullscreenpreview"]?>" class="Picture" GALLERYIMG="no" id="previewimage"
-		<?php if ($retina_mode) { ?>onload="this.width/=1.8;this.onload=null;"<?php } ?>											   
-		/><?php 
-		} 
-	?><?php hook("aftersearchimg","",array($ref))?></a><?php
-	if(isset($previewcaption))
-		{
-		echo "<div class=\"clearerleft\"> </div>";	
-		@list($pw) = @getimagesize($imagepath);
-		display_field_data($previewcaption, true, $pw);
-		}
-	hook("previewextras");
-	?></div><?php 
-	if ($image_preview_zoom)
-		{ 
-		$previewurl=get_resource_path($ref,false,"scr",false,$resource["preview_extension"],-1,1,$use_watermark);		
-		?>
-		<script>
-		jQuery(document).ready(function(){
-			jQuery('#previewimage')
-			        .wrap('<span style="display:inline-block"></span>')
-			        .css('display', 'block')
-			        .parent()
-			        .zoom({url: '<?php echo $previewurl ?>' });
-			});
-		</script>
-		<?php
-		}
-	}
-else
-	{
-	?>
-	<div id="previewimagewrapper">
-	<img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture" style="border:none;" id="previewimage" />
-	<?php
-	if(isset($previewcaption))
-		{	
-		echo "<div class=\"clearerleft\"> </div>";	
-		display_field_data($previewcaption, true);
-		}
-	hook("previewextras");
-	?></div><?php	
-	}
+else if(1 == $resource['has_image'])
+    {
+    $use_watermark = check_use_watermark();
+    $imagepath     = get_resource_path($ref, true, 'pre', false, $resource['preview_extension'], true, 1, $use_watermark);
 
+    if(!file_exists($imagepath))
+        {
+        $imageurl = get_resource_path($ref, false, 'thm', false, $resource['preview_extension'], true, 1, $use_watermark);
+        }
+    else
+        {
+        $imageurl = get_resource_path($ref, false, ($retina_mode ? 'scr' : 'pre'), false, $resource['preview_extension'], true, 1, $use_watermark);
+        }
+        ?>
+    <div id="previewimagewrapper">
+        <a id="previewimagelink"
+           class="enterLink"
+           href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams, array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>"
+           title="<?php echo $lang["fullscreenpreview"]; ?>"
+           style="position:relative;"
+           onclick="return CentralSpaceLoad(this);">
+    <?php
+    if(file_exists($imagepath))
+        {
+        list($image_width, $image_height) = @getimagesize($imagepath);
+        ?>
+        <img id="previewimage"
+             class="Picture"
+             src="<?php echo $imageurl; ?>" 
+             alt="<?php echo $lang['fullscreenpreview']; ?>" 
+             GALLERYIMG="no"
+        <?php
+        if($annotate_enabled)
+            {
+            ?>
+             data-original="<?php echo "{$baseurl}/annotation/resource/{$ref}"; ?>"
+            <?php
+            }
+
+        if($retina_mode)
+            {
+            ?>
+             onload="this.width/=1.8;this.onload=null;"
+            <?php
+            }
+            ?>/>
+        <?php 
+        }
+
+    hook('aftersearchimg', '', array($ref));
+    ?>
+        </a>
+    <?php
+    if(isset($previewcaption))
+        {
+        ?>
+        <div class="clearerleft"></div>
+        <?php
+        @list($pw) = @getimagesize($imagepath);
+
+        display_field_data($previewcaption, true, $pw);
+        }
+
+    hook('previewextras');
+
+    if(canSeePreviewTools($edit_access))
+        {
+    	if($annotate_enabled)
+    		{
+			include_once '../include/annotation_functions.php';
+    		}
+        	?>
+        <!-- Available tools to manipulate previews -->
+        <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
+            <div id="PreviewToolsOptionsWrapper" class="Hidden">
+            <?php
+            if($annotate_enabled && file_exists($imagepath))
+                {
+                ?>
+                <a class="ToolsOptionLink" href="#" onclick="toggleAnnotationsOption(this); return false;">
+                    <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
+                </a>
+                <script>
+                var rs_tagging_plugin_added = false;
+
+                function toggleAnnotationsOption(element)
+                    {
+                    var option             = jQuery(element);
+                    var preview_image      = jQuery('#previewimage');
+                    var preview_image_link = jQuery('#previewimagelink');
+                    var img_copy_id        = 'previewimagecopy';
+                    var img_src            = preview_image.attr('src');
+
+                    // Setup Annotorious (has to be done only once)
+                    if(!rs_tagging_plugin_added)
+                        {
+                        anno.addPlugin('RSTagging',
+                            {
+                            annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
+                            nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
+                            resource            : <?php echo (int) $ref; ?>,
+                            read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>
+                            });
+
+                        rs_tagging_plugin_added = true;
+
+                        // We have to wait for initialisation process to finish as this does ajax calls
+                        // in order to set itself up
+                        setTimeout(function ()
+                            {
+                            toggleAnnotationsOption(element);
+                            }, 
+                            1000);
+
+                        return false;
+                        }
+
+                    // Feature enabled? Then disable it.
+                    if(option.hasClass('Enabled'))
+                        {
+                        anno.destroy(preview_image.data('original'));
+
+                        // Remove the copy and show the linked image again
+                        jQuery('#' + img_copy_id).remove();
+                        preview_image_link.show();
+
+                        toggleMode(element);
+
+                        return false;
+                        }
+
+                    // Enable feature
+                    // Hide the linked image for now and use a copy of it to annotate
+                    var preview_image_copy = preview_image.clone(true);
+                    preview_image_copy.prop('id', img_copy_id);
+                    preview_image_copy.prop('src', img_src);
+
+                    // Set the width and height of the image otherwise if the source of the file
+                    // is fetched from download.php, Annotorious will not be able to determine its
+                    // size
+                    preview_image_copy.width(<?php echo $image_width; ?>);
+                    preview_image_copy.height(<?php echo $image_height; ?>);
+
+                    preview_image_copy.appendTo(preview_image_link.parent());
+                    preview_image_link.hide();
+
+                    anno.makeAnnotatable(document.getElementById(img_copy_id));
+
+                    toggleMode(element);
+
+                    return false;
+                    }
+                </script>
+                <?php
+                }
+
+            if($image_preview_zoom)
+                {
+                $previewurl = get_resource_path($ref, false, 'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
+                ?>
+                <a class="ToolsOptionLink" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
+                    <i class='fa fa-search-plus' aria-hidden="true"></i>
+                </a>
+                <script>
+                function toggleImagePreviewZoomOption(element)
+                    {
+                    var option = jQuery(element);
+
+                    // Feature enabled? Then disable it.
+                    if(option.hasClass('Enabled'))
+                        {
+                        jQuery('#previewimage').trigger('zoom.destroy');
+
+                        toggleMode(element);
+
+                        return false;
+                        }
+
+                    // Enable
+                    jQuery('#previewimage')
+                        .wrap('<span style="display: inline-block;"></span>')
+                        .css('display', 'block')
+                        .parent()
+                        .zoom({url: '<?php echo $previewurl; ?>'});
+
+                    toggleMode(element);
+
+                    return false;
+                    }
+                </script>
+                <?php
+                }
+                ?>
+            </div>
+            <script>
+            function showHidePreviewTools()
+                {
+                var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
+                var tools_options = tools_wrapper.find('.ToolsOptionLink');
+
+                // If any of the tools are enabled do not close Preview tools box
+                if(tools_options.length > 0 && tools_options.hasClass('Enabled'))
+                    {
+                    tools_wrapper.removeClass('Hidden');
+
+                    return false;
+                    }
+
+                tools_wrapper.toggleClass('Hidden');
+
+                return false;
+                }
+
+            function toggleMode(element)
+                {
+                jQuery(element).toggleClass('Enabled');
+                }
+            </script>
+        </div>
+        <?php
+        } /* end of canSeePreviewTools() */
+        ?>
+    </div>
+    <?php
+    }
+else
+    {
+    ?>
+    <div id="previewimagewrapper">
+        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture" style="border:none;" id="previewimage" />
+    <?php
+    if(isset($previewcaption))
+        {
+        ?>
+        <div class="clearerleft"></div>
+        <?php
+        display_field_data($previewcaption, true);
+        }
+
+    hook("previewextras");
+    ?>
+    </div>
+    <?php
+    }
 ?>
 <?php } /* End of renderinnerresourcepreview hook */ ?>
 <?php } /* End of replacerenderinnerresourcepreview hook */ ?>
@@ -1688,19 +1896,31 @@ function <?php echo $context ?>UpdateFSResultCount()
 <input type="hidden" name="countonly" id="<?php echo $context ?>countonly" value="">
 <?php
 $keywords=get_resource_top_keywords($ref,50);
-for ($n=0;$n<count($keywords);$n++)
+if (count($keywords)!=0)
 	{
-	?>
-	<div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n])?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
-	onClick="<?php echo $context ?>UpdateFSResultCount();"><label for="similar_search_<?php echo urlencode($keywords[$n])?>">&nbsp;<?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
-	<?php
+		for ($n=0;$n<count($keywords);$n++)
+			{
+			?>
+			<div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n])?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
+			onClick="<?php echo $context ?>UpdateFSResultCount();"><label for="similar_search_<?php echo urlencode($keywords[$n])?>">&nbsp;<?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
+			<?php
+			}
+	
+		?>
+		<div class="clearerleft"> </div>
+		<br />
+		<input name="search" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
+		<iframe src="<?php echo $baseurl_short?>pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
+		</form>
+		<?php
 	}
-?>
-<div class="clearerleft"> </div>
-<br />
-<input name="search" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
-<iframe src="<?php echo $baseurl_short?>pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
-</form>
+	
+else
+	{
+	echo $lang["nosimilarresources"];	
+	}
+	?>
+
 <div class="clearerleft"> </div>
 </div>
 </div>
@@ -1710,6 +1930,20 @@ for ($n=0;$n<count($keywords);$n++)
 <?php 
 	hook("afterviewfindsimilar");
 }
+
+if($annotate_enabled)
+    {
+    ?>
+    <!-- Annotorious -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/css/theme-dark/annotorious-dark.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/annotorious.min.js"></script>
+
+    <!-- Annotorious plugin(s) -->
+    <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
+    <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <!-- End of Annotorious -->
+    <?php
+    }
 
 include "../include/footer.php";
 ?>

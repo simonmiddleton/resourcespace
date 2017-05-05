@@ -3,7 +3,7 @@ if (!hook("renderresultlargethumb"))
 	{ ?>
 	<!--Resource Panel-->
 	<div class="ResourcePanelShellLarge" id="ResourceShell<?php echo htmlspecialchars($ref)?>"  <?php echo hook('resourcepanelshell_attributes')?>>
-		<div class="ResourcePanelLarge <?php hook('xlthumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
+		<div class="ResourcePanelLarge ArchiveState<?php echo $result[$n]['archive'];?><?php hook('xlthumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
     		<?php  
     		if ($resource_type_icons) 
     			{ ?>
@@ -73,9 +73,23 @@ if (!hook("renderresultlargethumb"))
 						}
 					else 
 						{
-						$pre_url=get_resource_path($ref,false,($retina_mode?"scr":"pre"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
-						if (isset($result[$n]["pre_url"])) {$pre_url=$result[$n]["pre_url"];}
-						?>
+                        $pre_url = get_resource_path(
+                            $ref,
+                            false,
+                            ($retina_mode ? 'scr' : 'pre'),
+                            false,
+                            $result[$n]['preview_extension'],
+                            true,
+                            1,
+                            $use_watermark,
+                            $result[$n]['file_modified']
+                        );
+
+                        if(isset($result[$n]['pre_url']))
+                            {
+                            $pre_url = $result[$n]['pre_url'];
+                            }
+                            ?>
 						<a 
 							style="position:relative;" 
 							href="<?php echo $url?>"  
@@ -189,6 +203,35 @@ if (!hook("renderresultlargethumb"))
 				{} ?> 
 			<!-- END HOOK Rendertitlelargethumb -->			
 			<?php
+            if($annotate_enabled)
+                {
+                $annotations_count = getResourceAnnotationsCount($ref);
+                $message           = '';
+
+                if(1 < $annotations_count)
+                    {
+                    $message = $annotations_count . ' ' . mb_strtolower($lang['annotate_annotations_label']);
+                    }
+                else if(1 == $annotations_count)
+                    {
+                    $message = $annotations_count . ' ' . mb_strtolower($lang['annotate_annotation_label']);
+                    }
+                ?>
+                <div class="ResourcePanelInfo AnnotationInfo">
+                <?php
+                if(0 < $annotations_count)
+                    {
+                    ?>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <span><?php echo $message; ?></span>
+                    <?php
+                    }
+                    ?>
+                &nbsp;
+                </div>
+                <?php
+                }
+
 			$df_alt=hook("displayfieldsalt");
 			$df_normal=$df;
 			if ($df_alt)

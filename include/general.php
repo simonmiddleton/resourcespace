@@ -6,15 +6,94 @@ include_once 'message_functions.php';
 include_once 'node_functions.php';
 
 $GLOBALS['get_resource_path_fpcache'] = array();
-function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jpg",$scramble=-1,$page=1,$watermarked=false,$file_modified="",$alternative=-1,$includemodified=true)
+/**
+* Get resource path/ resource URL/ download URL for this resource
+* 
+* IMPORTANT: the download URL should always be used client side (public)
+*            whilst filstore path is private for internal use only
+* 
+* @uses sql_value()
+* @uses get_alternative_file()
+* @uses get_resource_data()
+* 
+* @param integer $ref              Resource ID 
+* @param boolean $getfilepath      Set to TRUE to get the filestore (physical) path
+* @param string  $size             Specify which size of the resource should be returned. Use '' for original file
+* @param boolean $generate         Generate folder if not found
+* @param string  $extension        Extension of the file we are looking for. For original file, this would be the file
+*                                  extension, otherwise use the preview extension (e.g image preview will have JPG
+*                                  while video preview can have FLV/MP4 or others)
+* @param boolean $scramble         Set to TRUE to get the scrambled folder (requires scramble key for it to work)
+* @param integer $page             For documents, use the page number we are trying to get the preview of.
+* @param boolean $watermarked      Get the watermark version?
+* @param string  $file_modified    Specify when the file was last modified
+* @param integer $alternative      ID of the alternative file
+* @param boolean $includemodified  Show when the file was last modified
+* 
+* @return string
+*/
+function get_resource_path(
+    $ref,
+    $getfilepath,
+    $size,
+    $generate = true,
+    $extension = 'jpg',
+    $scramble = true,
+    $page = 1,
+    $watermarked = false,
+    $file_modified = '',
+    $alternative = -1,
+    $includemodified = true
+)
 	{
 	# returns the correct path to resource $ref of size $size ($size==empty string is original resource)
 	# If one or more of the folders do not exist, and $generate=true, then they are generated
-	if(!preg_match('/^[a-zA-Z0-9]+$/', $extension)){$extension="jpg";}
-	$override=hook("get_resource_path_override","",array($ref,$getfilepath,$size,$generate,$extension,$scramble,$page,$watermarked,$file_modified,$alternative,$includemodified));
-	if (is_string($override)) {return $override;}
+    if(!preg_match('/^[a-zA-Z0-9]+$/', $extension))
+        {
+        $extension = 'jpg';
+        }
 
-	global $storagedir,$originals_separate_storage,$fstemplate_alt_threshold,$fstemplate_alt_storagedir,$fstemplate_alt_storageurl,$fstemplate_alt_scramblekey;
+    $override = hook(
+        'get_resource_path_override',
+        '',
+        array($ref, $getfilepath, $size, $generate, $extension, $scramble, $page, $watermarked, $file_modified, $alternative, $includemodified)
+    );
+
+    if(is_string($override))
+        {
+        return $override;
+        }
+
+    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
+           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath;
+
+    // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
+    if(!$getfilepath && $hide_real_filepath)
+        {
+        global $baseurl, $k, $get_resource_path_extra_download_query_string_params;
+
+        if(
+        	!isset($get_resource_path_extra_download_query_string_params)
+        	|| is_null($get_resource_path_extra_download_query_string_params)
+        	|| !is_array($get_resource_path_extra_download_query_string_params)
+    	)
+        	{
+    		$get_resource_path_extra_download_query_string_params = array();
+        	}
+
+        return generateURL(
+            "{$baseurl}/pages/download.php",
+            array(
+                'ref'         => $ref,
+                'size'        => $size,
+                'ext'         => $extension,
+                'page'        => $page,
+                'alternative' => $alternative,
+                'k'           => $k,
+                'noattach'    => 'true',
+            ),
+            $get_resource_path_extra_download_query_string_params);
+        }
 
 	if ($size=="")
 		{
@@ -56,28 +135,21 @@ function get_resource_path($ref,$getfilepath,$size,$generate=true,$extension="jp
 			}
 		}
 
-	global $scramble_key;	
-	if ($scramble===-1)
-		{
-		# Find the system default scramble setting if not specified
-		if (isset($scramble_key) && ($scramble_key!="")) {$scramble=true;} else {$scramble=false;}
-		}
-	
-	if ($scramble)
-		{
-		# Create a scrambled path using the scramble key
-		# It should be very difficult or impossible to work out the scramble key, and therefore access
-		# other resources, based on the scrambled path of a single resource.
-		$skey=$scramble_key;
-        
-        # FSTemplate support - for trial system templates
-        if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
+    // Create a scrambled path using the scramble key
+    // It should be very difficult or impossible to work out the scramble key, and therefore access
+    // other resources, based on the scrambled path of a single resource.
+    if($scramble && isset($scramble_key) && '' != $scramble_key)
+        {
+        $skey = $scramble_key;
+
+        // FSTemplate support - for trial system templates
+        if(0 < $fstemplate_alt_threshold && $ref < $fstemplate_alt_threshold && -1 == $alternative)
             {
-            $skey=$fstemplate_alt_scramblekey;
+            $skey = $fstemplate_alt_scramblekey;
             }
-            
-		$scramblepath=substr(md5($ref . "_" . $skey),0,15);
-		}
+
+        $scramblepath = substr(md5("{$ref}_{$skey}"), 0, 15);
+        }
 	
     
 	if ($extension=="") {$extension="jpg";}
@@ -395,9 +467,9 @@ function get_resource_top_keywords($resource,$count)
         
     $return=array();
 	
-	$keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (1,5,6,8,10,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
+	$keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (0,1,5,8,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
     
-    $fixed_dynamic_keywords = sql_query("select distinct n.ref, n.name, n.resource_type_field from node n inner join resource_node rn on n.ref=rn.node where rn.resource='$resource' order by new_hit_count desc limit $count");
+    $fixed_dynamic_keywords = sql_query("select distinct n.ref, n.name, n.resource_type_field from node n inner join resource_node rn on n.ref=rn.node where (rn.resource='$resource' and n.resource_type_field in (select rtf.ref from resource_type_field rtf where use_for_similar=1) ) order by new_hit_count desc limit $count");
     
     $combined = array_merge($keywords,$fixed_dynamic_keywords);
     
@@ -418,22 +490,25 @@ function get_resource_top_keywords($resource,$count)
             {
             # In this case the keyword is coming from nodes
             # Apply permissions and strip out any results the user does not have access to.
-            if ( (checkperm("f*") || checkperm("f" . $keyword["field"]))
+            if ( (checkperm("f*") || checkperm("f" . $keyword["resource_type_field"]))
             && !checkperm("f-" . $keyword["resource_type_field"]) && !checkperm("T" . $resource) )
                 {
                 $r =  $keyword["name"] ;   
                 }
             }
             
-        if (substr($r,0,1)==","){$r=substr($r,1);}
-        $s=explode(",",$r);
-        foreach ($s as $a)
-            {
-            if(!empty($a))
-                {
-                $return[]=$a;
-                }
-            }
+        if(isset($r) && count($r)!=0)
+			{    
+			if (substr($r,0,1)==","){$r=substr($r,1);}
+			$s=explode(",",$r);
+			foreach ($s as $a)
+				{
+				if(!empty($a))
+					{
+					$return[]=$a;
+					}
+				}
+			}
 		}	
 			
 	return $return;
@@ -5141,23 +5216,34 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
 	}
 
 
-function generateURL($url,$parameters=array(),$setparams=array())
+/**
+* Utility function to generate URLs with query strings easier, with the ability
+* to override existing query string parameters when needed.
+* 
+* @param  string  $url
+* @param  array   $parameters  Default query string params (e.g "k", which appears on most of ResourceSpace URLs)
+* @param  array   $set_params  Override existing query string params
+* 
+* @return string
+*/
+function generateURL($url, $parameters = array(), $set_params = array())
     {
-    foreach($setparams as $setparam=>$setvalue)
+    foreach($set_params as $set_param => $set_value)
         {
-        if($setparam!="")
-            {$parameters[$setparam]=$setvalue;}
+        if('' != $set_param)
+            {
+            $parameters[$set_param] = $set_value;
+            }
         }
-    $querystringparams=array();
-    foreach($parameters as $parameter=>$parametervalue)
+
+    $query_string_params = array();
+
+    foreach($parameters as $parameter => $parameter_value)
         {
-        $querystringparams[]= $parameter . "=" . urlencode($parametervalue);
+        $query_string_params[] = $parameter . '=' . urlencode($parameter_value);
         }
-    $querystring="?" . implode ("&", $querystringparams);
-    
-    $returnurl= $url . $querystring;
-    return $returnurl;
-     
+
+    return $url . '?' . implode ('&', $query_string_params);
     }
 
 function notify_resource_change($resource)
@@ -5540,7 +5626,7 @@ function form_value_display($row,$name,$default="")
 function get_download_filename($ref,$size,$alternative,$ext)
 	{
 	# Constructs a filename for download
-	global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,$download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,$prefix_filename_string;
+	global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,$download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,$prefix_filename_string, $filename;
 	
 	$filename = $ref . $size . ($alternative>0?"_" . $alternative:"") . "." . $ext;
 	
@@ -5801,4 +5887,23 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
         }
 
     return $default;
+    }
+
+/**
+* Helper function for Preview tools feature. Checks all necessary permissions or options
+* in order to tell the system whether PreviewTools panel should be displayed
+* 
+* @param boolean $edit_access Does user have the permissions to edit this resource
+* 
+* @return boolean
+*/
+function canSeePreviewTools($edit_access)
+    {
+    global $annotate_enabled, $image_preview_zoom;
+
+    return
+        (
+           ($annotate_enabled && $edit_access)
+        || $image_preview_zoom
+        );
     }

@@ -1448,3 +1448,17 @@ function get_tile_custom_style($buildstring)
         }
     }
 
+/*
+ * Delete a tile from the dash for all users in a group
+* 
+* @param integer $tile ID of tile to delete
+* @param integer $group ref of usergroup to delete tile from
+* 
+* @return boolean
+*/
+function delete_usergroup_dash_tile($tile,$group)
+	{
+	if(!is_numeric($tile) || !is_numeric($group)){return false;}	
+    sql_query("DELETE FROM usergroup_dash_tile WHERE usergroup = '{$group}' AND dash_tile = '{$tile}'");					
+	sql_query("DELETE ud.* FROM user_dash_tile ud LEFT JOIN user u ON ud.user=u.ref LEFT JOIN usergroup ug ON ug.ref=u.usergroup WHERE ud.dash_tile='" . $tile . "' and ug.ref='" . $group . "'");
+	}

@@ -924,6 +924,17 @@ $config_sheetthumb_include_ref=true;
 # If making a contact sheet with one resource per page sheet style, use these fields in contact sheet:
 $config_sheetsingle_fields = array(8);
 $config_sheetsingle_include_ref=true;
+
+# Use templates rather than setting contactsheet fields by display style?
+$contactsheet_use_field_templates=false;
+# If $contactsheet_use_field_templates=true uncomment and set:
+# 'name' is the displayed name of the template
+# 'fields' is an array of fields to use. Fields will be displayed in setting order.
+#$contactsheet_field_template[0]['name']='Title only';
+#$contactsheet_field_template[0]['fields']=array(8);
+#$contactsheet_field_template[0]['name']='Title & Filename';
+#$contactsheet_field_template[0]['fields']=array(8,51);
+
 # experimental sorting (doesn't include ASC/DESC yet).
 $contactsheet_sorting=false;
 
@@ -952,11 +963,18 @@ $contact_sheet_footer = false;
 $contact_sheet_add_link=true;
 # Give user option to enable links?
 $contact_sheet_add_link_option=false;
-
+# Give user option to show field name in front of field data
+$contact_sheet_field_name_option=false;
+# Bold the field name (if shown)?
+$contact_sheet_field_name_bold=false;
 # Use watermarked previews for contact sheets? If set to 'true' watermarks will be forced rather than judged based on user credentials.
 $contact_sheet_force_watermarks=false;
 # Give user option to force watermarks?
 $contact_sheet_force_watermark_option=false;
+# Contactsheet include time with dates?
+$contact_sheet_date_include_time=true;
+# Contactsheet wordy dates?
+$contact_sheet_date_wordy=true;
 
 # Show contact sheet metadata under preview? For thumbnail view only
 $contact_sheet_metadata_under_thumbnail=false;
@@ -2971,6 +2989,9 @@ $password_reset_link_expiry =1;
 # Show the resource view in a modal when accessed from search results.
 $resource_view_modal=true;
 
+# Option to show other standard pages e.g. resource requests in a modal
+$modal_default=false;
+
 # Show the resource edit in a modal when accessed from resource view modal.
 $resource_edit_modal_from_view_modal=false;
 
@@ -3029,15 +3050,15 @@ $previews_allow_enlarge=false;
 $static_slideshow_image=false;
 
 # User preference - user_pref_resource_notifications. Option to receive notifications about resource management e.g. archive state changes 
-$user_pref_resource_notifications=true;
+$user_pref_resource_notifications=false;
 # User preference - user_pref_resource_access_notifications. Option to receive notifications about resource access e.g. resource requests
-$user_pref_resource_access_notifications=true;
+$user_pref_resource_access_notifications=false;
 
 # Administrator default for receiving notifications about resource access e.g. resource requests. Can't use user_pref_resource_access_notifications since this will pick up setting of requesting user
-$admin_resource_access_notifications=true;
+$admin_resource_access_notifications=false;
 
 # User preference - user_pref_user_management_notifications (user admins only). Option to receive notifications about user management changes e.g. account requests
-$user_pref_user_management_notifications=true;
+$user_pref_user_management_notifications=false;
 # User preference - user_pref_system_management_notifications (System admins only). Option to receive notifications about system events e.g. low disk space
 $user_pref_system_management_notifications=true;
 
@@ -3190,13 +3211,18 @@ $fstemplate_alt_scramblekey=""; # The scramble key used by the template installa
 $responsive_ui = true;
 
 # Default action settings
-$actions_enable=true;
+$actions_enable=false;
+# If $actions_enable is false, option to enable actions only for users with certain permissions, To enable actions based on users having more than one permission, separate with a comma.
+$actions_permissions=array("a","t","R","u","e0");
 $actions_resource_requests=true;
 $actions_account_requests=true;
 $actions_resource_review=true;
 $actions_notify_states="-1";
 $actions_resource_types_hide="";  // Resource types to exclude from notifications
 $actions_approve_hide_groups=""; // Groups to exclude from notifications
+
+# Option to show action links e.g. user requests, resource requests in a modal
+$actions_modal=true;
 
 # Separator to use when rendering date range field values
 $range_separator = " / ";
@@ -3219,3 +3245,27 @@ $resource_type_extension_mapping         = array(
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
 
+
+#######################################
+########################## Annotations:
+#######################################
+// Ability to annotate images or documents previews.
+// Annotations are linked to nodes, the user needs to specify which field a note is bind to.
+$annotate_enabled = false;
+
+// Specify which fields can be used to bind to annotations
+$annotate_fields = array();
+
+// The user can see existing annotations in read-only mode
+$annotate_read_only = false;
+
+// When using anonymous users, set to TRUE to allow anonymous users to add/ edit/ delete annotations
+$annotate_crud_anonymous = false;
+#######################################
+#######################################
+
+/*Prevent client side users to get access to the real path of the resource when ResourceSpace is using filestore URLs.
+Rather than use a URL like "http://yourdomain/filestore/1_6326bb8314c6c21/1pre_cf33a61f47b5982.jpg", it will use
+the download.php page to give back the file. This prevents users from comming back and download the files after their 
+permissions to the assets have been revoked.*/
+$hide_real_filepath = false;

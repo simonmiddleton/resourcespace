@@ -1,7 +1,8 @@
 <?php
 /* -------- Category Tree ------------------- */ 
-global $lang, $baseurl, $css_reload_key, $category_tree_show_status_window, $category_tree_open, $is_search, $cat_tree_singlebranch,
-$category_tree_add_parents,$category_tree_remove_children;
+global $lang, $baseurl, $css_reload_key, $category_tree_show_status_window,
+$category_tree_open, $is_search, $cat_tree_singlebranch, $category_tree_add_parents,
+$category_tree_remove_children;
 
 $is_search      = (isset($is_search) ? $is_search : false);
 $forsearchbar   = (isset($forsearchbar) ? $forsearchbar : false);
@@ -188,18 +189,39 @@ echo $hidden_input_elements;
             jQuery('#<?php echo $hidden_input_elements_id_prefix; ?>' + data.node.id).remove();
             jQuery('#<?php echo $status_box_id;?>_option_' + data.node.id).next('br').remove();
             jQuery('#<?php echo $status_box_id;?>_option_' + data.node.id).remove();
-			<?php if ($category_tree_remove_children && !$is_search)
-				{?>
-				// Remove child nodes
-				ChildNodes = jQuery('#<?php echo $tree_id; ?>').jstree('get_children_dom', data.node);
-				jQuery.each(ChildNodes, function( index, value )
-					{
-					jQuery('#<?php echo $tree_id; ?>').jstree('deselect_node', value);
-					});
-				
-				<?php
-				}?>
-			
+            <?php
+            if($category_tree_remove_children && !$is_search)
+                {
+                ?>
+                // If parent node is closed, make sure we open its children and deselect them as well
+                if(jQuery('#<?php echo $tree_id; ?>').jstree('is_closed', data.node))
+                    {
+                    jQuery('#<?php echo $tree_id; ?>').jstree(
+                        'open_node',
+                        data.node,
+                        function ()
+                            {
+                            // Remove child nodes
+                            ChildNodes = jQuery('#<?php echo $tree_id; ?>').jstree('get_children_dom', data.node);
+
+                            jQuery.each(ChildNodes, function( index, value )
+                                {
+                                jQuery('#<?php echo $tree_id; ?>').jstree('deselect_node', value);
+                                });
+                            },
+                        false);
+                    }
+
+                // Remove child nodes
+                ChildNodes = jQuery('#<?php echo $tree_id; ?>').jstree('get_children_dom', data.node);
+
+                jQuery.each(ChildNodes, function( index, value )
+                    {
+                    jQuery('#<?php echo $tree_id; ?>').jstree('deselect_node', value);
+                    });
+                <?php
+                }
+                ?>
             }
 
         // Common actions for both selecting or deselecting a node

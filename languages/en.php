@@ -736,6 +736,7 @@ $lang["action"]="Action";
 $lang["treeobjecttype-field"]=$lang["field"]="Field";
 $lang["save"]="Save";
 $lang["revert"]="Revert";
+$lang['continue'] = 'Continue';
 $lang["cancel"]="Cancel";
 $lang["view"]="View";
 $lang["type"]="Type";
@@ -1897,6 +1898,9 @@ $lang["report-send-all-users"]="Send the report to all active users?";
 $lang["contactsheet-single"]="1 per page";
 $lang["contact_sheet-include_header_option"]="Include header?";
 $lang["contact_sheet-add_link_option"]="Add clickable links to resource view page?";
+$lang['contact_sheet_field_template'] = 'Select contact sheet metadata field template';
+$lang["contact_sheet-field_name_option"] = 'Include field names with data?';
+$lang['contact_sheet_field_template_fields'] = 'Displayed fields';
 $lang['contact_sheet_select_fields'] = 'Select metadata fields to display on contact sheet';
 $lang["contact_sheet-add_logo_option"]="Add logo to top of each page?";
 $lang["contact_sheet-single_select_size"]="Image quality";
@@ -2356,6 +2360,7 @@ $lang['userpreference_default_perpage_label'] = 'Default per page';
 $lang['userpreference_default_display_label'] = 'Default display';
 $lang['userpreference_use_checkboxes_for_selection_label'] = 'Use checkboxes to add to collection';
 $lang['userpreference_resource_view_modal_label'] = 'Resource view modal';
+$lang["userpreference_modal_default"] = "Show standard pages in a modal (popup) window where enabled?";
 $lang['userpreference_thumbs_default_label'] = 'Default collection bar display';
 $lang['userpreference_basic_simple_search_label'] = 'Basic simple search';
 $lang['userpreference_cc_me_label'] = 'CC me when sending resources and collections';
@@ -2412,6 +2417,7 @@ $lang['systemconfig_themes_simple_view'] = 'Enable Featured Collections simple v
 $lang['systemconfig_themes_category_split_pages'] = 'Display Featured Collection categories as links, and Featured Collections on separate pages?';
 $lang['systemconfig_theme_category_levels'] = 'How many levels of theme category to show?';
 $lang['systemconfig_enable_themes'] = 'Enable Featured Collections';
+$lang["systemconfig_modal_default"] = "Enable modals for standard pages where configured? User preferences may override this.";
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
@@ -2570,6 +2576,7 @@ $lang["actions_myactions"] = "My actions";
 $lang["actions_introtext"] = "You can configure the criteria for actions that appear here by changing your user preferences";
 $lang["actions_noactions"] = "You have no outstanding actions";
 $lang["actions_resource_review"] = "Show me editable resources in my actions list";
+$lang["actions_modal"] = "Show action links e.g. user requests, resource requests in a modal (popup) window?";
 $lang["actions_resource_review_default"] = "Show editable resources by default in action lists";
 $lang["actions_notify_states"] = "Editable resources in the following states will be shown";
 $lang["actions_resource_types_hide"] = "Do not show editable resources of the following types";
@@ -2592,3 +2599,8 @@ $lang["default_upload_sequence"]="Default upload sequence";
 $lang["upload_first_then_set_metadata"]="Upload first, then set metadata";
 $lang["set_metadata_then_upload"]="Set metadata first, then upload";
 
+
+/* Annotations */
+$lang['annotate_text_link_label'] = 'Annotate mode toggle';
+$lang['annotate_annotation_label'] = 'Annotation';
+$lang['annotate_annotations_label'] = 'Annotations';

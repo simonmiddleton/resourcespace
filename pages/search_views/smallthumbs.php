@@ -3,7 +3,7 @@ if (!hook("renderresultsmallthumb"))
 	{ ?>
 	<!--Resource Panel-->
 	<div class="ResourcePanelShellSmall" <?php if ($display_user_rating_stars && $k==""){?> <?php } ?>id="ResourceShell<?php echo htmlspecialchars($ref)?>"  <?php echo hook('resourcepanelshell_attributes')?> >
-		<div class="ResourcePanelSmall  <?php hook('smallthumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
+		<div class="ResourcePanelSmall  ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('smallthumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
 			<?php  
 			if ($resource_type_icons) 
 				{ ?>
@@ -20,22 +20,46 @@ if (!hook("renderresultsmallthumb"))
 					{
 					$use_watermark=false;	
 					}
-				# Work out the preview image path
-				if (isset($result[$n]["col_url"]))
-					{$col_url=$result[$n]["col_url"];} # If col_url set in data, use instead, e.g. by manipulation of data via process_search_results hook
-				else
-					{
-					$col_path=get_resource_path($ref,true,($retina_mode?"thm":"col"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
-					if ($result[$n]["has_image"] && file_exists($col_path))
-						{
-						$col_url=get_resource_path($ref,false,($retina_mode?"thm":"col"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
-						}
-					else
-						{
-						$col_url = $baseurl_short . "gfx/" . get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],"col");
-						}
-					}
-				?>
+
+                # Work out the preview image path
+                if(isset($result[$n]['col_url']))
+                    {
+                    $col_url = $result[$n]['col_url'];
+                    } # If col_url set in data, use instead, e.g. by manipulation of data via process_search_results hook
+                else
+                    {
+                    $col_path = get_resource_path(
+                            $ref,
+                            true,
+                            ($retina_mode ? 'thm' : 'col'),
+                            false,
+                            $result[$n]['preview_extension'],
+                            true,
+                            1,
+                            $use_watermark,
+                            $result[$n]['file_modified']
+                        );
+
+                    if($result[$n]['has_image'] && file_exists($col_path))
+                        {
+                        $col_url = get_resource_path(
+                                $ref,
+                                false,
+                                ($retina_mode ? 'thm' : 'col'),
+                                false,
+                                $result[$n]['preview_extension'],
+                                true,
+                                1,
+                                $use_watermark,
+                                $result[$n]['file_modified']
+                            );
+                        }
+                    else
+                        {
+                        $col_url = $baseurl_short . 'gfx/' . get_nopreview_icon($result[$n]['resource_type'],$result[$n]['file_extension'],'col');
+                        }
+                    }
+                    ?>
 				<table border="0" class="ResourceAlignSmall<?php hook('searchdecorateresourcetableclass'); ?>">
 				<?php hook("resourcetop");?>
 				<tr><td>
@@ -163,6 +187,26 @@ if (!hook("renderresultsmallthumb"))
 				{
 				hook("icons");
 				} //end hook replaceicons
+
+            if($annotate_enabled)
+                {
+                $annotations_count = getResourceAnnotationsCount($ref);
+                ?>
+                <div class="ResourcePanelInfo AnnotationInfo">
+                <?php
+                if(0 < $annotations_count)
+                    {
+                    ?>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <span><?php echo $annotations_count; ?></span>
+                    <?php
+                    }
+                    ?>
+                &nbsp;
+                </div>
+                <?php
+                }
+
 			$df_alt=hook("displayfieldsalt");
 			$df_normal=$df;
 			if ($df_alt){$df=$df_alt;}
