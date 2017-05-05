@@ -395,6 +395,11 @@ if($ajax)
             $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name);
             }
 
+        if((bool) $field_data['automatic_nodes_ordering'])
+            {
+            $nodes = reorder_nodes($nodes);
+            }
+
         foreach($nodes as $node)
             {
             check_node_indexed($node, $field_data['partial_index']);
@@ -411,7 +416,7 @@ if($ajax)
 
                             <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo $lang['save']; ?></button>
                         <?php
-                        if('' == $filter_by_name)
+                        if('' == $filter_by_name && !$field_data['automatic_nodes_ordering'])
                             {
                             ?>
                             <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>

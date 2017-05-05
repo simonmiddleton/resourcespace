@@ -2906,21 +2906,48 @@ function get_fields_with_options()
 }
 
 function get_field($field)
-{
+    {
     # A standard field title is translated using $lang.  A custom field title is i18n translated.
 
     # Executes query.
-    $r = sql_query("select ref, name, title, type, order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, display_as_dropdown from resource_type_field where ref='$field'");
+    $r = sql_query("
+        SELECT ref,
+               name,
+               title,
+               type,
+               order_by,
+               keywords_index,
+               partial_index,
+               resource_type,
+               resource_column,
+               display_field,
+               use_for_similar,
+               iptc_equiv,
+               display_template,
+               tab_name,
+               required,
+               smart_theme_name,
+               exiftool_field,
+               advanced_search,
+               simple_search,
+               help_text,
+               display_as_dropdown,
+               automatic_nodes_ordering
+          FROM resource_type_field
+         WHERE ref = '{$field}'
+     ");
 
     # Translates the field title if the searched field is found.
-    if (count($r)==0) {
+    if(0 == count($r))
+        {
         return false;
-    }
-    else {
+        }
+    else
+        {
         $r[0]["title"] = lang_or_i18n_get_translated($r[0]["title"], "fieldtitle-");
         return $r[0];
+        }
     }
-}
 
 function get_field_options_with_stats($field)
 	{

@@ -39,7 +39,7 @@ if($backurl=="")
 	
 function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type, $currentvalue,$fieldtype)
 	{
-	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $daterange_edtf_support;
+	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $daterange_edtf_support, $allfields;
 	if($propertyname=="linked_data_field")
 		{
 		if($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
@@ -105,9 +105,22 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                 </div> <!-- end question -->
 
                 <div class="Question">
-                <label><?php echo $lang['options']; ?></label>
-                <span><a href="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['property-options_edit_link']; ?></a></span>
+                    <label><?php echo $lang['options']; ?></label>
+                    <span><a href="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['property-options_edit_link']; ?></a></span>
+                    <div class="clearerleft"></div>
+                </div>
+
                 <?php
+                if(FIELD_TYPE_CATEGORY_TREE != $currentvalue)
+                    {
+                    $field_index              = array_search($ref, array_column($allfields, 'ref'));
+                    $automatic_nodes_ordering = (false !== $field_index ? $allfields[$field_index]['automatic_nodes_ordering'] : 0);
+                    ?>
+                    <div class="Question">
+                        <label><?php echo $lang['property-automatic_nodes_ordering_label']; ?></label>
+                        <input type="checkbox" name="automatic_nodes_ordering" value="1"<?php if(1 == $automatic_nodes_ordering) { ?> checked="checked"<?php } ?>>
+                    <?php
+                    }
                 }            
             elseif (in_array($currentvalue, array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE)))
                 { // create constraints selector
@@ -205,40 +218,41 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 // )
 // IMPORTANT - Make sure advanced field properties are listed after the 'partial_index' so that these will be hidden from users by default
 
-$fieldcolumns=array("title"=>array($lang["property-title"],"",0,1),
-					"resource_type"=>array($lang["property-resource_type"],"",0,0),
-					"type"=>array($lang["property-field_type"],"",0,1),
-					"linked_data_field"=>array($lang["property-field_raw_edtf"],"",0,1),
-					"name"=>array($lang["property-shorthand_name"],$lang["information-shorthand_name"],0,1),
-					"required"=>array($lang["property-required"],"",1,1),
-					"order_by"=>array($lang["property-order_by"],"",0,1),
-					"keywords_index"=>array($lang["property-index_this_field"],$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"],1,1),
-					"display_field"=>array($lang["property-display_field"],"",1,1),
-					"advanced_search"=>array($lang["property-enable_advanced_search"],"",1,1),
-					"simple_search"=>array($lang["property-enable_simple_search"],"",1,1),
-					"exiftool_field"=>array($lang["property-exiftool_field"],"",0,1),
-					"use_for_similar"=>array($lang["property-use_for_find_similar_searching"],"",1,1),
-					"hide_when_uploading"=>array($lang["property-hide_when_uploading"],"",1,1),
-					"hide_when_restricted"=>array($lang["property-hide_when_restricted"],"",1,1),
-					"help_text"=>array($lang["property-help_text"],"",2,1),
-					"tooltip_text"=>array($lang["property-tooltip_text"],$lang["information-tooltip_text"],2,1),
-					
-					"partial_index"=>array($lang["property-enable_partial_indexing"],$lang["information-enable_partial_indexing"],1,1),
-					"iptc_equiv"=>array($lang["property-iptc_equiv"],"",0,1),					
-					"display_template"=>array($lang["property-display_template"],"",2,1),
-					"display_condition"=>array($lang["property-display_condition"],$lang["information-display_condition"],2,1),
-					"value_filter"=>array($lang["property-value_filter"],"",2,1),
-					"regexp_filter"=>array($lang["property-regexp_filter"],$lang["information-regexp_filter"],2,1),
-					"tab_name"=>array($lang["property-tab_name"],"",0,1),
-					"smart_theme_name"=>array($lang["property-smart_theme_name"],"",0,1),
-					"exiftool_filter"=>array($lang["property-exiftool_filter"],"",2,1),
-					"display_as_dropdown"=>array($lang["property-display_as_dropdown"],$lang["information-display_as_dropdown"],1,1),
-					"external_user_access"=>array($lang["property-external_user_access"],"",1,1),
-					"autocomplete_macro"=>array($lang["property-autocomplete_macro"],"",2,1),
-					"omit_when_copying"=>array($lang["property-omit_when_copying"],"",1,1),
-					"sync_field"=>array($lang["property-sync_with_field"],"",0,0),
-					"onchange_macro"=>array($lang["property-onchange_macro"],$lang["information-onchange_macro"],2,1)				
-					);
+$fieldcolumns = array(
+    'title'                    => array($lang['property-title'],'',0,1),
+    'resource_type'            => array($lang['property-resource_type'],'',0,0),
+    'type'                     => array($lang['property-field_type'],'',0,1),
+    'linked_data_field'        => array($lang['property-field_raw_edtf'],'',0,1),
+    'name'                     => array($lang['property-shorthand_name'],$lang['information-shorthand_name'],0,1),
+    'required'                 => array($lang['property-required'],'',1,1),
+    'order_by'                 => array($lang['property-order_by'],'',0,1),
+    'keywords_index'           => array($lang['property-index_this_field'],$lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1),
+    'display_field'            => array($lang['property-display_field'],'',1,1),
+    'advanced_search'          => array($lang['property-enable_advanced_search'],'',1,1),
+    'simple_search'            => array($lang['property-enable_simple_search'],'',1,1),
+    'exiftool_field'           => array($lang['property-exiftool_field'],'',0,1),
+    'use_for_similar'          => array($lang['property-use_for_find_similar_searching'],'',1,1),
+    'hide_when_uploading'      => array($lang['property-hide_when_uploading'],'',1,1),
+    'hide_when_restricted'     => array($lang['property-hide_when_restricted'],'',1,1),
+    'help_text'                => array($lang['property-help_text'],'',2,1),
+    'tooltip_text'             => array($lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1),
+
+    'partial_index'            => array($lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1),
+    'iptc_equiv'               => array($lang['property-iptc_equiv'],'',0,1),					
+    'display_template'         => array($lang['property-display_template'],'',2,1),
+    'display_condition'        => array($lang['property-display_condition'],$lang['information-display_condition'],2,1),
+    'value_filter'             => array($lang['property-value_filter'],'',2,1),
+    'regexp_filter'            => array($lang['property-regexp_filter'],$lang['information-regexp_filter'],2,1),
+    'tab_name'                 => array($lang['property-tab_name'],'',0,1),
+    'smart_theme_name'         => array($lang['property-smart_theme_name'],'',0,1),
+    'exiftool_filter'          => array($lang['property-exiftool_filter'],'',2,1),
+    'display_as_dropdown'      => array($lang['property-display_as_dropdown'],$lang['information-display_as_dropdown'],1,1),
+    'external_user_access'     => array($lang['property-external_user_access'],'',1,1),
+    'autocomplete_macro'       => array($lang['property-autocomplete_macro'],'',2,1),
+    'omit_when_copying'        => array($lang['property-omit_when_copying'],'',1,1),
+    'sync_field'               => array($lang['property-sync_with_field'],'',0,0),
+    'onchange_macro'           => array($lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1)				
+);
 
 # Remove some items if $execution_lockout is set to prevent code execution
 if ($execution_lockout)
@@ -298,8 +312,12 @@ if(getval("save","")!="" && getval("delete","")=="")
 		}
 	// add field_constraint sql
 	if (getvalescaped("field_constraint","")!=""){$sql.=",field_constraint='".getvalescaped("field_constraint",0)."'";}
-	$sql.=" where ref='{$ref}'";
-	
+
+    // Add automatic nodes ordering if set (available only for fixed list fields - except category trees)
+    $sql .= ", automatic_nodes_ordering = '" . (1 == getval('automatic_nodes_ordering', 0, true) ? 1 : 0) . "'";
+
+    $sql .= " WHERE ref = '{$ref}'";
+
 	sql_query($sql);
 	if($sync_field!="" && $sync_field>0)
 		{
