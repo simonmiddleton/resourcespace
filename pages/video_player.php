@@ -19,39 +19,44 @@ $vidindex=0;
 if($video_preview_hls_support!=1 || !$video_preview_player_hls) 
 	{
 	// Look for a standard preview video with the expected extension.
-	$video_preview=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative);
-	if (file_exists($video_preview))
+	$video_preview = get_resource_path($ref, true, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative);
+
+	if(file_exists($video_preview))
 		{
-		$video_preview_path=get_resource_path($ref,false,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative,false);
-		$video_preview_type="video/" . $ffmpeg_preview_extension;
+		$video_preview_path = get_resource_path($ref, false, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, false);
+		$video_preview_type = "video/{$ffmpeg_preview_extension}";
 		}		
-	elseif (!file_exists($video_preview) && $ffmpeg_preview_extension!="flv")
+	else if(!file_exists($video_preview) && 'flv' != $ffmpeg_preview_extension)
 		{
 		// No preview file of the default type found. For legacy systems that were not using MP4 previews there may be an FLV preview.
-		$video_preview=get_resource_path($ref,true,"pre",false,"flv",-1,1,false,"",$alternative);
-		if (file_exists($video_preview))
+		$video_preview = get_resource_path($ref, true, 'pre', false, 'flv', true, 1, false, '', $alternative);
+
+		if(file_exists($video_preview))
 			{
-			$video_preview_path=get_resource_path($ref,false,"pre",false,"flv",-1,1,false,"",$alternative,false);
-			$video_preview_type="video/flv";
+			$video_preview_path = get_resource_path($ref, false, 'pre', false, 'flv', true, 1, false, '', $alternative, false);
+			$video_preview_type = 'video/flv';
 			}
 		}
 			
-	if ((!file_exists($video_preview) || $video_preview_original) && get_resource_access($ref))
+	if((!file_exists($video_preview) || $video_preview_original) && get_resource_access($ref))
 		{
 		# Attempt to play the source file direct (not a preview). For direct MP4/FLV upload support - the file itself is an FLV/MP4. Or, with the preview functionality disabled, we simply allow playback of uploaded video files.
-		$origvideofile=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative);
+		$origvideofile = get_resource_path($ref, true, '', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative);
+
 		if(file_exists($origvideofile))
 			{
-			$video_preview_path=get_resource_path($ref,false,"",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative,false);
-			$video_preview_type="video/" . $ffmpeg_preview_extension;
+			$video_preview_path = get_resource_path($ref, false, '', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, false);
+			$video_preview_type = "video/{$ffmpeg_preview_extension}";
 			}
 		}
-	if (isset($video_preview_path))
+
+	if(isset($video_preview_path))
 		{
-		$video_preview_sources[$vidindex]["url"]=$video_preview_path;
-		$video_preview_sources[$vidindex]["url_encoded"]=urlencode($video_preview_path);
-		$video_preview_sources[$vidindex]["type"]=$video_preview_type;
-		$video_preview_sources[$vidindex]["label"]="";
+		$video_preview_sources[$vidindex]['url']         = $video_preview_path;
+		$video_preview_sources[$vidindex]['url_encoded'] = urlencode($video_preview_path);
+		$video_preview_sources[$vidindex]['type']        = $video_preview_type;
+		$video_preview_sources[$vidindex]['label']       = '';
+
 		$vidindex++;
 		}
 	}
@@ -61,15 +66,19 @@ if($video_preview_hls_support!=0)
 	$playlistfile=get_resource_path($ref,true,"pre",false,"m3u8",-1,1,false,"",$alternative,false);
 	if(file_exists($playlistfile))
 		{
+        $hide_real_filepath = false;
+
 		$playlisturl=get_resource_path($ref,false,"pre",false,"m3u8",-1,1,false,"",$alternative,false);
 		$video_preview_sources[$vidindex]["url"]=$playlisturl;
 		$video_preview_sources[$vidindex]["type"]="application/x-mpegURL";
 		$video_preview_sources[$vidindex]["label"]="Auto";
 		$vidindex++;
+
+        $hide_real_filepath = true;
 		}
 	$videojs_resolution_selection_default_res="Auto";
 	}		
-	
+
 if($use_video_alts)
 	{
 	# blank alt variable to use proper preview image
@@ -84,11 +93,15 @@ if(isset($videojs_resolution_selection))
 		$hlsfile=get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative,false);
 		if(file_exists($hlsfile))
 			{
+            $hide_real_filepath = false;
+
 			$hlsurl=get_resource_path($ref,false,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative,false);
 			$video_preview_sources[$vidindex]["url"]=$hlsurl;
 			$video_preview_sources[$vidindex]["type"]="application/x-mpegURL";
 			$video_preview_sources[$vidindex]["label"]=i18n_get_translated($video_hls_stream['label']);
 			$vidindex++;
+
+            $hide_real_filepath = true;
 			}
 		}
 	
@@ -105,9 +118,9 @@ if(isset($videojs_resolution_selection))
 			$alt_data=sql_query("select * from resource_alt_files where resource={$ref} and name='{$videojs_resolution_selection[$s]['name']}'");
 			if(!empty($alt_data))
 				{
-				$alt_data=$alt_data[0];
-				$res_path=get_resource_path($ref,false,"",false,$alt_data['file_extension'],-1,1,false,"",$alt_data['ref'],false);
-				$res_ext=$alt_data['file_extension'];
+				$alt_data = $alt_data[0];
+				$res_path = get_resource_path($ref, false, '', false, $alt_data['file_extension'], true, 1, false, '', $alt_data['ref'], false);
+				$res_ext  = $alt_data['file_extension'];
 				}
 			}
 		if(isset($res_path) && isset($res_ext))
@@ -120,9 +133,9 @@ if(isset($videojs_resolution_selection))
 		}
 	}
 
-$thumb=get_resource_path($ref,false,"pre",false,"jpg",-1,1,false,"",$alternative); 
-$thumb_raw=$thumb;
-$thumb=urlencode($thumb);
+$thumb     = get_resource_path($ref, false, 'pre', false, 'jpg', true, 1, false, '', $alternative);
+$thumb_raw = $thumb;
+$thumb     = urlencode($thumb);
 
 # Choose a colour based on the theme.
 $theme=(isset($userfixedtheme) && $userfixedtheme!="")?$userfixedtheme:getval("colourcss","greyblu");

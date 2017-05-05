@@ -2906,21 +2906,48 @@ function get_fields_with_options()
 }
 
 function get_field($field)
-{
+    {
     # A standard field title is translated using $lang.  A custom field title is i18n translated.
 
     # Executes query.
-    $r = sql_query("select ref, name, title, type, order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, display_as_dropdown from resource_type_field where ref='$field'");
+    $r = sql_query("
+        SELECT ref,
+               name,
+               title,
+               type,
+               order_by,
+               keywords_index,
+               partial_index,
+               resource_type,
+               resource_column,
+               display_field,
+               use_for_similar,
+               iptc_equiv,
+               display_template,
+               tab_name,
+               required,
+               smart_theme_name,
+               exiftool_field,
+               advanced_search,
+               simple_search,
+               help_text,
+               display_as_dropdown,
+               automatic_nodes_ordering
+          FROM resource_type_field
+         WHERE ref = '{$field}'
+     ");
 
     # Translates the field title if the searched field is found.
-    if (count($r)==0) {
+    if(0 == count($r))
+        {
         return false;
-    }
-    else {
+        }
+    else
+        {
         $r[0]["title"] = lang_or_i18n_get_translated($r[0]["title"], "fieldtitle-");
         return $r[0];
+        }
     }
-}
 
 function get_field_options_with_stats($field)
 	{
@@ -4432,6 +4459,11 @@ function truncate_join_field_value($value)
 * Check whether a resource (of a video type) has any snapshots created.
 * Snapshots are being created using config option $ffmpeg_snapshot_frames
 * 
+* @uses get_resource_path()
+* 
+* @global array $get_resource_path_extra_download_query_string_params Array of query string params
+*                                                                     as expected by generateURL()
+* 
 * @param integer $resource_id Resource unique ref
 * @param boolean $file_path   Specify whether the return value should be the file path. Default is FALSE
 * @param boolean $count_only  Set to true if we are only interested in how many snapshots we have. Default is FALSE
@@ -4440,10 +4472,11 @@ function truncate_join_field_value($value)
 */
 function get_video_snapshots($resource_id, $file_path = false, $count_only = false)
     {
-    global $storagedir, $storageurl;
+    global $get_resource_path_extra_download_query_string_params;
 
-    $snapshots_found = array();
-    $path            = get_resource_path($resource_id, true, 'snapshot', false, 'jpg', -1, 1, false, '');
+    $get_resource_path_extra_download_query_string_params = array();
+    $snapshots_found                                      = array();
+    $path                                                 = get_resource_path($resource_id, true, 'snapshot', false, 'jpg', true, 1, false, '', -1, false);
 
     $i = 1;
     do
@@ -4453,7 +4486,21 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
 
         if($snapshot_found)
             {
-            $snapshots_found[$i] = ($file_path ? $snapshot_path : str_replace($storagedir, $storageurl, $snapshot_path));
+            if(!$file_path)
+                {
+                global $hide_real_filepath;
+
+                $get_resource_path_extra_download_query_string_params['snapshot_frame'] = $i;
+
+                $snapshot_path = get_resource_path($resource_id, false, 'snapshot', false, 'jpg', true, 1, false, '', -1, false);
+
+                if(!$hide_real_filepath)
+                    {
+                    $snapshot_path = str_replace('snapshot', "snapshot_{$i}", $snapshot_path);
+                    }
+                }
+
+            $snapshots_found[$i] = $snapshot_path;
             }
 
         $i++;

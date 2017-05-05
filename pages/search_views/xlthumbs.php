@@ -73,9 +73,23 @@ if (!hook("renderresultlargethumb"))
 						}
 					else 
 						{
-						$pre_url=get_resource_path($ref,false,($retina_mode?"scr":"pre"),false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
-						if (isset($result[$n]["pre_url"])) {$pre_url=$result[$n]["pre_url"];}
-						?>
+                        $pre_url = get_resource_path(
+                            $ref,
+                            false,
+                            ($retina_mode ? 'scr' : 'pre'),
+                            false,
+                            $result[$n]['preview_extension'],
+                            true,
+                            1,
+                            $use_watermark,
+                            $result[$n]['file_modified']
+                        );
+
+                        if(isset($result[$n]['pre_url']))
+                            {
+                            $pre_url = $result[$n]['pre_url'];
+                            }
+                            ?>
 						<a 
 							style="position:relative;" 
 							href="<?php echo $url?>"  
