@@ -965,10 +965,16 @@ $contact_sheet_add_link=true;
 $contact_sheet_add_link_option=false;
 # Give user option to show field name in front of field data
 $contact_sheet_field_name_option=false;
+# Bold the field name (if shown)?
+$contact_sheet_field_name_bold=false;
 # Use watermarked previews for contact sheets? If set to 'true' watermarks will be forced rather than judged based on user credentials.
 $contact_sheet_force_watermarks=false;
 # Give user option to force watermarks?
 $contact_sheet_force_watermark_option=false;
+# Contactsheet include time with dates?
+$contact_sheet_date_include_time=true;
+# Contactsheet wordy dates?
+$contact_sheet_date_wordy=true;
 
 # Show contact sheet metadata under preview? For thumbnail view only
 $contact_sheet_metadata_under_thumbnail=false;
