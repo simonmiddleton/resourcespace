@@ -90,19 +90,22 @@ function getResourceAnnotations($resource, $page = 0)
 */
 function getAnnotoriousResourceAnnotations($resource, $page = 0)
     {
+    global $baseurl;
+
     $annotations = array();
 
     /*
     Build an annotations array of Annotorious annotation objects
 
     IMPORTANT: until ResourceSpace will have text fields implemented as nodes, text should be left blank.
-    Also, leave src empty as this is handled client side. This will allow us to have the same annotation 
-    for multiple sizes of the same image (e.g: pre and scr)
+    
+    NOTE: src attribute is generated per resource (dummy source) to avoid issues when source is
+    loaded from download.php
     */
     foreach(getResourceAnnotations($resource, $page) as $annotation)
         {
         $annotations[] = array(
-                'src'    => '',
+                'src'    => "{$baseurl}/annotation/resource/{$resource}",
                 'text'   => '',
                 'shapes' => array(
                     array(

@@ -101,34 +101,30 @@ if (!file_exists(get_resource_path($ref,true,"scr",false,$ext,-1,$nextpage,$use_
 
 
 # Locate the resource
+$path = get_resource_path($ref, true, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
 
-$path=get_resource_path($ref,true,"scr",false,$ext,-1,$page,$use_watermark,"",$alternative);
-/*$path_orig=get_resource_path($ref,true,"",false,$ext,-1,$page,$use_watermark,"",$alternative);*/
-
-if (file_exists($path) && (resource_download_allowed($ref,"scr",$resource["resource_type"]) || $use_watermark ))
-	{
-	$url=get_resource_path($ref,false,"scr",false,$ext,-1,$page,$use_watermark,"",$alternative);
-	}
-/*elseif (file_exists($path_orig) && resource_download_allowed($ref,"",$resource["resource_type"]))
-	{
-	$url=get_resource_path($ref,false,"",false,$ext,-1,$page,$use_watermark,"",$alternative);
-	}*/
+if(file_exists($path) && (resource_download_allowed($ref, 'scr', $resource['resource_type']) || $use_watermark))
+    {
+    $url = get_resource_path($ref, false, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
+    }
 else
-	{
-	$path=get_resource_path($ref,true,"pre",false,$ext,-1,$page,$use_watermark,"",$alternative);
-	if (file_exists($path))
-		{
-		$url=get_resource_path($ref,false,"pre",false,$ext,-1,$page,$use_watermark,"",$alternative);
-		}
-	 }	
-if (!isset($url))
-	{
-	$info=get_resource_data($ref);
-	$url=$baseurl."/gfx/" . get_nopreview_icon($info["resource_type"],$info["file_extension"],false);
-	$border=false;
-	}
+    {
+    $path = get_resource_path($ref, true, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative);
 
-$resource=get_resource_data($ref);
+    if(file_exists($path))
+        {
+        $url = get_resource_path($ref, false, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative);
+        }
+    }
+
+if(!isset($url))
+    {
+    $info   = get_resource_data($ref);
+    $url    = $baseurl . '/gfx/' . get_nopreview_icon($info['resource_type'], $info['file_extension'], false);
+    $border = false;
+    }
+
+$resource = get_resource_data($ref);
 
 // get mp3 paths if necessary and set $use_mp3_player switch
 if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && (in_array($resource["file_extension"],$ffmpeg_audio_extensions) || $resource["file_extension"]=="mp3") && $mp3_player){
