@@ -35,41 +35,22 @@ if(!hook('customchkboxes', '', array($field)))
         default:       $cols = 10;
         }
 
-    ##### Reordering options #####
-    $reordered_options = array();
-    foreach($field['nodes'] as $node)
+    if((bool) $field['automatic_nodes_ordering'])
         {
-        $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
-        }
-	
-    if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
-        {
-        if($auto_order_checkbox_case_insensitive)
-            {
-            natcasesort($reordered_options);
-            }
-        else
-            {
-            natsort($reordered_options);
-            }
+        $field['nodes'] = reorder_nodes($field['nodes']);
         }
 
     $new_node_order    = array();
     $order_by_resetter = 0;
-    foreach($reordered_options as $reordered_node_id => $reordered_node_option)
+    foreach($field['nodes'] as $node_index => $node)
         {
-        $new_node_order[$reordered_node_id] = $field['nodes'][array_search($reordered_node_id, array_column($field['nodes'], 'ref', 'ref'))];
-
         // Special case for vertically ordered checkboxes.
         // Order by needs to be reset as per the new order so that we can reshuffle them using the order by as a reference
         if($checkbox_ordered_vertically)
             {
-            $new_node_order[$reordered_node_id]['order_by'] = $order_by_resetter++;
+            $field['nodes'][$node_index]['order_by'] = $order_by_resetter++;
             }
         }
-
-    $field['nodes'] = $new_node_order;
-    ##### End of reordering options #####
 
     $wrap = 0;
     $rows = ceil(count($field['nodes']) / $cols);

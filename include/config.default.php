@@ -3269,3 +3269,10 @@ $annotate_crud_anonymous = false;
 $iiif_enabled=false;
 #$iiif_identifier_field=29;
 #$iiif_userid=6;
+#######################################
+
+/*Prevent client side users to get access to the real path of the resource when ResourceSpace is using filestore URLs.
+Rather than use a URL like "http://yourdomain/filestore/1_6326bb8314c6c21/1pre_cf33a61f47b5982.jpg", it will use
+the download.php page to give back the file. This prevents users from comming back and download the files after their 
+permissions to the assets have been revoked.*/
+$hide_real_filepath = false;

@@ -65,13 +65,22 @@ jQuery("#toggleall").click(function() {
 <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo $sort?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditresource"]?></a><br / >
 <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo $sort?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
 </p>
-	<?php if ($alternative_file_resource_preview){ 
-		$imgpath=get_resource_path($resource['ref'],true,"col",false);
-		if (file_exists($imgpath)){ ?><img src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/><?php } 
-	} ?>
-	<?php if ($alternative_file_resource_title){ 
-		echo "<h2>" . htmlspecialchars(i18n_get_translated($resource['field'.$view_title_field])) . "</h2><br/>";
-	}?>
+<?php 
+if($alternative_file_resource_preview)
+    {
+    if(file_exists(get_resource_path($resource['ref'], true, 'col', false)))
+        {
+        ?>
+        <img src="<?php echo get_resource_path($resource['ref'], false, 'col', false); ?>"/>
+        <?php
+        } 
+    }
+
+if($alternative_file_resource_title)
+    {
+    echo "<h2>" . htmlspecialchars(i18n_get_translated($resource['field'.$view_title_field])) . "</h2><br/>";
+    }
+    ?>
 <h1><?php echo $lang["managealternativefilestitle"]?></h1>
 <?php if (count($files)>0){?><a href="#" id="deletechecked" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {clickDelete();} return false;"><?php echo LINK_CARET ?><?php echo $lang["action-deletechecked"]?></a><?php } ?>
 </div>

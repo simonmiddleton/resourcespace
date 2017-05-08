@@ -36,25 +36,27 @@ if ($alt_access)
 			<td colspan="3" id="altfileheader"><?php echo $lang["alternativefiles"]?></td>
 			</tr>
 			<?php
-			}	
-		$alt_thm="";$alt_pre="";
-		if ($alternative_file_previews)
-			{
-			$use_watermark=check_use_watermark();
-			$alt_thm_file=get_resource_path($ref,true,"col",false,"jpg",-1,1,$use_watermark,"",$altfiles[$n]["ref"]);
-			if (file_exists($alt_thm_file))
-				{
-				# Get web path for thumb (pass creation date to help cache refresh)
-				$alt_thm=get_resource_path($ref,false,"col",false,"jpg",-1,1,$use_watermark,$altfiles[$n]["creation_date"],$altfiles[$n]["ref"]);
-				}
-			$alt_pre_file=get_resource_path($ref,true,"pre",false,"jpg",-1,1,$use_watermark,"",$altfiles[$n]["ref"]);
-			if (file_exists($alt_pre_file))
-				{
-				# Get web path for preview (pass creation date to help cache refresh)
-				$alt_pre=get_resource_path($ref,false,"pre",false,"jpg",-1,1,$use_watermark,$altfiles[$n]["creation_date"],$altfiles[$n]["ref"]);
-				}
 			}
-		?>
+
+        $alt_thm = '';
+        $alt_pre = '';
+        if($alternative_file_previews)
+            {
+            $use_watermark = check_use_watermark();
+
+            if(file_exists(get_resource_path($ref, true, 'col', false, 'jpg', true, 1, $use_watermark, '', $altfiles[$n]['ref'])))
+                {
+                # Get web path for thumb (pass creation date to help cache refresh)
+                $alt_thm = get_resource_path($ref, false, 'col', false, 'jpg', true, 1, $use_watermark, $altfiles[$n]['creation_date'], $altfiles[$n]['ref']);
+                }
+
+            if(file_exists(get_resource_path($ref, true, 'pre', false, 'jpg', true, 1, $use_watermark, '', $altfiles[$n]['ref'])))
+                {
+                # Get web path for preview (pass creation date to help cache refresh)
+                $alt_pre = get_resource_path($ref, false, 'pre', false, 'jpg', true, 1, $use_watermark, $altfiles[$n]['creation_date'], $altfiles[$n]['ref']);
+                }
+            }
+            ?>
 		<tr class="DownloadDBlend" <?php if ($alt_pre!="" && $alternative_file_previews_mouseover) { ?>onMouseOver="orig_preview=jQuery('#previewimage').attr('src');orig_width=jQuery('#previewimage').width();jQuery('#previewimage').attr('src','<?php echo $alt_pre ?>');jQuery('#previewimage').width(orig_width);" onMouseOut="jQuery('#previewimage').attr('src',orig_preview);"<?php } ?>>
 		<td class="DownloadFileName">
 		<?php if(!hook("renderaltthumb")): ?>

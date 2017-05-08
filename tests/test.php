@@ -108,11 +108,12 @@ if (!file_exists($storagedir))
     {
     mkdir($storagedir);
     }
-$storagedir .= "/rs_test/";
+$storagedir .= '/rs_test';
 if (!file_exists($storagedir))
     {
     mkdir($storagedir);
     }
+$storageurl .= '/rs_test';
 echo "Filestore is now at $storagedir\n";
 
 # Get a list of core tests

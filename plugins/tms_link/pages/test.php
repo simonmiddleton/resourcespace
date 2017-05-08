@@ -24,7 +24,7 @@ foreach($tmsdata as $key=>$value)
 	{
 	echo "<tr>"; 
 	echo "<td><strong>" . $key . "</strong></td>";
-	echo "<td>" . $value . "</td>";	
+	echo "<td>" . mb_convert_encoding($value, 'UTF-8') . "</td>";
 	echo "</tr>";
 	}
 
