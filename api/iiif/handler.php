@@ -58,29 +58,28 @@ else
 	$iiif_field=get_resource_type_field($iiif_identifier_field);
 	$iiif_search=$iiif_field["name"] . ":" . $identifier;
 	$iiif_results=do_search($iiif_search);
+	//print_r($iiif_results);
 	
 	if(!is_array($iiif_results) || count($iiif_results)==0){exit("Invalid identifier: " . $identifier);}
 	
 	if($xpath[1]=="manifest")
 		{
+		/* MANIFEST REQUEST - see http://iiif.io/api/presentation/2.1/#manifest */
+		
 		$response["@context"] = "http://iiif.io/api/presentation/2/context.json";
 		$response["@id"] = $rooturl . $identifier . "/manifest";
-		$response["@type"] = "sc:Manifest";
-		
+		$response["@type"] = "sc:Manifest";		
 		
 		// Descriptive metadata about the object/work
 		// The manifest data should be the same for all resources that are returned.
 		// This is the default when using the tms_link plugin for TMS integration. 
 		// Therefore we use the data from the first returned result.
 		$iiif_data=get_resource_field_data($iiif_results[0]["ref"]);
-		//$iiif_data_rows=count($iiif_data);
 		
-		//$response["label"] = $iiif_data["field" . $view_title_field];
 		$response["label"] = get_data_by_field($iiif_results[0]["ref"], $view_title_field);
 		
 		$response["metadata"] = array();
 		$n=0;
-		//print_r($iiif_data);
 		foreach($iiif_data as $iiif_data_row)
 			{
 			$response["metadata"][$n]=array();		
@@ -89,8 +88,6 @@ else
 				{
 				// Don't use the data as this has already concatentated the translations, add an entry for each node translation by building up a new array
 				$resnodes=get_resource_nodes($iiif_results[0]["ref"],$iiif_data[$n]["resource_type_field"],true);
-				//$langidx=0;
-				//print_r($resnodes);
 				$langentries=array();
 				foreach($resnodes as $resnode)
 					{
@@ -102,13 +99,10 @@ else
 						if(!isset($langentries[$nlang]))
 							{
 							// This is the first translated node entry for this language. If we already have translations copy the default language array to make sure no nodes with missing translations are lost
-							echo "adding a new lang entry for " . $nlang  . "\n";
 							$langentries[$nlang]=isset($def_lang)?$def_lang:array();
-							echo "NEw array is :  " . implode(",",$langentries[$nlang])  . "\n";
 							}
-						// Add the node text to the array for this language
-						echo "adding text  entry for " . $nltext . " to " . $nlang  . "\n";
-							$langentries[$nlang][]=$nltext;
+						// Add the node text to the array for this language;
+						$langentries[$nlang][]=$nltext;
 						
 						// Set default text for any translations
 						if($nlang==$defaultlanguage || $defaulttrans==""){$defaulttrans=$nltext;}
@@ -122,13 +116,8 @@ else
 						if(count($mdtrans)!=$transcount)
 							{
 							$langentries[$mdlang][]=  $defaulttrans;
-							//if(!isset($node_langs[$mdlang])){$langentries[$mdlang][]=$node_langs[$defaultlanguage];}
 							}
-						}	
-					//$response["metadata"][$n]["value"]["@value"]=$mdtrans;
-					//$response["metadata"][$n]["value"]["@language"]=$mdlang;
-					//$langidx++;
-					
+						}						
 					// To ensure that no nodes are lost due to missing translations,  
 					// Save the default language array to make sure we include any untranslated nodes that may be missing when/if we find new languages for the next node
 					if(!isset($def_lang))
@@ -137,12 +126,10 @@ else
 						reset($langentries);
 						$def_lang = isset($langentries[$defaultlanguage])?$langentries[$defaultlanguage]:$langentries[key($langentries)];
 						}
-					}
-				
+					}		
 								
 				
 				$response["metadata"][$n]["value"]=array();
-				//$iiif_langs=i18n_get_translations($iiif_data[$n]["value"]);
 				//print_r($langentries);
 				$o=0;
 				foreach($langentries as $mdlang=>$mdtrans)
@@ -159,40 +146,75 @@ else
 				}
 			$n++;
 			}
-		print_r($response);
-		
-		/*
-		"label": "Book 1",
-		  "metadata": [
-			{"label": "Author", "value": "Anne Author"},
-			{"label": "Published", "value": [
-				{"@value": "Paris, circa 1400", "@language": "en"},
-				{"@value": "Paris, environ 1400", "@language": "fr"}
-			  ]
-			},
-			{"label": "Notes", "value": ["Text of note 1", "Text of note 2"]},
-			{"label": "Source",
-			 "value": "<span>From: <a href=\"http://example.org/db/1.html\">Some Collection</a></span>"}
-		  ],
-		  "description": "A longer description of this example book. It should give some real information.",
-		  "thumbnail": {
-			"@id": "http://example.org/images/book1-page1/full/80,100/0/default.jpg",
-			"service": {
-			  "@context": "http://iiif.io/api/image/2/context.json",
-			  "@id": "http://example.org/images/book1-page1",
-			  "profile": "http://iiif.io/api/image/2/level1.json"
-			}
-		  },
-		*/  
 			
-		echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);		
+		$response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
+		
+		
+		// Thumbnail property
+		$response["thumbnail"] = array();
+		$response["thumbnail"]["@id"]="http://example.org/images/book1-page1/full/80,100/0/default.jpg";
+		$response["thumbnail"]["service"]=array();
+		$response["thumbnail"]["service"]["@context"]="http://iiif.io/api/image/2/context.json";
+		$response["thumbnail"]["service"]["@id"]= "http://example.org/images/book1-page1";
+		$response["thumbnail"]["service"]["profile"]= "http://iiif.io/api/image/2/level1.json";
+		
+		
+		/* MANIFEST REQUEST END */
 		}
+		
+	elseif($xpath[1]=="full" || $xpath[1]=="info.json")
+		{
+		/* IMAGE REQUEST (http://iiif.io/api/image/2.1/) */
+		if($xpath[1]=="info.json")
+			{
+			
+			// Image information request. Only fullsize available in this initial version
+			$response["@context"] = "http://iiif.io/api/image/2/context.json";
+			$response["@id"] = $rooturl . $identifier . "/info.json";
+			$response["protocol"] = "http://iiif.io/api/image";
+			
+			
+			$img_path=get_resource_path($iiif_results[0]["ref"],true,'',false);
+			$image_size=get_original_imagesize($iiif_results[0]["ref"],$img_path);
+			//print_r($image_size);
+			$response["width"] = $image_size[1];
+			$response["height"] = $image_size[2];
+			
+			$response["sizes"] = array();
+			$response["sizes"][0]["width"]=$image_size[1];
+			$response["sizes"][0]["height"]=$image_size[2];
+			
+			$response["profile"] = array();
+			$response["profile"][]="http://iiif.io/api/image/2/level0.json";
+			$response["profile"][]=array(
+				"formats"=>array("jpg"),
+				"qualities"=>array("color"),
+				"supports"=>array("baseUriRedirect")				
+				);
+						
+			header("Content-type: application/json");
+			header('Link: <http://iiif.io/api/image/2/level0.json>;rel="profile"');
+			echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+			exit();
+			}		
+		elseif($xpath[1]=="full")
+			{
+			// Get full size image
+			}
+		
+		http_response_code(200); # Send OK
+		header("Content-type: application/json");
+		echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);	
+		/* IMAGE REQUEST END */
+		}	
 	else
 		{
 		exit("Not supported");
 		}
 	
-	
+	http_response_code(200); # Send OK
+	header("Content-type: application/json");
+	echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 	exit();
 	}
 	
