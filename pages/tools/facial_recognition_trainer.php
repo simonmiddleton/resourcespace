@@ -16,6 +16,8 @@ echo PHP_EOL;
 
 // Init
 $convert_fullpath             = get_utility_path('im-convert');
+$python_fullpath              = get_utility_path('python');
+$faceRecognizerTrainer_path   = __DIR__ . '/../../lib/facial_recognition/faceRecognizerTrainer.py';
 $facial_recognition_tag_field = (int) escape_check($facial_recognition_tag_field);
 $allow_training               = false;
 $no_previews_found_counter    = 0;
@@ -30,6 +32,12 @@ if('' === $facial_recognition_face_recognizer_models_location)
 if(false === $convert_fullpath)
     {
     echo 'Error: Could not find ImageMagick "convert" utility!' . PHP_EOL;
+    exit(1);
+    }
+
+if(false === $python_fullpath)
+    {
+    echo 'Error: Could not find Python!' . PHP_EOL;
     exit(1);
     }
 
@@ -107,13 +115,10 @@ if($no_previews_found_counter === count($annotations))
     exit(1);
     }
 
+$prepared_data_path = "{$facial_recognition_face_recognizer_models_location}/prepared_data.csv";
+
 // Save prepared data to a CSV file
-$prepared_data_file = fopen(
-    $facial_recognition_face_recognizer_models_location
-    . DIRECTORY_SEPARATOR
-    . 'prepared_data.csv',
-    'w+b'
-);
+$prepared_data_file = fopen($prepared_data_path, 'w+b');
 
 if(false === $prepared_data_file)
     {
@@ -123,3 +128,16 @@ if(false === $prepared_data_file)
 fwrite($prepared_data_file, $prepared_trainer_data);
 fclose($prepared_data_file);
 
+
+// Step 2: Training FaceRecognizer
+if(!file_exists($prepared_data_path))
+    {
+    echo 'Error: Could not find the prepared data CSV file for FaceRecognizer trainer!' . PHP_EOL;
+    exit(1);
+    }
+
+$command        = "{$python_fullpath} {$faceRecognizerTrainer_path} {$prepared_data_path}";
+$command_output = run_command($command);
+
+echo $command_output;
+echo PHP_EOL;
