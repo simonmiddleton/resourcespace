@@ -18,7 +18,13 @@ with open(PREPARED_DATA_PATH, 'rb') as csvFile:
     for csvRow in csv.reader(csvFile, delimiter = ';', quotechar = '"'):
         # Expected row should contain: ['/path/to/file', 'label']
         if '' != csvRow[0] and '' != csvRow[1]:
-            images.append(cv2.imread(csvRow[0], 0))
+            image = cv2.imread(csvRow[0], 0)
+
+            if image is None:
+                print "Could not read image '{}'".format(csvRow[0])
+                continue
+
+            images.append(image)
             labels.append(int(csvRow[1]))
 
 if(0 == len(images)):
