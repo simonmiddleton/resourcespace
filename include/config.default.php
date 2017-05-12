@@ -121,7 +121,7 @@ $collection_download_tar_size = 100; // Use tar to speed up large collection dow
 $collection_download_tar_option=false; // Default to using tar downloads for all downloads
 
 // Path to Python (programming language)
-$python_path = '/usr/bin';
+// $python_path = '/usr/bin';
 
 /* ---------------------------------------------------
 OTHER PARAMETERS
