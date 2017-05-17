@@ -1785,8 +1785,9 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 function delete_resource($ref)
 	{
 	# Delete the resource, all related entries in tables and all files on disk
-	
-	$resource=get_resource_data($ref);
+	$ref      = escape_check($ref);
+	$resource = get_resource_data($ref);
+
 	if (!$resource) {return false;} # Resource not found in database
 	
 	$current_state=$resource['archive'];
@@ -1865,6 +1866,13 @@ function delete_resource($ref)
     sql_query("delete from resource_custom_access where resource='$ref'");
     sql_query("delete from external_access_keys where resource='$ref'");
 	sql_query("delete from resource_alt_files where resource='$ref'");
+    sql_query(
+        "    DELETE an
+               FROM annotation_node AS an
+         INNER JOIN annotation AS a ON a.ref = an.annotation
+              WHERE a.resource = '{$ref}'"
+    );
+    sql_query("DELETE FROM annotation WHERE resource = '{$ref}'");
 	hook("afterdeleteresource");
 	
 	return true;
