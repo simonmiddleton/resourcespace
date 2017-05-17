@@ -14,6 +14,12 @@ restore_error_handler();
 
 echo PHP_EOL;
 
+if(!$facial_recognition)
+    {
+    echo 'Error: Facial recognition is not enabled!' . PHP_EOL;
+    exit(1);
+    }
+
 // Init
 $convert_fullpath             = get_utility_path('im-convert');
 $python_fullpath              = get_utility_path('python');
