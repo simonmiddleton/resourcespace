@@ -297,20 +297,12 @@ global $suppress_headers;
 if (($pagename!="download") && ($pagename!="graph") && !$suppress_headers) {header("Content-Type: text/html; charset=UTF-8");} // Make sure we're using UTF-8.
 #------------------------------------------------------
 
-/*
-### Facial recognition setup ###
-IMPORTANT: only one field can be setup for the annotation side
-and it also needs to be a dynamic keywords list
-*/
-if($facial_recognition && is_numeric($facial_recognition_tag_field) && 0 < $facial_recognition_tag_field)
-    {
-    $facial_recognition_rtf = sql_value("SELECT `type` AS `value` FROM resource_type_field WHERE ref = '" . escape_check($facial_recognition_tag_field) . "'", null);
 
-    if(!is_null($facial_recognition_rtf) && FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $facial_recognition_rtf)
-        {
-        $annotate_enabled = true;
-        $annotate_fields  = array($facial_recognition_tag_field);
-        }
+// Facial recognition setup
+if($facial_recognition)
+    {
+    include __DIR__ . '/facial_recognition_functions.php';
+    $facial_recognition = initFacialRecognition();
     }
 
 # Pre-load all text for this page.
