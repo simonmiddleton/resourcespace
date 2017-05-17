@@ -1,4 +1,4 @@
-import os, sys, cv2
+import os, sys, cv2, json
 
 if 3 > len(sys.argv):
     print >> sys.stderr, 'Try running: faceRecognizer.py <path/to/lbph_model.xml> <path/to/image.ext>'
@@ -27,4 +27,4 @@ if testImage is None:
 
 predictedData = model.predict(testImage)
 
-print "FaceRecognizer suggests: {}@{}".format(predictedData[0], predictedData[1])
+print json.dumps(predictedData)
