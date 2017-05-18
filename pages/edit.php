@@ -1573,11 +1573,15 @@ if ($multiple && !$disable_geocoding)
 
 <?php
 hook("locationextras");
-} 
-?>
+}
 
-<?php
-
+if($disablenavlinks)
+        {
+        ?>
+        <input type=hidden name="disablenav" value="true">
+        <?php
+        }
+        
 if (!$edit_upload_options_at_top){include '../include/edit_upload_options.php';}
 ?>
 
