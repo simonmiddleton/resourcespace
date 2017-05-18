@@ -109,3 +109,48 @@ function prepareFaceImage($image_path, $prepared_image_path, $x, $y, $width, $he
 
     return true;
     }
+
+
+/**
+* Use FaceRecognizer to predict the association between a face and a label (i.e person name)
+* 
+* @param string $model_file_path Path to the FaceRecognizer model state file
+* @param string $test_image_path Path to the prepared image we are testing
+* 
+* @return boolean|array  Return the label ID and probability on successful prediction or FALSE on error
+*/
+function faceRecognizerPredict($model_file_path, $test_image_path)
+    {
+    if(!file_exists($model_file_path))
+        {
+        debug("FACIAL_RECOGNITION: Could not find model at '{$model_file_path}'");
+        return false;
+        }
+
+    if(!file_exists($test_image_path))
+        {
+        debug("FACIAL_RECOGNITION: Could not find the test image at '{$test_image_path}'");
+        return false;
+        }
+
+    $python_fullpath = get_utility_path('python');
+    if(false === $python_fullpath)
+        {
+        debug('FACIAL_RECOGNITION: Could not find Python!');
+        return false;
+        }
+
+    $faceRecognizer_path = __DIR__ . '/../lib/facial_recognition/faceRecognizer.py';
+    $model_file_path     = escapeshellarg($model_file_path);
+    $test_image_path     = escapeshellarg($test_image_path);
+
+    $prediction = run_command("{$python_fullpath} {$faceRecognizer_path} {$model_file_path} {$test_image_path}");
+    $prediction = json_decode($prediction);
+
+    if(null === $prediction || 2 > count($prediction))
+        {
+        return false;
+        }
+
+    return $prediction;
+    }
