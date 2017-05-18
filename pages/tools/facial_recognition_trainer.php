@@ -80,7 +80,7 @@ foreach($annotations as $annotation)
         true,
         FACIAL_RECOGNITION_CROP_SIZE_PREFIX . $annotation['node_id'],
         true,
-        'pgm');
+        FACIAL_RECOGNITION_PREPARED_IMAGE_EXT);
 
     // Use existing prepared image if one is found.
     // A line of prepared data is expected to be as /path/to/prepared/file.ext;label where label MUST be an integer 

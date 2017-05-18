@@ -164,6 +164,7 @@ define ('TAG_EDITOR_DELIMITER', '~');
 
 // Facial recognition
 define('FACIAL_RECOGNITION_CROP_SIZE_PREFIX', '_facial_recognition_crop_');
+define('FACIAL_RECOGNITION_PREPARED_IMAGE_EXT', 'pgm');
 // --------------------------------------------------------------------------------
 
 // used internally within this file
