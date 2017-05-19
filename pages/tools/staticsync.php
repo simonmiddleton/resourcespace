@@ -230,6 +230,9 @@ function ProcessFolder($folder)
             # Already exists or deleted/archived in which case we won't proceed?
             if (!isset($done[$shortpath]))
                 {
+                // Extra check to make sure we don't end up with duplicates
+                $existing=sql_value("SELECT ref value FROM resource WHERE file_path = '" . escape_check($shortpath) . "'",0);
+                if($existing>0){continue;}
                 $count++;
                 echo "Processing file: $fullpath" . PHP_EOL;
                 if ($collection == 0 && $staticsync_autotheme)
