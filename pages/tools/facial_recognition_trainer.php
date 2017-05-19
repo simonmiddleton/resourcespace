@@ -12,6 +12,12 @@ include_once __DIR__ . '/../../include/resource_functions.php';
 ob_end_clean();
 restore_error_handler();
 
+$cli_short_options = 'h';
+$cli_long_options  = array(
+    'help',
+    'overwrite-existing'
+);
+
 echo PHP_EOL;
 
 if(!$facial_recognition)
@@ -26,6 +32,7 @@ $python_fullpath              = get_utility_path('python');
 $faceRecognizerTrainer_path   = __DIR__ . '/../../lib/facial_recognition/faceRecognizerTrainer.py';
 $facial_recognition_tag_field = (int) escape_check($facial_recognition_tag_field);
 $allow_training               = false;
+$overwrite_existing           = false;
 $no_previews_found_counter    = 0;
 $prepared_trainer_data        = '';
 
@@ -47,6 +54,20 @@ if(false === $python_fullpath)
     exit(1);
     }
 
+// CLI options check
+foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option_value)
+    {
+    if(in_array($option_name, array('h', 'help')))
+        {
+        echo 'Try running php scriptName.php --overwrite-existing' . PHP_EOL;
+        exit(1);
+        }
+
+    if('overwrite-existing' == $option_name)
+        {
+        $overwrite_existing = true;
+        }
+    }
 
 // Step 1: Preparing the data
 $annotations = sql_query(
@@ -66,7 +87,13 @@ $annotations = sql_query(
 
 foreach($annotations as $annotation)
     {
-    $preview_image_path  = get_resource_path($annotation['resource'], true, 'pre', true, $annotation['resource_preview_ext']);
+    $preview_image_path  = get_resource_path(
+        $annotation['resource'],
+        true,
+        'pre',
+        true,
+        $annotation['resource_preview_ext']
+    );
 
     if(!file_exists($preview_image_path))
         {
@@ -80,38 +107,28 @@ foreach($annotations as $annotation)
         true,
         FACIAL_RECOGNITION_CROP_SIZE_PREFIX . $annotation['node_id'],
         true,
-        FACIAL_RECOGNITION_PREPARED_IMAGE_EXT);
-
-    // Use existing prepared image if one is found.
-    // A line of prepared data is expected to be as /path/to/prepared/file.ext;label where label MUST be an integer 
-    if(file_exists($prepared_image_path))
-        {
-        $prepared_trainer_data .= "{$prepared_image_path};{$annotation['node_id']}" . PHP_EOL;
-        continue;
-        }
+        FACIAL_RECOGNITION_PREPARED_IMAGE_EXT
+    );
 
     echo "Preparing image for resource ID {$annotation['resource']} and node ID {$annotation['node_id']}" . PHP_EOL;
 
-    $command                     = $convert_fullpath;
-    $preview_image_path_escaped  = escapeshellarg($preview_image_path);
-    $prepared_image_path_escaped = escapeshellarg($prepared_image_path);
+    $is_image_prepared = prepareFaceImage(
+        $preview_image_path,
+        $prepared_image_path,
+        $annotation['x'],
+        $annotation['y'],
+        $annotation['width'],
+        $annotation['height'],
+        $overwrite_existing
+    );
 
-    list($preview_image_width, $preview_image_height) = getimagesize($preview_image_path);
-
-    $x      = escapeshellarg(round($annotation['x'] * $preview_image_width, 0));
-    $y      = escapeshellarg(round($annotation['y'] * $preview_image_height, 0));
-    $width  = escapeshellarg(round($annotation['width'] * $preview_image_width, 0));
-    $height = escapeshellarg(round($annotation['height'] * $preview_image_height, 0));
-
-    $command        .= " {$preview_image_path_escaped} -colorspace gray -depth 8";
-    $command        .= " -crop {$width}x{$height}+{$x}+{$y}";
-    $command        .= " -resize 90x90\>";
-    $command        .= " +repage {$prepared_image_path_escaped}";
-    $command_output  = run_command($command);
+    if(!$is_image_prepared)
+        {
+        echo 'Warning: Could not prepare image' . PHP_EOL;
+        continue;
+        }
 
     $prepared_trainer_data .= "{$prepared_image_path};{$annotation['node_id']}" . PHP_EOL;
-
-    resource_log($annotation['resource'], LOG_CODE_TRANSFORMED, '', '', '', $lang['facial_recognition_prepare_image_log']);
     } // end of foreach($annotations as $annotation)
 
 
