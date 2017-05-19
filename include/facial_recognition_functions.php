@@ -50,16 +50,17 @@ function initFacialRecognition()
 * @uses get_utility_path()
 * @uses debug()
 * 
-* @param string $image_path          Path of the source image
-* @param string $prepared_image_path 
-* @param float  $x                   X position
-* @param float  $y                   Y position
-* @param float  $width               Width
-* @param float  $height              Height
+* @param string   $image_path           Path of the source image
+* @param string   $prepared_image_path  Path of the prepared image
+* @param float    $x                    X position
+* @param float    $y                    Y position
+* @param float    $width                Width
+* @param float    $height               Height
+* @param boolean  $overwrite_existing   Set to TRUE to overwrite existing prepared image (if any exists)
 * 
 * @return boolean
 */
-function prepareFaceImage($image_path, $prepared_image_path, $x, $y, $width, $height)
+function prepareFaceImage($image_path, $prepared_image_path, $x, $y, $width, $height, $overwrite_existing = false)
     {
     if(!file_exists($image_path))
         {
@@ -68,7 +69,7 @@ function prepareFaceImage($image_path, $prepared_image_path, $x, $y, $width, $he
         }
 
     // Use existing prepared image if one is found
-    if(file_exists($prepared_image_path))
+    if(!$overwrite_existing && file_exists($prepared_image_path))
         {
         return true;
         }
