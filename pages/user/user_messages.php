@@ -55,6 +55,7 @@ if (getval("allseen","")!="")
 <?php
 		}
 ?>
+
 </ul>
 </div> <!-- End of VerticalNav -->
 
@@ -63,6 +64,12 @@ if (getval("allseen","")!="")
 		<tr class="ListviewTitleStyle">
 			<td><?php echo $lang["created"]; ?></td>
 			<td><?php echo $lang["from"]; ?></td>
+			<?php if ($messages_actions_fullname){?>
+			<td><?php echo $lang["columnheader-username"]; ?></td>
+			<?php } ?>
+			<?php if ($messages_actions_usergroup){?>
+				<td><?php echo $lang["property-user_group"]; ?></td>
+				<?php } ?>
 			<td><?php echo $lang["message"]; ?></td>
 			<td><?php echo $lang["expires"]; ?></td>
 			<td><?php echo $lang["seen"]; ?></td>
@@ -75,10 +82,19 @@ for ($n=0;$n<count($messages);$n++)
 	$message=htmlspecialchars($message,ENT_QUOTES);
 	$url_encoded=urlencode($messages[$n]["url"]);
 	$unread_css = ($messages[$n]["seen"]==0 ? " class='MessageUnread'" : "");
+	$userbyname = get_user_by_username($messages[$n]["owner"]);
+	$user = get_user($userbyname);
 	?>
 		<tr>
 			<td<?php echo $unread_css; ?>><?php echo nicedate($messages[$n]["created"],true); ?></td>
 			<td<?php echo $unread_css; ?>><?php echo $messages[$n]["owner"]; ?></td>
+			<?php if ($messages_actions_fullname){?>
+				<td<?php echo $unread_css; ?>><?php 
+				echo strip_tags_and_attributes($user['fullname']); ?></td>
+				<?php } ?>
+			<?php if ($messages_actions_usergroup){?>
+				<td<?php echo $unread_css; ?>><?php echo $user['groupname']; ?></td>
+				<?php } ?>
 			<td<?php echo $unread_css; ?>><a href="#Header" onclick="message_modal('<?php echo $message; ?>','<?php
 				echo $url_encoded; ?>',<?php echo $messages[$n]["ref"]; ?>,'<?php echo $messages[$n]["owner"] ?>');"><?php
 					echo nl2br($messages[$n]["message"]);

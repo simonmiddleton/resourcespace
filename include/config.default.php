@@ -3049,6 +3049,12 @@ $previews_allow_enlarge=false;
 # Option to use a random static image from the available slideshow images. Requires slideshow_big=true;
 $static_slideshow_image=false;
 
+#Add full username column in my messages/actions pages
+$messages_actions_fullname = true;
+
+#Add usergroup column in my messages/actions area
+$messages_actions_usergroup = false;
+
 # User preference - user_pref_resource_notifications. Option to receive notifications about resource management e.g. archive state changes 
 $user_pref_resource_notifications=false;
 # User preference - user_pref_resource_access_notifications. Option to receive notifications about resource access e.g. resource requests
