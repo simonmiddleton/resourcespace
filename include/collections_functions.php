@@ -1677,12 +1677,12 @@ function send_collection_feedback($collection,$comment)
 function copy_collection($copied,$current,$remove_existing=false)
 	{	
 	# Get all data from the collection to copy.
-	$copied_collection=sql_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection='$copied'","");
+	$copied_collection=sql_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection='" . escape_check($copied) . "'","");
 	
 	if ($remove_existing)
 		{
 		#delete all existing data in the current collection
-		sql_query("delete from collection_resource where collection='$current'");
+		sql_query("delete from collection_resource where collection='" . $current . "'");
 		collection_log($current,"R",0);
 		}
 	

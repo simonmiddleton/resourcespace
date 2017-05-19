@@ -34,7 +34,7 @@ $resources=do_search("!collection".$ref);
 $colcount=count($resources);
 
 # Collection copy functionality
-$copy=getval("copy","");
+$copy=getvalescaped("copy","");
 if ($copy!="")
 	{
 	copy_collection($copy,$ref,$copycollectionremoveall!="");

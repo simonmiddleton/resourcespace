@@ -549,7 +549,7 @@ if ($_FILES)
                             # Log this			
                             daily_stat("Resource upload",$ref);
                             $status=upload_file($ref,(getval("no_exif","")=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!=''),$plupload_upload_location);
-                            $wait=hook("afterpluploadfile","",array($ref));
+                            $wait = hook('afterpluploadfile', '', array($ref, $extension));
                             echo "SUCCESS: " . htmlspecialchars($ref);
                             exit();
                             }
