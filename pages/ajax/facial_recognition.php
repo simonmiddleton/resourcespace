@@ -93,7 +93,7 @@ if('predict_label' == $action)
         {
         $return['data'] = $tag;
 
-        // Remove the file since it is used only once. Once we have tagged it the trainer will come later
+        // Remove the file since it is used only once. Once we have tagged it, the trainer will come later
         // and learn who this person is anyway, regardless of this prediction
         unlink($prepared_image_path);
 
