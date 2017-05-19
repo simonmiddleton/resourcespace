@@ -817,6 +817,7 @@ $lang['import_export'] = 'Import/ Export';
 $lang['import'] = 'Import';
 $lang['export'] = 'Export';
 $lang['origin'] = "Origin";
+$lang['unknown'] = 'Unknown';
 
 # Pager
 $lang["next"]="Next";
@@ -2604,6 +2605,3 @@ $lang["set_metadata_then_upload"]="Set metadata first, then upload";
 $lang['annotate_text_link_label'] = 'Annotate mode toggle';
 $lang['annotate_annotation_label'] = 'Annotation';
 $lang['annotate_annotations_label'] = 'Annotations';
-
-/* Facial recognition */
-$lang['facial_recognition_prepare_image_log'] = 'Prepared tag for facial recognition trainer';

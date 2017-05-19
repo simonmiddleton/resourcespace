@@ -88,6 +88,21 @@ if('predict_label' == $action)
         exit();
         }
 
+    // Unknown
+    if(-1 === $prediction[0])
+        {
+        $return['data'] = array(
+            'ref'                 => null,
+            'resource_type_field' => $facial_recognition_tag_field,
+            'name'                => $lang['unknown'],
+            'parent'              => null,
+            'order_by'            => null
+            );
+
+        echo json_encode($return);
+        exit();
+        }
+
     $tag = array();
     if(get_node($prediction[0], $tag))
         {
