@@ -662,7 +662,8 @@ $default_sort="relevance";
 
 # What is the default sort order when viewing collection resources?
 # Options are date, colour, relevance, popularity, country
-$default_collection_sort="relevance";
+# Note: when users are expected resources to be shown in the order they provided, make sure this is set to 'relevance'
+$default_collection_sort = 'relevance';
 
 # Enable themes (promoted collections intended for showcasing selected resources)
 $enable_themes=true;

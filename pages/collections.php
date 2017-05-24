@@ -10,7 +10,6 @@ include_once dirname(__FILE__)."/../include/resource_functions.php";
 include_once dirname(__FILE__)."/../include/search_functions.php";
 include_once dirname(__FILE__) . '/../include/render_functions.php';
 
-$order_by        = getvalescaped('order_by', $default_collection_sort);
 $sort            = getvalescaped('sort', 'DESC');
 $search          = getvalescaped('search', '');
 $last_collection = getval('last_collection', '');
@@ -19,6 +18,19 @@ $archive         = getvalescaped('archive', '');
 $daylimit        = getvalescaped('daylimit', '');
 $offset          = getvalescaped('offset', '');
 $resources_count = getvalescaped('resources_count', '');
+$collection      = getvalescaped('collection', '', true);
+$entername       = getvalescaped('entername', '');
+
+/* 
+IMPORTANT NOTE: Collections should always show their resources in the order set by a user (via sortorder column 
+in collection_resource table). This means that all pages order by 'relevance' and on search page only if we search
+for this collection we can rely on the passed order by value.
+*/
+$order_by = $default_collection_sort;
+if('!collection' === substr($search, 0, 11) && "!collection{$collection}" == $search)
+    {
+    $order_by = getvalescaped('order_by', $default_collection_sort);
+    }
 
 $change_col_url="search=" . urlencode($search). "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&restypes=" . urlencode($restypes) . "&archive=" .urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&offset=" . urlencode($offset) . "&resources_count=" . urlencode($resources_count);
 
@@ -69,9 +81,6 @@ else
 	{
 	$basket=false;
 	}
-
-$collection=getvalescaped("collection","");
-$entername=getvalescaped("entername","");
 
 # ------------ Change the collection, if a collection ID has been provided ----------------
 if ($collection!="")
