@@ -18,7 +18,7 @@ $archive         = getvalescaped('archive', '');
 $daylimit        = getvalescaped('daylimit', '');
 $offset          = getvalescaped('offset', '');
 $resources_count = getvalescaped('resources_count', '');
-$collection      = getvalescaped('collection', '', true);
+$collection      = getvalescaped('collection', '');
 $entername       = getvalescaped('entername', '');
 
 /* 
