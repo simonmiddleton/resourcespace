@@ -35,6 +35,11 @@ function HookSimplesamlAllPreheaderoutput()
 
 	foreach ($simplesaml_allowedpaths as $simplesaml_allowedpath)
 		{
+        if('' == trim($simplesaml_allowedpath))
+            {
+            continue;
+            }
+
 		$samlexempturl=strpos($url,$simplesaml_allowedpath);
 		if ($samlexempturl!==false && $samlexempturl==0)
 			{
