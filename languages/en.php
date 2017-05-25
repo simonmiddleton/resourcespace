@@ -608,6 +608,11 @@ $lang["log_code_U"]="Unspecified";
 $lang["log_code_v"]="Viewed";
 $lang["log_code_x"]="Deleted";
 
+$lang['user_created_by']='Created by';
+$lang['user_autocreated']='Automatically created';
+$lang['user_approved_by']='Approved by';
+$lang['user_autoapproved']='Automatically approved';
+
 $lang["backtoresourceview"]="Back to resource view";
 $lang["continuetoresourceview"]="Continue to resource view";
 

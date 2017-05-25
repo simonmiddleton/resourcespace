@@ -1395,6 +1395,15 @@ $collection_public_hide_owner=true;
 # Only useful when $user_account_auto_creation=true;
 $registration_group_select=false;
 
+# Show the fullname of the user who created the account when editing user
+$user_edit_created_by=false;
+# Also show the user email address if $user_edit_created_by=true
+$user_edit_created_by_email=false;
+# Show the fullname of the user who approved the account when editing user
+$user_edit_approved_by=false;
+# Also show the user email address if $user_edit_approved_by=true
+$user_edit_approved_by_email=false;
+
 # Custom Resource/Collection Request Fields
 # -----------------------------------------
 # Additional custom fields that are collected and e-mailed when new resources or collections are requested.
