@@ -159,7 +159,8 @@ function ProcessFolder($folder)
            $staticsync_ingest, $staticsync_mapfolders, $staticsync_alternatives_suffix, $theme_category_levels,
            $staticsync_defaultstate, $additional_archive_states, $staticsync_extension_mapping_append_values,
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
-           $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload;
+           $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
+           $FIXED_LIST_FIELD_TYPES;
     
     $collection = 0;
     $treeprocessed=false;
@@ -217,7 +218,7 @@ function ProcessFolder($folder)
 
         # -------FILES---------------
         if (($filetype == "file") && (substr($file,0,1) != ".") && (strtolower($file) != "thumbs.db"))
-            {
+            {                
 
             /* Below Code Adapted  from CMay's bug report */
             global $banned_extensions;
@@ -232,7 +233,12 @@ function ProcessFolder($folder)
                 {
                 // Extra check to make sure we don't end up with duplicates
                 $existing=sql_value("SELECT ref value FROM resource WHERE file_path = '" . escape_check($shortpath) . "'",0);
-                if($existing>0){continue;}
+                if($existing>0)
+                    {
+                    $done[$shortpath]["processed"]=true;
+                    $done[$shortpath]["modified"]=date('Y-m-d H:i:s',time());
+                    continue;
+                    }
                 $count++;
                 echo "Processing file: $fullpath" . PHP_EOL;
                 if ($collection == 0 && $staticsync_autotheme)
@@ -323,6 +329,7 @@ function ProcessFolder($folder)
                     # Extract metadata from the file path as per $staticsync_mapfolders in config.php
                     if (isset($staticsync_mapfolders))
                         {
+                        $field_nodes    = array();
                         foreach ($staticsync_mapfolders as $mapfolder)
                             {
                             $match = $mapfolder["match"];
@@ -372,27 +379,60 @@ function ProcessFolder($folder)
                                         {
                                         # Save the value
                                         $value = $path_parts[$level-1];
-                                        
-                                        if($staticsync_extension_mapping_append_values){
-											$given_value=$value;
-											// append the values if possible...not used on dropdown, date, categroy tree, datetime, or radio buttons
-											$field_info=get_resource_type_field($field);
-											if(in_array($field['type'],array(0,1,2,4,5,6,7,8))){
-												$old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
-												$value=append_field_value($field_info,$value,$old_value);
-											}
-										}
-                                        
-                                        update_field ($r, $field, $value);
-                                        
-                                        if($staticsync_extension_mapping_append_values){
-											$value=$given_value;
-										}
-                                        
+                                        $field_info=get_resource_type_field($field);
+                                        if(in_array($field_info['type'], $FIXED_LIST_FIELD_TYPES))
+                                            {
+                                            $fieldnodes=get_nodes($field);
+                                            if(in_array($value, array_column($fieldnodes,"name")) || ($field_info['type']==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field)))
+                                                {
+                                                // Add this to array of nodes to add
+                                                $newnode = set_node(null, $field, trim($value), null, null, true);
+                                                echo "Adding node" . trim($value) . "\n";
+                                                
+                                                if($staticsync_extension_mapping_append_values && !in_array($field_info['type'],array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)))
+                                                    {
+                                                    // The $staticsync_extension_mapping_append_values variable actually refers to folder->metadata mapping, not the file extension
+                                                    $field_nodes[$field][]   = $newnode;
+                                                    }
+                                                else
+                                                    {
+                                                    // We have got a new value for this field and we are not appending values,
+                                                    // replace any existing value the array 
+                                                    $field_nodes[$field]   = array($newnode);
+                                                    }
+                                                }                                            
+                                            }
+                                        else
+                                            {
+                                            if($staticsync_extension_mapping_append_values)
+                                                {
+    											$given_value=$value;
+    											// append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
+    											if(in_array($field['type'],array(0,1,4,5,6,8)))
+                                                    {
+                                                    $old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
+                                                    $value=append_field_value($field_info,$value,$old_value);
+                                                    }
+                                                }
+                                            update_field ($r, $field, $value);
+                                            if($staticsync_extension_mapping_append_values && isset($given_value))
+                                                {
+                                                $value=$given_value;
+                                                }
+                                            }
                                         echo " - Extracted metadata from path: $value" . PHP_EOL;
                                         }
                                     }
                                 }
+                            }
+                        if(count($field_nodes)>0)
+                            {
+                            $nodes_to_add = array();
+                            foreach($field_nodes as $field_id=>$nodeids)
+                                {
+                                $nodes_to_add = array_merge($nodes_to_add,$nodeids);
+                                }
+                            add_resource_nodes($r,$nodes_to_add);
                             }
                         }
                         
@@ -453,13 +493,16 @@ function ProcessFolder($folder)
                             sql_query("INSERT INTO collection_resource (collection, resource, date_added) 
                                             VALUES ('$collection', '$r', NOW())");
                             }
-                        }
+                        }                        
+                    $done[$shortpath]["ref"]=$r;
+                    $done[$shortpath]["processed"]=true;
+                    $done[$shortpath]["modified"]=date('Y-m-d H:i:s',time());
                     }
                 else
                     {
                     # Import failed - file still being uploaded?
                     echo " *** Skipping file - it was not possible to move the file (still being imported/uploaded?)" . PHP_EOL;
-                    }
+                    }                
                 }
             elseif (!isset($done[$shortpath]["archive"]) // Check modified times and and update previews if no existing archive state is set,
                     || (isset($resource_deletion_state) && $done[$shortpath]["archive"]!=$resource_deletion_state) // or if resource is not in system deleted state,

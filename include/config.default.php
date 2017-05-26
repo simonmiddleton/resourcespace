@@ -2054,7 +2054,7 @@ $staticsync_extension_mapping[4]=array("flv");
 # $staticsync_mapped_category_tree=50;
 # Uncomment and set the next line to specify a text field to store the retrieved path information for each file. This is a time saving alternative to the option above.
 # $staticsync_filepath_to_field=100;
-# Append multiple mapped values instead of overwritting? This will use the same appending methods used when editing fields. Not used on dropdown, date, categroy tree, datetime, or radio buttons
+# Append multiple mapped values instead of overwritting? This will use the same appending methods used when editing fields. Not used on dropdown, date, category tree, datetime, or radio buttons
 $staticsync_extension_mapping_append_values=true;
 # Should the generated resource title include the sync folder path?
 $staticsync_title_includes_path=true;
