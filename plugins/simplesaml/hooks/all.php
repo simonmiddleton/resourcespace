@@ -27,10 +27,21 @@ function HookSimplesamlAllPreheaderoutput()
 	if (!$simplesaml_site_block){return true;}
 
 	// Check for exclusions
-	if ($simplesaml_allow_public_shares && getvalescaped("k","")!="") 
-		{
-		return true;
-		}
+    $k = getvalescaped('k', '');
+    if(
+        $simplesaml_allow_public_shares &&
+        '' != $k &&
+        (
+            // Hard to determine at this stage what we consider a collection/ resource ID so we
+            // use the most general ones
+            check_access_key_collection(str_replace('!collection', '', getvalescaped('search', '')), $k) && 
+            check_access_key(getvalescaped('ref', ''), $k)
+        )
+    )
+        {
+        return true;
+        }
+
 	$url=str_replace("\\","/", $_SERVER["PHP_SELF"]);
 
 	foreach ($simplesaml_allowedpaths as $simplesaml_allowedpath)
