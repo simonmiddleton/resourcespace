@@ -88,6 +88,10 @@ function api_update_resource_type($resource,$type)
 
 function api_get_resource_path($ref, $getfilepath, $size, $generate=true, $extension="jpg", $page=1, $watermarked=false, $alternative=-1)
     {
+    # Set defaults
+    if ($alternative=="") {$alternative=-1;}
+    if ($page=="") {$page=1;}
+
     $refs = json_decode($ref, true);
     if(is_array($refs))
         {
