@@ -832,11 +832,15 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	    }
 	
 	# Apply day limit
-	if($recent_search_daylimit!="")
-	    {
-	    if ($sql_filter!="") {$sql_filter.=" and ";}
-	    $sql_filter.= "creation_date > (curdate() - interval " . $recent_search_daylimit . " DAY)";
-	    }
+	if('' != $recent_search_daylimit && is_numeric($recent_search_daylimit))
+        {
+        if('' != $sql_filter)
+            {
+            $sql_filter .= ' and ';
+            }
+
+        $sql_filter.= "creation_date > (curdate() - interval '" . escape_check($recent_search_daylimit) . "' DAY)";
+        }
 	
 	# The ability to restrict access by the user that created the resource.
 	if (isset($resource_created_by_filter) && count($resource_created_by_filter)>0)

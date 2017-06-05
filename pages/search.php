@@ -361,9 +361,9 @@ if(false === strpos($search, '!'))
 
 $jumpcount=0;
 
-if (getvalescaped("recentdaylimit","")!="") //set for recent search, don't set cookie
+if (getvalescaped('recentdaylimit', '', true)!="") //set for recent search, don't set cookie
 	{
-	$daylimit=getvalescaped("recentdaylimit","");
+	$daylimit=getvalescaped('recentdaylimit', '', true);
 	}
 else if($recent_search_period_select==true && strpos($search,"!")===false) //set cookie for paging
 	{
@@ -480,7 +480,7 @@ $searchparams= array(
     'archive'									=> $archive,
     'sort'										=> $sort,
     'restypes'									=> $restypes,
-	'recentdaylimit'							=> getval("recentdaylimit","",true),
+	'recentdaylimit'							=> getvalescaped('recentdaylimit', '', true),
     'foredit'									=> ($editable_only?"true":"")
 );
  
@@ -990,7 +990,7 @@ if($responsive_ui)
 		</div>
 		<?php
 		}
-	if ($display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getvalescaped("recentdaylimit","")==""){?>
+	if ($display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getvalescaped('recentdaylimit', '', true)==""){?>
 	<div class="InpageNavLeftBlock"><?php echo $lang["period"]?>:<br />
 		<select class="medcomplementwidth ListDropdown" style="width:auto" id="resultsdisplay" name="resultsdisplay" onchange="CentralSpaceLoad(this.value,true);">
 		<?php for($n=0;$n<count($recent_search_period_array);$n++){
@@ -1100,7 +1100,7 @@ if($responsive_ui)
 		</div>
 		<?php } 
 	
-		if (!$display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getvalescaped("recentdaylimit","")==""){?>
+		if (!$display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getvalescaped('recentdaylimit', '', true)==""){?>
 		<div class="InpageNavLeftBlock"><?php echo $lang["period"]?>:<br />
 		<?php 
 		for($n=0;$n<count($recent_search_period_array);$n++){
