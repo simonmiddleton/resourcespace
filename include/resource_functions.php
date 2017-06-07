@@ -4453,7 +4453,7 @@ function truncate_join_field_value($value)
 
     $truncated_value = mb_substr($value, 0, $resource_field_column_limit, $encoding);
 
-    if($resource_field_column_limit == mb_strlen($truncated_value))
+    if($resource_field_column_limit >= mb_strlen($truncated_value))
         {
         return $truncated_value;
         }
