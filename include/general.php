@@ -5130,12 +5130,12 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
         //setcookie($name, "", time() - 3600, $baseurl_short . "pages/", $domain, $secure, $httponly);
         //setcookie($name, "", time() - 3600, $baseurl_short, $domain, $secure, $httponly);
         # Set new cookie
-        setcookie($name, $value, $expire, "/", $domain, $secure, $httponly);
+        setcookie($name, $value, (int) $expire, "/", $domain, $secure, $httponly);
         }
     else
         {
         # Set new cookie
-        setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+        setcookie($name, $value, (int) $expire, $path, $domain, $secure, $httponly);
         }
     }
 
