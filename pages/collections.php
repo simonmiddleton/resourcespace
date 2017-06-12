@@ -967,6 +967,9 @@ if ($count_result>0)
 		<?php
 		} # End of ResourceView hook
 	  } # End of loop through resources
+	  
+		# Hook to allow plugins to list additional resources in a collection (e.g. resourceconnect)	  
+		hook("thumblistextra");
 	?>
 	<div class="clearerleft"></div>
 	<?php
@@ -989,13 +992,9 @@ if($count_result > $max_collection_thumbs)
 	<?php
 	}
 
-?></div><?php		
-# Plugin for additional collection listings	(deprecated)
-if (file_exists("plugins/collection_listing.php")) {include "plugins/collection_listing.php";}
 
-hook("thumblistextra");
 ?>
-</div>  
+</div></div>
 <?php 
 
 }

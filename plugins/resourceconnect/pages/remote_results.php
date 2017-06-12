@@ -1,7 +1,7 @@
 <?php
-include "../../../include/db.php";
-include "../../../include/general.php";
-include "../../../include/search_functions.php";
+include_once "../../../include/db.php";
+include_once "../../../include/general.php";
+include_once "../../../include/search_functions.php";
 include_once "../config/config.php";
 
 $search=getvalescaped("search","");
@@ -134,7 +134,7 @@ else
 		<div class="ResourcePanelInfo"><?php echo tidy_trim($title,25) ?>&nbsp;</div>
 
 		<div class="ResourcePanelIcons">		
-		<span class="IconCollect"><a target="collections" href="<?php echo $add_url ?>" onClick="return CollectionDivLoad(this,true);"><img src="../gfx/interface/sp.gif" alt="" width="22" height="12" /></a></span>
+		<a class="addToCollection fa fa-plus-circle" target="collections" href="<?php echo $add_url ?>" onClick="return CollectionDivLoad(this,true);"></a>
 		</div>
 		<div class="clearer"></div>
 		

@@ -367,6 +367,6 @@ if ($archiver)
 
 </div>
 <?php 
-include "../../../include/footer.php";
+include_once "../../../include/footer.php";
 ?>
 

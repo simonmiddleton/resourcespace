@@ -1,5 +1,5 @@
 <?php
-include "../../../include/db.php";
+include_once "../../../include/db.php";
 
 $k=getvalescaped("k","");
 $kauth=true;
@@ -14,8 +14,8 @@ if ($k!="")
 	}
 
 if ($k=="" || !$kauth) {include "../../../include/authenticate.php";}
-include "../../../include/general.php";
-include "../../../include/search_functions.php";
+include_once "../../../include/general.php";
+include_once "../../../include/search_functions.php";
 
 # Wrap the remote view page with the local header/footer.
 
@@ -50,4 +50,4 @@ echo $html;
 <?php
 */
 
-include "../../../include/footer.php";
+include_once "../../../include/footer.php";

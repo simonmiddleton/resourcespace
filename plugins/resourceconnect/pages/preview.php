@@ -1,5 +1,5 @@
 <?php
-include "../../../include/db.php";
+include_once "../../../include/db.php";
 
 $k=getvalescaped("k","");
 $kauth=true;
@@ -46,4 +46,4 @@ echo $html;
 <?php
 */
 
-include "../../../include/footer.php";
+include_once "../../../include/footer.php";
