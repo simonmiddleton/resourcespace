@@ -925,10 +925,10 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                 {
                 exit ("Field(s) with short name '" . $filterfield . "' not found in user group search filter.");
                 }
+			$fn=array(); // Node filter fields
+			$ff=array(); // Free text filter fields
 			foreach ($f as $fd)
 				{
-				$fn=array(); // Node filter fields
-				$ff=array(); // Free text filter fields
 				if(in_array($fd['type'], $FIXED_LIST_FIELD_TYPES))
 					{
 					$fn[] = $fd['ref'];
