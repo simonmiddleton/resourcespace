@@ -608,6 +608,11 @@ $lang["log_code_U"]="Unspecified";
 $lang["log_code_v"]="Viewed";
 $lang["log_code_x"]="Deleted";
 
+$lang['user_created_by']='Created by';
+$lang['user_autocreated']='Automatically created';
+$lang['user_approved_by']='Approved by';
+$lang['user_autoapproved']='Automatically approved';
+
 $lang["backtoresourceview"]="Back to resource view";
 $lang["continuetoresourceview"]="Continue to resource view";
 
@@ -2591,6 +2596,7 @@ $lang["actions_type_resourcerequest"] = "Resource request";
 $lang["actions_type_userrequest"] = "Account request";
 $lang["actions_add_editable_to_collection"] = "Add all editable resources to collection";
 $lang["field_search_no_results"] = "Try without specifying a metadata field, or";
+$lang["actions_view_editable_as_resultset"]="View resources to review as a result set";
 
 $lang["refinemetadata"]="Refine metadata";
 $lang["saveandnext"]="Save and next";

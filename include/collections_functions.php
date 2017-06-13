@@ -47,13 +47,24 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
    		$sql.=" (length(c.theme)=0 or c.theme is null) ";
    		}
 	global $anonymous_login,$username,$anonymous_user_session_collection;
- 	if (isset($anonymous_login) && ($username==$anonymous_login) && $anonymous_user_session_collection)
-   		{
-		// Anonymous user - only get the user's own collections that are for this session - although we can still join to get collections that have been specifically shared with the anonymous user 
-		if ($sql==""){$extrasql=" where ";} else {$extrasql.=" and ";}		
-		$rs_session=get_rs_session_id(true);			
-   		$extrasql.=" (c.session_id='" . $rs_session . "')";
-   		}
+
+    if(isset($anonymous_login) && ($username==$anonymous_login) && $anonymous_user_session_collection)
+        {
+        // Anonymous user - only get the user's own collections that are for this session - although we can still join to 
+        // get collections that have been specifically shared with the anonymous user 
+        if('' == $sql)
+            {
+            $extrasql = " where ";
+            }
+        else
+            {
+            $extrasql .= " and ";
+            }
+
+        global $rs_session;
+
+        $extrasql .= " (c.session_id='{$rs_session}')";
+        }
 
    
 	$order_sort="";

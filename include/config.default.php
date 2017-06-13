@@ -665,7 +665,8 @@ $default_sort="relevance";
 
 # What is the default sort order when viewing collection resources?
 # Options are date, colour, relevance, popularity, country
-$default_collection_sort="relevance";
+# Note: when users are expecting resources to be shown in the order they provided, make sure this is set to 'relevance'
+$default_collection_sort = 'relevance';
 
 # Enable themes (promoted collections intended for showcasing selected resources)
 $enable_themes=true;
@@ -1397,6 +1398,15 @@ $collection_public_hide_owner=true;
 # Only useful when $user_account_auto_creation=true;
 $registration_group_select=false;
 
+# Show the fullname of the user who created the account when editing user
+$user_edit_created_by=false;
+# Also show the user email address if $user_edit_created_by=true
+$user_edit_created_by_email=false;
+# Show the fullname of the user who approved the account when editing user
+$user_edit_approved_by=false;
+# Also show the user email address if $user_edit_approved_by=true
+$user_edit_approved_by_email=false;
+
 # Custom Resource/Collection Request Fields
 # -----------------------------------------
 # Additional custom fields that are collected and e-mailed when new resources or collections are requested.
@@ -2047,7 +2057,7 @@ $staticsync_extension_mapping[4]=array("flv");
 # $staticsync_mapped_category_tree=50;
 # Uncomment and set the next line to specify a text field to store the retrieved path information for each file. This is a time saving alternative to the option above.
 # $staticsync_filepath_to_field=100;
-# Append multiple mapped values instead of overwritting? This will use the same appending methods used when editing fields. Not used on dropdown, date, categroy tree, datetime, or radio buttons
+# Append multiple mapped values instead of overwritting? This will use the same appending methods used when editing fields. Not used on dropdown, date, category tree, datetime, or radio buttons
 $staticsync_extension_mapping_append_values=true;
 # Should the generated resource title include the sync folder path?
 $staticsync_title_includes_path=true;
@@ -3051,6 +3061,12 @@ $previews_allow_enlarge=false;
 
 # Option to use a random static image from the available slideshow images. Requires slideshow_big=true;
 $static_slideshow_image=false;
+
+#Add full username column in my messages/actions pages
+$messages_actions_fullname = true;
+
+#Add usergroup column in my messages/actions area
+$messages_actions_usergroup = false;
 
 # User preference - user_pref_resource_notifications. Option to receive notifications about resource management e.g. archive state changes 
 $user_pref_resource_notifications=false;

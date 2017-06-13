@@ -186,6 +186,21 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="Fixed"><?php echo nicedate($user["created"],true) ?></div>
 <div class="clearerleft"> </div></div>
 
+<?php 
+if ($user_edit_created_by)
+	{ 
+	$account_creation_data=sql_query('select u.fullname, u.email from user u left join activity_log al on u.ref=al.user where al.log_code="c" and al.remote_table="user" and al.remote_column="ref" and al.remote_ref=' . $ref);
+	$account_created_by=(!empty($account_creation_data) ? $account_creation_data[0]['fullname'] . ($user_edit_created_by_email ? ' (' . $account_creation_data[0]['email'] . ')' : '') : $lang['user_autocreated']);
+	?>
+	<div class="Question">
+		<label><?php echo $lang["user_created_by"]?></label>
+		<div class="Fixed"><?php echo $account_created_by ?></div>
+		<div class="clearerleft"> </div>
+	</div>
+	<?php
+	}
+?>
+
 <div class="Question"><label><?php echo $lang["origin"]; ?></label>
 <div class="Fixed"><?php echo (($user["origin"]!="")?(isset($lang["origin_" . $user["origin"]])?$lang["origin_" . $user["origin"]]:$user["origin"]):$applicationname) ?></div>
 <div class="clearerleft"> </div></div>
@@ -238,6 +253,21 @@ if (!hook("ticktoemailpassword"))
 <div class="Question"><label><?php echo $lang["approved"]?></label><input name="approved" type="checkbox"  value="yes" <?php if ($user["approved"]==1) { ?>checked<?php } ?>>
 <?php if ($user["approved"]==0) { ?><div class="FormError">!! <?php echo $lang["ticktoapproveuser"]?> !!</div><?php } ?>
 <div class="clearerleft"> </div></div>
+
+<?php 
+if ($user_edit_approved_by && $user["approved"]==1)
+	{ 
+	$account_approval_data=sql_query('select u.fullname, u.email from user u left join activity_log al on u.ref=al.user where al.log_code="e" and al.remote_table="user" and al.remote_column="approved" and al.remote_ref=' . $ref);
+	$account_approved_by=(!empty($account_approval_data) ? $account_approval_data[0]['fullname'] . ($user_edit_approved_by_email ? ' (' . $account_approval_data[0]['email'] . ')' : '') : $lang['user_autoapproved']);
+	?>
+	<div class="Question">
+		<label><?php echo $lang["user_approved_by"]?></label>
+		<div class="Fixed"><?php echo $account_approved_by ?></div>
+		<div class="clearerleft"> </div>
+	</div>
+	<?php
+	}
+?>
 
 <div class="Question"><label><?php echo $lang["ticktodelete"]?></label><input name="deleteme" type="checkbox"  value="yes"><div class="clearerleft"> </div></div>
 <?php hook("additionaluserlinks");?>

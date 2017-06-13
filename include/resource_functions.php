@@ -1480,7 +1480,7 @@ function update_field($resource, $field, $value, array &$errors = array())
         $fieldinfo = $fieldinfo[0];
         }
 
-    $fieldoptions = get_nodes($field,null,true);
+    $fieldoptions = get_nodes($field,null,$fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE);
     $newvalues    = trim_array(explode(',', $value));
 
     // Set up arrays of node ids to add/remove. 
@@ -4459,7 +4459,20 @@ function truncate_join_field_value($value)
         $encoding = $server_charset;
         }
 
-    return mb_substr($value, 0, $resource_field_column_limit, $encoding);
+    $truncated_value = mb_substr($value, 0, $resource_field_column_limit, $encoding);
+
+    if($resource_field_column_limit >= strlen($truncated_value))
+        {
+        return $truncated_value;
+        }
+
+    $more_limit = $resource_field_column_limit;
+    while($resource_field_column_limit < strlen($truncated_value))
+        {
+        $truncated_value = mb_substr($value, 0, --$more_limit, $encoding);
+        }
+
+    return $truncated_value;
     }
 
 
