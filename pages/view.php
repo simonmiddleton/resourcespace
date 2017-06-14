@@ -184,6 +184,9 @@ if (!$direct_download_allow_ie7 && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]
 if (!$direct_download_allow_ie8 && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]),"msie 8.")!==false) {$save_as=true;}	
 }
 
+# downloading a file from iOS should open a new window/tab to prevent a download loop
+$iOS_save=((stripos($_SERVER['HTTP_USER_AGENT'],"iPod") || stripos($_SERVER['HTTP_USER_AGENT'],"iPhone") || stripos($_SERVER['HTTP_USER_AGENT'],"iPad")) ? true : false);
+
 # Show the header/sidebar
 include "../include/header.php";
 
@@ -1076,7 +1079,7 @@ function make_download_preview_link($ref, $size, $label)
 
 function add_download_column($ref, $size_info, $downloadthissize)
 	{
-	global $save_as, $direct_download, $order_by, $lang, $baseurl_short, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource;;
+	global $save_as, $direct_download, $order_by, $lang, $baseurl_short, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save;
 	if ($downloadthissize)
 		{
 		?><td class="DownloadButton"><?php
@@ -1092,7 +1095,15 @@ function add_download_column($ref, $size_info, $downloadthissize)
 					{
 					echo "href=\"" . generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
 					}
-					?> onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"]?></a><?php
+					if($iOS_save)
+						{
+						echo " target=\"_blank\"";
+						}
+					else
+						{
+						echo " onClick=\"return CentralSpaceLoad(this,true);\"";
+						}
+					?>><?php echo $lang["action-download"]?></a><?php
 				}
 			}
 		else
