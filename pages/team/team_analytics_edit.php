@@ -6,7 +6,7 @@
 include '../../include/db.php';
 include_once '../../include/general.php';
 include '../../include/authenticate.php';
-include '../../include/collections_functions.php';
+include_once '../../include/collections_functions.php';
 
 $ref=getvalescaped("ref","",true);
 

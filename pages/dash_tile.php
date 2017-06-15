@@ -6,12 +6,12 @@
  */
 
 include "../include/db.php";
-include_once "../include/general.php";
+include "../include/general.php";
 $k=getvalescaped("k","");
 include "../include/authenticate.php";
-include "../include/collections_functions.php";
-include "../include/search_functions.php";
-include "../include/dash_functions.php";
+include_once "../include/collections_functions.php";
+include_once "../include/search_functions.php";
+include_once "../include/dash_functions.php";
 include_once '../include/render_functions.php';
 
 if(!checkPermission_dashcreate()){exit($lang["error-permissiondenied"]);}

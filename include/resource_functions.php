@@ -1849,7 +1849,7 @@ function delete_resource($ref)
 	# Log the deletion of this resource for any collection it was in. 
 	$in_collections=sql_query("select * from collection_resource where resource = '$ref'");
 	if (count($in_collections)>0){
-		if (!function_exists("collection_log")){include ("collections_functions.php");}
+		if (!function_exists("collection_log")){include_once ("collections_functions.php");}
 		for($n=0;$n<count($in_collections);$n++)
 			{
 			collection_log($in_collections[$n]['collection'],'d',$in_collections[$n]['resource']);
