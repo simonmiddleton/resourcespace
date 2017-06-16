@@ -29,6 +29,20 @@ if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_r
     $replace_resource = false;
     }
 
+if($resource_type == "")
+	{
+	// If upload_then_edit we may not have a resource type
+	$allrestypes = get_resource_types();
+	foreach($allrestypes as $restype)
+		{
+		if (!checkperm("XU" . $restype["ref"]))
+			{
+			$resource_type = $restype["ref"];
+			break;
+			}
+		}
+	}
+
 # Load the configuration for the selected resource type. Allows for alternative notification addresses, etc.
 resource_type_config_override($resource_type);
 
