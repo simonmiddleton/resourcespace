@@ -870,6 +870,7 @@ $plugins = array('transform', 'rse_version');
 #$anonymous_login="guest";
 
 # Alternative anonymous login mode. Automatically create a separate user for each anonymous session and log them in.
+# EXPERIMENTAL - user with caution!
 # $anonymous_autouser_group=2;
 
 
