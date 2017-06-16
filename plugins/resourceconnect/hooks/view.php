@@ -21,7 +21,7 @@ function HookResourceconnectViewViewallresults()
 
 	global $lang,$search;
 	?>
-	|
+	
 	<a href="<?php echo getval("resourceconnect_source","") ?>/pages/search.php?search=<?php echo urlencode($search) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["viewallresults"]?></a>
 	<?php
 	return true;
@@ -35,7 +35,7 @@ function HookResourceconnectViewNextpreviousextraurl()
 	# Forward the resourceconnect source.
 
 	global $baseurl;
-	echo "resourceconnect_source=" .$baseurl;
+	return ("resourceconnect_source=" .$baseurl);
 	}
 	
 function HookResourceconnectViewPreviewextraurl()
@@ -45,7 +45,7 @@ function HookResourceconnectViewPreviewextraurl()
 	# Forward the resourceconnect source.
 
 	global $baseurl;
-	echo "resourceconnect_source=" .$baseurl;
+	return ("resourceconnect_source=" .$baseurl);
 	}
 
 
