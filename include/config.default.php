@@ -120,6 +120,9 @@ $use_zip_extension=false; //use php-zip extension instead of $archiver or $zipco
 $collection_download_tar_size = 100; // Use tar to speed up large collection downloads. Enter value in MB. Downloads above this size will default to using tar. Set value to 0 to disable tar downloads
 $collection_download_tar_option=false; // Default to using tar downloads for all downloads
 
+// Path to Python (programming language)
+// $python_path = '/usr/bin';
+
 /* ---------------------------------------------------
 OTHER PARAMETERS
 
@@ -3290,3 +3293,21 @@ Rather than use a URL like "http://yourdomain/filestore/1_6326bb8314c6c21/1pre_c
 the download.php page to give back the file. This prevents users from comming back and download the files after their 
 permissions to the assets have been revoked.*/
 $hide_real_filepath = false;
+
+
+#######################################
+################### Facial recognition:
+#######################################
+// Requires OpenCV and Python (version 2.7.6)
+// Credit to “AT&T Laboratories, Cambridge” for their database of faces during initial testing phase.
+$facial_recognition = false;
+
+// Set the field that will be used to store the name of the person suggested/ detected
+// IMPORTANT: the field type MUST be dynamic keyword list
+$facial_recognition_tag_field = null;
+
+// Physical file path to FaceRecognizer model state(s) and data
+// Security note: it is best to place it outside of web root
+$facial_recognition_face_recognizer_models_location = '';
+#######################################
+#######################################

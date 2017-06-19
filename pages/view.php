@@ -802,6 +802,19 @@ else if(1 == $resource['has_image'])
                             read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>
                             });
 
+                <?php
+                if($facial_recognition)
+                    {
+                    ?>
+                        anno.addPlugin('RSFaceRecognition',
+                            {
+                            facial_recognition_endpoint: '<?php echo $baseurl; ?>/pages/ajax/facial_recognition.php',
+                            resource                   : <?php echo (int) $ref; ?>,
+                            });
+                    <?php
+                    }
+                    ?>
+
                         rs_tagging_plugin_added = true;
 
                         // We have to wait for initialisation process to finish as this does ajax calls
@@ -1952,6 +1965,14 @@ if($annotate_enabled)
     <!-- Annotorious plugin(s) -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
     <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <?php
+    if($facial_recognition)
+        {
+        ?>
+        <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSFaceRecognition/rs_facial_recognition.js"></script>
+        <?php
+        }
+        ?>
     <!-- End of Annotorious -->
     <?php
     }

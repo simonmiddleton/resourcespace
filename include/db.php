@@ -298,6 +298,13 @@ if (($pagename!="download") && ($pagename!="graph") && !$suppress_headers) {head
 #------------------------------------------------------
 
 
+// Facial recognition setup
+if($facial_recognition)
+    {
+    include __DIR__ . '/facial_recognition_functions.php';
+    $facial_recognition = initFacialRecognition();
+    }
+
 # Pre-load all text for this page.
 $pagefilter="AND (page = '" . $pagename . "' OR page = 'all' OR page = '' " .  (($pagename=="dash_tile")?" OR page = 'home'":"") . ")";
 if ($pagename=="admin_content") {$pagefilter="";} # Special case for the team content manager. Pull in all content from all pages so it's all overridden.

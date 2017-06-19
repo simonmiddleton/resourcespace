@@ -27,6 +27,76 @@ function getAnnotation($ref)
 
 
 /**
+* General annotations search functionality
+* 
+* @uses escape_check()
+* @uses sql_query()
+* 
+* @param integer $resource
+* @param integer $resource_type_field
+* @param integer $user
+* @param integer $page
+* 
+* @return array
+*/
+function getAnnotations($resource = 0, $resource_type_field = 0, $user = 0, $page = 0)
+    {
+    if(!is_numeric($resource) || !is_numeric($resource_type_field) || !is_numeric($user) || !is_numeric($page))
+        {
+        return array();
+        }
+
+    $resource            = escape_check($resource);
+    $resource_type_field = escape_check($resource_type_field);
+    $user                = escape_check($user);
+    $page                = escape_check($page);
+    $sql_where_clause    = '';
+
+    if(0 < $resource)
+        {
+        $sql_where_clause = " resource = '{$resource}'";
+        }
+
+    if(0 < $resource_type_field)
+        {
+        if('' != $sql_where_clause)
+            {
+            $sql_where_clause .= ' AND';
+            }
+
+        $sql_where_clause .= " resource_type_field = '{$resource_type_field}'";
+        }
+
+    if(0 < $user)
+        {
+        if('' != $sql_where_clause)
+            {
+            $sql_where_clause .= ' AND';
+            }
+
+        $sql_where_clause .= " user = '{$user}'";
+        }
+
+    if(0 < $page)
+        {
+        if('' != $sql_where_clause)
+            {
+            $sql_where_clause .= ' AND';
+            }
+
+        $sql_where_clause .= " page = '{$page}'";
+        }
+
+    if('' != $sql_where_clause)
+        {
+        $sql_where_clause = "WHERE {$sql_where_clause}";
+        }
+
+    return sql_query("SELECT * FROM annotation {$sql_where_clause}");
+    }
+
+
+/**
 * Get number of annotations available for a resource.
 * 
 * Note: multi page resources will show the total number (ie. all pages)
