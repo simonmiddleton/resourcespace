@@ -1098,7 +1098,7 @@ if($collapsible_sections)
     <label for="copyfrom"><?php echo $lang["batchcopyfrom"]?></label>
     <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
     <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true);">
-    <input type="submit" name="save" value="Save">
+    <input type="submit" name="save" value="<?php echo $lang['save']; ?>">
  </div><!-- end of question_copyfrom -->
  <?php
 } ?>
