@@ -635,6 +635,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
 	echo "Completed path : " . $shortpath . PHP_EOL;
 	$done[$shortpath]["ref"]=$ref;
     $done[$shortpath]["alternative"]=$alternative;
+    set_process_lock("staticsync"); // Update the lock so we know it is still processing resources
     }
 
 # Recurse through the folder structure.
@@ -700,24 +701,29 @@ if (!$staticsync_ingest)
          
         if ($fp!="" && !file_exists($fp))
             {
-            if(!isset($rf["alternative"]))
-                {
-                echo "File no longer exists: " . $rf["ref"] . " " . $fp . PHP_EOL;
-                # Set to archived.
-                sql_query("UPDATE resource SET archive='" . $staticsync_deleted_state . "' WHERE ref='{$rf["ref"]}'");
-                if(isset($resource_deletion_state) && $staticsync_deleted_state==$resource_deletion_state)
-                    {
-                    // Only remove from collections if we are really deleting this. Some configurations may have a separate state or synced resources may be temporarily absent
-                    sql_query("DELETE FROM collection_resource WHERE resource='{$rf["ref"]}'");
-                    }
-                # Log this
-                resource_log($rf['ref'],LOG_CODE_STATUS_CHANGED,'','',$rf["archive"],$staticsync_deleted_state);
-                } 
-            else
-                {
-                echo "Alternative file no longer exists: resource " . $rf["ref"] . " alt:" . $rf["alternative"] . " " . $fp . PHP_EOL;
-                sql_query("DELETE FROM resource_alt_files WHERE ref='" . $rf["alternative"] . "'");
-                }
+			// Additional check - make sure the archive state hasn't changed since the start of the script
+			$cas=sql_value("SELECT archive value FROM resource where ref='{$rf["ref"]}'",0);
+			if(!in_array($cas,$staticsync_ignore_deletion_states))
+				{
+				if(!isset($rf["alternative"]))
+					{
+					echo "File no longer exists: " . $rf["ref"] . " " . $fp . PHP_EOL;
+					# Set to archived, unless state hasn't changed since script started.
+					sql_query("UPDATE resource SET archive='" . $staticsync_deleted_state . "' WHERE ref='{$rf["ref"]}'");
+					if(isset($resource_deletion_state) && $staticsync_deleted_state==$resource_deletion_state)
+						{
+						// Only remove from collections if we are really deleting this. Some configurations may have a separate state or synced resources may be temporarily absent
+						sql_query("DELETE FROM collection_resource WHERE resource='{$rf["ref"]}'");
+						}
+					# Log this
+					resource_log($rf['ref'],LOG_CODE_STATUS_CHANGED,'','',$rf["archive"],$staticsync_deleted_state);
+					} 
+				else
+					{
+					echo "Alternative file no longer exists: resource " . $rf["ref"] . " alt:" . $rf["alternative"] . " " . $fp . PHP_EOL;
+					sql_query("DELETE FROM resource_alt_files WHERE ref='" . $rf["alternative"] . "'");
+					}
+				}
             }
         }
         
