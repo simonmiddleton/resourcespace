@@ -19,30 +19,54 @@
 /* ---------------------------------------------------
 BASIC PARAMETERS
 ------------------------------------------------------ */
-$mysql_server="localhost";	# Use 'localhost' if MySQL is installed on the same server as your web server.
-$mysql_username="root";		# MySQL username
-$mysql_password="";			# MySQL password
-$mysql_db="resourcespace";			# MySQL database name
-# $mysql_charset="utf8"; # MySQL database connection charset, uncomment to use.
+
+#######################################
+################################ MySQL:
+#######################################
+$mysql_server      = 'localhost';
+$mysql_server_port = 3306;
+$mysql_username    = 'root';
+$mysql_password    = '';
+$mysql_db          = 'resourcespace';
+# $mysql_charset     = 'utf8';
 
 # The path to the MySQL client binaries - e.g. mysqldump
 # (only needed if you plan to use the export tool)
-$mysql_bin_path="/usr/bin"; # Note: no trailing slash
+# IMPORTANT: no trailing slash
+$mysql_bin_path = '/usr/bin';
 
 # Force MySQL Strict Mode? (regardless of existing setting) - This is useful for developers so that errors that might only occur when Strict Mode is enabled are caught. Strict Mode is enabled by default with some versions of MySQL. The typical error caused is when the empty string ('') is inserted into a numeric column when NULL should be inserted instead. With Strict Mode turned off, MySQL inserts NULL without complaining. With Strict Mode turned on, a warning/error is generated.
-$mysql_force_strict_mode=false;
+$mysql_force_strict_mode = false;
 
 # If true, it does not remove the backslash from DB queries, and doesn't do any special processing.
 # to them. Unless you need to store '\' in your fields, you can safely keep the default.
-$mysql_verbatim_queries=false;
+$mysql_verbatim_queries = false;
 
 # Ability to record important DB transactions (e.g. INSERT, UPDATE, DELETE) in a sql file to allow replaying of changes since DB was last backed.
 # You may schedule cron jobs to delete this sql log file and perform a mysqldump of the database at the same time.
 # Note that there is no built in database backup, you need to take care of this yourself!
 #
 # WARNING!! Ensure the location defined by $mysql_log_location is not in a web accessible directory -it is advisable to either block access in the web server configuration or make the file write only by the web service account
-$mysql_log_transactions=false;
-#$mysql_log_location="/var/resourcespace_backups/sql_log.sql";
+$mysql_log_transactions = false;
+# $mysql_log_location     = '/var/resourcespace_backups/sql_log.sql';
+
+# Use php-mysqli extension for interfacing with the mysql database
+# Only enable if the extension is present.
+$use_mysqli = function_exists('mysqli_connect');
+
+# Use prepared statements
+# Default is false until technology proven
+$use_mysqli_prepared = $use_mysqli && false;
+
+# Enable establishing secure connections using SSL
+# Requires $use_mysqli = true and setting up mysqli_ssl_server_cert and mysqli_ssl_ca_cert
+$use_mysqli_ssl = $use_mysqli && false;
+
+# $mysqli_ssl_server_cert = '/etc/ssl/certs/server.pem';
+# $mysqli_ssl_ca_cert     = '/etc/ssl/certs/ca_chain.pem';
+#######################################
+#######################################
+
 
 $baseurl="http://my.site/resourcespace"; # The 'base' web address for this installation. Note: no trailing slash
 $email_from="resourcespace@my.site"; # Where system e-mails appear to come from
@@ -2605,14 +2629,6 @@ $tweak_allow_gamma=true;
 # experimental email notification of php errors to $email_notify. 
 $email_errors=false;
 $email_errors_address="";
-
-# Use php-mysqli extension for interfacing with the mysql database
-# Only enable if the extension is present.
-$use_mysqli=function_exists("mysqli_connect");
-
-# Use prepared statements
-# Default is false until technology proven
-$use_mysqli_prepared=$use_mysqli && false;
 
 # Experimental performance enhancement - two pass mode for search results.
 # The first query returns only the necessary number of results for the current search results display
