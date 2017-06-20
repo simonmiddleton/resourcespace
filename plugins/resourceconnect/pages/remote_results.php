@@ -40,7 +40,7 @@ foreach ($rtx as $rt)
 		}
 	}
 
-
+$restypes="";
 $results=do_search($search,$restypes,"relevance",0,$pagesize+$offset,"desc",false,"",true); # Search, ignoring filters (as fields are unlikely to match).
 
 # The access key is used to sign all inbound queries, the remote system must therefore know the access key.
