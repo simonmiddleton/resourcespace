@@ -2511,8 +2511,8 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	# Include footer
 	global $email_footer, $storagedir, $mime_type_by_extension;
 	
-	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/class.phpmailer.php");
-	include_once(dirname(__FILE__)."/../lib/phpmailer_v5.2.6/extras/class.html2text.php");
+	include_once(dirname(__FILE__)."/../lib/PHPMailer-5.2.23/class.phpmailer.php");
+	//include_once(dirname(__FILE__)."/../lib/PHPMailer-5.2.23/extras/class.html2text.php");
 	
 	global $email_from;
 	if ($from=="") {$from=$email_from;}
