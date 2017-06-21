@@ -124,6 +124,11 @@ if(!isset($url))
     $border = false;
     }
 
+if(file_exists($path))
+    {
+    list($image_width, $image_height) = @getimagesize($path);
+    }
+
 $resource = get_resource_data($ref);
 
 // get mp3 paths if necessary and set $use_mp3_player switch
@@ -228,7 +233,18 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
             ?>
             <td>
                 <a onClick="return CentralSpaceLoad(this);" href="<?php echo ((getval("from","")=="search")?$baseurl_short."pages/search.php?":$baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&")?>search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>">
-                    <img id="PreviewImageLarge" class="Picture" src="<?php echo $url; ?>" alt=""/>
+                    <img id="PreviewImageLarge"
+                         class="Picture"
+                         src="<?php echo $url; ?>"
+                         <?php
+                         if($annotate_enabled)
+                            {
+                            ?>
+                            data-original="<?php echo "{$baseurl}/annotation/resource/{$ref}"; ?>"
+                            <?php
+                            }
+                            ?>
+                         alt="" />
                 </a>
                 <?php
                 hook('afterpreviewimage');
@@ -327,11 +343,6 @@ if($annotate_enabled)
             return false;
             }
 
-        if(img_src.indexOf('?') != -1)
-            {
-            img_src = img_src.substring(0, img_src.indexOf('?'));
-            }
-
         // Feature enabled? Then disable it.
         if(option.hasClass('Enabled'))
             {
@@ -351,6 +362,13 @@ if($annotate_enabled)
         var preview_image_copy = preview_image.clone(true);
         preview_image_copy.prop('id', img_copy_id);
         preview_image_copy.prop('src', img_src);
+
+        // Set the width and height of the image otherwise if the source of the file
+        // is fetched from download.php, Annotorious will not be able to determine its
+        // size
+        preview_image_copy.width(<?php echo $image_width; ?>);
+        preview_image_copy.height(<?php echo $image_height; ?>);
+
         preview_image_copy.appendTo(preview_image_link.parent());
         preview_image_link.hide();
 
