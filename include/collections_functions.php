@@ -47,13 +47,24 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
    		$sql.=" (length(c.theme)=0 or c.theme is null) ";
    		}
 	global $anonymous_login,$username,$anonymous_user_session_collection;
- 	if (isset($anonymous_login) && ($username==$anonymous_login) && $anonymous_user_session_collection)
-   		{
-		// Anonymous user - only get the user's own collections that are for this session - although we can still join to get collections that have been specifically shared with the anonymous user 
-		if ($sql==""){$extrasql=" where ";} else {$extrasql.=" and ";}		
-		$rs_session=get_rs_session_id(true);			
-   		$extrasql.=" (c.session_id='" . $rs_session . "')";
-   		}
+
+    if(isset($anonymous_login) && ($username==$anonymous_login) && $anonymous_user_session_collection)
+        {
+        // Anonymous user - only get the user's own collections that are for this session - although we can still join to 
+        // get collections that have been specifically shared with the anonymous user 
+        if('' == $sql)
+            {
+            $extrasql = " where ";
+            }
+        else
+            {
+            $extrasql .= " and ";
+            }
+
+        global $rs_session;
+
+        $extrasql .= " (c.session_id='{$rs_session}')";
+        }
 
    
 	$order_sort="";
@@ -1677,12 +1688,12 @@ function send_collection_feedback($collection,$comment)
 function copy_collection($copied,$current,$remove_existing=false)
 	{	
 	# Get all data from the collection to copy.
-	$copied_collection=sql_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection='$copied'","");
+	$copied_collection=sql_query("select cr.resource, r.resource_type from collection_resource cr join resource r on cr.resource=r.ref where collection='" . escape_check($copied) . "'","");
 	
 	if ($remove_existing)
 		{
 		#delete all existing data in the current collection
-		sql_query("delete from collection_resource where collection='$current'");
+		sql_query("delete from collection_resource where collection='" . $current . "'");
 		collection_log($current,"R",0);
 		}
 	

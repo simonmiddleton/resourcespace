@@ -19,30 +19,54 @@
 /* ---------------------------------------------------
 BASIC PARAMETERS
 ------------------------------------------------------ */
-$mysql_server="localhost";	# Use 'localhost' if MySQL is installed on the same server as your web server.
-$mysql_username="root";		# MySQL username
-$mysql_password="";			# MySQL password
-$mysql_db="resourcespace";			# MySQL database name
-# $mysql_charset="utf8"; # MySQL database connection charset, uncomment to use.
+
+#######################################
+################################ MySQL:
+#######################################
+$mysql_server      = 'localhost';
+$mysql_server_port = 3306;
+$mysql_username    = 'root';
+$mysql_password    = '';
+$mysql_db          = 'resourcespace';
+# $mysql_charset     = 'utf8';
 
 # The path to the MySQL client binaries - e.g. mysqldump
 # (only needed if you plan to use the export tool)
-$mysql_bin_path="/usr/bin"; # Note: no trailing slash
+# IMPORTANT: no trailing slash
+$mysql_bin_path = '/usr/bin';
 
 # Force MySQL Strict Mode? (regardless of existing setting) - This is useful for developers so that errors that might only occur when Strict Mode is enabled are caught. Strict Mode is enabled by default with some versions of MySQL. The typical error caused is when the empty string ('') is inserted into a numeric column when NULL should be inserted instead. With Strict Mode turned off, MySQL inserts NULL without complaining. With Strict Mode turned on, a warning/error is generated.
-$mysql_force_strict_mode=false;
+$mysql_force_strict_mode = false;
 
 # If true, it does not remove the backslash from DB queries, and doesn't do any special processing.
 # to them. Unless you need to store '\' in your fields, you can safely keep the default.
-$mysql_verbatim_queries=false;
+$mysql_verbatim_queries = false;
 
 # Ability to record important DB transactions (e.g. INSERT, UPDATE, DELETE) in a sql file to allow replaying of changes since DB was last backed.
 # You may schedule cron jobs to delete this sql log file and perform a mysqldump of the database at the same time.
 # Note that there is no built in database backup, you need to take care of this yourself!
 #
 # WARNING!! Ensure the location defined by $mysql_log_location is not in a web accessible directory -it is advisable to either block access in the web server configuration or make the file write only by the web service account
-$mysql_log_transactions=false;
-#$mysql_log_location="/var/resourcespace_backups/sql_log.sql";
+$mysql_log_transactions = false;
+# $mysql_log_location     = '/var/resourcespace_backups/sql_log.sql';
+
+# Use php-mysqli extension for interfacing with the mysql database
+# Only enable if the extension is present.
+$use_mysqli = function_exists('mysqli_connect');
+
+# Use prepared statements
+# Default is false until technology proven
+$use_mysqli_prepared = $use_mysqli && false;
+
+# Enable establishing secure connections using SSL
+# Requires $use_mysqli = true and setting up mysqli_ssl_server_cert and mysqli_ssl_ca_cert
+$use_mysqli_ssl = $use_mysqli && false;
+
+# $mysqli_ssl_server_cert = '/etc/ssl/certs/server.pem';
+# $mysqli_ssl_ca_cert     = '/etc/ssl/certs/ca_chain.pem';
+#######################################
+#######################################
+
 
 $baseurl="http://my.site/resourcespace"; # The 'base' web address for this installation. Note: no trailing slash
 $email_from="resourcespace@my.site"; # Where system e-mails appear to come from
@@ -119,6 +143,9 @@ $ghostscript_executable='gs';
 $use_zip_extension=false; //use php-zip extension instead of $archiver or $zipcommand
 $collection_download_tar_size = 100; // Use tar to speed up large collection downloads. Enter value in MB. Downloads above this size will default to using tar. Set value to 0 to disable tar downloads
 $collection_download_tar_option=false; // Default to using tar downloads for all downloads
+
+// Path to Python (programming language)
+// $python_path = '/usr/bin';
 
 /* ---------------------------------------------------
 OTHER PARAMETERS
@@ -662,7 +689,8 @@ $default_sort="relevance";
 
 # What is the default sort order when viewing collection resources?
 # Options are date, colour, relevance, popularity, country
-$default_collection_sort="relevance";
+# Note: when users are expecting resources to be shown in the order they provided, make sure this is set to 'relevance'
+$default_collection_sort = 'relevance';
 
 # Enable themes (promoted collections intended for showcasing selected resources)
 $enable_themes=true;
@@ -867,6 +895,11 @@ $plugins = array('transform', 'rse_version');
 # You must set this to the USERNAME of the USER who will represent all your anonymous users
 # Note that collections will be shared among all anonymous users - it's therefore usually best to turn off all collections functionality for the anonymous user.
 #$anonymous_login="guest";
+
+# Alternative anonymous login mode. Automatically create a separate user for each anonymous session and log them in.
+# EXPERIMENTAL - user with caution!
+# $anonymous_autouser_group=2;
+
 
 # Domain Linked Anonymous Access
 # Uncomment and set to allow different anonymous access USERS for different domains. 
@@ -1393,6 +1426,15 @@ $collection_public_hide_owner=true;
 # in System Setup.
 # Only useful when $user_account_auto_creation=true;
 $registration_group_select=false;
+
+# Show the fullname of the user who created the account when editing user
+$user_edit_created_by=false;
+# Also show the user email address if $user_edit_created_by=true
+$user_edit_created_by_email=false;
+# Show the fullname of the user who approved the account when editing user
+$user_edit_approved_by=false;
+# Also show the user email address if $user_edit_approved_by=true
+$user_edit_approved_by_email=false;
 
 # Custom Resource/Collection Request Fields
 # -----------------------------------------
@@ -2044,7 +2086,7 @@ $staticsync_extension_mapping[4]=array("flv");
 # $staticsync_mapped_category_tree=50;
 # Uncomment and set the next line to specify a text field to store the retrieved path information for each file. This is a time saving alternative to the option above.
 # $staticsync_filepath_to_field=100;
-# Append multiple mapped values instead of overwritting? This will use the same appending methods used when editing fields. Not used on dropdown, date, categroy tree, datetime, or radio buttons
+# Append multiple mapped values instead of overwritting? This will use the same appending methods used when editing fields. Not used on dropdown, date, category tree, datetime, or radio buttons
 $staticsync_extension_mapping_append_values=true;
 # Should the generated resource title include the sync folder path?
 $staticsync_title_includes_path=true;
@@ -2588,14 +2630,6 @@ $tweak_allow_gamma=true;
 $email_errors=false;
 $email_errors_address="";
 
-# Use php-mysqli extension for interfacing with the mysql database
-# Only enable if the extension is present.
-$use_mysqli=function_exists("mysqli_connect");
-
-# Use prepared statements
-# Default is false until technology proven
-$use_mysqli_prepared=$use_mysqli && false;
-
 # Experimental performance enhancement - two pass mode for search results.
 # The first query returns only the necessary number of results for the current search results display
 # The second query is the same but returns only a count of the full result set, which is used to pad the result array to the correct size (so counts display correctly).
@@ -2653,7 +2687,7 @@ $collection_allow_creation=true;
 $daterange_search=false;
 
 # Keyboard navigation allows using left and right arrows to browse through resources in view/search/preview modes
-$keyboard_navigation=true;
+$keyboard_navigation = false;
 
 # Keyboard control codes
 # Previous/next resource, default: left/right arrows
@@ -3049,6 +3083,12 @@ $previews_allow_enlarge=false;
 # Option to use a random static image from the available slideshow images. Requires slideshow_big=true;
 $static_slideshow_image=false;
 
+#Add full username column in my messages/actions pages
+$messages_actions_fullname = true;
+
+#Add usergroup column in my messages/actions area
+$messages_actions_usergroup = false;
+
 # User preference - user_pref_resource_notifications. Option to receive notifications about resource management e.g. archive state changes 
 $user_pref_resource_notifications=false;
 # User preference - user_pref_resource_access_notifications. Option to receive notifications about resource access e.g. resource requests
@@ -3276,3 +3316,21 @@ Rather than use a URL like "http://yourdomain/filestore/1_6326bb8314c6c21/1pre_c
 the download.php page to give back the file. This prevents users from comming back and download the files after their 
 permissions to the assets have been revoked.*/
 $hide_real_filepath = false;
+
+
+#######################################
+################### Facial recognition:
+#######################################
+// Requires OpenCV and Python (version 2.7.6)
+// Credit to “AT&T Laboratories, Cambridge” for their database of faces during initial testing phase.
+$facial_recognition = false;
+
+// Set the field that will be used to store the name of the person suggested/ detected
+// IMPORTANT: the field type MUST be dynamic keyword list
+$facial_recognition_tag_field = null;
+
+// Physical file path to FaceRecognizer model state(s) and data
+// Security note: it is best to place it outside of web root
+$facial_recognition_face_recognizer_models_location = '';
+#######################################
+#######################################

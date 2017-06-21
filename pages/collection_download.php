@@ -383,17 +383,26 @@ if ($submitted != "")
                         # Copy to tmp (if exiftool failed) or rename this file
                         # this is for extra efficiency to reduce copying and disk usage
                         
-                        if (!($collection_download_tar || $use_zip_extension))
-							{
-							// the copy or rename to the filename is not necessary using the zip extension since the archived filename can be specified.
-							$newpath = get_temp_dir(false,$id) . "/" . $filename;
-							if (!$copy){rename($p, $newpath);} else {copy($p,$newpath);}
-							# Add the temporary file to the post-archiving deletion list.
-							$deletion_array[]=$newpath;
-							
-							# Set p so now we are working with this new file
-							$p=$newpath;
-							}
+                        if(!($collection_download_tar || $use_zip_extension))
+                            {
+                            // the copy or rename to the filename is not necessary using the zip extension since the archived filename can be specified.
+                            $newpath = get_temp_dir(false,$id) . '/' . $filename;
+
+                            if(!$copy && $exiftool_write_option)
+                                {
+                                rename($p, $newpath);
+                                }
+                            else
+                                {
+                                copy($p,$newpath);
+                                }
+
+                            # Add the temporary file to the post-archiving deletion list.
+                            $deletion_array[] = $newpath;
+
+                            # Set p so now we are working with this new file
+                            $p = $newpath;
+                            }
 						}
 					}
 				if (empty($filename))

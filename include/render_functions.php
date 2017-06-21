@@ -807,7 +807,7 @@ function render_sort_order(array $order_fields)
             {
             /*Because we are looking at the same collection in both CentralSpace and CollectionDiv,
             make sure to keep both sections in sync*/
-            CollectionDivLoad(baseurl_short + 'pages/collections.php?collection=' + usercollection + '&k=<?php echo $k; ?>' + '&order_by=' + selected_option.val() + '&sort=' + selected_sort_option);
+            CollectionDivLoad(baseurl_short + 'pages/collections.php?collection=' + usercollection + '&k=<?php echo htmlspecialchars($k); ?>' + '&order_by=' + selected_option.val() + '&sort=' + selected_sort_option);
             }
     });
 
@@ -827,7 +827,7 @@ function render_sort_order(array $order_fields)
             {
             /*Because we are looking at the same collection in both CentralSpace and CollectionDiv,
             make sure to keep both sections in sync*/
-            CollectionDivLoad(baseurl_short + 'pages/collections.php?collection=' + usercollection + '&k=<?php echo $k; ?>' + '&order_by=' + selected_sort_order_option.val() + '&sort=' + selected_option);
+            CollectionDivLoad(baseurl_short + 'pages/collections.php?collection=' + usercollection + '&k=<?php echo htmlspecialchars($k); ?>' + '&order_by=' + selected_sort_order_option.val() + '&sort=' + selected_option);
             }
     });
     </script>

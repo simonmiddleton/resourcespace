@@ -103,9 +103,9 @@ foreach($getfields as $field_id)
     $csf[] = get_resource_type_field($field_id);
     }
 
-
 $pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
-$PDF_filename      = get_temp_dir() . '/contactsheet.pdf';
+$filename_uid      = generateUserFilenameUID($userref);
+$PDF_filename      = get_temp_dir() . "/contactsheet_{$filename_uid}.pdf";
 $placeholders      = array(
     'date'                          			=> nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy),
     'titlefontsize'                 			=> $titlefontsize,
@@ -213,7 +213,18 @@ foreach($results as $result_data)
         $use_watermark = check_use_watermark();
         }
 
+    // Determine the image path. If no file is found then do not continue.
     $img_path = get_resource_path($result_data['ref'], true, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
+
+    if(!file_exists($img_path))
+        {
+        $img_path = get_resource_path($result_data['ref'], true, 'lpr', false, $result_data['preview_extension'], -1, 1, $use_watermark);
+        }
+
+    if(!file_exists($img_path))
+        {
+        $img_path = get_resource_path($result_data['ref'], true, 'scr', false, $result_data['preview_extension'], -1, 1, $use_watermark);
+        }
 
     // If we can't find the size, drop back to preview size
     if(!file_exists($img_path))
@@ -224,6 +235,12 @@ foreach($results as $result_data)
     if(!file_exists($img_path))
         {
         $img_path = "../../gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false, true);
+        }
+
+    if(!file_exists($img_path))
+        {
+        debug("CONTACT_SHEET: could not find image path at '{$img_path}'. Skipping resource!");
+        continue;
         }
 
     $placeholders['resources'][$result_data['ref']]['preview_src'] = str_replace($storagedir, $storageurl, $img_path);
@@ -281,13 +298,13 @@ catch(Html2Pdf_exception $e)
 // Make AJAX preview
 if ($preview && isset($imagemagick_path)) 
     {
-    $contact_sheet_rip = get_temp_dir() . '/contactsheetrip.jpg';
+    $contact_sheet_rip = get_temp_dir() . "/contactsheetrip_{$filename_uid}.jpg";
     if(file_exists($contact_sheet_rip))
         {
         unlink($contact_sheet_rip);
         }
 
-    $contact_sheet_preview_img = get_temp_dir() . '/contactsheet.jpg';
+    $contact_sheet_preview_img = get_temp_dir() . "/contactsheet_{$filename_uid}.jpg";
     if(file_exists($contact_sheet_preview_img))
         {
         unlink($contact_sheet_preview_img);

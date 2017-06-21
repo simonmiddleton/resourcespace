@@ -458,7 +458,7 @@ if (!hook("replacecdivrender"))
 	else {?><div class="ui-layout-south" ></div><script>myLayout=jQuery('body').layout({south__initHidden: true });	</script><?php }
 	}
 
-if($responsive_ui)
+if($responsive_ui && !hook("responsive_footer"))
     {
     ?>
     <!-- Responsive -->

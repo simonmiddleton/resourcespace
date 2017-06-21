@@ -47,7 +47,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
 					if($theme_image_path!="")
 						{	
 						echo " FeaturedSimpleTileImage\" style=\"background: url(" . $theme_image_path . ");background-size: cover;";
-						}?>">					
+						}?> <?php echo strip_tags_and_attributes(htmlspecialchars(str_replace(" ","",i18n_get_collection_name($getthemes[$m]))))?>">					
 					<a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $getthemes[$m]["ref"]?>" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink <?php if($themes_simple_images){echo " TileContentShadow";} ?>" id="featured_tile_<?php echo $getthemes[$m]["ref"]; ?>">
 					<div id="FeaturedSimpleTileContents_<?php echo $getthemes[$m]["ref"] ; ?>"  class="FeaturedSimpleTileContents">
 						<div class="FeaturedSimpleTileText">
@@ -362,8 +362,9 @@ if (!$themes_category_split_pages && !$theme_direct_jump) { ?>
   <p><?php echo text("introtext")?></p>
 <?php } ?>
 
-<?php if ($theme_direct_jump)
+<?php if ($theme_direct_jump )
 	{
+		
 	# Display title and description when 'direct jump' mode is enabled.
 	$text=text("introtext");
 	$title=htmlspecialchars(getval("title",$lang["themes"]),ENT_QUOTES);
@@ -374,9 +375,13 @@ if (!$themes_category_split_pages && !$theme_direct_jump) { ?>
 		if ($text=="") {$text=text("introtext");}
 		}
 	?>
+	
+	
   <h1><?php echo $title ?></h1>
   <p><?php echo $text ?></p>
-<?php } ?>
+<?php } 
+hook('themestext')
+?>
 
 
   <style>.ListviewTitleBoxed {background-color:#fff;}</style>
@@ -464,13 +469,16 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 						if($theme_image_path!="")
 							{	
 							echo " FeaturedSimpleTileImage\" style=\"background: url(" . $theme_image_path . ");background-size: cover;";
-							}?>">
-						<a href="<?php echo $link; ?>" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_<?php echo md5($headers[$n]);?>">
+							}?><?php echo strip_tags_and_attributes(trim(htmlspecialchars(str_replace(" ","",$headers[$n]))));?>">
+						<a href="<?php echo $link; ?>" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_<?php echo md5($headers[$n]);?> ">
 							<div id="FeaturedSimpleTileContents_<?php echo md5($headers[$n]) ; ?>"  class="FeaturedSimpleTileContents">
 							<div class="FeaturedSimpleTileText">
-								<h2><?php echo htmlspecialchars(i18n_get_translated(str_replace("*","",$headers[$n])))?></h2>
+								<h2><?php echo htmlspecialchars(i18n_get_translated(str_replace("*","",$headers[$n])));?></h2>
 							</div>
+							
+							
 							</div><!-- End of FeaturedSimpleTileContents_<?php echo md5($headers[$n]);?>-->
+							
 						</a>
 						
 					<?php
@@ -499,11 +507,13 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 							<?php
 							}
 						if ($enable_theme_category_edit && checkperm("t"))
-							{
+							{ 
+							hook("addcustomtool"); 
 							?><div class="tool">
 								<a href="<?php echo $editlink ?>" onClick="return ModalLoad(this,true);">
-									<span><?php echo LINK_CARET ?><?php echo $lang["action-edit"]; ?></span>
+									<span><?php echo LINK_CARET ?><?php echo $lang['action-edit']; ?></span>
 								</a>
+								
 							</div>
 							<?php
 							}

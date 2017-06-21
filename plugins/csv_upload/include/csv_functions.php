@@ -30,7 +30,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 	$resource_type_filter=getvalescaped("resource_type","",true);
 	if(getvalescaped("add_to_collection","")!="")
 		{
-		include dirname(__FILE__)."/../../../include/collections_functions.php";
+		include_once dirname(__FILE__)."/../../../include/collections_functions.php";
 		global $usercollection;
 		$add_to_collection=true;
 		}

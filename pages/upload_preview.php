@@ -28,10 +28,6 @@ $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 
-$maxsize="200000000"; #200MB
-#ini_set("upload_max_filesize","200M");
-#echo "Max size = " . ini_get("upload_max_filesize");
-
 #handle posts
 if (array_key_exists("userfile",$_FILES))
     {
@@ -55,7 +51,6 @@ function check(filename) {
 }
 </script>
 <form method="post" class="form" enctype="multipart/form-data" action="upload_preview.php">
-<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $maxsize?>">
 <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref)?>">
 <br/>
 <?php if ($status!="") { ?><?php echo $status?><?php } ?>

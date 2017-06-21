@@ -184,13 +184,21 @@ foreach($resources as $resource) // For each resources
 
       $start_time = microtime(true);
 
-      // For each fork, we need a new connection to database.
-	if ($use_mysqli){
-			$db=mysqli_connect($mysql_server,$mysql_username,$mysql_password,$mysql_db);
-		} else {
-			mysql_connect($mysql_server,$mysql_username,$mysql_password);
-			mysql_select_db($mysql_db);
-		}
+        // For each fork, we need a new connection to database.
+        if($use_mysqli)
+            {
+            $db = mysqli_connect($mysql_server, $mysql_username, $mysql_password, $mysql_db, $mysql_server_port);
+
+            if($use_mysqli_ssl)
+                {
+                mysqli_ssl_set($db, null, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert, null, null);
+                }
+            }
+        else
+            {
+            mysql_connect($mysql_server,$mysql_username,$mysql_password);
+            mysql_select_db($mysql_db);
+            }
 
       // If $mysql_charset is defined, we use it
       // else, we use the default charset for mysql connection.

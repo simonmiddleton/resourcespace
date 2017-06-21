@@ -140,7 +140,7 @@ if ((getval("logout","")!="") && array_key_exists("user",$_COOKIE))
     sql_query("update user set logged_in=0,session='' where session='$session'");
     hook("removeuseridcookie");
     #blank cookie
-    rs_setcookie("user", "", time() - 3600);
+    rs_setcookie('user', '', 0);
 
     # Also blank search related cookies
     rs_setcookie('search', '');

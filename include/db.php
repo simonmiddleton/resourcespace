@@ -122,11 +122,17 @@ if (!isset($storageurl)) {$storageurl=$baseurl."/filestore";}
 $db = null;
 function sql_connect() 
     {
-    global $use_mysqli,$db,$mysql_server,$mysql_username,$mysql_password,$mysql_db,$mysql_charset,$mysql_force_strict_mode;
+    global $use_mysqli,$db,$mysql_server,$mysql_username,$mysql_password,$mysql_db,$mysql_charset,$mysql_force_strict_mode, 
+           $mysql_server_port, $use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert;
 	# *** CONNECT TO DATABASE ***
 	if ($use_mysqli)
 	    {
-	    $db=mysqli_connect($mysql_server,$mysql_username,$mysql_password,$mysql_db);
+        $db = mysqli_connect($mysql_server, $mysql_username, $mysql_password, $mysql_db, $mysql_server_port);
+
+        if($use_mysqli_ssl)
+            {
+            mysqli_ssl_set($db, null, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert, null, null);
+            }
 	    } 
 	else 
 	    {
@@ -297,6 +303,13 @@ global $suppress_headers;
 if (($pagename!="download") && ($pagename!="graph") && !$suppress_headers) {header("Content-Type: text/html; charset=UTF-8");} // Make sure we're using UTF-8.
 #------------------------------------------------------
 
+
+// Facial recognition setup
+if($facial_recognition)
+    {
+    include __DIR__ . '/facial_recognition_functions.php';
+    $facial_recognition = initFacialRecognition();
+    }
 
 # Pre-load all text for this page.
 $pagefilter="AND (page = '" . $pagename . "' OR page = 'all' OR page = '' " .  (($pagename=="dash_tile")?" OR page = 'home'":"") . ")";

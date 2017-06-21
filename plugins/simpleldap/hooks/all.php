@@ -4,9 +4,7 @@ include_once(dirname(__FILE__) . "/../include/simpleldap_functions.php");
 
 function HookSimpleldapAllExternalauth($uname, $pword){
 	if (!function_exists('ldap_connect')){return false;}
-	global $simpleldap;
-	global $username;
-	global $password_hash, $email_attribute, $phone_attribute;
+	global $lang, $simpleldap, $username, $password_hash, $email_attribute, $phone_attribute;
 	
 	// oops - the password is getting escaped earlier in the process, and we don't want that 
     // when it goes to the ldap server. So remove the slashes for this purpose.

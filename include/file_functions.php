@@ -26,3 +26,32 @@ function safe_file_name($name)
 
     return $newname;
     }
+
+
+/**
+* Generate a UID for filnames that can be different from user to user (e.g. contact sheets)
+* 
+* @param integer $user_id
+* 
+* @return string
+*/
+function generateUserFilenameUID($user_id)
+    {
+    if(!is_numeric($user_id) || 0 >= $user_id)
+        {
+        trigger_error('Bad parameter for generateUserFilenameUID()!');
+        }
+
+    global $rs_session, $scramble_key;
+
+    $filename_uid = '';
+
+    if(isset($rs_session))
+        {
+        $filename_uid .= $rs_session;
+        }
+
+    $filename_uid .= $user_id;
+
+    return substr(hash('sha256', $filename_uid . $scramble_key), 0, 15);
+    }

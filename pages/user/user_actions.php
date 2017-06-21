@@ -21,7 +21,7 @@ $actiontype=getvalescaped("actiontype",''); // Set to ascertain if we are filter
 $offset=getvalescaped("offset",0);
 $order_by=getvalescaped("actions_order_by","date");
 $sort=getvalescaped("actions_sort","DESC");
-$valid_order_bys=array("date","ref","description","type");
+$valid_order_bys=array("date","ref","description","type","user","usergroup");
 if (!in_array($order_by,$valid_order_bys)) {$order_by="date";$sort="DESC";} 
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 
@@ -67,8 +67,10 @@ if ($actions_resource_review)
 	$rtypes=get_resource_types();
     $searchable_restypes=implode(",",array_diff(array_column($rtypes,"ref"),explode(",",$actions_resource_types_hide)));
 	$add_editable_resources_url = $baseurl_short . "pages/collections.php?addsearch=&mode=resources&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true";
+	$search_url = $baseurl_short . "pages/search.php?search=&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true";
 	?>
 	<li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_add_editable_to_collection']?></a></li>
+	<li><a href="#" onclick="CentralSpaceLoad('<?php echo $search_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_view_editable_as_resultset']?></a></li>
 	<?php 
 	}?>
 </ul>
@@ -133,6 +135,11 @@ else
 	  <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 		  <tr class="ListviewTitleStyle">
 			  <td><?php if ($order_by=="date"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"date")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo $lang["date"]; ?></a></td>
+			  
+			<?php if ($messages_actions_fullname){?><td> <?php if ($order_by=="name"       ) {?><td><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo $lang["user"]; ?></a></td>
+			<?php } ?>
+			<?php if ($messages_actions_usergroup){?><td> <?php  if ($order_by=="usergroup"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo $lang["columnheader-user_group"]; ?></a></td>
+			<?php } ?>
 			  <td><?php if ($order_by=="ref"        ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"ref")) ?>"         onClick="return CentralSpaceLoad(this);"><?php echo $lang["property-reference"]; ?></a></td>
 			  <td><?php if ($order_by=="description") {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"description")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["description"]; ?></a></td>
 			  <td><?php if ($order_by=="type"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"type")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo $lang["type"]; ?></a></td>
@@ -186,8 +193,16 @@ else
 		  ?>
 			<tr>
 				<td><?php echo nicedate($all_actions[$n]["date"],true); ?></td>
+				<?php if ($messages_actions_fullname)
+						{
+						echo "<td>" . strip_tags_and_attributes(tidy_trim(TidyList($all_actions[$n]["user"]),$list_search_results_title_trim)) . "</td>";	
+						}?>
+				<?php if ($messages_actions_usergroup)
+						{
+						echo "<td>" .$all_actions[$n]["usergroup"] . "</td>";
+						}?>	
 				<td><a href="<?php echo $editlink; ?>" onClick="actionreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" ><?php echo $all_actions[$n]["ref"]; ?></a></td>
-				<td><?php echo tidy_trim(TidyList($all_actions[$n]["description"]),$list_search_results_title_trim) ; ?></td>
+				<td><?php echo strip_tags_and_attributes(tidy_trim(TidyList($all_actions[$n]["description"]),$list_search_results_title_trim)) ; ?></td>
 				<td><?php echo $lang["actions_type_" . $all_actions[$n]["type"]]; ?></td>
 				<td>
 					<div class="ListTools">

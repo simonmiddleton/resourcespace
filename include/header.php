@@ -353,7 +353,6 @@ else
 				$header_img_src = $baseurl_short . $header_img_src;
 				}
 			}
-		
         $headerimginfo=@getimagesize($header_img_src);
         $headerwidth=isset($headerimginfo[1])?floor(($headerimginfo[0]/$headerimginfo[1])*50):236;
         }
@@ -420,7 +419,7 @@ if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false =
 
 <?php
 hook("beforeheadernav1");
-if (isset($anonymous_login) && ($username==$anonymous_login))
+if ((isset($anonymous_login) && ($username==$anonymous_login)) || (isset($anonymous_autouser_group) && ($usergroup==$anonymous_autouser_group)))
 	{
 	if (!hook("replaceheadernav1anon")) 
         {

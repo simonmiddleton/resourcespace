@@ -144,6 +144,29 @@ else
     hook("removeuseridcookie");
     }
 
+if (!$valid && isset($anonymous_autouser_group))
+    {
+    # Automatically create a users for anonymous access, and place them in a user group.
+    
+	# Prepare to create the user.
+	$email=trim(getvalescaped("email","")) ;
+    $username="anonymous" . sql_value("select max(ref)+1 value from user",0); # Make up a username.
+	$password=make_password();
+	$password_hash = hash('sha256', md5('RS' . $username . $password));
+    
+    # Create the user
+	sql_query("insert into user (username,password,fullname,email,usergroup,approved) values ('" . $username . "','" . $password_hash . "','" . $username . "','','" . $anonymous_autouser_group . "',1)");
+	$new = sql_insert_id();
+   
+    include_once ("login_functions.php");
+    print_r(perform_login());
+    rs_setcookie("user", $session_hash, 100, "", "", substr($baseurl,0,5)=="https", true);
+    
+    #exit("Created user $new");
+    
+    $valid=true;
+    }
+    
 if (!$valid && !isset($system_login))
     {
 	$_SERVER['REQUEST_URI'] = ( isset($_SERVER['REQUEST_URI']) ?

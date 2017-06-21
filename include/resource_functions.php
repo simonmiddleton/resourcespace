@@ -1480,7 +1480,7 @@ function update_field($resource, $field, $value, array &$errors = array())
         $fieldinfo = $fieldinfo[0];
         }
 
-    $fieldoptions = get_nodes($field,null,true);
+    $fieldoptions = get_nodes($field,null,$fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE);
     $newvalues    = trim_array(explode(',', $value));
 
     // Set up arrays of node ids to add/remove. 
@@ -1785,8 +1785,9 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 function delete_resource($ref)
 	{
 	# Delete the resource, all related entries in tables and all files on disk
-	
-	$resource=get_resource_data($ref);
+	$ref      = escape_check($ref);
+	$resource = get_resource_data($ref);
+
 	if (!$resource) {return false;} # Resource not found in database
 	
 	$current_state=$resource['archive'];
@@ -1849,7 +1850,7 @@ function delete_resource($ref)
 	# Log the deletion of this resource for any collection it was in. 
 	$in_collections=sql_query("select * from collection_resource where resource = '$ref'");
 	if (count($in_collections)>0){
-		if (!function_exists("collection_log")){include ("collections_functions.php");}
+		if (!function_exists("collection_log")){include_once ("collections_functions.php");}
 		for($n=0;$n<count($in_collections);$n++)
 			{
 			collection_log($in_collections[$n]['collection'],'d',$in_collections[$n]['resource']);
@@ -1865,6 +1866,13 @@ function delete_resource($ref)
     sql_query("delete from resource_custom_access where resource='$ref'");
     sql_query("delete from external_access_keys where resource='$ref'");
 	sql_query("delete from resource_alt_files where resource='$ref'");
+    sql_query(
+        "    DELETE an
+               FROM annotation_node AS an
+         INNER JOIN annotation AS a ON a.ref = an.annotation
+              WHERE a.resource = '{$ref}'"
+    );
+    sql_query("DELETE FROM annotation WHERE resource = '{$ref}'");
 	hook("afterdeleteresource");
 	
 	return true;
@@ -4451,7 +4459,20 @@ function truncate_join_field_value($value)
         $encoding = $server_charset;
         }
 
-    return mb_substr($value, 0, $resource_field_column_limit, $encoding);
+    $truncated_value = mb_substr($value, 0, $resource_field_column_limit, $encoding);
+
+    if($resource_field_column_limit >= strlen($truncated_value))
+        {
+        return $truncated_value;
+        }
+
+    $more_limit = $resource_field_column_limit;
+    while($resource_field_column_limit < strlen($truncated_value))
+        {
+        $truncated_value = mb_substr($value, 0, --$more_limit, $encoding);
+        }
+
+    return $truncated_value;
     }
 
 
