@@ -267,6 +267,14 @@ if($annotate_enabled)
     <!-- Annotorious plugin(s) -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
     <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <?php
+    if($facial_recognition)
+        {
+        ?>
+        <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSFaceRecognition/rs_facial_recognition.js"></script>
+        <?php
+        }
+        ?>
     <!-- End of Annotorious -->
 
     <script>
@@ -292,6 +300,19 @@ if($annotate_enabled)
                 // First page of a document is exactly the same as the preview
                 page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>
                 });
+
+    <?php
+    if($facial_recognition)
+        {
+        ?>
+            anno.addPlugin('RSFaceRecognition',
+                {
+                facial_recognition_endpoint: '<?php echo $baseurl; ?>/pages/ajax/facial_recognition.php',
+                resource                   : <?php echo (int) $ref; ?>,
+                });
+        <?php
+        }
+        ?>
 
             rs_tagging_plugin_added = true;
 
