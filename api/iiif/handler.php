@@ -24,9 +24,10 @@ $errors=array();
 if (count($xpath) == 1)
 	{
 	# Root level request - send information file only		   	
-	$response["@context"] = "http://iiif.io/api/image/2/context.json";
-  	$response["@id"] = $rootlevel;
-	$response["protocol"] = "http://iiif.io/api/image";
+	$response["@context"] = "http://iiif.io/api/presentation/2/context.json";
+  	$response["@id"] = $rooturl;
+  	$response["@type"] = "sc:Manifest";
+  	$response["@label"] = "";
 	$response["width"] = 6000;
 	$response["height"] = 4000;
 			  
@@ -83,6 +84,8 @@ else
                     $iiif_data = get_resource_field_data($iiif_results[0]["ref"]);
                     
                     $response["label"] = get_data_by_field($iiif_results[0]["ref"], $view_title_field);
+                    
+                    $response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
                     
                     $response["metadata"] = array();
                     $n=0;
@@ -153,35 +156,111 @@ else
                         }
                         
                     $response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
-                    
-                    
+                    if(isset($iiif_license_field))
+                        {
+                        $response["license"] = get_data_by_field($iiif_results[0]["ref"], $iiif_license_field);
+                        }
+                                        
                     // Thumbnail property
                     $response["thumbnail"] = array();
                     $response["thumbnail"]["@id"] = "http://example.org/images/book1-page1/full/80,100/0/default.jpg";
+                    $response["thumbnail"]["@type"] = "dctypes:Image";
+                    
+                     // Get the size of the images
+                    $img_path = get_resource_path($iiif_results[0]["ref"],true,'thm',false);
+                    $image_size = get_original_imagesize($iiif_results[0]["ref"],$img_path);
+                    $response["thumbnail"]["height"] = intval($image_size[1]);
+                    $response["thumbnail"]["width"] = intval($image_size[2]);
+                    $response["thumbnail"]["format"] = "image/jpeg";
+                    
                     $response["thumbnail"]["service"] =array();
                     $response["thumbnail"]["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
-                    $response["thumbnail"]["service"]["@id"] = "http://example.org/images/book1-page1";
+                    $response["thumbnail"]["service"]["@id"] = $rooturl . $identifier . "/full/thm/0/default.jpg";
                     $response["thumbnail"]["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
                     
                     
                     // Sequences
-                    $response["sequences"] = array();
-                    $response["sequences"]["@id"] = $rootlevel . $identifier . "/sequence/normal";
-                    $response["sequences"]["@type"] = "sc:Sequence";
-                    $response["sequences"]["label"] = "Default order";
-                    /*
-                    "sequences": [
-                          {
-                            "@id": "http://example.org/iiif/book1/sequence/normal",
-                            "@type": "sc:Sequence",
-                            "label": "Current Page Order"
-                            // sequence's page order should be included here, see below...
-                          }
-                          // Any additional sequences can be referenced here...
-                            */
+                    $response["sequences"] = array();                    
+                    $response["sequences"][0]["@id"] = $rooturl . $identifier . "/sequence/normal";
+                    $response["sequences"][0]["@type"] = "sc:Sequence";
+                    $response["sequences"][0]["label"] = "Default order";
+                       
+                        
+                    $canvases = array();
+                    //$position=0;
+                    foreach ($iiif_results as $iiif_result)
+                        {
+                        if(isset($iiif_sequence_field))
+                            {
+                            if(isset($iiif_result["field" . $iiif_sequence_field]))
+                                {
+                                $position = $iiif_result["field" . $iiif_sequence_field];
+                                }
+                            else
+                                {
+                                $position = get_data_by_field($iiif_result["ref"],$iiif_sequence_field);
+                                }
+                            }
+                        else
+                            {
+                            $position++;
+                            }
+                        
+                        $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
+                        $canvases[$position]["@type"] = "sc:Canvas";
+                        $canvases[$position]["label"] = "Default order";
+                        
+                        // Get the size of the images
+                        $img_path = get_resource_path($iiif_result["ref"],true,'',false);
+                        $image_size = get_original_imagesize($iiif_result["ref"],$img_path);
+                        $canvases[$position]["height"] = intval($image_size[1]);
+                        $canvases[$position]["width"] = intval($image_size[2]);
+                        }
                     
+                    ksort($canvases);
+                    $response["sequences"][0]["canvases"]=array();
+                    foreach($canvases as $canvas)
+                        {
+                        $response["sequences"][0]["canvases"][] = $canvas;
+                        }
                     $validrequest = true;	
                     /* MANIFEST REQUEST END */
+                    }
+                elseif($xpath[1] == "canvas")
+                    {
+                    // {scheme}://{host}/{prefix}/{identifier}/canvas/{name}
+                    /*
+                    {
+                    // Metadata about this canvas
+                    "@context": "http://iiif.io/api/presentation/2/context.json",
+                    "@id": "http://example.org/iiif/book1/canvas/p1",
+                    "@type": "sc:Canvas",
+                    "label": "p. 1",
+                    "height": 1000,
+                    "width": 750,
+                    "thumbnail" : {
+                      "@id" : "http://example.org/iiif/book1/canvas/p1/thumb.jpg",
+                      "@type": "dctypes:Image",
+                      "height": 200,
+                      "width": 150
+                    },
+                    "images": [
+                      {
+                        "@type": "oa:Annotation"
+                        // Link from Image to canvas should be included here, as below
+                      }
+                    ],
+                    "otherContent": [
+                      {
+                        // Reference to list of other Content resources, _not included directly_
+                        "@id": "http://example.org/iiif/book1/list/p1",
+                        "@type": "sc:AnnotationList"
+                      }
+                    ]
+                  
+                    }
+                    */
+                    
                     }
                 elseif($xpath[1] == "sequence")
                     {
@@ -321,11 +400,11 @@ else
                             $errorcode=501;
                             $errors[] = "Invalid region requested. Only 'full' is permitted";   
                             }
-                        if($size != "full"  && $size != "max")
+                        if($size != "full"  && $size != "max" && $size != "thm")
                             {
                             // Need full size image, only max resolution is available
                             $errorcode=501;
-                            $errors[] = "Invalid size requested. Only 'max' or 'full' is permitted";   
+                            $errors[] = "Invalid size requested. Only 'max', 'full' or 'thm' is permitted";   
                             }
                         if($rotation!=0)
                             {
@@ -353,7 +432,7 @@ else
                             $imgfound = false;
                             foreach($iiif_results as $iiif_result)
                                 {
-                                $imgpath = get_resource_path($iiif_result["ref"],true,'',false,"jpg");
+                                $imgpath = get_resource_path($iiif_result["ref"],true,($size == "thm"?'thm':''),false,"jpg");
                                 if(file_exists($imgpath))
                                     {
                                     //$imgurl = get_resource_path($iiif_result["ref"],false,'',false,"jpg");
@@ -392,6 +471,7 @@ else
 	if($validrequest)
 		{
 		http_response_code(200); # Send OK
+        header("Access-Control-Allow-Origin: *");
 		if(isset($response_image))
             {
             // Send the image

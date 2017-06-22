@@ -1304,15 +1304,15 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 }
 
 .ToolsOptionLink:hover {
-    color: #000;
+    color: #79BC41;
     text-decoration: none;
 }
 
 .ToolsOptionLink.Enabled {
-    color: #000;
+    color: #79BC41;
 }
 
 a.Enabled, a:visited.Enabled {
-    color: #000;
+    color: #79BC41;
     text-decoration: underline;
 }

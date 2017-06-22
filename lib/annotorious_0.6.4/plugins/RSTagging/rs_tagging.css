@@ -17,7 +17,8 @@
 }
 
 .RSTagging-tag .fa-exclamation-triangle,
-.RSTagging-tag .fa-plus {
+.RSTagging-tag .fa-plus,
+.RSTagging-tag .fa-database {
     margin-right: 3px;
 }
 

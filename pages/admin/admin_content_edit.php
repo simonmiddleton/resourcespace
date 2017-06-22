@@ -45,19 +45,19 @@ if(($save != '') && getval('langswitch', '') == '' && $html_validation === true)
 		{
 		if(getval('returntolist', '') == '')
 			{
-			redirect($baseurl_short . "pages/admin/admin_content_edit.php?page=help&name=" . $newhelp . "&offset=" . $offset . "&findpage=" . $findpage . "&findname=" . $findname . "&findtext=" . $findtext);
+			redirect($baseurl_short . "pages/admin/admin_content_edit.php?page=help&name=" . urlencode($newhelp) . "&offset=" . urlencode($offset) . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) );
 			}
 		}
 	if(getval('custom', '') == 1)
 		{
 		if(getval('returntolist', '') == '')
 			{
-			redirect($baseurl_short . "pages/admin/admin_content_edit.php?page=$page&name=$name&offset=" . $offset . "&findpage=" . $findpage . "&findname=" . $findname . "&findtext=" . $findtext);
+			redirect($baseurl_short . "pages/admin/admin_content_edit.php?page=". urlencode($page) . "&name=" . urlencode($name) . "&offset=" . urlencode($offset) . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) );
 			}
 		}	
 	if(getval('returntolist', '') != '')
 		{
-		redirect($baseurl_short . "pages/admin/admin_content.php?nc=" . time() . "&findpage=" . $findpage . "&findname=" . $findname . "&findtext=" . $findtext . "&offset=" . $offset);
+		redirect($baseurl_short . "pages/admin/admin_content.php?nc=" . time() . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) . "&offset=" . urlencode($offset) );
 		}
 	}
 	
@@ -87,7 +87,7 @@ include "../../include/header.php";
 ?>
 <div class="BasicsBox">
 	<p>
-		<a href="<?php echo $baseurl_short; ?>pages/admin/admin_content.php?nc=<?php echo time()?>&findpage=<?php echo $findpage?>&findname=<?php echo $findname?>&findtext=<?php echo $findtext?>&offset=<?php echo $offset?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagecontent"]?></a>
+		<a href="<?php echo $baseurl_short; ?>pages/admin/admin_content.php?nc=<?php echo time()?>&findpage=<?php echo urlencode($findpage)?>&findname=<?php echo urlencode($findname)?>&findtext=<?php echo urlencode($findtext)?>&offset=<?php echo urlencode($offset)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagecontent"]?></a>
 	</p>
 	<h1><?php echo $lang["editcontent"]; ?></h1>
 
@@ -100,7 +100,7 @@ if($html_validation !== true && $html_validation !== '')
 	}
 	?>
 
-	<form method="post" id="mainform" action="<?php echo $baseurl_short; ?>pages/admin/admin_content_edit.php?page=<?php echo $page;?>&name=<?php echo $name;?>&editlanguage=<?php echo $editlanguage;?>&editgroup=<?php echo $editgroup;?>&findpage=<?php echo $findpage?>&findname=<?php echo $findname?>&findtext=<?php echo $findtext?>&offset=<?php echo $offset?>">
+	<form method="post" id="mainform" action="<?php echo $baseurl_short; ?>pages/admin/admin_content_edit.php?page=<?php echo urlencode($page);?>&name=<?php echo urlencode($name);?>&editlanguage=<?php echo urlencode($editlanguage);?>&editgroup=<?php echo urlencode($editgroup);?>&findpage=<?php echo urlencode($findpage)?>&findname=<?php echo urlencode($findname)?>&findtext=<?php echo urlencode($findtext)?>&offset=<?php echo urlencode($offset)?>">
 		<input type=hidden name=page value="<?php echo $page?>">
 		<input type=hidden name=name value="<?php echo $name?>">
 		<input type=hidden name=langswitch id="langswitch" value="">

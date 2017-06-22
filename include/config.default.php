@@ -3309,6 +3309,7 @@ $annotate_crud_anonymous = false;
 $iiif_enabled=false;
 #$iiif_identifier_field=29;
 #$iiif_userid=6;
+#$$iiif_license_field=0
 #######################################
 
 /*Prevent client side users to get access to the real path of the resource when ResourceSpace is using filestore URLs.

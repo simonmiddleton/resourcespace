@@ -124,6 +124,11 @@ if(!isset($url))
     $border = false;
     }
 
+if(file_exists($path))
+    {
+    list($image_width, $image_height) = @getimagesize($path);
+    }
+
 $resource = get_resource_data($ref);
 
 // get mp3 paths if necessary and set $use_mp3_player switch
@@ -228,7 +233,18 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
             ?>
             <td>
                 <a onClick="return CentralSpaceLoad(this);" href="<?php echo ((getval("from","")=="search")?$baseurl_short."pages/search.php?":$baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&")?>search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>">
-                    <img id="PreviewImageLarge" class="Picture" src="<?php echo $url; ?>" alt=""/>
+                    <img id="PreviewImageLarge"
+                         class="Picture"
+                         src="<?php echo $url; ?>"
+                         <?php
+                         if($annotate_enabled)
+                            {
+                            ?>
+                            data-original="<?php echo "{$baseurl}/annotation/resource/{$ref}"; ?>"
+                            <?php
+                            }
+                            ?>
+                         alt="" />
                 </a>
                 <?php
                 hook('afterpreviewimage');
@@ -267,6 +283,14 @@ if($annotate_enabled)
     <!-- Annotorious plugin(s) -->
     <link type="text/css" rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.css" />
     <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSTagging/rs_tagging.js"></script>
+    <?php
+    if($facial_recognition)
+        {
+        ?>
+        <script src="<?php echo $baseurl_short; ?>lib/annotorious_0.6.4/plugins/RSFaceRecognition/rs_facial_recognition.js"></script>
+        <?php
+        }
+        ?>
     <!-- End of Annotorious -->
 
     <script>
@@ -293,6 +317,19 @@ if($annotate_enabled)
                 page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>
                 });
 
+    <?php
+    if($facial_recognition)
+        {
+        ?>
+            anno.addPlugin('RSFaceRecognition',
+                {
+                facial_recognition_endpoint: '<?php echo $baseurl; ?>/pages/ajax/facial_recognition.php',
+                resource                   : <?php echo (int) $ref; ?>,
+                });
+        <?php
+        }
+        ?>
+
             rs_tagging_plugin_added = true;
 
             // We have to wait for initialisation process to finish as this does ajax calls
@@ -304,11 +341,6 @@ if($annotate_enabled)
                 1000);
 
             return false;
-            }
-
-        if(img_src.indexOf('?') != -1)
-            {
-            img_src = img_src.substring(0, img_src.indexOf('?'));
             }
 
         // Feature enabled? Then disable it.
@@ -330,6 +362,13 @@ if($annotate_enabled)
         var preview_image_copy = preview_image.clone(true);
         preview_image_copy.prop('id', img_copy_id);
         preview_image_copy.prop('src', img_src);
+
+        // Set the width and height of the image otherwise if the source of the file
+        // is fetched from download.php, Annotorious will not be able to determine its
+        // size
+        preview_image_copy.width(<?php echo $image_width; ?>);
+        preview_image_copy.height(<?php echo $image_height; ?>);
+
         preview_image_copy.appendTo(preview_image_link.parent());
         preview_image_link.hide();
 
