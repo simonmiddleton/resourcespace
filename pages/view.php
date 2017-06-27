@@ -1526,13 +1526,15 @@ if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/us
 
 <?php
 /* ---------------  Display metadata ----------------- */
+if (!hook('replacemetadata')) {
 ?>
 <div id="Panel1" class="ViewPanel">
     <div id="Titles1" class="ViewPanelTitles">
         <div class="Title Selected" panel="Metadata"><?php if (!hook("customdetailstitle")) echo $lang["resourcedetails"]?></div>
     </div>
 </div>
-<?php include "view_metadata.php"; ?>
+<?php include "view_metadata.php";
+} /* End of replacemetadata hook */ ?>
 </div></div>
 
 </div>
