@@ -1517,9 +1517,9 @@ if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/us
 
 
 </div>
+</div>
 <?php } /* End of renderresourcedownloadspace hook */ ?>
 <?php } /* End of renderinnerresourceview hook */ ?>
-</div>
 
 <?php hook("renderbeforeresourcedetails"); ?>
 
