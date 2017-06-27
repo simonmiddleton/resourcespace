@@ -12,7 +12,7 @@ if ($modifiedurl){$url=$modifiedurl;}
 
 $modal=getval("modal","");
 
-if ($modal)
+if ($modal || getval("ajax","")!="")
 	{
 	# add the capslock lib because there's no header
 	?>
