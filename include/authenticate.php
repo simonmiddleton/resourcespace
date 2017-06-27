@@ -159,10 +159,8 @@ if (!$valid && isset($anonymous_autouser_group))
 	$new = sql_insert_id();
    
     include_once ("login_functions.php");
-    print_r(perform_login());
+    perform_login();
     rs_setcookie("user", $session_hash, 100, "", "", substr($baseurl,0,5)=="https", true);
-    
-    #exit("Created user $new");
     
     $valid=true;
     }
