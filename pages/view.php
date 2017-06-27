@@ -420,7 +420,14 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 					$value=$value_mod_after_highlight;
 					}
 				
-				?><div <?php if (!$valueonly){echo "class=\"itemNarrow\""; } elseif (isset($fixedwidth)) {echo "style=\"width:" . $fixedwidth . "px\""; } ?>>
+				?><div <?php if (!$valueonly)
+						{
+						echo "class=\"itemNarrow itemType".$field['type']."\"";
+						}
+					elseif (isset($fixedwidth))
+						{
+						echo "style=\"width:" . $fixedwidth . "px\"";
+						} ?>>
 				<h3><?php echo $title?></h3><p><?php echo $value; ?></p></div><?php
 				}
 			}
