@@ -63,3 +63,89 @@ function execute_api_call($query)
     return json_encode(eval($eval));
     }
     
+
+function iiif_get_canvases($identifier, $iiif_results)
+    {
+    global $rooturl,$iiif_sequence_field,$xpath;
+    $canvases = array();
+    //$position=0;
+    foreach ($iiif_results as $iiif_result)
+        {
+        if(isset($iiif_sequence_field))
+            {
+            if(isset($iiif_result["field" . $iiif_sequence_field]))
+                {
+                $position = $iiif_result["field" . $iiif_sequence_field];
+                }
+            else
+                {
+                $position = get_data_by_field($iiif_result["ref"],$iiif_sequence_field);
+                }
+            }
+        else
+            {
+            $position++;
+            }
+        
+        $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
+        $canvases[$position]["@type"] = "sc:Canvas";
+        $canvases[$position]["label"] = "Default order";
+        
+        // Get the size of the images
+        $img_path = get_resource_path($iiif_result["ref"],true,'',false);
+        $image_size = get_original_imagesize($iiif_result["ref"],$img_path);
+        $canvases[$position]["height"] = intval($image_size[1]);
+        $canvases[$position]["width"] = intval($image_size[2]);
+        
+        // Add images
+        $canvases[$position]["images"] = array();
+        $canvases[$position]["images"][0]["@id"] = $rooturl . $identifier . "/annotation/" . $position;
+        $canvases[$position]["images"][0]["@type"] = "oa:Annotation";
+        $canvases[$position]["images"][0]["motivation"] = "sc:painting";
+        
+        $canvases[$position]["images"][0]["resource"] = array();
+        $canvases[$position]["images"][0]["resource"]["@id"] = $rooturl . $xpath[0] . "/full/max/0/default.jpg";
+        $canvases[$position]["images"][0]["resource"]["@type"] = "dctypes:Image";
+        $canvases[$position]["images"][0]["resource"]["format"] = "image/jpeg";
+        $canvases[$position]["images"][0]["resource"]["service"] =array();
+        $canvases[$position]["images"][0]["resource"]["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
+        $canvases[$position]["images"][0]["resource"]["service"]["@id"] = $rooturl . "image/";
+        $canvases[$position]["images"][0]["resource"]["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
+        $canvases[$position]["images"][0]["on"] = $rooturl . $identifier . "/canvas/" . $position;
+        $canvases[$position]["images"][0]["resource"]["height"] = intval($image_size[1]);
+        $canvases[$position]["images"][0]["resource"]["width"] = intval($image_size[2]);;
+        
+        
+        /*
+         *"images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource":{
+                  "@id": "http://example.org/iiif/book1/res/page1.jpg",
+                  "@type": "dctypes:Image",
+                  "format": "image/jpeg",
+                  "service": {
+                      "@context": "http://iiif.io/api/image/2/context.json",
+                      "@id": "http://example.org/images/book1-page1",
+                      "profile": "http://iiif.io/api/image/2/level1.json"
+                  },
+                  "height":2000,
+                  "width":1500
+              },
+              "on": "http://example.org/iiif/book1/canvas/p1"
+            }
+            ],
+        */
+        
+        
+        }
+    
+    ksort($canvases);
+    $return=array();
+    foreach($canvases as $canvas)
+        {
+        $return[] = $canvas;
+        }
+    return $return;
+    }

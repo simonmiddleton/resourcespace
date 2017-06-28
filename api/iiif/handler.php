@@ -6,6 +6,7 @@ if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identif
 include_once "../../include/general.php";
 include_once "../../include/resource_functions.php";
 include_once "../../include/search_functions.php";
+include_once "../../include/api_functions.php";
 $debug = getval("debug","")!="";
    
 $iiif_user = get_user($iiif_userid);
@@ -44,9 +45,9 @@ if (count($xpath) == 1)
 	}
 else
 	{
-	$identifier = $xpath[0];
-	if(is_numeric($identifier))
+	if(is_numeric($xpath[0]))
         {	
+        $identifier = $xpath[0];
         $iiif_field = get_resource_type_field($iiif_identifier_field);
         $iiif_search = $iiif_field["name"] . ":" . $identifier;
         //$iiif_results = do_search($iiif_search,"","field" . $iiif_sequence_field,0,-1,"asc");
@@ -163,7 +164,7 @@ else
                                         
                     // Thumbnail property
                     $response["thumbnail"] = array();
-                    $response["thumbnail"]["@id"] = "http://example.org/images/book1-page1/full/80,100/0/default.jpg";
+                    $response["thumbnail"]["@id"] = $rooturl . $identifier . "/full/thm/0/default.jpg";
                     $response["thumbnail"]["@type"] = "dctypes:Image";
                     
                      // Get the size of the images
@@ -175,7 +176,7 @@ else
                     
                     $response["thumbnail"]["service"] =array();
                     $response["thumbnail"]["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
-                    $response["thumbnail"]["service"]["@id"] = $rooturl . $identifier . "/full/thm/0/default.jpg";
+                    $response["thumbnail"]["service"]["@id"] = $rooturl . "image/";
                     $response["thumbnail"]["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
                     
                     
@@ -185,50 +186,34 @@ else
                     $response["sequences"][0]["@type"] = "sc:Sequence";
                     $response["sequences"][0]["label"] = "Default order";
                        
-                        
-                    $canvases = array();
-                    //$position=0;
-                    foreach ($iiif_results as $iiif_result)
-                        {
-                        if(isset($iiif_sequence_field))
-                            {
-                            if(isset($iiif_result["field" . $iiif_sequence_field]))
-                                {
-                                $position = $iiif_result["field" . $iiif_sequence_field];
-                                }
-                            else
-                                {
-                                $position = get_data_by_field($iiif_result["ref"],$iiif_sequence_field);
-                                }
-                            }
-                        else
-                            {
-                            $position++;
-                            }
-                        
-                        $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
-                        $canvases[$position]["@type"] = "sc:Canvas";
-                        $canvases[$position]["label"] = "Default order";
-                        
-                        // Get the size of the images
-                        $img_path = get_resource_path($iiif_result["ref"],true,'',false);
-                        $image_size = get_original_imagesize($iiif_result["ref"],$img_path);
-                        $canvases[$position]["height"] = intval($image_size[1]);
-                        $canvases[$position]["width"] = intval($image_size[2]);
-                        }
-                    
-                    ksort($canvases);
-                    $response["sequences"][0]["canvases"]=array();
-                    foreach($canvases as $canvas)
-                        {
-                        $response["sequences"][0]["canvases"][] = $canvas;
-                        }
+                                            
+                    $response["sequences"][0]["canvases"]  = iiif_get_canvases($identifier,$iiif_results);
                     $validrequest = true;	
                     /* MANIFEST REQUEST END */
                     }
                 elseif($xpath[1] == "canvas")
-                    {
+                    {                        
+                    // This is esentially a resource
                     // {scheme}://{host}/{prefix}/{identifier}/canvas/{name}
+                    
+                    $canvasname = $xpath[2];
+                    $response["@context"] = "http://iiif.io/api/presentation/2/context.json";
+                    $response["@id"] = $rooturl . $identifier . "/canvas/" . $canvasname;
+                    $response["@type"] = "sc:Canvas";		
+                    
+                    $validrequest = true;	
+                    
+                    //$response["thumbnail"] = array();
+                    //$response["thumbnail"]["@id"] = "http://example.org/images/book1-page1/full/80,100/0/default.jpg";
+                    //$response["thumbnail"]["@type"] = "dctypes:Image";
+                    
+                     // Get the size of the images
+                    //$img_path = get_resource_path($iiif_results[0]["ref"],true,'thm',false);
+                    //$image_size = get_original_imagesize($iiif_results[0]["ref"],$img_path);
+                    //$response["thumbnail"]["height"] = intval($image_size[1]);
+                    //$response["thumbnail"]["width"] = intval($image_size[2]);
+                    //$response["thumbnail"]["format"] = "image/jpeg";
+                    
                     /*
                     {
                     // Metadata about this canvas
@@ -335,131 +320,140 @@ else
                         $validrequest = true;
                         }
                     }
-                else
-                    {
-                    // IMAGE REQUEST (http://iiif.io/api/image/2.1/)
-                    if($xpath[1] == "info.json")
-                        {			
-                        // Image information request. Only fullsize available in this initial version
-                        $response["@context"] = "http://iiif.io/api/image/2/context.json";
-                        $response["@id"] = $rooturl . $identifier . "/info.json";
-                        $response["protocol"] = "http://iiif.io/api/image";			
-                        
-                        $img_path = get_resource_path($iiif_results[0]["ref"],true,'',false);
-                        $image_size = get_original_imagesize($iiif_results[0]["ref"],$img_path);
-                        //print_r($image_size);
-                        $response["width"] = $image_size[1];
-                        $response["height"] = $image_size[2];
-                        
-                        $response["sizes"] = array();
-                        $response["sizes"][0]["width"] = $image_size[1];
-                        $response["sizes"][0]["height"] = $image_size[2];
-                        
-                        $response["profile"] = array();
-                        $response["profile"][] = "http://iiif.io/api/image/2/level0.json";
-                        $response["profile"][] = array(
-                            "formats" => array("jpg"),
-                            "qualities" => array("color"),
-                            "supports" => array("baseUriRedirect")				
-                            );
-                        
-                        $iiif_headers[] = 'Link: <http://iiif.io/api/image/2/level0.json>;rel="profile"';
-                        $validrequest = true;
-                        }
-                        
-                    // The IIIF Image API URI for requesting an image must conform to the following URI Template:
-                    // {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
-                    // Initial version only supports full image
-                    elseif(!isset($xpath[2]) || !isset($xpath[3]) || !isset($xpath[4]) || !isset($xpath[4]) || strpos(".",$xpath[4] === false))
-                        {
-                        $errorcode= 400;
-                        $errors[] = "Invalid image request format.";
-                        }
-                    else
-                        {
-                        // Request is ok so far, check the request parameters
-                        $region = $xpath[1];
-                        $size = $xpath[2];
-                        $rotation = $xpath[3];
-                        $formatparts =explode(".",$xpath[4]);
-                        if(count($formatparts) != 2)
-                            {
-                            // Format. As we only support IIIF Image level 0 only a value of 'jpg' is accepted 
-                            $errorcode=501;
-                            $errors[] = "Invalid quality or format requested. Try using 'default.jpg'";   
-                            }
-                        else
-                            {
-                            $quality = $formatparts[0];
-                            $format = $formatparts[1];
-                            }
-                        
-                        if($region != "full")
-                            {
-                            // Invalid region, only 'full' specified at present
-                            $errorcode=501;
-                            $errors[] = "Invalid region requested. Only 'full' is permitted";   
-                            }
-                        if($size != "full"  && $size != "max" && $size != "thm")
-                            {
-                            // Need full size image, only max resolution is available
-                            $errorcode=501;
-                            $errors[] = "Invalid size requested. Only 'max', 'full' or 'thm' is permitted";   
-                            }
-                        if($rotation!=0)
-                            {
-                            // Rotation. As we only support IIIF Image level 0 only a rotation value of 0 is accepted 
-                            $errorcode=501;
-                            $errors[] = "Invalid rotation requested. Only '0' is permitted";   
-                            }
-                         if(isset($quality) && $quality != "default" && $quality != "color")
-                            {
-                            // Quality. As we only support IIIF Image level 0 only a quality value of 'default' or 'color' is accepted 
-                            $errorcode=501;
-                            $errors[] = "Invalid quality requested. Only 'default' is permitted";   
-                            }
-                         if(isset($format) && strtolower($format) != "jpg")
-                            {
-                            // Format. As we only support IIIF Image level 0 only a value of 'jpg' is accepted 
-                            $errorcode=501;
-                            $errors[] = "Invalid format requested. Only 'jpg' is permitted";   
-                            }
-                            
-                        if(!isset($errorcode))
-                            {                                           
-                            // Request is supported, send the image
-                            $validrequest = true;
-                            $imgfound = false;
-                            foreach($iiif_results as $iiif_result)
-                                {
-                                $imgpath = get_resource_path($iiif_result["ref"],true,($size == "thm"?'thm':''),false,"jpg");
-                                if(file_exists($imgpath))
-                                    {
-                                    //$imgurl = get_resource_path($iiif_result["ref"],false,'',false,"jpg");
-                                    $response_image=$imgpath;
-                                    $imgfound = true;
-                                    break;
-                                    }
-                                }
-                            if(!$imgfound)
-                                {
-                                $errorcode = "404";
-                                $errors[] = "No image available for this identifier";
-                                }
-                            }
-                        else
-                            {
-                            // Invalid request format
-                            $errorcode=400;
-                            $errors[] = "Bad request. Please check the format of your request.";
-                            $errors[] = "For the full image use " . $rooturl . $xpath[0] . "/full/max/0/default.jpg";
-                            }
-                        }
-                    /* IMAGE REQUEST END */
-                    }
                 }
             }
         } // End of !is_numeric($identifier)
+    elseif($xpath[0] == "image")
+        {
+        $identifier = $xpath[1];
+        if(is_numeric($identifier))
+            {
+            // IMAGE REQUEST (http://iiif.io/api/image/2.1/)
+            if(!isset($xpath[2]) || $xpath[2] == "info.json")
+                {
+                // Image information request. Only fullsize available in this initial version
+                $response["@context"] = "http://iiif.io/api/image/2/context.json";
+                $response["@id"] = $rooturl . $identifier . "/info.json";
+                $response["protocol"] = "http://iiif.io/api/image";			
+                
+                $img_path = get_resource_path($iiif_results[0]["ref"],true,'',false);
+                $image_size = get_original_imagesize($iiif_results[0]["ref"],$img_path);
+                //print_r($image_size);
+                $response["width"] = $image_size[1];
+                $response["height"] = $image_size[2];
+                
+                $response["sizes"] = array();
+                $response["sizes"][0]["width"] = $image_size[1];
+                $response["sizes"][0]["height"] = $image_size[2];
+                
+                $response["profile"] = array();
+                $response["profile"][] = "http://iiif.io/api/image/2/level0.json";
+                $response["profile"][] = array(
+                    "formats" => array("jpg"),
+                    "qualities" => array("color"),
+                    "supports" => array("baseUriRedirect")				
+                    );
+                
+                $iiif_headers[] = 'Link: <http://iiif.io/api/image/2/level0.json>;rel="profile"';
+                $validrequest = true;
+                }
+                
+            // The IIIF Image API URI for requesting an image must conform to the following URI Template:
+            // {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
+            // Initial version only supports full image
+            elseif(!isset($xpath[3]) || !isset($xpath[4]) || !isset($xpath[5]) || !isset($xpath[5]) || strpos(".",$xpath[5] === false))
+                {
+                $errorcode= 400;
+                $errors[] = "Invalid image request format.";
+                }
+            else
+                {
+                // Request is ok so far, check the request parameters
+                $region = $xpath[2];
+                $size = $xpath[3];
+                $rotation = $xpath[4];
+                $formatparts =explode(".",$xpath[5]);
+                if(count($formatparts) != 2)
+                    {
+                    // Format. As we only support IIIF Image level 0 only a value of 'jpg' is accepted 
+                    $errorcode=501;
+                    $errors[] = "Invalid quality or format requested. Try using 'default.jpg'";   
+                    }
+                else
+                    {
+                    $quality = $formatparts[0];
+                    $format = $formatparts[1];
+                    }
+                
+                if($region != "full")
+                    {
+                    // Invalid region, only 'full' specified at present
+                    $errorcode=501;
+                    $errors[] = "Invalid region requested. Only 'full' is permitted";   
+                    }
+                if($size != "full"  && $size != "max" && $size != "thm")
+                    {
+                    // Need full size image, only max resolution is available
+                    $errorcode=501;
+                    $errors[] = "Invalid size requested. Only 'max', 'full' or 'thm' is permitted";   
+                    }
+                if($rotation!=0)
+                    {
+                    // Rotation. As we only support IIIF Image level 0 only a rotation value of 0 is accepted 
+                    $errorcode=501;
+                    $errors[] = "Invalid rotation requested. Only '0' is permitted";   
+                    }
+                 if(isset($quality) && $quality != "default" && $quality != "color")
+                    {
+                    // Quality. As we only support IIIF Image level 0 only a quality value of 'default' or 'color' is accepted 
+                    $errorcode=501;
+                    $errors[] = "Invalid quality requested. Only 'default' is permitted";   
+                    }
+                 if(isset($format) && strtolower($format) != "jpg")
+                    {
+                    // Format. As we only support IIIF Image level 0 only a value of 'jpg' is accepted 
+                    $errorcode=501;
+                    $errors[] = "Invalid format requested. Only 'jpg' is permitted";   
+                    }
+                    
+                if(!isset($errorcode))
+                    {                                           
+                    // Request is supported, send the image
+                    $validrequest = true;
+                    $imgfound = false;
+                    foreach($iiif_results as $iiif_result)
+                        {
+                        $imgpath = get_resource_path($iiif_result["ref"],true,($size == "thm"?'thm':''),false,"jpg");
+                        if(file_exists($imgpath))
+                            {
+                            //$imgurl = get_resource_path($iiif_result["ref"],false,'',false,"jpg");
+                            $response_image=$imgpath;
+                            $imgfound = true;
+                            break;
+                            }
+                        }
+                    if(!$imgfound)
+                        {
+                        $errorcode = "404";
+                        $errors[] = "No image available for this identifier";
+                        }
+                    }
+                else
+                    {
+                    // Invalid request format
+                    $errorcode=400;
+                    $errors[] = "Bad request. Please check the format of your request.";
+                    $errors[] = "For the full image use " . $rooturl . $xpath[0] . "/full/max/0/default.jpg";
+                    }
+                }
+            /* IMAGE REQUEST END */
+            }
+        else
+            {
+            $errorcode=404;
+            $errors[] = "Missing identifier";    
+            }
+        }
     else
         {
         $errorcode=404;
