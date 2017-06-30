@@ -205,6 +205,8 @@ if(empty($fields_tab_names))
 // Option to display related resources of specified types along with metadata
 if ($enable_related_resources && $show_default_related_resources)
 	{
+	$archive_standard=true;
+	$search_all_workflow_states=true;
 	$relatedresources=do_search("!related" . $ref);
 	#build array of related resources' types
 	$related_restypes=array();
