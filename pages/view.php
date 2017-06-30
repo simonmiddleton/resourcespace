@@ -185,7 +185,11 @@ if (!$direct_download_allow_ie8 && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]
 }
 
 # downloading a file from iOS should open a new window/tab to prevent a download loop
-$iOS_save=((stripos($_SERVER['HTTP_USER_AGENT'],"iPod") || stripos($_SERVER['HTTP_USER_AGENT'],"iPhone") || stripos($_SERVER['HTTP_USER_AGENT'],"iPad")) ? true : false);
+$iOS_save=false;
+if (isset($_SERVER['HTTP_USER_AGENT']))
+	{
+	$iOS_save=((stripos($_SERVER['HTTP_USER_AGENT'],"iPod")!==false || stripos($_SERVER['HTTP_USER_AGENT'],"iPhone")!==false || stripos($_SERVER['HTTP_USER_AGENT'],"iPad")!==false) ? true : false);
+	}
 
 # Show the header/sidebar
 include "../include/header.php";
