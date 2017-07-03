@@ -2511,8 +2511,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	# Include footer
 	global $email_footer, $storagedir, $mime_type_by_extension;
 	
-	include_once(__DIR__ . '/../lib/PHPMailer-5.2.23/PHPMailerAutoload.php');
-	//include_once(dirname(__FILE__)."/../lib/PHPMailer-5.2.23/extras/class.html2text.php");
+    include_once(__DIR__ . '/../lib/PHPMailer-5.2.23/PHPMailerAutoload.php');
 	
 	global $email_from;
 	if ($from=="") {$from=$email_from;}
@@ -2779,12 +2778,13 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	if (isset($attachments)){
 		foreach ($attachments as $attachment){
 		$mail->AddAttachment($attachment,basename($attachment));}
-	}	
-	if (is_html($body)){
-		$h2t = new html2text($body); 
-		$text = $h2t->get_text(); 
-		$mail->AltBody = $text; 
-		}	 
+	}
+
+	if (is_html($body))
+        {
+        $mail->AltBody = $mail->html2text($body); 
+        }
+
 	if(!$mail->Send())
 		{
 		echo "Message could not be sent. <p>";
