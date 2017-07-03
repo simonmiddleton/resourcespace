@@ -2377,6 +2377,7 @@ $lang['userpreference_user_management_notifications'] = "Send me user administra
 $lang['userpreference_resource_access_notifications'] = "Send me messages about resource access e.g. resource requests";
 $lang['userpreference_resource_notifications'] = "Send me resource messages about resource management e.g. resource state changes, metadata changes";
 $lang['userpreference_exiftool_write_metadata_label'] = 'Write embedded metadata on download (provides option to choose this only on collection download)';
+$lang['userpreference_keyboard_navigation'] = 'Keyboard navigation';
 
 /* System Config */
 $lang['systemconfig'] = 'System configuration';
