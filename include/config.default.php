@@ -643,6 +643,9 @@ $ffmpeg_use_qscale = true;
 # Allow users to request accounts?
 $allow_account_request=true;
 
+# Send a confirmation e-mail to requester
+$account_request_send_confirmation_email_to_requester = true;
+
 # Should the system allow users to request new passwords via the login screen?
 $allow_password_reset=true;
 

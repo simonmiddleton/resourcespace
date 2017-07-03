@@ -1756,7 +1756,8 @@ function auto_create_user_account($hash="")
 function email_user_request()
     {
     // E-mails the submitted user request form to the team.
-    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note;
+    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note,
+           $account_request_send_confirmation_email_to_requester;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getvalescaped('name', ''));
@@ -1772,18 +1773,26 @@ function email_user_request()
 
     foreach($approval_notify_users as $approval_notify_user)
         {
-        get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);		  
+        get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);
 
         if(false == $send_message)
             {
             continue;
-            }		
+            }
 
         get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email);
 
-        if($send_email && $approval_notify_user["email"]!="")
+        if($send_email && '' != $approval_notify_user['email'])
             {
-            send_mail($approval_notify_user['email'], "{$applicationname}: {$lang['requestuserlogin']} - {$name}", $message, '', $user_email, '', '', $name);
+            send_mail(
+                $approval_notify_user['email'],
+                "{$applicationname}: {$lang['requestuserlogin']} - {$name}",
+                $message,
+                '',
+                $user_email,
+                '',
+                '',
+                $name);
             }
         else
             {
@@ -1794,7 +1803,16 @@ function email_user_request()
     if(0 < count($message_users))
         {
         // Send a message with long timeout (30 days)
-        message_add($message_users,$notificationmessage,"",0,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
+        message_add($message_users, $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
+        }
+
+    // Send a confirmation e-mail to requester
+    if($account_request_send_confirmation_email_to_requester)
+        {
+        send_mail(
+            $email,
+            "{$applicationname}: {$lang['account_request_label']}",
+            $lang['account_request_confirmation_email_to_requester']);
         }
 
     return true;

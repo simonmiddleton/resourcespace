@@ -668,6 +668,8 @@ $lang["sendnewpassword"]="Send email";
 $lang["requestuserlogin"]="Request user login";
 $lang["accountlockedstatus"]="Account is locked";
 $lang["accountunlock"]="Unlock";
+$lang['account_request_label'] = 'Account request';
+$lang['account_request_confirmation_email_to_requester'] = 'Your request for a new user account has been received. Someone will be in contact soon. Thank you!';
 
 # Research request
 $lang["nameofproject"]="Name of project";
