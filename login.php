@@ -78,14 +78,18 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
        	if (getval("remember","")!="") {$expires = 100;} # remember login for 100 days
 
 		# Store language cookie
-        rs_setcookie("language", $language, 1000); # Only used if not global cookies
-        rs_setcookie("language", $language, 1000, $baseurl_short . "pages/");
+		rs_setcookie("language", $language, 1000); # Only used if not global cookies
+		rs_setcookie("language", $language, 1000, $baseurl_short . "pages/");
 
-		# Set the session cookie.
-        rs_setcookie("user", "", 0);
+		# Set the session cookie. Do this for all paths that nay set the cookie as otherwise we can end up with a valid cookie at e.g. pages/team or pages/ajax
+		rs_setcookie("user", "", 0);
+		rs_setcookie("user", "", 0,"/pages");
+		rs_setcookie("user", "", 0,"/pages/team");
+		rs_setcookie("user", "", 0,"/pages/admin");
+		rs_setcookie("user", "", 0,"/pages/ajax");
 
-		# Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)
-        rs_setcookie("user", $result['session_hash'], $expires, "", "", substr($baseurl,0,5)=="https", true);
+		# Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)	
+		rs_setcookie("user", $result['session_hash'], $expires, "", "", substr($baseurl,0,5)=="https", true);
 
         # Set default resource types
         rs_setcookie('restypes', $default_res_types);
