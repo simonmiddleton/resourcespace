@@ -147,9 +147,9 @@ echo $hidden_input_elements;
             'wholerow',
             'checkbox'
         ],
-        'checkbox' : {
-            'three_state' :<?php echo ($category_tree_add_parents ? 'false' : 'true' ); ?>, // to tick checkboxes individually
-            'cascade' : 'true'
+        'checkbox' : {		
+            'three_state' : false,
+            'cascade' : '<?php echo (($category_tree_add_parents && !$is_search ) ? 'up' : '' ); ?>'
         }
     });
 
