@@ -5420,6 +5420,10 @@ function generateURL($url, $parameters = array(), $set_params = array())
         $query_string_params[] = $parameter . '=' . urlencode($parameter_value);
         }
 
+    # Ability to hook in and change the URL.
+    $hookurl=hook("generateurl","",array($url));
+    if ($hookurl!==false) {$url=$hookurl;}
+    
     return $url . '?' . implode ('&', $query_string_params);
     }
 

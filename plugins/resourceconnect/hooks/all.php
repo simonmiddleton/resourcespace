@@ -81,6 +81,12 @@ function HookResourceConnectAllGenerate_collection_access_key($collection,$k,$us
 	
 	}
 
+function HookResourceconnectAllGenerateurl($url)
+	{
+	global $baseurl,$baseurl_short;
+	if (getval("resourceconnect_source","")!="") return $baseurl . "/" . substr($url,strlen($baseurl_short));
+	}
+	
 /*
 function HookResourceConnectAllAdvancedsearchlink()
 	{
