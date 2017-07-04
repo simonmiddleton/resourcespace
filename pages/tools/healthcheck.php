@@ -73,6 +73,31 @@ if (function_exists("svn_info"))
         $version.=" " . $svn_url[count($svn_url)-1] . "." . $svnrevision;
         }
     }
+else
+	{
+	$svncommand = "svn info "  . __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
+	$svninfo=run_command($svncommand);
+	$matches = array();
+	
+	// Get version
+	if (preg_match('/\nURL: .+\/releases\/(.+)\\n/', $svninfo, $matches)!=0)
+		{
+		$version .= " " . $matches[1];
+		}
+	elseif (preg_match('/\nURL: .+\/branches\/(.+)\\n/', $svninfo, $matches)!=0)
+		{
+		$version .= " BRANCH " . $matches[1];
+		}
+	else
+		{
+		$version .= " TRUNK ";
+		}	
+	// Get revision
+	if (preg_match('/\nRevision: (\d+)/i', $svninfo, $matches)!=0)
+		{
+		$version .= "." . $matches[1];
+		}
+	}
 
 echo("OK" . $version);
 
