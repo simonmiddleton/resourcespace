@@ -69,12 +69,25 @@ if (!$save_as)
 	$order_by= getval("saved_order_by",getval("order_by",""));
 	$sort= getval("saved_sort",getval("sort",""));
 	$archive= getval("saved_archive",getval("archive",""));
+	
+	// Set parameters for liks
+	$url_parameters=array
+		(
+		"ref"=>$ref,
+		"k"=>$k,
+		"search"=>getval("search",""),
+		"offset"=>$offset,
+		"order_by"=>$order_by,
+		"sort"=>$sort,
+		"archive"=>$archive
+		);
+	
 	?>
-    <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&k=<?php echo urlencode($k) ?>&search=<?php echo urlencode(getval("search",""))?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
-    <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?k=<?php echo urlencode($k) ?>&search=<?php echo urlencode(getval("search",""))?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresults"]?></a></p>
+    <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/view.php",$url_parameters) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php", $url_parameters) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresults"]?></a></p>
     
     <?php if ($k=="") { ?>
-    <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/home.php"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtohome"]?></a></p>
+    <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short  . "pages/home.php") ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtohome"]?></a></p>
     <?php } ?>
 </div>
 
