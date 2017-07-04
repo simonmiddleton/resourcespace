@@ -42,7 +42,7 @@ if ($display_user_rating_stars && $star_search)
 	}
 	
 ?><!DOCTYPE html>
-<html>	
+<html lang="<?php echo $language ?>">	
 <?php 
 if ($include_rs_header_info)
     {?>
