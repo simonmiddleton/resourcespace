@@ -788,7 +788,7 @@ else if(1 == $resource['has_image'])
             if($annotate_enabled && file_exists($imagepath))
                 {
                 ?>
-                <a class="ToolsOptionLink" href="#" onclick="toggleAnnotationsOption(this); return false;">
+                <a class="ToolsOptionLink AnnotationsOption" href="#" onclick="toggleAnnotationsOption(this); return false;">
                     <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
                 </a>
                 <script>
@@ -874,6 +874,23 @@ else if(1 == $resource['has_image'])
 
                     return false;
                     }
+
+                <?php
+                if(checkPreviewToolsOptionUniqueness('annotate_enabled'))
+                    {
+                    ?>
+                    jQuery(document).ready(function ()
+                        {
+                        setTimeout(function ()
+                            {
+                            showHidePreviewTools();
+                            }, 
+                            1000);
+                        toggleAnnotationsOption(jQuery('.AnnotationsOption'));
+                        });
+                    <?php
+                    }
+                    ?>
                 </script>
                 <?php
                 }
@@ -882,7 +899,7 @@ else if(1 == $resource['has_image'])
                 {
                 $previewurl = get_resource_path($ref, false, 'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
                 ?>
-                <a class="ToolsOptionLink" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
+                <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
                 </a>
                 <script>
@@ -911,6 +928,19 @@ else if(1 == $resource['has_image'])
 
                     return false;
                     }
+
+                <?php
+                if(checkPreviewToolsOptionUniqueness('image_preview_zoom'))
+                    {
+                    ?>
+                    jQuery(document).ready(function ()
+                        {
+                        showHidePreviewTools();
+                        toggleImagePreviewZoomOption(jQuery('.ImagePreviewZoomOption'));
+                        });
+                    <?php
+                    }
+                    ?>
                 </script>
                 <?php
                 }

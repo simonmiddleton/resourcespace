@@ -6088,3 +6088,48 @@ function canSeePreviewTools($edit_access)
         || $image_preview_zoom
         );
     }
+
+
+/**
+* Helper function for Preview tools feature. Checks if a config option that manipulates the preview image (on view page)
+* is the only one enababled.
+* 
+* IMPORTANT: When adding new preview tool options, make sure to check if you need to add a new type check (at the 
+* moment it only checks for boolean config options and anything else is seen as enabled).
+* 
+* @param string $config_option Preview tool config option name to check
+* 
+* @return boolean False means there are other preview tool options enabled.
+*/
+function checkPreviewToolsOptionUniqueness($config_option)
+    {
+    $count_options_enabled = 0;
+    $preview_tool_options = array(
+        'annotate_enabled',
+        'image_preview_zoom'
+    );
+
+    foreach($preview_tool_options as $preview_tools_option)
+        {
+        if($preview_tools_option === $config_option)
+            {
+            continue;
+            }
+
+        if(!isset($GLOBALS[$preview_tools_option]))
+            {
+            continue;
+            }
+
+        $check_option = $GLOBALS[$preview_tools_option];
+
+        if(is_bool($check_option) && !$check_option)
+            {
+            continue;
+            }
+
+        $count_options_enabled++;
+        }
+
+    return (0 === $count_options_enabled ? true : false);
+    }
