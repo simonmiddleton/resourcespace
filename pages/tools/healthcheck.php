@@ -8,6 +8,7 @@
 
 include "../../include/db.php";
 include_once "../../include/general.php";
+include_once "../../include/resource_functions.php";
 
 # Check database connectivity.
 $check=sql_value("select count(*) value from resource_type",0);
@@ -73,4 +74,15 @@ if (function_exists("svn_info"))
         }
     }
 
-exit("OK" . $version);
+echo("OK" . $version);
+
+// Warning if quota set and nearing quota limit
+if (isset($disksize))
+	{
+	$avail=$disksize*(1024*1024*1024); # Get quota in bytes
+	$used=get_total_disk_usage();      # Total usage in bytes
+    $percent=ceil(($used/$avail)*100);
+	if ($percent>=90) {echo " WARNING " . $percent . "% of quota";}
+	}
+
+
