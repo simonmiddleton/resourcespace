@@ -783,6 +783,30 @@ else if(1 == $resource['has_image'])
         	?>
         <!-- Available tools to manipulate previews -->
         <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
+            <script>
+            function showHidePreviewTools()
+                {
+                var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
+                var tools_options = tools_wrapper.find('.ToolsOptionLink');
+
+                // If any of the tools are enabled do not close Preview tools box
+                if(tools_options.length > 0 && tools_options.hasClass('Enabled'))
+                    {
+                    tools_wrapper.removeClass('Hidden');
+
+                    return false;
+                    }
+
+                tools_wrapper.toggleClass('Hidden');
+
+                return false;
+                }
+
+            function toggleMode(element)
+                {
+                jQuery(element).toggleClass('Enabled');
+                }
+            </script>
             <div id="PreviewToolsOptionsWrapper" class="Hidden">
             <?php
             if($annotate_enabled && file_exists($imagepath))
@@ -879,7 +903,7 @@ else if(1 == $resource['has_image'])
                 if(checkPreviewToolsOptionUniqueness('annotate_enabled'))
                     {
                     ?>
-                    jQuery(document).ready(function ()
+                    jQuery('#PreviewToolsOptionsWrapper').on('readyToUseAnnotorious', function ()
                         {
                         setTimeout(function ()
                             {
@@ -946,30 +970,6 @@ else if(1 == $resource['has_image'])
                 }
                 ?>
             </div>
-            <script>
-            function showHidePreviewTools()
-                {
-                var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
-                var tools_options = tools_wrapper.find('.ToolsOptionLink');
-
-                // If any of the tools are enabled do not close Preview tools box
-                if(tools_options.length > 0 && tools_options.hasClass('Enabled'))
-                    {
-                    tools_wrapper.removeClass('Hidden');
-
-                    return false;
-                    }
-
-                tools_wrapper.toggleClass('Hidden');
-
-                return false;
-                }
-
-            function toggleMode(element)
-                {
-                jQuery(element).toggleClass('Enabled');
-                }
-            </script>
         </div>
         <?php
         } /* end of canSeePreviewTools() */
@@ -2016,6 +2016,9 @@ if($annotate_enabled)
         <?php
         }
         ?>
+    <script>
+    jQuery('#PreviewToolsOptionsWrapper').trigger('readyToUseAnnotorious');
+    </script>
     <!-- End of Annotorious -->
     <?php
     }
