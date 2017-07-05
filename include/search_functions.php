@@ -627,7 +627,7 @@ function compile_search_actions($top_actions)
 
     global $baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
-           $collection, $usercollection, $internal_share_access;
+           $collection, $usercollection, $internal_share_access, $archive_standard;
 
 	if(!isset($internal_share_access)){$internal_share_access=false;}
 	
@@ -687,6 +687,9 @@ function compile_search_actions($top_actions)
         // Save search as Smart Collections
         if($allow_smart_collections && substr($search, 0, 11) != '!collection')
             {
+			if ($archive==''){
+				$archive= $archive_standard;
+			}
             $extra_tag_attributes = sprintf('
                     data-url="%spages/collections.php?addsmartcollection=%s&restypes=%s&archive=%s&starsearch=%s"
                 ',
