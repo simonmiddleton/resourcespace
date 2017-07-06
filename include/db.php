@@ -2021,31 +2021,47 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
-    $is_html                    = ($html != strip_tags($html));
-    $compatibility_libxml_2_7_8 = false;
+    $is_html = ($html != strip_tags($html));
 
-    libxml_use_internal_errors(true);
-
-    $allowed_tags       = array_merge(array('div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'em', 'strong', 'b', 'u', 'ol', 'ul', 'li', 'i', 'small', 'sub', 'ins', 'del', 'mark'), $tags);
+    $allowed_tags = array_merge(
+        array(
+            'html',
+            'body',
+            'div',
+            'span',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'p',
+            'br',
+            'em',
+            'strong',
+            'b',
+            'u',
+            'ol',
+            'ul',
+            'li',
+            'i',
+            'small',
+            'sub',
+            'ins',
+            'del',
+            'mark'
+        ),
+        $tags
+    );
     $allowed_attributes = array_merge(array('id', 'class', 'style'), $attributes);
 
     // Step 1 - Check DOM
-    $doc = new DOMDocument();
+    libxml_use_internal_errors(true);
+
+    $doc           = new DOMDocument();
     $doc->encoding = 'UTF-8';
 
-    if(defined ('LIBXML_HTML_NOIMPLIED') && defined ('LIBXML_HTML_NODEFDTD'))
-        {
-        $process_html = $doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-        }
-    else
-        {
-        // Compatibility with libxml <2.7.8
-        // we allow HTML and BODY because libxml does not have some required constants and then we extract
-        // the text between BODY tags
-        $allowed_tags               = array_merge(array('html', 'body'), $allowed_tags);
-        $process_html               = $doc->loadHTML($html);
-        $compatibility_libxml_2_7_8 = true;
-        }
+    $process_html = $doc->loadHTML($html);
 
     if($process_html)
         {
@@ -2074,7 +2090,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 
         $html = $doc->saveHTML();
 
-        if($compatibility_libxml_2_7_8 && false !== strpos($html, '<body>'))
+        if(false !== strpos($html, '<body>'))
             {
             $body_o_tag_pos = strpos($html, '<body>');
             $body_c_tag_pos = strpos($html, '</body>');
@@ -2102,6 +2118,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 
     if(!$is_html)
         {
+        // DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag
         $html = strip_tags($html);
         }
 
