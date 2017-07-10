@@ -697,7 +697,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 
 /**
 * Renders sort order functionality as a dropdown box
-* Renders sort order functionality as a dropdown box
 *
 */
 if (!function_exists("render_sort_order")){
