@@ -365,7 +365,7 @@ else
         }
     else
         {?>
-        <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" style="width:<?php echo $headerwidth; ?>px;"></img></div>
+        <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
         <?php
         }
 	}
