@@ -595,9 +595,10 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 
         if($forsearchbar)
             {
-            $category_tree_open  = true;
-            $treeonly            = true;
-            $status_box_elements = '';
+            $original_category_tree_open = $category_tree_open;
+            $category_tree_open          = true;
+            $treeonly                    = true;
+            $status_box_elements         = '';
 
             foreach($field['nodes'] as $node)
                 {
@@ -618,7 +619,12 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     <p align="right">
                         <a href="#" onClick="document.getElementById('cattree_<?php echo $field['name']; ?>').style.display='none'; return false;"><?php echo $lang['close']; ?></a>
                     </p>
-                    <?php include __DIR__ . '/../pages/edit_fields/7.php'; ?>
+                    <?php
+                    include __DIR__ . '/../pages/edit_fields/7.php';
+
+                    // Reset category_tree_open because normally searchbar occurs before edit/ advanced search page
+                    $category_tree_open = $original_category_tree_open;
+                    ?>
                  </div>
                 <a href="#"
                    onClick="
