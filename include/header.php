@@ -416,7 +416,7 @@ if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false =
 
 <?php
 hook("beforeheadernav1");
-if ((isset($anonymous_login) && ($username==$anonymous_login)) || (isset($anonymous_autouser_group) && ($usergroup==$anonymous_autouser_group)))
+if (checkPermission_anonymoususer())
 	{
 	if (!hook("replaceheadernav1anon")) 
         {

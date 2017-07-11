@@ -67,8 +67,15 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 		$session_hash="";
 		$rs_session=get_rs_session_id(true);
 		}
-	$user_select_sql="u.session='$session_hash'";
-	if (isset($anonymous_login) && ($username==$anonymous_login)) {$user_select_sql="and u.username='$username'";} # Automatic anonymous login, do not require session hash.
+
+    $user_select_sql = "u.session='{$session_hash}'";
+
+    // Automatic anonymous login, do not require session hash.
+    if(isset($anonymous_login) && $username == $anonymous_login)
+        {
+        $user_select_sql = "AND u.username = '{$username}' AND usergroup IN (SELECT ref FROM usergroup)";
+        }
+
 	hook('provideusercredentials');
 
     $userdata = validate_user($user_select_sql, true); // validate user and get user details 

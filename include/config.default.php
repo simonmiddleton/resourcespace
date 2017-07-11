@@ -899,11 +899,6 @@ $plugins = array('transform', 'rse_version');
 # Note that collections will be shared among all anonymous users - it's therefore usually best to turn off all collections functionality for the anonymous user.
 #$anonymous_login="guest";
 
-# Alternative anonymous login mode. Automatically create a separate user for each anonymous session and log them in.
-# EXPERIMENTAL - user with caution!
-# $anonymous_autouser_group=2;
-
-
 # Domain Linked Anonymous Access
 # Uncomment and set to allow different anonymous access USERS for different domains. 
 # The usernames are the same rules for just a single anonymous account but you must match them against the full domain $Baseurl that they will be using.
@@ -912,6 +907,10 @@ $plugins = array('transform', 'rse_version');
 		"http://example.com" => "guest",
 		"http://test.com" => "guest2"
 		); */
+
+# Alternative anonymous login mode. Automatically create a separate user for each anonymous session and log them in.
+# EXPERIMENTAL - use with caution!
+# $anonymous_autouser_group=2;
 
 # When anonymous access is on, show login in a modal.
 $anon_login_modal=false;

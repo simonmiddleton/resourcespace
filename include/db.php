@@ -1788,14 +1788,22 @@ function show_pagetime(){
  */
 function checkPermission_anonymoususer()
     {
-    global $baseurl, $anonymous_login, $username;
+    global $baseurl, $anonymous_login, $anonymous_autouser_group, $username, $usergroup;
 
-    return (
-        isset($anonymous_login)
-        && (
-            (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
-            || (is_array($anonymous_login) && array_key_exists($baseurl, $anonymous_login) && $anonymous_login[$baseurl] == $username)
+    return
+        (
+            (
+            isset($anonymous_login)
+            && (
+                (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
+                || (
+                    is_array($anonymous_login)
+                    && array_key_exists($baseurl, $anonymous_login)
+                    && $anonymous_login[$baseurl] == $username
+                   )
+               )
             )
+            || (isset($anonymous_autouser_group) && $usergroup == $anonymous_autouser_group)
         );
     }
 
@@ -1980,22 +1988,78 @@ function setup_user($userdata)
 * @return boolean|array
 */
 function validate_user($user_select_sql, $getuserdata=true)
-	{
-	if($user_select_sql==""){return false;}
-	
-	$full_user_select_sql = "approved = 1 AND (account_expires IS NULL OR account_expires = '0000-00-00 00:00:00' OR account_expires > now()) " . ((strtoupper(trim(substr($user_select_sql,0,4)))=="AND")?" ":" AND ") .  $user_select_sql;
-	if($getuserdata)
-		{
-		$userdata=sql_query("SELECT u.ref, u.username, u.origin, g.permissions, g.parent, u.usergroup, u.current_collection, u.last_active, timestampdiff(second, u.last_active, now()) idle_seconds, u.email, u.password, u.fullname, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, resource_defaults, u.password_last_change, g.config_options, g.request_mode, g.derestrict_filter, u.hidden_collections, u.accepted_terms FROM user u LEFT JOIN usergroup g on u.usergroup=g.ref WHERE " . $full_user_select_sql);
-		return $userdata;
-		}
-	else
-		{
-		$validuser=sql_value("SELECT u.ref value FROM user u LEFT JOIN usergroup g on u.usergroup=g.ref WHERE " . $full_user_select_sql,"");
-		if($validuser!=""){return true;}
-		}
-	return false;
-	}
+    {
+    if('' == $user_select_sql)
+        {
+        return false;
+        }
+
+    $full_user_select_sql = "
+        approved = 1
+        AND (
+                account_expires IS NULL 
+                OR account_expires = '0000-00-00 00:00:00' 
+                OR account_expires > now()
+            ) "
+        . ((strtoupper(trim(substr($user_select_sql, 0, 4))) == 'AND') ? ' ' : ' AND ')
+        . $user_select_sql;
+
+    if($getuserdata)
+        {
+        $userdata = sql_query(
+            "   SELECT u.ref,
+                       u.username,
+                       u.origin,
+                       g.permissions,
+                       g.parent,
+                       u.usergroup,
+                       u.current_collection,
+                       u.last_active,
+                       timestampdiff(second,
+                       u.last_active,
+                       now()) idle_seconds,
+                       u.email,
+                       u.password,
+                       u.fullname,
+                       g.search_filter,
+                       g.edit_filter,
+                       g.ip_restrict ip_restrict_group,
+                       g.name groupname,
+                       u.ip_restrict ip_restrict_user,
+                       u.search_filter_override,
+                       resource_defaults,
+                       u.password_last_change,
+                       g.config_options,
+                       g.request_mode,
+                       g.derestrict_filter,
+                       u.hidden_collections,
+                       u.accepted_terms
+                  FROM user AS u
+             LEFT JOIN usergroup AS g on u.usergroup = g.ref
+                 WHERE {$full_user_select_sql}"
+        );
+
+        return $userdata;
+        }
+    else
+        {
+        $validuser = sql_value(
+            "      SELECT u.ref AS `value`
+                     FROM user AS u 
+                LEFT JOIN usergroup g ON u.usergroup = g.ref
+                    WHERE {$full_user_select_sql}"
+            ,
+            ''
+        );
+
+        if('' != $validuser)
+            {
+            return true;
+            }
+        }
+
+    return false;
+    }
 
 
 /**
