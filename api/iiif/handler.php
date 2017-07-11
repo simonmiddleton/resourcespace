@@ -14,6 +14,7 @@ setup_user($iiif_user);
 
 $rootlevel = $baseurl_short . "iiif/";
 $rooturl = $baseurl . "/iiif/";
+$rootimageurl = $baseurl . "/iiif/image/";
 $request_url=strtok($_SERVER["REQUEST_URI"],'?');
 $path=substr($request_url,strpos($request_url,$rootlevel) + strlen($rootlevel));
 $xpath = explode("/",$path);
@@ -40,304 +41,27 @@ if (count($xpath) == 1)
 	$response["profile"] = array("http://iiif.io/api/image/2/level2.json");
 	
 	$validrequest = true;	
-	//echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);	
-	//exit();
 	}
 else
 	{
-	if(is_numeric($xpath[0]))
-        {	
-        $identifier = $xpath[0];
-        $iiif_field = get_resource_type_field($iiif_identifier_field);
-        $iiif_search = $iiif_field["name"] . ":" . $identifier;
-        //$iiif_results = do_search($iiif_search,"","field" . $iiif_sequence_field,0,-1,"asc");
-        $iiif_results = do_search($iiif_search);
-        //print_r($iiif_results);
-        
-        if(!isset($xpath[1]))
-            {
-            $errorcode=404;
-            $errors[] = "Bad request. Valid options are 'manifest', 'sequence' or 'full' e.g. ";
-            $errors[] = "For the manifest: " . $rooturl . $xpath[0] . "/manifest";
-            $errors[] = "For a sequence : " . $rooturl . $xpath[0] . "/sequence";
-            }
-        else
-            {
-            if(!is_array($iiif_results) || count($iiif_results) == 0)
-                {
-                $errorcode=404;
-                $errors[] = "Invalid identifier: " . $identifier;
-                }
-            else
-                {
-                if($xpath[1] == "manifest")
-                    {
-                    /* MANIFEST REQUEST - see http://iiif.io/api/presentation/2.1/#manifest */
-                    
-                    $response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-                    $response["@id"] = $rooturl . $identifier . "/manifest";
-                    $response["@type"] = "sc:Manifest";		
-                    
-                    // Descriptive metadata about the object/work
-                    // The manifest data should be the same for all resources that are returned.
-                    // This is the default when using the tms_link plugin for TMS integration. 
-                    // Therefore we use the data from the first returned result.
-                    $iiif_data = get_resource_field_data($iiif_results[0]["ref"]);
-                    
-                    $response["label"] = get_data_by_field($iiif_results[0]["ref"], $view_title_field);
-                    
-                    $response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
-                    
-                    $response["metadata"] = array();
-                    $n=0;
-                    foreach($iiif_data as $iiif_data_row)
-                        {
-                        $response["metadata"][$n] = array();		
-                        $response["metadata"][$n]["label"] = $iiif_data[$n]["title"];
-                        if(in_array($iiif_data[$n]["type"],$FIXED_LIST_FIELD_TYPES))
-                            {
-                            // Don't use the data as this has already concatentated the translations, add an entry for each node translation by building up a new array
-                            $resnodes = get_resource_nodes($iiif_results[0]["ref"],$iiif_data[$n]["resource_type_field"],true);
-                            $langentries = array();
-                            foreach($resnodes as $resnode)
-                                {
-                                $node_langs = i18n_get_translations($resnode["name"]);
-                                $transcount = 0;
-                                $defaulttrans = "";
-                                foreach($node_langs as $nlang => $nltext)
-                                    {
-                                    if(!isset($langentries[$nlang]))
-                                        {
-                                        // This is the first translated node entry for this language. If we already have translations copy the default language array to make sure no nodes with missing translations are lost
-                                        $langentries[$nlang] = isset($def_lang)?$def_lang:array();
-                                        }
-                                    // Add the node text to the array for this language;
-                                    $langentries[$nlang][] = $nltext;
-                                    
-                                    // Set default text for any translations
-                                    if($nlang == $defaultlanguage || $defaulttrans == ""){$defaulttrans = $nltext;}
-                                    
-                                    $transcount++;						
-                                    }
-            
-                                // There may not be translations for all nodes, fill the arrays with the untranslated versions
-                                foreach($langentries as $mdlang => $mdtrans)
-                                    {
-                                    if(count($mdtrans) != $transcount)
-                                        {
-                                        $langentries[$mdlang][] =  $defaulttrans;
-                                        }
-                                    }						
-                                // To ensure that no nodes are lost due to missing translations,  
-                                // Save the default language array to make sure we include any untranslated nodes that may be missing when/if we find new languages for the next node
-                                if(!isset($def_lang))
-                                    {
-                                    // Default language is the ideal, but if no default language entries for this node have been found copy the first language we have
-                                    reset($langentries);
-                                    $def_lang = isset($langentries[$defaultlanguage])?$langentries[$defaultlanguage]:$langentries[key($langentries)];
-                                    }
-                                }		
-                                            
-                            
-                            $response["metadata"][$n]["value"] = array();
-                            $o=0;
-                            foreach($langentries as $mdlang => $mdtrans)
-                                {
-                                $response["metadata"][$n]["value"][$o]["@value"] = array();
-                                $response["metadata"][$n]["value"][$o]["@value"][] = $mdtrans;
-                                $response["metadata"][$n]["value"][$o]["@language"] = $mdlang;
-                                $o++;
-                                }
-                            }
-                        else
-                            {
-                            $response["metadata"][$n]["value"] = $iiif_data[$n]["value"];
-                            }
-                        $n++;
-                        }
-                        
-                    $response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
-                    if(isset($iiif_license_field))
-                        {
-                        $response["license"] = get_data_by_field($iiif_results[0]["ref"], $iiif_license_field);
-                        }
-                                        
-                    // Thumbnail property
-                    $response["thumbnail"] = array();
-                    $response["thumbnail"]["@id"] = $rooturl . $identifier . "/full/thm/0/default.jpg";
-                    $response["thumbnail"]["@type"] = "dctypes:Image";
-                    
-                     // Get the size of the images
-                    $img_path = get_resource_path($iiif_results[0]["ref"],true,'thm',false);
-                    $image_size = get_original_imagesize($iiif_results[0]["ref"],$img_path);
-                    $response["thumbnail"]["height"] = intval($image_size[1]);
-                    $response["thumbnail"]["width"] = intval($image_size[2]);
-                    $response["thumbnail"]["format"] = "image/jpeg";
-                    
-                    $response["thumbnail"]["service"] =array();
-                    $response["thumbnail"]["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
-                    $response["thumbnail"]["service"]["@id"] = $rooturl . "image/";
-                    $response["thumbnail"]["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
-                    
-                    
-                    // Sequences
-                    $response["sequences"] = array();                    
-                    $response["sequences"][0]["@id"] = $rooturl . $identifier . "/sequence/normal";
-                    $response["sequences"][0]["@type"] = "sc:Sequence";
-                    $response["sequences"][0]["label"] = "Default order";
-                       
-                                            
-                    $response["sequences"][0]["canvases"]  = iiif_get_canvases($identifier,$iiif_results);
-                    $validrequest = true;	
-                    /* MANIFEST REQUEST END */
-                    }
-                elseif($xpath[1] == "canvas")
-                    {                        
-                    // This is esentially a resource
-                    // {scheme}://{host}/{prefix}/{identifier}/canvas/{name}
-                    
-                    $canvasname = $xpath[2];
-                    $response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-                    $response["@id"] = $rooturl . $identifier . "/canvas/" . $canvasname;
-                    $response["@type"] = "sc:Canvas";		
-                    
-                    $validrequest = true;	
-                    
-                    //$response["thumbnail"] = array();
-                    //$response["thumbnail"]["@id"] = "http://example.org/images/book1-page1/full/80,100/0/default.jpg";
-                    //$response["thumbnail"]["@type"] = "dctypes:Image";
-                    
-                     // Get the size of the images
-                    //$img_path = get_resource_path($iiif_results[0]["ref"],true,'thm',false);
-                    //$image_size = get_original_imagesize($iiif_results[0]["ref"],$img_path);
-                    //$response["thumbnail"]["height"] = intval($image_size[1]);
-                    //$response["thumbnail"]["width"] = intval($image_size[2]);
-                    //$response["thumbnail"]["format"] = "image/jpeg";
-                    
-                    /*
-                    {
-                    // Metadata about this canvas
-                    "@context": "http://iiif.io/api/presentation/2/context.json",
-                    "@id": "http://example.org/iiif/book1/canvas/p1",
-                    "@type": "sc:Canvas",
-                    "label": "p. 1",
-                    "height": 1000,
-                    "width": 750,
-                    "thumbnail" : {
-                      "@id" : "http://example.org/iiif/book1/canvas/p1/thumb.jpg",
-                      "@type": "dctypes:Image",
-                      "height": 200,
-                      "width": 150
-                    },
-                    "images": [
-                      {
-                        "@type": "oa:Annotation"
-                        // Link from Image to canvas should be included here, as below
-                      }
-                    ],
-                    "otherContent": [
-                      {
-                        // Reference to list of other Content resources, _not included directly_
-                        "@id": "http://example.org/iiif/book1/list/p1",
-                        "@type": "sc:AnnotationList"
-                      }
-                    ]
-                  
-                    }
-                    */
-                    
-                    }
-                elseif($xpath[1] == "sequence")
-                    {
-                    // {scheme}://{host}/{prefix}/{identifier}/sequence/{name}
-                    /*
-                    {
-                      // Metadata about this sequence
-                      "@context": "http://iiif.io/api/presentation/2/context.json",
-                      "@id": "http://example.org/iiif/book1/sequence/normal",
-                      "@type": "sc:Sequence",
-                      "label": "Current Page Order",
-            
-                      "viewingDirection": "left-to-right",
-                      "viewingHint": "paged",
-                      "startCanvas": "http://example.org/iiif/book1/canvas/p2",
-            
-                      // The order of the canvases
-                      "canvases": [
-                        {
-                          "@id": "http://example.org/iiif/book1/canvas/p1",
-                          "@type": "sc:Canvas",
-                          "label": "p. 1"
-                          // ...
-                        },
-                        {
-                          "@id": "http://example.org/iiif/book1/canvas/p2",
-                          "@type": "sc:Canvas",
-                          "label": "p. 2"
-                          // ...
-                        },
-                        {
-                          "@id": "http://example.org/iiif/book1/canvas/p3",
-                          "@type": "sc:Canvas",
-                          "label": "p. 3"
-                          // ...
-                        }
-                      ]
-                    }
-                    */
-                    if(isset($xpath[2]) && $xpath[2]=="normal")
-                        {
-                        $response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-                        $response["@id"] = $rooturl . $identifier . "/sequence/normal";
-                        $response["type"] = "sc:Sequence";
-                        $response["label"] = "Default order";
-                        
-                        $canvases = array();
-                        $position=0;
-                        foreach ($iiif_results as $iiif_result)
-                            {
-                            if(isset($iiif_sequence_field))
-                                {
-                                if(isset($iiif_result["field" . $iiif_sequence_field]))
-                                    {
-                                    $position = $iiif_result["field" . $iiif_sequence_field];
-                                    }
-                                else
-                                    {
-                                    $position = get_data_by_field($iiif_result["ref"],$iiif_sequence_field);
-                                    }
-                                }
-                            else
-                                {
-                                $position++;
-                                }
-                            
-                            $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
-                            $canvases[$position]["type"] = "sc:Sequence";
-                            $canvases[$position]["label"] = "Default order";
-                            }
-                        $response["canvases"] = array_values($canvases);
-                        $validrequest = true;
-                        }
-                    }
-                }
-            }
-        } // End of !is_numeric($identifier)
-    elseif($xpath[0] == "image")
+	if(strtolower($xpath[0]) == "image")
         {
-        $identifier = $xpath[1];
-        if(is_numeric($identifier))
-            {
-            // IMAGE REQUEST (http://iiif.io/api/image/2.1/)
+		// IMAGE REQUEST (http://iiif.io/api/image/2.1/)
+        $resourceid = $xpath[1];		
+		//$iiif_search = $iiif_field["name"] . ":" . $identifier;
+		//$iiif_results = do_search($iiif_search);
+		$resource_access=get_resource_access($resourceid);
+		if($resource_access==0)
+            {	
             if(!isset($xpath[2]) || $xpath[2] == "info.json")
                 {
                 // Image information request. Only fullsize available in this initial version
                 $response["@context"] = "http://iiif.io/api/image/2/context.json";
-                $response["@id"] = $rooturl . $identifier . "/info.json";
+                $response["@id"] = $rootimageurl . $resourceid . "/info.json";
                 $response["protocol"] = "http://iiif.io/api/image";			
                 
-                $img_path = get_resource_path($iiif_results[0]["ref"],true,'',false);
-                $image_size = get_original_imagesize($iiif_results[0]["ref"],$img_path);
+                $img_path = get_resource_path($resourceid,true,'',false);
+                $image_size = get_original_imagesize($resourceid,$img_path);
                 //print_r($image_size);
                 $response["width"] = $image_size[1];
                 $response["height"] = $image_size[2];
@@ -421,17 +145,12 @@ else
                     // Request is supported, send the image
                     $validrequest = true;
                     $imgfound = false;
-                    foreach($iiif_results as $iiif_result)
-                        {
-                        $imgpath = get_resource_path($iiif_result["ref"],true,($size == "thm"?'thm':''),false,"jpg");
-                        if(file_exists($imgpath))
-                            {
-                            //$imgurl = get_resource_path($iiif_result["ref"],false,'',false,"jpg");
-                            $response_image=$imgpath;
-                            $imgfound = true;
-                            break;
-                            }
-                        }
+                    $imgpath = get_resource_path($resourceid,true,($size == "thm"?'thm':''),false,"jpg");
+					if(file_exists($imgpath))
+						{
+						$response_image=$imgpath;
+						$imgfound = true;
+						}
                     if(!$imgfound)
                         {
                         $errorcode = "404";
@@ -443,7 +162,7 @@ else
                     // Invalid request format
                     $errorcode=400;
                     $errors[] = "Bad request. Please check the format of your request.";
-                    $errors[] = "For the full image use " . $rooturl . $xpath[0] . "/full/max/0/default.jpg";
+                    $errors[] = "For the full image use " . $rootimageurl . $resourceid . "/full/max/0/default.jpg";
                     }
                 }
             /* IMAGE REQUEST END */
@@ -451,14 +170,189 @@ else
         else
             {
             $errorcode=404;
-            $errors[] = "Missing identifier";    
+            $errors[] = "Missing or invalid identifier";    
             }
-        }
-    else
+        } // End of image API
+	else
         {
-        $errorcode=404;
-        $errors[] = "Invalid identifier: " . $identifier;
-        }
+		// Presentation API
+		$identifier = $xpath[0];
+		$iiif_field = get_resource_type_field($iiif_identifier_field);
+		$iiif_search = $iiif_field["name"] . ":" . $identifier;
+		$iiif_results = do_search($iiif_search);
+        //print_r($iiif_results);
+        if(is_array($iiif_results) && count($iiif_results)>0)
+			{	
+			if(!isset($xpath[1]))
+				{
+				$errorcode=404;
+				$errors[] = "Bad request. Valid options are 'manifest', 'sequence' or 'canvas' e.g. ";
+				$errors[] = "For the manifest: " . $rooturl . $xpath[0] . "/manifest";
+				$errors[] = "For a sequence : " . $rooturl . $xpath[0] . "/sequence";
+				$errors[] = "For a canvas : " . $rooturl . $xpath[0] . "/canvas/<identifier>";
+				}
+			else
+				{
+				if(!is_array($iiif_results) || count($iiif_results) == 0)
+					{
+					$errorcode=404;
+					$errors[] = "Invalid identifier: " . $identifier;
+					}
+				else
+					{
+					if($xpath[1] == "manifest")
+						{
+						/* MANIFEST REQUEST - see http://iiif.io/api/presentation/2.1/#manifest */
+						
+						$response["@context"] = "http://iiif.io/api/presentation/2/context.json";
+						$response["@id"] = $rooturl . $identifier . "/manifest";
+						$response["@type"] = "sc:Manifest";		
+						
+						// Descriptive metadata about the object/work
+						// The manifest data should be the same for all resources that are returned.
+						// This is the default when using the tms_link plugin for TMS integration. 
+						// Therefore we use the data from the first returned result.
+						$iiif_data = get_resource_field_data($iiif_results[0]["ref"]);
+						
+						$response["label"] = get_data_by_field($iiif_results[0]["ref"], $view_title_field);
+						
+						$response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
+						
+						$response["metadata"] = array();
+						$n=0;
+						foreach($iiif_data as $iiif_data_row)
+							{
+							$response["metadata"][$n] = array();		
+							$response["metadata"][$n]["label"] = $iiif_data[$n]["title"];
+							if(in_array($iiif_data[$n]["type"],$FIXED_LIST_FIELD_TYPES))
+								{
+								// Don't use the data as this has already concatentated the translations, add an entry for each node translation by building up a new array
+								$resnodes = get_resource_nodes($iiif_results[0]["ref"],$iiif_data[$n]["resource_type_field"],true);
+								$langentries = array();
+								$nodecount = 0;
+								unset($def_lang);
+								foreach($resnodes as $resnode)
+									{
+									debug("iiif: translating " . $resnode["name"] . " from field '" . $iiif_data[$n]["title"] . "'");
+									$node_langs = i18n_get_translations($resnode["name"]);
+									$transcount=0;
+									$defaulttrans = "";
+									foreach($node_langs as $nlang => $nltext)
+										{
+										if(!isset($langentries[$nlang]))
+											{
+											// This is the first translated node entry for this language. If we already have translations copy the default language array to make sure no nodes with missing translations are lost
+											debug("iiif: Adding a new translation entry for language '" . $nlang . "', field '" . $iiif_data[$n]["title"] . "'");
+											$langentries[$nlang] = isset($def_lang)?$def_lang:array();
+											}
+										// Add the node text to the array for this language;
+										debug("iiif: Adding node translation for language '" . $nlang . "', field '" . $iiif_data[$n]["title"] . "': " . $nltext);
+										$langentries[$nlang][] = $nltext;
+										
+										// Set default text for any translations
+										if($nlang == $defaultlanguage || $defaulttrans == ""){$defaulttrans = $nltext;}
+										$transcount++;						
+										}
+									
+									$nodecount++;								
+									
+									// There may not be translations for all nodes, fill any arrays that don't have an entry with the untranslated versions
+									foreach($langentries as $mdlang => $mdtrans)
+										{
+										debug("iiif: enry count for " . $mdlang . ":" . count($mdtrans));
+										debug("iiif: node count: " . $nodecount);
+										if(count($mdtrans) != $nodecount)
+											{
+											debug("iiif: No translation found for " . $mdlang . ". Adding default translation to language array for field '" . $iiif_data[$n]["title"] . "': " . $mdlang . ": " . $defaulttrans);
+											$langentries[$mdlang][] =  $defaulttrans;
+											}
+										}				
+										
+									// To ensure that no nodes are lost due to missing translations,  
+									// Save the default language array to make sure we include any untranslated nodes that may be missing when/if we find new languages for the next node
+								   
+									debug("iiif: Saving default language array for field '" . $iiif_data[$n]["title"] . "': " . implode(",",$langentries[$defaultlanguage]));
+									// Default language is the ideal, but if no default language entries for this node have been found copy the first language we have
+									reset($langentries);
+									$def_lang = isset($langentries[$defaultlanguage])?$langentries[$defaultlanguage]:$langentries[key($langentries)];
+									}		
+												
+								
+								$response["metadata"][$n]["value"] = array();
+								$o=0;
+								foreach($langentries as $mdlang => $mdtrans)
+									{
+									debug("iiif: adding to metadata language array: " . $mdlang . ": " . implode(",",$mdtrans));
+									//$response["metadata"][$n]["value"][$o]["@value"] = array();
+									//$response["metadata"][$n]["value"][$o]["@value"][] = $mdtrans;
+									//$response["metadata"][$n]["value"][$o]["@language"] = $mdlang;
+									$response["metadata"][$n]["value"][$o]["@value"] = implode(",",array_values($mdtrans));
+									$response["metadata"][$n]["value"][$o]["@language"] = $mdlang;
+									$o++;
+									}
+								}
+							else
+								{
+								$response["metadata"][$n]["value"] = $iiif_data[$n]["value"];
+								}
+							$n++;
+							}
+							
+						$response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
+						if(isset($iiif_license_field))
+							{
+							$response["license"] = get_data_by_field($iiif_results[0]["ref"], $iiif_license_field);
+							}
+											
+						// Thumbnail property
+						$response["thumbnail"] = iiif_get_thumbnail($identifier, $iiif_results);
+						
+						// Sequences
+						$response["sequences"] = array();                    
+						$response["sequences"][0]["@id"] = $rooturl . $identifier . "/sequence/normal";
+						$response["sequences"][0]["@type"] = "sc:Sequence";
+						$response["sequences"][0]["label"] = "Default order";
+						   
+												
+						$response["sequences"][0]["canvases"]  = iiif_get_canvases($identifier,$iiif_results,false);
+						$validrequest = true;	
+						/* MANIFEST REQUEST END */
+						}
+					elseif($xpath[1] == "canvas")
+						{                        
+						// This is essentially a resource
+						// {scheme}://{host}/{prefix}/{identifier}/canvas/{name}
+						$canvasid = $xpath[2];
+						$allcanvases = iiif_get_canvases($identifier,$iiif_results,true);
+						//$sequenceids = array_keys($allcanvases);
+						//print_r($allcanvases);
+						//print_r($allcanvases[$canvasid]);
+						$response["@context"] =  "http://iiif.io/api/presentation/2/context.json";
+						$response = array_merge($response,$allcanvases[$canvasid]);                    
+						$validrequest = true;	
+						}
+					elseif($xpath[1] == "sequence")
+						{
+						if(isset($xpath[2]) && $xpath[2]=="normal")
+							{
+							$response["@context"] = "http://iiif.io/api/presentation/2/context.json";
+							$response["@id"] = $rooturl . $identifier . "/sequence/normal";
+							$response["@type"] = "sc:Sequence";
+							$response["label"] = "Default order";
+							$response["canvases"] = iiif_get_canvases($identifier,$iiif_results);
+							$validrequest = true;
+							}
+						}
+					}
+				}
+			} // End of valid $identifier check based on search results
+		else
+			{
+			$errorcode=404;
+			$errors[] = "Invalid identifier: " . $identifier;
+			}
+		}
+    
     }
     
     // Send the data 
