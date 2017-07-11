@@ -8,6 +8,7 @@
 
 include "../../include/db.php";
 include_once "../../include/general.php";
+include_once "../../include/resource_functions.php";
 
 # Check database connectivity.
 $check=sql_value("select count(*) value from resource_type",0);
@@ -72,5 +73,41 @@ if (function_exists("svn_info"))
         $version.=" " . $svn_url[count($svn_url)-1] . "." . $svnrevision;
         }
     }
+else
+	{
+	$svncommand = "svn info "  . __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
+	$svninfo=run_command($svncommand);
+	$matches = array();
+	
+	// Get version
+	if (preg_match('/\nURL: .+\/releases\/(.+)\\n/', $svninfo, $matches)!=0)
+		{
+		$version .= " " . $matches[1];
+		}
+	elseif (preg_match('/\nURL: .+\/branches\/(.+)\\n/', $svninfo, $matches)!=0)
+		{
+		$version .= " BRANCH " . $matches[1];
+		}
+	else
+		{
+		$version .= " TRUNK ";
+		}	
+	// Get revision
+	if (preg_match('/\nRevision: (\d+)/i', $svninfo, $matches)!=0)
+		{
+		$version .= "." . $matches[1];
+		}
+	}
 
-exit("OK" . $version);
+echo("OK" . $version);
+
+// Warning if quota set and nearing quota limit
+if (isset($disksize))
+	{
+	$avail=$disksize*(1024*1024*1024); # Get quota in bytes
+	$used=get_total_disk_usage();      # Total usage in bytes
+    $percent=ceil(($used/$avail)*100);
+	if ($percent>=90) {echo " WARNING " . $percent . "% of quota";}
+	}
+
+

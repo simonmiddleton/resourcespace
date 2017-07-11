@@ -50,9 +50,9 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
 			 . ($messages_actions_usergroup?"usergroup.name as 
 			usergroup,":"") . 
 			" description, 
-			type FROM (" . $actionsql . ")  allactions join user on 
+			type FROM (" . $actionsql . ")  allactions LEFT JOIN user ON 
 			allactions.user=user.ref"
-			 . ($messages_actions_usergroup?" join usergroup on 
+			 . ($messages_actions_usergroup?" LEFT JOIN usergroup ON 
 			user.usergroup=usergroup.ref":"") .
 			" ORDER BY " . $order_by . " " . $sort;}
        

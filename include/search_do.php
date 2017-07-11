@@ -1,12 +1,58 @@
 <?php
-function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$access_override=false,$starsearch=0,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false, $editable_only=false,$returnsql=false) {
-
-    # Takes a search string $search, as provided by the user, and returns a results set
-    # of matching resources.
-    # If there are no matches, instead returns an array of suggested searches.
-    # $restypes is optionally used to specify which resource types to search.
-    # $access_override is used by smart collections, so that all all applicable resources can be judged regardless of the final access-based results
-
+/**
+* Takes a search string $search, as provided by the user, and returns a results set of matching resources. If there are
+* no matches, instead returns an array of suggested searches
+* 
+* @uses debug()
+* @uses hook()
+* @uses escape_check()
+* @uses sql_value()
+* @uses sql_query()
+* @uses split_keywords()
+* @uses add_verbatim_keywords()
+* @uses search_filter()
+* @uses search_special()
+* 
+* @param string      $search                  Search string
+* @param string      $restypes                Optionally used to specify which resource types to search for
+* @param string      $order_by
+* @param integer     $archive                 Allows searching in more than one archive state
+* @param integer     $fetchrows               Fetch "$fetchrows" rows but pad the array to the full result set size with
+*                                             empty values (@see sql_query())
+* @param string      $sort
+* @param boolean     $access_override         Used by smart collections, so that all all applicable resources can be judged
+*                                             regardless of the final access-based results
+* @param integer     $starsearch
+* @param boolean     $ignore_filters
+* @param boolean     $return_disk_usage
+* @param string      $recent_search_daylimit
+* @param string|bool $go                      Paging direction (prev|next)
+* @param boolean     $stats_logging           Log keyword usage
+* @param boolean     $return_refs_only
+* @param boolean     $editable_only
+* @param boolean     $returnsql
+* 
+* @return null|string|array
+*/
+function do_search(
+    $search,
+    $restypes = '',
+    $order_by = 'relevance',
+    $archive = 0,
+    $fetchrows = -1,
+    $sort = 'desc',
+    $access_override = false,
+    $starsearch = 0,
+    $ignore_filters = false,
+    $return_disk_usage = false,
+    $recent_search_daylimit = '',
+    $go = false,
+    $stats_logging = true,
+    $return_refs_only = false,
+    $editable_only = false,
+    $returnsql = false
+)
+    {
     debug("search=$search $go $fetchrows restypes=$restypes archive=$archive daylimit=$recent_search_daylimit editable_only=" . ($editable_only?"true":"false"));
 
     # globals needed for hooks
@@ -683,10 +729,10 @@ function do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchr
                                          $sql_keyword_union_or[]=$keywords_expanded_or;
                                             
         
-                                        # Log this
-                                        if ($stats_logging)
+                                        // Log this
+                                        if($stats_logging && !$go)
                                             {
-                                            daily_stat("Keyword usage", $keyref);
+                                            daily_stat('Keyword usage', $keyref);
                                             }
                                         } // End of standard keyword match
                                     } // end if not omit

@@ -467,6 +467,8 @@ if ($remove!="")
 $addsearch=getvalescaped("addsearch",-1);
 if ($addsearch!=-1)
 	{
+    $order_by = getvalescaped('order_by', getvalescaped('saved_order_by', $default_collection_sort));
+
     if (!collection_writeable($usercollection))
         { ?>
         <script language="Javascript">alert("<?php echo $lang["cantmodifycollection"]?>");</script><?php

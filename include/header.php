@@ -42,7 +42,7 @@ if ($display_user_rating_stars && $star_search)
 	}
 	
 ?><!DOCTYPE html>
-<html>	
+<html lang="<?php echo $language ?>">	
 <?php 
 if ($include_rs_header_info)
     {?>
@@ -352,23 +352,20 @@ else
 					}
 				$header_img_src = $baseurl_short . $header_img_src;
 				}
-			}
-        $headerimginfo=@getimagesize($header_img_src);
-        $headerwidth=isset($headerimginfo[1])?floor(($headerimginfo[0]/$headerimginfo[1])*50):236;
+			}		
         }
 	else 
 		{
 		$header_img_src = $baseurl.'/gfx/titles/title.svg';
-        $headerwidth=236;
 		}
 	if($header_link && ($k=="" || $internal_share_access))
         {?>
-        <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"  style="width:<?php echo $headerwidth; ?>px;"></img></a>
+        <a href="<?php echo $linkUrl; ?>" onClick="return CentralSpaceLoad(this,true);" class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" ></img></a>
         <?php
         }
     else
         {?>
-        <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg" style="width:<?php echo $headerwidth; ?>px;"></img></div>
+        <div class="HeaderImgLink"><img src="<?php echo $header_img_src; ?>" id="HeaderImg"></img></div>
         <?php
         }
 	}
@@ -419,7 +416,7 @@ if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false =
 
 <?php
 hook("beforeheadernav1");
-if ((isset($anonymous_login) && ($username==$anonymous_login)) || (isset($anonymous_autouser_group) && ($usergroup==$anonymous_autouser_group)))
+if (checkPermission_anonymoususer())
 	{
 	if (!hook("replaceheadernav1anon")) 
         {

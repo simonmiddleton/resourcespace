@@ -27,7 +27,7 @@ function check_api_key($username,$querystring,$sign)
     
     # First remove the sign parameter as this would not have been present when signed on the client.
     $s=strpos($querystring,"&sign=");
-    if ($s===false) {return false;}
+    if ($s===false || $s+6+strlen($sign)!==strlen($querystring)) {return false;}
     $querystring=substr($querystring,0,$s);
     
     # Calculate the expected signature.

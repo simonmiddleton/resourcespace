@@ -643,6 +643,9 @@ $ffmpeg_use_qscale = true;
 # Allow users to request accounts?
 $allow_account_request=true;
 
+# Send a confirmation e-mail to requester
+$account_request_send_confirmation_email_to_requester = true;
+
 # Should the system allow users to request new passwords via the login screen?
 $allow_password_reset=true;
 
@@ -896,11 +899,6 @@ $plugins = array('transform', 'rse_version');
 # Note that collections will be shared among all anonymous users - it's therefore usually best to turn off all collections functionality for the anonymous user.
 #$anonymous_login="guest";
 
-# Alternative anonymous login mode. Automatically create a separate user for each anonymous session and log them in.
-# EXPERIMENTAL - user with caution!
-# $anonymous_autouser_group=2;
-
-
 # Domain Linked Anonymous Access
 # Uncomment and set to allow different anonymous access USERS for different domains. 
 # The usernames are the same rules for just a single anonymous account but you must match them against the full domain $Baseurl that they will be using.
@@ -909,6 +907,10 @@ $plugins = array('transform', 'rse_version');
 		"http://example.com" => "guest",
 		"http://test.com" => "guest2"
 		); */
+
+# Alternative anonymous login mode. Automatically create a separate user for each anonymous session and log them in.
+# EXPERIMENTAL - use with caution!
+# $anonymous_autouser_group=2;
 
 # When anonymous access is on, show login in a modal.
 $anon_login_modal=false;
@@ -2687,7 +2689,7 @@ $collection_allow_creation=true;
 $daterange_search=false;
 
 # Keyboard navigation allows using left and right arrows to browse through resources in view/search/preview modes
-$keyboard_navigation = false;
+$keyboard_navigation = true;
 
 # Keyboard control codes
 # Previous/next resource, default: left/right arrows

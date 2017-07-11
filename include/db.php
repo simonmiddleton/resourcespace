@@ -1788,14 +1788,22 @@ function show_pagetime(){
  */
 function checkPermission_anonymoususer()
     {
-    global $baseurl, $anonymous_login, $username;
+    global $baseurl, $anonymous_login, $anonymous_autouser_group, $username, $usergroup;
 
-    return (
-        isset($anonymous_login)
-        && (
-            (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
-            || (is_array($anonymous_login) && array_key_exists($baseurl, $anonymous_login) && $anonymous_login[$baseurl] == $username)
+    return
+        (
+            (
+            isset($anonymous_login)
+            && (
+                (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
+                || (
+                    is_array($anonymous_login)
+                    && array_key_exists($baseurl, $anonymous_login)
+                    && $anonymous_login[$baseurl] == $username
+                   )
+               )
             )
+            || (isset($anonymous_autouser_group) && $usergroup == $anonymous_autouser_group)
         );
     }
 
@@ -1980,22 +1988,78 @@ function setup_user($userdata)
 * @return boolean|array
 */
 function validate_user($user_select_sql, $getuserdata=true)
-	{
-	if($user_select_sql==""){return false;}
-	
-	$full_user_select_sql = "approved = 1 AND (account_expires IS NULL OR account_expires = '0000-00-00 00:00:00' OR account_expires > now()) " . ((strtoupper(trim(substr($user_select_sql,0,4)))=="AND")?" ":" AND ") .  $user_select_sql;
-	if($getuserdata)
-		{
-		$userdata=sql_query("SELECT u.ref, u.username, u.origin, g.permissions, g.parent, u.usergroup, u.current_collection, u.last_active, timestampdiff(second, u.last_active, now()) idle_seconds, u.email, u.password, u.fullname, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, resource_defaults, u.password_last_change, g.config_options, g.request_mode, g.derestrict_filter, u.hidden_collections, u.accepted_terms FROM user u LEFT JOIN usergroup g on u.usergroup=g.ref WHERE " . $full_user_select_sql);
-		return $userdata;
-		}
-	else
-		{
-		$validuser=sql_value("SELECT u.ref value FROM user u LEFT JOIN usergroup g on u.usergroup=g.ref WHERE " . $full_user_select_sql,"");
-		if($validuser!=""){return true;}
-		}
-	return false;
-	}
+    {
+    if('' == $user_select_sql)
+        {
+        return false;
+        }
+
+    $full_user_select_sql = "
+        approved = 1
+        AND (
+                account_expires IS NULL 
+                OR account_expires = '0000-00-00 00:00:00' 
+                OR account_expires > now()
+            ) "
+        . ((strtoupper(trim(substr($user_select_sql, 0, 4))) == 'AND') ? ' ' : ' AND ')
+        . $user_select_sql;
+
+    if($getuserdata)
+        {
+        $userdata = sql_query(
+            "   SELECT u.ref,
+                       u.username,
+                       u.origin,
+                       g.permissions,
+                       g.parent,
+                       u.usergroup,
+                       u.current_collection,
+                       u.last_active,
+                       timestampdiff(second,
+                       u.last_active,
+                       now()) idle_seconds,
+                       u.email,
+                       u.password,
+                       u.fullname,
+                       g.search_filter,
+                       g.edit_filter,
+                       g.ip_restrict ip_restrict_group,
+                       g.name groupname,
+                       u.ip_restrict ip_restrict_user,
+                       u.search_filter_override,
+                       resource_defaults,
+                       u.password_last_change,
+                       g.config_options,
+                       g.request_mode,
+                       g.derestrict_filter,
+                       u.hidden_collections,
+                       u.accepted_terms
+                  FROM user AS u
+             LEFT JOIN usergroup AS g on u.usergroup = g.ref
+                 WHERE {$full_user_select_sql}"
+        );
+
+        return $userdata;
+        }
+    else
+        {
+        $validuser = sql_value(
+            "      SELECT u.ref AS `value`
+                     FROM user AS u 
+                LEFT JOIN usergroup g ON u.usergroup = g.ref
+                    WHERE {$full_user_select_sql}"
+            ,
+            ''
+        );
+
+        if('' != $validuser)
+            {
+            return true;
+            }
+        }
+
+    return false;
+    }
 
 
 /**
@@ -2021,31 +2085,47 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
-    $is_html                    = ($html != strip_tags($html));
-    $compatibility_libxml_2_7_8 = false;
+    $is_html = ($html != strip_tags($html));
 
-    libxml_use_internal_errors(true);
-
-    $allowed_tags       = array_merge(array('div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'em', 'strong', 'b', 'u', 'ol', 'ul', 'li'), $tags);
+    $allowed_tags = array_merge(
+        array(
+            'html',
+            'body',
+            'div',
+            'span',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'p',
+            'br',
+            'em',
+            'strong',
+            'b',
+            'u',
+            'ol',
+            'ul',
+            'li',
+            'i',
+            'small',
+            'sub',
+            'ins',
+            'del',
+            'mark'
+        ),
+        $tags
+    );
     $allowed_attributes = array_merge(array('id', 'class', 'style'), $attributes);
 
     // Step 1 - Check DOM
-    $doc = new DOMDocument();
+    libxml_use_internal_errors(true);
+
+    $doc           = new DOMDocument();
     $doc->encoding = 'UTF-8';
 
-    if(defined ('LIBXML_HTML_NOIMPLIED') && defined ('LIBXML_HTML_NODEFDTD'))
-        {
-        $process_html = $doc->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-        }
-    else
-        {
-        // Compatibility with libxml <2.7.8
-        // we allow HTML and BODY because libxml does not have some required constants and then we extract
-        // the text between BODY tags
-        $allowed_tags               = array_merge(array('html', 'body'), $allowed_tags);
-        $process_html               = $doc->loadHTML($html);
-        $compatibility_libxml_2_7_8 = true;
-        }
+    $process_html = $doc->loadHTML($html);
 
     if($process_html)
         {
@@ -2074,7 +2154,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 
         $html = $doc->saveHTML();
 
-        if($compatibility_libxml_2_7_8 && false !== strpos($html, '<body>'))
+        if(false !== strpos($html, '<body>'))
             {
             $body_o_tag_pos = strpos($html, '<body>');
             $body_c_tag_pos = strpos($html, '</body>');
@@ -2102,6 +2182,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 
     if(!$is_html)
         {
+        // DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag
         $html = strip_tags($html);
         }
 

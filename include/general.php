@@ -1756,7 +1756,8 @@ function auto_create_user_account($hash="")
 function email_user_request()
     {
     // E-mails the submitted user request form to the team.
-    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note;
+    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note,
+           $account_request_send_confirmation_email_to_requester;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getvalescaped('name', ''));
@@ -1772,18 +1773,26 @@ function email_user_request()
 
     foreach($approval_notify_users as $approval_notify_user)
         {
-        get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);		  
+        get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message);
 
         if(false == $send_message)
             {
             continue;
-            }		
+            }
 
         get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email);
 
-        if($send_email && $approval_notify_user["email"]!="")
+        if($send_email && '' != $approval_notify_user['email'])
             {
-            send_mail($approval_notify_user['email'], "{$applicationname}: {$lang['requestuserlogin']} - {$name}", $message, '', $user_email, '', '', $name);
+            send_mail(
+                $approval_notify_user['email'],
+                "{$applicationname}: {$lang['requestuserlogin']} - {$name}",
+                $message,
+                '',
+                $user_email,
+                '',
+                '',
+                $name);
             }
         else
             {
@@ -1794,7 +1803,16 @@ function email_user_request()
     if(0 < count($message_users))
         {
         // Send a message with long timeout (30 days)
-        message_add($message_users,$notificationmessage,"",0,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30);
+        message_add($message_users, $notificationmessage, '', 0, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN, 60 * 60 * 24 * 30);
+        }
+
+    // Send a confirmation e-mail to requester
+    if($account_request_send_confirmation_email_to_requester)
+        {
+        send_mail(
+            $email,
+            "{$applicationname}: {$lang['account_request_label']}",
+            $lang['account_request_confirmation_email_to_requester']);
         }
 
     return true;
@@ -2511,8 +2529,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	# Include footer
 	global $email_footer, $storagedir, $mime_type_by_extension;
 	
-	include_once(dirname(__FILE__)."/../lib/PHPMailer-5.2.23/class.phpmailer.php");
-	//include_once(dirname(__FILE__)."/../lib/PHPMailer-5.2.23/extras/class.html2text.php");
+    include_once(__DIR__ . '/../lib/PHPMailer-5.2.23/PHPMailerAutoload.php');
 	
 	global $email_from;
 	if ($from=="") {$from=$email_from;}
@@ -2779,12 +2796,13 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	if (isset($attachments)){
 		foreach ($attachments as $attachment){
 		$mail->AddAttachment($attachment,basename($attachment));}
-	}	
-	if (is_html($body)){
-		$h2t = new html2text($body); 
-		$text = $h2t->get_text(); 
-		$mail->AltBody = $text; 
-		}	 
+	}
+
+	if (is_html($body))
+        {
+        $mail->AltBody = $mail->html2text($body); 
+        }
+
 	if(!$mail->Send())
 		{
 		echo "Message could not be sent. <p>";
@@ -5402,6 +5420,10 @@ function generateURL($url, $parameters = array(), $set_params = array())
         $query_string_params[] = $parameter . '=' . urlencode($parameter_value);
         }
 
+    # Ability to hook in and change the URL.
+    $hookurl=hook("generateurl","",array($url));
+    if ($hookurl!==false) {$url=$hookurl;}
+    
     return $url . '?' . implode ('&', $query_string_params);
     }
 
@@ -6065,4 +6087,49 @@ function canSeePreviewTools($edit_access)
            ($annotate_enabled && $edit_access)
         || $image_preview_zoom
         );
+    }
+
+
+/**
+* Helper function for Preview tools feature. Checks if a config option that manipulates the preview image (on view page)
+* is the only one enababled.
+* 
+* IMPORTANT: When adding new preview tool options, make sure to check if you need to add a new type check (at the 
+* moment it only checks for boolean config options and anything else is seen as enabled).
+* 
+* @param string $config_option Preview tool config option name to check
+* 
+* @return boolean False means there are other preview tool options enabled.
+*/
+function checkPreviewToolsOptionUniqueness($config_option)
+    {
+    $count_options_enabled = 0;
+    $preview_tool_options = array(
+        'annotate_enabled',
+        'image_preview_zoom'
+    );
+
+    foreach($preview_tool_options as $preview_tools_option)
+        {
+        if($preview_tools_option === $config_option)
+            {
+            continue;
+            }
+
+        if(!isset($GLOBALS[$preview_tools_option]))
+            {
+            continue;
+            }
+
+        $check_option = $GLOBALS[$preview_tools_option];
+
+        if(is_bool($check_option) && !$check_option)
+            {
+            continue;
+            }
+
+        $count_options_enabled++;
+        }
+
+    return (0 === $count_options_enabled ? true : false);
     }

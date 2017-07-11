@@ -122,4 +122,14 @@ if($html_output !== strip_tags_and_attributes($html_input))
     return false;
     }
 
+
+// Case: Normal text (ie. no HTML present)
+$html_input  = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+$html_output = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+
+if($html_output !== strip_tags_and_attributes($html_input))
+    {
+    return false;
+    }
+
 return true;

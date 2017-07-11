@@ -9,7 +9,7 @@ $user_email=getval("email","");
 hook("preuserrequest");
 
 if (getval("save","")!="")
-	{    
+	{
 	# Check for required fields
 
 	# Required fields (name, email) not set?
@@ -57,11 +57,11 @@ if (getval("save","")!="")
 				}
 			}
 		}
-		
+
 	$spamcode = getval("antispamcode","");
 	$usercode = getval("antispam","");
 	$spamtime = getval("antispamtime",0);
-	
+
 	if (!empty($missingFields))
 		{
 		$error=$lang["requiredfields"] . ' ' . i18n_get_translated(implode(', ', $missingFields), true);
@@ -86,7 +86,7 @@ if (getval("save","")!="")
 	else
 		{
 		# E-mail is unique
-		
+
 		if ($user_account_auto_creation)
 			{	
 			# Automatically create a new user account

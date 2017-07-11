@@ -319,10 +319,10 @@ function createAnnotation(array $annotation)
         }
 
     // Annotorious annotation
-    $x                   = escape_check($annotation['shapes'][0]['geometry']['x']);
-    $y                   = escape_check($annotation['shapes'][0]['geometry']['y']);
-    $width               = escape_check($annotation['shapes'][0]['geometry']['width']);
-    $height              = escape_check($annotation['shapes'][0]['geometry']['height']);
+    $x      = escape_check($annotation['shapes'][0]['geometry']['x']);
+    $y      = escape_check($annotation['shapes'][0]['geometry']['y']);
+    $width  = escape_check($annotation['shapes'][0]['geometry']['width']);
+    $height = escape_check($annotation['shapes'][0]['geometry']['height']);
 
     // ResourceSpace specific properties
     $resource            = escape_check($annotation['resource']);

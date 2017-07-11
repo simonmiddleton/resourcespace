@@ -185,7 +185,11 @@ if (!$direct_download_allow_ie8 && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]
 }
 
 # downloading a file from iOS should open a new window/tab to prevent a download loop
-$iOS_save=((stripos($_SERVER['HTTP_USER_AGENT'],"iPod") || stripos($_SERVER['HTTP_USER_AGENT'],"iPhone") || stripos($_SERVER['HTTP_USER_AGENT'],"iPad")) ? true : false);
+$iOS_save=false;
+if (isset($_SERVER['HTTP_USER_AGENT']))
+	{
+	$iOS_save=((stripos($_SERVER['HTTP_USER_AGENT'],"iPod")!==false || stripos($_SERVER['HTTP_USER_AGENT'],"iPhone")!==false || stripos($_SERVER['HTTP_USER_AGENT'],"iPad")!==false) ? true : false);
+	}
 
 # Show the header/sidebar
 include "../include/header.php";
@@ -420,7 +424,14 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 					$value=$value_mod_after_highlight;
 					}
 				
-				?><div <?php if (!$valueonly){echo "class=\"itemNarrow\""; } elseif (isset($fixedwidth)) {echo "style=\"width:" . $fixedwidth . "px\""; } ?>>
+				?><div <?php if (!$valueonly)
+						{
+						echo "class=\"itemNarrow itemType".$field['type']."\"";
+						}
+					elseif (isset($fixedwidth))
+						{
+						echo "style=\"width:" . $fixedwidth . "px\"";
+						} ?>>
 				<h3><?php echo $title?></h3><p><?php echo $value; ?></p></div><?php
 				}
 			}
@@ -772,12 +783,36 @@ else if(1 == $resource['has_image'])
         	?>
         <!-- Available tools to manipulate previews -->
         <div id="PreviewTools" onmouseenter="showHidePreviewTools();" onmouseleave="showHidePreviewTools();">
+            <script>
+            function showHidePreviewTools()
+                {
+                var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
+                var tools_options = tools_wrapper.find('.ToolsOptionLink');
+
+                // If any of the tools are enabled do not close Preview tools box
+                if(tools_options.length > 0 && tools_options.hasClass('Enabled'))
+                    {
+                    tools_wrapper.removeClass('Hidden');
+
+                    return false;
+                    }
+
+                tools_wrapper.toggleClass('Hidden');
+
+                return false;
+                }
+
+            function toggleMode(element)
+                {
+                jQuery(element).toggleClass('Enabled');
+                }
+            </script>
             <div id="PreviewToolsOptionsWrapper" class="Hidden">
             <?php
             if($annotate_enabled && file_exists($imagepath))
                 {
                 ?>
-                <a class="ToolsOptionLink" href="#" onclick="toggleAnnotationsOption(this); return false;">
+                <a class="ToolsOptionLink AnnotationsOption" href="#" onclick="toggleAnnotationsOption(this); return false;">
                     <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
                 </a>
                 <script>
@@ -863,6 +898,23 @@ else if(1 == $resource['has_image'])
 
                     return false;
                     }
+
+                <?php
+                if(checkPreviewToolsOptionUniqueness('annotate_enabled'))
+                    {
+                    ?>
+                    jQuery('#PreviewToolsOptionsWrapper').on('readyToUseAnnotorious', function ()
+                        {
+                        setTimeout(function ()
+                            {
+                            showHidePreviewTools();
+                            }, 
+                            1000);
+                        toggleAnnotationsOption(jQuery('.AnnotationsOption'));
+                        });
+                    <?php
+                    }
+                    ?>
                 </script>
                 <?php
                 }
@@ -871,7 +923,7 @@ else if(1 == $resource['has_image'])
                 {
                 $previewurl = get_resource_path($ref, false, 'scr', false, $resource['preview_extension'], -1, 1, $use_watermark);
                 ?>
-                <a class="ToolsOptionLink" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
+                <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="toggleImagePreviewZoomOption(this); return false;">
                     <i class='fa fa-search-plus' aria-hidden="true"></i>
                 </a>
                 <script>
@@ -900,35 +952,24 @@ else if(1 == $resource['has_image'])
 
                     return false;
                     }
+
+                <?php
+                if(checkPreviewToolsOptionUniqueness('image_preview_zoom'))
+                    {
+                    ?>
+                    jQuery(document).ready(function ()
+                        {
+                        showHidePreviewTools();
+                        toggleImagePreviewZoomOption(jQuery('.ImagePreviewZoomOption'));
+                        });
+                    <?php
+                    }
+                    ?>
                 </script>
                 <?php
                 }
                 ?>
             </div>
-            <script>
-            function showHidePreviewTools()
-                {
-                var tools_wrapper = jQuery('#PreviewToolsOptionsWrapper');
-                var tools_options = tools_wrapper.find('.ToolsOptionLink');
-
-                // If any of the tools are enabled do not close Preview tools box
-                if(tools_options.length > 0 && tools_options.hasClass('Enabled'))
-                    {
-                    tools_wrapper.removeClass('Hidden');
-
-                    return false;
-                    }
-
-                tools_wrapper.toggleClass('Hidden');
-
-                return false;
-                }
-
-            function toggleMode(element)
-                {
-                jQuery(element).toggleClass('Enabled');
-                }
-            </script>
         </div>
         <?php
         } /* end of canSeePreviewTools() */
@@ -1510,22 +1551,24 @@ if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/us
 
 
 </div>
+</div>
 <?php } /* End of renderresourcedownloadspace hook */ ?>
 <?php } /* End of renderinnerresourceview hook */ ?>
-</div>
 
 <?php hook("renderbeforeresourcedetails"); ?>
 
 
 <?php
 /* ---------------  Display metadata ----------------- */
+if (!hook('replacemetadata')) {
 ?>
 <div id="Panel1" class="ViewPanel">
     <div id="Titles1" class="ViewPanelTitles">
         <div class="Title Selected" panel="Metadata"><?php if (!hook("customdetailstitle")) echo $lang["resourcedetails"]?></div>
     </div>
 </div>
-<?php include "view_metadata.php"; ?>
+<?php include "view_metadata.php";
+} /* End of replacemetadata hook */ ?>
 </div></div>
 
 </div>
@@ -1973,6 +2016,9 @@ if($annotate_enabled)
         <?php
         }
         ?>
+    <script>
+    jQuery('#PreviewToolsOptionsWrapper').trigger('readyToUseAnnotorious');
+    </script>
     <!-- End of Annotorious -->
     <?php
     }
