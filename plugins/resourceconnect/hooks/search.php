@@ -17,7 +17,7 @@ function HookResourceConnectSearchBeforesearchresults2()
 
 function HookResourceConnectSearchReplacesearchresults()
 	{
-	global $lang,$language,$resourceconnect_affiliates,$baseurl,$resourceconnect_selected,$search,$resourceconnect_this,$resourceconnect_treat_local_system_as_affiliate;
+	global $lang,$language,$resourceconnect_affiliates,$baseurl,$resourceconnect_selected,$search,$resourceconnect_this,$resourceconnect_treat_local_system_as_affiliate,$resourceconnect_pagesize;
 	if (!checkperm("resourceconnect")) {return false;}
 
 	# Do not replace results for special searches
@@ -28,7 +28,7 @@ function HookResourceConnectSearchReplacesearchresults()
 
 	$affiliate=$resourceconnect_affiliates[$resourceconnect_selected];
 	$counter=$resourceconnect_selected;
-	$page_size=15;
+	$page_size=$resourceconnect_pagesize;
 	
 	$restypes="";
 	$resource_types=get_resource_types();

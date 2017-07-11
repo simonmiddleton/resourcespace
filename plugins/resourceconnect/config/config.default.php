@@ -9,7 +9,7 @@ $resourceconnect_title="Search the Affiliate Network"; # i18n
 # - you may use the i18n syntax for multi-lingual titles, e.g. ~en:Title~sv:Titel
 
 $resourceconnect_user=1;
-$resourceconnect_pagesize=8;
+$resourceconnect_pagesize=48;
 $resourceconnect_pagesize_expanded=32;
 $resourceconnect_treat_local_system_as_affiliate=false; # For testing - causes the local system itself to work like an external affiliate
 
