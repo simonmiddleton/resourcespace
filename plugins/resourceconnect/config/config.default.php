@@ -37,3 +37,4 @@ $resourceconnect_affiliates=array
                 )
         );
         
+$resourceconnect_fullredir_pages=array("terms","download","view","preview");

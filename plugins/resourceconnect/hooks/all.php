@@ -84,7 +84,9 @@ function HookResourceConnectAllGenerate_collection_access_key($collection,$k,$us
 function HookResourceconnectAllGenerateurl($url)
 	{
 	# Always use complete URLs when accessing a remote system. This ensures the user stays on the affiliate system and doesn't get diverted back to the base system.
-	global $baseurl,$baseurl_short;
+	global $baseurl,$baseurl_short,$pagename,$resourceconnect_fullredir_pages;
+	
+	if (!in_array($pagename,$resourceconnect_fullredir_pages)) {return $url;} # Only fire for certain pages as needed.
 	
 	# Trim off the short base URL if it's been set.
 	if (substr($url,0,strlen($baseurl_short))==$baseurl_short) {$url=substr($url,strlen($baseurl_short));}
