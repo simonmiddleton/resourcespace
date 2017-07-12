@@ -343,6 +343,7 @@ if($create)
 	$link                         = getvalescaped("link","");
 	$title                        = getvalescaped("title","");
     $current_specific_user_groups = (isset($specific_user_groups) ? $specific_user_groups : array());
+    $tlsize                       = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
 
 	if($tile_type=="srch")
 		{
