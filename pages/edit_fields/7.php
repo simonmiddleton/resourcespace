@@ -14,7 +14,7 @@ $status_box_id                     = ($is_search ? "nodes_searched_{$field['ref'
 $status_box_elements               = '';
 $update_result_count_function_call = 'UpdateResultCount();';
 $tree_id                           = ($is_search ? "search_tree_{$field['ref']}" : "tree_{$field['ref']}");
-$tree_container_styling            = 'display: none;';
+$tree_container_styling            = ($category_tree_open ? 'display: block;' : 'display: none;');
 
 if(!isset($selected_nodes))
     {
@@ -45,8 +45,6 @@ foreach($field['nodes'] as $node)
 if($forsearchbar)
     {
     $update_result_count_function_call = '';
-
-    $tree_container_styling = '';
     }
 
 if(!$is_search)

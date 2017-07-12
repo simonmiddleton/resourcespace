@@ -55,7 +55,6 @@ input {
     height:47px;
   }
   #Header .HorizontalNav ul li a {
-    color: inherit;
     display: inline-block;
     text-align: center;
     background: none;

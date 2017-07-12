@@ -207,6 +207,7 @@
         height: auto;
         float: none;
         clear: both;
+        text-align: right;
     }
     #HeaderNav2 {
         display:none;
@@ -226,7 +227,6 @@
     .SlimHeader #Header.slimheader_darken .HorizontalNav ul li a:active,
     .SlimHeader #Header.slimheader_darken .HorizontalNav ul li a:hover,
     .SlimHeader #Header.slimheader_darken .HorizontalNav ul li a:visited{
-        color: #4E4646;
         display:inline-block;
         text-align: center;
         background: #d2d2d2;   
@@ -972,3 +972,4 @@
         display:none;
     }
 }
+

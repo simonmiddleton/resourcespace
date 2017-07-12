@@ -107,7 +107,7 @@ button[type="submit"] { font-size: 1em; }
 #HeaderNav2 {float:left; padding-left: 30px;}
 #HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0.5em;}
 .HeaderImgLink{float:left;height:100%;}
-#HeaderImg{margin:0; height: 40px; }
+#HeaderImg{margin:0;}
 .HorizontalNav li,  .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
 .HorizontalNav li a, .HorizontalNav li a{display: inline-block;zoom: 1;*display: inline;}
 #SearchBarContainer {margin-top: 20px;}
@@ -116,18 +116,27 @@ h2#CollectionsPanelHeader {display:none;}
 
 /* Header size variants */
 .HeaderSmall #HeaderNav1,  .HeaderSmall #HeaderNav2 {margin:2px 0 0 0;line-height: 30px;}
-.HeaderSmall #HeaderImg{height:40px;}
+.HeaderSmall #HeaderImg{max-height:40px;}
 .HeaderSmall #HeaderNav1 {height:30px;}
 
 .HeaderMid #HeaderNav1, .HeaderMid #HeaderNav2 {margin:5px 0 0 0;line-height: 35px;}
-.HeaderMid #HeaderImg{height:50px;}
+.HeaderMid #HeaderImg{max-height:50px;}
 .HeaderMid #HeaderNav1 {height:50px;}
 
 .HeaderLarge #HeaderNav1, .HeaderLarge #HeaderNav2 {margin:5px 0 0 0;line-height: 20px;}
-.HeaderLarge #HeaderImg{height:85px;}
+.HeaderLarge #HeaderImg{max-height:85px;}
 .HeaderLarge #HeaderNav1 {height:70px;}
 .HeaderLarge #HeaderNav2 {float:right; clear:both; padding-left: 20px;margin-top:0;}
 
+/* Fix for IE not scaling svg files correctly */
+@media all and (-ms-high-contrast: active), (-ms-high-contrast: none)
+    {
+    img[src$=".svg"]
+        {
+        height: 100% !important; 
+        width: 100% !important;
+        }
+    }
 
 /* Slim header with fixed top bar */
 div#Header.SlimHeaderFixedPosition { width: 100%; position:fixed; top: 0px; z-index: 100; }
