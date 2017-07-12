@@ -694,6 +694,7 @@ if(!$validpage)
 		var pretxt = encodeURIComponent(jQuery("#previewtext").val());
 		var prelink= encodeURIComponent(jQuery("#previewlink").val());
 		var tile = "&tllink="+prelink+"&tltitle="+pretitle+"&tltxt="+pretxt;
+        var tlsize = encodeURIComponent(jQuery('#DashTileSize :selected').val());
 		<?php
 		if($tile_type=="srch")
 			{?>	
@@ -733,7 +734,7 @@ if(!$validpage)
             jQuery('#previewdashtile').addClass('DoubleWidthDashTile');
             }
 
-		jQuery("#previewdashtile").load("<?php echo $previewurl; ?>?tltype=<?php echo urlencode($tile_type)?>&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
+		jQuery("#previewdashtile").load("<?php echo $previewurl; ?>?tltype=<?php echo urlencode($tile_type)?>&tlsize=" + tlsize + "&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
 	}
 
 	updateDashTilePreview();

@@ -397,6 +397,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 	{
 	global $baseurl_short,$lang,$dash_tile_shadows;
+
 	$tile_type="srch";
 	$tile_style="multi";
 	$search_string = explode('?',$tile["link"]);
@@ -428,9 +429,11 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 			$previewpath=$modifiedurl;
 			$border=true;
 			}
-        #$space=$margin+($images-1)*$gap;
-        $gap=140/min(count($resources),4);
-        $space=$i*$gap;
+
+        $tile_working_space = ('' == $tile['tlsize'] ? 140 : 380);
+
+        $gap   = $tile_working_space / min(count($resources), 4);
+        $space = $i * $gap;
         ?>
         <img style="position: absolute; top:10px;left:<?php echo ($space*1.5) ?>px;height:100%;<?php if ($shadow) { ?>box-shadow: 0 0 25px #000;<?php } ?>;transform: rotate(<?php echo 20-($i *12) ?>deg);" src="<?php echo $previewpath?>">
         <?php				
