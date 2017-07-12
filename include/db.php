@@ -124,13 +124,28 @@ if (isset($remote_config_url) && isset($_SERVER["HTTP_HOST"]))
 		# Cache not present or has expired.
 		# Fetch new config and store. Set a very low timeout of 2 seconds so the config server going down does not take down the site.
 		$ctx = stream_context_create(array('http' => array('timeout' => 2),'https' => array('timeout' => 2)));
-		$r=file_get_contents($remote_config_url . "?host=" . urlencode($host) . "&sign=" . md5($host . $remote_config_key),0,$ctx);
+		# Attempt to fetch the remote contents but suppress errors.
+		$r=@file_get_contents($remote_config_url . "?host=" . urlencode($host) . "&sign=" . md5($host . $remote_config_key),0,$ctx);
 		if ($r!==false)
 			{
 			# Fetch remote config was a success.
-			$remote_config=$r;
-			set_sysvar($remote_config_sysvar,$remote_config);
-			set_sysvar("remote_config-exp" .  $hostmd,time()+(60)); # Load again in one minute
+			
+			# Validate the return to make sure it's an expected config file
+			# The last 33 characters must be a hash and the sign of the previous characters.
+			$sign=substr($r,-32); # Last 32 characters is a signature
+			$r=substr($r,0,strlen($r)-33);
+			if ($sign==md5($remote_config_key . $r))
+					{
+					$remote_config=$r;
+					set_sysvar($remote_config_sysvar,$remote_config);
+					set_sysvar("remote_config-exp" .  $hostmd,time()+(60)); # Load again in one minute
+					}
+			else
+					{
+					# Validation of returned config failed. Possibly the remote config server is misconfigured or having issues.
+					# Proceed with old config and do not try again for 10 minutes.
+					set_sysvar("remote_config-exp" .  $hostmd,time()+(60*10)); 
+					}
 			}
 		else
 			{
