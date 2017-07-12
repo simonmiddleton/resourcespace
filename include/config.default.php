@@ -295,10 +295,13 @@ $slideshow_photo_delay = 5;
 /** Dash Config Options **/
 # Enable home dash functionality (on by default, recommended)
 $home_dash = true;
+
 # Define the available styles per type.
-$tile_styles['srch'] = array('thmbs', 'multi', 'blank');
-$tile_styles['ftxt'] = array('ftxt');
-$tile_styles['conf'] = array('blank');
+$tile_styles['srch']  = array('thmbs', 'multi', 'blank');
+$tile_styles['ftxt']  = array('ftxt');
+$tile_styles['conf']  = array('blank');
+$tile_styles['fcthm'] = array('thmbs', 'multi', 'blank');
+
 # Place the default dash (tiles set for all_users) on the home page for anonymous users with none of the drag 'n' drop functionality.
 $anonymous_default_dash=true;
 # use shadows on all tile content (Built in support for transparent tiles)

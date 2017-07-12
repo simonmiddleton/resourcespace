@@ -480,23 +480,58 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 							</div><!-- End of FeaturedSimpleTileContents_<?php echo md5($headers[$n]);?>-->
 							
 						</a>
-						
 					<?php
-					if((checkperm("h") && $enable_theme_category_sharing) || ($enable_theme_category_edit && checkperm("t")))
-						{
-						$editlink=$baseurl_short."pages/theme_edit.php?theme1=" . urlencode((!isset($themes[0]))? $headers[$n]:$themes[0]);
-						$sharelink=$baseurl_short."pages/theme_category_share.php?theme1=" . urlencode((!isset($themes[0]))? $headers[$n]:$themes[0]);
-						for ($x=2;$x<count($themes)+2;$x++){
-							if (isset($headers[$n])){
-								$link.="&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
-								$headerlink.="&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
-								$editlink.="&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
-								$sharelink.="&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
-							}
-						}
-						?>	
+                    // 
+                    if((checkperm("h") && $enable_theme_category_sharing) || ($enable_theme_category_edit && checkperm("t")))
+                        {
+                        $editlink  = $baseurl_short . 'pages/theme_edit.php?theme1=' . urlencode(!isset($themes[0]) ? $headers[$n] : $themes[0]);
+                        $sharelink = $baseurl_short . 'pages/theme_category_share.php?theme1=' . urlencode(!isset($themes[0]) ? $headers[$n] : $themes[0]);
+
+                        $additional_dash_tile_link_params['theme1'] = !isset($themes[0]) ? $headers[$n] : $themes[0];
+
+                        for($x = 2; $x < count($themes) + 2; $x++)
+                            {
+                            if(isset($headers[$n]))
+                                {
+                                $link       .= "&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
+                                $headerlink .= "&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
+                                $editlink   .= "&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
+                                $sharelink  .= "&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
+
+                                $additional_dash_tile_link_params["theme{$x}"] = !isset($themes[$x - 1]) ? (!isset($themes[$x - 2]) ? '' : $headers[$n]) : $themes[$x - 1];
+                                }
+                            }
+
+                        $dash_tile_link = generateURL(
+                            "{$baseurl_short}pages/dash_tile.php",
+                            array(
+                                'create'         => 'true',
+                                'submitdashtile' => 'true',
+                                'tltype'         => 'fcthm',
+                                'tlstyle'        => 'blank',
+                                'title'          => "{$headers[$n]}",
+                                'tile_audience'  => 'false',
+                                'link'           => generateURL(
+                                    "{$baseurl_short}pages/themes.php",
+                                    array('simpleview' => 'true'),
+                                    $additional_dash_tile_link_params
+                                ),
+                            )
+                        );
+                        ?>
 						<div id="FeaturedSimpleTileActions_<?php echo md5($headers[$n]); ?>" class="FeaturedSimpleTileActions"  style="display:none;">
 						<?php
+                        if(checkPermission_dashmanage())
+                            {
+                            ?>
+                            <div class="tool">
+                                <a href="<?php echo $dash_tile_link; ?>" onClick="return CentralSpaceLoad(this, true);">
+                                    <span><?php echo LINK_CARET ?><?php echo $lang['savethissearchtodash']; ?></span>
+                                </a>
+                            </div>
+                            <?php
+                            }
+
 						if (checkperm("h") && $enable_theme_category_sharing)
 							{?>
 							<div class="tool">

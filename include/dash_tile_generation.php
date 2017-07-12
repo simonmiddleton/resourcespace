@@ -63,6 +63,28 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
 							exit;
 			}
 		}
+
+    // Featured collection - themes specific tiles
+    if('fcthm' == $tile_type)
+        {
+        switch($tile_style)
+            {
+            case 'thmbs':
+                // tile_featured_collection_thumbs($tile, $tile_id, getvalescaped('promimg', 0));
+                break;
+
+            case 'multi':
+                // tile_featured_collection_multi($tile, $tile_id);
+                break;
+
+            case 'blank':
+            default:
+                tile_featured_collection_blank($tile, $tile_id);
+                break;
+            }
+
+        exit();
+        }
 	}
 
 /*
@@ -562,3 +584,37 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 		}
 	}
 
+function tile_featured_collection_blank($tile, $tile_id)
+    {
+    global $baseurl_short, $lang, $dash_tile_shadows;
+    ?>
+    <h2>
+        <span class='fa fa-folder'></span>
+        <?php
+        if('' != $tile['title'])
+            {
+            echo htmlspecialchars(i18n_get_translated($tile['title']));
+            }
+        else if('' != $tile['txt'])
+            {
+            echo htmlspecialchars(i18n_get_translated($tile['txt']));
+            }
+        ?>
+    </h2>
+    <?php
+    if('' != $tile['title'] && '' != $tile['txt'])
+        { 
+        ?>
+        <p><?php echo htmlspecialchars(i18n_get_translated($tile['txt'])); ?></p>
+        <?php
+        }
+
+    if(!$dash_tile_shadows)
+        {
+        ?>
+        <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
+        <?php
+        }
+
+    return;
+    }
