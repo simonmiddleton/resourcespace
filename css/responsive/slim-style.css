@@ -207,6 +207,7 @@
         height: auto;
         float: none;
         clear: both;
+        text-align: right;
     }
     #HeaderNav2 {
         display:none;
@@ -971,3 +972,4 @@
         display:none;
     }
 }
+
