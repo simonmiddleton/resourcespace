@@ -874,7 +874,10 @@ a.HomePanel:hover {
 	clear: left;
 	font-size:1em;
 }
-
+.DoubleWidthDashTile {
+    /*Note: check .HomePanel width to be sure it is ok*/
+    width: 515px;
+}
 
 .tools a{white-space: nowrap;}
 #delete_dialog {display:none !important;}

@@ -994,11 +994,13 @@ function get_user_dash($user)
 
         $tile_custom_style = '';
 
+        $buildstring = explode('?', $tile['url']);
+        parse_str(str_replace('&amp;', '&', $buildstring[1]), $buildstring);
+
+        $tlsize = (isset($buildstring['tlsize']) ? $buildstring['tlsize'] : '');
+
         if($dash_tile_colour)
             {
-            $buildstring = explode('?', $tile['url']);
-            parse_str(str_replace('&amp;', '&', $buildstring[1]), $buildstring);
-
             if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
                 {
                 $tile_custom_style .= get_tile_custom_style($buildstring);
@@ -1021,7 +1023,7 @@ function get_user_dash($user)
 			?>
 			href="<?php echo parse_dashtile_link($link)?>" <?php echo $newtab ? "target='_blank'" : "";?> 
 			onClick="if(dragging){dragging=false;e.defaultPrevented}<?php echo $newtab? "": "return " . ($help_modal && strpos($link,"pages/help.php")!==false?"ModalLoad(this,true);":"CentralSpaceLoad(this,true);");?>" 
-			class="HomePanel DashTile DashTileDraggable <?php echo ($tile['all_users']==1)? 'allUsers':'';?>"
+			class="HomePanel DashTile DashTileDraggable <?php echo ($tile['all_users']==1)? 'allUsers':'';?> <?php echo ('double' == $tlsize ? 'DoubleWidthDashTile' : ''); ?>"
 			tile="<?php echo $tile['tile']; ?>"
 			id="user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>"
 		>

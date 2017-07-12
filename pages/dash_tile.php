@@ -26,7 +26,9 @@ $error=false;
 $submitdashtile=getvalescaped("submitdashtile",FALSE);
 if($submitdashtile)
 	{
-	$buildurl=getvalescaped("url","");
+	$buildurl = getvalescaped("url","");
+    $tlsize   = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
+
 	if ($buildurl=="")
 		{
         $new_buildurl_tltype        = getvalescaped('tltype', '');
@@ -34,7 +36,7 @@ if($submitdashtile)
         $new_buildurl_tlstylecolour = urlencode(getvalescaped('tlstylecolour', ''));
 
 		# No URL provided - build a URL (standard title types).
-		$buildurl = "pages/ajax/dash_tile.php?tltype={$new_buildurl_tltype}&tlstyle={$new_buildurl_tlstyle}";
+		$buildurl = "pages/ajax/dash_tile.php?tltype={$new_buildurl_tltype}&tlsize={$tlsize}&tlstyle={$new_buildurl_tlstyle}";
 
         if('' != $new_buildurl_tltype && allow_tile_colour_change($new_buildurl_tltype) && '' != $new_buildurl_tlstylecolour)
             {
@@ -147,6 +149,11 @@ if($submitdashtile)
 			{
 			$buildurl = str_replace("promimg=".$buildstring["promimg"],"promimg=".$promoted_image,$buildurl);
 			}
+
+        if(isset($buildstring['tlsize']))
+            {
+            $buildurl = str_replace("tlsize={$buildstring['tlsize']}", "tlsize={$tlsize}", $buildurl);
+            }
 
 		if(($tile["all_users"] || $all_users ) && checkPermission_dashadmin())
             {
@@ -420,7 +427,9 @@ else if($edit)
 		}
 	
 	$promoted_resource=isset($buildstring["promimg"])? $buildstring["promimg"] : FALSE;
-	
+
+    $tlsize = (isset($buildstring['tlsize']) && 'double' === $buildstring['tlsize'] ? $buildstring['tlsize'] : '');
+
 	$modifylink = ($tile_type=="ftxt") ? TRUE: FALSE;
 	
 	$notitle = isset($buildstring["nottitle"])? TRUE : FALSE;
@@ -492,7 +501,19 @@ if(!$validpage)
 		</div>
 		<?php
 		}
+        ?>
 
+    <!-- Dash tile size selector -->
+    <div class="Question">
+        <label for="tlsize"><?php echo $lang['size']; ?></label>
+        <select id="DashTileSize" class="stdwidth" name="tlsize" onchange="updateDashTilePreview();">
+            <option value=""><?php echo $lang['single']; ?></option>
+            <option value="double"<?php echo ('double' === $tlsize ? ' selected' : ''); ?>><?php echo $lang['double']; ?></option>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+
+    <?php
 	if (!$tile_nostyle)
 		{
 		if(isset($tile_style))
@@ -702,14 +723,24 @@ if(!$validpage)
 			prevstyle = '<?php echo isset($tile_style) ? $tile_style : ""; ?>';
 			}
 
+        // Change size if needed:
+        jQuery('#previewdashtile').removeClass('DoubleWidthDashTile');
+        if('double' == jQuery('#DashTileSize :selected').val()
+            || (typeof event !== 'undefined' && event.type == 'change' && 'double' == jQuery(event.target).val())
+        )
+            {
+            jQuery('#previewdashtile').addClass('DoubleWidthDashTile');
+            }
+
 		jQuery("#previewdashtile").load("<?php echo $previewurl; ?>?tltype=<?php echo urlencode($tile_type)?>&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
 	}
+
 	updateDashTilePreview();
 	jQuery("#previewtitle").change(updateDashTilePreview);
 	jQuery("#previewtext").change(updateDashTilePreview);
 	jQuery("#resource_count").change(updateDashTilePreview);
 	jQuery(".tlstyle").change(updateDashTilePreview);
-	jQuery("#promotedresource").change(updateDashTilePreview);
+    jQuery("#promotedresource").change(updateDashTilePreview);
 </script>
 <?php
 include "../include/footer.php";
