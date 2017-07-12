@@ -305,7 +305,7 @@ else
 							}
 											
 						// Thumbnail property
-						$response["thumbnail"] = iiif_get_thumbnail($identifier, $iiif_results);
+						$response["thumbnail"] = iiif_get_thumbnail($iiif_results[0]["ref"], $iiif_results);
 						
 						// Sequences
 						$response["sequences"] = array();                    

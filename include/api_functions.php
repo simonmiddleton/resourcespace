@@ -169,23 +169,23 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     return $return;
     }
 
-function iiif_get_thumbnail($identifier, $iiif_results)
+function iiif_get_thumbnail($resourceid, $iiif_results)
     {
-	global $rooturl;
+	global $rootimageurl;
 	$thumbnail = array();
-	$thumbnail["@id"] = $rooturl . $identifier . "/full/thm/0/default.jpg";
+	$thumbnail["@id"] = $rootimageurl . $resourceid . "/full/thm/0/default.jpg";
 	$thumbnail["@type"] = "dctypes:Image";
 	
 	 // Get the size of the images
-	$img_path = get_resource_path($iiif_results[0]["ref"],true,'thm',false);
-	$image_size = get_original_imagesize($iiif_results[0]["ref"],$img_path);
+	$img_path = get_resource_path($resourceid,true,'thm',false);
+	$image_size = get_original_imagesize($resourceid,$img_path);
 	$thumbnail["height"] = intval($image_size[1]);
 	$thumbnail["width"] = intval($image_size[2]);
 	$thumbnail["format"] = "image/jpeg";
 	
 	$thumbnail["service"] =array();
 	$thumbnail["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
-	$thumbnail["service"]["@id"] = $rooturl . "image/";
+	$thumbnail["service"]["@id"] = $rootimageurl;
 	$thumbnail["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
 	return $thumbnail;
 	}
