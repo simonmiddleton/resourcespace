@@ -3329,3 +3329,13 @@ $facial_recognition_tag_field = null;
 $facial_recognition_face_recognizer_models_location = '';
 #######################################
 #######################################
+
+
+# Ability to connect to a remote system for the loading of configuration. Can be used to create a multi-instance setup, where one ResourceSpace
+# installation can connect to different databases / set different filestore paths depending on the URL, and be driven from a central management
+# system that provides the configuration.
+#
+# $remote_config_url="http://remote-config.mycompany.com";
+# $remote_config_key=""; # The baseurl will be hashed with this key and passed as an &sign= value.
+
+
