@@ -120,12 +120,12 @@ if (isset($remote_config_url) && isset($_SERVER["HTTP_HOST"]))
 		# Local cache exists and has not expired.
 		}
 	else
-		{
+		{ 
 		# Cache not present or has expired.
 		# Fetch new config and store. Set a very low timeout of 2 seconds so the config server going down does not take down the site.
 		$ctx = stream_context_create(array('http' => array('timeout' => 2),'https' => array('timeout' => 2)));
 		# Attempt to fetch the remote contents but suppress errors.
-		$r=@file_get_contents($remote_config_url . "?host=" . urlencode($host) . "&sign=" . md5($host . $remote_config_key),0,$ctx);
+		$r=@file_get_contents($remote_config_url . "?host=" . urlencode($host) . "&sign=" . md5($remote_config_key . $host),0,$ctx);
 		if ($r!==false)
 			{
 			# Fetch remote config was a success.
