@@ -121,7 +121,7 @@ if($submitdashtile)
                 {
                 if(isset($buildstring['tlstylecolour']))
                     {
-                    $buildurl = str_replace("tlstylecolour={$buildstring['tlstylecolour']}", "tlstylecolour={$tlstylecolour}", $buildurl);
+                    $buildurl = str_replace('tlstylecolour=' . urlencode($buildstring['tlstylecolour']), "tlstylecolour={$tlstylecolour}", $buildurl);
                     }
                 else
                     {
