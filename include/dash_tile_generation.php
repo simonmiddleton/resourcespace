@@ -70,11 +70,11 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
         switch($tile_style)
             {
             case 'thmbs':
-                // tile_featured_collection_thumbs($tile, $tile_id, getvalescaped('promimg', 0));
+                tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_height, getvalescaped('promimg', 0));
                 break;
 
             case 'multi':
-                // tile_featured_collection_multi($tile, $tile_id);
+                // tile_featured_collection_multi($tile, $tile_width, $tile_height, $tile_id);
                 break;
 
             case 'blank':
@@ -583,6 +583,115 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 		<?php
 		}
 	}
+
+
+function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_height, $promoted_image)
+    {
+    global $baseurl_short, $lang, $dash_tile_shadows;
+
+    if(0 < $promoted_image)
+        {
+        $promoted_image_data = get_resource_data($promoted_image);
+
+        if(false !== $promoted_image_data)
+            {
+            $preview_resource = $promoted_image_data;
+            }
+
+        $no_preview = false;
+
+        $preview_path = get_resource_path($preview_resource['ref'], true, 'pre', false, 'jpg', -1, 1, false);
+        if(file_exists($preview_path))
+            {
+            $preview_path = get_resource_path($preview_resource['ref'], false, 'pre', false, 'jpg', -1, 1, false);
+            }
+        else
+            {
+            $preview_path  = "{$baseurl_short}gfx/";
+            $preview_path .= get_nopreview_icon($preview_resource['resource_type'], $preview_resource['file_extension'], false);
+            $no_preview    = true;
+            }
+        ?>
+        <img 
+            src="<?php echo $preview_path; ?>" 
+            <?php 
+            if($no_preview)
+                {
+                ?>
+                style="position:absolute; top:<?php echo ($tile_height - 128) / 2; ?>px;left:<?php echo ($tile_width - 128) / 2; ?>px;"
+                <?php
+                }
+            else 
+                {
+                // fit image to tile size
+                if(($preview_resource['thumb_width'] * 0.7) >= $preview_resource['thumb_height'])
+                    {
+                    $ratio = $preview_resource['thumb_height'] / $tile_height;
+                    $width = $preview_resource['thumb_width'] / $ratio;
+
+                    if($width < $tile_width)
+                        {
+                        echo 'width="100%" ';
+                        }
+                    else
+                        {
+                        echo 'height="100%" ';
+                        }
+                    }
+                else
+                    {
+                    $ratio  = $preview_resource['thumb_width'] / $tile_width;
+                    $height = $preview_resource['thumb_height'] / $ratio;
+
+                    if($height < $tile_height)
+                        {
+                        echo 'height="100%" ';
+                        }
+                    else
+                        {
+                        echo 'width="100%" ';
+                        }
+                    }
+                ?>
+                style="position:absolute;top:0;left:0;"
+                <?php
+                }?>
+            class="thmbs_tile_img"
+        />
+        <?php
+        }
+        ?>
+    <h2>
+        <span class='fa fa-folder'></span>
+        <?php
+        if('' != $tile['title'])
+            {
+            echo htmlspecialchars(i18n_get_translated($tile['title']));
+            }
+        else if('' != $tile['txt'])
+            {
+            echo htmlspecialchars(i18n_get_translated($tile['txt']));
+            }
+        ?>
+    </h2>
+    <?php
+    if('' != $tile['title'] && '' != $tile['txt'])
+        { 
+        ?>
+        <p><?php echo htmlspecialchars(i18n_get_translated($tile['txt'])); ?></p>
+        <?php
+        }
+
+    if(!$dash_tile_shadows)
+        {
+        ?>
+        <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
+        <?php
+        }
+
+    return;
+    }
+
 
 function tile_featured_collection_blank($tile, $tile_id)
     {

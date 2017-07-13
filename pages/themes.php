@@ -505,13 +505,14 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
                         $dash_tile_link = generateURL(
                             "{$baseurl_short}pages/dash_tile.php",
                             array(
-                                'create'         => 'true',
-                                'submitdashtile' => 'true',
-                                'tltype'         => 'fcthm',
-                                'tlstyle'        => 'blank',
-                                'title'          => "{$headers[$n]}",
-                                'tile_audience'  => 'false',
-                                'link'           => generateURL(
+                                'create'            => 'true',
+                                'tltype'            => 'fcthm',
+                                'tlstyle'           => 'thmbs',
+                                'title'             => "{$headers[$n]}",
+                                'freetext'          => 'true',
+                                'tile_audience'     => 'false',
+                                'promoted_resource' => 'true',
+                                'link'              => generateURL(
                                     "{$baseurl_short}pages/themes.php",
                                     array('simpleview' => 'true'),
                                     $additional_dash_tile_link_params

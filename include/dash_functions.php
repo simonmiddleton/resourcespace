@@ -1464,3 +1464,23 @@ function delete_usergroup_dash_tile($tile,$group)
     sql_query("DELETE FROM usergroup_dash_tile WHERE usergroup = '{$group}' AND dash_tile = '{$tile}'");					
 	sql_query("DELETE ud.* FROM user_dash_tile ud LEFT JOIN user u ON ud.user=u.ref LEFT JOIN usergroup ug ON ug.ref=u.usergroup WHERE ud.dash_tile='" . $tile . "' and ug.ref='" . $group . "'");
 	}
+
+
+/**
+* Confirms whether a dash tile type allows for promoted resources
+* 
+* @param string $tile_type
+* 
+* @return boolean
+*/
+function allowPromotedResources($tile_type)
+    {
+    if('' === trim($tile_type))
+        {
+        return false;
+        }
+
+    $allowed_types = array('srch', 'fcthm');
+
+    return in_array($tile_type, $allowed_types);
+    }
