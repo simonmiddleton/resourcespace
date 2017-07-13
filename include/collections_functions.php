@@ -1382,6 +1382,9 @@ function add_saved_search_items($collection)
 				{
 				sql_query("delete from collection_resource where resource='$resource' and collection='$collection'");
 				sql_query("insert into collection_resource(resource,collection) values ('$resource','$collection')");
+				
+				#log this
+				collection_log($collection,"a",$resource);
 				}
 			}
 		}
