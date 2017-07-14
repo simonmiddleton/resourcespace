@@ -564,7 +564,7 @@ if(!$validpage)
 		}
 
     // Show promoted resource selector
-    if($promoted_resource && allowPromotedResources($tile_type))
+    if($promoted_resource && allowPromotedResources($tile_type) && 'thmbs' == $tile_style)
         {
         $resources = array();
 
@@ -740,6 +740,12 @@ if(!$validpage)
 		var prelink= encodeURIComponent(jQuery("#previewlink").val());
 		var tile = "&tllink="+prelink+"&tltitle="+pretitle+"&tltxt="+pretxt;
         var tlsize = encodeURIComponent(jQuery('#DashTileSize :selected').val());
+
+        // Some tile types don't have style
+        if(typeof prevstyle === 'undefined')
+            {
+            prevstyle = '<?php echo isset($tile_style) ? $tile_style : ""; ?>';
+            }
 		<?php
 		if($tile_type=="srch")
 			{?>	
@@ -765,12 +771,6 @@ if(!$validpage)
 		else
 			{$previewurl=$baseurl_short.$url;}
 		?>
-
-		// Some tile types don't have style
-		if(typeof prevstyle === 'undefined')
-			{
-			prevstyle = '<?php echo isset($tile_style) ? $tile_style : ""; ?>';
-			}
 
         // Change size if needed:
         jQuery('#previewdashtile').removeClass('DoubleWidthDashTile');
