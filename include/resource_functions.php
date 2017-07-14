@@ -2031,7 +2031,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
 	{
 	global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
 
-    if(($resource===RESOURCE_LOG_APPEND_PREVIOUS && !isset($resource_log_previous_ref)) || ($resource!==RESOURCE_LOG_APPEND_PREVIOUS && $resource<0))
+    if(($resource === RESOURCE_LOG_APPEND_PREVIOUS && !isset($resource_log_previous_ref)) || ($resource !== RESOURCE_LOG_APPEND_PREVIOUS && $resource < 0))
         {
         return false;
         }
@@ -2061,24 +2061,36 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
                 $diff = $tovalue;
                 break;
 
-            default:
-                $diff = log_diff($fromvalue, $tovalue);
+            default:                
+                if ($fromvalue == "")
+                    {
+                    $diff = $tovalue;
+                    }
+                else
+                    {
+                    if(strlen($tovalue)>60000)
+                        {
+                        // Trim this as it can cause out of memory errors with class.Diff.php e.g.when cresatng previews for large PDF files
+                        $tovalue = substr($tovalue,60000);
+                        }
+                    $diff = log_diff($fromvalue, $tovalue);
+                    }
             }
         }
 
 	$modifiedlogtype=hook("modifylogtype","",array($type));
 	if ($modifiedlogtype)
         {
-        $type=$modifiedlogtype;
+        $type = $modifiedlogtype;
         }
 	
 	$modifiedlognotes=hook("modifylognotes","",array($notes,$type,$resource));
 	if($modifiedlognotes)
         {
-        $notes=$modifiedlognotes;
+        $notes = $modifiedlognotes;
         }
 
-    if ($resource===RESOURCE_LOG_APPEND_PREVIOUS)
+    if ($resource === RESOURCE_LOG_APPEND_PREVIOUS)
         {
         sql_query("UPDATE `resource_log` SET `diff`=left(concat(`diff`,'\n','" . escape_check($diff) . "'),60000) WHERE `ref`=" . $resource_log_previous_ref);
         return $resource_log_previous_ref;
@@ -2089,8 +2101,8 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
             "`purchase_price`, `access_key`, `previous_value`) VALUES (now()," .
             (($userref != "") ? "'$userref'" : "null") . ",'{$resource}','{$type}'," . (($field=="") ? "null" : "'{$field}'") . ",'" . escape_check($notes) . "','" .
             escape_check($diff) . "','{$usage}','{$purchase_size}','{$purchase_price}'," . ((isset($k) && !$internal_share_access) ? "'{$k}'" : "null") . ",'" . escape_check($fromvalue) . "')");
-        $log_ref=sql_insert_id();
-        $resource_log_previous_ref=$log_ref;
+        $log_ref = sql_insert_id();
+        $resource_log_previous_ref = $log_ref;
         return $log_ref;
         }
 	}

@@ -115,9 +115,9 @@ if (isset($remote_config_url) && isset($_SERVER["HTTP_HOST"]))
 	# Look for configuration for this host (supports multiple hosts)
 	$remote_config_sysvar="remote-config-" . $hostmd; # 46 chars (column is 50)
 	$remote_config=get_sysvar($remote_config_sysvar);
-	if ($remote_config!==false && get_sysvar("remote_config-exp" .  $hostmd)>time())
+	if ($remote_config!==false && get_sysvar("remote_config-exp" .  $hostmd)>time() && !isset($_GET["reload_remote_config"]))
 		{
-		# Local cache exists and has not expired.
+		# Local cache exists and has not expired. Use this copy.
 		}
 	else
 		{ 
@@ -138,20 +138,19 @@ if (isset($remote_config_url) && isset($_SERVER["HTTP_HOST"]))
 					{
 					$remote_config=$r;
 					set_sysvar($remote_config_sysvar,$remote_config);
-					set_sysvar("remote_config-exp" .  $hostmd,time()+(60)); # Load again in one minute
 					}
 			else
 					{
 					# Validation of returned config failed. Possibly the remote config server is misconfigured or having issues.
-					# Proceed with old config and do not try again for 10 minutes.
-					set_sysvar("remote_config-exp" .  $hostmd,time()+(60*10)); 
+					# Do nothing; proceed with old config and try again later.
 					}
 			}
 		else
 			{
 			# The attempt to fetch the remote configuration failed.
-			set_sysvar("remote_config-exp" .  $hostmd,time()+(60*10)); # Don't try again for another 10 minutes. We don't want to slow down every access while the config server is offline.
+			# Do nothing; the cached copy will be used and we will try again later.
 			}
+		set_sysvar("remote_config-exp" .  $hostmd,time()+(60*10)); # Load again (or try again if failed) in ten minutes
 		}
 	# Load and use the config
 	eval($remote_config);

@@ -465,11 +465,12 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 					}
 					?>		
 					
-					<div id="FeaturedSimpleTile_<?php echo md5($headers[$n]);?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile <?php if($themes_simple_images){echo " TileContentShadow";}
+					<div id="FeaturedSimpleTile_<?php echo md5($headers[$n]);?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile <?php if($themes_simple_images){echo " TileContentShadow ";}
+						echo strip_tags_and_attributes(trim(htmlspecialchars(str_replace(" ","",$headers[$n]))));
 						if($theme_image_path!="")
 							{	
 							echo " FeaturedSimpleTileImage\" style=\"background: url(" . $theme_image_path . ");background-size: cover;";
-							}?><?php echo strip_tags_and_attributes(trim(htmlspecialchars(str_replace(" ","",$headers[$n]))));?>">
+							}?>">
 						<a href="<?php echo $link; ?>" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_<?php echo md5($headers[$n]);?> ">
 							<div id="FeaturedSimpleTileContents_<?php echo md5($headers[$n]) ; ?>"  class="FeaturedSimpleTileContents">
 							<div class="FeaturedSimpleTileText">
