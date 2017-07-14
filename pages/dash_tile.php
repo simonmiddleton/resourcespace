@@ -564,7 +564,7 @@ if(!$validpage)
 		}
 
     // Show promoted resource selector
-    if($promoted_resource && allowPromotedResources($tile_type) && 'thmbs' == $tile_style)
+    if($promoted_resource && allowPromotedResources($tile_type))
         {
         $resources = array();
 
@@ -631,6 +631,11 @@ if(!$validpage)
             <div class="clearerleft"> </div>
         </div>
         <script>
+        if(!jQuery('#tile_style_thmbs').prop('checked'))
+            {
+            jQuery('#promotedresource').hide();
+            }
+
         jQuery('.tlstyle').change(function()
             {
                 checked = jQuery('.tlstyle:checked').val();
