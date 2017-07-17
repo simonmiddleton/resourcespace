@@ -62,7 +62,6 @@ else
                 
                 $img_path = get_resource_path($resourceid,true,'',false);
                 $image_size = get_original_imagesize($resourceid,$img_path);
-                //print_r($image_size);
                 $response["width"] = $image_size[1];
                 $response["height"] = $image_size[2];
                 
@@ -180,7 +179,7 @@ else
 		$iiif_field = get_resource_type_field($iiif_identifier_field);
 		$iiif_search = $iiif_field["name"] . ":" . $identifier;
 		$iiif_results = do_search($iiif_search);
-        //print_r($iiif_results);
+		
         if(is_array($iiif_results) && count($iiif_results)>0)
 			{	
 			if(!isset($xpath[1]))
@@ -200,7 +199,38 @@ else
 					}
 				else
 					{
-					if($xpath[1] == "manifest")
+					// Add sequence position information
+					$resultcount = count($iiif_results);
+				    for ($n=0;$n<$resultcount;$n++)
+						{
+						if(isset($iiif_sequence_field))
+							{
+							if(isset($iiif_results[$n]["field" . $iiif_sequence_field]))
+								{
+								$position = $iiif_results[$n]["field" . $iiif_sequence_field];
+								}
+							else
+								{
+								$position = get_data_by_field($iiif_results[$n]["ref"],$iiif_sequence_field);
+								}
+							$position_field=get_resource_type_field($iiif_sequence_field);
+							$position_prefix = $position_field["name"] . " ";
+							}
+						else
+							{
+							$position = $n;
+							}
+						debug("iiif position" . $position);
+						$iiif_results[$n]["iiif_position"] = $position;
+						}
+						
+					// Sort by position
+					usort($iiif_results, function($a, $b)
+						{
+						return $a['iiif_position'] - $b['iiif_position'];
+						});
+						
+					if($xpath[1] == "manifest" || $xpath[1] == "")
 						{
 						/* MANIFEST REQUEST - see http://iiif.io/api/presentation/2.1/#manifest */
 						
@@ -324,9 +354,6 @@ else
 						// {scheme}://{host}/{prefix}/{identifier}/canvas/{name}
 						$canvasid = $xpath[2];
 						$allcanvases = iiif_get_canvases($identifier,$iiif_results,true);
-						//$sequenceids = array_keys($allcanvases);
-						//print_r($allcanvases);
-						//print_r($allcanvases[$canvasid]);
 						$response["@context"] =  "http://iiif.io/api/presentation/2/context.json";
 						$response = array_merge($response,$allcanvases[$canvasid]);                    
 						$validrequest = true;	
@@ -341,6 +368,35 @@ else
 							$response["label"] = "Default order";
 							$response["canvases"] = iiif_get_canvases($identifier,$iiif_results);
 							$validrequest = true;
+							}
+						}
+                    elseif($xpath[1] == "annotation")
+						{
+						// See http://iiif.io/api/presentation/2.1/#image-resources
+						$annotationid = $xpath[2]; 
+						
+						// Need to find the resourceid the annotation is linked to 			
+						foreach($iiif_results as $iiif_result)
+							{
+							if($iiif_result["iiif_position"] == $annotationid)
+								{
+								$resourceid = $iiif_result["ref"];
+								$validrequest = true;
+								break;
+								}
+							}
+						if($validrequest)
+							{
+							$response["@context"] = "http://iiif.io/api/presentation/2/context.json";
+							$response["@id"] = $rooturl . $identifier . "/annotation/" . $annotationid;
+							$response["@type"] = "oa:Annotation";
+							$response["motivation"] = "sc:painting";						
+							$response["resource"] =  iiif_get_image($identifier,$resourceid,$annotationid);
+							}
+						else
+							{
+							$errorcode=404;
+							$errors[] = "Invalid annotation identifier: " . $identifier;
 							}
 						}
 					}

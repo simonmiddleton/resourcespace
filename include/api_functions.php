@@ -63,97 +63,54 @@ function execute_api_call($query)
     return json_encode(eval($eval));
     }
     
-
+/**
+* Get an array of all the canvases for the identifier ready for JSON encoding
+* 
+* @uses get_data_by_field()
+* @uses get_original_imagesize()
+* @uses get_resource_type_field()
+* @uses get_resource_path()
+* @uses iiif_get_thumbnail()
+* @uses iiif_get_image()
+* 
+* @param integer $identifier		IIIF identifier (this associates resources via the metadata field set as $iiif_identifier_field
+* @param array $iiif_results		Array of ResourceSpace search results that match the $identifier, sorted 
+* @param boolean $sequencekeys		Get the array with each key matching the value set in the metadata field $iiif_sequence_field. By default the array will be sorted but have a 0 based index
+* 
+* @return array
+*/
 function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     {
-    global $rooturl,$rootimageurl,$iiif_sequence_field;	
-	
-	/*
-	{
-	// Metadata about this canvas
-	"@context": "http://iiif.io/api/presentation/2/context.json",
-	"@id": "http://example.org/iiif/book1/canvas/p1",
-	"@type": "sc:Canvas",
-	"label": "p. 1",
-	"height": 1000,
-	"width": 750,
-	"thumbnail" : {
-	  "@id" : "http://example.org/iiif/book1/canvas/p1/thumb.jpg",
-	  "@type": "dctypes:Image",
-	  "height": 200,
-	  "width": 150
-	},
-	"images": [
-	  {
-		"@type": "oa:Annotation"
-		// Link from Image to canvas should be included here, as below
-	  }
-	],
-	"otherContent": [
-	  {
-		// Reference to list of other Content resources, _not included directly_
-		"@id": "http://example.org/iiif/book1/list/p1",
-		"@type": "sc:AnnotationList"
-	  }
-	]
-  
-	}
-	*/
-		
+    global $rooturl,$rootimageurl;	
+			
     $canvases = array();
-    $position=0;
     foreach ($iiif_results as $iiif_result)
-        {
-        if(isset($iiif_sequence_field))
-            {
-            if(isset($iiif_result["field" . $iiif_sequence_field]))
-                {
-                $position = $iiif_result["field" . $iiif_sequence_field];
-                }
-            else
-                {
-                $position = get_data_by_field($iiif_result["ref"],$iiif_sequence_field);
-                }
-			$position_field=get_resource_type_field($iiif_sequence_field);
-			$position_prefix = $position_field["name"] . " ";
-            }
-        else
-            {
-            $position++;
-            }
-        debug("iiif position" . $position);
+        {       
+		$position = $iiif_result["iiif_position"];
         $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
         $canvases[$position]["@type"] = "sc:Canvas";
-        //$canvases[$position]["label"] = "Default order";
         $canvases[$position]["label"] = (isset($position_prefix)?$position_prefix:'') . $position;
         
         // Get the size of the images
         $img_path = get_resource_path($iiif_result["ref"],true,'',false);
+        
         $image_size = get_original_imagesize($iiif_result["ref"],$img_path);
         $canvases[$position]["height"] = intval($image_size[1]);
         $canvases[$position]["width"] = intval($image_size[2]);
+				
+		// "If the largest image’s dimensions are less than 1200 pixels on either edge, then the canvas’s dimensions should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
+		if($image_size[1] < 1200 || $image_size[2] < 1200)
+			{
+			$image_size[1] = $image_size[1] * 2;
+			$image_size[2] = $image_size[2] * 2;
+			}
         
-        // Add images
-        $canvases[$position]["images"] = array();
-        $canvases[$position]["images"][0]["@id"] = $rooturl . $iiif_result["ref"] . "/annotation/" . $position;
-        $canvases[$position]["images"][0]["@type"] = "oa:Annotation";
-        $canvases[$position]["images"][0]["motivation"] = "sc:painting";
+        $canvases[$position]["thumbnail"] = iiif_get_thumbnail($iiif_result["ref"]);
         
-        $canvases[$position]["images"][0]["resource"] = array();
-        $canvases[$position]["images"][0]["resource"]["@id"] = $rootimageurl . $iiif_result["ref"] . "/full/max/0/default.jpg";
-        $canvases[$position]["images"][0]["resource"]["@type"] = "dctypes:Image";
-        $canvases[$position]["images"][0]["resource"]["format"] = "image/jpeg";
-        $canvases[$position]["images"][0]["resource"]["service"] =array();
-        $canvases[$position]["images"][0]["resource"]["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
-        $canvases[$position]["images"][0]["resource"]["service"]["@id"] = $rooturl . "image/";
-        $canvases[$position]["images"][0]["resource"]["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
-        $canvases[$position]["images"][0]["on"] = $rooturl . $iiif_result["ref"] . "/canvas/" . $position;
-        $canvases[$position]["images"][0]["resource"]["height"] = intval($image_size[1]);
-        $canvases[$position]["images"][0]["resource"]["width"] = intval($image_size[2]);       
-        
+        // Add image (only 1 per canvas currently supported)
+        $canvases[$position]["images"] = iiif_get_image($identifier,$iiif_result["ref"],$position);		
         }
     
-	//print_r($canvases);
 	if($sequencekeys)
 		{
 		// keep the sequence identifiers as keys so a required canvas can be accessed by sequence id
@@ -169,7 +126,17 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     return $return;
     }
 
-function iiif_get_thumbnail($resourceid, $iiif_results)
+/**
+* Get  thumbnail information for the specified resource id ready for IIIF JSON encoding
+* 
+* @uses get_resource_path()
+* @uses getimagesize()
+* 
+* @param integer $resourceid		Resource ID
+*
+* @return array
+*/
+function iiif_get_thumbnail($resourceid)
     {
 	global $rootimageurl;
 	$thumbnail = array();
@@ -178,9 +145,18 @@ function iiif_get_thumbnail($resourceid, $iiif_results)
 	
 	 // Get the size of the images
 	$img_path = get_resource_path($resourceid,true,'thm',false);
-	$image_size = get_original_imagesize($resourceid,$img_path);
-	$thumbnail["height"] = intval($image_size[1]);
-	$thumbnail["width"] = intval($image_size[2]);
+    if ((list($tw,$th) = @getimagesize($img_path))!==false)
+        {
+        $thumbnail["height"] = $th;
+        $thumbnail["width"] = $tw;   
+        }
+    else
+        {
+        // Use defaults
+        $thumbnail["height"] = 150;
+        $thumbnail["width"] = 150;    
+        }
+            
 	$thumbnail["format"] = "image/jpeg";
 	
 	$thumbnail["service"] =array();
@@ -190,4 +166,41 @@ function iiif_get_thumbnail($resourceid, $iiif_results)
 	return $thumbnail;
 	}
 	
+/**
+* Get the image for the specified identifier canvas and resource id
+* 
+* @uses get_original_imagesize()
+* @uses get_resource_path()
+* 
+* @param integer $identifier		IIIF identifier (this associates resources via the metadata field set as $iiif_identifier_field
+* @param integer $resourceid		Resource ID
+* @param string $position			The canvas identifier, i..e position in the sequence. If $iiif_sequence_field is defined it will be the value of this metadata field for the given resource
+* 
+* @return array
+*/	
+function iiif_get_image($identifier,$resourceid,$position)
+    {
+    global $rooturl,$rootimageurl;
+	$images = array();
+	$images["@context"] = "http://iiif.io/api/presentation/2/context.json";
+	$images["@id"] = $rooturl . $identifier . "/annotation/" . $position;
+	$images["@type"] = "oa:Annotation";
+	$images["motivation"] = "sc:painting";
 	
+	$images["resource"] = array();
+	$images["resource"]["@id"] = $rootimageurl . $resourceid . "/full/max/0/default.jpg";
+	$images["resource"]["@type"] = "dctypes:Image";
+	$images["resource"]["format"] = "image/jpeg";
+	$images["resource"]["service"] =array();
+	$images["resource"]["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
+	$images["resource"]["service"]["@id"] = $rootimageurl;
+	$images["resource"]["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
+	$images["on"] = $rooturl . $identifier . "/canvas/" . $position;
+	
+	$img_path = get_resource_path($resourceid,true,'',false);
+	$image_size = get_original_imagesize($resourceid,$img_path);
+	
+	$images["height"] = intval($image_size[1]);
+	$images["width"] = intval($image_size[2]);
+	return $images;  
+	}
