@@ -3303,16 +3303,23 @@ $annotate_read_only = false;
 
 // When using anonymous users, set to TRUE to allow anonymous users to add/ edit/ delete annotations
 $annotate_crud_anonymous = false;
-#######################################
-#######################################
 
-// Enable IIIF interface. See http://iiif.io for information on the IIIF standard
-// IF set to true a 404 error handler must be configured on the web server for any paths under the <base_url?/iiif path
-$iiif_enabled=false;
-#$iiif_identifier_field=29;
-#$iiif_userid=6;
-#$$iiif_license_field=0
+
 #######################################
+################################  IIIF:
+#######################################
+// Enable IIIF interface. See http://iiif.io for information on the IIIF standard
+// If set to true a URL rewrite rule or similar must be configured on the web server for any paths under the <base_url>/iiif path
+$iiif_enabled = false;
+// Field that is used to hold the IIIF identifier e.g. if using TMS this may be the same as the TMS object field
+// $iiif_identifier_field = 29;
+//
+// Field that contains license information about the resource
+// $$iiif_license_field = 0;
+//
+// Field that defines the position of a particular resource in the default  sequence (only one sequence currently supported)
+// $iiif_sequence_field = 1;
+
 
 /*Prevent client side users to get access to the real path of the resource when ResourceSpace is using filestore URLs.
 Rather than use a URL like "http://yourdomain/filestore/1_6326bb8314c6c21/1pre_cf33a61f47b5982.jpg", it will use
@@ -3337,3 +3344,26 @@ $facial_recognition_tag_field = null;
 $facial_recognition_face_recognizer_models_location = '';
 #######################################
 #######################################
+
+
+# Ability to connect to a remote system for the loading of configuration. Can be used to create a multi-instance setup, where one ResourceSpace
+# installation can connect to different databases / set different filestore paths depending on the URL, and be driven from a central management
+# system that provides the configuration.
+#
+# # The last 33 characters of the returned config must be an MD5 hash and the key and the previous characters up until, but not including, the hash.
+/*
+ * For example, on the remote system that serves the configuration, to remotely configure the application name:
+
+    $remote_config_key="abcdef12345";
+
+    $config='
+    $applicationname="Test Remote Config ";
+    ';
+    
+    echo $config . "#" . md5($remote_config_key . $config);
+
+ */
+# $remote_config_url="http://remote-config.mycompany.com";
+# $remote_config_key=""; # The baseurl will be hashed with this key and passed as an &sign= value.
+
+

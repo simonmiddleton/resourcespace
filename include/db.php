@@ -102,6 +102,68 @@ if (file_exists(dirname(__FILE__)."/config.default.php")) {include dirname(__FIL
 if (!file_exists(dirname(__FILE__)."/config.php")) {header ("Location: pages/setup.php" );die(0);}
 include (dirname(__FILE__)."/config.php");
 
+
+
+# -------------------------------------------------------------------------------------------
+# Remote config support - possibility to load the configuration from a remote system.
+#
+if (isset($remote_config_url) && isset($_SERVER["HTTP_HOST"]))
+	{
+	sql_connect(); # Connect a little earlier
+	$host=$_SERVER['HTTP_HOST'];$hostmd=md5($host);
+	
+	# Look for configuration for this host (supports multiple hosts)
+	$remote_config_sysvar="remote-config-" . $hostmd; # 46 chars (column is 50)
+	$remote_config=get_sysvar($remote_config_sysvar);
+	if ($remote_config!==false && get_sysvar("remote_config-exp" .  $hostmd)>time() && !isset($_GET["reload_remote_config"]))
+		{
+		# Local cache exists and has not expired. Use this copy.
+		}
+	else
+		{ 
+		# Cache not present or has expired.
+		# Fetch new config and store. Set a very low timeout of 2 seconds so the config server going down does not take down the site.
+		$ctx = stream_context_create(array('http' => array('timeout' => 2),'https' => array('timeout' => 2)));
+		# Attempt to fetch the remote contents but suppress errors.
+		$r=@file_get_contents($remote_config_url . "?host=" . urlencode($host) . "&sign=" . md5($remote_config_key . $host),0,$ctx);
+		if ($r!==false)
+			{
+			# Fetch remote config was a success.
+			
+			# Validate the return to make sure it's an expected config file
+			# The last 33 characters must be a hash and the sign of the previous characters.
+			$sign=substr($r,-32); # Last 32 characters is a signature
+			$r=substr($r,0,strlen($r)-33);
+			if ($sign==md5($remote_config_key . $r))
+					{
+					$remote_config=$r;
+					set_sysvar($remote_config_sysvar,$remote_config);
+					}
+			else
+					{
+					# Validation of returned config failed. Possibly the remote config server is misconfigured or having issues.
+					# Do nothing; proceed with old config and try again later.
+					}
+			}
+		else
+			{
+			# The attempt to fetch the remote configuration failed.
+			# Do nothing; the cached copy will be used and we will try again later.
+			}
+		set_sysvar("remote_config-exp" .  $hostmd,time()+(60*10)); # Load again (or try again if failed) in ten minutes
+		}
+	# Load and use the config
+	eval($remote_config);
+	}
+#
+# End of remote config support
+# ---------------------------------------------------------------------------------------------
+
+
+
+
+
+
 if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
     {
     // Add X-Frame-Options to HTTP header, so that page cannot be shown in an iframe unless specifically set in config.
@@ -394,11 +456,13 @@ function set_sysvar($name,$value=null)
     {
     $name=escape_check($name);
     $value=escape_check($value);
+	db_begin_transaction();
     sql_query("DELETE FROM `sysvars` WHERE `name`='{$name}'");
     if($value!=null)
         {
         sql_query("INSERT INTO `sysvars`(`name`,`value`) values('{$name}','{$value}')");
         }
+	db_end_transaction();
     }
 
 // get a system variable (which is received from the sysvars table)
