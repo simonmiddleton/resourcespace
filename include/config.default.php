@@ -633,6 +633,9 @@ $ffmpeg_use_qscale = true;
 # $ffmpeg_alternatives[1]["lines_min"]=480;
 # $ffmpeg_alternatives[1]["alt_type"]='mywebversion';
 
+# when using $originals_separate_storage=true, store $ffmpeg_alternatives with previews?
+$originals_separate_storage_ffmpegalts_as_previews=false;
+
 # To be able to run certain actions asyncronus (eg. preview transcoding), define the path to php:
 # $php_path="/usr/bin";
 

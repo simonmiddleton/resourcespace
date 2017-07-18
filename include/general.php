@@ -158,15 +158,40 @@ function get_resource_path(
 	#if (!file_exists(dirname(__FILE__) . $folder)) {mkdir(dirname(__FILE__) . $folder,0777);}
 	
 	# Original separation support
-	if($originals_separate_storage && $size=="")
+	if($originals_separate_storage)
 		{
-		# Original file (core file or alternative)
-		$path_suffix="/original/";
-		}
-	elseif($originals_separate_storage)
-		{
-		# Preview or thumb
-		$path_suffix="/resized/";
+		global $originals_separate_storage_ffmpegalts_as_previews;
+		if($alternative>0 && $originals_separate_storage_ffmpegalts_as_previews)
+			{
+			$alt_data=sql_query('select * from resource_alt_files where ref=' . $alternative);
+			if(!empty($alt_data))
+				{
+				// determin if this file was created from $ffmpeg_alternatives
+				$ffmpeg_alt=alt_is_ffmpeg_alternative($alt_data[0]);
+				if($ffmpeg_alt)
+					{
+					$path_suffix="/resized/";
+					}
+				else
+					{
+					$path_suffix="/original/";
+					}
+				}
+			else
+				{
+				$path_suffix="/original/";
+				}
+			}
+		elseif($size=="")
+			{
+			# Original file (core file or alternative)
+			$path_suffix="/original/";
+			}
+		else
+			{
+			# Preview or thumb
+			$path_suffix="/resized/";
+			}
 		}
 	else
 		{
@@ -6136,3 +6161,31 @@ function checkPreviewToolsOptionUniqueness($config_option)
 
     return (0 === $count_options_enabled ? true : false);
     }
+
+/**
+* Determine if a video alternative was created from $ffmpeg_alternatives settings.
+* Places in this file because get_resource_path relies on it
+* 
+* @param array $alternative Record line from resource_alt_files
+* 
+* @return boolean True means alternative was created from $ffmpeg_alternatives settings
+*/
+function alt_is_ffmpeg_alternative($alternative)
+	{
+	global $ffmpeg_alternatives;
+	
+	$alt_is_ffmpeg_alternative=false;
+	
+	if(isset($ffmpeg_alternatives) && !empty($ffmpeg_alternatives))
+		{
+		foreach($ffmpeg_alternatives as $alt_setting)
+			{
+			if($alternative['name']==$alt_setting['name'] && $alternative['file_name']==$alt_setting['filename'] . '.' . $alt_setting['extension'])
+				{
+				$alt_is_ffmpeg_alternative=true;
+				return $alt_is_ffmpeg_alternative;
+				}
+			}
+		}
+	return $alt_is_ffmpeg_alternative;
+	}
