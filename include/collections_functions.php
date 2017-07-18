@@ -1323,7 +1323,8 @@ function add_saved_search_items($collection)
 	{
 	global $collection_share_warning, $collection_allow_not_approved_share, $userref, $collection_block_restypes, $search_all_workflow_states;
 	# Adds resources from a search to the collection.
-	$archivesearch = getvalescaped("archive","",true);
+	$archivesearch = getvalescaped('archive', '');
+
 	if($search_all_workflow_states && 0 != $archivesearch)
 		{
 		$search_all_workflow_states = false;
