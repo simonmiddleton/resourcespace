@@ -93,6 +93,7 @@ $lang["documentation-permissions"]="See <a href=../../documentation/permissions.
 $lang["property-reference"]="Reference";
 $lang["property-name"]="Name";
 $lang["property-permissions"]="Permissions";
+$lang["property-permissions_inherit"]="Inherit from parent group";
 $lang["information-permissions"]="NOTE: Global permissions from config may also be in effect";
 $lang["property-fixed_theme"]="Fixed theme";
 $lang["property-parent"]="Parent";
@@ -100,6 +101,7 @@ $lang["property-search_filter"]="Search filter";
 $lang["property-edit_filter"]="Edit filter";
 $lang["property-resource_defaults"]="Resource defaults";
 $lang["property-override_config_options"]="Override config options";
+$lang["property-config_inherit"]="Inherit from parent group";
 $lang["property-email_welcome_message"]="Email welcome message";
 $lang["information-ip_address_restriction"]="Wildcards are supported for IP address restrictions, e.g. 128.124.*";
 $lang["property-ip_address_restriction"]="IP address restriction";

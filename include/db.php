@@ -2074,7 +2074,7 @@ function validate_user($user_select_sql, $getuserdata=true)
             "   SELECT u.ref,
                        u.username,
                        u.origin,
-                       g.permissions,
+                       if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions,
                        g.parent,
                        u.usergroup,
                        u.current_collection,
@@ -2091,15 +2091,16 @@ function validate_user($user_select_sql, $getuserdata=true)
                        g.name groupname,
                        u.ip_restrict ip_restrict_user,
                        u.search_filter_override,
-                       resource_defaults,
+                       g.resource_defaults,
                        u.password_last_change,
-                       g.config_options,
+                       if(find_in_set('config_options',g.inherit_flags) AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,
                        g.request_mode,
                        g.derestrict_filter,
                        u.hidden_collections,
                        u.accepted_terms
                   FROM user AS u
              LEFT JOIN usergroup AS g on u.usergroup = g.ref
+			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref
                  WHERE {$full_user_select_sql}"
         );
 

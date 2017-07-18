@@ -112,13 +112,19 @@ if (getval("save",false))
 			}
 
 	foreach (array("name","permissions","parent","search_filter","edit_filter","derestrict_filter",
-					"resource_defaults","config_options","welcome_message","ip_restrict","request_mode","allow_registration_selection") as $column)		
+					"resource_defaults","config_options","welcome_message","ip_restrict","request_mode","allow_registration_selection","inherit_flags") as $column)		
 		
 		{
-		if ($column=="allow_registration_selection")
+		if (in_array($column,array("allow_registration_selection")))
 			{
 			$val=getval($column,"0") ? "1" : "0";
 			}
+		
+		elseif($column=="inherit_flags" && getvalescaped($column,'')!="")
+			{
+			//exit(print_r(getval($column,'')));
+			$val=implode(",",getvalescaped($column,''));
+			}			
 		elseif($column=="parent")
 			{
 			$val=getval($column,0,true);
@@ -154,8 +160,7 @@ if (getval("save",false))
 	exit;
 	}
 
-$record = sql_query("select * from usergroup where ref={$ref}");
-$record = $record[0];
+$record = get_usergroup($ref);
 
 # prints out an option tag per config.default.php file and moves any comments to the label attribute.
 function dump_config_default_options()
@@ -222,14 +227,26 @@ include "../../include/header.php";
 
 		<div class="Question">			
 			<label for="permissions"><?php echo $lang["property-permissions"]; ?></label>
-			<input type="button" class="stdwidth" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo $ref . $url_params; ?>',true);" value="<?php echo $lang["launchpermissionsmanager"]; ?>"></input>						
-			<div class="clearerleft"></div>			
-			<label></label>
-			<textarea name="permissions" class="stdwidth" rows="5" cols="50"><?php echo $record['permissions']; ?></textarea>
-			<div class="clearerleft"></div>
-			<label></label>
-			<div><a href="../../documentation/permissions.txt" target="_blank"><?php echo $lang["documentation-permissions"]; ?></div>
-			<div class="clearerleft"></div>
+			
+			<?php if ($record['parent'])
+				{?>
+				<label><?php echo $lang["property-permissions_inherit"] ?></label>
+				<input id="permissions_inherit" name="inherit_flags[]" type="checkbox" value="permissions" onClick="if(jQuery('#permissions_inherit').is(':checked')){jQuery('#permissions_area').slideUp();}else{jQuery('#permissions_area').slideDown();}" <?php if(in_array("permissions",$record['inherit'])){echo "checked";} ?>>
+				<div class="clearerleft"></div>	
+				<?php 
+				}?>
+				
+			<div id ="permissions_area" <?php if(in_array("permissions",$record['inherit'])){echo "style=display:none;";} ?>>
+				<label></label>
+				<input type="button" class="stdwidth" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo $ref . $url_params; ?>',true);" value="<?php echo $lang["launchpermissionsmanager"]; ?>"></input>						
+				<div class="clearerleft"></div>			
+				<label></label>
+				<textarea name="permissions" class="stdwidth" rows="5" cols="50"><?php echo $record['permissions']; ?></textarea>
+				<div class="clearerleft"></div>
+				<label></label>
+				<div><a href="../../documentation/permissions.txt" target="_blank"><?php echo $lang["documentation-permissions"]; ?></div>
+				<div class="clearerleft"></div>
+			</div> <!-- End of permissions_area -->
 		</div>
 
 		<div class="Question">
@@ -292,9 +309,21 @@ include "../../include/header.php";
 		<?php if (!$execution_lockout) { ?>
 		<div class="Question">
 			<label for="config_options"><?php echo $lang["property-override_config_options"]; ?></label>
-			<textarea name="config_options" id="configOptionsBox" class="stdwidth" rows="12" cols="50"><?php echo $record['config_options']; ?></textarea>
-			<div class="clearerleft"></div>
-<?php
+			
+			<?php if ($record['parent'])
+				{?>
+				<label><?php echo $lang["property-config_inherit"] ?></label>
+				<input id="config_inherit" name="inherit_flags[]" type="checkbox" value="config_options" onClick="if(jQuery('#config_inherit').is(':checked')){jQuery('#config_area').slideUp();}else{jQuery('#config_area').slideDown();}" <?php if(in_array("config_options",$record['inherit'])){echo "checked";} ?>>
+				<div class="clearerleft"></div>	
+				<?php 
+				}?>
+			
+			<div id ="config_area" <?php if(in_array("config_options",$record['inherit'])){echo "style=display:none;";} ?>>	
+				<label></label>
+				<textarea name="config_options" id="configOptionsBox" class="stdwidth" rows="12" cols="50"><?php echo $record['config_options']; ?></textarea>
+				<div class="clearerleft"></div>
+			</div> 
+			<?php
 	if (
 		isset($system_architect_user_names) &&
 		is_array($system_architect_user_names) &&

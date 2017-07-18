@@ -1183,14 +1183,14 @@ function get_users_with_permission($permission)
     # The standard user group names are translated using $lang. Custom user group names are i18n translated.	
 
     # First find all matching groups.
-    $groups = sql_query("select ref,permissions from usergroup");
+    $groups = sql_query("SELECT ref,permissions FROM usergroup");
     $matched = array();
     for ($n = 0;$n<count($groups);$n++) {
         $perms = trim_array(explode(",",$groups[$n]["permissions"]));
         if (in_array($permission,$perms)) {$matched[] = $groups[$n]["ref"];}
     }
     # Executes query.
-	$r = sql_query("select u.*,g.name groupname,g.ref groupref,g.parent groupparent from user u left outer join usergroup g on u.usergroup=g.ref where g.ref in ('" . join("','",$matched) . "') order by username",false);
+	$r = sql_query("SELECT u.*,g.name groupname,g.ref groupref,g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup=g.ref WHERE (g.ref IN ('" . join("','",$matched) . "') OR (find_in_set('permissions',g.inherit_flags)>0 AND groupparent IN ('" . join("','",$matched) . "'))) ORDER BY username",false);
 
     # Translates group names in the newly created array.
     $return = array();
@@ -1204,7 +1204,7 @@ function get_users_with_permission($permission)
 
 function get_user_by_email($email)
 {
-	$r = sql_query("select u.*,g.name groupname,g.ref groupref,g.parent groupparent from user u left outer join usergroup g on u.usergroup=g.ref where u.email like '%$email%' order by username",false);
+	$r = sql_query("SELECT u.*,g.name groupname,g.ref groupref,g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup=g.ref WHERE u.email LIKE '%$email%' ORDER BY username",false);
 
     # Translates group names in the newly created array.
     $return = array();
@@ -1244,7 +1244,7 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
 
     # Executes query.
     global $default_group;
-    $r = sql_query("select * from usergroup $sql order by (ref='$default_group') desc,name");
+    $r = sql_query("select *,inherit_flags from usergroup $sql order by (ref='$default_group') desc,name");
 
     # Translates group names in the newly created array.
     $return = array();
@@ -1285,10 +1285,11 @@ function get_usergroup($ref)
 {
     # Returns the user group corresponding to the $ref. A standard user group name is translated using $lang. A custom user group name is i18n translated.
 
-    $return = sql_query("select ref,name,permissions,parent,search_filter,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo from usergroup where ref='$ref'");
+    $return = sql_query("SELECT ref,name,permissions,parent,search_filter,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags FROM usergroup WHERE ref='$ref'");
     if (count($return)==0) {return false;}
     else {
         $return[0]["name"] = lang_or_i18n_get_translated($return[0]["name"], "usergroup-");
+		$return[0]["inherit"]=explode(",",trim($return[0]["inherit_flags"]));
         return $return[0];
     }
 }
@@ -1300,7 +1301,7 @@ function get_user($ref)
         if (isset($udata_cache[$ref])){
           $return=$udata_cache[$ref];
         } else {
-	$udata_cache[$ref]=sql_query("select u.*, g.permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, resource_defaults,g.config_options,g.request_mode, g.derestrict_filter from user u left join usergroup g on u.usergroup=g.ref where u.ref='$ref'");
+	$udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
     }
     
 	# Return a user's credentials.
@@ -3672,12 +3673,14 @@ function check_access_key($resource,$key)
 		
 		global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options; 
                 $groupjoin="u.usergroup=g.ref";
+				$permissionselect="g.permissions";
                 if ($keys[0]["usergroup"]!="")
                     {
                     # Select the user group from the access key instead.
-                    $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "'";
+                    $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
+					$permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
                     }
-		$userinfo=sql_query("select g.ref usergroup,g.permissions,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
+		$userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
 		if (count($userinfo)>0)
 			{
             $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
