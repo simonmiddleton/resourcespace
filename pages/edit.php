@@ -197,6 +197,12 @@ if (getval("regenexif","")!="")
 # Establish if this is a metadata template resource, so we can switch off certain unnecessary features
 $is_template=(isset($metadata_template_resource_type) && $resource["resource_type"]==$metadata_template_resource_type);
 
+# If config option $blank_edit_template is set and form has not yet been submitted, blank the form for user edit templates.
+if(0 > $ref && $blank_edit_template && '' == getval('submitted', ''))
+    {
+    clear_resource_data($ref);
+    }
+        
 # check for upload disabled due to space limitations...
 if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
   {

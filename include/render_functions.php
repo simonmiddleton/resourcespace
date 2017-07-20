@@ -1518,9 +1518,7 @@ function display_field($n, $field, $newtab=false)
     $lastrt=$field["resource_type"];
 
     # Blank form if 'reset form' has been clicked
-    # OR
-    # If config option $blank_edit_template is set, always show a blank form for user edit templates.
-    if('' != getval('resetform', '') || (0 > $ref && $blank_edit_template && '' == getval('submitted', '')))
+    if('' != getval('resetform', ''))
         {
         $value = '';
 
