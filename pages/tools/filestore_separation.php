@@ -20,8 +20,8 @@ $refs=getval("refs","");
 
 $cleanup=false;
 
-function reverse_filestore_location($path,$size,$url=false){
-	global $originals_separate_storage,$storagedir,$storageurl;
+function reverse_filestore_location($path,$size,$url=false, $ffmpeg_alt=false){
+	global $originals_separate_storage, $originals_separate_storage_ffmpegalts_as_previews, $storagedir, $storageurl;
 	
 	// take the storagedir/storageurl out of the path and see what's next
 	if($url){
@@ -34,8 +34,18 @@ function reverse_filestore_location($path,$size,$url=false){
 	$path_trim=str_replace($remove,"",$path);
 	echo "Path trim:$path_trim<br/>";
 	if($originals_separate_storage){
+		if($originals_separate_storage_ffmpegalts_as_previews && $ffmpeg_alt){
+			//echo 'found original alt<br/>';
+			// we have to consider the fact that this may be in either location
+			if(strpos($path_trim, '/original')===0){
+				$path_trim=substr($path_trim, 9);
+			}
+			elseif(strpos($path_trim, '/resized')===0){
+				$path_trim=substr($path_trim, 8);
+			}
+		}
 		// take the separator out of the path
-		if($size=='' || $size=='o'){
+		elseif($size=='' || $size=='o'){
 			$path_trim=substr($path_trim, 9);
 		}
 		else{
@@ -45,7 +55,16 @@ function reverse_filestore_location($path,$size,$url=false){
 	}
 	else{
 		// add the separator into the path
-		if($size=='' || $size=='o'){
+		if($originals_separate_storage_ffmpegalts_as_previews){
+			if($ffmpeg_alt){
+				$path_trim="/resized".$path_trim;
+			}
+			else{
+				$path_trim="/original".$path_trim;
+			}
+		
+		}
+		elseif($size=='' || $size=='o'){
 			$path_trim="/original".$path_trim;
 		}
 		else{
@@ -131,26 +150,6 @@ foreach($refs as $ref){
 		if(file_exists($otherpath)){
 			// let's move it to where it belongs. start by trimming the filename off the path
 			$wait=filestore_relocate($otherpath,$filepath);
-			/*
-			$file_dir=explode("/",$filepath);
-			$filename=array_pop($file_dir);
-			$file_dir=implode("/",$file_dir);
-			echo "Copying file to proper location: $file_dir<br/>";
-			if(!file_exists($file_dir)){
-				echo "Need to make directory first...";
-				@mkdir($file_dir,0777,true);
-				chmod($file_dir,0777);
-				echo "done!<br/>";
-			}
-			if(!copy($otherpath,$filepath)){
-				echo "Failed to copy file...skipping<br/>";
-				continue;
-			}
-			else{
-				echo "Copy complete!<br/>";
-				// remove the file
-				unlink($otherpath);
-			}*/
 		}
 		else{
 			echo "No original file found!<br/>";
@@ -164,9 +163,22 @@ foreach($refs as $ref){
 		echo "alts found!<br/>";
 		// these get moved to originals
 		foreach($alts as $alt){
-			//echo "Alt:";print_r($alt);echo"<br/>";
+			echo "Alt:";print_r($alt);echo"<br/>";
+			$ffmpeg_alt=alt_is_ffmpeg_alternative($alt);
 			$alt_filepath=get_resource_path($ref,true,'',false,$alt['file_extension'],-1,1,false,'',$alt["ref"]);
-			$alt_otherpath=reverse_filestore_location($alt_filepath,'');
+			if($ffmpeg_alt){
+				if(strpos($alt_filepath, '/original/')!==false){
+					$ffmpeg_alt_filepath=str_replace('/original/','/resized/', $alt_filepath);
+				}
+				elseif(strpos($alt_filepath, '/resized/')!==false){
+					$ffmpeg_alt_filepath=str_replace('/resized/','/original/', $alt_filepath);
+				}
+				if(isset($ffmpeg_alt_filepath)){
+					echo 'ffmpeg_alt_filepath=' . $ffmpeg_alt_filepath . '<br/>';
+				}
+			}
+			echo 'Alt Filepath:' . $alt_filepath .'<br/>';
+			$alt_otherpath=reverse_filestore_location($alt_filepath, '', false, $ffmpeg_alt);
 			
 			if(file_exists($alt_filepath)){
 				echo "Alt file ".$alt["ref"]." found in proper location<br/>";
@@ -179,7 +191,11 @@ foreach($refs as $ref){
 				echo "Alt file ".$alt["ref"]." not found in proper location<br/>";
 				if(file_exists($alt_otherpath)){
 					// let's move it to where it belongs. start by trimming the filename off the path
-					$wait=filestore_relocate($alt_otherpath,$alt_filepath);
+					filestore_relocate($alt_otherpath,$alt_filepath);
+				}
+				elseif($ffmpeg_alt && isset($ffmpeg_alt_filepath) && file_exists($ffmpeg_alt_filepath)){
+					echo "Alt file is ffmpeg_alt in old setting location<br/>";
+					filestore_relocate($ffmpeg_alt_filepath,$alt_filepath);
 				}
 				else{
 					echo "Alternative file not found!<br/>";

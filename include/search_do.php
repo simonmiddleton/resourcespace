@@ -16,7 +16,7 @@
 * @param string      $search                  Search string
 * @param string      $restypes                Optionally used to specify which resource types to search for
 * @param string      $order_by
-* @param integer     $archive                 Allows searching in more than one archive state
+* @param string      $archive                 Allows searching in more than one archive state
 * @param integer     $fetchrows               Fetch "$fetchrows" rows but pad the array to the full result set size with
 *                                             empty values (@see sql_query())
 * @param string      $sort
@@ -38,7 +38,7 @@ function do_search(
     $search,
     $restypes = '',
     $order_by = 'relevance',
-    $archive = 0,
+    $archive = '0',
     $fetchrows = -1,
     $sort = 'desc',
     $access_override = false,

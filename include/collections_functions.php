@@ -1323,7 +1323,8 @@ function add_saved_search_items($collection)
 	{
 	global $collection_share_warning, $collection_allow_not_approved_share, $userref, $collection_block_restypes, $search_all_workflow_states;
 	# Adds resources from a search to the collection.
-	$archivesearch = getvalescaped("archive","",true);
+	$archivesearch = getvalescaped('archive', '');
+
 	if($search_all_workflow_states && 0 != $archivesearch)
 		{
 		$search_all_workflow_states = false;
@@ -2032,13 +2033,12 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
            $allow_resource_deletion;
-    
+               
 	#This is to properly render the actions drop down in the themes page	
-	if (isset($collection_data['c']))
+	if ( isset($collection_data['ref']) )
 		{
-		$count_result = $collection_data['c'];
+		$count_result = count(get_collection_resources($collection_data['ref']));
 		}
-	
 	
 	if(isset($search) && substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
 		{ 
