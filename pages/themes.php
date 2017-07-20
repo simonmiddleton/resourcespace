@@ -20,7 +20,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
 	{
 	if($simpleview)
 		{
-		global $baseurl_short, $themecount, $themes_simple_images;
+		global $baseurl_short, $lang, $themecount, $themes_simple_images;
 		$getthemes=get_themes($themes);
 		# 
 		for ($m=0;$m<count($getthemes);$m++)
@@ -42,8 +42,8 @@ function DisplayTheme($themes=array(), $simpleview=false)
 						}
 					}
 				}
-			?>				
-				<div id="FeaturedSimpleTile_<?php echo $getthemes[$m]["ref"]; ?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile<?php
+                ?>
+				<div id="FeaturedSimpleTile_<?php echo md5($getthemes[$m]['ref']); ?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile<?php
 					if($theme_image_path!="")
 						{	
 						echo " FeaturedSimpleTileImage\" style=\"background: url(" . $theme_image_path . ");background-size: cover;";
@@ -55,8 +55,60 @@ function DisplayTheme($themes=array(), $simpleview=false)
 						</div>
 					</div>
 					</a>
-				</div><!-- End of FeaturedSimpleTile_<?php echo $getthemes[$m]["ref"]; ?>-->		
-					
+                    <div id="FeaturedSimpleTileActions_<?php echo md5($getthemes[$m]['ref']); ?>" class="FeaturedSimpleTileActions"  style="display:none;">
+                    <?php
+                    if(checkPermission_dashmanage())
+                        {
+                        $display_theme_dash_tile_link = generateURL(
+                            "{$baseurl_short}pages/dash_tile.php",
+                            array(
+                                'create'            => 'true',
+                                'tltype'            => 'srch',
+                                'title'             => "{$getthemes[$m]['name']}",
+                                'freetext'          => 'true',
+                                'tile_audience'     => 'false',
+                                'all_users'         => 1,
+                                'promoted_resource' => 'true',
+                                'link'              => "{$baseurl_short}pages/search.php?search=!collection{$getthemes[$m]['ref']}",
+                            )
+                        );
+                        ?>
+                        <div class="tool">
+                            <a href="<?php echo $display_theme_dash_tile_link; ?>" onClick="return CentralSpaceLoad(this, true);">
+                                <span><?php echo LINK_CARET; ?><?php echo $lang['add_to_dash']; ?></span>
+                            </a>
+                        </div>
+                        <?php
+                        }
+
+                    if(collection_readable($getthemes[$m]['ref']))
+                        {
+                        ?>
+                        <div class="tool">
+                            <a href="#" onClick="return ChangeCollection(<?php echo $getthemes[$m]['ref']; ?>, '');">
+                                <span><?php echo LINK_CARET; ?><?php echo $lang['action-select']; ?></span>
+                            </a>
+                        </div>
+                        <?php
+                        }
+
+                    if(collection_writeable($getthemes[$m]['ref']))
+                        {
+                        $display_theme_edit_link = generateURL(
+                            "{$baseurl_short}pages/collection_edit.php",
+                            array('ref' => $getthemes[$m]['ref'])
+                        );
+                        ?>
+                        <div class="tool">
+                            <a href="<?php echo $display_theme_edit_link; ?>" onClick="return ModalLoad(this, true);">
+                                <span><?php echo LINK_CARET; ?><?php echo $lang['action-edit']; ?></span>
+                            </a>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+				</div><!-- End of FeaturedSimpleTile_<?php echo $getthemes[$m]["ref"]; ?>-->
 			<?php
 			}		
 		
@@ -322,22 +374,20 @@ include "../include/header.php";
 ?>
 
 <script>
-	
-jQuery(document).ready(function () {
-	jQuery('.FeaturedSimpleTile').hover(
-		function(e){
-			
-			tileid=jQuery(this).attr('id').substring(19);
-			//console.log('hovering on' + tileid);
-			jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideDown();
-		},
-		function(e){
-			tileid=jQuery(this).attr('id').substring(19);
-			jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideUp();
-		});	
-
-});
-
+jQuery(document).ready(function ()
+    {
+    jQuery('.FeaturedSimpleTile').hover(
+    function(e)
+        {
+        tileid = jQuery(this).attr('id').substring(19);
+        jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideDown();
+        },
+    function(e)
+        {
+        tileid=jQuery(this).attr('id').substring(19);
+        jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideUp();
+        });
+    });
 </script>
 
 
