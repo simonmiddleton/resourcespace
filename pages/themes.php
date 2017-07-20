@@ -438,33 +438,38 @@ hook('themestext')
 
 <?php
 global $enable_theme_breadcrumbs;
-if(!hook('replacethemesbacklink')){
-if ($enable_theme_breadcrumbs && $themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
-	{
-	echo "<div class='SearchBreadcrumbs'>";
-	# Display breadcrumb links
-	$link=$baseurl_short."pages/themes.php?";
-	?>
-	<a href="<?php echo $link ?>" onClick="return CentralSpaceLoad(this,true);">
-		<span><?php echo $lang["themes"] ?></span>
-	</a>
-	<?php			
-	for ($x=0;$x<count($themes);$x++)
-		{
-		//print_r($themes);	
-		if ($x!=0){ $link.="&"; }
-		$link.="theme";
-		$link.=($x==0)?"":$x;
-		$link.="=". urlencode($themes[$x]);
-		if($simpleview)
-		{$link.="&simpleview=true";}
-		echo LINK_CARET;
-		?><a href="<?php echo $link ?>" onClick="return CentralSpaceLoad(this,true);"><span><?php echo str_replace("*","",i18n_get_collection_name($themes[$x])) ?>&nbsp;</span></a><?php
-		}
-	echo "</div>";
+if(!hook('replacethemesbacklink'))
+    {
+    if($enable_theme_breadcrumbs && $themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
+        {
+        $links_trail_params            = array();
+        $links_trail_additional_params = array();
 
-}
-} # end hook('replacethemesbacklink')
+        if($simpleview)
+            {
+            $links_trail_params['simpleview'] = 'true';
+            }
+
+        $links_trail = array(
+            array(
+                'title' => $lang['themes'],
+                'href'  => generateURL("{$baseurl_short}pages/themes.php", $links_trail_params)
+            )
+        );
+
+        for($x = 0; $x < count($themes); $x++)
+            {
+            $links_trail_additional_params['theme' . (0 == $x ? '': $x)] = $themes[$x];
+
+            $links_trail[] = array(
+                'title' => str_replace('*', '', i18n_get_collection_name($themes[$x])),
+                'href'  => generateURL("{$baseurl_short}pages/themes.php", $links_trail_params, $links_trail_additional_params)
+                );
+            }
+
+        renderBreadcrumbs($links_trail);
+        }
+    } # end hook('replacethemesbacklink')
 
 #if ($themes_category_split_pages && $theme1=="" && $smart_theme=="")
 if ($smart_theme!="")

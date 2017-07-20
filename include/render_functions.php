@@ -2054,3 +2054,53 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
         <?php
         }
 	}
+
+/**
+* Renders a full breadcrumbs trail.
+* 
+* @param array  $links     List of link "objects" that create the trail
+* @param string $pre_links Pre-rendered links in HTML form
+* 
+* @return void
+*/
+function renderBreadcrumbs(array $links, $pre_links = '')
+    {
+    global $lang;
+    /*
+    NOTE: implemented as seen on themes and search. There is a lot of room for improvement UI wise
+
+    TODO: search_title_processing.php is using it intesively and at the moment there are differences in terms of 
+    rendered HTML between themes/ search and search_title_processing.php. We should refactor all places were breadcrumbs
+    are being created and make sure they all use this function (or any future related functions - like generateBreadcrumb() ).
+    */
+
+    if(0 === count($links))
+        {
+        return;
+        }
+        ?>
+    <div class='SearchBreadcrumbs'>
+    <?php
+    if('' !== $pre_links && $pre_links !== strip_tags($pre_links))
+        {
+        echo $pre_links . '&nbsp;' . LINK_CARET;
+        }
+
+    for($i = 0; $i < count($links); $i++)
+        {
+        if(0 < $i)
+            {
+            echo LINK_CARET;
+            }
+            ?>
+        <a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onClick="return CentralSpaceLoad(this, true);">
+            <span><?php echo htmlspecialchars($links[$i]['title']); ?></span>
+        </a>
+        <?php
+        }
+        ?>
+    </div>
+    <?php
+
+    return;
+    }
