@@ -528,7 +528,7 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
                             ?>
                             <div class="tool">
                                 <a href="<?php echo $dash_tile_link; ?>" onClick="return CentralSpaceLoad(this, true);">
-                                    <span><?php echo LINK_CARET ?><?php echo $lang['savethissearchtodash']; ?></span>
+                                    <span><?php echo LINK_CARET ?><?php echo $lang['add_to_dash']; ?></span>
                                 </a>
                             </div>
                             <?php

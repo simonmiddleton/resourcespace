@@ -2559,7 +2559,7 @@ $lang["report_external_option0"]="...are ignored";
 $lang["report_external_option1"]="...are combined with the user group of the sharing user";
 $lang["report_external_option2"]="...are reported as a separate user group";
 $lang["report_external_share"]="External share";
-$lang["report_add_to_dash"]="Add to dash";
+$lang['report_add_to_dash'] = $lang['add_to_dash'] = 'Add to dash';
 $lang["collection_restype_blocked"]="The following resource types cannot be added";
 
 $lang["retina_mode"]="Retina mode";
