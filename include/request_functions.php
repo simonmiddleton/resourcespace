@@ -502,7 +502,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     // Manage collection requests:
     hook('autoassign_collection_requests', '', array($userref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
     
-    if(isset($manage_request_admin) && isset($collectiondata)) 
+    if(isset($manage_request_admin) && count($manage_request_admin) > 0 && isset($collectiondata)) 
 		{
         // $all_r_types = get_resource_types();
         // foreach ($all_r_types as $r_type) 
