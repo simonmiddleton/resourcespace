@@ -57,6 +57,8 @@
     div#Header.SlimHeaderFixedPosition #HeaderNav1Click { margin-right: 30px; }
     div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 16px; }
     div#SearchBox.SlimHeaderFixedPosition { margin-top: 46px; }
+
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }
 }
 /* General Forms */
 @media(max-width:1100px) {   
@@ -122,12 +124,13 @@
     .BasicsBox .Question {
         overflow-x:auto;
     }
-
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }
 }
 @media(max-width:700px) {
     .FormHelp {
         margin:0 0 10px 0px;
     }
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }
 }
 @media(max-width:525px) {
     .Question .stdwidth, .stdwidth {
@@ -138,13 +141,14 @@
     .CategoryBox {
         width:100%;
     }
-    
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }
 }
 /* Login Forms */
 @media(max-width:1100px) { 
     #CentralSpaceLogin .Question label {
         width:300px;
     }
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }
 }
 @media(max-width:750px) {
     #CentralSpaceLogin {
@@ -153,6 +157,7 @@
         margin-right:3%;
         padding:0;
     }
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }
 }
 /* Glyphs */
 .glyph {
@@ -250,12 +255,12 @@
     #Header.slimheader_darken a:link, #Header.slimheader_darken a:visited, #Header.slimheader_darken a:active {
         color: #565656;
     }
-
 }
 @media(max-width:900px) {
     #HeaderButtons {
         padding-left:150px;
     }
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }
 }
 @media(max-width:700px) {
     .headerlink {
@@ -264,6 +269,7 @@
     .clearResponsiveBackground {
         background:none!important;
     }
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }
 }
 @media(max-width:575px) {
     #HeaderButtons .rbText{
@@ -280,6 +286,7 @@
         height:auto;
         max-height:47px;
     }
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }
 }
 @media(max-width:515px) {
     #HeaderButtons {
@@ -287,7 +294,8 @@
     }
     .ResponsiveHeaderButton {
         margin-left:5px;
-    }    
+    }
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }    
 }
 @media(max-width:380px) {
     #Header {
@@ -304,6 +312,7 @@
         width: 100%;
         text-align: left;
     }
+    .BreadcrumbsBox { margin: 0em 0em 1em 0em; }
 }
 @media(min-width:1201px) {
     #HeaderNav1, #HeaderNav2 {
@@ -972,4 +981,3 @@
         display:none;
     }
 }
-

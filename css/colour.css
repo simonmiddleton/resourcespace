@@ -360,3 +360,6 @@ input:checked + .customFieldLabel, .keywordselected
   {
   background-color: #ccc;
   }
+
+.BreadcrumbsBox { color:#FFF; }
+.BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #FFF; }

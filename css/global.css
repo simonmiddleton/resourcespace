@@ -1328,3 +1328,16 @@ a.Enabled, a:visited.Enabled {
     color: #79BC41;
     text-decoration: underline;
 }
+
+/* Breadcrumbs */
+.BreadcrumbsBox {
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    margin: 0em 1em 1em 0em;
+    padding: 0.66em;
+    background: rgba(0, 0, 0, 0.65);
+}
+.BreadcrumbsBox > .SearchBreadcrumbs {
+    margin: 0;
+}

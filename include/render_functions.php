@@ -2079,26 +2079,29 @@ function renderBreadcrumbs(array $links, $pre_links = '')
         return;
         }
         ?>
-    <div class='SearchBreadcrumbs'>
-    <?php
-    if('' !== $pre_links && $pre_links !== strip_tags($pre_links))
-        {
-        echo $pre_links . '&nbsp;' . LINK_CARET;
-        }
-
-    for($i = 0; $i < count($links); $i++)
-        {
-        if(0 < $i)
+    <!-- <div id="HomeSiteText" class="BasicsBox dashtext"> -->
+    <div id="" class="BreadcrumbsBox">
+        <div class="SearchBreadcrumbs">
+        <?php
+        if('' !== $pre_links && $pre_links !== strip_tags($pre_links))
             {
-            echo LINK_CARET;
+            echo $pre_links . '&nbsp;' . LINK_CARET;
+            }
+
+        for($i = 0; $i < count($links); $i++)
+            {
+            if(0 < $i)
+                {
+                echo LINK_CARET;
+                }
+                ?>
+            <a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onClick="return CentralSpaceLoad(this, true);">
+                <span><?php echo htmlspecialchars($links[$i]['title']); ?></span>
+            </a>
+            <?php
             }
             ?>
-        <a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onClick="return CentralSpaceLoad(this, true);">
-            <span><?php echo htmlspecialchars($links[$i]['title']); ?></span>
-        </a>
-        <?php
-        }
-        ?>
+        </div>
     </div>
     <?php
 
