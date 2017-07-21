@@ -2079,7 +2079,6 @@ function renderBreadcrumbs(array $links, $pre_links = '')
         return;
         }
         ?>
-    <!-- <div id="HomeSiteText" class="BasicsBox dashtext"> -->
     <div id="" class="BreadcrumbsBox">
         <div class="SearchBreadcrumbs">
         <?php
@@ -2103,6 +2102,7 @@ function renderBreadcrumbs(array $links, $pre_links = '')
             ?>
         </div>
     </div>
+    <div class="clearerleft"></div>
     <?php
 
     return;

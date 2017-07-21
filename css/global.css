@@ -1331,6 +1331,7 @@ a.Enabled, a:visited.Enabled {
 
 /* Breadcrumbs */
 .BreadcrumbsBox {
+    display: inline-block;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
