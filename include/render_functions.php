@@ -2107,3 +2107,31 @@ function renderBreadcrumbs(array $links, $pre_links = '')
 
     return;
     }
+
+
+/**
+* Render a blank tile used for call to actions (e.g: on featured collections, a tile for creating new collections)
+* 
+* @param string $link URL
+* 
+* @return void
+*/
+function renderCallToActionTile($link)
+    {
+    if('' === $link)
+        {
+        return;
+        }
+        ?>
+    <div id="FeaturedSimpleTile" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
+        <a href="<?php echo $link; ?>" onclick="return ModalLoad(this, true);" class="">
+            <div class="FeaturedSimpleTileContents">
+                <div class="FeaturedSimpleTileText">
+                    <h2><span class='fa fa-plus-circle fa-2x'></span></h2>
+                </div>
+            </div>
+        </a>
+    </div>
+    <?php
+    return;
+    }

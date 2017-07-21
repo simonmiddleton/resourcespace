@@ -111,7 +111,31 @@ function DisplayTheme($themes=array(), $simpleview=false)
 				</div><!-- End of FeaturedSimpleTile_<?php echo $getthemes[$m]["ref"]; ?>-->
 			<?php
 			}		
-		
+
+
+        $new_collection_additional_params = array();
+        for($x = 0; $x < count($themes); $x++)
+            {
+            /*
+            IMPORTANT: this call to action is basically going to make a call to save_collection() which for some unknown
+            reason is inconsistent with the way themes are handled on themes page. Example:
+            save_collection(): theme=A&theme2=B&theme3=C
+            themes.php: theme1=A&theme2=B&theme3=C
+            */
+            $new_collection_additional_params['theme' . (0 == $x ? '': $x + 1)] = $themes[$x];
+            }
+
+        renderCallToActionTile(
+            generateURL(
+                "{$baseurl_short}pages/collection_manage.php",
+                array(
+                    'name'                => $lang['stat-newcollection'],
+                    'submit'              => 'Create',
+                    'public'              => 1,
+                    'call_to_action_tile' => 'true'
+                ),
+                $new_collection_additional_params
+            ));
 		}
 	else
 		{
@@ -459,7 +483,7 @@ if(!hook('replacethemesbacklink'))
 
         for($x = 0; $x < count($themes); $x++)
             {
-            $links_trail_additional_params['theme' . (0 == $x ? '': $x)] = $themes[$x];
+            $links_trail_additional_params['theme' . (0 == $x ? '': $x + 1)] = $themes[$x];
 
             $links_trail[] = array(
                 'title' => str_replace('*', '', i18n_get_collection_name($themes[$x])),
