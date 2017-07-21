@@ -527,14 +527,14 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             // Store all resources of unmanaged type in one collection which will be sent to the system administrator:
             if(!isset($manage_request_admin[$collection_type]))
 				{
-                $collections['not_managed'] = create_collection($userref, $collectiondata['name'] . ' for unmanaged types');
+                $collections['not_managed'] = create_collection($userref, $collectiondata['name'] . " " . date("ymdHis"));
                 foreach ($collection_resources as $collection_resource_id) 
 					{
                     add_resource_to_collection($collection_resource_id, $collections['not_managed']);
 					}
                 continue;
 				}            
-            $collections[$collection_type] = create_collection($userref, $collectiondata['name'] . ' for type ' . $collection_type);
+            $collections[$collection_type] = create_collection($userref, $collectiondata['name'] . ' : ' . $collection_type . " " . date("ymdHis"));
             foreach ($collection_resources as $collection_resource_id)
 				{
                 add_resource_to_collection($collection_resource_id, $collections[$collection_type]);
