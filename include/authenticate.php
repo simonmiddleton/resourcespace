@@ -166,10 +166,20 @@ if (!$valid && isset($anonymous_autouser_group))
 	$new = sql_insert_id();
    
     include_once ("login_functions.php");
-    perform_login();
+    $login_data = perform_login();
     rs_setcookie("user", $session_hash, 100, "", "", substr($baseurl,0,5)=="https", true);
-    
-    $valid=true;
+
+    // Setup the user
+    $login_session_hash = (isset($login_data['session_hash']) ? escape_check($login_data['session_hash']) : '');
+    $user_data          = validate_user("u.session = '{$login_session_hash}'", true);
+
+    $valid = false;
+    if(0 < count($user_data))
+        {
+        $valid = true;
+
+        setup_user($user_data[0]);
+        }
     }
     
 if (!$valid && !isset($system_login))
