@@ -2573,6 +2573,12 @@ function AutoRotateImage($src_image, $ref = false)
             $output=run_command($fix_orientation);
             resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$fix_orientation . ":\n" . $output);
             }
+        
+        # we'll remove the exiftool created file copy (as a result of using -TagsFromFile)
+        if(file_exists($new_image . '_original'))
+        	{
+        	unlink($new_image . '_original');
+        	}
         }
     
     unlink($src_image);
