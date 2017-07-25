@@ -543,7 +543,7 @@ $urlparams= array(
 
 
 # Check if actually coming from a search, but not if a numeric search and config_search_for_number is set or if this is a direct request e.g. ?r=1234.
-if (isset($_GET["search"]) && !($config_search_for_number && is_numeric($usearch))) { ?>
+if (!hook("replaceviewnav") && isset($_GET["search"]) && !($config_search_for_number && is_numeric($usearch))) { ?>
 <div class="backtoresults">
 <a class="prevLink fa fa-arrow-left" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);" title="<?php echo $lang["previousresult"]?>"></a>
 <?php 
@@ -571,7 +571,9 @@ else if($modal)
 	{
 	?>
 	<div class="backtoresults">
+		<?php if (!hook("replacemaxlink")) { ?>
 		<a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this);" class="maxLink fa fa-expand" title="<?php echo $lang["maximise"]?>"></a>
+		<?php } ?>
 		<a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
 	</div>
 	<?php

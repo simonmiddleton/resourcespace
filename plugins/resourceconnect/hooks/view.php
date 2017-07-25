@@ -14,6 +14,26 @@ function HookResourceconnectViewNextpreviewregeneratekey()
 	return $k;
 	}
 
+function HooKResourceconnectViewReplaceviewnav()
+    {
+    # Replace navigation links for view page.
+    global $is_resourceconnect;
+    if (isset($is_resourceconnect))
+        {       
+        return true;
+        }
+    }
+
+function HooKResourceconnectViewReplacemaxlink()
+    {
+    # Replace navigation links for view page.
+    global $is_resourceconnect;
+    if (isset($is_resourceconnect))
+        {       
+        return true;
+        }
+    }
+    
 function HookResourceconnectViewViewallresults()	
 	{
 	# View all results.
