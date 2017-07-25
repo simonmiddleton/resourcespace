@@ -12,7 +12,8 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
 
 	global $resourceconnect_user; # Which user to use for remote access?
 	
-	global $usergroup,$userpermissions,$userrequestmode;
+
+	global $usergroup,$userpermissions,$userrequestmode,$is_resourceconnect;
 	$userinfo=sql_query("select u.usergroup,g.permissions from user u join usergroup g on u.usergroup=g.ref where u.ref='$resourceconnect_user'");
 	if (count($userinfo)>0)
 		{
@@ -21,6 +22,9 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
 		if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
 		$userrequestmode=0; # Always use 'email' request mode for external users
 		}
+	
+	# Set that we're being accessed via resourceconnect.
+	$is_resourceconnect=true;
 	
 	return true;
 	}
