@@ -1310,9 +1310,9 @@ if($responsive_ui)
 				}			
 				
 			// Check if user or group has been granted specific access level as set in array returned from do_search function. 
-			if($result[$n]["user_access"]!="")
+			if(isset($result[$n]["user_access"]) && $result[$n]["user_access"]!="")
 				{$result[$n]["access"]=$result[$n]["user_access"];}
-			elseif ($result[$n]["group_access"]!="")
+			elseif (isset($result[$n]["group_access"]) && $result[$n]["group_access"]!="")
 				{$result[$n]["access"]=$result[$n]["group_access"];}
 			// Global $access needs to be set to check watermarks in search views (and may be used in hooks)		
 			$access=$result[$n]["access"];

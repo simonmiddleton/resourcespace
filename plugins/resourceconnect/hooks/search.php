@@ -93,6 +93,7 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
 			(
 			"ref"=>-87412,
 			"access"=>0,
+            "archive"=>0,
 			"resource_type"=>0,
 			"has_image"=>1,
 			"thumb_width"=>0,
@@ -108,7 +109,6 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
 			"user_rating"=>''
 			);
 		}
-
 	return $result;
 	}
 	
