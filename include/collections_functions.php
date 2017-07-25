@@ -466,7 +466,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                     {
                     if (substr($keywords[$n],0,19)=="collectionkeywords:") $keywords[$n]=substr($keywords[$n],19);
 		    # Support field specific matching - discard the field identifier as not appropriate for collection searches.
-		    if (strpos($keywords[$n],":")!==false) {$keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);echo $keywords[$n];}
+		    if (strpos($keywords[$n],":")!==false) {$keywords[$n]=substr($keywords[$n],strpos($keywords[$n],":")+1);}
                     $keyref=resolve_keyword($keywords[$n],false);
                     if ($keyref!==false) {$keyrefs[]=$keyref;}
                     $keysql.="join collection_keyword k" . $n . " on k" . $n . ".collection=c.ref and (k" . $n . ".keyword='$keyref')";
