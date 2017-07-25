@@ -137,19 +137,36 @@ if ($cropper_debug){
 	error_log("origwidth: $origwidth, width: $width / origheight = $origheight, height = $height, $xcoord / $ycoord");
 }
 
-if (($width == 0 && $height == 0 && ($new_width > 0||$new_height > 0)) ||  $cropperestricted) {
+if (($width == 0 && $height == 0 && ($new_width > 0||$new_height > 0)) ||  $cropperestricted)
+	{
 	// the user did not indicate a crop. presumably they are scaling
 	$verb = $lang['scaled'];
 	$crop_necessary = false;
-} else if (!$cropperestricted){
+	}
+else if (!$cropperestricted)
+	{
 	$crop_necessary = true;
 	$verb = $lang['cropped'];
 	// now we need to mathematically convert to the original size
 	$finalxcoord = round ((($origwidth  * $xcoord)/$cropwidth),0);
-	$finalycoord = round ((($origheight * $ycoord)/$cropheight),0);
-	$finalwidth  = round ((($origwidth  * $width)/$cropwidth),0);
-	$finalheight = round ((($origheight * $height)/$cropheight),0);
-}
+	$finalycoord = round ((($origheight * $ycoord)/$cropheight),0);	
+	
+	// Ensure that new ratio of crop matches that of the specified size or we may end up missing the target size
+	// If landscape crop, set the width first, then base the height on that
+	$desiredratio = $width / $height;
+	if($desiredratio > 1)
+		{
+		$finalwidth  = round ((($origwidth  * $width)/$cropwidth),0);
+		$finalheight = round ($finalwidth / $desiredratio,0);
+		}
+	else
+		{
+		$finalheight = round ((($origheight * $height)/$cropheight),0);
+		$finalwidth= round($finalheight *  $desiredratio,0);			
+		}
+	}
+	
+
 
 // determine output format
 // prefer what the user requested. If nothing, look for configured default. If nothing, use same as original
