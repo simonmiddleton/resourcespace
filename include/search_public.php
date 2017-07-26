@@ -12,12 +12,12 @@ for ($n=0;$n<count($collections);$n++)
 	if ($display=="thumbs")
 		{
 		?>
-		<div class="ResourcePanelShell" id="ResourceShell">
-		<div class="ResourcePanel">
+
+		<div class="ResourcePanel"
+			style="height: <?php echo 180+(28*count($thumbs_display_fields)) ?>px;"
+			>
 	
-		<table  border="0" class="ResourceAlign"><?php hook("publicresulttop")?><tr><td>
-		
-		<div style="position: relative;height:140px;">
+		<div class="ImageWrapper" style="position: relative;height:150px;">
 		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo htmlspecialchars(str_replace(array("\"","'"),"",i18n_get_collection_name($collections[$n]))) ?>">
 		
 		<?php 
@@ -35,7 +35,7 @@ for ($n=0;$n<count($collections);$n++)
             $modifiedurl=hook('searchpublicmodifyurl');
 			if ($modifiedurl){ $previewpath=$modifiedurl;$border=true;}
             $images++;
-            $space=3+($images-1)*18;
+            $space=10+($images-1)*18;
             ?>
             <img style="position: absolute; top:<?php echo $space ?>px;left:<?php echo $space ?>px" src="<?php echo $previewpath?>" <?php if ($border){?>class="ImageBorder"<?php } ?>>
             <?php				
@@ -43,9 +43,7 @@ for ($n=0;$n<count($collections);$n++)
 		?>
 		</a>
 		</div>
-		</td>
-		</tr></table>
-        <?php // for spacing
+
         <?php hook("icons","search",array("collections"=>true)); //for spacing ?>
         <?php //add spacing for display fields to even out the box size
         for ($x=0;$x<count($df);$x++){
@@ -60,7 +58,7 @@ for ($n=0;$n<count($collections);$n++)
         ?></div><?php } ?>
         <?php } ?>
         <?php if (!hook("replacecollectiontools")){?>
-        <div class="ResourcePanelCountry" style="float:right;"><a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]?>" onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]?></a>&nbsp;&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . $lang["viewall"]?></a></div>		
+        <div class="ResourcePanelIcons" style="float:right;"><a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]?>" onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]?></a>&nbsp;&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . $lang["view"]?></a></div>		
         <?php } ?>
 		
 		<div class="clearer"></div>
@@ -71,130 +69,8 @@ for ($n=0;$n<count($collections);$n++)
 	
 	
 	
-		if ($display=="xlthumbs")
-		{
-		?>
-		<div class="ResourcePanelShellLarge" id="ResourceShell">
-		<div class="ResourcePanelLarge">
 	
-		<table  border="0" class="ResourceAlignLarge"><?php hook("publicresulttop")?><tr><td>
-		
-		<div style="position: relative;height:330px;">
-		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo str_replace(array("\"","'"),"",i18n_get_collection_name($collections[$n]))?>">
 
-		<?php 
-		$images=0;
-		for ($m=0;$m<count($resources) && $images<=4;$m++)
-            {
-            $border=true;    
-            $ref=$resources[$m]['ref'];
-            $previewpath=get_resource_path($ref, true, "thm", false, "jpg", -1, 1, false);
-            if (file_exists($previewpath)){
-                $previewpath=get_resource_path($ref,false,"thm",false,"jpg",-1,1,false,$resources[$m]["file_modified"]);
-            }
-            else {
-                $previewpath="../gfx/".get_nopreview_icon($resources[$m]["resource_type"],$resources[$m]["file_extension"],"");$border=false;
-            }
-            $images++;
-            $space=3+($images-1)*45;
-            ?>
-            <img style="position: absolute; top:<?php echo $space ?>px;left:<?php echo $space ?>px" src="<?php echo $previewpath?>" <?php if ($border){?>class="ImageBorder"<?php } ?>>
-            <?php				
-			}
-		?>
-		</a>
-		</div>
-		</td>
-		</tr></table>
-        <?php // for spacing
-
-        <?php hook("icons","search",array("collections"=>true)); //for spacing ?>
-        <?php //add spacing for display fields to even out the box size
-        for ($x=0;$x<count($df);$x++){
-            if (!hook("replaceresourcepanelinfolargepublicsearch")){
-            ?></count><div class="ResourcePanelInfo">
-            <?php if (in_array($df[$x]['ref'],$xl_thumbs_display_extended_fields)){
-                ?><div class="extended">
-            <?php } ?>
-            <?php if ($x==count($df)-1){?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo str_replace(array("\"","'"),"",i18n_get_collection_name($collections[$n]))?>"><?php echo highlightkeywords(tidy_trim(i18n_get_collection_name($collections[$n]),32),$search)?></a><?php } ?>&nbsp;<?php if (in_array($df[$x]['ref'],$xl_thumbs_display_extended_fields)){ ?></div>
-            <?php }
-        ?></div><?php } ?>
-        <?php } ?>
-        <div>
-        <?php if (!hook("replacecollectiontools")){?>
-		<div class="ResourcePanelCountry" style="float:right;"><a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]?>"  onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]?></a>&nbsp;&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . $lang["viewall"]?></a>
-		<?php } ?>
-		</div>		
-		  <?php hook("xlargesearchiconpublic");?></div>
-		<div class="clearer"></div>
-		</div>
-		
-		</div>
-	<?php } 
-	
-	
-	
-	
-	if ($display=="smallthumbs")
-		{
-		?>
-		<div class="ResourcePanelShellSmall" id="ResourceShell">
-		<div class="ResourcePanelSmall">
-	
-		<table  border="0" class="ResourceAlignSmall"><?php hook("publicresulttop")?><tr><td>
-		
-		<div style="position: relative;height:70px;">
-		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo str_replace(array("\"","'"),"",i18n_get_collection_name($collections[$n]))?>">
-
-
-
-        
-		<?php 
-		$images=0;
-
-		for ($m=0;$m<count($resources) && $images<=4;$m++)
-            {
-            $border=true;    
-            $ref=$resources[$m]['ref'];
-            $previewpath=get_resource_path($ref, true, "col", false, "jpg", -1, 1, false);
-            if (file_exists($previewpath)){
-                $previewpath=get_resource_path($ref,false,"col",false,"jpg",-1,1,false,$resources[$m]["file_modified"]);
-            }
-            else {
-                $previewpath="../gfx/".get_nopreview_icon($resources[$m]["resource_type"],$resources[$m]["file_extension"],"col");$border=false;
-            }
-            $images++;
-            $space=3+($images-1)*9;
-            if (list($sw,$sh) = @getimagesize($previewpath)){
-            ?>
-            <img width="<?php echo floor($sw/2)?>" height="<?php echo floor($sh/2)?>" style="position: absolute; top:<?php echo $space ?>px;left:<?php echo $space ?>px" src="<?php echo $previewpath?>" <?php if ($border){?>class="ImageBorder"<?php } ?>>
-            <?php
-            }
-			}
-		?>
-		</a>
-		</div>
-		</td>
-		</tr></table>	
-        <?php hook("icons","search",array("collections"=>true)); //for spacing ?>
-        <?php //add spacing for display fields to even out the box size
-        for ($x=0;$x<count($df);$x++){
-            ?>
-            <?php if (!hook("replaceresourcepanelinfosmallpublicsearch")){?>
-            <div class="ResourcePanelInfo">
-            
-            <?php if (in_array($df[$x]['ref'],$small_thumbs_display_extended_fields)){
-                ?><div class="extended"><?php } ?><?php if ($x==count($df)-1){?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo str_replace(array("\"","'"),"",i18n_get_collection_name($collections[$n]))?>"><?php echo highlightkeywords(tidy_trim(i18n_get_collection_name($collections[$n]),32),$search)?></a><?php } ?>&nbsp;<?php if (in_array($df[$x]['ref'],$small_thumbs_display_extended_fields)){ ?></div>
-            <?php }
-        ?></div><?php } ?>
-        <?php } ?>
-        <?php if (!hook("replacecollectiontools")){?>
-        <div class="ResourcePanelCountry" style="font-size:9px;"><a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]?>"  onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]?></a>&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET .  $lang["viewall"]?></a></div><div class="clearer"></div>
-        <?php } ?>
-		</div>
-		
-		</div>
-	<?php } 
 	
 	if ($display=="list")
 		{
