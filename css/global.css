@@ -315,8 +315,8 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 /*Forms*/
 #CentralSpaceLogin form {margin:0;padding:0;}
-.Question{padding: 0.5em 0em 1em;}
-.QuestionSubmit{	padding: 0.75em 0em 1em;margin-top: 1em;}
+.Question{padding: 0.7em 0em 0.7em 0.5em;}
+.QuestionSubmit{	padding: 1.75em 0em 0.5em 0.5em;}
 .Question label, .QuestionSubmit label{	width: 300px;float: left;margin-top: 0.4em;}
 .Question .customFieldLabel { width: auto; margin: 0;}
 .Question .customFieldset { padding: 0; border: 0;}
@@ -348,7 +348,6 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .FormWide .Question .FormHelp {margin: 0px 10px 10px 20%;}
 .FormWide .Question .FormHelp .FormHelpInner {width: 99%}
 
-.NoPaddingSaveClear {padding: 0;margin: 0;margin-bottom: 10px;}
 .Question .Fixed {    width: 300px;float: left;margin-top: 0.4em;font-weight: bold;} 
 .FormError{font-weight: bold;font-size: 1.1em;margin: 0px 0px 10px 190px;padding: 10px 0px 0px;}
 .FormIncorrect {font-weight: bold;font-size: 1.1em;margin: 0px 0px 25px;text-align: center;padding: 3px 3px 6px;}

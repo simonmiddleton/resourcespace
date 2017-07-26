@@ -89,7 +89,6 @@ $page_def[] = config_add_single_select(
     'default_display',
     $lang['userpreference_default_display_label'],
     array(
-        'smallthumbs' => $lang['smallthumbstitle'],
         'thumbs'      => $lang['largethumbstitle'],
         'xlthumbs'    => $lang['xlthumbstitle'],
         'list'        => $lang['listtitle']
