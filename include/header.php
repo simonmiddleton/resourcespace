@@ -250,7 +250,7 @@ endif; # !hook("customhtmlheader")
 if(!hook("customloadinggraphic"))
 	{
 	?>
-	<div id="LoadingBox"><?php echo $lang["pleasewait"] ?>&nbsp;<i aria-hidden="true" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></div>
+	<div id="LoadingBox"><i aria-hidden="true" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
 	<?php
 	}
 ?>

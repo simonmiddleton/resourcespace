@@ -369,3 +369,10 @@ input:checked + .customFieldLabel, .keywordselected
   {
   background-color: #ccc;
   }
+  
+#LoadingBox
+	{
+	border-radius:5px;
+	background-color:white;
+    color:black;
+	}
