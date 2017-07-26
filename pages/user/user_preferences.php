@@ -32,9 +32,7 @@ include "../../include/header.php";
     $all_field_info = get_fields_for_search_display(array_unique(array_merge(
         $sort_fields,
         $thumbs_display_fields,
-        $list_display_fields,
-        $xl_thumbs_display_fields,
-        $small_thumbs_display_fields))
+        $list_display_fields))
     );
 	
 	// Create an array for the archive states
@@ -131,10 +129,7 @@ include "../../include/header.php";
 
     // Default Display
     $default_display_array = array();
-    if($smallthumbs || $GLOBALS['default_display'] == 'smallthumbs')
-		{
-		$default_display_array['smallthumbs'] = $lang['smallthumbstitle'];
-		}
+
 	$default_display_array['thumbs'] = $lang['largethumbstitle'];
 	if($xlthumbs || $GLOBALS['default_display'] == 'xlthumbs')
 		{
