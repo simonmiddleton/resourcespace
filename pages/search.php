@@ -110,7 +110,7 @@ foreach($keywords as $keyword)
 $df=array();
 
 
-$all_field_info=get_fields_for_search_display(array_unique(array_merge($sort_fields,$thumbs_display_fields,$list_display_fields,$xl_thumbs_display_fields,$small_thumbs_display_fields)));
+$all_field_info=get_fields_for_search_display(array_unique(array_merge($sort_fields,$thumbs_display_fields,$list_display_fields)));
 
 # get display and normalize display specific variables
 $display=getvalescaped("display",$default_display);rs_setcookie('display', $display);
@@ -122,22 +122,10 @@ switch ($display)
 		$results_title_trim = $list_search_results_title_trim;
 		break;
 		
-	case "smallthumbs":
-		$display_fields	= $small_thumbs_display_fields; 
-		if (isset($small_search_result_title_height)) { $result_title_height = $small_search_result_title_height; }
-		$results_title_trim = $small_search_results_title_trim;
-		$results_title_wordwrap = $small_search_results_title_wordwrap;
-		break;
-		
-	case "xlthumbs":	 
-		$display_fields = $xl_thumbs_display_fields;
-		if (isset($xl_search_result_title_height)) { $result_title_height = $xl_search_result_title_height; }
-		$results_title_trim = $xl_search_results_title_trim;
-		$results_title_wordwrap = $xl_search_results_title_wordwrap;
-		break;
-		
+	case "xlthumbs":	 		
 	case "thumbs": 
 	case "strip":
+        
 	default:
 		$display_fields	= $thumbs_display_fields;  
 		if (isset($search_result_title_height)) { $result_title_height = $search_result_title_height; }
@@ -566,13 +554,7 @@ if($k=="" || $internal_share_access)
 	</script>
  	<?php
 	}
-if ($display_user_rating_stars && ($k=="" || $internal_share_access))
-	{
-	if (!hook("replace_user_rating_searchviewjs")){?>
-	<script src="<?php echo $baseurl ?>/lib/js/user_rating_searchview.js?1" type="text/javascript"></script>
-	<?php
-	}
-	}
+
 
 // Allow Drag & Drop from collection bar to CentralSpace only when special search is "!collection"
 if($collectionsearch && collection_writeable(substr($search, 11)))
@@ -620,7 +602,7 @@ if(!$collectionsearch)
 	<script>	
 	jQuery(document).ready(function() {
 		if(jQuery(window).width()<600 && jQuery(window).height()<600 && is_touch_device()) {return false;}
-		jQuery('#CentralSpaceResources .ResourcePanelShell, .ResourcePanelShellLarge, .ResourcePanelShellSmall').draggable({
+		jQuery('.ResourcePanel').draggable({
 			distance: 50,
 			connectWith: '#CollectionSpace',
 			appendTo: 'body',
@@ -643,7 +625,7 @@ if(!$collectionsearch)
 	<?php
 	}
 	
-	if ($allow_reorder && $display!="list") {
+if ($allow_reorder && $display!="list") {
 ?>
 	<script type="text/javascript">
 	var allow_reorder = true;
@@ -684,7 +666,7 @@ if(!$collectionsearch)
 				
 				return jQuery('#CentralSpaceResourceClone');
 				},
-			items: '.ResourcePanelShell, .ResourcePanelShellLarge, .ResourcePanelShellSmall',
+			items: '.ResourcePanel',
 			cancel: '.DisableSort',
 			
 			start: function (event, ui)
@@ -880,7 +862,6 @@ if($responsive_ui)
 			<select class="medcomplementwidth ListDropdown" style="width:auto" id="displaysize" name="displaysize" onchange="CentralSpaceLoad(this.value,true);">
 			<?php if ($xlthumbs==true) { ?><option <?php if ($display=="xlthumbs"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")) ?>"><?php echo $lang["xlthumbs"]?></option><?php } ?>
 			<option <?php if ($display=="thumbs"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")) ?>"><?php echo $lang["largethumbs"]?></option>
-			<?php if ($smallthumbs==true) { ?><option <?php if ($display=="smallthumbs"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"smallthumbs")) ?>"><?php echo $lang["smallthumbs"]?></option><?php } ?>
 			<?php if ($searchlist==true) { ?><option <?php if ($display=="list"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")) ?>"><?php echo $lang["list"]?></option><?php } ?>
 			</select>&nbsp;
 			<?php
@@ -922,25 +903,6 @@ if($responsive_ui)
 				<?php
 				}
 	
-
-				
-			if($smallthumbs == true)
-				{
-				if($display == 'smallthumbs')
-					{
-					?>
-					<span class="smallthumbsiconactive">&nbsp;</span>
-					<?php
-					}
-				else
-					{
-					?>
-					<a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"smallthumbs")); ?>" title='<?php echo $lang["smallthumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
-						<span class="smallthumbsicon">&nbsp;</span>
-					</a>
-					<?php
-					}
-				}
 				
 			if($display == 'strip')
 				{
@@ -981,7 +943,6 @@ if($responsive_ui)
 			{
 			if ($xlthumbs==true) { ?> <?php if ($display=="xlthumbs") { ?><span class="Selected"><?php echo $lang["xlthumbs"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["xlthumbs"]?></a><?php } ?>&nbsp; |&nbsp;<?php } ?>
 			<?php if ($display=="thumbs") { ?> <span class="Selected"><?php echo $lang["largethumbs"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["largethumbs"]?></a><?php } ?>&nbsp; |&nbsp; 
-			<?php if ($smallthumbs==true) { ?> <?php if ($display=="smallthumbs") { ?><span class="Selected"><?php echo $lang["smallthumbs"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"smallthumbs")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["smallthumbs"]?></a><?php } ?>&nbsp; |&nbsp;<?php } ?>
 			<?php if ($display=="strip") { ?><span class="Selected"><?php echo $lang["striptitle"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["striptitle"]?></a><?php } ?>&nbsp; |&nbsp;
 			<?php if ($display=="list") { ?> <span class="Selected"><?php echo $lang["list"]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["list"]?></a><?php } ?> <?php hook("adddisplaymode"); ?> 
 			<?php
@@ -1232,7 +1193,7 @@ if($responsive_ui)
 			<?php if ($order_by=="field".$df[$x]['ref']) {?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"field" . $df[$x]['ref'],"sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($df[$x]['title'])?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"field" . $df[$x]['ref'])); ?>" onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($df[$x]['title'])?></a></td><?php } ?>
 			<?php }
 		
-		if ($display_user_rating_stars && ($k=="" || $internal_share_access) || hook("forceratingstarheading")){?><td><?php if ($order_by=="popularity") {?><span class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"popularity","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["popularity"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"popularity")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["popularity"]?></a><?php } ?></td><?php } 
+
 		if (isset($rating_field)){?><td>&nbsp;</td><!-- contains admin ratings --><?php }
 		if ($id_column){?><?php if ($order_by=="resourceid"){?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourceid","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["id"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourceid")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["id"]?></a></td><?php } ?><?php } ?>
 		<?php if ($resource_type_column){?><?php if ($order_by=="resourcetype"){?><td class="Selected"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourcetype","sort"=>$revsort)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["type"]?></a><div class="<?php echo urlencode($sort)?>">&nbsp;</div></td><?php } else { ?><td><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("order_by"=>"resourcetype")); ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["type"]?></a></td><?php } ?><?php } ?>
@@ -1346,12 +1307,6 @@ if($responsive_ui)
                 include "search_views/xlthumbs.php";
                 }
 
-            if ($display=="smallthumbs")
-                {
-                # ---------------- Small Thumbs view ---------------------
-                include "search_views/smallthumbs.php";
-                }
-
             if ($display=="list")
                 {
                 # ----------------  List view -------------------
@@ -1377,11 +1332,11 @@ if($responsive_ui)
         <?php
         }
 
-if ($display=="strip")
+if ($display=="strip" || $display=="xlthumbs")
 	{
-        #  ---------------------------- Extra footer for strip view ----------------------------
-        include 'search_views/strip_footer.php';
-        }
+    #  ---------------------------- Extra footer for strip view ----------------------------
+    include 'search_views/' . $display . '_footer.php';
+    }
     
 $url=generateURL($baseurl . "/pages/search.php",$searchparams); 
 

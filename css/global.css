@@ -246,13 +246,13 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #SearchBox .PopupCategoryTree { display: none; position: fixed; text-align: left; z-index: 999; }
 
 /*Resource Panel layout*/
-.ResourcePanelShell {padding:0;float: left;margin: 0px 15px 10px 0px;width: 174px;}
-.ResourcePanel {padding:0;margin:0;width: 172px;padding-bottom:5px;}
+.ResourcePanel {padding:0;margin:0 10px 10px 0;width: 150px;float:left;height:230px;position:relative;}
 .ResourcePanelPreview {height: 156px;width: 156px;margin: 3px;}
-.ResourcePanelInfo {margin-right: 5px;margin-left: 5px;margin-bottom: 4px;overflow:hidden;white-space:nowrap;padding:0;margin-top:0;}	
+.ResourcePanelInfo {margin: 5px;overflow:hidden;white-space:nowrap;padding:0;text-align:justify;}	
 .ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0px;float: left;clear: left;display:inline;}	
-.ResourcePanelIcons {padding: 5px;}	
+.ResourcePanelIcons {padding: 5px;text-align:right;position:absolute;bottom:0;right:0;width:142px;}	
 .ResourcePanelSmallIcons {padding-left: 5px;}	
+.ImageWrapper {height:150px;display:block;padding:0;;vertical-align: middle;text-align: center;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
 .ResourceTypeIcon { height: 16px;width:16px;float:right;margin-right:5px;margin-top:6px; }
@@ -276,7 +276,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a, .CollectionPanelTools a	{;margin-right: 0.5em;text-decoration:none;}
+.ResourcePanelIcons a, .CollectionPanelTools a	{;margin-left: 3px;margin-right:2px; text-decoration:none;}
 .ListTools a	{float: right;margin-left: 5px;text-decoration:none;}
 .ResourcePanelIcons a:hover	{text-decoration:none;}
 .ListTools a:hover	{text-decoration:none;}
@@ -713,7 +713,7 @@ margin-bottom: 10px;
 }
 
 .icondisplay {
-width: 110px;
+width: 90px;
 }
 
 .smalllisticon{background: url(../gfx/interface/listicon.png) no-repeat 0px;}
@@ -1272,7 +1272,7 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
     visibility:visible;
     }
     
-.CollectionPanelTools {visibility:hidden;}
+.CollectionPanelTools {visibility:hidden;text-align:center;}
 .CollectionPanelShell:hover .CollectionPanelTools {visibility:visible;}
 #FilterNodeOptions .FilterItemContainer > label { width: 150px; }.tag-editor li { padding: initial; }
 
@@ -1325,3 +1325,7 @@ a.Enabled, a:visited.Enabled {
     color: #79BC41;
     text-decoration: underline;
 }
+
+.checkselect {float:left;padding-left:5px;}
+
+.ResourcePanelResourceID {float:left;}

@@ -263,7 +263,7 @@ else { ?>
 	<script>
 		jQuery('#CentralSpace').on('prepareTrash', function() {
 			jQuery('#CollectionDiv').droppable({
-				accept: '.ResourcePanelShell, .ResourcePanelShellSmall, .ResourcePanelShellLarge',
+				accept: '.ResourcePanel',
 
 				drop: function(event, ui)
 					{
@@ -283,7 +283,7 @@ else { ?>
 			});
 
 			jQuery('#trash_bin').droppable({
-				accept: '.CollectionPanelShell, .ResourcePanelShell, .ResourcePanelShellSmall, .ResourcePanelShellLarge',
+				accept: '.CollectionPanelShell, .ResourcePanel',
 				activeClass: "ui-state-hover",
 				hoverClass: "ui-state-active",
 

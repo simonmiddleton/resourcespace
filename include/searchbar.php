@@ -147,32 +147,8 @@ $found_month="";if (isset($set_fields["month"])) {$found_month=$set_fields["mont
 $found_day="";if (isset($set_fields["day"])) {$found_day=$set_fields["day"];}
 
 
-if ($display_user_rating_stars && $star_search){ ?>
-	<?php if (!hook("replacesearchbarstarjs")){?>
-	<script type="text/javascript">
 
-	function StarSearchRatingDisplay(rating,hiclass)
-		{
-		for (var n=1;n<=5;n++)
-			{
-			jQuery('#RatingStar-'+n).removeClass('StarEmpty');
-			jQuery('#RatingStar-'+n).removeClass('StarCurrent');
-			jQuery('#RatingStar-'+n).removeClass('StarSelect');
-			if (n<=rating)
-				{
-				jQuery('#RatingStar-'+n).addClass(hiclass);
-				}
-			else
-				{
-				jQuery('#RatingStar-'+n).addClass('StarEmpty');
-				}
-			}
-		}	
-
-	</script>
-	<?php } // end hook replacesearchbarstarjs ?>
-<?php } ?>
-
+?>
 <div id="SearchBox" <?php
     if(isset($slimheader) && $slimheader && isset($slimheader_fixed_position) && $slimheader_fixed_position)
         {
@@ -425,10 +401,6 @@ elseif($restypes=='')
         # Clear the standard fields
 		$searchbuttons .= "document.getElementById('ssearchbox').value='';" . $cleardate;
 
-        if($display_user_rating_stars && $star_search)
-            {
-            $searchbuttons .= "StarSearchRatingDisplay(0,'StarCurrent');document.getElementById('starsearch').value='';window['StarSearchRatingDone']=true;";
-            }
 
         if($resourceid_simple_search)
             {
@@ -730,22 +702,6 @@ elseif($restypes=='')
 				}     			
      			?>
 	
-	
-	    <?php if ($star_search && $display_user_rating_stars){?>
-		<?php if (!hook("replacesearchbarstars")){?>
-        <div class="SearchItem StarRatings"><?php echo $lang["starsminsearch"];?><br />
-        <input type="hidden" id="starsearch" name="starsearch" class="SearchWidth" value="<?php echo htmlspecialchars($starsearch);?>">
-                <?php if ($starsearch=="") {$starsearch=0;}?>           
-                <div  class="RatingStars" onMouseOut="StarSearchRatingDisplay(document.getElementById('starsearch').value,'StarCurrent');">&nbsp;<?php 
-                for ($z=1;$z<=5;$z++)
-                        {
-                        ?><a href="#" onMouseOver="StarSearchRatingDisplay(<?php echo $z?>,'StarSelect');" onClick="document.getElementById('starsearch').value=<?php echo $z?>;return false;"><span id="RatingStar-<?php echo $z?>" class="Star<?php echo ($z<=$starsearch?"Current":"Empty")?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a><?php
-                        }
-                ?>
-                </div>
-        </div>
-        <?php } // end hook replacesearchbarstars?>
-        <?php } ?>
         
 
 	

@@ -2,14 +2,10 @@
 if (!hook("renderresultthumb")) 
 	{ ?>
 	<!--Resource Panel-->
-	<div class="ResourcePanelShell" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>>
-		<div class="ResourcePanel ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>">
+	<div class="ResourcePanel ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
+	style="height: <?php echo 180+(28*count($thumbs_display_fields)) ?>px;"
+	>
 		<?php  
-		if ($resource_type_icons) 
-			{ ?>
-	 		<div class="ResourceTypeIcon IconResourceType<?php echo $result[$n]["resource_type"];  ?>"></div>
-			<?php 
-			}
 		hook ("resourcethumbtop");
 		if (!hook("renderimagethumb")) 
 			{
@@ -39,13 +35,7 @@ if (!hook("renderresultthumb"))
                 {
                 $thm_url = $result[$n]['thm_url'];
                 } # Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
-			?>
-			<table border="0" class="ResourceAlign icon_type_<?php echo $result[$n]["resource_type"]; ?> icon_extension_<?php echo $result[$n]['file_extension']; ?><?php if(!hook("replaceresourcetypeicon")){ if (in_array($result[$n]["resource_type"],$videotypes)) { ?> IconVideo<?php } ?><?php } hook('searchdecorateresourcetableclass'); ?>">
-			<?php hook("resourcetop")?>
-			<tr>
-			<td>
-				<!-- new code start -->
-				<?php
+
 				$show_flv=false;
 				$use_mp3_player=false;
 				if((in_array($result[$n]["file_extension"],$ffmpeg_supported_extensions) || $result[$n]["file_extension"]=="flv") && $video_player_thumbs_view){ 
@@ -87,10 +77,9 @@ if (!hook("renderresultthumb"))
 
 					include "mp3_play.php";
 					}
-				else{?><!-- new code end -->
-				<div id="triangle" style="border-color: transparent transparent rgb(7, 101, 145); border-width: 0px 0px 200px 200px;"></div>
-				<a 
-					style="position:relative;" 
+				else { ?>
+				<a
+				    class="ImageWrapper"
 					href="<?php echo $url?>"  
 					onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
 					title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field])))))?>"
@@ -99,18 +88,19 @@ if (!hook("renderresultthumb"))
                         if(1 == $result[$n]['has_image'])
                         {
                         ?>
-                        <img 
+                        <img
+							 border="0"
                         <?php
                         if('' != $result[$n]['thumb_width'] && 0 != $result[$n]['thumb_width'] && '' != $result[$n]['thumb_height'])
                             {
                             ?>
                             width="<?php echo $result[$n]["thumb_width"]?>" 
-                            height="<?php echo $result[$n]["thumb_height"]?>" 
+                            height="<?php echo $result[$n]["thumb_height"]?>"
+							style="padding-top:<?php echo floor((150-$result[$n]["thumb_height"])/2) ?>px;"
                             <?php
                             }
                             ?>
                         src="<?php echo $thm_url ?>" 
-                        class="ImageBorder" 
                         alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))); ?>"
                         />
                         <?php
@@ -120,7 +110,7 @@ if (!hook("renderresultthumb"))
                             {
                             ?>
                             <script>
-                            jQuery('#ResourceShell<?php echo $ref; ?> .ResourcePanel table tbody tr td a img').mousemove(function(event)
+                            jQuery('#ResourceShell<?php echo $ref; ?> a img').mousemove(function(event)
                                 {
                                 var x_coord             = event.pageX - jQuery(this).offset().left;
                                 var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref)); ?>;
@@ -142,56 +132,19 @@ if (!hook("renderresultthumb"))
 						{ ?>
 						<img 
 							border=0 
-							src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" 
+							src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="padding-top:10px;"
 
 						/>
 						<?php 
 						}
 					hook("aftersearchimg","",array($result[$n]))?>
 				</a>
-				<!-- new code start -->
 				<?php } ?>
-				<!-- new code end -->
-			</td>
-			</tr>
-			</table>
 			<?php 
 			} ?> 
 		<!-- END HOOK Renderimagethumb-->
 		<?php 
-		hook("beforesearchstars");
-		if ($display_user_rating_stars && ($k=="" || $internal_share_access))
-			{ 
-			if (!hook("replacesearchstars"))
-				{
-				if ($result[$n]['user_rating']=="") {$result[$n]['user_rating']=0;}
-				$modified_user_rating=hook("modifyuserrating");
-				if ($modified_user_rating!=''){$result[$n]['user_rating']=$modified_user_rating;}
-				?>
-				<div  class="RatingStars" onMouseOut="UserRatingDisplay(<?php echo $result[$n]['ref']?>,<?php echo $result[$n]['user_rating']?>,'StarCurrent');">&nbsp;<?php 
-				for ($z=1;$z<=5;$z++)
-					{
-					?>
-					<a 
-						href="#" 
-						onMouseOver="UserRatingDisplay(<?php echo $result[$n]['ref']?>,<?php echo $z?>,'StarSelect');" 
-						onClick="UserRatingSet(<?php echo $userref?>,<?php echo $result[$n]['ref']?>,<?php echo $z?>);return false;" 
-						id="RatingStarLink<?php echo $result[$n]['ref'].'-'.$z?>"
-					>
-						<span 
-							id="RatingStar<?php echo $result[$n]['ref'].'-'.$z?>" 
-							class="Star<?php echo ($z<=$result[$n]['user_rating']?"Current":"Empty")?>"
-						>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						</span>
-					</a>
-					<?php
-					}
-				?>
-				</div>
-				<?php 
-				} // end hook replacesearchstars
-			}
+
 		if (!hook("replaceicons")) 
 			{
 			hook("icons");
@@ -356,7 +309,7 @@ if (!hook("renderresultthumb"))
 		if(!hook("replacethumbsidinthumbnail"))
 			{
 			if ($display_resource_id_in_thumbnail && $ref>0) 
-				{ echo htmlspecialchars($ref); } 
+				{ echo "<span class='ResourcePanelResourceID'>" . htmlspecialchars($ref) . "</span>"; } 
 			else 
 				{ ?>&nbsp;<?php }
 			} # end hook("replacethumbsidinthumbnail")
@@ -367,8 +320,7 @@ if (!hook("renderresultthumb"))
 			} // end hook replaceresourcetools ?>
         </div>	
 	</div>
-	
-	</div>
+
 	<?php 
 	} # end hook renderresultthumb
 

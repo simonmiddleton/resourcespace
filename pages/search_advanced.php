@@ -564,17 +564,7 @@ if (!$daterange_search)
 	<div class="clearerleft"> </div>
 	</div>
 <?php }} ?>
-<?php if ($star_search && $display_user_rating_stars){?>
-<div class="Question"><label><?php echo $lang["starsminsearch"];?></label>
-<select id="starsearch" name="starsearch" class="SearchWidth" onChange="UpdateResultCount();">
-<option value=""><?php echo $lang['anynumberofstars']?></option>
-<?php for ($n=1;$n<=5;$n++){?>
-	 <option value="<?php echo $n;?>" <?php if ($n==$starsearch){?>selected<?php } ?>><?php for ($x=0;$x<$n;$x++){?>&#9733;<?php } ?></option>
-<?php } ?>
-</select>
-<div class="clearerleft"> </div>
-</div>
-<?php } ?>
+
 
 <?php hook('advsearchaddfields'); ?>
 

@@ -1710,8 +1710,6 @@ function get_resource_table_joins(){
 	global 
 	$rating_field,
 	$sort_fields,
-	$small_thumbs_display_fields,
-	$xl_thumbs_display_fields,
 	$thumbs_display_fields,
 	$list_display_fields,
 	$data_joins,
@@ -1724,8 +1722,6 @@ function get_resource_table_joins(){
 
 	$joins=array_merge(
 	$sort_fields,
-	$small_thumbs_display_fields,
-	$xl_thumbs_display_fields,
 	$thumbs_display_fields,
 	$list_display_fields,
 	$data_joins,

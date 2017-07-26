@@ -25,21 +25,7 @@ if(!isset($thumbs) && ($pagename!="login") && ($pagename!="user_password") && ($
         rs_setcookie("thumbs", $thumbs, 1000,"","",false,false);
         }
     }
-// blank starsearch cookie in case $star_search was turned off
-rs_setcookie('starsearch', '');
-if ($display_user_rating_stars && $star_search)
-    {
-	# if seardch is not a special search (ie. !recent), use starsearchvalue.
-	if (getval("search","")!="" && strpos(getval("search",""),"!")!==false)
-		{
-		$starsearch="";
-		}
-	else
-		{
-		$starsearch=getvalescaped("starsearch","");	
-		rs_setcookie('starsearch', $starsearch);
-	    }
-	}
+
 	
 ?><!DOCTYPE html>
 <html lang="<?php echo $language ?>">	

@@ -84,50 +84,6 @@ if (!hook("replacelistitem"))
 				} //end replace list title
 			}
 
-		hook("beforesearchstars");
-		if ($display_user_rating_stars && $k=="")
-			{ 
-			if (!hook("replacesearchstars"))
-				{ ?>
-				<td <?php hook("listviewcolumnstyle");?> >
-					<?php 
-					if ($result[$n]['user_rating']=="") 
-						{$result[$n]['user_rating']=0;}
-
-					$modified_user_rating=hook("modifyuserrating");
-					if ($modified_user_rating!='')
-						{$result[$n]['user_rating']=$modified_user_rating;}
-					?>
-					<div  
-						class="RatingStars" 
-						style="text-align:left;margin:0px;" 
-						onMouseOut="UserRatingDisplay(<?php echo $result[$n]['ref']?>,<?php echo $result[$n]['user_rating']?>,'StarCurrent');"
-					>
-						<?php 
-						for ($z=1;$z<=5;$z++)
-							{ ?>
-							<a 
-								href="#" 
-								onMouseOver="UserRatingDisplay(<?php echo $result[$n]['ref']?>,<?php echo $z?>,'StarSelect');" 
-								onClick="UserRatingSet(<?php echo $userref?>,<?php echo $result[$n]['ref']?>,<?php echo $z?>);return false;" 
-								id="RatingStarLink<?php echo $result[$n]['ref'].'-'.$z?>"
-							>
-								<span 
-									id="RatingStar<?php echo $result[$n]['ref'].'-'.$z?>" 
-									class="Star<?php echo ($z<=$result[$n]['user_rating']?"Current":"Empty")?>"
-								>
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								</span>
-							</a>
-							<?php
-							}
-					?>
-					</div>
-				</td>
-				<?php 
-				} // end hook replacesearchstars
-			}
-		
 		if (isset($rating_field))
 			{ ?>
 			<td <?php hook("listviewcolumnstyle");?> >

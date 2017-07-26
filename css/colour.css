@@ -51,11 +51,21 @@ input[readonly] {color: #000000;}
 #ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active
 {color:#fff;text-decoration:none;}
 
-#ThemeBoxPanel,  .RecordPanel, .ResourcePanel, .ResourcePanelSmall, .ResourcePanelLarge{background: #eee;}
-#ThemeBoxPanel, #SearchBoxPanel, #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanel, .ResourcePanelSmall, .ResourcePanelLarge
+#ThemeBoxPanel,  .RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge{background: #eee;}
+#ThemeBoxPanel, #SearchBoxPanel, #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge
 	{
 	border-radius:5px;
 	}
+.ResourcePanel
+	{
+	background-color: white;
+	border:1px solid #999;
+	}
+.ImageWrapper
+	{
+	background-color: #ddd;
+	}
+	
 #easyTooltip{
 	background: inherit;
 	border: 1px solid;
@@ -102,7 +112,6 @@ input[readonly] {color: #000000;}
 
 /* End Home */
 
-.ImageBorder, .Picture, .VideoBorder {border: 1px solid #000000;}	
 .CollectImageBorder {border: 1px solid #000000;}	
 .ASC	{	background: url(../gfx/interface/ASC.gif) no-repeat;background-position:center;}
 .DESC	{	background: url(../gfx/interface/DESC.gif) no-repeat;background-position:center;}

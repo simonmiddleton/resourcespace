@@ -46,9 +46,6 @@ for ($n=0;$n<count($collections);$n++)
 		</td>
 		</tr></table>
         <?php // for spacing
-        if ($display_user_rating_stars && $k==""){ ?>
-            <div  class="RatingStars">&nbsp;</div>
-        <?php } ?>
         <?php hook("icons","search",array("collections"=>true)); //for spacing ?>
         <?php //add spacing for display fields to even out the box size
         for ($x=0;$x<count($df);$x++){
@@ -110,9 +107,7 @@ for ($n=0;$n<count($collections);$n++)
 		</td>
 		</tr></table>
         <?php // for spacing
-        if ($display_user_rating_stars && $k==""){ ?>
-            <div  class="RatingStars">&nbsp;</div>
-        <?php } ?>
+
         <?php hook("icons","search",array("collections"=>true)); //for spacing ?>
         <?php //add spacing for display fields to even out the box size
         for ($x=0;$x<count($df);$x++){
@@ -181,9 +176,6 @@ for ($n=0;$n<count($collections);$n++)
 		</div>
 		</td>
 		</tr></table>	
-        <?php // for spacing
-        if ($display_user_rating_stars && $k==""){ ?><div  class="RatingStars">&nbsp;&nbsp;</div>
-        <?php } ?>
         <?php hook("icons","search",array("collections"=>true)); //for spacing ?>
         <?php //add spacing for display fields to even out the box size
         for ($x=0;$x<count($df);$x++){
@@ -229,7 +221,7 @@ for ($n=0;$n<count($collections);$n++)
 				
 		?>
 		<td>-</td>
-	    <?php if ($display_user_rating_stars && $k==""){ ?><td>&nbsp;&nbsp;</td><?php } ?>
+
 		<?php if ($id_column){?><td><?php echo $collections[$n]['ref']?></td><?php } ?>
 		<?php if ($resource_type_column){?><td><?php echo $collection_tag?></td><?php } ?>
 		<?php if ($date_column){?><td><?php echo nicedate($collections[$n]["created"],false,true)?></td><?php } ?>

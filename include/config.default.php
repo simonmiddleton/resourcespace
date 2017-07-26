@@ -585,7 +585,7 @@ the user to get an idea of what the video is about
 
 Note: Set to 0 to disable this feature
 */
-$ffmpeg_snapshot_frames = 12;
+$ffmpeg_snapshot_frames = 20;
 
 # $ffmpeg_command_prefix - Ability to add prefix to command when calling ffmpeg 
 # Example for use on Linux using nice to avoid slowing down the server
@@ -895,7 +895,7 @@ $user_purge=true;
 # List of active plugins.
 # Note that multiple plugins must be specified within array() as follows:
 # $plugins=array("loader","rss","messaging","googledisplay"); 
-$plugins = array('transform', 'rse_version');
+$plugins = array('transform', 'rse_version', 'lightbox_preview');
 
 # Uncomment and set the next line to allow anonymous access. 
 # You must set this to the USERNAME of the USER who will represent all your anonymous users
@@ -1697,6 +1697,7 @@ $thumbs_display_extended_fields=array();
 	
 # Enable extra large thumbnails option for search screen
 $xlthumbs=true;
+
 # Extra Large Display Fields:  array of fields to display on the xlarge thumbnail view.
 $xl_thumbs_display_fields=array(8);
 # array of defined xl_thumbs_display_fields to apply CSS modifications to (via $xl_search_results_title_wordwrap, $xl_search_results_title_height, $xl_search_results_title_trim)
@@ -1704,16 +1705,8 @@ $xl_thumbs_display_extended_fields=array();
 	# $xl_search_result_title_height=26;
 	$xl_search_results_title_trim=60;
 	$xl_search_results_title_wordwrap=100;
-	
-# Enable small thumbnails option for search screen
-$smallthumbs=true;	
-# Small Thumbs Display Fields: array of fields to display on the small thumbnail view.
-$small_thumbs_display_fields=array();
-# array of defined small_thumbs_display_fields to apply CSS modifications to ($small_search_results_title_wordwrap, $small_search_results_title_height, $small_search_results_title_trim)
-$small_thumbs_display_extended_fields=array();
-	# $small_search_result_title_height=26;
-	$small_search_results_title_trim=30;
-	$small_search_results_title_wordwrap=100;
+
+
 
 # Enable list view option for search screen
 $searchlist=true;
@@ -2401,8 +2394,6 @@ $preview_all_hide_collections=true;
 # Don't display the link to toggle thumbnails in collection frame
 $disable_collection_toggle=false;
 
-# Display User Rating Stars in search views (a popularity column in list view)
-$display_user_rating_stars=false;
 # Allow each user only one rating per resource (can be edited). Note this will remove all accumlated ratings/weighting on newly rated items.
 $user_rating_only_once = true;
 # if user_rating_only_once, allow a log view of user's ratings (link is in the rating count on the View page):
@@ -2493,9 +2484,6 @@ $psd_transparency_checkerboard=false;
 // checkerboard for gif and png with transparency
 $transparency_background = "gfx/images/transparency.gif";
 
-# Search for a minimum number of stars in Simple search/Advanaced Search (requires $$display_user_rating_stars)
-$star_search=false;
-
 # Omit archived resources from get_smart_themes (so if all resources are archived, the header won't show)
 # Generally it's not possible to check for the existence of results based on permissions,
 # but in the case of archived files, an extra join can help narrow the smart theme results to active resources.
@@ -2553,8 +2541,7 @@ $display_swf_xlarge_view=false;
 $mp3_player_thumbs_view=false;
 # show flv player in thumbs view 
 $video_player_thumbs_view=false;
-# show flv player in small thumbs view 
-$video_player_small_thumbs_view=false;
+
 
 # use an ffmpeg alternative for search preview playback
 $video_player_thumbs_view_alt=false;
