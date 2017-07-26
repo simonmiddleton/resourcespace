@@ -3341,4 +3341,5 @@ $facial_recognition_face_recognizer_models_location = '';
 # $remote_config_url="http://remote-config.mycompany.com";
 # $remote_config_key=""; # The baseurl will be hashed with this key and passed as an &sign= value.
 
-
+// Option to allow administrators to change the value of the 'contributed by' user for a resource.
+$edit_contributed_by = false;

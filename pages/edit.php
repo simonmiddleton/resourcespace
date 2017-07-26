@@ -1416,7 +1416,7 @@ else
     # Related Resources
     if ($enable_related_resources && ($multiple || $ref>0)) # Not when uploading
     {
-       if ($multiple) { ?><div><input name="editthis_related" id="editthis_related" value="yes" type="checkbox" onClick="var q=document.getElementById('question_related');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis<?php echo $n?>"><?php echo $lang["relatedresources"]?></label></div><?php } ?>
+       if ($multiple) { ?><div><input name="editthis_related" id="editthis_related" value="yes" type="checkbox" onClick="var q=document.getElementById('question_related');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_related"><?php echo $lang["relatedresources"]?></label></div><?php } ?>
 
        <div class="Question" id="question_related" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
           <label for="related"><?php echo $lang["relatedresources"]?></label><?php
@@ -1433,6 +1433,22 @@ else
           </div><?php
        } 
     }
+    
+    // Edit the 'contributed by' value of the resource table
+    if($ref > 0 && $edit_contributed_by)
+      {
+      $sharing_userlists = false;
+      $single_user_select_field_id = "created_by";
+      $single_user_select_field_value = $resource["created_by"];
+      if ($edit_autosave) {$single_user_select_field_onchange = "AutoSave('created_by');"; }
+      if ($multiple) { ?><div id><input name="editthis_created_by" id="editthis_created_by" value="yes" type="checkbox" onClick="var q=document.getElementById('question_created_by');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_created_by>"><?php echo $lang["contributedby"] ?></label></div><?php } ?>
+      <div class="Question" id="question_created_by" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+        <label><?php echo $lang["contributedby"] ?></label><?php include __DIR__ . "/../include/user_select.php"; ?>
+        <div class="clearerleft"> </div>
+      </div>
+      <?php
+      }
+    
 
 
     if($ref > 0 && $delete_resource_custom_access)

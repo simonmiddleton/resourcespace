@@ -63,7 +63,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 		
 	global $lang, $auto_order_checkbox, $userresourcedefaults, $multilingual_text_fields,
            $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,
-           $DATE_FIELD_TYPES, $range_separator, $reset_date_field, $reset_date_upload_template;
+           $DATE_FIELD_TYPES, $range_separator, $reset_date_field, $reset_date_upload_template,
+           $edit_contributed_by;
 
 	hook("befsaveresourcedata", "", array($ref));
 
@@ -382,7 +383,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					}
 				} // End of if not a fixed list (node) field
 			
-
+            
 		    // Required fields cannot have empty values
 		    if(1 == $fields[$n]['required'] && '' == $fields[$n]['display_condition'] && (('' == strip_leading_comma($val) && '' == $autosave_field) || (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values)==0)))
                 {
@@ -467,7 +468,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 				}
 			}
 		}	   
-    
+        
         if ($autosave_field=="")
             {
             # Additional tasks when editing all fields (i.e. not autosaving)
@@ -505,11 +506,31 @@ function save_resource_data($ref,$multi,$autosave_field="")
         }
     db_end_transaction();
 
-	# Expiry field(s) edited? Reset the notification flag so that warnings are sent again when the date is reached.
+	// Initialise an array of updates for the resource table
+    $resource_update_sql = array();
+    $resource_update_log_sql = array();
+    if($edit_contributed_by)
+            {
+            $created_by = $resource_data['created_by'];
+            $new_created_by = getvalescaped("created_by",0,true);
+            if((getvalescaped("created_by",0,true) > 0) && $new_created_by != $created_by)
+                {
+                # Also update created_by
+                $resource_update_sql[] = "created_by='" . $new_created_by . "'";
+                $olduser=get_user($created_by);
+                $newuser=get_user($new_created_by);
+				$resource_update_log_sql[] = array("ref"=>$ref,"type"=>LOG_CODE_CREATED_BY_CHANGED,"field"=>0,"notes"=>"","from"=>$created_by . " (" . ($olduser["fullname"]=="" ? $olduser["username"] : $olduser["fullname"])  . ")","to"=>$new_created_by . " (" . ($newuser["fullname"]=="" ? $newuser["username"] : $newuser["fullname"])  . ")");
+                }
+            }
+            
+    # Expiry field(s) edited? Reset the notification flag so that warnings are sent again when the date is reached.
 	$expirysql="";
-	if ($expiry_field_edited) {$expirysql=",expiry_notification_sent=0";}
-
-	if (!hook('forbidsavearchive', '', array($errors)))
+	if ($expiry_field_edited)
+        {
+        $resource_update_sql[] = "expiry_notification_sent='0'";
+        }
+    
+    if (!hook('forbidsavearchive', '', array($errors)))
 		{
 		# Also update archive status and access level
 		$oldaccess=$resource_data['access'];
@@ -525,15 +546,16 @@ function save_resource_data($ref,$multi,$autosave_field="")
 			}
 			
 		if ($access!=$oldaccess || $setarchivestate!=$oldarchive) // Only if changed
-			{
-			sql_query("update resource set archive='" . $setarchivestate . "',access='" . $access . "' $expirysql where ref='$ref'");  
+			{  
 			if ($setarchivestate!=$oldarchive && $ref>0)
 				{
-				resource_log($ref,"s",0,"",$oldarchive,$setarchivestate);
+                $resource_update_sql[] = "archive='" . $setarchivestate . "'";                
+				$resource_update_log_sql[] = array("ref"=>$ref,"type"=>"s","field"=>0,"notes"=>"","from"=>$oldarchive,"to"=>$setarchivestate);
 				}
 			if ($access!=$oldaccess && $ref>0)
 				{
-				resource_log($ref,"a",0,"",$oldaccess,$access);
+                $resource_update_sql[] = "access='" . $access . "'"; 
+				$resource_update_log_sql[] = array("ref"=>$ref,"type"=>"a","field"=>0,"notes"=>"","from"=>$oldaccess,"to"=>$access);
 				}
             
             if ($oldaccess==3 && $access!=3)
@@ -542,8 +564,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 # This can delete any 'manual' usergroup grants also as the user will have seen this as part of the custom access.
                 delete_resource_custom_access_usergroups($ref);
                 }
-			
-			
+						
 			# Clear any outstanding notifications relating to submission of this resource
 			message_remove_related(SUBMITTED_RESOURCE,$ref);
 			
@@ -565,6 +586,16 @@ function save_resource_data($ref,$multi,$autosave_field="")
 				}
 			}
 		}
+        
+    if(count($resource_update_sql)>0)
+        {
+        sql_query("update resource set " . implode(",",$resource_update_sql) . " where ref='$ref'");
+        foreach($resource_update_log_sql as $log_sql)
+            {
+            resource_log($log_sql["ref"],$log_sql["type"],$log_sql["field"],$log_sql["notes"],$log_sql["from"],$log_sql["to"]);   
+            }
+        }
+        
 	# For access level 3 (custom) - also save custom permissions
 	if (getvalescaped("access",0)==3) {save_resource_custom_access($ref);}
 
@@ -632,7 +663,8 @@ function set_resource_defaults($ref, array $specific_fields = array())
 if (!function_exists("save_resource_data_multi")){
 function save_resource_data_multi($collection)
     {
-    global $auto_order_checkbox,$auto_order_checkbox_case_insensitive,  $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$range_separator;
+    global $auto_order_checkbox,$auto_order_checkbox_case_insensitive,  $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,
+    $range_separator, $edit_contributed_by;
 
     # Save all submitted data for collection $collection, this is for the 'edit multiple resources' feature
     # Loop through the field data and save (if necessary)
@@ -1186,6 +1218,25 @@ function save_resource_data_multi($collection)
 		}
 	
 	# Also update access level
+	if (getval("editthis_created_by","")!="" && $edit_contributed_by)
+        {
+        for ($m=0;$m<count($list);$m++)
+			{
+			$ref=$list[$m];
+            $created_by = sql_value("select created_by value from resource where ref='$ref'",""); 
+            $new_created_by = getvalescaped("created_by",0,true);
+            if((getvalescaped("created_by",0,true) > 0) && $new_created_by != $created_by)
+                {
+                sql_query("update resource set created_by='" . $new_created_by . "'  where ref='$ref'"); 
+                $olduser=get_user($created_by,true);
+                $newuser=get_user($new_created_by,true);
+                resource_log($ref,LOG_CODE_CREATED_BY_CHANGED,0,"",$created_by . " (" . ($olduser["fullname"]=="" ? $olduser["username"] : $olduser["fullname"])  . ")",$new_created_by . " (" . ($newuser["fullname"]=="" ? $newuser["username"] : $newuser["fullname"])  . ")");
+                }
+            }
+        }
+    
+    
+    # Also update access level
 	if (getval("editthis_access","")!="")
 		{
 		for ($m=0;$m<count($list);$m++)

@@ -578,6 +578,7 @@ $lang["log-E"]="Shared resource via e-mail to ";//  + notes field
 $lang["log-v"]="Viewed resource";
 $lang["log-x"]="Deleted resource";
 $lang["log-l"]="Logged in"; # For user entries only.
+$lang["log-o"]="Changed contributed by";
 $lang["log-t"]="Transformed file";
 $lang["log-s"]="Change status";
 $lang["log-a"]="Change access";
