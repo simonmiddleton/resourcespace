@@ -3,27 +3,20 @@
 # Check access keys
 function HookResourceconnectAllCheck_access_key($resource,$key)
 	{
-
 	# Generate access key and check that the key is correct for this resource.
 	global $scramble_key;
 	$access_key=md5("resourceconnect" . $scramble_key);
-	
+
 	if ($key!=substr(md5($access_key . $resource),0,10)) {return false;} # Invalid access key. Fall back to user logins.
 
 	global $resourceconnect_user; # Which user to use for remote access?
+	$userdata=validate_user("u.ref='$resourceconnect_user'");
+	setup_user($userdata[0]);
 	
-
-	global $usergroup,$userpermissions,$userrequestmode,$is_resourceconnect;
-	$userinfo=sql_query("select u.usergroup,g.permissions from user u join usergroup g on u.usergroup=g.ref where u.ref='$resourceconnect_user'");
-	if (count($userinfo)>0)
-		{
-		$usergroup=$userinfo[0]["usergroup"];
-		$userpermissions=explode(",",$userinfo[0]["permissions"]);
-		if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
-		$userrequestmode=0; # Always use 'email' request mode for external users
-		}
+	
 	
 	# Set that we're being accessed via resourceconnect.
+	global $is_resourceconnect;
 	$is_resourceconnect=true;
 	
 	return true;

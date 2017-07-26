@@ -12,15 +12,8 @@ $affiliatename=getvalescaped("affiliatename","");
 
 # Authenticate as 'resourceconnect' user.
 global $resourceconnect_user; # Which user to use for remote access?
-global $usergroup,$userpermissions,$userrequestmode;
-$userinfo=sql_query("select u.usergroup,g.permissions from user u join usergroup g on u.usergroup=g.ref where u.ref='$resourceconnect_user'");
-if (count($userinfo)>0)
-	{
-	$usergroup=$userinfo[0]["usergroup"];
-	$userpermissions=explode(",",$userinfo[0]["permissions"]);
-	if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
-	$userrequestmode=0; # Always use 'email' request mode for external users
-	}
+$userdata=validate_user("u.ref='$resourceconnect_user'");
+setup_user($userdata[0]);
 
 $restypes="";
 # Resolve resource types
