@@ -7,12 +7,13 @@
 #
 
 include "../../include/db.php";
+
 if (!(PHP_SAPI == 'cli'))
 	{
 	include "../../include/authenticate.php";
 	if (!checkperm("a")) {exit("Permission denied");}
-	$start = getval('ref', 0, true);
-	$end = getvalescaped('end', 0, true);
+	$start = getvalescaped('ref', 0, true);
+	$end   = getvalescaped('end', 0, true);
 	}
 elseif(isset($argv[1]) && is_numeric($argv[1]))
 	{
@@ -22,18 +23,13 @@ elseif(isset($argv[1]) && is_numeric($argv[1]))
 	}
 	
 include_once "../../include/general.php";
-include "../../include/resource_functions.php";
-include "../../include/image_processing.php";
+include_once "../../include/resource_functions.php";
+include_once "../../include/image_processing.php";
 
 // Disable sql_logging
 $mysql_log_transactions=false;
 
 $sql = '';
-
-if('' != getval('ref', ''))
-    {
-    $sql = "WHERE r.ref = '" . getvalescaped('ref', '', true) . "'";
-    }
 
 set_time_limit(0);
 echo "<pre>" . PHP_EOL;
@@ -45,6 +41,12 @@ if(isset($start))    {
 		$sql.= " and r.ref<=" . $end;
 		}
     }	
+
+// Re-index only one resource
+if(0 < $start && 0 == $end)
+    {
+    $sql = "WHERE r.ref = '{$start}'";
+    }
 	
 $resources = sql_query("SELECT r.ref, u.username, u.fullname FROM resource AS r LEFT OUTER JOIN user AS u ON r.created_by = u.ref {$sql} ORDER BY ref");
 
