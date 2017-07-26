@@ -46,4 +46,19 @@ function HookLightbox_previewViewRenderbeforeresourcedetails()
 	addLightBox('a[rel="lightbox-other"]');
 	}
 
+function HookLightbox_previewViewAftersearchimg()
+	{
+	// Prevent loading of Central Space when clicking preview image
+	?>
+
+	<script type="text/javascript">
+		jQuery(document).ready(function() {
+			jQuery('#previewimagelink').removeAttr('onclick');
+		});
+	</script>
+
+	<?php
+	}
+
 ?>
+
