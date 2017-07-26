@@ -4559,33 +4559,22 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
     {
     global $get_resource_path_extra_download_query_string_params;
 
-    $get_resource_path_extra_download_query_string_params = array();
-    $snapshots_found                                      = array();
-    $path                                                 = get_resource_path($resource_id, true, 'snapshot', false, 'jpg', true, 1, false, '', -1, false);
+    $snapshots_found = array();
+ 
+    $template_path            = get_resource_path($resource_id, true,  'snapshot', false, 'jpg', -1, 1, false, '');
+    $template_webpath         = get_resource_path($resource_id, false, 'snapshot', false, 'jpg', -1, 1, false, '');
 
     $i = 1;
     do
         {
-        $snapshot_path  = str_replace('snapshot', "snapshot_{$i}", $path);
-        $snapshot_found = file_exists($snapshot_path);
+	$path=str_replace("snapshot","snapshot_" . $i,$template_path);
+	$webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
+
+        $snapshot_found  = file_exists($path);
 
         if($snapshot_found)
             {
-            if(!$file_path)
-                {
-                global $hide_real_filepath;
-
-                $get_resource_path_extra_download_query_string_params['snapshot_frame'] = $i;
-
-                $snapshot_path = get_resource_path($resource_id, false, 'snapshot', false, 'jpg', true, 1, false, '', -1, false);
-
-                if(!$hide_real_filepath)
-                    {
-                    $snapshot_path = str_replace('snapshot', "snapshot_{$i}", $snapshot_path);
-                    }
-                }
-
-            $snapshots_found[$i] = $snapshot_path;
+            $snapshots_found[$i] = ($file_path ? $path : $webpath);
             }
 
         $i++;
