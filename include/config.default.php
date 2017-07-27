@@ -2086,6 +2086,8 @@ $staticsync_extension_mapping[4]=array("flv");
 # $staticsync_filepath_to_field=100;
 # Append multiple mapped values instead of overwritting? This will use the same appending methods used when editing fields. Not used on dropdown, date, category tree, datetime, or radio buttons
 $staticsync_extension_mapping_append_values=true;
+# Uncomment and set the next line to specify specific fields for $staticsync_extension_mapping_append_values
+#$staticsync_extension_mapping_append_values_fields=array();
 # Should the generated resource title include the sync folder path?
 $staticsync_title_includes_path=true;
 # Should the sync'd resource files be 'ingested' i.e. moved into ResourceSpace's own filestore structure?

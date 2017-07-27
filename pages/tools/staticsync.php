@@ -160,7 +160,7 @@ function ProcessFolder($folder)
            $staticsync_defaultstate, $additional_archive_states, $staticsync_extension_mapping_append_values,
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
            $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
-           $FIXED_LIST_FIELD_TYPES;
+           $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields;
     
     $collection = 0;
     $treeprocessed=false;
@@ -389,7 +389,7 @@ function ProcessFolder($folder)
                                                 $newnode = set_node(null, $field, trim($value), null, null, true);
                                                 echo "Adding node" . trim($value) . "\n";
                                                 
-                                                if($staticsync_extension_mapping_append_values && !in_array($field_info['type'],array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)))
+                                                if($staticsync_extension_mapping_append_values && !in_array($field_info['type'],array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)) && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
                                                     {
                                                     // The $staticsync_extension_mapping_append_values variable actually refers to folder->metadata mapping, not the file extension
                                                     $field_nodes[$field][]   = $newnode;
@@ -404,18 +404,18 @@ function ProcessFolder($folder)
                                             }
                                         else
                                             {
-                                            if($staticsync_extension_mapping_append_values)
+                                            if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
                                                 {
-    											$given_value=$value;
-    											// append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
-    											if(in_array($field['type'],array(0,1,4,5,6,8)))
+                                                $given_value=$value;
+                                                // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
+                                                if(in_array($field['type'],array(0,1,4,5,6,8)))
                                                     {
                                                     $old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
                                                     $value=append_field_value($field_info,$value,$old_value);
                                                     }
                                                 }
                                             update_field ($r, $field, $value);
-                                            if($staticsync_extension_mapping_append_values && isset($given_value))
+                                            if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)) && isset($given_value))
                                                 {
                                                 $value=$given_value;
                                                 }
