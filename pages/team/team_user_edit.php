@@ -66,6 +66,12 @@ if (!checkperm_user_edit($user))
 
 include "../../include/header.php";
 
+if ($user == ''){
+	echo $lang["accountdoesnotexist"];
+	include "../../include/footer.php";
+	exit();
+	}
+	
 # Log in as this user?
 if (getval("loginas","")!="")
 	{

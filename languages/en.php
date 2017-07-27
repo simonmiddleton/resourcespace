@@ -673,6 +673,7 @@ $lang["accountlockedstatus"]="Account is locked";
 $lang["accountunlock"]="Unlock";
 $lang['account_request_label'] = 'Account request';
 $lang['account_request_confirmation_email_to_requester'] = 'Your request for a new user account has been received. Someone will be in contact soon. Thank you!';
+$lang["accountdoesnotexist"]="This user account does not exist.<br /> If you arrived at this page because of a link in the user messages area, please note that another admin might have already handled an account request and removed this account.";
 
 # Research request
 $lang["nameofproject"]="Name of project";
