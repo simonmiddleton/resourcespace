@@ -1944,6 +1944,9 @@ $themes_column_sorting=false; // only works with themes_category_split_pages
 $themes_date_column=false;
 $themes_ref_column=false;
 
+// Enable to have a background image when $themes_simple_view is enabled
+$themes_show_background_image = false;
+
 # Ask the user the intended usage when downloading
 $download_usage=false;
 $download_usage_options=array("Press","Print","Web","TV","Other");

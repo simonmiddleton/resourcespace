@@ -525,14 +525,14 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 						{
 						foreach($theme_images as $theme_image)
 							{
-							if(file_exists(get_resource_path($theme_image,true,"pre",false)))
-								{
-								$theme_image_path=get_resource_path($theme_image,false,"pre",false);
-								
-								$theme_image_detail= get_resource_data($theme_image);
-								break;
-								}
-							}
+                            if(file_exists(get_resource_path($theme_image,true,"pre",false)))
+                                {
+                                $theme_image_path=get_resource_path($theme_image,false,"pre",false);
+                                
+                                $theme_image_detail= get_resource_data($theme_image);
+                                break;
+                                }
+                            }
 						}
 					}
 				for ($x=2;$x<count($themes)+2;$x++)
@@ -1082,5 +1082,78 @@ else
 		} 
 	}
 
+if($simpleview && $themes_show_background_image)
+    {
+    $slideshow_files = get_slideshow_files_data();
+
+    foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
+        {
+        if(isset($background_image_url))
+            {
+            continue;
+            }
+
+        if(isset($background_image_url) || !file_exists($slideshow_file_info['file_path']))
+            {
+            continue;
+            }
+
+        // Set first image found when refreshing. Otherwise, the system picks up the last image that dash background
+        // changed to when navigating using CentralSpaceLoad.
+        $background_image_url = $baseurl_short . $homeanim_folder . '/' . $slideshow_image . '.jpg' . '?nc=' . time();
+        break;
+        }
+
+    // Overwrite background_image_url with theme specific ones
+    $background_theme_images = get_theme_image(0 < count($themes) ? $themes : array(''));
+
+        if(is_array($background_theme_images) && 0 < count($background_theme_images))
+            {
+            foreach($background_theme_images as $background_theme_image)
+                {
+                if(file_exists(get_resource_path($background_theme_image, true, 'scr', false)))
+                    {
+                    $background_image_url = get_resource_path($background_theme_image, false, 'scr', false);
+                    break;
+                    }
+                }
+            }
+            ?>
+    <script>
+    jQuery(document).ready(function ()
+        {
+        jQuery('#UICenter').css('background-image','url(<?php echo $background_image_url; ?>)');
+        jQuery('#Footer').hide();
+        });
+
+    jQuery('#CentralSpace').on('CentralSpaceLoaded', function (event, data)
+        {
+        var background_image_url = SlideshowImages[SlideshowCurrent];
+
+        jQuery('#Footer').show();
+
+        if('themes.php' == basename(data.url).substr(0, 10))
+            {
+            // Set the background_image_url if one was set based on the featured collection category
+            <?php
+            if(isset($background_image_url))
+                {
+                ?>
+                background_image_url = '<?php echo $background_image_url; ?>';
+                <?php
+                }
+                ?>
+            jQuery('#UICenter').css('background-image','url(' + background_image_url + ')');
+            jQuery('#Footer').hide();
+            }
+
+        // Home page is not showing footer either so make sure we honour this
+        if('home.php' == basename(data.url).substr(0, 8))
+            {
+            jQuery('#Footer').hide();
+            }
+        });
+    </script>
+    <?php
+    } /* End of show background image in simpleview mode*/
 include "../include/footer.php";
-?>

@@ -31,3 +31,5 @@ $theme_category_levels=8;
 $simple_search_pills_view = true;
 
 $stemming=true;
+
+$themes_show_background_image = true;
