@@ -1330,7 +1330,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $rgb=explode(":",$search);$rgb=explode(",",$rgb[1]);
         
         $searchsql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where has_image=1 and $sql_filter group by r.ref order by (abs(image_red-" . $rgb[0] . ")+abs(image_green-" . $rgb[1] . ")+abs(image_blue-" . $rgb[2] . ")) asc limit 500" . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($sql,false,$fetchrows);
+        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
         }
         
     # Has no preview image
