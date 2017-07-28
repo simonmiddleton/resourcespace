@@ -5785,7 +5785,7 @@ function get_notification_users($userpermission="SYSTEM_ADMIN")
 			
 			case "RESOURCE_ACCESS";
 			// Notify users who can grant access to resources, get all users in groups with R permissions
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");	
+			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND find_in_set(binary 'Rb',ug.permissions) = 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");	
 			return $notification_users_cache[$userpermissionindex];		
 			break;
 			
