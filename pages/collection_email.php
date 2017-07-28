@@ -301,7 +301,7 @@ if(!$user_select_internal)
 		global $collection_share_expire_days, $collection_share_expire_never;
 		if($collection_share_expire_never){?><option value=""><?php echo $lang["never"]?></option><?php }?>
 		<?php 
-		for ($n=1;$n<=150;$n++)
+		for ($n=1;$n<=$collection_share_expire_days;$n++)
 			{
 			$date = time()+(60*60*24*$n);
 			$d    = date("D",$date);
