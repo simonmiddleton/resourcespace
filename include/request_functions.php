@@ -539,9 +539,8 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 add_resource_to_collection($collection_resource_id, $collections[$collection_type]);
 				}
 			}
-        
-        if(isset($collections) && count($collections) > 1)
-            {
+        if(isset($collections) && count($collections) > 0)
+            { 
             foreach ($collections as $request_resource_type => $collection_id)
 				{
                 $assigned_to = '';
@@ -577,6 +576,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                         }
                     if(!$email_notify_is_user){$assigned_to_user_emails[] = $email_notify;}                        
                     }
+                    
                 if(trim($assigned_to) != '')
                     {
                     $request_query = sprintf("
