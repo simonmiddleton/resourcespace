@@ -1084,9 +1084,7 @@ div.MessageBox a {
 
 .FeaturedSimpleTile {
 	position: relative;
-	margin-left: 100px;
-	margin-right: 100px;
-	margin-top: 25px;
+	margin-top: 10px;
 	height: 150px;
 	border-radius:5px;
 	overflow: hidden;
