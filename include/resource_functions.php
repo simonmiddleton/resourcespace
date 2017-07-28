@@ -3472,11 +3472,14 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 	# Checks the edit permissions (e0, e-1 etc.) and also the group edit filter which filters edit access based on resource metadata.
 	
 	global $userref,$usereditfilter,$edit_access_for_contributor;
-	$plugincustomeditaccess=hook("customediteaccess");
-	if($plugincustomeditaccess!==''){
-		return $plugincustomeditaccess;
-	}
-	
+
+    $plugincustomeditaccess = hook('customediteaccess');
+
+    if($plugincustomeditaccess)
+        {
+        return $plugincustomeditaccess;
+        }
+
 	if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data  may not be passed 
 		{
 		$resourcedata=get_resource_data($resource);		
