@@ -491,14 +491,21 @@ if(!hook('replacethemesbacklink'))
                 );
             }
 
-        ?>
-        <div id="" class="BreadcrumbsBox">
-        <?php
-        renderBreadcrumbs($links_trail);
-        ?>
-        </div>
-        <div class="clearerleft"></div>
-        <?php
+        if($themes_show_background_image)
+            {
+            ?>
+            <div id="" class="BreadcrumbsBox">
+            <?php
+            renderBreadcrumbs($links_trail);
+            ?>
+            </div>
+            <div class="clearerleft"></div>
+            <?php
+            }
+        else
+            {
+            renderBreadcrumbs($links_trail);
+            }
         }
     } # end hook('replacethemesbacklink')
 
