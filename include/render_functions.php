@@ -2115,6 +2115,11 @@ function renderBreadcrumbs(array $links, $pre_links = '')
 */
 function renderCallToActionTile($link)
     {
+    if(checkperm('b'))
+        {
+        return;
+        }
+
     if('' === $link)
         {
         return;
