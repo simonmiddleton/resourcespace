@@ -2079,7 +2079,6 @@ function renderBreadcrumbs(array $links, $pre_links = '')
         return;
         }
         ?>
-    <div id="" class="BreadcrumbsBox">
         <div class="SearchBreadcrumbs">
         <?php
         if('' !== $pre_links && $pre_links !== strip_tags($pre_links))
@@ -2101,8 +2100,6 @@ function renderBreadcrumbs(array $links, $pre_links = '')
             }
             ?>
         </div>
-    </div>
-    <div class="clearerleft"></div>
     <?php
 
     return;
