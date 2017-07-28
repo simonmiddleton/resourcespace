@@ -2125,7 +2125,7 @@ function renderCallToActionTile($link)
         return;
         }
         ?>
-    <div id="FeaturedSimpleTile" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
+    <div id="FeaturedSimpleTile" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile FeaturedCallToActionTile">
         <a href="<?php echo $link; ?>" onclick="return ModalLoad(this, true);" class="">
             <div class="FeaturedSimpleTileContents">
                 <div class="FeaturedSimpleTileText">

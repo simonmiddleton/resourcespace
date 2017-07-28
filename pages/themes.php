@@ -50,9 +50,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
 						}?> <?php echo strip_tags_and_attributes(htmlspecialchars(str_replace(" ","",i18n_get_collection_name($getthemes[$m]))))?>">					
 					<a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $getthemes[$m]["ref"]?>" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink <?php if($themes_simple_images){echo " TileContentShadow";} ?>" id="featured_tile_<?php echo $getthemes[$m]["ref"]; ?>">
 					<div id="FeaturedSimpleTileContents_<?php echo $getthemes[$m]["ref"] ; ?>"  class="FeaturedSimpleTileContents">
-						<div class="FeaturedSimpleTileText">
-						<h2><?php echo i18n_get_collection_name($getthemes[$m])?></h2>
-						</div>
+                        <h2><span class="fa fa-th-large"></span><?php echo i18n_get_collection_name($getthemes[$m]); ?></h2>
 					</div>
 					</a>
                     <div id="FeaturedSimpleTileActions_<?php echo md5($getthemes[$m]['ref']); ?>" class="FeaturedSimpleTileActions"  style="display:none;">

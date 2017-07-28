@@ -862,17 +862,16 @@ a.HomePanel:hover {
 	width: 100%;
 	min-height: 180px;
 }
-.HomePanelDynamicDash h2, .HomePanelThemes h2 {
+.HomePanelDynamicDash h2, .HomePanelThemes h2, .FeaturedSimpleTileContents h2 {
 	float: none;
 	position: relative;
 	padding: 12px 15px 0 15px;
 	margin-bottom: 0;
 	font-size: 1.2em;
-	
 }
-.HomePanelDynamicDash h2 span, .HomePanelThemes h2 span {
-	padding-right:8px;font-size:1.2em;
-	
+.HomePanelDynamicDash h2 span, .HomePanelThemes h2 span, .FeaturedSimpleTileContents h2 span {
+    padding-right: 8px;
+    font-size: 1.2em;
 }
 .HomePanelDynamicDash p, .HomePanelThemes p {
 	float: none;
@@ -1119,10 +1118,15 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 	text-decoration:none;
 }
 
+.FeaturedCallToActionTile .FeaturedSimpleTileContents h2 {
+    text-align: center;
+}
+.FeaturedCallToActionTile .FeaturedSimpleTileContents h2 span{
+    font-size: 2em;
+}
 
 .FeaturedSimpleTile .FeaturedSimpleTileContents h2{
 	background: transparent;
-	text-align: center;
 	margin: auto;  
 	max-width: 215px;    
 	white-space: normal;
