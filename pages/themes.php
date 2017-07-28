@@ -564,11 +564,10 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 							}?>">
 						<a href="<?php echo $link; ?>" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_<?php echo md5($headers[$n]);?> ">
 							<div id="FeaturedSimpleTileContents_<?php echo md5($headers[$n]) ; ?>"  class="FeaturedSimpleTileContents">
-							<div class="FeaturedSimpleTileText">
-								<h2><?php echo htmlspecialchars(i18n_get_translated(str_replace("*","",$headers[$n])));?></h2>
-							</div>
-							
-							
+                            <h2>
+                                <span class="fa fa-folder"></span>
+                                <?php echo htmlspecialchars(i18n_get_translated(str_replace('*', '', $headers[$n]))); ?>
+                            </h2>
 							</div><!-- End of FeaturedSimpleTileContents_<?php echo md5($headers[$n]);?>-->
 							
 						</a>
@@ -880,9 +879,10 @@ if ($header=="" && !isset($themes[0]))
 					<div id="FeaturedSimpleTile_smart_<?php echo $n ; ?>"  class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
 						<a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo $headers[$n]["ref"] ?>&node=<?php echo urlencode(getval("parentnode",0)) ?>&nodename=<?php echo urlencode(getval("parentnodename","")) ?>&simpleview=true" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink" id="featured_tile_smart_<?php echo $n ;?>">
 						<div id="FeaturedSimpleTileContents_smart<?php echo $n ; ?>"  class="FeaturedSimpleTileContents" >	
-							<div class="FeaturedSimpleTileText">
-							<h2><?php echo str_replace("*","",i18n_get_translated($headers[$n]["smart_theme_name"])); ?></h2>
-							</div>
+                            <h2>
+                                <span class="fa fa-folder"></span>
+                                <?php echo htmlspecialchars(str_replace('*', '', i18n_get_translated($headers[$n]['smart_theme_name']))); ?>
+                            </h2>
 						</div>
 						</a>
 					</div>
@@ -941,9 +941,10 @@ if ($header=="" && !isset($themes[0]))
 							<div  id="FeaturedSimpleTile_smart_<?php echo $themes[$m]["ref"]  ; ?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
 							<a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo $headers[$n]["ref"] ?>&node=<?php echo $themes[$m]["node"] ?>&parentnode=<?php echo urlencode($node) ?>&parentnodename=<?php echo urlencode(getval("nodename","")) ?>&nodename=<?php echo urlencode($themes[$m]["name"]) ?>&simpleview=true" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink TileContentShadow" id="featured_tile_<?php echo $themes[$m]["ref"] ;?>">
 								<div id="FeaturedSimpleTileContents_smart<?php echo $themes[$m]["ref"]; ?>"  class="FeaturedSimpleTileContents">	
-									<div class="FeaturedSimpleTileText">
-										<h2><?php echo i18n_get_collection_name($themes[$m])?>	</h2>	
-									</div>
+                                    <h2>
+                                        <span class="fa fa-folder"></span>
+                                        <?php echo htmlspecialchars(i18n_get_collection_name($themes[$m])); ?>
+                                    </h2>
 								</div>
 							</a>
 							</div>										
@@ -956,9 +957,10 @@ if ($header=="" && !isset($themes[0]))
 							<div id="FeaturedSimpleTile_smart_<?php echo $themes[$m]["ref"]  ; ?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
 							<a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($s)?>&resetrestypes=true" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink TileContentShadow" id="featured_tile_<?php echo $themes[$m]["ref"]; ?>">
 							<div id="FeaturedSimpleTileContents_smart<?php echo $themes[$m]["ref"] ; ?>"  class="FeaturedSimpleTileContents" >	
-									<div class="FeaturedSimpleTileText">
-										<h2><?php echo i18n_get_collection_name($themes[$m])?></h2>
-									</div>
+                                    <h2>
+                                        <span class="fa fa-folder"></span>
+                                        <?php echo htmlspecialchars(i18n_get_collection_name($themes[$m])); ?>
+                                    </h2>
 							</div>
 							</a>	
 							</div>			
@@ -1061,9 +1063,10 @@ if($simpleview)
 			<div id="FeaturedSimpleTile_public" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
 						<a href="<?php echo $baseurl_short?>pages/collection_public.php" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_public">
 							<div id="FeaturedSimpleTileContents_public"  class="FeaturedSimpleTileContents">
-							<div class="FeaturedSimpleTileText">
-								<h2><?php echo $lang["findpubliccollection"]; ?></h2>
-							</div>
+                            <h2>
+                                <span class="fa fa-th-large"></span>
+                                <?php echo htmlspecialchars($lang['findpubliccollection']); ?>
+                            </h2>
 							</div><!-- End of FeaturedSimpleTileContents_public -->
 						</a>
 			</div><!-- End of FeaturedSimpleTile_public -->
