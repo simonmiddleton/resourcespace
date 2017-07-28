@@ -15,6 +15,11 @@ if ($k!="" && (!isset($internal_share_access) || !$internal_share_access) && $pr
 	exit();
 	}
 
+if($ref=="" && isset($usercollection))
+  {
+  $ref = $usercollection;
+  }
+  
 $cinfo=get_collection($ref);
 $error=false;
 
@@ -64,7 +69,7 @@ include "../include/header.php";
   <h1><?php echo $lang["requestcollection"]?></h1>
   <p><?php echo text("introtext")?></p>
   
-	<form method="post" action="<?php echo $baseurl_short?>pages/collection_request.php">  
+	<form method="post" onsubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_request.php">  
 	<input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
 	<input type=hidden name="k" value="<?php echo htmlspecialchars($k) ?>">
 	
@@ -171,7 +176,8 @@ if (isset($custom_request_fields))
 	<?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><?php } ?>
 	<label for="buttons"> </label>			
 	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo urlencode($ref) ?>';"/>&nbsp;
-	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["requestcollection"]?>&nbsp;&nbsp;" />
+	<input name="save" value="true" type="hidden" />
+	<input type="submit" value="&nbsp;&nbsp;<?php echo $lang["requestcollection"]?>&nbsp;&nbsp;" />
 	</div>
 	</form>
 	
