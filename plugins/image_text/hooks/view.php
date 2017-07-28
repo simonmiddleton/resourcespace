@@ -14,8 +14,7 @@ function HookImage_textViewDownloadbuttonreplace()
             
             <a id="downloadlink" href="<?php echo $baseurl ?>/pages/terms.php?ref=<?php echo urlencode($ref)?>&search=<?php
                                     echo urlencode($search) ?>&k=<?php echo urlencode($k)?>&url=<?php
-                                    echo urlencode("pages/download_progress.php?ref=" . $ref . "&size=" . $size_info["id"]
-                                    . "&ext=" . $altfiles[$n]["file_extension"] . "&k=" . $k . "&search=" . urlencode($search)
+                                    echo urlencode("pages/download_progress.php?ref=" . $ref . "&ext=" . $altfiles[$n]["file_extension"] . "&k=" . $k . "&search=" . urlencode($search)
                                     . "&offset=" . $offset . "&alternative=" . $altfiles[$n]["ref"] . "&archive=" . $archive . "&sort=".$sort."&order_by="
                                     . urlencode($order_by)."&nooverlay=true")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["image_text_download_clear"]?></a></td><td class="DownloadButton"><?php
             }
