@@ -1157,7 +1157,8 @@ if($simpleview && $themes_show_background_image)
                 <?php
                 }
                 ?>
-            jQuery('#UICenter').css('background-image','url(' + background_image_url + ')');
+            jQuery('#UICenter').css('background-image', 'url(' + background_image_url + ')');
+            jQuery('#UICenter').css('transition', 'none');
             jQuery('#Footer').hide();
             }
 
