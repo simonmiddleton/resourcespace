@@ -53,6 +53,21 @@ editor.on('blur',function(e)
 		AutoSave('<?php echo $field["ref"]?>');
 		}
 	});
+
+// Ensure that help text is shown when given focus
+editor.on('instanceReady', function(evt) 
+    {
+    editor.on('focus', function(e)
+        {
+        ShowHelp('<?php echo $field["ref"]?>');
+        });
+
+    editor.on('blur', function(e)
+        {
+        HideHelp('<?php echo $field["ref"]?>');
+        });
+    });
+
 <?php } ?>
 
 </script>

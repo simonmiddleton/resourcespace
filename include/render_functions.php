@@ -1638,6 +1638,7 @@ function display_field($n, $field, $newtab=false)
       <?php
       } 
     # Define some Javascript for help actions (applies to all fields)
+    # Help actions for CKEditor fields are set in pages/edit_fields/8.php
      $help_js="onBlur=\"HideHelp(" . $field["ref"] . ");return false;\" onFocus=\"ShowHelp(" . $field["ref"] . ");return false;\"";
 
     #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
