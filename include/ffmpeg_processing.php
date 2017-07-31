@@ -8,6 +8,11 @@ if (!RUNNING_ASYNC)
 	}
 else
 	{
+    if(!isset($_SERVER['HTTP_HOST']) && isset($_SERVER['argv'][8]))
+        {
+        $_SERVER['HTTP_HOST'] = $_SERVER['argv'][8];
+        }
+
 	require dirname(__FILE__)."/db.php";
 	require_once dirname(__FILE__)."/general.php";
 	require dirname(__FILE__)."/resource_functions.php";

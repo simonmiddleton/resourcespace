@@ -684,6 +684,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
                 		escapeshellarg($previewonly) . " " . 
 				escapeshellarg($snapshottime) . " " .
                                   	escapeshellarg($alternative) . " " .
+                    (isset($_SERVER['HTTP_HOST']) ?  escapeshellarg($_SERVER['HTTP_HOST']) : '') . " " .
                                    	"> /dev/null 2>&1 &");
                 	}
             	else 
