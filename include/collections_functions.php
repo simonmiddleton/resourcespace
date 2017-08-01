@@ -2032,10 +2032,10 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
-           $allow_resource_deletion;
+           $allow_resource_deletion, $pagename;
                
 	#This is to properly render the actions drop down in the themes page	
-	if ( isset($collection_data['ref']) )
+	if ( isset($collection_data['ref']) && $pagename!="collections" )
 		{
 		$count_result = count(get_collection_resources($collection_data['ref']));
 		}
