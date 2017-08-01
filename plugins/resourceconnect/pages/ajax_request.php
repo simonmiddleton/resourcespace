@@ -15,6 +15,27 @@ $offset=getval("offset","");
 $pagesize=getval("pagesize","");
 $restypes=getval("restypes","");
 
+
+# Parse and replace nodes.
+$k=(split_keywords($search));$search="";
+foreach ($k as $kw)
+	{
+	if (substr($kw,0,2)=="@@")
+		{
+		# Node, resolve to string
+		$n=substr($kw,2);
+		$node=array();get_node($n,$node);$name=$node["name"];
+		$search.=' "' . i18n_get_translated($name) . '"';
+		}
+	else
+		{
+		# Not a node, add as is
+		$search.=" " . $kw;
+		}
+	}
+$search=trim($search);
+
+
 # Sign this request.
 $access_key=$affiliate["accesskey"];
 $sign=md5($access_key . $search);
