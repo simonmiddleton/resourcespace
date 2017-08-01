@@ -454,15 +454,22 @@ function do_search(
                         {
                         // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
                         $field_nodes      = get_nodes($fieldinfo['ref'], null, false, true);
-                        $field_node_index = array_search(mb_strtolower(i18n_get_translated($keystring)), array_map('mb_strtolower',array_column($field_nodes, 'name')));
-     
-                        // Take the ref of the node and put it in the node_bucket
-                        if(false !== $field_node_index)
+                        
+                        // Check if multiple nodes have been specified for an OR search
+                        $keywords_expanded=explode(';',$keystring);
+                        $nodeorcount = count($node_bucket);
+                        foreach($keywords_expanded as $keyword_expanded)
                             {
-                            $node_bucket[][] = $field_nodes[$field_node_index]['ref'];
-                            $quoted_field_match=true; // String has been resolved to a node so even if it is quoted we don't need to process it as a quoted string now
-							$keywordprocessed=true;
+                            $field_node_index = array_search(mb_strtolower(i18n_get_translated($keyword_expanded)), array_map('mb_strtolower',array_column($field_nodes, 'name')));
+                            // Take the ref of the node and add it to the node_bucket as an OR
+                            if(false !== $field_node_index)
+                                {
+                                $node_bucket[$nodeorcount][] = $field_nodes[$field_node_index]['ref'];
+                                $quoted_field_match=true; // String has been resolved to a node so even if it is quoted we don't need to process it as a quoted string now
+                                $keywordprocessed=true;
+                                }
                             }
+                        
                         }
                     
                      if($field_short_name_specified) // Need this also for string matching in a named text field

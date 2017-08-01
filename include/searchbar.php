@@ -86,6 +86,7 @@ for ($n=0;$n<count($keywords);$n++)
 			else {$set_fields[$s[0]]=$s[1];}
 			if (!in_array($s[0],$simple_fields)) {$simple[]=trim($keywords[$n]);$initial_tags[] =trim($keywords[$n]);}
             }
+            
         // Nodes search
         else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
             {                
@@ -96,24 +97,40 @@ for ($n=0;$n<count($keywords);$n++)
                 }
 
             $searched_nodes = array_unique($searched_nodes);
+            $simpletext_count = count($simple);
+            $initial_tag_count = count($initial_tags);
             foreach($searched_nodes as $searched_node)
                 {
                 $node = array();
-
                 if(!get_node($searched_node, $node))
                     {
                     continue;
                     }
-
                 $field_index = array_search($node['resource_type_field'], array_column($fields, 'ref'));
 
                 if(false === $field_index) // Node is not from a simple search field
                     {
                     $fieldsearchterm = rebuild_specific_field_search_from_node($node);
 					if(strpos(" ",$fieldsearchterm)!==false)
-						{ $fieldsearchterm = "\"" . $fieldsearchterm . "\"";}	
-					$simple[]=$fieldsearchterm;
-					$initial_tags[] = $fieldsearchterm;
+						{ $fieldsearchterm = "\"" . $fieldsearchterm . "\"";}
+                        
+                    $field_name = substr($fieldsearchterm,0,strpos($fieldsearchterm,":"));
+                        
+                    if(isset($last_field_name) && $last_field_name == $field_name)
+                        {
+                        // Append in order to construct the field:value1;value2 syntax used for an OR search in the same field
+                        $fieldsearchterm = substr($fieldsearchterm,strpos($fieldsearchterm,":")+1);
+                        $simple[$simpletext_count] .= ";" . $fieldsearchterm;  
+                        $initial_tags[$initial_tag_count] .= ";" .  $fieldsearchterm;                          
+                        }
+					else
+                        {
+                        $simple[$simpletext_count] = $fieldsearchterm;
+                        $initial_tags[] = $fieldsearchterm;
+                        }
+                    
+                    // Store the field name so we can check for ORs on same field 
+                    $last_field_name = $field_name;
                     continue;
                     }
 
@@ -134,9 +151,8 @@ for ($n=0;$n<count($keywords);$n++)
 			}
 		}
 	}
-	
+    
 # Set the text search box to the stripped value.
-;
 $simple=array_unique($simple);
 $initial_tags=array_unique($initial_tags);
 $quicksearch=join(" ",trim_array($simple));
