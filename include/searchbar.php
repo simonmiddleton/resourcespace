@@ -116,7 +116,7 @@ for ($n=0;$n<count($keywords);$n++)
                         
                     $field_name = substr($fieldsearchterm,0,strpos($fieldsearchterm,":"));
                         
-                    if(isset($last_field_name) && $last_field_name == $field_name)
+                    if(isset($last_field_name) && $last_field_name == $field_name && !$checkbox_and)
                         {
                         // Append in order to construct the field:value1;value2 syntax used for an OR search in the same field
                         $fieldsearchterm = substr($fieldsearchterm,strpos($fieldsearchterm,":")+1);
