@@ -18,6 +18,9 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
 	# Set that we're being accessed via resourceconnect.
 	global $is_resourceconnect;
 	$is_resourceconnect=true;
+
+	global $collections_footer;	
+	$collections_footer=false;
 	
 	return true;
 	}

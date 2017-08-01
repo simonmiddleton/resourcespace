@@ -1397,7 +1397,7 @@ if (isset($flv_download) && $flv_download)
 	<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($flvfile))?></td>
 	<td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
 	<?php if (!$direct_download || $save_as){?>
-		<a href="<?php echo $baseurl_short?>pages/terms.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search); ?>&k=<?php echo urlencode($k)?>&url=<?php echo urlencode("pages/download_progress.php?ref=" . $ref . "&ext=" . $ffmpeg_preview_extension . "&size=pre&k=" . $k . "&search=" . urlencode($search) . "&offset=" . $offset . "&archive=" . $archive . "&sort=".$sort."&order_by=" . urlencode($order_by))?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
+		<a href="<?php echo generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=>generateURL("pages/download_progress.php",$urlparams,array("ext"=>$ffmpeg_preview_extension,"size"=>"pre")))) ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
 	<?php } else { ?>
 		<a href="#" onclick="directDownload('<?php echo $baseurl_short?>pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k)?>')"><?php echo $lang["action-download"]?></a>
 	<?php } // end if direct_download ?></td>
