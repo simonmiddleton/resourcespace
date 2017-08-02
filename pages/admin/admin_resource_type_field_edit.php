@@ -36,10 +36,11 @@ if($backurl=="")
     {
     $backurl=$baseurl . "/pages/admin/admin_resource_type_fields.php?ref=" . urlencode($ref) . "&restypefilter=" . urlencode($restypefilter) . "&field_sort=" . urlencode($field_sort) . "&find=" . urlencode($find);
     }
+
 	
 function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type, $currentvalue,$fieldtype)
 	{
-	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $daterange_edtf_support, $allfields;
+	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $daterange_edtf_support, $allfields;
 	if($propertyname=="linked_data_field")
 		{
 		if($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
@@ -85,7 +86,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			//natsort($field_types);
 			?>
 			<div class="tickset">
-			  <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth" onchange="CentralSpacePost(this.form);">
+			  <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth" onchange="newval=parseInt(this.value);if((jQuery.inArray(newval,fixed_list_fields) > -1) && (jQuery.inArray(current_type,text_fields) > -1)){if(confirm('<?php echo $lang["admin_resource_type_field_migrate_data_prompt"] ?>')){jQuery('#migrate_data').val('yes');return CentralSpacePost(this.form,true);}else{jQuery('#migrate_data').val('');}}else{return CentralSpacePost(this.form,true);}">
 				
 				<?php
 				foreach($field_types as $field_type=>$field_type_description)
@@ -266,21 +267,33 @@ if ($execution_lockout)
 $modify_resource_type_field_columns=hook("modifyresourcetypefieldcolumns","",array($fieldcolumns));
 if($modify_resource_type_field_columns!=''){
         $fieldcolumns=$modify_resource_type_field_columns;
-}				
+}
+
+$type_change = false;
+
 if(getval("save","")!="" && getval("delete","")=="")
 	{
 	# Save field config
-	$sync_field=getvalescaped("sync_field",0);
+	$sync_field = getvalescaped("sync_field",0);
+	$existingfield = get_resource_type_field($ref);
 	
 	foreach ($fieldcolumns as $column=>$column_detail)		
-		{		
+		{
 		if ($column_detail[2]==1)
 			{
 			$val=getval($column,"0") ? "1" : "0";
 			}		
 		else
 			{
-			$val=escape_check(trim(getval($column,""))); 
+			$val=escape_check(trim(getval($column,"")));			
+			
+			if($column == "type" && $val != $existingfield["type"] && getval("migrate_data","") != "")
+				{
+				// Need to migrate field data
+				//$migratelog = migrate_data_to_nodes ($ref,$existingfield["type"],$val,",");	
+				$migrate_data = true;				
+				}
+			
 			// Set shortname if not already set
 			if($column=="name" && $val==""){$val="field" . $ref;}
 			}
@@ -351,26 +364,14 @@ if (getval("delete","")!="")
 	    }
         else
 	    {	    
-	    // User needs to confirm deletion as data wil be lost
+	    // User needs to confirm deletion as data will be lost
 	    $error_text=str_replace("%%AFFECTEDRESOURCES%%",$affected_resources_count,$lang["admin_delete_field_confirm"]);
-	    // $affected_links="<br>";
-	    // for ($a=0;$a<10 && $a<$affected_resources_count;$a++) // show links for up to 10 of the affected resources
-			// {
-			// if($a!=0){$affected_links.=",";}    
-			// $affected_links.="<a target='_blank' href='" . $baseurl . "/?r=" . $affected_resources[$a] . "'>" . $affected_resources[$a] . "</a>";
-			// } 
-		//$error_text.=$affected_links;
-		
 		$error_text.="<br><a target=\"_blank\" href=\"" . $baseurl  . "/pages/search.php?search=!hasdata" . $ref . "\">" . $lang["show_resources"] . "</a>";
 	    
 	    $confirm_delete=true;
 	    }
-	
-	
 	}
-
-
-
+	
 # Fetch  data
 $allfields=get_resource_type_fields();
 $resource_types=sql_query("select ref, name from resource_type");
@@ -380,13 +381,26 @@ foreach($resource_types as $resource_type)
 	}
 $resource_type_array[0]=$lang["resourcetype-global_field"];
 $resource_type_array[999]=$lang["resourcetype-archive_only"];
-
 $fielddata=get_resource_type_field($ref);
 
 include "../../include/header.php";
-
 ?>
+<script>
+var fixed_list_fields = [<?php echo implode(",",$FIXED_LIST_FIELD_TYPES) ?>];
+var text_fields = [<?php echo implode(",",$TEXT_FIELD_TYPES) ?>];
+var current_type = <?php echo $fielddata["type"] ?>;
 
+<?php if (isset($migrate_data))
+	{
+	?>
+	jQuery(document).ready(function()
+		{
+		window.location.href = '<?php echo $baseurl ?>/pages/tools/migrate_data_to_fixed.php?field=<?php echo $ref ?>';
+		});
+	<?php
+	}
+?>
+</script>
 <div class="BasicsBox">
     
     <p>
@@ -422,7 +436,6 @@ if($confirm_delete)
 else
     {
     ?>
- 
     <div class="Question"><label><?php echo $lang["property-field_id"] ?></label>
 	<div class="Fixed"><?php echo  $fielddata["ref"] ?></div>
 	<div class="clearerleft"> </div>
@@ -449,6 +462,7 @@ else
     <label for="buttons"> </label>			
     <input name="save" type="submit" value="&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;&nbsp;&nbsp;" />&nbsp;&nbsp;
     <input type="button" class="button" onClick="CentralSpaceLoad('<?php echo $baseurl . "/pages/admin/admin_copy_field.php?ref=" . $ref . "&backurl=" . $url ?>',true);return false;" value="&nbsp;&nbsp;<?php echo $lang["copy-field"] ?>&nbsp;&nbsp;" >
+    <input name="migrate_data" id="migrate_data" type="hidden" value="">
     <input name="delete" type="button" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#delete').val('yes');this.form.submit();}else{jQuery('#delete').val('');}" />
 
     </div>
