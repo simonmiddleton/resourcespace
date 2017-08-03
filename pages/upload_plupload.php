@@ -295,7 +295,7 @@ if ($_FILES)
             debug("PLUPLOAD - invalid file extension received from user " . $username . ",  filename " . $plfilename . ", chunk " . $chunk . " of " . $chunks);
        		die('{"jsonrpc" : "2.0", "error" : {"code": 105, "message": "Banned file extension."}, "id" : "id"}');
 		}
-
+	hook('additional_plupload_checks');
 	// Clean the filename for security reasons
 	if($replace){$origuploadedfilename=escape_check($plfilename);}
 	$plfilename = preg_replace('/[^\w\._]+/', '_', $plfilename);
