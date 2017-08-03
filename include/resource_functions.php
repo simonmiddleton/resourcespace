@@ -2584,17 +2584,20 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 			}
 
 		# Move the file
-		global $syncdir;
-		$destination=get_resource_path($r,true,"",true,$extension);
-		$result=rename($syncdir . "/" . $path,$destination);
-		if ($result===false)
+		if(!hook('update_resource_replace_ingest','',array($r, $path, $extension)))
 			{
-			# The rename failed. The file is possibly still being copied or uploaded and must be ignored on this pass.
-			# Delete the resouce just created and return false.
-			delete_resource($r);
-			return false;
+			global $syncdir;
+			$destination=get_resource_path($r,true,"",true,$extension);
+			$result=rename($syncdir . "/" . $path,$destination);
+			if ($result===false)
+				{
+				# The rename failed. The file is possibly still being copied or uploaded and must be ignored on this pass.
+				# Delete the resouce just created and return false.
+				delete_resource($r);
+				return false;
+				}
+			chmod($destination,0777);
 			}
-		chmod($destination,0777);
 		}
 
 	# generate title and extract embedded metadata
