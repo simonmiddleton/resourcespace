@@ -3,7 +3,7 @@
 
 <?php hook("befckeditortextarea"); ?>
 
-<textarea class="stdwidth" rows=10 cols=80 name="<?php echo $name?>" id="<?php echo $name?>" <?php echo $help_js; ?>
+<textarea class="stdwidth" rows=10 cols=80 name="<?php echo $name?>" id="<?php echo ((isset($modal) && $modal)?"Modal_":"CentralSpace_") . $name?>" <?php echo $help_js; ?>
 ><?php if($value == strip_tags($value)){
 	$value=nl2br($value);
 }
@@ -28,16 +28,16 @@ switch (strtolower($language))
 
 // Replace the <textarea id=$name> with an CKEditor instance.
 <?php if(!hook("ckeditorinit","",array($name))): ?>
-var editor = CKEDITOR.instances['<?php echo $name?>'];
+var editor = CKEDITOR.instances['<?php echo ((isset($modal) && $modal)?"Modal_":"CentralSpace_") . $name?>'];
 if (editor) { editor.destroy(true); }
-CKEDITOR.replace('<?php echo $name ?>',
+CKEDITOR.replace('<?php echo ((isset($modal) && $modal)?"Modal_":"CentralSpace_") . $name ?>',
     {
     language: '<?php echo $ckeditor_language ?>',
     // Define the toolbar to be used.
     toolbar : [ [ <?php global $ckeditor_toolbars;echo $ckeditor_toolbars; ?> ] ],
     height: "150",
     });
-var editor = CKEDITOR.instances['<?php echo $name?>'];
+var editor = CKEDITOR.instances['<?php echo ((isset($modal) && $modal)?"Modal_":"CentralSpace_") . $name?>'];
 <?php endif; ?>
 
 <?php hook("ckeditoroptions"); ?>

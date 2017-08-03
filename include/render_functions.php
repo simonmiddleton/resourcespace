@@ -1466,7 +1466,7 @@ function display_multilingual_text_field($n, $field, $translations)
   ?></table><?php
   }
 
-function display_field($n, $field, $newtab=false)
+function display_field($n, $field, $newtab=false,$modal=false)
   {
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
