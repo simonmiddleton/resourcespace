@@ -2953,6 +2953,11 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
     */
     $text = htmlspecialchars_decode($text);
 
+    // If text contains HTML tags then ignore them
+    if ($text != strip_tags($text))
+        {
+        $options = $options & STR_HIGHLIGHT_STRIPLINKS;
+        }
 
 	# Thanks to Aidan Lister <aidan@php.net>
 	# Sourced from http://aidanlister.com/repos/v/function.str_highlight.php on 2007-10-09
