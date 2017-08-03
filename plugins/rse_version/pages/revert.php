@@ -252,20 +252,25 @@ if ($type==LOG_CODE_UPLOADED) {
     $alt_file=$log["previous_file_alt_ref"];
     $alt_thumb=get_resource_path($resource, true, 'thm', true, "", -1, 1, false, "", $alt_file);
     if (file_exists($alt_thumb))
-        {
-        $alt_thumb_url=get_resource_path($resource, false, 'thm', true, "", -1, 1, false, "", $alt_file); 
-        ?>
-        <div class="Question">
-        <label><?php echo $lang["revertingwillreplace"]?></label>
-
-        <div class="Fixed">
-        <img src="<?php echo $alt_thumb_url ?>" alt="<?php echo $lang["preview"] ?>" />
-        </div>
-        <div class="clearerleft"> </div>
-        </div>
-        <?php
+        { 
+        $image=get_resource_path($resource, false, 'thm', true, "", -1, 1, false, "", $alt_file);
         }
-    ?>
+    else
+        {
+        // If an image is not available, fetch a nopreview image based on extension   
+        $alter_data = get_alternative_file($resource,$alt_file);    
+        $image = $baseurl_short . 'gfx/' . get_nopreview_icon('',$alter_data['file_extension'],'',$deprecated1=false,$deprecated2=false);
+        }?>
+    <div class="Question">
+    <label><?php echo $lang["revertingwillreplace"]?></label>
+
+    <div class="Fixed">
+    <img src="<?php echo $image ?>" alt="<?php echo $lang["preview"] ?>" />
+    </div>
+    <div class="clearerleft"> </div>
+    </div>
+        
+    
 
 <?php } ?>
 
