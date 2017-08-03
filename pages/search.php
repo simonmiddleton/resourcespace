@@ -98,14 +98,25 @@ foreach($keywords as $keyword)
 		}
 
 	$nodes = get_nodes($resource_type_field, null, true);
-	$node_found = get_node_by_name($nodes, $specific_field_search[1]);
+    
+    // Check if multiple nodes have been specified for an OR search
+    $keywords_expanded=explode(';',$specific_field_search[1]);
+    $subnodestring = "";
+    foreach($keywords_expanded as $keyword_expanded)
+        {
+        $node_found = get_node_by_name($nodes, $keyword_expanded);
 
-	if(0 < count($node_found))
-		{
-		$search = str_ireplace($keyword, NODE_TOKEN_PREFIX . $node_found['ref'], $search);
-		}
+        if(0 < count($node_found))
+            {
+            $subnodestring .= NODE_TOKEN_PREFIX . $node_found['ref'];
+            }
+        }
+    if($subnodestring != "")
+        {
+        $search = str_ireplace($keyword, $subnodestring, $search);
+        }
 	}
-
+    
 # create a display_fields array with information needed for detailed field highlighting
 $df=array();
 

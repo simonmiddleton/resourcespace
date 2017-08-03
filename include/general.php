@@ -3395,32 +3395,37 @@ function resolve_users($users)
 	}
 
 function get_simple_search_fields()
-{
+    {
+    global $FIXED_LIST_FIELD_TYPES, $country_search;
     # Returns a list of fields suitable for the simple search box.
     # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
-
-    $sql = "";
-
-    # Include the country field even if not selected?
-    # This is to provide compatibility for older systems on which the simple search box was not configurable
-    # and had a simpler 'country search' option.
-    global $country_search;
-    if (isset($country_search) && $country_search) {$sql=" or ref=3";}
-
-    # Executes query.
-    $fields = sql_query("select *, ref, name, title, type, order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, display_as_dropdown, external_user_access, autocomplete_macro, hide_when_uploading, hide_when_restricted, value_filter, exiftool_filter, omit_when_copying, tooltip_text, display_condition from resource_type_field where (simple_search=1 $sql) and keywords_index=1 order by resource_type,order_by");
-
+   
+    # First get all the fields
+    $allfields=get_resource_type_fields("","resource_type,order_by");
+    
     # Applies field permissions and translates field titles in the newly created array.
     $return = array();
-    for ($n = 0;$n<count($fields);$n++) {
-        if ((checkperm("f*") || checkperm("f" . $fields[$n]["ref"]))
-        && !checkperm("f-" . $fields[$n]["ref"]) && !checkperm("T" . $fields[$n]["resource_type"] )) {
-            $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");            
-            $return[] = $fields[$n];
+    for ($n = 0;$n<count($allfields);$n++)
+        {
+        if (
+            # Check if for simple_search
+            # Also include the country field even if not selected
+            # This is to provide compatibility for older systems on which the simple search box was not configurable
+            # and had a simpler 'country search' option.
+            ($allfields[$n]["simple_search"] == 1 || (isset($country_search) && $country_search && $allfields[$n]["ref"] == 3))         
+        &&
+            # Must be either indexed or a fixed list type
+            ($allfields[$n]["keywords_index"] == 1 || in_array($allfields[$n]["type"],$FIXED_LIST_FIELD_TYPES))
+        &&    
+            (checkperm("f*") || checkperm("f" . $allfields[$n]["ref"]))
+        && !checkperm("f-" . $allfields[$n]["ref"]) && !checkperm("T" . $allfields[$n]["resource_type"] ))
+            {
+            $allfields[$n]["title"] = lang_or_i18n_get_translated($allfields[$n]["title"], "fieldtitle-");            
+            $return[] = $allfields[$n];
+            }
         }
-    }
     return $return;
-}
+    }
 
 function check_display_condition($n, $field)
     {

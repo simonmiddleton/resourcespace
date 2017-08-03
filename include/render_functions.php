@@ -663,9 +663,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         
         // Dynamic keywords list
         case FIELD_TYPE_DYNAMIC_KEYWORDS_LIST:
-            // Different syntax used for keyword separation when searching
-            $value = str_replace(';', ',', $value);
-
             include __DIR__ . '/../pages/edit_fields/9.php';
         break;      
 

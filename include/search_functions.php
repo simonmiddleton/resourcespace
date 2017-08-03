@@ -299,7 +299,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 $rangeendparts=explode("-",$rangedates[1]);
                 $rangeend=$rangeendparts[0] . "-" . (isset($rangeendparts[1])?$rangeendparts[1]:"12") . "-" . (isset($rangeendparts[2])?$rangeendparts[2]:"99");
                 $datepart = "start" . $rangestart . "end" . $rangeend;
-                debug("BANG " . $datepart);
                 }
             else
                 {
@@ -354,128 +353,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 }
 
             break;
-
-            case FIELD_TYPE_CATEGORY_TREE:  # -------- Category tree
-            $name="field_" . $fields[$n]["ref"];
-            $value=getvalescaped($name,"");
-            $selected=trim_array(explode(",",$value));
-            $p="";
-            for ($m=0;$m<count($selected);$m++)
-                {
-                if ($selected[$m]!="")
-                    {
-                    if ($p!="") {$p.=";";}
-                    $p.=$selected[$m];
-                    }
-
-                # Resolve keywords to make sure that the value has been indexed prior to including in the search string.
-                $keywords=split_keywords($selected[$m]);
-                foreach ($keywords as $keyword) {resolve_keyword($keyword,true);}
-                }
-            if ($p!="")
-                {
-                if ($search!="") {$search.=", ";}
-                $search.=$fields[$n]["name"] . ":" . $p;
-                }
-            break;
-        
-            case FIELD_TYPE_DYNAMIC_KEYWORDS_LIST: # -------- Dynamic keywords
-            $name="field_" . $fields[$n]["ref"];
-            $value=getvalescaped($name,"");
-            $selected=trim_array(explode("|",$value));
-            $p="";
-            for ($m=0;$m<count($selected);$m++)
-                {
-                if ($selected[$m]!="")
-                    {
-                    if ($p!="") {$p.=";";}
-                    $p.=$selected[$m];
-                    }
-
-                # Resolve keywords to make sure that the value has been indexed prior to including in the search string.
-                $keywords=split_keywords($selected[$m]);
-                foreach ($keywords as $keyword) {resolve_keyword($keyword,true);}
-                }
-            if ($p!="" && !$dynamic_keyword_and)
-                {
-                if ($search!="") {$search.=", ";}
-                $search.=$fields[$n]["name"] . ":" . $p;
-                }
-            elseif ($p!="" && $dynamic_keyword_and)
-                    {
-                    $p=str_replace(";",", {$fields[$n]["name"]}:",$p);	// this will force each and condition into a separate union in do_search (which will AND)
-                    if ($search!="") {$search.=", ";}
-                    $search.=$fields[$n]["name"] . ":" . $p;
-                    }   
-                
-            break;
-        
-            // Radio buttons:
-            case FIELD_TYPE_RADIO_BUTTONS:
-                if($fields[$n]['display_as_dropdown'])
-                    {
-                    // Process dropdown or checkboxes behaviour (with only one option ticked):
-                    $value = getvalescaped('field_' . $fields[$n]['ref'], '');
-
-                    if($value != '')
-                        {
-                        if('' != $search)
-                            { 
-                            $search .= ', ';
-                            }
-
-                        $search .= $fields[$n]['name'] . ':' . $value;
-                        }
-                    }
-                else
-                    {
-                    //Process checkbox behaviour (multiple options selected create a logical AND condition):
-                    $options = array();
-                    node_field_options_override($options,$fields[$n]['ref']);
-
-                    $p = '';
-                    $c = 0;
-                    foreach ($options as $option)
-                        {
-                        $name = 'field_' . $fields[$n]['ref'] . '_' . sha1($option);
-                        $value = getvalescaped($name, '');
-
-                        if($value == $option)
-                            {
-                            if($p != '' || ($p=='' && emptyiszero($value)))
-                                {
-                                $c++;
-                                $p .= ';';
-                                }
-
-                            $p .= mb_strtolower(i18n_get_translated($option), 'UTF-8');
-                            }
-                        }
-        
-                    // All options ticked - omit from the search (unless using AND matching, or there is only one option intended as a boolean selection)
-                    if(($c == count($options) && !$checkbox_and) && (count($options) > 1))
-                        {
-                        $p = '';
-                        }
-
-                    if('' != $p)
-                        {
-                        if('' != $search)
-                            {
-                            $search .= ', ';
-                            }
-
-						if($checkbox_and)
-							{
-							$p=str_replace(";",", {$fields[$n]["name"]}:",$p);	// this will force each and condition into a separate union in do_search (which will AND)
-							}
-
-                        $search .= $fields[$n]['name'] . ':' . $p;
-                        }
-
-                    }
-            break;
-            
+   
 			case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes  
 			default: 
 				$value=getvalescaped('field_'.$fields[$n]["ref"],'');
@@ -494,11 +372,12 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         }
 
         ##### NODES #####
-        // Fixed lists will be handled separately as we don't care about the field they belong to,
+        // Fixed lists will be handled separately as we don't care about the field
+        // they belong to (except when $checkbox_and and $dynamic_keyword_and)
         // we know exactly what we are searching for.
         $node_ref = '';
 
-        foreach(getval('nodes_searched', array()) as $searched_field_nodes)
+        foreach(getval('nodes_searched', array()) as $searchedfield => $searched_field_nodes)
             {
             // Fields that are displayed as a dropdown will only pass one node ID
             if(!is_array($searched_field_nodes) && '' == $searched_field_nodes)
@@ -511,12 +390,14 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 				continue;
                 }
 
+            $fieldinfo = get_resource_type_field($searchedfield);
+            
             // For fields that are displayed as checkboxes
             $node_ref .= ', ';
 
             foreach($searched_field_nodes as $searched_node_ref)
                 {
-				if($checkbox_and)
+				if(($fieldinfo["type"] == FIELD_TYPE_CHECK_BOX_LIST && $checkbox_and) || ($fieldinfo["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && $dynamic_keyword_and))
 					{
 					// Split into an additional search element to force a join since this is a separate condition
 					$node_ref .= ', ';
@@ -556,14 +437,8 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     }
 
 if (!function_exists("refine_searchstring")){
-function refine_searchstring($search){
-    #
-    # DISABLED TEMPORARILY
-    #
-    # This causes an issue when using advanced search with check boxes.
-    # A keyword containing spaces will break the search when used with another keyword. 
-    #
-    
+function refine_searchstring($search)
+    {
     # This function solves several issues related to searching.
     # it eliminates duplicate terms, helps the field content to carry values over into advanced search correctly, fixes a searchbar bug where separators (such as in a pasted filename) cause an initial search to fail, separates terms for searchcrumbs.
     
@@ -617,7 +492,7 @@ function refine_searchstring($search){
     $search=implode(", ",$keywords);
     $search=str_replace(",-"," -",$search); // support the omission search
     return $search;
-}
+    }
 }
 
 function compile_search_actions($top_actions)

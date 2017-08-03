@@ -47,6 +47,7 @@ if(!isset($internal_share_access))
 
 # Load the basic search fields, so we know which to strip from the search string
 $fields=get_simple_search_fields();
+
 $simple_fields=array();
 for ($n=0;$n<count($fields);$n++)
 	{
@@ -109,14 +110,18 @@ for ($n=0;$n<count($keywords);$n++)
                 $field_index = array_search($node['resource_type_field'], array_column($fields, 'ref'));
 
                 if(false === $field_index) // Node is not from a simple search field
-                    {
+                    {                        
                     $fieldsearchterm = rebuild_specific_field_search_from_node($node);
 					if(strpos(" ",$fieldsearchterm)!==false)
 						{ $fieldsearchterm = "\"" . $fieldsearchterm . "\"";}
-                        
-                    $field_name = substr($fieldsearchterm,0,strpos($fieldsearchterm,":"));
-                        
-                    if(isset($last_field_name) && $last_field_name == $field_name && !$checkbox_and)
+                    if(!isset($all_fields))
+                        {
+                        $all_fields=get_resource_type_fields();
+                        }
+            
+                    $all_fields_index = array_search($node['resource_type_field'], array_column($all_fields, 'ref'));                        
+                    $field_name = $all_fields[$all_fields_index]["name"];
+                    if(isset($last_field_name) && $last_field_name == $field_name && (($all_fields[$all_fields_index]["type"] == FIELD_TYPE_CHECK_BOX_LIST && !$checkbox_and) ||  ($all_fields[$all_fields_index]["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$dynamic_keyword_and)))
                         {
                         // Append in order to construct the field:value1;value2 syntax used for an OR search in the same field
                         $fieldsearchterm = substr($fieldsearchterm,strpos($fieldsearchterm,":")+1);
