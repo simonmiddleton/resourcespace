@@ -233,7 +233,7 @@ function ProcessFolder($folder)
                 {
                 // Extra check to make sure we don't end up with duplicates
                 $existing=sql_value("SELECT ref value FROM resource WHERE file_path = '" . escape_check($shortpath) . "'",0);
-                if($existing>0)
+                if($existing>0 || hook('staticsync_plugin_add_to_done'))
                     {
                     $done[$shortpath]["processed"]=true;
                     $done[$shortpath]["modified"]=date('Y-m-d H:i:s',time());
