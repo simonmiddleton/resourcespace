@@ -138,7 +138,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     	}
 
 	// also remove any existing extracted icc profiles
-    	$icc_path=get_resource_path($ref,true,"",true,$extension.'.icc');
+    	$iccpath_infile = get_resource_path($ref,true,'',false,$extension);
+		$icc_path = get_icc_path($iccpath_infile);
     	if (file_exists($icc_path)) {unlink($icc_path);}
     	global $pdf_pages;
     	$iccx=0; // if there is a -0.icc page, run through and delete as many as necessary.
@@ -1431,7 +1432,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				# EXPERIMENTAL CODE TO USE EXISTING ICC PROFILE IF PRESENT
 				global $icc_extraction, $icc_preview_profile, $icc_preview_options,$ffmpeg_supported_extensions;
 				if ($icc_extraction){
-					$iccpath = get_resource_path($ref,true,'',false,$extension,-1,1,false,"",$alternative).'.icc';
+					$iccpath_infile = get_resource_path($ref,true,'',false,$extension,-1,1,false,"",$alternative);
+					$iccpath = get_icc_path($iccpath_infile);
 					if (!file_exists($iccpath) && !isset($iccfound) && $extension!="pdf" && !in_array($extension,$ffmpeg_supported_extensions)) {
 						// extracted profile doesn't exist. Try extracting.
 						if (extract_icc_profile($ref,$extension)){
@@ -2610,15 +2612,14 @@ function extract_icc($infile) {
    //$outfile=get_resource_path($ref,true,"",false,$extension.".icc");
    //new, more flexible approach: we will just create a file for anything the caller hands to us.
    //this makes things work with alternatives, the deepzoom plugin, etc.
-   $path_parts = pathinfo($infile);
-   $outfile = $path_parts['dirname'] . '/' . $path_parts['filename'] .'.'. $path_parts['extension'] .'.icc';
+   $outfile = get_icc_path($infile);
    
    if (file_exists($outfile)){
       // extracted profile already existed. We'll remove it and start over
       unlink($outfile);
    }
 
-    $cmd="$convert_fullpath $infile" . '[0]' . " $outfile $stderrclause";
+    $cmd="$convert_fullpath '$infile" . "[0]'" . " '$outfile' $stderrclause";
     $cmdout = run_command($cmd);
     resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $cmdout);
 
@@ -2630,6 +2631,28 @@ function extract_icc($infile) {
 
    if (file_exists($outfile)) { return true; } else { return false; }
 
+}
+
+function get_icc_path($infile){
+	global $syncdir;
+	$path_parts = pathinfo($infile);
+	
+	if(strpos($infile, $syncdir)===0){
+		global $ref, $scramble_key;
+		// use the pre location
+		$outfile_path=get_resource_path($ref,true,"pre",false);
+		$outfile_path_parts=pathinfo($outfile_path);
+		if(isset($scramble_key) && '' != $scramble_key){
+			$outfile = $outfile_path_parts['dirname'] . '/' . $ref . "_" . substr(md5($ref . $scramble_key),0,15) . "." . $path_parts['extension'] .'.icc';
+		}
+		else{
+			$outfile = $outfile_path_parts['dirname'] . "." . $path_parts['extension'] .'.icc';
+		}
+	}
+	else{
+	   $outfile = $path_parts['dirname'] . '/' . $path_parts['filename'] .'.'. $path_parts['extension'] .'.icc';
+	}
+	return $outfile;
 }
 
 function get_imagemagick_version($array=true){
