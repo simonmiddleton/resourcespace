@@ -3345,3 +3345,7 @@ $facial_recognition_face_recognizer_models_location = '';
 
 // Option to allow administrators to change the value of the 'contributed by' user for a resource.
 $edit_contributed_by = false;
+
+# Option to use decimal (KB, MB, GB in multiples of 1000) vs. binary (KiB, MiB, GiB, TiB in multiples of 1024)
+$byte_prefix_mode_decimal=true;
+

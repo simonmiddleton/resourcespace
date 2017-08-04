@@ -472,8 +472,9 @@ function config_text_input($name, $label, $current, $password = false, $width = 
         <?php
         }
         ?>
+        <div class="clearerleft"></div>
     </div>
-    <div class="clearerleft"></div>
+
     <?php
     }
 
@@ -610,8 +611,9 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
                 });
             </script>
         </div>
-        </div>
         <div class="clearerleft"></div>
+        </div>
+        
     <?php
     }
 
@@ -681,8 +683,8 @@ function config_single_select($name, $label, $current, $choices, $usekeys = true
             }
         ?>
         </select>
+     <div class="clearerleft"></div>
     </div>
-    <div class="clearerleft"></div>
     <?php
     }
 
@@ -755,8 +757,8 @@ function config_boolean_select($name, $label, $current, $choices = '', $width = 
             <option value="1"<?php if($current == '1') { ?> selected<?php } ?>><?php echo $choices[1]; ?></option>
             <option value="0"<?php if($current == '0') { ?> selected<?php } ?>><?php echo $choices[0]; ?></option>
         </select>
+        <div class="clearerleft"></div>
     </div>
-    <div class="clearerleft"></div>
     <?php
     }
 
@@ -846,8 +848,9 @@ function config_checkbox_select($name, $label, $current, $choices, $usekeys=true
             ?>
             </tr>
         </table>
+        <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
+  
 <?php
     }
 

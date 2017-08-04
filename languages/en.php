@@ -1882,6 +1882,10 @@ $lang["kilobyte-symbol"]="KB";
 $lang["megabyte-symbol"]="MB";
 $lang["gigabyte-symbol"]="GB";
 $lang["terabyte-symbol"]="TB";
+$lang["kilobyte-symbol-binary"]="KiB";
+$lang["megabyte-symbol-binary"]="MiB";
+$lang["gigabyte-symbol-binary"]="GiB";
+$lang["terabyte-symbol-binary"]="TiB";
 
 $lang["upload_files"]="Upload files";
 $lang["upload_files-to_collection"]="Upload files (to the collection '%collection')"; # %collection will be replaced, e.g. Upload Files (to the collection 'My Collection')
@@ -2623,3 +2627,5 @@ $lang["set_metadata_then_upload"]="Set metadata first, then upload";
 $lang['annotate_text_link_label'] = 'Annotate mode toggle';
 $lang['annotate_annotation_label'] = 'Annotation';
 $lang['annotate_annotations_label'] = 'Annotations';
+
+$lang["byte_prefix_mode_decimal"]="Use decimal for file sizes (1000 multiples, KB/MB/GB/TB) as opposed to binary (1024 multiples , KiB/MiB/GiB/TiB)";

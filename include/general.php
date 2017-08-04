@@ -2195,26 +2195,37 @@ function formatfilesize($bytes)
 	{
 	# Return a human-readable string representing $bytes in either KB or MB.
 	
+    # Binary mode
+    $multiple=1024;$lang_suffix="-binary";
+    
+    # Decimal mode, if configured
+    global $byte_prefix_mode_decimal;
+    if ($byte_prefix_mode_decimal)
+        {
+        $multiple=1000;
+        $lang_suffix="";
+        }
+    
 	global $lang;
-	if ($bytes<1024)
+	if ($bytes<$multiple)
 		{
 		return number_format((double)$bytes) . "&nbsp;".$lang["byte-symbol"];
 		}
-	elseif ($bytes<pow(1024,2))
+	elseif ($bytes<pow($multiple,2))
 		{
-		return number_format((double)ceil($bytes/1024)) . "&nbsp;".$lang["kilobyte-symbol"];
+		return number_format((double)ceil($bytes/$multiple)) . "&nbsp;".$lang["kilobyte-symbol" . $lang_suffix];
 		}
-	elseif ($bytes<pow(1024,3))
+	elseif ($bytes<pow($multiple,3))
 		{
-		return number_format((double)$bytes/pow(1024,2),1) . "&nbsp;".$lang["megabyte-symbol"];
+		return number_format((double)$bytes/pow($multiple,2),1) . "&nbsp;".$lang["megabyte-symbol" . $lang_suffix];
 		}
-	elseif ($bytes<pow(1024,4))
+	elseif ($bytes<pow($multiple,4))
 		{
-		return number_format((double)$bytes/pow(1024,3),1) . "&nbsp;".$lang["gigabyte-symbol"];
+		return number_format((double)$bytes/pow($multiple,3),1) . "&nbsp;".$lang["gigabyte-symbol" . $lang_suffix];
 		}
 	else
 		{
-		return number_format((double)$bytes/pow(1024,4),1) . "&nbsp;".$lang["terabyte-symbol"];
+		return number_format((double)$bytes/pow($multiple,4),1) . "&nbsp;".$lang["terabyte-symbol" . $lang_suffix];
 		}
 	}
 
