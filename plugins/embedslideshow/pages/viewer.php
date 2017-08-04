@@ -16,15 +16,11 @@ $size       = getvalescaped('size', 'pre');
 $transition = (int)getvalescaped('transition', 4);
 $showtext   = getvalescaped('showtext', '0');
 
-$width        = getvalescaped('width', '');
-$player_width = $width;
+$player_width        = getvalescaped('width', '');
+$player_height        = getvalescaped('height', '') - 48;
 
-$dynamic = ('true' == getvalescaped('dynamic', '') ? true : false);
-if($dynamic)
-    {
-    $player_height = getvalescaped('height', '');
-    }
-
+$player_ratio = $player_width / $player_height;
+	
 # Check key is valid
 if (!check_access_key_collection($ref,$key))
 	{
@@ -43,7 +39,7 @@ $use_watermark=check_use_watermark();
 <body>
 
 <div class="embedslideshow_player">
-<div class="embedslideshow_preview" id="embedslideshow_preview" style="position: relative;width:<?php echo $width?>px;height:<?php echo ($dynamic == true ? $player_height - 48 : $width + 8); ?>px;">
+<div class="embedslideshow_preview" id="embedslideshow_preview" style="position: relative;width:<?php echo $player_width?>px;height:<?php echo $player_height?>px;">
 
 <script type="text/javascript">
 var embedslideshow_page=1;
@@ -59,10 +55,10 @@ var timer;
 
 <?php
 $page=1;
-
 $resources=do_search("!collection" . $ref);
 foreach ($resources as $resource)
 	{
+		
 	$file_path=get_resource_path($resource["ref"],true,$size,false,$resource["preview_extension"],-1,1,$use_watermark);
 	if (file_exists($file_path))
 		{
@@ -80,22 +76,21 @@ foreach ($resources as $resource)
 	# sets height and width to display 
 	if((isset($resource["thumb_width"])&&$resource["thumb_width"]<1) || (isset($resource["thumb_height"])&&$resource["thumb_height"] <1)) {continue;/*No Preview Available*/}
 	$ratio=$resource["thumb_width"]/$resource["thumb_height"];
-
-	if ($ratio>=1)
+	
+	if ($ratio > $player_ratio) // Base on the width unless we have been asked to scale to specific width
 		{
 		# Landscape image, width is the largest - scale the height
-		$width=getvalescaped("width","");
+		$width = $player_width - 8;
 		$height=floor($width / $ratio);
 		}
 	else
 		{
-		$height=getvalescaped("width","");
-		$width=floor($height * $ratio);
-		}
-
+		$height = $player_height;
+		$width = floor($height* $ratio);
+		}		
 	?>
 	<a class="embedslideshow_preview_inner" id="embedslideshow_preview<?php echo $page ?>" style="display:none;" href="#" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(<?php echo ($page + 1) ?>,false,false);return false;">
-        <img border="0" width=<?php echo $width ?> height=<?php echo ($dynamic ? $player_height - 48 : $height); ?> src="<?php echo $preview_path ?>">
+        <img border="0" width=<?php echo $width ?> height=<?php echo $height; ?> src="<?php echo $preview_path ?>">
     </a>
 	<?php 
 	global $embedslideshow_textfield,$embedslideshow_resourcedatatextfield;
@@ -107,34 +102,13 @@ foreach ($resources as $resource)
 			?>
 			<span class="embedslideshow_text" id="embedslideshow_previewtext<?php echo $page ?>"><?php echo $resource_data;?></span>
 			<?php
-			}
-		?>
-		<script type="text/javascript">
-		embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ceil(($player_width-$width)/2)+4; ?>;
-		embedslideshow_y_offsets[<?php echo $page ?>]=<?php echo 4 ?>;
-		</script>
-		<?php
-		} 
-	else 
-		{
-        if($dynamic)
-            {
-            ?>
-            <script type="text/javascript">
-            embedslideshow_y_offsets[<?php echo $page ?>] = 4;
-            </script>
-            <?php
-            }
-        else
-            {
-            ?>
-            <script type="text/javascript">
-            embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ceil(($player_width-$width)/2)+4; ?>;
-            embedslideshow_y_offsets[<?php echo $page ?>]=<?php echo ceil(($player_width-$height)/2)+4;?>;
-            </script>
-            <?php
-            }
-		}
+			}		
+		} ?>
+	<script type="text/javascript">
+	embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ($ratio < $player_ratio)?(ceil(($player_width-$width)/2)+4):8; ?>;
+	embedslideshow_y_offsets[<?php echo $page ?>]=<?php echo ($ratio > $player_ratio)?(ceil(($player_height-$height)/2)+4):8; ?>;
+	</script>
+	<?php
 	$page++;
 	}
 $maxpages=$page-1;
@@ -188,15 +162,15 @@ function embedslideshow_ShowPage(page_set,from_auto,jump)
 	// Fade out pause button if manually clicked
 	if (!embedslideshow_auto)
 		{
-		$('#embedslideshow_auto').fadeTo(100,0.4);
+		jQuery('#embedslideshow_auto').fadeTo(100,0.4);
 		}
 		
 	// Faster fade time when manually clicked
 	if (embedslideshow_auto) {var embedslideshow_fadetime=1000;} else {var embedslideshow_fadetime=200;}
 	
 	// Fade out current page
-	$('#embedslideshow_preview' + embedslideshow_page).fadeOut(embedslideshow_fadetime);
-	$('#embedslideshow_previewtext' + embedslideshow_page).fadeOut(embedslideshow_fadetime);
+	jQuery('#embedslideshow_preview' + embedslideshow_page).fadeOut(embedslideshow_fadetime);
+	jQuery('#embedslideshow_previewtext' + embedslideshow_page).fadeOut(embedslideshow_fadetime);
 		
 	embedslideshow_page=page_set;
 	if (embedslideshow_page>(<?php echo $maxpages ?>)) {embedslideshow_page=1;} // back to first page
@@ -205,27 +179,16 @@ function embedslideshow_ShowPage(page_set,from_auto,jump)
 	//document.getElementById("embedslideshow_preview").innerHTML=embedslideshow_pages[embedslideshow_page];
 
 	// Center in space
-	$('#embedslideshow_preview' + embedslideshow_page).css('top',embedslideshow_y_offsets[embedslideshow_page] + 'px');
-	$('#embedslideshow_preview' + embedslideshow_page).css('left',embedslideshow_x_offsets[embedslideshow_page] + 'px');
+	jQuery('#embedslideshow_preview' + embedslideshow_page).css('top',embedslideshow_y_offsets[embedslideshow_page] + 'px');
+	jQuery('#embedslideshow_preview' + embedslideshow_page).css('left',embedslideshow_x_offsets[embedslideshow_page] + 'px');
+	jQuery('.embedslideshow_text').css('left',embedslideshow_x_offsets[embedslideshow_page] + 'px');
+	
 		
 	// Fade in new page
-	$('#embedslideshow_preview' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
-	$('#embedslideshow_previewtext' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
+	jQuery('#embedslideshow_preview' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
+	jQuery('#embedslideshow_previewtext' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
 
-    <?php
-    if($dynamic)
-        {
-        ?>
-        var pageImageSrc = $('#embedslideshow_preview' + embedslideshow_page + ' > img').attr('src');
-        console.log(pageImageSrc);
-        $('#embedslideshow_preview').css('background', '#000 url("' + pageImageSrc + '") no-repeat left top');
-        $('#embedslideshow_preview').css('background-size', 'cover');
-
-        $('#embedslideshow_preview' + embedslideshow_page).hide();
-        <?php
-        }
-        ?>
-	
+  	
 	if (embedslideshow_auto) {timer = setTimeout("embedslideshow_ShowPage(embedslideshow_page+1,true,false);",<?php echo ($transition==0?4000:$transition * 1000) ?>);} else {clearTimeout(timer);}
 	
 	document.getElementById('embedslideshow_page_box').value=embedslideshow_page;

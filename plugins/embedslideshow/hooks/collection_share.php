@@ -2,7 +2,7 @@
 
 function HookEmbedslideshowCollection_shareExtra_share_options()
 	{
-	global $ref,$lang,$baseurl,$embedslideshow_min_size,$embedslideshow_max_size;
+	global $ref,$lang,$baseurl,$embedslideshow_min_size,$embedslideshow_max_size, $embedslideshow_dynamic_size;
 	?>
 	<li><i aria-hidden="true" class="fa fa-fw fa-slideshare"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="collection_share.php?ref=<?php echo $ref?>&embedslideshow=true"><?php echo $lang["embedslideshow"]?></a></li>
 	<?php
@@ -55,7 +55,7 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
 			{?>
 			<div class="Question">		
 			<label><?php echo $lang['embedslideshow_textfield'] ?></label>
-			<input type="checkbox" name="showtext" <?php if (isset($_POST["showtext"]) && $_POST["showtext"]=="1") { ?>checked<?php } ?>>
+			<input type="checkbox" value="1" name="showtext" <?php if (isset($_POST["showtext"]) && $_POST["showtext"]=="1") { ?>checked<?php } ?>>
 			<div class="clearerleft"></div>
 			</div>	<?php 
 			} ?>
@@ -107,12 +107,12 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
 			\">" . $lang["embedslideshow_minimise"] . "</a></div>
 			<div id=\"embedslideshow_maximise_" . $ref . "\" class=\"embedslideshow_maximise\"><a href=\"#\" onClick=\"
 			var ed=document.getElementById('embedslideshow_" . $ref . "');
-			ed.width='858';
-			ed.height='898';
+			ed.width='100%';
+			ed.height='100%';
 			ed.style.position='absolute';
 			ed.style.top='20px';
 			ed.style.left='20px';
-			ed.src='" . $baseurl . "/plugins/embedslideshow/pages/viewer.php?ref=$ref&k=$key&size=scr&width=850&transition=" . getval("transition","") . "';
+			ed.src='" . $baseurl . "/plugins/embedslideshow/pages/viewer.php?ref=$ref&k=$key&size=scr&height=' + ((window.innerHeight)-40) + '&width=' + ((window.innerWidth)-40) + '&transition=" . getval("transition","")  . "&showtext=".getval("showtext","0") . "';
 			ed.style.zIndex=999;
 			document.getElementById('embedslideshow_minimise_" . $ref . "').style.display='block';
 			document.getElementById('embedslideshow_maximise_" . $ref . "').style.display='none';	
