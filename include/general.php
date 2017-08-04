@@ -4187,14 +4187,21 @@ function strip_extension($name)
 
 
 
-function get_nopreview_icon($resource_type,$extension,$col_size,$deprecated1=false,$deprecated2=false)
+/**
+* Returns the path (relative to the gfx folder) of a suitable folder to represent
+* a resource with the given resource type or extension
+* Extension matches are tried first, followed by resource type matches
+* Finally, if there are no matches then the 'type1' image will be used.
+* set contactsheet to true to cd up one more level.
+* 
+* @param integer $resource_type
+* @param string  $extension
+* @param boolean $col_size
+* 
+* @return string
+*/
+function get_nopreview_icon($resource_type, $extension, $col_size)
 	{
-	# Returns the path (relative to the gfx folder) of a suitable folder to represent
-	# a resource with the given resource type or extension
-	# Extension matches are tried first, followed by resource type matches
-	# Finally, if there are no matches then the 'type1' image will be used.
-	# set contactsheet to true to cd up one more level.
-	
 	global $language;
 	
 	$col=($col_size?"_col":"");
