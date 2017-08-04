@@ -175,8 +175,8 @@ foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
             <?php echo $lang["slideshow_use_static_image"]; ?>    
             </label>
             <input type="checkbox" name="slideshow_static_image" id="slideshow_static_image_checkbox" <?php if($static_slideshow_image){echo "checked";} ?> onchange="if(this.checked){jQuery.post('<?php echo $manageurl ?>?ajax=true&static=true');}else{jQuery.post('<?php echo $manageurl ?>?ajax=true&static=false');}"></input>
-        </div>
         <div class="clearerleft"></div>
+        </div>
         <?php
         }
     hook('render_new_element_for_manage_slideshow', '', array($slideshow_files));
