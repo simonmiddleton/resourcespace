@@ -4111,7 +4111,8 @@ function overquota()
 		{
 		# Disk quota functionality. Calculate the usage by the $storagedir folder only rather than the whole disk.
 		# Unix only due to reliance on 'du' command
-		$avail=$disksize*(1024*1024*1024);
+		
+		$avail=$disksize * 1000 * 1000 * 1000;
 		$used=get_total_disk_usage();
 		
 		$free=$avail-$used;

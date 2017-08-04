@@ -20,7 +20,7 @@ if (!file_exists($storagedir)) {mkdir($storagedir,0777);}
 
 if (isset($disksize)) # Use disk quota rather than real disk size
 	{
-	$avail=$disksize*(1024*1024*1024);
+	$avail=$disksize * 1000 * 1000 * 1000;
 	$used=get_total_disk_usage();
 	$free=$avail-$used;
 	}

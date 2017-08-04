@@ -359,8 +359,7 @@ $dash_tile_colour_options = array();
  */ 
 
 
-# Optional 'quota size' for allocation of a set amount of disk space to this application. Value is in GB.
-# Note: Unix systems only.
+# Optional 'quota size' for allocation of a set amount of disk space to this application. Value is in GB (note decimal, not binary, so 1000 multiples).
 # $disksize=150;
 
 # Disk Usage Warnings - require running check_disk_usage.php
