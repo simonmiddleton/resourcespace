@@ -75,7 +75,7 @@ include "../include/header.php";
 	
 	<div class="Question">
 	<label><?php echo $lang["collectionname"]?></label>
-	<div class="Fixed"><?php echo htmlspecialchars($cinfo["name"]) ?></div>
+	<div class="Fixed"><?php echo htmlspecialchars(i18n_get_collection_name($cinfo)); ?></div>
 	<div class="clearerleft"> </div>
 	</div>
 
