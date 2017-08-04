@@ -259,7 +259,7 @@ if ($type==LOG_CODE_UPLOADED) {
         {
         // If an image is not available, fetch a nopreview image based on extension   
         $alter_data = get_alternative_file($resource,$alt_file);    
-        $image = $baseurl_short . 'gfx/' . get_nopreview_icon('',$alter_data['file_extension'],'',$deprecated1=false,$deprecated2=false);
+        $image = $baseurl_short . 'gfx/' . get_nopreview_icon('', $alter_data['file_extension'], '');
         }?>
     <div class="Question">
     <label><?php echo $lang["revertingwillreplace"]?></label>

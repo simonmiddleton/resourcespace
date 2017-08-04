@@ -42,7 +42,6 @@ function HookRse_versionLogLog_diff_td_extra($ref)
         # Attempt to find the image. For the latest upload, this is the current file.
         $latest=sql_query("select previous_file_alt_ref from resource_log where resource='$ref' and type='u' and ref>'" . $log[$n]["ref"] . "' order by ref limit 1");
 
-        //die(print_r($latest));
         if (count($latest)==0)
             {
             # There are no subsequent uploads. The current file is the latest one.
@@ -54,7 +53,7 @@ function HookRse_versionLogLog_diff_td_extra($ref)
             else{
                 $res = get_resource_data($ref);
                 $res_ext = $res['file_extension'];
-                $image = $baseurl_short . 'gfx/' . get_nopreview_icon('',$res_ext,'',$deprecated1=false,$deprecated2=false);
+                $image = $baseurl_short . 'gfx/' . get_nopreview_icon('', $res_ext, '');
                 }
             }
         else
@@ -76,7 +75,7 @@ function HookRse_versionLogLog_diff_td_extra($ref)
             else
                 {
                 //If an image does not exist, get a nopreview image by looking at the extension of the alternative file    
-                $image = $baseurl_short . 'gfx/' . get_nopreview_icon('',$alter_data['file_extension'],'',$deprecated1=false,$deprecated2=false);
+                $image = $baseurl_short . 'gfx/' . get_nopreview_icon('', $alter_data['file_extension'], '');
                 }
             
             }?>
