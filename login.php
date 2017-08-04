@@ -185,35 +185,9 @@ if (getval("langupdate","")!="")
 
 include "include/header.php";
 
-if($login_background && !hook('replace_login_background'))
+if($login_background)
 	{
-    $backimageurl = "";
-
-    // Create homeanim folder if we don't have one
-    if(!file_exists(dirname(__FILE__) . "/{$homeanim_folder}"))
-        {
-        mkdir(dirname(__FILE__) . "/{$homeanim_folder}", 0777, true);
-        }
-
-    $dir = dirname(__FILE__) . "/" . $homeanim_folder;
-    $d = scandir($dir);    
-	sort($d, SORT_NUMERIC);
-    foreach ($d as $f) 
-		{ 
-		if(preg_match("/[0-9]+\.(jpg)$/",$f))
-            {
-            $backimageurl= $baseurl_short . $homeanim_folder . "/" . $f;  
-            break;    
-            }
-        }
-	?>
-	<style>
-	#UICenter {
-		background-image: url('<?php echo $backimageurl; ?>');
-		}
-	</style>
-	<div id="login_box">
-	<?php
+    include "include/login_background.php";
 	}
 
 	
