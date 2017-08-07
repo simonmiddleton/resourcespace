@@ -21,7 +21,7 @@ $giraffenode = set_node(NULL, 73, "giraffe",'',1000);
 $capybaranode = set_node(NULL, 73, "capybara",'',1000);
 $mammalnode = set_node(NULL, 73, "mammal",'',1000);
 $threeblindmicenode = set_node(NULL, 73, "three blind mice",'',1000);
-$firstthirdsecondnode = set_node(NULL, 73, "first third second",'',1000);
+$firstthirdsecondnode = set_node(NULL, 73, "first third second lovely",'',1000);
 debug("node1: " . $zebranode . "\n");
 debug("node2: " . $giraffenode . "\n");
 debug("node3: " . $capybaranode . "\n");
@@ -92,7 +92,7 @@ if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']
 
 
 // quoted search via resource_keyword
-$results=do_search('"first second third"');
+$results=do_search('"first second third lovely"');
 if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
 
 // quoted search via node_keyword
@@ -111,7 +111,7 @@ $results=do_search('giraffe');
 if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourceb) return false;
 
 // quoted search via node_keyword
-$results=do_search('"first third second"');
+$results=do_search('"first third second lovely"');
 if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcec) return false;
 
 
