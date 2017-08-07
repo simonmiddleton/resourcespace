@@ -342,7 +342,7 @@ function set_user_collection($user,$collection)
 	}
 	
 if (!function_exists("create_collection")){	
-function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0)
+function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false,$categories=array())
 	{
 	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
 	if($username==$anonymous_login && $anonymous_user_session_collection)
@@ -354,9 +354,22 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0)
 		{	
 		$rs_session="";
 		}
-
+	
+	$categorysql = "";
+	$themecolumns = "";
+	$themecount = 1;
+	if(count($categories) > 0)
+		{
+		foreach($categories as $category)
+			{
+			$themecolumns .= ",theme" . 	($themecount == 1 ? "" : $themecount);
+			$categorysql .= ",'" . escape_check($category) . "'";
+			$themecount++;
+			}
+		}
 	# Creates a new collection and returns the reference
-	sql_query("insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id) values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . ")");
+	sql_query("insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")");
+	//echo "insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")" . "\n";
 	$ref=sql_insert_id();
 
 	index_collection($ref);	
@@ -901,7 +914,7 @@ function get_themes($themes=array(""),$subthemes=false)
 	$order_sort="";
 	if ($themes_order_by!="name"){$order_sort=" order by $themes_order_by $sort";}
 	$sql.=" and c.public=1    $order_sort;";
-
+	//echo $sql . "\n";
 	$collections=sql_query($sql);
 	if ($themes_order_by=="name"){
 		if ($sort=="ASC"){usort($collections, 'collections_comparator');}
@@ -2499,3 +2512,51 @@ function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $
     // Doing $dupe_increment = null, ++$dupe_increment results in $dupe_increment = 1
     return makeFilenameUnique($base_values, $filename, $dupe_string, $extension, ++$dupe_increment);
     }
+
+/**
+* Show the new collection form.
+**
+* @return boolean
+*/
+function new_collection_form($featured=false,$themearray=array())
+	{
+	global $lang;
+	if(getval("collection_create","")!="")
+		{
+		// Create the collection and reload the page
+		
+		}
+		/*
+		{$baseurl_short}pages/collection_manage.php",
+                array(
+                    'name'                => $lang['stat-newcollection'],
+                    'submit'              => 'Create',
+                    'public'              => 1,
+                    'call_to_action_tile' => 'true'
+                    */
+	echo "<h1>" . $lang["createnewcollection"] . "</h1>";
+	//$themes=get_theme_headers($themearray);
+	?>
+	<form id="new_collection_form" onsubmit="return CentralSpacePost(this,true);" >
+		<div class="Question">
+			<label for="collectionname" ><?php echo $lang["collectionname"] ?></label>
+			<input type="text" name="collectionname"></input>
+			<div class="clearleft"></div>
+		</div>
+		
+		<div class="Question">
+			
+			<label for="location" ></label>
+			<div><input type="radio" name="location" value="root" onclick="jQuery('#theme_category_name').slideUp();"></input><?php echo "&nbsp;" . $lang["create_new_here"] ?></div>
+			<label for="location" ></label>
+			<div><input type="radio" name="location" value="subfolder" onclick="jQuery('#theme_category_name').slideDown();"></input><?php echo "&nbsp;" . $lang["create_new_below"] ?></div>
+			<div class="clearleft"></div>
+		</div>
+		<div class="Question" id="theme_category_name" style=display:none;" >
+			<label for="collectionname" ><?php echo $lang["themecategory"] ?></label>
+			<input type="text" name="collectionname"></input>
+			<div class="clearleft"></div>
+		</div>
+	</form>	
+	<?php
+	}

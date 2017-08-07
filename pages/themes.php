@@ -13,6 +13,47 @@ $sort=getvalescaped("sort",getvalescaped("saved_themes_sort","ASC"));rs_setcooki
 $per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 $simpleview=$themes_simple_view || getval("simpleview","")=="true";
 
+
+$themes=array();
+$themecount=0;
+foreach ($_GET as $key => $value) {
+	// only set necessary vars
+	
+	if (substr($key,0,5)=="theme" && substr($key,0,6)!="themes"){		
+		if (empty($value)) break;	# if the value is empty then there is no point in continuing iterations of the loop
+		$themes[$themecount]=rawurldecode($value);
+		$themecount++;
+		}
+	}
+	
+	
+if(getval("new","")!="")
+	{
+	// Option to create a new featured collection at or below the current level
+	?><div class="BasicsBox">
+	<?php
+	new_collection_form(true,$themes);
+	exit();
+	if(getval("create","")!="")
+		{
+		// Create the collection and reload the page
+		}
+		/*
+		{$baseurl_short}pages/collection_manage.php",
+                array(
+                    'name'                => $lang['stat-newcollection'],
+                    'submit'              => 'Create',
+                    'public'              => 1,
+                    'call_to_action_tile' => 'true'
+                    */
+	echo "<h1>" . $lang["createnewcollection"] . "</h1>";
+	?>
+	</div>
+	<?php
+	exit("HERE");
+	}
+
+
 hook("themeheader");
 
 if (!function_exists("DisplayTheme")){
@@ -22,7 +63,8 @@ function DisplayTheme($themes=array(), $simpleview=false)
 		{
 		global $baseurl_short, $lang, $themecount, $themes_simple_images;
 		$getthemes=get_themes($themes);
-		# 
+		#
+		print_r($themes);
 		for ($m=0;$m<count($getthemes);$m++)
 			{
 			$theme_image_path="";
@@ -108,32 +150,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
                     </div>
 				</div><!-- End of FeaturedSimpleTile_<?php echo $getthemes[$m]["ref"]; ?>-->
 			<?php
-			}		
-
-
-        $new_collection_additional_params = array();
-        for($x = 0; $x < count($themes); $x++)
-            {
-            /*
-            IMPORTANT: this call to action is basically going to make a call to save_collection() which for some unknown
-            reason is inconsistent with the way themes are handled on themes page. Example:
-            save_collection(): theme=A&theme2=B&theme3=C
-            themes.php: theme1=A&theme2=B&theme3=C
-            */
-            $new_collection_additional_params['theme' . (0 == $x ? '': $x + 1)] = $themes[$x];
-            }
-
-        renderCallToActionTile(
-            generateURL(
-                "{$baseurl_short}pages/collection_manage.php",
-                array(
-                    'name'                => $lang['stat-newcollection'],
-                    'submit'              => 'Create',
-                    'public'              => 1,
-                    'call_to_action_tile' => 'true'
-                ),
-                $new_collection_additional_params
-            ));
+			}	
 		}
 	else
 		{
@@ -365,17 +382,6 @@ function DisplayTheme($themes=array(), $simpleview=false)
 }
 
 
-$themes=array();
-$themecount=0;
-foreach ($_GET as $key => $value) {
-	// only set necessary vars
-	
-	if (substr($key,0,5)=="theme" && substr($key,0,6)!="themes"){		
-		if (empty($value)) break;	# if the value is empty then there is no point in continuing iterations of the loop
-		$themes[$themecount]=rawurldecode($value);
-		$themecount++;
-		}
-	}
 
 $header=getvalescaped("header","");
 $smart_theme=getvalescaped("smart_theme","");
@@ -856,6 +862,28 @@ elseif (($theme_category_levels==1 && $smart_theme=="") || $theme_direct_jump)
 			DisplayTheme(array_merge($themes,array($headers[$n])), $simpleview);
 		}
 	}
+
+$new_collection_additional_params = array();
+for($x = 0; $x < count($themes); $x++)
+	{
+	/*
+	IMPORTANT: this call to action is basically going to make a call to save_collection() which for some unknown
+	reason is inconsistent with the way themes are handled on themes page. Example:
+	save_collection(): theme=A&theme2=B&theme3=C
+	themes.php: theme1=A&theme2=B&theme3=C
+	*/
+	$new_collection_additional_params['theme' . (0 == $x ? '': $x + 1)] = $themes[$x];
+	}
+
+renderCallToActionTile(
+	generateURL(
+		"{$baseurl_short}pages/themes.php",
+		array(
+			'new'              => 'true',
+			'call_to_action_tile' => 'true'
+		),
+		$new_collection_additional_params
+	));
 ?>
 
 <?php
@@ -1143,12 +1171,13 @@ if($simpleview && $themes_show_background_image)
 
     jQuery('#CentralSpace').on('CentralSpaceLoaded', function (event, data)
         {
-        var background_image_url = SlideshowImages[SlideshowCurrent];
-
-        jQuery('#Footer').show();
-
+		
         if('themes.php' == basename(data.url).substr(0, 10))
             {
+			var background_image_url = SlideshowImages[SlideshowCurrent];
+	
+			jQuery('#Footer').show();
+
             // Set the background_image_url if one was set based on the featured collection category
             <?php
             if(isset($background_image_url))
