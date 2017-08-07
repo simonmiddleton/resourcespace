@@ -343,7 +343,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .FormWide .Question label{width: 20%}
 .FormWide .Question .Inline label { width: auto; }
-.FormWide .Question .stdwidth, .FormWide .Question .tickset{width: 80%}
+.FormWide .Question .stdwidth, .FormWide .Question .tickset{width: 70%}
 .FormWide .Question .tickset .stdwidth{width: 99%}
 .FormWide .Question .FormHelp {margin: 0px 10px 10px 20%;}
 .FormWide .Question .FormHelp .FormHelpInner {width: 99%}
