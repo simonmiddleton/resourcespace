@@ -387,14 +387,11 @@ if ($_FILES)
                         fclose($out);
                         @unlink($_FILES['file']['tmp_name']);
 
-                        if($plupload_allow_duplicates_in_a_row)
-                            {
-                            // Write in the processed file
-                            $processed_file_handle = fopen($pluplpoad_processed_filepath, 'w');
-                            $processed_file_new_content = $chunk . ',' . $queue_index;
-                            fwrite($processed_file_handle, $processed_file_new_content);
-                            fclose($processed_file_handle);
-                            }
+                        // Write in the processed file (keep track of the last processed chunk)
+                        $processed_file_handle      = fopen($pluplpoad_processed_filepath, 'w');
+                        $processed_file_new_content = "{$chunk},{$queue_index}";
+                        fwrite($processed_file_handle, $processed_file_new_content);
+                        fclose($processed_file_handle);
                         }
                     else
                         {
@@ -426,14 +423,11 @@ if ($_FILES)
                     fclose($in);
                     fclose($out);
 
-                    if($plupload_allow_duplicates_in_a_row)
-                        {
-                        // Write in the processed file
-                        $processed_file_handle = fopen($pluplpoad_processed_filepath, 'w');
-                        $processed_file_new_content = $chunk . ',' . $queue_index;
-                        fwrite($processed_file_handle, $processed_file_new_content);
-                        fclose($processed_file_handle);
-                        }
+                    // Write in the processed file (keep track of the last processed chunk)
+                    $processed_file_handle      = fopen($pluplpoad_processed_filepath, 'w');
+                    $processed_file_new_content = "{$chunk},{$queue_index}";
+                    fwrite($processed_file_handle, $processed_file_new_content);
+                    fclose($processed_file_handle);
                     }
                 else
                     {
