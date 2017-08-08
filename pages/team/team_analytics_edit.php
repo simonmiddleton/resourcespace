@@ -22,6 +22,7 @@ $offset=getvalescaped("offset",0);
 $findtext=getvalescaped("findtext","");
 $activity_type=getvalescaped("activity_type","");
 
+$resource_type=getvalescaped("resource_type","");
 $period=getvalescaped("period",$reporting_periods_default[1]);
 $period_init=$period;
 $period_days=getvalescaped("period_days","");
@@ -119,6 +120,24 @@ for ($n=0;$n<count($types);$n++)
 
 <?php include "../../include/usergroup_select.php" ?>
 
+<div class="Question">
+<label for="resource_type"><?php echo $lang["report_resource_type"]?></label><select id="resource_type" name="resource_type" class="stdwidth">
+<option value=""><?php echo $lang["all_resource_types"]?></option>
+<?php $resource_types=get_resource_types();
+foreach($resource_types as $type)
+    {
+    ?>
+    <option value="<?php echo htmlspecialchars($type['ref']) ?>"
+    <?php if ($resource_type == $type['ref']) { ?>selected<?php } ?>
+    ><?php echo htmlspecialchars($type['name'])?>
+    </option>
+    <?php
+    }
+?>
+</select>
+<div class="clearerleft"> </div>
+</div>
+
 <?php include "../../include/date_range_selector.php" ?>
 
 <div class="Question">
@@ -175,6 +194,7 @@ for ($n=0;$n<count($list);$n++)
 <table cellpadding=2 cellspacing=0><tr>
 <td width="1"><input type="checkbox" id="pie_check" name="graph_types[]" value="pie" <?php if (in_array("pie",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="pie_check" ><?php echo $lang["report_breakdown_pie"] ?></label></td>
 <td width="1"><input type="checkbox" id="piegroup_check" name="graph_types[]" value="piegroup" <?php if (in_array("piegroup",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="piegroup_check" ><?php echo $lang["report_user_group_pie"] ?></label></td>
+<td width="1"><input type="checkbox" id="pieresourcetype_check" name="graph_types[]" value="pieresourcetype" <?php if (in_array("pieresourcetype",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="pieresourcetype_check" ><?php echo $lang["report_resource_type_pie"] ?></label></td>
 <td width="1"><input type="checkbox" id="line_check" name="graph_types[]" value="line" <?php if (in_array("line",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="line_check" ><?php echo $lang["report_time_line"] ?></label></td>
 <td width="1"><input type="checkbox" id="summary_check" name="graph_types[]" value="summary" <?php if (in_array("summary",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="line_check" ><?php echo $lang["report_summary_block"] ?></label></td>
 </tr></table>
@@ -208,14 +228,17 @@ for ($n=0;$n<count($types);$n++)
 	{
         if (($activity_type=="" || $activity_type==$types[$n]) && ($collection=="" || in_array($types[$n],$resource_activity_types)))
             {
-            $graph_params="report=" . $ref . "&n=" . $n . "&activity_type=" . urlencode($types[$n]) . "&groups=" . urlencode(join(",",$groups)) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . $period . "&period_days=" . $period_days . "&collection=" . $collection . "&external=" . $external;
+            $graph_params="report=" . $ref . "&n=" . $n . "&activity_type=" . urlencode($types[$n]) . "&groups=" . urlencode(join(",",$groups)) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . $period . "&period_days=" . $period_days . "&collection=" . $collection  . "&resource_type=" . $resource_type . "&external=" . $external;
             #echo $graph_params;
             
             # Show the object breakdown for certain types only.
             $show_breakdown=false;
+            $show_pieresourcetype=false;
             if (in_array($types[$n],array("Keyword usage","Keyword added to resource", "User session"))) {$show_breakdown=true;}
             if (!(in_array("pie",$graph_types) || count($graph_types)==0)) {$show_breakdown=false;}
             $show_piegroup=(in_array("piegroup",$graph_types) || count($graph_types)==0);
+            if (in_array($types[$n],array("Add resource to collection","Create resource","Removed resource from collection","Resource download", "Resource edit","Resource upload","Resource view"))) {$show_pieresourcetype=true;}
+            if (!(in_array("pieresourcetype",$graph_types) || count($graph_types)==0)) {$show_pieresourcetype=false;}
             $show_line=(in_array("line",$graph_types) || count($graph_types)==0);
             $show_summary=(in_array("summary",$graph_types) || count($graph_types)==0);
             if ($show_breakdown)
@@ -227,13 +250,35 @@ for ($n=0;$n<count($types);$n++)
             if ($show_piegroup)
                 {
                 ?>
-                <div id="piegroup<?php echo $n ?>" style="float:left;width:<?php echo ($show_breakdown?"24%":"24%") ?>;height:300px;"><?php echo $lang["loading"] ?></div>
+                <div id="piegroup<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"] ?></div>
+                <?php
+                }
+            if ($show_pieresourcetype)
+                {
+                ?>
+                <div id="pieresourcetype<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"] ?></div>
                 <?php
                 }
             if ($show_line)
                 {
                 ?>
-                <div id="line<?php echo $n ?>" style="float:left;width:<?php echo ($show_breakdown?"51%":($show_piegroup?"75%":"99%")) ?>;height:300px;"><?php echo $lang["loading"] ?></div>
+                <div id="line<?php echo $n ?>" style="float:left;width:<?php
+                // Set width of line graph based on number of pie charts
+                $pie_counter = 0;
+                $line_width = 99;
+                if ($show_breakdown) {$pie_counter++;}
+                if ($show_piegroup) {$pie_counter++;}
+                if ($show_pieresourcetype) {$pie_counter++;}
+                if ($pie_counter == 1)
+                    {
+                    $line_width = 75;
+                    }
+                elseif ($pie_counter == 2)
+                    {
+                    $line_width = 50;
+                    }
+                echo $line_width . "%";
+                ?>;height:300px;"><?php echo $lang["loading"] ?></div>
                 <?php
                 }
             if ($show_summary)
@@ -249,6 +294,7 @@ for ($n=0;$n<count($types);$n++)
             jQuery(function () {
             <?php if ($show_breakdown) { ?>jQuery('#pie<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=pie&<?php echo $graph_params ?>");<?php } ?>
             <?php if ($show_piegroup) { ?>jQuery('#piegroup<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=piegroup&<?php echo $graph_params ?>");<?php } ?>
+            <?php if ($show_pieresourcetype) { ?>jQuery('#pieresourcetype<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=pieresourcetype&<?php echo $graph_params ?>");<?php } ?>
             <?php if ($show_line) { ?>jQuery('#line<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=line&<?php echo $graph_params ?>");<?php } ?>
             <?php if ($show_summary) { ?>jQuery('#summary<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=summary&<?php echo $graph_params ?>");<?php } ?>
             

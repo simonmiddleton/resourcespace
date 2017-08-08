@@ -8,6 +8,7 @@ include '../../../include/reporting_functions.php';
 
 $report=getvalescaped("report","");
 $activity_type=getvalescaped("activity_type","");
+$resource_type=getvalescaped("resource_type","");
 $period=getvalescaped("period",$reporting_periods_default[1]);
 $period_init=$period;
 if ($period==0)
@@ -73,6 +74,22 @@ or
 )";
 if ($groups!="") {$condition.=" and d.usergroup in ('" . join("','",explode(",",$groups)) . "')";}
 
+// Activity types in table daily_stat where object_ref refers to a resource ID
+$resource_activity_types = array(
+    'Add resource to collection',
+    'Create resource',
+    'Removed resource from collection',
+    'Resource download', 
+    'Resource edit',
+    'Resource upload',
+    'Resource view');
+
+// Add extra SQL condition if filtering by resource type
+if ($resource_type!="" && in_array($activity_type, $resource_activity_types))
+    {
+    $condition.=" and d.object_ref in (select resource.ref from resource join resource_type where resource.resource_type=resource_type.ref and resource_type.ref=$resource_type)";
+    }
+
 $join="";
 # Using a subquery has proven to be faster for collection limitation (at least with MySQL 5.5 and MyISAM)... left the original join method here in case that proves to be faster with MySQL 5.6 and/or a switch to InnoDB.
 #if ($collection!="") {$join.=" join collection_resource cr on cr.collection='$collection' and d.object_ref=cr.resource ";}
@@ -96,7 +113,7 @@ if (!$from_dash)
     
     <?php
     # Add to dash tile function
-    $graph_params="activity_type=" . urlencode($activity_type) . "&groups=" . urlencode($groups) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . getvalescaped("period","") . "&period_days=" . getvalescaped("period_days",""). "&collection=" . $collection . "&external=" . $external . "&type=" . urlencode($type) . "&from_dash=true";
+    $graph_params="activity_type=" . urlencode($activity_type) . "&groups=" . urlencode($groups) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . getvalescaped("period","") . "&period_days=" . getvalescaped("period_days",""). "&collection=" . $collection . "&external=" . $external . "&type=" . urlencode($type) . "&resource_type=" . $resource_type . "&from_dash=true";
     ?>
     &nbsp;&nbsp;<a style="white-space:nowrap;" class="ReportAddToDash" href="<?php echo $baseurl_short ?>pages/dash_tile.php?create=true&title=<?php echo urlencode($title) ?>&nostyleoptions=true&link=<?php echo urlencode("pages/team/team_analytics_edit.php?ref=" . $report)?>&url=<?php echo urlencode("pages/team/ajax/graph.php?" . $graph_params) ?>" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-plus-square"></i>&nbsp;<?php echo  $lang["report_add_to_dash"] ?></a>
     </h2>
@@ -258,8 +275,81 @@ else
     
     
     
-    
-    
+    <?php if ($type=="pieresourcetype") {
+    // Pie chart to break down resource activities by type
+        
+    $data=sql_query("
+        select
+            ret.name as res_type_name,
+            sum(count) c
+        from
+            daily_stat d
+        join
+            resource res on d.object_ref=res.ref
+        join
+            resource_type ret on res.resource_type=ret.ref
+            $join $condition
+        group by
+            ret.name
+        order by
+            c desc"
+        );
+
+    // No data found
+    if (count($data)==0)
+        {
+        ?>
+        <p><?php echo $lang["report_no_data"] ?></p>
+        <script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script>
+        <?php 
+        exit(); 
+        }
+
+    ?>
+
+    <script type="text/javascript"> 
+        jQuery(function ()
+            {
+            jQuery.plot('#placeholder<?php echo $type . $n ?>', [
+                <?php foreach ($data as $row) { ?>{data:<?php echo $row["c"] ?>,label:"<?php echo $row["res_type_name"]  ?>"},<?php } ?>
+            ], {
+            series:
+                {
+                pie:
+                    {
+                    show: true,
+                    label:
+                        {
+                        show: false
+                        },
+                    stroke:
+                        {
+                        width: 0
+                        }
+                    }
+                },
+                grid:
+                    {
+                    hoverable: true
+                    },
+                legend:
+                    {
+                    show: false
+                    },
+                tooltip:
+                    {
+                    show: true,
+                    content: '%p.0%, %s',
+                    shifts:
+                        {
+                        x: 20,
+                        y: 0
+                        }
+                    }
+                });
+            });
+    </script>
+    <?php } ?>
     
     
 

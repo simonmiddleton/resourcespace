@@ -2537,9 +2537,11 @@ $lang["rse_analytics"]="Analytics";
 $lang["new_report"]="New report";
 $lang["edit_report"]="Edit report";
 $lang["all_activity"]="All activity";
+$lang["all_resource_types"]="All resource types";
 
 $lang["report-graph-by-pie"]="breakdown";
 $lang["report-graph-by-piegroup"]="by user group";
+$lang["report-graph-by-pieresourcetype"]="by resource type";
 $lang["report-graph-by-line"]="over time";
 $lang["report-graph-by-summary"]="summary";
 $lang["update_report"]="Update report";
@@ -2548,9 +2550,11 @@ $lang["save_report_as"]="Save report as...";
 
 $lang["report_graph_types"]="Graph types";
 $lang["report_no_data"]="No data for the selected criteria";
+$lang["report_resource_type"]="Resource type";
 
 $lang["report_breakdown_pie"]="Breakdown pie";
 $lang["report_user_group_pie"]="User group pie";
+$lang["report_resource_type_pie"]="Resource type pie";
 $lang["report_time_line"]="Time line";
 $lang["report_summary_block"]="Summary block";
 
