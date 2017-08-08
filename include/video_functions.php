@@ -1,27 +1,46 @@
 <?php
+include_once 'resource_functions.php';
+
 /**
 * Get video resolution using FFMpeg
 * 
-* @param string $ffmpeg_fullpath
-* @param string $file            Path to video file
+* @uses get_video_info()
+* 
+* @param string $file Path to video file
 * 
 * @return array
 */
-function get_video_resolution($ffmpeg_fullpath, $file)
+function get_video_resolution($file)
     {
     $video_resolution = array(
         'width'  => 0,
         'height' => 0,
     );
 
-    $cmd    = $ffmpeg_fullpath . ' -i ' . escapeshellarg($file) . " 2>&1 | grep Stream | grep -oP ', \K[0-9]+x[0-9]+'";
-    $output = run_command($cmd, true);
+    $video_info = get_video_info($file);
 
-    $video_resolution_pieces = explode('x', $output);
-    if(2 === count($video_resolution_pieces))
+    // Different versions of ffprobe store the dimensions in different parts of the json output
+    if(!empty($video_info['width']))
         {
-        $video_resolution['width']  = $video_resolution_pieces[0];
-        $video_resolution['height'] = $video_resolution_pieces[1];
+        $video_resolution['width'] = intval($video_info['width']);
+        }
+
+    if(!empty($video_info['height']))
+        {
+        $video_resolution['height'] = intval($video_info['height']);
+        }
+ 
+    if(isset($video_info['streams']) && is_array($video_info['streams']))
+        {
+        foreach( $video_info['streams'] as $stream)
+            {
+            if(!empty($stream['codec_type']) && 'video' === $stream['codec_type'])
+                {
+                $video_resolution['width']  = intval($stream['width']);
+                $video_resolution['height'] = intval($stream['height']);
+                break;
+                }
+            }
         }
 
     return $video_resolution;

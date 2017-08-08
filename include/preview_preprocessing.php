@@ -614,7 +614,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
             // Find video resolution, figure out whether it is landscape/ portrait and adjust the scaling for the snapshots accordingly
             include_once dirname(__FILE__) . '/video_functions.php';
 
-            $video_resolution = get_video_resolution($ffmpeg_fullpath, $file);
+            $video_resolution = get_video_resolution($file);
             $snapshot_size    = sql_query('SELECT width, height FROM preview_size WHERE id = "pre"');
 
             if(isset($snapshot_size[0]) && 0 < count($snapshot_size[0]))
@@ -643,7 +643,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
                 {
                 $escaped_snapshot_target = str_replace('snapshot', "snapshot_{$i}", $escaped_target);
 
-                $cmd = "{$ffmpeg_fullpath} {$ffmpeg_global_options} -y -ss {$snapshot_point} -i {$escaped_file} {$snapshot_scale},thumbnail=100 -frames:v 1 {$escaped_snapshot_target}";
+                $cmd = "{$ffmpeg_fullpath} {$ffmpeg_global_options} -y -ss {$snapshot_point} -i {$escaped_file} {$snapshot_scale} -frames:v 1 {$escaped_snapshot_target}";
                 run_command($cmd);
                 }
             }
