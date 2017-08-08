@@ -3348,3 +3348,5 @@ $edit_contributed_by = false;
 # Option to use decimal (KB, MB, GB in multiples of 1000) vs. binary (KiB, MiB, GiB, TiB in multiples of 1024)
 $byte_prefix_mode_decimal=true;
 
+# Option to force users to select a resource type at upload
+$resource_type_force_selection=false;

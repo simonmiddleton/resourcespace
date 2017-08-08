@@ -202,6 +202,12 @@ if(0 > $ref && $blank_edit_template && '' == getval('submitted', ''))
     {
     clear_resource_data($ref);
     }
+
+if($ref < 0 && $resource_type_force_selection)
+  {
+  $resource_type = "";
+  $resource["resource_type"] = "";
+  }
         
 # check for upload disabled due to space limitations...
 if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
@@ -281,7 +287,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
          
        # Perform the save
        $save_errors=save_resource_data($ref,$multiple,$autosave_field);
-         
+      
        if($embedded_data_user_select)
          {
          $no_exif=getval("exif_option","");
@@ -297,14 +303,22 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
           }
         $autorotate = getval("autorotate","");
 
+        if($ref < 0 && $resource_type_force_selection && $resource_type=="")
+          {
+          if (!is_array($save_errors)){$save_errors=array();} 
+          $save_errors['resource_type'] = $lang["resourcetype"] . ": " . $lang["requiredfield"];
+          $show_error=true;
+          }
+          
         if ($upload_collection_name_required)
             {
             if (getvalescaped("entercolname","")=="" && getval("collection_add","")=="new")
               { 
               if (!is_array($save_errors)){$save_errors=array();} 
-              $save_errors['collectionname']=$lang["requiredfield"];
+              $save_errors['collectionname'] = $lang["collectionname"] . ": " .$lang["requiredfield"];
+              $show_error=true;
               }
-           }       
+           }
 
         if (($save_errors===true || $is_template)&&(getval("tweak","")==""))
           {           
@@ -857,14 +871,18 @@ if(!$is_template && $show_required_field_label)
 if(!$multiple)
     {
     ?>
-    <div class="Question" id="question_resourcetype">
+    <div class="Question <?php if(isset($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
         <label for="resourcetype"><?php echo $lang["resourcetype"]?></label>
         <select name="resource_type" id="resourcetype" class="stdwidth" 
                 onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
         <?php
         $types                = get_resource_types();
         $shown_resource_types = array();
-
+        if($ref < 0 && $resource_type_force_selection && $resource_type=="") // $resource_type is obtained fromn getval
+          {
+          echo "<option value='' selected>" . $lang["select"] . "</option>";
+          }
+          
         for($n = 0; $n < count($types); $n++)
             {
             // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
@@ -1660,24 +1678,17 @@ if($multiple){echo "</div>";} ?>
 if (isset($show_error) && isset($save_errors) && !hook('replacesaveerror'))
   {
   ?>
-  <script type="text/javascript">
-
+  <script>
   // Find the first field that triggered the error:
   var error_fields;
 
   error_fields = document.getElementsByClassName('FieldSaveError');
   window.location.hash = error_fields[0].id;
 
+  styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>');
   </script>
-  <?php
-  foreach ($save_errors as $save_error_field=>$save_error_message)
-    {
-      ?>
-      <script type="text/javascript">
-      alert('<?php echo htmlspecialchars($save_error_message) ?>');
-      </script><?php
-    }
- }
+  <?php 
+  }
 
 hook("autolivejs");
 

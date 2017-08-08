@@ -125,7 +125,7 @@ input[readonly] {color: #000000;}
 .ListviewStyle thead,.ListviewTitleStyle{background:#DDD;}
 .Question, .QuestionSubmit {background: linear-gradient(#fff, #eee);}
 .Question select .optionWeekend { background-color: #ccc; }
-.Question.FieldSaveError {background-color: #F1A9A0;}
+.Question.FieldSaveError {background: #F1A9A0;}
 div.autocomplete {background-color:white;border:1px solid #888;}
 div.autocomplete ul li.selected { background-color: #ffb;}
 div.autocomplete ul li {color: #000;}
