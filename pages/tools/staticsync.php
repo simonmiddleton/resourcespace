@@ -703,7 +703,7 @@ if (!$staticsync_ingest)
             {
 			// Additional check - make sure the archive state hasn't changed since the start of the script
 			$cas=sql_value("SELECT archive value FROM resource where ref='{$rf["ref"]}'",0);
-			if(!in_array($cas,$staticsync_ignore_deletion_states))
+			if(isset($staticsync_ignore_deletion_states) && !in_array($cas,$staticsync_ignore_deletion_states))
 				{
 				if(!isset($rf["alternative"]))
 					{
