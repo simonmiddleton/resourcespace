@@ -2514,49 +2514,57 @@ function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $
     }
 
 /**
-* Show the new collection form.
-**
+* Show the new featured collection form.
+*
+* @param array $themearray array of theme levels at which featured collection will be created 
+* 
 * @return boolean
 */
-function new_collection_form($featured=false,$themearray=array())
+function new_featured_collection_form($themearray=array())
 	{
 	global $lang;
-	if(getval("collection_create","")!="")
-		{
-		// Create the collection and reload the page
-		
-		}
-		/*
-		{$baseurl_short}pages/collection_manage.php",
-                array(
-                    'name'                => $lang['stat-newcollection'],
-                    'submit'              => 'Create',
-                    'public'              => 1,
-                    'call_to_action_tile' => 'true'
-                    */
-	echo "<h1>" . $lang["createnewcollection"] . "</h1>";
-	//$themes=get_theme_headers($themearray);
 	?>
-	<form id="new_collection_form" onsubmit="return CentralSpacePost(this,true);" >
+	<div class="BasicsBox">
+	<h1><?php echo $lang["createnewcollection"] ?></h1>
+	<form id="new_collection_form" action="" onsubmit="return CentralSpacePost(this,true);" >
 		<div class="Question">
 			<label for="collectionname" ><?php echo $lang["collectionname"] ?></label>
 			<input type="text" name="collectionname"></input>
 			<div class="clearleft"></div>
 		</div>
 		
-		<div class="Question">
-			
-			<label for="location" ></label>
-			<div><input type="radio" name="location" value="root" onclick="jQuery('#theme_category_name').slideUp();"></input><?php echo "&nbsp;" . $lang["create_new_here"] ?></div>
-			<label for="location" ></label>
-			<div><input type="radio" name="location" value="subfolder" onclick="jQuery('#theme_category_name').slideDown();"></input><?php echo "&nbsp;" . $lang["create_new_below"] ?></div>
+		<?php
+		if(count($themearray) > 0)
+			{?>
+			<div class="Question">
+				<label for="location" ></label>
+				<div><input type="radio" name="location" value="root" onclick="jQuery('#theme_category_name').slideUp();"></input><?php echo "&nbsp;" . $lang["create_new_here"] ?></div>
+				<label for="location" ></label>
+				<div><input type="radio" name="location" value="subfolder" onclick="jQuery('#theme_category_name').slideDown();"></input><?php echo "&nbsp;" . $lang["create_new_below"] ?></div>
+				<div class="clearleft"></div>
+			</div>
+			<?php
+			}
+			?>
+		<div class="Question" id="theme_category_name" <?php if(count($themearray) > 0) {?>style=display:none;" <?php }?></div>
+			<label for="category_name" ><?php echo $lang["themecategory"] ?></label>
+			<input type="text" name="category_name"></input>
 			<div class="clearleft"></div>
 		</div>
-		<div class="Question" id="theme_category_name" style=display:none;" >
-			<label for="collectionname" ><?php echo $lang["themecategory"] ?></label>
-			<input type="text" name="collectionname"></input>
+		<?php
+		for($n=0;$n<count($themearray);$n++)
+			{
+			echo "<input type='hidden' name='theme" . ($n>0?$n+1:"") . "' value='" . $themearray[$n] . "'></input>";
+			}
+		?>
+		<input type='hidden' name='create' value='true'></input>
+		<div class="QuestionSubmit" >
+			<label></label>
+			<input type="submit" name="create" value="<?php echo $lang["create"] ?>"></input>
 			<div class="clearleft"></div>
 		</div>
-	</form>	
+	</form>
+	</div>
 	<?php
+	return true;
 	}

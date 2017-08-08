@@ -13,46 +13,35 @@ $sort=getvalescaped("sort",getvalescaped("saved_themes_sort","ASC"));rs_setcooki
 $per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 $simpleview=$themes_simple_view || getval("simpleview","")=="true";
 
-
-$themes=array();
-$themecount=0;
+$themes = array();
+$themecount = 0;
 foreach ($_GET as $key => $value) {
 	// only set necessary vars
 	
 	if (substr($key,0,5)=="theme" && substr($key,0,6)!="themes"){		
 		if (empty($value)) break;	# if the value is empty then there is no point in continuing iterations of the loop
-		$themes[$themecount]=rawurldecode($value);
+		$themes[$themecount] = rawurldecode($value);
 		$themecount++;
 		}
 	}
-	
-	
-if(getval("new","")!="")
+
+if(getval("create","") != "")
+	{
+	// Create the collection and reload the page
+	$collectionname = getvalescaped("collectionname","");
+	$newcategory = getvalescaped("category_name","");
+	// Add the new category to the theme array
+	if($newcategory != ""){$themes[]=$newcategory;}
+	$new_collection = create_collection($userref,$collectionname,0,0,0,true,$themes);
+	set_user_collection($userref,$new_collection);
+	refresh_collection_frame($collection="");
+	}	
+elseif(getval("new","")!="")
 	{
 	// Option to create a new featured collection at or below the current level
-	?><div class="BasicsBox">
-	<?php
-	new_collection_form(true,$themes);
+	new_featured_collection_form($themes);
 	exit();
-	if(getval("create","")!="")
-		{
-		// Create the collection and reload the page
-		}
-		/*
-		{$baseurl_short}pages/collection_manage.php",
-                array(
-                    'name'                => $lang['stat-newcollection'],
-                    'submit'              => 'Create',
-                    'public'              => 1,
-                    'call_to_action_tile' => 'true'
-                    */
-	echo "<h1>" . $lang["createnewcollection"] . "</h1>";
-	?>
-	</div>
-	<?php
-	exit("HERE");
 	}
-
 
 hook("themeheader");
 
@@ -64,7 +53,6 @@ function DisplayTheme($themes=array(), $simpleview=false)
 		global $baseurl_short, $lang, $themecount, $themes_simple_images;
 		$getthemes=get_themes($themes);
 		#
-		print_r($themes);
 		for ($m=0;$m<count($getthemes);$m++)
 			{
 			$theme_image_path="";
@@ -1174,7 +1162,10 @@ if($simpleview && $themes_show_background_image)
 		
         if('themes.php' == basename(data.url).substr(0, 10))
             {
-			var background_image_url = SlideshowImages[SlideshowCurrent];
+			if (typeof SlideshowImages !== 'undefined')
+				{
+				var background_image_url = SlideshowImages[SlideshowCurrent];
+				}
 	
 			jQuery('#Footer').show();
 
