@@ -443,6 +443,10 @@ $exiftool_no_process=array();
 # Which field do we drop the original filename in to?
 $filename_field=51;
 
+# Which field is linked to the exiftool field for title?
+# This should not be confused with the $view_title_field option, which is purely for display purposes.
+$title_field=8;
+
 # If using imagemagick, should colour profiles be preserved? (for larger sizes only - above 'scr')
 $imagemagick_preserve_profiles=false;
 $imagemagick_quality=90; # JPEG quality (0=worst quality/lowest filesize, 100=best quality/highest filesize)
