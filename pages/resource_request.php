@@ -191,6 +191,7 @@ if (isset($custom_request_fields))
 			}
 		}
 	}
+hook("resource_request_form_bottom");
 ?>
 
 	<div class="QuestionSubmit">
