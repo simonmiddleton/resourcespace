@@ -13,8 +13,17 @@ include "../include/header.php";
 
 	<div class="VerticalNav">
 	<ul>
-	
-	<li><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo urlencode($userref) ?>&uploader=plupload"><?php echo $lang["addresourcebatchbrowser"];?></a></li>
+
+	<li><a onClick="return CentralSpaceLoad(this,true);"
+	<?php
+				#We need to point to the right upload sequence based on $upload_then_edit
+				if ($upload_then_edit==1){?>
+						href="<?php echo $baseurl_short?>pages/upload_plupload.php">
+				<?php }
+				else {?>
+						href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo urlencode($userref) ?>&uploader=plupload"><?php 
+				}?>
+	<?php echo $lang["addresourcebatchbrowser"];?></a></li>
 	
 	<?php if (checkperm("e-2")) { ?>
 	<li><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo urlencode($userref) ?>&archive=-2"><?php echo $lang["viewcontributedps"]?></a></li>
