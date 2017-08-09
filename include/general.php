@@ -3362,7 +3362,7 @@ function get_grouped_related_keywords($find="",$specific="")
 
 function save_related_keywords($keyword,$related)
 	{
-	$keyref=resolve_keyword($keyword,true);
+	$keyref=resolve_keyword($keyword,true,false,false);
 	$s=trim_array(explode(",",$related));
 
 	# Blank existing relationships.
@@ -3371,7 +3371,7 @@ function save_related_keywords($keyword,$related)
 		{
 		for ($n=0;$n<count($s);$n++)
 			{
-			sql_query("insert into keyword_related (keyword,related) values ('$keyref','" . resolve_keyword($s[$n],true) . "')");
+			sql_query("insert into keyword_related (keyword,related) values ('$keyref','" . resolve_keyword($s[$n],true,false,false) . "')");
 			}
 		}
 	return true;
