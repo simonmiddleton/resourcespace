@@ -77,7 +77,10 @@ function HookSimplesamlAllProvideusercredentials()
         $simplesaml_custom_attributes,$lang,$simplesaml_login;
 		
         // If user is logged or if SAML is not being used to login to ResourceSpace (just as a simple barrier, usually with anonymous access configured) then use standard authentication if available
-		if (isset($_COOKIE["user"]) || !$simplesaml_login) {return true;}
+        if(isset($_COOKIE['user']) || (!$simplesaml_login && !simplesaml_is_authenticated()))
+            {
+            return true;
+            }
 		
 		// Redirect to login page if not already authenticated and local login option is preferred
 		if(!simplesaml_is_authenticated() && $simplesaml_allow_standard_login  && $simplesaml_prefer_standard_login && getval("usesso","")=="" )
