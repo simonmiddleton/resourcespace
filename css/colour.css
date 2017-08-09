@@ -5,7 +5,7 @@
  * Standard structural styling should be placed inside global.css
  * 
  */
-body,html {color:#555;background: #FFF;}
+body,html {color:#555;background: #e6e6e6;}
 h2 {color: #000000;}
 h1 {color: #000000;}
 
@@ -59,11 +59,12 @@ input[readonly] {color: #000000;}
 .ResourcePanel
 	{
 	background-color: white;
-	border:1px solid #999;
+	border-radius: 5px;
 	}
+
 .ImageWrapper
 	{
-	background-color: #ddd;
+	/* background-color: #fff; add a background to clearly highlight the image area */
 	}
 	
 #easyTooltip{
@@ -123,7 +124,12 @@ input[readonly] {color: #000000;}
 
 .NavUnderline {border-bottom: 1px solid #5A7599;}
 .ListviewStyle thead,.ListviewTitleStyle{background:#DDD;}
-.Question, .QuestionSubmit {background: linear-gradient(#fff, #eee);}
+.Question, .QuestionSubmit {background: #fff;}
+.Question, .QuestionSubmit {border-top-left-radius:5px;border-top-right-radius: 5px;}
+.Question ~ .Question {border-top-left-radius:0;border-top-right-radius:0;}
+.Question:last-of-type, .QuestionSubmit:last-of-type {border-bottom-left-radius:5px;border-bottom-right-radius: 5px;}
+
+.Question {border-bottom: 1px solid #ddd;}
 .Question select .optionWeekend { background-color: #ccc; }
 .Question.FieldSaveError {background: #F1A9A0;}
 div.autocomplete {background-color:white;border:1px solid #888;}
@@ -302,7 +308,7 @@ li.plupload_droptext {color:#999;}
 
 #modal
     {
-    background-color:rgb(238, 238, 238);
+    background-color: #e6e6e6;
     box-shadow: 0 0 40px rgba(0,0,0,0.5);
     }
 #modal .RecordHeader, #modal .BasicsBox h1, #modal .TopInpageNav

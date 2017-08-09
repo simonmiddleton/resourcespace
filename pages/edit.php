@@ -972,6 +972,7 @@ if (isset($metadata_template_resource_type) && !$multiple && !checkperm("F*"))
        ?>
     </select>
     <input type="submit" class="medcomplementwidth" name="copyfromsubmit" value="<?php echo $lang["action-select"]?>">
+    <div class="clearerleft"> </div>
  </div><!-- end of question_metadatatemplate --> 
  <?php
 }
@@ -1123,6 +1124,7 @@ if($collapsible_sections)
     <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
     <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true);">
     <input type="submit" name="save" value="<?php echo $lang['save']; ?>">
+    <div class="clearerleft"> </div>
  </div><!-- end of question_copyfrom -->
  <?php
 } ?>

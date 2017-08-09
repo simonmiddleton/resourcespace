@@ -2976,7 +2976,7 @@ $remove_resources_link_on_collection_bar = TRUE;
 # Show group filter and user search at top of team_user.php
 $team_user_filter_top=false;
 
-# Stemming support - at this stage, experimental. Indexes stems of words only, so plural / singular (etc) forms of keywords are indexed as if they are equivalent. Requires a full reindex.
+# Stemming support. Indexes stems of words only, so plural / singular (etc) forms of keywords are indexed as if they are equivalent. Requires a full reindex.
 $stemming=false;
 
 # Initialize array for classes to be added to <body> element
