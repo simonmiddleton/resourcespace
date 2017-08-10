@@ -229,12 +229,12 @@ if (getval("save","")!="" || getval("submitted","")!="")
 			$message.=$templatevars['proposer'] . $lang["propose_changes_proposed_changes_submitted_text"] . $ref . "<br>";
 			$message.= $templatevars['url'];
 			
+			$admin_notify_emails = array();
+            $admin_notify_users = array();
 				
 			if($propose_changes_notify_admin)
 				{				
 				debug("propose_changes: sending submitted message/email to admins");
-				$admin_notify_emails = array();
-                $admin_notify_users = array();
                 $notify_users=get_notification_users("RESOURCE_ADMIN");
                 foreach($notify_users as $notify_user)
                     {
