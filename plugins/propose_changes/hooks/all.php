@@ -6,7 +6,7 @@ function HookPropose_changesAllAddtoactions()
 	if($actions_propose_changes)
 		{
 		$alleditablesql=do_search("","","",0,-1,"",false,0,false,false,"",false,true, true, true,true);    
-		$changessql="SELECT pc.date,pc.resource AS ref, group_concat(f.title) AS description, 'proposed_change' AS type FROM propose_changes_data pc JOIN resource_type_field f ON pc.resource_type_field=f.ref WHERE pc.resource in (select ref from (" . $alleditablesql . ") editable) GROUP BY pc.resource";
+		$changessql="SELECT pc.date,pc.resource AS ref, pc.user as user,group_concat(f.title) AS description, 'proposed_change' AS type FROM propose_changes_data pc JOIN resource_type_field f ON pc.resource_type_field=f.ref WHERE pc.resource in (select ref from (" . $alleditablesql . ") editable) GROUP BY pc.resource";
 		return $changessql;  
 		}
 	return false;

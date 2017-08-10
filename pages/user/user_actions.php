@@ -160,7 +160,7 @@ else
 			{
 			$actioneditlink=$actionlinks["editlink"];
 			$actionviewlink=$actionlinks["viewlink"]; 
-			$actionaddlink=$actionlinks["addlink"];
+			$actionaddlink=isset($actionlinks["addlink"])?$actionlinks["addlink"]:"";
 			}
 		  else
 			{
