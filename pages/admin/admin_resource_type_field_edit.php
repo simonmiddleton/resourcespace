@@ -85,9 +85,30 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			//natsort($field_types);
 			?>
-			<div class="tickset">
-			  <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth" onchange="newval=parseInt(this.value);if((jQuery.inArray(newval,fixed_list_fields) > -1) && (jQuery.inArray(current_type,text_fields) > -1)){if(confirm('<?php echo $lang["admin_resource_type_field_migrate_data_prompt"] ?>')){jQuery('#migrate_data').val('yes');return CentralSpacePost(this.form,true);}else{jQuery('#migrate_data').val('');}}else{return CentralSpacePost(this.form,true);}">
-				
+            <div class="tickset">
+                <select id="<?php echo $propertyname ?>"
+                        name="<?php echo $propertyname ?>"
+                        class="stdwidth"
+                        onchange="
+                            newval=parseInt(this.value);
+
+                            if((jQuery.inArray(newval,fixed_list_fields) > -1) && (jQuery.inArray(current_type,text_fields) > -1))
+                                {
+                                if(confirm('<?php echo $lang["admin_resource_type_field_migrate_data_prompt"] ?>'))
+                                    {
+                                    jQuery('#migrate_data').val('yes');
+                                    this.form.submit();
+                                    }
+                                else
+                                    {
+                                    jQuery('#migrate_data').val('');
+                                    }
+                                }
+                            else
+                                {
+                                this.form.submit();
+                                }
+                ">
 				<?php
 				foreach($field_types as $field_type=>$field_type_description)
 					{
