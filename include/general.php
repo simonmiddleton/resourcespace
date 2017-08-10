@@ -4779,9 +4779,14 @@ function format_display_field($value){
 	
 	// applies trim/wordwrap/highlights 
 	global $results_title_trim,$results_title_wordwrap,$df,$x,$search;
-	if(isset($df[$x]['type']) && $df[$x]['type']==8){
-		$value=strip_tags($value);
-	}
+
+    $value = strip_tags_and_attributes($value);
+
+    if(isset($df[$x]['type']) && 8 == $df[$x]['type'])
+        {
+        $value = strip_tags($value);
+        }
+
 	$string=i18n_get_translated($value);
 	$string=TidyList($string);
 	//$string=tidy_trim($string,$results_title_trim);
