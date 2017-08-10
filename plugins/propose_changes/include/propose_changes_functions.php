@@ -2,7 +2,7 @@
 
 function save_proposed_changes($ref)
 	{
-    global $userref, $auto_order_checkbox,$multilingual_text_fields,$languages,$language, $FIXED_LIST_FIELD_TYPES;
+    global $userref, $auto_order_checkbox,$multilingual_text_fields,$languages,$language, $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES, $range_separator;
 
     # Loop through the field data and save (if necessary)
 	$errors        = array();
@@ -46,72 +46,183 @@ function save_proposed_changes($ref)
                         }
                     }
                 }
-            ##### END OF NODES #####
+				
+		else
+				{
+				if($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
+					{
+					# date range type
+					# each value will be a node so we end up with a pair of nodes to represent the start and end dates
 
-            if ($fields[$n]["type"]==4 || $fields[$n]["type"]==6 || $fields[$n]["type"]==10)
-                    {
+					$newval="";
+					
+					if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
+						{
+						// We have been passed the range in EDTF format, check it is in the correct format
+						$rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
+						if(!preg_match($rangeregex,$date_edtf,$matches))
+							{
+							$errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
+							continue;
+							}
+						$rangedates = explode("/",$date_edtf);
+						$rangestart=str_pad($rangedates[0],  10, "-00");
+						$rangeendparts=explode("-",$rangedates[1]);
+                        $rangeendyear=$rangeendparts[0];
+                        $rangeendmonth=isset($rangeendparts[1])?$rangeendparts[1]:12;
+                        $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
+						$rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
+                        
+						$val = $rangestart . "," . $rangeend;
+						}
+					else
+						{
+						// Range has been passed via normal inputs, construct the value from the date/time dropdowns
+						$date_parts=array("start","end");
+						
+						foreach($date_parts as $date_part)
+							{	
+							$val = getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "year","");
+							if (intval($val)<=0) 
+								{
+								$val="";
+								}
+							elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "month",""))!="") 
+								{
+								$val.="-" . $field;
+								if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "day",""))!="") 
+									{
+									$val.="-" . $field;
+									}
+								 else 
+									{
+									$val.="-00";
+									}
+								}
+							else 
+								{
+								$val.="-00-00";
+								}
+							$newval.= ($newval!=""?",":"") . $val;
+							}
+						}
+						$val=$newval;
+                    }
+				elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
+					{
                     # date type, construct the value from the date/time dropdowns
                     $val=sprintf("%04d", getvalescaped("field_" . $fields[$n]["ref"] . "-y",""));
                     if ((int)$val<=0) 
-                            {
-                            $val="";
-                            }
+                        {
+                        $val="";
+                        }
                     elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-m",""))!="") 
+                        {
+                        $val.="-" . $field;
+                        if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-d",""))!="") 
                             {
                             $val.="-" . $field;
-                            if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-d",""))!="") 
+                            if (($field=getval("field_" . $fields[$n]["ref"] . "-h",""))!="")
+                                {
+                                $val.=" " . $field . ":";
+                                if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-i",""))!="") 
                                     {
-                                    $val.="-" . $field;
-                                    if (($field=getval("field_" . $fields[$n]["ref"] . "-h",""))!="")
-                                            {
-                                            $val.=" " . $field . ":";
-                                            if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-i",""))!="") 
-                                                    {
-                                                            $val.=$field;
-                                                    } 
-                                            else 
-                                                    {
-                                                            $val.="00";
-                                                    }
-                                            }
+                                    $val.=$field;
+									if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "-s",""))!="") 
+										{
+										$val.=$field;
+										} 
+								     else 
+										{
+										$val.=":00";
+										}
+                                    } 
+                                else 
+                                    {
+                                    $val.="00:00";
                                     }
+                                }
+                            else 
+                                {
+                                $val.=" 00:00:00";
+                                }
                             }
-                    }
-            elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
-                    {
-                    # Construct a multilingual string from the submitted translations
-                    $val=getvalescaped("field_" . $fields[$n]["ref"],"");
-                    $val="~" . $language . ":" . $val;
-                    reset ($languages);
-                    foreach ($languages as $langkey => $langname)
+                         else 
                             {
-                            if ($language!=$langkey)
-                                    {
-                                    $val.="~" . $langkey . ":" . getvalescaped("multilingual_" . $n . "_" . $langkey,"");
-                                    }
+                            $val.="-00 00:00:00";
                             }
+                        }
+                    else 
+                        {
+                        $val.="-00-00 00:00:00";
+                        }
                     }
-            else
-                    {
-                    # Set the value exactly as sent.
-                    $val=getvalescaped("field_" . $fields[$n]["ref"],"");
-                    } 
-            
-            # Check for regular expression match
-            if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
-                    {
-                    if(preg_match("#^" . $fields[$n]["regexp_filter"] . "$#",$val,$matches)<=0)
-                            {
-                            global $lang;
-                            debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . $fields[$n]["regexp_filter"] . ". Value passed: " . $val);
-                            if (getval("autosave","")!="")
-                                    {
-                                    exit();
-                                    }
-                            $errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
-                            continue;
-                            }
-                    }
+				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
+					{
+					# Construct a multilingual string from the submitted translations
+					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
+					$val="~" . $language . ":" . $val;
+					reset ($languages);
+					foreach ($languages as $langkey => $langname)
+						{
+						if ($language!=$langkey)
+							{
+							$val.="~" . $langkey . ":" . getvalescaped("multilingual_" . $n . "_" . $langkey,"");
+							}
+						}
+					}
+				else
+					{
+					# Set the value exactly as sent.
+					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
+					} 
+				# Check for regular expression match
+				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+					{
+					if(preg_match("#^" . $fields[$n]["regexp_filter"] . "$#",$val,$matches)<=0)
+						{
+						global $lang;
+						debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . $fields[$n]["regexp_filter"] . ". Value passed: " . $val);
+						if (getval("autosave","")!="")
+							{
+							exit();
+							}
+						$errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
+						continue;
+						}
+					}
+				$modified_val=hook("modifiedsavedfieldvalue",'',array($fields,$n,$val));
+				if(!empty($modified_val)){$val=$modified_val;}
+				
+				$error=hook("additionalvalcheck", "all", array($fields, $fields[$n]));
+				if ($error) 
+					{
+					global $lang;
+					global $lang;
+					if (getval("autosave","")!="")
+						{
+						exit($error);
+						}
+					$errors[$fields[$n]["ref"]]=$error;
+					continue;
+					}
+				}
+					
+				# Check for regular expression match
+				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+						{
+						if(preg_match("#^" . $fields[$n]["regexp_filter"] . "$#",$val,$matches)<=0)
+								{
+								global $lang;
+								debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . $fields[$n]["regexp_filter"] . ". Value passed: " . $val);
+								if (getval("autosave","")!="")
+										{
+										exit();
+										}
+								$errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
+								continue;
+								}
+						}
             $error=hook("additionalvalcheck", "all", array($fields, $fields[$n]));
             if ($error) 
                 {

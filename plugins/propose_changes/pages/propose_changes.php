@@ -1,10 +1,11 @@
 <?php
 
-include '../../../include/db.php';
-include_once '../../../include/general.php';
-include '../../../include/authenticate.php';
-include '../../../include/resource_functions.php';
-include '../include/propose_changes_functions.php';
+include_once __DIR__ . '/../../../include/db.php';
+include_once __DIR__ . '/../../../include/general.php';
+include __DIR__ . '/../../../include/authenticate.php';
+include_once __DIR__ . '/../../../include/resource_functions.php';
+include_once __DIR__ . '/../include/propose_changes_functions.php';
+include_once __DIR__ . '/../../../include/render_functions.php';
 
 
 $ref=getvalescaped("ref","",true);
@@ -47,7 +48,7 @@ if($editaccess)
     {
     $userproposals= sql_query("select pc.user, u.username from propose_changes_data pc left join user u on u.ref=pc.user where resource='$ref' group by pc.user order by u.username asc");
     $view_user=getvalescaped("proposeuser",((count($userproposals)==0)?$userref:$userproposals[0]["user"]));
-    $proposed_changes=get_proposed_changes($ref, $view_user);  
+    $proposed_changes=get_proposed_changes($ref, $view_user);
     }
 else
     {
@@ -173,7 +174,6 @@ if (getval("save","")!="" || getval("submitted","")!="")
         if ($save_errors===true)
 			{			
 			$proposed_changes=get_proposed_changes($ref, $userref);
-
 			for ($n=0;$n<count($proposefields);$n++)
 				{
 				# Has a change to this field been proposed?
@@ -352,7 +352,9 @@ function propose_changes_display_multilingual_text_field($n, $field, $translatio
 function propose_changes_display_field($n, $field)
 	{
 	
-	global $ref, $original_fields, $multilingual_text_fields, $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess, $FIXED_LIST_FIELD_TYPES;
+	global $ref, $original_fields, $multilingual_text_fields,
+    $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess,
+    $FIXED_LIST_FIELD_TYPES,$range_separator;
 	
     $edit_autosave=false;
 	$name="field_" . $field["ref"];
@@ -420,6 +422,7 @@ function propose_changes_display_field($n, $field)
             $value = implode(', ', $resource_nodes);
             }
         }
+        
 
     $realvalue = $value; // Store this in case it gets changed by view processing
 	if ($value!="")
@@ -501,6 +504,12 @@ function propose_changes_display_field($n, $field)
                 {
                 $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
                 }
+            }
+        else if ($field["type"]==FIELD_TYPE_DATE_RANGE)
+            {
+            $rangedates = explode(",",$value);		
+            natsort($rangedates);
+            $value=implode(",",$rangedates);
             }
 
         $is_search = false;
