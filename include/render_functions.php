@@ -350,6 +350,17 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 $field['nodes'] = reorder_nodes($field['nodes']);
                 }
 
+            $order_by_resetter = 0;
+            foreach($field['nodes'] as $node_index => $node)
+                {
+                // Special case for vertically ordered checkboxes.
+                // Order by needs to be reset as per the new order so that we can reshuffle them using the order by as a reference
+                if($checkbox_ordered_vertically)
+                    {
+                    $field['nodes'][$node_index]['order_by'] = $order_by_resetter++;
+                    }
+                }
+
             if ($field["display_as_dropdown"] || $forsearchbar)
                 {
                 # Show as a dropdown box
