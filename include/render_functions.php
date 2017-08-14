@@ -339,49 +339,16 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             	$optionfields[]=$field["name"]; # Append to the option fields array, used by the AJAX dropdown filtering
             	}
 
-            ##### Reordering options #####
-            $reordered_options = array();
-            $node_options      = array();
+            $node_options = array();
             foreach($field['nodes'] as $node)
                 {
-                // Filter the options array for blank values and ignored keywords
-                if('' !== $node['name'] && 0 !== count($limit_keywords) && !in_array(strval($node['name']), $limit_keywords))
-                    {
-                    continue;
-                    }
-
-                $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
-                $node_options[]                  = $node['name'];
+                $node_options[] = $node['name'];
                 }
 
-            if($auto_order_checkbox && !hook('ajust_auto_order_checkbox', '', array($field)))
+            if((bool) $field['automatic_nodes_ordering'])
                 {
-                if($auto_order_checkbox_case_insensitive)
-                    {
-                    natcasesort($reordered_options);
-                    }
-                else
-                    {
-                    natsort($reordered_options);
-                    }
+                $field['nodes'] = reorder_nodes($field['nodes']);
                 }
-
-            $new_node_order    = array();
-            $order_by_resetter = 0;
-            foreach($reordered_options as $reordered_node_id => $reordered_node_option)
-                {
-                $new_node_order[$reordered_node_id] = $field['nodes'][array_search($reordered_node_id, array_column($field['nodes'], 'ref', 'ref'))];
-
-                // Special case for vertically ordered checkboxes.
-                // Order by needs to be reset as per the new order so that we can reshuffle them using the order by as a reference
-                if($checkbox_ordered_vertically)
-                    {
-                    $new_node_order[$reordered_node_id]['order_by'] = $order_by_resetter++;
-                    }
-                }
-
-            $field['nodes'] = $new_node_order;
-            ##### End of reordering options #####
 
             if ($field["display_as_dropdown"] || $forsearchbar)
                 {
