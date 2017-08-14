@@ -79,7 +79,7 @@ if(!hook('customchkboxes', '', array($field)))
             ?>
             <fieldset class="customFieldset" name="<?php echo $field['title']; ?>">
                 <legend class="accessibility-hidden"><?php echo $field['title']; ?></legend>
-                <table cellpadding=3 cellspacing=0>
+                <table cellpadding="5" cellspacing="0">
                     <tr>
                 <?php
                 for($i = 0; $i < $rows; $i++)
@@ -137,7 +137,7 @@ if(!hook('customchkboxes', '', array($field)))
         ?>
 		<fieldset class="customFieldset" name="<?php echo $field['title']; ?>">
         <legend class="accessibility-hidden"><?php echo $field['title']; ?></legend>
-        <table cellpadding=3 cellspacing=0>
+        <table cellpadding="3" cellspacing="0">
             <tr>
         <?php
         foreach($field['nodes'] as $node)
