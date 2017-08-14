@@ -682,7 +682,6 @@ if(0 > $ref)
       hook("custompermshowfile");
       if ((!$is_template && !checkperm("F*"))||$custompermshowfile) 
          { ?>
-         <div class="PreviewImageBlock RecordDownload">
          <div class="Question" id="question_file">
             <label><?php echo $lang["file"]?></label>
          <div class="Fixed" style="width:50%;">
@@ -761,7 +760,6 @@ if(0 > $ref)
         <?php hook("afterfileoptions"); ?>
      </div>
      <div class="clearerleft"> </div>
-  </div>
   </div>
   <?php }
   hook("beforeimagecorrection");
@@ -1090,6 +1088,32 @@ $fields=$newfields;
 
 $required_fields_exempt=array(); # new array to contain required fields that have not met the display condition
 
+# Work out if any fields are displayed, and if so, enable copy from feature (+others)
+$display_any_fields=false;
+$fieldcount=0;
+$tabname="";
+$tabcount=0;
+for ($n=0;$n<count($fields);$n++)
+  {
+   if (is_field_displayed($fields[$n]))
+     {
+     $display_any_fields=true;
+     break;
+    }
+}
+ 
+# "copy data from" feature
+if ($display_any_fields && $enable_copy_data_from && !checkperm("F*") && !$upload_review_mode)
+    { ?>
+ <div class="Question" id="question_copyfrom">
+    <label for="copyfrom"><?php echo $lang["batchcopyfrom"]?></label>
+    <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
+    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true);">
+    <input type="submit" name="save" value="<?php echo $lang['save']; ?>">
+    <div class="clearerleft"> </div>
+ </div><!-- end of question_copyfrom -->
+ <?php
+}
 ?>
 </div>
 <?php hook('editbeforesectionhead');
@@ -1102,32 +1126,10 @@ if($collapsible_sections)
      <?php
   }
 
-  $display_any_fields=false;
-  $fieldcount=0;
-  $tabname="";
-  $tabcount=0;
-  for ($n=0;$n<count($fields);$n++)
-  {
-     if (is_field_displayed($fields[$n]))
-     {
-       $display_any_fields=true;
-       break;
-    }
- }
+
  if ($display_any_fields)
  {
-    # "copy data from" feature
-  if ($enable_copy_data_from && !checkperm("F*") && !$upload_review_mode)
-    { ?>
- <div class="Question" id="question_copyfrom">
-    <label for="copyfrom"><?php echo $lang["batchcopyfrom"]?></label>
-    <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
-    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true);">
-    <input type="submit" name="save" value="<?php echo $lang['save']; ?>">
-    <div class="clearerleft"> </div>
- </div><!-- end of question_copyfrom -->
- <?php
-} ?>
+ ?>
 
 <?php if (!$upload_review_mode) { ?>
 <br /><br /><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
@@ -1625,16 +1627,17 @@ if($disablenavlinks)
         }
         
 if (!$edit_upload_options_at_top){include '../include/edit_upload_options.php';}
+
+if(!hook('replacesubmitbuttons'))
+    {
+    SaveAndClearButtons("NoPaddingSaveClear");
+    }
 ?>
 
 
 </div>
-<?php
-if(!hook('replacesubmitbuttons'))
-    {
-SaveAndClearButtons("NoPaddingSaveClear");
-    }
-   
+
+<?php 
 # Duplicate navigation
 if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav")) {EditNav();}
 

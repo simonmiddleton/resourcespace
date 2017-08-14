@@ -122,14 +122,17 @@ input[readonly] {color: #000000;}
 .StarEmpty {background: transparent url('../gfx/interface/RatingStarMedGrey.gif') no-repeat;}
 .StarCurrent {background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 
-.NavUnderline {border-bottom: 1px solid #5A7599;}
+.NavUnderline,.Question,.QuestionSubmit {border-bottom: 1px solid #ddd;}
 .ListviewStyle thead,.ListviewTitleStyle{background:#DDD;}
 .Question, .QuestionSubmit {background: #fff;}
+
+/* Put rounded corners on the first and last Question/QuestionSubmit in each block only */
 .Question, .QuestionSubmit {border-top-left-radius:5px;border-top-right-radius: 5px;}
 .Question ~ .Question {border-top-left-radius:0;border-top-right-radius:0;}
+.QuestionSubmit ~ .Question {border-top-left-radius:0;border-top-right-radius:0;}
+.Question ~ .QuestionSubmit {border-top-left-radius:0;border-top-right-radius:0;}
 .Question:last-of-type, .QuestionSubmit:last-of-type {border-bottom-left-radius:5px;border-bottom-right-radius: 5px;}
 
-.Question {border-bottom: 1px solid #ddd;}
 .Question select .optionWeekend { background-color: #ccc; }
 .Question.FieldSaveError {background: #F1A9A0;}
 div.autocomplete {background-color:white;border:1px solid #888;}
