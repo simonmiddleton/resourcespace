@@ -829,6 +829,8 @@ $lang['import'] = 'Import';
 $lang['export'] = 'Export';
 $lang['origin'] = "Origin";
 $lang['unknown'] = 'Unknown';
+$lang['from'] = 'From';
+$lang['to'] = 'To';
 
 # Pager
 $lang["next"]="Next";
