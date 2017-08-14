@@ -419,6 +419,8 @@ jQuery(document).ready(function()
     
     });
 </script>
+
+<iframe src="blank.html" name="resultcount" id="resultcount" style="visibility:hidden;float:right;" width=1 height=1></iframe>
 <div class="BasicsBox">
 <h1><?php echo ($archiveonly)?$lang["archiveonlysearch"]:$lang["advancedsearch"];?> </h1>
 <p class="tight"><?php echo text("introtext")?></p>
@@ -511,6 +513,7 @@ if($search_includes_resources && !hook("advsearchrestypes"))
 if (!hook('advsearchallfields')) { ?>
 <!-- Search across all fields -->
 <input type="hidden" id="hiddenfields" name="hiddenfields" value="">
+    
 <div class="Question">
 <label for="allfields"><?php echo $lang["allfields"]?></label><input class="SearchWidth" type=text name="allfields" id="allfields" value="<?php echo htmlspecialchars($allwords)?>" onChange="UpdateResultCount();">
 <div class="clearerleft"> </div>
@@ -568,7 +571,6 @@ if (!$daterange_search)
 
 <?php hook('advsearchaddfields'); ?>
 
-<iframe src="blank.html" name="resultcount" id="resultcount" style="visibility:hidden;" width=1 height=1></iframe>
 <?php
 # Fetch fields
 $fields=get_advanced_search_fields($archiveonly);
