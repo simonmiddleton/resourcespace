@@ -1318,3 +1318,13 @@ a.Enabled, a:visited.Enabled {
 .checkselect {float:left;padding-left:5px;}
 
 .ResourcePanelResourceID {float:left;}
+
+
+.ReportSheet {padding:10px;}
+.ReportSummary td {padding:10px;}
+.ReportMetric {font-size:200%;padding-left:5px;}
+.ReportAddToDash {font-size:65%;}
+
+
+
+

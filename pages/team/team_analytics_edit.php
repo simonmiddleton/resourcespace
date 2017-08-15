@@ -77,16 +77,7 @@ $resource_activity_types=array("Add resource to collection","Create resource","E
 include dirname(__FILE__)."/../../include/header.php";
 ?>
 
-<style>
-.ReportSheet {background-color:#eee;border:1px solid black;color:black;padding:10px;}
-.ReportSheet  h2 {color:black;}
-.ReportSheet  p {color:black;}
 
-.ReportSummary {background-color:white;color:black;border-collapse:collapse;}
-.ReportSummary td {border:1px solid black;color:black;padding:10px;}
-.ReportMetric {font-size:200%;color:black;padding-left:5px;}
-.ReportAddToDash {font-size:65%;}
-</style>
 
 <div class="BasicsBox"><p><a href="<?php echo $baseurl_short ?>pages/team/team_analytics.php?offset=<?php echo $offset?>&findtext=<?php echo $findtext?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK . $lang["rse_analytics"]?></a></p>
 

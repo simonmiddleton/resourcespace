@@ -394,3 +394,10 @@ input:checked + .customFieldLabel, .keywordselected
 	background-color:white;
     color:black;
 	}
+
+.ReportSheet {background-color:#fff;border:1px solid black;color:black;}
+.ReportSheet  h2 {color:black;}
+.ReportSheet  p {color:black;}
+.ReportSummary {background-color:white;color:black;border-collapse:collapse;}
+.ReportSummary td {border:1px solid #888;color:black;}
+.ReportMetric {color:black;}
