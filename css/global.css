@@ -311,7 +311,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .SearchSpace a:link, .SearchSpace a:visited {text-decoration:none;}
 .SearchSpace a:hover, .SearchSpace a:active {text-decoration:underline;}
 
-.ListDropdown {width: 115px;font-size: 0.7em;margin:0px;padding: 0px;height:18px;}
+.ListDropdown {width: 115px;margin:0px;padding: 0px;height:18px;}
 
 /*Forms*/
 #CentralSpaceLogin form {margin:0;padding:0;}
