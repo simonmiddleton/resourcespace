@@ -815,6 +815,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         $results_count=count($collections)+$resources_count;
     	}
 	?>
+	<div class="BasicsBox">
 	<div class="TopInpageNav">
 	<div class="TopInpageNavLeft">
 
@@ -1103,6 +1104,7 @@ if($responsive_ui)
 	?>
 	</div>
 	<div class="clearerleft"></div>
+	</div>
 	</div>
 	<?php
 } 
