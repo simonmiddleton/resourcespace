@@ -269,7 +269,6 @@ if($editing && !$editexternalurl)
             {
             ?>
             <h2><?php echo $lang["externalusersharing"]?></h2>
-            <div class="Question">
             <?php
             $keys = get_resource_external_access($ref);
             if (count($keys) == 0)
@@ -349,7 +348,6 @@ if($editing && !$editexternalurl)
                     }
                     ?>
                     </table>
-                </div>
                 <?php
                 }
                 ?>
@@ -386,7 +384,6 @@ if($editing && !$editexternalurl)
 	    
 	    
 	    <h2><?php echo $lang["custompermissions"]?></h2>
-	    <div class="Question">
             <?php
             $custom_access_rows = get_resource_custom_access_users_usergroups($ref);
             if (count($custom_access_rows) == 0)
@@ -424,7 +421,7 @@ if($editing && !$editexternalurl)
 					?></table>
 				</div> <!-- end Listview --><?php
 				}
-		?></div> <!-- end Question -->
+		?>
         </form>
 </div> <!-- BasicsBox -->
 
