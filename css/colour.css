@@ -15,6 +15,10 @@ a:hover {color:#000000;}
 a:active {opacity:0.6;}
 input[readonly] {color: #000000;}
 
+select {background-color:white; border-radius:5px;border:none;}
+.Question select {border-radius:0; border:1px solid #999;}
+input[type=submit] {border-radius: 5px;}
+
 #Header {
   border-bottom: 1px solid #d7d7d7;
 }
