@@ -895,9 +895,11 @@ if($responsive_ui)
 					</a>
 					<?php
 					}
-					?>&nbsp;
-					<?php
 				}
+
+			?>
+			&nbsp;
+			<?php
 	
 			if($display == 'thumbs')
 				{
