@@ -204,7 +204,7 @@
     #HeaderNav1 {
         display:none;
         margin:0;
-        height: auto;
+        height: auto !important;
         float: none;
         clear: both;
         text-align: right;
@@ -212,7 +212,7 @@
     #HeaderNav2 {
         display:none;
         margin:0;
-        height: auto;
+        height: auto !important;
         float: none;
         width: 100%;
         clear: both;
@@ -405,13 +405,33 @@
         margin-left:15px;
     }
     .LoginBoxPanel {
-        margin-top:8px;   
+        margin-top:8px;  
+    }
+
+    #SearchBoxPanel .tag-editor {
+        width: 250px;
+        display: inline-block !important;
+        -webkit-box-sizing: border-box;
+        padding: 0;
+        vertical-align: middle;
+        height: 25px;
+    }
+    #SearchBoxPanel ul {
+        margin: 0;
+        padding: 0;
+        display: inline-block !important;
+    }
+    .tag-editor li {
+        margin-top: 2px;
     }
 
 }
 @media(max-width:600px) {
     .ResponsiveSimpleSearch .StarRatings {
         width:100%;
+    }
+    #SearchBoxPanel .tag-editor {
+        margin-top: 5px;
     }
 }
 @media(max-width:370px) {
