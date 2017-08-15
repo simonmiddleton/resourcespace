@@ -25,7 +25,7 @@ $count=$results[0]["total_resources"];
 include ("../include/header.php");
 
 ?>
-
+<div class="BasicsBox">
 <h1><?php echo $lang["searchitemsdiskusage"] ?></h1>
 
 <div class="Question">
@@ -40,6 +40,7 @@ include ("../include/header.php");
 <div class="clearerleft"></div>
 </div>
 
+</div>
 
 <?php
 
