@@ -12,6 +12,15 @@ $yes_no_options         = array($lang['no'], $lang['yes']);
 // System section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemsetup'] . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
 $page_def[] = config_add_text_input('applicationname', $lang['setup-applicationname'], false, 420, false, '', true);
+
+$page_def[] = config_add_text_input('email_from', $lang['setup-emailfrom'], false, 420, false, '', true);
+$page_def[] = config_add_text_input('email_notify', $lang['setup-emailnotify'], false, 420, false, '', true);
+$page_def[] = config_add_html('</div>');
+
+
+
+// User interface section
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="SystemConfigUserInterfaceSection" class="CollapsibleSection">');
 $page_def[] = config_add_file_input(
     'linkedheaderimgsrc',
     $lang['systemconfig_linkedheaderimgsrc_label'],
@@ -53,8 +62,14 @@ $page_def[] = config_add_colouroverride_input(
     true,
     "jQuery('#HeaderNav1 a').css('color',value);jQuery('#HeaderNav2 a').css('color',value);jQuery('#HeaderNav2 li').css('border-color', value);"
 );
-$page_def[] = config_add_text_input('email_from', $lang['setup-emailfrom'], false, 420, false, '', true);
-$page_def[] = config_add_text_input('email_notify', $lang['setup-emailnotify'], false, 420, false, '', true);
+$page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['showthumbnails'], 'hide' => $lang['hidethumbnails']), true, 420, '', true);
+$page_def[] = config_add_boolean_select('resource_view_modal', $lang['userpreference_resource_view_modal_label'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_boolean_select('modal_default', $lang['systemconfig_modal_default'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_boolean_select('basic_simple_search', $lang['userpreference_basic_simple_search_label'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_boolean_select('comments_resource_enable', $lang['systemconfig_comments'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_single_select('upload_then_edit', $lang['default_upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 420, '', true);
+$page_def[] = config_add_boolean_select('byte_prefix_mode_decimal', $lang['byte_prefix_mode_decimal'], $enable_disable_options, 420, '', true);
+
 $page_def[] = config_add_html('</div>');
 
 
@@ -137,17 +152,6 @@ $page_def[] = config_add_single_select(
 $page_def[] = config_add_html('</div>');
 
 
-// User interface section
-$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="SystemConfigUserInterfaceSection" class="CollapsibleSection">');
-$page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['showthumbnails'], 'hide' => $lang['hidethumbnails']), true, 420, '', true);
-$page_def[] = config_add_boolean_select('resource_view_modal', $lang['userpreference_resource_view_modal_label'], $enable_disable_options, 420, '', true);
-$page_def[] = config_add_boolean_select('modal_default', $lang['systemconfig_modal_default'], $enable_disable_options, 420, '', true);
-$page_def[] = config_add_boolean_select('basic_simple_search', $lang['userpreference_basic_simple_search_label'], $enable_disable_options, 420, '', true);
-$page_def[] = config_add_boolean_select('comments_resource_enable', $lang['systemconfig_comments'], $enable_disable_options, 420, '', true);
-$page_def[] = config_add_single_select('upload_then_edit', $lang['default_upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 420, '', true);
-$page_def[] = config_add_boolean_select('byte_prefix_mode_decimal', $lang['byte_prefix_mode_decimal'], $enable_disable_options, 420, '', true);
-
-$page_def[] = config_add_html('</div>');
 
 
 // Workflow section
