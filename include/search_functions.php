@@ -1180,7 +1180,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                           
          and $sql_filter group by r.ref order by $order_by";
         $searchsql=$sql_prefix . $sql . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($sql,false,$fetchrows);
+        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
         }
 
     # Colour search
@@ -1196,7 +1196,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
          and $sql_filter group by r.ref order by $order_by";
         
         $searchsql=$sql_prefix . $sql . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($sql,false,$fetchrows);
+        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
         }       
         
     # Similar to a colour
