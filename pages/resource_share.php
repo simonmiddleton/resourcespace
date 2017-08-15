@@ -206,7 +206,7 @@ if($editing && !$editexternalurl)
 							}
 							hook("additionalresourceshare");
 							?>
-                        <div class="QuestionSubmit" style="padding-top:0;margin-top:0;">
+                        <div class="QuestionSubmit" s]]>
                             <label>&nbsp;</label>
                             <?php
                             if ($editing  && !$editexternalurl)
