@@ -70,7 +70,7 @@ include '../../include/header.php';
     </p>
     <h1><?php echo $lang['manage_external_shares']; ?></h1>
 
-    <div class="Question">
+
         <div class="Listview">
             <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="0">
                 <tbody>
@@ -94,7 +94,7 @@ include '../../include/header.php';
                 </tbody>
             </table>
         </div><!-- end of Listview -->
-    </div><!-- end of Question -->
+
 
 </div><!-- end of BasicBox -->
 <script>
