@@ -1190,7 +1190,7 @@ if($responsive_ui)
         {
         $list_displayed = true;
 		?>
-		<div class="Listview">
+		<div class="BasicsBox"><div class="Listview">
 		<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 
 		<?php if(!hook("replacelistviewtitlerow")){?>	
@@ -1339,7 +1339,7 @@ if($responsive_ui)
         {
         ?>
         </table>
-        </div>
+        </div></div>
         <?php
         }
 
