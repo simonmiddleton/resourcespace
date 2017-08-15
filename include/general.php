@@ -1463,10 +1463,10 @@ function save_user($ref)
             if((isset($current_user_data['usergroup']) && '' != $current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
                 {
                 sql_query("DELETE FROM user_dash_tile WHERE user = '{$ref}' AND dash_tile IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup = '{$current_user_data['usergroup']}')");
-                }
 
-            include_once __DIR__ . '/dash_functions.php';
-            build_usergroup_dash($usergroup, $ref);
+                include_once __DIR__ . '/dash_functions.php';
+                build_usergroup_dash($usergroup, $ref);
+                }
             }
 
     if($allow_password_email && getval('emailme', '') != '')
