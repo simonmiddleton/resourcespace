@@ -590,7 +590,12 @@ if ($submitted != "")
         $fh = fopen($textfile, 'w') or die("can't open file");
         fwrite($fh, $text);
         fclose($fh);
-		if ($use_zip_extension){
+		if($collection_download_tar)
+			{
+			debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
+			@symlink($textfile, $usertempdir . DIRECTORY_SEPARATOR . $collection . "-" . safe_file_name(i18n_get_collection_name($collectiondata)) . $sizetext . '.txt');
+			}
+		elseif ($use_zip_extension){
 			$zip->addFile($textfile,$collection . "-" . safe_file_name(i18n_get_collection_name($collectiondata)) . $sizetext . ".txt");
         } else {
 			$path.=$textfile . "\r\n";	
@@ -968,8 +973,8 @@ if ($archiver && count($collection_download_settings)>1)
 <div class="Question">
 	<label for="include_csv_file"><?php echo $lang['csvAddMetadataCSVToArchive']; ?></label>
 	<input type="checkbox" id="include_csv_file" name="include_csv_file" value="yes">
+	<div class="clearerleft"></div>
 </div>
-<div class="clearerleft"></div>
 
 <?php
 if($exiftool_write && !$force_exiftool_write_metadata)
@@ -979,33 +984,34 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     <div class="Question" id="exiftool_question" <?php if($collection_download_tar_option){echo "style=\"display:none;\"";} ?>>
         <label for="write_metadata_on_download"><?php echo $lang['collection_download__write_metadata_on_download_label']; ?></label>
         <input type="checkbox" id="write_metadata_on_download" name="write_metadata_on_download" value="yes" >
+		<div class="clearerleft"></div>
     </div>
-    <div class="clearerleft"></div>
     <?php
     }
 ?>
 	
 <div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
-<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
-<div class="tickset">
-<select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){ajax_on=true;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{ajax_on=false;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
-	   <option value="off"><?php echo $lang["collection_download_no_tar"]; ?></option>
-	   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option>	   
-</select>
-
-<div class="clearerleft"></div></div><br>
-<div class="clearerleft"></div>
-<label for="tarinfo"></label>
-<div class="Fixed"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div>
+	<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
+	<div class="tickset">
+	<select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){ajax_on=true;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{ajax_on=false;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
+		   <option value="off"><?php echo $lang["collection_download_no_tar"]; ?></option>
+		   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option>	   
+	</select>
+	
+	<div class="clearerleft"></div></div><br>
+	<div class="clearerleft"></div>
+	<label for="tarinfo"></label>
+	<div class="Fixed"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div>
+	
+	<div class="clearerleft"></div>
 </div>
-<div class="clearerleft"></div>
 	
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
-<label for="download"> </label>
-<script>var ajax_on=<?php echo ($collection_download_tar)?"true":"false"; ?>;</script>
-<input type="submit" onclick="if(ajax_on){ajax_download();return false;}" value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
-
-<div class="clearerleft"> </div>
+	<label for="download"> </label>
+	<script>var ajax_on=<?php echo ($collection_download_tar)?"true":"false"; ?>;</script>
+	<input type="submit" onclick="if(ajax_on){ajax_download();return false;}" value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
+	
+	<div class="clearerleft"> </div>
 </div>
 
 <div id="progress"></div>
