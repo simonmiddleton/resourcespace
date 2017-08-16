@@ -500,7 +500,7 @@ function compile_search_actions($top_actions)
     $options = array();
 	$o=0;
 
-    global $baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
+    global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
            $collection, $usercollection, $internal_share_access, $archive_standard;
 
@@ -537,7 +537,7 @@ function compile_search_actions($top_actions)
             $option_name = 'save_search_to_dash';
             $data_attribute = array(
                 'url'  => $baseurl_short . 'pages/dash_tile.php?create=true&tltype=srch&freetext=true"',
-                'link' => $url
+                'link' => str_replace($baseurl,'',$url)
             );
 
             if(substr($search, 0, 11) == '!collection')
