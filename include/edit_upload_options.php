@@ -53,7 +53,7 @@ if ($ref<0)
 		{
 	    $collection_add=getvalescaped("collection_add","");
 		?>
-		<div class="Question <?php if(isset($save_errors) && array_key_exists('collectionname',$save_errors)) { echo " FieldSaveError"; } ?>" id="question_collectionadd">
+		<div class="Question <?php if(isset($save_errors) && is_array($save_errors) && array_key_exists('collectionname',$save_errors)) { echo " FieldSaveError"; } ?>" id="question_collectionadd">
 		<label for="collection_add"><?php echo $lang["addtocollection"]?></label>
 		<select name="collection_add" id="collection_add" class="stdwidth">
 		
