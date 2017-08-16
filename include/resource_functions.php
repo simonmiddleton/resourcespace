@@ -1452,7 +1452,7 @@ function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$o
     if (!$stemmed && $stemming && function_exists("GetStem"))
         {
         $kworig=$keyword;
-        $keyword=GetStem($keyword);
+        $keyword=GetStem($keyword);debug("Using stem " . $keyword . " for keyword " . $kworig);
         if($keyword!=$kworig)
             {
             // $keyword has been changed by stemming, also index the original value
@@ -1461,8 +1461,9 @@ function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$o
         }
 	
     if (!(in_array($keyword,$noadd)))
-            {           
-            $keyref=resolve_keyword($keyword,true,false,$stemmed); // 3rd param set to false as already normalized	
+            {
+            $keyref=resolve_keyword($keyword,true,false,!$stemmed); // 3rd param set to false as already normalized. If already a stemmed value, do not stem this keyword.
+            debug("Indexing keyword $keyword - keyref is " . $keyref . ", already stemmed? is " . ($stemmed?"TRUE":"FALSE"));
             
             # create mapping, increase hit count.
             if ($optional_column<>'' && $optional_value<>'')	# Check if any optional column value passed and add this
