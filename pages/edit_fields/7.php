@@ -2,19 +2,18 @@
 /* -------- Category Tree ------------------- */ 
 global $lang, $baseurl, $css_reload_key, $category_tree_show_status_window,
 $category_tree_open, $is_search, $cat_tree_singlebranch, $category_tree_add_parents,
-$category_tree_remove_children,$scope;
+$category_tree_remove_children;
 
 $is_search      = (isset($is_search) ? $is_search : false);
 $forsearchbar   = (isset($forsearchbar) ? $forsearchbar : false);
 $edit_autosave  = (isset($edit_autosave) ? $edit_autosave : false);
 
 $hidden_input_elements             = '';
-$hidden_input_elements_id_prefix   = $scope . ($is_search ? 'nodes_searched_' : 'nodes_');
-$status_box_id                     = $scope . ($is_search ? "nodes_searched_{$field['ref']}_statusbox" : "nodes_{$field['ref']}_statusbox");
+$hidden_input_elements_id_prefix   = ($is_search ? 'nodes_searched_' : 'nodes_');
+$status_box_id                     = ($is_search ? "nodes_searched_{$field['ref']}_statusbox" : "nodes_{$field['ref']}_statusbox");
 $status_box_elements               = '';
 $update_result_count_function_call = 'UpdateResultCount();';
-$tree_id                           = $scope . ($is_search ? "search_tree_{$field['ref']}" : "tree_{$field['ref']}");
-alert($tree_id);
+$tree_id                           = ($is_search ? "search_tree_{$field['ref']}" : "tree_{$field['ref']}");
 $tree_container_styling            = ($category_tree_open ? 'display: block;' : 'display: none;');
 
 if(!isset($selected_nodes))

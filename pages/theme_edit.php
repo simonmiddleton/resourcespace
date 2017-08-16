@@ -73,6 +73,8 @@ if (!checkperm("t")) {
 	exit;
 	} 
 
+
+$modal=(getval("modal","")=="true");
 if(!$modal)
 	{?>
 	<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl . "/pages/" . $link?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtothemes"]?></a></p>

@@ -22,6 +22,7 @@ if (strpos($search,"!")!==false) {$restypes="";}
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
+$modal=(getval("modal","")=="true");
 $single=getval("single","")!="" || getval("forcesingle","")!="";
 $disablenavlinks=getval("disablenav","")=="true";
 
@@ -444,8 +445,6 @@ if (getval("refreshcollectionframe","")!="")
    }
 
 include "../include/header.php";
-
-$context=($modal?"Modal":"Root"); # Set a unique context, used for scoping so this page in a modal doesn't conflict with the same page open behind the modal.
 ?>
 
 
@@ -498,7 +497,7 @@ jQuery(document).ready(function()
 function ShowHelp(field)
 {
     // Show the help box if available.
-    if (document.getElementById('<?php echo $scope ?>help_' + field))
+    if (document.getElementById('help_' + field))
     {
        jQuery('#help_' + field).fadeIn();
     }
@@ -506,9 +505,9 @@ function ShowHelp(field)
  function HideHelp(field)
  {
     // Hide the help box if available.
-    if (document.getElementById('<?php echo $scope ?>help_' + field))
+    if (document.getElementById('help_' + field))
     {
-       document.getElementById('<?php echo $scope ?>help_' + field).style.display='none';
+       document.getElementById('help_' + field).style.display='none';
     }
  }
 
@@ -631,7 +630,7 @@ if(0 > $ref)
     }
 ?>
 
-<form method="post" action="<?php echo $form_action; ?>" id="<?php echo $context ?>mainform" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+<form method="post" action="<?php echo $form_action; ?>" id="mainform" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
 <input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
    <div class="BasicsBox">
     
@@ -639,7 +638,7 @@ if(0 > $ref)
    <?php 
    if ($multiple) 
       { ?>
-      <h1 id="<?php echo $context ?>editmultipleresources"><?php echo $lang["editmultipleresources"]?></h1>
+      <h1 id="editmultipleresources"><?php echo $lang["editmultipleresources"]?></h1>
       <p style="padding-bottom:20px;"><?php $qty = count($items);
       echo ($qty==1 ? $lang["resources_selected-1"] : str_replace("%number", $qty, $lang["resources_selected-2"])) . ". ";
       # The script doesn't allow editing of empty collections, no need to handle that case here.
@@ -661,9 +660,9 @@ if(0 > $ref)
          if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
          
          if (!$upload_review_mode) { ?>
-         <h1 id="<?php echo $context ?>editresource"><?php echo $lang["editresource"]?></h1>
+         <h1 id="editresource"><?php echo $lang["editresource"]?></h1>
          <?php } else { ?>
-        <h1 id="<?php echo $context ?>editresource"><?php echo $lang["refinemetadata"]?></h1>
+        <h1 id="editresource"><?php echo $lang["refinemetadata"]?></h1>
         <?php } ?>
         
          </div><!-- end of RecordHeader -->
@@ -672,7 +671,7 @@ if(0 > $ref)
          
          if (!$upload_review_mode)
             { ?>
-            <div class="Question" id="<?php echo $context ?>resource_ref_div" style="border-top:none;">
+            <div class="Question" id="resource_ref_div" style="border-top:none;">
                <label><?php echo $lang["resourceid"]?></label>
                <div class="Fixed"><?php echo urlencode($ref) ?></div>
                <div class="clearerleft"> </div>
@@ -683,20 +682,20 @@ if(0 > $ref)
       hook("custompermshowfile");
       if ((!$is_template && !checkperm("F*"))||$custompermshowfile) 
          { ?>
-         <div class="Question" id="<?php echo $context ?>question_file">
+         <div class="Question" id="question_file">
             <label><?php echo $lang["file"]?></label>
          <div class="Fixed" style="width:50%;">
          <?php
          if ($resource["has_image"]==1)
             { ?>
-            <img id="<?php echo $context ?>preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px;"/>
+            <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px;"/>
             <?php // check for watermarked version and show it if it exists
             if (checkperm("w"))
                {
                $wmpath=get_resource_path($ref,true,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true);
                if (file_exists($wmpath))
                   { ?>
-                  <img style="display:none;" id="<?php echo $context ?>wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
+                  <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
                   <?php 
                   }
                } ?>
@@ -766,8 +765,8 @@ if(0 > $ref)
   hook("beforeimagecorrection");
 
   if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode) { ?>
-  <div class="Question" id="<?php echo $context ?>question_imagecorrection">
-   <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="<?php echo $context ?>tweak" onChange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('<?php echo $scope ?>mainform'),true);">
+  <div class="Question" id="question_imagecorrection">
+   <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
    <option value=""><?php echo $lang["select"]?></option>
    <?php if ($resource["has_image"]==1) { ?>
    <?php
@@ -870,10 +869,10 @@ if(!$is_template && $show_required_field_label)
 if(!$multiple)
     {
     ?>
-    <div class="Question <?php if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="<?php echo $context ?>question_resourcetype">
+    <div class="Question <?php if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
         <label for="resourcetype"><?php echo $lang["resourcetype"]?></label>
-        <select name="resource_type" id="<?php echo $context ?>resourcetype" class="stdwidth" 
-                onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('<?php echo $scope ?>mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
+        <select name="resource_type" id="resourcetype" class="stdwidth" 
+                onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
         <?php
         $types                = get_resource_types();
         $shown_resource_types = array();
@@ -926,10 +925,10 @@ else
     # Multiple method of changing resource type.
     ?>
     <h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo $lang["resourcetype"] ?></h2>
-    <div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="<?php echo $context ?>ResourceTypeSection<?php if ($ref==-1) echo "Upload"; ?>"><input name="editresourcetype" id="editresourcetype" type="checkbox" value="yes" onClick="var q=document.getElementById('<?php echo $scope ?>editresourcetype_question');if (this.checked) {q.style.display='block';alert('<?php echo $lang["editallresourcetypewarning"] ?>');} else {q.style.display='none';}">&nbsp;<label for="editresourcetype"><?php echo $lang["resourcetype"] ?></label>
-    <div class="Question" style="display:none;" id="<?php echo $context ?>editresourcetype_question">
+    <div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="ResourceTypeSection<?php if ($ref==-1) echo "Upload"; ?>"><input name="editresourcetype" id="editresourcetype" type="checkbox" value="yes" onClick="var q=document.getElementById('editresourcetype_question');if (this.checked) {q.style.display='block';alert('<?php echo $lang["editallresourcetypewarning"] ?>');} else {q.style.display='none';}">&nbsp;<label for="editresourcetype"><?php echo $lang["resourcetype"] ?></label>
+    <div class="Question" style="display:none;" id="editresourcetype_question">
         <label for="resourcetype"><?php echo $lang["resourcetype"]?></label>
-        <select name="resource_type" id="<?php echo $context ?>resourcetype" class="stdwidth">
+        <select name="resource_type" id="resourcetype" class="stdwidth">
             <?php
             $types = get_resource_types();
             for($n = 0; $n < count($types); $n++)
@@ -956,7 +955,7 @@ if (isset($metadata_template_resource_type) && !$multiple && !checkperm("F*"))
 {
     # Show metadata templates here
   ?>
-  <div class="Question" id="<?php echo $context ?>question_metadatatemplate">
+  <div class="Question" id="question_metadatatemplate">
      <label for="metadatatemplate"><?php echo $lang["usemetadatatemplate"]?></label>
      <select name="metadatatemplate" class="medwidth">
         <option value=""><?php echo (getval("metadatatemplate","")=="")?$lang["select"]:$lang["undometadatatemplate"] ?></option>
@@ -978,47 +977,47 @@ if (isset($metadata_template_resource_type) && !$multiple && !checkperm("F*"))
 
 if($embedded_data_user_select && $ref<0 && !$multiple)
  {?>
-<div class="Question" id="<?php echo $context ?>question_exif">
- <label for="<?php echo $context ?>exif_option"><?php echo $lang["embedded_metadata"]?></label>
- <table id="<?php echo $context ?>exif_options" cellpadding="3" cellspacing="3" style="display: block;">                    
+<div class="Question" id="question_exif">
+ <label for="exif_option"><?php echo $lang["embedded_metadata"]?></label>
+ <table id="" cellpadding="3" cellspacing="3" style="display: block;">                    
    <tbody>
      <tr>        
        <td width="10" valign="middle">
-         <input type="radio" id="<?php echo $context ?>exif_extract" name="exif_option" value="extract" onClick="jQuery('.ExifOptions').hide();" <?php if($metadata_read_default) echo "checked" ?>>
+         <input type="radio" id="exif_extract" name="exif_option" value="extract" onClick="jQuery('.ExifOptions').hide();" <?php if($metadata_read_default) echo "checked" ?>>
       </td>
       <td align="left" valign="middle">
-         <label class="customFieldLabel" for="<?php echo $context ?>exif_extract"><?php echo $lang["embedded_metadata_extract_option"] ?></label>
+         <label class="customFieldLabel" for="exif_extract"><?php echo $lang["embedded_metadata_extract_option"] ?></label>
       </td>
 
 
       <td width="10" valign="middle">
-         <input type="radio" id="<?php echo $context ?>no_exif" name="exif_option" value="yes" onClick="jQuery('.ExifOptions').hide();" <?php if(!$metadata_read_default) echo "checked" ?>>
+         <input type="radio" id="no_exif" name="exif_option" value="yes" onClick="jQuery('.ExifOptions').hide();" <?php if(!$metadata_read_default) echo "checked" ?>>
       </td>
       <td align="left" valign="middle">
-         <label class="customFieldLabel" for="<?php echo $context ?>no_exif"><?php echo $lang["embedded_metadata_donot_extract_option"] ?></label>
+         <label class="customFieldLabel" for="no_exif"><?php echo $lang["embedded_metadata_donot_extract_option"] ?></label>
       </td>
 
 
       <td width="10" valign="middle">
-         <input type="radio" id="<?php echo $context ?>exif_append" name="exif_option" value="append" onClick="jQuery('.ExifOptions').hide();">
+         <input type="radio" id="exif_append" name="exif_option" value="append" onClick="jQuery('.ExifOptions').hide();">
       </td>
       <td align="left" valign="middle">
-         <label class="customFieldLabel" for="<?php echo $context ?>exif_append"><?php echo $lang["embedded_metadata_append_option"] ?></label>
+         <label class="customFieldLabel" for="exif_append"><?php echo $lang["embedded_metadata_append_option"] ?></label>
       </td>
 
 
       <td width="10" valign="middle">
-         <input type="radio" id="<?php echo $context ?>exif_prepend" name="exif_option" value="prepend" onClick="jQuery('.ExifOptions').hide();">
+         <input type="radio" id="exif_prepend" name="exif_option" value="prepend" onClick="jQuery('.ExifOptions').hide();">
       </td>
       <td align="left" valign="middle">
-         <label class="customFieldLabel" for="<?php echo $context ?>exif_prepend"><?php echo $lang["embedded_metadata_prepend_option"] ?></label>
+         <label class="customFieldLabel" for="exif_prepend"><?php echo $lang["embedded_metadata_prepend_option"] ?></label>
       </td>
 
       <td width="10" valign="middle">
-         <input type="radio" id="<?php echo $context ?>exif_custom" name="exif_option" value="custom" onClick="jQuery('.ExifOptions').show();">
+         <input type="radio" id="exif_custom" name="exif_option" value="custom" onClick="jQuery('.ExifOptions').show();">
       </td>
       <td align="left" valign="middle">
-         <label class="customFieldLabel" for="<?php echo $context ?>exif_custom"><?php echo $lang["embedded_metadata_custom_option"] ?></label>
+         <label class="customFieldLabel" for="exif_custom"><?php echo $lang["embedded_metadata_custom_option"] ?></label>
       </td>
 
    </tr>
@@ -1106,10 +1105,10 @@ for ($n=0;$n<count($fields);$n++)
 # "copy data from" feature
 if ($display_any_fields && $enable_copy_data_from && !checkperm("F*") && !$upload_review_mode)
     { ?>
- <div class="Question" id="<?php echo $context ?>question_copyfrom">
+ <div class="Question" id="question_copyfrom">
     <label for="copyfrom"><?php echo $lang["batchcopyfrom"]?></label>
     <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
-    <input type="submit" id="<?php echo $context ?>copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="return CentralSpacePost(document.getElementById('<?php echo $scope ?>mainform'),true);">
+    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo $lang["copy"]?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true);">
     <input type="submit" name="save" value="<?php echo $lang['save']; ?>">
     <div class="clearerleft"> </div>
  </div><!-- end of question_copyfrom -->
@@ -1123,7 +1122,7 @@ global $collapsible_sections;
 if($collapsible_sections)
 {
   ?>
-  <div id="<?php echo $context ?>CollapsibleSections">
+  <div id="CollapsibleSections">
      <?php
   }
 
@@ -1133,10 +1132,10 @@ if($collapsible_sections)
  ?>
 
 <?php if (!$upload_review_mode) { ?>
-<br /><br /><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="<?php echo $context ?>ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
+<br /><br /><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
  } 
 
-?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="<?php echo $context ?>ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
+?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
 }
 
 if($tabs_on_edit)
@@ -1160,8 +1159,8 @@ if($tabs_on_edit)
             # draw new tab?
       if ($tabname!=$fields[$n]["tab_name"] && is_field_displayed($fields[$n]))
       {
-        if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"<?php echo $context ?>BasicsBoxTabs\"><div class=\"TabBar\">";}
-        $tabtophtml.="<div id=\"<?php echo $context ?>tabswitch" . $tabcount . "\" class=\"Tab";
+        if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
+        $tabtophtml.="<div id=\"tabswitch" . $tabcount . "\" class=\"Tab";
         if($tabcount==0){$tabtophtml.=" TabSelected ";}
         $tabtophtml.="\"><a href=\"#\" onclick=\"SelectTab(" . $tabcount . ");return false;\">" .  i18n_get_translated($fields[$n]["tab_name"]) . "</a></div>";
         $tabcount++;
@@ -1182,11 +1181,11 @@ function SelectTab(tab)
 {
                 // Deselect all tabs
                 <?php for ($n=0;$n<$tabcount;$n++) { ?>
-                 document.getElementById("<?php echo $scope ?>tab<?php echo $n?>").style.display="none";
-                 document.getElementById("<?php echo $scope ?>tabswitch<?php echo $n?>").className="Tab";
+                 document.getElementById("tab<?php echo $n?>").style.display="none";
+                 document.getElementById("tabswitch<?php echo $n?>").className="Tab";
                  <?php } ?>
-                 document.getElementById("<?php echo $scope ?>tab" + tab).style.display="block";
-                 document.getElementById("<?php echo $scope ?>tabswitch" + tab).className="Tab TabSelected";
+                 document.getElementById("tab" + tab).style.display="block";
+                 document.getElementById("tabswitch" + tab).className="Tab TabSelected";
               }
               </script>
               <?php
@@ -1197,7 +1196,7 @@ function SelectTab(tab)
         if ($tabcount>1)
         {
           ?>
-          <div id="<?php echo $context ?>tab0" class="TabbedPanel<?php if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
+          <div id="tab0" class="TabbedPanel<?php if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
              <div class="clearerleft"> </div>
              <div class="TabPanelInner">
 
@@ -1221,7 +1220,7 @@ function SelectTab(tab)
             {
                $tabcount++;
             # Also display the custom formatted data $extra at the bottom of this tab panel.
-               ?><div class="clearerleft"> </div><?php if(isset($extra)){echo $extra;} ?></div><!-- end of TabPanelInner --></div><!-- end of TabbedPanel --><div class="TabbedPanel StyledTabbedPanel" style="display:none;" id="<?php echo $context ?>tab<?php echo $tabcount?>"><div class="TabPanelInner"><?php  
+               ?><div class="clearerleft"> </div><?php if(isset($extra)){echo $extra;} ?></div><!-- end of TabPanelInner --></div><!-- end of TabbedPanel --><div class="TabbedPanel StyledTabbedPanel" style="display:none;" id="tab<?php echo $tabcount?>"><div class="TabPanelInner"><?php  
                $extra="";
                $newtab=true;
             }
@@ -1247,7 +1246,7 @@ function SelectTab(tab)
 
 
 # Add required_fields_exempt so it is submitted with POST
-echo " <input type=hidden name=\"exemptfields\" id=\"<?php echo $context ?>exemptfields\" value=\"" . implode(",",$required_fields_exempt) . "\">";   
+echo " <input type=hidden name=\"exemptfields\" id=\"exemptfields\" value=\"" . implode(",",$required_fields_exempt) . "\">";   
 
 # Work out the correct archive status.
 if ($ref<0) # Upload template.
@@ -1275,7 +1274,7 @@ if ($ref<0) # Upload template.
       {
       # Hide the dropdown, and set the default status.
       ?>
-      <input type=hidden name="status" id="<?php echo $context ?>status" value="<?php echo htmlspecialchars($setarchivestate)?>"><?php
+      <input type=hidden name="status" id="status" value="<?php echo htmlspecialchars($setarchivestate)?>"><?php
       }
    }
 else # Edit Resource(s).
@@ -1293,11 +1292,11 @@ if (eval($show_status_and_access_on_upload_perm) && !hook("editstatushide")) # O
     {
             if ($enable_related_resources && ($multiple || $ref>0)) # Showing relationships
             {
-              ?></div><!-- end of ResourceMetadataSection --><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?> id="<?php echo $context ?>StatusRelationshipsSectionHead"><?php echo $lang["statusandrelationships"]?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="<?php echo $context ?>StatusRelationshipsSection<?php if ($ref==-1) echo "Upload"; ?>"><?php
+              ?></div><!-- end of ResourceMetadataSection --><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?> id="StatusRelationshipsSectionHead"><?php echo $lang["statusandrelationships"]?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusRelationshipsSection<?php if ($ref==-1) echo "Upload"; ?>"><?php
            }
            else
            {
-                ?></div><!-- end of ResourceMetadataSection --><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo $lang["status"]?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="<?php echo $context ?>StatusSection<?php if ($ref==-1) echo "Upload"; ?>"><?php # Not showing relationships
+                ?></div><!-- end of ResourceMetadataSection --><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo $lang["status"]?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusSection<?php if ($ref==-1) echo "Upload"; ?>"><?php # Not showing relationships
              }
           }
 
@@ -1312,19 +1311,19 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
       {
       if ($multiple)
          { ?>
-         <div id="editmultiple_status"><input name="editthis_status" id="<?php echo $context ?>editthis_status" value="yes" type="checkbox" onClick="var q=document.getElementById('<?php echo $scope ?>question_status');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="<?php echo $context ?>editthis_status_label" for="editthis<?php echo $n?>"><?php echo $lang["status"]?></label></div>
+         <div id="editmultiple_status"><input name="editthis_status" id="editthis_status" value="yes" type="checkbox" onClick="var q=document.getElementById('question_status');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="editthis_status_label" for="editthis<?php echo $n?>"><?php echo $lang["status"]?></label></div>
          <?php
          } ?>
-      <div class="Question" id="<?php echo $context ?>question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+      <div class="Question" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
          <label for="status"><?php echo $lang["status"]?></label><?php
 
          # Autosave display
          if ($edit_autosave || $ctrls_to_save)
             { ?>
-            <div class="AutoSaveStatus" id="<?php echo $context ?>AutoSaveStatusStatus" style="display:none;"></div>
+            <div class="AutoSaveStatus" id="AutoSaveStatusStatus" style="display:none;"></div>
             <?php
             } ?>
-         <select class="stdwidth" name="status" id="<?php echo $context ?>status" <?php if ($edit_autosave) {?>onChange="AutoSave('Status');"<?php } ?>><?php
+         <select class="stdwidth" name="status" id="status" <?php if ($edit_autosave) {?>onChange="AutoSave('Status');"<?php } ?>><?php
          for ($n=-2;$n<=3;$n++)
             {
             if (checkperm("e" . $n)) { ?><option value="<?php echo $n?>" <?php if ($setarchivestate==$n) { ?>selected<?php } ?>><?php echo $lang["status" . $n]?></option><?php }
@@ -1354,13 +1353,13 @@ if ($ref<0 && (($show_status_and_access_on_upload== false && $show_access_on_upl
 }
 else
 {
-   if ($multiple) { ?><div><input name="editthis_access" id="<?php echo $context ?>editthis_access" value="yes" type="checkbox" onClick="var q=document.getElementById('<?php echo $context ?>question_access');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis<?php echo $n?>"><?php echo $lang["access"]?></label></div><?php } ?>
+   if ($multiple) { ?><div><input name="editthis_access" id="editthis_access" value="yes" type="checkbox" onClick="var q=document.getElementById('question_access');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis<?php echo $n?>"><?php echo $lang["access"]?></label></div><?php } ?>
 
-   <div class="Question" id="<?php echo $context ?>question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+   <div class="Question" id="question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
       <label for="access"><?php echo $lang["access"]?></label><?php
 
             # Autosave display
-      if ($edit_autosave || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="<?php echo $context ?>AutoSaveStatusAccess" style="display:none;"></div><?php }
+      if ($edit_autosave || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusAccess" style="display:none;"></div><?php }
 
       $ea0=!checkperm('ea0');
       $ea1=!checkperm('ea1');
@@ -1369,7 +1368,7 @@ else
       if(($ea0 && $resource["access"]==0) || ($ea1 && $resource["access"]==1) || ($ea2 && $resource["access"]==2) || ($ea3 && $resource["access"]==3))
       {
         ?>
-        <select class="stdwidth" name="access" id="<?php echo $context ?>access" onChange="var c=document.getElementById('<?php echo $scope ?>custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo $lang["confirm_remove_custom_usergroup_access"] ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
+        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo $lang["confirm_remove_custom_usergroup_access"] ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
                     if($ea0)    //0 - open
                     {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo $lang["access" . $n]?></option><?php }
@@ -1386,7 +1385,7 @@ else
               else
               {
                  ?>
-                 <label class="stdwidth" id="<?php echo $context ?>access"><?php echo $lang["access" .$resource["access"]];?></label>
+                 <label class="stdwidth" id="access"><?php echo $lang["access" .$resource["access"]];?></label>
                  <?php
               }
               ?>
@@ -1395,7 +1394,7 @@ else
               if($ea3 || $resource["access"]==3)
               {
                  ?>
-                 <table id="<?php echo $context ?>custom_access" cellpadding=3 cellspacing=3 style="padding-left:150px;<?php if ($resource["access"]!=3) { ?>display:none;<?php } ?>"><?php
+                 <table id="custom_access" cellpadding=3 cellspacing=3 style="padding-left:150px;<?php if ($resource["access"]!=3) { ?>display:none;<?php } ?>"><?php
                  global $default_customaccess;
                  $groups=get_resource_custom_access($ref);
                  for ($n=0;$n<count($groups);$n++)
@@ -1439,15 +1438,15 @@ else
     # Related Resources
     if ($enable_related_resources && ($multiple || $ref>0)) # Not when uploading
     {
-       if ($multiple) { ?><div><input name="editthis_related" id="<?php echo $context ?>editthis_related" value="yes" type="checkbox" onClick="var q=document.getElementById('<?php echo $context ?>question_related');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="<?php echo $context ?>editthis_related"><?php echo $lang["relatedresources"]?></label></div><?php } ?>
+       if ($multiple) { ?><div><input name="editthis_related" id="editthis_related" value="yes" type="checkbox" onClick="var q=document.getElementById('question_related');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_related"><?php echo $lang["relatedresources"]?></label></div><?php } ?>
 
-       <div class="Question" id="<?php echo $context ?>question_related" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
-          <label for="<?php echo $context ?>related"><?php echo $lang["relatedresources"]?></label><?php
+       <div class="Question" id="question_related" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+          <label for="related"><?php echo $lang["relatedresources"]?></label><?php
 
         # Autosave display
           if ($edit_autosave  || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusRelated" style="display:none;"></div><?php } ?>
 
-          <textarea class="stdwidth" rows=3 cols=50 name="related" id="<?php echo $context ?>related"<?php
+          <textarea class="stdwidth" rows=3 cols=50 name="related" id="related"<?php
           if ($edit_autosave) {?>onChange="AutoSave('Related');"<?php } ?>><?php
 
           echo ((getval("resetform","")!="")?"":join(", ",get_related_resources($ref)))?></textarea>
@@ -1464,8 +1463,8 @@ else
       $single_user_select_field_id = "created_by";
       $single_user_select_field_value = $resource["created_by"];
       if ($edit_autosave) {$single_user_select_field_onchange = "AutoSave('created_by');"; }
-      if ($multiple) { ?><div><input name="editthis_created_by" id="<?php echo $context ?>editthis_created_by" value="yes" type="checkbox" onClick="var q=document.getElementById('<?php echo $context ?>question_created_by');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_created_by>"><?php echo $lang["contributedby"] ?></label></div><?php } ?>
-      <div class="Question" id="<?php echo $context ?>question_created_by" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+      if ($multiple) { ?><div><input name="editthis_created_by" id="editthis_created_by" value="yes" type="checkbox" onClick="var q=document.getElementById('question_created_by');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_created_by>"><?php echo $lang["contributedby"] ?></label></div><?php } ?>
+      <div class="Question" id="question_created_by" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
         <label><?php echo $lang["contributedby"] ?></label><?php include __DIR__ . "/../include/user_select.php"; ?>
         <div class="clearerleft"> </div>
       </div>
@@ -1500,8 +1499,8 @@ else
 
        ?>
     </div> <!-- end of previous collapsible section -->
-    <h2 id="<?php echo $context ?>resource_custom_access" <?php echo ($collapsible_sections) ? ' class="CollapsibleSectionHead"' : ''; ?>>Resource custom access</h2>
-    <div  id="<?php echo $context ?>ResourceCustomAccessSection" <?php echo ($collapsible_sections) ? 'class="CollapsibleSection"' : ''; ?>>
+    <h2 id="resource_custom_access" <?php echo ($collapsible_sections) ? ' class="CollapsibleSectionHead"' : ''; ?>>Resource custom access</h2>
+    <div  id="ResourceCustomAccessSection" <?php echo ($collapsible_sections) ? 'class="CollapsibleSection"' : ''; ?>>
        <script type="text/javascript">
        function removeCustomAccess(ref,type) {
 		console.log('<?php echo $baseurl_short; ?>pages/ajax/remove_custom_access.php?resource=<?php echo $ref?>&ref='+ref+'&type='+type);
@@ -1517,18 +1516,18 @@ else
          success: function() {
 			 if(type=='user')
 				{
-				jQuery('#<?php echo $context ?>rca_user_' + ref).remove();
+				jQuery('#rca_user_' + ref).remove();
 				}
 			else if (type=='usergroup')
 				{
-				jQuery('#<?php echo $context ?>rca_usergroup_' + ref).remove();	
+				jQuery('#rca_usergroup_' + ref).remove();	
 				}
          }
       });
      }
      </script>
-     <div class="Question" id="<?php echo $context ?>question_resource_custom_access">
-      <label for="<?php echo $context ?>res_custom_access"><?php echo $lang['remove_custom_access_users_groups']?></label>
+     <div class="Question" id="question_resource_custom_access">
+      <label for="res_custom_access"><?php echo $lang['remove_custom_access_users_groups']?></label>
       <!-- table here -->
       <table id="res_custom_access" cellpadding="3" cellspacing="3">
         <tbody>
@@ -1536,7 +1535,7 @@ else
           foreach ($rca_users as $rca_user_info)
 			{
              ?>
-             <tr id="<?php echo $context ?>rca_user_<?php echo $rca_user_info['user_ref'] ?>">
+             <tr id="rca_user_<?php echo $rca_user_info['user_ref'] ?>">
                <td valign="middle" nowrap=""><?php echo $rca_user_info['user']; ?></td>
                <td valign="middle" nowrap="">&nbsp;</td>
                <td width="10" valign="middle">
@@ -1549,7 +1548,7 @@ else
         foreach ($rca_usergroups as $rca_usergroup_info)
 			{
              ?>
-             <tr id="<?php echo $context ?>rca_group_<?php echo $rca_usergroup_info['usergroup_ref'] ?>">
+             <tr id="rca_group_<?php echo $rca_usergroup_info['usergroup_ref'] ?>">
                <td valign="middle" nowrap=""><?php echo $rca_usergroup_info['name']." (".$lang['group'].")"?></td>
                <td valign="middle" nowrap="">&nbsp;</td>
                <td width="10" valign="middle">
@@ -1582,17 +1581,17 @@ if ($multiple && !$disable_geocoding)
 {
     # Multiple method of changing location.
  ?>
-</div><h2 <?php echo ($collapsible_sections)?" class=\"CollapsibleSectionHead\"":""?> id="<?php echo $context ?>location_title"><?php echo $lang["location-title"] ?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="<?php echo $context ?>LocationSection<?php if ($ref=="new") echo "Upload"; ?>">
-<div><input name="editlocation" id="<?php echo $context ?>editlocation" type="checkbox" value="yes" onClick="var q=document.getElementById('<?php echo $context ?>editlocation_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="<?php echo $context ?>editlocation"><?php echo $lang["location"] ?></label></div>
-<div class="Question" style="display:none;" id="<?php echo $context ?>editlocation_question">
+</div><h2 <?php echo ($collapsible_sections)?" class=\"CollapsibleSectionHead\"":""?> id="location_title"><?php echo $lang["location-title"] ?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="LocationSection<?php if ($ref=="new") echo "Upload"; ?>">
+<div><input name="editlocation" id="editlocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editlocation_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editlocation"><?php echo $lang["location"] ?></label></div>
+<div class="Question" style="display:none;" id="editlocation_question">
   <label for="location"><?php echo $lang["latlong"]?></label>
-  <input type="text" name="location" id="<?php echo $context ?>location" class="stdwidth">
+  <input type="text" name="location" id="location" class="stdwidth">
   <div class="clearerleft"> </div>
 </div>
-<div><input name="editmapzoom" id="<?php echo $context ?>editmapzoom" type="checkbox" value="yes" onClick="var q=document.getElementById('<?php echo $context ?>editmapzoom_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="<?php echo $context ?>editmapzoom"><?php echo $lang["mapzoom"] ?></label></div>
-<div class="Question" style="display:none;" id="<?php echo $context ?>editmapzoom_question">
+<div><input name="editmapzoom" id="editmapzoom" type="checkbox" value="yes" onClick="var q=document.getElementById('editmapzoom_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editmapzoom"><?php echo $lang["mapzoom"] ?></label></div>
+<div class="Question" style="display:none;" id="editmapzoom_question">
   <label for="mapzoom"><?php echo $lang["mapzoom"]?></label>
-  <select name="mapzoom" id="<?php echo $context ?>mapzoom">
+  <select name="mapzoom" id="mapzoom">
     <option value=""><?php echo $lang["select"]?></option>
     <option value="2">2</option>
     <option value="3">3</option>
