@@ -1325,6 +1325,7 @@ a.Enabled, a:visited.Enabled {
 .ReportMetric {font-size:200%;padding-left:5px;}
 .ReportAddToDash {font-size:65%;}
 
+#modal #CentralSpaceResources {padding:20px;} /* extra spacing needed when results displayed in a modal - e.g. geographical search */
 
 
 
