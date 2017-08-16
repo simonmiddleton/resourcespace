@@ -5,6 +5,7 @@ include "../include/authenticate.php";
 include "../include/search_functions.php";
 include "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
+include_once '../include/render_functions.php';
 
 $ref        = getvalescaped('ref', '', true);
 $user_group = getvalescaped('usergroup', '', true);
@@ -283,14 +284,15 @@ if($editing && !$editexternalurl)
                 <div class="Listview">
                     <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
                         <tr class="ListviewTitleStyle">
-                            <td><?php echo $lang["accesskey"];   ?></td>
-                            <td><?php echo $lang["type"];        ?></td>
-                            <td><?php echo $lang["sharedby"];    ?></td>
-                            <td><?php echo $lang["sharedwith"];  ?></td>
-                            <td><?php echo $lang["lastupdated"]; ?></td>
-                            <td><?php echo $lang["lastused"];    ?></td>
-                            <td><?php echo $lang["expires"];     ?></td>
-                            <td><?php echo $lang["access"];      ?></td>
+                            <td><?php echo $lang["accesskey"];    ?></td>
+                            <td><?php echo $lang["type"];         ?></td>
+                            <td><?php echo $lang["sharedby"];     ?></td>
+                            <td><?php echo $lang["sharedwith"];   ?></td>
+                            <td><?php echo $lang["lastupdated"];  ?></td>
+                            <td><?php echo $lang["lastused"];     ?></td>
+                            <td><?php echo $lang["expires"];      ?></td>
+                            <td><?php echo $lang["access"];       ?></td>
+                            <td><?php echo $lang['social_media']; ?></td>
                             <?php hook("additionalresourceexternalshareheader");?>
                             <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
                         </tr>
@@ -322,6 +324,7 @@ if($editing && !$editexternalurl)
                             <td><?php echo htmlspecialchars(nicedate($key["lastused"],true)); ?></td>
                             <td><?php echo htmlspecialchars($expires)                         ?></td>
                             <td><?php echo htmlspecialchars($access);                         ?></td>
+                            <td><?php renderSocialMediaShareLinksForUrl($url);                ?></td>
                             <?php hook("additionalresourceexternalsharerecord");?>
                             <td>
                                 <div class="ListTools">

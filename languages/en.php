@@ -831,6 +831,7 @@ $lang['origin'] = "Origin";
 $lang['unknown'] = 'Unknown';
 $lang['from'] = 'From';
 $lang['to'] = 'To';
+$lang['social_media'] = 'Social media';
 
 # Pager
 $lang["next"]="Next";

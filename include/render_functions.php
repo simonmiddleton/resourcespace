@@ -2028,3 +2028,40 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
         <?php
         }
 	}
+
+
+/**
+* Renders social media links in order to share a particular link
+* 
+* @param string $url The URL to be shared on social media networks
+* 
+* @return void
+*/
+function renderSocialMediaShareLinksForUrl($url)
+    {
+    global $facebook_app_id;
+
+    $url_encoded = urlencode($url);
+
+    if('' !== trim($facebook_app_id))
+        {
+        ?>
+        <!-- Facebook -->
+        <a target="_blank" href="https://www.facebook.com/dialog/feed?app_id=<?php echo $facebook_app_id; ?>&link=<?php echo $url_encoded; ?>">
+            <i class="fa fa-facebook-official" aria-hidden="true"></i>
+        </a>
+        <?php
+        }
+        ?>
+    <!-- Twitter -->
+    <a target="_blank" href="https://twitter.com/?status=<?php echo $url_encoded; ?>">
+        <i class="fa fa-twitter-square" aria-hidden="true"></i>
+    </a>
+    <!-- LinkedIn -->
+    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $url_encoded; ?>">
+        <i class="fa fa-linkedin-square" aria-hidden="true"></i>
+    </a>
+    <?php
+
+    return;
+    }

@@ -3354,3 +3354,6 @@ $byte_prefix_mode_decimal=true;
 
 # Option to force users to select a resource type at upload
 $resource_type_force_selection=false;
+
+// Facebook App ID
+$facebook_app_id = '';

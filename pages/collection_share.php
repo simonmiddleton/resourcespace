@@ -5,6 +5,7 @@ include "../include/authenticate.php";
 include "../include/search_functions.php";
 include "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
+include_once '../include/render_functions.php';
 
 // Fetch vars
 $ref        = getvalescaped('ref', '', true);
@@ -329,6 +330,7 @@ include "../include/header.php";
 			<td><?php echo $lang["lastused"];?></td>
 			<td><?php echo $lang["expires"];?></td>
 			<td><?php echo $lang["access"];?></td>
+			<td><?php echo $lang['social_media']; ?></td>
 			<?php hook("additionalcolexternalshareheader");?>
 			<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
 			</tr>
@@ -344,6 +346,7 @@ include "../include/header.php";
 				<td><?php echo htmlspecialchars(nicedate($keys[$n]["lastused"],true)); ?></td>
 				<td><?php echo htmlspecialchars(($keys[$n]["expires"]=="")?$lang["never"]:nicedate($keys[$n]["expires"],false)) ?></td>
 				<td><?php echo htmlspecialchars(($keys[$n]["access"]==-1)?"":$lang["access" . $keys[$n]["access"]]); ?></td>
+                <td><?php renderSocialMediaShareLinksForUrl(generateURL($baseurl, array('c' => $ref, 'k' => $keys[$n]['access_key']))); ?></td>
 				<?php hook("additionalcolexternalsharerecord");?>
 				<td><div class="ListTools">
 				<a href="#" onClick="if (confirm('<?php echo $lang["confirmdeleteaccess"]?>')) {document.getElementById('deleteaccess').value='<?php echo htmlspecialchars($keys[$n]["access_key"]) ?>';document.getElementById('collectionform').submit(); return false;}"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>
