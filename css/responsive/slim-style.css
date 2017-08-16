@@ -407,6 +407,14 @@
     .LoginBoxPanel {
         margin-top:8px;  
     }
+    /* Metadata fields */
+    .SearchItem .SearchWidth, .SearchItem .SearchWidthHalf {
+        float: right;
+        margin-left: 4px;
+    }
+    #searchspace .SearchItem {
+        clear: right;
+    }
 
 }
 @media(max-width:600px) {
