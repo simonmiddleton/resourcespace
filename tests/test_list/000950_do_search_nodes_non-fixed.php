@@ -35,7 +35,7 @@ add_resource_nodes($resourceb,array($giraffenode, $mammalnode,$threeblindmicenod
 add_resource_nodes($resourcec,array($capybaranode, $firstthirdsecondnode));
 
 // Add data to title field
-update_field($resourcea,$view_title_field,'Zebedee jumping, first second third');
+update_field($resourcea,$view_title_field,'Zebedee jumping, first second third lovely'); # "Lovely" checks stemming.
 update_field($resourceb,$view_title_field,'Geoffrey swimming, second first third');
 update_field($resourcec,$view_title_field,'Clifford sleeping, third first second');
 
