@@ -363,6 +363,9 @@ for ($n=count($plugins)-1;$n>=0;$n--)
 global $suppress_headers;
 # Set character set.
 if (($pagename!="download") && ($pagename!="graph") && !$suppress_headers) {header("Content-Type: text/html; charset=UTF-8");} // Make sure we're using UTF-8.
+
+# Set so pages can tell if they are in a modal. Used to scope DOM elements
+$modal = (getval("modal","") == "true");
 #------------------------------------------------------
 
 
