@@ -452,15 +452,7 @@ if($contactsheet_sorting)
             </div>
 
             <div class="QuestionSubmit">
-                <label for="buttons"> </label>	
-                <?php
-                if($contact_sheet_previews==true)
-                    {
-                    ?>
-                    <input name="preview" type="button" value="&nbsp;&nbsp;<?php echo $lang["action-preview"]?>&nbsp;&nbsp;" onClick="jQuery().rsContactSheet('preview', '<?php echo $filename_uid; ?>');"/>
-                    <?php
-                    }
-                    ?>
+
                 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" />
             </div>
         </div> <!-- end of small BasicBox -->
