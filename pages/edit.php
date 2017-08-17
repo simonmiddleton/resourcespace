@@ -684,7 +684,7 @@ if(0 > $ref)
          { ?>
          <div class="Question" id="question_file">
             <label><?php echo $lang["file"]?></label>
-         <div class="Fixed" style="width:50%;">
+         <div class="Fixed">
          <?php
          if ($resource["has_image"]==1)
             { ?>

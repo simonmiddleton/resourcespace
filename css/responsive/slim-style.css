@@ -122,11 +122,17 @@
     .BasicsBox .Question {
         overflow-x:auto;
     }
+    .customFieldset table {
+        white-space: nowrap;
+    }
 
 }
 @media(max-width:700px) {
     .FormHelp {
         margin:0 0 10px 0px;
+    }
+    .Question {
+        overflow: scroll;
     }
 }
 @media(max-width:525px) {
