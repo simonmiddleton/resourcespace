@@ -2200,7 +2200,7 @@ $lang["download_progress__introtext"]="Your download will start shortly. When yo
 $lang["downloadfile_nofile"]="The file requested was not found.";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="Please select which fields you wish to overwrite. Fields you do not select will be left untouched.";
-$lang["help__introtext"]='<iframe src="https://resourcespace.montala.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;"/>';
+$lang["help__introtext"]='<iframe src="https://resourcespace.montala.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["home__help"]="Help and advice to get the most out of ResourceSpace.";
 $lang["home__mycollections"]="Organise, collaborate & share your resources. Use these tools to help you work more effectively.";
 $lang["home__restrictedtext"]="Please click on the link that you were e-mailed to access the resources selected for you.";
