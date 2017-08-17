@@ -4617,3 +4617,44 @@ function get_video_info($file)
     $ffprobe_array=json_decode($ffprobe_output, true);
     return ($ffprobe_array);
     }
+
+
+/**
+* Provides the ability to copy any metadata field data from one resource to a user resource template regardless of any
+* field permissions the user might have. Mostly used in metadata templates when users should even get metadata of fields
+* they are not supposed to see / edit.
+* 
+* @uses escape_check()
+* @uses sql_query()
+* @uses copy_resource_nodes()
+* 
+* @param integer $from     Resource we are copying data from
+* @param integer $user_ref The user ID to whose resource template needs updating
+* 
+* @return void
+*/
+function copyAllDataToUserResourceTemplate($from, $user_ref)
+    {
+    $from     = escape_check($from);
+    $user_ref = escape_check(-1 * abs($user_ref));
+
+    sql_query("
+        INSERT INTO resource_data(resource, resource_type_field, value)
+             SELECT '{$user_ref}',
+                    rd.resource_type_field,
+                    rd.value
+               FROM resource_data AS rd
+               JOIN resource AS r ON rd.resource = r.ref
+               JOIN resource_type_field AS rtf ON rd.resource_type_field = rtf.ref
+                    AND (
+                            rtf.resource_type = r.resource_type
+                            OR rtf.resource_type = 999
+                            OR rtf.resource_type = 0
+                        )
+              WHERE rd.resource = '{$from}'
+    ");
+
+    copy_resource_nodes($from, $user_ref);
+
+    return;
+    }

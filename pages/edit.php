@@ -203,6 +203,12 @@ if(0 > $ref && $blank_edit_template && '' == getval('submitted', ''))
     clear_resource_data($ref);
     }
 
+// If using metadata templates, make sure user templates are cleared but not when form is being submitted
+if(0 > $ref && '' == getval('submitted', '') && isset($metadata_template_resource_type) && !$multiple && !checkperm('F*'))
+    {
+    clear_resource_data($ref);
+    }
+
 if($ref < 0 && $resource_type_force_selection)
   {
   $resource_type = "";
@@ -1055,12 +1061,14 @@ if (getval("copyfrom","")!="")
     }
   }
 
-if (getval("metadatatemplate","")!="")
-  {
-  $use=getvalescaped("metadatatemplate","");
-  $original_fields=get_resource_field_data($ref,$multiple,true,-1,"",$tabs_on_edit);
-  $original_nodes = get_resource_nodes($ref);
-  }
+if('' != getval('metadatatemplate', ''))
+    {
+    $use             = getvalescaped('metadatatemplate', '');
+    $original_fields = get_resource_field_data($ref, $multiple, true, -1, '', $tabs_on_edit);
+    $original_nodes  = get_resource_nodes($ref);
+
+    copyAllDataToUserResourceTemplate($use, $userref);
+    }
 
 # Load resource data
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
