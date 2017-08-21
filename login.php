@@ -281,6 +281,29 @@ jQuery(document).ready(function() {
     jQuery(window).capslockstate();
 
 });
+
+/* Responsive Stylesheet inclusion based upon viewing device */
+if(document.createStyleSheet)
+    {
+    document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
+    }
+else
+    {
+    jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+    }
+
+if(!is_touch_device() && jQuery(window).width() <= 1300)
+    {
+    if(document.createStyleSheet)
+        {
+        document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>');
+        }
+    else
+        {
+        jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+        }
+    }
+
 </script>
 
 <?php

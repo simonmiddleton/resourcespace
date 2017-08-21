@@ -158,6 +158,8 @@
         margin-left:3%;
         margin-right:3%;
         padding:0;
+        top:0;
+        transform:translateY(0); 
     }
 }
 /* Glyphs */
