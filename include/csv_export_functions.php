@@ -21,7 +21,7 @@ function generateResourcesMetadataCSV(array $resources)
         {
         foreach(get_resource_field_data($resource['ref'], false, true, -1, '' != getval('k', '')) as $field_data)
             {
-            $csv_field_headers[$field_data['resource_type_field']] = $field_data['title'];
+            $csv_field_headers[$field_data['ref']] = $field_data['title'];
 
             $resources_fields_data[$resource['ref']][$field_data['resource_type_field']] = $field_data['value'];
             }
