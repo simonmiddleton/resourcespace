@@ -1,9 +1,20 @@
 <?php 
 if (!hook("renderresultthumb")) 
-	{ ?>
+	{
+    $thumbs_displayed_fields_height = 180 + (28 * count($thumbs_display_fields));
+    if($annotate_enabled)
+        {
+        $thumbs_displayed_fields_height += 28;
+        }
+    $hook_thumbs_displayed_fields_height = hook('thumbs_resourceshell_height', '', array($thumbs_displayed_fields_height));
+    if(false !== $hook_thumbs_displayed_fields_height)
+        {
+        $thumbs_displayed_fields_height = $hook_thumbs_displayed_fields_height;
+        }
+    ?>
 	<!--Resource Panel-->
 	<div class="ResourcePanel ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
-	style="height: <?php echo 180+(28*count($thumbs_display_fields)) ?>px;"
+	style="height: <?php echo $thumbs_displayed_fields_height; ?>px;"
 	>
 		<?php  
 		hook ("resourcethumbtop");

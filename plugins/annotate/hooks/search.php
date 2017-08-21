@@ -42,3 +42,15 @@ function HookAnnotateSearchIcons($collections = false)
         <?php
         }
     }
+
+function HookAnnotateSearchThumbs_resourceshell_height($current_height)
+    {
+    global $baseurl, $k, $search, $archive, $sort, $offset, $order_by, $result, $n, $lang, $k, $annotate_public_view;
+
+    if('' != $k && !$annotate_public_view)
+        {
+        return false;
+        }
+
+    return $current_height + 28;
+    }
