@@ -1263,7 +1263,7 @@ function add_smart_collection()
 	$search=getvalescaped("addsmartcollection","");
 	$restypes=getvalescaped("restypes","");
 	if($restypes=="Global"){$restypes="";}
-	$archive=getvalescaped("archive","",true);
+	$archive = getvalescaped('archive', 0, true);
 	$starsearch=getvalescaped("starsearch",0);
 	
 	// more compact search strings should work with get_search_title
