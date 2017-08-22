@@ -63,8 +63,6 @@ for ($n=0;$n<count($collections);$n++)
 		
 		<div class="clearer"></div>
 		</div>
-		
-		</div>
 	<?php } 
 	
 	
