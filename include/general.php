@@ -1345,7 +1345,7 @@ if(!function_exists('save_user')){
 */
 function save_user($ref)
     {
-    global $lang, $allow_password_email, $home_dash;
+    global $lang, $home_dash;
 
     $current_user_data = get_user($ref);
 
@@ -1469,11 +1469,7 @@ function save_user($ref)
                 }
             }
 
-    if($allow_password_email && getval('emailme', '') != '')
-        {
-        email_user_welcome(getval('email', ''), getval('username', ''), getval('password', ''), $usergroup);
-        }
-    elseif(getval('emailresetlink', '') != '')
+    if('' != getval('emailresetlink', ''))
         {
         email_reset_link($email, true);
         }
@@ -1495,14 +1491,14 @@ function email_user_welcome($email,$username,$password,$usergroup)
 	# Fetch any welcome message for this user group
 	$welcome=sql_value("select welcome_message value from usergroup where ref='" . $usergroup . "'","");
 	if (trim($welcome)!="") {$welcome.="\n\n";}
-	
-	$templatevars['welcome']=i18n_get_translated($welcome);
-	$templatevars['username']=$username;
-	
-        $templatevars['password']=$password;
+
+    $templatevars['welcome']  = i18n_get_translated($welcome);
+    $templatevars['username'] = $username;
+    $templatevars['password'] = ''; // DO NOT SEND PASSWORD IN PLAIN TEXT - DEPRECATED!
+
         if (trim($email_url_save_user)!=""){$templatevars['url']=$email_url_save_user;}
         else {$templatevars['url']=$baseurl;}
-        $message=$templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n" . $lang["password"] . ": " . $templatevars['password'] . "\n\n". $templatevars['url'];
+        $message=$templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n" . $templatevars['url'];
           	
 	send_mail($email,$applicationname . ": " . $lang["youraccountdetails"],$message,"","","emaillogindetails",$templatevars);
 	}

@@ -230,31 +230,17 @@ if ($user_edit_created_by)
 
 
 <?php 
-# Only allow sending of password when this is not an MD5 string (i.e. only when first created or 'Suggest' is used).
-
-if (!hook("ticktoemailpassword")) 
-	{
-	if($allow_password_email) // Let's hope this is not enabled
-		{
-		?>
-		<div class="Question"><label><?php echo $lang["ticktoemail"]?></label>
-		<?php if (strlen($user["password"])!=64) { ?>
-		<input name="emailme" type="checkbox" value="yes" <?php if ($user["approved"]==0) { ?>checked<?php } ?>>
-		<?php } else { ?>
-		<div class="Fixed"><?php echo $lang["cannotemailpassword"]?></div>
-		<?php } ?><?php hook('emailpassword'); ?>
-		<div class="clearerleft"> </div></div>
-		<?php 
-		} 
-	else
-		{
-		?>
-		<div class="Question"><label><?php echo $lang["ticktoemaillink"]?></label>
-		<input name="emailresetlink" type="checkbox" value="yes" <?php if ($user["approved"]==0) { ?>checked<?php } ?>>
-		<div class="clearerleft"> </div></div>
-		<?php
-		}
-	}?> 
+// Tick to e-mail plain text password is depreacated for security reasons. We can only reset it
+// manually (as an Administrator) or by sending a reset link
+if(!hook('ticktoemailpassword')) 
+    {
+    ?>
+    <div class="Question"><label><?php echo $lang["ticktoemaillink"]?></label>
+    <input name="emailresetlink" type="checkbox" value="yes" <?php if ($user["approved"]==0) { ?>checked<?php } ?>>
+    <div class="clearerleft"> </div></div>
+    <?php
+    }
+    ?> 
 
 <div class="Question"><label><?php echo $lang["approved"]?></label><input name="approved" type="checkbox"  value="yes" <?php if ($user["approved"]==1) { ?>checked<?php } ?>>
 <?php if ($user["approved"]==0) { ?><div class="FormError">!! <?php echo $lang["ticktoapproveuser"]?> !!</div><?php } ?>
