@@ -4572,7 +4572,7 @@ function truncate_join_field_value($value)
 */
 function get_video_snapshots($resource_id, $file_path = false, $count_only = false)
     {
-    global $get_resource_path_extra_download_query_string_params;
+    global $get_resource_path_extra_download_query_string_params, $hide_real_filepath;
 
     $snapshots_found = array();
  
@@ -4583,7 +4583,12 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
     do
         {
 	$path=str_replace("snapshot","snapshot_" . $i,$template_path);
-	$webpath=$template_webpath . "&snapshot_frame=" . $i;
+	if($hide_real_filepath){
+		$webpath=$template_webpath . "&snapshot_frame=" . $i;
+	}
+	else{
+		$webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
+	}
 
         $snapshot_found  = file_exists($path);
 
