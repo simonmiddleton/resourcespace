@@ -4583,7 +4583,7 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
     do
         {
 	$path=str_replace("snapshot","snapshot_" . $i,$template_path);
-	$webpath=str_replace("snapshot","snapshot_" . $i,$template_webpath);
+	$webpath=$template_webpath . "&snapshot_frame=" . $i;
 
         $snapshot_found  = file_exists($path);
 
