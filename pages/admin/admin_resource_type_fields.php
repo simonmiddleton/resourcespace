@@ -172,9 +172,11 @@ else
 addColumnHeader('ref', 'property-reference');
 addColumnHeader('title', 'property-title');
 addColumnHeader('resource_type', 'property-resource_type');
-addColumnHeader('name', 'property-shorthand_name');
+if (!hook('replacenamecolumnheader'))
+	addColumnHeader('name', 'property-shorthand_name');
 addColumnHeader('type', 'property-field_type');
-addColumnHeader('tab_name', 'property-tab_name');
+if (!hook('replacetabnamecolumnheader'))
+	addColumnHeader('tab_name', 'property-tab_name');
 ?>
 <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
 </tr>
@@ -193,23 +195,24 @@ for ($n=0;$n<count($fields);$n++)
 		<td>
 			<div class="ListTitle">
 			      <a href="<?php echo $baseurl . "/pages/admin/admin_resource_type_field_edit.php?ref=" . $fields[$n]["ref"] . "&restype=" . $restypefilter . "&field_order_by=" . $field_order_by . "&field_sort=" . $field_sort . "&find=" . urlencode($find) . "&backurl=" . urlencode($url) ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><span><?php echo str_highlight (i18n_get_translated($fields[$n]["title"]),$find,STR_HIGHLIGHT_SIMPLE);?></span></a>
-				
-				
 			</div>
 		</td>
 		<td>		
 			<?php if(isset($arr_restypes[$fields[$n]["resource_type"]])){echo i18n_get_translated($arr_restypes[$fields[$n]["resource_type"]]);} else {echo $fields[$n]["resource_type"];}?>
-		</td>	
-		<td>		
+		</td>
+	<?php if (!hook('replacenamecolumn')) {
+		?><td>
 			<?php echo str_highlight($fields[$n]["name"],$find,STR_HIGHLIGHT_SIMPLE);?>
-		</td>	
+		</td><?php
+	}?>
 		<td>		
 			<?php echo ($fields[$n]["type"]!="")?$lang[$field_types[$fields[$n]["type"]]]:$lang[$field_types[0]];  // if no value it is treated as type 0 (single line text) ?>
 		</td>
-		<td>		
+	<?php if (!hook('replacetabnamecolumn')) {
+		?><td>
 			<?php echo str_highlight(i18n_get_translated($fields[$n]["tab_name"]),$find,STR_HIGHLIGHT_SIMPLE);?>
-		</td>
-		
+		</td><?php
+	}?>
 		<td>
 			<div class="ListTools">
 			  
