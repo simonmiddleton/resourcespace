@@ -41,6 +41,10 @@ else
 
 $initial_tags = explode(',', $quicksearch);
 
+// For responsive mode we cannot use tag editor. For some reason it doesn't work. I think it has something to do with
+// jQuery UI/ layout but not sure what exactly.
+$simple_search_pills_view = 750 > getval('width', 0, true) ? false : $simple_search_pills_view;
+
 include_once('../../include/searchbar.php');
 ?>
 <script type="text/javascript">

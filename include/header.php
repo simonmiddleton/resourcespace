@@ -206,6 +206,7 @@ if ($chosen_dropdowns)
 	<?php
 	}
 ?>
+var responsive_search_bar_loaded = false;
 </script>
 
 <script src="<?php echo $baseurl_short?>lib/js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>

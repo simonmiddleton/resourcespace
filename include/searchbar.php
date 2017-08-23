@@ -852,7 +852,18 @@ elseif($restypes=='')
 <?php } ?>
 
 </div>
+<script>
+jQuery(document).ready(function ()
+    {
+    if(responsive_search_bar_loaded)
+        {
+        return;
+        }
 
+    ReloadSearchBar();
+    responsive_search_bar_loaded = true;
+    });
+</script>
 <?php hook("searchbarbottom");
 
 # Restore original values that may have been affected by processsing so the search page still draws correctly with the current search.
