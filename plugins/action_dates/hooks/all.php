@@ -1,6 +1,5 @@
 <?php
-
-function HookAction_datesPagestoolscron_copy_hitcountAddplugincronjob()
+function HookAction_datesCronCron()
 	{
 	global $lang, $action_dates_restrictfield,$action_dates_deletefield, $resource_deletion_state,
            $action_dates_reallydelete, $action_dates_email_admin_days, $email_notify, $email_from,
@@ -8,11 +7,11 @@ function HookAction_datesPagestoolscron_copy_hitcountAddplugincronjob()
 	
 	
 	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)");
+	
 	# Check that this is a valid date field to use
 	if(in_array($action_dates_restrictfield, $allowable_fields))
 		{
 		$restrict_resources=sql_query("select rd.resource, rd.value from resource_data rd left join resource r on r.ref=rd.resource where r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
-			
 		$emailrefs=array();
 		foreach ($restrict_resources as $resource)
 			{
@@ -140,8 +139,3 @@ function HookAction_datesPagestoolscron_copy_hitcountAddplugincronjob()
             }
         }
 	}
-function HookAction_datesCron_copy_hitcountAddplugincronjob()
-	{
-	HookAction_datesPagestoolscron_copy_hitcountAddplugincronjob();
-	}
-			
