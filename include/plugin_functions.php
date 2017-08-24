@@ -432,8 +432,8 @@ function display_rsc_upload($upload_status)
       <label for="rsc_file"><?php echo $lang['plugins-getrsc'] ?></label>
       <input type="file" name="rsc_file" id="rsc_file" size=80 />
       <input type="submit" name="upload" value="<?php echo $lang['plugins-upload'] ?>" />
+      <div class="clearerleft"></div>
     </div>
-    <div class="clearerleft"></div>
   </form>
 <?php
     }
@@ -639,8 +639,8 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
           <label for="submit">&nbsp;</label>
           <input type="submit" name="save" id="save" value="<?php echo $lang['plugins-saveconfig']?>">
           <input type="submit" name="submit" id="submit" value="<?php echo $lang['plugins-saveandexit']?>">
+          <div class="clearerleft"></div>
         </div>
-        <div class="clearerleft"></div>
       </form>
 <?php
     display_rsc_upload($upload_status);
@@ -663,8 +663,8 @@ function config_section_header($title, $description)
 	<?php if ($description!=""){?>
 		<p><?php echo $description?></p>
     <?php } ?>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
 <?php
     }
 
@@ -725,8 +725,8 @@ function config_multi_select($name, $label, $current, $choices, $usekeys=true, $
         }
 ?>
     </select>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
 <?php
     }
 
@@ -775,8 +775,9 @@ function config_single_user_select($name, $label, $current=array(), $width=300)
         }
 ?>
     </select>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
+  
 <?php
     }
 
@@ -819,8 +820,9 @@ function config_multi_user_select($name, $label, $current=array(), $width=300)
         }
 ?>
     </select>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
+  
 <?php
     }
 	
@@ -862,8 +864,9 @@ function config_single_group_select($name, $label, $current=array(), $width=300)
 		}
 ?>
     </select>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
+  
 <?php
     }
 	
@@ -906,8 +909,9 @@ function config_multi_group_select($name, $label, $current=array(), $width=300)
         }
 ?>
     </select>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
+  
 <?php
     }
 	
@@ -960,8 +964,8 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
         }
 ?>
     </select>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
 <?php
     }
 
@@ -1010,8 +1014,8 @@ function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$
         }
 ?>
     </select>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
 <?php
     }
 
@@ -1052,8 +1056,8 @@ function config_single_rtype_select($name, $label, $current, $width=300)
         }
 ?>
     </select>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
 <?php
 }
 
@@ -1095,8 +1099,8 @@ function config_multi_rtype_select($name, $label, $current, $width=300)
         }
 ?>
     </fieldset>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
 <?php
     }
 
@@ -1157,8 +1161,8 @@ function config_db_single_select($name, $label, $current, $choices, $ixcol='ref'
         }
 ?>
     </select>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
 <?php
     }
 
@@ -1231,8 +1235,8 @@ function config_add_db_single_select($config_var, $label, $choices, $ixcol='ref'
         }
 ?>
     </select>
+    <div class="clearerleft"></div>
   </div>
-  <div class="clearerleft"></div>
 <?php
     }
 
