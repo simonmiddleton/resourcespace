@@ -1643,7 +1643,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			$unique_source_profile=false;
 			$unique_strip_target=false;
 			$unique_target_profile=false;
-			//$unique_colorspace=false;
 			
 			$cp_count=count($command_parts);
 			$mpr_init_write=false;
@@ -1735,7 +1734,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						}
 					}
 				
-				if($unique_flatten || $unique_strip_source || $unique_source_profile || $unique_colorspace || $unique_strip_target || $unique_target_profile)
+				if($unique_flatten || $unique_strip_source || $unique_source_profile || $unique_strip_target || $unique_target_profile)
 					{
 					// make these changes
 					if($unique_flatten)
