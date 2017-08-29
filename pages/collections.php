@@ -184,8 +184,9 @@ if ($allow_reorder)
 			});		
 		}
 		jQuery(document).ready(function() {
-			if(jQuery(window).width()<600 && jQuery(window).height()<600 && is_touch_device()) {
-					return false;
+			if(is_touch_device())
+				{
+				return false;
 				}
 
 			jQuery('#CollectionSpace').sortable({

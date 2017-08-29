@@ -573,9 +573,10 @@ if($collectionsearch && collection_writeable(substr($search, 11)))
 	?>
 	<script>
 		jQuery(document).ready(function() {
-		if(jQuery(window).width()<600 && jQuery(window).height()<600 && is_touch_device()) {
+		if(is_touch_device())
+			{
 			return false;
-		}
+			}
 			jQuery('#CentralSpaceResources').droppable({
 				accept: '.CollectionPanelShell',
 
@@ -612,7 +613,10 @@ if(!$collectionsearch)
 	<!-- Search items should only be draggable if results are not a collection -->
 	<script>	
 	jQuery(document).ready(function() {
-		if(jQuery(window).width()<600 && jQuery(window).height()<600 && is_touch_device()) {return false;}
+		if(is_touch_device())
+			{
+			return false;
+			}
 		jQuery('.ResourcePanel').draggable({
 			distance: 50,
 			connectWith: '#CollectionSpace',
@@ -658,7 +662,10 @@ if ($allow_reorder && $display!="list") {
 		});
 	}
 	jQuery('#CentralSpace').on('CentralSpaceSortable', function() {
-		if(jQuery(window).width()<600 && jQuery(window).height()<600 && is_touch_device()) {return false;}
+		if(is_touch_device())
+			{
+			return false;
+			}
         jQuery('.ui-sortable').sortable('enable');
 		jQuery('#CentralSpaceResources').sortable({
 			connectWith: '#CollectionSpace',

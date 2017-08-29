@@ -439,10 +439,11 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
 			}
 			var dragging=false;
 				jQuery(function() {
-					if(jQuery(window).width()<600 && jQuery(window).height()<600 && is_touch_device()) {
+					if(is_touch_device())
+						{
 						jQuery("#HomePanelContainer").prepend("<p><?php echo $lang["dashtilesmalldevice"];?></p>");
 						return false;
-					}
+						}
 				 	jQuery("#HomePanelContainer").sortable({
 				  	  items: ".DashTileDraggable",
 				  	  start: function(event,ui) {
@@ -1066,8 +1067,9 @@ function get_user_dash($user)
 		}
 		var dragging=false;
 			jQuery(function() {
-				if(jQuery(window).width()<600 && jQuery(window).height()<600 && is_touch_device()) {
-						return false;
+				if(is_touch_device())
+					{
+					return false;
 					}				
 			 	jQuery("#HomePanelContainer").sortable({
 			  	  items: ".DashTileDraggable",
