@@ -5636,7 +5636,7 @@ function create_password_reset_key($username)
 	
 function get_rs_session_id($create=false)
     {
-	global $baseurl;
+	global $baseurl, $userref;
     // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users
     if(isset($_COOKIE["rs_session"]))
         {
@@ -5649,6 +5649,10 @@ function get_rs_session_id($create=false)
         $rs_session= rand();
         global $baseurl;
         rs_setcookie("rs_session",$rs_session, 7, "", "", substr($baseurl,0,5)=="https", true);
+
+        // Log this in the daily stats
+        daily_stat("User session", $userref);
+
 		return $rs_session;
         }
     return false;
