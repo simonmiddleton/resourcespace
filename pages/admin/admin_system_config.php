@@ -8,7 +8,6 @@ include_once '../../include/config_functions.php';
 $enable_disable_options = array($lang['userpreference_disable_option'], $lang['userpreference_enable_option']);
 $yes_no_options         = array($lang['no'], $lang['yes']);
 
-
 // System section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemsetup'] . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
 $page_def[] = config_add_text_input('applicationname', $lang['setup-applicationname'], false, 420, false, '', true);
@@ -174,7 +173,7 @@ $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . 
 $page_def[] = config_add_boolean_select('metadata_report', $lang['metadata-report'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('metadata_read_default', $lang['embedded_metadata'], array($lang['embedded_metadata_donot_extract_option'], $lang['embedded_metadata_extract_option']), 420, '', true);
 $page_def[] = config_add_boolean_select('speedtagging', $lang['speedtagging'], $enable_disable_options, 420, '', true);
-
+$page_def[] = config_add_single_ftype_select('speedtaggingfield', $lang['speedtaggingfield'], 420, false, $TEXT_FIELD_TYPES,true);
 $page_def[] = config_add_html('</div>');
 
 

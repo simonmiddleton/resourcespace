@@ -951,6 +951,7 @@ $lang["collection_download_tar_applink"] = "Can't open tar files? Get the open s
 $lang["downloadsize"]="Download size";
 $lang["tagging"]="Tagging";
 $lang["speedtagging"]="Speed tagging";
+$lang["speedtaggingfield"]="Speed tagging field";
 $lang["existingkeywords"]="Existing keywords:";
 $lang["extrakeywords"]="Extra keywords";
 $lang["leaderboard"]="Leaderboard";
