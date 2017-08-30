@@ -5636,7 +5636,7 @@ function create_password_reset_key($username)
 	
 function get_rs_session_id($create=false)
     {
-	global $baseurl, $userref;
+	global $baseurl, $anonymous_login, $usergroup;
     // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users
     if(isset($_COOKIE["rs_session"]))
         {
@@ -5650,8 +5650,27 @@ function get_rs_session_id($create=false)
         global $baseurl;
         rs_setcookie("rs_session",$rs_session, 7, "", "", substr($baseurl,0,5)=="https", true);
 
-        // Log this in the daily stats
-        daily_stat("User session", $userref);
+        if(is_array($anonymous_login))
+            {
+            foreach($anonymous_login as $key => $val)
+                {
+                if($baseurl == $key)
+                    {
+                    $anonymous_login = $val;
+                    }
+                }
+            }
+
+        $valid = sql_query("select ref,usergroup,account_expires from user where username='" . escape_check($anonymous_login) . "'");
+
+        if (count($valid) >= 1)
+            {
+            // setup_user hasn't been called yet, we just need the usergroup
+            $usergroup = $valid[0]["usergroup"];
+
+            // Log this in the daily stats
+            daily_stat("User session", $valid[0]["ref"]);
+            }
 
 		return $rs_session;
         }
