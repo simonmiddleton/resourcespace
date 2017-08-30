@@ -1396,7 +1396,7 @@ function checkperm_user_edit($user)
 		{
 		return false;
 		}
-	if (!isset($user['usergroup']))		// allow for passing of user array or user ref to this function.
+	if (!is_array($user))		// allow for passing of user array or user ref to this function.
 		{
 		$user=get_user($user);
 		}
