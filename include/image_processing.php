@@ -1554,7 +1554,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 						$wait=run_command($cmd, true);
 						resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $wait);
 
-						unlink($path);
+						if(file_exists($path))
+							{
+							unlink($path);
+							}
 						$path=str_replace($extension,"jpg",$path);
 						}
 					}           
