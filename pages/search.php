@@ -46,6 +46,7 @@ if ($k!="" && !$internal_share_access) {$use_checkboxes_for_selection=false;}
 
 $search = getvalescaped('search', '');
 $modal  = ('true' == getval('modal', ''));
+$collection_add=getvalescaped("collection_add",""); // Need this if redirected here from upload
 
 if(false !== strpos($search, TAG_EDITOR_DELIMITER))
 	{
@@ -758,24 +759,49 @@ if ($allow_reorder && $display!="list") {
 
 if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-1"))
 	{
-	// User has come here from upload. Show a prompt to submit the resources in current collection for review
+	// User has come here from upload. Show a prompt to submit the resources for review
 	?>
 	<script>	
 	jQuery(document).ready(function() {
+        jQuery("#modal_dialog").html('<?php echo $lang["submit_dialog_text"]; ?>');
 		jQuery("#modal_dialog").dialog({
-							    	title:'<?php echo $lang["submit_dialog_text"]; ?>',
+							    	title:'<?php echo $lang["submit_review_prompt"]; ?>',
 							    	modal: true,
+                                    width: 400,
 									resizable: false,
 									dialogClass: 'no-close',
 							        buttons: {
 							            "<?php echo $lang['action_submit_review'] ?>": function() {
-							            		jQuery(this).dialog("close");
-												window.location.href='<?php echo $baseurl_short?>pages/edit.php?submitted=true&editthis_status=true&collection=<?php echo $usercollection ?>&status=-1';
+							            		jQuery.ajax({
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    url: baseurl_short+"pages/ajax/user_action.php",
+                                                    data: {
+                                                        "action" : "submitpending",
+                                                        "collection_add" : "<?php echo $collection_add ?>"
+                                                    },
+                                                    success: function(response){
+                                                            <?php
+                                                            if(is_numeric($collection_add))
+                                                                {
+                                                                echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!collection" . $collection_add . "';";
+                                                                }
+                                                            else
+                                                                {
+                                                                echo "window.location.href='" .  $baseurl_short . "pages/search.php?search=!contributions" . $userref . "&archive=-1&order_by=date&sort=desc';";
+                                                                }
+                                                            ?>
+                                                            },
+                                                    error: function(response) {
+                                                        styledalert('<?php echo $lang["error"]; ?>',response['responseJSON']['message']);
+                                                        }
+                                                    });
+                                                
+												
 							            	},    
 							            "<?php echo $lang['action_continue_editing'] ?>": function() { 
 							            		jQuery(this).dialog('close');
 												<?php 
-												$collection_add=getvalescaped("collection_add","");
 												if ($collection_add!="")
 													{?>
 													window.location.href='<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection_add ?>';

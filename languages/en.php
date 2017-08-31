@@ -2447,7 +2447,7 @@ $lang["systemconfig_modal_default"] = "Enable modals for standard pages where co
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
-
+$lang['error_generic'] = 'Sorry, there has been an error. If this error persists please contact your system administrator';
 
 $lang["maximise"]="Maximise";
 
@@ -2455,8 +2455,8 @@ $lang["actions-select"]="";
 $lang["actions"] = "Actions";
 $lang["actions-total"] = "Total actions";
 $lang["actions-enable"] = "Enable actions functionality for all users? If this is disabled it can still be enabled based on group permissions";
-$lang["submit_review_prompt"]="Submit for review?";
-$lang["submit_dialog_text"]="The uploaded resources are now in the pending submission state. Submit the collection for review or continue editing?";
+$lang["submit_review_prompt"]="Submit for review";
+$lang["submit_dialog_text"]="The uploaded resources are now in the pending submission state. Submit the resources for review or continue editing?";
 $lang["action_submit_review"]="Submit for review";
 $lang["action_continue_editing"]="Continue editing";
 $lang["action-addrow"]="Add row";
