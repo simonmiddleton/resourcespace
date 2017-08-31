@@ -1,0 +1,73 @@
+<?php
+function HookGoogle_oauthAllPreheaderoutput()
+    {
+    if(google_oauth_is_authenticated())
+        {
+        // Make sure we don't ask the user to type in a password when deleting resources, since we don't have it!
+        global $delete_requires_password;
+
+        $delete_requires_password = false;
+        
+        return;
+        }
+
+    // If authenticated do nothing and return
+    if(isset($_COOKIE['user']))
+        {
+        return;
+        }
+
+    // Allow external shares to bypass Google SSO?
+    global $google_oauth_xshares_bypass_sso;
+    $k = getvalescaped('k', '');
+    if(
+        $google_oauth_xshares_bypass_sso
+        && '' != $k 
+        && (
+            // Hard to determine at this stage what we consider a collection/ resource ID so we
+            // use the most general ones
+            check_access_key_collection(str_replace('!collection', '', getvalescaped('search', '')), $k)
+            || check_access_key(getvalescaped('ref', ''), $k)
+        )
+    )
+        {
+        return;
+        }
+
+    // Go ahead and authenticate before continuing any further
+    google_oauth_authenticate();
+
+    return;
+    }
+
+
+function HookGoogle_oauthAllProvideusercredentials()
+    {
+    global $baseurl, $session_hash;
+
+    // If authenticated do nothing and return
+    if(isset($_COOKIE['user']))
+        {
+        if(isset($_COOKIE[GOOGLE_OAUTH_COOKIE_NAME]))
+            {
+            google_oauth_signout();
+            }
+
+        return true;
+        }
+
+    if(google_oauth_is_authenticated())
+        {
+        $session_hash = isset($_COOKIE[GOOGLE_OAUTH_COOKIE_NAME]) ? $_COOKIE[GOOGLE_OAUTH_COOKIE_NAME] : '';
+
+        return true;
+        }
+
+    return false;
+    }
+
+
+function HookGoogle_oauthAllCheckuserloggedin()
+    {
+    return google_oauth_is_authenticated();
+    }

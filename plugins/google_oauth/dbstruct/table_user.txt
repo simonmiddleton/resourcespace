@@ -1,0 +1,2 @@
+google_oauth_id_token,mediumtext,YES,,,
+google_oauth_sub_claim,varchar(255),YES,,,
