@@ -206,7 +206,6 @@ if ($chosen_dropdowns)
 	<?php
 	}
 ?>
-var responsive_search_bar_loaded = false;
 </script>
 
 <script src="<?php echo $baseurl_short?>lib/js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
@@ -480,7 +479,17 @@ include (dirname(__FILE__) . "/header_links.php");
 
 <?php
 # Include simple search sidebar?
-$omit_searchbar_pages=array("terms","index","preview_all","search_advanced","preview","admin_header","login");
+$omit_searchbar_pages = array(
+    'terms',
+    'index',
+    'preview_all',
+    'search_advanced',
+    'preview',
+    'admin_header',
+    'login',
+    'user_request',
+    'user_password'
+);
 $modified_omit_searchbar_pages=hook("modifyomitsearchbarpages");
 if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}
 	

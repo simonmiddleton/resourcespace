@@ -855,13 +855,12 @@ elseif($restypes=='')
 <script>
 jQuery(document).ready(function ()
     {
-    if(responsive_search_bar_loaded)
+    // For responsive mode we cannot use tag editor. For some reason it doesn't work. I think it has something to do with
+    // jQuery UI/ layout but not sure what exactly.
+    if(750 > jQuery(window).width())
         {
-        return;
+        jQuery('#ssearchbox').tagEditor('destroy');
         }
-
-    ReloadSearchBar();
-    responsive_search_bar_loaded = true;
     });
 </script>
 <?php hook("searchbarbottom");
