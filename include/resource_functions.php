@@ -967,23 +967,34 @@ function save_resource_data_multi($collection)
                         
                         $findstring=getval("find_" . $fields[$n]["ref"],"");
                         $replacestring=getval("replace_" . $fields[$n]["ref"],"");
+                        
                         $val=str_replace($findstring,$replacestring,$existing);
-                        if ($fields[$n]["type"] == 8) // Need to replace quotes with html characters
+                                                
+                        if (html_entity_decode($existing, ENT_QUOTES | ENT_HTML401) != $existing)
                             {
-                            //CkEditor converts some characters to the HTML entity code, in order to use and replace these, we need the
-                            //$rich_field_characters array below so the stored in the database value e.g. &#39; corresponds to "'"
-                            //that the user typed in the search and replace box
-                            //This array could possibly be expanded to include more such conversions
-                            $rich_field_characters = array("&#39;"=>"'","&rsquo;"=>"’");
-                            foreach ($rich_field_characters as $x => $replaceme){
-                                if (stripos( $findstring,$replaceme )!== false){
-                                    $findstring=str_replace($replaceme, $x, htmlspecialchars($findstring));
-                                    $replacestring=str_replace($replaceme, $x, htmlspecialchars($replacestring));
-                                    $val=str_replace($findstring, $replacestring, $val);
-                                    }
-                                }
+                            // Need to replace html characters with html characters
+                            // CkEditor converts some characters to the HTML entity code, in order to use and replace these, we need the
+                            // $rich_field_characters array below so the stored in the database value e.g. &#39; corresponds to "'"
+                            // that the user typed in the search and replace box
+                            // This array could possibly be expanded to include more such conversions
+                            
+                            $rich_field_characters_replace = array("'","’");
+                            $rich_field_characters_sub = array("&#39;","&rsquo;");
+                            
+                            // Set up array of strings to match as we may have a number of variations in the existing value
+                            $html_entity_strings = array();
+                            $html_entity_strings[] = str_replace($rich_field_characters_replace, $rich_field_characters_sub, htmlspecialchars($findstring));
+                            $html_entity_strings[] = str_replace($rich_field_characters_replace, $rich_field_characters_sub, htmlentities($findstring)); 
+                            $html_entity_strings[] = htmlentities($findstring);
+                            $html_entity_strings[] = htmlspecialchars($findstring);                            
+                            
+                            // Just need one replace string
+                            $replacestring = htmlspecialchars($replacestring);
+                                                        
+                            $val=str_replace($html_entity_strings, $replacestring, $val);
                             }
                         }
+                        
                     
                     # Append text/option(s) mode?
                     if (getval("modeselect_" . $fields[$n]["ref"],"")=="AP")
