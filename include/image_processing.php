@@ -1717,6 +1717,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			
 			for($p=0;$p<$cp_count;$p++)
 				{
+				if($extension=="png" || $extension=="gif")
+					{
+					$command_parts[$p]['targetpath']=str_replace($extension,"jpg",$command_parts[$p]['targetpath']);
+					if($p==0)
+						{
+						$command.=" \( -size " . $command_parts[$p]['tw'] . "x" . $command_parts[$p]['th'] . " tile:pattern:checkerboard \) +swap -compose over -composite";
+						}
+					}
 				$command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '');
 				
 				if(isset($command_parts[$p]['icc_transform_complete']) && !$mpr_icc_transform_complete && $command_parts[$p]['icc_transform_complete'] && $command_parts[$p]['targetprofile']!=='')
