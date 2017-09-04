@@ -103,23 +103,43 @@
 		map.setCenter (lonLat, Math.min(<?php echo $zoom ?>, map.getNumZoomLevels() - 1));
 	
 	      </script>
-		<?php     
-		    } else {?>
-		<a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang['location-add'];?></a>
-	
-		<?php }?>
-		<?php if ($view_panels) { ?>
-			<script>
-			    jQuery(document).ready(function () {
-    
-		    		jQuery("#GeolocationData").children(".Title").attr("panel", "GeolocationData").appendTo("#Titles1");
-		    		removePanel=jQuery("#GeolocationData").parent().parent(".RecordBox");
-		    		jQuery("#GeolocationData").appendTo("#Panel1").addClass("TabPanel").hide();
-		    		removePanel.remove();
-		    		
-		         });
-		    </script>
-				<?php } ?>
+		<?php
+        }
+    else
+        {
+        ?>
+        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang['location-add'];?></a>
+        <?php
+        }
+
+    if($view_panels)
+        {
+        ?>
+        <script>
+        jQuery(document).ready(function ()
+            {
+            jQuery("#GeolocationData").children(".Title").attr("panel", "GeolocationData").appendTo("#Titles1");
+
+            removePanel = jQuery("#GeolocationData").parent().parent(".RecordBox");
+
+            jQuery("#GeolocationData").appendTo("#Panel1").addClass("TabPanel").hide();
+
+            removePanel.remove();
+
+            // Function to switch tab panels
+            jQuery('.ViewPanelTitles').children('.Title').click(function()
+                {
+                jQuery(this).parent().parent().children('.TabPanel').hide();
+                jQuery(this).parent().children('.Title').removeClass('Selected');
+                jQuery(this).addClass('Selected');
+                jQuery('#' + jQuery(this).attr('panel')).show();
+                map.updateSize();
+                });
+            });
+        </script>
+        <?php
+        }
+        ?>
 	</div>
 	<?php
 	}
