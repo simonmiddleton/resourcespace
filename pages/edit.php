@@ -204,7 +204,7 @@ if(0 > $ref && $blank_edit_template && '' == getval('submitted', ''))
     }
 
 // If using metadata templates, make sure user templates are cleared but not when form is being submitted
-if(0 > $ref && '' == getval('submitted', '') && isset($metadata_template_resource_type) && !$multiple && !checkperm('F*'))
+if(0 > $ref && '' == getval('submitted', '') && isset($metadata_template_resource_type) && !$multiple)
     {
     clear_resource_data($ref);
     }
@@ -957,7 +957,7 @@ else
 
 $lastrt=-1;
 
-if (isset($metadata_template_resource_type) && !$multiple && !checkperm("F*"))
+if (isset($metadata_template_resource_type) && !$multiple)
 {
     # Show metadata templates here
   ?>
