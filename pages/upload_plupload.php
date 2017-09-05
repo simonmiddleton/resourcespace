@@ -1062,7 +1062,7 @@ if ($collection_add!="false" && count(get_collection_external_access($collection
 	# Add language support if available
 	if (file_exists("../lib/plupload_2.1.8/i18n/" . $language . ".js"))
 		{
-		echo "<script type=\"text/javascript\" src=\"../lib/plupload_2.1.8/i18n/" . $language . ".js?" . $css_reload_key . "\"></script>";
+		echo "<script type=\"text/javascript\" src=\"" . $baseurl_short . "lib/plupload_2.1.8/i18n/" . $language . ".js?" . $css_reload_key . "\"></script>";
 		}
 		?>
 		

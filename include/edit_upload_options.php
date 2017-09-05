@@ -262,7 +262,7 @@ if ($ref<0)
 		// if the user can add to a theme, include the theme selector
 		?>
 			<!-- select theme if collection is public -->
-			<script type="text/javascript" src="../lib/js/update_theme_levels.js"></script>
+			<script type="text/javascript" src="<?php echo $baseurl_short ?>lib/js/update_theme_levels.js"></script>
 			<input type="hidden" name="themestring" id="themestring" value="" />
 			<div id='themeselect' class='themeselect' style="display:none">
 				<?php 
