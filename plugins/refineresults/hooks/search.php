@@ -27,7 +27,7 @@ function HookRefineresultsSearchSearch_header_after_actions()
     if ($results > 1)
         {
         ?>
-        <a href="#" onClick="jQuery('#RefineResults').slideToggle();jQuery('#refine_keywords').focus();">+ <?php echo $lang["refineresults"] ?></a>
+        <br /><a href="#" onClick="jQuery('#RefineResults').slideToggle();jQuery('#refine_keywords').focus();">+ <?php echo $lang["refineresults"] ?></a>
         <?php
         }
     }
