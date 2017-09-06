@@ -9,6 +9,8 @@ if ($disable_geocoding){exit("Geomapping disabled.");}
 
 # Fetch resource data.
 $ref = getvalescaped('ref','',true);
+# See if we came from the geolocate_collection page
+$geocol = getvalescaped('geocol','',true);
 if ($ref=='') {die;}
 $resource=get_resource_data($ref);
 if ($resource==false) {die;}
@@ -53,7 +55,7 @@ if (isset($_POST['submit']))
 <div class="RecordPanel">
 <div class="Title"><?php echo $lang['location-title']; ?></div>
 <?php if (!hook("customgeobacklink")) { ?>
-<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $ref?>"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoresourceview']; ?></a></p>
+<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short . ($geocol != '' ? "pages/geolocate_collection.php?ref=" . $geocol : "pages/view.php?ref=" . $ref) ?>"><?php echo LINK_CARET_BACK . ($geocol != '' ? $lang['backtogeolocatecollection'] : $lang['backtoresourceview']) ?></a></p>
 <?php } ?>
 
 <!-- Drag mode selector -->
@@ -171,6 +173,7 @@ hook("rendermapfooter");
 <p><?php echo $lang['location-details']; ?></p>
 <form id="map-form" method="post" action="<?php echo $baseurl_short?>pages/geo_edit.php">
 <input name="ref" type="hidden" value="<?php echo $ref; ?>" />
+<input name="geocol" type="hidden" value="<?php echo $geocol; ?>" />
 <input name="map-zoom" type="hidden" value="<?php echo $zoom ?>" id="map-zoom" />
 <?php echo $lang['latlong']; ?>: <input name="geo-loc" type="text" size="50" value="<?php echo $resource["geo_long"]==""?"":($resource["geo_lat"] . "," . $resource["geo_long"]) ?>" id="map-input" />
 <?php hook("renderlocationextras"); ?>

@@ -618,6 +618,7 @@ $lang['user_autoapproved']='Automatically approved';
 
 $lang["backtoresourceview"]="Back to resource view";
 $lang["continuetoresourceview"]="Continue to resource view";
+$lang["backtogeolocatecollection"]="Back to geolocate collection";
 
 # Resource status
 $lang["status"]="Status";
