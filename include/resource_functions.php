@@ -3459,22 +3459,30 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
 		if ($complete==1) {return true;}
 		}
 
-	# Restricted
-	if ($access==1)
-		{
-		if ($size=="")
-			{
-			# Original file - access depends on the 'restricted_full_download' config setting.
-			global $restricted_full_download;
-			return $restricted_full_download;
-			}
-		else
-			{
-			# Return the restricted access setting for this resource type.
-			return (sql_value("select allow_restricted value from preview_size where id='" . escape_check($size) . "'",0)==1);
-			}
-		}
-		
+    # Restricted
+    if(1 == $access)
+        {
+        // The system should always allow these sizes to be downloaded as these are needed for search results and it makes
+        // sense to allow them if a request for one of them is received. For example when $hide_real_filepath is enabled.
+        $sizes_always_allowed = array('col', 'thm', 'pre', 'snapshot');
+
+        if('' == $size)
+            {
+            # Original file - access depends on the 'restricted_full_download' config setting.
+            global $restricted_full_download;
+            return $restricted_full_download;
+            }
+        else if('' != $size && in_array($size, $sizes_always_allowed))
+            {
+            return true;
+            }
+        else
+            {
+            # Return the restricted access setting for this resource type.
+            return (sql_value("select allow_restricted value from preview_size where id='" . escape_check($size) . "'",0)==1);
+            }
+        }
+
 	# Confidential
 	if ($access==2)
 		{
