@@ -246,7 +246,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #SearchBox .PopupCategoryTree { display: none; position: fixed; text-align: left; z-index: 999; }
 
 /*Resource Panel layout*/
-.ResourcePanel {padding:0;margin:0 10px 10px 0;width: 150px;float:left;height:230px;position:relative;}
+.ResourcePanel {padding:0;margin:0 14px 14px 0;width: 150px;float:left;height:230px;position:relative;}
 .ResourcePanelPreview {height: 156px;width: 156px;margin: 3px;}
 .ResourcePanelInfo {margin: 5px;overflow:hidden;white-space:nowrap;padding:0;text-align:justify;text-overflow: ellipsis;}	
 .ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0px;float: left;clear: left;display:inline;}	
