@@ -6,6 +6,10 @@ if (!hook("renderresultthumb"))
         {
         $thumbs_displayed_fields_height += 28;
         }
+    if($resource_type_icons)
+        {
+        $thumbs_displayed_fields_height += 16;
+        }
     $hook_thumbs_displayed_fields_height = hook('thumbs_resourceshell_height', '', array($thumbs_displayed_fields_height));
     if(false !== $hook_thumbs_displayed_fields_height)
         {
@@ -17,6 +21,12 @@ if (!hook("renderresultthumb"))
 	style="height: <?php echo $thumbs_displayed_fields_height; ?>px;"
 	>
 		<?php  
+        if ($resource_type_icons) 
+            {
+            ?>
+            <div class="ResourceTypeIcon IconResourceType<?php echo $result[$n]["resource_type"];  ?>" ></div>
+            <?php 
+            }
 		hook ("resourcethumbtop");
 		if (!hook("renderimagethumb")) 
 			{

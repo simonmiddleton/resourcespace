@@ -252,7 +252,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0px;float: left;clear: left;display:inline;}	
 .ResourcePanelIcons {padding: 5px;text-align:right;position:absolute;bottom:0;right:0;width:142px;}	
 .ResourcePanelSmallIcons {padding-left: 5px;}	
-.ImageWrapper {height:150px;display:block;padding:0;;vertical-align: middle;text-align: center;}
+.ImageWrapper {height:150px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
 .ResourceTypeIcon { height: 16px;width:16px;float:right;margin-right:5px;margin-top:6px; }
