@@ -102,7 +102,7 @@ include "../include/header.php";
 	
 	<div class="Question">
 	<label><?php echo $lang['resourcetitle']; ?></label>
-	<div class="Fixed"><?php echo htmlspecialchars($resource_title); ?></div>
+	<div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resource_title)); ?></div>
 	<div class="clearerleft"> </div>
 	</div>
 	
