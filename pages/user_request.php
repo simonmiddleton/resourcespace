@@ -334,7 +334,7 @@ if(!hook("replaceantispam"))
         height:50px;
         margin-left: 300px;
         text-indent:1.5em;
-        ">    
+        " id="AntiSpamImage">    
     </div>
         
 	<div class="clearerleft"> </div>    	

@@ -161,6 +161,9 @@
         top:0;
         transform:translateY(0); 
     }
+    #AntiSpamImage {
+        margin-left: 0 !important;
+    }
 }
 /* Glyphs */
 .glyph {
