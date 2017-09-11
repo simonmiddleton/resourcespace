@@ -14,12 +14,11 @@
 * @uses get_utility_path()
 * @uses run_command()
 * 
-* @param string  $file_path      Physical path to the file
-* @param boolean $get_xml_object Set to TRUE to return a SimpleXMLElement object or to FALSE to return an XML string
+* @param string $file_path Physical path to the file
 * 
-* @return SimpleXMLElement|string
+* @return SimpleXMLElement
 */
-function runFitsForFile($file_path, $get_xml_object = true)
+function runFitsForFile($file_path)
     {
     $fits = get_utility_path('fits');
     $file = escapeshellarg($file_path);
@@ -31,12 +30,7 @@ function runFitsForFile($file_path, $get_xml_object = true)
 
     $return = run_command("{$fits} -i {$file} -xc");
 
-    if($get_xml_object)
-        {
-        return new SimpleXMLElement($return);
-        }
-
-    return $return;
+    return new SimpleXMLElement($return);
     }
 
 
