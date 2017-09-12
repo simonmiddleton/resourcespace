@@ -6,6 +6,9 @@ global $default_user_select;
 if (!isset($userstring)) {$userstring="";}
 if ($userstring=="") {$userstring=$default_user_select;}
 
+// $autocomplete_user_scope needs to be set if we have more than one user select field on a page
+if(!isset($autocomplete_user_scope)){$autocomplete_user_scope = "";} 
+
 ?>
 <table cellpadding="0" cellspacing="0" width="300">
 
@@ -16,7 +19,7 @@ if(isset($user_select_internal) && $user_select_internal)
 	{?>
 	<tr>
 		<td>
-			<input type="text" class="stdwidth" value="<?php echo $lang["starttypingusername"]?>" id="autocomplete" name="autocomplete_parameter" onFocus="if(this.value == '<?php echo $lang['starttypingusername']; ?>') {this.value = ''}" onBlur="if(this.value == '') {this.value = '<?php echo $lang['starttypingusername']; ?>';}" />
+			<input type="text" class="stdwidth" value="<?php echo $lang["starttypingusername"]?>" id="<?php echo $autocomplete_user_scope; ?>autocomplete" name="autocomplete_parameter" onFocus="if(this.value == '<?php echo $lang['starttypingusername']; ?>') {this.value = ''}" onBlur="if(this.value == '') {this.value = '<?php echo $lang['starttypingusername']; ?>';}" />
 		</td>			
 	</tr>
 	<?php
@@ -25,10 +28,10 @@ else
 	{?>
 	<tr>
 		<td>
-			<input type="text" class="medwidth" value="<?php echo $lang["starttypingusername"]?>" id="autocomplete" name="autocomplete_parameter" onFocus="if(this.value == '<?php echo $lang['starttypingusername']; ?>') {this.value = ''}" onBlur="if(this.value == '') {this.value = '<?php echo $lang['starttypingusername']; ?>';}" />
+			<input type="text" class="medwidth" value="<?php echo $lang["starttypingusername"]?>" id="<?php echo $autocomplete_user_scope; ?>autocomplete" name="autocomplete_parameter" onFocus="if(this.value == '<?php echo $lang['starttypingusername']; ?>') {this.value = ''}" onBlur="if(this.value == '') {this.value = '<?php echo $lang['starttypingusername']; ?>';}" />
 		</td>
 		<td>
-			<input id="adduserbutton" type=button value="+" class="medcomplementwidth" onClick="addUser();" />
+			<input id="<?php echo $autocomplete_user_scope; ?>adduserbutton" type=button value="+" class="medcomplementwidth" onClick="<?php echo $autocomplete_user_scope; ?>addUser();" />
 		</td>
 	</tr>
 	<?php
@@ -42,7 +45,7 @@ else
         ?>
         <tr>
             <td colspan="2" align="left">
-                <input type="text" readonly="readonly" class="stdwidth" name="users" id="users" value="<?php
+                <input type="text" readonly="readonly" class="stdwidth" name="<?php echo $autocomplete_user_scope; ?>users" id="<?php echo $autocomplete_user_scope; ?>users" value="<?php
                     if(isset($single_user_select_field_value))
                         {
                         $found_single_user_select_field_value=sql_value("select username as value from user where ref='{$single_user_select_field_value}'",'');
@@ -53,7 +56,7 @@ else
                 <?php
                     if ($found_single_user_select_field_value!='')
                         {
-                        ?><script>jQuery("#adduserbutton").attr('value', '<?php echo $lang["clearbutton"]; ?>');</script><?php
+                        ?><script>jQuery("#<?php echo $autocomplete_user_scope; ?>adduserbutton").attr('value', '<?php echo $lang["clearbutton"]; ?>');</script><?php
                         }
                 ?>
                 <input type="hidden" id="<?php echo $single_user_select_field_id; ?>" name="<?php echo $single_user_select_field_id; ?>" value="<?php
@@ -67,9 +70,9 @@ else
         ?>
         <!-- user string -->
         <tr>
-            <td colspan="2" align="left"><textarea rows=6 class="stdwidth" name="users" id="users"
+            <td colspan="2" align="left"><textarea rows=6 class="stdwidth" name="<?php echo $autocomplete_user_scope; ?>users" id="<?php echo $autocomplete_user_scope; ?>users"
                                                    <?php if (!$sharing_userlists){ ?>onChange="this.value=this.value.replace(/[^,] /g,function replacespaces(str) {return str.substring(0,1) + ', ';});"
-                                                   <?php } else { ?>onChange="addUser();checkUserlist();updateUserSelect();"<?php } ?>><?php echo htmlspecialchars($userstring); ?></textarea>
+                                                   <?php } else { ?>onChange="<?php echo $autocomplete_user_scope; ?>addUser();<?php echo $autocomplete_user_scope; ?>checkUserlist();<?php echo $autocomplete_user_scope; ?><?php echo $autocomplete_user_scope; ?>updateUserSelect();"<?php } ?>><?php echo htmlspecialchars($userstring); ?></textarea>
             </td>
         </tr>
         <!-- -->
@@ -78,20 +81,20 @@ else
 
     if ($sharing_userlists){?>
 	<tr><td>
-	<div id="userlist_name_div" style="display:none;">
-		<input type="text" class="medwidth" value="<?php echo $lang['typeauserlistname']?>"  id="userlist_name_value" name="userlist_parameter" onClick="this.value='';" /></div>
+	<div id="<?php echo $autocomplete_user_scope; ?>userlist_name_div" style="display:none;">
+		<input type="text" class="medwidth" value="<?php echo $lang['typeauserlistname']?>"  id="<?php echo $autocomplete_user_scope; ?>userlist_name_value" name="userlist_parameter" onClick="this.value='';" /></div>
 	</td>
 
 	<td>
-	<div id="userlist_+" style="display:none;"><input type=button value="<?php echo $lang['saveuserlist']?>" class="medcomplementwidth" onClick="saveUserList();" />
+	<div id="<?php echo $autocomplete_user_scope; ?>userlist_+" style="display:none;"><input type=button value="<?php echo $lang['saveuserlist']?>" class="medcomplementwidth" onClick="<?php echo $autocomplete_user_scope; ?>saveUserList();" />
 	</td></tr>
 
 	<tr><td>
-		<select id="userlist_select" class="medwidth" onchange="document.getElementById('users').value=document.getElementById('userlist_select').value;document.getElementById('userlist_name_div').style.display='none';document.getElementById('userlist_+').style.display='none';if (document.getElementById('userlist_select').value==''){document.getElementById('userlist_delete').style.display='none';}else{document.getElementById('userlist_delete').style.display='inline';}"></select>
+		<select id="<?php echo $autocomplete_user_scope; ?>userlist_select" class="medwidth" onchange="document.getElementById('<?php echo $autocomplete_user_scope; ?>users').value=document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_select').value;document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_name_div').style.display='none';document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_+').style.display='none';if (document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_select').value==''){document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_delete').style.display='none';}else{document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_delete').style.display='inline';}"></select>
 	</td>
 	
 	<td>
-	<input type=button id="userlist_delete" value="<?php echo $lang['deleteuserlist']?>" style="display:none;" class="medcomplementwidth" onClick="deleteUserList();" />
+	<input type=button id="<?php echo $autocomplete_user_scope; ?>userlist_delete" value="<?php echo $lang['deleteuserlist']?>" style="display:none;" class="medcomplementwidth" onClick="<?php echo $autocomplete_user_scope; ?>deleteUserList();" />
 	</td></tr>
 
 <?php } ?>
@@ -102,10 +105,10 @@ else
 
 <script type="text/javascript">
 
-function addUser(event,ui)
+function <?php echo $autocomplete_user_scope; ?>addUser(event,ui)
 	{
-	var username=document.getElementById("autocomplete").value;
-    var users=document.getElementById("users");
+	var username=document.getElementById("<?php echo $autocomplete_user_scope; ?>autocomplete").value;
+    var users=document.getElementById("<?php echo $autocomplete_user_scope; ?>users");
     var attachUserSmartGroups='<?php global $attach_user_smart_groups;echo $attach_user_smart_groups?>';
 
 	if (typeof ui!=='undefined') {username=ui.item.value;}
@@ -143,11 +146,11 @@ function addUser(event,ui)
         if (user_ref=='')
             {
             username='';
-            jQuery("#adduserbutton").attr('value', '+');
+            jQuery("#<?php echo $autocomplete_user_scope; ?>adduserbutton").attr('value', '+');
             }
         else
             {
-            jQuery("#adduserbutton").attr('value', '<?php echo $lang["clearbutton"]; ?>');
+            jQuery("#<?php echo $autocomplete_user_scope; ?>adduserbutton").attr('value', '<?php echo $lang["clearbutton"]; ?>');
             }
         <?php
             if (isset($single_user_select_field_onchange))
@@ -164,7 +167,7 @@ function addUser(event,ui)
 		//var input = users.value;var splitted = input.split(', ');splitted=splitted.uniq();splitted=splitted.sort();users.value = splitted.join(', '); 
 		}
 		
-	document.getElementById("autocomplete").value="";
+	document.getElementById("<?php echo $autocomplete_user_scope; ?>autocomplete").value="";
 	
 	<?php if ($sharing_userlists){?>
 	var parameters = 'userstring='+ users.value;
@@ -180,15 +183,15 @@ function addUser(event,ui)
 	}
 
 jQuery(document).ready(function () {
-	jQuery('#autocomplete').autocomplete(
+	jQuery('#<?php echo $autocomplete_user_scope; ?>autocomplete').autocomplete(
 		{
 		source: "<?php echo $baseurl?>/pages/ajax/autocomplete_user.php<?php if(isset($single_user_select_field_id)) { ?>?nogroups=true<?php } ?>",
-            select: addUser
+            select: <?php echo $autocomplete_user_scope; ?>addUser
 		} );
 })
 
 <?php if ($sharing_userlists){?>
-updateUserSelect();
+<?php echo $autocomplete_user_scope; ?>updateUserSelect();
 jQuery("#userlist_name_value").autocomplete(
 { source:"<?php echo $baseurl?>/pages/ajax/autocomplete_userlist.php"
 } );
@@ -199,61 +202,61 @@ jQuery("#userlist_name_value").autocomplete(
 function checkUserlist()
 	{
 	// conditionally add option to save userlist if string is new
-	var userstring=document.getElementById("users").value;
+	var userstring=document.getElementById("<?php echo $autocomplete_user_scope; ?>users").value;
 
-	var sel = document.getElementById('userlist_select').options;
+	var sel = document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_select').options;
 	var newstring=true;
 
 	for (n=0; n<=sel.length-1;n++) {
-		//alert (document.getElementById('users').value+'='+sel[n].value);
-		if(document.getElementById('users').value==sel[n].value){
+		//alert (document.getElementById('<?php echo $autocomplete_user_scope; ?>users').value+'='+sel[n].value);
+		if(document.getElementById('<?php echo $autocomplete_user_scope; ?>users').value==sel[n].value){
 			sel[n].selected=true;document.getElementById("userlist_delete").style.display='inline';
 			newstring=false;
 		break;}
 	}
 
 	if (newstring){
-	 document.getElementById("userlist_name_div").style.display='block';
-     document.getElementById("userlist_+").style.display='block';
-	 document.getElementById('userlist_select').value="";	
-	document.getElementById('userlist_name_value').value='';	
-	document.getElementById('userlist_name_value').placeholder='<?php echo $lang['typeauserlistname']?>';
-	 document.getElementById("userlist_delete").style.display='none';
+	 document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_name_div").style.display='block';
+     document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_+").style.display='block';
+	 document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_select').value="";	
+	document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_name_value').value='';	
+	document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_name_value').placeholder='<?php echo $lang['typeauserlistname']?>';
+	 document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_delete").style.display='none';
 	}
 	else {
-	 document.getElementById("userlist_name_div").style.display='none';
-     document.getElementById("userlist_+").style.display='none';
+	 document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_name_div").style.display='none';
+     document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_+").style.display='none';
 
 	}
 }
 
-function saveUserList()
+function <?php echo $autocomplete_user_scope; ?>saveUserList()
 	{
-	var parameters = 'userref=<?php echo htmlspecialchars($userref) ?>&userstring='+ document.getElementById("users").value+'&userlistname='+document.getElementById("userlist_name_value").value;
+	var parameters = 'userref=<?php echo htmlspecialchars($userref) ?>&userstring='+ document.getElementById("<?php echo $autocomplete_user_scope; ?>users").value+'&userlistname='+document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_name_value").value;
 	jQuery.ajax("<?php echo $baseurl?>/pages/ajax/userlist_save.php",
 		{
 		data: parameters,
 		complete: function(){
-			document.getElementById("userlist_name_div").style.display='none';
-			document.getElementById("userlist_+").style.display='none';
-			updateUserSelect();
+			document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_name_div").style.display='none';
+			document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_+").style.display='none';
+			<?php echo $autocomplete_user_scope; ?>updateUserSelect();
 			}
 		}
 	);
 
 }
 
-function deleteUserList()
+function <?php echo $autocomplete_user_scope; ?>deleteUserList()
 	{
-	var parameters = 'delete=true&userlistref='+document.getElementById('userlist_select').options[document.getElementById('userlist_select').selectedIndex].id;
+	var parameters = 'delete=true&userlistref='+document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_select').options[document.getElementById('<?php echo $autocomplete_user_scope; ?>userlist_select').selectedIndex].id;
 	jQuery.ajax("<?php echo $baseurl?>/pages/ajax/userlist_save.php",
 		{
 		data: parameters,
 		complete: function(){
-			updateUserSelect();
-			//document.getElementById("userlist_name_div").style.display='none';
-			//document.getElementById("userlist_+").style.display='none';
-			//document.getElementById("userlist_delete").style.display='none';
+			<?php echo $autocomplete_user_scope; ?>updateUserSelect();
+			//document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_name_div").style.display='none';
+			//document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_+").style.display='none';
+			//document.getElementById("<?php echo $autocomplete_user_scope; ?>userlist_delete").style.display='none';
 			}
 		}
 	);
@@ -261,14 +264,14 @@ function deleteUserList()
 }
 
 
-function updateUserSelect()
+function <?php echo $autocomplete_user_scope; ?>updateUserSelect()
 	{
-	var parameters = 'userref=<?php echo htmlspecialchars($userref) ?>&userstring='+document.getElementById("users").value;
+	var parameters = 'userref=<?php echo htmlspecialchars($userref) ?>&userstring='+document.getElementById("<?php echo $autocomplete_user_scope; ?>users").value;
 	jQuery("#userlist_select").load("<?php echo $baseurl?>/pages/ajax/userlist_select_update.php",
 		
 		parameters,
 		function(){
-			checkUserlist();
+			<?php echo $autocomplete_user_scope; ?>checkUserlist();
 			}
 		
 	);

@@ -2616,11 +2616,15 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 			reset($languages);
 			foreach ($languages as $key=>$value)
 				{
-				if (array_key_exists($key . "-" . $html_template,$site_text)) {$template= $site_text[$key . "-" . $html_template];break;} 		
+				if (array_key_exists($key . "-" . $html_template,$site_text)) {$template = $site_text[$key . "-" . $html_template];break;} 		
 				}
-                        // Fall back to language file if not in site text
-                        global $lang;
-                        if(isset($lang[$html_template])){$template=$lang[$html_template];}
+			// Fall back to language file if not in site text
+			global $lang;
+			if(!isset($template))
+				{
+				if(isset($lang["all__" . $html_template])){$template=$lang["all__" . $html_template];}
+				elseif(isset($lang[$html_template])){$template=$lang[$html_template];}
+				}
 			}		
 
 
