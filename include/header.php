@@ -419,12 +419,21 @@ else
 	{
 	if (!hook("replaceheadernav1")) {
 	?>
-	<ul>
-	<?php if (!hook("replaceheaderfullnamelink")){?>
-	<li><a href="<?php echo $baseurl?>/pages/user/user_home.php"  onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?></a>
-		<span style="display: none;" class="MessageTotalCountPill Pill"></span>
-		<div id="MessageContainer" style="position:absolute; "></div>
-	<?php } ?></li>
+    <ul>
+    <?php
+    if(!hook('replaceheaderfullnamelink'))
+        {
+        ?>
+        <li>
+            <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
+                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?>
+            </a>
+            <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+            <div id="MessageContainer" style="position:absolute; "></div>
+        <?php
+        }
+        ?>
+        </li>
 	
 	<!-- Team centre link -->
 	<?php if (checkperm("t")) { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-bars fa-fw"></i>&nbsp;<?php echo $lang["teamcentre"]?></a>

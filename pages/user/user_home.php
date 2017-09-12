@@ -30,18 +30,37 @@ $introtext=text("introtext");
 		
 		<?php if (!(!checkperm("d")&&!(checkperm('c') && checkperm('e0')))) { ?>
 		<li><i aria-hidden="true" class="fa fa-fw fa-user-plus"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/contribute.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["mycontributions"]?></a></li>
-		<?php } ?>
-		<?php if (!checkperm("b")){?>
-		<li><i aria-hidden="true" class="fa fa-fw fa-shopping-bag"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["mycollections"]?></a></li>
-		<?php }
-		if($actions_on)
-		  {?>
-		<li><i aria-hidden="true" class="fa fa-fw fa-check-square-o"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/user/user_actions.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["actions_myactions"]; 
-		?></a><span style="display: none;" class="ActionCountPill Pill"></span></li>
-		<?php } ?>
-		<script>message_poll();</script>
-		<li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["mymessages"]; 
-		?></a><span style="display: none;" class="MessageCountPill Pill"></span></li>
+		<?php 
+        }
+
+        if(!checkperm('b'))
+            {
+            ?>
+            <li id="MyCollectionsUserMenuItem">
+                <i aria-hidden="true" class="fa fa-fw fa-shopping-bag"></i>
+                <a href="<?php echo $baseurl_short; ?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['mycollections']; ?></a>
+            </li>
+            <?php
+            }
+
+        if($actions_on)
+            {
+            ?>
+            <li>
+                <i aria-hidden="true" class="fa fa-fw fa-check-square-o"></i>
+                <a href="<?php echo $baseurl_short; ?>pages/user/user_actions.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['actions_myactions']; ?></a>
+                <span style="display: none;" class="ActionCountPill Pill"></span>
+            </li>
+            <?php
+            }
+            ?>
+
+        <script>message_poll();</script>
+        <li id="MyMessagesUserMenuItem">
+            <i aria-hidden="true" class="fa fa-fw fa-envelope"></i>
+            <a href="<?php echo $baseurl_short; ?>pages/user/user_messages.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['mymessages']; ?></a>
+            <span style="display: none;" class="MessageCountPill Pill"></span>
+        </li>
 		
 		<?php
 		if($home_dash && checkPermission_dashmanage())
