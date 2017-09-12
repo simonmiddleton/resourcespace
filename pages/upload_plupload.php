@@ -553,7 +553,24 @@ if ($_FILES)
                                 // This has been added from a related resource upload link
                                 sql_query("insert into resource_related(resource,related) values ($relateto,$ref)");
                                 }
-        
+
+                            // For upload_then_edit mode ONLY, we decide the resource type based on the extension. User
+                            // can later change this at the edit stage
+                            // IMPORTANT: we change resource type only if user has access to it
+                            if($upload_then_edit)
+                                {
+                                $resource_type_from_extension = get_resource_type_from_extension(
+                                    pathinfo($plupload_upload_location, PATHINFO_EXTENSION),
+                                    $resource_type_extension_mapping,
+                                    $resource_type_extension_mapping_default
+                                );
+
+                                if(!checkperm("XU{resource_type_from_extension}"))
+                                    {
+                                    update_resource_type($ref, $resource_type_from_extension);
+                                    }
+                                }
+
                             # Log this			
                             daily_stat("Resource upload",$ref);
                             $status=upload_file($ref,(getval("no_exif","")=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!=''),$plupload_upload_location);
