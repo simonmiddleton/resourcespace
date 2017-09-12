@@ -201,7 +201,7 @@ function get_resource_path(
 	for ($n=0;$n<strlen($ref);$n++)
 		{
 		$folder.=substr($ref,$n,1);
-		if (($scramble) && ($n==(strlen($ref)-1))) {$folder.="_" . $scramblepath;}
+		if ($scramble && isset($scramblepath) && ($n==(strlen($ref)-1))) {$folder.="_" . $scramblepath;}
 		$folder.="/";
 		#echo "<li>" . $folder;
 		if ((!(file_exists($storagedir . $path_suffix . $folder))) && $generate) {@mkdir($storagedir . $path_suffix . $folder,0777);chmod($storagedir . $path_suffix . $folder,0777);}
@@ -245,7 +245,7 @@ function get_resource_path(
 	    $folder=$surl . $path_suffix . $folder;
 	    }
 	
-	if ($scramble)
+	if ($scramble && isset($skey))
 		{
 		$file_old=$filefolder . $ref . $size . $p . $a . "." . $extension;
 		$file_new=$filefolder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
