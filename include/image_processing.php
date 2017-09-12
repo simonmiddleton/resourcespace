@@ -9,6 +9,8 @@
  * @todo Document
  */
 
+include_once 'metadata_functions.php';
+
 if (!function_exists("upload_file")){
 function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="")
 	{
@@ -874,7 +876,10 @@ function extract_exif_comment($ref,$extension="")
 				}
 			}
 		}
-	
+
+    // Extract FITS metadata and overwrite any existing metadata (e.g from Exiftool, IPTC etc.)
+    extractFitsMetadata($image, $ref);
+
 	# Update the XML metadata dump file.
 	update_xml_metadump($ref);
 	

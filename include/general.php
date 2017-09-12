@@ -4980,7 +4980,7 @@ function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
 function get_utility_path($utilityname, &$checked_path = null)
     {
     global $ghostscript_path, $ghostscript_executable, $ffmpeg_path, $exiftool_path, $antiword_path, $pdftotext_path,
-           $blender_path, $archiver_path, $archiver_executable, $python_path;
+           $blender_path, $archiver_path, $archiver_executable, $python_path, $fits_path;
 
     $checked_path = null;
 
@@ -5152,6 +5152,21 @@ function get_utility_path($utilityname, &$checked_path = null)
                 ),
                 $checked_path,
                 true);
+
+        case 'fits':
+            // FITS path not configured
+            if(!isset($fits_path) || '' == $fits_path)
+                {
+                return false;
+                }
+
+            return get_executable_path(
+                $fits_path,
+                array(
+                    'unix' => 'fits.sh',
+                    'win'  => 'fits.bat'
+                ),
+                $checked_path);
         }
 
     // No utility path found
