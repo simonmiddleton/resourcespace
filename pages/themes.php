@@ -921,51 +921,9 @@ if ($header=="" && !isset($themes[0]))
 			} //end of if ((checkperm("f*") || checkperm("f" . $headers[$n]["ref"])) && !checkperm("f-" . $headers[$n]["ref"]) && ($smart_theme=="" || $smart_theme==$headers[$n]["ref"]))
 		} // end of for ($n=0;$n<count($headers);$n++)
 	} // end of if ($header=="" && !isset($themes[0]))
+	
+?></div><!-- End of FeaturedSimpleLinks -->
 
-if($simpleview)
-	{
-	if (!$public_collections_header_only && getval("theme","")=="" && getval("theme1","")=="")
-		{?>
-		<?php if (!checkperm("b") && $enable_public_collections)
-			{ ?>
-			</div><!-- End of FeaturedSimpleLinks -->
-			<div class="BasicsBox FeaturedSimpleLinks">
-			<h1><?php echo $lang["findpubliccollection"]?></h1>
-			<div id="FeaturedSimpleTile_public" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
-						<a href="<?php echo $baseurl_short?>pages/collection_public.php" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_public">
-							<div id="FeaturedSimpleTileContents_public"  class="FeaturedSimpleTileContents">
-							<div class="FeaturedSimpleTileText">
-								<h2><?php echo $lang["findpubliccollection"]; ?></h2>
-							</div>
-							</div><!-- End of FeaturedSimpleTileContents_public -->
-						</a>
-			</div><!-- End of FeaturedSimpleTile_public -->
-			<?php
-			} 
-		} 
-	?>
-	</div><!-- End of FeaturedSimpleLinks -->
-	<?php
-	}
-else
-	{?>
-	</form>
-	</div>
-	<?php
-	if (!$public_collections_header_only)
-		{?>
-		<?php if (!checkperm("b") && $enable_public_collections)
-			{ ?>
-			<div class="clearerleft"> </div>
-			<div class="BasicsBox">
-				<h1><?php echo $lang["findpubliccollection"]?></h1>
-				<p class="tight"><?php echo text("findpublic")?></p>
-				<p><a href="<?php echo $baseurl_short?>pages/collection_public.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["findpubliccollection"]?></a></p>
-			</div>
-			<?php
-			} 
-		} 
-	}
-
+<?php
 include "../include/footer.php";
 ?>
