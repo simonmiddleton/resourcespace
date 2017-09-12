@@ -876,13 +876,13 @@ if(!$multiple)
     {
     ?>
     <div class="Question <?php if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
-        <label for="resourcetype"><?php echo $lang["resourcetype"]?></label>
+        <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" ) ?></label>
         <select name="resource_type" id="resourcetype" class="stdwidth" 
                 onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
         <?php
         $types                = get_resource_types();
         $shown_resource_types = array();
-        if($ref < 0 && $resource_type_force_selection && $resource_type=="") // $resource_type is obtained fromn getval
+        if($ref < 0 && $resource_type_force_selection && $resource_type=="") // $resource_type is obtained from getval
           {
           echo "<option value='' selected>" . $lang["select"] . "</option>";
           }
