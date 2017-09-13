@@ -653,6 +653,9 @@
     .TopInpageNavRight {
         margin-top:1px;
     }
+    #PreviewImageLarge {
+        width: 95vw;
+    }
 }
 @media(max-width:700px) {
     .ResourcePanelShell .ResourcePanel {
