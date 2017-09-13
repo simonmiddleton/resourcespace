@@ -852,18 +852,25 @@ elseif($restypes=='')
 <?php } ?>
 
 </div>
-<script>
-jQuery(document).ready(function ()
+<?php
+if ($simple_search_pills_view)
     {
-    // For responsive mode we cannot use tag editor. For some reason it doesn't work. I think it has something to do with
-    // jQuery UI/ layout but not sure what exactly.
-    if(750 > jQuery(window).width())
+    ?>
+    <script>
+    jQuery(document).ready(function ()
         {
-        jQuery('#ssearchbox').tagEditor('destroy');
-        }
-    });
-</script>
-<?php hook("searchbarbottom");
+        // For responsive mode we cannot use tag editor. For some reason it doesn't work. I think it has something to do with
+        // jQuery UI/ layout but not sure what exactly.
+        if(750 > jQuery(window).width())
+            {
+            jQuery('#ssearchbox').tagEditor('destroy');
+            }
+        });
+    </script>
+    <?php
+    }
+
+hook("searchbarbottom");
 
 # Restore original values that may have been affected by processsing so the search page still draws correctly with the current search.
 $restypes=$stored_restypes;
