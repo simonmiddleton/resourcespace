@@ -201,6 +201,7 @@
     }
     #HeaderNav1Click {
         float:right;
+        margin-right: 5px;
     }
     #HeaderNav2Click {
         float: right;
@@ -227,6 +228,7 @@
         float: none;
         width: 100%;
         clear: both;
+        text-align: right;
     }
     #Header .HorizontalNav ul li {
         display: inline-block;
@@ -240,7 +242,7 @@
     .SlimHeader #Header.slimheader_darken .HorizontalNav ul li a:visited{
         display:inline-block;
         text-align: center;
-        background: #d2d2d2;   
+        background: #ffffff;   
         border: 1px solid white;
         height: 45px;
         line-height: 45px;
@@ -253,7 +255,7 @@
         height:auto;
     }
     .HeaderMenu #HeaderImg {
-        height:40px;
+        max-height:40px;
     }
     #HeaderImg {
         height:47px;
@@ -262,6 +264,17 @@
         color: #565656;
     }
 
+}
+@media(max-width: 1100px) {
+    #HeaderNav1 li a,
+    #HeaderNav2 li a {
+        color: #3a3a3a;
+        opacity: 1;
+        background-color: #ffffff;
+    }
+    #HeaderNav2 {
+        padding-left: 0;
+    }
 }
 @media(max-width:900px) {
     #HeaderButtons {
@@ -298,7 +311,17 @@
     }
     .ResponsiveHeaderButton {
         margin-left:5px;
-    }    
+    }
+    #HeaderNav1 li a,
+    #HeaderNav2 li a {
+        width: 90vw;
+        padding:0 !important;
+        text-align: center;
+    }
+    #HeaderNav1 ul,
+    #HeaderNav2 ul {
+        text-align: center;
+    }
 }
 @media(max-width:380px) {
     #Header {
