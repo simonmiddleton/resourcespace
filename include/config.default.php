@@ -149,6 +149,7 @@ $collection_download_tar_option=false; // Default to using tar downloads for all
 
 // Path to FITS (File Information Tool Set - https://projects.iq.harvard.edu/fits)
 // Make sure user has write access as it needs to write the log file (./fits.log).
+// IMPORTANT: requires JAVA > 1.7
 // $fits_path = '/opt/fits-1.2.0';
 
 /* ---------------------------------------------------

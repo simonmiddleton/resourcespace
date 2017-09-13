@@ -20,13 +20,18 @@
 */
 function runFitsForFile($file_path)
     {
-    $fits = get_utility_path('fits');
-    $file = escapeshellarg($file_path);
+    global $fits_path;
+
+    $fits              = get_utility_path('fits');
+    $fits_path_escaped = escapeshellarg($fits_path);
+    $file              = escapeshellarg($file_path);
 
     if(false === $fits)
         {
         trigger_error('FITS library could not be located!');
         }
+
+    putenv("LD_LIBRARY_PATH={$fits_path_escaped}/tools/mediainfo/linux");
 
     $return = run_command("{$fits} -i {$file} -xc");
 
