@@ -857,7 +857,7 @@ if($responsive_ui)
     {
     ?>
     <div class="ResponsiveResultDisplayControls">
-        <a href="#" id="Responsive_ResultDisplayOptions" class="ResourcePanel ResponsiveButton" style="display:none;"><?php echo $lang['responsive_result_settings']; ?><span class="glyph glyph_result"></span></a>
+        <a href="#" id="Responsive_ResultDisplayOptions" class="ResourcePanel ResponsiveButton" style="display:none;"><?php echo $lang['responsive_result_settings']; ?></a>
         <div id="ResponsiveResultCount">
             <span class="Selected">
         <?php
