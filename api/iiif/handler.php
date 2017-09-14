@@ -142,13 +142,13 @@ else
                 if(!isset($errorcode))
                     {                                           
                     // Request is supported, send the image
-                    $validrequest = true;
                     $imgfound = false;
                     $imgpath = get_resource_path($resourceid,true,($size == "thm"?'thm':''),false,"jpg");
 					if(file_exists($imgpath))
 						{
 						$response_image=$imgpath;
 						$imgfound = true;
+                        $validrequest = true;
 						}
                     if(!$imgfound)
                         {
