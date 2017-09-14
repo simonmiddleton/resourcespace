@@ -4,13 +4,26 @@
 global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,$video_player_thumbs_view_alt,$video_player_thumbs_view_alt_name,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,$video_hls_streams,$video_preview_player_hls,$video_preview_hls_support;
 
 # Check for search page and the use of an alt file for video playback
-$use_video_alts=false;
-if($video_player_thumbs_view_alt && isset($video_player_thumbs_view_alt_name) && $pagename=='search' && $display!='list')
-	{
-	$use_video_alts=true;
-	#  get the alt ref
-	$alternative=sql_value("select ref value from resource_alt_files where resource={$ref} and name='{$video_player_thumbs_view_alt_name}'","");
-	}
+$use_video_alts = false;
+$alternative    = -1;
+
+if(
+       $video_player_thumbs_view_alt
+    && isset($video_player_thumbs_view_alt_name)
+    && 'search' == $pagename
+    && 'list' != $display
+)
+    {
+    $use_video_alts = true;
+
+    $alternative = sql_value("
+            SELECT ref AS `value`
+              FROM resource_alt_files
+             WHERE resource = {$ref}
+               AND name = '{$video_player_thumbs_view_alt_name}'
+        ",
+        -1);
+    }
 
 //Create array of video sources
 $video_preview_sources=array();
@@ -80,10 +93,10 @@ if($video_preview_hls_support!=0)
 	}		
 
 if($use_video_alts)
-	{
-	# blank alt variable to use proper preview image
-	$alternative='';
-	}
+    {
+    # blank alt variable to use proper preview image
+    $alternative = -1;
+    }
 	
 if(isset($videojs_resolution_selection))
 	{
