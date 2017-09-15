@@ -9,8 +9,10 @@ $lang["resourceconnect_access_key_for_installation"] = "The access key for this 
 $lang["resourceconnect_addedcollection"] = "The resource has been added to your collection.<br /><br /><strong>Please note that some collection functions do not work for remote resources, such as batch editing.</strong>";
 
 $lang["resourceconnect_affiliate"] = "Affiliate";
-
+$lang["resourceconnect_search_database"] = "Search database";
 $lang["resourceconnect_pleasewait"] = "Accessing affiliate system...";
 
 $lang["resourceconnect_error-affiliate_not_found"] = "ResourceConnect error: current affiliate not found in configured affiliate list - ensure baseurls match.";
 $lang["resourceconnect_error-not_signed_with_correct_key"] = "Sorry, the request was not signed with the correct access key for this installation.";
+
+$lang["resourceconnect_search_info"] = "Please specify which connected database you wish to search.";
