@@ -112,27 +112,25 @@ else
 			}
 		
 		?>
-		<div class="ResourcePanelShell">
-		<div class="ResourcePanel">
+		<div class="ResourcePanel" style="height: 208px;">
 		
-		
-		<table border="0" class="ResourceAlign"><tr><td>
-		<a xtarget="_blank" href="<?php echo $link_url?>" title="<?php echo $title ?>" onClick="return ModalLoad(this,true);"><?php if ($result["has_image"]==1) { ?><img  src="<?php echo get_resource_path($ref,false,"thm",false,$result["preview_extension"],-1,1,false,$result["file_modified"])?>" class="ImageBorder"
-		/><?php } else { ?><img border=0 src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($result["resource_type"],$result["file_extension"],false,false,true) ?>" 
-		/><?php } ?></a>
-		</td>
-		</tr>
 	
-		</table>	
+		<a class="ImageWrapper" href="<?php echo $link_url?>" title="<?php echo $title ?>" onClick="return ModalLoad(this,true);"><?php if ($result["has_image"]==1) { ?><img  src="<?php echo get_resource_path($ref,false,"thm",false,$result["preview_extension"],-1,1,false,$result["file_modified"])?>" 
+		        style="padding-top:<?php echo floor((150-$result["thumb_height"])/2) ?>px;" /><?php } else { ?><img border=0 src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($result["resource_type"],$result["file_extension"],false,false,true) ?>"
+
+		/><?php } ?></a>
+	
 		<div class="ResourcePanelInfo"><?php echo tidy_trim($title,25) ?>&nbsp;</div>
 
+        <div class="clearer"></div>
+                
 		<div class="ResourcePanelIcons">		
 		<a class="addToCollection fa fa-plus-circle" target="collections" href="<?php echo $add_url ?>" onClick="return CollectionDivLoad(this,true);"></a>
 		</div>
-		<div class="clearer"></div>
+
 		
 		</div>
-		</div>
+
 		
 		<?php
 		
