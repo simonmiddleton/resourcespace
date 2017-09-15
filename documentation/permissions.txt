@@ -49,13 +49,13 @@ ert? Can edit resources of the specified resource type in any archive state, can
 i	Can manage archive resources
 n	Can tag resources using 'Speed Tagging' (must be enabled in config).
 
-Themes / Collections
+Featured collection / Collections
 --------------------
-b	Supress bottom collections frame and all associated collections functionality (not advisable for administrator groups as collections make resource management much easier)
-h	Can publish themes, and edit all collections
-j*	Can see all theme categories
-j?	Can see theme in category ? (e.g. jCars,jAnimals)
-J	Can only search for resources that belong to themes (not advisable!)
+b	Suppress bottom collections frame and all associated collections functionality (not advisable for administrator groups as collections make resource management much easier)
+h	Can publish featured collections, and edit all collections
+j*	Can see all featured collection categories
+j?	Can see featured collection in category ? (e.g. jCars,jAnimals)
+J	Can only search for resources that belong to featured collections (not advisable!)
 X	Allows selection of a user group to determine access level when sharing externally so that when accessed options, fields etc. will be viewed as if by a member of that group
 
 Restrictive permissions

@@ -1892,35 +1892,28 @@ function collection_set_private($collection)
 		}
 	}
 
-function collection_set_themes($collection,$themearr)
+/**
+* Set a collection as a featured collection.
+*
+* @param integer $collection - reference of collection
+* @param array  $categories - array of categories
+*
+* @return boolean
+*/
+function collection_set_themes ($collection, $categories = array())
 	{
-		// add theme categories to this collection
-		if (is_numeric($collection) && is_array($themearr)){
-			global $theme_category_levels;
-			$clause = '';
-			for ($i = 0; $i < $theme_category_levels; $i++){
-				if ($i == 0) {
-					$column = 'theme';
-				} else {
-					$column = "theme" . ($i + 1);
-				}
-				if (isset($themearr[$i])){
-					if (strlen($clause) > 0) {
-						$clause .= ", ";
-					}
-					$clause .= " $column = '" . escape_check($themearr[$i]) . "' ";
-				}
-			}
-			if (strlen($clause) > 0){
-				$sql = "update collection set $clause where ref = '$collection'";
-				sql_query($sql);
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}	
+	global $theme_category_levels;
+	if(!is_numeric($collection) || !is_array($categories) || count($categories) > $theme_category_levels){return false;}
+	$sql="update collection set public = 1";
+	for($n=0;$n<count($categories);$n++)
+		{	
+		if ($n==0){$categoryindex="";} else {$categoryindex=$n+1;}
+		$sql .= ",theme" . $categoryindex . "='" . $categories[$n]. "'";
+		}
+	
+	$sql .= " where ref = '" . $collection . "'";
+	sql_query($sql);
+	return true;
 	}
 	
 function remove_all_resources_from_collection($ref){
@@ -2185,7 +2178,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		$options[$o]['data_attr']=$data_attribute;
 		$o++;
         }
-
+		
+	// Add option to publish as featured collection
+    if(checkperm("h") && ($k == '' || $internal_share_access))
+        {
+        $data_attribute['url'] = $baseurl_short . 'pages/collection_set_category.php?ref=' . $collection_data['ref'];
+        $options[$o]['value']='collection_set_category';
+		$options[$o]['label']=$lang['collection_set_theme_category'];
+		$options[$o]['data_attr']=$data_attribute;
+		$o++;
+        }
+		
     // Request all
     if($count_result > 0 && ($k == '' || $internal_share_access))
         {
@@ -2534,7 +2537,7 @@ function new_featured_collection_form($themearray=array())
 		</div>
 		
 		<?php
-		if(count($themearray) > 0)
+		if(true || count($themearray) > 0)
 			{?>
 			<div class="Question">
 				<label for="location" ></label>
