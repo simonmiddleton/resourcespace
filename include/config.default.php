@@ -602,7 +602,7 @@ $ffmpeg_snapshot_frames = 20;
 # If uploaded file is in the preview format already, should we transcode it anyway?
 # Note this is now ON by default as of switching to MP4 previews, because it's likely that uploaded MP4 files will need a lower bitrate preview and
 # were not intended to be the actual preview themselves.
-$ffmpeg_preview_force=false;
+$ffmpeg_preview_force = true;
 
 # Option to always try and play the original file instead of preview - useful if recent change to $ffmpeg_preview_force doesn't suit e.g. if all users are
 # on internal network and want to see HQ video
