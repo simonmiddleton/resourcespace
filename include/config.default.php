@@ -3276,8 +3276,8 @@ the extension of the file.
 */
 $resource_type_extension_mapping_default = 1;
 $resource_type_extension_mapping         = array(
-    2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl'),
-    3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv'),
+    2 => array('pdf', 'doc', 'docx', 'epub', 'ppt', 'pptx', 'odt', 'ods', 'tpl', 'ott' , 'rtf' , 'txt' , 'xml'),
+    3 => array('mov', '3gp', 'avi', 'mpg', 'mp4', 'flv', 'wmv'),
     4 => array('flac', 'mp3', '3ga', 'cda', 'rec', 'aa', 'au', 'mp4a', 'wav', 'aac', 'ogg'),
 );
 
