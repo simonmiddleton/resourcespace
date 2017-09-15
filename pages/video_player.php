@@ -3,6 +3,9 @@
 
 global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,$video_player_thumbs_view_alt,$video_player_thumbs_view_alt_name,$keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,$video_hls_streams,$video_preview_player_hls,$video_preview_hls_support;
 
+$ref_escaped                               = escape_check($ref);
+$video_player_thumbs_view_alt_name_escaped = escape_check($video_player_thumbs_view_alt_name);
+
 # Check for search page and the use of an alt file for video playback
 $use_video_alts = false;
 $alternative    = -1;
@@ -19,8 +22,8 @@ if(
     $alternative = sql_value("
             SELECT ref AS `value`
               FROM resource_alt_files
-             WHERE resource = {$ref}
-               AND name = '{$video_player_thumbs_view_alt_name}'
+             WHERE resource = '{$ref_escaped}'
+               AND name = '{$video_player_thumbs_view_alt_name_escaped}'
         ",
         -1);
     }
