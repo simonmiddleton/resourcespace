@@ -94,23 +94,30 @@ else
         </select>
     </div>
     
-    
-	
-	<div class="InpageNavRightBlock">
+    <?php
+	function rs_pager()
+        {
+        global $offset,$pagesize,$lang,$results;
+        ?>
+        <div class="InpageNavRightBlock">
         <span class="TopInpageNavRight"><br />
-	<a href="#" 
-	
-	<?php if ($offset-$pagesize>=0) { ?>onClick="ResourceConnect_Repage(-<?php echo $pagesize ?>);return false;"<?php } ?>
-	><i aria-hidden="true" class="fa fa-arrow-left"></i></a>
-	&nbsp;
-	<?php echo $lang["page"] . " " .  (floor($offset/$pagesize)+1) . " " . $lang["of"] . " " . (floor(count($results)/$pagesize)+1) ?>
-	&nbsp;
-	<a href="#" 
-	<?php if ($offset+$pagesize<=count($results)) { ?>onClick="ResourceConnect_Repage(<?php echo $pagesize ?>);return false;"<?php } ?>
-	
-	><i aria-hidden="true" class="fa fa-arrow-right"></i></a>
+        <a href="#" 
+        
+        <?php if ($offset-$pagesize>=0) { ?>onClick="ResourceConnect_Repage(-<?php echo $pagesize ?>);return false;"<?php } ?>
+        ><i aria-hidden="true" class="fa fa-arrow-left"></i></a>
+        &nbsp;
+        <?php echo $lang["page"] . " " .  (floor($offset/$pagesize)+1) . " " . $lang["of"] . " " . (floor(count($results)/$pagesize)+1) ?>
+        &nbsp;
+        <a href="#" 
+        <?php if ($offset+$pagesize<=count($results)) { ?>onClick="ResourceConnect_Repage(<?php echo $pagesize ?>);return false;"<?php } ?>
+        
+        ><i aria-hidden="true" class="fa fa-arrow-right"></i></a>
         </span>
-	</div>
+        </div>
+        <?php
+        }
+    rs_pager();
+    ?>
     
     </div>
     
@@ -174,7 +181,10 @@ else
 		
 		}
 	}
-    ?>
+    ?><div class="BottomInpageNav"><?php
+    rs_pager();
+    ?></div>
+    
     </div><!-- End of BasicsBox -->
     <script>
     ResourceConnect_SetPageOptions();
