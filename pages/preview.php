@@ -260,7 +260,10 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
 <?php } // end hook previewimage2 ?>
 <?php } // end hook previewimage ?>
 
-
+<script>
+// Don't need space for Simple Search box
+jQuery('#CentralSpaceContainer').width('94%');
+</script>
 
 
 <?php

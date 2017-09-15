@@ -26,6 +26,9 @@
     text-align: center;
     margin-top: 10px;
 }
+#PreviewImageLarge {
+    width: 100%;
+}
 
 @media(max-width:1100px) {
     #SearchBarContainer {
@@ -258,7 +261,7 @@
         max-height:40px;
     }
     #HeaderImg {
-        height:47px;
+        max-height:47px;
     }
     #Header.slimheader_darken a:link, #Header.slimheader_darken a:visited, #Header.slimheader_darken a:active {
         color: #565656;
@@ -331,12 +334,6 @@
         max-width: 160px;
         margin-top: 5px;
         height:auto;
-    }
-    .HeaderImgLink {
-        clear: both;
-        display: block;
-        width: 100%;
-        text-align: left;
     }
 }
 @media(min-width:1201px) {
@@ -675,9 +672,6 @@
     }
     .TopInpageNavRight {
         margin-top:1px;
-    }
-    #PreviewImageLarge {
-        width: 95vw;
     }
 }
 @media(max-width:700px) {
