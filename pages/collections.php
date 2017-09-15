@@ -644,9 +644,9 @@ if(!hook("updatemaincheckboxesfromcollectionframe")){
 	if ($use_checkboxes_for_selection){?>
 	<script><?php
 	# update checkboxes in main window
-	for ($n=0;$n<count($result);$n++)			
+	for ($n=0;$n<count($results_all);$n++)			
 		{
-		$ref=$result[$n]["ref"];
+		$ref=$results_all[$n]["ref"];
 		?>
 		if (jQuery('#check<?php echo htmlspecialchars($ref) ?>')){
 		jQuery('#check<?php echo htmlspecialchars($ref) ?>').prop('checked',true);
