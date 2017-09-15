@@ -15,6 +15,10 @@ $offset=getval("offset","");
 $pagesize=getval("pagesize","");
 $restypes=getval("restypes","");
 
+$per_page=getval("per_page","");
+$order_by=getval("order_by","");
+$sort=getval("sort","");
+
 
 # Parse and replace nodes.
 $k=(split_keywords($search));$search="";
@@ -40,7 +44,9 @@ $search=trim($search);
 $access_key=$affiliate["accesskey"];
 $sign=md5($access_key . $search);
 
-echo file_get_contents($abaseurl . "/plugins/resourceconnect/pages/remote_results.php?search=" . urlencode($search) . "&pagesize=" . $pagesize . "&offset=" . $offset . "&sign=" . urlencode($sign) . "&language_set="  . urlencode($language) . "&affiliatename=" . urlencode(getval("affiliatename","")) . "&restypes=" . urlencode($restypes) . "&resourceconnect_source=" . urlencode($baseurl));
+echo file_get_contents($abaseurl . "/plugins/resourceconnect/pages/remote_results.php?search=" . urlencode($search) . "&pagesize=" . $pagesize .
+                       "&per_page=" . $per_page ."&order_by=" . $order_by ."&sort=" . $sort .
+                       "&offset=" . $offset . "&sign=" . urlencode($sign) . "&language_set="  . urlencode($language) . "&affiliatename=" . urlencode(getval("affiliatename","")) . "&restypes=" . urlencode($restypes) . "&resourceconnect_source=" . urlencode($baseurl));
 
 
 ?>

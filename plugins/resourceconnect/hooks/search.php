@@ -53,18 +53,40 @@ function HookResourceConnectSearchReplacesearchresults()
 	<div class="clearerleft"></div>
 
 	<script>
-	// Repage / pager function
+	// Repage / pager function - reload the results based on the requested offset and selected sort/per page options
 	var offset_<?php echo $counter ?>=0;
 	function ResourceConnect_Repage(distance)
 		{
 		offset_<?php echo $counter ?>+=distance;
 		if (offset_<?php echo $counter ?><0) {offset_<?php echo $counter ?>=0;}
 	
-		jQuery('#resourceconnect_container_<?php echo $counter ?>').load('<?php echo $baseurl ?>/plugins/resourceconnect/pages/ajax_request.php?search=<?php echo urlencode($search) ?>&pagesize=<?php echo $page_size ?>&affiliate=<?php echo $resourceconnect_selected ?>&affiliatename=<?php echo urlencode(i18n_get_translated($affiliate["name"])) ?>&restypes=<?php echo urlencode($restypes) ?>&offset=' + offset_<?php echo $counter ?>);
-
-		
+        // Load from cookies (initial load) or from selected values (when updating currently display) as appropriate
+        var sort=jQuery('#rc_sort').val();if (typeof(sort) != "undefined") {SetCookie ("rc_sort",sort,10,true);} else {sort=jQuery.cookie('rc_sort');}
+        var order_by=jQuery('#rc_order_by').val();if (typeof(order_by) != "undefined") {SetCookie ("rc_order_by",order_by,10,true);} else {order_by=jQuery.cookie('rc_order_by');}
+        var per_page=jQuery('#rc_per_page').val();if (typeof(per_page) != "undefined") {SetCookie ("rc_per_page",per_page,10,true);} else {per_page=jQuery.cookie('rc_per_page');}
+    
+    
+		jQuery('#resourceconnect_container_<?php echo $counter ?>').load('<?php echo $baseurl ?>/plugins/resourceconnect/pages/ajax_request.php?search=<?php echo urlencode($search) ?>&pagesize=<?php echo $page_size ?>&affiliate=<?php echo $resourceconnect_selected ?>&affiliatename=<?php echo urlencode(i18n_get_translated($affiliate["name"])) ?>&restypes=<?php echo urlencode($restypes) ?>&offset=' + offset_<?php echo $counter ?> + '&sort=' + sort + '&order_by=' + order_by + '&per_page=' + per_page);
 		}
 
+    // Set the sort/perpage options based on the stored cookie
+    function ResourceConnect_SetPageOptions()
+        {
+        // Set values where they exist
+        if(jQuery('#rc_sort option').filter(function(){ return jQuery(this).val() == jQuery.cookie('rc_sort'); }).length)
+            {
+            jQuery('#rc_sort').val(jQuery.cookie('rc_sort'));
+            }
+        if(jQuery('#rc_order_by option').filter(function(){ return jQuery(this).val() == jQuery.cookie('rc_order_by'); }).length)
+            {
+            jQuery('#rc_order_by').val(jQuery.cookie('rc_order_by'));
+            }
+        if(jQuery('#rc_per_page option').filter(function(){ return jQuery(this).val() == jQuery.cookie('rc_per_page'); }).length)
+            {
+            jQuery('#rc_per_page').val(jQuery.cookie('rc_per_page'));
+            }
+        }
+        
 	ResourceConnect_Repage(0);
 	</script>
 

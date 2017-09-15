@@ -10,6 +10,10 @@ $offset=getvalescaped("offset",0);
 $pagesize=getvalescaped("pagesize",$resourceconnect_pagesize);
 $affiliatename=getvalescaped("affiliatename","");
 
+$per_page=getvalescaped("per_page","");if (is_numeric($per_page)) {$pagesize=$per_page;} # Manual setting of page size.
+$sort=getvalescaped("sort","");
+$order_by=getvalescaped("order_by","");
+
 # Authenticate as 'resourceconnect' user.
 global $resourceconnect_user; # Which user to use for remote access?
 $userdata=validate_user("u.ref='$resourceconnect_user'");
@@ -34,7 +38,7 @@ foreach ($rtx as $rt)
 	}
 
 $restypes="";
-$results=do_search($search,$restypes,"relevance",0,$pagesize+$offset,"desc",false,"",true); # Search, ignoring filters (as fields are unlikely to match).
+$results=do_search($search,$restypes,$order_by,0,$pagesize+$offset,$sort,false,"",true); # Search, ignoring filters (as fields are unlikely to match).
 
 # The access key is used to sign all inbound queries, the remote system must therefore know the access key.
 $access_key=md5("resourceconnect" . $scramble_key);
@@ -45,6 +49,7 @@ if ($sign!=$expected_sign) {exit("<p>" . $lang["resourceconnect_error-not_signed
 
 if ($offset>count($results)) {while ($offset>count($results)) {$offset-=$pagesize;}}
 if ($offset<0) {$offset=0;}
+?><div class="BasicsBox"><?php
 
 if (!is_array($results))
 	{
@@ -61,22 +66,54 @@ else
 
 	<div class="InpageNavLeftBlock"><?php echo $lang["resourceconnect_affiliate"] ?>:<br><span class="Selected"><?php echo $affiliatename ?></span></div>	
 
+    
+    
+    <div id="searchSortOrderContainer" class="InpageNavLeftBlock ">
+		Sort order:<br>
+        <select id="rc_order_by" onChange="ResourceConnect_Repage(0);">
+            <option value="relevance"><?php echo $lang["relevance"] ?></option>
+            <option value="popularity"><?php echo $lang["popularity"] ?></option>
+            <option value="colour"><?php echo $lang["colour"] ?></option>
+            <option value="date"><?php echo $lang["date"] ?></option> 
+    </select>
+    <select id="rc_sort" onChange="ResourceConnect_Repage(0);">
+        <option value="ASC">ASC</option>
+        <option value="DESC" selected="">DESC</option>
+    </select>
+    </div>
+    
+    
+    <div class="InpageNavLeftBlock">Per page:
+    <br>
+        <select id="rc_per_page" class="medcomplementwidth ListDropdown" style="width:auto" name="resultsdisplay" onChange="ResourceConnect_Repage(0);">
+            <option>24</option>
+            <option>48</option>
+            <option>72</option>
+            <option>120</option>
+            <option>240</option>
+        </select>
+    </div>
+    
+    
 	
-	<span class="HorizontalWhiteNav">
-	<br />
+	<div class="InpageNavRightBlock">
+        <span class="TopInpageNavRight"><br />
 	<a href="#" 
 	
 	<?php if ($offset-$pagesize>=0) { ?>onClick="ResourceConnect_Repage(-<?php echo $pagesize ?>);return false;"<?php } ?>
-	>&lt;&nbsp;<?php echo $lang["previous"]?></a>
-	|
+	><i aria-hidden="true" class="fa fa-arrow-left"></i></a>
+	&nbsp;
 	<?php echo $lang["page"] . " " .  (floor($offset/$pagesize)+1) . " " . $lang["of"] . " " . (floor(count($results)/$pagesize)+1) ?>
-	|
+	&nbsp;
 	<a href="#" 
 	<?php if ($offset+$pagesize<=count($results)) { ?>onClick="ResourceConnect_Repage(<?php echo $pagesize ?>);return false;"<?php } ?>
 	
-	><?php echo $lang["next"]?>&nbsp;&gt;</a>
-	</span>
+	><i aria-hidden="true" class="fa fa-arrow-right"></i></a>
+        </span>
 	</div>
+    
+    </div>
+    
 	<div class="clearerleft"></div>
 	<!--<h1><?php echo $affiliatename ?></h1>-->
 	<?php
@@ -137,3 +174,9 @@ else
 		
 		}
 	}
+    ?>
+    </div><!-- End of BasicsBox -->
+    <script>
+    ResourceConnect_SetPageOptions();
+    
+    </script>
