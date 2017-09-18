@@ -1068,7 +1068,7 @@ if ($header=="" && !isset($themes[0]))
 	} // end of if ($header=="" && !isset($themes[0]))
 	
 ?></div><!-- End of FeaturedSimpleLinks -->
-
+<?php
 if($simpleview)
 	{
 	if (!$public_collections_header_only && getval("theme","")=="" && getval("theme1","")=="")
