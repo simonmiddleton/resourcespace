@@ -21,12 +21,12 @@ if(count($getthemes) != 1 || !in_array($levelbcollection,array_column($getthemes
 
 $levels[] = "level 3";
 $levelccollection = create_collection(1,"TEST COLLECTION 3",0,0,0,true,$levels);
-$getthemes=get_themes(array("Top level","level 2"));
+$getthemes=get_themes(array("Top level","level 2"),true);
 if(count($getthemes) != 2  || !in_array($levelbcollection,array_column($getthemes,"ref")) || !in_array($levelccollection,array_column($getthemes,"ref")) )
     {return false;}
                        
 $theme_category_levels=4;
-$levels[] = "level 3";
+$levels[] = "level  4";
 $leveldcollection = create_collection(1,"TEST COLLECTION 4",0,0,0,true,$levels);
 $getthemes=get_themes(array("Top level","level 2"),true);
 if(count($getthemes) != 3  || !in_array($levelbcollection,array_column($getthemes,"ref")) || !in_array($levelccollection,array_column($getthemes,"ref")) || !in_array($leveldcollection,array_column($getthemes,"ref")) )
