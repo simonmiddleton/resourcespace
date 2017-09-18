@@ -1162,7 +1162,7 @@ else
 
 hook("additionaluploadtext");
 
-if ($allowed_extensions!=""){
+if ($allowed_extensions!="" && $alternative=''){
     $allowed_extensions=str_replace(", ",",",$allowed_extensions);
     $list=explode(",",trim($allowed_extensions));
     sort($list);
