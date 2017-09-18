@@ -342,7 +342,7 @@ function set_user_collection($user,$collection)
 	}
 	
 if (!function_exists("create_collection")){	
-function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0)
+function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false,$categories=array())
 	{
 	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
 	if($username==$anonymous_login && $anonymous_user_session_collection)
@@ -354,9 +354,22 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0)
 		{	
 		$rs_session="";
 		}
-
+	
+	$categorysql = "";
+	$themecolumns = "";
+	$themecount = 1;
+	if(count($categories) > 0)
+		{
+		foreach($categories as $category)
+			{
+			$themecolumns .= ",theme" . 	($themecount == 1 ? "" : $themecount);
+			$categorysql .= ",'" . escape_check($category) . "'";
+			$themecount++;
+			}
+		}
 	# Creates a new collection and returns the reference
-	sql_query("insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id) values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . ")");
+	sql_query("insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")");
+	//echo "insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")" . "\n";
 	$ref=sql_insert_id();
 
 	index_collection($ref);	
@@ -901,7 +914,7 @@ function get_themes($themes=array(""),$subthemes=false)
 	$order_sort="";
 	if ($themes_order_by!="name"){$order_sort=" order by $themes_order_by $sort";}
 	$sql.=" and c.public=1    $order_sort;";
-
+	//echo $sql . "\n";
 	$collections=sql_query($sql);
 	if ($themes_order_by=="name"){
 		if ($sort=="ASC"){usort($collections, 'collections_comparator');}
@@ -1879,35 +1892,28 @@ function collection_set_private($collection)
 		}
 	}
 
-function collection_set_themes($collection,$themearr)
+/**
+* Set a collection as a featured collection.
+*
+* @param integer $collection - reference of collection
+* @param array  $categories - array of categories
+*
+* @return boolean
+*/
+function collection_set_themes ($collection, $categories = array())
 	{
-		// add theme categories to this collection
-		if (is_numeric($collection) && is_array($themearr)){
-			global $theme_category_levels;
-			$clause = '';
-			for ($i = 0; $i < $theme_category_levels; $i++){
-				if ($i == 0) {
-					$column = 'theme';
-				} else {
-					$column = "theme" . ($i + 1);
-				}
-				if (isset($themearr[$i])){
-					if (strlen($clause) > 0) {
-						$clause .= ", ";
-					}
-					$clause .= " $column = '" . escape_check($themearr[$i]) . "' ";
-				}
-			}
-			if (strlen($clause) > 0){
-				$sql = "update collection set $clause where ref = '$collection'";
-				sql_query($sql);
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}	
+	global $theme_category_levels;
+	if(!is_numeric($collection) || !is_array($categories) || count($categories) > $theme_category_levels){return false;}
+	$sql="update collection set public = 1";
+	for($n=0;$n<count($categories);$n++)
+		{	
+		if ($n==0){$categoryindex="";} else {$categoryindex=$n+1;}
+		$sql .= ",theme" . $categoryindex . "='" . $categories[$n]. "'";
+		}
+	
+	$sql .= " where ref = '" . $collection . "'";
+	sql_query($sql);
+	return true;
 	}
 	
 function remove_all_resources_from_collection($ref){
@@ -2172,7 +2178,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		$options[$o]['data_attr']=$data_attribute;
 		$o++;
         }
-
+		
+	// Add option to publish as featured collection
+    if(checkperm("h") && ($k == '' || $internal_share_access))
+        {
+        $data_attribute['url'] = $baseurl_short . 'pages/collection_set_category.php?ref=' . $collection_data['ref'];
+        $options[$o]['value']='collection_set_category';
+		$options[$o]['label']=$lang['collection_set_theme_category'];
+		$options[$o]['data_attr']=$data_attribute;
+		$o++;
+        }
+		
     // Request all
     if($count_result > 0 && ($k == '' || $internal_share_access))
         {
@@ -2499,3 +2515,59 @@ function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $
     // Doing $dupe_increment = null, ++$dupe_increment results in $dupe_increment = 1
     return makeFilenameUnique($base_values, $filename, $dupe_string, $extension, ++$dupe_increment);
     }
+
+/**
+* Show the new featured collection form.
+*
+* @param array $themearray array of theme levels at which featured collection will be created 
+* 
+* @return boolean
+*/
+function new_featured_collection_form($themearray=array())
+	{
+	global $lang;
+	?>
+	<div class="BasicsBox">
+	<h1><?php echo $lang["createnewcollection"] ?></h1>
+	<form id="new_collection_form" action="" onsubmit="return CentralSpacePost(this,true);" >
+		<div class="Question">
+			<label for="collectionname" ><?php echo $lang["collectionname"] ?></label>
+			<input type="text" name="collectionname"></input>
+			<div class="clearleft"></div>
+		</div>
+		
+		<?php
+		if(true || count($themearray) > 0)
+			{?>
+			<div class="Question">
+				<label for="location" ></label>
+				<div><input type="radio" name="location" value="root" onclick="jQuery('#theme_category_name').slideUp();"></input><?php echo "&nbsp;" . $lang["create_new_here"] ?></div>
+				<label for="location" ></label>
+				<div><input type="radio" name="location" value="subfolder" onclick="jQuery('#theme_category_name').slideDown();"></input><?php echo "&nbsp;" . $lang["create_new_below"] ?></div>
+				<div class="clearleft"></div>
+			</div>
+			<?php
+			}
+			?>
+		<div class="Question" id="theme_category_name" <?php if(count($themearray) > 0) {?>style=display:none;" <?php }?></div>
+			<label for="category_name" ><?php echo $lang["themecategory"] ?></label>
+			<input type="text" name="category_name"></input>
+			<div class="clearleft"></div>
+		</div>
+		<?php
+		for($n=0;$n<count($themearray);$n++)
+			{
+			echo "<input type='hidden' name='theme" . ($n>0?$n+1:"") . "' value='" . $themearray[$n] . "'></input>";
+			}
+		?>
+		<input type='hidden' name='create' value='true'></input>
+		<div class="QuestionSubmit" >
+			<label></label>
+			<input type="submit" name="create" value="<?php echo $lang["create"] ?>"></input>
+			<div class="clearleft"></div>
+		</div>
+	</form>
+	</div>
+	<?php
+	return true;
+	}

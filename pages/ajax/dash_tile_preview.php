@@ -24,6 +24,7 @@ $tile['link']           = getvalescaped('tllink', '');
 $tile['txt']            = getvalescaped('tltxt', '');
 $tile['title']          = getvalescaped('tltitle', '');
 $tile['resource_count'] = getvalescaped('tlrcount', '');
+$tile['tlsize']         = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
 
 
 $tile_id="previewdashtile";

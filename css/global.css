@@ -851,17 +851,16 @@ a.HomePanel:hover {
 	width: 100%;
 	min-height: 180px;
 }
-.HomePanelDynamicDash h2, .HomePanelThemes h2 {
+.HomePanelDynamicDash h2, .HomePanelThemes h2, .FeaturedSimpleTileContents h2 {
 	float: none;
 	position: relative;
 	padding: 12px 15px 0 15px;
 	margin-bottom: 0;
 	font-size: 1.2em;
-	
 }
-.HomePanelDynamicDash h2 span, .HomePanelThemes h2 span {
-	padding-right:8px;font-size:1.2em;
-	
+.HomePanelDynamicDash h2 span, .HomePanelThemes h2 span, .FeaturedSimpleTileContents h2 span {
+    padding-right: 8px;
+    font-size: 1.2em;
 }
 .HomePanelDynamicDash p, .HomePanelThemes p {
 	float: none;
@@ -872,7 +871,10 @@ a.HomePanel:hover {
 	clear: left;
 	font-size:1em;
 }
-
+.DoubleWidthDashTile {
+    /*Note: check .HomePanel width to be sure it is ok*/
+    width: 515px;
+}
 
 .tools a{white-space: nowrap;}
 #delete_dialog {display:none !important;}
@@ -1012,6 +1014,9 @@ div.video-js {margin:auto;}
 #modal .BasicsBox .HelpHeader a { color: #e0e0e0; }
 #modal .BasicsBox .HelpHeader .backtoresults { margin-top: 15px; }
 
+#modal form {
+    min-width: 600px;    
+    }
 /* Dropdown Actions */
 #CollectionMenu .ActionsContainer {
 	margin: 10px 0px;
@@ -1070,9 +1075,7 @@ div.MessageBox a {
 
 .FeaturedSimpleTile {
 	position: relative;
-	margin-left: 100px;
-	margin-right: 100px;
-	margin-top: 25px;
+	margin-top: 10px;
 	height: 150px;
 	border-radius:5px;
 	overflow: hidden;
@@ -1107,10 +1110,15 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
 	text-decoration:none;
 }
 
+.FeaturedCallToActionTile .FeaturedSimpleTileContents h2 {
+    text-align: center;
+}
+.FeaturedCallToActionTile .FeaturedSimpleTileContents h2 span{
+    font-size: 2em;
+}
 
 .FeaturedSimpleTile .FeaturedSimpleTileContents h2{
 	background: transparent;
-	text-align: center;
 	margin: auto;  
 	max-width: 215px;    
 	white-space: normal;
@@ -1329,3 +1337,17 @@ a.Enabled, a:visited.Enabled {
 
 
 
+
+/* Breadcrumbs */
+.BreadcrumbsBox {
+    display: inline-block;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    margin: 0em 1em 1em 0em;
+    padding: 0.66em;
+    background: rgba(0, 0, 0, 0.65);
+}
+.BreadcrumbsBox > .SearchBreadcrumbs {
+    margin: 0;
+}

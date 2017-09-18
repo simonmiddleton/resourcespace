@@ -2029,39 +2029,85 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
         }
 	}
 
-
 /**
-* Renders social media links in order to share a particular link
+* Renders a full breadcrumbs trail.
 * 
-* @param string $url The URL to be shared on social media networks
+* @param array  $links     List of link "objects" that create the trail
+* @param string $pre_links Pre-rendered links in HTML form
 * 
 * @return void
 */
-function renderSocialMediaShareLinksForUrl($url)
+function renderBreadcrumbs(array $links, $pre_links = '')
     {
-    global $facebook_app_id;
+    global $lang;
+    /*
+    NOTE: implemented as seen on themes and search. There is a lot of room for improvement UI wise
 
-    $url_encoded = urlencode($url);
+    TODO: search_title_processing.php is using it intesively and at the moment there are differences in terms of 
+    rendered HTML between themes/ search and search_title_processing.php. We should refactor all places were breadcrumbs
+    are being created and make sure they all use this function (or any future related functions - like generateBreadcrumb() ).
+    */
 
-    if('' !== trim($facebook_app_id))
+    if(0 === count($links))
         {
-        ?>
-        <!-- Facebook -->
-        <a target="_blank" href="https://www.facebook.com/dialog/feed?app_id=<?php echo $facebook_app_id; ?>&link=<?php echo $url_encoded; ?>">
-            <i class="fa fa-facebook-official" aria-hidden="true"></i>
-        </a>
-        <?php
+        return;
         }
         ?>
-    <!-- Twitter -->
-    <a target="_blank" href="https://twitter.com/?status=<?php echo $url_encoded; ?>">
-        <i class="fa fa-twitter-square" aria-hidden="true"></i>
-    </a>
-    <!-- LinkedIn -->
-    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $url_encoded; ?>">
-        <i class="fa fa-linkedin-square" aria-hidden="true"></i>
-    </a>
+        <div class="SearchBreadcrumbs">
+        <?php
+        if('' !== $pre_links && $pre_links !== strip_tags($pre_links))
+            {
+            echo $pre_links . '&nbsp;' . LINK_CARET;
+            }
+
+        for($i = 0; $i < count($links); $i++)
+            {
+            if(0 < $i)
+                {
+                echo LINK_CARET;
+                }
+                ?>
+            <a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onClick="return CentralSpaceLoad(this, true);">
+                <span><?php echo htmlspecialchars($links[$i]['title']); ?></span>
+            </a>
+            <?php
+            }
+            ?>
+        </div>
     <?php
 
+    return;
+    }
+
+
+/**
+* Render a blank tile used for call to actions (e.g: on featured collections, a tile for creating new collections)
+* 
+* @param string $link URL
+* 
+* @return void
+*/
+function renderCallToActionTile($link)
+    {
+    if(checkperm('b'))
+        {
+        return;
+        }
+
+    if('' === $link)
+        {
+        return;
+        }
+        ?>
+    <div id="FeaturedSimpleTile" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile FeaturedCallToActionTile">
+        <a href="<?php echo $link; ?>" onclick="return ModalLoad(this, true, true);" class="">
+            <div class="FeaturedSimpleTileContents">
+                <div class="FeaturedSimpleTileText">
+                    <h2><span class='fa fa-plus-circle fa-2x'></span></h2>
+                </div>
+            </div>
+        </a>
+    </div>
+    <?php
     return;
     }

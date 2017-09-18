@@ -63,6 +63,28 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
 							exit;
 			}
 		}
+
+    // Featured collection - themes specific tiles
+    if('fcthm' == $tile_type)
+        {
+        switch($tile_style)
+            {
+            case 'thmbs':
+                tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_height, getvalescaped('promimg', 0));
+                break;
+
+            case 'multi':
+                tile_featured_collection_multi($tile, $tile_id);
+                break;
+
+            case 'blank':
+            default:
+                tile_featured_collection_blank($tile, $tile_id);
+                break;
+            }
+
+        exit();
+        }
 	}
 
 /*
@@ -397,6 +419,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 	{
 	global $baseurl_short,$lang,$dash_tile_shadows;
+
 	$tile_type="srch";
 	$tile_style="multi";
 	$search_string = explode('?',$tile["link"]);
@@ -428,9 +451,11 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 			$previewpath=$modifiedurl;
 			$border=true;
 			}
-        #$space=$margin+($images-1)*$gap;
-        $gap=140/min(count($resources),4);
-        $space=$i*$gap;
+
+        $tile_working_space = ('' == $tile['tlsize'] ? 140 : 380);
+
+        $gap   = $tile_working_space / min(count($resources), 4);
+        $space = $i * $gap;
         ?>
         <img style="position: absolute; top:10px;left:<?php echo ($space*1.5) ?>px;height:100%;<?php if ($shadow) { ?>box-shadow: 0 0 25px #000;<?php } ?>;transform: rotate(<?php echo 20-($i *12) ?>deg);" src="<?php echo $previewpath?>">
         <?php				
@@ -559,3 +584,235 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 		}
 	}
 
+
+function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_height, $promoted_image)
+    {
+    global $baseurl_short, $lang, $dash_tile_shadows;
+
+    if(0 < $promoted_image)
+        {
+        $promoted_image_data = get_resource_data($promoted_image);
+
+        if(false !== $promoted_image_data)
+            {
+            $preview_resource = $promoted_image_data;
+            }
+
+        $no_preview = false;
+
+        $preview_path = get_resource_path($preview_resource['ref'], true, 'pre', false, 'jpg', -1, 1, false);
+        if(file_exists($preview_path))
+            {
+            $preview_path = get_resource_path($preview_resource['ref'], false, 'pre', false, 'jpg', -1, 1, false);
+            }
+        else
+            {
+            $preview_path  = "{$baseurl_short}gfx/";
+            $preview_path .= get_nopreview_icon($preview_resource['resource_type'], $preview_resource['file_extension'], false);
+            $no_preview    = true;
+            }
+        ?>
+        <img 
+            src="<?php echo $preview_path; ?>" 
+            <?php 
+            if($no_preview)
+                {
+                ?>
+                style="position:absolute; top:<?php echo ($tile_height - 128) / 2; ?>px;left:<?php echo ($tile_width - 128) / 2; ?>px;"
+                <?php
+                }
+            else 
+                {
+                // fit image to tile size
+                if(($preview_resource['thumb_width'] * 0.7) >= $preview_resource['thumb_height'])
+                    {
+                    $ratio = $preview_resource['thumb_height'] / $tile_height;
+                    $width = $preview_resource['thumb_width'] / $ratio;
+
+                    if($width < $tile_width)
+                        {
+                        echo 'width="100%" ';
+                        }
+                    else
+                        {
+                        echo 'height="100%" ';
+                        }
+                    }
+                else
+                    {
+                    $ratio  = $preview_resource['thumb_width'] / $tile_width;
+                    $height = $preview_resource['thumb_height'] / $ratio;
+
+                    if($height < $tile_height)
+                        {
+                        echo 'height="100%" ';
+                        }
+                    else
+                        {
+                        echo 'width="100%" ';
+                        }
+                    }
+                ?>
+                style="position:absolute;top:0;left:0;"
+                <?php
+                }?>
+            class="thmbs_tile_img"
+        />
+        <?php
+        }
+        ?>
+    <h2>
+        <span class='fa fa-folder'></span>
+        <?php
+        if('' != $tile['title'])
+            {
+            echo htmlspecialchars(i18n_get_translated($tile['title']));
+            }
+        else if('' != $tile['txt'])
+            {
+            echo htmlspecialchars(i18n_get_translated($tile['txt']));
+            }
+        ?>
+    </h2>
+    <?php
+    if('' != $tile['title'] && '' != $tile['txt'])
+        { 
+        ?>
+        <p><?php echo htmlspecialchars(i18n_get_translated($tile['txt'])); ?></p>
+        <?php
+        }
+
+    if(!$dash_tile_shadows)
+        {
+        ?>
+        <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
+        <?php
+        }
+
+    return;
+    }
+
+
+function tile_featured_collection_multi($tile, $tile_id)
+    {
+    global $baseurl_short, $lang, $dash_tile_shadows;
+
+    $link_parts = explode('?', $tile['link']);
+    parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
+
+    $resources                      = array();
+    $featured_collection_categories = array();
+
+    foreach($link_parts as $link_part_key => $link_part_value)
+        {
+        if(false === strpos($link_part_key, 'theme'))
+            {
+            continue;
+            }
+
+        $featured_collection_categories[] = $link_part_value;
+        }
+
+    foreach(get_themes($featured_collection_categories, true) as $theme)
+        {
+        $resources = array_merge(
+            $resources,
+            do_search("!collection{$theme['ref']}", '', 'relevance', 0, -1, 'desc', false, 0, false, false, '', false, false)
+            );
+        }
+
+    $i = 0;
+    foreach(array_rand($resources, min(count($resources), 4)) as $random_picked_resource_key)
+        {
+        $resource = $resources[$random_picked_resource_key];
+
+        $shadow = true;
+
+        $preview_path = get_resource_path($resource['ref'], true, 'pre', false, 'jpg', -1, 1, false);
+        if(file_exists($preview_path))
+            {
+            $preview_path = get_resource_path($resource['ref'], false, 'pre', false, 'jpg', -1, 1, false);
+            }
+        else
+            {
+            $preview_path  = "{$baseurl_short}gfx/";
+            $preview_path .= get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
+            $shadow        = false;
+            }
+
+        $tile_working_space = ('' == $tile['tlsize'] ? 140 : 380);
+
+        $gap   = $tile_working_space / min(count($resources), 4);
+        $space = $i * $gap;
+        ?>
+        <img style="position: absolute; top: 10px; left:<?php echo $space * 1.5; ?>px; height: 100%;<?php if($shadow) { ?>box-shadow: 0 0 25px #000;<?php } ?>;transform: rotate(<?php echo 20 - ($i * 12); ?>deg);" src="<?php echo $preview_path; ?>">
+        <?php
+        $i++;
+        }
+        ?>
+    <h2>
+        <span class='fa fa-folder'></span>
+        <?php
+        if('' != $tile['title'])
+            {
+            echo htmlspecialchars(i18n_get_translated($tile['title']));
+            }
+        else if('' != $tile['txt'])
+            {
+            echo htmlspecialchars(i18n_get_translated($tile['txt']));
+            }
+        ?>
+    </h2>
+    <?php
+    if('' != $tile['title'] && '' != $tile['txt'])
+        { 
+        ?>
+        <p><?php echo htmlspecialchars(i18n_get_translated($tile['txt'])); ?></p>
+        <?php
+        }
+
+    if(!$dash_tile_shadows)
+        {
+        ?>
+        <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
+        <?php
+        }
+
+    return;
+    }
+
+
+function tile_featured_collection_blank($tile, $tile_id)
+    {
+    global $baseurl_short, $lang, $dash_tile_shadows;
+    ?>
+    <h2>
+        <span class='fa fa-folder'></span>
+        <?php
+        if('' != $tile['title'])
+            {
+            echo htmlspecialchars(i18n_get_translated($tile['title']));
+            }
+        else if('' != $tile['txt'])
+            {
+            echo htmlspecialchars(i18n_get_translated($tile['txt']));
+            }
+        ?>
+    </h2>
+    <?php
+    if('' != $tile['title'] && '' != $tile['txt'])
+        { 
+        ?>
+        <p><?php echo htmlspecialchars(i18n_get_translated($tile['txt'])); ?></p>
+        <?php
+        }
+
+    if(!$dash_tile_shadows)
+        {
+        ?>
+        <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
+        <?php
+        }
+
+    return;
+    }

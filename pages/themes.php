@@ -13,6 +13,36 @@ $sort=getvalescaped("sort",getvalescaped("saved_themes_sort","ASC"));rs_setcooki
 $per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 $simpleview=$themes_simple_view || getval("simpleview","")=="true";
 
+$themes = array();
+$themecount = 0;
+foreach ($_GET as $key => $value) {
+	// only set necessary vars
+	
+	if (substr($key,0,5)=="theme" && substr($key,0,6)!="themes"){		
+		if (empty($value)) break;	# if the value is empty then there is no point in continuing iterations of the loop
+		$themes[$themecount] = rawurldecode($value);
+		$themecount++;
+		}
+	}
+
+if(getval("create","") != "")
+	{
+	// Create the collection and reload the page
+	$collectionname = getvalescaped("collectionname","");
+	$newcategory = getvalescaped("category_name","");
+	// Add the new category to the theme array
+	if($newcategory != ""){$themes[]=$newcategory;}
+	$new_collection = create_collection($userref,$collectionname,0,0,0,true,$themes);
+	set_user_collection($userref,$new_collection);
+	refresh_collection_frame($collection="");
+	}	
+elseif(getval("new","")!="")
+	{
+	// Option to create a new featured collection at or below the current level
+	new_featured_collection_form($themes);
+	exit();
+	}
+
 hook("themeheader");
 
 if (!function_exists("DisplayTheme")){
@@ -20,9 +50,9 @@ function DisplayTheme($themes=array(), $simpleview=false)
 	{
 	if($simpleview)
 		{
-		global $baseurl_short, $themecount, $themes_simple_images;
+		global $baseurl_short, $lang, $themecount, $themes_simple_images;
 		$getthemes=get_themes($themes);
-		# 
+		#
 		for ($m=0;$m<count($getthemes);$m++)
 			{
 			$theme_image_path="";
@@ -42,24 +72,73 @@ function DisplayTheme($themes=array(), $simpleview=false)
 						}
 					}
 				}
-			?>				
-				<div id="FeaturedSimpleTile_<?php echo $getthemes[$m]["ref"]; ?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile<?php
+                ?>
+				<div id="FeaturedSimpleTile_<?php echo md5($getthemes[$m]['ref']); ?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile<?php
 					if($theme_image_path!="")
 						{	
 						echo " FeaturedSimpleTileImage\" style=\"background: url(" . $theme_image_path . ");background-size: cover;";
 						}?> <?php echo strip_tags_and_attributes(htmlspecialchars(str_replace(" ","",i18n_get_collection_name($getthemes[$m]))))?>">					
 					<a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $getthemes[$m]["ref"]?>" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink <?php if($themes_simple_images){echo " TileContentShadow";} ?>" id="featured_tile_<?php echo $getthemes[$m]["ref"]; ?>">
 					<div id="FeaturedSimpleTileContents_<?php echo $getthemes[$m]["ref"] ; ?>"  class="FeaturedSimpleTileContents">
-						<div class="FeaturedSimpleTileText">
-						<h2><?php echo i18n_get_collection_name($getthemes[$m])?></h2>
-						</div>
+                        <h2><span class="fa fa-th-large"></span><?php echo i18n_get_collection_name($getthemes[$m]); ?></h2>
 					</div>
 					</a>
-				</div><!-- End of FeaturedSimpleTile_<?php echo $getthemes[$m]["ref"]; ?>-->		
-					
+                    <div id="FeaturedSimpleTileActions_<?php echo md5($getthemes[$m]['ref']); ?>" class="FeaturedSimpleTileActions"  style="display:none;">
+                    <?php
+                    if(checkPermission_dashmanage())
+                        {
+                        $display_theme_dash_tile_link = generateURL(
+                            "{$baseurl_short}pages/dash_tile.php",
+                            array(
+                                'create'            => 'true',
+                                'tltype'            => 'srch',
+                                'title'             => "{$getthemes[$m]['name']}",
+                                'freetext'          => 'true',
+                                'tile_audience'     => 'false',
+                                'all_users'         => 1,
+                                'promoted_resource' => 'true',
+                                'link'              => "{$baseurl_short}pages/search.php?search=!collection{$getthemes[$m]['ref']}",
+                            )
+                        );
+                        ?>
+                        <div class="tool">
+                            <a href="<?php echo $display_theme_dash_tile_link; ?>" onClick="return CentralSpaceLoad(this, true);">
+                                <span><?php echo LINK_CARET; ?><?php echo $lang['add_to_dash']; ?></span>
+                            </a>
+                        </div>
+                        <?php
+                        }
+
+                    if(collection_readable($getthemes[$m]['ref']))
+                        {
+                        ?>
+                        <div class="tool">
+                            <a href="#" onClick="return ChangeCollection(<?php echo $getthemes[$m]['ref']; ?>, '');">
+                                <span><?php echo LINK_CARET; ?><?php echo $lang['action-select']; ?></span>
+                            </a>
+                        </div>
+                        <?php
+                        }
+
+                    if(collection_writeable($getthemes[$m]['ref']))
+                        {
+                        $display_theme_edit_link = generateURL(
+                            "{$baseurl_short}pages/collection_edit.php",
+                            array('ref' => $getthemes[$m]['ref'])
+                        );
+                        ?>
+                        <div class="tool">
+                            <a href="<?php echo $display_theme_edit_link; ?>" onClick="return ModalLoad(this, true);">
+                                <span><?php echo LINK_CARET; ?><?php echo $lang['action-edit']; ?></span>
+                            </a>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+				</div><!-- End of FeaturedSimpleTile_<?php echo $getthemes[$m]["ref"]; ?>-->
 			<?php
-			}		
-		
+			}	
 		}
 	else
 		{
@@ -291,17 +370,6 @@ function DisplayTheme($themes=array(), $simpleview=false)
 }
 
 
-$themes=array();
-$themecount=0;
-foreach ($_GET as $key => $value) {
-	// only set necessary vars
-	
-	if (substr($key,0,5)=="theme" && substr($key,0,6)!="themes"){		
-		if (empty($value)) break;	# if the value is empty then there is no point in continuing iterations of the loop
-		$themes[$themecount]=rawurldecode($value);
-		$themecount++;
-		}
-	}
 
 $header=getvalescaped("header","");
 $smart_theme=getvalescaped("smart_theme","");
@@ -322,22 +390,20 @@ include "../include/header.php";
 ?>
 
 <script>
-	
-jQuery(document).ready(function () {
-	jQuery('.FeaturedSimpleTile').hover(
-		function(e){
-			
-			tileid=jQuery(this).attr('id').substring(19);
-			//console.log('hovering on' + tileid);
-			jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideDown();
-		},
-		function(e){
-			tileid=jQuery(this).attr('id').substring(19);
-			jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideUp();
-		});	
-
-});
-
+jQuery(document).ready(function ()
+    {
+    jQuery('.FeaturedSimpleTile').hover(
+    function(e)
+        {
+        tileid = jQuery(this).attr('id').substring(19);
+        jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideDown();
+        },
+    function(e)
+        {
+        tileid=jQuery(this).attr('id').substring(19);
+        jQuery('#FeaturedSimpleTileActions_' + tileid).stop(true, true).slideUp();
+        });
+    });
 </script>
 
 
@@ -388,33 +454,52 @@ hook('themestext')
 
 <?php
 global $enable_theme_breadcrumbs;
-if(!hook('replacethemesbacklink')){
-if ($enable_theme_breadcrumbs && $themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
-	{
-	echo "<div class='SearchBreadcrumbs'>";
-	# Display breadcrumb links
-	$link=$baseurl_short."pages/themes.php?";
-	?>
-	<a href="<?php echo $link ?>" onClick="return CentralSpaceLoad(this,true);">
-		<span><?php echo $lang["themes"] ?></span>
-	</a>
-	<?php			
-	for ($x=0;$x<count($themes);$x++)
-		{
-		//print_r($themes);	
-		if ($x!=0){ $link.="&"; }
-		$link.="theme";
-		$link.=($x==0)?"":$x;
-		$link.="=". urlencode($themes[$x]);
-		if($simpleview)
-		{$link.="&simpleview=true";}
-		echo LINK_CARET;
-		?><a href="<?php echo $link ?>" onClick="return CentralSpaceLoad(this,true);"><span><?php echo str_replace("*","",i18n_get_collection_name($themes[$x])) ?>&nbsp;</span></a><?php
-		}
-	echo "</div>";
+if(!hook('replacethemesbacklink'))
+    {
+    if($enable_theme_breadcrumbs && $themes_category_split_pages && isset($themes[0]) && !$theme_direct_jump)
+        {
+        $links_trail_params            = array();
+        $links_trail_additional_params = array();
 
-}
-} # end hook('replacethemesbacklink')
+        if($simpleview)
+            {
+            $links_trail_params['simpleview'] = 'true';
+            }
+
+        $links_trail = array(
+            array(
+                'title' => $lang['themes'],
+                'href'  => generateURL("{$baseurl_short}pages/themes.php", $links_trail_params)
+            )
+        );
+
+        for($x = 0; $x < count($themes); $x++)
+            {
+            $links_trail_additional_params['theme' . (0 == $x ? '': $x + 1)] = $themes[$x];
+
+            $links_trail[] = array(
+                'title' => str_replace('*', '', i18n_get_collection_name($themes[$x])),
+                'href'  => generateURL("{$baseurl_short}pages/themes.php", $links_trail_params, $links_trail_additional_params)
+                );
+            }
+
+        if($themes_show_background_image)
+            {
+            ?>
+            <div id="" class="BreadcrumbsBox">
+            <?php
+            renderBreadcrumbs($links_trail);
+            ?>
+            </div>
+            <div class="clearerleft"></div>
+            <?php
+            }
+        else
+            {
+            renderBreadcrumbs($links_trail);
+            }
+        }
+    } # end hook('replacethemesbacklink')
 
 #if ($themes_category_split_pages && $theme1=="" && $smart_theme=="")
 if ($smart_theme!="")
@@ -446,14 +531,14 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 						{
 						foreach($theme_images as $theme_image)
 							{
-							if(file_exists(get_resource_path($theme_image,true,"pre",false)))
-								{
-								$theme_image_path=get_resource_path($theme_image,false,"pre",false);
-								
-								$theme_image_detail= get_resource_data($theme_image);
-								break;
-								}
-							}
+                            if(file_exists(get_resource_path($theme_image,true,"pre",false)))
+                                {
+                                $theme_image_path=get_resource_path($theme_image,false,"pre",false);
+                                
+                                $theme_image_detail= get_resource_data($theme_image);
+                                break;
+                                }
+                            }
 						}
 					}
 				for ($x=2;$x<count($themes)+2;$x++)
@@ -473,31 +558,66 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 							}?>">
 						<a href="<?php echo $link; ?>" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_<?php echo md5($headers[$n]);?> ">
 							<div id="FeaturedSimpleTileContents_<?php echo md5($headers[$n]) ; ?>"  class="FeaturedSimpleTileContents">
-							<div class="FeaturedSimpleTileText">
-								<h2><?php echo htmlspecialchars(i18n_get_translated(str_replace("*","",$headers[$n])));?></h2>
-							</div>
-							
-							
+                            <h2>
+                                <span class="fa fa-folder"></span>
+                                <?php echo htmlspecialchars(i18n_get_translated(str_replace('*', '', $headers[$n]))); ?>
+                            </h2>
 							</div><!-- End of FeaturedSimpleTileContents_<?php echo md5($headers[$n]);?>-->
 							
 						</a>
-						
 					<?php
-					if((checkperm("h") && $enable_theme_category_sharing) || ($enable_theme_category_edit && checkperm("t")))
-						{
-						$editlink=$baseurl_short."pages/theme_edit.php?theme1=" . urlencode((!isset($themes[0]))? $headers[$n]:$themes[0]);
-						$sharelink=$baseurl_short."pages/theme_category_share.php?theme1=" . urlencode((!isset($themes[0]))? $headers[$n]:$themes[0]);
-						for ($x=2;$x<count($themes)+2;$x++){
-							if (isset($headers[$n])){
-								$link.="&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
-								$headerlink.="&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
-								$editlink.="&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
-								$sharelink.="&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
-							}
-						}
-						?>	
+                    // 
+                    if((checkperm("h") && $enable_theme_category_sharing) || ($enable_theme_category_edit && checkperm("t")))
+                        {
+                        $editlink  = $baseurl_short . 'pages/theme_edit.php?theme1=' . urlencode(!isset($themes[0]) ? $headers[$n] : $themes[0]);
+                        $sharelink = $baseurl_short . 'pages/theme_category_share.php?theme1=' . urlencode(!isset($themes[0]) ? $headers[$n] : $themes[0]);
+
+                        $additional_dash_tile_link_params['theme1'] = !isset($themes[0]) ? $headers[$n] : $themes[0];
+
+                        for($x = 2; $x < count($themes) + 2; $x++)
+                            {
+                            if(isset($headers[$n]))
+                                {
+                                $link       .= "&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
+                                $headerlink .= "&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
+                                $editlink   .= "&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
+                                $sharelink  .= "&theme".$x."=" . urlencode((!isset($themes[$x-1]))? ((!isset($themes[$x-2]))?"":$headers[$n]):$themes[$x-1]);
+
+                                $additional_dash_tile_link_params["theme{$x}"] = !isset($themes[$x - 1]) ? (!isset($themes[$x - 2]) ? '' : $headers[$n]) : $themes[$x - 1];
+                                }
+                            }
+
+                        $dash_tile_link = generateURL(
+                            "{$baseurl_short}pages/dash_tile.php",
+                            array(
+                                'create'            => 'true',
+                                'tltype'            => 'fcthm',
+                                'tlstyle'           => 'thmbs',
+                                'title'             => "{$headers[$n]}",
+                                'freetext'          => 'true',
+                                'tile_audience'     => 'false',
+                                'promoted_resource' => 'true',
+                                'link'              => generateURL(
+                                    "{$baseurl_short}pages/themes.php",
+                                    array('simpleview' => 'true'),
+                                    $additional_dash_tile_link_params
+                                ),
+                            )
+                        );
+                        ?>
 						<div id="FeaturedSimpleTileActions_<?php echo md5($headers[$n]); ?>" class="FeaturedSimpleTileActions"  style="display:none;">
 						<?php
+                        if(checkPermission_dashmanage())
+                            {
+                            ?>
+                            <div class="tool">
+                                <a href="<?php echo $dash_tile_link; ?>" onClick="return CentralSpaceLoad(this, true);">
+                                    <span><?php echo LINK_CARET ?><?php echo $lang['add_to_dash']; ?></span>
+                                </a>
+                            </div>
+                            <?php
+                            }
+
 						if (checkperm("h") && $enable_theme_category_sharing)
 							{?>
 							<div class="tool">
@@ -730,6 +850,28 @@ elseif (($theme_category_levels==1 && $smart_theme=="") || $theme_direct_jump)
 			DisplayTheme(array_merge($themes,array($headers[$n])), $simpleview);
 		}
 	}
+
+$new_collection_additional_params = array();
+for($x = 0; $x < count($themes); $x++)
+	{
+	/*
+	IMPORTANT: this call to action is basically going to make a call to save_collection() which for some unknown
+	reason is inconsistent with the way themes are handled on themes page. Example:
+	save_collection(): theme=A&theme2=B&theme3=C
+	themes.php: theme1=A&theme2=B&theme3=C
+	*/
+	$new_collection_additional_params['theme' . (0 == $x ? '': $x + 1)] = $themes[$x];
+	}
+
+renderCallToActionTile(
+	generateURL(
+		"{$baseurl_short}pages/themes.php",
+		array(
+			'new'              => 'true',
+			'call_to_action_tile' => 'true'
+		),
+		$new_collection_additional_params
+	));
 ?>
 
 <?php
@@ -753,9 +895,10 @@ if ($header=="" && !isset($themes[0]))
 					<div id="FeaturedSimpleTile_smart_<?php echo $n ; ?>"  class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
 						<a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo $headers[$n]["ref"] ?>&node=<?php echo urlencode(getval("parentnode",0)) ?>&nodename=<?php echo urlencode(getval("parentnodename","")) ?>&simpleview=true" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink" id="featured_tile_smart_<?php echo $n ;?>">
 						<div id="FeaturedSimpleTileContents_smart<?php echo $n ; ?>"  class="FeaturedSimpleTileContents" >	
-							<div class="FeaturedSimpleTileText">
-							<h2><?php echo str_replace("*","",i18n_get_translated($headers[$n]["smart_theme_name"])); ?></h2>
-							</div>
+                            <h2>
+                                <span class="fa fa-folder"></span>
+                                <?php echo htmlspecialchars(str_replace('*', '', i18n_get_translated($headers[$n]['smart_theme_name']))); ?>
+                            </h2>
 						</div>
 						</a>
 					</div>
@@ -814,9 +957,10 @@ if ($header=="" && !isset($themes[0]))
 							<div  id="FeaturedSimpleTile_smart_<?php echo $themes[$m]["ref"]  ; ?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
 							<a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo $headers[$n]["ref"] ?>&node=<?php echo $themes[$m]["node"] ?>&parentnode=<?php echo urlencode($node) ?>&parentnodename=<?php echo urlencode(getval("nodename","")) ?>&nodename=<?php echo urlencode($themes[$m]["name"]) ?>&simpleview=true" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink TileContentShadow" id="featured_tile_<?php echo $themes[$m]["ref"] ;?>">
 								<div id="FeaturedSimpleTileContents_smart<?php echo $themes[$m]["ref"]; ?>"  class="FeaturedSimpleTileContents">	
-									<div class="FeaturedSimpleTileText">
-										<h2><?php echo i18n_get_collection_name($themes[$m])?>	</h2>	
-									</div>
+                                    <h2>
+                                        <span class="fa fa-folder"></span>
+                                        <?php echo htmlspecialchars(i18n_get_collection_name($themes[$m])); ?>
+                                    </h2>
 								</div>
 							</a>
 							</div>										
@@ -829,9 +973,10 @@ if ($header=="" && !isset($themes[0]))
 							<div id="FeaturedSimpleTile_smart_<?php echo $themes[$m]["ref"]  ; ?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
 							<a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($s)?>&resetrestypes=true" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink TileContentShadow" id="featured_tile_<?php echo $themes[$m]["ref"]; ?>">
 							<div id="FeaturedSimpleTileContents_smart<?php echo $themes[$m]["ref"] ; ?>"  class="FeaturedSimpleTileContents" >	
-									<div class="FeaturedSimpleTileText">
-										<h2><?php echo i18n_get_collection_name($themes[$m])?></h2>
-									</div>
+                                    <h2>
+                                        <span class="fa fa-folder"></span>
+                                        <?php echo htmlspecialchars(i18n_get_collection_name($themes[$m])); ?>
+                                    </h2>
 							</div>
 							</a>	
 							</div>			
@@ -924,6 +1069,129 @@ if ($header=="" && !isset($themes[0]))
 	
 ?></div><!-- End of FeaturedSimpleLinks -->
 
-<?php
+if($simpleview)
+	{
+	if (!$public_collections_header_only && getval("theme","")=="" && getval("theme1","")=="")
+		{?>
+		<?php if (!checkperm("b") && $enable_public_collections)
+			{ ?>
+			</div><!-- End of FeaturedSimpleLinks -->
+			<div class="BasicsBox FeaturedSimpleLinks">
+			<h1><?php echo $lang["findpubliccollection"]?></h1>
+			<div id="FeaturedSimpleTile_public" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
+						<a href="<?php echo $baseurl_short?>pages/collection_public.php" onclick="return CentralSpaceLoad(this,true);"  class="FeaturedSimpleLink " id="featured_tile_public">
+							<div id="FeaturedSimpleTileContents_public"  class="FeaturedSimpleTileContents">
+                            <h2>
+                                <span class="fa fa-th-large"></span>
+                                <?php echo htmlspecialchars($lang['findpubliccollection']); ?>
+                            </h2>
+							</div><!-- End of FeaturedSimpleTileContents_public -->
+						</a>
+			</div><!-- End of FeaturedSimpleTile_public -->
+			<?php
+			} 
+		} 
+	?>
+	</div><!-- End of FeaturedSimpleLinks -->
+	<?php
+	}
+else
+	{?>
+	</form>
+	</div>
+	<?php
+	if (!$public_collections_header_only)
+		{?>
+		<?php if (!checkperm("b") && $enable_public_collections)
+			{ ?>
+			<div class="clearerleft"> </div>
+			<div class="BasicsBox">
+				<h1><?php echo $lang["findpubliccollection"]?></h1>
+				<p class="tight"><?php echo text("findpublic")?></p>
+				<p><a href="<?php echo $baseurl_short?>pages/collection_public.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["findpubliccollection"]?></a></p>
+			</div>
+			<?php
+			} 
+		} 
+	}
+
+if($simpleview && $themes_show_background_image)
+    {
+    $slideshow_files = get_slideshow_files_data();
+
+    foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
+        {
+        if(isset($background_image_url))
+            {
+            continue;
+            }
+
+        if(isset($background_image_url) || !file_exists($slideshow_file_info['file_path']))
+            {
+            continue;
+            }
+
+        // Set first image found when refreshing. Otherwise, the system picks up the last image that dash background
+        // changed to when navigating using CentralSpaceLoad.
+        $background_image_url = $baseurl_short . $homeanim_folder . '/' . $slideshow_image . '.jpg' . '?nc=' . time();
+        break;
+        }
+
+    // Overwrite background_image_url with theme specific ones
+    $background_theme_images = get_theme_image(0 < count($themes) ? $themes : array(''));
+
+        if(is_array($background_theme_images) && 0 < count($background_theme_images))
+            {
+            foreach($background_theme_images as $background_theme_image)
+                {
+                if(file_exists(get_resource_path($background_theme_image, true, 'scr', false)))
+                    {
+                    $background_image_url = get_resource_path($background_theme_image, false, 'scr', false);
+                    break;
+                    }
+                }
+            }
+            ?>
+    <script>
+    jQuery(document).ready(function ()
+        {
+        jQuery('#UICenter').css('background-image','url(<?php echo $background_image_url; ?>)');
+        jQuery('#Footer').hide();
+        });
+
+    jQuery('#CentralSpace').on('CentralSpaceLoaded', function (event, data)
+        {
+		
+        if('themes.php' == basename(data.url).substr(0, 10))
+            {
+			if (typeof SlideshowImages !== 'undefined')
+				{
+				var background_image_url = SlideshowImages[SlideshowCurrent];
+				}
+	
+			jQuery('#Footer').show();
+
+            // Set the background_image_url if one was set based on the featured collection category
+            <?php
+            if(isset($background_image_url))
+                {
+                ?>
+                background_image_url = '<?php echo $background_image_url; ?>';
+                <?php
+                }
+                ?>
+            jQuery('#UICenter').css('background-image', 'url(' + background_image_url + ')');
+            jQuery('#UICenter').css('transition', 'none');
+            jQuery('#Footer').hide();
+            }
+
+        // Home page is not showing footer either so make sure we honour this
+        if('home.php' == basename(data.url).substr(0, 8))
+            {
+            jQuery('#Footer').hide();
+            }
+        });
+    </script>
+    <?php
+    } /* End of show background image in simpleview mode*/
 include "../include/footer.php";
-?>

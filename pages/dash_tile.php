@@ -26,7 +26,9 @@ $error=false;
 $submitdashtile=getvalescaped("submitdashtile",FALSE);
 if($submitdashtile)
 	{
-	$buildurl=getvalescaped("url","");
+	$buildurl = getvalescaped("url","");
+    $tlsize   = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
+
 	if ($buildurl=="")
 		{
         $new_buildurl_tltype        = getvalescaped('tltype', '');
@@ -34,7 +36,7 @@ if($submitdashtile)
         $new_buildurl_tlstylecolour = urlencode(getvalescaped('tlstylecolour', ''));
 
 		# No URL provided - build a URL (standard title types).
-		$buildurl = "pages/ajax/dash_tile.php?tltype={$new_buildurl_tltype}&tlstyle={$new_buildurl_tlstyle}";
+		$buildurl = "pages/ajax/dash_tile.php?tltype={$new_buildurl_tltype}&tlsize={$tlsize}&tlstyle={$new_buildurl_tlstyle}";
 
         if('' != $new_buildurl_tltype && allow_tile_colour_change($new_buildurl_tltype) && '' != $new_buildurl_tlstylecolour)
             {
@@ -119,7 +121,7 @@ if($submitdashtile)
                 {
                 if(isset($buildstring['tlstylecolour']))
                     {
-                    $buildurl = str_replace("tlstylecolour={$buildstring['tlstylecolour']}", "tlstylecolour={$tlstylecolour}", $buildurl);
+                    $buildurl = str_replace('tlstylecolour=' . urlencode($buildstring['tlstylecolour']), "tlstylecolour={$tlstylecolour}", $buildurl);
                     }
                 else
                     {
@@ -147,6 +149,11 @@ if($submitdashtile)
 			{
 			$buildurl = str_replace("promimg=".$buildstring["promimg"],"promimg=".$promoted_image,$buildurl);
 			}
+
+        if(isset($buildstring['tlsize']))
+            {
+            $buildurl = str_replace("tlsize={$buildstring['tlsize']}", "tlsize={$tlsize}", $buildurl);
+            }
 
 		if(($tile["all_users"] || $all_users ) && checkPermission_dashadmin())
             {
@@ -336,6 +343,10 @@ if($create)
 	$link                         = getvalescaped("link","");
 	$title                        = getvalescaped("title","");
     $current_specific_user_groups = (isset($specific_user_groups) ? $specific_user_groups : array());
+    $tlsize                       = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
+
+    // Promoted resources can be available for search tiles (srch) and feature collection tiles (fcthm)
+    $promoted_resource = getvalescaped('promoted_resource', FALSE);
 
 	if($tile_type=="srch")
 		{
@@ -346,7 +357,6 @@ if($create)
 		$daylimit=getvalescaped("daylimit","");
 		$restypes=getvalescaped("restypes","");
 		$title=getvalescaped("title","");
-		$promoted_resource=getvalescaped("promoted_resource",FALSE);
 		$resource_count=getvalescaped("resource_count",0,TRUE);
 
 		$link=$srch."&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&daylimit=" . urlencode($daylimit) . "&k=" . urlencode($k) . "&restypes=" . urlencode($restypes);
@@ -420,7 +430,9 @@ else if($edit)
 		}
 	
 	$promoted_resource=isset($buildstring["promimg"])? $buildstring["promimg"] : FALSE;
-	
+
+    $tlsize = (isset($buildstring['tlsize']) && 'double' === $buildstring['tlsize'] ? $buildstring['tlsize'] : '');
+
 	$modifylink = ($tile_type=="ftxt") ? TRUE: FALSE;
 	
 	$notitle = isset($buildstring["nottitle"])? TRUE : FALSE;
@@ -492,7 +504,19 @@ if(!$validpage)
 		</div>
 		<?php
 		}
+        ?>
 
+    <!-- Dash tile size selector -->
+    <div class="Question">
+        <label for="tlsize"><?php echo $lang['size']; ?></label>
+        <select id="DashTileSize" class="stdwidth" name="tlsize" onchange="updateDashTilePreview();">
+            <option value=""><?php echo $lang['single']; ?></option>
+            <option value="double"<?php echo ('double' === $tlsize ? ' selected' : ''); ?>><?php echo $lang['double']; ?></option>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+
+    <?php
 	if (!$tile_nostyle)
 		{
 		if(isset($tile_style))
@@ -537,49 +561,97 @@ if(!$validpage)
 			});
 		</script>
 		<?php
-		if($promoted_resource)
-			{
-			global $link,$view_title_field;
-			$search_string = explode('?',$link);
-			parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
-			$search = isset($search_string["search"]) ? $search_string["search"] :"";
-			$restypes = isset($search_string["restypes"]) ? $search_string["restypes"] : "";
-			$order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
-			$archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
-			$sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
-			$resources = do_search($search,$restypes,$order_by,$archive,-1,$sort);
-			?>
-			<div class="Question" id="promotedresource">
-				<label for="promoted_image">
-				<?php echo $lang["dashtileimage"]?></label>
-				<select class="stdwidth" id="previewimage" name="promoted_image">
-				<?php 
-				foreach ($resources as $resource)
-					{
-					?>
-					<option value="<?php echo htmlspecialchars($resource["ref"]) ?>" <?php echo $promoted_resource===$resource["ref"]? "selected='selected'":"";?>>
-						<?php echo str_replace(array("%ref", "%title"), array($resource["ref"], i18n_get_translated($resource["field" . $view_title_field])), $lang["ref-title"]) ?>
-					</option>
-					<?php
-					}
-				?>
-				</select>
-				<div class="clearerleft"> </div>
-			</div>
-			<script>
-				jQuery(".tlstyle").change(function(){
-					checked=jQuery(".tlstyle:checked").val();
-					if(checked=="thmbs") {
-						jQuery("#promotedresource").show();
-					}
-					else {
-						jQuery("#promotedresource").hide();
-					}
-				});
-			</script>
-			<?php
-			}
 		}
+
+    // Show promoted resource selector
+    if($promoted_resource && allowPromotedResources($tile_type))
+        {
+        $resources = array();
+
+        if('srch' == $tile_type)
+            {
+            $search_string = explode('?',$link);
+            parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
+            $search = isset($search_string["search"]) ? $search_string["search"] :"";
+            $restypes = isset($search_string["restypes"]) ? $search_string["restypes"] : "";
+            $order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
+            $archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
+            $sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
+            $resources = do_search($search,$restypes,$order_by,$archive,-1,$sort);
+            }
+        else if('fcthm' == $tile_type)
+            {
+            $link_parts = explode('?', $link);
+            parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
+
+            $featured_collection_categories = array();
+
+            foreach($link_parts as $link_part_key => $link_part_value)
+                {
+                if(false === strpos($link_part_key, 'theme'))
+                    {
+                    continue;
+                    }
+
+                $featured_collection_categories[] = $link_part_value;
+                }
+
+            foreach(get_themes($featured_collection_categories, true) as $theme)
+                {
+                $resources = array_merge(
+                    $resources,
+                    do_search("!collection{$theme['ref']}", '', 'relevance', 0, -1, 'desc', false, 0, false, false, '', false, false)
+                    );
+                }
+            }
+            ?>
+        <div class="Question" id="promotedresource">
+            <label for="promoted_image"><?php echo $lang['dashtileimage']; ?></label>
+            <select class="stdwidth" id="previewimage" name="promoted_image">
+            <?php 
+            foreach($resources as $resource)
+                {
+                ?>
+                <option value="<?php echo htmlspecialchars($resource["ref"]) ?>"
+                    <?php echo $promoted_resource === $resource['ref'] ? 'selected="selected"' : ''; ?>
+                ><?php
+                    echo str_replace(
+                        array('%ref','%title'),
+                        array(
+                            $resource['ref'],
+                            i18n_get_translated($resource['field' . $view_title_field])
+                        ),
+                        $lang['ref-title']
+                    );
+                ?></option>
+                <?php
+                }
+                ?>
+            </select>
+            <div class="clearerleft"> </div>
+        </div>
+        <script>
+        if(!jQuery('#tile_style_thmbs').prop('checked'))
+            {
+            jQuery('#promotedresource').hide();
+            }
+
+        jQuery('.tlstyle').change(function()
+            {
+                checked = jQuery('.tlstyle:checked').val();
+
+                if(checked == 'thmbs')
+                    {
+                    jQuery('#promotedresource').show();
+                    }
+                else
+                    {
+                    jQuery('#promotedresource').hide();
+                    }
+            });
+        </script>
+        <?php
+        }
 
 	if(checkPermission_dashadmin())
 		{
@@ -672,6 +744,13 @@ if(!$validpage)
 		var pretxt = encodeURIComponent(jQuery("#previewtext").val());
 		var prelink= encodeURIComponent(jQuery("#previewlink").val());
 		var tile = "&tllink="+prelink+"&tltitle="+pretitle+"&tltxt="+pretxt;
+        var tlsize = encodeURIComponent(jQuery('#DashTileSize :selected').val());
+
+        // Some tile types don't have style
+        if(typeof prevstyle === 'undefined')
+            {
+            prevstyle = '<?php echo isset($tile_style) ? $tile_style : ""; ?>';
+            }
 		<?php
 		if($tile_type=="srch")
 			{?>	
@@ -682,12 +761,14 @@ if(!$validpage)
 				{count=0;}
 			tile= tile+"&tlrcount="+encodeURIComponent(count);
 			<?php
-			if($promoted_resource)
-				{ ?>
-				tile = tile+"&promimg="+encodeURIComponent(jQuery("#previewimage").val()); 
-				<?php
-				}
 			}
+
+        if($promoted_resource && allowPromotedResources($tile_type))
+            {
+            ?>
+            tile = tile + '&promimg=' + encodeURIComponent(jQuery('#previewimage').val()); 
+            <?php
+            }
 
 		#Preview URL
 		if (empty($url) || strpos($url,"pages/ajax/dash_tile.php")!==FALSE)
@@ -696,20 +777,24 @@ if(!$validpage)
 			{$previewurl=$baseurl_short.$url;}
 		?>
 
-		// Some tile types don't have style
-		if(typeof prevstyle === 'undefined')
-			{
-			prevstyle = '<?php echo isset($tile_style) ? $tile_style : ""; ?>';
-			}
+        // Change size if needed:
+        jQuery('#previewdashtile').removeClass('DoubleWidthDashTile');
+        if('double' == jQuery('#DashTileSize :selected').val()
+            || (typeof event !== 'undefined' && event.type == 'change' && 'double' == jQuery(event.target).val())
+        )
+            {
+            jQuery('#previewdashtile').addClass('DoubleWidthDashTile');
+            }
 
-		jQuery("#previewdashtile").load("<?php echo $previewurl; ?>?tltype=<?php echo urlencode($tile_type)?>&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
+		jQuery("#previewdashtile").load("<?php echo $previewurl; ?>?tltype=<?php echo urlencode($tile_type)?>&tlsize=" + tlsize + "&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
 	}
+
 	updateDashTilePreview();
 	jQuery("#previewtitle").change(updateDashTilePreview);
 	jQuery("#previewtext").change(updateDashTilePreview);
 	jQuery("#resource_count").change(updateDashTilePreview);
 	jQuery(".tlstyle").change(updateDashTilePreview);
-	jQuery("#promotedresource").change(updateDashTilePreview);
+    jQuery("#promotedresource").change(updateDashTilePreview);
 </script>
 <?php
 include "../include/footer.php";

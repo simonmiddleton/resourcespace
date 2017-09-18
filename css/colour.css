@@ -401,3 +401,6 @@ input:checked + .customFieldLabel, .keywordselected
 .ReportSummary {background-color:white;color:black;border-collapse:collapse;}
 .ReportSummary td {border:1px solid #888;color:black;}
 .ReportMetric {color:black;}
+
+.BreadcrumbsBox { color:#FFF; }
+.BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #FFF; }

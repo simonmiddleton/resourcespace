@@ -359,6 +359,8 @@ $lang["private"]="Private";
 $lang["public"]="Public";
 $lang["attachedusers"]="Attached users";
 $lang["themecategory"]="Featured collection category";
+$lang["collection_set_theme_category"]="Add to featured collection category";
+$lang["collection_set_theme_category_title"]="Add collection to featured collection category";
 $lang["theme"]="Featured collection";
 $lang["newcategoryname"]="OR: Enter a new featured collection category name...";
 $lang["allowothersaddremove"]="Allow other users to add/remove resources";
@@ -377,6 +379,8 @@ $lang["emailtousers_internal"]="E-mail to users<br><br>Start typing the user's n
 $lang["removecollectionareyousure"]="Are you sure you wish to remove this collection from your list?";
 $lang["managemycollections"]="Manage my collections";
 $lang["createnewcollection"]="Create new collection";
+$lang["create_new_here"]="Create here";
+$lang["create_new_below"]="Create in a new category";
 $lang["findpubliccollection"]="Public collections";
 $lang["searchpubliccollections"]="Search public collections";
 $lang["addtomycollections"]="Add to my collections";
@@ -835,6 +839,8 @@ $lang['unknown'] = 'Unknown';
 $lang['from'] = 'From';
 $lang['to'] = 'To';
 $lang['social_media'] = 'Social media';
+$lang['single'] = 'Single';
+$lang['double'] = 'Double';
 
 # Pager
 $lang["next"]="Next";
@@ -2579,7 +2585,7 @@ $lang["report_external_option0"]="...are ignored";
 $lang["report_external_option1"]="...are combined with the user group of the sharing user";
 $lang["report_external_option2"]="...are reported as a separate user group";
 $lang["report_external_share"]="External share";
-$lang["report_add_to_dash"]="Add to dash";
+$lang['report_add_to_dash'] = $lang['add_to_dash'] = 'Add to dash';
 $lang["collection_restype_blocked"]="The following resource types cannot be added";
 
 $lang["retina_mode"]="Retina mode";

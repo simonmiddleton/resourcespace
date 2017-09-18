@@ -837,7 +837,14 @@ if (isset($result_title_height))
 if($enable_theme_breadcrumbs && !$search_titles && isset($theme_link) && $k=="")
 	{
 	// Show the themes breadcrumbs if they exist, but not if we are using the search_titles
-	echo "<div class='SearchBreadcrumbs'>" . $theme_link . "&nbsp;" . LINK_CARET . "<span id=\"coltitle" . $collection . "\"><a  href=\"" . generateURL($baseurl_short."pages/search.php",array("search"=>"!collection" . $collection)) . "\" onClick=\"return CentralSpaceLoad(this,true);\">" . i18n_get_collection_name($collectiondata) . "</a></span></div>" ;
+    renderBreadcrumbs(
+        array(
+            array(
+                'title' => i18n_get_collection_name($collectiondata),
+                'href'  => generateURL("{$baseurl_short}pages/search.php", array('search' => "!collection{$collection}"))
+            )
+        ),
+        $theme_link);
 	}
 
 if (!hook("replacesearchheader")) # Always show search header now.

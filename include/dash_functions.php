@@ -995,11 +995,13 @@ function get_user_dash($user)
 
         $tile_custom_style = '';
 
+        $buildstring = explode('?', $tile['url']);
+        parse_str(str_replace('&amp;', '&', $buildstring[1]), $buildstring);
+
+        $tlsize = (isset($buildstring['tlsize']) ? $buildstring['tlsize'] : '');
+
         if($dash_tile_colour)
             {
-            $buildstring = explode('?', $tile['url']);
-            parse_str(str_replace('&amp;', '&', $buildstring[1]), $buildstring);
-
             if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
                 {
                 $tile_custom_style .= get_tile_custom_style($buildstring);
@@ -1022,7 +1024,7 @@ function get_user_dash($user)
 			?>
 			href="<?php echo parse_dashtile_link($link)?>" <?php echo $newtab ? "target='_blank'" : "";?> 
 			onClick="if(dragging){dragging=false;e.defaultPrevented}<?php echo $newtab? "": "return " . ($help_modal && strpos($link,"pages/help.php")!==false?"ModalLoad(this,true);":"CentralSpaceLoad(this,true);");?>" 
-			class="HomePanel DashTile DashTileDraggable <?php echo ($tile['all_users']==1)? 'allUsers':'';?>"
+			class="HomePanel DashTile DashTileDraggable <?php echo ($tile['all_users']==1)? 'allUsers':'';?> <?php echo ('double' == $tlsize ? 'DoubleWidthDashTile' : ''); ?>"
 			tile="<?php echo $tile['tile']; ?>"
 			id="user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>"
 		>
@@ -1464,3 +1466,23 @@ function delete_usergroup_dash_tile($tile,$group)
     sql_query("DELETE FROM usergroup_dash_tile WHERE usergroup = '{$group}' AND dash_tile = '{$tile}'");					
 	sql_query("DELETE ud.* FROM user_dash_tile ud LEFT JOIN user u ON ud.user=u.ref LEFT JOIN usergroup ug ON ug.ref=u.usergroup WHERE ud.dash_tile='" . $tile . "' and ug.ref='" . $group . "'");
 	}
+
+
+/**
+* Confirms whether a dash tile type allows for promoted resources
+* 
+* @param string $tile_type
+* 
+* @return boolean
+*/
+function allowPromotedResources($tile_type)
+    {
+    if('' === trim($tile_type))
+        {
+        return false;
+        }
+
+    $allowed_types = array('srch', 'fcthm');
+
+    return in_array($tile_type, $allowed_types);
+    }
