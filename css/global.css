@@ -1269,7 +1269,7 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
     visibility:visible;
     }
     
-.CollectionPanelTools {visibility:hidden;text-align:center;}
+.CollectionPanelTools {visibility:hidden;text-align:right;}
 .CollectionPanelShell:hover .CollectionPanelTools {visibility:visible;}
 #FilterNodeOptions .FilterItemContainer > label { width: 150px; }.tag-editor li { padding: initial; }
 
