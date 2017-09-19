@@ -253,6 +253,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelIcons {padding: 5px;text-align:right;position:absolute;bottom:0;right:0;width:166px;}	
 .ResourcePanelSmallIcons {padding-left: 5px;}	
 .ImageWrapper {height:150px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
+.ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
 .ResourceTypeIcon { height: 16px;width:16px;float:right;margin-right:5px;margin-top:6px; }
@@ -271,8 +272,8 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 
 .ResourcePanelShellLarge {padding:0 0 10px; float: left;margin: 0px 15px 0px 0px;width: 365px;}
 .ResourcePanelShellLarge.ui-draggable {text-align: left;}
-.ResourcePanelLarge {padding:0;margin:0;width: 365px;padding-bottom:5px;}
-.ResourcePanelLarge .ResourcePanelIcons {font-size:1.5em;}
+.ResourcePanelLarge {width: 320px;}
+.ResourcePanelLarge .ResourcePanelIcons {font-size:1.25em; width: 310px;}
 .ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 

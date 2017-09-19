@@ -1,7 +1,7 @@
 <?php 
 if (!hook("renderresultthumb")) 
 	{
-    $thumbs_displayed_fields_height = 180 + (28 * count($thumbs_display_fields));
+    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 350 : 180) + (28 * count($thumbs_display_fields));
     if($annotate_enabled)
         {
         $thumbs_displayed_fields_height += 28;
@@ -17,7 +17,7 @@ if (!hook("renderresultthumb"))
         }
     ?>
 	<!--Resource Panel-->
-	<div class="ResourcePanel ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
+	<div class="ResourcePanel ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?> <?php if ($display == 'xlthumbs') {echo 'ResourcePanelLarge';} ?> id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
 	style="height: <?php echo $thumbs_displayed_fields_height; ?>px;"
 	>
 		<?php  
@@ -43,7 +43,7 @@ if (!hook("renderresultthumb"))
             $thm_url = get_resource_path(
                 $ref,
                 false,
-                ($retina_mode ? 'pre' : 'thm'),
+                ($display == "xlthumbs" ? ($retina_mode ? 'scr' : 'pre') : ($retina_mode ? 'pre' : 'thm')),
                 false,
                 $result[$n]['preview_extension'],
                 true,
@@ -100,7 +100,7 @@ if (!hook("renderresultthumb"))
 					}
 				else { ?>
 				<a
-				    class="ImageWrapper"
+				    class="<?php echo ($display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper') ?>"
 					href="<?php echo $url?>"  
 					onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
 					title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field])))))?>"
@@ -114,11 +114,33 @@ if (!hook("renderresultthumb"))
                         <?php
                         if('' != $result[$n]['thumb_width'] && 0 != $result[$n]['thumb_width'] && '' != $result[$n]['thumb_height'])
                             {
-                            ?>
-                            width="<?php echo $result[$n]["thumb_width"]?>" 
-                            height="<?php echo $result[$n]["thumb_height"]?>"
-							style="padding-top:<?php echo floor((150-$result[$n]["thumb_height"])/2) ?>px;"
-                            <?php
+                            if ($display == "xlthumbs")
+                                {
+                                $ratio = $result[$n]["thumb_width"] / $result[$n]["thumb_height"];
+                                if ($result[$n]["thumb_width"] > $result[$n]['thumb_height'])
+                                    {
+                                    $xlwidth = 320;
+                                    $xlheight = round(320 / $ratio);
+                                    } 
+                                else 
+                                    {
+                                    $xlheight = 320;
+                                    $xlwidth = round(320 * $ratio);
+                                    }
+                                ?>
+                                width="<?php echo $xlwidth ?>" 
+                                height="<?php echo $xlheight ?>"
+                                style="padding-top:<?php echo floor((320 - $xlheight) / 2) ?>px;"
+                                <?php
+                                }
+                            else
+                                {
+                                ?>
+                                width="<?php echo $result[$n]["thumb_width"]?>" 
+                                height="<?php echo $result[$n]["thumb_height"]?>"
+                                style="padding-top:<?php echo floor((150 - $result[$n]["thumb_height"]) / 2) ?>px;"
+                                <?php
+                                }
                             }
                             ?>
                         src="<?php echo $thm_url ?>" 
@@ -153,7 +175,7 @@ if (!hook("renderresultthumb"))
 						{ ?>
 						<img 
 							border=0 
-							src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="padding-top:10px;"
+							src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="padding-top:<?php echo ($display == "xlthumbs" ? "90px" : "10px")?>;"
 
 						/>
 						<?php 
