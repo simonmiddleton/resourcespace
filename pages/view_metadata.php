@@ -119,6 +119,7 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
 <?php 
 #  ----------------------------- Draw standard fields ------------------------
 ?>
+<?php hook("beforefields");?>
 <?php if ($show_resourceid) { ?><div class="itemNarrow"><h3><?php echo $lang["resourceid"]?></h3><p><?php echo htmlspecialchars($ref)?></p></div><?php } ?>
 <?php if ($show_access_field) { ?><div class="itemNarrow"><h3><?php echo $lang["access"]?></h3><p><?php echo @$lang["access" . $resource["access"]]?></p></div><?php } ?>
 <?php if ($show_resource_type) { ?><div class="itemNarrow"><h3><?php echo $lang["resourcetype"]?></h3><p><?php echo  get_resource_type_name($resource["resource_type"])?></p></div><?php } ?>
