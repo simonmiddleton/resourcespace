@@ -98,6 +98,8 @@ input[type=submit] {border-radius: 5px;}
 .CollectionPanelInfo .IconComment {background: url(../gfx/interface/IcComment.gif) no-repeat;}
 .CollectionPanelInfo .IconCommentAnim {background: url(../gfx/interface/IcComment_anim.gif) no-repeat;}
 .CollectionPanelInfo .IconRemove {background: url(../gfx/interface/IcRemove.gif) no-repeat;}
+.CollectionPanelShell {background-color: #444;}
+
 /* Home */
 .HomePanel a:link, 
 .HomePanel a:visited, 
