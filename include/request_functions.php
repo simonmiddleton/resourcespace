@@ -107,7 +107,8 @@ function save_request($request)
         get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
         if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
             {
-            send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus1"],$message);
+			$templatevars['url'] = $baseurl."/?c=" . $currentrequest["collection"]; 
+            send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus1"],$message,"","","requestapprovedmail",$templatevars);
             }
         else
             {
