@@ -14,6 +14,7 @@ $collectionname                         = getvalescaped('entercolname', '');
 $search                                 = getvalescaped('search', '');
 $offset                                 = getvalescaped('offset', '', true);
 $order_by                               = getvalescaped('order_by', '');
+// This is the archive state for searching, NOT the archive state to be set from the form POST
 $archive                                = getvalescaped('archive', '', true);
 $setarchivestate                        = getvalescaped('status', '', true);
 $alternative                            = getvalescaped('alternative', ''); # Batch upload alternative files
@@ -22,7 +23,6 @@ $replace_resource                       = getvalescaped('replace_resource', '');
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
 $redirecturl = getval("redirecturl","");
 if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
-
 
 if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_readonly($replace_resource)))
     {

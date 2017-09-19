@@ -547,19 +547,33 @@ function save_resource_data($ref,$multi,$autosave_field="")
 			$setarchivestate=$oldarchive;
 			}
 			
-		if ($access!=$oldaccess || $setarchivestate!=$oldarchive) // Only if changed
-			{  
-			if ($setarchivestate!=$oldarchive && $ref>0)
-				{
-                $resource_update_sql[] = "archive='" . $setarchivestate . "'";                
-				$resource_update_log_sql[] = array("ref"=>$ref,"type"=>"s","field"=>0,"notes"=>"","from"=>$oldarchive,"to"=>$setarchivestate);
-				}
-			if ($access!=$oldaccess && $ref>0)
-				{
-                $resource_update_sql[] = "access='" . $access . "'"; 
-				$resource_update_log_sql[] = array("ref"=>$ref,"type"=>"a","field"=>0,"notes"=>"","from"=>$oldaccess,"to"=>$access);
-				}
-            
+        // Only if changed
+        if($access != $oldaccess || $setarchivestate != $oldarchive)
+            {
+            $resource_update_sql[] = "archive = '" . escape_check($setarchivestate) . "'";
+            if($setarchivestate != $oldarchive && 0 < $ref)
+                {
+                $resource_update_log_sql[] = array(
+                    'ref'   => $ref,
+                    'type'  => 's',
+                    'field' => 0,
+                    'notes' => '',
+                    'from'  => $oldarchive,
+                    'to'    => $setarchivestate);
+                }
+
+            $resource_update_sql[] = "access = '" . escape_check($access) . "'";
+            if($access != $oldaccess && 0 < $ref)
+                {
+                $resource_update_log_sql[] = array(
+                    'ref'   => $ref,
+                    'type'  => 'a',
+                    'field' => 0,
+                    'notes' => '',
+                    'from'  => $oldaccess,
+                    'to'    => $access);
+                }
+
             if ($oldaccess==3 && $access!=3)
                 {
                 # Moving out of the custom state. Delete any usergroup specific access.
