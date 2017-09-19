@@ -29,7 +29,18 @@ foreach ($k as $kw)
 		# Node, resolve to string
 		$n=substr($kw,2);
 		$node=array();get_node($n,$node);$name=$node["name"];
-		$search.=' "' . i18n_get_translated($name) . '"';
+        
+        if (in_array($node["resource_type_field"],$resourceconnect_bind_fields))
+            {
+            # Preserve filter to bind the field.
+            $field_info=get_resource_type_field($node["resource_type_field"]);
+            $search.=' ' . $field_info['name'] . ':' . i18n_get_translated($name) ;
+            }
+        else
+            {
+            # Strip back to plain text and match on any field.             
+            $search.=' "' . i18n_get_translated($name) . '"';
+            }
 		}
 	else
 		{

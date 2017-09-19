@@ -38,7 +38,6 @@ foreach ($rtx as $rt)
 		}
 	}
 
-$restypes="";
 $results=do_search($search,$restypes,$order_by,0,$pagesize+$offset,$sort,false,"",true); # Search, ignoring filters (as fields are unlikely to match).
 
 # The access key is used to sign all inbound queries, the remote system must therefore know the access key.
@@ -96,7 +95,7 @@ else
     </div>
     
     <?php
-	function rs_pager()
+	function rc_pager()
         {
         global $offset,$pagesize,$lang,$results;
         ?>
@@ -117,7 +116,7 @@ else
         </div>
         <?php
         }
-    rs_pager();
+    rc_pager();
     ?>
     
     </div>
@@ -191,14 +190,10 @@ else
 		
 		</div>
 
-		
 		<?php
-		
-		
 		}
-	}
     ?><div class="BottomInpageNav"><?php
-    rs_pager();
+    rc_pager();
     ?></div>
     
     </div><!-- End of BasicsBox -->
@@ -209,3 +204,4 @@ else
     <?php
     # Initiate lightbox.
     addLightBox('.RCfullscreen');
+	}
