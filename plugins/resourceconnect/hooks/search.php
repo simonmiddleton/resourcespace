@@ -67,7 +67,7 @@ function HookResourceConnectSearchReplacesearchresults()
     
         // pull in any refine text
         var refine=jQuery('#refine_keywords').val();
-        if (typeof(refine)=="undefined") {refine='';} else {refine=' ' + refine;}
+        if (typeof(refine)=="undefined") {refine='';} else {SetCookie("rc_refine_keywords",refine,10,true);refine=' ' + refine;}
     
 		jQuery('#resourceconnect_container_<?php echo $counter ?>').load('<?php echo $baseurl ?>/plugins/resourceconnect/pages/ajax_request.php?search=<?php echo urlencode($search) ?>' + encodeURIComponent(refine) + '&pagesize=<?php echo $page_size ?>&affiliate=<?php echo $resourceconnect_selected ?>&affiliatename=<?php echo urlencode(i18n_get_translated($affiliate["name"])) ?>&restypes=<?php echo urlencode($restypes) ?>&offset=' + offset_<?php echo $counter ?> + '&sort=' + sort + '&order_by=' + order_by + '&per_page=' + per_page);
 		}
@@ -88,8 +88,12 @@ function HookResourceConnectSearchReplacesearchresults()
             {
             jQuery('#rc_per_page').val(jQuery.cookie('rc_per_page'));
             }
+        jQuery('#refine_keywords').val(jQuery.cookie('rc_refine_keywords'));
         }
-        
+    
+    // First time search. Reset refine then run search.
+    SetCookie("rc_refine_keywords",'',10,true);
+    jQuery('#refine_keywords').val('');
 	ResourceConnect_Repage(0);
 	</script>
 

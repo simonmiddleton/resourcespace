@@ -94,7 +94,7 @@ else
         </select>
     </div>
     
-    <div class="InpageNavLeftBlock"><a href="#" onClick="jQuery('#RefineResults').slideToggle();jQuery('#refine_keywords').focus();jQuery('#refine_keywords').val('');">+ <?php echo $lang["refineresults"] ?></a></div>
+    <div class="InpageNavLeftBlock"><a href="#" onClick="jQuery('#RefineResults').slideToggle();jQuery('#refine_keywords').focus();">+ <?php echo $lang["refineresults"] ?></a></div>
 
         
     <?php
