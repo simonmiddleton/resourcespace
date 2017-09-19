@@ -2,6 +2,7 @@
 include_once "../../../include/db.php";
 include_once "../../../include/general.php";
 include_once "../../../include/search_functions.php";
+include_once "../../lightbox_preview/include/utility.php";
 include_once "../config/config.php";
 
 $search=getvalescaped("search","");
@@ -168,7 +169,22 @@ else
 
         <div class="clearer"></div>
                 
-		<div class="ResourcePanelIcons">		
+		<div class="ResourcePanelIcons">
+        
+        <!-- Preview icon -->
+        <?php
+        $url = getPreviewURL($result);
+        if ($url!==false)
+                { ?>
+                <a aria-hidden="true" class="fa fa-expand RCfullscreen" 
+                        href="<?php echo $url ?>"
+                        title="<?php echo $lang["fullscreenpreview"]?>" rel="lightbox"
+                ></a>
+                <?php
+                }
+            ?>
+
+        
 		<a class="addToCollection fa fa-plus-circle" target="collections" href="<?php echo $add_url ?>" onClick="return CollectionDivLoad(this,true);"></a>
 		</div>
 
@@ -190,3 +206,6 @@ else
     ResourceConnect_SetPageOptions();
     
     </script>
+    <?php
+    # Initiate lightbox.
+    addLightBox('.RCfullscreen');
