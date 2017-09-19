@@ -1040,13 +1040,13 @@ function CheckDBStruct($path,$verbose=false)
 					while (($col = fgetcsv($f,5000)) !== false)
 						{
 						if (count($col)> 1)
-							{
+							{   
 							# Look for this column in the existing columns.
 							$found=false;
 							for ($n=0;$n<count($existing);$n++)
 								{
 								if ($existing[$n]["Field"]==$col[0])
-									{
+									{ 
 									$found=true;
 									$existingcoltype=strtoupper($existing[$n]["Type"]);
 									$basecoltype=strtoupper(str_replace("§",",",$col[1]));									
@@ -1056,17 +1056,20 @@ function CheckDBStruct($path,$verbose=false)
 									// Checks added so that we don't trim off data if a varchar size has been increased manually or by a plugin. 
 									// - If column is of same type but smaller number, update
 									// - If target column is of type text, update
+									// - If target column is of type varchyar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
 									
 									if	(
 										(count($matchbase)==3 && count($matchexisting)==3 && $matchbase[1] == $matchexisting[1] && $matchbase[2] > $matchexisting[2])
 										 ||
 										(stripos($basecoltype,"text")!==false && stripos($existingcoltype,"text")===false)
 										||
-										(strtoupper($basecoltype)=="BIGINT" && strtoupper($existingcoltype=="INT"))
+										(strtoupper($basecoltype)=="BIGINT" && strtoupper(substr($existingcoltype,0,3)=="INT"))
 										||
-										(strtoupper($basecoltype)=="INT" && strtoupper($existingcoltype=="TINYINT") || strtoupper($existingcoltype=="SMALLINT"))
+										(strtoupper(substr($existingcoltype,0,3))=="INT" && (strtoupper($existingcoltype)=="TINYINT" || strtoupper($existingcoltype)=="SMALLINT"))
+										||
+										(strtoupper(substr($basecoltype,0,7))=="VARCHAR" && strtoupper(substr($existingcoltype,0,3)=="INT"))
 									       )
-										{        
+										{    
 										debug("DBSTRUCT - updating column " . $col[0] . " in table " . $table . " from " . $existing[$n]["Type"] . " to " . str_replace("§",",",$col[1]) );
 										// Update the column type
 										sql_query("alter table $table modify `" .$col[0] . "` " .  $col[1]);       
