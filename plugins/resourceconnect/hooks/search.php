@@ -65,8 +65,11 @@ function HookResourceConnectSearchReplacesearchresults()
         var order_by=jQuery('#rc_order_by').val();if (typeof(order_by) != "undefined") {SetCookie ("rc_order_by",order_by,10,true);} else {order_by=jQuery.cookie('rc_order_by');}
         var per_page=jQuery('#rc_per_page').val();if (typeof(per_page) != "undefined") {SetCookie ("rc_per_page",per_page,10,true);} else {per_page=jQuery.cookie('rc_per_page');}
     
+        // pull in any refine text
+        var refine=jQuery('#refine_keywords').val();
+        if (typeof(refine)=="undefined") {refine='';} else {refine=' ' + refine;}
     
-		jQuery('#resourceconnect_container_<?php echo $counter ?>').load('<?php echo $baseurl ?>/plugins/resourceconnect/pages/ajax_request.php?search=<?php echo urlencode($search) ?>&pagesize=<?php echo $page_size ?>&affiliate=<?php echo $resourceconnect_selected ?>&affiliatename=<?php echo urlencode(i18n_get_translated($affiliate["name"])) ?>&restypes=<?php echo urlencode($restypes) ?>&offset=' + offset_<?php echo $counter ?> + '&sort=' + sort + '&order_by=' + order_by + '&per_page=' + per_page);
+		jQuery('#resourceconnect_container_<?php echo $counter ?>').load('<?php echo $baseurl ?>/plugins/resourceconnect/pages/ajax_request.php?search=<?php echo urlencode($search) ?>' + encodeURIComponent(refine) + '&pagesize=<?php echo $page_size ?>&affiliate=<?php echo $resourceconnect_selected ?>&affiliatename=<?php echo urlencode(i18n_get_translated($affiliate["name"])) ?>&restypes=<?php echo urlencode($restypes) ?>&offset=' + offset_<?php echo $counter ?> + '&sort=' + sort + '&order_by=' + order_by + '&per_page=' + per_page);
 		}
 
     // Set the sort/perpage options based on the stored cookie

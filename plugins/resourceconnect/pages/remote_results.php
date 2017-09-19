@@ -94,6 +94,9 @@ else
         </select>
     </div>
     
+    <div class="InpageNavLeftBlock"><a href="#" onClick="jQuery('#RefineResults').slideToggle();jQuery('#refine_keywords').focus();jQuery('#refine_keywords').val('');">+ <?php echo $lang["refineresults"] ?></a></div>
+
+        
     <?php
 	function rc_pager()
         {
@@ -118,10 +121,27 @@ else
         }
     rc_pager();
     ?>
+
     
+    <div class="RecordBox clearerleft" id="RefineResults" style="display:none;">
+
+	<div class="Question Inline" id="question_refine" style="border-top:none;">
+	<label id="label_refine" for="refine_keywords"><?php echo $lang["additionalkeywords"]?></label>
+	<input class="medwidth Inline" type=text id="refine_keywords" name="refine_keywords" value="">
+	<input class="vshrtwidth Inline" name="save" type="submit" id="refine_submit" onClick="ResourceConnect_Repage(0);return false;" value="&nbsp;&nbsp;<?php echo $lang["refine"]?>&nbsp;&nbsp;" />
+	<div class="clearerleft"> </div>
+
+	</div>
+	</div>
+        
+        
+        
     </div>
     
 	<div class="clearerleft"></div>
+    
+            
+            
 	<!--<h1><?php echo $affiliatename ?></h1>-->
 	<?php
 	
