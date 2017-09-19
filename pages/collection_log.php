@@ -38,6 +38,10 @@ if (!checkperm("b"))
 <div class="BasicsBox">
 <?php if ($back_to_collections_link != "") { ?><div style="float:right;"><a href="<?php echo $baseurl_short?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);"><strong><?php echo $back_to_collections_link ?></strong> </a></div> <?php } ?>
 <h1><?php echo str_replace("%collection", $colname, $lang["collectionlogheader"]);?></h1>
+<?php
+$intro=text("introtext");
+if ($intro!="") { ?><p><?php echo $intro ?></p><?php } 
+?>
 <div class="TopInpageNav">
 <div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
 	<?php 

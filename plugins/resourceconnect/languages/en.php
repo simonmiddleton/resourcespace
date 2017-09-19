@@ -16,3 +16,5 @@ $lang["resourceconnect_error-affiliate_not_found"] = "ResourceConnect error: cur
 $lang["resourceconnect_error-not_signed_with_correct_key"] = "Sorry, the request was not signed with the correct access key for this installation.";
 
 $lang["resourceconnect_search_info"] = "Please specify which connected database you wish to search.";
+
+$lang["resourceconnect_collectionwarning"]="<span style='color:red;'><strong>IMPORTANT NOTICE</strong>: This collection contains assets from a remote database. These will not be included in the below operation.</span>";

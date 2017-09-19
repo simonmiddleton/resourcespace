@@ -762,7 +762,10 @@ include "../include/header.php";
 }?>
 
 <h1><?php echo $lang["downloadzip"]?></h1>
-
+<?php
+$intro=text("introtext");
+if ($intro!="") { ?><p><?php echo $intro ?></p><?php } 
+?>
 <script>
 
 function ajax_download()

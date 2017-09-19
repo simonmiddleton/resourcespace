@@ -33,7 +33,7 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
 function HookResourceConnectAllInitialise()
 	{
 	# Work out the current affiliate
-	global $lang,$language,$resourceconnect_affiliates,$baseurl,$resourceconnect_selected,$resourceconnect_this;
+	global $lang,$language,$resourceconnect_affiliates,$baseurl,$resourceconnect_selected,$resourceconnect_this,$pagename,$collection;
 
 	# Work out which affiliate this site is
 	$resourceconnect_this="";
@@ -51,6 +51,50 @@ function HookResourceConnectAllInitialise()
 		}
 #	setcookie("resourceconnect_selected",$resourceconnect_selected);
 	setcookie("resourceconnect_selected",$resourceconnect_selected,0,"/",'',false,true);
+	
+	// Language string manipulation to warn on certain pages if necessary, e.g. where collection actions will not include remote assets
+	switch ($pagename)
+		{
+		case "contactsheet_settings":
+		ResourceConnectCollectionWarning("contactsheetintrotext",getvalescaped("ref",""));
+		break;
+
+		case "edit":
+		ResourceConnectCollectionWarning("edit__multiple",getvalescaped("collection",""));
+		break;
+	
+		case "collection_log":
+		ResourceConnectCollectionWarning("collection_log__introtext",getvalescaped("ref",""));
+		break;
+	
+		case "collection_edit_previews":
+		ResourceConnectCollectionWarning("collection_edit_previews__introtext",getvalescaped("ref",""));
+		break;
+		
+		case "search_disk_usage":
+		ResourceConnectCollectionWarning("search_disk_usage__introtext",str_replace("!collection","",getvalescaped("search","")));
+		break;
+	
+		case "collection_download":
+		ResourceConnectCollectionWarning("collection_download__introtext",getvalescaped("collection",""));
+		break;
+		}
+	
+	
+	
+	}
+
+function ResourceConnectCollectionWarning($languagestring,$collection)
+	{
+	global $lang;
+	# Are there any remote assets?
+	$c=sql_value("select count(*) value from resourceconnect_collection_resources where collection='" . escape_check($collection) . "'",0);
+	if ($c>0)
+		{
+		# Add a warning.
+		if (!isset($lang[$languagestring])) {$lang[$languagestring]="";}
+		$lang[$languagestring].="<p>" . $lang["resourceconnect_collectionwarning"] . "</p>";
+		}	
 	}
 
 function HookResourceConnectAllSearchfiltertop()
