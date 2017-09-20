@@ -147,7 +147,7 @@ if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 
 $allowed_extensions="";
-if ($resource_type!="") {$allowed_extensions=get_allowed_extensions_by_type($resource_type);}
+if ($resource_type!="" && !$alternative) {$allowed_extensions=get_allowed_extensions_by_type($resource_type);}
 
 
 if ($collection_add!=="false")
@@ -1162,7 +1162,7 @@ else
 
 hook("additionaluploadtext");
 
-if ($allowed_extensions!="" && $alternative=''){
+if ($allowed_extensions!="" && $alternative==''){
     $allowed_extensions=str_replace(", ",",",$allowed_extensions);
     $list=explode(",",trim($allowed_extensions));
     sort($list);
