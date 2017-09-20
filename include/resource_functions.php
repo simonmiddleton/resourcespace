@@ -1921,10 +1921,11 @@ function delete_resource($ref)
 
 	
 	// remove metadump file, and attempt to remove directory
-	$dirpath = dirname(get_resource_path($ref, true, "", true));
-	if (file_exists("$dirpath/metadump.xml")){
-		unlink("$dirpath/metadump.xml");
+	$metadump_path = get_resource_path($ref, true, "pre", true, 'xml');
+	if (file_exists($metadump_path)){
+		unlink($metadump_path);
 	}
+	$dirpath = dirname($metadump_path);
 	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
     
 	# Log the deletion of this resource for any collection it was in. 
@@ -3680,7 +3681,7 @@ function update_xml_metadump($resource)
 	global $xml_metadump,$xml_metadump_dc_map;
 	if (!$xml_metadump || $resource < 0) {return true;} # Only execute when configured and when not a template
 	
-	$path=dirname(get_resource_path($resource,true,"pre",true)) . "/metadump.xml";
+	$path=get_resource_path($resource,true,"pre",true, 'xml');
 	hook("before_update_xml_metadump");
 	if (file_exists($path)){$wait=unlink($path);}
 	
