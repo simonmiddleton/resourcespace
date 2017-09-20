@@ -157,7 +157,7 @@ function touch_category_tree_level($path_parts)
 function ProcessFolder($folder)
 	{
 	#echo "<br>processing folder $folder";
-	global $syncdir,$nogo,$max,$count,$done,$modtimes,$lastsync, $ffmpeg_preview_extension, $staticsync_autotheme, $staticsync_extension_mapping_default, $staticsync_extension_mapping, $staticsync_mapped_category_tree,$staticsync_title_includes_path, $staticsync_ingest, $staticsync_mapfolders,$staticsync_alternatives_suffix,$staticsync_alt_suffixes,$staticsync_alt_suffix_array,$file_minimum_age,$staticsync_run_timestamp;
+	global $syncdir,$nogo,$max,$count,$done,$modtimes,$lastsync, $ffmpeg_preview_extension, $staticsync_autotheme, $staticsync_extension_mapping_default, $staticsync_extension_mapping, $staticsync_mapped_category_tree,$staticsync_title_includes_path, $staticsync_ingest, $staticsync_mapfolders,$staticsync_alternatives_suffix,$staticsync_alt_suffixes,$staticsync_alt_suffix_array,$file_minimum_age,$staticsync_run_timestamp, $view_title_field, $filename_field;
 	
 	$collection=0;
 	
@@ -261,7 +261,7 @@ function ProcessFolder($folder)
                                 }
 				
 				# Formulate a title
-				if ($staticsync_title_includes_path)
+				if ($staticsync_title_includes_path && $view_title_field!==$filename_field)
 					{
 					$title=str_ireplace("." . $extension,"",str_replace("/"," - ",$shortpath));
 					$title=ucfirst(str_replace("_"," ",$title));

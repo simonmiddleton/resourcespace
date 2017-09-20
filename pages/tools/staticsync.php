@@ -160,7 +160,7 @@ function ProcessFolder($folder)
            $staticsync_defaultstate, $additional_archive_states, $staticsync_extension_mapping_append_values,
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
            $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
-           $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields;
+           $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field;
     
     $collection = 0;
     $treeprocessed=false;
@@ -298,7 +298,7 @@ function ProcessFolder($folder)
                 if (is_numeric($modified_type)) { $type = $modified_type; }
 
                 # Formulate a title
-                if ($staticsync_title_includes_path)
+                if ($staticsync_title_includes_path && $view_title_field!==$filename_field)
                     {
                     $title_find = array('/',   '_', ".$extension" );
                     $title_repl = array(' - ', ' ', '');

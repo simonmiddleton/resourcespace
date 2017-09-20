@@ -451,10 +451,6 @@ $exiftool_no_process=array();
 # Which field do we drop the original filename in to?
 $filename_field=51;
 
-# Which field is linked to the exiftool field for title?
-# This should not be confused with the $view_title_field option, which is purely for display purposes.
-$title_field=8;
-
 # If using imagemagick, should colour profiles be preserved? (for larger sizes only - above 'scr')
 $imagemagick_preserve_profiles=false;
 $imagemagick_quality=90; # JPEG quality (0=worst quality/lowest filesize, 100=best quality/highest filesize)
@@ -2103,6 +2099,7 @@ $staticsync_extension_mapping_append_values=true;
 # Uncomment and set the next line to specify specific fields for $staticsync_extension_mapping_append_values
 #$staticsync_extension_mapping_append_values_fields=array();
 # Should the generated resource title include the sync folder path?
+# This will not be used if $view_title_field is set to th same field as $filename_field.
 $staticsync_title_includes_path=true;
 # Should the sync'd resource files be 'ingested' i.e. moved into ResourceSpace's own filestore structure?
 # In this scenario, the sync'd folder merely acts as an upload mechanism. If path to metadata mapping is used then this allows metadata to be extracted based on the file's location.
