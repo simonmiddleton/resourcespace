@@ -2662,7 +2662,7 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 		global $enable_thumbnail_creation_on_upload;
 		if ($enable_thumbnail_creation_on_upload) {create_previews($r,false,$extension,false,false,-1,false,$ingest);}
 		}
-
+	hook('after_update_resource', '', array("resourceId" => $r ));
 	# Pass back the newly created resource ID.
 	return $r;
 	}
