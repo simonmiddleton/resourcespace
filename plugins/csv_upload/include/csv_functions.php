@@ -319,7 +319,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 		// Set access if no header found in CSV
 		if($processcsv && !in_array("ACCESS",$header)) // We don't have a value but we still need to process the selected value
 			{
-			$selectedaccess=(in_array(getvalescaped("access","",true),array(0,1,2))) ? getvalescaped("access","",true) : "default"; // Must be a valid access value						
+			$selectedaccess=(in_array(getvalescaped("access","-1",true),array(0,1,2))) ? getvalescaped("access","",true) : "default"; // Must be a valid access value	
+
 			if($selectedaccess!="default")
 				{
 				sql_query("update resource set access='$selectedaccess' where ref='$newref'");
