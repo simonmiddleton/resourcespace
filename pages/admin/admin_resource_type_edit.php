@@ -13,15 +13,16 @@ if (!checkperm("a"))
 	{
 	exit ("Permission denied.");
 	}
-        
-        
 
-$ref=getvalescaped("ref","",true);
-$name=getvalescaped("name","");
-$config_options=getvalescaped("config_options","");
-$allowed_extensions=getvalescaped("allowed_extensions","");
-$tab=getvalescaped("tab","");
-$confirm_delete=false;
+
+$ref                   = getvalescaped('ref', '', true);
+$name                  = getvalescaped('name', '');
+$config_options        = getvalescaped('config_options', '');
+$allowed_extensions    = getvalescaped('allowed_extensions', '');
+$tab                   = getvalescaped('tab', '');
+$push_metadata         = ('' != getvalescaped('push_metadata', '') ? 1 : 0);
+$inherit_global_fields = ('' != getvalescaped('inherit_global_fields', '') ? 1 : 0);
+$confirm_delete        = false;
 
 $restype_order_by=getvalescaped("restype_order_by","rt");
 $restype_sort=getvalescaped("restype_sort","asc");
@@ -48,7 +49,16 @@ if (getval("save","")!="")
 
         if ($execution_lockout) {$config_options="";} # Not allowed to save PHP if execution_lockout set.
         
-	sql_query("update resource_type set name='" . $name . "',config_options='" . $config_options . "', allowed_extensions='" . $allowed_extensions . "',tab_name='" . $tab . "',push_metadata='" . (getvalescaped("push_metadata","")!=""?"1":"0") . "' where ref='$ref'");
+    sql_query("
+        UPDATE resource_type
+           SET `name`= '{$name}',
+               config_options = '{$config_options}',
+               allowed_extensions = '{$allowed_extensions}',
+               tab_name = '{$tab}',
+               push_metadata = '{$push_metadata}',
+               inherit_global_fields = '{$inherit_global_fields}'
+         WHERE ref = '$ref'
+     ");
 	
 	redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
 	}
@@ -83,22 +93,21 @@ if (getval("delete","")!="")
 
 # Fetch  data
 $restypedata=sql_query ("
-	select 
-		ref,
-		name,
-		order_by,
-		config_options,
-		allowed_extensions,
-		tab_name,
-                push_metadata
-        from
-		resource_type
-	where
-            ref='$ref'
-	order by name"
-);
+      SELECT ref,
+             name,
+             order_by,
+             config_options,
+             allowed_extensions,
+             tab_name,
+             push_metadata,
+             inherit_global_fields
+        FROM resource_type
+       WHERE ref = '{$ref}'
+    ORDER BY `name`
+");
 $restypedata=$restypedata[0];
 
+$inherit_global_fields_checked = ((bool) $restypedata['inherit_global_fields'] ? 'checked' : '');
 
 include "../../include/header.php";
 
@@ -224,13 +233,22 @@ else
     </div>
     
         <div class="Question">
-	<label><?php echo $lang["property-push_metadata"]?></label>
-	<input name="push_metadata" type="checkbox" value="yes" <?php if ($restypedata["push_metadata"]==1) { echo "checked"; } ?> />
-	<div class="FormHelp" style="padding:0;clear:left;" >
-	    <div class="FormHelpInner"><?php echo $lang["information-push_metadata"] ?>
-	    </div>
-	</div>
-	<div class="clearerleft"> </div>
+    <label><?php echo $lang["property-push_metadata"]?></label>
+    <input name="push_metadata" type="checkbox" value="yes" <?php if ($restypedata["push_metadata"]==1) { echo "checked"; } ?> />
+    <div class="FormHelp" style="padding:0;clear:left;" >
+        <div class="FormHelpInner"><?php echo $lang["information-push_metadata"] ?>
+        </div>
+    </div>
+    <div class="clearerleft"> </div>
+    </div>
+
+    <div class="Question">
+        <label><?php echo $lang['property-inherit_global_fields']; ?></label>
+        <input name="inherit_global_fields" type="checkbox" value="yes" <?php echo $inherit_global_fields_checked; ?> />
+        <div class="FormHelp" style="padding:0;clear:left;" >
+            <div class="FormHelpInner"><?php echo $lang['information-inherit_global_fields']; ?></div>
+        </div>
+        <div class="clearerleft"></div>
     </div>
     
     <div class="QuestionSubmit">

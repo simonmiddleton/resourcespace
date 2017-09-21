@@ -381,34 +381,79 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     # If using metadata templates, 
     $templatesql = "";
-    global $metadata_template_resource_type,$NODE_FIELDS;
+    global $metadata_template_resource_type, $NODE_FIELDS;
     if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$rtype) {
         # Show all resource fields, just as with editing multiple resources.
         $multi = true;
     }
 
-    $return = array();
-	
-	$fieldsSQL = "SELECT d.value,d.resource_type_field,f1.*,f1.required frequired,f1.ref fref, f1.field_constraint, f1.automatic_nodes_ordering FROM resource_type_field f1 LEFT JOIN (SELECT * FROM resource_data WHERE resource='$ref') d ON d.resource_type_field=f1.ref AND d.resource='$ref' 
-	
-	WHERE (f1.type NOT IN (" . implode(",",$NODE_FIELDS) . ") AND (" . (($multi)?"1=1":"f1.resource_type=0 OR f1.resource_type=999 OR f1.resource_type='$rtype'") . "))
-	
-	UNION 
-	
-	SELECT group_concat(if(rn.resource = '$ref',n.name,NULL)) value, n.resource_type_field, f2.*,f2.required frequired, f2.ref, f2.field_constraint, f2.automatic_nodes_ordering FROM resource_type_field f2 LEFT JOIN node n ON n.resource_type_field=f2.ref LEFT JOIN resource_node rn ON rn.node=n.ref
-	
-	AND rn.resource='$ref' WHERE (f2.type IN (" . implode(",",$NODE_FIELDS) . ") AND (" . (($multi)?"1=1":"f2.resource_type=0 OR f2.resource_type=999 OR f2.resource_type='$rtype'") . ")) group by ref order by ";
-    if ($ord_by) {
-    	$fieldsSQL .= "order_by,resource_type,ref";
-    } else {
-		$fieldsSQL .= "resource_type,order_by,ref";
-	    debug("use perms: ".!$use_permissions);
-    }
+    $return           = array();
+    $order_by_sql     = ($ord_by ? 'order_by, resource_type, ref' : 'resource_type, order_by, ref');
+    $node_fields_list = implode(',', $NODE_FIELDS);
+
+    $fieldsSQL = "
+             SELECT d.value,
+                    d.resource_type_field,
+                    f1.*,
+                    f1.required AS frequired,
+                    f1.ref AS fref,
+                    f1.field_constraint,
+                    f1.automatic_nodes_ordering 
+               FROM resource_type_field AS f1
+          LEFT JOIN (
+                        SELECT * 
+                          FROM resource_data 
+                         WHERE resource = '{$ref}'
+                    ) AS d ON d.resource_type_field = f1.ref AND d.resource = '{$ref}' 
+              WHERE (
+                            f1.type NOT IN ({$node_fields_list})
+                        AND (" . ($multi ? "1 = 1" : "f1.resource_type = 0 OR f1.resource_type = 999 OR f1.resource_type = '{$rtype}'") . ")
+                    )
+
+              UNION
+
+             SELECT group_concat(if(rn.resource = '{$ref}', n.name, NULL)) AS `value`,
+                    n.resource_type_field,
+                    f2.*,
+                    f2.required AS frequired,
+                    f2.ref AS fref,
+                    f2.field_constraint,
+                    f2.automatic_nodes_ordering
+               FROM resource_type_field AS f2
+          LEFT JOIN node AS n ON n.resource_type_field = f2.ref
+          LEFT JOIN resource_node AS rn ON rn.node = n.ref AND rn.resource = '{$ref}'
+              WHERE (
+                            f2.type IN ({$node_fields_list})
+                        AND (" . ($multi ? "1 = 1" : "f2.resource_type = 0 OR f2.resource_type = 999 OR f2.resource_type = '{$rtype}'") . ")
+                    )
+           GROUP BY ref
+           ORDER BY {$order_by_sql}
+    ";
+
+    if(!$ord_by)
+        {
+        debug('GENERAL/GET_RESOURCE_FIELD_DATA: use perms: ' . !$use_permissions);
+        }
+    	
 	$fields = sql_query($fieldsSQL);
+
     # Build an array of valid types and only return fields of this type. Translate field titles. 
-    $validtypes = sql_array("SELECT ref value from resource_type");
-    $validtypes[] = 0; $validtypes[] = 999; # Support archive and global.
-    for ($n = 0;$n<count($fields);$n++) {
+    $validtypes = sql_array('SELECT ref AS `value` FROM resource_type');
+
+    # Support archive and global.
+    $validtypes[] = 0;
+    $validtypes[] = 999;
+
+    // Resource types can be configured to not have global fields in which case we only present the user fields valid for
+    // this resource type
+    $inherit_global_fields = (bool) sql_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = {$rtype}", true);
+    if(!$inherit_global_fields)
+        {
+        $validtypes = array($rtype);
+        }
+
+    for ($n = 0; $n < count($fields); $n++)
+    {
         if
 	(
 		(
