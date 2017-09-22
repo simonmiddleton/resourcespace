@@ -418,6 +418,10 @@
         display: inline-block;
         width: 130px;
     }
+    #CentralSpaceResources .ResourcePanel {
+        width: 150px;
+        margin: 0 7px 7px 0;
+    }
     /* Show Responsive Bar */
     #SearchBoxPanel input, #SearchBoxPanel label, #SearchBoxPanel h2, #SearchBoxPanel .SearchItem, #SearchBoxPanel .StarRatings, #SearchBoxPanel #searchbarrt, #SearchBoxPanel p {
         display:none;
@@ -455,6 +459,12 @@
 @media(max-width:600px) {
     .ResponsiveSimpleSearch .StarRatings {
         width:100%;
+    }
+}
+@media(max-width:400px) {
+    .ImageStrip {
+        height: auto;
+        width: 100%;
     }
 }
 @media(max-width:370px) {
@@ -663,6 +673,9 @@
     }
     .ResourcePanelInfo {
         text-align:center;
+        height: 35px;
+        white-space: normal;
+        margin: 10px 5px 5px 5px;
     }
     .BottomInpageNav .InpageNavLeftBlock {
         width:auto;

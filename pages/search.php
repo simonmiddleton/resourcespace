@@ -1386,12 +1386,6 @@ if($responsive_ui)
         </div></div>
         <?php
         }
-
-if ($display=="strip" || $display=="xlthumbs")
-	{
-    #  ---------------------------- Extra footer for strip view ----------------------------
-    include 'search_views/' . $display . '_footer.php';
-    }
     
 $url=generateURL($baseurl . "/pages/search.php",$searchparams); 
 
