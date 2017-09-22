@@ -190,28 +190,39 @@ echo $hidden_input_elements;
             .select_node(jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(parent_node), data.selected, event);
         });
 
-    // Handle deselect changes done in category tree
-    jquery_tree_by_id.on('deselect_node.jstree', function (event, data)
-        {
-        if(false == category_tree_remove_children)
-            {
-            return;
-            }
-
-        // Force removing all children
-        var rendered_childrens = jQuery('#<?php echo $tree_id; ?>').jstree('get_children_dom', data.node);
-
-        for(var i = 0; i < rendered_childrens.length; i++)
-            {
-            jQuery('#<?php echo $tree_id; ?>')
-                .jstree(true)
-                .deselect_node(
-                    jQuery('#<?php echo $tree_id; ?>')
-                    .jstree(true)
-                    .get_node(rendered_childrens[i]), data.selected, event
-                );
-            }
-        });
+    <?php
+	// Handle deselect changes done in category tree
+    if($category_tree_remove_children && !$is_search)
+                {
+                ?>
+				jquery_tree_by_id.on('deselect_node.jstree', function (event, data)
+					{					
+					 // If parent node is closed, make sure we open its children and deselect them as well
+					if(jQuery('#<?php echo $tree_id; ?>').jstree('is_closed', data.node))
+						{
+						jQuery('#<?php echo $tree_id; ?>').jstree(
+							'open_node',
+							data.node);
+						}
+					// Force removing all children
+					var rendered_childrens = jQuery('#<?php echo $tree_id; ?>').jstree('get_children_dom', data.node);
+			 
+					for(var i = 0; i < rendered_childrens.length; i++)
+						{
+						jQuery('#<?php echo $tree_id; ?>')
+							.jstree(true)
+							.deselect_node(
+								jQuery('#<?php echo $tree_id; ?>')
+								.jstree(true)
+								.get_node(rendered_childrens[i]), data.selected, event
+							);
+						}
+					});
+				
+				<?php
+				}	
+				?>				
+	
 
     // Handle common tasks for when (de)selecting nodes
     jquery_tree_by_id.on('changed.jstree', function (event, data)
