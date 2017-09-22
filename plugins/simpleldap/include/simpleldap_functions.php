@@ -21,7 +21,14 @@ function simpleldap_authenticate($username,$password){
 	// associative array of displayname, username, e-mail, group if valid
 	global $simpleldap;
 	debug("LDAP - Connecting to LDAP server: " . $simpleldap['ldapserver'] . " on port " . $simpleldap['port']);
-	$ds = ldap_connect( $simpleldap['ldapserver'],$simpleldap['port'] );
+	if($simpleldap['port']==636)
+		{
+		$ds = ldap_connect('ldaps://' . $simpleldap['ldapserver'] . ':636');
+		}
+	else
+		{
+		$ds = ldap_connect( $simpleldap['ldapserver'],$simpleldap['port'] );
+		}
 	
 	if($ds){
 		debug("LDAP - Connected to LDAP server ");
@@ -72,7 +79,14 @@ function simpleldap_authenticate($username,$password){
 		}
 	for($x=0;$x<count($dn);$x++)
 		{
-		$ldapconnections[$x] = ldap_connect( $simpleldap['ldapserver'],$simpleldap['port'] );
+		 if($simpleldap['port']==636)
+	                {
+        	        $ldapconnections[$x] = ldap_connect('ldaps://' . $simpleldap['ldapserver'] . ':636');
+                	}
+	        else
+        	        {
+        	        $ldapconnections[$x] = ldap_connect($simpleldap['ldapserver'],$simpleldap['port']);
+                	}
 		
 		if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype']==1) 
 			{
@@ -83,7 +97,7 @@ function simpleldap_authenticate($username,$password){
 			$binduserstring = $simpleldap['loginfield'] . "=" . $username . "," . $simpleldap['basedn'];
 			}
 		debug("LDAP - binding as " . $binduserstring);
-		if(!(@ldap_bind($ldapconnections[$x], $binduserstring, $password ))){return false;}
+		if(!(@ldap_bind($ldapconnections[$x], $binduserstring, $password ))){continue;}
 		
 		debug("LDAP - searching " . $dn[$x] . " as " . $binduserstring);
 		
