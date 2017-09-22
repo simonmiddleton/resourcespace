@@ -1465,6 +1465,7 @@ $lang["existing_tags"]="Existing Exiftool tags";
 $lang["new_tags"]="New Exiftool tags (which will be added upon download)";
 $lang["date_of_download"]="[Date of download]";
 $lang["field_ref_and_name"]="%ref% - %name%"; # %ref% and %name% will be replaced, e.g. 3 – Country
+$lang['metadata-report-fits_section'] = 'FITS tags mapped';
 
 $lang["indicateusage"]="Please describe your planned use for this resource.";
 $lang["usage"]="Usage";

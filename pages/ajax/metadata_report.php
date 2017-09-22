@@ -188,6 +188,68 @@ else
 			}
 		}
 
+    $fits = get_utility_path('fits');
+    if(false !== $fits)
+        {
+        include "../../include/metadata_functions.php";
+
+        // $image should contain the original file
+        $fits_xml      = runFitsForFile($image);
+        $resource_type = escape_check($resource_type);
+
+        // Get a list of all the fields that have a FITS field set
+        $rs_fields_to_read_for = sql_query("
+               SELECT rtf.ref,
+                      rtf.`type`,
+                      rtf.`name`,
+                      rtf.title,
+                      rtf.fits_field
+                 FROM resource_type_field AS rtf
+                WHERE length(rtf.fits_field) > 0
+                  AND (rtf.resource_type = '{$resource_type}' OR rtf.resource_type = 0)
+             ORDER BY fits_field;
+        ");
+
+        ?>
+        <tr>
+            <td colspan="5"><?php echo $lang['metadata-report-fits_section']; ?></td>
+        </tr>
+        <?php
+
+        foreach($rs_fields_to_read_for as $rs_field)
+            {
+            $fits_fields = explode(',', $rs_field['fits_field']);
+
+            ?>
+            <tr>
+            <?php
+            foreach($fits_fields as $fits_field)
+                {
+                $fits_field_value = getFitsMetadataFieldValue($fits_xml, $fits_field);
+
+                if('' == $fits_field_value)
+                    {
+                    continue;
+                    }
+                    ?>
+                    <td>
+                    <?php echo str_replace(
+                            array('%ref%', '%name%'),
+                            array($rs_field['ref'], lang_or_i18n_get_translated($rs_field['title'], 'fieldtitle-')),
+                            $lang['field_ref_and_name']
+                        );
+                    ?>
+                    </td>
+                    <td>fits</td>
+                    <td><?php echo $fits_field; ?></td>
+                    <td><?php echo $fits_field_value; ?></td>
+                    <td></td>
+                </tr>
+                <?php
+                }
+            }
+        }
+
     # Add tags which don't exist in the original file?
     if ($exiftool_write&&$file_writability)
         {
