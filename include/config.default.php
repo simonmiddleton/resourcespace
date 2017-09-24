@@ -1615,7 +1615,7 @@ $global_permissions="";
 # Global permissions
 # Permissions that will be removed from all user group permissions
 # Useful for temporarily disabling permissions globally, e.g. to make the system readonly during maintenance.
-# Suggested setting for a 'read only' mode: $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h";
+# Suggested setting for a 'read only' mode: $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q";
 $global_permissions_mask="";
 
 # User account application - auto creation
