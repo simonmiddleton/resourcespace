@@ -855,16 +855,17 @@ var pluploadconfig = {
                                             {
                                             uploadError = JSON.parse(info.response);
                                             uploaderrormessage= uploadError.error.code + " " + uploadError.error.message;
+											if(uploadError.error.code==108)
+												{
+												styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadError.error.duplicates);	
+												}
                                             }
                                         catch(e)
                                             {
                                             uploaderrormessage = 'Server side error! Please contact the administrator!';
                                             }
                                         file.status = plupload.FAILED;
-										if(uploadError.error.code==108)
-											{
-											styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadError.error.duplicates);	
-											}
+										
                                         if(show_upload_log)
                                             {
                                             jQuery("#upload_log").append("\r\n" + file.name + " - " + uploaderrormessage);

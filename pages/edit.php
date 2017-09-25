@@ -41,8 +41,15 @@ if ($upload_review_mode && $ref=="")
   {
   # Set the collection and ref if not already set.
   $collection=0-$userref;
-  # Start reviewing at the first resource.
+  # Start reviewing at the first resource. Need to search all worflow states and remove filters as no data has been set yet
+  $search_all_workflow_states_cache = $search_all_workflow_states;
+  $usersearchfilter_cache = $usersearchfilter;
+  $search_all_workflow_states = TRUE;
+  $usersearchfilter = "";
   $collection_contents=do_search("!collection" . $collection);
+  # Revert save settings
+  $search_all_workflow_states = $search_all_workflow_states_cache;
+  $usersearchfilter = $usersearchfilter_cache;
   # Set the resource to the first ref number. If the collection is empty then tagging is complete. Go to the recently added page.
   if (isset($collection_contents[0]["ref"])) {$ref=$collection_contents[0]["ref"];} else {redirect("pages/search.php?search=!last1000");}
   }

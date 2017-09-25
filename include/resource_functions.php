@@ -12,9 +12,16 @@ function create_resource($resource_type,$archive=999,$user=-1)
 	if ($archive==999)
 		{
 		# Work out an appropriate default state
-		$archive=0;
-		if (!checkperm("e0")) {$archive=2;} # Can't create a resource in normal state? create in archive.
+		for ($n=-2;$n<3;$n++)
+			{
+			if (checkperm("e" . $n))
+				{
+				$archive = $n;
+				break;
+				}
+			}
 		}
+
 	if ($archive==-2 || $archive==-1 || (isset($always_record_resource_creator) and $always_record_resource_creator))
 		{
 		# Work out user ref - note: only for content in status -2 and -1 (user submitted / pending review).
