@@ -130,7 +130,7 @@ if (!hook("renderresultthumb"))
                                 ?>
                                 width="<?php echo $xlwidth ?>" 
                                 height="<?php echo $xlheight ?>"
-                                style="padding-top:<?php echo floor((320 - $xlheight) / 2) ?>px;"
+                                style="margin-top:<?php echo floor((320 - $xlheight) / 2) ?>px;"
                                 <?php
                                 }
                             else
@@ -138,7 +138,7 @@ if (!hook("renderresultthumb"))
                                 ?>
                                 width="<?php echo $result[$n]["thumb_width"]?>" 
                                 height="<?php echo $result[$n]["thumb_height"]?>"
-                                style="padding-top:<?php echo floor((150 - $result[$n]["thumb_height"]) / 2) ?>px;"
+                                style="margin-top:<?php echo floor((150 - $result[$n]["thumb_height"]) / 2) ?>px;"
                                 <?php
                                 }
                             }
