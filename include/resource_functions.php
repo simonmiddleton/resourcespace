@@ -139,12 +139,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     {
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
 					}
-					
-				 // Check nodes are valid for this field				
-				$fieldnodes = get_nodes($fields[$n]['ref'],'',true);
-				$node_options = array_column($fieldnodes,"name","ref");
-				$validnodes=array_column($fieldnodes,"ref");
-				
+
+                // Check nodes are valid for this field
+                $fieldnodes   = get_nodes($fields[$n]['ref'], '', (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type']));
+                $node_options = array_column($fieldnodes, 'name', 'ref');
+                $validnodes   = array_column($fieldnodes, 'ref');
+
 				$ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);	
 
                 $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);

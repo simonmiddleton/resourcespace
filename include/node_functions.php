@@ -204,7 +204,8 @@ function get_node($ref, array &$returned_node)
 * 
 * @param  integer  $resource_type_field    ID of the metadata field
 * @param  integer  $parent                 ID of parent node
-* @param  boolean  $recursive              Set to true to get children nodes as well
+* @param  boolean  $recursive              Set to true to get children nodes as well.
+*                                          IMPORTANT: this should be used only with category trees
 * @param  integer  $offset                 Specifies the offset of the first row to return
 * @param  integer  $rows                   Specifies the maximum number of rows to return
 * @param  string   $name                   Filter by name of node
