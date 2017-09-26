@@ -740,11 +740,11 @@ function save_resource_data_multi($collection)
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
                     }
 
-                // Check nodes are valid for this field				
-				$fieldnodes = get_nodes($fields[$n]['ref'],'',true);
-				$node_options = array_column($fieldnodes,"name","ref");
-				$valid_nodes=array_column($fieldnodes,"ref");
-				
+                // Check nodes are valid for this field
+                $fieldnodes   = get_nodes($fields[$n]['ref'], '', (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type']));
+                $node_options = array_column($fieldnodes, 'name', 'ref');
+                $valid_nodes  = array_column($fieldnodes, 'ref');
+
                 // Store selected/deselected values in array
 				$ui_selected_node_values=array_intersect($ui_selected_node_values,$valid_nodes);   
 				$ui_deselected_node_values = array_diff($valid_nodes, $ui_selected_node_values);
