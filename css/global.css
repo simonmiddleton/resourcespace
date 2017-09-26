@@ -139,7 +139,7 @@ h2#CollectionsPanelHeader {display:none;}
     }
 
 /* Slim header with fixed top bar */
-div#Header.SlimHeaderFixedPosition { width: 100%; position:fixed; top: 0px; z-index: 100; }
+div#Header.SlimHeaderFixedPosition { width: 100%; position:fixed; top: 0px; z-index: 1100; }
 div#Header.SlimHeaderFixedPosition #HeaderNav1 { margin-right: 25px; }
 div#Header.SlimHeaderFixedPosition #HeaderNav2 li:last-child { margin-right: 40px; }
 div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
