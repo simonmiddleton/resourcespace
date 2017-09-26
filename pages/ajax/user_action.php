@@ -4,6 +4,7 @@ include_once('../../include/general.php');
 include_once('../../include/authenticate.php');
 include_once('../../include/resource_functions.php');
 include_once('../../include/search_functions.php');
+include_once('../../include/collections_functions.php');
 
 // Generic endpoint that can be used for ajax calls
 $action = getvalescaped('action','');
