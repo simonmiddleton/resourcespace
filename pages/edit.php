@@ -970,7 +970,7 @@ if(!$multiple)
     ?>
     <div class="Question <?php if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
         <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" ) ?></label>
-		<input id='resource_type_check' name='resource_type_check' type='hidden' value='<?php echo $resource['resource_type']; ?>'>
+		<input id='resource_type_checksum' name='resource_type_checksum' type='hidden' value='<?php echo $resource['resource_type']; ?>'>
 
         <select name="resource_type" id="resourcetype" class="stdwidth" 
                 onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
