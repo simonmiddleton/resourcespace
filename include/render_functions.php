@@ -1648,12 +1648,47 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 {
                 $name = "field_{$field['ref']}";
                 }
+			
+			$field_nodes = array();
+			foreach($selected_nodes as $selected_node)
+				{
+				if(in_array($selected_node,array_column($field['nodes'],"ref")))
+					{
+					$field_nodes[] = $selected_node;
+					}
+				natsort($field_nodes);
+				}
+			if(!$multiple)
+				{
+				echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
+				echo "<input name='" . "field_" . $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
+				}
             }
+        elseif($field['type']==FIELD_TYPE_DATE_RANGE)
+			{
+            $field['nodes'] = get_nodes($field['ref'], NULL, FALSE);
+            $field_nodes = array();
+			foreach($selected_nodes as $selected_node)
+				{
+				if(in_array($selected_node,array_column($field['nodes'],"ref")))
+					{
+					$field_nodes[] = $selected_node;
+					}
+				}
+			natsort($field_nodes);
+			
+			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
+			}
+		elseif(!$multiple)
+			{
+			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5($value) . "'>";
+			}
 
         $is_search = false;
 
         include "edit_fields/{$type}.php";
         }
+		
     # ----------------------------------------------------------------------------
 
     # Display any error messages from previous save
@@ -1752,6 +1787,11 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
 			$rangevalues = explode(",",$value);
 			$startvalue = $rangevalues[0];
 			$endvalue = $rangevalues[1];
+			}
+		elseif(strlen($value)==10 && strpos($value,"-") !==  false)
+			{
+			$startvalue = $value;
+			$endvalue = "";
 			}
 		else
 			{

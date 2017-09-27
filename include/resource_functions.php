@@ -71,10 +71,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	global $lang, $auto_order_checkbox, $userresourcedefaults, $multilingual_text_fields,
            $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,
            $DATE_FIELD_TYPES, $range_separator, $reset_date_field, $reset_date_upload_template,
-           $edit_contributed_by;
+           $edit_contributed_by, $new_checksums;
 
 	hook("befsaveresourcedata", "", array($ref));
-
+		
     // Save resource defaults (functionality available for upload only)
     // Call it here so that if users have access to the field and want 
     // to override it, they can do so
@@ -100,6 +100,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
     // of the fields while others have been added/removed
     $user_set_values = getval('nodes', array());
 	
+	
+	// Initialise array to store new checksums that client needs after autosave, without which subsequent edits will fail
+	$new_checksums = array();		
+	
 	for ($n=0;$n<count($fields);$n++)
 		{
         debug("save_resource_data(): Checking nodes to add/ remove for field {$fields[$n]['ref']} - {$fields[$n]['title']}");
@@ -122,6 +126,16 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                 // Get currently selected nodes for this field 
                 $current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']); 
+				
+				// Check if resource field data has been changed between form being loaded and submitted				
+				$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
+				$current_cs = md5(implode(",",$current_field_nodes));				
+				if($post_cs != $current_cs)
+					{
+					$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
+					continue;
+					};
+			
                 debug("save_resource_data(): Current nodes for resource " . $ref . ": " . implode(",",$current_field_nodes));
                 
 				// Work out nodes submitted by user
@@ -146,7 +160,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 $validnodes   = array_column($fieldnodes, 'ref');
 
 				$ui_selected_node_values=array_intersect($ui_selected_node_values,$validnodes);	
-
+				natsort($ui_selected_node_values);
+				
                 $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
 
                 debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
@@ -193,6 +208,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $val .= ",{$node_options[$current_field_node]}";
                         }
                     }
+				if($autosave_field == $fields[$n]['ref'] || (is_array($autosave_field) && in_array($fields[$n]['ref'], $autosave_field)))
+					{
+					$new_checksums[$fields[$n]['ref']] = md5(implode(",",$ui_selected_node_values));
+					}
                 }
 			else
 				{
@@ -210,7 +229,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						$rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
 						if(!preg_match($rangeregex,$date_edtf,$matches))
 							{
-							$errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
+							$errors[$fields[$n]["ref"]] = $lang["information-regexp_fail"] . " : " . $val;
 							continue;
 							}
                         if(is_numeric($fields[$n]["linked_data_field"]))
@@ -268,6 +287,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						// Get currently selected nodes for this field 
 						$current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);
 						
+						// Check if resource field data has been changed between form being loaded and submitted				
+						$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
+						$current_cs = md5(implode(",",$current_field_nodes));						
+						if($post_cs != $current_cs)
+							{
+							$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
+							continue;
+							};
+						
 						$added_nodes = array_diff($daterangenodes, $current_field_nodes);
 						debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
 						$nodes_to_add = array_merge($nodes_to_add, $added_nodes);
@@ -289,6 +317,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 								sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
 								 }
 							}
+					
+					$new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
                     }
 				elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
 					{
@@ -340,6 +370,18 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         {
                         $val = date('Y-m-d H:i:s');
                         }
+					
+					
+					// Check if resource field data has been changed between form being loaded and submitted				
+					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
+					$current_cs = md5($fields[$n]['value']);			
+					if($post_cs != $current_cs)
+						{
+						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
+						continue;
+						};
+					
+					$new_checksums[$fields[$n]['ref']] = md5($val);
                     }
 				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
 					{
@@ -354,11 +396,31 @@ function save_resource_data($ref,$multi,$autosave_field="")
 							$val.="~" . $langkey . ":" . getvalescaped("multilingual_" . $n . "_" . $langkey,"");
 							}
 						}
+						
+					// Check if resource field data has been changed between form being loaded and submitted				
+					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
+					$current_cs = md5($fields[$n]['value']);						
+					if($post_cs != $current_cs)
+						{
+						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
+						continue;
+						};
+					
+					$new_checksums[$fields[$n]['ref']] = md5($val);
 					}
 				else
 					{
 					# Set the value exactly as sent.
 					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
+					// Check if resource field data has been changed between form being loaded and submitted				
+					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
+					$current_cs = md5($fields[$n]['value']);				cs);			
+					if($post_cs != $current_cs)
+						{
+						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
+						continue;
+						};
+					$new_checksums[$fields[$n]['ref']] = md5($val);
 					} 
 				# Check for regular expression match
 				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
@@ -377,7 +439,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					}
 				$modified_val=hook("modifiedsavedfieldvalue",'',array($fields,$n,$val));
 				if(!empty($modified_val)){$val=$modified_val;}
-				
+												
 				$error=hook("additionalvalcheck", "all", array($fields, $fields[$n]));
 				if ($error) 
 					{
@@ -390,6 +452,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					$errors[$fields[$n]["ref"]]=$error;
 					continue;
 					}
+				
 				} // End of if not a fixed list (node) field
 			
             
@@ -544,69 +607,90 @@ function save_resource_data($ref,$multi,$autosave_field="")
 		# Also update archive status and access level
 		$oldaccess=$resource_data['access'];
 		$access=getvalescaped("access",$oldaccess,true);
-
-		#$oldarchive=sql_value("select archive value from resource where ref='$ref'","");
+        
 		$oldarchive=$resource_data['archive'];
 		$setarchivestate=getvalescaped("status",$oldarchive,true);
-		
 		if($setarchivestate!=$oldarchive && !checkperm("e" . $setarchivestate)) // don't allow change if user has no permission to change archive state
 			{
 			$setarchivestate=$oldarchive;
 			}
 			
         // Only if changed
-        if($access != $oldaccess || $setarchivestate != $oldarchive)
+        if(($autosave_field=="" || $autosave_field=="Status") && $setarchivestate != $oldarchive)
             {
-            $resource_update_sql[] = "archive = '" . escape_check($setarchivestate) . "'";
-            if($setarchivestate != $oldarchive && 0 < $ref)
+            // Check if resource status has already been changed between form being loaded and submitted
+            if(getval("status_checksum","") != $oldarchive)
                 {
-                $resource_update_log_sql[] = array(
-                    'ref'   => $ref,
-                    'type'  => 's',
-                    'field' => 0,
-                    'notes' => '',
-                    'from'  => $oldarchive,
-                    'to'    => $setarchivestate);
+                $errors["status"] = $lang["status"] . ': ' . $lang["save-conflict-error"];
                 }
-
-            $resource_update_sql[] = "access = '" . escape_check($access) . "'";
-            if($access != $oldaccess && 0 < $ref)
+            else
                 {
-                $resource_update_log_sql[] = array(
-                    'ref'   => $ref,
-                    'type'  => 'a',
-                    'field' => 0,
-                    'notes' => '',
-                    'from'  => $oldaccess,
-                    'to'    => $access);
+                $resource_update_sql[] = "archive = '" . escape_check($setarchivestate) . "'";
+                if($setarchivestate != $oldarchive && 0 < $ref)
+                    {
+                    $resource_update_log_sql[] = array(
+                        'ref'   => $ref,
+                        'type'  => 's',
+                        'field' => 0,
+                        'notes' => '',
+                        'from'  => $oldarchive,
+                        'to'    => $setarchivestate);
+                    }
+    
+                # Clear any outstanding notifications relating to submission of this resource
+                message_remove_related(SUBMITTED_RESOURCE,$ref);
+                
+                // Notify the resources team ($email_notify) if moving from pending submission -> review.
+                if ($oldarchive==-2 && $setarchivestate==-1 && $ref>0)
+                        {	
+                        notify_user_contributed_submitted(array($ref));
+                        }
+                if ($oldarchive==-1 && $setarchivestate==-2 && $ref>0)
+                        {
+                        notify_user_contributed_unsubmitted(array($ref));
+                        }
+                if($user_resources_approved_email)
+                    {	
+                    if (($oldarchive==-2 || $oldarchive==-1) && $ref>0 && $setarchivestate==0)
+                            {
+                            notify_user_resources_approved(array($ref));
+                            }	
+                    }
+                
+				$new_checksums["status"] = $setarchivestate;
                 }
-
-            if ($oldaccess==3 && $access!=3)
+			}
+            
+        if(($autosave_field=="" || $autosave_field=="Access") && $access != $oldaccess)
+            {
+            // Check if resource access has already been changed between form being loaded and submitted
+            if(getval("access_checksum","") != $oldaccess)
                 {
-                # Moving out of the custom state. Delete any usergroup specific access.
-                # This can delete any 'manual' usergroup grants also as the user will have seen this as part of the custom access.
-                delete_resource_custom_access_usergroups($ref);
+                $errors["access"] = $lang["access"] . ': ' . $lang["save-conflict-error"];
                 }
-						
-			# Clear any outstanding notifications relating to submission of this resource
-			message_remove_related(SUBMITTED_RESOURCE,$ref);
-			
-			// Notify the resources team ($email_notify) if moving from pending submission -> review.
-			if ($oldarchive==-2 && $setarchivestate==-1 && $ref>0)
-					{	
-					notify_user_contributed_submitted(array($ref));
-					}
-			if ($oldarchive==-1 && $setarchivestate==-2 && $ref>0)
-					{
-					notify_user_contributed_unsubmitted(array($ref));
-					}
-			if($user_resources_approved_email)
-				{	
-				if (($oldarchive==-2 || $oldarchive==-1) && $ref>0 && $setarchivestate==0)
-						{
-						notify_user_resources_approved(array($ref));
-						}	
-				}
+            else
+                {
+                $resource_update_sql[] = "access = '" . escape_check($access) . "'";
+                if($access != $oldaccess && 0 < $ref)
+                    {
+                    $resource_update_log_sql[] = array(
+                        'ref'   => $ref,
+                        'type'  => 'a',
+                        'field' => 0,
+                        'notes' => '',
+                        'from'  => $oldaccess,
+                        'to'    => $access);
+                    }
+    
+                if ($oldaccess==3 && $access!=3)
+                    {
+                    # Moving out of the custom state. Delete any usergroup specific access.
+                    # This can delete any 'manual' usergroup grants also as the user will have seen this as part of the custom access.
+                    delete_resource_custom_access_usergroups($ref);
+                    }
+                
+				$new_checksums["access"] = $access;
+                }
 			}
 		}
         
