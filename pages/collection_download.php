@@ -208,30 +208,25 @@ if ($submitted != "")
 	$delindex=0;
 	foreach($tempfoldercontents as $objectindex => $object)
 		{
+		$tmpfilename = $object->getFilename();
 		if ($object->isDir())
 			{
-			if(substr($object->getFilename(),0,strlen("rs_" . $userref . "_"))=="rs_" . $userref . "_" && time()-$object->getMTime()>24*60*60) 
+			if((substr($tmpfilename,0,strlen("rs_" . $userref . "_"))=="rs_" . $userref . "_"  || substr($tmpfilename,0,3)== "Col") && time()-$object->getMTime()>24*60*60) 
 			   {
-			   debug ("Collection download - found old temp directory: " . $object->getFilename() .  "  age (minutes): " . (time()-$object->getMTime())/60);
+			   debug ("Collection download - found old temp directory: " . $tmpfilename .  "  age (minutes): " . (time()-$object->getMTime())/60);
 			   // This directory belongs to the user and is older than a day, delete it
-			   $folderstodelete[]=$tempdirbase . DIRECTORY_SEPARATOR . $object->getFilename();				
+			   $folderstodelete[]=$tempdirbase . DIRECTORY_SEPARATOR . $tmpfilename;				
 			   }
 			}
 		elseif($purge_temp_folder_age!=0 && time()-$object->getMTime()>$purge_temp_folder_age*24*60*60)
 			{
-			unlink($tempdirbase . DIRECTORY_SEPARATOR . $object->getFilename()); 				
+			unlink($tempdirbase . DIRECTORY_SEPARATOR . $tmpfilename); 				
 			}
 		
 		}
 	foreach ($folderstodelete as $foldertodelete)
 		{
 		debug ("Collection download - deleting directory " . $foldertodelete);
-		$delfiles = array_diff(scandir($foldertodelete), array('.','..')); 
-		foreach ($delfiles as $delfile)
-			{
-			//unlink($foldertodelete . DIRECTORY_SEPARATOR . $delfile); 
-			} 
-					    
 		@rcRmdir($foldertodelete);
 		}
 	$progress_file=$usertempdir . "/progress_file.txt";
