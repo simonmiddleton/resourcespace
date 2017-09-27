@@ -83,7 +83,7 @@ if($tabs_on_edit || $upload_review_mode){$collapsible_sections=false;}
 $errors=array(); # The results of the save operation (e.g. required field messages)
 
 # Disable auto save for upload forms - it's not appropriate.
-if ($ref<0) { $edit_autosave=false; }
+if ($ref<0 || $upload_review_mode) { $edit_autosave=false; }
 
 # next / previous resource browsing
 $go=getval("go","");
@@ -127,7 +127,7 @@ if ($go!="")
      $multiple=true;
     $edit_autosave=false; # Do not allow auto saving for batch editing.
     $items=get_collection_resources($collection);
-    if (count($items)==0) {
+	if (count($items)==0) {
        $error=$lang['error-cannoteditemptycollection'];
        error_alert($error);
        exit();

@@ -387,6 +387,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					{
 					# Construct a multilingual string from the submitted translations
 					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
+					$rawval = getval("field_" . $fields[$n]["ref"],"");
 					$val="~" . $language . ":" . $val;
 					reset ($languages);
 					foreach ($languages as $langkey => $langname)
@@ -399,28 +400,29 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						
 					// Check if resource field data has been changed between form being loaded and submitted				
 					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
-					$current_cs = md5($fields[$n]['value']);						
+					$current_cs = md5(trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
 					if($post_cs != $current_cs)
 						{
 						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 						continue;
 						};
 					
-					$new_checksums[$fields[$n]['ref']] = md5($val);
+					$new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
 					}
 				else
 					{
 					# Set the value exactly as sent.
 					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
+					$rawval = getval("field_" . $fields[$n]["ref"],"");
 					// Check if resource field data has been changed between form being loaded and submitted				
 					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
-					$current_cs = md5($fields[$n]['value']);			
+					$current_cs = md5(trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
 					if($post_cs != $current_cs)
 						{
 						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 						continue;
 						};
-					$new_checksums[$fields[$n]['ref']] = md5($val);
+					$new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
 					} 
 				# Check for regular expression match
 				if (trim(strlen($fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
@@ -438,7 +440,11 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						}
 					}
 				$modified_val=hook("modifiedsavedfieldvalue",'',array($fields,$n,$val));
-				if(!empty($modified_val)){$val=$modified_val;}
+				if(!empty($modified_val))
+					{
+					$val=$modified_val;
+					$new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
+					}
 												
 				$error=hook("additionalvalcheck", "all", array($fields, $fields[$n]));
 				if ($error) 
@@ -492,7 +498,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					{
 					sql_query("insert into resource_data(resource,resource_type_field,value) values('$ref','" . $fields[$n]["ref"] . "','" . escape_check($val) ."')");
 					}
-								
+				
 				if ($fields[$n]["type"]==3 && substr($oldval,0,1) != ',')
 					{
 					# Prepend a comma when indexing dropdowns
@@ -2202,7 +2208,7 @@ function copy_resource($from,$resource_type=-1)
 function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0)
 	{
 	global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
-
+		
     if(($resource === RESOURCE_LOG_APPEND_PREVIOUS && !isset($resource_log_previous_ref)) || ($resource !== RESOURCE_LOG_APPEND_PREVIOUS && $resource < 0))
         {
         return false;

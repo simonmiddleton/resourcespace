@@ -1681,7 +1681,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 			}
 		elseif(!$multiple)
 			{
-			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5($value) . "'>";
+			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(trim(preg_replace('/\s\s+/', ' ', $field['value']))) . "'>";
 			}
 
         $is_search = false;
