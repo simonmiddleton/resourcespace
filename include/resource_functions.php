@@ -414,7 +414,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					$val=getvalescaped("field_" . $fields[$n]["ref"],"");
 					// Check if resource field data has been changed between form being loaded and submitted				
 					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
-					$current_cs = md5($fields[$n]['value']);				cs);			
+					$current_cs = md5($fields[$n]['value']);			
 					if($post_cs != $current_cs)
 						{
 						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
