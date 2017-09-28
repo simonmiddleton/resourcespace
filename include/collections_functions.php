@@ -1427,36 +1427,43 @@ function add_saved_search_items($collection)
 	}
 
 if (!function_exists("allow_multi_edit")){
-function allow_multi_edit($collection)
+function allow_multi_edit($collection,$collectionid = 0)
 	{
 	global $resource;
 	# Returns true or false, can all resources in this collection be edited by the user?
-	# also applies edit filter, since it uses get_resource_access
 
-	if (!is_array($collection)){ // collection is an array of resource data
-        $collection=do_search("!collection" . $collection);
-
-	}
-	for ($n=0;$n<count($collection);$n++){
-		$resource = $collection[$n];
-		if (!get_edit_access($collection[$n]["ref"],$collection[$n]["archive"],false,$collection[$n])){return false;}
-		
-	}
-
+	if (is_array($collection) && $collectionid == 0)
+		{
+		// Do this the hard way by checking every resource for edit access
+		for ($n=0;$n<count($collection);$n++)
+			{
+			$resource = $collection[$n];
+			if (!get_edit_access($collection[$n]["ref"],$collection[$n]["archive"],false,$collection[$n]))
+				{
+				return false;
+				}
+			}	
+		}
+	else
+		{            
+		// Instead of checking each resource we can do a comparison between a search for all resources in collection and a search for editable resources
+		if(!is_array($collection))
+			{
+			// Need the collection resources so need to run the search
+			$collectionid = $collection;
+			$collection = do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, true, true,false);
+			}
+			
+		$resultcount = count($collection);
+		$editresults = 	do_search("!collection{$collectionid}", '', '', 0, -1, '', false, 0, false, false, '', false, true, true,true);
+		$editcount = count($editresults);
+		if($resultcount != $editcount){return false;}
+		}
+	
+			
 	if(hook('denyaftermultiedit', '', array($collection))) { return false; }
 
 	return true;
-	
-	# Updated: 2008-01-21: Edit all now supports multiple types, so always return true.
-	/*
-	$types=sql_query("select distinct r.resource_type from collection_resource c left join resource r on c.resource=r.ref where c.collection='$collection'");
-	if (count($types)!=1) {return false;}
-	
-	$status=sql_query("select distinct r.archive from collection_resource c left join resource r on c.resource=r.ref where c.collection='$collection'");
-	if (count($status)!=1) {return false;}	
-	
-	return true;
-	*/
 	}
 }	
 
@@ -2329,13 +2336,13 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // work this out in one place to prevent multiple calls as function is expensive
-    $allow_multi_edit=allow_multi_edit(empty($resource_data) ? $collection_data['ref'] : $resource_data);
+    $allow_multi_edit=allow_multi_edit(empty($resource_data) ? $collection_data['ref'] : $resource_data, $collection_data['ref']);
 
     // Edit all
     # If this collection is (fully) editable, then display an edit all link
     if(($k=="" || $internal_share_access) && $show_edit_all_link && $count_result>0)
         {
-        if(!$edit_all_checkperms || $allow_multi_edit)
+        if($allow_multi_edit)
             {
             $extra_tag_attributes = sprintf('
                     data-url="%spages/edit.php?collection=%s"

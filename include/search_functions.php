@@ -850,7 +850,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			}
 	    }
 	
-	
 	# Append media restrictions
 	
 	if ($heightmin!='')
@@ -881,13 +880,12 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 				}
 			}	
 			
-		$blockeditstates="";
+		$blockeditstates=array();
 		for ($n=-2;$n<=3;$n++)
 			{
 			if(!checkperm("e" . $n))
 				{           
-				if ($blockeditstates!="") {$blockeditstates.="','";}
-				$blockeditstates .= $n;
+				$blockeditstates[] = $n;
 				}
 			}
 	
@@ -895,8 +893,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			{
 			if(!checkperm("e" . $n))
 				{
-				if ($blockeditstates!="") {$blockeditstates.="','";}
-				$blockeditstates .= $blockeditstates;
+				$blockeditstates[] = $n;
 				}
 			}
 
@@ -912,7 +909,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			$sql_filter .= "))";
 			}	
 				
-		if ($blockeditstates!="")
+		if (count($blockeditstates) > 0)
 			{
 			$blockeditoverride="";
 			global $userref;
@@ -926,7 +923,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 				$blockeditoverride .= " resource_type in (" . implode(",",$rtexclusions) . ")";				
 				}
 			if ($sql_filter!="") {$sql_filter.=" and ";}
-			$sql_filter.="(archive not in ('$blockeditstates')" . (($blockeditoverride!="")?" or " . $blockeditoverride:"") . ")";
+			$sql_filter.="(archive not in ('" . implode("','",$blockeditstates) . "')" . (($blockeditoverride!="")?" or " . $blockeditoverride:"") . ")";
 			
 			}			
 		}
