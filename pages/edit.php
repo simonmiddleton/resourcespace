@@ -153,7 +153,7 @@ $resource=get_resource_data($ref);
 $resource_type=getval("resource_type","");
 if ($ref<0 && $resource_type!="" && $resource_type!=$resource["resource_type"] && !checkperm("XU{$resource_type}"))     // only if new resource specified and user has permission for that resource type
 	{
-	update_resource_type($ref,$resource_type);
+	update_resource_type($ref,intval($resource_type));
 	$resource["resource_type"]=$resource_type;
 	}
 
@@ -285,7 +285,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
          
 		# Upload template: Change resource type
 		$resource_type=getvalescaped("resource_type","");
-		if ($resource_type!="" && !checkperm("XU{$resource_type}") && $autosave_field=="")     // only if resource type specified and user has permission for that resource type
+		if ($resource_type!="" && $resource_type!=$resource["resource_type"] && !checkperm("XU{$resource_type}") && $autosave_field=="")     // only if resource type specified and user has permission for that resource type
 			{
 			// Check if resource type has been changed between form being loaded and submitted				
 			$post_cs = getval("resource_type_checksum","");
