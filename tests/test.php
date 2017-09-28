@@ -187,7 +187,7 @@ foreach ($tests as $key => $test_stack)
 	foreach ($test_stack as $test)
 	    {
         # ------------- RUN THE TEST ------------------------------------------------
-		echo "Running test " . str_pad($test,45," ") . " ";ob_flush();
+		echo "Running test " . str_pad($test,65," ") . " ";ob_flush();
         try
             {
             $result = include $key . '/'. $test;
