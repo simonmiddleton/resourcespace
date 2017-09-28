@@ -290,7 +290,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 			// Check if resource type has been changed between form being loaded and submitted				
 			$post_cs = getval("resource_type_checksum","");
 			$current_cs = $resource["resource_type"];			
-			if($post_cs != $current_cs)
+			if($post_cs != "" && $post_cs != $current_cs)
 				{
 				$save_errors = array("resource_type"=>$lang["resourcetype"] . ": " . $lang["save-conflict-error"]);
 				$show_error=true;

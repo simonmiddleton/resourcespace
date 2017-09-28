@@ -1658,13 +1658,13 @@ function display_field($n, $field, $newtab=false,$modal=false)
 					}
 				natsort($field_nodes);
 				}
-			if(!$multiple)
+			if(!$multiple && !$blank_edit_template)
 				{
 				echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
 				echo "<input name='" . "field_" . $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
 				}
             }
-        elseif($field['type']==FIELD_TYPE_DATE_RANGE)
+        elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template)
 			{
             $field['nodes'] = get_nodes($field['ref'], NULL, FALSE);
             $field_nodes = array();
@@ -1679,7 +1679,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 			
 			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
 			}
-		elseif(!$multiple)
+		elseif(!$multiple && !$blank_edit_template)
 			{
 			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(trim(preg_replace('/\s\s+/', ' ', $field['value']))) . "'>";
 			}

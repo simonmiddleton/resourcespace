@@ -130,7 +130,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 				// Check if resource field data has been changed between form being loaded and submitted				
 				$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 				$current_cs = md5(implode(",",$current_field_nodes));				
-				if($post_cs != $current_cs)
+				if($post_cs != "" && $post_cs != $current_cs)
 					{
 					$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 					continue;
@@ -290,7 +290,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						// Check if resource field data has been changed between form being loaded and submitted				
 						$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 						$current_cs = md5(implode(",",$current_field_nodes));						
-						if($post_cs != $current_cs)
+						if($post_cs != "" && $post_cs != $current_cs)
 							{
 							$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 							continue;
@@ -375,7 +375,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					// Check if resource field data has been changed between form being loaded and submitted				
 					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 					$current_cs = md5($fields[$n]['value']);			
-					if($post_cs != $current_cs)
+					if($post_cs != "" && $post_cs != $current_cs)
 						{
 						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 						continue;
@@ -401,7 +401,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					// Check if resource field data has been changed between form being loaded and submitted				
 					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 					$current_cs = md5(trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
-					if($post_cs != $current_cs)
+					if($post_cs != "" && $post_cs != $current_cs)
 						{
 						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 						continue;
@@ -417,7 +417,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					// Check if resource field data has been changed between form being loaded and submitted				
 					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 					$current_cs = md5(trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
-					if($post_cs != $current_cs)
+					debug("BANG post_cs: " . $post_cs);
+                    debug("BANG current_cs : " . $current_cs);
+                    debug("BANG currentval : " . trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
+                    if($post_cs != "" && $post_cs != $current_cs)
 						{
 						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 						continue;
@@ -625,7 +628,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         if(($autosave_field=="" || $autosave_field=="Status") && $setarchivestate != $oldarchive)
             {
             // Check if resource status has already been changed between form being loaded and submitted
-            if(getval("status_checksum","") != $oldarchive)
+            if(getval("status_checksum","") != "" && getval("status_checksum","") != $oldarchive)
                 {
                 $errors["status"] = $lang["status"] . ': ' . $lang["save-conflict-error"];
                 }
@@ -670,7 +673,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
         if(($autosave_field=="" || $autosave_field=="Access") && $access != $oldaccess)
             {
             // Check if resource access has already been changed between form being loaded and submitted
-            if(getval("access_checksum","") != $oldaccess)
+            if(getval("access_checksum","") != "" && getval("access_checksum","") != $oldaccess)
                 {
                 $errors["access"] = $lang["access"] . ': ' . $lang["save-conflict-error"];
                 }
