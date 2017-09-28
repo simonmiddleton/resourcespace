@@ -1388,18 +1388,18 @@ function render_access_key_tr(array $record)
 # The functions is_field_displayed, display_multilingual_text_field and display_field below moved from edit.php
 function is_field_displayed($field)
     {
-    global $ref, $resource;
-  
+    global $ref, $resource, $upload_review_mode;
+
     # Field is an archive only field
     return !(($resource["archive"]==0 && $field["resource_type"]==999)
-      # Field has write access denied
-      || (checkperm("F*") && !checkperm("F-" . $field["ref"])
-       && !($ref < 0 && checkperm("P" . $field["ref"])))
-      || checkperm("F" . $field["ref"])
-      # Upload only field
-      || ($ref < 0 && $field["hide_when_uploading"] && $field["required"]==0)
-      || hook('edithidefield', '', array('field' => $field))
-      || hook('edithidefield2', '', array('field' => $field)));
+        # Field has write access denied
+        || (checkperm("F*") && !checkperm("F-" . $field["ref"])
+        && !($ref < 0 && checkperm("P" . $field["ref"])))
+        || checkperm("F" . $field["ref"])
+        # Upload only field
+        || (($ref < 0 || $upload_review_mode) && $field["hide_when_uploading"] && $field["required"]==0)
+        || hook('edithidefield', '', array('field' => $field))
+        || hook('edithidefield2', '', array('field' => $field)));
     }
 
 # Allows language alternatives to be entered for free text metadata fields.
