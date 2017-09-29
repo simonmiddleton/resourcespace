@@ -784,6 +784,7 @@ if(!$validpage)
         )
             {
             jQuery('#previewdashtile').addClass('DoubleWidthDashTile');
+            width = 515;
             }
 
 		jQuery("#previewdashtile").load("<?php echo $previewurl; ?>?tltype=<?php echo urlencode($tile_type)?>&tlsize=" + tlsize + "&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
