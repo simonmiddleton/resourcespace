@@ -1016,7 +1016,8 @@ div.video-js {margin:auto;}
 #modal .BasicsBox .HelpHeader .backtoresults { margin-top: 15px; }
 
 #modal form {
-    min-width: 600px;    
+    min-width: 600px;
+    margin-bottom: 10px;
     }
 /* Dropdown Actions */
 #CollectionMenu .ActionsContainer {
