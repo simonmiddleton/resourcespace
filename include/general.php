@@ -354,20 +354,73 @@ function update_hitcount($ref)
 		sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='$ref'",false,-1,true,0);
 		}
 	}	
-	
+
+/**
+* Returns field data from resource_type_field for the given field
+* 
+* @uses escape_check()
+* @uses sql_query()
+* 
+* @param integer $field Resource type field ID
+* 
+* @return boolean|array
+*/
 function get_resource_type_field($field)
-	{
-	# Returns field data from resource_type_field for the given field.
-	$return=sql_query("select *,linked_data_field from resource_type_field where ref='$field'");
-	if (count($return)==0)
-		{
-		return false;
-		}
-	else
-		{
-		return $return[0];
-		}
-	}
+    {
+    $field = escape_check($field);
+
+    $return = sql_query("
+         SELECT ref,
+                name,
+                title,
+                type,
+                order_by,
+                keywords_index,
+                partial_index,
+                resource_type,
+                resource_column,
+                display_field,
+                use_for_similar,
+                iptc_equiv,
+                display_template,
+                tab_name,
+                required,
+                smart_theme_name,
+                exiftool_field,
+                advanced_search,
+                simple_search,
+                help_text,
+                display_as_dropdown,
+                external_user_access,
+                autocomplete_macro,
+                hide_when_uploading,
+                hide_when_restricted,
+                value_filter,
+                exiftool_filter,
+                omit_when_copying,
+                tooltip_text,
+                regexp_filter,
+                sync_field,
+                display_condition,
+                onchange_macro,
+                field_constraint,
+                linked_data_field,
+                automatic_nodes_ordering,
+                fits_field
+           FROM resource_type_field
+          WHERE ref = '{$field}'
+    ");
+    
+    if(0 == count($return))
+        {
+        return false;
+        }
+    else
+        {
+        return $return[0];
+        }
+    }
+
 if (!function_exists('get_resource_field_data')) {
 function get_resource_field_data($ref,$multi=false,$use_permissions=true,$originalref=-1,$external_access=false,$ord_by=false)
 	{
@@ -5526,12 +5579,51 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
 			}
 		$conditionsql.=" name like '%" . $find . "%' or title like '%" . $find . "%' or tab_name like '%" . $find . "%' or exiftool_field like '%" . $find . "%' or help_text like '%" . $find . "%' or ref like '%" . $find . "%' or tooltip_text like '%" .$find . "%' or display_template like '%" .$find . "%')";
 		}
+
 	// Allow for sorting, enabled for use by System Setup pages
 	//if(!in_array($field_order_by,array("ref","name","tab_name","type","order_by","keywords_index","resource_type","display_field","required"))){$field_order_by="ref";}		
 		
-	$allfields = sql_query("select *, ref, name, title, type, order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, display_as_dropdown, tooltip_text from resource_type_field" . $conditionsql . " order by " . $field_order_by . " " . $field_sort);
-	return $allfields;
-	
+    $allfields = sql_query("
+        SELECT ref,
+               name,
+               title,
+               type,
+               order_by,
+               keywords_index,
+               partial_index,
+               resource_type,
+               resource_column,
+               display_field,
+               use_for_similar,
+               iptc_equiv,
+               display_template,
+               tab_name,
+               required,
+               smart_theme_name,
+               exiftool_field,
+               advanced_search,
+               simple_search,
+               help_text,
+               display_as_dropdown,
+               external_user_access,
+               autocomplete_macro,
+               hide_when_uploading,
+               hide_when_restricted,
+               value_filter,
+               exiftool_filter,
+               omit_when_copying,
+               tooltip_text,
+               regexp_filter,
+               sync_field,
+               display_condition,
+               onchange_macro,
+               field_constraint,
+               linked_data_field,
+               automatic_nodes_ordering,
+               fits_field
+          FROM resource_type_field" . $conditionsql . " ORDER BY " . escape_check($field_order_by) . " " . escape_check($field_sort));
+
+    return $allfields;
 	}
 
 
