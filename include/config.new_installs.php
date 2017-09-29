@@ -39,3 +39,5 @@ $themes_show_background_image = true;
 
 $use_zip_extension=true;
 $collection_download=true;
+
+$theme_category_levels=20;
