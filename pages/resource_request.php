@@ -76,7 +76,11 @@ if (getval("save","")!="")
 		}
 	else
 		{
-		redirect("pages/done.php?text=resource_request&resource=" . urlencode($ref) . "&k=" . urlencode($k));
+		?>
+		<script>
+		CentralSpaceLoad("<?php echo $baseurl_short ?>pages/done.php?text=resource_request&k=<?php echo htmlspecialchars($k); ?>",true);
+		</script>
+		<?php
 		}
 	}
 include "../include/header.php";
@@ -90,7 +94,7 @@ include "../include/header.php";
   <h1><?php echo i18n_get_translated($lang["requestresource"]); ?></h1>
   <p><?php echo text("introtext")?></p>
   
-	<form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php">  
+	<form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php" onsubmit="return CentralSpacePost(this,true);" >  
 	<input type="hidden" name="k" value="<?php echo htmlspecialchars($k); ?>">
 	<input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref)?>">
 	
@@ -197,6 +201,7 @@ hook("resource_request_form_bottom");
 	<div class="QuestionSubmit">
 	<?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><?php } ?>
 	<label for="buttons"> </label>			
+	<input name="save" value="true" type="hidden" />
 	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo htmlspecialchars($ref)?>';"/>&nbsp;
 	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo i18n_get_translated($lang["requestresource"])?>&nbsp;&nbsp;" />
 	</div>

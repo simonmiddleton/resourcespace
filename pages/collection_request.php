@@ -48,7 +48,11 @@ if (getval("save","")!="")
 		}
 	else
 		{
-		redirect("pages/done.php?text=resource_request&k=" . $k);
+		?>
+		<script>
+		CentralSpaceLoad("<?php echo $baseurl_short ?>pages/done.php?text=resource_request&k=<?php echo htmlspecialchars($k); ?>",true);
+		</script>
+		<?php
 		}
 	}
 include "../include/header.php";
