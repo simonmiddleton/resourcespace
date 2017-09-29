@@ -2528,53 +2528,79 @@ function makeFilenameUnique($base_values, $filename, $dupe_string, $extension, $
 *
 * @param array $themearray array of theme levels at which featured collection will be created 
 * 
-* @return boolean
+* @return void
 */
-function new_featured_collection_form($themearray=array())
-	{
-	global $lang;
-	?>
-	<div class="BasicsBox">
-	<h1><?php echo $lang["createnewcollection"] ?></h1>
-	<form id="new_collection_form" action="" onsubmit="return CentralSpacePost(this,true);" >
-		<div class="Question">
-			<label for="collectionname" ><?php echo $lang["collectionname"] ?></label>
-			<input type="text" name="collectionname"></input>
-			<div class="clearleft"></div>
-		</div>
-		
-		<?php
-		if(true || count($themearray) > 0)
-			{?>
-			<div class="Question">
-				<label for="location" ></label>
-				<div><input type="radio" name="location" value="root" onclick="jQuery('#theme_category_name').slideUp();"></input><?php echo "&nbsp;" . $lang["create_new_here"] ?></div>
-				<label for="location" ></label>
-				<div><input type="radio" name="location" value="subfolder" onclick="jQuery('#theme_category_name').slideDown();"></input><?php echo "&nbsp;" . $lang["create_new_below"] ?></div>
-				<div class="clearleft"></div>
-			</div>
-			<?php
-			}
-			?>
-		<div class="Question" id="theme_category_name" <?php if(count($themearray) > 0) {?>style=display:none;" <?php }?></div>
-			<label for="category_name" ><?php echo $lang["themecategory"] ?></label>
-			<input type="text" name="category_name"></input>
-			<div class="clearleft"></div>
-		</div>
-		<?php
-		for($n=0;$n<count($themearray);$n++)
-			{
-			echo "<input type='hidden' name='theme" . ($n>0?$n+1:"") . "' value='" . $themearray[$n] . "'></input>";
-			}
-		?>
-		<input type='hidden' name='create' value='true'></input>
-		<div class="QuestionSubmit" >
-			<label></label>
-			<input type="submit" name="create" value="<?php echo $lang["create"] ?>"></input>
-			<div class="clearleft"></div>
-		</div>
-	</form>
-	</div>
-	<?php
-	return true;
+function new_featured_collection_form(array $themearray = array())
+    {
+    global $lang;
+
+    $themes_count = count($themearray);
+    ?>
+    <div class="BasicsBox">
+        <h1><?php echo $lang["createnewcollection"] ?></h1>
+        <form id="new_collection_form" action="" onsubmit="return CentralSpacePost(this,true);" >
+            <div class="Question">
+                <label for="collectionname" ><?php echo $lang["collectionname"] ?></label>
+                <input type="text" name="collectionname"></input>
+                <div class="clearleft"></div>
+            </div>
+
+        <?php
+        if(0 < $themes_count)
+            {
+            ?>
+            <div class="Question">
+                <label for="location" ></label>
+                <div>
+                    <input type="radio"
+                           name="location" 
+                           value="root" 
+                           onclick="jQuery('#theme_category_name').slideUp();"
+                           checked
+                           ><?php echo "&nbsp;" . $lang["create_new_here"]; ?></input>
+                </div>
+                <label for="location" ></label>
+                <div>
+                    <input type="radio"
+                           name="location"
+                           value="subfolder"
+                           onclick="jQuery('#theme_category_name').slideDown();"
+                           ><?php echo "&nbsp;" . $lang["create_new_below"]; ?></input>
+                </div>
+                <div class="clearleft"></div>
+            </div>
+            <?php
+            }
+            ?>
+            <div class="Question" id="theme_category_name" <?php if($themes_count > 0) {?>style="display:none;" <?php }?></div>
+                <label for="category_name" ><?php echo $lang["themecategory"] ?></label>
+                <input type="text" name="category_name"></input>
+                <div class="clearleft"></div>
+            </div>
+        <?php
+        for($n = 0; $n < $themes_count; $n++)
+            {
+            echo "<input type='hidden' name='theme" . ($n > 0 ? $n + 1 : "") . "' value='" . $themearray[$n] . "'></input>";
+            }
+
+        // Root level does not allow collections so the only option for the user is to just create a featured collection
+        // category level
+        if(0 === $themes_count)
+            {
+            ?>
+            <input type="hidden" name="location" value="subfolder">
+            <?php
+            }
+            ?>
+            <input type='hidden' name='create' value='true'></input>
+            <div class="QuestionSubmit" >
+                <label></label>
+                <input type="submit" name="create" value="<?php echo $lang["create"] ?>"></input>
+                <div class="clearleft"></div>
+            </div>
+        </form>
+    </div>
+    <?php
+
+    return;
 	}
