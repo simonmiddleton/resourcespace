@@ -843,6 +843,8 @@ $lang['to'] = 'To';
 $lang['social_media'] = 'Social media';
 $lang['single'] = 'Single';
 $lang['double'] = 'Double';
+$lang['single_width'] = 'Single width';
+$lang['double_width'] = 'Double width';
 
 # Pager
 $lang["next"]="Next";

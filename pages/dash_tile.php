@@ -510,8 +510,8 @@ if(!$validpage)
     <div class="Question">
         <label for="tlsize"><?php echo $lang['size']; ?></label>
         <select id="DashTileSize" class="stdwidth" name="tlsize" onchange="updateDashTilePreview();">
-            <option value=""><?php echo $lang['single']; ?></option>
-            <option value="double"<?php echo ('double' === $tlsize ? ' selected' : ''); ?>><?php echo $lang['double']; ?></option>
+            <option value=""><?php echo $lang['single_width']; ?></option>
+            <option value="double"<?php echo ('double' === $tlsize ? ' selected' : ''); ?>><?php echo $lang['double_width']; ?></option>
         </select>
         <div class="clearerleft"></div>
     </div>
