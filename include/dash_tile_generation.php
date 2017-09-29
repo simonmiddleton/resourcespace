@@ -74,7 +74,7 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
                 break;
 
             case 'multi':
-                tile_featured_collection_multi($tile, $tile_id);
+                tile_featured_collection_multi($tile, $tile_id, $tile_width, $tile_height, getvalescaped('promimg', 0));
                 break;
 
             case 'blank':
@@ -693,7 +693,7 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
     }
 
 
-function tile_featured_collection_multi($tile, $tile_id)
+function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_height,$promoted_image)
     {
     global $baseurl_short, $lang, $dash_tile_shadows;
 
@@ -721,33 +721,40 @@ function tile_featured_collection_multi($tile, $tile_id)
             );
         }
 
-    $i = 0;
-    foreach(array_rand($resources, min(count($resources), 4)) as $random_picked_resource_key)
+    if(count($resources)>0)
         {
-        $resource = $resources[$random_picked_resource_key];
-
-        $shadow = true;
-
-        $preview_path = get_resource_path($resource['ref'], true, 'pre', false, 'jpg', -1, 1, false);
-        if(file_exists($preview_path))
+        if(count($resources) == 1)
             {
-            $preview_path = get_resource_path($resource['ref'], false, 'pre', false, 'jpg', -1, 1, false);
+            return tile_featured_collection_thumbs($tile,$tile_id,$tile_width,$tile_height, $resources[0]['ref']); 
             }
-        else
+        $i = 0;
+        foreach(array_rand($resources, min(count($resources), 4)) as $random_picked_resource_key)
             {
-            $preview_path  = "{$baseurl_short}gfx/";
-            $preview_path .= get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
-            $shadow        = false;
+            $resource = $resources[$random_picked_resource_key];
+    
+            $shadow = true;
+    
+            $preview_path = get_resource_path($resource['ref'], true, 'pre', false, 'jpg', -1, 1, false);
+            if(file_exists($preview_path))
+                {
+                $preview_path = get_resource_path($resource['ref'], false, 'pre', false, 'jpg', -1, 1, false);
+                }
+            else
+                {
+                $preview_path  = "{$baseurl_short}gfx/";
+                $preview_path .= get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
+                $shadow        = false;
+                }
+    
+            $tile_working_space = ('' == $tile['tlsize'] ? 140 : 380);
+    
+            $gap   = $tile_working_space / min(count($resources), 4);
+            $space = $i * $gap;
+            ?>
+            <img style="position: absolute; top: 10px; left:<?php echo $space * 1.5; ?>px; height: 100%;<?php if($shadow) { ?>box-shadow: 0 0 25px #000;<?php } ?>;transform: rotate(<?php echo 20 - ($i * 12); ?>deg);" src="<?php echo $preview_path; ?>">
+            <?php
+            $i++;
             }
-
-        $tile_working_space = ('' == $tile['tlsize'] ? 140 : 380);
-
-        $gap   = $tile_working_space / min(count($resources), 4);
-        $space = $i * $gap;
-        ?>
-        <img style="position: absolute; top: 10px; left:<?php echo $space * 1.5; ?>px; height: 100%;<?php if($shadow) { ?>box-shadow: 0 0 25px #000;<?php } ?>;transform: rotate(<?php echo 20 - ($i * 12); ?>deg);" src="<?php echo $preview_path; ?>">
-        <?php
-        $i++;
         }
         ?>
     <h2>
