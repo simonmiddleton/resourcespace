@@ -452,7 +452,7 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 			$border=true;
 			}
 
-        $tile_working_space = ('' == $tile['tlsize'] ? 140 : 380);
+        $tile_working_space = ('' == $tile['tlsize'] ? 140 : 280);
 
         $gap   = $tile_working_space / min(count($resources), 4);
         $space = $i * $gap;
@@ -746,7 +746,7 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
                 $shadow        = false;
                 }
     
-            $tile_working_space = ('' == $tile['tlsize'] ? 140 : 380);
+            $tile_working_space = ('' == $tile['tlsize'] ? 140 : 280);
     
             $gap   = $tile_working_space / min(count($resources), 4);
             $space = $i * $gap;
