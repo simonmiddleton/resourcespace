@@ -703,7 +703,7 @@ function SaveAndClearButtons($extraclass="")
       <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
       <?php
       } ?>
-      <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo ($ref>0)?($upload_review_mode?$lang["saveandnext"]:$lang["save"]):$lang["next"]?>&nbsp;&nbsp;" /><br><br>
+      <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo ($ref>0)?($upload_review_mode?$lang["saveandnext"]:$lang["save"]):$lang["next"]?>&nbsp;&nbsp;" /><br /><br />
      <div class="clearerleft"> </div>
      </div>
    <?php 

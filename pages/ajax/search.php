@@ -17,7 +17,6 @@ $return        = array();
 $search_string = getvalescaped('search_string', '');
 
 
-
 // Generate search tags based on a search string
 if(filter_var(getval('generate_tags', false), FILTER_VALIDATE_BOOLEAN))
     {
@@ -27,7 +26,6 @@ if(filter_var(getval('generate_tags', false), FILTER_VALIDATE_BOOLEAN))
     in the search string
     */
     $tag_delimiters = array_merge(array(' ', '  '), $config_separators);
-    // echo "{$search_string}<br>";
 
     // Quoted search detected, so anything within double quotes should allow for white spaces
     $double_quotes_pos = strpos($search_string, '"');
@@ -61,8 +59,6 @@ if(filter_var(getval('generate_tags', false), FILTER_VALIDATE_BOOLEAN))
         {
         $return = array_merge($return, split_keywords($search_string));
         }
-
-    // echo '<pre>';print_r($return);echo '</pre>';die('<br>You died in ' . __FILE__ . ' @' . __LINE__);
 
     echo json_encode($return);
     exit();

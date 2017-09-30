@@ -99,7 +99,7 @@ foreach ($all_resources as $value)
 }
 
 ?>
-<?php if ($check){?></table><?php echo "<br>";}
+<?php if ($check){?></table><?php echo "<br />";}
 
 //exit if there are no assets to put on the map
 if (count($markers)==0) {exit;}?>

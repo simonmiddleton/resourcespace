@@ -48,7 +48,7 @@ if(is_array($collectionstates) && (count($collectionstates)>1 || !in_array(0,$co
 	$warningtext=$lang["collection_share_status_warning"];
 	foreach($collectionstates as $collectionstate)
 		{
-		$warningtext.="<br>" . $lang["status" . $collectionstate];
+		$warningtext.="<br />" . $lang["status" . $collectionstate];
 		}
 	}
 

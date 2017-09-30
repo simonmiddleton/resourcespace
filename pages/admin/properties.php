@@ -67,16 +67,13 @@ if (substr($t[7],0,2)=="as")
     $query=trim($tree[$as[1]]);
     for ($q=2;$q<count($as);$q+=2)
         {
-    #echo "replace " . $as[$q] . " with " . $as[$q+1] . "<br><br>";
         $query=str_replace($as[$q],$as[$q+1],$query);
-    #echo $query . "<br><br>";
         }
     $q=explode(";",$query);
     for ($u=6;$u<count($q);$u++)
         {
         $t[$u]=$q[$u];
         }
-    #echo $t[6];
     }
     
 # A special case for global relationships.
@@ -137,7 +134,7 @@ if (array_key_exists("submit",$_POST))
             $result=move_uploaded_file($_FILES['userfile']['tmp_name'], "$filename");
             if ($result==false)
                 {
-                if (file_exists($filename)) {unlink($filename);} else {echo "<div class=propbox>" . $lang["file_too_large"] . "." . "</div><br><br>";}
+                if (file_exists($filename)) {unlink($filename);} else {echo "<div class=propbox>" . $lang["file_too_large"] . "." . "</div><br /><br />";}
                 }
             }
         else if(preg_match("/(.gif|gif)$/", $_POST["group_specific_logo"]) && preg_match("/(.gif|gif)$/",$_FILES['userfile']['name'])) 
@@ -147,13 +144,13 @@ if (array_key_exists("submit",$_POST))
             $result=move_uploaded_file($_FILES['userfile']['tmp_name'], "$filename");
             if ($result==false)
                 {
-                if (file_exists($filename)) {unlink($filename);} else {echo "<div class=propbox>" . $lang["file_too_large"] . "." . "</div><br><br>";}
+                if (file_exists($filename)) {unlink($filename);} else {echo "<div class=propbox>" . $lang["file_too_large"] . "." . "</div><br /><br />";}
                 }   
             }
         else
             {
             $_POST["group_specific_logo"]="";
-            echo "<div class=propbox>" . $lang["accept_png_gif_only"] . ". " . $lang["ensure_file_extension_match"]."."."</div><br><br>";
+            echo "<div class=propbox>" . $lang["accept_png_gif_only"] . ". " . $lang["ensure_file_extension_match"]."."."</div><br /><br />";
             }
         
         }
@@ -316,11 +313,10 @@ if (substr($t[7],0,6)=="upload")
         $scale=100;
         while ($width>350) {$width=$width/2;$height=$height/2;$scale=$scale/2;}
         ?>
-        <p align=center><a href="<?php echo $filename?>" target="_blank"><img src="<?php echo $filename?>?<?php echo time()?>" width="<?php echo $width?>" height="<?php echo $height?>" border=0></a><br><?php echo $lang["zoom"] . ": " . floor($scale)?>%</p>
+        <p align=center><a href="<?php echo $filename?>" target="_blank"><img src="<?php echo $filename?>?<?php echo time()?>" width="<?php echo $width?>" height="<?php echo $height?>" border=0></a><br /><?php echo $lang["zoom"] . ": " . floor($scale)?>%</p>
         <p><?php echo $lang["deletion_instruction"] ?></p>
         <?php
         }
-    #echo "$filename<br>../assets/B1B3A2005B4A09B5A1B6.jpg";
     ?>
     <form enctype="multipart/form-data" method="post">
     <p>
@@ -403,7 +399,7 @@ else
         if ($key=="newredirect") {?><input type=hidden name="newredirect" value="<?php echo $value?>"><?php } else {
         ?>
         <p>
-        <?php if (!(is_numeric($key))) { echo  ($langindex==true ? $lang[$label] : lang_or_i18n_get_translated($label,"property-")) . "<br>"; }
+        <?php if (!(is_numeric($key))) { echo  ($langindex==true ? $lang[$label] : lang_or_i18n_get_translated($label,"property-")) . "<br />"; }
         # include plugin
         if (file_exists("plugins/" . $curid . "_" . $key . ".php")) {include ("plugins/" . $curid . "_" . $key . ".php");}
         

@@ -586,7 +586,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     }
 
                 // Show previously searched options on the status box
-                $status_box_elements .= "<span id=\"nodes_searched_{$field['ref']}_statusbox_option_{$node['ref']}\">{$node['name']}</span><br>";
+                $status_box_elements .= "<span id=\"nodes_searched_{$field['ref']}_statusbox_option_{$node['ref']}\">{$node['name']}</span><br />";
                 }
             ?>
 			<div id="field_<?php echo htmlspecialchars($field['name']); ?>">

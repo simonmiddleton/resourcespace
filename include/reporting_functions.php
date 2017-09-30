@@ -284,7 +284,7 @@ function send_periodic_report_emails()
 			$report['ref']
 		);
 
-		$unsubscribe="<br>" . $lang["unsubscribereport"] . "<br>" . $baseurl . "/?ur=" . $report["ref"];
+		$unsubscribe="<br />" . $lang["unsubscribereport"] . "<br />" . $baseurl . "/?ur=" . $report["ref"];
 		$email=$report["email"];
 
 		// Check user unsubscribed from this report
@@ -301,7 +301,7 @@ function send_periodic_report_emails()
 
 		if(!$unsubscribed_user)
 			{
-			echo $lang["sendingreportto"] . " " . $email . "<br>" . $output . $delete_link . $unsubscribe . "<br>";
+			echo $lang["sendingreportto"] . " " . $email . "<br />" . $output . $delete_link . $unsubscribe . "<br />";
 			send_mail($email,$title,$output . $delete_link  . $unsubscribe);
 			}
 
@@ -354,7 +354,7 @@ function send_periodic_report_emails()
 					$report['ref']
 				);
 
-				echo $lang["sendingreportto"] . " " . $email . "<br>" . $output . $unsubscribe_link . "<br>";
+				echo $lang["sendingreportto"] . " " . $email . "<br />" . $output . $unsubscribe_link . "<br />";
 				send_mail($email, $title, $output . $unsubscribe_link);
 				}
 			}

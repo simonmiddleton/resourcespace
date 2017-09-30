@@ -256,7 +256,6 @@ function check_view_display_condition($fields,$n)
 	$displaycondition=true;
 	if ($fields[$n]["display_condition"]!="")
 		{
-		//echo $fields[$n]["display_condition"] . "<br>";
 		$fieldstocheck=array(); #' Set up array to use in jQuery script function
 		$s=explode(";",$fields[$n]["display_condition"]);
 		$condref=0;
@@ -1711,7 +1710,7 @@ if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_acce
         <div class="RecordBox">
         <div class="RecordPanel">  
         <div class="Title"><?php echo $lang['metadata-report']?></div>
-        <div id="<?php echo $context ?>metadata_report"><a onclick="metadataReport(<?php echo htmlspecialchars($ref)?>,'<?php echo $context ?>');document.getElementById('<?php echo $context ?>metadata_report').innerHTML='<?php echo $lang['pleasewait']?>';return false;" class="itemNarrow" href="#"> <?php echo LINK_CARET . $lang['viewreport'];?></a><br></div>
+        <div id="<?php echo $context ?>metadata_report"><a onclick="metadataReport(<?php echo htmlspecialchars($ref)?>,'<?php echo $context ?>');document.getElementById('<?php echo $context ?>metadata_report').innerHTML='<?php echo $lang['pleasewait']?>';return false;" class="itemNarrow" href="#"> <?php echo LINK_CARET . $lang['viewreport'];?></a><br /></div>
         </div>
         
         </div>

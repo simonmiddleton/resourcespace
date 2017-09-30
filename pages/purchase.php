@@ -182,7 +182,7 @@ else
 			
 	<tr><td><strong><?php echo $lang["totalprice"] ?></strong></td><td align="right"><strong><?php echo $currency_symbol . " " . number_format($totalprice,2) ?></strong></td></tr>
 	</table>
-	<br>
+	<br />
 	
 	<?php if ($userrequestmode==2)
 		{

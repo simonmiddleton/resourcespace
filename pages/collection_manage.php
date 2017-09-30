@@ -239,7 +239,7 @@ include "../include/header.php";
 ?>
   <div class="BasicsBox">
     <h1><?php echo $lang["managemycollections"]?></h1>
-    <p class="tight"><?php echo text("introtext")?></p><br>
+    <p class="tight"><?php echo text("introtext")?></p><br />
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/collection_manage.php">
 		<div class="Question">

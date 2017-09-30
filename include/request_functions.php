@@ -809,7 +809,7 @@ function email_resource_request($ref,$details)
     
     $htmlbreak="";
     global $use_phpmailer;
-    if ($use_phpmailer){$htmlbreak="<br><br>";}
+    if ($use_phpmailer){$htmlbreak="<br /><br />";}
     
     $list="";
     reset ($_POST);

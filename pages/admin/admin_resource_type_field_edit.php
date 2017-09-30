@@ -388,7 +388,7 @@ if (getval("delete","")!="")
 	    {	    
 	    // User needs to confirm deletion as data will be lost
 	    $error_text=str_replace("%%AFFECTEDRESOURCES%%",$affected_resources_count,$lang["admin_delete_field_confirm"]);
-		$error_text.="<br><a target=\"_blank\" href=\"" . $baseurl  . "/pages/search.php?search=!hasdata" . $ref . "\">" . $lang["show_resources"] . "</a>";
+		$error_text.="<br /><a target=\"_blank\" href=\"" . $baseurl  . "/pages/search.php?search=!hasdata" . $ref . "\">" . $lang["show_resources"] . "</a>";
 	    
 	    $confirm_delete=true;
 	    }

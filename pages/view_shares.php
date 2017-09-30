@@ -85,10 +85,10 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
 				echo "<tr>";
 				echo "<td>" . $lang["users"] . "</td>";
 				echo "<td>" . (($collections[$n]["allow_changes"]==0)?$lang["view"]:$lang["addremove"]) . "</td>";
-				echo "<td>" . $lang["users"] . ":<br>";
+				echo "<td>" . $lang["users"] . ":<br />";
 				foreach($colusers as $coluser)
 					{
-					echo (($coluser["fullname"]!="")?$coluser["fullname"]:$coluser["username"]) . "<br>";											
+					echo (($coluser["fullname"]!="")?$coluser["fullname"]:$coluser["username"]) . "<br />";											
 					}
 				echo "</td>";
 				echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_edit.php?ref=" . $collections[$n]["ref"] . "\"><?php echo LINK_CARET ?>" . $lang["action-edit"] . "</a></div></td>";

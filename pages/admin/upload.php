@@ -14,9 +14,9 @@ if (array_key_exists("userfile",$_FILES))
 	    $result=move_uploaded_file($_FILES['userfile']['tmp_name'], $filepath);
     	if ($result==false)
        	 	{
-       	 echo "<div class=propbox>File upload error. File too large?<br><br><pre>";
+       	 echo "<div class=propbox>File upload error. File too large?<br /><br /><pre>";
        	 print_r($_FILES);
-       	 echo "</pre></div><br><br>";
+       	 echo "</pre></div><br /><br />";
        	 	}
      	else
      		{

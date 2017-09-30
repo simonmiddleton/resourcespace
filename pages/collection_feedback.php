@@ -38,7 +38,7 @@ if (getval("save","")!="")
 			if($errors=="")
 				{$errors = $saveerror;}
 			else
-				{$errors.="<br><br> " . $saveerror;}
+				{$errors.="<br /><br /> " . $saveerror;}
 			}
 		}
 	else
@@ -58,7 +58,7 @@ include "../include/header.php";
 
 if ($errors!="")
 	{
-	echo "<script>alert('" .  str_replace(array("<br>","<br/>","<br />"),"\\n\\n",$errors) . "');</script>";
+	echo "<script>alert('" .  str_replace(array("<br />","<br/>","<br />"),"\\n\\n",$errors) . "');</script>";
 	}
 ?>
 

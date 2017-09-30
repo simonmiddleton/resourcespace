@@ -963,7 +963,7 @@ if ($archiver && count($collection_download_settings)>1)
         <option value="<?php echo htmlspecialchars($key) ?>"><?php echo lang_or_i18n_get_translated($value["name"],"archive-") ?></option><?php
         } ?>
     </select>
-    <div class="clearerleft"></div></div><br>
+    <div class="clearerleft"></div></div><br />
     </div><?php
     }	?>
 
@@ -996,7 +996,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 		   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option>	   
 	</select>
 	
-	<div class="clearerleft"></div></div><br>
+	<div class="clearerleft"></div></div><br />
 	<div class="clearerleft"></div>
 	<label for="tarinfo"></label>
 	<div class="Fixed"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div>

@@ -150,7 +150,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
         {
         // if usageoption is set to -1 when logging, you can avoid the usage description here
         echo (($log[$n]["notes"]=="" || $log[$n]["notes"]=="-1")? "" :
-            $lang["usage"] . ": " . nl2br(htmlspecialchars($log[$n]["notes"])) . "<br>" . $lang["indicateusagemedium"] . ": " . @$download_usage_options[$log[$n]["usageoption"]]);
+            $lang["usage"] . ": " . nl2br(htmlspecialchars($log[$n]["notes"])) . "<br />" . $lang["indicateusagemedium"] . ": " . @$download_usage_options[$log[$n]["usageoption"]]);
 	    }
 
 	# For purchases, append size and price

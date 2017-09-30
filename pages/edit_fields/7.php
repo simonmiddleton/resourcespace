@@ -38,7 +38,7 @@ foreach($field['nodes'] as $node)
     // Show previously searched options on the status box
     if(!(isset($treeonly) && true == $treeonly))
         {
-        $status_box_elements .= "<div class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">{$node['name']}</span><br></div>";
+        $status_box_elements .= "<div class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">{$node['name']}</span><br /></div>";
         }
     }
 
@@ -259,7 +259,7 @@ echo $hidden_input_elements;
                     + selected_rs_node_ids[i]
                     + '">'
                     + jQuery('#<?php echo $tree_id; ?>').jstree(true).get_node(selected_rs_node_ids[i]).text
-                    + '</span><br></div>');
+                    + '</span><br /></div>');
                 }
 
             // Trigger an event so we can chain actions once we've changed a category tree option

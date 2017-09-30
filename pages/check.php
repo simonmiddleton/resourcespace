@@ -307,7 +307,7 @@ function get_utility_version($utilityname)
     if ($utility_fullpath==false)
         {
         # There was a path but it was incorrect - the utility couldn't be found.
-        $error_msg = $lang["status-fail"] . ":<br>" . str_replace("?", $path, $lang["softwarenotfound"]);
+        $error_msg = $lang["status-fail"] . ":<br />" . str_replace("?", $path, $lang["softwarenotfound"]);
         return array("name" => $name, "version" => "", "success" => false, "error" => $error_msg);
         }
 
@@ -350,7 +350,7 @@ function get_utility_version($utilityname)
     if ($expected==false)
         {
         # There was a correct path but the version check failed - unexpected output when executing the command.
-        $error_msg = $lang["status-fail"] . ":<br>" . str_replace(array("%command", "%output"), array($version_command, $version), $lang["execution_failed"]);
+        $error_msg = $lang["status-fail"] . ":<br />" . str_replace(array("%command", "%output"), array($version_command, $version), $lang["execution_failed"]);
         return array("name" => $name, "version" => "", "success" => false, "error" => $error_msg);
         }
     else    

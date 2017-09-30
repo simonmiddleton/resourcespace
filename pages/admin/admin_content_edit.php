@@ -181,7 +181,7 @@ if($html_validation !== true && $html_validation !== '')
 			?>
 			<p>
 				<label for="text"><?php echo $lang['text']; ?></label>
-			</p><br>
+			</p><br />
 			<?php echo $text_info; ?>
 			<textarea id="<?php echo $lang["text"]?>" class="stdwidth" name="text" rows=15 cols=50><?php echo htmlspecialchars($text); ?></textarea>
 			<script type="text/javascript">

@@ -3573,14 +3573,10 @@ function check_display_condition($n, $field)
         $displayconditioncheck = false;
         $s                     = explode('=', $condition);
 
-        // echo "sField = $s[0]<br>";
-        // echo "sCondition = $s[1]<br>";
-
         for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
             {
             if($s[0] == $fields[$cf]['name']) # this field needs to be checked
                 {
-                // echo "Field '{$fields[$cf]['name']}' needs to be checked<br><br>";
                 $fields[$cf]['nodes'] = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
 
                 $node_options = extract_node_options($fields[$cf]['nodes']);
@@ -4606,7 +4602,7 @@ function payment_set_complete($collection,$emailconfirmation="")
 		}
 	$summary.="</table>";
 	// Send email or notification to admin
-	$message=$lang["purchase_complete_email_admin_body"] . "<br>" . $lang["username"] . ": " . $username . "(" . $userfullname . ")<br>" . $summary . "<br><br>$baseurl/?c=" . $collection . "<br>";
+	$message=$lang["purchase_complete_email_admin_body"] . "<br />" . $lang["username"] . ": " . $username . "(" . $userfullname . ")<br />" . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
 	$notificationmessage=$lang["purchase_complete_email_admin_body"] . "\r\n" . $lang["username"] . ": " . $username . "(" . $userfullname . ")";
 	$notify_users=get_notification_users("RESOURCE_ACCESS"); 
 	$message_users=array();
@@ -4633,7 +4629,7 @@ function payment_set_complete($collection,$emailconfirmation="")
 	
 	// Send email to user (not a notification as may need to be kept for reference)
 	$confirmation_address=($emailconfirmation!="")?$emailconfirmation:$useremail;	
-	$userconfirmmessage= $lang["purchase_complete_email_user_body"] . $summary . "<br><br>$baseurl/?c=" . $collection . "<br>";
+	$userconfirmmessage= $lang["purchase_complete_email_user_body"] . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
 	send_mail($useremail,$applicationname . ": " . $lang["purchase_complete_email_user"] ,$userconfirmmessage);
 	
 	// Rename so that can be viewed on my purchases page
@@ -5540,11 +5536,11 @@ function validate_html($html)
 	{
 	$line=xml_get_current_line_number($parser);
         
-	$error=htmlspecialchars(xml_error_string($errcode)) . "<br>Line: " . $line . "<br><br>";
+	$error=htmlspecialchars(xml_error_string($errcode)) . "<br />Line: " . $line . "<br /><br />";
 	$s=explode("\n",$html);
-	$error.= "<pre>" . trim(htmlspecialchars(@$s[$line-2])) . "<br>";
-	$error.= "<strong>" . trim(htmlspecialchars(@$s[$line-1])) . "</strong><br>";
-	$error.= trim(htmlspecialchars(@$s[$line])) . "<br></pre>";		
+	$error.= "<pre>" . trim(htmlspecialchars(@$s[$line-2])) . "<br />";
+	$error.= "<strong>" . trim(htmlspecialchars(@$s[$line-1])) . "</strong><br />";
+	$error.= trim(htmlspecialchars(@$s[$line])) . "<br /></pre>";		
 	return $error;
 	}
     else

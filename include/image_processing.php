@@ -577,7 +577,6 @@ function extract_exif_comment($ref,$extension="")
 							{
 							if (trim($s[0])!="" && (in_array(strtolower($s[$n]),$options))) {$value.="," . $s[$n];} 							
 							}
-						#echo($read_from[$i]["ref"] . " = " . $value . "<br>");
 						}
 					
 					# Read the data.				

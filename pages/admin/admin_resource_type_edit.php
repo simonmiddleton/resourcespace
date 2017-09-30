@@ -129,7 +129,7 @@ include "../../include/header.php";
     ?>
     <div class="PageInfoMessage">
     <?php
-    echo str_replace("%%RESOURCECOUNT%%",count($affectedresources),$lang["resource_type_delete_confirmation"]) . "<br>";	
+    echo str_replace("%%RESOURCECOUNT%%",count($affectedresources),$lang["resource_type_delete_confirmation"]) . "<br />";	
         
     echo $lang["resource_type_delete_select_new"];
     ?>

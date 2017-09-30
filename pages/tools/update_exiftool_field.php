@@ -36,7 +36,7 @@ foreach ($fieldrefs as $fieldref){
 	if ($exiftool_tag==""){ die ("Please add an exiftool mapping to your $title Field");}
 
 
-	echo "<b>Updating RS Field $fieldref - $title, with exiftool extraction of: $exiftool_tag</b><br><br>";
+	echo "<b>Updating RS Field $fieldref - $title, with exiftool extraction of: $exiftool_tag</b><br /><br />";
 
 	$join="";
 	$condition = "";
@@ -79,12 +79,12 @@ foreach ($fieldrefs as $fieldref){
     	
     		if ($blanks=="true"){
     			update_field($ref,$fieldref,$value);
-    			echo ("<br>Updated Resource $ref <br> -Exiftool found \"$value\" embedded in the -$exiftool_tag tag and applied it to ResourceSpace Field $fieldref<br><br>");
+    			echo ("<br />Updated Resource $ref <br /> -Exiftool found \"$value\" embedded in the -$exiftool_tag tag and applied it to ResourceSpace Field $fieldref<br /><br />");
     			}
     		else {
     			if ($value!=""){
     				update_field($ref,$fieldref,$value);
-    				echo ("<br>Updated Resource $ref <br> -Exiftool found \"$value\" embedded in the -$exiftool_tag tag and applied it to ResourceSpace Field $fieldref<br><br>");	
+    				echo ("<br />Updated Resource $ref <br /> -Exiftool found \"$value\" embedded in the -$exiftool_tag tag and applied it to ResourceSpace Field $fieldref<br /><br />");	
     			}
     		}
 		}

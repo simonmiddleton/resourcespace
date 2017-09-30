@@ -84,7 +84,7 @@ include "../include/header.php";
 ?>
   <div class="BasicsBox">
     <h1><?php echo $lang["viewpurchases"]?></h1>
-    <p class="tight"><?php echo $lang["viewpurchasesintro"]?></p><br>
+    <p class="tight"><?php echo $lang["viewpurchasesintro"]?></p><br />
 
 <?php
 

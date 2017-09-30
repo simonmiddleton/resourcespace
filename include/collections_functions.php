@@ -1091,7 +1091,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 	# htmlbreak is for composing list
 	$htmlbreak="\r\n";
 	global $use_phpmailer;
-	if ($use_phpmailer){$htmlbreak="<br><br>";$htmlbreaksingle="<br>";} 
+	if ($use_phpmailer){$htmlbreak="<br /><br />";$htmlbreaksingle="<br />";} 
 	
 	if ($fromusername==""){$fromusername=$applicationname;} // fromusername is used for describing the sender's name inside the email
 	if ($from_name==""){$from_name=$applicationname;} // from_name is for the email headers, and needs to match the email address (app name or user name)
@@ -1223,7 +1223,6 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 			$body = "";
 		}
 		$body.=$templatevars['fromusername']." " . (($emailcollectionmessageexternal)?$externalmessage:$internalmessage) . "\n\n" . $templatevars['message']."\n\n" . $viewlinktext ."\n\n".$templatevars['list'];
-		#exit ($body . "<br>" . $viewlinktext);	
 		send_mail($emails[$nx1],$subject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
 		$viewlinktext=$origviewlinktext;
 		}

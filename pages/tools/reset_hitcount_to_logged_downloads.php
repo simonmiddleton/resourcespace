@@ -15,7 +15,7 @@ $rd=sql_query("select ref from resource");
 for ($n=0;$n<count($rd);$n++)
 	{
 	$ref=$rd[$n]['ref'];
-	echo "Updating " . $ref. "<br>";
+	echo "Updating " . $ref. "<br />";
 	$count=sql_query("select * from resource_log where resource=$ref and type='d'");
 	sql_query("update resource set hit_count=0,new_hit_count=".count($count)." where ref='$ref'");
 	}

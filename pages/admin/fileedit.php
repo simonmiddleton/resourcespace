@@ -111,7 +111,7 @@ for ($n=0;$n<count($plugins);$n++)
 </style>
 
 <?php if ($error!="") { ?>
-<div class=propbox style="font-weight:bold;color:red;"><?php echo $error?></div><br><br>
+<div class=propbox style="font-weight:bold;color:red;"><?php echo $error?></div><br /><br />
 <?php } ?>
 
 <div class="proptitle"><?php echo $lang["file"] . ": "  . str_replace("../","",$file); if (basename($file)=="config.default.php"){echo "<br />" . $lang["configdefault-title"];}

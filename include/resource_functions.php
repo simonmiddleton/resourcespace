@@ -1686,7 +1686,7 @@ function update_field($resource, $field, $value, array &$errors = array())
             if(count($fieldoptiontranslations) < 2)
                 {
                 $currentoptions[]=trim($fieldoption['name']); # Not a translatable field
-                debug("update_field: current field option: '" . trim($fieldoption['name']) . "'<br>");
+                debug("update_field: current field option: '" . trim($fieldoption['name']) . "'<br />");
                 }
             else
                 {
@@ -1697,14 +1697,14 @@ function update_field($resource, $field, $value, array &$errors = array())
                     if (substr($fieldoptiontranslations[$n],2,1)!=":" && substr($fieldoptiontranslations[$n],5,1)!=":" && substr($fieldoptiontranslations[$n],0,1)!=":")
                         {
                         $currentoptions[]=trim($fieldoption);
-                        debug("update_field: current field option: '" . $fieldoption . "'<br>");
+                        debug("update_field: current field option: '" . $fieldoption . "'<br />");
                         }
                     else
                         {
                         # Support both 2 character and 5 character language codes (for example en, en-US).
                         $p=strpos($fieldoptiontranslations[$n],':');                         
                         $currentoptions[]=trim(substr($fieldoptiontranslations[$n],$p+1));
-                        debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)) . "'<br>");
+                        debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)) . "'<br />");
                         }
                     }
                 }
@@ -1720,7 +1720,7 @@ function update_field($resource, $field, $value, array &$errors = array())
                 $nodes_to_add[]   = $newnode;
                 $currentoptions[] = trim($newvalue);
 
-                debug("update_field: field option added: '" . trim($newvalue) . "'<br>");
+                debug("update_field: field option added: '" . trim($newvalue) . "'<br />");
                 }
             }
         }
@@ -2968,7 +2968,7 @@ function notify_user_contributed_submitted($refs,$collection=0)
 	global $notify_user_contributed_submitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer;
 	if (!$notify_user_contributed_submitted) {return false;} # Only if configured.
 	$htmlbreak="\r\n";
-	if ($use_phpmailer){$htmlbreak="<br><br>";}
+	if ($use_phpmailer){$htmlbreak="<br /><br />";}
 	
 	$list="";
 	if(is_array($refs))
@@ -3028,7 +3028,7 @@ function notify_user_contributed_unsubmitted($refs,$collection=0)
 	if (!$notify_user_contributed_unsubmitted) {return false;} # Only if configured.
 	
 	$htmlbreak="\r\n";
-	if ($use_phpmailer){$htmlbreak="<br><br>";}
+	if ($use_phpmailer){$htmlbreak="<br /><br />";}
 	
 	$list="";
 	if(is_array($refs))
@@ -3240,7 +3240,6 @@ function save_field_options($field)
 			for ($m=0;$m<count($matching);$m++)
 				{
 				$ref=$matching[$m]["resource"];
-				#echo "Processing $ref to update " . $options[$n] . "<br>existing value is " . $matching[$m]["value"] . "<br/>";
 								
 				$set=trim_array(explode(",",$matching[$m]["value"]));
 				
@@ -3290,7 +3289,6 @@ function save_field_options($field)
 			for ($m=0;$m<count($matching);$m++)
 				{
 				$ref=$matching[$m]["resource"];
-				#echo "Processing $ref to remove " . $options[$n] . "<br>existing value is " . $matching[$m]["value"] . "<br/>";
 								
 				$set=trim_array(explode(",",$matching[$m]["value"]));
 				$new=array();
@@ -4268,7 +4266,7 @@ function notify_user_resources_approved($refs)
 	debug("Emailing user notifications of resource approvals");	
 	$htmlbreak="\r\n";
 	global $use_phpmailer,$userref,$templatevars;
-	if ($use_phpmailer){$htmlbreak="<br><br>";}
+	if ($use_phpmailer){$htmlbreak="<br /><br />";}
 	$notifyusers=array();
 	
     if(!is_array($refs))
