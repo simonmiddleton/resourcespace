@@ -1428,7 +1428,7 @@ function add_saved_search_items($collection)
 if (!function_exists("allow_multi_edit")){
 function allow_multi_edit($collection,$collectionid = 0)
 	{
-	global $resource, $ref;
+	global $resource;
 	# Returns true or false, can all resources in this collection be edited by the user?
 
 	if (is_array($collection) && $collectionid == 0)
@@ -1437,11 +1437,6 @@ function allow_multi_edit($collection,$collectionid = 0)
 		for ($n=0;$n<count($collection);$n++)
 			{
 			$resource = $collection[$n];
-
-            // get_edit_access() has a custom hook which depends on global $ref. We need to make sure it applies
-            // to the actual resource ref we are testing edit access for
-            $ref = $resource['ref'];
-
 			if (!get_edit_access($collection[$n]["ref"],$collection[$n]["archive"],false,$collection[$n]))
 				{
 				return false;
