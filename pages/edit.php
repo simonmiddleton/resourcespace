@@ -1431,7 +1431,7 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
             <div class="AutoSaveStatus" id="AutoSaveStatusStatus" style="display:none;"></div>
             <?php
             } 
-		 if(!$multiple)
+		 if(!$multiple && getval("copyfrom","")=="")
 			{
 			echo "<input id='status_checksum' name='status_checksum' type='hidden' value='" . $setarchivestate . "'>";
 			}?>
@@ -1479,7 +1479,7 @@ else
       $ea3=$custom_access?!checkperm('ea3'):false;
       if(($ea0 && $resource["access"]==0) || ($ea1 && $resource["access"]==1) || ($ea2 && $resource["access"]==2) || ($ea3 && $resource["access"]==3))
       {
-        if(!$multiple)
+        if(!$multiple && getval("copyfrom","")=="")
 			{
 			echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $resource["access"] . "'>";
 			}?>
