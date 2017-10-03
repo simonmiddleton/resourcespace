@@ -17,6 +17,7 @@ input[readonly] {color: #000000;}
 
 select {background-color:white; border-radius:5px;border:none;}
 .Question select {border-radius:0; border:1px solid #999;}
+.ListTools .ActionsContainer select {border: 1px solid #a2a2a2;}
 input[type=submit] {border-radius: 5px;}
 
 #Header {
