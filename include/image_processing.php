@@ -920,7 +920,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews']);
 
 	# Debug
-	debug("create_previews(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested,checksum_required=$checksum_required)",RESOURCE_LOG_APPEND_PREVIOUS);
+	debug("create_previews(ref = {$ref}, thumbonly = {$thumbonly}, extension = {$extension}, previewonly = {$previewonly}, previewbased = {$previewbased}, alternative = {$alternative}, ignoremaxsize = {$ignoremaxsize}, ingested = {$ingested}, checksum_required = {$checksum_required})", RESOURCE_LOG_APPEND_PREVIOUS);
 
 	if (!$previewonly) {
 		// make sure the extension is the same as the original so checksums aren't done for previews
