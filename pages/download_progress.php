@@ -20,11 +20,7 @@ $download_url_suffix.= hook("addtodownloadquerystring");
 
 if ($download_usage && getval("usage","")=="" && !$direct_download)
 	{
-	?>
-	<script>
-	CentralSpaceLoad('<?php echo $baseurl_short . "pages/download_usage.php" . $download_url_suffix; ?>',true);
-	</script>
-	<?php
+	redirect($baseurl_short."pages/download_usage.php".$download_url_suffix);
 	}
 
 if (!($url=hook("getdownloadurl", "", array($ref, $size, $ext, 1, $alternative)))) // used in remotedownload-plugin
@@ -48,7 +44,7 @@ if (!$save_as)
 	{
 	?>
 	<script type="text/javascript">
-	window.setTimeout("window.open('<?php echo $url?>'),'_blank'",500);
+	window.setTimeout("document.location='<?php echo $url?>'",1000);
 	</script>
 	<?php
 	}

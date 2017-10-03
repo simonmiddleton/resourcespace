@@ -19,17 +19,7 @@ if('' != getval('save', ''))
         {
         sql_query("UPDATE user SET accepted_terms = 1 WHERE ref = '{$userref}'");
         }
-	
-	if(strpos($url,$baseurl)!==false || substr($url,0,1)=="/")
-			{
-			?>
-			<script>
-			CentralSpaceLoad('<?php echo $url ?>',true);
-			</script>
-			<?php
-			exit();
-			}
-			
+
     if(false !== strpos($url, 'http'))
         {
         header("Location: {$url}");
@@ -43,18 +33,8 @@ if('' != getval('save', ''))
 
 if($terms_download == false && getval("noredir","") == "")
     {
-	if(strpos($url,$baseurl)!==false || substr($url,0,1)=="/")
-			{
-			// Local redirect, perform an ajax load 
-			?>
-			<script>
-			CentralSpaceLoad('<?php echo $url ?>',true);
-			</script>
-			<?php
-			exit();
-			}
     redirect($url);
-	}
+    }
 
 include "../include/header.php";
 ?>
