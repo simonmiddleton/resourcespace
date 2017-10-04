@@ -1615,7 +1615,7 @@ else
 
        ?>
     </div> <!-- end of previous collapsible section -->
-    <h2 id="resource_custom_access" <?php echo ($collapsible_sections) ? ' class="CollapsibleSectionHead"' : ''; ?>>Resource custom access</h2>
+    <h2 id="resource_custom_access" <?php echo ($collapsible_sections) ? ' class="CollapsibleSectionHead"' : ''; ?>><?php echo $lang["resource_custom_access"]?></h2>
     <div  id="ResourceCustomAccessSection" <?php echo ($collapsible_sections) ? 'class="CollapsibleSection"' : ''; ?>>
        <script type="text/javascript">
        function removeCustomAccess(ref,type) {
