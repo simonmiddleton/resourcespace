@@ -867,7 +867,8 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 	// Append filter if only searching for editable resources
 	// ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref) && !checkperm("ert" . $resourcedata['resource_type']))
 	if($editable_only)
-		{
+		{		
+		$editable_filter = "";
 		# Construct resource type exclusion based on 'ert' permission 
 		# look for all 'ert' permissions and append to the exclusion array.
 		$rtexclusions=array();
@@ -897,16 +898,15 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 				}
 			}
 
-		// Add code to hide resources in archive<0 unless has 't' permission, resource has been contributed by user or has ert permission		
-		if(!checkperm("t"))
+		// Add code to hide resources in archive<0 unless has 't' permission, resource has been contributed by user or has ert permission
+        if(!checkperm("t"))
 			{
-			if ($sql_filter!="") {$sql_filter.=" and ";}
-			$sql_filter.="(archive not in (-2,-1) or (created_by='" . $userref . "' ";
+			$editable_filter.="(archive not in (-2,-1) or (created_by='" . $userref . "' ";
 			if(count($rtexclusions)>0)
 				{
-				$sql_filter .= " or resource_type in (" . implode(",",$rtexclusions) . ")";				
+				$editable_filter .= " or resource_type in (" . implode(",",$rtexclusions) . ")";				
 				}
-			$sql_filter .= "))";
+			$editable_filter .= "))";
 			}	
 				
 		if (count($blockeditstates) > 0)
@@ -922,12 +922,19 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 				if ($blockeditoverride!="") {$blockeditoverride.=" and ";}
 				$blockeditoverride .= " resource_type in (" . implode(",",$rtexclusions) . ")";				
 				}
-			if ($sql_filter!="") {$sql_filter.=" and ";}
-			$sql_filter.="(archive not in ('" . implode("','",$blockeditstates) . "')" . (($blockeditoverride!="")?" or " . $blockeditoverride:"") . ")";
-			
-			}			
+			if ($editable_filter!="") {$editable_filter.=" and ";}
+			$editable_filter.="(archive not in ('" . implode("','",$blockeditstates) . "')" . (($blockeditoverride!="")?" or " . $blockeditoverride:"") . ")";
+			}
+            
+        $updated_editable_filter = hook("modifysearcheditable","",array($editable_filter,$userref));
+        if($updated_editable_filter !== false)
+            {
+            $editable_filter = $updated_editable_filter;
+            }
+        
+        if ($sql_filter!="") {$sql_filter .= " and ";}
+        $sql_filter .= $editable_filter;
 		}
-
 	return $sql_filter;
 	}
 
