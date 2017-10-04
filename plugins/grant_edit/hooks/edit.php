@@ -92,7 +92,7 @@ function HookGrant_editEditEditstatushide()
 
 function HookGrant_editEditReplacesubmitbuttons()
 	{
-	global $ref,$lang,$baseurl,$grant_editusers, $multiple, $usergroup, $grant_edit_groups;
+	global $ref,$lang,$baseurl,$grant_editusers, $multiple, $usergroup, $grant_edit_groups, $collapsible_sections;
 	
 	// Do we have access to see this?
 	if(!in_array($usergroup, $grant_edit_groups) || $ref<0){return;}
@@ -100,10 +100,13 @@ function HookGrant_editEditReplacesubmitbuttons()
 	$grant_editusers=sql_query("select ea.user, u.fullname, u.username, ea.expiry from grant_edit ea left join user u on u.ref=ea.user where ea.resource='$ref' and (ea.expiry is NULL or ea.expiry>=NOW()) order by expiry, u.username");
 	//print_r($grant_editusers);
 	//exit();
-	
+	?>
+    <h2 id="resource_custom_access" <?php echo ($collapsible_sections) ? ' class="CollapsibleSectionHead"' : ''; ?>><?php echo $lang["grant_edit_title"]?></h2>
+    <?php
+   
 	if ($multiple)
                 { ?>
-                <div id="editmultiple_grant_edit"><input name="editthis_grant_edit" id="editthis_grant_edit" value="yes" type="checkbox" onClick="var q=document.getElementById('grant_edit_fields');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="editthis_grant_edit_label" for="editthisenhancedaccess>"><?php echo $lang["grant_edit_title"]?></label></div><?php
+                <div class="Question" id="editmultiple_grant_edit"><input name="editthis_grant_edit" id="editthis_grant_edit" value="yes" type="checkbox" onClick="var q=document.getElementById('grant_edit_fields');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="editthis_grant_edit_label" for="editthisenhancedaccess>"><?php echo $lang["grant_edit_title"]?></label></div><?php
                 }
 	else
 		{?>
