@@ -228,7 +228,7 @@ include "../include/header.php";
 			
 			<?php hook("additionalcollectionshare");?>
 			
-			<div class="QuestionSubmit" style="padding-top:0;margin-top:0;">
+			<div class="QuestionSubmit">
 			<label for="buttons"> </label>
 			<?php 
 			if ($editing  && !$editexternalurl)
@@ -307,7 +307,6 @@ include "../include/header.php";
 	if(!$internal_share_only)
 		{?>
 		<h2><?php echo $lang["externalusersharing"]?></h2>
-		<div class="Question">
 
 		<?php
 		$keys=get_collection_external_access($ref);
@@ -361,7 +360,6 @@ include "../include/header.php";
 			<?php
 			}
 		?>
-		</div>	
 		
 		<?php
 		}
