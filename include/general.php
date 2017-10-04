@@ -115,7 +115,7 @@ function get_resource_path(
 		
 		$test_ext = explode(".",$fp);$test_ext=trim(strtolower($test_ext[count($test_ext)-1]));
 		
-        if (($test_ext == $extension || $alternative > 0) && strlen($fp)>0 && strpos($fp,"/")!==false)
+        if (($test_ext == $extension || $alternative > 0) && strlen($fp)>0 && (strpos($fp,"/")!==false || strlen($fp)>1))
 			{				
 			if ($getfilepath)
 				{

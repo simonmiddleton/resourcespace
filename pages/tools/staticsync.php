@@ -79,7 +79,7 @@ if(isset($staticsync_alternative_file_text) && !$staticsync_ingest)
     $syncedalternatives = sql_query("SELECT ref, file_name, resource, creation_date FROM resource_alt_files WHERE file_name like '%" . escape_check($syncdir) . "%'");
     foreach($syncedalternatives as $syncedalternative)
         {
-        $shortpath=str_replace($syncdir . DIRECTORY_SEPARATOR, '', $syncedalternative["file_name"]);      
+        $shortpath=str_replace($syncdir . '/', '', $syncedalternative["file_name"]);      
         $done[$shortpath]["ref"]=$syncedalternative["resource"];
         $done[$shortpath]["modified"]=$syncedalternative["creation_date"];
         $done[$shortpath]["alternative"]=$syncedalternative["ref"];
@@ -175,14 +175,14 @@ function ProcessFolder($folder)
             {
             continue;
             }
-        $filetype  = filetype($folder . DIRECTORY_SEPARATOR . $file);
-        $fullpath  = $folder . DIRECTORY_SEPARATOR . $file;
-        $shortpath = str_replace($syncdir . DIRECTORY_SEPARATOR, '', $fullpath);
+        $filetype  = filetype($folder . '/' . $file);
+        $fullpath  = $folder . '/' . $file;
+        $shortpath = str_replace($syncdir . '/', '', $fullpath);
         
         if(isset($staticsync_alternative_file_text) && strpos($file,$staticsync_alternative_file_text)!==false)
             {
             // Set a flag so we can process this later in case we don't processs this along with a primary resource file (it may be a new alternative file for an existing resource)
-            $alternativefiles[]=$syncdir . DIRECTORY_SEPARATOR . $shortpath;
+            $alternativefiles[]=$syncdir . '/' . $shortpath;
             continue;
             }
             
@@ -564,7 +564,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
     // Process an alternative file
     global $staticsync_alternative_file_text, $syncdir, $lang, $staticsync_ingest, $alternative_file_previews, $done;
 	
-    $shortpath = str_replace($syncdir . DIRECTORY_SEPARATOR, '', $alternativefile);
+    $shortpath = str_replace($syncdir . '/', '', $alternativefile);
 	if(!isset($done[$shortpath]))
 		{
 		$alt_parts=pathinfo($alternativefile);
@@ -573,10 +573,10 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
 		if($ref=="")
 			{
 			// We need to find which resource this relates to
-			echo "Searching for primary resource related to " . $alternativefile . "  in " . $alt_parts['dirname'] . DIRECTORY_SEPARATOR . $altbasename . "." .  PHP_EOL;
+			echo "Searching for primary resource related to " . $alternativefile . "  in " . $alt_parts['dirname'] . '/' . $altbasename . "." .  PHP_EOL;
 			foreach($done as $syncedfile=>$synceddetails)
 				{
-				if(strpos($syncdir . DIRECTORY_SEPARATOR . $syncedfile,$alt_parts['dirname'] . DIRECTORY_SEPARATOR . $altbasename . ".")!==false)
+				if(strpos($syncdir . '/' . $syncedfile,$alt_parts['dirname'] . '/' . $altbasename . ".")!==false)
 					{
 					// This synced file has the same base name as the resource
 					$ref= $synceddetails["ref"];
@@ -692,7 +692,7 @@ if (!$staticsync_ingest)
     
     foreach ($resources_to_archive as $rf)
         {
-        $fp = $syncdir . DIRECTORY_SEPARATOR . $rf["file_path"];
+        $fp = $syncdir . '/' . $rf["file_path"];
         if (isset($rf['syncdir']) && $rf['syncdir'] != '')
                {
                # ***for modified syncdir directories:
