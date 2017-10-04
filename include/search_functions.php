@@ -930,10 +930,16 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         if($updated_editable_filter !== false)
             {
             $editable_filter = $updated_editable_filter;
-            }
+            }		
         
-        if ($sql_filter!="") {$sql_filter .= " and ";}
-        $sql_filter .= $editable_filter;
+         if($editable_filter != "")
+			{
+			if ($sql_filter != "")
+				{
+				$sql_filter .= " AND ";
+			    }
+			$sql_filter .= $editable_filter;
+			}
 		}
 	return $sql_filter;
 	}
