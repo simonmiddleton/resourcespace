@@ -700,12 +700,11 @@ if(!$validpage)
 				<?php
 				}
 			?>
-		</div>
-        <span class="stdwidth"></span>
 		<?php 
-        render_user_group_checkbox_select('specific_user_groups', $current_specific_user_groups, 'margin-left: 360px;display: none;');
+        render_user_group_checkbox_select('specific_user_groups', $current_specific_user_groups, 'padding-left: 310px; display: none;');
 		}
         ?>
+    </div>
 	<div class="Question">
 		 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $submittext;?>&nbsp;&nbsp;" /></div>
 		<div class="clearerleft"> </div>

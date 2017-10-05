@@ -128,6 +128,9 @@
     .customFieldset table {
         white-space: nowrap;
     }
+    #specific_user_groups {
+        padding-left: 0 !important;
+    }
 
 }
 @media(max-width:700px) {
