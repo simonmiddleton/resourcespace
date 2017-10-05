@@ -1,6 +1,8 @@
 <?php
 function HookGoogle_oauthAllPreheaderoutput()
     {
+    global $baseurl, $pagename, $google_oauth_standard_login, $google_oauth_use_standard_login_by_default;
+
     if(google_oauth_is_authenticated())
         {
         // Make sure we don't ask the user to type in a password when deleting resources, since we don't have it!
@@ -13,6 +15,19 @@ function HookGoogle_oauthAllPreheaderoutput()
 
     // If authenticated do nothing and return
     if(isset($_COOKIE['user']))
+        {
+        return;
+        }
+
+    // Go to login page if system allows us to get to it
+    $query_string = (isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '');
+    if(
+        !google_oauth_is_authenticated()
+        && $google_oauth_standard_login
+        // We either use standard RS login by default or the user made a direct request to login because redirects
+        // usually contain a url param
+        && ($google_oauth_use_standard_login_by_default || ('login' == $pagename && '' == $query_string))
+    )
         {
         return;
         }
