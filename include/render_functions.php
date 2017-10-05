@@ -2129,7 +2129,9 @@ function renderBreadcrumbs(array $links, $pre_links = '')
 */
 function renderCallToActionTile($link)
     {
-    if(checkperm('b'))
+    global $themes_simple_view;
+
+    if(!$themes_simple_view || checkperm('b'))
         {
         return;
         }
