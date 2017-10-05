@@ -1330,7 +1330,7 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         <?php
         }
         ?>
-            <label class="stdwidth"><?php echo $lang['colour']; ?></label>
+            <label><?php echo $lang['colour']; ?></label>
     <?php
     // Show either color picker OR a drop down selector
     if(0 === count($dash_tile_colour_options))

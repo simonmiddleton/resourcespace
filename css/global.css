@@ -1353,3 +1353,8 @@ a.Enabled, a:visited.Enabled {
 .BreadcrumbsBox > .SearchBreadcrumbs {
     margin: 0;
 }
+
+/* Colour picker */
+#tile_style_colour {
+    display: none;
+}
