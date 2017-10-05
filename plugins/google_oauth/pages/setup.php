@@ -32,6 +32,8 @@ $page_def[] = config_add_text_input('google_oauth_client_id', $lang['google_oaut
 $page_def[] = config_add_text_input('google_oauth_client_secret', $lang['google_oauth_client_secret_label']);
 
 $page_def[] = config_add_section_header($lang['setup-generalsettings']);
+$page_def[] = config_add_boolean_select('google_oauth_standard_login', $lang['google_oauth_standard_login_label']);
+$page_def[] = config_add_boolean_select('google_oauth_use_standard_login_by_default', $lang['google_oauth_use_standard_login_by_default_label']);
 $page_def[] = config_add_boolean_select('google_oauth_xshares_bypass_sso', $lang['google_oauth_allow_xshares_sso_bypass_label']);
 $page_def[] = config_add_single_group_select('google_oauth_default_user_group', $lang['google_oauth_default_usergroup'], 420);
 
