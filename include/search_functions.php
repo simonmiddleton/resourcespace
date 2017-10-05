@@ -537,7 +537,7 @@ function compile_search_actions($top_actions)
             {
             $option_name = 'save_search_to_dash';
             $data_attribute = array(
-                'url'  => $baseurl_short . 'pages/dash_tile.php?create=true&tltype=srch&freetext=true"',
+                'url'  => $baseurl_short . 'pages/dash_tile.php?create=true&tltype=srch&freetext=true',
                 'link' => str_replace($baseurl,'',$url)
             );
 
