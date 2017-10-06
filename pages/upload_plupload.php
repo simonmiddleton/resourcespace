@@ -343,11 +343,11 @@ if ($_FILES)
             }
 
     // Check the chunk and file have not been processed before for this filename
-    $pluplpoad_processed_filepath = $targetDir . DIRECTORY_SEPARATOR . 'processing_' . $plfilename . '.txt';
-    if($plupload_allow_duplicates_in_a_row && file_exists($pluplpoad_processed_filepath))
+    $plupload_processed_filepath = $targetDir . DIRECTORY_SEPARATOR . 'processing_' . $plfilename . '.txt';
+    if(!$plupload_allow_duplicates_in_a_row && file_exists($plupload_processed_filepath))
         {
         // Get current chunk, queue index and filename so we can know if we processed it before or not
-        $processed_file_content = file_get_contents($pluplpoad_processed_filepath);
+        $processed_file_content = file_get_contents($plupload_processed_filepath);
         $processed_file_content = explode(',', $processed_file_content);
 
         // If this chunk-file-filename has been processed, don't process it again
@@ -388,7 +388,7 @@ if ($_FILES)
                         @unlink($_FILES['file']['tmp_name']);
 
                         // Write in the processed file (keep track of the last processed chunk)
-                        $processed_file_handle      = fopen($pluplpoad_processed_filepath, 'w');
+                        $processed_file_handle      = fopen($plupload_processed_filepath, 'w');
                         $processed_file_new_content = "{$chunk},{$queue_index}";
                         fwrite($processed_file_handle, $processed_file_new_content);
                         fclose($processed_file_handle);
@@ -424,7 +424,7 @@ if ($_FILES)
                     fclose($out);
 
                     // Write in the processed file (keep track of the last processed chunk)
-                    $processed_file_handle      = fopen($pluplpoad_processed_filepath, 'w');
+                    $processed_file_handle      = fopen($plupload_processed_filepath, 'w');
                     $processed_file_new_content = "{$chunk},{$queue_index}";
                     fwrite($processed_file_handle, $processed_file_new_content);
                     fclose($processed_file_handle);
