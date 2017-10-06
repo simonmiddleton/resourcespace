@@ -409,8 +409,8 @@ include "../../include/header.php";
 ?>
 <script>
 var fixed_list_fields = [<?php echo implode(",",$FIXED_LIST_FIELD_TYPES) ?>];
-var text_fields = [<?php echo implode(",",$TEXT_FIELD_TYPES) ?>];
-var current_type = <?php echo $fielddata["type"] ?>;
+var text_fields       = [<?php echo implode(",",$TEXT_FIELD_TYPES) ?>];
+var current_type      = <?php echo ('' != $fielddata['type'] ? $fielddata['type'] : 0); ?>;
 
 <?php if (isset($migrate_data))
 	{
