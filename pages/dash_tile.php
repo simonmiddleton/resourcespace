@@ -504,8 +504,10 @@ if(!$validpage)
 		</div>
 		<?php
 		}
-        ?>
 
+if('' != $tile_type)
+    {
+    ?>
     <!-- Dash tile size selector -->
     <div class="Question">
         <label for="tlsize"><?php echo $lang['size']; ?></label>
@@ -515,8 +517,9 @@ if(!$validpage)
         </select>
         <div class="clearerleft"></div>
     </div>
-
     <?php
+    }
+
 	if (!$tile_nostyle)
 		{
 		if(isset($tile_style))
