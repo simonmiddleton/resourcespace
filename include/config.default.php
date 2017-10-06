@@ -3326,6 +3326,7 @@ $facial_recognition_tag_field = null;
 
 // Physical file path to FaceRecognizer model state(s) and data
 // Security note: it is best to place it outside of web root
+// IMPORTANT: ResourceSpace will not create this folder if it doesn't exist
 $facial_recognition_face_recognizer_models_location = '';
 #######################################
 #######################################
