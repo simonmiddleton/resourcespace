@@ -2245,19 +2245,12 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
                 break;
 
             default:                
-                if ($fromvalue == "")
+                if(strlen($tovalue)>60000)
                     {
-                    $diff = $tovalue;
+                    // Trim this as it can cause out of memory errors with class.Diff.php e.g.when cresatng previews for large PDF files
+                    $tovalue = substr($tovalue,60000);
                     }
-                else
-                    {
-                    if(strlen($tovalue)>60000)
-                        {
-                        // Trim this as it can cause out of memory errors with class.Diff.php e.g.when cresatng previews for large PDF files
-                        $tovalue = substr($tovalue,60000);
-                        }
-                    $diff = log_diff($fromvalue, $tovalue);
-                    }
+                $diff = log_diff($fromvalue, $tovalue);
             }
         }
 
@@ -3745,6 +3738,10 @@ function log_diff($fromvalue, $tovalue)
         $fromvalue = explode(',', i18n_get_translated($fromvalue));
         $tovalue   = explode(',', i18n_get_translated($tovalue));
 
+        // Empty arrays if either side is blank.
+        if (count($fromvalue)==1 && trim($fromvalue[0])=="") {$fromvalue=array("");}
+        if (count($tovalue)==1   && trim($tovalue[0])=="")   {$tovalue=array("");}
+            
         // Get diffs
         $inserts = array_diff($tovalue, $fromvalue);
         $deletes = array_diff($fromvalue, $tovalue);
@@ -3768,6 +3765,10 @@ function log_diff($fromvalue, $tovalue)
         return $return;
         }
 
+    // Simple return when either side is blank (the user is adding or removing all the text)
+    if ($fromvalue=="") {return "+ " . $tovalue;}
+    if ($tovalue=="") {return "- " . $fromvalue;}
+    
     // For standard strings, use Diff library
     require_once dirname(__FILE__) . '/../lib/Diff/class.Diff.php';
     $return = Diff::toString(Diff::compare($fromvalue, $tovalue));
