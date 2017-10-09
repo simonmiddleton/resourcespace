@@ -49,8 +49,8 @@ if (getval("save","")!="")
 		}
 	}
 
-$headerinsert.="<script src=\"../lib/lightbox/js/jquery.lightbox-0.5.min.js\" type=\"text/javascript\"></script>";
-$headerinsert.="<link type=\"text/css\" href=\"../lib/lightbox/css/jquery.lightbox-0.5.css?css_reload_key=" . $css_reload_key . "\" rel=\"stylesheet\">";
+$headerinsert.="<script src=\"../lib/lightbox/js/jquery.lightbox.min.js\" type=\"text/javascript\"></script>";
+$headerinsert.="<link type=\"text/css\" href=\"../lib/lightbox/css/jquery.lightbox.css?css_reload_key=" . $css_reload_key . "\" rel=\"stylesheet\">";
 
 
 

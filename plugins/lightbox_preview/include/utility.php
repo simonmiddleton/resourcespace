@@ -66,7 +66,8 @@ function addLightBox($selector)
                 imageBtnNext: '<?php echo $baseurl_short?>gfx/lightbox/next.png',
                 containerResizeSpeed: 250,
                 txtImage: '<?php echo $lang["lightbox-image"]?>',
-                txtOf: '<?php echo $lang["lightbox-of"]?>'
+                txtOf: '<?php echo $lang["lightbox-of"]?>',
+                shrinkToFit: true
             });
         });
     </script>
