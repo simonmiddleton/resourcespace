@@ -1387,6 +1387,12 @@ if($responsive_ui)
         <?php
         }
     
+if ($display=="strip")
+    {
+    #  ---------------------------- Extra footer for strip view ----------------------------
+    include 'search_views/' . $display . '_footer.php';
+    }
+
 $url=generateURL($baseurl . "/pages/search.php",$searchparams); 
 
 ?>
