@@ -338,10 +338,18 @@ function get_config_options($user_id, array &$returned_options)
 *
 * @param int $user_id
 *
-* @return bool true
+* @return void
 */
 function process_config_options($user_id = null)
     {
+    global $user_preferences;
+
+    // If the user doesn't have the ability to set his/her own preferences, then don't load it either
+    if(!is_null($user_id) && !$user_preferences)
+        {
+        return;
+        }
+
     $config_options = array();
 
     if(get_config_options($user_id, $config_options))
@@ -360,7 +368,7 @@ function process_config_options($user_id = null)
             }
         }
 
-    return true;
+    return;
     }
 
 
