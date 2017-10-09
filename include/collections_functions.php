@@ -2537,7 +2537,7 @@ function new_featured_collection_form(array $themearray = array())
     ?>
     <div class="BasicsBox">
         <h1><?php echo $lang["createnewcollection"] ?></h1>
-        <form id="new_collection_form" class="modalform" action="" onsubmit="return CentralSpacePost(this,true);" >
+        <form id="new_collection_form" name = "new_collection_form" class="modalform" action="<?php echo $_SERVER['PHP_SELF'] ?>" onsubmit="return CentralSpacePost(this,true);" >
             <div class="Question">
                 <label for="collectionname" ><?php echo $lang["collectionname"] ?></label>
                 <input type="text" name="collectionname"></input>
