@@ -128,14 +128,28 @@ h2#CollectionsPanelHeader {display:none;}
 .HeaderLarge #HeaderNav1 {height:70px;}
 .HeaderLarge #HeaderNav2 {float:right; clear:both; padding-left: 20px;margin-top:0;}
 
-/* Fix for IE not scaling svg files correctly */
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none)
+.HeaderImgLink
     {
-    img[src$=".svg"]
-        {
-        height: 100% !important; 
-        width: 100% !important;
-        }
+    width: auto;
+    }
+    
+/* Parent height set so that svg files scale correctly */
+.HeaderSmall .HeaderImgLink
+    {
+    height: 40px;
+    }
+.HeaderMid .HeaderImgLink
+    {
+    height: 50px;
+    }		
+.HeaderLarge .HeaderImgLink
+    {
+    height: 70px;
+    }
+
+img[src$=".svg"]
+    {
+    height: 100% !important; 
     }
 
 /* Slim header with fixed top bar */
