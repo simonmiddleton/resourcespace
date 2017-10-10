@@ -554,7 +554,7 @@ function AddNode(parent)
                 if($last_page_offset != $offset)
                     {
                     ?>
-                    window.location.replace('<?php echo $last_page_url; ?>');
+                    CentralSpaceLoad('<?php echo $last_page_url; ?>');
                     return;
                     <?php
                     }
