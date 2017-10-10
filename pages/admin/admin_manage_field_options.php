@@ -297,18 +297,31 @@ if('true' === $ajax && 'export' === $action)
     }
 
 // [Paging functionality]
-$url            = generateURL("{$baseurl_short}pages/admin/admin_manage_field_options.php",
+$url         = generateURL("{$baseurl_short}pages/admin/admin_manage_field_options.php",
                         array(
                             'field'          => $field,
                             'filter_by_name' => $filter_by_name
                         )
                     );
-$offset         = (int) getvalescaped('offset', 0, true);
-$per_page       = (int) getvalescaped('per_page_list', $default_perpage_list, true);
-$count_nodes    = get_nodes_count($field, $filter_by_name);
-$totalpages     = ceil($count_nodes / $per_page);
-$curpage        = floor($offset / $per_page) + 1;
-$jumpcount      = 0;
+$offset      = (int) getvalescaped('offset', 0, true);
+$per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
+$count_nodes = get_nodes_count($field, $filter_by_name);
+$totalpages  = ceil($count_nodes / $per_page);
+$curpage     = floor($offset / $per_page) + 1;
+$jumpcount   = 0;
+
+// URL used for redirect on JS - AddNode() when used in combination with the pager in order to add the node at the end of
+// the options list
+$last_page_offset = (($totalpages - 1) * $per_page);
+$last_page_url    = generateURL(
+    "{$baseurl_short}pages/admin/admin_manage_field_options.php",
+    array(
+        'field'          => $field,
+        'filter_by_name' => $filter_by_name,
+        'go'             => 'page',
+        'offset'         => $last_page_offset
+    )
+);
 
 if($offset > $count_nodes)
     {
@@ -535,6 +548,18 @@ function AddNode(parent)
                 }
             else
                 {
+                <?php
+                // When adding new options for non category tree fields AND we are not on the last page of the pager,
+                // then redirect to the last page
+                if($last_page_offset != $offset)
+                    {
+                    ?>
+                    window.location.replace('<?php echo $last_page_url; ?>');
+                    return;
+                    <?php
+                    }
+                    ?>
+
                 new_node_parent_children.before(response);
                 }
 
