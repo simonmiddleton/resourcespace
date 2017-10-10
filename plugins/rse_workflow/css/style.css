@@ -1,0 +1,17 @@
+
+
+
+.rse_workflow_link{
+	cursor: pointer;
+	cursor: hand;
+}
+
+#RecordDownload {
+	margin-right:20px;
+	
+}
+
+#ResourceWorkflowActions input {
+	width: 100%;
+	
+}
