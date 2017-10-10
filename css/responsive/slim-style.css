@@ -682,9 +682,6 @@
     .BottomInpageNav .InpageNavLeftBlock {
         width:auto;
     }
-    .largethumbsiconactive {
-        height:auto;
-    }
     .TopInpageNavRight {
         margin-top:1px;
     }
@@ -737,6 +734,17 @@
     }
     #Rssearchexpand {
         margin-right:0;
+    }
+    .xlthumbsicon, .xlthumbsiconactive, 
+    .largethumbsicon, .largethumbsiconactive, 
+    .stripicon, .stripiconactive, 
+    .smalllisticon, .smalllisticonactive {
+        background-size: 32px 32px;
+        width: 32px;
+        height: 32px;
+    }
+    .InpageNavLeftBlock.icondisplay {
+        line-height: 2em;
     }
 }
 @media(max-width:400px) {
