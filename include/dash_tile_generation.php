@@ -365,9 +365,9 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 		<?php
 		}
 	$icon = ""; 
-	if(substr($search_string["search"],0,11)=="!collection")
+	if(substr($search,0,11)=="!collection")
 		{$icon="th-large";}
-	else if(substr($search_string["search"],0,7)=="!recent" || substr($search_string["search"],0,5)=="!last")
+	else if(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
 		{$icon="clock-o";}
 	else{$icon="search";}
 
@@ -462,9 +462,9 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 		}
 	
 	$icon = ""; 
-	if(substr($search_string["search"],0,11)=="!collection")
+	if(substr($search,0,11)=="!collection")
 		{$icon="th-large";}
-	else if(substr($search_string["search"],0,7)=="!recent" || substr($search_string["search"],0,5)=="!last")
+	else if(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
 		{$icon="clock-o";}
 	else
 		{$icon="search";}
@@ -532,9 +532,9 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 		}
 	
 	$icon = ""; 
-	if(substr($search_string["search"],0,11)=="!collection")
+	if(substr($search,0,11)=="!collection")
 		{$icon="th-large";}
-	else if(substr($search_string["search"],0,7)=="!recent" || substr($search_string["search"],0,5)=="!last")
+	else if(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
 		{$icon="clock-o";}
 	else{$icon="search";}
 
