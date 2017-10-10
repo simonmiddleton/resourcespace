@@ -924,9 +924,7 @@ if($responsive_ui)
 				{
 				if($display == 'xlthumbs')
 					{
-					?>
-					<span class="xlthumbsiconactive">&nbsp;</span>
-					<?php
+					?><span class="xlthumbsiconactive">&nbsp;</span>&nbsp;<?php
 					}
 				else
 					{
@@ -937,16 +935,9 @@ if($responsive_ui)
 					<?php
 					}
 				}
-
-			?>
-			&nbsp;
-			<?php
-	
 			if($display == 'thumbs')
 				{
-				?>
-				<span class="largethumbsiconactive">&nbsp;</span>
-				<?php
+				?><span class="largethumbsiconactive">&nbsp;</span>&nbsp;<?php
 				}
 			else
 				{
@@ -956,13 +947,9 @@ if($responsive_ui)
 				</a>
 				<?php
 				}
-	
-				
 			if($display == 'strip')
 				{
-				?>
-				<span class="stripiconactive">&nbsp;</span>
-				<?php
+				?><span class="stripiconactive">&nbsp;</span>&nbsp;<?php
 				}
 			else
 				{
@@ -977,9 +964,7 @@ if($responsive_ui)
 				{
 				if($display == 'list')
 					{
-					?>
-					<span class="smalllisticonactive">&nbsp;</span>
-					<?php
+					?><span class="smalllisticonactive">&nbsp;</span>&nbsp;<?php
 					}
 				else
 					{

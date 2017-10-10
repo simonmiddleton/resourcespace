@@ -482,6 +482,7 @@ if($responsive_ui && !hook("responsive_footer"))
         {
         jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock").slideToggle(100);
         jQuery("#SearchResultFound").hide();
+        jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock.icondisplay").css('display', 'inline-block');
         }
 
     /* Responsive Stylesheet inclusion based upon viewing device */
