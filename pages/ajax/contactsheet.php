@@ -279,6 +279,10 @@ catch(Html2PdfException $e)
     }
 catch(Html2Pdf_exception $e)
     {
+    // 
+    debug('CONTACT-SHEET:' . $e->getMessage());
+    debug('CONTACT-SHEET:' . $e->getTraceAsString());
+
     // Starting point
     if(0 == $field_value_limit)
         {
