@@ -827,7 +827,7 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
         return false;
         }
 
-    $keyword_ref = resolve_keyword($keyword, true,$normalize,$stem);
+    $keyword_ref = resolve_keyword($keyword, true,$normalize,false); // We have already stemmed
 
     sql_query("INSERT INTO node_keyword (node, keyword, position) VALUES ('" . escape_check($node) . "', '" . escape_check($keyword_ref) . "', '" . escape_check($position) . "')");
     sql_query("UPDATE keyword SET hit_count = hit_count + 1 WHERE ref = '" . escape_check($keyword_ref) . "'");

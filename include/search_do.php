@@ -58,7 +58,7 @@ function do_search(
     # globals needed for hooks
      global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
            $search_sql_double_pass_mode, $usergroup, $search_filter_strict, $default_sort, 
-           $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES;
+           $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming;
 		   
     $alternativeresults = hook("alternativeresults", "", array($go));
     if ($alternativeresults)
@@ -585,7 +585,23 @@ function do_search(
                                 
                                 # Add related keywords
                                 $related = get_related_keywords($keyref);
-    
+                                if($stemming)
+                                    {
+                                    # Need to ensure we include related keywords for original string
+                                    $original_related = get_grouped_related_keywords("",$keyword); 
+                                    $extra_related = array();
+                                    if (isset($original_related[0]["related"])  && $original_related[0]["related"] != "")
+                                        {
+                                        $related_stems = explode(",",$original_related[0]["related"]);
+                                        foreach ($related_stems as $related_stem)
+                                            {
+                                            $extrakeyword=GetStem(trim($related_stem));
+                                            // No need to normalize or stem as we already dealing with stems
+                                            $extra_related[] = resolve_keyword($extrakeyword,true,false,false);
+                                            }
+                                        $related = array_merge($related, $extra_related);
+                                        }
+                                    }
                                 # Merge wildcard expansion with related keywords
                                 $related = array_merge($related, $wildcards);
                                 if (count($related) > 0)
