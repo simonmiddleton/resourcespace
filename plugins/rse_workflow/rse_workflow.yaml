@@ -1,0 +1,7 @@
+name: rse_workflow
+desc: ResourceSpace Enterprise - Workflow 
+author: Montala Limited
+version: 1.0
+default_priority: 100
+config_url: /plugins/rse_workflow/pages/setup.php
+category: Enterprise
