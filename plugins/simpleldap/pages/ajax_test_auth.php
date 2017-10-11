@@ -4,22 +4,22 @@ include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permis
 include_once "../../../include/general.php";
 
 
-$simpleldap['domain'] = getvalescaped('domain','');
-$simpleldap['ldapserver'] = getvalescaped('ldapserver','');
-$simpleldap['ldapuser'] = getvalescaped('ldapuser','');
-$simpleldap['ldappassword'] = getvalescaped('ldappassword','');
-$userdomain = getvalescaped('userdomain','');
-$simpleldap['port'] = getvalescaped('port','');
-$simpleldap['ldaptype'] = getvalescaped('ldaptype',1);
-$simpleldap['basedn']= getvalescaped('basedn','');
-$simpleldap['loginfield'] = getvalescaped('loginfield','');
-$simpleldap['ldapgroupfield'] = getvalescaped('ldapgroupfield','');
-$simpleldap['email_attribute'] = getvalescaped('email_attribute','');
-$simpleldap['phone_attribute'] = getvalescaped('phone_attribute','');
+$simpleldap['domain']          = getvalescaped('domain', '');
+$simpleldap['ldapserver']      = getvalescaped('ldapserver', '');
+$simpleldap['ldapuser']        = getvalescaped('ldapuser', '');
+$simpleldap['ldappassword']    = getvalescaped('ldappassword', '');
+$userdomain                    = getvalescaped('userdomain', '');
+$simpleldap['port']            = getvalescaped('port', '');
+$simpleldap['ldaptype']        = getvalescaped('ldaptype', 1);
+$simpleldap['basedn']          = getvalescaped('basedn', '');
+$simpleldap['loginfield']      = getvalescaped('loginfield', '');
+$simpleldap['ldapgroupfield']  = getvalescaped('ldapgroupfield', '');
+$simpleldap['email_attribute'] = getvalescaped('email_attribute', '');
+$simpleldap['phone_attribute'] = getvalescaped('phone_attribute', '');
 
 // Test we can connect to domain
 $bindsuccess=false;	
-$ds = ldap_connect( $simpleldap['ldapserver'],$simpleldap['port'] );	
+$ds = ldap_connect( $simpleldap['ldapserver'],$simpleldap['port'] );
 if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype']==1) 
 	{
 	$binduserstring = $simpleldap['ldapuser'] . "@" . $userdomain;
@@ -47,8 +47,8 @@ else
 		}
 	}			
 	
-$response['bindsuccess']=$bindsuccess?$lang["status-ok"]:$lang["status-fail"];	
-$response['memberof'] = array();
+$response['bindsuccess'] = $bindsuccess ? $lang['status-ok'] : "{$lang['status-fail']} - " . ldap_error($ds) . ' (#' . ldap_errno($ds) . ')';
+$response['memberof']    = array();
 
 $userdetails=simpleldap_authenticate($simpleldap['ldapuser'],$simpleldap['ldappassword']);
 
