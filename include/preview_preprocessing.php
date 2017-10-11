@@ -575,12 +575,10 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
 		}
 	
     $snapshottime = 1;
-	
+	$duration = 0; // Set this as default if the duration is not determined so that previews will always work
     $cmd = $ffmpeg_fullpath . ' -i ' . escapeshellarg($file);
     $out = run_command($cmd, true);
-	
-	
-	
+		
     resource_log(RESOURCE_LOG_APPEND_PREVIOUS, LOG_CODE_TRANSFORMED, '', '', '', $cmd . ":\n" . $out);
     debug("FFMPEG-VIDEO: Running information command: {$cmd}", RESOURCE_LOG_APPEND_PREVIOUS);
 
@@ -589,11 +587,6 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
         $duration = $match[1] * 3600 + $match[2] * 60 + $match[3];
         debug("FFMPEG-VIDEO: \$duration = {$duration} seconds", RESOURCE_LOG_APPEND_PREVIOUS);
         
-        if(10 < $duration)
-            {
-            $snapshottime = floor($duration * (isset($ffmpeg_snapshot_fraction) ? $ffmpeg_snapshot_fraction : 0.1));
-            }
-
         if(isset($ffmpeg_snapshot_seconds)) // Overrides the other settings
             {
             if($ffmpeg_snapshot_seconds < $duration)
@@ -601,16 +594,20 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
                 $snapshottime = $ffmpeg_snapshot_seconds;
                 }
             }
-
-        // Generate snapshots for the whole video (not for alternatives)
+		elseif(10 < $duration)
+            {
+            $snapshottime = floor($duration * (isset($ffmpeg_snapshot_fraction) ? $ffmpeg_snapshot_fraction : 0.1));
+            }
+		
+		// Generate snapshots for the whole video (not for alternatives)
         // Custom target used ONLY for captured snapshots during the video
         if(1 < $ffmpeg_snapshot_frames && -1 == $alternative)
             {
             $snapshot_scale           = '';
             $escaped_file             = escapeshellarg($file);
             $escaped_target           = escapeshellarg(get_resource_path($ref, true, 'snapshot', false, 'jpg', -1, 1, false, ''));
-            $snapshot_points_distance = $duration / $ffmpeg_snapshot_frames;
-
+			$snapshot_points_distance = max($duration / $ffmpeg_snapshot_frames,1);
+			
             // Find video resolution, figure out whether it is landscape/ portrait and adjust the scaling for the snapshots accordingly
             include_once dirname(__FILE__) . '/video_functions.php';
 
@@ -649,7 +646,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
             }
         }
 
-    if('mxf' == $extension)
+    if('mxf' == $extension || $duration == 0)
         {
         $snapshottime = 0;
         }

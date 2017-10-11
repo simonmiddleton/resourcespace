@@ -219,7 +219,7 @@ foreach($resources as $resource) // For each resources
 		# Below added to catch an issue with previews failing when large video files were taking a long time to copy to StaticSync location
 		echo "Created at: " . $resource['creation_date'] . "\nTime now: " . date("Y-m-d H:i:s") . "\n";
 		$resourceage = time() - strtotime($resource['creation_date']);		
-		if ($resource['preview_attempts']>3 && $resourceage<1000){echo "Just added so may not have finished copying, resetting attempts \n";sql_query("UPDATE resource SET preview attempts=0 WHERE ref='" . $resource['ref'] . "'");continue;} 
+		if ($resource['preview_attempts']>3 && $resourceage<1000){echo "Just added so may not have finished copying, resetting attempts \n";sql_query("UPDATE resource SET preview_attempts=0 WHERE ref='" . $resource['ref'] . "'");continue;} 
 		
 		#check whether resource already has mp3 preview in which case we set preview_attempts to 5
 		if ($resource['file_extension']!="mp3" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")))	
