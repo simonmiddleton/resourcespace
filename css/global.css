@@ -862,9 +862,8 @@ a.HomePanel:hover {
 	padding: 0;
 	overflow: hidden;
 	position: relative;
-	height: 100%;
+	height: 180px;
 	width: 100%;
-	min-height: 180px;
 }
 .HomePanelDynamicDash h2, .HomePanelThemes h2, .FeaturedSimpleTileContents h2 {
 	float: none;

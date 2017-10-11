@@ -582,6 +582,7 @@
     }
     .HomePanelIN {
         min-height: 145px;
+        max-height: 180px;
         height:auto;
     }
 
