@@ -1449,13 +1449,16 @@ function display_field($n, $field, $newtab=false,$modal=false)
   $value=$field["value"];
   $value=trim($value);
 
-  if ($field["omit_when_copying"] && $use!=$ref)
+  if (($field["omit_when_copying"] || strip_leading_comma($value) == "") && $use!=$ref)
     {
-    # Omit when copying - return this field back to the value it was originally, instead of using the current value which has been fetched from the new resource.
+    # Omit when copying, or there is no data for this field associated with the copied resource - return this field back to the value it was originally, instead of using the current value which has been fetched from the copied resource.
     reset($original_fields);
     foreach ($original_fields as $original_field)
       {
-      if ($original_field["ref"]==$field["ref"]) {$value=$original_field["value"];}
+      if ($original_field["ref"]==$field["ref"])
+        {
+        $value=$original_field["value"];
+        }
       }
     $selected_nodes = $original_nodes;
     }
@@ -1463,7 +1466,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
     {
     $selected_nodes = $all_selected_nodes;
     }
-
+    
   $displaycondition=true;
   if ($field["display_condition"]!="")
     {
@@ -1478,7 +1481,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
     if (array_key_exists($language,$translations)) {$value=$translations[$language];} else {$value="";}
     }
 
-  if ($multiple && (getval("copyfrom","")=="" || str_replace(array(" ",","),"",$value)=="")) {$value="";} # Blank the value for multi-edits  unless copying data from resource.
+  if ($multiple && ((getval("copyfrom","") == "" && getval('metadatatemplate', '') == "") || str_replace(array(" ",","),"",$value)=="")) {$value="";} # Blank the value for multi-edits  unless copying data from resource.
 
   if ($field["resource_type"]!=$lastrt && $lastrt!=-1 && $collapsible_sections)
       {
@@ -1652,13 +1655,13 @@ function display_field($n, $field, $newtab=false,$modal=false)
 					}
 				natsort($field_nodes);
 				}
-			if(!$multiple && !$blank_edit_template && getval("copyfrom","")=="")
+			if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "")
 				{
 				echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
 				echo "<input name='" . "field_" . $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
 				}
             }
-        elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","")=="")
+        elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "")
 			{
             $field['nodes'] = get_nodes($field['ref'], NULL, FALSE);
             $field_nodes = array();
@@ -1673,7 +1676,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 			
 			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
 			}
-		elseif(!$multiple && !$blank_edit_template && getval("copyfrom","")=="")
+		elseif(!$multiple && !$blank_edit_template && getval("copyfrom","")=="" && getval('metadatatemplate', '') == "")
 			{
 			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(trim(preg_replace('/\s\s+/', ' ', $field['value']))) . "'>";
 			}

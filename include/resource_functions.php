@@ -2152,8 +2152,8 @@ function copy_resource($from,$resource_type=-1)
 		}
 
 	# Now copy all data
-	sql_query("insert into resource_data(resource,resource_type_field,value) select '$to',rd.resource_type_field,rd.value from resource_data rd join resource r on rd.resource=r.ref join resource_type_field rtf on rd.resource_type_field=rtf.ref and (rtf.resource_type=r.resource_type or rtf.resource_type=999 or rtf.resource_type=0) where rd.resource='$from'");
-    
+	copyResourceDataValues($from,$to);
+	
     # Copy nodes
     copy_resource_nodes($from,$to);
 	
@@ -4762,7 +4762,7 @@ function get_video_info($file)
 
 
 /**
-* Provides the ability to copy any metadata field data from one resource to a user resource template regardless of any
+* Provides the ability to copy any metadata field data from one resource to another regardless of any
 * field permissions the user might have. Mostly used in metadata templates when users should even get metadata of fields
 * they are not supposed to see / edit.
 * 
@@ -4771,18 +4771,29 @@ function get_video_info($file)
 * @uses copy_resource_nodes()
 * 
 * @param integer $from     Resource we are copying data from
-* @param integer $user_ref The user ID to whose resource template needs updating
+* @param integer $ref      The Resource ID that needs updating
 * 
 * @return void
 */
-function copyAllDataToUserResourceTemplate($from, $user_ref)
+function copyAllDataToResource($from, $to)
     {
-    $from     = escape_check($from);
-    $user_ref = escape_check(-1 * abs($user_ref));
+    copyResourceDataValues ($from,$to);
+    copy_resource_nodes($from, $to);
+    return;
+    }
+
+    
+function copyResourceDataValues($from,$to)
+    {
+    $from  = escape_check($from);    
+    $to   = escape_check($to);
+    
+    // Check for fields that should be excluded
+    $omitfields = sql_array("SELECT ref value FROM resource_type_field WHERE omit_when_copying='1'",0);
 
     sql_query("
         INSERT INTO resource_data(resource, resource_type_field, value)
-             SELECT '{$user_ref}',
+             SELECT '{$to}',
                     rd.resource_type_field,
                     rd.value
                FROM resource_data AS rd
@@ -4794,9 +4805,6 @@ function copyAllDataToUserResourceTemplate($from, $user_ref)
                             OR rtf.resource_type = 0
                         )
               WHERE rd.resource = '{$from}'
-    ");
-
-    copy_resource_nodes($from, $user_ref);
-
-    return;
+              AND rd.resource_type_field NOT IN ('" . implode("','",$omitfields) . "')");    
+        
     }

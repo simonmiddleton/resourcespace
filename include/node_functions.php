@@ -1114,7 +1114,8 @@ function delete_all_resource_nodes($resourceid)
     
 function copy_resource_nodes($resourcefrom,$resourceto)
 	{
-	sql_query("insert into resource_node (resource,node, hit_count, new_hit_count) select '" . $resourceto . "', node, 0, 0 FROM resource_node rnold WHERE resource ='" . $resourcefrom . "' ON DUPLICATE KEY UPDATE hit_count=rnold.new_hit_count;");	
+    $omitfields = sql_array("SELECT ref value FROM resource_type_field WHERE omit_when_copying=1",0);
+	sql_query("insert into resource_node (resource,node, hit_count, new_hit_count) select '" . $resourceto . "', node, 0, 0 FROM resource_node rnold LEFT JOIN node n on n.ref=rnold.node WHERE resource ='" . $resourcefrom . "' AND n.resource_type_field NOT IN ('" . implode("','",$omitfields) . "') ON DUPLICATE KEY UPDATE hit_count=rnold.new_hit_count;");	
 	}
     
 function get_nodes_from_keywords($keywords=array())
