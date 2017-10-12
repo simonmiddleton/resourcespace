@@ -647,21 +647,21 @@ function do_search(
                                     $union_restriction_clause = "";
                                     $union_restriction_clause_node = "";
     
-                                    // TODO: change $c to [union_index]
-    
+                                    $skipfields = array();
                                     if (!empty($sql_exclude_fields))
                                         {
                                         $union_restriction_clause .= " and k[union_index].resource_type_field not in (" . $sql_exclude_fields . ")";
                                         $union_restriction_clause_node .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field IN (" . $sql_exclude_fields .  "))";
+                                        $skipfields = explode(",",str_replace(array("'","\""),"",$sql_exclude_fields));
                                         }
-    
+                                        
                                     if (count($hidden_indexed_fields) > 0)
                                         {
                                         $union_restriction_clause .= " and k[union_index].resource_type_field not in ('" . join("','", $hidden_indexed_fields) . "')";
-                                        $union_restriction_clause_node .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";
+                                        $union_restriction_clause_node .= " AND nk[union_index].node NOT IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field IN (" . join(",", $hidden_indexed_fields) . "))";                                        
+                                        $skipfields = array_merge($skipfields,$hidden_indexed_fields);
                                         }
-                                        
-                                    if (isset($search_field_restrict) && $search_field_restrict!="") // Search is looking for a keyword in a specifed field
+                                    if (isset($search_field_restrict) && $search_field_restrict!="") // Search is looking for a keyword in a specified field
                                         {
                                         $union_restriction_clause .= " AND k[union_index].resource_type_field = '" . $search_field_restrict  . "' ";
                                         $union_restriction_clause_node .= " AND nk[union_index].node IN (SELECT ref FROM node WHERE nk[union_index].node=node.ref AND node.resource_type_field = '" . $search_field_restrict  . "')";
@@ -669,6 +669,13 @@ function do_search(
     
                                     if ($empty)  // we are dealing with a special search checking if a field is empty
                                         {
+                                        // First check user can see this field
+                                        if(in_array($nodatafield,$skipfields))
+                                            {
+                                            // Not permitted to check this field, return false
+                                            return false;
+                                            }
+                                            
                                         $rtype = sql_value("select resource_type value from resource_type_field where ref='$nodatafield'", 0);
                                         if ($rtype != 0)
                                             {
@@ -680,18 +687,21 @@ function do_search(
                                                     $sql_filter .= " and ";
                                                     }
                                                 $sql_filter .= str_replace("r[union_index].archive='0'", "(r[union_index].archive=1 or r[union_index].archive=2)", $sql_filter);
-                                                } else
+                                                }
+                                            else
                                                 {
                                                 $restypesql = "and r[union_index].resource_type ='$rtype' ";
                                                 }
-                                            } else
+                                            }
+                                        else
                                             {
                                             $restypesql = "";
                                             }
 										
 										$nodatafieldtype = sql_value("SELECT  `type` value FROM resource_type_field WHERE ref = '{$nodatafield}'", 0);	
-										if(in_array($nodatafieldtype,$FIXED_LIST_FIELD_TYPES))
-											{
+										
+                                        if(in_array($nodatafieldtype,$FIXED_LIST_FIELD_TYPES))
+                                            {   
 											// Check that nodes are empty
 											$union = "select ref as resource, [bit_or_condition] 1 as score from resource r[union_index] where r[union_index].ref not in 
 													(
@@ -701,8 +711,7 @@ function do_search(
 													where  n.resource_type_field='" . $nodatafield . "'
 													group by rn.resource
 													)";
-											$union .= $union_restriction_clause_node;
-											
+                                                    
 											$sql_keyword_union[] = $union;									
 											$sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
 											$sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`"; 
@@ -714,7 +723,6 @@ function do_search(
 											// Check that resource data is empty
 											$union = "select ref as resource, [bit_or_condition] 1 as score from resource r[union_index] left outer join resource_data rd[union_index] on r[union_index].ref=rd[union_index].resource and rd[union_index].resource_type_field='$nodatafield' where  (rd[union_index].value ='' or
 												rd[union_index].value is null or rd[union_index].value=',') $restypesql  and r[union_index].ref>0 group by r[union_index].ref ";
-											$union .= $union_restriction_clause;
 											
 											$sql_keyword_union[] = $union;										
 											$sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
