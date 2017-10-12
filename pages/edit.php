@@ -778,8 +778,8 @@ if(0 > $ref)
             <?php
             }
          }
-      hook("custompermshowfile");
-      if ((!$is_template && !checkperm("F*"))||$custompermshowfile) 
+      $custompermshowfile = hook('custompermshowfile');
+      if((!$is_template && !checkperm('F*')) || $custompermshowfile)
          { ?>
          <div class="Question" id="question_file">
             <label><?php echo $lang["file"]?></label>
