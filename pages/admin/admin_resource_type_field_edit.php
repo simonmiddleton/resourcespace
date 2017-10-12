@@ -22,6 +22,7 @@ $find=getvalescaped("find","");
 $restypefilter=getvalescaped("restypefilter","",true);
 $field_order_by=getvalescaped("field_order_by","ref");
 $field_sort=getvalescaped("field_sort","asc");
+$newfield = getval("newfield","") != "";
 
 $url_params = array("ref"=>$ref,
 		    "restypefilter"=>$restypefilter,
@@ -40,7 +41,7 @@ if($backurl=="")
 	
 function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type, $currentvalue,$fieldtype)
 	{
-	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $daterange_edtf_support, $allfields;
+	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $daterange_edtf_support, $allfields, $newfield;
 	if($propertyname=="linked_data_field")
 		{
 		if($fieldtype==FIELD_TYPE_DATE_RANGE && $daterange_edtf_support)
@@ -90,24 +91,34 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                         name="<?php echo $propertyname ?>"
                         class="stdwidth"
                         onchange="
-                            newval=parseInt(this.value);
-
-                            if((jQuery.inArray(newval,fixed_list_fields) > -1) && (jQuery.inArray(current_type,text_fields) > -1))
-                                {
-                                if(confirm('<?php echo $lang["admin_resource_type_field_migrate_data_prompt"] ?>'))
-                                    {
-                                    jQuery('#migrate_data').val('yes');
-                                    this.form.submit();
-                                    }
-                                else
-                                    {
-                                    jQuery('#migrate_data').val('');
-                                    }
-                                }
-                            else
-                                {
-                                this.form.submit();
-                                }
+                             <?php if(!$newfield)
+								{?>
+								newval=parseInt(this.value);
+								if((jQuery.inArray(newval,fixed_list_fields) > -1) && (jQuery.inArray(current_type,text_fields) > -1))
+									{
+									if(confirm('<?php echo $lang["admin_resource_type_field_migrate_data_prompt"] ?>'))
+										{
+										jQuery('#migrate_data').val('yes');
+										this.form.submit();
+										}
+									else
+										{
+										jQuery('#migrate_data').val('');
+										}
+									}
+								else
+									{
+									this.form.submit();
+									}
+								<?php
+								}
+							else
+								{
+								?>
+								this.form.submit();
+								<?php
+								}
+								?>
                 ">
 				<?php
 				foreach($field_types as $field_type=>$field_type_description)
@@ -312,7 +323,6 @@ if(getval("save","")!="" && getval("delete","")=="")
 			if($column == "type" && $val != $existingfield["type"] && getval("migrate_data","") != "")
 				{
 				// Need to migrate field data
-				//$migratelog = migrate_data_to_nodes ($ref,$existingfield["type"],$val,",");	
 				$migrate_data = true;				
 				}
 			
@@ -435,9 +445,11 @@ var current_type      = <?php echo ('' != $fielddata['type'] ? $fielddata['type'
 
  
 
-<form method=post class="FormWide" action="<?php echo $baseurl_short?>pages/admin/admin_resource_type_field_edit.php?ref=<?php echo $fielddata["ref"] . "&restypefilter=" . $restypefilter . "&field_order_by=" . $field_order_by . "&field_sort=" . $field_sort ."&find=" . urlencode($find); ?>" onSubmit="return CentralSpacePost(this,true);">
+<form method="post" class="FormWide" action="<?php echo $baseurl_short?>pages/admin/admin_resource_type_field_edit.php?ref=<?php echo $fielddata["ref"] . "&restypefilter=" . $restypefilter . "&field_order_by=" . $field_order_by . "&field_sort=" . $field_sort ."&find=" . urlencode($find); ?>" onSubmit="return CentralSpacePost(this,true);">
 
-<input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
+<input type="hidden" name="ref" value="<?php echo urlencode($ref) ?>">
+
+<input type="hidden" name="newfield" value="<?php echo ($newfield)?"TRUE":""; ?>">
 
 
 <?php

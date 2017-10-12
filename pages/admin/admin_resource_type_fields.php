@@ -52,7 +52,7 @@ if (getval("newfield","")!="")
 	sql_query("insert into resource_type_field (title,resource_type) values('" . getvalescaped("newfield","") . "','$newfieldrestype')");
 	$new=sql_insert_id();
 	log_activity(null,LOG_CODE_CREATED,getvalescaped("newfield",""),'resource_type_field','title',$new,null,'');
-	redirect($baseurl_short . 'pages/admin/admin_resource_type_field_edit.php?ref=' . $new);
+	redirect($baseurl_short . 'pages/admin/admin_resource_type_field_edit.php?ref=' . $new . '&newfield=true');
 	}
 	
 if(getval("deleted","")!="")
