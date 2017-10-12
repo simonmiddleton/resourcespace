@@ -2515,6 +2515,10 @@ function write_metadata($path, $ref, $uniqid="")
 		$filename = $filename['basename'];	
 		$randstring=md5(mt_rand()); // Added to make sure that simultaneous downloads are not attempting to write to the same file
 		$tmpfile=get_temp_dir(false,$uniqid) . "/" . $randstring . "_" .  $filename;
+		$tmpfile_mod=hook("write_metadata_tmpfile",'', array($path, $ref, $uniqid));
+		if($tmpfile_mod!==false){
+			$tmpfile=$tmpfile_mod;
+		}
 		copy($path,$tmpfile);
 		
         # Add the call to exiftool and some generic arguments to the command string.
