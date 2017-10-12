@@ -689,7 +689,6 @@ function render_sort_order(array $order_fields)
     // can depend on other params
     $modal  = ('true' == getval('modal', ''));
     ?>
-
     <select id="sort_order_selection">
     
     <?php
@@ -741,7 +740,8 @@ function render_sort_order(array $order_fields)
         <option value="ASC" <?php if($sort == 'ASC') {echo 'selected';} ?>><?php echo $lang['sortorder-asc']; ?></option>
         <option value="DESC" <?php if($sort == 'DESC') {echo 'selected';} ?>><?php echo $lang['sortorder-desc']; ?></option>
     </select>
-    
+    &nbsp;<i class="fa fa-sort-amount-<?php echo strtolower(safe_file_name($sort)) ?>"></i>
+
     <script>
     function updateCollectionActions(order_by,sort_direction){
     	jQuery("#CollectionDiv .ActionsContainer select option").each(function(){

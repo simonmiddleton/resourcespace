@@ -1005,7 +1005,7 @@ if($responsive_ui)
 	
 	# order by
 	#if (strpos($search,"!")===false)
-	if ($search!="!duplicates" && $search!="!unused" && !hook("replacesearchsortorder")) # Ordering enabled for collections/themes too now at the request of N Ward / Oxfam
+	if ($search!="!duplicates" && $search!="!unused" && !hook("replacesearchsortorder")) 
 		{
 		$rel=$lang["relevance"];
 		if(!hook("replaceasadded"))
