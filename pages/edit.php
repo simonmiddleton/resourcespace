@@ -1166,8 +1166,10 @@ if('' != getval('metadatatemplate', ''))
     $use             = getvalescaped('metadatatemplate', '');
     $original_fields = get_resource_field_data($ref, $multiple, true, -1, '', $tabs_on_edit);
     $original_nodes  = get_resource_nodes($ref);
-
-    copyAllDataToUserResourceTemplate($use, $userref);
+    if($ref < 0 || $upload_review_mode)
+        {
+        copyAllDataToResource($use, $ref);
+        }
     }
 
 # Load resource data
