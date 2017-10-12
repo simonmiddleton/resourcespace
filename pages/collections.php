@@ -745,7 +745,7 @@ elseif ($k!="" && !$internal_share_access)
 <?php if (!hook("thumbsmenu")) { ?>
   <?php if (!hook("replacecollectiontitle") && !hook("replacecollectiontitlemax")) { ?><h2 id="CollectionsPanelHeader"><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_manage.php"><?php echo $lang["mycollections"]?></a></h2><?php } ?>
   <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#entername').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
-		<div style="padding:0;margin:0;"><?php echo $lang["currentcollection"]?>&nbsp;(<strong><?php echo $count_result?></strong>&nbsp;<?php if ($count_result==1){echo $lang["item"];} else {echo $lang["items"];}?>): 
+		<div style="padding:0;margin:0;"><?php echo $lang["currentcollection"]?>: 
 		<br /><select name="collection" id="collection" onchange="if(document.getElementById('collection').value=='new'){document.getElementById('entername').style.display='block';document.getElementById('entername').focus();return false;} <?php if (!checkperm("b")){ ?>ChangeCollection(jQuery(this).val(),'<?php echo urlencode($k)  ?>','<?php echo urlencode($usercollection) ?>','<?php echo $change_col_url?>');<?php } else { ?>document.getElementById('colselect').submit();<?php } ?>" <?php if ($collection_dropdown_user_access_mode){?>class="SearchWidthExp"<?php } else { ?> class="SearchWidth"<?php } ?>>
 		<?php
 		$found=false;
@@ -802,6 +802,7 @@ elseif ($k!="" && !$internal_share_access)
 		<?php } ?>
 
 		</select>
+        <br /><small><?php echo $count_result . " "; if ($count_result==1){echo $lang["item"];} else {echo $lang["items"];} ?></small>
 		<input type=text id="entername" name="entername" style="display:none;" placeholder="<?php echo $lang['entercollectionname']?>" <?php if ($collection_dropdown_user_access_mode){?>class="SearchWidthExp"<?php } else { ?> class="SearchWidth"<?php } ?>>
 		</div>			
   </form>

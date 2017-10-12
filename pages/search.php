@@ -891,7 +891,7 @@ if($responsive_ui)
     }
     hook('responsiveresultoptions');
     ?>
-	<div id="SearchResultFound" class="InpageNavLeftBlock"><?php echo $lang["youfound"]?>:<br /><span class="Selected">
+	<div id="SearchResultFound" class="InpageNavLeftBlock"><span class="Selected">
 	<?php
 	if (isset($collections)) 
 	    {
@@ -906,12 +906,12 @@ if($responsive_ui)
 	if(!hook('replacedisplayselector','',array($search,(isset($collections)?$collections:""))))
 		{
 		?>
-		<div class="InpageNavLeftBlock <?php if($iconthumbs) {echo 'icondisplay';} ?>"><?php echo $lang["display"]?>:<br />
+		<div class="InpageNavLeftBlock <?php if($iconthumbs) {echo 'icondisplay';} ?>">
 		<?php	
 		if($display_selector_dropdowns)
 			{
 			?>
-			<select class="medcomplementwidth ListDropdown" style="width:auto" id="displaysize" name="displaysize" onchange="CentralSpaceLoad(this.value,true);">
+			<select style="width:auto" id="displaysize" name="displaysize" onchange="CentralSpaceLoad(this.value,true);">
 			<?php if ($xlthumbs==true) { ?><option <?php if ($display=="xlthumbs"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")) ?>"><?php echo $lang["xlthumbs"]?></option><?php } ?>
 			<option <?php if ($display=="thumbs"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")) ?>"><?php echo $lang["largethumbs"]?></option>
 			<?php if ($searchlist==true) { ?><option <?php if ($display=="list"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")) ?>"><?php echo $lang["list"]?></option><?php } ?>
@@ -991,8 +991,8 @@ if($responsive_ui)
 		<?php
 		}
 	if ($display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getvalescaped('recentdaylimit', '', true)==""){?>
-	<div class="InpageNavLeftBlock"><?php echo $lang["period"]?>:<br />
-		<select class="medcomplementwidth ListDropdown" style="width:auto" id="resultsdisplay" name="resultsdisplay" onchange="CentralSpaceLoad(this.value,true);">
+	<div class="InpageNavLeftBlock">
+		<select style="width:auto" id="resultsdisplay" name="resultsdisplay" onchange="CentralSpaceLoad(this.value,true);">
 		<?php for($n=0;$n<count($recent_search_period_array);$n++){
 			if ($display_selector_dropdowns){?>
 				<option <?php if ($daylimit==$recent_search_period_array[$n]){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("daylimit"=>$recent_search_period_array[$n])); ?>"><?php echo str_replace("?",$recent_search_period_array[$n],$lang["lastndays"]); ?></option>
@@ -1046,7 +1046,6 @@ if($responsive_ui)
 		?>
 		<div id="searchSortOrderContainer" class="InpageNavLeftBlock ">
 		<?php
-		echo $lang["sortorder"] . ':<br />';
 
 		if(!hook('render_sort_order_differently', '', array($orderFields)))
 			{
@@ -1062,16 +1061,15 @@ if($responsive_ui)
 		if($display_selector_dropdowns || $perpage_dropdown)
 			{
 			?>
-			<div class="InpageNavLeftBlock"><?php echo ucfirst($lang['perpage']); ?>:
-				<br />
-				<select id="resultsdisplay" class="medcomplementwidth ListDropdown" style="width:auto" name="resultsdisplay" onchange="<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this.value,true);">
+			<div class="InpageNavLeftBlock">
+				<select id="resultsdisplay" style="width:auto" name="resultsdisplay" onchange="<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this.value,true);">
 			<?php
 			for($n = 0; $n < count($results_display_array); $n++)
 				{
 				if($display_selector_dropdowns || $perpage_dropdown)
 					{
 					?>
-					<option <?php if($per_page == $results_display_array[$n]) { ?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n])); ?>"><?php echo urlencode($results_display_array[$n]); ?></option>
+					<option <?php if($per_page == $results_display_array[$n]) { ?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n])); ?>"><?php echo str_replace("?",$results_display_array[$n],$lang["perpage_option"]); ?></option>
 					<?php
 					}
 				}
@@ -1087,12 +1085,12 @@ if($responsive_ui)
 			}
 		
 		$url=generateURL($baseurl . "/pages/search.php",$searchparams); // Moved above render_actions as $url is used to render search actions
-		render_actions($collectiondata,true);
+		render_actions($collectiondata,true,false);
 
 		hook("search_header_after_actions");
 		
 		if (!$display_selector_dropdowns && !$perpage_dropdown){?>
-		<div class="InpageNavLeftBlock"><?php echo ucfirst($lang["perpage"]);?>:<br />
+		<div class="InpageNavLeftBlock">
 		<?php 
 		for($n=0;$n<count($results_display_array);$n++){?>
 		<?php if ($per_page==$results_display_array[$n]){?><span class="Selected"><?php echo urlencode($results_display_array[$n])?></span><?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n])); ?>" onClick="return CentralSpaceLoad(this);"><?php echo urlencode($results_display_array[$n])?></a><?php } ?><?php if ($n>-1&&$n<count($results_display_array)-1){?>&nbsp;|<?php } ?>
@@ -1101,7 +1099,7 @@ if($responsive_ui)
 		<?php } 
 	
 		if (!$display_selector_dropdowns && $recent_search_period_select && strpos($search,"!")===false && getvalescaped('recentdaylimit', '', true)==""){?>
-		<div class="InpageNavLeftBlock"><?php echo $lang["period"]?>:<br />
+		<div class="InpageNavLeftBlock">
 		<?php 
 		for($n=0;$n<count($recent_search_period_array);$n++){
 			if ($daylimit==$recent_search_period_array[$n]){?><span class="Selected"><?php echo htmlspecialchars(str_replace("?",$recent_search_period_array[$n],$lang["lastndays"]))?> </span>&nbsp;|&nbsp;<?php } else { ?><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("daylimit"=>$recent_search_period_array[$n])); ?>" onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars(str_replace("?",$recent_search_period_array[$n],$lang["lastndays"]))?></a>&nbsp;|&nbsp;<?php } 
@@ -1124,7 +1122,7 @@ if($responsive_ui)
 	<?php hook("stickysearchresults"); ?> <!--the div TopInpageNavRight was added in after this hook so it may need to be adjusted -->
 	<div class="TopInpageNavRight">
 	<?php
-		pager();
+		pager(false);
 		$draw_pager=true;
 	?>
 	</div>

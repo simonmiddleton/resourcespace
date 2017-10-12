@@ -226,7 +226,7 @@ if($submitdashtile)
 		}
 	include "../include/header.php";
 	?>
-	<h2><?php echo $lang["createnewdashtile"];?></h2>
+	<h1><?php echo $lang["createnewdashtile"];?></h1>
 	<?php 
 	if($error)
 		{?>
@@ -455,10 +455,26 @@ if(!$validpage)
 	exit;
 	}
 ?>
-<h2><?php echo $pagetitle?></h2>
+<div class="BasicsBox">
+<h1><?php echo $pagetitle?></h1>
 <form id="create_dash" name="create_dash">
 	<input type="hidden" name="tltype" value="<?php echo htmlspecialchars($tile_type)?>" />
 	<input type="hidden" name="url" value="<?php echo htmlspecialchars($url); ?>" />
+    
+    
+    <div class="Question">
+        <label>
+        <?php echo $lang["preview"] ?>
+        </label>
+        <br />
+        <div class="HomePanel DashTile">
+        <div id="previewdashtile" class="dashtilepreview HomePanelIN HomePanelDynamicDash <?php echo ($dash_tile_shadows)? "TileContentShadow":"";?>">
+        </div>
+        </div>
+        <div class="clearerleft"></div>
+    </div>
+    
+    
 	<?php
 	echo $formextra;
 
@@ -708,7 +724,7 @@ if('' != $tile_type)
 		}
         ?>
     </div>
-	<div class="Question">
+	<div class="QuestionSubmit">
 		 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $submittext;?>&nbsp;&nbsp;" /></div>
 		<div class="clearerleft"> </div>
 	</div>
@@ -733,10 +749,8 @@ if('' != $tile_type)
     </script>
 </form>
 
-<div class="HomePanel DashTile">
-	<div id="previewdashtile" class="dashtilepreview HomePanelIN HomePanelDynamicDash <?php echo ($dash_tile_shadows)? "TileContentShadow":"";?>">
-	</div>
-</div>
+
+
 <script>
 	function updateDashTilePreview() {
 		var prevstyle = jQuery(".tlstyle:checked").val();
@@ -799,6 +813,8 @@ if('' != $tile_type)
 	jQuery(".tlstyle").change(updateDashTilePreview);
     jQuery("#promotedresource").change(updateDashTilePreview);
 </script>
+
+</div><!-- End of BasicsBox -->
 <?php
 include "../include/footer.php";
 

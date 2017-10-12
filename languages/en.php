@@ -245,6 +245,8 @@ $lang["striptitle"]="Strip view";
 $lang["list"]="List";
 $lang["listtitle"]="List view";
 $lang["perpage"]="per page";
+$lang["perpage_option"]="? per page";
+
 $lang["on"]="On";
 $lang["off"]="Off";
 $lang["seconds"]="seconds";
@@ -2467,7 +2469,7 @@ $lang['error_generic'] = 'Sorry, there has been an error. If this error persists
 
 $lang["maximise"]="Maximise";
 
-$lang["actions-select"]="";
+$lang["actions-select"]="Actions...";
 $lang["actions"] = "Actions";
 $lang["actions-total"] = "Total actions";
 $lang["actions-enable"] = "Enable actions functionality for all users? If this is disabled it can still be enabled based on group permissions";
