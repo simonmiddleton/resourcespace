@@ -125,8 +125,16 @@ for ($n=0;$n<count($keywords);$n++)
                         {
                         // Append in order to construct the field:value1;value2 syntax used for an OR search in the same field
                         $fieldsearchterm = substr($fieldsearchterm,strpos($fieldsearchterm,":")+1);
-                        $simple[$simpletext_count] .= ";" . $fieldsearchterm;  
-                        $initial_tags[$initial_tag_count] .= ";" .  $fieldsearchterm;                          
+                        if(!isset($simple[$simpletext_count]))
+                            {
+                            $simple[$simpletext_count] = "";
+                            }
+                        $simple[$simpletext_count] .= ";" . $fieldsearchterm;
+                        if(!isset($initial_tags[$initial_tag_count]))
+                            {
+                            $initial_tags[$initial_tag_count] = "";  
+                            }
+                        $initial_tags[$initial_tag_count] .= ";" . $fieldsearchterm;                          
                         }
 					else
                         {
