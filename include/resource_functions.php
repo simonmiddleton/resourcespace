@@ -2069,6 +2069,18 @@ function clear_resource_data($resource)
 	sql_query("delete from resource_keyword where resource='$resource'");
 	sql_query("delete from resource_related where resource='$resource' or related='$resource'");
     delete_all_resource_nodes($resource); 
+    
+    // Clear all 'joined' fields
+    $joins=get_resource_table_joins();
+    if(count($joins) > 0)
+        {
+        $joins_sql = "";
+        foreach ($joins as $join)
+            {
+            $joins_sql .= (($joins_sql!="")?",":"") . "field" . escape_check($join) . "=NULL";
+            }
+        sql_query("UPDATE resource SET $joins_sql WHERE ref='$resource'");
+        }
         
     return true;
     }
