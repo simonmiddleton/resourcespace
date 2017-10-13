@@ -112,7 +112,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             checkperm('F' . $fields[$n]['ref'])
             || (checkperm("F*") && !checkperm('F-' . $fields[$n]['ref']))
             // If we hide on upload the field, there is no need to check values passed from the UI as there shouldn't be any
-            || (0 > $ref && $fields[$n]['hide_when_uploading'])
+            || ((0 > $ref || $upload_review_mode) && $fields[$n]['hide_when_uploading'])
             )
             && ('' == $autosave_field || $autosave_field == $fields[$n]['ref']
                 || (is_array($autosave_field) && in_array($fields[$n]['ref'], $autosave_field))
