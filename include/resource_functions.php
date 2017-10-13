@@ -2745,13 +2745,19 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 	# order depends on which title should be the default (embedded or generated)
 	if ($staticsync_prefer_embedded_title)
 		{
-		update_field($r,$view_title_field,$title);
+		if ($view_title_field!==$filename_field)
+			{
+			update_field($r,$view_title_field,$title);
+			}
 		extract_exif_comment($r,$extension);
 		}
 	else
 		{
 		extract_exif_comment($r,$extension);
-		update_field($r,$view_title_field,$title);
+		if ($view_title_field!==$filename_field)
+			{
+			update_field($r,$view_title_field,$title);
+			}
 		}
 		
 	# Extract text from documents (e.g. PDF, DOC)
