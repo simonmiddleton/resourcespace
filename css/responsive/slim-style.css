@@ -29,6 +29,9 @@
 #PreviewImageLarge {
     width: 100%;
 }
+body {
+    -webkit-overflow-scrolling: touch;
+}
 
 @media(max-width:1100px) {
     #SearchBarContainer {
@@ -425,6 +428,10 @@
         width: 150px;
         margin: 0 7px 7px 0;
     }
+    #CentralSpaceResources .ResourcePanel.ResourcePanelLarge {
+        width: 320px;
+        margin: 0 14px 14px 0;
+    }
     /* Show Responsive Bar */
     #SearchBoxPanel input, #SearchBoxPanel label, #SearchBoxPanel h2, #SearchBoxPanel .SearchItem, #SearchBoxPanel .StarRatings, #SearchBoxPanel #searchbarrt, #SearchBoxPanel p {
         display:none;
@@ -651,13 +658,10 @@
         width: 95%;
         display: none;
         margin: 0 0 10px 0;
-        margin-left: 5%;
     }
     .TopInpageNav .InpageNavLeftBlock a, .InpageNavLeftBlock span {
         display:inline-block;
         float:none;
-        font-size: 1em;
-        vertical-align: middle;
     }
  }
  @media(max-width:1200px) {
@@ -685,6 +689,9 @@
     }
     .TopInpageNavRight {
         margin-top:1px;
+    }
+    .ResourcePanel .ImageWrapper {
+        margin-top: 0;
     }
 }
 @media(max-width:700px) {
@@ -736,17 +743,6 @@
     #Rssearchexpand {
         margin-right:0;
     }
-    .xlthumbsicon, .xlthumbsiconactive, 
-    .largethumbsicon, .largethumbsiconactive, 
-    .stripicon, .stripiconactive, 
-    .smalllisticon, .smalllisticonactive {
-        background-size: 32px 32px;
-        width: 32px;
-        height: 32px;
-    }
-    .InpageNavLeftBlock.icondisplay {
-        line-height: 2em;
-    }
 }
 @media(max-width:400px) {
     .ResourcePanelShell {
@@ -754,13 +750,6 @@
     }
     .ResourcePanelShellLarge {
         width:100%;
-    }
-    .ResourcePanelLarge {
-        width:100%;
-    }
-    .ResourcePanelLarge img {
-        width:98%;
-        height:auto;
     }
     .ResourceAlignLarge {
         width:100%;
@@ -775,6 +764,9 @@
     .TopInpageNavRight {
         margin-top:10px;
         text-align:center;
+    }
+    #Responsive_ResultDisplayOptions {
+        margin-bottom: 12px;    
     }
 }
 @media(min-width:1301px) {

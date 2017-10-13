@@ -1,7 +1,7 @@
 <?php 
 if (!hook("renderresultthumb")) 
 	{
-    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 350 : 180) + (28 * count($thumbs_display_fields));
+    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 350 : 186) + (28 * count($thumbs_display_fields));
     if($annotate_enabled)
         {
         $thumbs_displayed_fields_height += 28;
@@ -175,7 +175,7 @@ if (!hook("renderresultthumb"))
 						{ ?>
 						<img 
 							border=0 
-							src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="padding-top:<?php echo ($display == "xlthumbs" ? "90px" : "10px")?>;"
+							src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="margin-top:<?php echo ($display == "xlthumbs" ? "90px" : "10px")?>;"
 
 						/>
 						<?php 

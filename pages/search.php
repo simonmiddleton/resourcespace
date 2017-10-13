@@ -915,7 +915,7 @@ if($responsive_ui)
 			<?php if ($xlthumbs==true) { ?><option <?php if ($display=="xlthumbs"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")) ?>"><?php echo $lang["xlthumbs"]?></option><?php } ?>
 			<option <?php if ($display=="thumbs"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")) ?>"><?php echo $lang["largethumbs"]?></option>
 			<?php if ($searchlist==true) { ?><option <?php if ($display=="list"){?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")) ?>"><?php echo $lang["list"]?></option><?php } ?>
-			</select>&nbsp;
+			</select>
 			<?php
 			}
 		elseif($iconthumbs)
@@ -924,38 +924,38 @@ if($responsive_ui)
 				{
 				if($display == 'xlthumbs')
 					{
-					?><span class="xlthumbsiconactive">&nbsp;</span>&nbsp;<?php
+					?><span class="xlthumbsiconactive"></span><?php
 					}
 				else
 					{
 					?>
 					<a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")); ?>" title='<?php echo $lang["xlthumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
-						<span class="xlthumbsicon">&nbsp;</span>
+						<span class="xlthumbsicon"></span>
 					</a>
 					<?php
 					}
 				}
 			if($display == 'thumbs')
 				{
-				?><span class="largethumbsiconactive">&nbsp;</span>&nbsp;<?php
+				?><span class="largethumbsiconactive"></span><?php
 				}
 			else
 				{
 				?>
 				<a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")); ?>" title='<?php echo $lang["largethumbstitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
-					<span class="largethumbsicon">&nbsp;</span>
+					<span class="largethumbsicon"></span>
 				</a>
 				<?php
 				}
 			if($display == 'strip')
 				{
-				?><span class="stripiconactive">&nbsp;</span>&nbsp;<?php
+				?><span class="stripiconactive"></span><?php
 				}
 			else
 				{
 				?>
 				<a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")); ?>" title='<?php echo $lang["striptitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
-					<span class="stripicon">&nbsp;</span>
+					<span class="stripicon"></span>
 				</a>
 				<?php
 				}
@@ -964,13 +964,13 @@ if($responsive_ui)
 				{
 				if($display == 'list')
 					{
-					?><span class="smalllisticonactive">&nbsp;</span>&nbsp;<?php
+					?><span class="smalllisticonactive"></span><?php
 					}
 				else
 					{
 					?>
 					<a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo $lang["listtitle"] ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
-						<span class="smalllisticon">&nbsp;</span>
+						<span class="smalllisticon"></span>
 					</a>
 					<?php
 					}

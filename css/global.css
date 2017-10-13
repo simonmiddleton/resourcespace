@@ -172,10 +172,10 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #CentralSpaceLogin {margin: 2em auto 4em;padding:0;width: 760px;text-align:left;}
 #CentralSpace {text-align:left;position:relative;}
 
-.TopInpageNav {clear: left;margin-bottom:10px;margin-right: 0;position:relative;}
+.TopInpageNav {clear: left;margin-bottom:20px;margin-right: 0;position:relative;}
 .BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0px; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
-.TopInpageNavLeft{float:left;padding-right:240px;}
+.TopInpageNavLeft{float:left;padding-right:120px;}
 .TopInpageNavRight{position:absolute;right:0;top:0;width:280px;text-align:right;}
 .InpageNavLeftBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 20px 0 0;}
 .InpageNavRightBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 15px 0 0;}
@@ -270,6 +270,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelSmallIcons {padding-left: 5px;}	
 .ImageWrapper {height:150px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
+.ResourcePanel .ImageWrapper {margin-top: 12px;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
 .ResourceTypeIcon { height: 16px;width:16px;float:right;margin-right:5px;margin-top:6px; }
@@ -705,33 +706,42 @@ margin-bottom:10px;
 }
 
 .smalllisticon, .smalllisticonactive, .xlthumbsicon, .xlthumbsiconactive, .smallthumbsicon, .smallthumbsiconactive, .largethumbsicon, .largethumbsiconactive, .stripicon, .stripiconactive {
-width: 20px;
+width: 24px;
 display: block;
-height: 20px;
+height: 24px;
 float:left;
+padding-left: 3px;
 }
 
 /* astec migrated 072515 - not sure who's edit this is*/
 .InpageNavLeftBlock {
 text-align:left;
-margin-right: 20px;
-margin-bottom: 10px;
+margin-right: 15px;
 }
 
 .icondisplay {
-width: 90px;
+    width:110px;
+    margin-right: 10px;
 }
 
 .smalllisticon{background: url(../gfx/interface/listicon.svg) no-repeat 0px;}
 .smalllisticonactive {background: url(../gfx/interface/listiconactive.svg) no-repeat 0px;}
 .xlthumbsicon{background: url(../gfx/interface/xlicon.svg) no-repeat 0px;}
 .xlthumbsiconactive {background: url(../gfx/interface/xliconactive.svg) no-repeat 0px;}
-.smallthumbsiconactive{background: url(../gfx/interface/smalliconactive.svg) no-repeat 0px;}
 .smallthumbsicon{background: url(../gfx/interface/smallicon.svg) no-repeat 0px;}
+.smallthumbsiconactive{background: url(../gfx/interface/smalliconactive.svg) no-repeat 0px;}
 .largethumbsicon{background: url(../gfx/interface/largeicon.svg) no-repeat 0px;}
 .largethumbsiconactive{background: url(../gfx/interface/largeiconactive.svg) no-repeat 0px;}
-.stripiconactive{background: url(../gfx/interface/stripiconactive.svg) no-repeat 0px;}
 .stripicon{background: url(../gfx/interface/stripicon.svg) no-repeat 0px;}
+.stripiconactive{background: url(../gfx/interface/stripiconactive.svg) no-repeat 0px;}
+
+#searchSortOrderContainer, #resultsdisplay, .InpageNavLeftBlock {
+    vertical-align: top;
+}
+
+#SearchResultFound {
+    padding-top: 3px;
+}
 
 #contactadminbox  textarea{
 	width:100%;
