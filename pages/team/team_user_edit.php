@@ -136,7 +136,8 @@ if(!$modal)
 if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user["login_last_try"]) > (time() - ($max_login_attempts_wait_minutes * 60))))
  {?>
 	<div class="Question"><label><strong><?php echo $lang["accountlockedstatus"]?></strong></label>
-		<input class="medcomplementwidth" type=submit name="unlock" value="<?php echo $lang["accountunlock"]?>" />
+		<input class="medcomplementwidth" type=submit name="unlock" value="<?php echo $lang["accountunlock"]?>" onclick="jQuery('#unlockuser').val('true');"/>
+		<input id="unlockuser" type=hidden name="unlock" value="" />
 	</div>
 
 	<div class="clearerleft"> </div>
