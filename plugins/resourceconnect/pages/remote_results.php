@@ -85,7 +85,7 @@ else
     
     <div class="InpageNavLeftBlock">Per page:
     <br>
-        <select id="rc_per_page" class="medcomplementwidth ListDropdown" style="width:auto" name="resultsdisplay" onChange="ResourceConnect_Repage(0);">
+        <select id="rc_per_page" style="width:auto" name="resultsdisplay" onChange="ResourceConnect_Repage(0);">
             <option>24</option>
             <option>48</option>
             <option>72</option>
