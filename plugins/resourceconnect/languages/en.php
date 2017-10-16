@@ -18,3 +18,8 @@ $lang["resourceconnect_error-not_signed_with_correct_key"] = "Sorry, the request
 $lang["resourceconnect_search_info"] = "Please specify which connected database you wish to search.";
 
 $lang["resourceconnect_collectionwarning"]="<span style='color:red;'><strong>IMPORTANT NOTICE</strong>: This collection contains assets from a remote database. These will not be included in the below operation.</span>";
+
+$lang["refineresults"]="Refine results"; # Define in case Refine Results plugin not installed.
+$lang["additionalkeywords"]="Additional keywords"; # Define in case Refine Results plugin not installed.
+$lang["refine"]="Refine"; # Define in case Refine Results plugin not installed.
+
