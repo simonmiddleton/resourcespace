@@ -143,14 +143,13 @@ function HookFilterboxAllAddsearchbarpanel()
 	<input type="hidden" name="search" value="<?php echo htmlspecialchars(stripslashes($original_search))?>" />
 	</div>
 
-	<div class="QuestionSubmit"
-		 style="padding-top:0;margin-top:0;margin-bottom:0;padding-bottom:0;">
+	<div class="QuestionSubmit">
 	<input name="save" type="submit" value="&nbsp;&nbsp;<?php
 			echo $lang["filterbutton"]?>&nbsp;&nbsp;" />
 	</div>
 	</form>
 	<br />
-	<p><a onClick="document.getElementById('filter_keywords').value=''; CentralSpacePost(document.getElementById('FilterForm'), true);">&gt; <?php echo $lang['clearbutton']?></a></p>
+	<p><a id="filter_clear_button" onClick="document.getElementById('filter_keywords').value=''; CentralSpacePost(document.getElementById('FilterForm'), true);">&gt; <?php echo $lang['clearbutton']?></a></p>
 
 	</div>
 	</div>

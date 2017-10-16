@@ -1,0 +1,22 @@
+.SearchSpace.FilterBox {
+    margin-top: 18px;
+}
+
+#filter_box_question_filter {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.FilterBox .QuestionSubmit {
+    background: none;
+    border: none;
+}
+
+#FilterForm .QuestionSubmit {
+    padding: 10px 0 0 0;
+}
+
+#filter_clear_button {
+    cursor: pointer;
+}
