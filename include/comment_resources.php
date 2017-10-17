@@ -45,7 +45,7 @@ if (!$view_panels) {
 <script type="text/javascript">
 	jQuery(document).ready(function () {		
 		jQuery("#CommentsContainer").load(
-			"../pages/ajax/comments_handler.php?ref=<?php echo $ref;?>", 
+			baseurl_short + "pages/ajax/comments_handler.php?ref=<?php echo $ref;?>", 
 			function() {
 			if (jQuery.type(jQuery(window.location.hash)[0])!=="undefined")				
 				jQuery(window.location.hash)[0].scrollIntoView();
