@@ -368,9 +368,7 @@ function update_hitcount($ref)
 function get_resource_type_field($field)
     {
     $field = escape_check($field);
-
-    $return = sql_query("
-         SELECT ref,
+	$rtf_query="SELECT ref,
                 name,
                 title,
                 type,
@@ -409,7 +407,12 @@ function get_resource_type_field($field)
                 fits_field
            FROM resource_type_field
           WHERE ref = '{$field}'
-    ");
+    ";
+    $modified_rtf_query=hook('modify_rtf_query','', array($field, $rtf_query));
+    if($modified_rtf_query!==false){
+    	$rtf_query=$modified_rtf_query;
+    }
+    $return = sql_query($rtf_query);
     
     if(0 == count($return))
         {
