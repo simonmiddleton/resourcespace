@@ -567,9 +567,21 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         
         
         case FIELD_TYPE_CATEGORY_TREE:
-        # ----- Category Tree
-        $set     = preg_split('/[;\|]/', cleanse_string($value, true));
-        $name    = "nodes_searched[{$field['ref']}][]";
+        global $category_tree_add_parents, $category_tree_search_use_and;
+
+        $set  = preg_split('/[;\|]/', cleanse_string($value, true));
+        $name = "nodes_searched[{$field['ref']}][]";
+
+        /*
+        For search, category trees work slightly different than the intended behaviour shown in edit_fields/7.php:
+        Intended behaviour:
+        1. Selecting a sub (child) node will automatically select all parent nodes up to and including the root level,
+        unless the option $category_tree_add_parents is set to false
+
+        On search this should work like this:
+        Selecting a sub (child) node will NOT select all parent nodes unless the system is configured to search using AND
+        */
+        $category_tree_add_parents = $category_tree_search_use_and;
 
         if($forsearchbar)
             {
