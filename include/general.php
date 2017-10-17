@@ -3567,6 +3567,7 @@ function check_display_condition($n, $field)
     $displaycondition = false;
     $s                = explode(';', $field['display_condition']);
     $condref          = 0;
+    $scriptconditions = array();
 
     // echo "<b>{$field['title']}</b>";
     // echo '<pre>';print_r($s);echo '</pre>';
