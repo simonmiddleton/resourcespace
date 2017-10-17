@@ -13,9 +13,9 @@ function antivirus_scan($file_path, $av_options = '')
     {
     global $antivirus_path;
 
-    if('' === trim($antivirus_path))
+    if(!isset($antivirus_path) || trim($antivirus_path) == '')
         {
-        trigger_error('$antivirus_path is not set!');
+        trigger_error($lang['antivirus_av_not_setup_error']);
         }
 
     $file_path = escapeshellarg($file_path);

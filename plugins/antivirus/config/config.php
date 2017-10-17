@@ -10,7 +10,5 @@ define('ANTIVIRUS_ACTION_QUARANTINE', 1);
 
 
 // General (default) config options
-$antivirus_path             = '/usr/bin/clamscan';
-$antivirus_silent_options   = '-i --no-summary';
 $antivirus_action           = ANTIVIRUS_ACTION_QUARANTINE;
 $antivirus_quarantine_state = 2;

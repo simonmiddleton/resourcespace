@@ -20,9 +20,12 @@ foreach(sql_query('SELECT `code`, `name` FROM archive_states') as $state)
     $archive_states[$state['code']] = $state['name'];
     }
 
+if(!isset($antivirus_path) || trim($antivirus_path) == '')
+    {
+    $error = $lang['antivirus_av_not_setup_error'];
+    }
 
-$page_def[] = config_add_text_input('antivirus_path', $lang['antivirus_av_path_label']);
-$page_def[] = config_add_text_input('antivirus_silent_options', $lang['antivirus_av_silent_options_label']);
+
 $page_def[] = config_add_single_select(
     'antivirus_action',
     $lang['antivirus_action_label'],
