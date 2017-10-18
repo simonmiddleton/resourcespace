@@ -915,7 +915,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 			global $userref;
 			if ($edit_access_for_contributor)
 				{
-				$blockeditoverride .= " created_by='" . $userref . "')";
+				$blockeditoverride .= " created_by='" . $userref . "'";
 				}
 			if(count($rtexclusions)>0)
 				{
