@@ -124,8 +124,8 @@ function HookResourceconnectViewBeforefooter()
 
 function HookResourceconnectViewBeforefields()
     {
-    global $applicationname,$lang;
+    global $applicationname,$lang,$resourceconnect_affiliates,$resourceconnect_this;
     ?>
-    <div class="itemNarrow"><h3><?php echo $lang["resourceconnect_search_database"] ?></h3><p><?php echo $applicationname ?></p></div>
+    <div class="itemNarrow"><h3><?php echo $lang["resourceconnect_affiliate"] ?></h3><p><?php echo $resourceconnect_affiliates[$resourceconnect_this]["name"] ?></p></div>
     <?php    
     }
