@@ -27,10 +27,12 @@ $lang['checkmail_body_field']="Body Field";
 $lang['checkmail_purge']="Purge e-mails after upload?";
 $lang['checkmail_confirm']="Send confirmation e-mails?";
 $lang['checkmail_users']="Allowed Users";
+$lang['checkmail_blocked_users_label'] = 'Blocked users';
 $lang['checkmail_default_access']="Default Access";
 $lang['checkmail_default_archive']="Default Status";
 $lang['checkmail_html']="Allow HTML Content? (experimental, not recommended)";
 $lang['checkmail_mail_skipped']="Skipped e-mail";
+$lang['checkmail_allow_users_based_on_permission_label'] = "Should users be allowed based on permission to upload?";
 
 $lang['addresourcesviaemail']="Add via E-mail";
 $lang['uploadviaemail']="Add via E-mail";
@@ -38,3 +40,5 @@ $lang['uploadviaemail-intro']="<br /><br />To upload via e-mail, attach your fil
 $lang['checkmail_confirmation_message']="You will receive a confirmation e-mail when your e-mail is successfully processed. If your e-mail is programmatically skipped for any reason (such as if it is sent from the wrong address), the administrator will be notified that there is an e-mail requiring attention.";
 $lang['yourresourcehasbeenuploaded']="Your resource has been uploaded";
 $lang['yourresourceshavebeenuploaded']="Your resources have been uploaded";
+
+$lang['checkmail_not_allowed_error_template'] = '[user-fullname] ([username]), with ID [user-ref] and e-mail [user-email] is not allowed to upload via e-mail (check permissions "c" or "d" or the blocked users in checkmail setup page). Recorded on: [datetime].';

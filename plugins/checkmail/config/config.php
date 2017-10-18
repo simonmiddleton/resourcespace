@@ -1,4 +1,4 @@
-<?php 	
+<?php
 	$checkmail_imap_server='imap.gmail.com:993/ssl'; 
 	$checkmail_email='';
 	$checkmail_password='';
@@ -11,3 +11,7 @@
 	$checkmail_html=false; // not generally recommended
 	$checkmail_default_resource_type=1; 
 	$checkmail_users=array();
+
+// Any users with the required permissions to upload resources will also be able to email resources.
+// If set to true, the system will block the current selected users ($checkmail_users)
+$checkmail_allow_users_based_on_permission = false;

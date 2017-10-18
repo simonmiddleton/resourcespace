@@ -134,11 +134,55 @@ if (isset($fromuser[0])){
 else {
 	skip_mail($imap,$current_message,"Could not find $fromaddress among Users on ". date('l jS \of F Y h:i:s A').".", true);
 }
-	
-if (!in_array($userref,$checkmail_users)){	
-	skip_mail($imap,$current_message,$fromuser['fullname']."($fromusername), user $userref with e-mail $fromaddress is not included in checkmail_users on ". date('l jS \of F Y h:i:s A').".",true);
-}
-	
+
+// If we reached so far, it should mean we have found a user.
+// Make sure it is valid and set the user up as we need to check permissions later on
+$user_data = validate_user("u.ref = '" . escape_check($userref) . "'", true);
+if($user_data !== false && count($user_data) > 0)
+    {
+    setup_user($user_data[0]);
+    }
+
+
+// If we allow users to upload via e-mails based on permissions, we skip users who either don't have permissions to 
+// upload or those who are blocked explicitly
+if(
+    $checkmail_allow_users_based_on_permission
+    && (
+        !(checkperm('c') || checkperm('d'))
+        || in_array($userref, $checkmail_users)
+    )
+)
+    {
+    $error_message = str_replace(
+        array(
+            '[user-fullname]',
+            '[username]',
+            '[user-ref]',
+            '[user-email]',
+            '[datetime]'
+        ),
+        array(
+            $fromuser['fullname'],
+            $fromusername,
+            $userref,
+            $fromaddress,
+            date('l jS \of F Y h:i:s A')
+        ),
+        $lang['checkmail_not_allowed_error_template']);
+
+    skip_mail($imap, $current_message, $error_message, true);
+    }
+
+if(!$checkmail_allow_users_based_on_permission && !in_array($userref, $checkmail_users))
+    {
+    skip_mail(
+        $imap,
+        $current_message,
+        "{$fromuser['fullname']} ({$fromusername}), user {$userref} with e-mail {$fromaddress} is not included in checkmail_users on " . date('l jS \of F Y h:i:s A') . '.',
+        true);
+    }
+
 // check that the user can create resources
 if (isset($fromuser['groupref'])){ 
 	$fromusergroup=get_usergroup($fromuser['groupref']);

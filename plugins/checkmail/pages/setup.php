@@ -20,12 +20,21 @@ else if ($last_checkmail==""){
 	$timediff=strtotime($now)-strtotime($last_checkmail);if ($timediff>300){$page_intro.=$lang['checkmail_cronjobprob'];}
 }
 
+$checkmail_users_label = $lang['checkmail_users'];
+if($checkmail_allow_users_based_on_permission)
+    {
+    $checkmail_users_label = $lang['checkmail_blocked_users_label'];
+    }
+
+
+
+
 // Build configuration variable descriptions
 $page_def[]= config_add_text_input("checkmail_imap_server",$lang["checkmail_imap_server"]);
 $page_def[]= config_add_text_input("checkmail_email",$lang["checkmail_email"]);
 $page_def[]= config_add_text_input("checkmail_password",$lang["checkmail_password"],true);
-
-$page_def[]= config_add_multi_user_select("checkmail_users",$lang["checkmail_users"]);
+$page_def[] = config_add_boolean_select('checkmail_allow_users_based_on_permission', $lang['checkmail_allow_users_based_on_permission_label']);
+$page_def[] = config_add_multi_user_select('checkmail_users', $checkmail_users_label);
 $page_def[]= config_add_single_ftype_select("checkmail_subject_field",$lang["checkmail_subject_field"]);
 $page_def[]= config_add_single_ftype_select("checkmail_body_field",$lang["checkmail_body_field"]);
 $page_def[]= config_add_single_select("checkmail_default_access",$lang["checkmail_default_access"],array(2=>$lang["access2"],1=>$lang["access1"],0=>$lang["access0"]));
