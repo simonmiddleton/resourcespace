@@ -22,7 +22,7 @@ setup_user($userdata[0]);
 
 $restypes="";
 # Resolve resource types
-$resource_types=get_resource_types();
+$resource_types=get_resource_types("", false);
 $rtx=explode(",",getvalescaped("restypes",""));
 foreach ($rtx as $rt)
 	{
@@ -30,7 +30,7 @@ foreach ($rtx as $rt)
 	# We have to handle resource type names because the resource type numeric IDs could be different from system to system.
 	foreach ($resource_types as $resource_type)
 		{
-		if ($resource_type["name"]==$rt)
+		if (strpos($resource_type["name"],$rt)!==false)
 			{
 			if ($restypes!="") {$restypes.=",";}	
 			$restypes.=$resource_type["ref"];
