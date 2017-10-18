@@ -17,12 +17,11 @@ if (substr($sapi_type, 0, 3) != 'cli')
         {
         exit("Command line execution only.");
 		}
-        
-if(strtolower($argv[1]) == "collection" && isset($argv[2]) && is_numeric($argv[2]))
+if(isset($argv[1]) && strtolower($argv[1]) == "collection" && isset($argv[2]) && is_numeric($argv[2]))
     {
     $collectionid = $argv[2];	
     }
-elseif(strtolower($argv[1]) == "resource" && isset($argv[2]) && is_numeric($argv[2]))
+elseif(isset($argv[1]) && strtolower($argv[1]) == "resource" && isset($argv[2]) && is_numeric($argv[2]))
     {
     $ref = $argv[2];
     if(isset($argv[3]) && is_numeric($argv[3]))
@@ -33,18 +32,18 @@ elseif(strtolower($argv[1]) == "resource" && isset($argv[2]) && is_numeric($argv
 else
     {
     echo "update_previews.php - update previews for all/selected resources\n\n";
-    echo "- extra options to use existing uploaded previews or to force recreation of video previews e.g. when changing to mp4/hls previews";
+    echo "- extra options to use existing uploaded previews or to force recreation of video previews e.g. when changing to mp4/hls previews\n";
     echo "USAGE:\n";
     echo "php update_previews.php [collection|resource] [id] [maxref] [-previewbased] [-videoupdate]\n\n";
     echo "examples\n";
     echo "php update_previews.php collection 247\n";
     echo "- this will update previews for all resources in collection #247\n\n";
     echo "php update_previews.php collection 380 -previewbased\n";
-    echo "- this will update previews for all resources in collection #380, utilising any uploaded existing previews47\n\n";
+    echo "- this will update previews for all resources in collection #380, utilising any existing uploaded previews\n\n";
     echo "php update_previews.php resource 19564\n";
     echo "- this will update previews for all resources starting with resource ID #19564\n\n";
     echo "php update_previews.php resource 19564 19800\n";
-    echo "- this will update previews for resources starting with resource ID #19564 and ending wth resource 19800\n\n";
+    echo "- this will update previews for resources starting with resource ID #19564 and ending with resource 19800\n\n";
     echo "php update_previews.php resource 1 -videoupdate\n";
     echo "- this will update previews for all video resources that do not have the required '\$ffmpeg_preview_extension' extension or hls m3u8 playlist files\n\n";
     exit();
@@ -74,7 +73,7 @@ if (!isset($collectionid))
         {
         $conditions[] = "ref <='" . escape_check($max) . "'";
         }
-    if (isset($videoupdate))
+    if ($videoupdate)
         {
         $conditions[] = "file_extension in ('" . implode("','",$ffmpeg_supported_extensions) . "')";
         }
@@ -82,7 +81,7 @@ if (!isset($collectionid))
         {
         $conditions[] = "archive <> '" . $resource_deletion_state . "'";
         }
-    $resources = sql_array("SELECT ref value FROM resource WHERE ref>='" . escape_check($ref)  . "'" . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions):""),0);
+    $resources = sql_array("SELECT ref value FROM resource WHERE ref>='" . escape_check($ref)  . "'" . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions):"") . " ORDER BY ref asc",0);
     }
 else
     {
