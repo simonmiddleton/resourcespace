@@ -731,9 +731,7 @@ else if(1 == $resource['has_image'])
 	
     $imageurl = get_resource_path($ref, false, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
         
-		
-		
-        ?>
+	if (!hook("replacepreviewlink")) { ?>
     <div id="previewimagewrapper">
         <a id="previewimagelink"
            class="enterLink"
@@ -741,7 +739,8 @@ else if(1 == $resource['has_image'])
            title="<?php echo $lang["fullscreenpreview"]; ?>"
            style="position:relative;"
            onclick="return CentralSpaceLoad(this);">
-    <?php
+		<?php } 
+
     if(file_exists($imagepath))
         {
         list($image_width, $image_height) = @getimagesize($imagepath);
