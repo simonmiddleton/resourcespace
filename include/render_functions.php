@@ -2140,7 +2140,7 @@ function renderCallToActionTile($link)
     {
     global $themes_simple_view;
 
-    if(!$themes_simple_view || checkperm('b'))
+    if(!$themes_simple_view || checkperm('b') || !checkperm('h'))
         {
         return;
         }
