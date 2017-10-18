@@ -951,8 +951,8 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
         }
 ?>
     </select>
-  </div>
   <div class="clearerleft"></div>
+  </div>
 <?php
     }
 
