@@ -454,13 +454,13 @@ function do_search(
                         {
                         // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
                         $field_nodes      = get_nodes($fieldinfo['ref'], null, false, true);
-                        
+
                         // Check if multiple nodes have been specified for an OR search
                         $keywords_expanded=explode(';',$keystring);
                         $nodeorcount = count($node_bucket);
                         foreach($keywords_expanded as $keyword_expanded)
                             {
-                            $field_node_index = array_search(mb_strtolower(i18n_get_translated($keyword_expanded)), array_map('mb_strtolower',array_column($field_nodes, 'name')));
+                            $field_node_index = array_search(mb_strtolower(i18n_get_translated($keyword_expanded)), array_map('i18n_get_translated',array_map('mb_strtolower',array_column($field_nodes, 'name'))));
                             // Take the ref of the node and add it to the node_bucket as an OR
                             if(false !== $field_node_index)
                                 {
