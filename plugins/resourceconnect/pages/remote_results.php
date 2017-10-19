@@ -20,6 +20,7 @@ global $resourceconnect_user; # Which user to use for remote access?
 $userdata=validate_user("u.ref='$resourceconnect_user'");
 setup_user($userdata[0]);
 
+
 $restypes="";
 # Resolve resource types
 $resource_types=get_resource_types("", false);
@@ -38,7 +39,7 @@ foreach ($rtx as $rt)
 		}
 	}
 
-$results=do_search($search,$restypes,$order_by,0,$pagesize+$offset,$sort,false,"",true); # Search, ignoring filters (as fields are unlikely to match).
+$results=do_search($search,$restypes,$order_by,0,$pagesize+$offset,$sort,false); # Search
 
 # The access key is used to sign all inbound queries, the remote system must therefore know the access key.
 $access_key=md5("resourceconnect" . $scramble_key);
