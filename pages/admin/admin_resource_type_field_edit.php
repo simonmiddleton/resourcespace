@@ -141,11 +141,13 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                     <label><?php echo $lang['options']; ?></label>
                     <span><a href="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['property-options_edit_link']; ?></a></span>
                     <div class="clearerleft"></div>
-                </div>
 
                 <?php
                 if(FIELD_TYPE_CATEGORY_TREE != $currentvalue)
                     {
+                    ?>
+                    </div>
+                    <?php
                     $field_index              = array_search($ref, array_column($allfields, 'ref'));
                     $automatic_nodes_ordering = (false !== $field_index ? $allfields[$field_index]['automatic_nodes_ordering'] : 0);
                     ?>
