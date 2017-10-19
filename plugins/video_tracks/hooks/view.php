@@ -67,4 +67,49 @@ function HookVideo_tracksViewAfterresourceactions()
 		}
 	
   	}
-	
+
+function HookVideo_tracksViewAdditionalresourcetools2($resource, $access)
+    {
+    global $baseurl, $lang, $video_tracks_permitted_video_extensions, $video_tracks_allow_original_custom_formats;
+
+    if(
+        !(
+            $video_tracks_allow_original_custom_formats
+            && $access == 0
+            && in_array(mb_strtolower($resource['file_extension']), $video_tracks_permitted_video_extensions)
+        )
+    )
+        {
+        return;
+        }
+
+    $url = generateURL(
+        "{$baseurl}/plugins/video_tracks/pages/create_video.php",
+        array(
+            'ref'          => $resource['ref'],
+            'for_original' => 'true'
+        )
+    );
+    ?>
+    <tr class="DownloadDBlend">
+        <td class="DownloadFileName" colspan="2">
+            <h2><?php echo $lang['video_tracks_custom_video_formats_label']; ?></h2>
+        </td>
+        <td class="DownloadButton">
+            <a href="<?php echo $url; ?>"
+               onClick="
+                    if(typeof modalurl != 'undefined' && modalurl.href != window.location.href)
+                        {
+                        jQuery('#CentralSpace').html('');
+
+                        CentralSpaceLoad(modalurl);
+                        }
+
+                    return ModalLoad(this, true, true);
+                "><?php echo $lang['video_tracks_generate_label']; ?></a>
+        </td>
+    </tr>
+    <?php
+
+    return;
+    }

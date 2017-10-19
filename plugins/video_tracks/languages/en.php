@@ -34,3 +34,9 @@ $lang["video_tracks_export_file_description"] = "Custom video file";
 $lang["video_tracks_download_export"] = "When files are created in the export folder offline, add a link to notification messages allowing for download of exported files through web interface";
 
 
+// Labels:
+$lang['video_tracks_generate_label'] = 'Generate';
+$lang['video_tracks_custom_video_formats_label'] = 'Custom formats';
+$lang['video_tracks_use_for_custom_video_formats_of_original_label'] = 'Allow the available file output options to be used to create custom video formats for the original file?';
+$lang['video_tracks_transcode_now_or_notify_me_label'] = 'Should the system start the transcode now or wait to receive a notification when it is ready?';
+$lang['video_tracks_transcode_now_label'] = 'Transcode now';

@@ -1403,7 +1403,7 @@ if (isset($flv_download) && $flv_download)
 	<?php
 	}
 
-hook("additionalresourcetools2");
+hook('additionalresourcetools2', '', array($resource, $access));
 	
 include "view_alternative_files.php";
 

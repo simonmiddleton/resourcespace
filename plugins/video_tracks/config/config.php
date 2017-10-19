@@ -16,5 +16,4 @@ $video_tracks_output_formats_saved=base64_encode(serialize(array(
 		)
 	));
 
-
-
+$video_tracks_allow_original_custom_formats = false;

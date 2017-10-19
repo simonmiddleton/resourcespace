@@ -5,25 +5,38 @@ include_once '../../../include/resource_functions.php';
 include_once '../../../include/authenticate.php';
 include_once '../../../include/image_processing.php';
 
-$ref=getvalescaped("ref","", true);
-if($ref<0 || $ref==""){$error=true;$message=$lang["video_tracks_invalid_resource"];}
+$ref = getvalescaped("ref","", true);
 
-$access=get_resource_access($ref);
-if($access!=0){$error=true;$message=$lang["error-permissiondenied"];}
+// for_original exists when the plugin is used to create custom video formats on the fly for the original file ($video_tracks_allow_original_custom_formats)
+$for_original = filter_var(getval('for_original', false), FILTER_VALIDATE_BOOLEAN);
 
-$uploadparams= array(
-    'ref'          => $ref,
-);
+if($ref < 0 || $ref == '')
+    {
+    $error   = true;
+    $message = $lang['video_tracks_invalid_resource'];
+    }
 
-$generateurl=generateURL($baseurl . "/plugins/video_tracks/pages/create_video.php",$uploadparams);
+$access = get_resource_access($ref);
+if($access != 0)
+    {
+    $error   = true;
+    $message = $lang['error-permissiondenied'];
+    }
 
-$message="";
-$video_tracks_output_formats=unserialize(base64_decode($video_tracks_output_formats_saved));
-$video_tracks_export_folder = rtrim($video_tracks_export_folder,"/");
-$resource=get_resource_data($ref);	
-$edit_access=get_edit_access($ref,$resource["archive"]);	
+$message                     = '';
+$video_tracks_output_formats = unserialize(base64_decode($video_tracks_output_formats_saved));
+$video_tracks_export_folder  = rtrim($video_tracks_export_folder, '/');
+$resource                    = get_resource_data($ref);
+$edit_access                 = get_edit_access($ref, $resource['archive']);
+$offline                     = ($offline_job_queue && $resource['file_size'] >= ($video_tracks_process_size_limit * 1024 * 1024));
+$generate                    = (getval('generate', '') == 'yes' ? true : false);
 
-$offline=($offline_job_queue && $resource["file_size"]>=($video_tracks_process_size_limit * 1024 * 1024));
+// The user can decide if he/ she wants to wait for the file to be transcoded or be notified when ready
+$transcode_now = (getval('transcode_now', '') == 'yes' ? true : false);
+if($generate && $offline && $transcode_now)
+    {
+    $offline = false;
+    }
 
 $altfiles=get_alternative_files($ref);
 $subtitle_alts=array();
@@ -34,13 +47,14 @@ foreach($altfiles as $altfile)
 	if(in_array(mb_strtolower($altfile["file_extension"]),$video_tracks_audio_extensions)){$audio_alts[]=$altfile;}
 	}
 		
-if(getval("generate","")!="")
-	{
-	$video_track_format=getvalescaped("video_track_format","");
-	$video_subtitle_file=getvalescaped("video_subtitle_file","");
-	$video_audio_file=getvalescaped("video_audio_file","");
-    $savealt=false;
-	$download=false;
+if($generate)
+    {
+    $video_track_format  = getvalescaped("video_track_format","");
+    $video_subtitle_file = getvalescaped("video_subtitle_file","");
+    $video_audio_file    = getvalescaped("video_audio_file","");
+    $savealt             = false;
+    $download            = false;
+
 	if($video_track_format!="")
 		{		
 		// Build up the ffmpeg command
@@ -251,112 +265,196 @@ if(getval("generate","")!="")
 
 ?>
 <script>
-var video_tracks_offline=<?php echo ($offline)?"true":"false"; ?>;
+var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
 </script>
 <div class="BasicsBox">
+    <h1><?php echo $lang["video_tracks_create_video_link"];?> </h1>
+    <?php
+    if ($message!="")
+        {
+        echo "<div class=\"PageInformal\">" . $message . "</div>";
+        }
+    ?>
+    <form id="video_tracks_create_form" action="<?php echo $baseurl . "/plugins/video_tracks/pages/create_video.php" ;?>">
+        <input name="ref" type="hidden" value="<?php echo $ref; ?>">
+        <input type="hidden" name="generate" value="yes" />
+        <div class="Question" id="question_video_track_format">
+            <label><?php echo $lang["video_tracks_select_output"] ?></label>
+            <select class="stdwidth" name="video_track_format" id="video_track_format" >
+            <?php
+            foreach ($video_tracks_output_formats as $video_tracks_output_format=>$video_tracks_output_command)
+                {
+                echo "<option value='" . htmlspecialchars(trim($video_tracks_output_format)) . "' >" . htmlspecialchars(trim($video_tracks_output_format)) . "</option>";
+                }
+                ?>
+            </select>
+            <div class="clearerleft"></div>
+        </div>
+    <?php 
+    if(count($subtitle_alts)>0)
+    	{?>
+    	<!-- Select subtitle file -->
+    	<div class="Question" id="question_video_subtitles">
+    	   <label><?php echo $lang["video_tracks_select_subtitle"] ?></label>
+    		<select class="stdwidth" name="video_subtitle_file" id="video_subtitle_file" >
+    		<option value=""><?php echo $lang["select"]; ?></option>
+            <?php
+    		foreach ($subtitle_alts as $subtitle_alt)
+    			{
+    			if(in_array(mb_strtolower($subtitle_alt["file_extension"]),$video_tracks_subtitle_extensions))
+    				{
+    				echo "<option value='" . $subtitle_alt["ref"] . "' >" . htmlspecialchars(trim($subtitle_alt["description"])) . " (" . $subtitle_alt["name"] . ")</option>";
+    				}	  
+    			}
+    		?>
+    		</select>
+    		<div class="clearerleft"> </div>
+    	</div>
+    	<?php
+    	}
+    	
+    if(count($audio_alts)>0)
+    	{?>
+    	<!-- Select audio file -->
+    	<div class="Question" id="question_video_audio">
+    	   <label><?php echo $lang["video_tracks_select_audio"] ?></label>
+    		<select class="stdwidth" name="video_audio_file" id="video_subtitle_file" >
+    		<option value=""><?php echo $lang["select"]; ?></option>
+            <?php
+    		foreach ($audio_alts as $audio_alt)
+    			{
+    			if(in_array(mb_strtolower($audio_alt["file_extension"]),$video_tracks_audio_extensions))
+    				{
+    				echo "<option value='" . $audio_alt["ref"] . "' >" . htmlspecialchars(trim($audio_alt["description"])) . " (" . $audio_alt["name"] . ")</option>";
+    				}	  
+    			}
+    		?>
+    		</select>
+    		<div class="clearerleft"> </div>
+    	</div>
+    	<?php
+    	}
+        ?>
+        <div class="Question" id="question_video_save_to">
+            <label><?php echo $lang["video_tracks_save_to"] ?></label>
+            <table cellpadding="5" cellspacing="0">
+                <tbody>
+                    <tr>
+                    <?php
+                    if($edit_access)
+                        {
+                        ?>
+                        <td>
+                            <input type="radio" 
+                                   id="video_track_save_alt" 
+                                   class="Inline video_track_save_option" 
+                                   name="video_track_save_alt" 
+                                   value="yes" 
+                                   onClick="
+                                        jQuery('#video_track_download').removeAttr('checked');
+                                        jQuery('#video_track_save_export').removeAttr('checked');
+                                        jQuery('#question_transcode_now_or_notify_me').slideUp();
+                                        jQuery('#question_alternative_description').slideDown();
+                            ">
+                            <label class="customFieldLabel Inline"
+                                   for="video_track_save_alt"><?php echo $lang['video_tracks_save_alternative']; ?></label>
+                        </td>
+                        <?php
+                        }
+                        ?>
+                        <td>
+                            <input type="radio"
+                                   id="video_track_save_export"
+                                   class="Inline video_track_save_option"
+                                   name="video_track_save_export"
+                                   value="yes"
+                                   onClick="
+                                        jQuery('#video_track_save_alt').removeAttr('checked');
+                                        jQuery('#video_track_download').removeAttr('checked');
+                                        jQuery('#question_alternative_description').slideUp();
+                                        jQuery('#question_transcode_now_or_notify_me').slideUp();
+                            ">
+                            <label class="customFieldLabel Inline"
+                                   for="video_track_save_export"><?php echo $lang['video_tracks_save_export']; ?></label>
+                        </td>
+                        <td>
+                            <input type="radio"
+                                   id="video_track_download"
+                                   class="Inline video_track_save_option"
+                                   name="video_track_download"
+                                   value="yes"
+                                   onClick="
+                                        jQuery('#video_track_save_export').removeAttr('checked');
+                                        jQuery('#video_track_save_alt').removeAttr('checked');
+                                        jQuery('#question_alternative_description').slideUp();
+                                        jQuery('#question_transcode_now_or_notify_me').slideDown();
+                            ">
+                            <label class="customFieldLabel Inline"
+                                   for="video_track_download"><?php echo $lang['download']; ?></label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="clearerleft"></div>
+        </div>
 
-<h1><?php echo $lang["video_tracks_create_video_link"];?> </h1>
-<?php
-if ($message!="")
-    {
-    echo "<div class=\"PageInformal\">" . $message . "</div>";
-    }
-?>
-<form id="video_tracks_create_form" action="<?php echo $baseurl . "/plugins/video_tracks/pages/create_video.php" ;?>">
-
-<input name="ref" type="hidden" value="<?php echo $ref; ?>">
-<input type="hidden" name="generate" value="yes" />
-<div class="Question" id="question_video_track_format">
-	<label><?php echo $lang["video_tracks_select_output"] ?></label>
-	<select class="stdwidth" name="video_track_format" id="video_track_format" >
-	<?php
-	foreach ($video_tracks_output_formats as $video_tracks_output_format=>$video_tracks_output_command)
-		{
-		echo "<option value='" . htmlspecialchars(trim($video_tracks_output_format)) . "' >" . htmlspecialchars(trim($video_tracks_output_format)) . "</option>";
-		}
-	?>
-	</select>
-	<div class="clearerleft"> </div>
-</div>
-
-<?php 
-if(count($subtitle_alts)>0)
-	{?>
-	<!-- Select subtitle file -->
-	<div class="Question" id="question_video_subtitles">
-	   <label><?php echo $lang["video_tracks_select_subtitle"] ?></label>
-		<select class="stdwidth" name="video_subtitle_file" id="video_subtitle_file" >
-		<option value=""><?php echo $lang["select"]; ?></option>
+        <div class="Question" id="question_alternative_description" style="display:none;">
+            <label for="video_track_alt_desc" ><?php echo $lang["description"]; ?></label>
+            <input type="text" class="stdwidth" id="video_track_alt_desc" name="video_track_alt_desc" value="" />
+            <div class="clearerleft"></div>
+        </div>
+    <?php
+    if($offline)
+        {
+        ?>
+        <div id="question_transcode_now_or_notify_me" class="Question DisplayNone">
+            <label><?php echo $lang['video_tracks_transcode_now_or_notify_me_label']; ?></label>
+            <table cellpadding="5" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                   id="transcode_now"
+                                   class="Inline"
+                                   name="transcode_now"
+                                   value="yes"
+                                   onClick="
+                                        video_tracks_offline = true;
+                                        if(jQuery(this).is(':checked'))
+                                            {
+                                            video_tracks_offline = false;
+                                            }
+                                   ">
+                            <label class="customFieldLabel Inline"
+                                   for="transcode_now"><?php echo $lang['video_tracks_transcode_now_label']; ?></label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="clearerleft"></div>
+        </div>
         <?php
-		foreach ($subtitle_alts as $subtitle_alt)
-			{
-			if(in_array(mb_strtolower($subtitle_alt["file_extension"]),$video_tracks_subtitle_extensions))
-				{
-				echo "<option value='" . $subtitle_alt["ref"] . "' >" . htmlspecialchars(trim($subtitle_alt["description"])) . " (" . $subtitle_alt["name"] . ")</option>";
-				}	  
-			}
-		?>
-		</select>
-		<div class="clearerleft"> </div>
-	</div>
-	<?php
-	}
-	
-if(count($audio_alts)>0)
-	{?>
-	<!-- Select audio file -->
-	<div class="Question" id="question_video_audio">
-	   <label><?php echo $lang["video_tracks_select_audio"] ?></label>
-		<select class="stdwidth" name="video_audio_file" id="video_subtitle_file" >
-		<option value=""><?php echo $lang["select"]; ?></option>
-        <?php
-		foreach ($audio_alts as $audio_alt)
-			{
-			if(in_array(mb_strtolower($audio_alt["file_extension"]),$video_tracks_audio_extensions))
-				{
-				echo "<option value='" . $audio_alt["ref"] . "' >" . htmlspecialchars(trim($audio_alt["description"])) . " (" . $audio_alt["name"] . ")</option>";
-				}	  
-			}
-		?>
-		</select>
-		<div class="clearerleft"> </div>
-	</div>
-	<?php
-	}
+        }
+        ?>
+        <div class="video_tracks_buttons">
+            <input type="submit"
+                   name="submit"
+                   class="video_tracks_button"
+                   value="<?php echo $lang["video_tracks_generate"]; ?>"
+                   onClick="
+                        if(jQuery('#video_track_download').is(':checked') && !video_tracks_offline)
+                            {
+                            this.form.submit;
+                            }
+                        else
+                            {
+                            ModalPost(this.form,false,true);
+                            jQuery('.video_tracks_button').attr('disabled',true);
 
-?>
-
-<div class="Question" id="question_video_save_to">
-	
-	<label><?php echo $lang["video_tracks_save_to"] ?></label>
-	<?php if($edit_access)
-		{
-		?>
-		<input type="radio" class="Inline video_track_save_option" id="video_track_save_alt" name="video_track_save_alt" value="yes" onClick="jQuery('#video_track_download').removeAttr('checked');jQuery('#video_track_save_export').removeAttr('checked');jQuery('#question_alternative_description').slideDown();"/>
-		<label class="customFieldLabel Inline" for="video_track_save_alt" ><?php echo $lang["video_tracks_save_alternative"]; ?></label>
-		<?php
-		}
-		?>		
-	<input type="radio" class="Inline video_track_save_option" id="video_track_save_export" name="video_track_save_export" value="yes" onClick="jQuery('#video_track_save_alt').removeAttr('checked');jQuery('#video_track_download').removeAttr('checked');jQuery('#question_alternative_description').slideUp();"/>
-	<label class="customFieldLabel Inline" for="video_track_download" ><?php echo $lang["video_tracks_save_export"]; ?></label>
-	
-    <input type="radio" class="Inline video_track_save_option" id="video_track_download" name="video_track_download" value="yes" onClick="jQuery('#video_track_save_export').removeAttr('checked');jQuery('#video_track_save_alt').removeAttr('checked');jQuery('#question_alternative_description').slideUp();"/>
-	<label class="customFieldLabel Inline" for="video_track_download" ><?php echo $lang["download"]; ?></label>
-   
-	
-	<div class="clearerleft"> </div>
-</div>
-
-<div class="Question" id="question_alternative_description" style="display:none;">
-	<label for="video_track_alt_desc" ><?php echo $lang["description"]; ?></label>
-	<input type="text" class="stdwidth" id="video_track_alt_desc" name="video_track_alt_desc" value="" />
-	<div class="clearerleft"> </div>
-</div>
-<div class="video_tracks_buttons">
-	<input type="submit" name="submit" class="video_tracks_button" value="<?php echo $lang["video_tracks_generate"]; ?>" onClick="if(jQuery('#video_track_download').is(':checked') && !video_tracks_offline){this.form.submit;}else{ModalPost(this.form,false,true);jQuery('.video_tracks_button').attr('disabled',true);return false;}"/>
-	<input type="submit" name="submit" class="video_tracks_button" value="<?php echo $lang["close"]; ?>" onClick="ModalClose();return false;"/>
-</div>
-
-</form>
-
+                            return false;
+                            }
+                    ">
+            <input type="submit" name="submit" class="video_tracks_button" value="<?php echo $lang["close"]; ?>" onClick="ModalClose();return false;"/>
+        </div>
+    </form>
 </div><!--End of BasicsBox -->

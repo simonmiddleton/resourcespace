@@ -107,6 +107,7 @@ $page_def[] = config_add_text_input('video_tracks_process_size_limit', $lang['vi
 $page_def[] = config_add_section_header($lang["video_tracks_export_section"]);
 $page_def[] = config_add_text_input('video_tracks_export_folder', $lang['video_tracks_export_folder']);
 $page_def[] = config_add_boolean_select('video_tracks_download_export', $lang['video_tracks_download_export']);
+$page_def[] = config_add_boolean_select('video_tracks_allow_original_custom_formats', $lang['video_tracks_use_for_custom_video_formats_of_original_label']);
 
 $page_def[] = config_add_html($video_trackshtml);
 $page_def[] =config_add_hidden("video_tracks_output_formats_saved");
