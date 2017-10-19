@@ -31,7 +31,7 @@ foreach ($rtx as $rt)
 	# We have to handle resource type names because the resource type numeric IDs could be different from system to system.
 	foreach ($resource_types as $resource_type)
 		{
-		if (strpos($resource_type["name"],$rt)!==false)
+		if ($rt!="" && strpos($resource_type["name"],$rt)!==false)
 			{
 			if ($restypes!="") {$restypes.=",";}	
 			$restypes.=$resource_type["ref"];
