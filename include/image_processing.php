@@ -18,8 +18,13 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 	hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
 
 	# revert is mainly for metadata reversion, removing all metadata and simulating a reupload of the file from scratch.
-	
+
 	hook ("removeannotations","",array($ref));
+
+    if(!(checkperm('c') || checkperm('d') || hook('upload_file_permission_check_override')))
+        {
+        return false;
+        }
 
     global $lang;
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['upload_file']);
@@ -2730,6 +2735,11 @@ function calculate_image_dimensions($image_path, $target_width, $target_height, 
 
 function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url)
 	{
+    if(!(checkperm('c') || checkperm('d') || hook('upload_file_permission_check_override')))
+        {
+        return false;
+        }
+
 	# Download a file from the provided URL, then upload it as if it was a local upload.
 	global $userref;
 	$file_path=get_temp_dir(false,$userref) . "/" . basename($url); # Temporary path creation for the downloaded file.
