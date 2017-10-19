@@ -193,10 +193,11 @@ else
         
         <!-- Preview icon -->
         <?php
-        $url = getPreviewURL($result);
-        if ($url!==false)
+        #$url = getPreviewURL($result);
+        $url = $baseurl . "/pages/preview.php?ref=" . $result["ref"] . "&k=" . substr(md5($access_key . $ref),0,10) . "&resourceconnect_source=1";
+	if ($url!==false)
                 { ?>
-                <a aria-hidden="true" class="fa fa-expand RCfullscreen" 
+                <a aria-hidden="true" class="fa fa-expand" target="_blank" 
                         href="<?php echo $url ?>"
                         title="<?php echo $lang["fullscreenpreview"]?>" rel="lightbox"
                 ></a>
