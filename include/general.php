@@ -2064,6 +2064,13 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             {
             # Reset $lang and include the appropriate file to search.
             $lang=array();
+
+            # Include language file
+            $searchlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($search_language) . ".php";
+            if(file_exists($searchlangfile))
+                {
+                include $searchlangfile;
+                }
             include dirname(__FILE__)."/../languages/" . safe_file_name($search_language) . ".php";
             
 			# Include plugin languages in reverse order as per db.php
@@ -2112,7 +2119,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
                     }
                 }
             }
-		
+
 		// Need to revert to saved values
 		$language=$languagesaved;
 		$lang=$langsaved;
@@ -2171,10 +2178,7 @@ function get_site_text($page,$name,$getlanguage,$group)
 	{
 	# Returns a specific site text entry.
     global $defaultlanguage, $lang, $language; // Registering plugin text uses $language and $lang 	
-    // Need to save these globals for later so we can revert after search
-	$languagesaved=$language;
-	$langsaved=$lang;
-        
+    global $applicationname, $storagedir, $homeanim_folder; // These are needed as they are referenced in lang files
 	if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
 	
 	$text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$getlanguage' and specific_to_group $gc $g");
@@ -2193,34 +2197,46 @@ function get_site_text($page,$name,$getlanguage,$group)
 	$text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group is null");
 	if (count($text)>0)
 		{
-                return $text[0]["text"];
-                }
+        return $text[0]["text"];
+        }
         
-        # Fall back to language strings.
-        if ($page=="") {$key=$name;} else {$key=$page . "__" . $name;}
-        
-        # Include specific language(s)
-        @include dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
-        @include dirname(__FILE__)."/../languages/" . safe_file_name($getlanguage) . ".php";
+    # Fall back to language strings.
+    if ($page=="") {$key=$name;} else {$key=$page . "__" . $name;}
+    
+    # Include specific language(s)
+    $defaultlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($defaultlanguage) . ".php";
+    if(file_exists($defaultlangfile))
+        {
+        include $defaultlangfile;
+        }
+    $getlangfile = dirname(__FILE__)."/../languages/" . safe_file_name($getlanguage) . ".php";
+    if(file_exists($getlangfile))
+        {
+        include $getlangfile;
+        }
 		
-		# Include plugin languages in reverse order as per db.php
-		global $plugins;	
-		$language = $defaultlanguage;
-		for ($n=count($plugins)-1;$n>=0;$n--)
-			{				
-			register_plugin_language($plugins[$n]);
-			}
-        $language = $getlanguage;
-		for ($n=count($plugins)-1;$n>=0;$n--)
-			{				
-			register_plugin_language($plugins[$n]);
-			}
-        
-        // Revert globals to saved values
-		$language=$languagesaved;
-		$lang=$langsaved;
-        
-		if (array_key_exists($key,$lang)) {return $lang[$key];} else {return "";}
+    # Include plugin languages in reverse order as per db.php
+    global $plugins;	
+    $language = $defaultlanguage;
+    for ($n=count($plugins)-1;$n>=0;$n--)
+        {				
+        register_plugin_language($plugins[$n]);
+        }
+
+    $language = $getlanguage;
+    for ($n=count($plugins)-1;$n>=0;$n--)
+        {				
+        register_plugin_language($plugins[$n]);
+        }
+            
+    if (array_key_exists($key,$lang))
+        {
+        return $lang[$key];
+        }
+    else
+        {
+        return "";
+        }
 	}
 
 function check_site_text_custom($page,$name)
