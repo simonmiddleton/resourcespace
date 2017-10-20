@@ -21,7 +21,8 @@ else if ($last_checkmail==""){
 }
 
 $checkmail_users_label = $lang['checkmail_users'];
-if($checkmail_allow_users_based_on_permission)
+if(($checkmail_allow_users_based_on_permission  && getval('checkmail_allow_users_based_on_permission','') == '')
+   || getval('checkmail_allow_users_based_on_permission',0) == 1)
     {
     $checkmail_users_label = $lang['checkmail_blocked_users_label'];
     }
