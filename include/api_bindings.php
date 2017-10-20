@@ -20,7 +20,10 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
    
     for($n=0;$n<$resultcount;$n++)
         {
-        $results[$n] = array_map("i18n_get_translated",$results[$n]);
+        if(is_array($results[$n]))
+            {
+            $results[$n] = array_map("i18n_get_translated",$results[$n]);
+            }
         }
     return $results;
     }
@@ -33,7 +36,10 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
     $resultcount= count ($results);
     for($n=0;$n<$resultcount;$n++)
         {
-        $results[$n] = array_map("i18n_get_translated",$results[$n]);
+        if(is_array($results[$n]))
+            {
+            $results[$n] = array_map("i18n_get_translated",$results[$n]);
+            }
         }
     return $results;
     }
@@ -259,7 +265,10 @@ function api_search_public_collections($search="", $order_by="name", $sort="ASC"
         {
         for($n=0;$n<$resultcount;$n++)
             {
-            $results[$n] = array_map("i18n_get_translated",$results[$n]);
+            if(is_array($results[$n]))
+                {
+                $results[$n] = array_map("i18n_get_translated",$results[$n]);
+                }
             }
         }
     return $results;
