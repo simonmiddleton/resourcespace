@@ -12,24 +12,45 @@
  */
 
 function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc")
-   {
-   # Search capability.
-   # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
-   return do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort);
-   }
+    {
+    # Search capability.
+    # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
+    $results = do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort);
+    $resultcount= count ($results);
+   
+    for($n=0;$n<$resultcount;$n++)
+        {
+        $results[$n] = array_map("i18n_get_translated",$results[$n]);
+        }
+    return $results;
+    }
    
 function api_search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$recent_search_daylimit="",$getsizes="",$previewext="jpg")
-   {
-   # Extension to search capability that also returns the URLs of preview file sizes requested using the $getsizes parameter that match the requested extension.
-   $getsizes=explode(",",$getsizes);
-   return search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,0,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
-   }
+    {
+    # Extension to search capability that also returns the URLs of preview file sizes requested using the $getsizes parameter that match the requested extension.
+    $getsizes=explode(",",$getsizes);
+    $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,0,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
+    $resultcount= count ($results);
+    for($n=0;$n<$resultcount;$n++)
+        {
+        $results[$n] = array_map("i18n_get_translated",$results[$n]);
+        }
+    return $results;
+    }
   
 function api_get_resource_field_data($resource)
-   {
-   # Get all field data for a resource
-   return get_resource_field_data($resource);
-   }
+    {
+    # Get all field data for a resource
+    $results = get_resource_field_data($resource);
+    $resultcount= count ($results);
+        {
+        for($n=0;$n<$resultcount;$n++)
+            {
+            $results[$n] = array_map("i18n_get_translated",$results[$n]);
+            }
+        }
+    return $results;
+    }
 
 function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,$revert=false,$autorotate=false,$metadata="")
     {
@@ -233,6 +254,13 @@ function api_search_public_collections($search="", $order_by="name", $sort="ASC"
     {
     $exclude_themes = filter_var($exclude_themes, FILTER_VALIDATE_BOOLEAN);
     $exclude_public = filter_var($exclude_public, FILTER_VALIDATE_BOOLEAN);
-
-    return search_public_collections($search, $order_by, $sort, $exclude_themes, $exclude_public);
+    $results = search_public_collections($search, $order_by, $sort, $exclude_themes, $exclude_public);
+    $resultcount= count ($results);
+        {
+        for($n=0;$n<$resultcount;$n++)
+            {
+            $results[$n] = array_map("i18n_get_translated",$results[$n]);
+            }
+        }
+    return $results;
     }
