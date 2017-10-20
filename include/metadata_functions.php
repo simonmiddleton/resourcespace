@@ -103,6 +103,11 @@ function getFitsMetadataFieldValue(SimpleXMLElement $xml , $rs_fits_filter)
 */
 function extractFitsMetadata($file_path, $resource)
     {
+    if(get_utility_path('fits') === false)
+        {
+        return false;
+        }
+
     if(!file_exists($file_path))
         {
         return false;
