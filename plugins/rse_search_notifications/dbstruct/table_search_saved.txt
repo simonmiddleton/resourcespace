@@ -1,7 +1,7 @@
 ref,int(11),NO,PRI,,auto_increment
 created,datetime,YES,,,
 owner,int(11),YES,,,
-title,varchar(200),YES,,,
+title,varchar(500),YES,,,
 search,TEXT,YES,,,
 restypes,TEXT,YES,,,
 archive,int(11),YES,,,
