@@ -3800,7 +3800,8 @@ function check_display_condition($n, $field)
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
                     jQuery('#question_<?php echo $n ?>').slideToggle();
-
+					jQuery('#question_<?php echo $n ?>').css('display', newfield<?php echo $field['ref']; ?>status);
+					
                     if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
                         {
                         jQuery('#question_<?php echo $n ?>').css('border-top', '');
