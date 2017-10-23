@@ -74,13 +74,19 @@ function save_resource_data($ref,$multi,$autosave_field="")
            $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template;
 
 	hook("befsaveresourcedata", "", array($ref));
-		
+
+    // Ability to avoid editing conflicts by checking checksums.
+    // NOTE: this should NOT apply to upload.
+    $check_edit_checksums = true;
+
     // Save resource defaults (functionality available for upload only)
     // Call it here so that if users have access to the field and want 
     // to override it, they can do so
     if(0 > $ref)
         {
         set_resource_defaults($ref);
+
+        $check_edit_checksums = false;
         }
 
 	# Loop through the field data and save (if necessary)
@@ -130,7 +136,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 				// Check if resource field data has been changed between form being loaded and submitted				
 				$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 				$current_cs = md5(implode(",",$current_field_nodes));				
-				if($post_cs != "" && $post_cs != $current_cs)
+				if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
 					{
 					$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 					continue;
@@ -290,7 +296,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						// Check if resource field data has been changed between form being loaded and submitted				
 						$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 						$current_cs = md5(implode(",",$current_field_nodes));						
-						if($post_cs != "" && $post_cs != $current_cs)
+						if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
 							{
 							$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 							continue;
@@ -375,7 +381,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					// Check if resource field data has been changed between form being loaded and submitted				
 					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 					$current_cs = md5($fields[$n]['value']);			
-					if($post_cs != "" && $post_cs != $current_cs)
+					if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
 						{
 						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 						continue;
@@ -401,7 +407,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					// Check if resource field data has been changed between form being loaded and submitted				
 					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 					$current_cs = md5(trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
-					if($post_cs != "" && $post_cs != $current_cs)
+					if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
 						{
 						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 						continue;
@@ -420,7 +426,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					debug("BANG post_cs: " . $post_cs);
                     debug("BANG current_cs : " . $current_cs);
                     debug("BANG currentval : " . trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
-                    if($post_cs != "" && $post_cs != $current_cs)
+                    if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
 						{
 						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
 						continue;
