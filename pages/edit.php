@@ -27,6 +27,14 @@ $single=getval("single","")!="" || getval("forcesingle","")!="";
 $disablenavlinks=getval("disablenav","")=="true";
 
 $archive=getvalescaped("archive",0,true); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
+
+// Ability to avoid editing conflicts by checking checksums.
+// NOTE: this should NOT apply to upload.
+$check_edit_checksums = true;
+if($ref < 0)
+    {
+    $check_edit_checksums = false;
+    }
   
 $uploadparams="";
 $uploadparams.="&relateto=" . urlencode(getval("relateto",""));
@@ -290,7 +298,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 			// Check if resource type has been changed between form being loaded and submitted				
 			$post_cs = getval("resource_type_checksum","");
 			$current_cs = $resource["resource_type"];			
-			if($post_cs != "" && $post_cs != $current_cs)
+			if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
 				{
 				$save_errors = array("resource_type"=>$lang["resourcetype"] . ": " . $lang["save-conflict-error"]);
 				$show_error=true;
