@@ -57,7 +57,7 @@
 		sql_query("INSERT INTO search_saved(created,owner,title,search,restypes,archive,enabled) VALUES (
 			NOW(),
 			{$userref},
-			'\"" . escape_check($rebuilt_search) . '"' . ($restypes_names == "" ? "" : " (" . escape_check($restypes_names) . ")") . "',
+			'\"" . escape_check($rebuilt_search) . '"' . ($restypes_names == "" ? "" : " (" . escape_check(i18n_get_translated($restypes_names)) . ")") . "',
 			'" . escape_check($search) . "',
 			'" . escape_check($restypes) . "',
 			" . escape_check($archive) . ",
