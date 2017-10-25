@@ -6460,3 +6460,32 @@ function delete_old_collections($userref=0, $days=30)
         }
     return $deletioncount;
     }
+
+/**
+* Create a new resource type field with the specified name of the required type
+* 
+* @param string $name - name of new field 
+* @param integer $restype - resource type - resource type that field applies to (0 = global)
+* @param integer $type - field type - refer to include/definitions.php
+* @param string $shortname - shortname of new field 
+* 
+* @return boolean|integer - ref of new field, false if unsuccessful
+*/
+
+function create_resource_type_field($name,$restype = 0, $type = FIELD_TYPE_TEXT_BOX_SINGLE_LINE, $shortname = "")
+    {
+    if((trim($name)=="") || !is_numeric($type) || !is_numeric($restype))
+        {
+        return false;
+        }
+
+    if(trim($shortname) == "")
+        {
+        $shortname = mb_substr(mb_strtolower(str_replace("_","",safe_file_name($name))),0,20);
+        }
+
+	sql_query("insert into resource_type_field (title,resource_type, type, name) values ('" . escape_check($name) . "','" . escape_check($restype) . "','" . escape_check($type) . "','" . escape_check($shortname) . "')");
+	$new=sql_insert_id();
+	log_activity(null,LOG_CODE_CREATED,$name,'resource_type_field','title',$new,null,'');
+    return $new;    
+    }

@@ -48,10 +48,9 @@ $url=generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_p
 
 if (getval("newfield","")!="")
 	{
-	$newfieldrestype=getvalescaped("newfieldrestype",0,true);
-	sql_query("insert into resource_type_field (title,resource_type) values('" . getvalescaped("newfield","") . "','$newfieldrestype')");
-	$new=sql_insert_id();
-	log_activity(null,LOG_CODE_CREATED,getvalescaped("newfield",""),'resource_type_field','title',$new,null,'');
+    $newfieldname = getvalescaped("newfield","");
+	$newfieldrestype = getvalescaped("newfieldrestype",0,true);
+    $new = create_resource_type_field($newfieldname,$newfieldrestype);
 	redirect($baseurl_short . 'pages/admin/admin_resource_type_field_edit.php?ref=' . $new . '&newfield=true');
 	}
 	
