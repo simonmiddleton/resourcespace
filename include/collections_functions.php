@@ -1473,29 +1473,39 @@ function get_theme_image($themes=array(),$collection="")
 	global $theme_category_levels;
 	# Resources that have been specifically chosen using the option on the collection comments page will be returned first based on order by.
 	
-	$sqlselect="select r.ref value from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
-	$orderby=" order by cr.use_as_theme_thumbnail desc";
-	for ($n=2;$n<=count($themes)+1;$n++){
-		if (isset($themes[$n-1])){
-			$sqlselect.=" and theme".$n."='" . escape_check($themes[$n-1]) . "' ";
-		} 
-		else {
-			if ($n<=$theme_category_levels){
-				# Resources in sub categories can be used but should be below those in the current category
-				$orderby.=", theme".$n . " ";
-			}
-		}
-	} 
-
-	if($collection!="")
-		{
-		$sqlselect.=" and c.ref = '" . escape_check($collection) .  "'";
-		}
+	# have this hook return an empty array if a plugin needs to return a false value from function
+	$images_override=hook('get_theme_image_override','', array($themes, $collection));
 	
-	$sqlselect.=" and r.has_image=1 ";
-	$orderby.=",r.hit_count desc,r.ref desc";
-	$sql = $sqlselect . $orderby . " limit " .$theme_images_number;
-	$images=sql_array($sql,0);	
+	if ($images_override!==false && is_array($images_override))
+		{
+		$images=$images_override;
+		}
+	else 
+		{
+		$sqlselect="select r.ref value from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
+		$orderby=" order by cr.use_as_theme_thumbnail desc";
+		for ($n=2;$n<=count($themes)+1;$n++){
+			if (isset($themes[$n-1])){
+				$sqlselect.=" and theme".$n."='" . escape_check($themes[$n-1]) . "' ";
+			} 
+			else {
+				if ($n<=$theme_category_levels){
+					# Resources in sub categories can be used but should be below those in the current category
+					$orderby.=", theme".$n . " ";
+				}
+			}
+		} 
+
+		if($collection!="")
+			{
+			$sqlselect.=" and c.ref = '" . escape_check($collection) .  "'";
+			}
+	
+		$sqlselect.=" and r.has_image=1 ";
+		$orderby.=",r.hit_count desc,r.ref desc";
+		$sql = $sqlselect . $orderby . " limit " .$theme_images_number;
+		$images=sql_array($sql,0);
+		}
 	if (count($images)>0) {return $images;}
 	return false;
 	}
