@@ -8,7 +8,7 @@ function HookRemote_assistAllSearchbarbottomtoolbar()
     <script>
     jQuery(document).ready(function()
         {
-        if (jQuery('remote_assist').children().length==0) {jQuery('#remote_assist').load('https://resourcespace.montala.com/remote_assist_plugin.php?baseurl=<?php echo base64_encode($baseurl) ?>');}
+        if (jQuery('remote_assist').children().length==0) {jQuery('#remote_assist').load('https://www.resourcespace.com/remote_assist_plugin.php?baseurl=<?php echo base64_encode($baseurl) ?>');}
         });
     </script>
     <div id="remote_assist"></div>
