@@ -2655,3 +2655,8 @@ $lang['annotate_annotation_label'] = 'Annotation';
 $lang['annotate_annotations_label'] = 'Annotations';
 
 $lang["byte_prefix_mode_decimal"]="Use decimal for file sizes (1000 multiples, KB/MB/GB/TB) as opposed to binary (1024 multiples , KiB/MiB/GiB/TiB)";
+
+
+/* Errors */
+$lang['error_upload_resource_alternatives_batch'] = 'When using this feature (see $upload_alternatives_suffix) your original file MUST be the first one in the queue!';
+$lang['error_upload_resource_not_found'] = 'A resource ID could not be found!';

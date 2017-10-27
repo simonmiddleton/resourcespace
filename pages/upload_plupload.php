@@ -21,6 +21,11 @@ $alternative                            = getvalescaped('alternative', ''); # Ba
 $replace                                = getvalescaped('replace', ''); # Replace Resource Batch
 $replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
+
+// When uploading, if there are any files in the queue that have similar names plus a suffix to distinguish between original
+// and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
+$attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '' && $collection_add !== 'false');
+
 $redirecturl = getval("redirecturl","");
 if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
 
@@ -778,6 +783,9 @@ if($store_uploadedrefs ||($relate_on_upload && $enable_related_resources && getv
 <?php 
 }
 ?>
+// A mapping used by subsequent file uploads of alternatives to know to which resource to add the files as alternatives
+// Used when the original file and its alternatives are uploaded in a batch to a collection
+var resource_ids_for_alternatives = [];
 
 var pluploadconfig = {
         // General settings
@@ -884,7 +892,30 @@ var pluploadconfig = {
                                 resource_keys.push(info.response.replace( /^\D+/g, ''));
                                 <?php 
                                 }
-                                ?>
+
+                                // When uploading a batch of files and their alternatives, keep track of the resource ID
+                                // and the filename it is associated with
+                                if($attach_alternatives_found_to_resources)
+                                    {
+                                    ?>
+                                    var alternative_suffix   = '<?php echo trim($upload_alternatives_suffix); ?>';
+                                    var uploaded_resource_id = info.response.replace(/^\D+/g, '');
+                                    var filename             = file.name;
+                                    var filename_ext         = getFilePathExtension(filename);
+
+                                    if(filename_ext != '')
+                                        {
+                                        filename = filename.substr(0, file.name.lastIndexOf('.' + filename_ext));
+                                        }
+
+                                    // Add resource ID - filename map only for original resources
+                                    if(filename.lastIndexOf(alternative_suffix) === -1)
+                                        {
+                                        resource_ids_for_alternatives[uploaded_resource_id] = filename;
+                                        }
+                                    <?php
+                                    }
+                                    ?>
                                 //update collection div if uploading to active collection
                                 <?php if ($usercollection==$collection_add) { ?>
                                         CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?nowarn=true&nc=' . time() ?>");
@@ -990,12 +1021,85 @@ var pluploadconfig = {
 												 // Reset the lastqueued flag in case more files are added now
 												 uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'lastqueued','');
                           });
-                  
-                                
-                 
-                                
-                          <?php } ?>
-                          
+                          <?php }
+
+if($attach_alternatives_found_to_resources)
+    {
+    ?>
+    uploader.bind('FilesAdded', function (up, files)
+        {
+        if(up.files.length <= 1)
+            {
+            return true;
+            }
+
+        var alternative_suffix  = '<?php echo trim($upload_alternatives_suffix); ?>';
+        var original_file_found;
+
+        for(i = 0; i < up.files.length; i++)
+            {
+            filename = up.files[i].name.substr(0, up.files[i].name.lastIndexOf('.' + getFilePathExtension(up.files[i].name)));
+
+            if(filename.lastIndexOf(alternative_suffix) === -1)
+                {
+                original_file_found = up.files[i];
+
+                break;
+                }
+            };
+
+        // One original file must be detected and it must be the first one in the queue
+        if(typeof original_file_found !== 'undefined' && up.files.indexOf(original_file_found))
+            {
+            styledalert("<?php echo $lang['error']; ?>", "<?php echo $lang['error_upload_resource_alternatives_batch']; ?>");
+            up.stop();
+
+            return false;
+            }
+        });
+
+    uploader.bind('BeforeUpload', function (up, file)
+        {
+        var alternative_suffix = '<?php echo trim($upload_alternatives_suffix); ?>';
+
+        if(alternative_suffix == '')
+            {
+            return true;
+            }
+
+        filename = file.name.substr(0, file.name.lastIndexOf('.' + getFilePathExtension(file.name)));
+
+        // Check if original file, in which case we stop here
+        if(filename.lastIndexOf(alternative_suffix) === -1)
+            {
+            return true;
+            }
+
+        // Below this point we only deal with alternatives for which we have a resource ID to use
+        original_filename = filename.substr(0, filename.lastIndexOf(alternative_suffix));
+        resource_id       = resource_ids_for_alternatives.indexOf(original_filename);
+
+        if(resource_id === -1)
+            {
+            styledalert("<?php echo $lang['error']; ?>", "<?php echo $lang['error_upload_resource_not_found']; ?>");
+            up.stop();
+
+            return false;
+            }
+
+        // If we've got so far, it means we can upload this file as an alternative for this resource ID
+        uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'alternative', resource_id);
+        });
+
+    uploader.bind('UploadComplete', function (up, files)
+        {
+        // Clean-up so user can go through a second batch
+        uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'alternative', '');
+        });
+    <?php
+    }
+    ?>
+
                           // Client side form validation
                         jQuery('form.pluploadform').submit(function(e) {
                                 
