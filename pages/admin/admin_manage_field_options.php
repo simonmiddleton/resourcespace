@@ -313,6 +313,11 @@ $jumpcount   = 0;
 // URL used for redirect on JS - AddNode() when used in combination with the pager in order to add the node at the end of
 // the options list
 $last_page_offset = (($totalpages - 1) * $per_page);
+if($last_page_offset < 0)
+    {
+    $last_page_offset = 0;
+    }
+
 $last_page_url    = generateURL(
     "{$baseurl_short}pages/admin/admin_manage_field_options.php",
     array(
