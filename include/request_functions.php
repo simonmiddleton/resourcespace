@@ -108,7 +108,7 @@ function save_request($request)
         if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
             {
 			$templatevars['url'] = $baseurl."/?c=" . $currentrequest["collection"]; 
-            send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus1"],$message,"","","requestapprovedmail",$templatevars);
+            send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus1"],$message);
             }
         else
             {
