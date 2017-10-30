@@ -2,7 +2,7 @@
 /*we will use output buffering to prevent any included files 
 from outputting stray characters that will mess up the binary download
 we will clear the buffer and start over right before we download the file*/
-ob_start(); 
+ob_start(); $nocache=true;
 include_once dirname(__FILE__) . '/../include/db.php';
 include_once dirname(__FILE__) . '/../include/general.php';
 include_once dirname(__FILE__) . '/../include/resource_functions.php';
