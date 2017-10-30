@@ -94,7 +94,32 @@ function HookRse_workflowViewPageevaluation()
                                 {
                                 $rse_workflow_from=$workflowaction["email_from"];
                                 }
-                                
+
+                            /***** NOTIFY GROUP SUPPORT *****/
+                            if(isset($workflowaction['notify_group']) && $workflowaction['notify_group'] != '')
+                            {
+                                $mailing_list = sql_array("
+                                    SELECT DISTINCT email AS `value`
+                                      FROM user
+                                     WHERE approved = 1
+                                       AND usergroup = '" . escape_check($workflowaction['notify_group']) . "'
+                                ");
+
+                                foreach($mailing_list as $email)
+                                    {
+                                    $message  = $lang["rse_workflow_state_notify_message"] . $lang["status" . $workflowaction["statusto"]] . "\n\n" . $baseurl . "/?r=" . $ref;
+                                    $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction['ref'], '');
+
+                                    send_mail(
+                                        $email,
+                                        $applicationname . ": " . $lang["status" . $workflowaction["statusto"]],
+                                        $message,
+                                        $rse_workflow_from,
+                                        $rse_workflow_from);
+                                    }
+                            }
+                            /***** END OF NOTIFY GROUP SUPPORT *****/
+
                             /*****NOTIFY CONTRIBUTOR*****/
                             if($workflowaction['notify_user_flag'] == 1)
                                 {
