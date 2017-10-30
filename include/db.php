@@ -31,7 +31,7 @@ $pagetime_start = microtime();
 $pagetime_start = explode(' ', $pagetime_start);
 $pagetime_start = $pagetime_start[1] + $pagetime_start[0];
 
-if (!isset($suppress_headers) || !$suppress_headers)
+if ((!isset($suppress_headers) || !$suppress_headers) && !isset($nocache))
 	{
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
 	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");  // always modified
