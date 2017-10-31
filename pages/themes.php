@@ -1093,7 +1093,7 @@ if($simpleview && $themes_show_background_image)
         }
 
     // Overwrite background_image_url with theme specific ones
-    $background_theme_images = get_theme_image(0 < count($themes) ? $themes : array(''));
+    $background_theme_images = get_theme_image(0 < count($themes) ? $themes : array(''), '', $smart_theme!=='');
 
         if(is_array($background_theme_images) && 0 < count($background_theme_images))
             {

@@ -1466,7 +1466,7 @@ function allow_multi_edit($collection,$collectionid = 0)
 	}
 }	
 
-function get_theme_image($themes=array(),$collection="")
+function get_theme_image($themes=array(), $collection="", $smart=false)
 	{
 	# Returns an array of resource references that can be used as theme category images.
 	global $theme_images_number;
@@ -1474,7 +1474,7 @@ function get_theme_image($themes=array(),$collection="")
 	# Resources that have been specifically chosen using the option on the collection comments page will be returned first based on order by.
 	
 	# have this hook return an empty array if a plugin needs to return a false value from function
-	$images_override=hook('get_theme_image_override','', array($themes, $collection));
+	$images_override=hook('get_theme_image_override','', array($themes, $collection, $smart));
 	
 	if ($images_override!==false && is_array($images_override))
 		{
@@ -1482,29 +1482,48 @@ function get_theme_image($themes=array(),$collection="")
 		}
 	else 
 		{
-		$sqlselect="select r.ref value from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
-		$orderby=" order by cr.use_as_theme_thumbnail desc";
-		for ($n=2;$n<=count($themes)+1;$n++){
-			if (isset($themes[$n-1])){
-				$sqlselect.=" and theme".$n."='" . escape_check($themes[$n-1]) . "' ";
-			} 
-			else {
-				if ($n<=$theme_category_levels){
-					# Resources in sub categories can be used but should be below those in the current category
-					$orderby.=", theme".$n . " ";
-				}
-			}
-		} 
-
-		if($collection!="")
+		if ($smart)
 			{
-			$sqlselect.=" and c.ref = '" . escape_check($collection) .  "'";
+			$nodes='';
+			foreach($themes as $node){
+				$nodes.=($nodes!=='' ? ', ' : '') . $node['ref'];
+			}
+			if($nodes=='')
+				{
+				return false;
+				}
+			$sqlselect="select r.ref value from resource_node rn join resource r on rn.resource=r.ref where rn.node in (" . $nodes . ") and r.archive=0";
+			$orderby=" order by r.hit_count desc, r.ref desc";
+			}
+		else
+			{
+			$sqlselect="select r.ref value from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
+		
+			$orderby=" order by cr.use_as_theme_thumbnail desc";
+			for ($n=2;$n<=count($themes)+1;$n++){
+				if (isset($themes[$n-1])){
+					$sqlselect.=" and theme".$n."='" . escape_check($themes[$n-1]) . "' ";
+				} 
+				else {
+					if ($n<=$theme_category_levels){
+						# Resources in sub categories can be used but should be below those in the current category
+						$orderby.=", theme".$n . " ";
+					}
+				}
+			} 
+
+			if($collection!="")
+				{
+				$sqlselect.=" and c.ref = '" . escape_check($collection) .  "'";
+				}
+			
+			$orderby.=",r.hit_count desc,r.ref desc";
 			}
 	
 		$sqlselect.=" and r.has_image=1 ";
-		$orderby.=",r.hit_count desc,r.ref desc";
+	
 		$sql = $sqlselect . $orderby . " limit " .$theme_images_number;
-		$images=sql_array($sql,0);
+		$images=sql_array($sql,0);	
 		}
 	if (count($images)>0) {return $images;}
 	return false;
