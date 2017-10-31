@@ -29,14 +29,42 @@ $url_params = array("ref"=>$ref,
 		    "$field_order_by"=>$field_order_by,
 		    "field_sort"=>$field_sort,
 		    "find" =>$find);
-$url=generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php",$url_params);
-
 		
 $backurl=getvalescaped("backurl","");
 if($backurl=="")
     {
     $backurl=$baseurl . "/pages/admin/admin_resource_type_fields.php?ref=" . urlencode($ref) . "&restypefilter=" . urlencode($restypefilter) . "&field_sort=" . urlencode($field_sort) . "&find=" . urlencode($find);
     }
+else
+	{
+	$back_url_params=parse_url($backurl, PHP_URL_QUERY);
+	# the first parameter of the back url is needed here but isn't captured
+	$back_url_params=explode('&', $back_url_params);
+	
+	foreach($back_url_params as $param)
+		{
+		$param_parts=explode('=', $param);
+		switch($param_parts[0])
+			{
+			case 'restypefilter':
+				$restypefilter=$param_parts[1];
+				break;
+			case 'field_order_by':
+				$field_order_by=$param_parts[1];
+				break;
+			case 'field_sort':
+				$field_sort=$param_parts[1];
+				break;
+			case 'find':
+				$find=$param_parts[1];
+				break;
+			}
+		}
+	
+	}
+	
+
+$url=generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php",$url_params);
 
 	
 function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type, $currentvalue,$fieldtype)
