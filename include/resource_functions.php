@@ -4790,34 +4790,47 @@ function get_video_info($file)
 
 
 /**
-* Provides the ability to copy any metadata field data from one resource to another regardless of any
-* field permissions the user might have. Mostly used in metadata templates when users should even get metadata of fields
-* they are not supposed to see / edit.
+* Provides the ability to copy any metadata field data from one resource to another.
 * 
-* @uses escape_check()
-* @uses sql_query()
-* @uses copy_resource_nodes()
-* 
-* @param integer $from     Resource we are copying data from
-* @param integer $ref      The Resource ID that needs updating
+* @param integer $from Resource we are copying data from
+* @param integer $ref  The Resource ID that needs updating
 * 
 * @return void
 */
 function copyAllDataToResource($from, $to)
     {
-    copyResourceDataValues ($from,$to);
+    copyResourceDataValues($from, $to);
     copy_resource_nodes($from, $to);
+
     return;
     }
 
-    
-function copyResourceDataValues($from,$to)
+
+/**
+* Copy resource data from one resource to another one.
+* 
+* @uses escape_check()
+* @uses sql_array()
+* @uses sql_query()
+* 
+* @param integer $from Resource we are copying data from
+* @param integer $ref  Resource we are copying data to
+* 
+* @return void
+*/    
+function copyResourceDataValues($from, $to)
     {
-    $from  = escape_check($from);    
-    $to   = escape_check($to);
-    
-    // Check for fields that should be excluded
-    $omitfields = sql_array("SELECT ref value FROM resource_type_field WHERE omit_when_copying='1'",0);
+    $from            = escape_check($from);    
+    $to              = escape_check($to);
+    $omit_fields_sql = '';
+
+    // When copying normal resources from one to another, check for fields that should be excluded
+    // NOTE: this does not apply to user template resources (negative ID resource)
+    if($from > 0)
+        {
+        $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", 0);
+        $omit_fields_sql = "AND rd.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
+        }
 
     sql_query("
         INSERT INTO resource_data(resource, resource_type_field, value)
@@ -4833,6 +4846,8 @@ function copyResourceDataValues($from,$to)
                             OR rtf.resource_type = 0
                         )
               WHERE rd.resource = '{$from}'
-              AND rd.resource_type_field NOT IN ('" . implode("','",$omitfields) . "')");    
-        
+                {$omit_fields_sql}
+    ");
+
+    return;
     }

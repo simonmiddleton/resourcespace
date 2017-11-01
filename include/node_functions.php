@@ -1111,12 +1111,46 @@ function delete_all_resource_nodes($resourceid)
 	{
 	sql_query("DELETE FROM resource_node WHERE resource ='$resourceid';");	
 	}
-    
-function copy_resource_nodes($resourcefrom,$resourceto)
-	{
-    $omitfields = sql_array("SELECT ref value FROM resource_type_field WHERE omit_when_copying=1",0);
-	sql_query("insert into resource_node (resource,node, hit_count, new_hit_count) select '" . $resourceto . "', node, 0, 0 FROM resource_node rnold LEFT JOIN node n on n.ref=rnold.node WHERE resource ='" . $resourcefrom . "' AND n.resource_type_field NOT IN ('" . implode("','",$omitfields) . "') ON DUPLICATE KEY UPDATE hit_count=rnold.new_hit_count;");	
-	}
+
+
+/**
+* Copy resource nodes from one resource to another
+* 
+* @uses escape_check()
+* @uses sql_array()
+* @uses sql_query()
+* 
+* @param integer $resourcefrom Resource we are copying data from
+* @param integer $resourceto   Resource we are copying data to
+* 
+* @return void
+*/
+function copy_resource_nodes($resourcefrom, $resourceto)
+    {
+    $resourcefrom    = escape_check($resourcefrom);    
+    $resourceto      = escape_check($resourceto);
+    $omit_fields_sql = '';
+
+    // When copying normal resources from one to another, check for fields that should be excluded
+    // NOTE: this does not apply to user template resources (negative ID resource)
+    if($resourcefrom > 0)
+        {
+        $omitfields      = sql_array("SELECT ref AS `value` FROM resource_type_field WHERE omit_when_copying = 1", 0);
+        $omit_fields_sql = "AND n.resource_type_field NOT IN ('" . implode("','", $omitfields) . "')";
+        }
+
+    sql_query("
+        INSERT INTO resource_node(resource, node, hit_count, new_hit_count)
+             SELECT '{$resourceto}', node, 0, 0
+               FROM resource_node AS rnold
+          LEFT JOIN node AS n ON n.ref = rnold.node
+              WHERE resource ='{$resourcefrom}'
+                {$omit_fields_sql}
+                 ON DUPLICATE KEY UPDATE hit_count = rnold.new_hit_count;
+    ");
+
+    return;
+    }
     
 function get_nodes_from_keywords($keywords=array())
 	{
