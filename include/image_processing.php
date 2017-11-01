@@ -1250,64 +1250,54 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		$identoutput=run_command($identcommand);
         resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$identcommand . ":\n" . $identoutput);
         
-        if(empty($identoutput) && $imagemagick_mpr)
-        	{
-        	// we really need dimensions here, so fallback to php's method
-        	if(file_exists($prefix . $file))
-        		{
-        		$identoutput = @getimagesize(escapeshellarg($prefix . $file));
-        		}
-        	else
-        		{
-        		return false;
-        		}
-        	}
-        
-        if(!empty($identoutput)){
+        if(!empty($identoutput))
+			{
 			$wh=explode("x",$identoutput);
-			$o_width=$wh[0];
-			$o_height=$wh[1];
-		}
-		elseif($imagemagick_mpr)
-        	{
-			// this puts us in a bad spot...return false
-			return false;
+			$sw = $o_width = $wh[0];
+			$sh = $o_height = $wh[1];
+			}
+		else
+			{
+        	// we really need dimensions here, so fallback to php's method
+			list($sw,$sh) = @getimagesize($file);
 			}
 
-        if($lean_preview_generation){
+        if($lean_preview_generation)
+			{
 			$all_sizes=false;
-			if(!$thumbonly && !$previewonly){
+			if(!$thumbonly && !$previewonly)
+				{
 				// seperate width and height
 				$all_sizes=true;
+				}
 			}
-		}
 		
-		preg_match('/^([0-9]+)x([0-9]+)$/ims',$identoutput,$smatches);
-				if ((@list(,$sw,$sh) = $smatches)===false) { return false; }
-
-
 		$sizes="";
 		if ($thumbonly) {$sizes=" where id='thm' or id='col'";}
 		if ($previewonly) {$sizes=" where id='thm' or id='col' or id='pre' or id='scr'";}
 
 		$ps=sql_query("select * from preview_size $sizes order by width desc, height desc");
-		if($lean_preview_generation && $all_sizes){
+		if($lean_preview_generation && $all_sizes)
+			{
 			$force_make=array("pre","thm","col");
 			if($extension!="jpg" || $extension!="jpeg"){
 				array_push($force_make,"hpr","scr");
 			}
 			$count=count($ps)-1;
 			$oversized=0;
-			for($s=$count;$s>0;$s--){
-				if(!in_array($ps[$s]['id'],$force_make) && !in_array($ps[$s]['id'],$always_make_previews) && (isset($o_width) && isset($o_height) && $ps[$s]['width']>$o_width && $ps[$s]['height']>$o_height) && !$previews_allow_enlarge){
+			for($s=$count;$s>0;$s--)
+				{
+				if(!in_array($ps[$s]['id'],$force_make) && !in_array($ps[$s]['id'],$always_make_previews) && (isset($o_width) && isset($o_height) && $ps[$s]['width']>$o_width && $ps[$s]['height']>$o_height) && !$previews_allow_enlarge)
+					{
 					$oversized++;
-				}
-				if($oversized>0){
+					}
+				if($oversized>0)
+					{
 					unset($ps[$s]);
+					}
 				}
-			}
 			$ps = array_values($ps);
-		}
+			}
 		
 		# Locate imagemagick.
 		$convert_fullpath = get_utility_path("im-convert");
