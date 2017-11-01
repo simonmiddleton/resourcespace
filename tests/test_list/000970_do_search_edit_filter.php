@@ -23,7 +23,6 @@ debug("Resource C: " . $resourcec);
 debug("Resource D: " . $resourced);
 debug("Resource E: " . $resourcee);
 
-
 // Add text to free text to fields
 update_field($resourcea,'title','Sales Document');
 update_field($resourceb,'title','Marketing Image');
@@ -54,6 +53,7 @@ add_resource_nodes($resourced,array($customerb_node, $productone_node, $productt
 // Add node to resource e
 add_resource_nodes($resourcee,array($customerc_node));
 
+
 // SUBTEST A
 // ----- Equals (=)(Equals Character) -----
 $usersearchfilter='';
@@ -64,6 +64,7 @@ if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']
     !match_values(array_column($results,'ref'),array($resourceb, $resourcec, $resourced))
 	)
 	{
+print_r($results);
     echo "ERROR - SUBTEST A ";
     return false;
     }
