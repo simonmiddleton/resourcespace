@@ -214,10 +214,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $val .= ",{$node_options[$current_field_node]}";
                         }
                     }
-				if($autosave_field == $fields[$n]['ref'] || (is_array($autosave_field) && in_array($fields[$n]['ref'], $autosave_field)))
-					{
-					$new_checksums[$fields[$n]['ref']] = md5(implode(",",$ui_selected_node_values));
-					}
+
+                $new_checksums[$fields[$n]['ref']] = md5(implode(',', $ui_selected_node_values));
                 }
 			else
 				{
