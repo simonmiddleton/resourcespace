@@ -421,9 +421,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					// Check if resource field data has been changed between form being loaded and submitted				
 					$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 					$current_cs = md5(trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
-					debug("BANG post_cs: " . $post_cs);
-                    debug("BANG current_cs : " . $current_cs);
-                    debug("BANG currentval : " . trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
                     if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
 						{
 						$errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
