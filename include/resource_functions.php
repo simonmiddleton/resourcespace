@@ -4519,7 +4519,7 @@ function get_resource_external_access($resource)
 	{
 	# Return all external access given to a resource 
 	# Users, emails and dates could be multiple for a given access key, an in this case they are returned comma-separated.
-	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup from external_access_keys where resource='$resource' group by access_key order by date");
+	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup from external_access_keys where resource='$resource' group by access_key,access,expires,collection,usergroup order by maxdate");
 	}
 }
         
