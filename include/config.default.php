@@ -3362,7 +3362,7 @@ $byte_prefix_mode_decimal=true;
 $resource_type_force_selection=false;
 
 // Facebook App ID
-$facebook_app_id = '';
+$facebook_app_id = '133361117324579'; # Standard ResourceSpace app
 
 /*
 Set the suffix used to identify alternatives for a particular resource when both the original file and its alternatives
