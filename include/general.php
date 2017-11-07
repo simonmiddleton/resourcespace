@@ -4348,6 +4348,12 @@ function get_nopreview_icon($resource_type, $extension, $col_size)
 	global $metadata_template_resource_type;
 	if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$resource_type) {$extension="mdtr";}
 
+    # Try a plugin
+	$try=hook('plugin_nopreview_icon','',array($resource_type,$col, $extension));
+	if (false !== $try && file_exists($folder . $try))
+		{
+		return $try;
+		}
 
 	# Try extension (language specific)
 	$try="no_preview/extension/" . $extension . $col . "_" . $language . ".png";
@@ -4384,12 +4390,7 @@ function get_nopreview_icon($resource_type, $extension, $col_size)
 		{
 		return $try;
 		}
-	# Try a plugin
-	$try=hook('plugin_nopreview_icon','',array($resource_type,$col));
-	if (false !== $try && file_exists($folder . $try))
-		{
-		return $try;
-		}
+	
 	
 	# Fall back to the 'no preview' icon used for type 1.
 	return "no_preview/resource_type/type1" . $col . ".png";
