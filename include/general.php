@@ -456,11 +456,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f1.field_constraint,
                     f1.automatic_nodes_ordering 
                FROM resource_type_field AS f1
-          LEFT JOIN (
-                        SELECT * 
-                          FROM resource_data 
-                         WHERE resource = '{$ref}'
-                    ) AS d ON d.resource_type_field = f1.ref 
+          LEFT JOIN resource_data d
+                 ON d.resource_type_field = f1.ref AND d.resource = '{$ref}'
               WHERE (
                             f1.type NOT IN ({$node_fields_list})
                         AND (" . ($multi ? "1 = 1" : "f1.resource_type = 0 OR f1.resource_type = 999 OR f1.resource_type = '{$rtype}'") . ")
