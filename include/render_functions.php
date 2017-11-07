@@ -2180,20 +2180,16 @@ function renderSocialMediaShareLinksForUrl($url)
         {
         ?>
         <!-- Facebook -->
-        <a target="_blank" href="https://www.facebook.com/dialog/feed?app_id=<?php echo $facebook_app_id; ?>&link=<?php echo $url_encoded; ?>">
-            <i class="fa fa-facebook-official" aria-hidden="true"></i>
-        </a>
+        <a target="_blank" href="https://www.facebook.com/dialog/feed?app_id=<?php echo $facebook_app_id; ?>&link=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-facebook-official" aria-hidden="true"></i></a>
         <?php
         }
         ?>
+    
     <!-- Twitter -->
-    <a target="_blank" href="https://twitter.com/?status=<?php echo $url_encoded; ?>">
-        <i class="fa fa-twitter-square" aria-hidden="true"></i>
-    </a>
+    <a target="_blank" href="https://twitter.com/?status=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-twitter-square" aria-hidden="true"></i></a>
+    
     <!-- LinkedIn -->
-    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $url_encoded; ?>">
-        <i class="fa fa-linkedin-square" aria-hidden="true"></i>
-    </a>
+    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-linkedin-square" aria-hidden="true"></i></a>
     <?php
 
     return;
