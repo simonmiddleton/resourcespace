@@ -174,8 +174,8 @@ if($generate)
 			if($offline)
 				{ 
 				$job_data=array();
-                $job_success_lang=$lang["download_file_created"]  . str_replace(array('%ref','%title'),array($ref,$resource['field' . $view_title_field]),$lang["ref-title"]);
-				$job_failure_lang=$lang["download_file_creation_failed"] . str_replace(array('%ref','%title'),array($ref,$resource['field' . $view_title_field]),$lang["ref-title"]);
+                $job_success_lang=$lang["download_file_created"]  . " - " . str_replace(array('%ref','%title'),array($ref,$resource['field' . $view_title_field]),$lang["ref-title"]);
+				$job_failure_lang=$lang["download_file_creation_failed"] . " - " . str_replace(array('%ref','%title'),array($ref,$resource['field' . $view_title_field]),$lang["ref-title"]);
                 $job_data["resource"]=$ref;
 				$job_data["command"]=$shell_exec_cmd;	 
 				$job_data["outputfile"]=$targetfile;	

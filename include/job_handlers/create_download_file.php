@@ -55,10 +55,11 @@ $output=run_command($shell_exec_cmd);
 	}
 else
 	{
-	// Job failed, upate job queue
+	// Job failed, update job queue
 	job_queue_update($jobref,$job_data,STATUS_ERROR);
     $message=$job_failure_text!=""?$job_failure_text:$lang["download_file_creation_failed"]  . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";
     $url=$baseurl . "/?r=" . $job_data["resource"];
+    message_add($job["user"],$message,$url,0);
 	}
 		
 		
