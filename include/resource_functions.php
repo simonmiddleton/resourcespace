@@ -1593,7 +1593,7 @@ function add_keyword_to_resource($ref,$keyword,$resource_type_field,$position,$o
 	
     if (!(in_array($keyword,$noadd)))
             {
-            $keyref=resolve_keyword($keyword,true,false,!$stemmed); // 3rd param set to false as already normalized. If already a stemmed value, do not stem this keyword.
+            $keyref=resolve_keyword($keyword,true,false,false); // 3rd param set to false as already normalized. Do not stem this keyword as stem has already been added in this function
             debug("Indexing keyword $keyword - keyref is " . $keyref . ", already stemmed? is " . ($stemmed?"TRUE":"FALSE"));
             
             # create mapping, increase hit count.
