@@ -44,7 +44,11 @@ if ($productversion == 'SVN'){
  foreach($out as $outline){
   $matches = array();
   if (preg_match('/^Revision: (\d+)/i', $outline, $matches)!=0){
-   $build = "r" . $matches[1];
+   $build .= "r" . $matches[1];
+  }
+  $matches = array();
+  if (preg_match('/^Relative URL: (.*)/i', $outline, $matches)!=0){
+   $build = str_replace("^","",$matches[1]) . " " . $build;
   }
  } 
 }
