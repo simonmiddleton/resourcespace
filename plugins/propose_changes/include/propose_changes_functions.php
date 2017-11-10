@@ -4,6 +4,11 @@ function save_proposed_changes($ref)
 	{
     global $userref, $auto_order_checkbox,$multilingual_text_fields,$languages,$language, $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES, $range_separator;
 
+    if(!is_numeric($ref))
+        {
+        return false;
+        }
+        
     # Loop through the field data and save (if necessary)
 	$errors        = array();
 	$fields        = get_resource_field_data($ref, false);
@@ -256,8 +261,16 @@ function save_proposed_changes($ref)
 
             if (str_replace("\r\n", "\n", $field_value) !== str_replace("\r\n", "\n", unescape($val)))
                     {
+                    if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
+                        {
+                        # Check that date hasn't only changed by adding seconds value
+                        if (trim($field_value) + ":00" == trim($val))
+                            {
+                            continue;    
+                            }
+                        }
                     # This value is different from the value we have on record. 
-                    # Add this to the proposed changes table for the user                    
+                    # Add this to the proposed changes table for the user
                     sql_query("INSERT INTO propose_changes_data(resource, user, resource_type_field, value, date) VALUES('{$ref}','{$userref}', '{$fields[$n]['ref']}', '" . escape_check($val) . "',now())");
                     }            
             
@@ -286,10 +299,15 @@ function get_proposed_changes($ref, $userid)
                  GROUP BY f.ref
                  ORDER BY f.resource_type, f.order_by, f.ref;
             ',
-            $ref,
-            $userid
+            escape_check($ref),
+            escape_check($userid)
         );
         $changes = sql_query($query);
 
         return $changes;  
         }
+        
+function delete_proposed_changes($ref, $userid="")
+	{
+    sql_query("DELETE FROM propose_changes_data WHERE resource = '" . escape_check($ref)  . "'" . ($userid!="" ? "AND user='" . escape_check($userid) . "'":""));
+    }

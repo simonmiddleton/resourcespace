@@ -43,15 +43,30 @@ if(!$propose_changes_always_allow && $proposeallowed=="" && !$editaccess)
     error_alert($error);
     exit();
     }
-    
+
 if($editaccess)
     {
-    $userproposals= sql_query("select pc.user, u.username from propose_changes_data pc left join user u on u.ref=pc.user where resource='$ref' group by pc.user order by u.username asc");
-    $view_user=getvalescaped("proposeuser",((count($userproposals)==0)?$userref:$userproposals[0]["user"]));
+    $view_user = getvalescaped("proposeuser",0);
+    
+    if(getval("resetform","") != "")
+        {
+        delete_proposed_changes($ref, $view_user);
+        }        
+        
+    $userproposals = sql_query("select pc.user, u.username from propose_changes_data pc left join user u on u.ref=pc.user where resource='$ref' group by pc.user order by u.username asc");
+    if(!in_array($view_user,array_column($userproposals,"user")) && count($userproposals) > 0)
+        {
+        $view_user = $userproposals[0]["user"];
+        }
+        
     $proposed_changes=get_proposed_changes($ref, $view_user);
     }
 else
     {
+     if(getval("resetform","") != "")
+        {
+        delete_proposed_changes($ref, $userref);
+        }
     $proposed_changes=get_proposed_changes($ref, $userref);
     }
 
@@ -62,7 +77,7 @@ $resource=get_resource_data($ref);
 $proposefields=get_resource_field_data($ref,false,true);
 
 // Save data
-if (getval("save","")!="" || getval("submitted","")!="")
+if (getval("save","")!="" || getval("submitted","")!="" && getval("resetform","")=="")
 	{	
 	if($editaccess)
 		{
@@ -390,7 +405,7 @@ function propose_changes_display_field($n, $field)
         
 	<div class="Question ProposeChangesQuestion" id="question_<?php echo $n?>">
                 
-	<div class="ProposeChangesLabel" ><?php echo htmlspecialchars($field["title"])?></div>
+	<div class="Label ProposeChangesLabel" ><?php echo htmlspecialchars($field["title"])?></div>
         
 	
 	<?php 
@@ -629,17 +644,29 @@ if(!$editaccess)
 		?>
 		<div class="Question" id="ProposeChangesUsers">
 		<form id="propose_changes_select_user_form" method="post" action="<?php echo $baseurl_short . "plugins/propose_changes/pages/propose_changes.php" . "?ref=" . urlencode($ref) . "&amp;search=" . urlencode($search) . "&amp;offset=" . urlencode($offset) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive)?>" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
-			<label><?php echo $lang["propose_changes_view_user"]; ?>
-			</label>
-			<select class="stdwidth" name="proposeuser" id="proposeuser" onchange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('propose_changes_form'),false);">
-			<?php 
-			foreach ($userproposals as $userproposal)
-				{
-				echo  "<option value=" . $userproposal["user"] . " " . (($view_user==$userproposal["user"])?"selected":"") . ">" . $userproposal["username"] . "</option>";				
-				}	
-			?>
-			</select>
-			</form>
+                <label><?php echo $lang["propose_changes_view_user"]; ?></label>
+            <?php
+            if(count($userproposals) > 1)
+                {?>
+                <select class="stdwidth" name="proposeuser" id="proposeuser" onchange="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('propose_changes_select_user_form'),false);">
+                <?php 
+                foreach ($userproposals as $userproposal)
+                    {
+                    echo  "<option value=" . $userproposal["user"] . " " . (($view_user==$userproposal["user"])?"selected":"") . ">" . htmlspecialchars($userproposal["username"]) . "</option>";				
+                    }	
+                ?>
+                </select>
+                <?php
+                }
+            else
+                {
+                ?>
+                <div class="Fixed"><?php echo htmlspecialchars($userproposals[0]["username"]) ?></div>	
+                <?php
+                }
+                ?>
+		</form>
+        <div class="clearerleft"> </div>
 		</div>
 		<?php
 		}	
@@ -737,21 +764,22 @@ if(!$editaccess)
 	?>
 
 	<div class="QuestionSubmit">
-	<input name="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
-        <?php if($editaccess)
-            {?>
-			<input name="submitted" type="hidden" value="true" />
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["propose_changes_save_changes"]?>&nbsp;&nbsp;" /><br />            
-            <?php
-            }
-        else
-            {?>
-			<input name="submitted" type="hidden" value="true" />
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" /><br />
-            <?php
-            }
-            ?>
-	<div class="clearerleft"> </div>
+        <input id="resetform" name="resetform" type="hidden" value=""/>
+        <input id="save"  name="submitted" type="hidden" value="" />
+        <input name="proposeuser" type="hidden" value="<?php echo isset($view_user) ? htmlspecialchars($view_user) : ""?>" />
+        <input name="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" onClick="return jQuery('#resetform').val('true');"/>&nbsp;
+            <?php if($editaccess)
+                {?>
+                <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["propose_changes_save_changes"]?>&nbsp;&nbsp;" onClick="return jQuery('#save').val('true');"/><br />            
+                <?php
+                }
+            else
+                {?>
+                <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;"  onClick="return jQuery('#save').val('true');"/><br />
+                <?php
+                }
+                    ?>
+        <div class="clearerleft"> </div>
 	</div>
 
 </form><!-- End of propose_changes_form -->
