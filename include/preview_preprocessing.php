@@ -612,7 +612,22 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
             include_once dirname(__FILE__) . '/video_functions.php';
 
             $video_resolution = get_video_resolution($file);
-            $snapshot_size    = sql_query('SELECT width, height FROM preview_size WHERE id = "pre"');
+            
+			if ($exiftool_fullpath!=false)
+				{
+				// Has it been rotated?
+				$command = $exiftool_fullpath . " -s -s -s -Rotation " . escapeshellarg($file);
+				$rotation = run_command($command);
+				if($rotation == "90" || $rotation == "270")
+					{
+					$orig_video_resolution = $video_resolution;
+					$video_resolution['width']	= $orig_video_resolution['height'];
+					$video_resolution['height']	= $orig_video_resolution['width'];
+					}					
+				}
+			
+			
+			$snapshot_size    = sql_query('SELECT width, height FROM preview_size WHERE id = "pre"');
 
             if(isset($snapshot_size[0]) && 0 < count($snapshot_size[0]))
                 {
