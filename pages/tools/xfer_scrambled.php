@@ -1,42 +1,88 @@
 <?php
 include "../../include/db.php";
 include_once "../../include/general.php";
-include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
+if (php_sapi_name() != "cli")
+    {
+    exit("Permission denied");
+    }
+    
 include "../../include/resource_functions.php";
-include "../../include/image_processing.php";
-
-set_time_limit(60*60*1);
-ini_set("track_errors","on");
-#error_reporting(0);
 
 # This script moves any non-scrambled resources over to the scrambled URL.
-exit("You must manually enable this script."); # prevent accidental use!
 
-?>
-<html>
-<body>
-<?php
+if(!$migrating_scrambled)
+    {
+    exit("You must manually enable this script by setting \$migrating_scrambled and optionally \$scramble_key_old." . PHP_EOL); # prevent accidental use!
+    }
 
-$resources=sql_query("select ref,file_extension from resource order by ref desc");
-for ($n=0;$n<count($resources);$n++)
+function migrate_files($ref, $alternative, $extension, $sizes)
+    {
+    global $scramble_key, $scramble_key_old, $migratedfiles;
+    echo "Checking Resource ID: " . $ref . ", alternative: " . $alternative . PHP_EOL;
+	$resource_data=get_resource_data($ref);
+    $pagecount=get_page_count($resource_data,$alternative);
+    for($page=1;$page<=$pagecount;$page++)
+		{
+        for ($m=0;$m<count($sizes);$m++)
+            {
+            // Get the new path for each file
+            $newpath=get_resource_path($ref,true,$sizes[$m]["id"],true,$sizes[$m]["extension"],true,$page,false,'',$alternative);
+            // Now get the old path, saving the current key first
+            $scramble_key_saved = $scramble_key;
+            $scramble_key = $scramble_key_old;
+            $path = get_resource_path($ref,true,$sizes[$m]["id"],false,$sizes[$m]["extension"],true,$page,false,'',$alternative);
+            echo " - Size: " . $sizes[$m]["id"] . ", extension: " . $sizes[$m]["extension"] . " Snew path: " . $newpath . PHP_EOL;
+            echo " - Checking old path: " . $path . PHP_EOL;
+            if (file_exists($path))
+                {		
+                echo " - Found file at old path : " . path . PHP_EOL;	
+                if(!file_exists($newpath))
+                    {
+                    echo " - Moving resource file for resource #" . $ref  . " - old path= " . $path  . ", new path=" . $newpath . PHP_EOL;
+                    rename ($path,$newpath);
+                    $migratedfiles++;
+                    }
+                else
+                    {
+                    echo " - Resource file for resource #" . $ref  . " - already exists at new path= " . $newpath  . PHP_EOL;
+                    }
+                }
+                
+            // Reset key before next 
+            $scramble_key = $scramble_key_saved;
+            }
+        }
+    }
+    
+set_time_limit(0);
+    
+$resources=sql_query("SELECT ref,file_extension FROM resource WHERE ref>0 ORDER BY ref DESC");
+$migratedfiles = 0;
+$totalresources = count($resources);
+for ($n=0;$n<$totalresources;$n++)
 	{
 	$ref=$resources[$n]["ref"];
 	$extension=$resources[$n]["file_extension"];
 	if ($extension=="") {$extension="jpg";}
-
 	$sizes=get_image_sizes($ref,true,$extension,false);
-	for ($m=0;$m<count($sizes);$m++)
-		{
-		$path=get_resource_path($ref,true,$sizes[$m]["id"],false,$extension,false);
-		if (file_exists($path))
-			{
-			$newpath=get_resource_path($ref,true,$sizes[$m]["id"],true,$extension,true);
-			
-			echo "<li>$ref - old path=$path, new path=$newpath";
-			rename ($path,$newpath);
-			}
-		}
-	}
-?>
-</body>
-</html>
+    
+    // Add in original resource files, jpg preview, ffmpeg previews and other non-size files
+    $sizes[] = array("id" => "", "extension" => $extension);
+    $sizes[] = array("id" => "pre", "extension" => $ffmpeg_preview_extension);
+    $sizes[] = array("id" => "", "extension" => "jpg");
+    $sizes[] = array("id" => "", "extension" => "xml");
+    $sizes[] = array("id" => "", "extension" => "icc");
+    
+    migrate_files($ref, -1, $extension, $sizes);
+    
+    // Migrate the alternatives
+    $alternatives = get_alternative_files($ref);
+    foreach($alternatives as $alternative)
+        {
+        $sizes=get_image_sizes($ref,true,$alternative["file_extension"],false);
+        $sizes[] = array("id" => "", "extension" => $alternative["file_extension"]);
+        migrate_files($ref, $alternative["ref"], $alternative["file_extension"], $sizes);
+        }
+    }
+    
+exit("FINISHED. " . $migratedfiles . " files migrated for " . $totalresources . " resources" . PHP_EOL);

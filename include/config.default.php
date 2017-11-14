@@ -3372,3 +3372,8 @@ collection.
 Please make sure to only upload one resource and its original alternatives otherwise it will not work as expected
 */
 $upload_alternatives_suffix = '';
+
+// Set this to true if changing the scramble key. If switching from a non-null key set the $scramble_key_old variable
+// Run pages/tools/xfer_srambled.php to move the files, but any ommitted should be detected by get_resource_path if this is set.
+$migrating_scrambled = false;
+// $scramble_key_old = "";

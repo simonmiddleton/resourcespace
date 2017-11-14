@@ -70,7 +70,7 @@ function get_resource_path(
         }
 
     global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
-           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath;
+           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,$migrating_scrambled, $scramble_key_old;
 
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
     if(!$getfilepath && $hide_real_filepath)
@@ -295,6 +295,31 @@ function get_resource_path(
 			$file .= "?v=" . urlencode($file_modified);
 			}
 		}
+
+    if ($scramble && isset($migrating_scrambled) && $migrating_scrambled)
+			{
+            // Check if there is a scrambled version using no/previous key, most will normally be moved using pages/tools/xfer_scrambled.php
+            $migrating_scrambled = false;
+            $newpath = $getfilepath ? $file : get_resource_path($ref,true,$size,true,$extension,true,$page,false,'',$alternative);
+            
+            $scramble_key_saved = $scramble_key;
+            $scramble_key = isset($scramble_key_old)?$scramble_key_old:"";
+            
+            $oldfilepath=get_resource_path($ref,true,$size,false,$extension,true,$page,false,'',$alternative);
+            if (file_exists($oldfilepath))
+                {
+                if(!file_exists(dirname($newpath)))
+                    {
+                    mkdir(dirname($newpath),0777,true);
+                    }
+                rename ($oldfilepath,$newpath);
+                }
+            
+            // Reset key
+            $scramble_key = $scramble_key_saved;
+            $migrating_scrambled = true;
+			}
+
 	return  $file;
 	}
 
