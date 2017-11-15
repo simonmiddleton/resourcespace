@@ -25,7 +25,7 @@ function HookVr_viewViewReplacepreviewlink()
 function HookVr_viewViewRenderinnerresourcepreview()
     {
     global $resource, $ffmpeg_supported_extensions, $vr_view_restypes;
-    if(in_array($resource['file_extension'],$ffmpeg_supported_extensions) && in_array($resource['resource_type'],$vr_view_restypes))
+    if(VrViewUseVR($resource))
         {
         // Set this to prevent standard video preview of 360 video
         $resource['is_transcoding'] = 1;
