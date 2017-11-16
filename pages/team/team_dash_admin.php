@@ -79,33 +79,26 @@ if(getvalescaped("quicksave",FALSE))
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
-    <h1><?php echo ($show_usergroups_dash ? $lang['manage_user_group_dash_tiles'] : $lang['managedefaultdash']); ?></h1>
+    <h1><?php echo $lang['manage_dash_tiles']; ?></h1>
     <p>
         <a href="<?php echo $baseurl_short?>pages/team/team_home.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoteamhome']; ?></a>
+    </p>
+<?php
+$href = "{$baseurl_short}pages/team/team_dash_tile.php";
+if($show_usergroups_dash)
+    {
+    $href .= "?show_usergroups_dash=true&selected_user_group={$selected_user_group}";
+    }
+    ?>
+    <p>
+        <a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET; ?><?php echo $lang['view_tiles']; ?></a>
     </p>
 <?php
 if(!$show_usergroups_dash)
     {
     ?>
     <p>
-        <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['managedefaultdash']; ?></a>
-    </p>
-    <p>
         <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile_special.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang['specialdashtiles']; ?></a>
-    </p>
-    <?php
-    }
-else
-    {
-    // Show link to re-order user group dash tiles
-    $href = "{$baseurl_short}pages/team/team_dash_tile.php";
-    if($show_usergroups_dash)
-        {
-        $href .= "?show_usergroups_dash=true&selected_user_group={$selected_user_group}";
-        }
-    ?>
-    <p>
-        <a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['manage_user_group_dash_tiles']; ?></a>
     </p>
     <?php
     }
