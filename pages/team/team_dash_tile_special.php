@@ -16,14 +16,10 @@ include "../../include/header.php";
 	</a>
 </p>
 <p>
-	<a href="<?php echo $baseurl_short?>pages/team/team_dash_tile.php" onClick="return CentralSpaceLoad(this,true);">
-		<?php echo LINK_CARET_BACK ?><?php echo $lang["managedefaultdash"]?>
-	</a>
+    <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK; ?><?php echo $lang['view_tiles']; ?></a>
 </p>
 <p>
-	<a href="<?php echo $baseurl_short?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this,true);">
-		<?php echo LINK_CARET ?><?php echo $lang["dasheditmodifytiles"];?>
-	</a>
+    <a href="<?php echo $baseurl_short?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK; ?><?php echo $lang['dasheditmodifytiles']; ?></a>
 </p>
 
 <h2><?php echo $lang["createnewdashtile"];?></h2>
