@@ -159,8 +159,13 @@ if (!hook("renderresultthumb"))
                                 var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref)); ?>;
                                 var snapshot_segment_px = Math.ceil(jQuery(this).width() / Object.keys(video_snapshots).length);
                                 var snapshot_number     = Math.ceil(x_coord / snapshot_segment_px);
-
-                                jQuery(this).attr('src', video_snapshots[snapshot_number]);
+                                if(typeof(ss_img_<?php echo $ref; ?>) === "undefined")
+                                    {
+                                    ss_img_<?php echo $ref; ?> = new Array();
+                                    }
+                                ss_img_<?php echo $ref; ?>[snapshot_number] = new Image();
+                                ss_img_<?php echo $ref; ?>[snapshot_number] = video_snapshots[snapshot_number];
+                                jQuery(this).attr('src', ss_img_<?php echo $ref; ?>[snapshot_number]);
                                 }
                             ).mouseout(function(event)
                                 {
