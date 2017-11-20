@@ -164,8 +164,8 @@ if (!hook("renderresultthumb"))
                                     ss_img_<?php echo $ref; ?> = new Array();
                                     }
                                 ss_img_<?php echo $ref; ?>[snapshot_number] = new Image();
-                                ss_img_<?php echo $ref; ?>[snapshot_number] = video_snapshots[snapshot_number];
-                                jQuery(this).attr('src', ss_img_<?php echo $ref; ?>[snapshot_number]);
+                                ss_img_<?php echo $ref; ?>[snapshot_number].src = video_snapshots[snapshot_number];
+                                jQuery(this).attr('src', ss_img_<?php echo $ref; ?>[snapshot_number].src);
                                 }
                             ).mouseout(function(event)
                                 {
