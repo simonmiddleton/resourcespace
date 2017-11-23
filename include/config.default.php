@@ -3287,6 +3287,8 @@ $resource_type_extension_mapping         = array(
 # New mode that means the upload goes first, then the users edit and approve resources moving them to the correct stage.
 $upload_then_edit=false;
 
+# Option to allow users to 'lock' metadata fields in upload_then_edit_mode
+$upload_review_lock_metadata = false;
 
 #######################################
 ########################## Annotations:

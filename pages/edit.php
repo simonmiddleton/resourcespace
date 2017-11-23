@@ -28,14 +28,6 @@ $disablenavlinks=getval("disablenav","")=="true";
 
 $archive=getvalescaped("archive",0,true); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 
-// Ability to avoid editing conflicts by checking checksums.
-// NOTE: this should NOT apply to upload.
-$check_edit_checksums = true;
-if($ref < 0)
-    {
-    $check_edit_checksums = false;
-    }
-  
 $uploadparams="";
 $uploadparams.="&relateto=" . urlencode(getval("relateto",""));
 $uploadparams.="&redirecturl=" . urlencode(getval("redirecturl",""));
@@ -62,6 +54,13 @@ if ($upload_review_mode && $ref=="")
   if (isset($collection_contents[0]["ref"])) {$ref=$collection_contents[0]["ref"];} else {redirect("pages/search.php?search=!last1000");}
   }
 
+// Ability to avoid editing conflicts by checking checksums.
+// NOTE: this should NOT apply to upload.
+$check_edit_checksums = true;
+if($ref < 0 || $upload_review_mode)
+    {
+    $check_edit_checksums = false;
+    }
 
 global $merge_filename_with_title;
 if($merge_filename_with_title && $ref < 0) {
@@ -156,6 +155,25 @@ if ($go!="")
 
 # Fetch resource data.
 $resource=get_resource_data($ref);
+if ($upload_review_mode)
+        {
+        $check_edit_checksums = false;
+        // Need to get details of the last resource edited so we can use these for this resource if field is locked
+        $locked_fields = (getval("lockedfields","") != "") ? trim_array(explode(",",getval("lockedfields",""))) : array();
+        $lastedited = getval('lastedited',0,true);
+        if(is_numeric($lastedited) && $lastedited > 0)
+            {
+            $lastresource=get_resource_data($lastedited,false);
+            $lockable_columns = array("resource_type","archive","access");
+            foreach($lockable_columns as $lockable_column)
+                {
+                if(in_array($lockable_column,$locked_fields))
+                    {
+                    $resource[$lockable_column] = $lastresource[$lockable_column];
+                    }
+                }
+            }
+        }
 
 # Allow to specify resource type from url for new resources
 $resource_type=getval("resource_type","");
@@ -309,6 +327,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 				}
 			}   	
 		$resource=get_resource_data($ref,false); # Reload resource data.
+       
 		if(in_array($resource['resource_type'], $data_only_resource_types))
 			{
 			$single=true;
@@ -358,13 +377,14 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 			{           
 			if ($ref>0 && getval("save","")!="")
 				{
+
 				# Log this
 				daily_stat("Resource edit",$ref);
 				if ($upload_review_mode)
 				  {
 				  # Drop this resource from the collection and redirect thus picking the next resource.
 				  remove_resource_from_collection($ref,0-$userref);refresh_collection_frame();
-				  ?><script>CentralSpaceLoad('<?php echo $baseurl_short . "pages/edit.php?upload_review_mode=true" ?>',true);</script>
+				  ?><script>CentralSpaceLoad('<?php echo $baseurl_short . "pages/edit.php?upload_review_mode=true&lastedited=" . urlencode($ref) ?>',true);</script>
 				  <?php exit();
 				  }
 				if (!hook('redirectaftersave') && !$modal)
@@ -502,9 +522,12 @@ if (getval("refreshcollectionframe","")!="")
 
 include "../include/header.php";
 ?>
-
-
-<script type="text/javascript">
+<script>
+<?php
+if ($upload_review_mode)
+        {
+        echo "lockedfields = " . (count($locked_fields) > 0 ? json_encode($locked_fields) : "new Array()") . ";";
+        }?>
 
 registerCollapsibleSections();
 
@@ -976,9 +999,19 @@ if(!$is_template && $show_required_field_label)
 if(!$multiple)
     {
     ?>
-    <div class="Question <?php if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
-        <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" ) ?></label>
-		<input id='resource_type_checksum' name='resource_type_checksum' type='hidden' value='<?php echo $resource['resource_type']; ?>'>
+    <div class="Question <?php if($upload_review_mode && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
+        <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
+        if ($upload_review_mode && $upload_review_lock_metadata)
+            {
+            renderLockButton('resource_type', $locked_fields);
+            }?>
+       </label>
+       <?php if ($check_edit_checksums)
+        {?>
+        <input id='resource_type_checksum' name='resource_type_checksum' type='hidden' value='<?php echo $resource['resource_type']; ?>'>
+        <?php
+        }
+        ?>
 
         <select name="resource_type" id="resourcetype" class="stdwidth" 
                 onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo $lang["editresourcetypewarning"]; ?>')){<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
@@ -1183,6 +1216,60 @@ if('' != getval('metadatatemplate', ''))
 # Load resource data
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
 $all_selected_nodes = get_resource_nodes($use);
+
+if ($upload_review_mode && count($locked_fields) > 0 )
+        {
+        // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
+        foreach($locked_fields as $locked_field)
+            {
+            if(!is_numeric($locked_field))
+                {
+                // These are handled earlier with get_resource_data
+                continue;
+                }
+            
+            // Check if this field is listed in the $fields array - if resource type has changed it may not be present
+            $key = array_search($locked_field, array_column($fields, 'ref'));
+            if($key!==false)
+                {
+                $fieldtype = $fields[$key]["type"];
+                }    
+            else
+                {
+                $lockfieldinfo = get_resource_type_field($locked_field);
+                $fieldtype = $lockfieldinfo["type"];
+                }                
+            
+            if(in_array($fieldtype, $FIXED_LIST_FIELD_TYPES))
+                {
+                // Replace nodes for this field
+                $field_nodes = get_nodes($locked_field, NULL, $fieldtype == FIELD_TYPE_CATEGORY_TREE);
+                $field_node_refs = array_column($field_nodes,"ref");
+                $stripped_nodes = array_diff ($all_selected_nodes, $field_node_refs);
+                $locked_nodes = get_resource_nodes($lastedited, $locked_field);
+                $all_selected_nodes = array_merge($stripped_nodes, $locked_nodes);
+                }
+            else
+                {
+                if(!isset($last_fields))
+                    {
+                    $last_fields = get_resource_field_data($lastedited,!hook("customgetresourceperms"),-1,"",$tabs_on_edit);
+                    }
+                
+                $addkey = array_search($locked_field, array_column($last_fields, 'ref'));
+                    if($key!==false)
+                    {
+                    // Field is already present - just update the value
+                    $fields[$key]["value"] = $last_fields[$addkey]["value"];
+                    }
+                else
+                    {
+                    // Add the field to the $fields array   
+                    $fields[] = $last_fields[$addkey];
+                    }
+                }
+            }
+        }
 
 # if this is a metadata template, set the metadata template title field at the top
 if (isset($metadata_template_resource_type)&&(isset($metadata_template_title_field)) && $resource["resource_type"]==$metadata_template_resource_type){
@@ -1432,8 +1519,14 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
          <div class="Question" id="editmultiple_status"><input name="editthis_status" id="editthis_status" value="yes" type="checkbox" onClick="var q=document.getElementById('question_status');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="editthis_status_label" for="editthis<?php echo $n?>"><?php echo $lang["status"]?></label></div>
          <?php
          } ?>
-      <div class="Question <?php if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
-         <label for="status"><?php echo $lang["status"]?></label><?php
+      <div class="Question <?php if($upload_review_mode && in_array("archive",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+         <label for="status">
+         <?php echo $lang["status"];
+         if ($upload_review_mode && $upload_review_lock_metadata)
+            {
+            renderLockButton('archive', $locked_fields);
+            }?>
+          </label><?php
 
          # Autosave display
          if ($edit_autosave || $ctrls_to_save)
@@ -1441,7 +1534,7 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
             <div class="AutoSaveStatus" id="AutoSaveStatusStatus" style="display:none;"></div>
             <?php
             } 
-		 if(!$multiple && getval("copyfrom","")=="")
+		 if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums)
 			{
 			echo "<input id='status_checksum' name='status_checksum' type='hidden' value='" . $setarchivestate . "'>";
 			}?>
@@ -1477,8 +1570,14 @@ else
 {
    if ($multiple) { ?><div class="Question"><input name="editthis_access" id="editthis_access" value="yes" type="checkbox" onClick="var q=document.getElementById('question_access');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis<?php echo $n?>"><?php echo $lang["access"]?></label></div><?php } ?>
 
-   <div class="Question <?php if(isset($save_errors) && is_array($save_errors) && array_key_exists('access',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
-      <label for="access"><?php echo $lang["access"]?></label><?php
+   <div class="Question <?php if($upload_review_mode && in_array("access",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('access',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+      <label for="access">
+      <?php echo $lang["access"];
+      if ($upload_review_mode && $upload_review_lock_metadata)
+            {
+            renderLockButton('access', $locked_fields);
+            }
+      ?></label><?php
 
             # Autosave display
       if ($edit_autosave || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusAccess" style="display:none;"></div><?php }
@@ -1489,7 +1588,7 @@ else
       $ea3=$custom_access?!checkperm('ea3'):false;
       if(($ea0 && $resource["access"]==0) || ($ea1 && $resource["access"]==1) || ($ea2 && $resource["access"]==2) || ($ea3 && $resource["access"]==3))
       {
-        if(!$multiple && getval("copyfrom","")=="")
+        if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums)
 			{
 			echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $resource["access"] . "'>";
 			}?>

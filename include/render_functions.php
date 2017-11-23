@@ -1452,10 +1452,15 @@ function display_field($n, $field, $newtab=false,$modal=false)
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
-  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES;
+  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums, $upload_review_lock_metadata, $locked_fields;
 
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
+  
+  if(!isset($locked_fields))
+    {
+    $locked_fields = explode(",",getval("lockedfields",""));
+    }
   
   $name="field_" . $field["ref"];
   $value=$field["value"];
@@ -1582,7 +1587,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
       }
       ?>
 
-      <div class="Question <?php if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n?>" <?php
+      <div class="Question <?php if(in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n?>" <?php
       if (($multiple && !$field_save_error) || !$displaycondition || $newtab)
         {?>style="border-top:none;<?php 
         if (($multiple && $value=="") || !$displaycondition) # Hide this
@@ -1609,7 +1614,22 @@ function display_field($n, $field, $newtab=false,$modal=false)
         $labelname .= '-d';
         }
         ?>
-     <label for="<?php echo htmlspecialchars($labelname)?>" ><?php if (!$multiple) {?><?php echo htmlspecialchars($field["title"])?> <?php if (!$is_template && $field["required"]==1) { ?><sup>*</sup><?php } ?><?php } ?></label>
+     <label for="<?php echo htmlspecialchars($labelname)?>" >
+     <?php 
+     if (!$multiple) 
+        {
+        echo htmlspecialchars($field["title"]);
+        if (!$is_template && $field["required"]==1)
+            {
+            echo "<sup>*</sup>";
+            }
+        } 
+     if ($upload_review_mode && $upload_review_lock_metadata)
+        {
+        renderLockButton($field["ref"], $locked_fields);
+        }
+        ?>
+     </label>
 
      <?php
     # Autosave display
@@ -1667,13 +1687,13 @@ function display_field($n, $field, $newtab=false,$modal=false)
 					}
 				natsort($field_nodes);
 				}
-			if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "")
+			if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
 				{
 				echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
 				echo "<input name='" . "field_" . $field['ref']  . "_currentval' type='hidden' value='" . implode(",",$field_nodes) . "'>";
 				}
             }
-        elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "")
+        elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
 			{
             $field['nodes'] = get_nodes($field['ref'], NULL, FALSE);
             $field_nodes = array();
@@ -1688,7 +1708,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 			
 			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
 			}
-		elseif(!$multiple && !$blank_edit_template && getval("copyfrom","")=="" && getval('metadatatemplate', '') == "")
+		elseif(!$multiple && !$blank_edit_template && getval("copyfrom","")=="" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
 			{
 			echo "<input id='field_" . $field['ref']  . "_checksum' name='" . "field_" . $field['ref']  . "_checksum' type='hidden' value='" . md5(trim(preg_replace('/\s\s+/', ' ', $field['value']))) . "'>";
 			}
@@ -1786,7 +1806,6 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
 		// Get the start/end date from the string
 		$startvalue=strpos($value,"start")!==false?substr($value,strpos($value,"start")+5,10):"";
 		$endvalue=strpos($value,"end")!==false?substr($value,strpos($value,"end")+3,10):"";
-		//exit($value);
 		}
 	else
 		{
@@ -2193,4 +2212,21 @@ function renderSocialMediaShareLinksForUrl($url)
     <?php
 
     return;
+    }
+    
+/**
+* Renders a lock button for a field - used to 'lock' metadata in upload_review_mode
+* 
+* @param string $name  The field identifier e.g. 'resource_type', '18'
+* @param array $locked_fields - Array of locked field identifiers
+* 
+* @return void
+*/
+function renderLockButton($name, $locked_fields=array())
+    {
+    ?>
+    <button type="submit" class="lock_icon" id="lock_icon_<?php echo htmlspecialchars($name) ; ?>" onClick="toggleFieldLock('<?php echo htmlspecialchars($name) ; ?>');return false;">
+        <i aria-hidden="true" class="fa <?php if(in_array($name,$locked_fields)){echo "fa-lock";} else {echo "fa-unlock";} ?> fa-fw"></i>
+    </button>
+    <?php    
     }

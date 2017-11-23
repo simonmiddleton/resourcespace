@@ -1384,3 +1384,12 @@ a.Enabled, a:visited.Enabled {
 #tile_style_colour {
     display: none;
 }
+
+.lockedQuestion .fieldset, .lockedQuestion table, .lockedQuestion input, .lockedQuestion select, .lockedQuestion textarea{
+   opacity: 0.6;
+}
+
+.lock_icon {
+    float: right;
+    height: 30px;
+}
