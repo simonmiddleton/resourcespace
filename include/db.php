@@ -107,10 +107,20 @@ include (dirname(__FILE__)."/config.php");
 # -------------------------------------------------------------------------------------------
 # Remote config support - possibility to load the configuration from a remote system.
 #
-if (isset($remote_config_url) && isset($_SERVER["HTTP_HOST"]))
+if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOURCESPACE_URL") != ""))
 	{
 	sql_connect(); # Connect a little earlier
-	$host=$_SERVER['HTTP_HOST'];$hostmd=md5($host);
+	if(isset($_SERVER['HTTP_HOST']))
+		{
+		$host=$_SERVER['HTTP_HOST'];                   
+		}
+	else
+		{
+		// If running scripts from command line the host will not be available and will need to be set as an environment variable
+		// e.g. export RESOURCESPACE_URL="www.yourresourcespacedomain.com";cd /var/www/pages/tools; php update_checksums.php
+		$host=getenv("RESOURCESPACE_URL");
+		}
+	$hostmd=md5($host);
 	
 	# Look for configuration for this host (supports multiple hosts)
 	$remote_config_sysvar="remote-config-" . $hostmd; # 46 chars (column is 50)
