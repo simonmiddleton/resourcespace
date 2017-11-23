@@ -74,8 +74,24 @@ function HookSimplesamlAllProvideusercredentials()
 		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
         $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
         $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
-        $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block;
-		
+        $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block, $anonymous_login;
+
+        // Allow anonymous logins outside SSO if simplesaml is not configured to block access to site.
+        // NOTE: if anonymous_login is set to an invalid user, then use SSO otherwise it goes in an indefinite loop
+        if(!$simplesaml_site_block && isset($anonymous_login) && trim($anonymous_login) !== '')
+            {
+            $anonymous_login_escaped = escape_check($anonymous_login);
+            $anonymous_login_found   = sql_value("SELECT username AS `value` FROM user WHERE username = '{$anonymous_login_escaped}'", '');
+
+            // If anonymous_login is not set to a real username then use SSO to authenticate
+            if($anonymous_login_found == '')
+                {
+                simplesaml_authenticate();
+                }
+
+            return false;
+            }
+
         // If user is logged or if SAML is not being used to login to ResourceSpace (just as a simple barrier, 
         // usually with anonymous access configured) then use standard authentication if available
         if($simplesaml_site_block && !simplesaml_is_authenticated())
