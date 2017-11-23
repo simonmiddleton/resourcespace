@@ -744,7 +744,7 @@ function SaveAndClearButtons($extraclass="")
 </script>
 
 <?php
-$form_action = $baseurl_short . 'pages/edit.php?ref=' . urlencode($ref) . '&amp;uploader=' . urlencode(getvalescaped("uploader","")) . '&amp;single=' . urlencode(getvalescaped("single","")) . '&amp;local=' . urlencode(getvalescaped("local","")) . '&amp;search=' . urlencode($search) . '&amp;offset=' . urlencode($offset) . '&amp;order_by=' . urlencode($order_by) . '&amp;sort=' . urlencode($sort) . '&amp;archive=' . urlencode($archive) . '&amp;collection=' . $collection . '&amp;metadatatemplate=' . getval("metadatatemplate","")  . $uploadparams . '&modal=' . getval("modal","");
+$form_action = $baseurl_short . 'pages/edit.php?ref=' . urlencode($ref) . '&amp;uploader=' . urlencode(getvalescaped("uploader","")) . '&amp;single=' . urlencode(getvalescaped("single","")) . '&amp;local=' . urlencode(getvalescaped("local","")) . '&amp;search=' . urlencode($search) . '&amp;offset=' . urlencode($offset) . '&amp;order_by=' . urlencode($order_by) . '&amp;sort=' . urlencode($sort) . '&amp;archive=' . urlencode($archive) . '&amp;collection=' . $collection . $uploadparams . '&modal=' . getval("modal","");
 // If resource type is set as a data only, don't reach upload stage (step 2)
 if(0 > $ref)
     {
@@ -1098,29 +1098,54 @@ else
 
 $lastrt=-1;
 
-if (isset($metadata_template_resource_type) && !$multiple)
-{
+if(isset($metadata_template_resource_type) && !$multiple)
+    {
     # Show metadata templates here
-  ?>
-  <div class="Question" id="question_metadatatemplate">
-     <label for="metadatatemplate"><?php echo $lang["usemetadatatemplate"]?></label>
-     <select name="metadatatemplate" class="medwidth">
-        <option value=""><?php echo (getval("metadatatemplate","")=="")?$lang["select"]:$lang["undometadatatemplate"] ?></option>
+    $metadata_template = getval('metadatatemplate', 0, true);
+    ?>
+    <div class="Question" id="question_metadatatemplate">
+        <label for="metadatatemplate"><?php echo $lang['usemetadatatemplate']; ?></label>
+        <select name="metadatatemplate" class="stdwidth" onchange="MetadataTemplateOptionChanged(jQuery(this).val());">
+            <option value=""><?php echo $metadata_template == 0 ? $lang['select'] : $lang['undometadatatemplate']; ?></option>
         <?php
-        $templates=get_metadata_templates();
-        foreach ($templates as $template)
-        {
-          ?>
-          <option value="<?php echo $template["ref"] ?>"><?php echo htmlspecialchars($template["field$metadata_template_title_field"]) ?></option>
-          <?php   
-       }
-       ?>
-    </select>
-    <input type="submit" class="medcomplementwidth" name="copyfromsubmit" value="<?php echo $lang["action-select"]?>">
-    <div class="clearerleft"> </div>
- </div><!-- end of question_metadatatemplate --> 
- <?php
-}
+        $templates = get_metadata_templates();
+
+        foreach($templates as $template)
+            {
+            $template_selected = '';
+
+            if($metadata_template > 0 && $template['ref'] == $metadata_template)
+                {
+                $template_selected = ' selected';
+                }
+                ?>
+            <option value="<?php echo $template["ref"] ?>" <?php echo $template_selected; ?>><?php echo htmlspecialchars($template["field{$metadata_template_title_field}"]); ?></option>
+            <?php   
+            }
+            ?>
+        </select>
+        <script>
+        function MetadataTemplateOptionChanged(value)
+            {
+            // Undo template selection <=> clear out the form
+            if(value == '')
+                {
+                jQuery('#mainform').append(
+                    jQuery('<input type="hidden">').attr(
+                        {
+                        name: 'resetform',
+                        value: 'true'
+                        })
+                );
+                }
+
+            return CentralSpacePost(document.getElementById('mainform'), true);
+            }
+        </script>
+        <div class="clearerleft"></div>
+    </div><!-- end of question_metadatatemplate --> 
+    <?php
+    }
 
 if($embedded_data_user_select && $ref<0 && !$multiple)
  {?>
