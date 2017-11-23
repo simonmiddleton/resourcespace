@@ -79,8 +79,8 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 	hook('provideusercredentials');
 
     $userdata = validate_user($user_select_sql, true); // validate user and get user details 
-	
-    if(0 < count($userdata))
+
+    if(count($userdata) > 0)
         {
         $valid = true;
         setup_user($userdata[0]);
