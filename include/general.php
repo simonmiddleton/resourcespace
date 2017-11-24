@@ -52,11 +52,6 @@ function get_resource_path(
         {
         $extension = 'jpg';
         }
-    if($extension=='xml' || $extension=='icc')
-    	{
-    	# use the preview path
-    	$size='pre';
-    	}
 
     $override = hook(
         'get_resource_path_override',
@@ -228,14 +223,6 @@ function get_resource_path(
         {
         $sdir=$fstemplate_alt_storagedir;
         }
-    # switch the size back so the icc profile name matches the original name and find the original extension
-    $icc=false;
-    if ($extension=='icc')
-    	{
-    	$size='';
-    	$icc=true;
-    	$extension=sql_value("select file_extension value from resource where ref={$ref}", 'jpg');
-    	}
             
 		
 	$filefolder=$sdir . $path_suffix . $folder;
@@ -257,11 +244,8 @@ function get_resource_path(
         
 	    $folder=$surl . $path_suffix . $folder;
 	    }
-	if ($extension=='xml')
-		{
-		$file=$folder . 'metadump.xml';
-		}
-	elseif ($scramble && isset($skey))
+	
+	if ($scramble && isset($skey))
 		{
 		$file_old=$filefolder . $ref . $size . $p . $a . "." . $extension;
 		$file_new=$filefolder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
@@ -274,11 +258,6 @@ function get_resource_path(
 	else
 		{
 		$file=$folder . $ref . $size . $p . $a . "." . $extension;
-		}
-		
-	if($icc)
-		{
-		$file.='.icc';
 		}
 
 # Append modified date/time to the URL so the cached copy is not used if the file is changed.
