@@ -78,7 +78,7 @@ function HookSimplesamlAllProvideusercredentials()
 
         // Allow anonymous logins outside SSO if simplesaml is not configured to block access to site.
         // NOTE: if anonymous_login is set to an invalid user, then use SSO otherwise it goes in an indefinite loop
-        if(!$simplesaml_site_block && isset($anonymous_login) && trim($anonymous_login) !== '')
+        if(!$simplesaml_site_block && isset($anonymous_login) && trim($anonymous_login) !== '' && getval("usesso","")=="")
             {
             $anonymous_login_escaped = escape_check($anonymous_login);
             $anonymous_login_found   = sql_value("SELECT username AS `value` FROM user WHERE username = '{$anonymous_login_escaped}'", '');
