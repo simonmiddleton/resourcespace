@@ -5,12 +5,12 @@ include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 function HookSimplesamlAllPreheaderoutput()
     {
     if(!(file_exists(simplesaml_get_lib_path() . '/config/config.php')))
-        {
+        {support
         debug("simplesaml: plugin not configured.");
         return false;
         }
         
-	global $simplesaml_site_block, $simplesaml_allow_public_shares, $simplesaml_allowedpaths;
+	global $simplesaml_site_block, $simplesaml_allow_public_shares, $simplesaml_allowedpaths, $simplesaml_login;
     
 	if(simplesaml_is_authenticated())
 		{
@@ -19,10 +19,17 @@ function HookSimplesamlAllPreheaderoutput()
 		$delete_requires_password=false;
 		return true;
 		}
-
+    
+     // Prevent password change if SAML authenticated and signed in to RS with SAML
+    if ($simplesaml_login && simplesaml_is_authenticated())
+        {
+        global $allow_password_change;
+        $allow_password_change=false;
+        }
+        
 	// If authenticated do nothing and return
 	if (isset($_COOKIE["user"])) {return true;}
-
+    
 	// If not blocking site do nothing and return
 	if (!$simplesaml_site_block){return true;}
 
