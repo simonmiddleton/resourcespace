@@ -96,7 +96,10 @@ function HookSimplesamlAllProvideusercredentials()
                 simplesaml_authenticate();
                 }
 
-            return false;
+            if(!simplesaml_is_authenticated())
+                {
+                return true;
+                }
             }
 
         // If user is logged or if SAML is not being used to login to ResourceSpace (just as a simple barrier, 
