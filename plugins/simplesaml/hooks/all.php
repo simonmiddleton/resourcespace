@@ -5,7 +5,7 @@ include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 function HookSimplesamlAllPreheaderoutput()
     {
     if(!(file_exists(simplesaml_get_lib_path() . '/config/config.php')))
-        {support
+        {
         debug("simplesaml: plugin not configured.");
         return false;
         }
