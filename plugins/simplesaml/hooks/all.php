@@ -288,7 +288,7 @@ function HookSimplesamlLoginLoginformlink()
 		if(!$simplesaml_login) {return false;}
 		
         ?>
-		<br/><a href="<?php echo $baseurl . "/?usesso=true\">&gt; " . $lang["simplesaml_use_sso"];?></a>
+		<br/><a href="<?php echo $baseurl; ?>/?usesso=true"><?php echo '&gt; ' . $lang['simplesaml_use_sso']; ?></a>
 		<?php
         }
 
@@ -313,17 +313,49 @@ function HookSimplesamlLoginPostlogout2()
         }
 
 
-
 function HookSimplesamlAllCheckuserloggedin()
-	{
-	return simplesaml_is_authenticated();
-	}
+    {
+    return simplesaml_is_authenticated();
+    }
 
 
+/**
+* Render header navigation links in anonymous mode based on simplasaml configuration
+* 
+* 
+*/
+function HookSimplesamlAllReplaceheadernav1anon()
+    {
+    global $baseurl, $lang, $anon_login_modal, $contact_link, $simplesaml_prefer_standard_login;
 
+    if($simplesaml_prefer_standard_login)
+        {
+        return false;
+        }
 
+    $onClick = '';
 
-	
-	
+    if($anon_login_modal)
+        {
+        $onClick = 'onClick="return ModalLoad(this, true);"';
+        }
+        ?>
+    <ul>
+        <li>
+            <a href="<?php echo $baseurl; ?>/?usesso=true"<?php echo $onClick; ?>><?php echo $lang['login']; ?></a>
+        </li>
+    <?php
+    if($contact_link)
+        {
+        ?>
+        <li>
+            <a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['contactus']; ?></a>
+        </li>
+        <?php
+        }
+        ?>
+    </ul>
+    <?php
 
-
+    return true;
+    }
