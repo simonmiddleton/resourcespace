@@ -1385,8 +1385,8 @@ a.Enabled, a:visited.Enabled {
     display: none;
 }
 
-.lockedQuestion .fieldset, .lockedQuestion table, .lockedQuestion input, .lockedQuestion select, .lockedQuestion textarea{
-   opacity: 0.6;
+.lockedQuestion .fieldset, .lockedQuestion table, .lockedQuestion input, .lockedQuestion select, .lockedQuestion textarea, .lockedQuestion .keywordselected, .lockedQuestion .CategoryBox{
+   font-weight: bold;
 }
 
 .lock_icon {

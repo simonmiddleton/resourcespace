@@ -37,6 +37,10 @@ $collection_add = getvalescaped('collection_add', '');
 
 # Are we in upload review mode?
 $upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collection-" . $userref);
+$lastedited = getval('lastedited',0,true);
+$lockable_fields = $upload_review_lock_metadata && $upload_review_mode;
+$locked_fields = (getval("lockedfields","") != "" && $lastedited > 0) ? trim_array(explode(",",getval("lockedfields",""))) : array();
+
 if ($upload_review_mode && $ref=="")
   {
   # Set the collection and ref if not already set.
@@ -45,6 +49,7 @@ if ($upload_review_mode && $ref=="")
   $search_all_workflow_states_cache = $search_all_workflow_states;
   $usersearchfilter_cache = $usersearchfilter;
   $search_all_workflow_states = TRUE;
+  $check_edit_checksums = false;
   $usersearchfilter = "";
   $collection_contents=do_search("!collection" . $collection);
   # Revert save settings
@@ -155,25 +160,19 @@ if ($go!="")
 
 # Fetch resource data.
 $resource=get_resource_data($ref);
-if ($upload_review_mode)
+if ($lockable_fields && $lastedited > 0)
+    {
+    // Need to get details of the last resource edited so we can use these for this resource if field is locked
+    $lastresource = get_resource_data($lastedited,false);
+    $lockable_columns = array("resource_type","archive","access");
+    foreach($lockable_columns as $lockable_column)
         {
-        $check_edit_checksums = false;
-        // Need to get details of the last resource edited so we can use these for this resource if field is locked
-        $locked_fields = (getval("lockedfields","") != "") ? trim_array(explode(",",getval("lockedfields",""))) : array();
-        $lastedited = getval('lastedited',0,true);
-        if(is_numeric($lastedited) && $lastedited > 0)
+        if(in_array($lockable_column,$locked_fields))
             {
-            $lastresource=get_resource_data($lastedited,false);
-            $lockable_columns = array("resource_type","archive","access");
-            foreach($lockable_columns as $lockable_column)
-                {
-                if(in_array($lockable_column,$locked_fields))
-                    {
-                    $resource[$lockable_column] = $lastresource[$lockable_column];
-                    }
-                }
+            $resource[$lockable_column] = $lastresource[$lockable_column];
             }
         }
+    }
 
 # Allow to specify resource type from url for new resources
 $resource_type=getval("resource_type","");
@@ -524,7 +523,7 @@ include "../include/header.php";
 ?>
 <script>
 <?php
-if ($upload_review_mode)
+if ($lockable_fields)
         {
         echo "lockedfields = " . (count($locked_fields) > 0 ? json_encode($locked_fields) : "new Array()") . ";";
         }?>
@@ -999,9 +998,9 @@ if(!$is_template && $show_required_field_label)
 if(!$multiple)
     {
     ?>
-    <div class="Question <?php if($upload_review_mode && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
+    <div class="Question <?php if($lockable_fields && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
         <label for="resourcetype"><?php echo $lang["resourcetype"] . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
-        if ($upload_review_mode && $upload_review_lock_metadata)
+        if ($lockable_fields)
             {
             renderLockButton('resource_type', $locked_fields);
             }?>
@@ -1242,7 +1241,7 @@ if('' != getval('metadatatemplate', ''))
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
 $all_selected_nodes = get_resource_nodes($use);
 
-if ($upload_review_mode && count($locked_fields) > 0 )
+if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
         {
         // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
         foreach($locked_fields as $locked_field)
@@ -1544,10 +1543,10 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
          <div class="Question" id="editmultiple_status"><input name="editthis_status" id="editthis_status" value="yes" type="checkbox" onClick="var q=document.getElementById('question_status');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="editthis_status_label" for="editthis<?php echo $n?>"><?php echo $lang["status"]?></label></div>
          <?php
          } ?>
-      <div class="Question <?php if($upload_review_mode && in_array("archive",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+      <div class="Question <?php if($lockable_fields && in_array("archive",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
          <label for="status">
          <?php echo $lang["status"];
-         if ($upload_review_mode && $upload_review_lock_metadata)
+         if ($lockable_fields)
             {
             renderLockButton('archive', $locked_fields);
             }?>
@@ -1595,10 +1594,10 @@ else
 {
    if ($multiple) { ?><div class="Question"><input name="editthis_access" id="editthis_access" value="yes" type="checkbox" onClick="var q=document.getElementById('question_access');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis<?php echo $n?>"><?php echo $lang["access"]?></label></div><?php } ?>
 
-   <div class="Question <?php if($upload_review_mode && in_array("access",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('access',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+   <div class="Question <?php if($lockable_fields && in_array("access",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('access',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
       <label for="access">
       <?php echo $lang["access"];
-      if ($upload_review_mode && $upload_review_lock_metadata)
+      if ($lockable_fields)
             {
             renderLockButton('access', $locked_fields);
             }
@@ -1689,16 +1688,24 @@ else
     {
        if ($multiple) { ?><div class="Question"><input name="editthis_related" id="editthis_related" value="yes" type="checkbox" onClick="var q=document.getElementById('question_related');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_related"><?php echo $lang["relatedresources"]?></label></div><?php } ?>
 
-       <div class="Question" id="question_related" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
-          <label for="related"><?php echo $lang["relatedresources"]?></label><?php
+       <div class="Question<?php if($lockable_fields && in_array("related_resources",$locked_fields)){echo " lockedQuestion ";} ?>" id="question_related" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
+          <label for="related"><?php echo $lang["relatedresources"];
+           if ($lockable_fields)
+            {
+            renderLockButton('related_resources', $locked_fields);
+            }?>
+           </label><?php
 
         # Autosave display
           if ($edit_autosave  || $ctrls_to_save) { ?><div class="AutoSaveStatus" id="AutoSaveStatusRelated" style="display:none;"></div><?php } ?>
 
           <textarea class="stdwidth" rows=3 cols=50 name="related" id="related"<?php
           if ($edit_autosave) {?>onChange="AutoSave('Related');"<?php } ?>><?php
+          
+          $relatedref = ($lockable_fields && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
+          $related = get_related_resources($relatedref);
 
-          echo ((getval("resetform","")!="")?"":join(", ",get_related_resources($ref)))?></textarea>
+          echo ((getval("resetform","")!="")?"":join(", ", $related))?></textarea>
 
           <div class="clearerleft"> </div>
           </div><?php
