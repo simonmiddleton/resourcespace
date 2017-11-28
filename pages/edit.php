@@ -645,13 +645,28 @@ jQuery(document).bind('keydown',function (e)
  }
 })
 
-function AutoSave(field)
+
+function AutoSave(field, stop_recurrence)
 	{
-	if (preventautosave)
-		{   
-		return false;
-		} 
-		
+    stop_recurrence = typeof stop_recurrence === 'undefined' ? false : stop_recurrence;
+
+    // If user has edited a field (autosave on) but then clicks straight on Save, this will prevent double save which can
+    // lead to edit conflicts.
+    if(!preventautosave && !stop_recurrence)
+        {
+        setTimeout(function()
+            {
+            AutoSave(field, true);
+            }, 150);
+
+        return false;
+        }
+
+    if(preventautosave)
+        {
+        return false;
+        }
+
 	jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
 	jQuery('#AutoSaveStatus' + field).show();
 	jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
@@ -759,7 +774,13 @@ if(0 > $ref)
     }
 ?>
 
-<form method="post" action="<?php echo $form_action; ?>" id="mainform" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+<form method="post"
+      action="<?php echo $form_action; ?>"
+      id="mainform"
+      onsubmit="
+        preventautosave = true;
+        return <?php echo ($modal ? 'Modal' : 'CentralSpace'); ?>Post(this, true);
+      ">
 <input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
    <div class="BasicsBox">
     
