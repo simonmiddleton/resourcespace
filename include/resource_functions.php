@@ -464,8 +464,37 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					}
 				
 				} // End of if not a fixed list (node) field
-			
-			if (!(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES)) && str_replace("\r\n","\n",$fields[$n]["value"])!== str_replace("\r\n","\n",unescape($val)))
+
+            // Check required fields have been entered.
+            $exemptfields = getvalescaped('exemptfields', '');
+            $exemptfields = explode(',', $exemptfields);
+            if(
+                $fields[$n]['required'] == 1
+                // Not exempt
+                && !in_array($fields[$n]['ref'], $exemptfields)
+                && (
+                    // No nodes submitted
+                    (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0)
+                    // No value submitted
+                    || (!in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && strip_leading_comma($val) == '')
+                )
+                && (
+                    // Existing resource, but not in upload review mode with blank template and existing value (e.g. for resource default)
+                    ($ref > 0 && !($upload_review_mode && $blank_edit_template && $fields[$n]['value'] != ''))
+                    // Template with blank template and existing value
+                    || ($ref < 0 && !($blank_edit_template && $fields[$n]["value"] !== ''))
+                )
+            )
+                {
+                $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
+                continue;
+                }
+
+            // If all good so far, then save the data
+			if(
+                !in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES)
+                && str_replace("\r\n", "\n", $fields[$n]['value']) !== str_replace("\r\n", "\n", unescape($val))
+            )
 				{
 				$oldval=$fields[$n]["value"];
 
@@ -526,32 +555,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					eval($fields[$n]["onchange_macro"]);    
 					}				
 				}
-			    
-			# Check required fields have been entered.
-			$exemptfields = getvalescaped("exemptfields","");
-			$exemptfields = explode(",",$exemptfields);
-			if ($fields[$n]["required"] == 1
-                &&
-                    !in_array($fields[$n]["ref"],$exemptfields) // Not exempt
-                &&
-                    (
-                    (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0) // No nodes submitted
-                    ||
-                    (!in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && '' == strip_leading_comma($val)) // No value submitted
-                    )
-                &&
-                    (
-                    ($ref > 0 && !($upload_review_mode && $blank_edit_template && $fields[$n]["value"] != "")) // Existing resource, but not in upload review mode with blank template and existing value (e.g. for resource default)
-                     ||
-                     ($ref < 0 && !($blank_edit_template && $fields[$n]["value"] !== "")) // Template with blank template and existing value
-                    )
-                )
-				{
-				global $lang;
-				$errors[$fields[$n]["ref"]]=i18n_get_translated($fields[$n]["title"]).": ".$lang["requiredfield"];
-				}
 			}
-		}	   
+		}
+
+    if(count($errors) > 0)
+        {
+        return $errors;
+        }
         
         if ($autosave_field=="")
             {
