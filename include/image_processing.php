@@ -2619,8 +2619,9 @@ function extract_icc($infile) {
    //$outfile=get_resource_path($ref,true,"",false,$extension.".icc");
    //new, more flexible approach: we will just create a file for anything the caller hands to us.
    //this makes things work with alternatives, the deepzoom plugin, etc.
-   $outfile = get_resource_path($infile,true,"",false,".icc");
-   
+   $path_parts = pathinfo($infile);
+   $outfile = $path_parts['dirname'] . '/' . $path_parts['filename'] .'.'. $path_parts['extension'] .'.icc';
+  
    if (file_exists($outfile)){
       // extracted profile already existed. We'll remove it and start over
       unlink($outfile);
