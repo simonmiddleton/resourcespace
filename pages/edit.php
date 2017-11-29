@@ -1353,7 +1353,7 @@ for ($n=0;$n<count($fields);$n++)
 }
  
 # "copy data from" feature
-if ($display_any_fields && $enable_copy_data_from && !checkperm("F*") && !$upload_review_mode)
+if ($display_any_fields && $enable_copy_data_from && !$upload_review_mode)
     { ?>
  <div class="Question" id="question_copyfrom">
     <label for="copyfrom"><?php echo $lang["batchcopyfrom"]?></label>
