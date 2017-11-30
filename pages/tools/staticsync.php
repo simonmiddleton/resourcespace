@@ -160,7 +160,8 @@ function ProcessFolder($folder)
            $staticsync_defaultstate, $additional_archive_states, $staticsync_extension_mapping_append_values,
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
            $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
-           $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field;
+           $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field,
+           $staticsync_whitelist_folders;
     
     $collection = 0;
     $treeprocessed=false;
@@ -171,13 +172,15 @@ function ProcessFolder($folder)
     $dh = opendir($folder);
     while (($file = readdir($dh)) !== false)
         {
-        if ( $file == '.' || $file == '..')
+        if($file == '.' || $file == '..')
             {
             continue;
             }
-        $filetype  = filetype($folder . '/' . $file);
-        $fullpath  = $folder . '/' . $file;
-        $shortpath = str_replace($syncdir . '/', '', $fullpath);
+
+        $filetype        = filetype($folder . '/' . $file);
+        $fullpath        = $folder . '/' . $file;
+        $shortpath       = str_replace($syncdir . '/', '', $fullpath);
+        $shortpath_parts = explode('/', $shortpath);
         
         if(isset($staticsync_alternative_file_text) && strpos($file,$staticsync_alternative_file_text)!==false)
             {
@@ -205,15 +208,28 @@ function ProcessFolder($folder)
             array_pop($path_parts);
             $treenodes=touch_category_tree_level($path_parts);
             $treeprocessed=true;
-            }   
+            }
 
         # -----FOLDERS-------------
-        if ((($filetype == "dir") || $filetype == "link") && 
-            (strpos($nogo, "[$file]") === false) && 
-            (strpos($file, $staticsync_alternatives_suffix) === false))
+        if(
+            ($filetype == 'dir' || $filetype == 'link')
+            && count($staticsync_whitelist_folders) > 0
+            && !in_array($file, $staticsync_whitelist_folders)
+            && count(array_intersect($staticsync_whitelist_folders, $shortpath_parts)) == 0
+        )
             {
-            # Recurse
-            ProcessFolder($folder . "/" . $file);
+            // Folders which are not whitelisted or underneath a whitelisted folder will not be processed any further
+            continue;
+            }
+
+        if(
+            ($filetype == 'dir' || $filetype == 'link')
+            && strpos($nogo, "[{$file}]") === false
+            && strpos($file, $staticsync_alternatives_suffix) === false
+        )
+            {
+            // Recurse
+            ProcessFolder("{$folder}/{$file}");
             }
 
         # -------FILES---------------

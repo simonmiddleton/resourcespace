@@ -2079,6 +2079,15 @@ $paypal_url="https://www.paypal.com/cgi-bin/webscr";
 # ------------------------------------------------------------------------------------------------------------------
 $syncdir="/var/www/r2000/accounted"; # The sync folder
 $nogo="[folder1]"; # A list of folders to ignore within the sign folder.
+
+/*
+Allow the system to specify the exact folders under the sync directory that need to be synced/ingested in ResourceSpace.
+Any subfolder that will match any of the folders in the $staticsync_whitelist_folders array will be synced.
+Note: When using $staticsync_whitelist_folders and $nogo configs together, ResourceSpace is going to first check the
+folder is in the $staticsync_whitelist_folders folders and then look in the $nogo folders.
+*/
+$staticsync_whitelist_folders = array();
+
 # Maximum number of files to process per execution of staticsync.php
 $staticsync_max_files = 10000;
 $staticsync_autotheme=true; # Automatically create themes based on the first and second levels of the sync folder structure.
