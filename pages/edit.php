@@ -546,7 +546,7 @@ jQuery(document).ready(function()
             event.preventDefault();
             if(jQuery('#mainform'))
             {
-               jQuery('.AutoSaveStatus').html('<?php echo $lang["saving"] ?>');
+               jQuery('.AutoSaveStatus').html('<?php echo urlencode($lang["saving"]) ?>');
                jQuery('.AutoSaveStatus').show();
                jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true',jQuery('#mainform').serialize(),
 
@@ -555,7 +555,7 @@ jQuery(document).ready(function()
 				  saveresult=JSON.parse(data)
 				  if (saveresult['result']=="SAVED")
 					{
-                    jQuery('.AutoSaveStatus').html('<?php echo $lang["saved"] ?>');
+                    jQuery('.AutoSaveStatus').html('<?php echo urlencode($lang["saved"]) ?>');
                     jQuery('.AutoSaveStatus').fadeOut('slow');
 					if (typeof(saveresult['checksums']) !== undefined)
 						{
@@ -574,7 +574,7 @@ jQuery(document).ready(function()
 					}
 				  else
 					{
-					saveerrors = '<?php echo $lang["error_generic"]; ?>';
+					saveerrors = '<?php echo urlencode($lang["error_generic"]); ?>';
 					if (typeof(saveresult['errors']) !== undefined)
 						{
 						saveerrors = "";
@@ -583,9 +583,9 @@ jQuery(document).ready(function()
 							saveerrors += saveresult['errors'][i] + "<br />";
 							}
 						}
-					jQuery('.AutoSaveStatus').html('<?php echo $lang["save-error"] ?>');
+					jQuery('.AutoSaveStatus').html('<?php echo urlencode($lang["save-error"]) ?>');
 					jQuery('.AutoSaveStatus').fadeOut('slow');
-					styledalert('<?php echo $lang["error"] ?>',saveerrors,450);
+					styledalert('<?php echo urlencode($lang["error"]) ?>',saveerrors,450);
 					}
                });
             }
@@ -667,7 +667,7 @@ function AutoSave(field, stop_recurrence)
         return false;
         }
 
-	jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
+	jQuery('#AutoSaveStatus' + field).html('<?php echo urlencode($lang["saving"]) ?>');
 	jQuery('#AutoSaveStatus' + field).show();
 	jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
 		function(data)
@@ -675,7 +675,7 @@ function AutoSave(field, stop_recurrence)
 			saveresult=JSON.parse(data);
 			if (saveresult['result']=="SAVED")
 				{
-				jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saved"] ?>');
+				jQuery('#AutoSaveStatus' + field).html('<?php echo urlencode($lang["saved"]) ?>');
 				jQuery('#AutoSaveStatus' + field).fadeOut('slow');
 				if (typeof(saveresult['checksums']) !== undefined)
 					{
@@ -694,7 +694,7 @@ function AutoSave(field, stop_recurrence)
 				}
 			else
 				{   
-				saveerrors = '<?php echo $lang["error_generic"]; ?>';
+				saveerrors = '<?php echo urlencode($lang["error_generic"]); ?>';
 				if (typeof(saveresult['errors']) !== undefined)
 					{
 					saveerrors = "";
@@ -703,9 +703,9 @@ function AutoSave(field, stop_recurrence)
 						saveerrors += saveresult['errors'][i] + "<br />";
 						}
 					}
-                jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["save-error"] ?>');
+                jQuery('#AutoSaveStatus' + field).html('<?php echo urlencode($lang["save-error"]) ?>');
 				jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-				styledalert('<?php echo $lang["error"] ?>',saveerrors);
+				styledalert('<?php echo urlencode($lang["error"]) ?>',saveerrors);
 				}
 			});
 	}
