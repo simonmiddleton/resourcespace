@@ -592,14 +592,20 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
     if(0 < $promoted_image)
         {
         $promoted_image_data = get_resource_data($promoted_image);
-
+		
         if(false !== $promoted_image_data)
             {
             $preview_resource = $promoted_image_data;
             }
-
+        
+		$preview_resource_mod=hook('modify_promoted_image_preview_resource_data','',array($promoted_image));
+		if($preview_resource_mod!==false)
+			{
+			$preview_resource=$preview_resource_mod;
+			}
+		
         $no_preview = false;
-
+		
         $preview_path = get_resource_path($preview_resource['ref'], true, 'pre', false, 'jpg', -1, 1, false);
         if(file_exists($preview_path))
             {

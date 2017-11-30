@@ -217,10 +217,11 @@ if($submitdashtile)
 
 
 		}
-
+	
 	/* SAVE SUCCESSFUL? */
 	if(!$error)
 		{
+		hook('before_dash_tile_save_redirect');
 		redirect($baseurl);
 		exit();
 		}
@@ -583,7 +584,7 @@ if('' != $tile_type)
 		}
 
     // Show promoted resource selector
-    if($promoted_resource && allowPromotedResources($tile_type))
+    if($promoted_resource && allowPromotedResources($tile_type) && !hook('replace_promoted_resource_selector'))
         {
         $resources = array();
 

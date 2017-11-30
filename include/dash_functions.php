@@ -119,6 +119,7 @@ function delete_dash_tile($tile,$cascade=TRUE,$force=FALSE)
 		sql_query("DELETE FROM user_dash_tile WHERE dash_tile='".$tile."'");
 		sql_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = '{$tile}'");
 		}
+	hook('after_delete_dash_tile', '', array($tile, $cascade , $force));
 	}
 
 /*
