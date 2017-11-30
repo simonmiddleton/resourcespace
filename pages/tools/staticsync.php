@@ -268,7 +268,7 @@ function ProcessFolder($folder)
                     
                     if ($staticsync_folder_structure)
                         {
-                        for ($x=0;$x<count($e)-1;$x++)
+                        for ($x=0;$x<count($e)-2;$x++)
                             {
                             if ($x != 0)
                                 {
