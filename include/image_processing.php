@@ -837,7 +837,7 @@ function extract_exif_comment($ref,$extension="")
 			}
 			
 		# Try IPTC headers
-		$size = getimagesize($image, $info);
+		$size = @getimagesize($image, $info);
 		if (isset($info["APP13"]))
 			{
 			$iptc = iptcparse($info["APP13"]);
