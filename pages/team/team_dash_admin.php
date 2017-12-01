@@ -7,13 +7,19 @@ include "../../include/dash_functions.php";
 include '../../include/render_functions.php';
 
 
-
-$show_usergroups_dash = ('true' == getvalescaped('show_usergroups_dash', '') ? true : false);
-if($show_usergroups_dash)
+$user_groups = array(ucfirst($lang['all_users']));
+if(checkperm('h') && checkperm('hdt_ug'))
     {
-    $user_groups         = get_usergroups(false, '', true);
-    // Get selected user group or default to first user group found
-    $selected_user_group = getvalescaped('selected_user_group', key($user_groups), true);
+    $user_groups += get_usergroups(false, '', true);
+    }
+
+// Get selected user group or default to all users dash tiles
+$selected_user_group = getvalescaped('selected_user_group', key($user_groups), true);
+
+$show_usergroups_dash = ('true' == getval('show_usergroups_dash', '') ? true : false);
+if($selected_user_group == 0)
+    {
+    $show_usergroups_dash = false;
     }
 
 if(getvalescaped("quicksave",FALSE))
@@ -79,50 +85,38 @@ if(getvalescaped("quicksave",FALSE))
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
-    <h1><?php echo ($show_usergroups_dash ? $lang['manage_user_group_dash_tiles'] : $lang['managedefaultdash']); ?></h1>
+    <h1><?php echo $lang['manage_dash_tiles']; ?></h1>
     <p>
         <a href="<?php echo $baseurl_short?>pages/team/team_home.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoteamhome']; ?></a>
+    </p>
+<?php
+$href = "{$baseurl_short}pages/team/team_dash_tile.php";
+if($show_usergroups_dash)
+    {
+    $href .= "?show_usergroups_dash=true&selected_user_group={$selected_user_group}";
+    }
+    ?>
+    <p>
+        <a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET; ?><?php echo $lang['view_tiles']; ?></a>
     </p>
 <?php
 if(!$show_usergroups_dash)
     {
     ?>
     <p>
-        <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['managedefaultdash']; ?></a>
-    </p>
-    <p>
         <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile_special.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang['specialdashtiles']; ?></a>
     </p>
     <?php
     }
-else
-    {
-    // Show link to re-order user group dash tiles
-    $href = "{$baseurl_short}pages/team/team_dash_tile.php";
-    if($show_usergroups_dash)
-        {
-        $href .= "?show_usergroups_dash=true&selected_user_group={$selected_user_group}";
-        }
-    ?>
-    <p>
-        <a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['manage_user_group_dash_tiles']; ?></a>
-    </p>
-    <?php
-    }
 
-if($show_usergroups_dash)
-    {
-    render_dropdown_question($lang['property-user_group'], 'select_user_group', $user_groups, $selected_user_group);
-    ?>
-    <script>
-        jQuery('#select_user_group').change(function(){
-            CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php?show_usergroups_dash=true&selected_user_group=' + jQuery(this[this.selectedIndex]).val(), true);
-        });
-    </script>
-    <?php
-    }
-    ?>
-
+render_dropdown_question(
+    $lang['property-user_group'],
+    'select_user_group',
+    $user_groups,
+    $selected_user_group,
+    "onchange=\"CentralSpaceLoad('{$baseurl_short}pages/team/team_dash_admin.php?show_usergroups_dash=true&selected_user_group=' + jQuery(this[this.selectedIndex]).val(), true);\""
+);
+?>
     <form class="Listview">
 	<input type="hidden" name="submit" value="true" />
 	<table class="ListviewStyle">

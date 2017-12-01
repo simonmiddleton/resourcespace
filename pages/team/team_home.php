@@ -108,18 +108,19 @@ include "../../include/header.php";
         <?php
         }
 
-    if($home_dash && ((checkperm('h') && !checkperm('hdta')) || (checkperm('dta') && !checkperm('h'))))
+    // Manage dash tiles
+    if(
+        $home_dash
+        && (
+            // All user tiles
+            ((checkperm('h') && !checkperm('hdta')) || (checkperm('dta') && !checkperm('h')))
+            // User group tiles
+            || (checkperm('h') && checkperm('hdt_ug'))
+        )
+    )
         {
         ?>
-        <li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['managedefaultdash']; ?></a></li>
-        <?php
-        }
-
-    // Manage user group dash tiles
-    if($home_dash && checkperm('h') && checkperm('hdt_ug'))
-        {
-        ?>
-        <li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php?show_usergroups_dash=true" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['manage_user_group_dash_tiles']; ?></a></li>
+        <li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/team/team_dash_admin.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['manage_dash_tiles']; ?></a></li>
         <?php
         }
 

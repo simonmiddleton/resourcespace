@@ -2318,7 +2318,7 @@ $lang["error-missingtileheightorwidth"]="Missing tile height or width";
 $lang["dashtileimage"]="Dash tile image";
 $lang["dashtilesmalldevice"]="Required drag functionality is not available on devices with a small screen";
 $lang["dashtileshow"]="Show tile";
-$lang["dasheditmodifytiles"]="Edit / modify dash tiles available";
+$lang['dasheditmodifytiles'] = 'View list';
 $lang['confirmdeleteconfigtile']="This tile is controlled by configuration option(s). To permanently delete this tile, turn off the relevant options and then perform this action again.";
 $lang["error-dashactionmissing"]="No action or invalid data was submitted to this page. No tile template available to build. <br />Please return to this page from a suitable creation / edit link";
 $lang["dasheditchangeall_users"]="Turning off this setting will not remove this tile from all dashes, you must do this from manage all user tiles. However, new users will no longer receive this tile on their dash.";
@@ -2326,6 +2326,8 @@ $lang["dashtilevisitlink"]="Visit target link";
 $lang["alluserprebuiltdashtiles"]="Create pre-constructed dash tiles (added for all users)";
 $lang["manageowndashinto"]="Manage dash tiles available for your dash. You can add / remove or edit tiles on your dash if you have the permissions to do so.";
 $lang['manage_all_user_dash_tiles_note'] = 'Note: Tiles shown with a red border are hidden to the users. Admins see them as there are other tiles available but hidden from these users';
+$lang['manage_dash_tiles'] = 'Manage dash tiles';
+$lang['view_tiles'] = 'View tiles';
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
