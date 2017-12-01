@@ -83,7 +83,12 @@ if(getval("submit","") != "")
     
     // Get all existing nodes
     $existing_nodes = get_nodes($migrate_field, NULL, TRUE);
-    $newnodecounter = max(array_column($existing_nodes,"ref")) + 1;
+	if($dryrun)
+		{
+		// Set start value for dummy node refs 
+		$newnoderef = (count($existing_nodes) > 0) ? max(array_column($existing_nodes,"ref")) + 1: 0;
+		}
+		
     foreach($resdata as $resdata_row)
         {
 		
@@ -115,16 +120,19 @@ if(getval("submit","") != "")
                 if(!$dryrun)
 					{
 					$newnode = set_node(NULL, $migrate_field, escape_check($data_value), NULL, '',true);
+			        $log[] = " - Created new node. ref:" . $newnode ;
 					$nodes_to_add[] = $newnode;
-					$existing_nodes[$newnode]["ref"] = $newnodecounter;
-					$existing_nodes[$newnode]["name"] = $data_value;
+					$newnodecounter = count($existing_nodes);
+					$existing_nodes[$newnodecounter]["ref"] = $newnode;
+					$existing_nodes[$newnodecounter]["name"] = $data_value;
 					}
 				else 
 					{
-					$newnode = $newnodecounter;
-					$existing_nodes[$newnodecounter]["ref"] = $newnodecounter;
+					$newnode = $newnoderef;
+					$newnodecounter = count($existing_nodes);
+					$existing_nodes[$newnodecounter]["ref"] = $newnoderef;
 					$existing_nodes[$newnodecounter]["name"] = $data_value;
-					$newnodecounter++;					
+					$newnoderef++;							
 					}
                 }
             }            
