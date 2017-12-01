@@ -2077,7 +2077,7 @@ $paypal_url="https://www.paypal.com/cgi-bin/webscr";
 # StaticSync (staticsync.php)
 # The ability to synchronise ResourceSpace with a separate and stand-alone filestore.
 # ------------------------------------------------------------------------------------------------------------------
-$syncdir="/var/www/r2000/accounted"; # The sync folder
+$syncdir="/dummy/path/to/syncfolder"; # The sync folder
 $nogo="[folder1]"; # A list of folders to ignore within the sign folder.
 
 /*
