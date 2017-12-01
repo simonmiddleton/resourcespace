@@ -78,7 +78,7 @@ include "../include/header.php";
 	</div>
 	<?php
 	
-	include 'collection_theme_select.php';
+	include __DIR__ . '/../include/collection_theme_select.php';
 	?>	
 	
 	<div class="QuestionSubmit">

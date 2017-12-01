@@ -163,7 +163,7 @@ include "../include/header.php";
 	
 	if ($collection['public']==1)
 		{
-		include 'collection_theme_select.php';
+		include __DIR__ . '/../include/collection_theme_select.php';
 		}
 		
 	global $home_dash,$anonymous_login,$username;
