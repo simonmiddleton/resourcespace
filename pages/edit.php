@@ -1120,21 +1120,30 @@ $lastrt=-1;
 
 if(isset($metadata_template_resource_type) && !$multiple)
     {
-    # Show metadata templates here
-    $metadata_template = getval('metadatatemplate', 0, true);
+    // Show metadata templates here
+    $metadatatemplate = getvalescaped(
+    	'metadatatemplate',
+    	($metadata_template_default_option == 0 ? 0 : $metadata_template_default_option),
+    	true
+    );
+
+    $templates = get_metadata_templates();
+
+    $first_option_conditions = ($metadata_template_default_option == 0 && $metadatatemplate == 0);
     ?>
     <div class="Question" id="question_metadatatemplate">
         <label for="metadatatemplate"><?php echo $lang['usemetadatatemplate']; ?></label>
         <select name="metadatatemplate" class="stdwidth" onchange="MetadataTemplateOptionChanged(jQuery(this).val());">
-            <option value=""><?php echo $metadata_template == 0 ? $lang['select'] : $lang['undometadatatemplate']; ?></option>
+            <option value=""<?php echo $first_option_conditions ? ' selected' : ''; ?>><?php echo $first_option_conditions ? $lang['select'] : $lang['undometadatatemplate']; ?></option>
         <?php
-        $templates = get_metadata_templates();
-
         foreach($templates as $template)
             {
             $template_selected = '';
 
-            if($metadata_template > 0 && $template['ref'] == $metadata_template)
+            if(
+                ($metadatatemplate == 0 && $metadata_template_default_option == $template['ref'])
+                || ($metadatatemplate > 0 && $template['ref'] == $metadatatemplate)
+            )
                 {
                 $template_selected = ' selected';
                 }
@@ -1247,11 +1256,12 @@ if (getval("copyfrom","")!="")
     }
   }
 
-if('' != getval('metadatatemplate', ''))
+if(isset($metadata_template_resource_type) && $metadatatemplate != '')
     {
-    $use             = getvalescaped('metadatatemplate', '');
+    $use             = $metadatatemplate;
     $original_fields = get_resource_field_data($ref, $multiple, true, -1, '', $tabs_on_edit);
     $original_nodes  = get_resource_nodes($ref);
+
     if($ref < 0 || $upload_review_mode)
         {
         copyAllDataToResource($use, $ref);

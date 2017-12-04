@@ -2383,6 +2383,9 @@ $debug_log=false;
 # The ability to set that a different field should be used for 'title' for metadata templates, so that the original title field can still be used for template data
 # $metadata_template_title_field=10;
 
+// Ability to default metadata templates to a particular resource ID
+$metadata_template_default_option = 0;
+
 # enable a list of collections that a resource belongs to, on the view page
 $view_resource_collections=false;
 
