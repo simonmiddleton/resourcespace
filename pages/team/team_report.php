@@ -11,7 +11,7 @@ include "../../include/authenticate.php";if (getvalescaped('unsubscribe', '') ==
 include "../../include/reporting_functions.php";
 include_once '../../include/render_functions.php';
 set_time_limit(0);
-$report=getvalescaped("report","");
+$report=getvalescaped("ref","");
 $period=getvalescaped("period",$reporting_periods_default[0]);
 $period_init=$period;
 
