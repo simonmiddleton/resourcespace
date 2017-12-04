@@ -326,9 +326,9 @@ function HookSimplesamlAllCheckuserloggedin()
 */
 function HookSimplesamlAllReplaceheadernav1anon()
     {
-    global $baseurl, $lang, $anon_login_modal, $contact_link, $simplesaml_prefer_standard_login;
+    global $baseurl, $lang, $anon_login_modal, $contact_link, $simplesaml_prefer_standard_login, $simplesaml_site_block;
 
-    if($simplesaml_prefer_standard_login)
+    if($simplesaml_prefer_standard_login || $simplesaml_site_block)
         {
         return false;
         }
