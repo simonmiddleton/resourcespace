@@ -13,7 +13,7 @@ $alternative = getvalescaped('alternative','');
 $allowed_extensions=get_allowed_extensions_by_type($resource_type);
 
 # Create a new collection?
-if ($collection_add==-1)
+if ($collection_add=="new")
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("ymdHis");} # Do not translate this string, the collection name is translated when displayed!

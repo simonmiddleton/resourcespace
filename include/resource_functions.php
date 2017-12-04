@@ -2181,7 +2181,7 @@ function copy_resource($from,$resource_type=-1)
     copy_resource_nodes($from,$to);
 	
 	# Copy relationships
-	sql_query("insert into resource_related(resource,related) select '$to',related from resource_related where resource='$from'");
+    copyRelatedResources($from, $to);
 
 	# Copy access
 	sql_query("insert into resource_custom_access(resource,usergroup,access) select '$to',usergroup,access from resource_custom_access where resource='$from'");
@@ -3251,9 +3251,6 @@ function save_field_options($field)
 			# Construct a new options value by creating a new array replacing the item in position $n
 			$newoptions=array_merge(array_slice($options,0,$n),array($new),array_slice($options,$n+1));
 
-			# Update the options field.
-			//sql_query("update resource_type_field set options='" . escape_check(join(", ",$newoptions)) . "' where ref='$field'");
-
             foreach ($newoptions as $no)
                 {
                 set_node(null,$field,$no,null,null);
@@ -3301,8 +3298,6 @@ function save_field_options($field)
 			# Construct a new options value by creating a new array ommitting the item in position $n
 			$new=array_merge(array_slice($options,0,$n),array_slice($options,$n+1));
 			
-			//sql_query("update resource_type_field set options='" . escape_check(join(", ",$new)) . "' where ref='$field'");
-
             foreach ($new as $new_option)
                 {
                 set_node(null,$field,escape_check(trim($new_option)),null,null);
@@ -3360,7 +3355,6 @@ function get_keyword_from_option($option)
 	
 function add_field_option($field,$option)
 	{
-	//sql_query("update resource_type_field set options=concat(ifnull(options,''),', " . escape_check($option) . "') where ref='$field'");
     set_node(null,$field,escape_check(trim($option)),null,null);
 	return true;
 	}
@@ -4805,7 +4799,6 @@ function copyAllDataToResource($from, $to)
     {
     copyResourceDataValues($from, $to);
     copy_resource_nodes($from, $to);
-
     return;
     }
 
@@ -4855,3 +4848,255 @@ function copyResourceDataValues($from, $to)
 
     return;
     }
+    
+/**
+* Update resource data for 'locked' fields from last edited resource. Used for upload_then_edit
+* 
+* @uses get_resource_data()
+* @uses update_resource_type()
+* @uses update_archive_status()
+* @uses resource_log()
+* @uses checkperm()
+* @uses escape_check()
+* @uses sql_query()
+* @uses checkperm()
+* 
+* @param array $resource - existing resource data
+* @param array $locked_fields - array of locked data columns (may also include field ids which are handled by copy_locked_fields) 
+* @param integer $lastedited   - last edited resource to copy data from
+* @param boolean $save - if true, save data to database (as opposed to just updating the $resource array e.g. for edit page)
+* 
+* @return array $resource - modified resource data array 
+*/ 
+function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
+    {
+    global $custom_access;
+    
+    debug("copy_locked_data resource " . $resource["ref"] . " lastedited: " . $lastedited);
+    
+    // Get details of the last resource edited and use these for this resource if field is 'locked'
+    $lastresource = get_resource_data($lastedited,false);
+    $lockable_columns = array("resource_type","archive","access");
+    
+    if(in_array("resource_type",$locked_fields) && $resource["resource_type"] != $lastresource["resource_type"])
+        {
+        $resource["resource_type"] = $lastresource["resource_type"];
+        if ($save && !checkperm("XU" . $lastresource["resource_type"]))
+            {
+            update_resource_type($resource["ref"],$lastresource["resource_type"]);   
+            }
+        }
+    
+    if(in_array("archive",$locked_fields) && $resource["archive"] != $lastresource["archive"])
+        {
+        $resource["archive"] = $lastresource["archive"];
+        if ($save && checkperm("e" . $lastresource["archive"]))
+            {
+            update_archive_status($resource["ref"],$lastresource["archive"]);
+            }
+        }
+        
+    if(in_array("access",$locked_fields) && $resource["access"] != $lastresource["access"])
+        {
+        $newaccess = $lastresource["access"];
+        if ($save)
+            {
+            $ea[0]=!checkperm('ea0');
+            $ea[1]=!checkperm('ea1');
+            $ea[2]=checkperm("v")?(!checkperm('ea2')?true:false):false;
+            $ea[3]=$custom_access?!checkperm('ea3'):false;
+            if($ea[$newaccess])
+                {
+                sql_query("update resource set access='" . $newaccess . "' where ref=' " . $resource["ref"] . "'");
+				
+                if ($newaccess==3)
+                        {
+                        # Copy custom access
+                        sql_query("insert into resource_custom_access (resource,usergroup,user,access) select '" . $resource["ref"] . "', usergroup,user,access from resource_custom_access where resource = '" . $lastresource["ref"] . "'");
+		                }
+				resource_log($resource["ref"],"a",0,"",$resource["access"],$newaccess);
+				}
+			}
+        $resource["access"] = $newaccess;
+        }
+        
+    return $resource;
+    }
+    
+/**
+* Update resource metadata for 'locked' fields from last edited resource.
+* NB: $fields and $all_selected_nodes are passed by reference
+* 
+* @uses get_resource_type_field()
+* @uses get_resource_nodes() 
+* @uses add_resource_nodes()
+* @uses delete_resource_nodes()* 
+* @uses get_resource_field_data()
+* @uses update_field()
+* @uses escape_check()
+* @uses sql_query()
+* 
+* @param integer $ref - resource id being updated
+* @param array $fields - resource $fields array
+* @param array $all_selected_nodes - array of existing resource nodes
+* @param array $locked_fields - array of locked data columns (may also include  resource table columns  - handled by copy_locked_data) 
+* @param integer $lastedited   - last edited resource to copy data from
+* @param boolean $save - save data to database (as opposed to just updating the $fields array e.g. for edit page)
+* 
+* @return void
+*/     
+function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$lastedited, $save=false)
+    {
+    debug("copy_locked_data resource " . $ref . " lastedited: " . $lastedited);
+    global $FIXED_LIST_FIELD_TYPES, $tabs_on_edit;
+    foreach($locked_fields as $locked_field)
+            {
+            if(!is_numeric($locked_field))
+                {
+                // These are handled by copy_locked_data
+                continue;
+                }
+            
+            // Check if this field is listed in the $fields array - if resource type has changed it may not be present
+            $key = array_search($locked_field, array_column($fields, 'ref'));
+            if($key!==false)
+                {
+                $fieldtype = $fields[$key]["type"];
+                }    
+            else
+                {
+                $lockfieldinfo = get_resource_type_field($locked_field);
+                $fieldtype = $lockfieldinfo["type"];
+                }                
+            
+            if(in_array($fieldtype, $FIXED_LIST_FIELD_TYPES))
+                {
+                // Replace nodes for this field
+                $field_nodes = get_nodes($locked_field, NULL, $fieldtype == FIELD_TYPE_CATEGORY_TREE);
+                $field_node_refs = array_column($field_nodes,"ref");
+                $stripped_nodes = array_diff ($all_selected_nodes, $field_node_refs);
+                $locked_nodes = get_resource_nodes($lastedited, $locked_field);
+                $all_selected_nodes = array_merge($stripped_nodes, $locked_nodes);
+                if($save)
+                    {
+                    debug("- adding locked field nodes for resource " . $ref . ", field id: " . $locked_field);
+                    delete_resource_nodes($ref,$field_node_refs);
+                    if(count($locked_nodes) > 0)
+                        {
+                        add_resource_nodes($ref,$locked_nodes);
+                        }
+                    }
+                }
+            else
+                {
+                debug(" - checking field values for last resource " . $lastedited . " field id: " . $locked_field);
+                if(!isset($last_fields))
+                    {
+                    $last_fields = get_resource_field_data($lastedited,!hook("customgetresourceperms"),-1,"",$tabs_on_edit);
+                    }
+                
+                $addkey = array_search($locked_field, array_column($last_fields, 'ref'));
+                if($key!==false)
+                    {
+                    // Field is already present - just update the value
+                debug(" - updating field value for resource " . $lastedited . " field id: " . $locked_field);
+                    $fields[$key]["value"] = $last_fields[$addkey]["value"];
+                    }
+                else
+                    {
+                    // Add the field to the $fields array   
+                debug(" - adding field value for resource " . $lastedited . " field id:" . $locked_field);
+                    $fields[] = $last_fields[$addkey];
+                    }
+                if($save)
+                    {
+                    debug("- adding locked field value for resource " . $ref . ", field id: " . $locked_field);
+                    update_field($ref,$locked_field,$last_fields[$addkey]["value"]);
+                    }
+                }
+            }
+    }
+
+/**
+* Copy  related resources from one resource to another
+* 
+* @uses sql_query()
+* 
+* @param integer $from Resource we are copying related resources from
+* @param integer $ref  Resource we are copying related resources to
+* 
+* @return void
+*/    
+function copyRelatedResources($from, $to)
+    {
+	sql_query("insert into resource_related(resource,related) SELECT '$to',related FROM resource_related WHERE resource='$from' AND related <> '$to'");
+    }
+
+    
+function process_edit_form($ref, $resource)
+	{
+    global $multiple, $lang, $embedded_data_user_select, $embedded_data_user_select_fields, $data_only_resource_types, $check_edit_checksums, $uploadparams,
+    $resource_type_force_selection, $relate_on_upload, $enable_related_resources, $is_template, $upload_collection_name_required, $upload_review_mode,
+    $userref, $userref, $collection_add, $baseurl_short, $no_exif, $autorotate;
+  
+	# save data
+    # When auto saving, pass forward the field so only this is saved.
+    $autosave_field=getvalescaped("autosave_field","");
+     
+    # Upload template: Change resource type
+    $resource_type=getvalescaped("resource_type","");
+    if ($resource_type!="" && $resource_type!=$resource["resource_type"] && !checkperm("XU{$resource_type}") && $autosave_field=="")     // only if resource type specified and user has permission for that resource type
+        {
+        // Check if resource type has been changed between form being loaded and submitted				
+        $post_cs = getval("resource_type_checksum","");
+        $current_cs = $resource["resource_type"];			
+        if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
+            {
+            $save_errors = array("resource_type"=>$lang["resourcetype"] . ": " . $lang["save-conflict-error"]);
+            $show_error=true;
+            }
+        else
+            {
+            update_resource_type($ref,$resource_type);
+            }
+        }   	
+    $resource=get_resource_data($ref,false); # Reload resource data.
+   
+    if(in_array($resource['resource_type'], $data_only_resource_types))
+        {
+        $single=true;
+        }
+    else
+        {
+        $uploadparams = str_replace(array('&forcesingle=true','&noupload=true'), array(''),$uploadparams); 
+        }   
+    if(!isset($save_errors))
+        {
+        # Perform the save
+        $save_errors=save_resource_data($ref,$multiple,$autosave_field);
+        }
+
+    if($relate_on_upload && $enable_related_resources && getval("relateonupload","")!="")
+      {
+      $uploadparams.="&relateonupload=yes";
+      }
+    
+    if($ref < 0 && $resource_type_force_selection && $resource_type=="")
+        {
+        if (!is_array($save_errors)){$save_errors=array();} 
+        $save_errors['resource_type'] = $lang["resourcetype"] . ": " . $lang["requiredfield"];
+        $show_error=true;
+        }
+      
+    if ($upload_collection_name_required)
+        {
+        if (getvalescaped("entercolname","")=="" && getval("collection_add","")=="new")
+              { 
+              if (!is_array($save_errors)){$save_errors=array();} 
+              $save_errors['collectionname'] = $lang["collectionname"] . ": " .$lang["requiredfield"];
+              $show_error=true;
+              }
+       }
+
+    return $save_errors;
+  }

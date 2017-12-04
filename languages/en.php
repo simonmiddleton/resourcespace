@@ -2644,6 +2644,7 @@ $lang["actions_view_editable_as_resultset"]="View resources to review as a resul
 
 $lang["refinemetadata"]="Refine metadata";
 $lang["saveandnext"]="Save and next";
+$lang["save_and_auto"]="Save and auto-next"; 
 
 $lang["upload_sequence"]="Upload sequence";
 $lang["default_upload_sequence"]="Default upload sequence";

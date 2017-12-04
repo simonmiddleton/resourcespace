@@ -12,8 +12,9 @@ if($annotate_enabled)
 
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$s=explode(" ",getvalescaped("search",""));
-$k=getvalescaped("k","");
+$s = explode(" ",getvalescaped("search",""));
+$k = getvalescaped("k","");
+$resetlockedfields = getvalescaped("resetlockedfields","") != "";
 
 if (($k=="") || (!check_access_key_collection(str_replace("!collection","",$s[0]),$k))) {include "../include/authenticate.php";}
 
@@ -358,6 +359,13 @@ if(false === strpos($search, '!'))
     {
     rs_setcookie('saved_archive', $archive);
     }
+
+if($resetlockedfields)
+    {
+    // Reset locked metadata fields cookie after editing resources in upload_review_mode
+    rs_setcookie('lockedfields', '');
+    }
+
 
 $jumpcount=0;
 
