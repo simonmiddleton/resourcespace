@@ -87,7 +87,6 @@ if (isset($qlpreview_path) && !in_array($extension, $qlpreview_exclude_extension
 	$qlpreview_command=$qlpreview_path."/qlpreview -generatePreviewOnly yes -imageType jpg -maxWidth 800 -maxHeight 800 -asIcon no -preferFileIcon no -inPath " . escapeshellarg($file) . " -outPath " . escapeshellarg($target);
 	debug("qlpreview command: " . $qlpreview_command);
 	$output=run_command($qlpreview_command);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$qlpreview_command . ":\n" . $output);
 
 	#sleep(4); # Delay to allow processing
 	if (file_exists($target)){$newfile = $target;debug("qlpreview success!",RESOURCE_LOG_APPEND_PREVIOUS);}
@@ -123,7 +122,6 @@ if ($exiftool_fullpath!=false)
 			$file=get_resource_path($ref,true,"",false,"pdf");		
 			$jpg2pdfcommand = $convert_fullpath . " ".$pagescommand." " . $file;
 			$output=run_command($jpg2pdfcommand);
-            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$jpg2pdfcommand . ":\n" . $output);
 			$n=0;
 			foreach ($indd_thumbs as $indd_page){
 				if (file_exists($target."_".$n)){	
@@ -154,7 +152,6 @@ if (($extension=="psd" || $extension=="psb") && !isset($newfile))
 			{
 			$cmd=$exiftool_fullpath.' -b -PhotoshopThumbnail '.escapeshellarg($file).' > '.$target;
             $output=run_command($cmd);
-            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $output);
 			}
 		if (file_exists($target))
 			{
@@ -177,7 +174,6 @@ if ($extension=="psd" && !isset($newfile) && $psd_transparency_checkerboard)
     $composite_fullpath = get_utility_path("im-composite");
     $cmd=$composite_fullpath . " -compose Dst_Over -tile pattern:checkerboard ".escapeshellarg($file)."[0] ".$target;
     $wait = run_command($cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $wait);
 	if (file_exists($target)){
 		$newfile=$target;
 	}
@@ -202,7 +198,6 @@ if ($extension=="swf" && !isset($newfile))
 		{
         $cmd=$dump_gnash_path.'/dump-gnash -t 1 --screenshot 5 --screenshot-file '.$target.' '.escapeshellarg($file);
         $output=run_command($cmd);
-        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $output);
 		}
 	if (file_exists($target))
 		{
@@ -254,7 +249,6 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
 		}
             
 	    $wait=run_command($cmd);
-            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $wait);
 
 			// check for nef -otherimage failure
 			if ($extension=="nef"&&!filesize_unlimited($target)>0)
@@ -269,7 +263,6 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
 					{
 					rename($extractedpreview, $target);
 					}
-				resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $wait);
 				}
 				
 			// NOTE: in case of failures, other suboptimal possibilities 
@@ -293,7 +286,6 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
                         {
                         $command = $mogrify_fullpath . ' -rotate +' . $orientation .' '. $target;
                         $wait = run_command($command);
-                        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command . ":\n" . $wait);
                         }
 					}
 				$newfile = $target;$keep_for_hpr=true;
@@ -316,7 +308,6 @@ if ( (($extension=="pages") || ($extension=="numbers") || (!isset($unoconv_path)
 	{
     $cmd="unzip -p ".escapeshellarg($file)." \"QuickLook/Thumbnail.jpg\" > $target";
     $output=run_command($cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $output);
 	$newfile = $target;
 	} 	
 		
@@ -335,7 +326,6 @@ if (in_array($extension,$unoconv_extensions) && isset($unoconv_path) && !isset($
 
     $cmd=$unocommand . " --format=pdf " . escapeshellarg($file);
 	$output=run_command($cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $output);
 
 	$path_parts=pathinfo($file);
 	$basename_minus_extension=remove_extension($path_parts['basename']);
@@ -375,7 +365,6 @@ if (in_array($extension,$calibre_extensions) && isset($calibre_path) && !isset($
 
     $cmd="xvfb-run ". $calibrecommand . " " . escapeshellarg($file) . " " .$pdffile." ";
     $wait=run_command($cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $wait);
 
     if (file_exists($pdffile))
 		{
@@ -404,11 +393,9 @@ if ((($extension=="odt") || ($extension=="ott") || ($extension=="odg") || ($exte
     {
     $cmd="unzip -p ".escapeshellarg($file)." \"Thumbnails/thumbnail.png\" > $target";
     $output=run_command($cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $output);
 
     $odcommand = $convert_fullpath . " \"$target\"[0]  \"$target\""; 
     $output = run_command($odcommand);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$odcommand . ":\n" . $output);
 
     if(file_exists($target)){$newfile = $target;}
     }
@@ -424,7 +411,6 @@ if ((($extension=="docx") || ($extension=="xlsx") || ($extension=="pptx") || ($e
 	{
     $cmd="unzip -p ".escapeshellarg($file)." \"docProps/thumbnail.jpeg\" > $target";
     $output=run_command($cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $output);
     $newfile = $target;
 	}
 
@@ -445,7 +431,6 @@ if ($extension=="blend" && !isset($newfile))
 
     $cmd=$blendercommand. " -b ".escapeshellarg($file)." -F JPEG -o $target -f 1";
     $error=run_command($cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $error);
 
     if (file_exists($target."0001"))
 		{
@@ -476,14 +461,12 @@ if ($extension=="doc" && isset($antiword_path) && isset($ghostscript_path) && !i
 
     $cmd=$command . " -p a4 " . escapeshellarg($file) . " > \"" . $target . ".ps" . "\"";
     $output=run_command($cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $output);
 
 	if (file_exists($target . ".ps"))
 		{
 		# Postscript file exists
         $gscommand = $ghostscript_fullpath . " -dBATCH -dNOPAUSE -sDEVICE=jpeg -r150 -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=1 -dLastPage=1 -dEPSCrop " . escapeshellarg($target . ".ps");
         $output = run_command($gscommand);
-        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$gscommand . ":\n" . $output);
 
 		if (file_exists($target))
 			{
@@ -504,7 +487,6 @@ if (($extension=="mp3" || $extension=="flac") && !isset($newfile))
 		{
 		$cmd=$exiftool_fullpath.' -b -picture '.escapeshellarg($file).' > '.$target;
         $output=run_command($cmd);
-        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $output);
 		}
 	if (file_exists($target))
 		{
@@ -579,7 +561,6 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
     $cmd = $ffmpeg_fullpath . ' -i ' . escapeshellarg($file);
     $out = run_command($cmd, true);
 		
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS, LOG_CODE_TRANSFORMED, '', '', '', $cmd . ":\n" . $out);
     debug("FFMPEG-VIDEO: Running information command: {$cmd}", RESOURCE_LOG_APPEND_PREVIOUS);
 
     if(preg_match('/Duration: (\d+):(\d+):(\d+)\.\d+, start/', $out, $match))
@@ -671,7 +652,6 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
         $cmd = $ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y -i ' . escapeshellarg($file) . ' -f image2 -vframes 1 -ss ' . $snapshottime . ' ' . escapeshellarg($target);
         $output = run_command($cmd);
 
-        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $output);
         debug("FFMPEG-VIDEO: Get snapshot: {$cmd}", RESOURCE_LOG_APPEND_PREVIOUS);
         }
 
@@ -721,7 +701,6 @@ if (($ffmpeg_fullpath!=false) && in_array($extension, $ffmpeg_audio_extensions))
 
     $cmd=$ffmpeg_fullpath . " -y -i " . escapeshellarg($file) . " " . $ffmpeg_audio_params . " " . escapeshellarg($mp3file);
     $output = run_command($cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $output);
 
     if(!file_exists($mp3file))
 		{
@@ -780,7 +759,6 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 			$eps_target=get_resource_path($ref,true,"",false,"miff");
 			$nfcommand = $convert_fullpath . ' -compress zip -colorspace '.$imagemagick_colorspace.' -quality 100 -density ' . sprintf("%.1f", $eps_density_x ). 'x' . sprintf("%.1f", $eps_density_y) . ' ' . escapeshellarg($file) . '[0] ' . escapeshellarg($eps_target);
 			$output=run_command($nfcommand);
-            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$nfcommand . ":\n" . $output);
 			if (file_exists($eps_target))
 			{
 			#  create_previews_using_im($ref,false,'miff',$previewonly);
@@ -849,7 +827,6 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 			if ($extension=="eps"){
 				$pdfinfocommand="identify ".escapeshellarg($file);
 				$pdfinfo=run_command($pdfinfocommand);
-                resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$pdfinfocommand . ":\n" . $pdfinfo);
 				$pdfinfo=explode(" ",$pdfinfo);
 				if (isset($pdfinfo[2])){
 					$pdfinfo=$pdfinfo[2];
@@ -886,7 +863,6 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 		if ($dUseCIEColor){$dUseCIEColor=" -dUseCIEColor ";} else {$dUseCIEColor="";}
 		$gscommand2 = $ghostscript_fullpath . " -dBATCH -r".$resolution." ".$dUseCIEColor." -dNOPAUSE -sDEVICE=jpeg -dJPEGQ=".$preview_quality." -sOutputFile=" . escapeshellarg($target) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " -dEPSCrop -dUseCropBox " . escapeshellarg($file);
  		$output=run_command($gscommand2);
-        resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$gscommand2 . ":\n" . $output);
 
  		# Stop trying when after the last page
  		if (strstr($output, 'FirstPage > LastPage'))
@@ -909,7 +885,6 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 			{
 			$command2 = $convert_fullpath . " " . $prefix . escapeshellarg($target) . "[0] -quality $preview_quality -resize ".$scr_width."x".$scr_height . " ".escapeshellarg($target);
 			$output=run_command($command2); $pagecount=$n;
-            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command2 . ":\n" . $output);
 
 			# Add a watermarked image too?
 			global $watermark;
@@ -922,7 +897,6 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
     				
 				$command2 = $convert_fullpath . " \"$target\"[0] $profile -quality $preview_quality -resize ".$scr_width."x".$scr_height. " -tile " . escapeshellarg($watermarkreal) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
 					$output=run_command($command2);
-                    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$command2 . ":\n" . $output);
 				}
 			}
 		}
@@ -940,7 +914,6 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 			# Extract this one page to a new resource.
 			$gscommand2 = $ghostscript_fullpath . " -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=" . escapeshellarg($copy_path) . "  -dFirstPage=" . $n . " -dLastPage=" . $n . " " . escapeshellarg($file);
 	 		$output=run_command($gscommand2);
-            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$gscommand2 . ":\n" . $output);
 
  			# Update the file extension
  			sql_query("update resource set file_extension='pdf' where ref='$copy'");
