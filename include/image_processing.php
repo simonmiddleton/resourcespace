@@ -2375,10 +2375,10 @@ function extract_text($ref,$extension,$path="")
 		if (!file_exists($command)) {debug("ERROR: pdftotext executable not found at '$pdftotext_path'",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
 
         $cmd=$command . " -enc UTF-8 \"" . $path . "\" -";
-        $text=run_command($cmd);
+        $text = run_command($cmd);
 
         }
-	
+
 	# HTML extraction
 	if ($extension=="html" || $extension=="htm")
 		{
