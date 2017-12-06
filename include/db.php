@@ -3,17 +3,9 @@
  * Database functions, data manipulation functions
  * and generic post/get handling
  * 
- * @author Dan Huby <dan@montala.net> for Oxfam, April 2006
  * @package ResourceSpace
  * @subpackage Includes
  */
-#
-# db.php - Database functions, data manipulation functions
-# and generic post/get handling
-#
-# Dan Huby (dan@montala.net) for Oxfam, April 2006
-
-# ensure no caching (dynamic site)
 
 
 // Include core functions:

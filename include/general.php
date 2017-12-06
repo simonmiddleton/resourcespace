@@ -2392,8 +2392,6 @@ function filesize2bytes($str) {
  *
  * @param string $str
  * @return int the result is in bytes
- * @author Svetoslav Marinov
- * @author http://slavi.biz
  */
     $bytes = 0;
 

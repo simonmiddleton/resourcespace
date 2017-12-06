@@ -4,7 +4,6 @@
  *
  * @package ResourceSpace
  * @subpackage Includes
- * @author Brian Adams <wreality@gmail.com>
  */
 /**
  * Activate a named plugin.
