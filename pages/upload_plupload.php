@@ -24,7 +24,7 @@ $replace_resource_original_alt_filename = getvalescaped('replace_resource_origin
 
 // When uploading, if there are any files in the queue that have similar names plus a suffix to distinguish between original
 // and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
-$attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '' && $collection_add !== 'false');
+$attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '');
 
 $redirecturl = getval("redirecturl","");
 if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
