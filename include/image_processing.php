@@ -2401,11 +2401,11 @@ function extract_text($ref,$extension,$path="")
 		if (!file_exists($command)) {debug("ERROR: pdftotext executable not found at '$pdftotext_path'",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
 
         $cmd=$command . " -enc UTF-8 \"" . $path . "\" -";
-        $text=run_command($cmd);
+        $text = run_command($cmd);
         resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$cmd . ":\n" . $text);
 
         }
-	
+
 	# HTML extraction
 	if ($extension=="html" || $extension=="htm")
 		{
