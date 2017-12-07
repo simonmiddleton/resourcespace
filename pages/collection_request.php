@@ -2,6 +2,7 @@
 include "../include/db.php";
 include_once "../include/general.php";
 include_once "../include/collections_functions.php";
+include_once "../include/search_functions.php";
 $ref=getval("ref","",true);
 $k=getvalescaped("k","");if ($k=="" || !check_access_key_collection($ref,$k)) {include "../include/authenticate.php";}
 
