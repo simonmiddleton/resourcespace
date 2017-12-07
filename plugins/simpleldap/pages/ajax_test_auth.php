@@ -19,11 +19,31 @@ $simpleldap['phone_attribute'] = getvalescaped('phone_attribute', '');
 
 // Test we can connect to domain
 $bindsuccess=false;	
-$ds = ldap_connect( $simpleldap['ldapserver'],$simpleldap['port'] );
-if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype']==1) 
+
+putenv('LDAPTLS_REQCERT=never');
+
+if($simpleldap['port'] == 636)
+    {
+    $ds = ldap_connect("ldaps://{$simpleldap['ldapserver']}:{$simpleldap['port']}");
+    }
+else
+    {
+    $ds = ldap_connect($simpleldap['ldapserver'], $simpleldap['port']);
+    }
+
+if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1) 
 	{
-	$binduserstring = $simpleldap['ldapuser'] . "@" . $userdomain;
+    if(strpos($simpleldap['ldapuser'], $userdomain) !== false)
+        {
+        $binduserstring = $simpleldap['ldapuser'];
+        }
+    else
+        {
+        $binduserstring = "{$simpleldap['ldapuser']}@{$userdomain}";
+        }
+
 	debug("LDAP - Attempting to bind to AD server as : " . $binduserstring);
+
 	$login = @ldap_bind( $ds, $binduserstring, $simpleldap['ldappassword'] );
 	if ($login)
 		{
