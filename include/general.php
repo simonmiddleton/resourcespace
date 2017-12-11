@@ -666,7 +666,7 @@ function get_resource_top_keywords($resource,$count)
                 }
             }
             
-        if(isset($r) && count($r)!=0)
+        if(isset($r) && is_array($r) && count($r)!=0)
 			{    
 			if (substr($r,0,1)==","){$r=substr($r,1);}
 			$s=split_keywords($r);
