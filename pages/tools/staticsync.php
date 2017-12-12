@@ -217,7 +217,7 @@ function ProcessFolder($folder)
             && !isPathWhitelisted($shortpath, $staticsync_whitelist_folders)
         )
             {
-            // Folders which are not whitelisted or underneath a whitelisted folder will not be processed any further
+            // Folders which are not whitelisted will not be processed any further
             continue;
             }
 
