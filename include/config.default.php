@@ -2227,6 +2227,9 @@ $hide_uploadertryother = false;
 # Default list taken from http://svn.rpmforge.net/svn/trunk/tools/unoconv/docs/formats.txt
 $unoconv_extensions=array("ods","xls","doc","docx","odt","odp","html","rtf","txt","ppt","pptx","sxw","sdw","html","psw","rtf","sdw","pdb","bib","txt","ltx","sdd","sda","odg","sdc","potx","key");
 
+# Set path to Libre/OpenOffic's packaged python (required for Windows only).
+# $unoconv_python_path='';
+
 # Uncomment to set a point in time where collections are considered 'active' and appear in the drop-down. 
 # This is based on creation date for now. Older collections are effectively 'archived', but accessible through Manage My Collections.
 # You can use any English-language strings supported by php's strtotime() function.

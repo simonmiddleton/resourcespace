@@ -321,10 +321,19 @@ if ( (($extension=="pages") || ($extension=="numbers") || (!isset($unoconv_path)
 global $unoconv_extensions;
 if (in_array($extension,$unoconv_extensions) && isset($unoconv_path) && !isset($newfile))
 	{
+	global $config_windows;
 	$unocommand=$unoconv_path . "/unoconv";
 	if (!file_exists($unocommand)) {exit("Unoconv executable not found at '$unoconv_path'");}
-
-    $cmd=$unocommand . " --format=pdf " . escapeshellarg($file);
+	if($config_windows)
+	   {
+	   global $unoconv_python_path;
+	   $cmd_uno_python_path=$unoconv_python_path . DIRECTORY_SEPARATOR . 'python.exe';
+	   if(!file_exists($cmd_uno_python_path))
+	   		{
+	   		exit("Unoconv's OpenOffice Python executable not found at '$unoconv_python_path'");
+	   		}
+	   }
+    $cmd=($config_windows ? $cmd_uno_python_path . ' ' : '') . $unocommand . " --format=pdf " . escapeshellarg($file);
 	$output=run_command($cmd);
 
 	$path_parts=pathinfo($file);
