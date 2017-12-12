@@ -55,3 +55,27 @@ function generateUserFilenameUID($user_id)
 
     return substr(hash('sha256', $filename_uid . $scramble_key), 0, 15);
     }
+
+
+/**
+* Checks if a path is part of a whitelisted list of paths. This applies to both folders and files.
+* 
+* Note: the function is not supposed to check/ validate the syntax of the path (ie. UNIX/ Windows)
+* 
+* @param  string  $path               Path which is going to be checked against whitelisted paths
+* @param  array   $whitelisted_paths  List of whitelisted paths
+* 
+* @return boolean
+*/
+function isPathWhitelisted($path, array $whitelisted_paths)
+    {
+    foreach($whitelisted_paths as $whitelisted_path)
+        {
+        if(substr_compare($whitelisted_path, $path, 0, strlen($path)) === 0)
+            {
+            return true;
+            }
+        }
+
+    return false;
+    }

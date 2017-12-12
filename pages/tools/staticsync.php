@@ -214,8 +214,7 @@ function ProcessFolder($folder)
         if(
             ($filetype == 'dir' || $filetype == 'link')
             && count($staticsync_whitelist_folders) > 0
-            && !in_array($file, $staticsync_whitelist_folders)
-            && count(array_intersect($staticsync_whitelist_folders, $shortpath_parts)) == 0
+            && !isPathWhitelisted($shortpath, $staticsync_whitelist_folders)
         )
             {
             // Folders which are not whitelisted or underneath a whitelisted folder will not be processed any further
