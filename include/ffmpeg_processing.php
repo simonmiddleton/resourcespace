@@ -75,7 +75,6 @@ if ($ffmpeg_get_par) {
   	}
 
     $output=run_command($shell_exec_cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . $output);
   
   preg_match('/PAR ([0-9]+):([0-9]+)/m', $output, $matches);
   
@@ -170,7 +169,6 @@ if (hook("replacetranscode","",array($file,$targetfile,$ffmpeg_global_options,$f
 				}
 				
 			$output=run_command($shell_exec_cmd);
-			resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . $output);
 			if(file_exists($hlsfile))
 				{
 				if(!isset($hls_codec_info))
@@ -212,7 +210,6 @@ if (hook("replacetranscode","",array($file,$targetfile,$ffmpeg_global_options,$f
 			}
 
 		$output=run_command($shell_exec_cmd);
-		resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . $output);
 		}
 
 
@@ -232,7 +229,6 @@ if ($ffmpeg_get_par && (isset($snapshotcheck) && $snapshotcheck==false)) {
     if ($height % 2) {$height++;}
     $shell_exec_cmd = $ffmpeg_fullpath . "  $ffmpeg_global_options -y -i " . escapeshellarg($file) . " -s {$width}x{$height} -f image2 -vframes 1 -ss ".$snapshottime." " . escapeshellarg($target);
     $output = run_command($shell_exec_cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . $output);
   }
 }
 
@@ -247,7 +243,6 @@ if (isset($qtfaststart_path) && file_exists($qtfaststart_path . "/qt-faststart")
 	rename($targetfile, $targetfiletmp);
     $shell_exec_cmd=$qtfaststart_path . "/qt-faststart " . escapeshellarg($targetfiletmp) . " " . escapeshellarg($targetfile);
     $output=run_command($shell_exec_cmd);
-    resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . $output);
     unlink($targetfiletmp);
     }
 
@@ -306,8 +301,6 @@ if (isset($ffmpeg_alternatives))
             // $output = run_command($shell_exec_cmd);  // this was failing to return when standard out was producing too much output
             $output = run_external($shell_exec_cmd,$return_code);
 
-            resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . (is_array($output) ? implode(PHP_EOL,$output) : $output));
-
 	    if(isset($qtfaststart_path))
 			{
 			if($qtfaststart_path && file_exists($qtfaststart_path . "/qt-faststart") && in_array($ffmpeg_alternatives[$n]["extension"], $qtfaststart_extensions) ){
@@ -315,7 +308,6 @@ if (isset($ffmpeg_alternatives))
 				rename($apath, $apathtmp);
                 $shell_exec_cmd=$qtfaststart_path . "/qt-faststart " . escapeshellarg($apathtmp) . " " . escapeshellarg($apath)." 2>&1";
                 $output=run_command($shell_exec_cmd);
-                resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',$shell_exec_cmd . ":\n" . $output);
 				unlink($apathtmp);
 				}
 			}
