@@ -328,7 +328,7 @@ $last_page_url    = generateURL(
     )
 );
 
-if($offset > $count_nodes)
+if($offset > $count_nodes || $offset < 0)
     {
     $offset = 0;
     }
