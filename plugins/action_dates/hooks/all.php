@@ -139,3 +139,9 @@ function HookAction_datesCronCron()
             }
         }
 	}
+
+// This is required if cron task is run via pages/tools/cron_copy_hitcount.php
+function HookAction_datesCron_copy_hitcountCron()
+	{
+    HookAction_datesCronCron();
+    }
