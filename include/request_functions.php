@@ -224,6 +224,19 @@ function email_collection_request($ref,$details)
     $newcopy=create_collection(-1,$lang["requestcollection"]);
     copy_collection($ref,$newcopy);
     
+    // Make sure a collection does not include resources that may have been hidden from the user due
+    // to archive state, resource type or access changes and that they are not aware they are requesting.
+    // Without this a full copy can confuse the request administrator
+    $col_visible = do_search("!collection" . $ref,'','','',-1,'desc',false,0,false,false,'',false,false,true);
+    $colresources = get_collection_resources($ref);    
+    foreach($colresources as $colresource)
+        {
+        if(!in_array($colresource,array_column($col_visible,"ref")))
+            {
+            remove_resource_from_collection($colresource,$newcopy,false);
+            }
+        }
+    
     if($collection_empty_on_submit)
         {
         remove_all_resources_from_collection($ref);    
@@ -389,6 +402,20 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         # Create a copy of the collection to attach to the request so that subsequent collection changes do not affect the request
         $c=create_collection($userref,$lang["request"] . " " . date("ymdHis"));
         copy_collection($ref,$c);
+        
+        // Make sure a collection does not include resources that may have been hidden from the user due
+        // to archive state, resource type or access changes and that they are not aware they are requesting.
+        // Without this a full copy can confuse the request administrator
+        $col_visible = do_search("!collection" . $ref,'','','',-1,'desc',false,0,false,false,'',false,false,true);
+        $colresources = get_collection_resources($ref);
+        
+        foreach($colresources as $colresource)
+            {
+            if(!in_array($colresource,array_column($col_visible,"ref")))
+                {
+                remove_resource_from_collection($colresource,$c,false);
+                }
+            }
         
         if($collection_empty_on_submit)
             {
