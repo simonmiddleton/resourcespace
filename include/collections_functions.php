@@ -715,11 +715,20 @@ function save_collection($ref)
     // AC: save_collection() should be changed in terms of the way it works
     // as it submits everything rather then just update only what is needed
     collection_log($ref, 'A', 0, $public ? 'public' : 'private');
-
+	
+	$old_attached_users=sql_array("SELECT user value FROM user_collection WHERE collection='$ref'");
+	$new_attached_users=array();
+	$collection_owner=sql_value("SELECT u.fullname value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=$ref","");
+	if($collection_owner=='')
+		{
+		$collection_owner=sql_value("SELECT u.username value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=$ref","");
+		}
+	
 	sql_query("delete from user_collection where collection='$ref'");
 	
 	if ($attach_user_smart_groups)
 		{
+		$old_attached_groups=sql_array("SELECT usergroup value FROM usergroup_collection WHERE collection='$ref'");
 		sql_query("delete from usergroup_collection where collection='$ref'");
 		}
 
@@ -734,6 +743,7 @@ function save_collection($ref)
 		if (count($urefs)>0)
 			{
 			sql_query("insert into user_collection(collection,user) values ($ref," . join("),(" . $ref . ",",$urefs) . ")");
+			$new_attached_users=array_diff($urefs, $old_attached_users);
 			}
 		#log this
 		collection_log($ref,"S",0, join(", ",$ulist));
@@ -756,12 +766,30 @@ function save_collection($ref)
 							{
 							$groupnames.=", ";
 							}
-							$groupnames.=sql_value("select name value from usergroup where ref={$group}","");
+						$groupnames.=sql_value("select name value from usergroup where ref={$group}","");
+						}
+
+					$new_attached_groups=array_diff($groups, $old_attached_groups);
+					if(!empty($new_attached_groups))
+						{
+						foreach($new_attached_groups as $newg)
+							{
+							$group_users=sql_array("SELECT ref value FROM user WHERE usergroup=$newg");
+							$new_attached_users=array_merge($new_attached_users, $group_users);
+							}
 						}
 					}
 				#log this
 				collection_log($ref,"S",0, $groupnames);
 				}
+			}
+		# Send a message to any new attached user
+		if(!empty($new_attached_users))
+			{
+			global $baseurl, $lang;
+			
+			$new_attached_users=array_unique($new_attached_users);
+			message_add($new_attached_users,str_replace(array('%user%', '%colname%'), array($collection_owner, getvalescaped("name","")), $lang['collectionprivate_attachedusermessage']),$baseurl . "/?c=" . $ref);
 			}
 		}
 		
