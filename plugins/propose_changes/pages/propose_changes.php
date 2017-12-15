@@ -6,6 +6,7 @@ include __DIR__ . '/../../../include/authenticate.php';
 include_once __DIR__ . '/../../../include/resource_functions.php';
 include_once __DIR__ . '/../include/propose_changes_functions.php';
 include_once __DIR__ . '/../../../include/render_functions.php';
+include_once __DIR__ . '/../../../include/search_functions.php';
 
 
 $ref=getvalescaped("ref","",true);
