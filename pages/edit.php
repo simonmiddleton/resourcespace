@@ -737,55 +737,6 @@ function ShowHelp(field)
             }
         })
     
-    function AutoSave(field)
-        {
-        if (preventautosave)
-            {   
-            return false;
-            } 
-            
-        jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
-        jQuery('#AutoSaveStatus' + field).show();
-        jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
-            function(data)
-                {
-                saveresult=JSON.parse(data);
-                if (saveresult['result']=="SAVED")
-                    {
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saved"] ?>');
-                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-                    if (typeof(saveresult['checksums']) !== undefined)
-                        {
-                        for (var i in saveresult['checksums']) 
-                            {
-                            if (jQuery.isNumeric(i))
-                                 {
-                                 jQuery("#field_" + i + "_checksum").val(saveresult['checksums'][i]);
-                                 }
-                               else
-                                 {
-                                 jQuery('#' + i + '_checksum').val(saveresult['checksums'][i]);
-                                 }
-                            }
-                        }					
-                    }
-                else
-                    {   
-                    saveerrors = '<?php echo urlencode($lang["error_generic"]); ?>';
-                    if (typeof(saveresult['errors']) !== undefined)
-                        {
-                        saveerrors = "";
-                        for (var i in saveresult['errors']) 
-                            {
-                            saveerrors += saveresult['errors'][i] + "<br />";
-                            }
-                        }
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["save-error"] ?>');
-                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-                    styledalert('<?php echo $lang["error"] ?>',saveerrors);
-                    }
-                });
-        }
 
     // Disable autosave on enter keypress as form will be submitted by this keypress anyway which can result in duplicate data
     jQuery(document).bind('keydown',function (e)
@@ -803,6 +754,7 @@ function ShowHelp(field)
 
     function AutoSave(field, stop_recurrence)
         {
+console.log('AUTOSAVE ' + field);
         stop_recurrence = typeof stop_recurrence === 'undefined' ? false : stop_recurrence;
 
         // If user has edited a field (autosave on) but then clicks straight on Save, this will prevent double save which can
