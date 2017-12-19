@@ -3600,6 +3600,11 @@ function check_display_condition($n, $field)
     {
     global $fields, $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
 
+    if(trim($field['display_condition']) == "")
+        {
+        return true;
+        }
+
     $displaycondition = false;
     $s                = explode(';', $field['display_condition']);
     $condref          = 0;
