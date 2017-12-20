@@ -55,22 +55,6 @@ if(!hook('customchkboxes', '', array($field)))
     $wrap = 0;
     $rows = ceil(count($field['nodes']) / $cols);
 
-    if($edit_autosave)
-        {
-        ?>
-        <script type="text/javascript">
-            // Function to allow checkboxes to save automatically when $edit_autosave from config is set: 
-            function checkbox_allow_save() {
-                preventautosave=false;
-                
-                setTimeout(function () {
-                    preventautosave=true;
-                }, 500);
-            }
-        </script>
-        <?php
-        }
-
     if($checkbox_ordered_vertically)
         {
         if(!hook('rendereditchkboxes'))
@@ -113,10 +97,10 @@ if(!hook('customchkboxes', '', array($field)))
                                 if($edit_autosave)
                                     {
                                     ?>
-                                    onChange="AutoSave('<?php echo $field['ref']; ?>');" onmousedown="checkbox_allow_save();"
+                                    onChange="AutoSave('<?php echo $field['ref']; ?>');"
                                     <?php
                                     }
-                                    ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
+                                    ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>"><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
                         </td>
                         <?php
                         }
@@ -171,7 +155,7 @@ if(!hook('customchkboxes', '', array($field)))
                         onChange="AutoSave('<?php echo $field['ref']; ?>');"
                         <?php
                         }
-                        ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>" <?php if($edit_autosave) { ?>onmousedown="checkbox_allow_save();" <?php } ?>><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label></td>
+                        ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>"><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label></td>
             <?php
             }
             ?>

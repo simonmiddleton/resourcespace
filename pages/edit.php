@@ -754,7 +754,6 @@ function ShowHelp(field)
 
     function AutoSave(field, stop_recurrence)
         {
-console.log('AUTOSAVE ' + field);
         stop_recurrence = typeof stop_recurrence === 'undefined' ? false : stop_recurrence;
 
         // If user has edited a field (autosave on) but then clicks straight on Save, this will prevent double save which can
