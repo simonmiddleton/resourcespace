@@ -814,48 +814,6 @@ function ShowHelp(field)
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
                     }
                 });
-
-	jQuery('#AutoSaveStatus' + field).html('<?php echo urlencode($lang["saving"]) ?>');
-	jQuery('#AutoSaveStatus' + field).show();
-	jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
-		function(data)
-			{
-			saveresult=JSON.parse(data);
-			if (saveresult['result']=="SAVED")
-				{
-				jQuery('#AutoSaveStatus' + field).html('<?php echo urlencode($lang["saved"]) ?>');
-				jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-				if (typeof(saveresult['checksums']) !== undefined)
-					{
-					for (var i in saveresult['checksums']) 
-						{
-                        if (jQuery.isNumeric(i))
-                             {
-                             jQuery("#field_" + i + "_checksum").val(saveresult['checksums'][i]);
-                             }
-                           else
-                             {
-                             jQuery('#' + i + '_checksum').val(saveresult['checksums'][i]);
-                             }
-						}
-					}					
-				}
-			else
-				{   
-				saveerrors = '<?php echo urlencode($lang["error_generic"]); ?>';
-				if (typeof(saveresult['errors']) !== undefined)
-					{
-					saveerrors = "";
-					for (var i in saveresult['errors']) 
-						{
-						saveerrors += saveresult['errors'][i] + "<br />";
-						}
-					}
-                jQuery('#AutoSaveStatus' + field).html('<?php echo urlencode($lang["save-error"]) ?>');
-				jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-				styledalert('<?php echo urlencode($lang["error"]) ?>',saveerrors);
-				}
-			});
 	}
 <?php } 
 
