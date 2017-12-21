@@ -15,4 +15,4 @@ $simpleldap['update_group'] = true;
 $simpleldap['create_new_match_email'] = false;
 $simpleldap['allow_duplicate_email'] = true;
 $simpleldap['notification_email'] = "";
-
+$simpleldap['LDAPTLS_REQCERT_never'] = false;

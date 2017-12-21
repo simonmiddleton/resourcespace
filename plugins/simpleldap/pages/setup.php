@@ -33,6 +33,7 @@ elseif (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag
 	$simpleldap['allow_duplicate_email'] = getvalescaped('allow_duplicate_email','');
 	$simpleldap['notification_email'] = getvalescaped('notification_email','');
 	$simpleldap['ldaptype'] = getvalescaped('ldaptype','');
+	$simpleldap['LDAPTLS_REQCERT_never'] = getvalescaped('LDAPTLS_REQCERT_never', false);
 	
 	
 	
@@ -76,11 +77,32 @@ include "../../../include/header.php";
 
 // if some of the values aren't set yet, fudge them so we don't get an undefined error
 // this may be important for updates to the plugin that introduce new variables
-foreach (array('ldapserver','domain','port','basedn','loginfield','usersuffix','emailsuffix','fallbackusergroup','email_attribute','phone_attribute','update_group','create_new_match_email','allow_duplicate_email','notification_email','ldaptype') as $thefield){
-	if (!isset($simpleldap[$thefield])){
-		$simpleldap[$thefield] = '';
-	}
-}
+foreach(
+    array(
+        'ldapserver',
+        'domain',
+        'port',
+        'basedn',
+        'loginfield',
+        'usersuffix',
+        'emailsuffix',
+        'fallbackusergroup',
+        'email_attribute',
+        'phone_attribute',
+        'update_group',
+        'create_new_match_email',
+        'allow_duplicate_email',
+        'notification_email',
+        'ldaptype',
+        'LDAPTLS_REQCERT_never'
+    ) as $thefield
+)
+    {
+    if(!isset($simpleldap[$thefield]))
+        {
+        $simpleldap[$thefield] = '';
+        }
+    }
 
 
 if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")=="")
@@ -234,8 +256,14 @@ if (!function_exists('ldap_connect'))
   
  <form id="form1" name="form1" enctype= "multipart/form-data" method="post" action="<?php echo get_plugin_path("simpleldap",true) . "/pages/setup.php";?>">
 
-<?php echo config_single_select("ldaptype", $lang['simpleldap_ldaptype'], $simpleldap['ldaptype'], array(1=>"Active Directory",2=>"Oracle Directory")); ?>
-<?php echo config_text_field("ldapserver",$lang['ldapserver'],$simpleldap['ldapserver'],60);?>
+<?php
+echo config_single_select("ldaptype", $lang['simpleldap_ldaptype'], $simpleldap['ldaptype'], array(1=>"Active Directory",2=>"Oracle Directory"));
+echo config_boolean_field(
+	'LDAPTLS_REQCERT_never',
+	$lang['simpleldap_LDAPTLS_REQCERT_never_label'],
+	$simpleldap['LDAPTLS_REQCERT_never'],
+	30);
+echo config_text_field("ldapserver",$lang['ldapserver'],$simpleldap['ldapserver'],60);?>
 <?php echo config_text_field("domain",$lang['domain'],$simpleldap['domain'],60);?>
 <?php echo config_text_field("emailsuffix",$lang['emailsuffix'],$simpleldap['emailsuffix'],60);?>
 <?php echo config_text_field("email_attribute",$lang['email_attribute'],$simpleldap['email_attribute'],60);?>

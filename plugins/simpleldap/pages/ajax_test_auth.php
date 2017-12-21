@@ -4,23 +4,27 @@ include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permis
 include_once "../../../include/general.php";
 
 
-$simpleldap['domain']          = getvalescaped('domain', '');
-$simpleldap['ldapserver']      = getvalescaped('ldapserver', '');
-$simpleldap['ldapuser']        = getvalescaped('ldapuser', '');
-$simpleldap['ldappassword']    = getvalescaped('ldappassword', '');
-$userdomain                    = getvalescaped('userdomain', '');
-$simpleldap['port']            = getvalescaped('port', '');
-$simpleldap['ldaptype']        = getvalescaped('ldaptype', 1);
-$simpleldap['basedn']          = getvalescaped('basedn', '');
-$simpleldap['loginfield']      = getvalescaped('loginfield', '');
-$simpleldap['ldapgroupfield']  = getvalescaped('ldapgroupfield', '');
-$simpleldap['email_attribute'] = getvalescaped('email_attribute', '');
-$simpleldap['phone_attribute'] = getvalescaped('phone_attribute', '');
+$simpleldap['domain']                = getvalescaped('domain', '');
+$simpleldap['ldapserver']            = getvalescaped('ldapserver', '');
+$simpleldap['ldapuser']              = getvalescaped('ldapuser', '');
+$simpleldap['ldappassword']          = getvalescaped('ldappassword', '');
+$userdomain                          = getvalescaped('userdomain', '');
+$simpleldap['port']                  = getvalescaped('port', '');
+$simpleldap['ldaptype']              = getvalescaped('ldaptype', 1);
+$simpleldap['basedn']                = getvalescaped('basedn', '');
+$simpleldap['loginfield']            = getvalescaped('loginfield', '');
+$simpleldap['ldapgroupfield']        = getvalescaped('ldapgroupfield', '');
+$simpleldap['email_attribute']       = getvalescaped('email_attribute', '');
+$simpleldap['phone_attribute']       = getvalescaped('phone_attribute', '');
+$simpleldap['LDAPTLS_REQCERT_never'] = getvalescaped('LDAPTLS_REQCERT_never', false);
 
 // Test we can connect to domain
 $bindsuccess=false;	
 
-putenv('LDAPTLS_REQCERT=never');
+if($simpleldap['LDAPTLS_REQCERT_never'])
+    {
+    putenv('LDAPTLS_REQCERT=never');
+    }
 
 if($simpleldap['port'] == 636)
     {

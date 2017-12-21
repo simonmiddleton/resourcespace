@@ -49,4 +49,4 @@ $lang["simpleldap_externsion_required"] = "The PHP LDAP module must be enabled f
 $lang["simpleldap_usercomment"] = "Created by SimpleLDAP plugin.";
 $lang["simpleldap_usermatchcomment"] = "Updated to LDAP user by SimpleLDAP.";
 $lang["origin_simpleldap"] = "SimpleLDAP plugin";
-
+$lang["simpleldap_LDAPTLS_REQCERT_never_label"] = "Do not check the FQDN of the server against the CN of the certificate";
