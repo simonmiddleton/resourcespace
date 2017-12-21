@@ -1604,7 +1604,7 @@ function save_user($ref)
         if($home_dash)
             {
             // If user group has changed, remove all user dash tiles that were valid for the old user group
-            if((isset($current_user_data['usergroup']) && '' != $current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
+            if($current_user_data['usergroup'] != $usergroup)
                 {
                 sql_query("DELETE FROM user_dash_tile WHERE user = '{$ref}' AND dash_tile IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup = '{$current_user_data['usergroup']}')");
 
