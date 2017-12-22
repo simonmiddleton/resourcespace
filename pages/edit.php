@@ -1375,7 +1375,7 @@ if (getval("copyfrom","")!="")
     }
   }
 
-if(isset($metadata_template_resource_type) && $metadatatemplate != '')
+if(isset($metadata_template_resource_type) && $metadatatemplate != 0)
     {
     $use             = $metadatatemplate;
     $original_fields = get_resource_field_data($ref, $multiple, true, -1, '', $tabs_on_edit);
