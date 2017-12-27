@@ -2542,7 +2542,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		}
 
     // Add extra collection actions and manipulate existing actions through plugins
-    $modified_options = hook('render_actions_add_collection_option', '', array($top_actions,$options));
+    $modified_options = hook('render_actions_add_collection_option', '', array($top_actions,$options,$collection_data));
     if(is_array($modified_options) && !empty($modified_options))
 		{
         $options=$modified_options;
