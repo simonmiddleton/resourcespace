@@ -1,18 +1,5 @@
 <?php
 
-function HookFlickr_theme_publishThemesAddcustomtool($theme)
-	{
-	# Adds a Flickr link to the themes page.
-	global $baseurl, $lang;
-	
-	# Work out how many resources in this theme are unpublished.
-	$unpublished=sql_value("select count(*) value from resource join collection_resource on resource.ref=collection_resource.resource where collection_resource.collection='" . $theme . "' and flickr_photo_id is null",0);
-
-	?>
-	&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/plugins/flickr_theme_publish/pages/sync.php?theme=<?php echo $theme?>">&gt;&nbsp;Flickr<?php if ($unpublished>0) { echo " <strong>(" . ($unpublished==1 ? $lang["unpublished-1"] : str_replace("%number", $unpublished, $lang["unpublished-2"])) . ")</strong>"; } ?></a>
-	<?php
-	}
-
 function HookFlickr_theme_publishAllRender_actions_add_collection_option($top_actions,$options,$collection_data)
 	{
 	global $lang, $baseurl_short, $pagename;
