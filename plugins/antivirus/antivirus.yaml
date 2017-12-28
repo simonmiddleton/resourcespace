@@ -1,6 +1,6 @@
 name    : antivirus
 author  : Alin Cota
-version : 1.0
+version : 1.1
 desc    : Antivirus capabilities by integrating with most known antivirus engines that can run command line
 info_url: http://www.resourcespace.com/knowledge-base/user/plugin-antivirus
 config_url: /plugins/antivirus/pages/setup.php
