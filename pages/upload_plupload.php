@@ -878,10 +878,14 @@ var pluploadconfig = {
                                             {
                                             uploadError = JSON.parse(info.response);
                                             uploaderrormessage= uploadError.error.code + " " + uploadError.error.message;
-											if(uploadError.error.code==108)
-												{
-												styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadError.error.duplicates);	
-												}
+                                            if(uploadError.error.code==108)
+                                                {
+                                                styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadError.error.duplicates);   
+                                                }
+                                            else
+                                                {
+                                                styledalert(uploadError.error.code, uploadError.error.message);
+                                                }
                                             }
                                         catch(e)
                                             {

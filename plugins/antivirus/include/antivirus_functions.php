@@ -5,13 +5,12 @@
 * @uses debug() 
 * 
 * @param string  $file_path Physical path of the file to be scanned
-* @param 
 * 
 * @return string Returns SAFE for safe files or UNSAFE otherwise
 */
-function antivirus_scan($file_path, $av_options = '')
+function antivirus_scan($file_path)
     {
-    global $antivirus_path;
+    global $antivirus_path, $antivirus_silent_options;
 
     if(!isset($antivirus_path) || trim($antivirus_path) == '')
         {
@@ -21,7 +20,7 @@ function antivirus_scan($file_path, $av_options = '')
     $file_path = escapeshellarg($file_path);
     $av_path   = escapeshellarg($antivirus_path);
 
-    $av_options         = explode(' ', $av_options);
+    $av_options         = explode(' ', $antivirus_silent_options);
     $escaped_av_options = array();
     foreach($av_options as $av_option)
         {
