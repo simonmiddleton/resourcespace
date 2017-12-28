@@ -1931,7 +1931,7 @@ function email_user_request()
     $userrequestcomment = strip_tags(getvalescaped('userrequestcomment', ''));
 
     // Build a message
-    $message             = "{" . ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "}\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n{" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "}\n{$baseurl}";
+    $message             = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
     $notificationmessage = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
 
     $approval_notify_users = get_notification_users("USER_ADMIN"); 
