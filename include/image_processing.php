@@ -2751,6 +2751,42 @@ function delete_previews($resource,$alternative=-1)
 		}
 	}
 
-	
-	
-	
+
+/**
+* Get SVG size by reading the file and looking for dimensions at either width and height OR at Viewbox attribute(s)
+* 
+* @param string $file_path Path to SVG file (should work with both a physical path and a URL)
+* 
+* @return array where first element is width and second is height represented as strings
+*/
+function getSvgSize($file_path)
+    {
+    if(!file_exists($file_path))
+        {
+        trigger_error("getSvgSize(): file_path does not exist!");
+        }
+
+    $svg_size   = array(0, 0);
+    $xml        = new SimpleXMLElement($file_path, 0, true);
+    $attributes = $xml->attributes();
+
+    // This information should be available in either width and height attributes and/ or viewBox
+    if(isset($attributes->width) && isset($attributes->height))
+        {
+        $svg_size[0] = (string) $attributes->width;
+        $svg_size[1] = (string) $attributes->height;
+        }
+    else if(isset($attributes->viewBox) && trim($attributes->viewBox) !== '')
+        {
+        // Note: viewBox coordinates can be separated by either space and/ or a comma
+        list($min_x, $min_y, $width, $height) = preg_split("/(\s|,)/", $attributes->viewBox);
+
+        if(isset($width) && isset($height))
+            {
+            $svg_size[0] = (string) $width;
+            $svg_size[1] = (string) $height;
+            }
+        }
+
+    return $svg_size;
+    }
