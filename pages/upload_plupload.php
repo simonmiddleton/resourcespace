@@ -229,24 +229,31 @@ if($send_collection_to_admin && $archive == -1 && getvalescaped('ajax' , 'false'
 		}
     exit();
 	}
+
 global $php_path,$relate_on_upload,$enable_related_resources;
-if($relate_on_upload && $enable_related_resources && getval("uploaded_refs","")!=""){
-    $resource_refs=getval("uploaded_refs","");
-    $stringlist="";
-    foreach ($resource_refs as $k => $v) {
-        if (!is_numeric($v)) {
+if($relate_on_upload && $enable_related_resources && getval("uploaded_refs", "") != "")
+    {
+    $resource_refs = getval("uploaded_refs", "");
+    $valid_refs    = array();
+
+    foreach($resource_refs as $resource_ref)
+        {
+        if(!is_numeric($resource_ref))
+            {
             exit("NUMERIC values ONLY");
+            }
+
+        $valid_refs[] = $resource_ref;
         }
-        else {
-            $stringlist.= $v.",";
-        }
-    }
-    if($stringlist!=="") 
+
+    $stringlist = implode(',', $valid_refs);
+
+    if($stringlist !== "")
         {
         exec($php_path . "/php " . dirname(__FILE__)."/tools/relate_resources.php \"" . $stringlist. "\" \"" . $_SERVER["HTTP_HOST"] . "\" > /dev/null 2>&1 &");
-        exit("Resource Relation Started: ".$stringlist);
+        exit("Resource Relation Started: " . $stringlist);
         }
-}
+    }
 
 #handle posts
 if ($_FILES)
