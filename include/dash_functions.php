@@ -1025,7 +1025,7 @@ function get_user_dash($user)
 				}
 			?>
 			href="<?php echo parse_dashtile_link($link)?>" <?php echo $newtab ? "target='_blank'" : "";?> 
-			onClick="if(dragging){dragging=false;return false;}<?php echo $newtab? "": "return " . ($help_modal && strpos($link,"pages/help.php")!==false?"ModalLoad(this,true);":"CentralSpaceLoad(this,true);");?>" 
+			onClick="if(dragging){dragging=false;return false;}<?php if ($tile["link"] != "") {echo $newtab? "": "return " . ($help_modal && strpos($link,"pages/help.php")!==false?"ModalLoad(this,true);":"CentralSpaceLoad(this,true);");} else {echo "return false;";}?>" 
 			class="HomePanel DashTile DashTileDraggable <?php echo ($tile['all_users']==1)? 'allUsers':'';?> <?php echo ('double' == $tlsize ? 'DoubleWidthDashTile' : ''); ?>"
 			tile="<?php echo $tile['tile']; ?>"
 			id="user_tile<?php echo htmlspecialchars($tile["user_tile"]);?>"
