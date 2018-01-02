@@ -215,31 +215,26 @@ foreach($results as $result_data)
 
     // Determine the image path. If no file is found then do not continue.
     $img_path = get_resource_path($result_data['ref'], true, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
-    $img_url  = get_resource_path($result_data['ref'], false, $img_size, false, $result_data['preview_extension'], -1, 1, $use_watermark);
 
     if(!file_exists($img_path))
         {
         $img_path = get_resource_path($result_data['ref'], true, 'lpr', false, $result_data['preview_extension'], -1, 1, $use_watermark);
-        $img_url  = get_resource_path($result_data['ref'], false, 'lpr', false, $result_data['preview_extension'], -1, 1, $use_watermark);
         }
 
     if(!file_exists($img_path))
         {
         $img_path = get_resource_path($result_data['ref'], true, 'scr', false, $result_data['preview_extension'], -1, 1, $use_watermark);
-        $img_url  = get_resource_path($result_data['ref'], false, 'scr', false, $result_data['preview_extension'], -1, 1, $use_watermark);
         }
 
     // If we can't find the size, drop back to preview size
     if(!file_exists($img_path))
         {
         $img_path = get_resource_path($result_data['ref'], true, 'pre', false, $result_data['preview_extension'], -1, 1, $use_watermark);
-        $img_url  = get_resource_path($result_data['ref'], false, 'pre', false, $result_data['preview_extension'], -1, 1, $use_watermark);
         }
 
     if(!file_exists($img_path))
         {
         $img_path = "../../gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false, true);
-        $img_url  = "{$baseurl}/gfx/" . get_nopreview_icon($result_data['resource_type'], $result_data['file_extension'], false, true);
         }
 
     if(!file_exists($img_path))
@@ -248,9 +243,11 @@ foreach($results as $result_data)
         continue;
         }
 
-    $placeholders['resources'][$result_data['ref']]['preview_src'] = $img_url;
+    // Note: _drawImage from html2pdf.class.php supports paths. If using URLs, allow_url_fopen should be turned ON but on
+    // some systems, even with allow_url_fopen On, it still couldn't load the image. Using the path seemed to have fixed
+    // the issue.
+    $placeholders['resources'][$result_data['ref']]['preview_src'] = $img_path;
     unset($img_path);
-    unset($img_url);
     }
 
 try
