@@ -2136,7 +2136,7 @@ function renderBreadcrumbs(array $links, $pre_links = '')
                 }
                 ?>
             <a href="<?php echo htmlspecialchars($links[$i]['href']); ?>" onClick="return CentralSpaceLoad(this, true);">
-                <span><?php echo htmlspecialchars($links[$i]['title']); ?></span>
+                <span><?php echo htmlspecialchars(htmlspecialchars_decode($links[$i]['title'])); ?></span>
             </a>
             <?php
             }
