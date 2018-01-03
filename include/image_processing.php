@@ -670,6 +670,10 @@ function extract_exif_comment($ref,$extension="")
 							
 							
 							hook("metadata_extract_addition","all",array($ref,$newval,$read_from,$i));
+
+                            // newval needs to be unset in order to avoid carrying over the value from one exif field to 
+                            // another
+                            unset($newval);
 						}
 
 					}	
