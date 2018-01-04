@@ -344,7 +344,7 @@ function get_resource_data($ref,$cache=true)
 			{
             # For upload templates (negative reference numbers), generate a new resource if upload permission.
             if (!(checkperm("c") || checkperm("d"))) {return false;}
-            else
+            elseif(!hook('replace_upload_template_creation'))
                 {
                 if (isset($always_record_resource_creator) && $always_record_resource_creator)
                     {
