@@ -3256,12 +3256,20 @@ $retina_mode=false;
 $xframe_options = "SAMEORIGIN";
 
 
-# FSTemplate - File System Template. Allows a system to contain an initial batch of resources that are stored elsewhere and read only.
-# Used by Montala for the ResourceSpace trial account templates, so each templated installation doesn't need to completely copy all the sample assets.
-$fstemplate_alt_threshold=0; # Applies to resource IDs BELOW this number only. Set the system so the user created resources start at 1000.
-$fstemplate_alt_storagedir=""; # Alternative filestore location for the sample files. The location of the template installation.
+/*
+FSTemplate - File System Template. Allows a system to contain an initial batch of resources that are stored elsewhere 
+and read only.
+Used by Montala for the ResourceSpace trial account templates, so each templated installation doesn't need to completely
+copy all the sample assets.
+*/
+# Applies to resource IDs BELOW this number only. Set the system so the user created resources start at 1000.
+# IMPORTANT: once you've set up the $fstemplate_alt_threshold, run the following query: "alter table resource auto_increment = $fstemplate_alt_threshold"
+$fstemplate_alt_threshold=0;
+# Alternative filestore location for the sample files. The location of the template installation.
+$fstemplate_alt_storagedir="";
 $fstemplate_alt_storageurl="";
-$fstemplate_alt_scramblekey=""; # The scramble key used by the template installation, so paths must be scrambled using this instead for the sample images.
+# The scramble key used by the template installation, so paths must be scrambled using this instead for the sample images.
+$fstemplate_alt_scramblekey="";
 
 # Ability to switch off responsive on UI
 $responsive_ui = true;
