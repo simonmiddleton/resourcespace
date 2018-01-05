@@ -56,7 +56,7 @@ function addColumnHeader($orderName, $labelKey)
 		foreach ($reports as $report)
 			{
 			$edit_url="{$baseurl_short}pages/admin/admin_report_management_edit.php?ref={$report["ref"]}" . ($find=="" ? "" : "&find={$find}") . ($order_by=="name" ? "" : "&orderby={$order_by}");
-			$view_url="{$baseurl_short}pages/team/team_report.php?ref={$report['ref']}";
+			$view_url="{$baseurl_short}pages/team/team_report.php?report={$report['ref']}";
 ?>			<tr>
 				<td>
 					<a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["ref"],$find,STR_HIGHLIGHT_SIMPLE); ?></a>
