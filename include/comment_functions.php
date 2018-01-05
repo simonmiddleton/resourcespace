@@ -92,13 +92,18 @@ function comments_submit()
 	}
 
 function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $level = 1) 
-	{					
-	
+	{	
 	# ref 				= the reference of the resource, collection or the comment (if called from itself recursively) 
 	# bcollection_mode	= boolean flag, false(default) == show comments for resources, true == show comments for collection
 	# bRecursive		= flag to indicate whether to recursively show comments, defaults to true, will be set to false if depth limit reached
 	# level				= used for recursion for display indentation etc.	
 	
+	
+	if(!is_numeric($ref))
+		{
+		return false;
+		}
+		
 	global $username, $anonymous_login, $lang, $comments_max_characters, $comments_flat_view, $regex_email, $comments_show_anonymous_email_address;
 	
 	$anonymous_mode = (empty ($username) || $username == $anonymous_login);		// show extra fields if commenting anonymously
