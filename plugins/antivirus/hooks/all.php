@@ -1,15 +1,20 @@
 <?php
 function HookAntivirusAllAfterpluploadfile($resource_id, $file_extension)
     {
-    global $lang, $resource_deletion_state, $antivirus_action, $antivirus_silent_options, $antivirus_quarantine_state;
+    global $lang, $resource_deletion_state, $antivirus_action, $antivirus_quarantine_state;
+
+    // This will show both as a styledalert and as a message in the log
+    $plupload_json_response = array(
+        'jsonrpc' => '2.0',
+        'error'   => array(
+            'code'    => $lang['antivirus_label'],
+            'message' => ''
+        ),
+        'id'      => 'id'
+    );
 
     $resource_path = get_resource_path($resource_id, true, '', false, $file_extension);
-
-    echo PHP_EOL . $lang['antivirus_scanning_file'];
-
-    $scan_output = antivirus_scan($resource_path, $antivirus_silent_options);
-
-    echo PHP_EOL . $scan_output . PHP_EOL;
+    $scan_output   = antivirus_scan($resource_path);
 
     if('UNSAFE' === $scan_output)
         {
@@ -19,7 +24,12 @@ function HookAntivirusAllAfterpluploadfile($resource_id, $file_extension)
                 // Delete permanently
                 delete_resource($resource_id);
                 delete_resource($resource_id);
-                echo $lang['antivirus_deleting_file'] . PHP_EOL;
+
+                $plupload_json_response['error']['message'] = str_replace(
+                    '[%resource_id%]',
+                    $resource_id,
+                    $lang['antivirus_deleting_file']
+                );
                 break;
 
             case ANTIVIRUS_ACTION_QUARANTINE:
@@ -28,11 +38,17 @@ function HookAntivirusAllAfterpluploadfile($resource_id, $file_extension)
                 $resource_data = get_resource_data($resource_id);
 
                 update_archive_status($resource_id, $to_state, $resource_data['archive']);
-                echo "{$lang['antivirus_moving_file']} {$to_state}" . PHP_EOL;
+
+                $plupload_json_response['error']['message'] = str_replace(
+                    array('[%resource_id%]', '[%archive_state%]'),
+                    array($resource_id, $to_state),
+                    $lang['antivirus_moving_file']
+                );
                 break;
             }
 
-        exit();
+        header('Content-Type: application/json');
+        die(json_encode($plupload_json_response));
         }
 
     return true;
