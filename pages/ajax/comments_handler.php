@@ -12,7 +12,7 @@ if('POST' == $_SERVER['REQUEST_METHOD'])
         }
     }
 
-$ref             = getvalescaped('ref', '');
+$ref             = getvalescaped('ref', 0, true);
 $collection_mode = ('' != getvalescaped('collection_mode', '') ? true : false);
 
 comments_show($ref, $collection_mode);

@@ -14,7 +14,7 @@ foreach($fixed_fields as $fixed_field)
 	while ($c>0)
 		{
 		sql_query("delete from resource_keyword where resource_type_field ='" . $fixed_field . "' limit 1000");
-		$c=sql_value($count_query,0);
+		$c = $c - 1000;
 		echo ($c . " rows remaining to delete" . PHP_EOL);
 		}
 	

@@ -1,0 +1,5 @@
+name: video_bookend
+author: Dan Huby
+version: 1.0
+desc: Adds the ability to download a video with a title and end graphic
+category: Asset processing

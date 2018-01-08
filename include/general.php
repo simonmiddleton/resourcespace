@@ -344,7 +344,7 @@ function get_resource_data($ref,$cache=true)
 			{
             # For upload templates (negative reference numbers), generate a new resource if upload permission.
             if (!(checkperm("c") || checkperm("d"))) {return false;}
-            else
+            elseif(!hook('replace_upload_template_creation'))
                 {
                 if (isset($always_record_resource_creator) && $always_record_resource_creator)
                     {
@@ -1604,7 +1604,7 @@ function save_user($ref)
         if($home_dash)
             {
             // If user group has changed, remove all user dash tiles that were valid for the old user group
-            if((isset($current_user_data['usergroup']) && '' != $current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
+            if($current_user_data['usergroup'] != $usergroup)
                 {
                 sql_query("DELETE FROM user_dash_tile WHERE user = '{$ref}' AND dash_tile IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup = '{$current_user_data['usergroup']}')");
 
@@ -1931,7 +1931,7 @@ function email_user_request()
     $userrequestcomment = strip_tags(getvalescaped('userrequestcomment', ''));
 
     // Build a message
-    $message             = "{" . ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "}\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n{" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "}\n{$baseurl}";
+    $message             = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
     $notificationmessage = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
 
     $approval_notify_users = get_notification_users("USER_ADMIN"); 
@@ -3599,6 +3599,11 @@ function get_simple_search_fields()
 function check_display_condition($n, $field)
     {
     global $fields, $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
+
+    if(trim($field['display_condition']) == "")
+        {
+        return true;
+        }
 
     $displaycondition = false;
     $s                = explode(';', $field['display_condition']);

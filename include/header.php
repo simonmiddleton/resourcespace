@@ -127,7 +127,7 @@ if ($enable_ckeditor){?>
 	<script type="text/javascript" src="<?php echo $baseurl_short;?>lib/plupload_2.1.8/jquery.plupload.queue/jquery.plupload.queue.min.js?<?php echo $css_reload_key;?>"></script>
 <?php } ?>
 <?php
-if($videojs && ($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || (($pagename=='preview' || $pagename=='preview_all') && $keyboard_navigation_video_preview))
+if($videojs && ($keyboard_navigation_video_search || $keyboard_navigation_video_view || $keyboard_navigation_video_preview))
     {
     ?>
 	<script type="text/javascript" src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?<?php echo $css_reload_key?>"></script>
@@ -540,17 +540,20 @@ hook("afterheader");
 } // end if !ajax
 
 // Update header links to add a class that indicates current location
+// We parse URL for systems that are one level deep under web root
 $parsed_url = parse_url($baseurl);
 
 $scheme = @$parsed_url['scheme'];
-$host = @$parsed_url['host'];
-$port = @$parsed_url['port'];
+$host   = @$parsed_url['host'];
+$port   = (isset($parsed_url['port']) ? ":{$parsed_url['port']}" : "");
+
+$activate_header_link = "{$scheme}://{$host}{$port}" . urlencode($_SERVER["REQUEST_URI"]);
 ?>
 <script>
 jQuery(document).ready(function()
-		{
-		ActivateHeaderLink('<?php echo $scheme . "://" . $host . (isset($port)?":" . $port:"") . $_SERVER["REQUEST_URI"] ?>');
-		});
+    {
+    ActivateHeaderLink('<?php echo $activate_header_link; ?>');
+    });
 </script>
 <?php
 // Non-ajax specific hook 

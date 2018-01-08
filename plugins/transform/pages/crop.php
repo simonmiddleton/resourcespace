@@ -80,12 +80,20 @@ $originalpath= get_resource_path($ref,true,'',false,$orig_ext);
 hook('transformcropbeforegetsize');
 
 // retrieve image sizes for original image and preview used for cropping
-$cropsizes = @getimagesize($previewpath);
-$origsizes = @getimagesize($originalpath);
-$cropwidth = $cropsizes[0];
+$cropsizes  = @getimagesize($previewpath);
+$origsizes  = @getimagesize($originalpath);
+$cropwidth  = $cropsizes[0];
 $cropheight = $cropsizes[1];
-$origwidth = $origsizes[0];
+$origwidth  = $origsizes[0];
 $origheight = $origsizes[1];
+
+// For SVGs it is hard to determine the size (at the moment (PHP7 - 29/12/2017) getimagesize does not support it)
+// Note: if getSvgSize() can extract the width and height then the crop will work as expected, otherwise the output will
+// be the full size (ie. not cropped)
+if($orig_ext == 'svg')
+    {
+    list($origwidth, $origheight) = getSvgSize($originalpath);
+    }
 
 // Get parameters from Manage slideshow page
 $manage_slideshow_action = getvalescaped('manage_slideshow_action', '');

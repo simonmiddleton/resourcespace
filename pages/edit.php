@@ -737,55 +737,6 @@ function ShowHelp(field)
             }
         })
     
-    function AutoSave(field)
-        {
-        if (preventautosave)
-            {   
-            return false;
-            } 
-            
-        jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
-        jQuery('#AutoSaveStatus' + field).show();
-        jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
-            function(data)
-                {
-                saveresult=JSON.parse(data);
-                if (saveresult['result']=="SAVED")
-                    {
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saved"] ?>');
-                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-                    if (typeof(saveresult['checksums']) !== undefined)
-                        {
-                        for (var i in saveresult['checksums']) 
-                            {
-                            if (jQuery.isNumeric(i))
-                                 {
-                                 jQuery("#field_" + i + "_checksum").val(saveresult['checksums'][i]);
-                                 }
-                               else
-                                 {
-                                 jQuery('#' + i + '_checksum').val(saveresult['checksums'][i]);
-                                 }
-                            }
-                        }					
-                    }
-                else
-                    {   
-                    saveerrors = '<?php echo urlencode($lang["error_generic"]); ?>';
-                    if (typeof(saveresult['errors']) !== undefined)
-                        {
-                        saveerrors = "";
-                        for (var i in saveresult['errors']) 
-                            {
-                            saveerrors += saveresult['errors'][i] + "<br />";
-                            }
-                        }
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["save-error"] ?>');
-                    jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-                    styledalert('<?php echo $lang["error"] ?>',saveerrors);
-                    }
-                });
-        }
 
     // Disable autosave on enter keypress as form will be submitted by this keypress anyway which can result in duplicate data
     jQuery(document).bind('keydown',function (e)
@@ -863,48 +814,6 @@ function ShowHelp(field)
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
                     }
                 });
-
-	jQuery('#AutoSaveStatus' + field).html('<?php echo urlencode($lang["saving"]) ?>');
-	jQuery('#AutoSaveStatus' + field).show();
-	jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
-		function(data)
-			{
-			saveresult=JSON.parse(data);
-			if (saveresult['result']=="SAVED")
-				{
-				jQuery('#AutoSaveStatus' + field).html('<?php echo urlencode($lang["saved"]) ?>');
-				jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-				if (typeof(saveresult['checksums']) !== undefined)
-					{
-					for (var i in saveresult['checksums']) 
-						{
-                        if (jQuery.isNumeric(i))
-                             {
-                             jQuery("#field_" + i + "_checksum").val(saveresult['checksums'][i]);
-                             }
-                           else
-                             {
-                             jQuery('#' + i + '_checksum').val(saveresult['checksums'][i]);
-                             }
-						}
-					}					
-				}
-			else
-				{   
-				saveerrors = '<?php echo urlencode($lang["error_generic"]); ?>';
-				if (typeof(saveresult['errors']) !== undefined)
-					{
-					saveerrors = "";
-					for (var i in saveresult['errors']) 
-						{
-						saveerrors += saveresult['errors'][i] + "<br />";
-						}
-					}
-                jQuery('#AutoSaveStatus' + field).html('<?php echo urlencode($lang["save-error"]) ?>');
-				jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-				styledalert('<?php echo urlencode($lang["error"]) ?>',saveerrors);
-				}
-			});
 	}
 <?php } 
 
@@ -1466,7 +1375,7 @@ if (getval("copyfrom","")!="")
     }
   }
 
-if(isset($metadata_template_resource_type) && $metadatatemplate != '')
+if(isset($metadata_template_resource_type) && $metadatatemplate != 0)
     {
     $use             = $metadatatemplate;
     $original_fields = get_resource_field_data($ref, $multiple, true, -1, '', $tabs_on_edit);

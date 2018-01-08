@@ -15,9 +15,9 @@ if(!in_array($plugin_name, $plugins))
     }
 
 $archive_states = array();
-foreach(sql_query('SELECT `code`, `name` FROM archive_states') as $state)
+foreach(get_editable_states($userref) as $state)
     {
-    $archive_states[$state['code']] = $state['name'];
+    $archive_states[$state['id']] = $state['name'];
     }
 
 if(!isset($antivirus_path) || trim($antivirus_path) == '')

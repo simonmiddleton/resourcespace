@@ -5035,10 +5035,11 @@ function copyRelatedResources($from, $to)
     
 function process_edit_form($ref, $resource)
 	{
-    global $multiple, $lang, $embedded_data_user_select, $embedded_data_user_select_fields, $data_only_resource_types, $check_edit_checksums, $uploadparams,
-    $resource_type_force_selection, $relate_on_upload, $enable_related_resources, $is_template, $upload_collection_name_required, $upload_review_mode,
-    $userref, $userref, $collection_add, $baseurl_short, $no_exif, $autorotate;
-  
+    global $multiple, $lang, $embedded_data_user_select, $embedded_data_user_select_fields, $data_only_resource_types,
+    $check_edit_checksums, $uploadparams, $resource_type_force_selection, $relate_on_upload, $enable_related_resources, 
+    $is_template, $upload_collection_name_required, $upload_review_mode, $userref, $userref, $collection_add, $baseurl_short,
+    $no_exif, $autorotate;
+
 	# save data
     # When auto saving, pass forward the field so only this is saved.
     $autosave_field=getvalescaped("autosave_field","");
@@ -5068,19 +5069,21 @@ function process_edit_form($ref, $resource)
         }
     else
         {
-        $uploadparams = str_replace(array('&forcesingle=true','&noupload=true'), array(''),$uploadparams); 
-        }   
+        unset($uploadparams['forcesingle']);
+        unset($uploadparams['noupload']);
+        }
+
     if(!isset($save_errors))
         {
         # Perform the save
         $save_errors=save_resource_data($ref,$multiple,$autosave_field);
         }
 
-    if($relate_on_upload && $enable_related_resources && getval("relateonupload","")!="")
-      {
-      $uploadparams.="&relateonupload=yes";
-      }
-    
+    if($relate_on_upload && $enable_related_resources && getval("relateonupload", "") != "")
+        {
+        $uploadparams['relateonupload'] = 'yes';
+        }
+
     if($ref < 0 && $resource_type_force_selection && $resource_type=="")
         {
         if (!is_array($save_errors)){$save_errors=array();} 

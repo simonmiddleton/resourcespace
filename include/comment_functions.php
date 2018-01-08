@@ -6,20 +6,20 @@ function comments_submit()
 	
 	if ($username == $anonymous_login && (getvalescaped("fullname","") == "" || preg_match ("/${regex_email}/", getvalescaped("email","")) === false)) return;
 	
-	$comment_to_hide = getvalescaped("comment_to_hide","");
+	$comment_to_hide = getvalescaped("comment_to_hide",0,true);
 	
-	if (($comment_to_hide != "") && (checkPerm("o"))) {	
-		$sql = "update comment set hide=1 where ref=$comment_to_hide";
+	if (($comment_to_hide != 0) && (checkPerm("o"))) {	
+		$sql = "update comment set hide=1 where ref='$comment_to_hide'";
 		sql_query ($sql);		
 		return;
 	}
 	
-	$comment_flag_ref = getvalescaped("comment_flag_ref","");	
+	$comment_flag_ref = getvalescaped("comment_flag_ref",0,true);	
 	
 	// --- process flag request
 	
-	if ($comment_flag_ref != "") 
-		{		
+	if ($comment_flag_ref != 0) 
+		{	
 		$comment_flag_reason = getvalescaped("comment_flag_reason","");		
 		$comment_flag_url = getvalescaped("comment_flag_url","");
 		
@@ -30,7 +30,7 @@ function comments_submit()
 		
 		$comment_flag_url .= "#comment${comment_flag_ref}";		// add comment anchor to end of URL
 		
-		$comment_body = sql_query("select body from comment where ref=${comment_flag_ref}");		
+		$comment_body = sql_query("select body from comment where ref='$comment_flag_ref'");		
 		$comment_body = (!empty($comment_body[0]['body'])) ? $comment_body[0]['body'] : "";
 		
 		if ($comment_body == "") return;
@@ -60,7 +60,6 @@ function comments_submit()
 	}
 	
 	// --- process comment submission
-	
 	if (											// we don't want to insert an empty comment or an orphan
 		(getvalescaped("body","") == "") ||
 		((getvalescaped("collection_ref","") == "") && (getvalescaped("resource_ref","") == "") && (getvalescaped("ref_parent","") == ""))
@@ -75,30 +74,39 @@ function comments_submit()
 	else
 		{
 			$sql_fields = "user_ref";
-			$sql_values = $userref;
+			$sql_values = "'" . $userref . "'";
 		}
 
 	$body = getvalescaped("body", "");		
 	if (strlen ($body) > $comments_max_characters) $body = substr ($body, 0, $comments_max_characters);		// just in case not caught in submit form
-		
+	
+	$parent_ref =  getvalescaped("ref_parent", 0,true);
+	$collection_ref =  getvalescaped("collection_ref", 0,true);
+	$resource_ref =  getvalescaped("resource_ref", 0,true);
+	
 	$sql = "insert into comment (ref_parent, collection_ref, resource_ref, {$sql_fields}, body) values ("	.
-				getvalescaped("ref_parent", "NULL", true) . "," .
-				getvalescaped("collection_ref", "NULL", true) . "," .
-				getvalescaped("resource_ref", "NULL", true) . "," .					
+				($parent_ref == 0 ? "NULL" : "'$parent_ref'") . "," .
+				($collection_ref == 0 ? "NULL" : "'$collection_ref'") . "," .
+				($resource_ref == 0 ? "NULL" : "'$resource_ref'") . "," .	
 				$sql_values . "," .					
 				"'${body}'" .							
-			")";			
+			")";
 	sql_query($sql);
 	}
 
 function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $level = 1) 
-	{					
-	
+	{	
 	# ref 				= the reference of the resource, collection or the comment (if called from itself recursively) 
 	# bcollection_mode	= boolean flag, false(default) == show comments for resources, true == show comments for collection
 	# bRecursive		= flag to indicate whether to recursively show comments, defaults to true, will be set to false if depth limit reached
 	# level				= used for recursion for display indentation etc.	
 	
+	
+	if(!is_numeric($ref))
+		{
+		return false;
+		}
+		
 	global $username, $anonymous_login, $lang, $comments_max_characters, $comments_flat_view, $regex_email, $comments_show_anonymous_email_address;
 	
 	$anonymous_mode = (empty ($username) || $username == $anonymous_login);		// show extra fields if commenting anonymously
