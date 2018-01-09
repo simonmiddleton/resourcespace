@@ -2230,3 +2230,76 @@ function renderLockButton($name, $locked_fields=array())
     </button>
     <?php    
     }
+
+/**
+* Renders an image, with width and heigth specified for centering in div
+* 
+* @param array $imagedata  An array of resource data - usually from search results
+* @param string $img_url - URL to image file
+* @param string $display -size to use - from search results
+* 
+* @return void
+*/
+function render_resource_image($imagedata, $img_url, $display="thumbs")
+    {
+    global $view_title_field;
+    
+    if('' != $imagedata['thumb_width'] && 0 != $imagedata['thumb_width'] && '' != $imagedata['thumb_height'])
+        {
+        $ratio = $imagedata["thumb_width"] / $imagedata["thumb_height"];   
+        }
+    else
+        {
+        $ratio = 1;
+        }
+        
+    switch($display)
+        {
+        case "xlthumbs":
+            $defaultwidth = 320;
+            $defaultheight = 320;
+        break;
+    
+        case "thumbs":
+            $defaultwidth = 150;
+            $defaultheight = 150;
+        break;        
+        
+        case "collection":
+            $defaultwidth = 75;
+            $defaultheight = 75;
+        break;
+    
+        default:
+            $defaultwidth = 75;
+            $defaultheight = 75;
+        break;        
+        }
+    
+    if ($ratio > 1)
+        {
+        $width = $defaultwidth;
+        $height = round($defaultheight / $ratio);
+        //exit($height);
+        $margin = floor(($defaultheight - $height ) / 2) . "px";
+        } 
+    else 
+        {
+        $height = $defaultheight;
+        $width = round($defaultwidth * $ratio);
+        $margin = "auto";
+        }
+    
+    
+    ?>
+    
+    <img
+    border="0"
+    width="<?php echo $width ?>" 
+    height="<?php echo $height ?>"
+    style="margin-top:<?php echo $margin ?>;"        
+    src="<?php echo $img_url ?>" 
+    alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($imagedata["field".$view_title_field]))))); ?>"
+    />
+    <?php
+    }

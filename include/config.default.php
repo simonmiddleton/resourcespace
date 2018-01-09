@@ -2964,7 +2964,11 @@ $embedded_data_user_select=false;
 
 # Option to show related resources of specified resource types in a table alongside resource data. Thes resource types will not then be shown in the usual related resources area.
 # $related_type_show_with_data=array(3,4);
-# Additonal option to show a link for those with edit access allowing upload of new related resources. The resource type will then be automatically selected for the upload
+
+# Option to show the specified resource types as thumbnails if in $related_type_show_with_data array
+#$related_type_thumbnail_view = array(3);
+
+# Additional option to show a link for those with edit access allowing upload of new related resources. The resource type will then be automatically selected for the upload
 $related_type_upload_link=true;
 
 # Array of preview sizes to always create. This is especially helpful if your preview size is small than the "thm" size.

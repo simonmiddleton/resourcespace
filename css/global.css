@@ -270,6 +270,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .ResourcePanelIcons {padding: 5px;text-align:right;position:absolute;bottom:0;right:0;width:166px;}	
 .ResourcePanelSmallIcons {padding-left: 5px;}	
 .ImageWrapper {height:150px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
+.ImageWrapperSmall {height:75px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
 .ResourcePanel .ImageWrapper {margin-top: 12px;}
 

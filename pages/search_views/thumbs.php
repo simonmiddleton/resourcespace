@@ -108,45 +108,7 @@ if (!hook("renderresultthumb"))
                         <?php 
                         if(1 == $result[$n]['has_image'])
                         {
-                        ?>
-                        <img
-							 border="0"
-                        <?php
-                        if('' != $result[$n]['thumb_width'] && 0 != $result[$n]['thumb_width'] && '' != $result[$n]['thumb_height'])
-                            {
-                            if ($display == "xlthumbs")
-                                {
-                                $ratio = $result[$n]["thumb_width"] / $result[$n]["thumb_height"];
-                                if ($result[$n]["thumb_width"] > $result[$n]['thumb_height'])
-                                    {
-                                    $xlwidth = 320;
-                                    $xlheight = round(320 / $ratio);
-                                    } 
-                                else 
-                                    {
-                                    $xlheight = 320;
-                                    $xlwidth = round(320 * $ratio);
-                                    }
-                                ?>
-                                width="<?php echo $xlwidth ?>" 
-                                height="<?php echo $xlheight ?>"
-                                style="margin-top:<?php echo floor((320 - $xlheight) / 2) ?>px;"
-                                <?php
-                                }
-                            else
-                                {
-                                ?>
-                                width="<?php echo $result[$n]["thumb_width"]?>" 
-                                height="<?php echo $result[$n]["thumb_height"]?>"
-                                style="margin-top:<?php echo floor((150 - $result[$n]["thumb_height"]) / 2) ?>px;"
-                                <?php
-                                }
-                            }
-                            ?>
-                        src="<?php echo $thm_url ?>" 
-                        alt="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))); ?>"
-                        />
-                        <?php
+						render_resource_image($result[$n],$thm_url,$display);
                         // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
                         // when user hovers over the preview thumbnail
                         if(1 < $ffmpeg_snapshot_frames && in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && 0 < get_video_snapshots($ref, false, true))

@@ -13,6 +13,7 @@ include_once "../include/search_functions.php";
 include_once "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
 include_once "../include/image_processing.php";
+include_once '../include/render_functions.php';
 
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
 $internal_share_access = ($k!="" && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
