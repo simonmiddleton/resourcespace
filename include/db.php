@@ -164,61 +164,64 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 # ----------------------------------------------------------------------------------------------------------------------
 # Basic CORS and automated CSRF protection
 #
-$baseurl_path   = parse_url($baseurl, PHP_URL_PATH);
-$CORS_whitelist = array_merge(
-    array(parse_url($baseurl, PHP_URL_SCHEME) . '://' . parse_url($baseurl, PHP_URL_HOST)),
-    $CORS_whitelist
-);
-$CSRF_no_redirects = array_merge(
-    array(
-        "{$baseurl_path}/pages/home.php",
-        "{$baseurl_path}/login.php",
-    ),
-    $CSRF_no_redirects
-);
-
-// CSRF: Check standard headers to verify the request is same origin
-// 1. Determining the origin the request is coming from (source origin)
-$CSRF_source_origin = '';
-
-if(isset($_SERVER['HTTP_ORIGIN']))
+if(PHP_SAPI != "cli")
     {
-    $CSRF_source_origin = $_SERVER['HTTP_ORIGIN'];
+    $baseurl_path   = parse_url($baseurl, PHP_URL_PATH);
+    $CORS_whitelist = array_merge(
+        array(parse_url($baseurl, PHP_URL_SCHEME) . '://' . parse_url($baseurl, PHP_URL_HOST)),
+        $CORS_whitelist
+    );
+    $CSRF_no_redirects = array_merge(
+        array(
+            "{$baseurl_path}/pages/home.php",
+            "{$baseurl_path}/login.php",
+        ),
+        $CSRF_no_redirects
+    );
 
-    // CORS
-    if(in_array($_SERVER['HTTP_ORIGIN'], $CORS_whitelist))
+    // CSRF: Check standard headers to verify the request is same origin
+    // 1. Determining the origin the request is coming from (source origin)
+    $CSRF_source_origin = '';
+
+    if(isset($_SERVER['HTTP_ORIGIN']))
         {
-        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+        $CSRF_source_origin = $_SERVER['HTTP_ORIGIN'];
+
+        // CORS
+        if(in_array($_SERVER['HTTP_ORIGIN'], $CORS_whitelist))
+            {
+            header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+            }
+        else
+            {
+            header("Access-Control-Allow-Origin: {$baseurl}");
+            }
+        header('Vary: Origin');
         }
-    else
+    else if(isset($_SERVER['HTTP_REFERER']))
         {
-        header("Access-Control-Allow-Origin: {$baseurl}");
+        $CSRF_source_origin = $_SERVER['HTTP_REFERER'];
         }
-    header('Vary: Origin');
-    }
-else if(isset($_SERVER['HTTP_REFERER']))
-    {
-    $CSRF_source_origin = $_SERVER['HTTP_REFERER'];
-    }
 
-if($CSRF_source_origin !== '')
-    {
-    $CSRF_source_origin = parse_url($CSRF_source_origin, PHP_URL_SCHEME) . '://' . parse_url($CSRF_source_origin, PHP_URL_HOST);
-    }
+    if($CSRF_source_origin !== '')
+        {
+        $CSRF_source_origin = parse_url($CSRF_source_origin, PHP_URL_SCHEME) . '://' . parse_url($CSRF_source_origin, PHP_URL_HOST);
+        }
 
-// 2. Determining the origin the request is going to (target origin)
-$CSRF_target_origin = parse_url($baseurl, PHP_URL_SCHEME) . '://' . parse_url($baseurl, PHP_URL_HOST);
+    // 2. Determining the origin the request is going to (target origin)
+    $CSRF_target_origin = parse_url($baseurl, PHP_URL_SCHEME) . '://' . parse_url($baseurl, PHP_URL_HOST);
 
-// 3, Verify the two origins match
-if($CSRF_source_origin !== $CSRF_target_origin && !in_array($_SERVER['REQUEST_URI'], $CSRF_no_redirects))
-    {
+    // 3, Verify the two origins match
+    if($CSRF_source_origin !== $CSRF_target_origin && !in_array($_SERVER['REQUEST_URI'], $CSRF_no_redirects))
+        {
+        header("Origin: {$baseurl}");
+        header("Access-Control-Allow-Origin: *");
+        header("Location: {$baseurl}/pages/home.php");
+        exit();
+        }
+
     header("Origin: {$baseurl}");
-    header("Access-Control-Allow-Origin: *");
-    header("Location: {$baseurl}/pages/home.php");
-    exit();
     }
-
-header("Origin: {$baseurl}");
 #
 # End of basic CORS and automated CSRF protection
 # ----------------------------------------------------------------------------------------------------------------------

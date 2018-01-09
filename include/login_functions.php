@@ -79,7 +79,21 @@ function perform_login()
 
 		# Update the user record.
 		$session_hash_sql="session='".escape_check($session_hash)."',";
-		sql_query("update user set $session_hash_sql last_active=now(),login_tries=0,lang='".getvalescaped("language","")."' where ref='$userref'");
+
+        // Generate a CSRF Token
+        $csrf_token_sql = "csrf_token = '" . escape_check(generateCSRFToken($session_hash)) . "'";
+
+        $language = getvalescaped("language", "");
+
+		sql_query("
+            UPDATE user
+               SET {$session_hash_sql}
+                   #{csrf_token_sql}
+                   last_active = NOW(),
+                   login_tries = 0,
+                   lang = '{$language}'
+             WHERE ref = '{$userref}'
+        ");
 
 		# Log this
 		daily_stat("User session",$userref);
