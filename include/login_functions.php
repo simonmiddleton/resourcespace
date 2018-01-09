@@ -81,17 +81,17 @@ function perform_login()
 		$session_hash_sql="session='".escape_check($session_hash)."',";
 
         // Generate a CSRF Token
-        $csrf_token_sql = "csrf_token = '" . escape_check(generateCSRFToken($session_hash)) . "'";
+        $csrf_token = escape_check(generateCSRFToken($session_hash));
 
         $language = getvalescaped("language", "");
 
 		sql_query("
             UPDATE user
                SET {$session_hash_sql}
-                   #{csrf_token_sql}
                    last_active = NOW(),
                    login_tries = 0,
-                   lang = '{$language}'
+                   lang = '{$language}',
+                   csrf_token = '{$csrf_token}'
              WHERE ref = '{$userref}'
         ");
 
