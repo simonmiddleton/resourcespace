@@ -211,7 +211,7 @@ if ($lockable_fields && $lastedited > 0)
 $resource_type=getval("resource_type","");
 if ($ref<0 && $resource_type!="" && $resource_type!=$resource["resource_type"] && !checkperm("XU{$resource_type}"))     // only if new resource specified and user has permission for that resource type
 	{
-	update_resource_type($ref,intval($resource_type));;
+	update_resource_type($ref,intval($resource_type));
     $resource["resource_type"] = $resource_type;
 	}
 
