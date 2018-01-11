@@ -75,7 +75,7 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
 	if ($result['valid'])
 		{
 	 	$expires=0;
-       	if (getval("remember","")!="") {$expires = 100;} # remember login for 100 days
+       	if ($allow_keep_logged_in && getval("remember","")!="") {$expires = 100;} # remember login for 100 days
 
 		# Store language cookie
 		rs_setcookie("language", $language, 1000); # Only used if not global cookies
