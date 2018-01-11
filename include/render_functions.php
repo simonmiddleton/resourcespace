@@ -51,8 +51,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
 					$scriptconditionnodes = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
                     
-                    //$scriptconditions[$condref]['node_options'] = array();
-
                     $checkvalues=$s[1];
                     $validvalues=explode("|",strtoupper($checkvalues));
 					$scriptconditions[$condref]['valid'] = array();
@@ -64,15 +62,20 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 							{
 							$scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
 
-							if(in_array($found_validvalue['ref'],$searched_nodes))
-								{
-								$displayconditioncheck = true;
-								}
-							}
-						}
+                            if(in_array($found_validvalue['ref'],$searched_nodes))
+                                {
+                                // Found a valid value
+                                $displayconditioncheck = true;
+                                }
+                            }
+                        }
 				
 
-                    if (!$displayconditioncheck) {$displaycondition=false;}
+                    if (!$displayconditioncheck)
+                        {
+                        $displaycondition=false;
+                        }
+
 					
 					// Certain fixed list types allow for multiple nodes to be passed at the same time
 					if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
@@ -162,7 +165,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
 			newfield<?php echo $field['ref']; ?>status = 'none';
 			newfield<?php echo $field['ref']; ?>show   = false;
-			<?php
+            newfield<?php echo $field['ref']; ?>provisional = true;
+            <?php
 			foreach($scriptconditions as $scriptcondition)
 				{
                 /*
@@ -179,6 +183,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     )
                 */
 				?>
+                newfield<?php echo $field['ref']; ?>subcheck = false;
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
 				<?php
                 ############################
@@ -207,18 +212,21 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                             {
 							 if(<?php echo $js_conditional_statement; ?>)
                                 {
-                                newfield<?php echo $field['ref']; ?>show = true;
+                                newfield<?php echo $field['ref']; ?>subcheck = true;
                                 }
                             });
                         }
                     <?php
+                    }?>
+                if(!newfield<?php echo $field['ref']; ?>subcheck)
+                    {
+                    newfield<?php echo $field['ref']; ?>provisional = false;
                     }
-                ############################
-                ############################
+                <?php
                 }
                 ?>
 
-                if(newfield<?php echo $field['ref']; ?>show)
+                if(newfield<?php echo $field['ref']; ?>provisional)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
                     }
