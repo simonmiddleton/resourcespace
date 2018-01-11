@@ -3605,7 +3605,7 @@ function check_display_condition($n, $field)
         return true;
         }
 
-    $displaycondition = false;
+    $displaycondition = true;
     $s                = explode(';', $field['display_condition']);
     $condref          = 0;
     $scriptconditions = array();
@@ -3655,12 +3655,9 @@ function check_display_condition($n, $field)
                         }
                     }
 
-                 if($displayconditioncheck)
+                 if(!$displayconditioncheck)
                     {
-                    $displaycondition = true;
-                    }
-                else
-                    {
+                    $displaycondition = false;
                     $required_fields_exempt[]=$field["ref"];
                     }
 
@@ -3758,6 +3755,7 @@ function check_display_condition($n, $field)
 			field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
 			newfield<?php echo $field['ref']; ?>status = 'none';
 			newfield<?php echo $field['ref']; ?>show   = false;
+            newfield<?php echo $field['ref']; ?>provisional = true;
 			<?php
 			foreach($scriptconditions as $scriptcondition)
 				{
@@ -3775,6 +3773,7 @@ function check_display_condition($n, $field)
                     )
                 */
 				?>
+                newfield<?php echo $field['ref']; ?>subcheck = false;
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
                 <?php
                 ############################
@@ -3806,18 +3805,22 @@ function check_display_condition($n, $field)
                             {
                             if(<?php echo $js_conditional_statement; ?>)
                                 {
-                                newfield<?php echo $field['ref']; ?>show = true;
+                                newfield<?php echo $field['ref']; ?>subcheck = true;
                                 }
                             });
                         }
                     <?php
                     }
-                ############################
-                ############################
+                ?>
+                if(!newfield<?php echo $field['ref']; ?>subcheck)
+                    {
+                    newfield<?php echo $field['ref']; ?>provisional = false;
+                    }
+                <?php
                 }
                 ?>
 
-                if(newfield<?php echo $field['ref']; ?>show)
+                if(newfield<?php echo $field['ref']; ?>provisional)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
                     }
@@ -3825,8 +3828,6 @@ function check_display_condition($n, $field)
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
                     jQuery('#question_<?php echo $n ?>').slideToggle();
-					jQuery('#question_<?php echo $n ?>').css('display', newfield<?php echo $field['ref']; ?>status);
-					
                     if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
                         {
                         jQuery('#question_<?php echo $n ?>').css('border-top', '');
