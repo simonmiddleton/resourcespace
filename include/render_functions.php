@@ -37,7 +37,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         $condref=0;
         foreach ($s as $condition) # Check each condition
             {
-            $displayconditioncheck=true;
+            $displayconditioncheck=false;
             $s=explode("=",$condition);
             global $fields;
             for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
@@ -51,8 +51,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
 					$scriptconditionnodes = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
                     
-                    //$scriptconditions[$condref]['node_options'] = array();
-
                     $checkvalues=$s[1];
                     $validvalues=explode("|",strtoupper($checkvalues));
 					$scriptconditions[$condref]['valid'] = array();
@@ -64,12 +62,13 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 							{
 							$scriptconditions[$condref]['valid'][] = $found_validvalue['ref'];
 
-							if(in_array($found_validvalue['ref'],$searched_nodes))
-								{
-								$displayconditioncheck = true;
-								}
-							}
-						}
+                            if(in_array($found_validvalue['ref'],$searched_nodes))
+                                {
+                                // Found a valid value
+                                $displayconditioncheck = true;
+                                }
+                            }
+                        }
 				
 
                     if (!$displayconditioncheck)
