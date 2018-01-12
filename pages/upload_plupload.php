@@ -21,6 +21,7 @@ $alternative                            = getvalescaped('alternative', ''); # Ba
 $replace                                = getvalescaped('replace', ''); # Replace Resource Batch
 $replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
+$single                                 = getval("single","") != "" || getval("forcesingle","") != "";
 
 // When uploading, if there are any files in the queue that have similar names plus a suffix to distinguish between original
 // and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
@@ -94,6 +95,7 @@ $uploadparams= array(
     'filename_field'                         => getval('filename_field', ''),
 	'keep_original'	                         => $replace_resource_preserve_option && $replace_resource_preserve_default,
     'replace_resource_original_alt_filename' => $replace_resource_original_alt_filename,
+    'single'                                 => ($single ? "true" : "false")
 );
 
 
@@ -155,7 +157,7 @@ $allowed_extensions="";
 if ($resource_type!="" && !$alternative) {$allowed_extensions=get_allowed_extensions_by_type($resource_type);}
 
 
-if ($collection_add!=="false")
+if ($collection_add!=="false" && is_numeric($collection_add))
 	{
 	# Switch to the selected collection (existing or newly created) and refresh the frame.
  	set_user_collection($userref,$collection_add);
@@ -554,7 +556,7 @@ if ($_FILES)
                                 }
 
                             # Add to collection?
-                            if ($collection_add!="false")
+                            if ($collection_add!="false" && is_numeric($collection_add))
                                     {
                                     add_resource_to_collection($ref,$collection_add,false,"",$resource_type);
                                     }
@@ -778,7 +780,7 @@ elseif ($upload_no_file && getval("createblank","")!="")
 	{
     $ref=copy_resource(0-$userref);    
 	# Add to collection?
-	if ($collection_add!="false")
+	if ($collection_add!="false" && is_numeric($collection_add))
 		{
 		add_resource_to_collection($ref,$collection_add);
 		}
@@ -829,7 +831,7 @@ var pluploadconfig = {
         },
         rename:true,
 		<?php } ?>
-        <?php if ($replace_resource > 0){?>
+        <?php if ($replace_resource > 0 || $single){?>
         multi_selection:false,
         rename: true,
         <?php }
