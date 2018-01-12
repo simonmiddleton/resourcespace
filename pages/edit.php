@@ -1040,7 +1040,7 @@ else
 
   if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode) { ?>
   <div class="Question" id="question_imagecorrection">
-   <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+   <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
    <option value=""><?php echo $lang["select"]?></option>
    <?php if ($resource["has_image"]==1) { ?>
    <?php
