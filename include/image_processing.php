@@ -1789,7 +1789,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				}
 			$modified_mpr_command=hook('modify_mpr_command','',array($command,$ref,$extension));
 			if($modified_mpr_command!=''){$command=$modified_mpr_command;}
-			$output = exec($command);
+			$output = run_command($command);
 			}
 		# For the thumbnail image, call extract_mean_colour() to save the colour/size information
 		$target=@imagecreatefromjpeg(get_resource_path($ref,true,"thm",false,"jpg",-1,1,false,"",$alternative));
