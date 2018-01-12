@@ -23,7 +23,7 @@ $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 $modal=(getval("modal","")=="true");
-$single=getval("single","")!="" || getval("forcesingle","")!="";
+$single=getval("single","") != "" || getval("forcesingle","") != "";
 $disablenavlinks=getval("disablenav","")=="true";
 $uploader = getvalescaped("uploader","");
 $collection     = getvalescaped('collection', '', true);
@@ -495,6 +495,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         if (getval("noupload","") != "")
                             {
                             $ref=copy_resource(0-$userref);
+                            $urlparams["ref"] = $ref;
                             if(is_numeric($collection_add))
                                 {
                                 add_resource_to_collection($ref, $collection_add,false,"",$resource_type);
@@ -503,19 +504,20 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             redirect(generateURL($baseurl_short . "pages/view.php",$urlparams, array("refreshcollectionframe"=>"true")));
                             exit();
                             }
-                        redirect(generateURL($baseurl_short . "pages/upload.php",array_merge($urlparams,$uploadparams), array("resource_type"=>$resource_type)));
-                        }
-                    elseif ($uploader != "" && $uploader !="local")
-                        {
-                        redirect(generateURL($baseurl_short . "pages/upload_" . urlencode($uploader) . ".php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                        redirect(generateURL($baseurl_short . "pages/upload_plupload.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
                         }
                     elseif (getval("local","") != "" || $uploader == "local")// Test if fetching resource from local upload folder.
                         {
                         redirect(generateURL($baseurl_short . "pages/team/team_batch_select.php",array_merge($urlparams,$uploadparams), array("use_local"=>"yes")) . hook("addtouploadurl"));
                         }
-                    else // Hence fetching from ftp.
+                    elseif ($uploader == "ftp")
                         {
                         redirect(generateURL($baseurl_short . "pages/team/team_batch.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
+                        }
+                    else
+                        {
+                        // Default
+                        redirect(generateURL($baseurl_short . "pages/upload_plupload.php",array_merge($urlparams,$uploadparams)) . hook("addtouploadurl"));
                         }
                     }
                 }
@@ -1038,7 +1040,7 @@ else
 
   if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode) { ?>
   <div class="Question" id="question_imagecorrection">
-   <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="<?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
+   <label><?php echo $lang["imagecorrection"]?><br/><?php echo $lang["previewthumbonly"]?></label><select class="stdwidth" name="tweak" id="tweak" onChange="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
    <option value=""><?php echo $lang["select"]?></option>
    <?php if ($resource["has_image"]==1) { ?>
    <?php
@@ -1081,20 +1083,31 @@ else
    {
     # Define the title h1:
     if ($single)
-      {
-      if (getval("status","")=="2")
         {
-        $titleh1 = $lang["newarchiveresource"]; # Add Single Archived Resource
+        if (getval("status","")=="2")
+            {
+            $titleh1 = $lang["newarchiveresource"]; # Add Single Archived Resource
+            }
+        else
+            {
+            $titleh1 = $lang["addresource"]; # Add Single Resource
+            }
         }
-      else
+    elseif ($uploader == "ftp")
         {
-        $titleh1 = $lang["addresource"]; # Add Single Resource
+        # Add Resource Batch - Fetch from FTP server
+        $titleh1 = $lang["addresourcebatchftp"];
         }
-      }
-    elseif ($uploader == "" || getval("uploader","")=="plupload") {$titleh1 = $lang["addresourcebatchbrowser"];} # Add Resource Batch - In Browser
-    elseif ((getval("local","")!="")||($uploader == "local")) {$titleh1 = $lang["addresourcebatchlocalfolder"];} # Add Resource Batch - Fetch from local upload folder
-    else $titleh1 = $lang["addresourcebatchftp"]; # Add Resource Batch - Fetch from FTP server
-    
+    elseif ((getval("local","")!="")||($uploader == "local"))
+        {
+         # Add Resource Batch - Fetch from local upload folder
+        $titleh1 = $lang["addresourcebatchlocalfolder"];
+        }
+   else
+        {
+        // Defualt - batch upload using plupload
+        $titleh1 = $lang["addresourcebatchbrowser"];
+        }    
     ?>
     
     <h1><?php echo $titleh1 ?></h1>
@@ -1117,8 +1130,7 @@ if(!$is_template && $show_required_field_label)
    global $clearbutton_on_upload;
    if(($clearbutton_on_upload && $ref<0 && !$multiple) || ($ref>0 && $clearbutton_on_edit)) 
      { ?>
-  <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
-  <?php
+  <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;&nbsp;<?php
     }
 
     $save_btn_value = $lang['next'];
@@ -1126,7 +1138,12 @@ if(!$is_template && $show_required_field_label)
         {
         $save_btn_value = $lang['create'];
         }
-?>
+if ($single)
+    {
+    ?>
+    <input name="save"  class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo $lang["noupload"] ; ?>&nbsp;&nbsp;" onClick="jQuery('#noupload').val('true');return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);" />&nbsp;&nbsp;
+    <input type=hidden id="noupload" name="noupload" value=""><?php
+    }?>
 <input name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" /><br />
 <div class="clearerleft"> </div>
 </div>
