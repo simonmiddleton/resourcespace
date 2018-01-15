@@ -5,7 +5,8 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
 
     $mandatory_columns = array('username', 'password', 'email');
     $optional_columns  = array('fullname', 'account_expires', 'comments', 'ip_restrict', 'lang');
-    $possible_columns  = array_merge($mandatory_columns, $optional_columns);
+    $possible_columns = sql_query("describe user");
+    $possible_columns = array_column($possible_columns,"Field");
 
     $default_columns_values = array(
         'lang' => $defaultlanguage
@@ -31,13 +32,12 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
 
 
     // Check header columns
-    $header_check_valid = false;
-    $mandatory_columns_not_found = array_diff($headers, $optional_columns);
-    $mandatory_columns_not_found = array_diff($mandatory_columns_not_found, $mandatory_columns);
+    $header_check_valid = true;
+    $mandatory_columns_not_found = array_diff($mandatory_columns,$headers);
     foreach($mandatory_columns_not_found as $column_header)
         {
         array_push($messages, 'Error: Could not find mandatory column "' . $column_header . '"');
-        $header_check_valid = true;
+        $header_check_valid = false;
         }
 
     $unknown_columns = array_diff($headers, $possible_columns);
@@ -47,10 +47,9 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
         }
 
     // No point to continue since headers are not right
-    if($header_check_valid)
+    if(!$header_check_valid)
         {
         fclose($file);
-
         return false;
         }
 
@@ -81,6 +80,12 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
             {
             $cell_count++;
             $cell_value = trim($line[$cell_count]);
+            
+            if(in_array($header, $unknown_columns))
+                {
+                // Ignore this column;
+                continue;
+                }                
 
             // Make sure mandatory fields have a value
             if(in_array($header, $mandatory_columns) && '' === $cell_value)
