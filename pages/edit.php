@@ -207,6 +207,12 @@ if ($lockable_fields && $lastedited > 0)
     $resource = copy_locked_data($resource, $locked_fields, $lastedited);
     }
 
+if($ref < 0 && $resource_type_force_selection)
+  {
+  $resource_type = "";
+  $resource["resource_type"] = "";
+  }
+
 # Allow to specify resource type from url for new resources
 $resource_type=getval("resource_type","");
 if ($ref<0 && $resource_type!="" && $resource_type!=$resource["resource_type"] && !checkperm("XU{$resource_type}"))     // only if new resource specified and user has permission for that resource type
@@ -279,11 +285,7 @@ if(0 > $ref && '' == getval('submitted', '') && isset($metadata_template_resourc
     clear_resource_data($ref);
     }
 
-if($ref < 0 && $resource_type_force_selection)
-  {
-  $resource_type = "";
-  $resource["resource_type"] = "";
-  }
+
         
 # check for upload disabled due to space limitations...
 if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
