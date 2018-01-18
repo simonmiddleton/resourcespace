@@ -573,7 +573,12 @@ function get_managed_dash()
                 ?>
 			href="<?php echo $link?>" <?php echo $newtab ? "target='_blank'" : "";?>
 			onClick="<?php echo (!$newtab ? 'return ' . (($help_modal && strpos($link,'pages/help.php')!==false)?'ModalLoad(this,true);':'CentralSpaceLoad(this,true);') : ''); ?>"
-			class="HomePanel DashTile DashTileDraggable" 
+
+			<?php
+			# Check if tile is set to double width
+			$tlsize = (isset($buildstring['tlsize']) ? $buildstring['tlsize'] : '');
+			?>
+			class="HomePanel DashTile DashTileDraggable <?php echo ('double' == $tlsize ? 'DoubleWidthDashTile' : ''); ?>" 
 			id="tile<?php echo htmlspecialchars($tile["tile"]);?>"
 		>
 			<div id="contents_tile<?php echo htmlspecialchars($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash <?php echo ($dash_tile_shadows)? "TileContentShadow":"";?>" style="<?php echo $tile_custom_style; ?>">
