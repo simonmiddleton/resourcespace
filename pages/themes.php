@@ -629,7 +629,7 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 							}
 						if ($enable_theme_category_edit && checkperm("t"))
 							{ 
-							hook("addcustomtool"); 
+							hook("addcustomtool", "", array($headers[$n])); 
 							?><div class="tool">
 								<a href="<?php echo $editlink ?>" onClick="return ModalLoad(this,true);">
 									<span><?php echo LINK_CARET ?><?php echo $lang['action-edit']; ?></span>
