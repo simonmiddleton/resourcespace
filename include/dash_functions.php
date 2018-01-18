@@ -511,6 +511,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
  */
 function get_managed_dash()
 	{
+
 	global $baseurl,$baseurl_short,$lang,$anonymous_login,$username,$dash_tile_shadows, $anonymous_default_dash, $userref, $usergroup;
     global $dash_tile_colour, $dash_tile_colour_options, $managed_home_dash, $help_modal;
 	#Build Tile Templates
@@ -573,7 +574,12 @@ function get_managed_dash()
                 ?>
 			href="<?php echo $link?>" <?php echo $newtab ? "target='_blank'" : "";?>
 			onClick="<?php echo (!$newtab ? 'return ' . (($help_modal && strpos($link,'pages/help.php')!==false)?'ModalLoad(this,true);':'CentralSpaceLoad(this,true);') : ''); ?>"
-			class="HomePanel DashTile DashTileDraggable" 
+
+			<?php
+			# Check if tile is set to double width
+			$tlsize = (isset($buildstring['tlsize']) ? $buildstring['tlsize'] : '');
+			?>
+			class="HomePanel DashTile DashTileDraggable <?php echo ('double' == $tlsize ? 'DoubleWidthDashTile' : ''); ?>" 
 			id="tile<?php echo htmlspecialchars($tile["tile"]);?>"
 		>
 			<div id="contents_tile<?php echo htmlspecialchars($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash <?php echo ($dash_tile_shadows)? "TileContentShadow":"";?>" style="<?php echo $tile_custom_style; ?>">
@@ -990,6 +996,7 @@ function get_user_dash($user)
 	$user_tiles = sql_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.all_users,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,user_dash_tile.ref AS 'user_tile',user_dash_tile.order_by FROM user_dash_tile JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user='".$user."' ORDER BY user_dash_tile.order_by");
 
 	$order=10;
+
 	foreach($user_tiles as $tile)
 		{
 		if($order != $tile["order_by"] || ($tile["order_by"] % 10) > 0){update_user_dash_tile_order($user,$tile["user_tile"],$order);}
@@ -1001,7 +1008,7 @@ function get_user_dash($user)
         parse_str(str_replace('&amp;', '&', $buildstring[1]), $buildstring);
 
         $tlsize = (isset($buildstring['tlsize']) ? $buildstring['tlsize'] : '');
-
+		
         if($dash_tile_colour)
             {
             if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))

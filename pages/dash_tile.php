@@ -27,7 +27,7 @@ $submitdashtile=getvalescaped("submitdashtile",FALSE);
 if($submitdashtile)
 	{
 	$buildurl = getvalescaped("url","");
-    $tlsize   = ('double' === getvalescaped('tlsize', '') ? 'double' : '');
+    $tlsize   = ('double' === getvalescaped('', '') ? 'double' : '');
 
 	if ($buildurl=="")
 		{
