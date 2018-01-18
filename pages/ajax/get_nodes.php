@@ -33,16 +33,6 @@ $return               = array();
 $found_node_by_ref    = array();
 $current_node_pointer = 0;
 
-if(0 == $node && '' == $name)
-    {
-    $return['error'] = array(
-        'status' => 400,
-        'title'  => 'Bad Request',
-        'detail' => 'Node ID or name incorrect!');
-
-    echo json_encode($return);
-    exit();
-    }
 
 if(0 < $node && get_node($node, $found_node_by_ref))
     {
@@ -56,33 +46,46 @@ if(0 < $node && get_node($node, $found_node_by_ref))
 
 // Fuzzy search by node name:
 // Translate (i18l) all options and return those that have a match for what client code searched (fuzzy searching still applies)
-foreach(get_nodes($resource_type_field, null, true, null, $rows, $name) as $node)
+if($name != "")
     {
-    if($rows == $current_node_pointer)
+    foreach(get_nodes($resource_type_field, null, true, null, $rows, $name) as $node)
         {
-        break;
+        if($rows == $current_node_pointer)
+            {
+            break;
+            }
+
+        $i18l_name = i18n_get_translated($node['name']);
+
+        // Skip any translated (i18l) names that don't contain what client code searched for
+        if(false === mb_strpos(mb_strtolower($i18l_name), mb_strtolower($name)))
+            {
+            continue;
+            }
+
+        $node['name'] = $i18l_name;
+
+        $return['data'][] = $node;
+
+        // Increment only when valid nodes have been added to the result set
+        $current_node_pointer++;
         }
-
-    $i18l_name = i18n_get_translated($node['name']);
-
-    // Skip any translated (i18l) names that don't contain what client code searched for
-    if(false === mb_strpos(mb_strtolower($i18l_name), mb_strtolower($name)))
-        {
-        continue;
-        }
-
-    $node['name'] = $i18l_name;
-
-    $return['data'][] = $node;
-
-    // Increment only when valid nodes have been added to the result set
-    $current_node_pointer++;
     }
 
 // Search did not return any results back. This is still considered a successful request!
-if(!isset($return['data']) && 0 === count($return))
+if(($node > 0 || $name != "") && !isset($return['data']) && 0 === count($return))
     {
     $return['data'] = array();
+    }
+
+// Only resource type field specified? That means client code is querying for all options of this field
+if($resource_type_field > 0)
+    {
+    foreach(get_nodes($resource_type_field, null, true) as $node)
+        {
+        $node['name']     = i18n_get_translated($node["name"]);
+        $return['data'][] = $node;
+        }
     }
 
 // If by this point we still don't have a response for the request,
