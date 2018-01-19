@@ -83,7 +83,9 @@ if (!hook("replacelistitem"))
 				<?php } 
 				} //end replace list title
 			}
-
+		
+		hook("searchbeforeratingfield");
+		
 		if (isset($rating_field))
 			{ ?>
 			<td <?php hook("listviewcolumnstyle");?> >

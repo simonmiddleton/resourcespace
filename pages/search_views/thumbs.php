@@ -21,7 +21,7 @@ if (!hook("renderresultthumb"))
 	style="height: <?php echo $thumbs_displayed_fields_height; ?>px;"
 	>
 		<?php  
-        if ($resource_type_icons) 
+        if ($resource_type_icons && !hook("replaceresourcetypeicon")) 
             {
             ?>
             <div class="ResourceTypeIcon IconResourceType<?php echo $result[$n]["resource_type"];  ?>" ></div>
@@ -283,6 +283,7 @@ if (!hook("renderresultthumb"))
 				} /* end hook replaceresourcepanelinfonormal */
 				hook("processthumbsfields");
 			}
+		hook("afterthumbfields");
 		$df=$df_normal;
 		?>
 		<!-- Checkboxes -->
