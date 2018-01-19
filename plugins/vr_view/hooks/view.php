@@ -2,13 +2,17 @@
 
 function HookVr_viewViewReplacepreviewlink()
     {
-	global $resource, $baseurl_short, $urlparams, $modal, $lang;
+	global $resource, $baseurl_short, $urlparams, $modal, $lang, $plugins;
     $use_vr_view = VrViewUseVR($resource);
     
-    if(!$use_vr_view)
+	if(!$use_vr_view)
         {
         return false;
         }
+
+	// Disable lightbox plugin as this will change the preview link
+	$plugins = array_diff($plugins,array("lightbox_preview"));
+	$plugins = array_values($plugins); 
     ?>
     <div id="previewimagewrapper">
         <a id="previewimagelink"
