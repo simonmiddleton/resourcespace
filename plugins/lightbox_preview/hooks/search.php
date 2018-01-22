@@ -5,7 +5,7 @@ include dirname(__FILE__) . "/../include/utility.php";
 function HookLightbox_previewSearchReplacefullscreenpreviewicon()
 	{
 	global $baseurl_short, $ref, $result, $n, $k, $search, $offset, $sort, $order_by, $archive,
-			$lang, $showkeypreview, $value;
+			$lang, $showkeypreview, $value, $view_title_field;
 
 	$url = getPreviewURL($result[$n]);
 	if ($url === false)
