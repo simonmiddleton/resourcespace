@@ -223,19 +223,24 @@ else
 	}
 
 // workaround for weird change in colorspace command in ImageMagick 6.7.5
-if (strtoupper($new_ext) == 'JPG' && $cropper_jpeg_rgb){
-       if ($imversion[0]<6 || ($imversion[0] == 6 &&  $imversion[1]<7) || ($imversion[0] == 6 && $imversion[1] == 7 && $imversion[2]<5)){
-
-                $colorspace1 = " -colorspace sRGB ";
-                $colorspace2 =  " -colorspace RGB ";
-        } else {
-                $colorspace1 = " -colorspace RGB ";
-                $colorspace2 =  " -colorspace sRGB ";
+if ($cropper_jpeg_rgb || ($cropper_srgb_option && getval("use_srgb","") != ""))
+    {
+    if ($imversion[0]<6 || ($imversion[0] == 6 &&  $imversion[1]<7) || ($imversion[0] == 6 && $imversion[1] == 7 && $imversion[2]<5))
+        {
+        $colorspace1 = " -colorspace sRGB ";
+        $colorspace2 =  " -colorspace RGB ";
         }
-} else {
-	$colorspace1 = '';
-	$colorspace2 = '';
-}
+    else
+        {
+        $colorspace1 = " -colorspace RGB ";
+        $colorspace2 =  " -colorspace sRGB ";
+        }
+    }
+else
+    {
+    $colorspace1 = '';
+    $colorspace2 = '';
+    }
 
 $commandprefix="";
 $keep_transparency=false;
@@ -252,7 +257,11 @@ else
     }
 
     
-
+$quality = getval("quality","",TRUE);
+if ($quality != "" && in_array($quality,$image_quality_presets) && in_array(strtoupper($new_ext) , array("PNG","JPG")))
+	{
+	$command .= " -quality " .  $quality . "% ";
+	}
 
 
 $resolution=getval("resolution","",TRUE);
@@ -350,15 +359,14 @@ $command .= $colorspace2;
 $command .= " \"$newpath\"";
 
 if ($cropper_debug && !$download && getval("slideshow","")==""){
-	error_log($command);
+	debug($command);
 	if (isset($_REQUEST['showcommand'])){
-		echo "$command";
+		echo htmlspecialchars($command);
 		delete_alternative_file($ref,$newfile);
 		exit;
 	}
 }
 
-// fixme -- do we need to trap for errors from imagemagick?
 $shell_result = run_command($command);
 if ($cropper_debug){
 	error_log("SHELL RESULT: $shell_result");
@@ -908,9 +916,35 @@ if(!$cropperestricted)
           </select>
           <?php } // end of if force_original_format ?></td>
       </tr>
-	  
-	  
-	  <?php
+	  	  
+	  <?php      
+      if($cropper_quality_select && count($image_quality_presets) > 0)
+        {?>
+        <tr>
+        <td style='text-align:right'><?php echo $lang['property-quality']; ?>: </td>
+        <td colspan='3'>
+          <select name='quality'>
+                <?php 
+                foreach ($image_quality_presets as $image_quality_preset) 
+                    {
+                    echo "<option value='" . htmlspecialchars($image_quality_preset) . "'>" . $lang["image_quality_" . htmlspecialchars($image_quality_preset)] . "&nbsp;</option>\n";
+                    }
+                    ?>
+          </select>
+        </td>
+        </tr>
+        <?php
+        }
+    
+     if (!$cropper_jpeg_rgb && $cropper_srgb_option)
+			{?>
+            <tr>
+                <td style='text-align:right'><?php echo $lang["cropper_use_srgb"]; ?>: </td>
+                <td><input type="checkbox" name='use_srgb' id='use_srgb' value="1" checked="checked"></td>
+            </tr>
+            <?php
+            }
+      
 	  if (count($cropper_resolutions)>0)
 			{?>
 		    <tr>
@@ -921,7 +955,7 @@ if(!$cropperestricted)
 					<?php 
 					foreach ($cropper_resolutions as $cropper_resolution)
 						{
-						echo "<option value='$cropper_resolution'>" . $cropper_resolution . "&nbsp;</option>\n";
+						echo "<option value='" . htmlspecialchars($cropper_resolution) . "'>" . htmlspecialchars($cropper_resolution) . "&nbsp;</option>\n";
 						}
 						?>
 			  </select>

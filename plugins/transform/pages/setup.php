@@ -27,12 +27,14 @@ $page_def[] = config_add_boolean_select('cropper_allow_scale_up', 'cropper_allow
 $page_def[] = config_add_boolean_select('cropper_rotation', $lang['allow_rotation']);
 $page_def[] = config_add_boolean_select('cropper_transform_original', $lang['allow_transform_original']);
 $page_def[] = config_add_boolean_select('cropper_use_repage', $lang['use_repage']);
-#$page_def[] = config_add_boolean_select('cropper_jpeg_rgb', 'cropper_jpeg_rgb');
 $page_def[] = config_add_boolean_select('cropper_enable_batch', $lang['enable_batch_transform']);
 $page_def[] = config_add_boolean_select('cropper_enable_alternative_files', $lang['cropper_enable_alternative_files']);
 $page_def[] = config_add_boolean_select('cropper_enable_replace_slideshow', $lang['enable_replace_slideshow']);
 $page_def[]= config_add_multi_group_select("cropper_restricteduse_groups",$lang["cropper_restricteduse_groups"]);
 $page_def[] = config_add_text_list_input('cropper_resolutions', $lang['cropper_resolutions']);
+$page_def[] = config_add_boolean_select('cropper_quality_select', $lang['cropper_quality_select']);
+$page_def[] = config_add_boolean_select('cropper_jpeg_rgb', $lang['cropper_jpeg_rgb']);
+$page_def[] = config_add_boolean_select('cropper_srgb_option', $lang['cropper_srgb_option']);
 
 // Commented out lines above that either don't seem to work or I'm unsure how to test
 

@@ -69,3 +69,7 @@ $lang['cropper_restricteduse_groups']='Restrict to rescale only (no rotate or cr
 $lang['transformblurbrestricted']="Choose a width and/or height to rescale the image. When you are done, choose a name and format for the new file and click download.<br/><br/>";
 $lang['cropper_resolutions']="Preset resolution changes e.g 72,300. If set the values here will be available for users to select as the embedded file resolution";
 $lang['cropper_resolution_select']="Select from the preset resolution (PPI).<br>Leave blank to use the original resolution value";
+$lang['cropper_quality_select'] = "Allow user to select the quality of resultant file (JPG/PNG only)";
+$lang['cropper_srgb_option'] = "Add option to force use of sRGB profile";
+$lang['cropper_jpeg_rgb'] = "Force sRGB (overrides user option)";
+$lang['cropper_use_srgb'] = "Use sRGB";
