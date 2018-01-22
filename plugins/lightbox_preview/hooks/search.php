@@ -22,8 +22,9 @@ function HookLightbox_previewSearchReplacefullscreenpreviewicon()
 			echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php
 			echo urlencode($archive)?>&k=<?php echo urlencode($k)?>" title="<?php
 			echo $lang["fullscreenpreview"]?>"></a></span>
+			
 	<?php
-	setLink('#previewlink' . $ref, $url, str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($result[$n]["field".$view_title_field]))))));
+	setLink('#previewlink' . $ref, $url, $result[$n]["field".$view_title_field]);
 	return true;
 	}
 
