@@ -503,7 +503,8 @@ function config_gen_setup_post($page_def,$plugin_name)
                         $omit = true;
                         break;
                     case 'text_list':
-                        $GLOBALS[$def[1]] = explode(',', getval($def[1], ''));
+                        $pval = getval($def[1],'');
+                        $GLOBALS[$def[1]] = (trim($pval) != '') ? explode(',',$pval) : array();
                         break;
                     case 'hidden_param':
                         break;
