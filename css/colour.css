@@ -188,20 +188,18 @@ div.autocomplete ul li {color: #000;}
 .StarEmpty {  background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 .StarCurrent { background: transparent url('../gfx/interface/RatingStarWhite.gif') no-repeat;}
 .highlight {color: #000;background-color: #ff0;}
-.Tab a {border: 1px solid #BBBBBB;border-bottom-style: none;color: #aaaaaa;  }
+.Tab a {border: 1px solid #BBBBBB;color: #aaaaaa;  }
 .StyledTabbedPanel 
     {
     background: #fefefe linear-gradient(#fff,#eee);
 	border: 1px solid #BBBBBB;
     }
 .TabSelected  
-    { 
-    background: #ffffff;  
-    border-bottom: 1px solid #ffffff; 
+    {    
     border-top: 1px solid #ffffff;
     border-left: #bbbbbb;
     }
-.TabSelected a { color: #666666; }
+.TabSelected a {background: #ffffff; color: #666666; border-bottom: 1px solid #ffffff; }
 .InfoTable {border-collapse:collapse;}
 .InfoTable tr {background: #597499 linear-gradient(#FFF,#EEE);}
 .InfoTable td {border:1px solid #BBBBBB;border-top:1px solid #BBBBBB;}

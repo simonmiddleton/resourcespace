@@ -21,8 +21,8 @@ if ($enable_related_resources)
 		{		
 		foreach($related_type_show_with_data as $rtype)
 			{
-			# Is this a resource type that needs to be displayed?
-			if (!in_array($rtype, $related_type_show_with_data) || (!in_array($rtype, $related_restypes) && !$related_type_upload_link))
+			# Is this a resource type that needs to be displayed? Don't show resources of the same type as this is not the standard configuration
+			if ($resource['resource_type'] == $rtype || !in_array($rtype, $related_type_show_with_data) || (!in_array($rtype, $related_restypes) && !$related_type_upload_link))
 				{
 				continue;
 				}
@@ -101,7 +101,7 @@ if ($enable_related_resources)
 										{
 										$relatedtitle = $relatedresource['field' . $view_title_field];
 										echo "<tr id=\"relatedresource" . $relatedresource["ref"] . "\" class=\"RelatedResourceRow\">";
-										echo "<td class=\"link\"><a href=\"" . $baseurl_short . "pages/view.php?ref=" . $relatedresource["ref"] . "\">" . htmlspecialchars($relatedtitle) . "</a></td>";                                    
+										echo "<td class=\"link\"><a href=\"" . $baseurl_short . "pages/view.php?ref=" . $relatedresource["ref"] . "\"  onClick=\"return ModalLoad(this,true);\" >" . htmlspecialchars($relatedtitle) . "</a></td>";                                    
 										echo "<td>";
 										if($edit_access)
 											{

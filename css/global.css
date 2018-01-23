@@ -459,7 +459,7 @@ a.HomePanel {text-decoration:none;}
 a.HomePanel {cursor:pointer;}
 
 
-.TabBar {padding:10px 0 0 0;}
+.TabBar {padding:10px 0 0 0;margin-bottom: -1px;}
 .Tab a {margin:0 5px 0 0;padding:5px;display:inline-block; border-top-right-radius:5px;border-top-left-radius:5px; }
 .Tab a:hover {text-decoration: none;}
 .Tab {display:inline;}

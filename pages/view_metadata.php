@@ -32,8 +32,8 @@ foreach ($fields_tab_names as $tabname) {
 $fields_tab_names = array_intersect($fields_tab_names, $tabs_with_data);
 
 if(isset($related_type_show_with_data)) {
-	// Get resource type tab names (if any set):
-	$resource_type_tab_names = sql_array('SELECT tab_name as value FROM resource_type', '');
+	// Get resource type tab names, excluding the current resource type (if any set):
+	$resource_type_tab_names = sql_array("SELECT tab_name as value FROM resource_type WHERE ref<>'" . $resource['resource_type'] . "'", "");
 	$resource_type_tab_names = array_values(array_unique($resource_type_tab_names));
 
 	// These are the tab names which will be rendered for the resource specified:
@@ -142,7 +142,6 @@ $tabname                        = '';
 $tabcount                       = 0;
 $extra                          = '';
 $show_default_related_resources = TRUE;
-
 foreach($fields_tab_names as $tabname)
     {
     for($i = 0; $i < count($fields); $i++)
@@ -158,11 +157,8 @@ foreach($fields_tab_names as $tabname)
             }
         }
 
-    // Add related resources which have the same tab name:
-    if(isset($related_type_show_with_data) && isset($fields_tab_names) && !empty($fields_tab_names))
-        {
-        include '../include/related_resources.php';
-        }
+    // Show related resources which have the same tab name:
+    include '../include/related_resources.php';
 
     $tabcount++;
     if($tabcount != count($fields_tab_names))
