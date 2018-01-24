@@ -708,6 +708,13 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
 	$search=str_replace("\n"," ",$search);
 	$search=str_replace("\\r"," ",$search);
 	$search=str_replace("\\n"," ",$search);
+    
+    if($is_html)
+        {
+        // String can't be in encoded format at this point or string won't be indexed correctly.
+        $search=html_entity_decode($search);
+        }
+
 
 	$ns=trim_spaces($search);
 
