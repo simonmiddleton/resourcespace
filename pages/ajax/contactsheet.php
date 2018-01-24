@@ -243,7 +243,10 @@ foreach($results as $result_data)
         continue;
         }
 
-    $placeholders['resources'][$result_data['ref']]['preview_src'] = str_replace($storagedir, $storageurl, $img_path);
+    // Note: _drawImage from html2pdf.class.php supports paths. If using URLs, allow_url_fopen should be turned ON but on
+    // some systems, even with allow_url_fopen On, it still couldn't load the image. Using the path seemed to have fixed
+    // the issue.
+    $placeholders['resources'][$result_data['ref']]['preview_src'] = $img_path;
     unset($img_path);
     }
 
