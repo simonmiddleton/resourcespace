@@ -32,7 +32,7 @@ if(!$propose_changes_always_allow)
 	$proposeallowed=sql_value("select r.ref value from resource r left join collection_resource cr on r.ref='$ref' and cr.resource=r.ref left join user_collection uc on uc.user='$userref' and uc.collection=cr.collection left join collection c on c.ref=uc.collection where c.propose_changes=1","");
         if($proposeallowed=="" && $propose_changes_allow_open)
             {
-			include '../../../include/search_do.php';
+			include_once '../../../include/search_do.php';
             $proposeallowed=(get_resource_access($ref)==0)?$ref:"";
             }
 	}
