@@ -38,8 +38,6 @@ $themes_show_background_image = true;
 $use_zip_extension=true;
 $collection_download=true;
 
-$theme_category_levels=20;
-
 $ffmpeg_preview_force = true;
 $ffmpeg_preview_extension = 'mp4';
 $ffmpeg_preview_options = '-f mp4 -b:v 1200k -b:a 64k -ac 1 -c:v h264 -c:a aac'; 
