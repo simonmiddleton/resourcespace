@@ -36,5 +36,10 @@ function HookRse_search_notificationsAllRender_search_actions_add_option($option
 
 function HookRse_search_notificationsAllRender_actions_add_collection_option($top_actions,array $options)
 	{
+    if($top_actions)
+        {
+        return;
+        }
+
 	return (HookRse_search_notificationsAllRender_search_actions_add_option($options));
 	}
