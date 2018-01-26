@@ -527,6 +527,11 @@ if ($_FILES)
 								notify_resource_change($alternative);
 								}
 								
+                            // Remove chunk tracking file as upload successful
+                            if(file_exists($plupload_processed_filepath))
+                                {
+                                unlink($plupload_processed_filepath);
+                                }
 			    	
 			    # Update disk usage
 			    update_disk_usage($alternative);
