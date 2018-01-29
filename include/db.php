@@ -1068,7 +1068,7 @@ function CheckDBStruct($path,$verbose=false)
 										||
 										(strtoupper(substr($basecoltype,0,6))=="BIGINT" && strtoupper(substr($existingcoltype,0,3)=="INT"))
 										||
-										(strtoupper(substr($existingcoltype,0,3))=="INT" && (strtoupper(substr($existingcoltype,0,7))=="TINYINT" || strtoupper(substr($existingcoltype,0,8))=="SMALLINT"))
+										(strtoupper(substr($basecoltype,0,3))=="INT" && (strtoupper(substr($existingcoltype,0,7))=="TINYINT" || strtoupper(substr($existingcoltype,0,8))=="SMALLINT"))
 										||
 										(strtoupper(substr($basecoltype,0,7))=="VARCHAR" && strtoupper(substr($existingcoltype,0,3)=="INT"))
 									       )
