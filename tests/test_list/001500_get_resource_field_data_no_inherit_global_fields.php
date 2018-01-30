@@ -8,7 +8,7 @@ if('cli' != PHP_SAPI)
 $return = true;
 
 // IMPORTANT: this needs to be changed if we have more/ less metadata fields specific to "Video" resource type
-$expected_number_of_fields = 4;
+$expected_number_of_fields = 5;
 
 // Check for a resource type which is not inheriting global fields
 sql_query("UPDATE resource_type SET inherit_global_fields = 0 WHERE ref = 3");
