@@ -2,8 +2,8 @@
 include '../../../include/db.php';
 include '../../../include/authenticate.php'; 
 include_once '../../../include/general.php';
-include '../../../include/resource_functions.php';
-include '../../../include/image_processing.php';
+include_once '../../../include/resource_functions.php';
+include_once '../../../include/image_processing.php';
 
 $ref=getvalescaped("ref","");
 
@@ -87,9 +87,10 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
             if (count($nodes_to_add) > 0)
                 {
                 add_resource_nodes($resource, array_values($nodes_to_add));
+
                 foreach($nodes_to_add as $node_to_add)
                     {
-                    $log_entry.='+ ' . $nodes_available[$node_to_add] . PHP_EOL;
+                    $log_entry .= '+ ' . $nodes_available[$node_to_add] . PHP_EOL;
                     }
                 }
             if (count($nodes_to_remove) > 0)
@@ -99,6 +100,30 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
                     {
                     $log_entry.='- ' . $nodes_available[$node_to_remove] . PHP_EOL;
                     }
+                }
+
+            # If this is a 'joined' field we need to add it to the resource column
+            $joins = get_resource_table_joins();
+            if(in_array($field, $joins))
+                {
+                // Get all options selected for this resource and field
+                $resource_field_data       = get_resource_field_data($resource);
+                $resource_field_data_index = array_search($field, array_column($resource_field_data, 'ref'));
+
+                $truncated_value = "NULL";
+                if(
+                    $resource_field_data_index !== false
+                    && trim($resource_field_data[$resource_field_data_index]["value"]) != ""
+                )
+                    {
+                    $new_joined_field_value = $resource_field_data[$resource_field_data_index]["value"];
+                    $truncated_value = truncate_join_field_value($new_joined_field_value);
+                    $truncated_value = "'" . escape_check($truncated_value) . "'";
+                    }
+
+                // $truncated_value is escaped and between single quotes above. This is done so if we don't have a
+                // value we can set field to NULL (not string NULL)
+                sql_query("UPDATE resource SET field{$field} = {$truncated_value} WHERE ref = '{$resource}'");
                 }
 
             if($log_entry!='')
