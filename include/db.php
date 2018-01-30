@@ -979,10 +979,11 @@ function CheckDBStruct($path,$verbose=false)
 
 				##########
 				# Copy needed resource_data into resource for search displays
-				if ($table=="resource"){
+				if ($table=="resource")
+                    {
 					$joins=get_resource_table_joins();
-					for ($m=0;$m<count($joins);$m++){
-						
+					for ($m=0;$m<count($joins);$m++)
+                        {
 						# Look for this column in the existing columns.	
 						$found=false;
 
@@ -990,24 +991,39 @@ function CheckDBStruct($path,$verbose=false)
 							{
 							if ("field".$joins[$m]==$existing[$n]["Field"]) {$found=true;}
 							}
+
 						if (!$found)
 							{
 							# Add this column.
 							$sql="alter table $table add column ";
 							$sql.="field".$joins[$m] . " VARCHAR(" . $resource_field_column_limit . ")";
 							sql_query($sql,false,-1,false);
-							$values=sql_query("select resource,value from resource_data where resource_type_field=$joins[$m]",false,-1,false);
-	
-							for($x = 0; $x < count($values); $x++)
-                                {
-                                $value    = substr(escape_check($values[$x]['value']), 0, $resource_field_column_limit);
-                                $resource = $values[$x]['resource'];
 
-                                sql_query("UPDATE resource SET field{$joins[$m]} = '{$value}' WHERE ref = {$resource}", false, -1, false);	
-                                }	
-						}
-					}	
-				}		
+                            $resources = sql_array("SELECT ref AS `value` FROM resource WHERE ref > 0");
+                            foreach($resources as $resource)
+                                {
+                                // Do not use permissions here as we want to sync all fields
+                                $resource_field_data       = get_resource_field_data($resource, false, false);
+                                $resource_field_data_index = array_search($joins[$m], array_column($resource_field_data, 'ref'));
+
+                                if(
+                                    $resource_field_data_index !== false
+                                    && trim($resource_field_data[$resource_field_data_index]["value"]) != ""
+                                )
+                                    {
+                                    $new_joins_field_value = $resource_field_data[$resource_field_data_index]["value"];
+                                    $truncated_value = truncate_join_field_value($new_joins_field_value);
+                                    $truncated_value_escaped = escape_check($truncated_value);
+
+                                    sql_query("
+                                        UPDATE resource
+                                           SET field{$joins[$m]} = '{$truncated_value_escaped}'
+                                         WHERE ref = '{$resource}'");
+                                    }
+                                }
+                            }
+                        }
+                    }
 				##########
 				
 				##########
