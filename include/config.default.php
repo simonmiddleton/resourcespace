@@ -1738,6 +1738,9 @@ $related_resources_title_trim=15;
 # SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
 $sort_fields=array(12);
 
+# Default Title field for resources that do not inherit global fields
+$resource_title_field=8;
+
 # TITLE field that should be used as title on the View and Collections pages.
 $view_title_field=8; 
 

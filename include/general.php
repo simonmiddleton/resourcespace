@@ -456,6 +456,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     # for this resource, for display in an edit / view form.
     # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
 
+    global $resource_title_field;
+
     # Find the resource type.
     if ($originalref==-1) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
     $rtype = sql_value("select resource_type value FROM resource WHERE ref='$originalref'",0);
@@ -528,6 +530,20 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     if(!$inherit_global_fields)
         {
         $validtypes = array($rtype);
+
+        # Add title field even if $inherit_global_fields = false
+        for ($n = 0; $n < count($fields); $n++)
+            {
+                if  
+                    (
+                        $fields[$n]['ref'] == $resource_title_field  #Check field against $title_field for default title reference
+                        && (checkperm("f*") || checkperm("f" . $fields[$n]["fref"])) #Check permissions to access title field
+                    )
+                            {
+                                $return[] = $fields[$n];
+                                break;
+                            }
+            }
         }
 
     for ($n = 0; $n < count($fields); $n++)
