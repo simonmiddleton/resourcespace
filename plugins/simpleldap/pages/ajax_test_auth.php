@@ -61,13 +61,23 @@ if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1)
 	}
 else
 	{
+	ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 	$searchdns=explode(";",$simpleldap['basedn']);
 	foreach($searchdns as $searchdn)
 		{
 		$binduserstring = $simpleldap['loginfield'] . "=" . $simpleldap['ldapuser'] . "," . $searchdn;
-		debug("LDAP - Attempting to bind to LDAP server as : " . $binduserstring);
+		debug("LDAP - Attempting to bind to LDAP server as : " . $binduserstring . ": " .$simpleldap['ldappassword']);
 		$login = @ldap_bind( $ds, $binduserstring, $simpleldap['ldappassword'] );
-		if (!$login){continue;}else{$bindsuccess=true;break;}
+		if (!$login)
+			{
+			debug("LDAP bind failed: " . $searchdn);
+			continue;
+			}
+		else
+			{
+			$bindsuccess=true;
+			break;
+			}
 		}
 	}			
 	

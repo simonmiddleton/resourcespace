@@ -59,6 +59,28 @@ function simpleldap_authenticate($username,$password){
 		}
 	else
 		{
+		$binddns=explode(";",$simpleldap['basedn']);
+		foreach ($binddns as $binddn)
+			{
+			$binduserstring = $simpleldap['loginfield'] . "=" . $username . "," . $binddn;
+			debug("LDAP - Attempting to bind to LDAP server as : " . $binduserstring . ": " . $password);
+			$login = @ldap_bind( $ds, $binduserstring, $password);
+			if (!$login)
+				{
+				debug("LDAP bind failed: " . $binddn);
+				continue;
+				}
+			else
+				{
+				$bindsuccess=true;
+				break;
+				}
+			}
+		if (!$login)
+			{
+			debug("LDAP - failed to bind to LDAP server");
+			return false;
+			}
 		$userdomain=$simpleldap['domain'];
 		}
 		
@@ -97,7 +119,11 @@ function simpleldap_authenticate($username,$password){
 			$binduserstring = $simpleldap['loginfield'] . "=" . $username . "," . $simpleldap['basedn'];
 			}
 		debug("LDAP - binding as " . $binduserstring);
-		if(!(@ldap_bind($ldapconnections[$x], $binduserstring, $password ))){continue;}
+		if(!(@ldap_bind($ldapconnections[$x], $binduserstring, $password )))
+			{
+			debug("LDAP BIND failed: " . $binduserstring);
+			continue;
+			}
 		
 		debug("LDAP - searching " . $dn[$x] . " as " . $binduserstring);
 		
