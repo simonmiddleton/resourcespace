@@ -58,6 +58,9 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
 		sql_query("DELETE FROM user_dash_tile WHERE dash_tile=".$tile);
 		$result = sql_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile."',5 FROM user");
 		}
+	
+	hook('after_create_dash_tile', '', array($tile));
+	
 	return $tile;
 	}
 
@@ -102,6 +105,8 @@ function update_dash_tile($tile,$url,$link,$title,$reload_interval,$all_users,$d
 		sql_query("DELETE FROM user_dash_tile WHERE dash_tile=".$tile["ref"]);
 		sql_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile["ref"]."',5 FROM user");
 		}
+		
+	hook('after_update_dash_tile');
 	}
 
 /*

@@ -672,7 +672,7 @@ if('' != $tile_type)
         </script>
         <?php
         }
-
+	hook('beforedashtileadmin');
 	if(checkPermission_dashadmin())
 		{
         ?>
@@ -803,7 +803,7 @@ if('' != $tile_type)
             jQuery('#previewdashtile').addClass('DoubleWidthDashTile');
             width = 515;
             }
-
+            
 		jQuery("#previewdashtile").load("<?php echo $previewurl; ?>?tltype=<?php echo urlencode($tile_type)?>&tlsize=" + tlsize + "&tlstyle="+prevstyle+"&tlwidth="+width+"&tlheight="+height+tile);
 	}
 
