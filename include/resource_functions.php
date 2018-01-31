@@ -2236,7 +2236,10 @@ function copy_resource($from,$resource_type=-1)
 function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0)
 	{
 	global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
-		
+    
+    // If it is worthy of logging, update the modified date in the resource table
+    update_timestamp($resource);
+    
     if(($resource === RESOURCE_LOG_APPEND_PREVIOUS && !isset($resource_log_previous_ref)) || ($resource !== RESOURCE_LOG_APPEND_PREVIOUS && $resource < 0))
         {
         return false;
@@ -5103,3 +5106,19 @@ function process_edit_form($ref, $resource)
 
     return $save_errors;
   }
+
+/*
+* Update the modified column in the resource table
+*  
+* @param integer $resource   	Resource to be updated
+* 
+* @return void
+*/	
+function update_timestamp($resource)
+    {
+    if(!is_numeric($resource))
+        {
+        return false;
+        }
+    sql_query("UPDATE resource SET modified=NOW() WHERE ref='" . $resource . "'");
+    }    

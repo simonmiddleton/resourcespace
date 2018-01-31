@@ -180,6 +180,7 @@ if ($collection!="")
      $multiple=true;
     $edit_autosave=false; # Do not allow auto saving for batch editing.
     $items=get_collection_resources($collection);
+    $last_resource_edit = get_last_resource_edit($collection);
 	if (count($items)==0) {
        $error=$lang['error-cannoteditemptycollection'];
        error_alert($error);
@@ -556,12 +557,46 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
         }
     else    
         {
-		# Save multiple resources
-		$save_errors=save_resource_data_multi($collection);
-		if(!is_array($save_errors) && !hook("redirectaftermultisave"))
+		// Save multiple resources
+        // Check if any of the resources have been edited since between the form being loaded and submitted				
+        $form_lastedit = getval("last_resource_edit",date("Y-m-d H:i:s"));
+        if(!$last_resource_edit || ($form_lastedit < $last_resource_edit["time"] && getval("ignoreconflict","") == ""))
             {
-            redirect(generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));
-            }      
+            $cfmsg = htmlspecialchars(str_replace("%%USERNAME%%", $last_resource_edit["user"] , $lang["save-conflict-multiple"]));
+            $cfmsg .= "<br /><br /><a href='" .$baseurl_short . "?r=" . $last_resource_edit["ref"] . "' target='_blank' onClick='return ModalLoad(this);'>" . htmlspecialchars($lang["action-view"]) . "</a>";
+            ?>
+            <script>
+            jQuery("#modal_dialog").html("<?php echo $cfmsg; ?>");
+            jQuery("#modal_dialog").dialog({
+                title:'<?php echo $lang["save-conflict-title"] ?>',
+                modal: true,
+                width: 400,
+                resizable: false,
+                buttons: {
+                    "<?php echo $lang['save'] ?>": function()
+                        {
+                        jQuery('#ignoreconflict').val("true");
+                        CentralSpacePost(document.getElementById('mainform'),true);
+                        jQuery(this).dialog('close');
+                        },
+                    "cancel" : function() {
+                        jQuery(this).dialog('close');
+                        }
+                    }
+                });
+            </script>
+            <?php
+            http_response_code(409);
+            exit();
+            }
+        else
+            {
+            $save_errors=save_resource_data_multi($collection);
+            if(!is_array($save_errors) && !hook("redirectaftermultisave"))
+                {
+                redirect(generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));
+                }  
+            }
 		$show_error=true;
 		}
     }
@@ -912,8 +947,11 @@ else
       <input type="hidden" name="submitted" value="true">
    <?php 
    if ($multiple) 
-      { ?>
-      <h1 id="editmultipleresources"><?php echo $lang["editmultipleresources"]?></h1>
+    {?>
+    <input type="hidden" name="last_resource_edit" value="<?php echo $last_resource_edit ? $last_resource_edit["time"] :  0 ; ?>">
+    <input type="hidden" id="ignoreconflict" name="ignoreconflict" value="">
+
+    <h1 id="editmultipleresources"><?php echo $lang["editmultipleresources"]?></h1>
       <p style="padding-bottom:20px;"><?php $qty = count($items);
       echo ($qty==1 ? $lang["resources_selected-1"] : str_replace("%number", $qty, $lang["resources_selected-2"])) . ". ";
       # The script doesn't allow editing of empty collections, no need to handle that case here.

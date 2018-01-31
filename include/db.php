@@ -929,6 +929,10 @@ function CheckDBStruct($path,$verbose=false)
 					if ($sql.="") {$sql.=", ";}
 					$sql.=$col[0] . " " . str_replace("§",",",$col[1]);
 					if ($col[4]!="") {$sql.=" default " . $col[4];}
+                    if (isset($col[6]) && $col[6] !="")
+                        {
+                        $sql.= " "  . $col[6];
+                        }
 					if ($col[3]=="PRI")
 					{
 						if($hasPrimaryKey)
@@ -1075,7 +1079,7 @@ function CheckDBStruct($path,$verbose=false)
 									// Checks added so that we don't trim off data if a varchar size has been increased manually or by a plugin. 
 									// - If column is of same type but smaller number, update
 									// - If target column is of type text, update
-									// - If target column is of type varchyar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
+									// - If target column is of type varchar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
 									
 									if	(
 										(count($matchbase)==3 && count($matchexisting)==3 && $matchbase[1] == $matchexisting[1] && $matchbase[2] > $matchexisting[2])
@@ -1101,6 +1105,10 @@ function CheckDBStruct($path,$verbose=false)
 									$sql="alter table $table add column ";
 									$sql.=$col[0] . " " . str_replace("§",",",$col[1]); # Allow commas to be entered using '§', necessary for a type such as decimal(2,10)
 									if ($col[4]!="") {$sql.=" default " . $col[4];}
+                                    if (isset($col[6]) && $col[6] !="")
+                                        {
+                                        $sql.= " "  . $col[6];
+                                        }
 									if ($col[3]=="PRI") {$sql.=" primary key";}
 									if ($col[5]=="auto_increment") {$sql.=" auto_increment ";}
 									sql_query($sql,false,-1,false);

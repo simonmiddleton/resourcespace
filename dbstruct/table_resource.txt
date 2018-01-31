@@ -35,3 +35,4 @@ disk_usage,bigint(20),YES,,,
 disk_usage_last_updated,datetime,YES,,,
 file_size,bigint(20),YES,,,
 preview_attempts,int(11),YES,,,
+modified,timestamp,YES,,CURRENT_TIMESTAMP,,"ON UPDATE CURRENT_TIMESTAMP"
