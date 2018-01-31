@@ -1739,10 +1739,9 @@ $related_resources_title_trim=15;
 # SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
 $sort_fields=array(12);
 
-# Default Title field for resources that do not inherit global fields
-$resource_title_field=8;
-
-# TITLE field that should be used as title on the View and Collections pages.
+# TITLE field: Default title for all resources 
+# Should be used as title on the View and Collections pages.
+# This field will be inherited even if Inherit Global fields is set to false.
 $view_title_field=8; 
 
 # Searchable Date Field:
