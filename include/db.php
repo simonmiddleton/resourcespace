@@ -929,11 +929,7 @@ function CheckDBStruct($path,$verbose=false)
 					if ($sql.="") {$sql.=", ";}
 					$sql.=$col[0] . " " . str_replace("§",",",$col[1]);
 					if ($col[4]!="") {$sql.=" default " . $col[4];}
-                    if (isset($col[6]) && $col[6] !="")
-                        {
-                        $sql.= " "  . $col[6];
-                        }
-					if ($col[3]=="PRI")
+                    if ($col[3]=="PRI")
 					{
 						if($hasPrimaryKey)
 						{
@@ -1105,10 +1101,6 @@ function CheckDBStruct($path,$verbose=false)
 									$sql="alter table $table add column ";
 									$sql.=$col[0] . " " . str_replace("§",",",$col[1]); # Allow commas to be entered using '§', necessary for a type such as decimal(2,10)
 									if ($col[4]!="") {$sql.=" default " . $col[4];}
-                                    if (isset($col[6]) && $col[6] !="")
-                                        {
-                                        $sql.= " "  . $col[6];
-                                        }
 									if ($col[3]=="PRI") {$sql.=" primary key";}
 									if ($col[5]=="auto_increment") {$sql.=" auto_increment ";}
 									sql_query($sql,false,-1,false);
