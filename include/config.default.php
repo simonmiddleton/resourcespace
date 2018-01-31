@@ -613,6 +613,7 @@ $ffmpeg_preview_force = true;
 $video_preview_original=false;
 
 # Encode preview asynchronous?
+# REQUIRES: $php_path
 $ffmpeg_preview_async=false;
 
 # Find out and obey the Pixel Aspect Ratio
