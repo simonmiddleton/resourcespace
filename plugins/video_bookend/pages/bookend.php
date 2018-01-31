@@ -25,24 +25,28 @@ if (getval("submit","")!="")
             {
             # Find extension
             $extension="";
-            foreach ($alternatives as $alternative) {if ($alternative["ref"]==$alt) {$extension=$alternative["file_extension"];}}
+            foreach($alternatives as $alternative)
+                {
+                if ($alternative["ref"]==$alt)
+                    {
+                    $extension=$alternative["file_extension"];
+                    }
+                }
             
             $image=get_resource_path($ref,true,"",false,$extension,true,1,false,'',$alt);
-            echo $image;
+            // echo $image;
             
             # Encode video (add silent audio track)
             $path[$n] = get_temp_dir() . "/video_bookend_temp_alt_" . $alt. ".mp4";
             $shell_exec_cmd = $ffmpeg_fullpath . " -y -loop 1 -i " . escapeshellarg($image) . " -i aevalsrc=0 -c:v libx264 -c:a mp3 -t $video_bookend_seconds " . escapeshellarg($path[$n]);
             $output = exec($shell_exec_cmd);
-            echo "<p>" . $shell_exec_cmd . "</p>";
-            
+            // echo "<p>" . $shell_exec_cmd . "</p>";
             }
         }
 
-    
     # Combine
     $final= get_temp_dir() . "/video_bookend_temp_final_" . $ref. ".mp4";
-    $resource=get_resource_data($ref);print_r($resource);
+    $resource=get_resource_data($ref);
     $source=get_resource_path($ref,true,"",false,$resource["file_extension"]);
     
     $shell_exec_cmd = $ffmpeg_fullpath;
