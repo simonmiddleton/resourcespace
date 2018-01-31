@@ -7,7 +7,7 @@ include "../include/resource_functions.php";
 
 $ref=getvalescaped("ref","",true);
 $status="";
-
+$error = false;
 $resource=get_resource_data($ref);
 # Not allowed to edit this resource?
 if (!get_edit_access($ref,$resource["archive"],false,$resource)) {
@@ -32,7 +32,12 @@ $sort=getval("sort",$default_sort_direction);
 if (array_key_exists("userfile",$_FILES))
     {
 	$status=upload_preview($ref);
-	redirect($baseurl_short."pages/edit.php?refreshcollectionframe=true&ref=" . urlencode($ref)."&search=".urlencode($search)."&offset=".urlencode($offset)."&order_by=".urlencode($order_by)."&sort=".urlencode($sort)."&archive=".urlencode($archive));
+    if($status !== false)
+        {
+        redirect($baseurl_short."pages/edit.php?refreshcollectionframe=true&ref=" . urlencode($ref)."&search=".urlencode($search)."&offset=".urlencode($offset)."&order_by=".urlencode($order_by)."&sort=".urlencode($sort)."&archive=".urlencode($archive));
+        exit();
+        }
+    $error = true;
     }
     
 include "../include/header.php";
@@ -54,7 +59,7 @@ function check(filename) {
 <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref)?>">
 <br/>
 <?php if ($status!="") { ?><?php echo $status?><?php } ?>
-<div id="invalid" style="display:none;" class="FormIncorrect"><?php echo str_replace_formatted_placeholder("%extensions", "JPG", $lang['invalidextension_mustbe-extensions']); ?></div>
+<div id="invalid" <?php if (!$error) {echo "style=\"display:none;\"";} ?> class="FormIncorrect"><?php echo str_replace_formatted_placeholder("%extensions", "JPG", $lang['invalidextension_mustbe-extensions']); ?></div>
 <div class="Question">
 <label for="userfile"><?php echo $lang["clickbrowsetolocate"]?></label>
 <input type=file name=userfile id=userfile>
