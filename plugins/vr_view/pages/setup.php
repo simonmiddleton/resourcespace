@@ -22,14 +22,14 @@ $page_def[] = config_add_boolean_select('vr_view_orig_image',$lang['vr_view_orig
 $page_def[] = config_add_boolean_select('vr_view_orig_video',$lang['vr_view_orig_video']);
 
 $page_def[] = config_add_section_header($lang['vr_view_condition'], $lang['vr_view_condition_detail']);
-$page_def[] = config_add_single_ftype_select('vr_view_projection_field', $lang['vr_view_projection_field']);
+$page_def[] = config_add_single_ftype_select('vr_view_projection_field', $lang['vr_view_projection_field'],420);
 $page_def[] = config_add_text_input('vr_view_projection_value', $lang['vr_view_projection_value']);
 
 // Extra options
 $page_def[] = config_add_section_header($lang['vr_view_additional_options'], $lang['vr_view_additional_options_detail']);
-$page_def[] = config_add_single_ftype_select('vr_view_stereo_field', $lang['vr_view_stereo_field']);
+$page_def[] = config_add_single_ftype_select('vr_view_stereo_field', $lang['vr_view_stereo_field'],420);
 $page_def[] = config_add_text_input('vr_view_stereo_value', $lang['vr_view_stereo_value']);
-$page_def[] = config_add_single_ftype_select('vr_view_yaw_only_field', $lang['vr_view_yaw_only_field']);
+$page_def[] = config_add_single_ftype_select('vr_view_yaw_only_field', $lang['vr_view_yaw_only_field'],420);
 $page_def[] = config_add_text_input('vr_view_yaw_only_value', $lang['vr_view_yaw_only_value']);
 
 // Do the page generation ritual -- don't change this section.
