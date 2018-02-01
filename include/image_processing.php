@@ -2604,7 +2604,7 @@ function extract_icc($infile) {
       unlink($outfile);
    }
 
-    $cmd="$convert_fullpath '$infile" . "[0]'" . " '$outfile' $stderrclause";
+    $cmd = $convert_fullpath . " \"" . $infile . "[0]\" \"" . $outfile . "\" " .  $stderrclause;
     $cmdout = run_command($cmd);
 
    if ( preg_match("/no color profile is available/",$cmdout) || !file_exists($outfile) ||filesize_unlimited($outfile) == 0){
