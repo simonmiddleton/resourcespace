@@ -1394,3 +1394,8 @@ a.Enabled, a:visited.Enabled {
     float: right;
     height: 30px;
 }
+
+/* jQuery UI */
+.ui-menu-item {
+    text-align: left;
+}
