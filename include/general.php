@@ -5353,6 +5353,21 @@ function get_utility_path($utilityname, &$checked_path = null)
                     'win'  => 'fits.bat'
                 ),
                 $checked_path);
+
+        case 'php':
+            global $php_path;
+
+            if(!isset($php_path) || $php_path == '')
+                {
+                return false;
+                }
+
+            $executable = array(
+                'unix' => 'php',
+                'win'  => 'php.exe'
+            );
+
+            return get_executable_path($php_path, $executable, $checked_path);
         }
 
     // No utility path found
