@@ -190,3 +190,35 @@ $h264_profiles=array(
     "High"=>"6400",
     "Extended"=>"58A0"    
     );
+
+// Array of default html tags that are permitted in field data
+$permitted_html_tags =  array(
+            'html',
+            'body',
+            'div',
+            'span',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'br',
+            'em',
+            'strong',
+            'ol',
+            'ul',
+            'li',
+            'small',
+            'sub',
+            'ins',
+            'del',
+            'mark',
+            'b',
+            'u',
+            'p',
+            'i'
+        );
+
+// Array of default html attributes that are permitted in field data
+$permitted_html_attributes = array('id', 'class', 'style');

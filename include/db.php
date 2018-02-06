@@ -2155,6 +2155,8 @@ function validate_user($user_select_sql, $getuserdata=true)
 */
 function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
     {
+	global $permitted_html_tags, $permitted_html_attributes;
+	
     if(!is_string($html) || 0 === strlen($html))
         {
         return $html;
@@ -2168,37 +2170,8 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     // (DOMDocument::saveHTML() returns a text string as a string wrapped in a <p> tag)
     $is_html = ($html != strip_tags($html));
 
-    $allowed_tags = array_merge(
-        array(
-            'html',
-            'body',
-            'div',
-            'span',
-            'h1',
-            'h2',
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'p',
-            'br',
-            'em',
-            'strong',
-            'b',
-            'u',
-            'ol',
-            'ul',
-            'li',
-            'i',
-            'small',
-            'sub',
-            'ins',
-            'del',
-            'mark'
-        ),
-        $tags
-    );
-    $allowed_attributes = array_merge(array('id', 'class', 'style'), $attributes);
+    $allowed_tags = array_merge($permitted_html_tags, $tags);
+    $allowed_attributes = array_merge($permitted_html_attributes, $attributes);
 
     // Step 1 - Check DOM
     libxml_use_internal_errors(true);

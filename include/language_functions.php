@@ -141,19 +141,12 @@ function i18n_get_indexable($text)
     {
 	# For field names / values using the i18n syntax, return all language versions, as necessary for indexing.
 	
-	// make sure keywords don't get squashed together, then trim
+	// Make sure keywords don't get squashed together, then trim
 	$text=str_replace(array("<br />","<br>","\\r","\\n","&nbsp;")," ",$text);
 	$text=trim($text);
 	
-	// Remove tags if html field, otherwise we will index html elements.
-	// Don't strip normal fields as strip_tags is overzealous and a simple '<' in a text field can mean that all subsequent text is removed
-	if(substr($text,0,1) == "<" && substr($text,-1,1) == ">")
-		{
-		$text=strip_tags_and_attributes($text);
-		}
-		
     $text=preg_replace('/~(.*?):/',',',$text);// remove i18n strings, which shouldn't be in the keywords
-	
+		
     # For multiple keywords, parse each keyword.
     if (substr($text,0,1)!="," && (strpos($text,",")!==false) && (strpos($text,"~")!==false)) {
         $s=explode(",",$text);
