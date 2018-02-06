@@ -993,7 +993,8 @@ else
             <?php
             }
          }
-      $custompermshowfile = hook('custompermshowfile');
+      global $custompermshowfile;
+      hook('custompermshowfile');
       if((!$is_template && !checkperm('F*')) || $custompermshowfile)
          { ?>
          <div class="Question" id="question_file">
