@@ -19,7 +19,7 @@ function HookResource_usageViewCustompanels()
     if($edit_access)
         {
         ?>    
-        <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short; ?>plugins/resource_usage/pages/edit.php?resource=<?php echo $ref; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['new_usage']; ?></a></p>
+        <p><?php echo LINK_CARET_PLUS ?><a href="<?php echo $baseurl_short; ?>plugins/resource_usage/pages/edit.php?resource=<?php echo $ref; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['new_usage']; ?></a></p>
         <?php
         }
 

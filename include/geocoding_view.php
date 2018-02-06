@@ -108,7 +108,7 @@
     else
         {
         ?>
-        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang['location-add'];?></a>
+        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_PLUS ?><?php echo $lang['location-add'];?></a>
         <?php
         }
 
