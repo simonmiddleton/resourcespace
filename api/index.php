@@ -8,6 +8,8 @@ include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";
 include_once "../include/api_bindings.php";
 
+if (!$enable_remote_apis) {exit("API not enabled.");}
+
 # Get parameters
 $user=getvalescaped("user","");
 $sign=getvalescaped("sign","");
