@@ -118,7 +118,7 @@ if (getval("save","")!="" || getval("submitted","")!="" && getval("resetform",""
 				$acceptedchangescount++;
 
 				// remove this from the list of proposed changes
-				sql_query("DELETE FROM propose_changes_data WHERE user = '{$view_user}' AND resource_type_field = '{$proposefields[$n]['ref']}'");
+				sql_query("DELETE FROM propose_changes_data WHERE user = '{$view_user}' AND resource_type_field = '{$proposefields[$n]['ref']}' AND resource = '{$ref}'");
 				}
 
 			# Has this field been deleted?
@@ -136,7 +136,7 @@ if (getval("save","")!="" || getval("submitted","")!="" && getval("resetform",""
 					}					
 
 				// remove this from the list of proposed changes
-				sql_query("DELETE FROM propose_changes_data WHERE user = '{$view_user}' AND resource_type_field = '{$proposefields[$n]['ref']}'");
+				sql_query("DELETE FROM propose_changes_data WHERE user = '{$view_user}' AND resource_type_field = '{$proposefields[$n]['ref']}' AND resource = '{$ref}'");
 				}
 			}	
 			
