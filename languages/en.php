@@ -1918,7 +1918,8 @@ $lang["sort-type"] = "Sort type";
 $lang["collection-order"] = "Collection order";
 $lang["save-error"]="!! Error auto saving - please save manually !!";
 $lang["save-conflict-error"]="Edit conflict. Please reload the page";
-$lang["save-conflict-multiple"]="Edit conflict. Please reload the page"; 
+$lang["save-conflict-multiple"]="Edit conflict. Please reload the page";
+$lang["save-conflict-title"]="Edit conflict"; 
 
 $lang["theme_home_promote"]="Promote on the home page?";
 $lang["theme_home_page_text"]="Home page text";

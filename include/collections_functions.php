@@ -2679,7 +2679,7 @@ function get_last_resource_edit($collection)
     $lastuserdetails = sql_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource ='" . $lastmodified[0]["ref"] . "' AND rl.type='e'");
     if(count($lastuserdetails) == 0)
         {
-        return false;
+        return true;
         }
         
     $timestamp = max($lastuserdetails[0]["date"],$lastmodified[0]["modified"]);
