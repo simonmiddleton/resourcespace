@@ -51,7 +51,8 @@ function execute_api_call($query)
         if (array_key_exists("param" . $n,$params))
             {
             if ($n>1) {$eval.=",";}
-            $eval.="\"" . str_replace("\"","\\\"",$params["param" . $n]) . "\"";
+            # Add to the eval, removing backslash (to avoid escaping out of the quote - PHP 5 bug) and the quote itself, again to avoid exiting the string and executing arbirtrary code.
+            $eval.="\"" . str_replace(array("\\","\""),"\\\"",$params["param" . $n]) . "\"";
             $n++;
             }
         else
