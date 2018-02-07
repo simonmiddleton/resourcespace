@@ -13,4 +13,4 @@
             <?php
             }
         ?>
-><?php echo htmlspecialchars(strip_tags_and_attributes(htmlspecialchars($value))); ?></textarea>
+><?php echo htmlspecialchars($value); ?></textarea>
