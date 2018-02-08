@@ -134,6 +134,7 @@ function save_research_request($ref)
 		if ($newstatus==2)
 			{
 			$message=$lang["researchrequestcompletemessage"] . "\n\n" . $lang["clicklinkviewcollection"] . "\n\n" . $templatevars['url'];$subject=$lang["researchrequestcomplete"];
+			$notification_message = $message;
 			get_config_option($requesting_user['ref'],'email_user_notifications', $send_email);    
 			if($send_email && $requesting_user["email"]!="")
 				{
