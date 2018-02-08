@@ -1073,7 +1073,7 @@ function do_search(
 						{
 						$sql_filter.=" and ";
 						}
-					$sql_filter .= "((r.ref not in (select rn.resource from resource_node rn left join node n on rn.node=n.ref where n.resource_type_field in ('" . join("','",$fn) . "') and LOWER(n.name) in ('" .    join("','",$ks) . "'))) "; # Filter out resources that do contain the keyword(s)
+					$sql_filter .= "((r.ref not in (select rn.resource from resource_node rn left join node n on rn.node=n.ref where n.resource_type_field in ('" . join("','",$fn) . "') and n.name in ('" .    join("','",$ks) . "'))) "; # Filter out resources that do contain the keyword(s)
 					}
 
                 # Option for custom access to override search filters.
