@@ -658,7 +658,9 @@ if (!$sorted && $sortby)
 								?><a href="<?php echo $baseurl; ?>/pages/view.php?ref=<?php echo $cell; ?>" onclick="return ModalLoad(this,true);"><?php
 								$close_anchor=true;
 								}
-							echo str_highlight(preg_replace('/&lt;(\/*)pre&gt;/i','<$1pre>',htmlspecialchars($cell)),$filter);
+
+							echo htmlspecialchars($cell);
+
 							if ($close_anchor)
 								{
 								?></a><?php
