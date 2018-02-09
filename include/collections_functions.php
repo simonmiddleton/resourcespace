@@ -2382,7 +2382,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
         
     // View all
-    if(($k=="" || $internal_share_access) && (isset($collection_data["c"]) && $collection_data["c"]>0) || count($result) > 0)
+    if(($k=="" || $internal_share_access) && (isset($collection_data["c"]) && $collection_data["c"]>0) || (is_array($result) && count($result) > 0))
         {
         $data_attribute['url'] =  $baseurl_short . 'pages/search.php?search=!collection' . urlencode($collection_data['ref']) . "&k=" . urlencode($k);
         $options[$o]['value']='view_all_resources_in_collection';
@@ -2419,7 +2419,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Note: functionality moved from edit collection page
     if(($k=="" || $internal_share_access) 
 		&& !$top_actions
-        && (count($result) != 0 || $count_result != 0)
+        && ((is_array($result) && count($result) != 0) || $count_result != 0)
         && (isset($allow_resource_deletion) && $allow_resource_deletion)
         && collection_writeable($collection_data['ref'])
         && $allow_multi_edit
@@ -2431,7 +2431,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Preview all
-    if(count($result) != 0 && ($k=="" || $internal_share_access) && $preview_all)
+    if((is_array($result) && count($result) != 0) && ($k=="" || $internal_share_access) && $preview_all)
         {
         $extra_tag_attributes = sprintf('
                 data-url="%spages/preview_all.php?ref=%s"
