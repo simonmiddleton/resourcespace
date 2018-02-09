@@ -1354,11 +1354,11 @@ $login_autocomplete=true;
 $case_insensitive_username=false;
 
 # Password standards - these must be met when a user or admin creates a new password.
-$password_min_length=7; # Minimum length of password
-$password_min_alpha=1; # Minimum number of alphabetical characters (a-z, A-Z) in any case
-$password_min_numeric=1; # Minimum number of numeric characters (0-9)
-$password_min_uppercase=0; # Minimum number of upper case alphabetical characters (A-Z)
-$password_min_special=0; # Minimum number of 'special' i.e. non alphanumeric characters (!@$%& etc.)
+$password_min_length=15; # Minimum length of password
+$password_min_alpha=7; # Minimum number of alphabetical characters (a-z, A-Z) in any case
+$password_min_numeric=3; # Minimum number of numeric characters (0-9)
+$password_min_uppercase=2; # Minimum number of upper case alphabetical characters (A-Z)
+$password_min_special=3; # Minimum number of 'special' i.e. non alphanumeric characters (!@$%& etc.)
 
 # How often do passwords expire, in days? (set to zero for no expiry).
 $password_expiry=0;
