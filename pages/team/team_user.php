@@ -179,9 +179,18 @@ function addColumnHeader($orderName, $labelKey)
 <?php
 for ($n=$offset;(($n<count($users)) && ($n<($offset+$per_page)));$n++)
 	{
+    $team_user_edit_params = array(
+        'ref'     => $users[$n]["ref"],
+        'backurl' => "{$url}&offset={$offset}",
+    );
+    $team_user_edit_url = generateURL("{$baseurl}/pages/team/team_user_edit.php", $team_user_edit_params);
 	?>
 	<tr>
-	<td><div class="ListTitle"><a href="<?php echo $baseurl ?>/pages/team/team_user_edit.php?ref=<?php echo $users[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $users[$n]["username"]?></a></div></td>
+        <td>
+            <div class="ListTitle">
+                <a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo htmlspecialchars($users[$n]["username"]); ?></a>
+            </div>
+        </td>
 	<?php if (!hook("replacefullnamerow")){?>
 	<td><?php echo htmlspecialchars($users[$n]["fullname"])?></td>
 	<?php } ?>
@@ -262,7 +271,7 @@ if ($user_purge)
 <div class="Fixed">
 <?php
 $active=get_active_users();
-for ($n=0;$n<count($active);$n++) {if($n>0) {echo", ";}echo "<b><a href='" . $baseurl . "/pages/team/team_user_edit.php?ref=" . $active[$n]["ref"] . "&backurl=" . urlencode($url . "&offset=" . $offset) . "' onClick='return CentralSpaceLoad(this,true);'>" . $active[$n]["username"] . "</a></b> (" . $active[$n]["t"] . ")";}
+for ($n=0;$n<count($active);$n++) {if($n>0) {echo", ";}echo "<b><a href='" . $baseurl . "/pages/team/team_user_edit.php?ref=" . $active[$n]["ref"] . "&backurl=" . urlencode($url . "&offset=" . $offset) . "' onClick='return CentralSpaceLoad(this,true);'>" . htmlspecialchars($active[$n]["username"]) . "</a></b> (" . $active[$n]["t"] . ")";}
 ?>
 </div><div class="clearerleft"> </div></div></div>	
 <?php } // end hook("replaceusersonline")
