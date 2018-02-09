@@ -64,7 +64,6 @@ if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']
     !match_values(array_column($results,'ref'),array($resourceb, $resourcec, $resourced))
 	)
 	{
-print_r($results);
     echo "ERROR - SUBTEST A ";
     return false;
     }
