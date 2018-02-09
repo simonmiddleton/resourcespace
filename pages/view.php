@@ -357,11 +357,16 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 
 		$value_unformatted=$value; # store unformatted value for replacement also
 
-		if ($field["type"]!=FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR || ($field["type"]==FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value == strip_tags($value))) # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to ckeditor that have not yet been edited.
-			{
-			$value=nl2br(htmlspecialchars($value));
-			}
-		
+        # Do not convert HTML formatted fields (that are already HTML) to HTML. Added check for extracted fields set to 
+        # ckeditor that have not yet been edited.
+        if(
+            $field["type"] != FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR
+            || ($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value == strip_tags($value))
+        )
+            {
+            $value = nl2br(htmlspecialchars($value));
+            }
+
 		$modified_value = hook('display_field_modified_value', '', array($field));
 		if($modified_value) {		
 			$value = $modified_value['value'];
@@ -411,10 +416,21 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			#There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
 			if ($value!=""){
 				# Draw this field normally.				
-				
-				// Strip tags moved before highlighting as was being corrupted
-				$value=strip_tags_and_attributes($value);
-				
+
+                /*
+                Sanitize value before rendering.
+                Note: we cannot use htmlspecialchars where we actually render it as that might break highligthing
+                */
+                if($value != strip_tags(htmlspecialchars_decode($value)))
+                    {
+                    // Strip tags moved before highlighting as was being corrupted
+                    $value = strip_tags_and_attributes(htmlspecialchars_decode($value));
+                    }
+                else
+                    {
+                    $value = htmlspecialchars($value);
+                    }
+
 				# Highlight keywords
 				$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
 				
