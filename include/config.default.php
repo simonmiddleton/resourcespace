@@ -458,7 +458,7 @@ $imagemagick_quality=90; # JPEG quality (0=worst quality/lowest filesize, 100=be
 # Preset quality settings. Used by transform plugin to allow user to select desired from a range of preset quality setting.
 # If adding extra quality settings, an accompanying $lang setting must be set e.g. in a plugin language file or using site text (Manage content)
 # e.g. $lang['image_quality_10'] = "";
-$image_quality_presets = array(100,75,50,25,1);
+$image_quality_presets = array(100,92,80,50,40);
 
 # Allow unique quality settings for each preview size. This will use $imagemagick_quality as a default setting.
 # If you want to adjust the quality settings for internal previews you must also set $internal_preview_sizes_editable=true

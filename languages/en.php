@@ -2668,7 +2668,7 @@ $lang['error_upload_resource_alternatives_batch'] = 'When using this feature (se
 $lang['error_upload_resource_not_found'] = 'A resource ID could not be found!';
 
 $lang['image_quality_100'] = "Maximum";
-$lang['image_quality_75'] = "High";
-$lang['image_quality_50'] = "Medium";
-$lang['image_quality_25'] = "Low";
-$lang['image_quality_1'] = "Very low";
+$lang['image_quality_92'] = "Print";
+$lang['image_quality_80'] = "Web";
+$lang['image_quality_50'] = "Low";
+$lang['image_quality_40'] = "Very low";

@@ -927,7 +927,7 @@ if(!$cropperestricted)
                 <?php 
                 foreach ($image_quality_presets as $image_quality_preset) 
                     {
-                    echo "<option value='" . htmlspecialchars($image_quality_preset) . "'>" . $lang["image_quality_" . htmlspecialchars($image_quality_preset)] . "&nbsp;</option>\n";
+                    echo "<option value='" . htmlspecialchars($image_quality_preset) . "'>" . htmlspecialchars(isset($lang["image_quality_" . $image_quality_preset]) ? $lang["image_quality_" . $image_quality_preset] : $image_quality_preset) . "&nbsp;</option>\n";
                     }
                     ?>
           </select>

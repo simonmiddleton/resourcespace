@@ -2297,6 +2297,10 @@ function get_site_text($page,$name,$getlanguage,$group)
         {
         return $lang[$key];
         }
+    elseif (array_key_exists("all_" . $key,$lang))
+        {
+        return $lang["all_" . $key];
+        }
     else
         {
         return "";
