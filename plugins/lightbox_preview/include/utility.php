@@ -81,7 +81,7 @@ function setLink($selector, $url, $title, $rel = 'lightbox')
 		jQuery(document).ready(function() {
 			jQuery('<?php echo $selector ?>')
 					.attr('href', '<?php echo $url ?>')
-					.attr('title', "<?php echo htmlspecialchars(strip_tags_and_attributes(i18n_get_translated($title))); ?>")
+					.attr('title', "<?php echo htmlspecialchars(strip_tags(i18n_get_translated($title))); ?>")
 					.attr('rel', '<?php echo $rel ?>')
 					.attr('onmouseup', 'closeModalOnLightBoxEnable();');
 		});
