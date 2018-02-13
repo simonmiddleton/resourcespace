@@ -74,33 +74,7 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
 	$result=perform_login();
 	if ($result['valid'])
 		{
-	 	$expires=0;
-       	if ($allow_keep_logged_in && getval("remember","")!="") {$expires = 100;} # remember login for 100 days
-
-		# Store language cookie
-		rs_setcookie("language", $language, 1000); # Only used if not global cookies
-		rs_setcookie("language", $language, 1000, $baseurl_short . "pages/");
-
-		# Set the session cookie. Do this for all paths that nay set the cookie as otherwise we can end up with a valid cookie at e.g. pages/team or pages/ajax
-		rs_setcookie("user", "", 0);
-		rs_setcookie("user", "", 0,"/pages");
-		rs_setcookie("user", "", 0,"/pages/team");
-		rs_setcookie("user", "", 0,"/pages/admin");
-		rs_setcookie("user", "", 0,"/pages/ajax");
-
-		# Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)	
-		rs_setcookie("user", $result['session_hash'], $expires, "", "", substr($baseurl,0,5)=="https", true);
-
-        # Set default resource types
-        rs_setcookie('restypes', $default_res_types);
-
-        $userpreferences = ($user_preferences) ? sql_query("SELECT user, `value` AS colour_theme FROM user_preferences WHERE user = '" . $result['ref'] . "' AND parameter = 'colour_theme';") : FALSE;
-        $userpreferences = ($userpreferences && isset($userpreferences[0])) ? $userpreferences[0]: FALSE;
-        if($userpreferences && isset($userpreferences["colour_theme"]) && $userpreferences["colour_theme"]!="" && (!isset($_COOKIE["colour_theme"]) || $userpreferences["colour_theme"]!=$_COOKIE["colour_theme"]))
-            {
-            rs_setcookie("colour_theme", $userpreferences["colour_theme"],100, "/", "", substr($baseurl,0,5)=="https", true);
-            }
-
+        set_login_cookies($result["ref"],$session_hash,$language, $user_preferences);
 		# If the redirect URL is the collection frame, do not redirect to this as this will cause
 		# the collection frame to appear full screen.
 		if (strpos($url,"pages/collections.php")!==false) {$url="index.php";}
@@ -197,8 +171,8 @@ if (!hook("replaceloginform")) {
   <h1><?php echo text("welcomelogin")?></h1>
   <p><?php echo text(getvalescaped("text","defaultintro"))?></p>
   <p>
-  <?php if ($allow_account_request) { ?><a id="account_apply" href="pages/user_request.php">&gt; <?php echo $lang["nopassword"]?> </a><?php } ?>
-  <?php if ($allow_password_reset) { ?><br/><a id="account_pw_reset" href="pages/user_password.php">&gt; <?php echo $lang["forgottenpassword"]?></a><?php } ?>
+  <?php if ($allow_account_request) { ?><a id="account_apply" href="pages/user_request.php"><?php echo LINK_CARET . $lang["nopassword"]?> </a><?php } ?>
+  <?php if ($allow_password_reset) { ?><br/><a id="account_pw_reset" href="pages/user_password.php"><?php echo LINK_CARET . $lang["forgottenpassword"]?></a><?php } ?>
   <?php hook("loginformlink") ?> 
   </p>
   <?php if ($error!="") { ?><div class="FormIncorrect"><?php echo $error?></div><?php } ?>
