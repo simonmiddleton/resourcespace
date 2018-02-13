@@ -168,16 +168,19 @@ function generate_session_hash($password_hash)
 		
 	}
 
-function set_login_cookies($user, $session_hash, $language, $user_preferences)
+function set_login_cookies($user, $session_hash, $language = "", $user_preferences)
     {
-    global $baseurl, $baseurl_short, $allow_keep_logged_in, $default_res_types;
+    global $baseurl, $baseurl_short, $allow_keep_logged_in, $default_res_types, $language;
     $expires=0;
     if ($allow_keep_logged_in && getval("remember","")!="") {$expires = 100;} # remember login for 100 days
 
-    # Store language cookie
-    rs_setcookie("language", $language, 1000); # Only used if not global cookies
-    rs_setcookie("language", $language, 1000, $baseurl_short . "pages/");
-
+    if($language != "")
+        {
+        # Store language cookie
+        rs_setcookie("language", $language, 1000); # Only used if not global cookies
+        rs_setcookie("language", $language, 1000, $baseurl_short . "pages/");
+        }
+        
     # Set the session cookie. Do this for all paths that nay set the cookie as otherwise we can end up with a valid cookie at e.g. pages/team or pages/ajax
     rs_setcookie("user", "", 0);
     rs_setcookie("user", "", 0,"/pages");
