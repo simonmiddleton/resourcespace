@@ -5589,7 +5589,13 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
     {
     # Note! The argument $daysexpire is not the same as the argument $expire in the PHP internal function setcookie.
     # Note! The $path argument is not used if $global_cookies = true
-
+    global $baseurl_short;
+    
+    if($path == "")
+        {
+        $path =  $baseurl_short;     
+        }
+        
     if (php_sapi_name()=="cli") {return true;} # Bypass when running from the command line (e.g. for the test scripts).
     
     global $baseurl_short, $global_cookies;

@@ -173,7 +173,7 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
     global $baseurl, $baseurl_short, $allow_keep_logged_in, $default_res_types, $language;
     $expires=0;
     if ($allow_keep_logged_in && getval("remember","")!="") {$expires = 100;} # remember login for 100 days
-
+            
     if($language != "")
         {
         # Store language cookie
@@ -182,14 +182,14 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
         }
         
     # Set the session cookie. Do this for all paths that nay set the cookie as otherwise we can end up with a valid cookie at e.g. pages/team or pages/ajax
-    rs_setcookie("user", "", 0);
-    rs_setcookie("user", "", 0,"/pages");
-    rs_setcookie("user", "", 0,"/pages/team");
-    rs_setcookie("user", "", 0,"/pages/admin");
-    rs_setcookie("user", "", 0,"/pages/ajax");
+    rs_setcookie("user", "", 0, $baseurl_short);
+    rs_setcookie("user", "", 0, $baseurl_short . "pages");
+    rs_setcookie("user", "", 0, $baseurl_short . "pages/team");
+    rs_setcookie("user", "", 0, $baseurl_short . "pages/admin");
+    rs_setcookie("user", "", 0, $baseurl_short . "pages/ajax");
 
     # Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)	
-    rs_setcookie("user", $session_hash, $expires, "", "", substr($baseurl,0,5)=="https", true);
+    rs_setcookie("user", $session_hash, $expires, $baseurl_short, "", substr($baseurl,0,5)=="https", true);
 
     # Set default resource types
     rs_setcookie('restypes', $default_res_types);
