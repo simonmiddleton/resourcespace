@@ -1,0 +1,7 @@
+name        : winauth
+author      : Montala Limited
+version     : 1.0
+desc        : Windows Integrated Authentication
+info_url    : https://www.resourcespace.com/knowledge-base/user/plugin-winauth
+config_url  : /plugins/winauth/pages/setup.php
+category    : Authentication
