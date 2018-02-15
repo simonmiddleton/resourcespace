@@ -152,6 +152,13 @@ function get_collection_resources($collection)
 	{
 	# Returns all resources in collection
 	# For many cases (e.g. when displaying a collection for a user) a search is used instead so permissions etc. are honoured.
+	
+	$plugin_collection_resources=hook('replace_get_collection_resources');
+	if(is_array($plugin_collection_resources))
+		{
+		return $plugin_collection_resources;
+		}	
+	
 	return sql_array("select resource value from collection_resource where collection='$collection' order by sortorder asc, date_added desc, resource desc"); 
 	}
 	
@@ -2674,7 +2681,10 @@ function get_last_resource_edit($collection)
         {
         return false;
         }
-        
+    $plugin_last_resource_edit=hook('override_last_resource_edit');
+    if($plugin_last_resource_edit===true){
+    	return true;
+    }
     $lastmodified  = sql_query("SELECT r.ref, r.modified FROM collection_resource cr LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection='" . $collection . "' ORDER BY r.modified DESC");
     $lastuserdetails = sql_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource ='" . $lastmodified[0]["ref"] . "' AND rl.type='e'");
     if(count($lastuserdetails) == 0)
