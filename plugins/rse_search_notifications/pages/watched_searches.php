@@ -67,10 +67,17 @@ $totalpages=ceil(count($watched_searches)/WATCHED_SEARCHES_ITEMS_PER_PAGE);
 $curpage=floor($offset/WATCHED_SEARCHES_ITEMS_PER_PAGE)+1;
 $per_page=WATCHED_SEARCHES_ITEMS_PER_PAGE;
 $jumpcount=1;
-$url=$watched_searches_url .
-	"?offset={$offset}" .
-	($find=="" ? "" : "&find={$find}") .
-	($all_users_mode ? "&allusers=1" : "");
+
+$url_set_params = array();
+if($find != "")
+    {
+    $url_set_params["find"] = $find;
+    }
+if($all_users_mode)
+    {
+    $url_set_params["allusers"] = 1;
+    }
+$url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_params);
 
 // ----- End of pager variables
 
@@ -85,7 +92,7 @@ $url=$watched_searches_url .
 			<div class="Question">
 				<div class="tickset">
 					<div class="Inline">
-						<input type="text" name="find" id="find" value="<?php echo $find; ?>" maxlength="100" class="shrtwidth">
+						<input type="text" name="find" id="find" value="<?php echo htmlspecialchars($find); ?>" maxlength="100" class="shrtwidth">
 					</div>
 					<input type="hidden" name="offset" id="offset" value="0" />
 					<div class="Inline"><input name="Submit" type="submit" value="<?php echo $lang["searchbutton"]; ?>"></div>
@@ -112,7 +119,7 @@ $url=$watched_searches_url .
 		{
 		?><form action="<?php echo $watched_searches_url; ?>" onchange="CentralSpacePost(this,true);">
 			<input type="hidden" name="offset" id="offset" value="0" />
-			<input type="hidden" name="find" id="find" value="<?php echo $find; ?>" >
+			<input type="hidden" name="find" id="find" value="<?php echo htmlspecialchars($find); ?>" >
 			<label for="allusers"><?php echo $lang['search_notifications_show_for_all_users']; ?></label>
 			<?php
 			if ($all_users_mode)
