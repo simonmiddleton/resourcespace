@@ -279,6 +279,12 @@ $page_def[] = config_add_single_select(
 );
 $page_def[] = config_add_html('</div>');
 
+// API section
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_api'] . '</h3><div id="SystemConfigWorkflowSection" class="CollapsibleSection">');
+$page_def[] = config_add_boolean_select('iiif_enabled', $lang['iiif_enable_option'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_html('</div>');
+
+
 // Let plugins hook onto page definition and add their own configs if needed
 // or manipulate the list
 $plugin_specific_definition = hook('add_system_config_page_def', '', array($page_def));

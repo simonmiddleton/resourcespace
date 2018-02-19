@@ -3339,8 +3339,26 @@ $annotate_read_only = false;
 
 // When using anonymous users, set to TRUE to allow anonymous users to add/ edit/ delete annotations
 $annotate_crud_anonymous = false;
+
+
 #######################################
+################################  IIIF:
 #######################################
+// Enable IIIF interface. See http://iiif.io for information on the IIIF standard
+// If set to true a URL rewrite rule or similar must be configured on the web server for any paths under the <base_url>/iiif path
+$iiif_enabled = false;
+// Field that is used to hold the IIIF identifier e.g. if using TMS this may be the same as the TMS object field
+// $iiif_identifier_field = 29;
+//
+// Field that contains license information about the resource
+// $$iiif_license_field = 0;
+//
+// Field that defines the position of a particular resource in the default sequence (only one sequence currently supported)
+// $iiif_sequence_field = 1;
+//
+// Optional prefix that will be added to sequence identifier - useful if just numeric identifers are used e.g. for different views or pages 
+// $iiif_sequence_prefix = "View ";
+
 
 /*Prevent client side users to get access to the real path of the resource when ResourceSpace is using filestore URLs.
 Rather than use a URL like "http://yourdomain/filestore/1_6326bb8314c6c21/1pre_cf33a61f47b5982.jpg", it will use

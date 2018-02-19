@@ -2672,3 +2672,9 @@ $lang['image_quality_92'] = "Print";
 $lang['image_quality_80'] = "Web";
 $lang['image_quality_50'] = "Low";
 $lang['image_quality_40'] = "Very low";
+
+/* IIIF */
+$lang['systemconfig_api'] = "API";
+$lang["iiif_enable_option"] = "Enable IIIF support";
+$lang["iiif_disabled"] = "IIIF is not enabled";
+
