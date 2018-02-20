@@ -150,15 +150,16 @@ rl.type='c'
 and
 rl.date>=date('[from-y]-[from-m]-[from-d]') and rl.date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
 order by rl.date"
-8,"Resources with zero downloads","select ref 'Resource ID',view_title_field 'Title' from resource where ref not in 
+8,"Resources with zero downloads","select ref 'thumbnail', ref 'Resource ID',view_title_field 'Title' from resource where ref not in 
+
 
 (
 #Previous query to fetch resource downloads
-select r.ref from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='Resource download'
+select r.ref from resource r LEFT JOIN daily_stat d ON r.ref=d.object_ref
 
 # --- date ranges
 # Make sure date is greater than FROM date
-and 
+WHERE 
 (
 d.year>[from-y]
 or 
@@ -166,8 +167,9 @@ or
 or
 (d.year=[from-y] and d.month=[from-m] and d.day>=[from-d])
 )
+
 # Make sure date is less than TO date
-and
+AND
 (
 d.year<[to-y]
 or 
@@ -176,10 +178,21 @@ or
 (d.year=[to-y] and d.month=[to-m] and d.day<=[to-d])
 )
 
+AND
+d.activity_type='Resource download'
 
 group by r.ref
-)"
-9,"Resources with zero views","select ref 'Resource ID',view_title_field 'Title' from resource where ref not in 
+)
+
+AND
+(
+creation_date>=date('[from-y]-[from-m]-[from-d]') and DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
+)
+
+AND
+ref>0
+"
+9,"Resources with zero views","select ref 'thumbnail', ref 'Resource ID',view_title_field 'Title' from resource where ref not in 
 
 (
 #Previous query to fetch resource views
@@ -206,7 +219,17 @@ or
 )
 
 group by r.ref
-)"
+)
+
+AND
+(
+creation_date>=date('[from-y]-[from-m]-[from-d]') and DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
+)
+
+AND
+ref>0
+
+"
 10,"Resource downloads by group","select
 g.name 'Group Name',
 count(rl.resource) 'Resource Downloads'
