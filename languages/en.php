@@ -2676,5 +2676,5 @@ $lang['image_quality_40'] = "Very low";
 /* IIIF */
 $lang['systemconfig_api'] = "API";
 $lang["iiif_enable_option"] = "Enable IIIF support";
-$lang["iiif_disabled"] = "IIIF is not enabled";
+$lang["iiif_disabled"] = "IIIF is not configured";
 

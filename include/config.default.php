@@ -3347,11 +3347,18 @@ $annotate_crud_anonymous = false;
 // Enable IIIF interface. See http://iiif.io for information on the IIIF standard
 // If set to true a URL rewrite rule or similar must be configured on the web server for any paths under the <base_url>/iiif path
 $iiif_enabled = false;
+
+// User ID to use for IIIF. This user should be granted access only to those resources that are to be published via IIIF using permissions and search filter
+// $iiif_userid = 0;
+//
 // Field that is used to hold the IIIF identifier e.g. if using TMS this may be the same as the TMS object field
 // $iiif_identifier_field = 29;
 //
+// Field that is used to hold the IIIF description
+// $iiif_description_field = 0;
+//
 // Field that contains license information about the resource
-// $$iiif_license_field = 0;
+// $iiif_license_field = 0;
 //
 // Field that defines the position of a particular resource in the default sequence (only one sequence currently supported)
 // $iiif_sequence_field = 1;

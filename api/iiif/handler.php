@@ -1,7 +1,10 @@
 <?php
 include "../../include/db.php";
 
-if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identifier_field) || !isset($iiif_userid) || !is_numeric($iiif_userid)){exit($lang["iiif_disabled"]);}
+if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identifier_field) || !isset($iiif_userid) || !is_numeric($iiif_userid) || !isset($iiif_description_field))
+    {
+    exit($lang["iiif_disabled"]);
+    }
 
 include_once "../../include/general.php";
 include_once "../../include/resource_functions.php";
@@ -264,7 +267,7 @@ else
 							$position_field=get_resource_type_field($iiif_sequence_field);
 							$position_prefix = $position_field["name"] . " ";
 							}
-						if(trim($position) == "")
+						if(!isset($position) || trim($position) == "")
 							{
 							$position = $n;
 							}
