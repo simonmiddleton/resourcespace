@@ -150,7 +150,7 @@ rl.type='c'
 and
 rl.date>=date('[from-y]-[from-m]-[from-d]') and rl.date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
 order by rl.date"
-8,"Resources with zero downloads","select ref 'thumbnail', ref 'Resource ID',view_title_field 'Title' from resource where ref not in 
+8,"Resources with zero downloads","select ref 'Resource ID',view_title_field 'Title' from resource where ref not in 
 
 
 (
@@ -185,14 +185,14 @@ group by r.ref
 )
 
 AND
-(
-creation_date>=date('[from-y]-[from-m]-[from-d]') and DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
-)
+
+DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
+
 
 AND
 ref>0
 "
-9,"Resources with zero views","select ref 'thumbnail', ref 'Resource ID',view_title_field 'Title' from resource where ref not in 
+9,"Resources with zero views","select ref 'Resource ID',view_title_field 'Title' from resource where ref not in 
 
 (
 #Previous query to fetch resource views
@@ -221,10 +221,7 @@ or
 group by r.ref
 )
 
-AND
-(
-creation_date>=date('[from-y]-[from-m]-[from-d]') and DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
-)
+DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
 
 AND
 ref>0
