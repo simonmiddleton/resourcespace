@@ -152,42 +152,30 @@ rl.date>=date('[from-y]-[from-m]-[from-d]') and rl.date<=adddate(date('[to-y]-[t
 order by rl.date"
 8,"Resources with zero downloads","select ref 'Resource ID',view_title_field 'Title' from resource where ref not in 
 
-
 (
-#Previous query to fetch resource downloads
-select r.ref from resource r LEFT JOIN daily_stat d ON r.ref=d.object_ref
-
-# --- date ranges
-# Make sure date is greater than FROM date
-WHERE 
+select object_ref from daily_stat
+WHERE activity_type='Resource download'
+AND
 (
-d.year>[from-y]
+year>[from-y]
 or 
-(d.year=[from-y] and d.month>[from-m])
+(year=[from-y] and month>[from-m])
 or
-(d.year=[from-y] and d.month=[from-m] and d.day>=[from-d])
+(year=[from-y] and month=[from-m] and day>=[from-d])
 )
-
-# Make sure date is less than TO date
 AND
 (
-d.year<[to-y]
+year<[to-y]
 or 
-(d.year=[to-y] and d.month<[to-m])
+(year=[to-y] and month<[to-m])
 or
-(d.year=[to-y] and d.month=[to-m] and d.day<=[to-d])
+(year=[to-y] and month=[to-m] and day<=[to-d])
+)
+group by object_ref
 )
 
 AND
-d.activity_type='Resource download'
-
-group by r.ref
-)
-
-AND
-
 DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
-
 
 AND
 ref>0
@@ -195,32 +183,32 @@ ref>0
 9,"Resources with zero views","select ref 'Resource ID',view_title_field 'Title' from resource where ref not in 
 
 (
-#Previous query to fetch resource views
-select r.ref from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='Resource view'
+SELECT object_ref FROM daily_stat d
 
-# --- date ranges
-# Make sure date is greater than FROM date
-and 
+WHERE d.activity_type='Resource view'
+
+AND 
 (
-d.year>[from-y]
+year>[from-y]
 or 
-(d.year=[from-y] and d.month>[from-m])
+(year=[from-y] and month>[from-m])
 or
-(d.year=[from-y] and d.month=[from-m] and d.day>=[from-d])
+(year=[from-y] and month=[from-m] and day>=[from-d])
 )
-# Make sure date is less than TO date
-and
+
+AND
 (
-d.year<[to-y]
+year<[to-y]
 or 
-(d.year=[to-y] and d.month<[to-m])
+(year=[to-y] and month<[to-m])
 or
-(d.year=[to-y] and d.month=[to-m] and d.day<=[to-d])
+(year=[to-y] and month=[to-m] and day<=[to-d])
 )
 
-group by r.ref
+group by object_ref
 )
 
+AND
 DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
 
 AND
