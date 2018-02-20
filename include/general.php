@@ -2499,7 +2499,7 @@ function change_password($password)
 	# Check password is not the same as the current
 	if ($userpassword==$password_hash) {return $lang["password_matches_existing"];}
 	
-	sql_query("update user set password='$password_hash', password_reset_hash=NULL, password_last_change=now() where ref='$userref' limit 1");
+	sql_query("update user set password='$password_hash', password_reset_hash=NULL, login_tries=0, password_last_change=now() where ref='$userref' limit 1");
         return true;
 	}
 }
