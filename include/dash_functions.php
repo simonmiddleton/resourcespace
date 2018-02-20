@@ -1224,9 +1224,9 @@ function build_dash_tile_list($dtiles_available)
   			<td>
   				<?php 
   				if(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]!="custm" && $buildstring["tlstyle"]!="pend" && isset($lang[$tile["title"]]))
-  					{echo i18n_get_translated($lang[$tile["title"]]);}
+  					{echo htmlspecialchars(i18n_get_translated($lang[$tile["title"]]));}
   				else 
-  					{echo i18n_get_translated($tile["title"]);}
+  					{echo htmlspecialchars(i18n_get_translated($tile["title"]));}
   				?>
   			</td>
   			<td>
@@ -1237,7 +1237,7 @@ function build_dash_tile_list($dtiles_available)
   					{
 					if(isset($lang[strtolower($tile['txt'])]))
 						{
-						$tile['txt'] = $lang[strtolower($tile["txt"])];
+						$tile['txt'] = htmlspecialchars($lang[strtolower($tile["txt"])]);
 						}
 					else
 						{
@@ -1247,20 +1247,20 @@ function build_dash_tile_list($dtiles_available)
   				
   				if(strlen($tile["txt"])>75)
   					{
-  					echo substr(i18n_get_translated($tile["txt"]),0,72)."...";
+  					echo htmlspecialchars(substr(i18n_get_translated($tile["txt"]),0,72)."...");
   					}
   				else
   					{
-  					echo i18n_get_translated($tile["txt"]);
+  					echo htmlspecialchars(i18n_get_translated($tile["txt"]));
   					}
   				?>
   			</td>
   			<td>
   				<a 
-  					href="<?php echo (mb_strtolower(substr($tile["link"],0,4))=="http")? $tile["link"]: $baseurl."/".htmlspecialchars($tile["link"]);?>"
+  					href="<?php echo (mb_strtolower(substr($tile["link"],0,4))=="http")? htmlspecialchars($tile["link"]): $baseurl."/".htmlspecialchars($tile["link"]);?>"
   					target="_blank"
   				>
-  					<?php echo $lang["dashtilevisitlink"];?>
+  					<?php echo htmlspecialchars($lang["dashtilevisitlink"]); ?>
   				</a>
   			</td>
   			<td><?php echo $tile["resource_count"]? $lang["yes"]: $lang["no"];?></td>
