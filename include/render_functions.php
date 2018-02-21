@@ -580,7 +580,6 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     
         break;
         
-        
         case FIELD_TYPE_CATEGORY_TREE:
         global $category_tree_add_parents, $category_tree_search_use_and;
 
@@ -621,42 +620,35 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     <?php echo $status_box_elements; ?>
                 </div>
                 <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
-                    <p align="right">
-                        <a href="#" onClick="document.getElementById('cattree_<?php echo $field['name']; ?>').style.display='none'; return false;"><?php echo $lang['close']; ?></a>
-                    </p>
                     <?php
                     include __DIR__ . '/../pages/edit_fields/7.php';
 
                     // Reset category_tree_open because normally searchbar occurs before edit/ advanced search page
                     $category_tree_open = $original_category_tree_open;
                     ?>
-                 </div>
-                <a href="#"
-                   onClick="
-                        jQuery('#cattree_<?php echo $field['name']; ?>').css('top', (jQuery(this).position().top) - 200);
-                        jQuery('#cattree_<?php echo $field['name']; ?>').css('left', (jQuery(this).position().left) - 400);
-                        jQuery('#cattree_<?php echo $field['name']; ?>').show();
-                        jQuery('#cattree_<?php echo $field['name']; ?>').draggable();
-                        return false;"><?php echo $lang['select']; ?></a>
+                </div>
+                <a href="<?php echo "$baseurl/pages/category_tree.php?fieldname=" . $field['name'] . "&fieldref=" . $field['ref']; ?>"
+                   onClick="jQuery('#cattree_<?php echo $field['name']; ?>').show();
+                        return ModalLoad(this, true, true);"><?php echo $lang['select']; ?></a>
             </div>
 			<?php
 			# Add to clear function
 			$clear_function .= "
-                    jQuery('#search_tree_{$field['ref']}').jstree(true).deselect_all();
+                jQuery('#search_tree_{$field['ref']}').jstree(true).deselect_all();
 
-                    /* remove the hidden inputs */
-                    var elements = document.getElementsByName('nodes_searched[{$field['ref']}][]');
-                    while(elements[0])
-                        {
-                        elements[0].parentNode.removeChild(elements[0]);
-                        }
+                /* remove the hidden inputs */
+                var elements = document.getElementsByName('nodes_searched[{$field['ref']}][]');
+                while(elements[0])
+                    {
+                    elements[0].parentNode.removeChild(elements[0]);
+                    }
 
-                    /* update status box */
-                    var node_statusbox = document.getElementById('nodes_searched_{$field['ref']}_statusbox');
-                    while(node_statusbox.lastChild)
-                        {
-                        node_statusbox.removeChild(node_statusbox.lastChild);
-                        }
+                /* update status box */
+                var node_statusbox = document.getElementById('nodes_searched_{$field['ref']}_statusbox');
+                while(node_statusbox.lastChild)
+                    {
+                    node_statusbox.removeChild(node_statusbox.lastChild);
+                    }
                 ";
             }
         else

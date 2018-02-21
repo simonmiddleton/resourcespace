@@ -108,7 +108,7 @@ select {background-color:white; border-radius:5px;border:none;}
 	{color:#FFF;}
 .HomePanel h2{color:#FFF;}
 
-#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree {
+#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN {
 	background: rgba(0, 0, 0, 0.65);
 	color:#FFF;
 }
