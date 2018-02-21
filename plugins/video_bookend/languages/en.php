@@ -9,3 +9,7 @@ $lang["bookend-noimage-1"]="(no title image)";
 $lang["bookend-noimage-2"]="(no closing image)";
 
 $lang["bookend-intro"]="Select images from the alternative files list to use for the opening and closing images.";
+
+// Errors
+$lang["bookend-failed"] = "Failed!";
+$lang["bookend-could-not-open-file"] = "Error - could not open file!";
