@@ -288,7 +288,7 @@ function HookSimplesamlLoginLoginformlink()
 		if(!$simplesaml_login) {return false;}
 		
         ?>
-		<br/><a href="<?php echo $baseurl; ?>/?usesso=true"><?php echo '&gt; ' . $lang['simplesaml_use_sso']; ?></a>
+		<br/><a href="<?php echo $baseurl; ?>/?usesso=true"><?php echo  LINK_CARET . $lang['simplesaml_use_sso']; ?></a>
 		<?php
         }
 

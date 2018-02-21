@@ -4,7 +4,7 @@ function HookGoogle_oauthLoginLoginformlink()
     global $baseurl, $lang;
     ?>
     <br/>
-    <a href="<?php echo GOOGLE_OAUTH_REDIRECT_URI; ?>">&gt; <?php echo $lang['google_oauth_log_in_with_google']; ?></a>
+    <a href="<?php echo GOOGLE_OAUTH_REDIRECT_URI; ?>"><?php echo LINK_CARET . $lang['google_oauth_log_in_with_google']; ?></a>
     <?php
     return;
     }
