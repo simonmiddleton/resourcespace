@@ -334,9 +334,7 @@ else
 <?php 
 if (count($plugins_avail)>0) 
    { 
-   $plugin_categories=array();
-   $general_plugins=array();
-   $advanced_plugins=array();
+   $plugin_categories = array();
    foreach($plugins_avail as $p)
       {
       $plugin_row = '<tr><td>'.$p['name'].'</td><td>'.$p['desc'].'</td><td>'.$p['author'].'</td>';
@@ -368,43 +366,23 @@ if (count($plugins_avail)>0)
             $p_cats = explode(",",$p["category"]);
             foreach($p_cats as $p_cat)
                {
-               $p_cat = trim(strtolower($p_cat));
-               if(strtolower($p_cat) == "advanced")
-                  {
-                  array_push($advanced_plugins,$plugin_row);
-                  unset($p_cats[array_search("advanced",$p_cats)]);
-                  }
-               elseif(strtolower($p_cat) =="general")
-                  {
-                  array_push($general_plugins,$plugin_row);
-                  unset($p_cats[array_search("general",$p_cats)]);
-                  }
-               else
-                  {
-                  if(!isset($plugin_categories[$p_cat]))
-                     {
-                     $plugin_categories[$p_cat]=array();
-                     }
-                  array_push($plugin_categories[$p_cat],$plugin_row);
-                  }
+                $p_cat = trim(strtolower($p_cat));
+                if(!isset($plugin_categories[$p_cat]))
+                    {
+                    $plugin_categories[$p_cat] = array();
+                    }
+                array_push($plugin_categories[$p_cat], $plugin_row);
                }
             }
-         else 
-            {
-            if($p["category"]=="advanced"){array_push($advanced_plugins,$plugin_row);}
          else 
             {
             if(!isset($plugin_categories[$p["category"]]))
                {
-               $plugin_categories[$p["category"]]=array();
+               $plugin_categories[$p["category"]] = array();
                }
-            array_push($plugin_categories[$p["category"]],$plugin_row);
+
+            array_push($plugin_categories[$p["category"]], $plugin_row);
             }
-            }
-         }
-      else
-         {
-         $general_plugins[] = $plugin_row;
          }
       }
    function display_plugin_category($plugins,$category,$header=true) 
@@ -443,18 +421,13 @@ if (count($plugins_avail)>0)
       <?php
       }
 
-   # General Plugins
-   display_plugin_category($general_plugins,"general",(count($plugin_categories)>0));
-
    # Category Specific plugins
    ksort($plugin_categories);
    foreach($plugin_categories as $category => $plugins)
       {
       display_plugin_category($plugins,$category);
       }
-
-   display_plugin_category($advanced_plugins,"advanced");
-   ?>
+    ?>
    <script>
       jQuery(".CollapsiblePluginListHead").click(function(){
          if(jQuery(this).hasClass("collapsed")) {
