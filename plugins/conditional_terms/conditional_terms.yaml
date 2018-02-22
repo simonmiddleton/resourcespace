@@ -3,3 +3,4 @@ desc: Enables conditional display of terms page at download based on resource me
 author: Montala Limited
 config_url: /plugins/conditional_terms/pages/setup.php
 version: 1.0
+category: user interface

@@ -1,8 +1,8 @@
 name: google_oauth
 author: Montala Limited
 version: 1.0
-desc: Ability to log in using Google accounts. Essentially a way to manage anonymous access!
+desc: [Advanced] Ability to log in using Google accounts. Essentially a way to manage anonymous access!
 info_url: http://www.resourcespace.com/knowledge-base/user/plugin-google-oauth
 config_url: /plugins/google_oauth/pages/setup.php
 default_priority: 100
-category: Authentication, Advanced
+category: authentication
