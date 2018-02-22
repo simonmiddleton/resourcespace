@@ -16,11 +16,15 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
     # Search capability.
     # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
     $results = do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort);
-    $resultcount= count ($results);
-   
-    for($n=0;$n<$resultcount;$n++)
+
+    if (!is_array($results))
         {
-        if(is_array($results[$n]))
+        return array();
+        }
+   
+    for ($n = 0; $n < count($results); $n++)
+        {
+        if (is_array($results[$n]))
             {
             $results[$n] = array_map("i18n_get_translated",$results[$n]);
             }
