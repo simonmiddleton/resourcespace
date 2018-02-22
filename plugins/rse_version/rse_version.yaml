@@ -3,4 +3,4 @@ desc: ResourceSpace Enterprise - Version Control
 author: Montala Limited
 version: 2.0
 default_priority: 100
-category: Enterprise
+category: asset processing,system,user interface

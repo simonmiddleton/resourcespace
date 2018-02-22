@@ -5,4 +5,4 @@ version: 1.0
 info_url: http://www.montala.com
 default_priority: 100
 config_url: /plugins/rse_search_notifications/pages/setup.php
-category: Enterprise,User interface
+category: user interface
