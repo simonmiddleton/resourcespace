@@ -29,9 +29,7 @@ else
 	}
 	
 # Set up ImageMagick
-
-putenv("MAGICK_HOME=" . $imagemagick_path); 
-putenv("PATH=/bin:" . $ghostscript_path . ":" . $imagemagick_path); # Path
+putenv("MAGICK_HOME=" . $imagemagick_path);
 
 $snapshotcheck=false;
 if (in_array($extension, $ffmpeg_supported_extensions)){
