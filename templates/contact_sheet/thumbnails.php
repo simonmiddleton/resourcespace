@@ -110,7 +110,7 @@ foreach($resources as $resource_ref => $resource)
 		foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
 			{
 			?>
-			<span><?php echo $contact_sheet_field; ?></span><br>
+			<span><?php echo htmlspecialchars($contact_sheet_field); ?></span><br>
 			<?php
 			}
 		}
@@ -134,7 +134,7 @@ foreach($resources as $resource_ref => $resource)
 		foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
 			{
 			?>
-			<span><?php echo $contact_sheet_field; ?></span><br>
+			<span><?php echo htmlspecialchars($contact_sheet_field); ?></span><br>
 			<?php
 			}
 		}

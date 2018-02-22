@@ -4,12 +4,13 @@ include_once '../include/general.php';
 include '../include/authenticate.php'; 
 include_once '../include/collections_functions.php';
 
-$collection        = getvalescaped('ref', '', true);
-$collectiondata    = get_collection($collection);
-$ajax              = ('true' == getvalescaped('ajax', '') ? true : false);
-$sheetstyle        = getvalescaped('sheetstyle', 'thumbnails');
-$field_value_limit = getvalescaped('field_value_limit', 0);
-$filename_uid      = generateUserFilenameUID($userref);
+$collection        	= getvalescaped('ref', '', true);
+$collectiondata    	= get_collection($collection);
+$ajax              	= ('true' == getvalescaped('ajax', '') ? true : false);
+$sheetstyle        	= getvalescaped('sheetstyle', 'thumbnails');
+$field_value_limit 	= getvalescaped('field_value_limit', 0);
+$filename_uid      	= generateUserFilenameUID($userref);
+$error				= getval("error","");
 
 if($contactsheet_use_field_templates && !isset($contactsheet_field_template))
 	{
@@ -91,6 +92,12 @@ if(!collection_readable($collection))
     }
     ?>
     <p><?php echo $lang["contactsheetintrotext"]; ?></p>
+	
+	<?php if ($error != "" && isset($lang[$error]))
+		{
+		echo "<div class='PageInformal' name='error' id='error'>" . htmlspecialchars($lang[$error]) . "</div>";
+		}
+	?>
 
     <!-- each time the form is modified, the variables are sent to contactsheet.php with preview=true
     contactsheet.php makes just the first page of the pdf (with col size images) 
@@ -189,6 +196,22 @@ if(!collection_readable($collection))
                 </script>
             </div>
 <?php
+
+if ($error != "contactsheet_data_toolong")
+	{
+	echo "<input type=hidden name='field_value_limit' value=" . urlencode($field_value_limit) . ">";
+	}
+else
+	{
+	?>
+	<div class="Question">
+	<label for="field_value_limit"><?php echo $lang["contactsheet_data_field_value_limit"]; ?></label>
+	<input type="number" name='field_value_limit' value='<?php echo urlencode($field_value_limit); ?>'>
+	<div class="clearerleft"></div>
+	</div>
+	<?php
+	}
+	
 if($contact_sheet_include_header_option)
     {
     ?>	

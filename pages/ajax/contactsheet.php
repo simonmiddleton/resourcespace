@@ -26,7 +26,7 @@ $addlink           = getvalescaped('addlink', '');
 $addlogo           = getvalescaped('addlogo', '');
 $addfieldname	   = getvalescaped('addfieldname','');
 $force_watermark   = getvalescaped('force_watermark','');
-$field_value_limit = getvalescaped('field_value_limit', 0);
+$field_value_limit = getval('field_value_limit', 0, true);
 
 if($force_watermark==='true'){
 	$force_watermark=true;
@@ -184,7 +184,7 @@ foreach($results as $result_data)
             // multiple pages, then truncate the value.
             if(0 < $field_value_limit)
                 {
-                $contact_sheet_value = substr($contact_sheet_value, 0, $field_value_limit);
+                $contact_sheet_value = mb_substr($contact_sheet_value, 0, $field_value_limit);
                 }
 
             // Clean fixed list types of their front comma
@@ -284,8 +284,8 @@ catch(Html2Pdf_exception $e)
     {
     debug('CONTACT-SHEET:' . $e->getMessage());
     debug('CONTACT-SHEET:' . $e->getTraceAsString());
-
-    // Starting point
+	
+	// Starting point
     if(0 == $field_value_limit)
         {
         $field_value_limit = 1100;
@@ -293,9 +293,14 @@ catch(Html2Pdf_exception $e)
 
     $parameters = array(
         'ref'               => $collection,
-        'field_value_limit' => $field_value_limit - 200,
+        'field_value_limit' => $field_value_limit - 100,
     );
 
+	if(strpos($e->getMessage(),"does not fit on only one page") !== false)
+		{
+		$parameters["error"] = "contactsheet_data_toolong";
+		}
+	
     redirect(generateURL("{$baseurl}/pages/contactsheet_settings.php", $parameters));
 
     exit();

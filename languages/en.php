@@ -1012,6 +1012,8 @@ $lang['relateallresources_confirmation'] = 'Are you sure you want to RELATE ALL 
 # New for 1.5
 $lang["columns"]="Columns";
 $lang["contactsheetconfiguration"]="Contact sheet configuration";
+$lang["contactsheet_data_field_value_limit"] = "Maximum characters per field";
+$lang["contactsheet_data_toolong"]="There is too much data to fit on one page. Please reduce the maximum characters per field, the amount of fields shown or choose an alternative page view";
 $lang["thumbnails"]="Thumbnails";
 $lang["contactsheetintrotext"]="Please select the configuration options you'd like for your contact sheet PDF. The preview will update automatically when you change your options, unless you change the order of resources in the collection, in which case you'll need to press the \"Preview\" button to update.<br />When you're ready, press \"Create\" to generate and download your contact sheet PDF.";
 $lang["size"]="Size";

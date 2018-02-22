@@ -115,7 +115,7 @@ if(isset($contact_sheet_footer))
     foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
         {
         ?>
-        <p><?php echo $contact_sheet_field; ?></p>
+        <p><?php echo htmlspecialchars($contact_sheet_field); ?></p>
         <?php
         }
         ?>
