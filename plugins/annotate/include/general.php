@@ -238,20 +238,15 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 		# Set up  
 		
 		putenv("MAGICK_HOME=" . $imagemagick_path); 
-		putenv("PATH=" . $ghostscript_path . ":" . $imagemagick_path); # Path 
-
         $ghostscript_fullpath = get_utility_path("ghostscript");
 		
-
         $command = $ghostscript_fullpath . " -sDEVICE=jpeg -dFirstPage=" . $previewpage . " -o -r100 -dLastPage=" . $previewpage . " -sOutputFile=" . escapeshellarg($jpgstoragepath) . " " . escapeshellarg($pdfstoragepath);
 		run_command($command);
 		
-		$command=$imagemagick_path . "/bin/convert";
-		if (!file_exists($command)) {$command=$imagemagick_path . "/convert.exe";}
-		if (!file_exists($command)) {$command=$imagemagick_path . "/convert";}
-		if (!file_exists($command)) {exit("Could not find ImageMagick 'convert' utility at location '$command'");}	
+		$convert_fullpath = get_utility_path("im-convert");
+		if ($convert_fullpath == false) {exit("Could not find ImageMagick 'convert' utility at location '$command'");}	
 		
-		$command.= " -resize $contact_sheet_preview_size -quality 90 -colorspace ".$imagemagick_colorspace." " . escapeshellarg($jpgstoragepath) ." " . escapeshellarg($jpgstoragepath);
+		$command = $convert_fullpath . " -resize $contact_sheet_preview_size -quality 90 -colorspace ".$imagemagick_colorspace." " . escapeshellarg($jpgstoragepath) ." " . escapeshellarg($jpgstoragepath);
 		run_command($command);
 		return true;
 		}

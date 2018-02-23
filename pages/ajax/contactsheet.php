@@ -331,7 +331,6 @@ if ($preview && isset($imagemagick_path))
 
     // Set up
     putenv("MAGICK_HOME={$imagemagick_path}");
-    putenv("PATH={$ghostscript_path}:{$imagemagick_path}");
     $ghostscript_fullpath = get_utility_path('ghostscript');
     $convert_fullpath = get_utility_path('im-convert');
     
