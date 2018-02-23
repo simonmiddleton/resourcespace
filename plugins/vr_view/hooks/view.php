@@ -1,5 +1,22 @@
 <?php
-
+function HookVr_viewViewaftergetresourcedataview($ref,$resource)
+    {
+	// Disable annotations if we are in VR View mode
+    global $annotate_enabled;
+	if(!is_array($resource))
+		{
+		return false;
+		}
+		
+    $use_vr_view = VrViewUseVR($resource);
+    if($use_vr_view)
+        {
+        $annotate_enabled = false; 
+        }
+		
+	return false;
+    }
+	
 function HookVr_viewViewReplacepreviewlink()
     {
 	global $resource, $baseurl_short, $urlparams, $modal, $lang, $plugins;
