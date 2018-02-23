@@ -1409,6 +1409,7 @@ $lang['plugins-goodrsc'] = 'Configuration uploaded ok. Click \'Save Configuratio
 $lang['plugins-badrsc'] = 'Sorry, that wasn\'t a valid .rsc file.';
 $lang['plugins-wrongplugin'] = 'Sorry, that\'s an .rsc file for the %plugin plugin. Choose one for this plugin.'; // %plugin is replaced by the name of the plugin being configured.
 $lang['plugins-configvar'] = 'Sets configuration variable: $%cvn'; //%cvn is replaced by the name of the config variable being set
+$lang['plugins-search-plugin-placeholder'] = 'Search plugins';
 
 #Location Data
 $lang['location-title'] = 'Location data';
