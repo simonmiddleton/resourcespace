@@ -258,15 +258,18 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
 </tr></table>
 
 <?php } // end hook previewimage2 ?>
-<?php } // end hook previewimage ?>
+<?php } // end hook previewimage
 
-<script>
-// Don't need space for Simple Search box
-jQuery('#CentralSpaceContainer').width('94%');
-</script>
-
-
-<?php
+if(!IsModal())
+	{
+	?>
+	<script>
+	// Don't need space for Simple Search box
+	jQuery('#CentralSpaceContainer').width('94%');
+	</script>
+	<?php
+	}
+	
 if ($show_resource_title_in_titlebar){
 	$title =  htmlspecialchars(i18n_get_translated(get_data_by_field($ref,$view_title_field)));
 	if (strlen($title) > 0){

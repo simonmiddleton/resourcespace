@@ -6584,3 +6584,22 @@ function create_resource_type_field($name,$restype = 0, $type = FIELD_TYPE_TEXT_
 	log_activity(null,LOG_CODE_CREATED,$name,'resource_type_field','title',$new,null,'');
     return $new;    
     }
+
+
+/**
+* Check if page is a modal and set global $modal variable if not already set
+*  
+* @return boolean =- true if modal, false otherwise
+*/
+
+function IsModal()
+    {
+    global $modal;
+    if(isset($modal) && $modal)
+        {
+        return true;
+        }
+    $modal = (getval("modal","") == "true");
+    return $modal;
+    }
+    
