@@ -720,11 +720,11 @@ if('' != $tile_type)
 				<?php
 				}
 			?>
+            </div>
 		<?php 
         render_user_group_checkbox_select('specific_user_groups', $current_specific_user_groups, 'padding-left: 310px; display: none;');
 		}
         ?>
-    </div>
 	<div class="QuestionSubmit">
 		 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $submittext;?>&nbsp;&nbsp;" /></div>
 		<div class="clearerleft"> </div>
