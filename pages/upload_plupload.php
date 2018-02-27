@@ -81,7 +81,13 @@ elseif ($upload_then_edit)
 	# Clear the user template
 	clear_resource_data(0-$userref);
 	}
-	
+
+$modify_redirecturl=hook('modify_redirecturl');
+if($modify_redirecturl!==false)
+	{
+	$redirecturl=$modify_redirecturl;
+	}
+
 $uploadparams= array(
     'replace'                                => $replace,
     'alternative'                            => $alternative,
