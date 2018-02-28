@@ -640,6 +640,10 @@ li.plupload_droptext {font-size: 1.1em;}
     {
     cursor: pointer;
     }
+.CollapsibleSectionHead:hover
+    {
+    color: #757575;
+    }
 
 h2.CollapsibleSectionHead, h1.CollapsibleSectionHead {
 	padding: 0.1em 0 0.5em 0;
