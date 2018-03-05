@@ -1366,26 +1366,43 @@ function get_search_title($searchstring){
 	return $title;
 }
 
-function add_saved_search_items($collection)
+function add_saved_search_items($collection, $search = "", $restypes = "", $archivesearch = "", $order_by = "relevance", $sort = "desc", $daylimit = "", $starsearch = "")
 	{
+    if((string)(int)$collection != $collection)
+        {
+        // Not an integer
+        return false;
+        }
+    
 	global $collection_share_warning, $collection_allow_not_approved_share, $userref, $collection_block_restypes, $search_all_workflow_states;
+    
 	# Adds resources from a search to the collection.
-	$archivesearch = getvalescaped('archive', '');
+    if($search_all_workflow_states && 0 != $archivesearch)
+        {
+        $search_all_workflow_states = false;
+        }
+   
+    $results=do_search($search, $restypes, $order_by, $archivesearch,-1,$sort,false,$starsearch,false,false,$daylimit);
 
-	if($search_all_workflow_states && 0 != $archivesearch)
-		{
-		$search_all_workflow_states = false;
-		}
-	$results=do_search(getvalescaped("addsearch",""), getvalescaped("restypes",""), "relevance", $archivesearch,-1,'',false,getvalescaped("starsearch",""),false,false,getvalescaped("daylimit",""));
-
-	if(!is_array($results) || count($results)==0){return false;}
+	if(!is_array($results) || count($results) == 0)
+        {
+        return false;
+        }
+        
 	# Check if this collection has already been shared externally. If it has, we must add a further entry
 	# for this specific resource, and warn the user that this has happened.
-	$keys=get_collection_external_access($collection);
-	$resourcesnotadded=array(); # record the resources that are not added so we can display to the user
-	$blockedtypes=array();# Record the resource types that are not added 
+	$keys = get_collection_external_access($collection);
+	$resourcesnotadded = array(); # record the resources that are not added so we can display to the user
+	$blockedtypes = array();# Record the resource types that are not added 
 	
-	for ($r=0;$r<count($results);$r++)
+    // To maintain current collection order but add the search items in the correct order we must first ove the existing collection resoruces out the way
+    $searchcount = count($results);
+    if($searchcount > 0)
+        {
+        sql_query("UPDATE collection_resource SET sortorder = sortorder + '" . $searchcount . "' WHERE collection='" . $collection . "'");
+        }
+
+	for ($r=0;$r<$searchcount;$r++)
 		{
 		$resource=$results[$r]["ref"];
 		$archivestatus=$results[$r]["archive"];
@@ -1423,13 +1440,13 @@ function add_saved_search_items($collection)
 		if (is_array($modifyNotAdded))
 			$resourcesnotadded = $modifyNotAdded;
 
-		for ($n=0;$n<count($results);$n++)
+		for ($n=0;$n<$searchcount;$n++)
 			{
 			$resource=$results[$n]["ref"];
 			if (!isset($resourcesnotadded[$resource]) && !in_array($results[$n]["resource_type"],$collection_block_restypes))
 				{
 				sql_query("delete from collection_resource where resource='$resource' and collection='$collection'");
-				sql_query("insert into collection_resource(resource,collection) values ('$resource','$collection')");
+				sql_query("insert into collection_resource(resource,collection,sortorder) values ('$resource','$collection','$n')");
 				
 				#log this
 				collection_log($collection,"a",$resource);

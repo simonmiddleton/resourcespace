@@ -608,13 +608,16 @@ function compile_search_actions($top_actions)
         if($resources_count != 0)
             {
 				$extra_tag_attributes = sprintf('
-                        data-url="%spages/collections.php?addsearch=%s&restypes=%s&archive=%s&mode=resources&daylimit=%s"
+                        data-url="%spages/collections.php?addsearch=%s&restypes=%s&order_by=%s&sort=%s&archive=%s&mode=resources&daylimit=%s&starsearch=%s"
                     ',
                     $baseurl_short,
                     urlencode($search),
                     urlencode($restypes),
+                    urlencode($order_by),
+                    urlencode($sort),
                     urlencode($archive),
-                    urlencode($daylimit)
+                    urlencode($daylimit),
+                urlencode($starsearch)
                 );
 
                 $options[$o]['value']='save_search_items_to_collection';

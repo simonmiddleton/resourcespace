@@ -21,6 +21,16 @@ $resources_count = getvalescaped('resources_count', '');
 $collection      = getvalescaped('collection', '');
 $entername       = getvalescaped('entername', '');
 
+# if search is not a special search (ie. !recent), use starsearchvalue.
+if ($search !="" && strpos($search,"!")!==false)
+	{
+	$starsearch = "";
+	}
+else
+	{
+	$starsearch = getvalescaped("starsearch","");	
+    }
+
 /* 
 IMPORTANT NOTE: Collections should always show their resources in the order set by a user (via sortorder column 
 in collection_resource table). This means that all pages order by 'relevance' and on search page only if we search
@@ -49,7 +59,6 @@ if ($addcollection!="")
    	# Log this
 	daily_stat("Add public collection",$userref);
 	}
-/////
 
 #Remove all from collection
 $emptycollection = getvalescaped("emptycollection","",true);
@@ -494,32 +503,31 @@ if ($addsearch!=-1)
         else
             {
             #add saved search (the items themselves rather than just the query)
-            $resourcesnotadded=add_saved_search_items($usercollection);
+            $resourcesnotadded=add_saved_search_items($usercollection, $search, $restypes,$archive, $order_by, $sort, $daylimit, $starsearch);
             if (!empty($resourcesnotadded))
                 {
-		$warningtext="";
-		//exit($resourcesnotadded["blockedtypes"]);
-		if(isset($resourcesnotadded["blockedtypes"]))
-			{
-			// There are resource types blocked due to $collection_block_restypes
-			$warningtext = $lang["collection_restype_blocked"] . "<br /><br />";
-			//$restypes=get_resource_types(implode(",",$collection_block_restypes));
-			$blocked_types=get_resource_types(implode(",",$resourcesnotadded["blockedtypes"]));
-			foreach($blocked_types as $blocked_type)
-				{
-				if($warningtext==""){$warningtext.="<ul>";}
-				$warningtext.= "<li>" . $blocked_type["name"] . "</li>";
-				}
-			$warningtext.="</ul>";
-			unset($resourcesnotadded["blockedtypes"]);
-			}
+                $warningtext="";
+                if(isset($resourcesnotadded["blockedtypes"]))
+                    {
+                    // There are resource types blocked due to $collection_block_restypes
+                    $warningtext = $lang["collection_restype_blocked"] . "<br /><br />";
+                    //$restypes=get_resource_types(implode(",",$collection_block_restypes));
+                    $blocked_types=get_resource_types(implode(",",$resourcesnotadded["blockedtypes"]));
+                    foreach($blocked_types as $blocked_type)
+                        {
+                        if($warningtext==""){$warningtext.="<ul>";}
+                        $warningtext.= "<li>" . $blocked_type["name"] . "</li>";
+                        }
+                    $warningtext.="</ul>";
+                    unset($resourcesnotadded["blockedtypes"]);
+                    }
 			
-		if (!empty($resourcesnotadded))	
-			{
-			// There are resources blocked from being added due to archive state
-			if($warningtext==""){$warningtext.="<br /><br />";}
-			$warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
-			}
+                if (!empty($resourcesnotadded))	
+                    {
+                    // There are resources blocked from being added due to archive state
+                    if($warningtext==""){$warningtext.="<br /><br />";}
+                    $warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
+                    }
 		
                 ?><script language="Javascript">styledalert("<?php echo $lang["status-warning"]; ?>","<?php echo $warningtext; ?>",600);</script><?php
                 }
@@ -585,11 +593,11 @@ hook("processusercommand");
 $searches=get_saved_searches($usercollection);
 
 // Do an initial count of how many resources there are in the collection (only returning ref and archive)
-$results_all  = do_search("!collection{$usercollection}", '', $order_by, 0, -1, $sort, false, 0, false, false, '', false, true, true);
+$results_all  = do_search("!collection{$usercollection}", '', "relevance", 0, -1, "DESC", false, 0, false, false, '', false, true, true);
 $count_result = count($results_all);
 
 // Then do another pass getting all data for the maximum allowed collection thumbs
-$result = do_search("!collection{$usercollection}", '', $order_by, 0, $max_collection_thumbs, $sort);
+$result = do_search("!collection{$usercollection}", '', "relevance", 0, $max_collection_thumbs, "DESC");
 
 $hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
 $feedback=$cinfo["request_feedback"];
