@@ -1472,10 +1472,10 @@ function display_field($n, $field, $newtab=false,$modal=false)
   $name="field_" . $field["ref"];
   $value=$field["value"];
   $value=trim($value);
-
-  if (($field["omit_when_copying"] || strip_leading_comma($value) == "") && $use!=$ref)
+  if ($use != $ref && ($field["omit_when_copying"] || in_array($field["ref"], $locked_fields)))
     {
-    # Omit when copying, or there is no data for this field associated with the copied resource - return this field back to the value it was originally, instead of using the current value which has been fetched from the copied resource.
+    # Return this field value back to the original value, instead of using the value from the copied resource/metadata template
+    # This is triggered if field has the 'omit_when_copying' flag set or if the field value has been locked e.g. in upload_then_edit mode
     reset($original_fields);
     foreach ($original_fields as $original_field)
       {
