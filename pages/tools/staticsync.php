@@ -724,7 +724,14 @@ if (!$staticsync_ingest)
 					{
 					echo "File no longer exists: " . $rf["ref"] . " " . $fp . PHP_EOL;
 					# Set to archived, unless state hasn't changed since script started.
-					sql_query("UPDATE resource SET archive='" . $staticsync_deleted_state . "' WHERE ref='{$rf["ref"]}'");
+					if (isset($staticsync_deleted_state))
+						{
+						sql_query("UPDATE resource SET archive='" . $staticsync_deleted_state . "' WHERE ref='{$rf["ref"]}'");
+						}
+					else
+						{
+						delete_resource($rf["ref"]);
+						}
 					if(isset($resource_deletion_state) && $staticsync_deleted_state==$resource_deletion_state)
 						{
 						// Only remove from collections if we are really deleting this. Some configurations may have a separate state or synced resources may be temporarily absent
