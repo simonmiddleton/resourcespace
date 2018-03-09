@@ -439,12 +439,34 @@ if ($submitted != "")
 								
 				$path.=$p . "\r\n";	
 				
-				if($collection_download_tar)
-					{
-					// Add link to file for use by tar to prevent full paths being included.
-					debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
-					@symlink($p, $usertempdir . DIRECTORY_SEPARATOR . $filename); 
-					}
+                if($collection_download_tar)
+                    {
+                    $ln_link_name = $usertempdir . DIRECTORY_SEPARATOR . $filename;
+
+                    /*
+                    There is unexpected behaviour when a folder contains more than 70,000 symbolic links/ files in it.
+                    By splitting result set in batches of 1000, this should address that problem. Up to 10,000 resources
+                    in a collection proved to work ok and relatively faster when not splitting in subfolders.
+                    */
+                    if(count($result) > 10000)
+                        {
+                        // Generate folder name
+                        $low_limit      = (floor($ref / 1000) * 1000) + 1;
+                        $high_limit     = (ceil($ref / 1000) * 1000);
+                        $symlink_folder = "{$usertempdir}" . DIRECTORY_SEPARATOR . "RS_{$low_limit}_to_{$high_limit}";
+
+                        if(!is_dir($symlink_folder))
+                            {
+                            mkdir($symlink_folder, 0777, true);
+                            }
+
+                        $ln_link_name = $symlink_folder . DIRECTORY_SEPARATOR . $filename;
+                        }
+
+                    // Add link to file for use by tar to prevent full paths being included.
+                    debug("collection_download adding symlink: {$p} - {$ln_link_name}");
+                    @symlink($p, $ln_link_name);
+                    }
 				elseif ($use_zip_extension)
 					{
 					$zip->addFile($p,$filename);
