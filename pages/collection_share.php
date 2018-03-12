@@ -329,7 +329,15 @@ include "../include/header.php";
 			<td><?php echo $lang["lastused"];?></td>
 			<td><?php echo $lang["expires"];?></td>
 			<td><?php echo $lang["access"];?></td>
-			<td><?php echo $lang['social_media']; ?></td>
+			<?php
+			global $social_media_links;
+			if (!empty($social_media_links))
+				{
+				?>
+				<td><?php echo $lang['social_media']; ?></td>
+				<?php
+				}
+			?>
 			<?php hook("additionalcolexternalshareheader");?>
 			<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
 			</tr>
@@ -345,7 +353,14 @@ include "../include/header.php";
 				<td><?php echo htmlspecialchars(nicedate($keys[$n]["lastused"],true)); ?></td>
 				<td><?php echo htmlspecialchars(($keys[$n]["expires"]=="")?$lang["never"]:nicedate($keys[$n]["expires"],false)) ?></td>
 				<td><?php echo htmlspecialchars(($keys[$n]["access"]==-1)?"":$lang["access" . $keys[$n]["access"]]); ?></td>
-                <td><?php renderSocialMediaShareLinksForUrl(generateURL($baseurl, array('c' => $ref, 'k' => $keys[$n]['access_key']))); ?></td>
+				<?php
+				if (!empty($social_media_links))
+					{
+					?>
+            		<td><?php renderSocialMediaShareLinksForUrl(generateURL($baseurl, array('c' => $ref, 'k' => $keys[$n]['access_key']))); ?></td>
+					<?php
+					}
+				?>
 				<?php hook("additionalcolexternalsharerecord");?>
 				<td><div class="ListTools">
 				<a href="#" onClick="if (confirm('<?php echo $lang["confirmdeleteaccess"]?>')) {document.getElementById('deleteaccess').value='<?php echo htmlspecialchars($keys[$n]["access_key"]) ?>';document.getElementById('collectionform').submit(); return false;}"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>
