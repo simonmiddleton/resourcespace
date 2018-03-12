@@ -3422,6 +3422,9 @@ $byte_prefix_mode_decimal=true;
 # Option to force users to select a resource type at upload
 $resource_type_force_selection=false;
 
+// Social media share buttons
+$social_media_links = array("facebook", "twitter", "linkedin");
+
 // Facebook App ID
 $facebook_app_id = '133361117324579'; # Standard ResourceSpace app
 

@@ -2198,25 +2198,33 @@ function renderCallToActionTile($link)
 */
 function renderSocialMediaShareLinksForUrl($url)
     {
-    global $facebook_app_id;
+    global $facebook_app_id, $social_media_links;
 
     $url_encoded = urlencode($url);
 
-    if('' !== trim($facebook_app_id))
+    if('' !== trim($facebook_app_id) && in_array("facebook", $social_media_links))
         {
         ?>
         <!-- Facebook -->
         <a target="_blank" href="https://www.facebook.com/dialog/feed?app_id=<?php echo $facebook_app_id; ?>&link=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-facebook-official" aria-hidden="true"></i></a>
         <?php
         }
+
+    if (in_array("twitter", $social_media_links))
+        {
         ?>
-    
-    <!-- Twitter -->
-    <a target="_blank" href="https://twitter.com/?status=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-twitter-square" aria-hidden="true"></i></a>
-    
-    <!-- LinkedIn -->
-    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-linkedin-square" aria-hidden="true"></i></a>
-    <?php
+        <!-- Twitter -->
+        <a target="_blank" href="https://twitter.com/?status=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-twitter-square" aria-hidden="true"></i></a>
+        <?php
+        }
+
+    if (in_array("linkedin", $social_media_links))
+        {
+        ?>
+        <!-- LinkedIn -->
+        <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-linkedin-square" aria-hidden="true"></i></a>
+        <?php
+        }
 
     return;
     }

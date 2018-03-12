@@ -292,7 +292,15 @@ if($editing && !$editexternalurl)
                             <td><?php echo $lang["lastused"];     ?></td>
                             <td><?php echo $lang["expires"];      ?></td>
                             <td><?php echo $lang["access"];       ?></td>
-                            <td><?php echo $lang['social_media']; ?></td>
+                            <?php
+                            global $social_media_links;
+                            if (!empty($social_media_links))
+                                {
+                                ?>
+                                <td><?php echo $lang['social_media']; ?></td>
+                                <?php
+                                }
+                            ?>
                             <?php hook("additionalresourceexternalshareheader");?>
                             <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
                         </tr>
@@ -324,7 +332,14 @@ if($editing && !$editexternalurl)
                             <td><?php echo htmlspecialchars(nicedate($key["lastused"],true)); ?></td>
                             <td><?php echo htmlspecialchars($expires)                         ?></td>
                             <td><?php echo htmlspecialchars($access);                         ?></td>
-                            <td><?php renderSocialMediaShareLinksForUrl($url);                ?></td>
+                            <?php
+                            if (!empty($social_media_links))
+                                {
+                                ?>
+                                <td><?php renderSocialMediaShareLinksForUrl($url);                ?></td>
+                                <?php
+                                }
+                            ?>
                             <?php hook("additionalresourceexternalsharerecord");?>
                             <td>
                                 <div class="ListTools">
