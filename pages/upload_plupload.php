@@ -799,8 +799,7 @@ elseif ($upload_no_file && getval("createblank","")!="")
 	}
 
 $headerinsert.="
-<link type='text/css' href='$baseurl/css/smoothness/jquery-ui.min.css?css_reload_key=$css_reload_key' rel='stylesheet' />
-<link type='text/css' href='$baseurl/css/smoothness/theme.css?css_reload_key=$css_reload_key' rel='stylesheet' />";
+<link type='text/css' href='$baseurl/css/smoothness/jquery-ui.min.css?css_reload_key=$css_reload_key' rel='stylesheet' />";
 
 include "../include/header.php";
 ?>
