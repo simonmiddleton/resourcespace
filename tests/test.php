@@ -74,7 +74,26 @@ if(array_search('nosetup',$argv)===false)
     create_new_db($mysql_db);
     }
 
+    
+// Reset any odd config settings by reapplying config.default and config.new_installs.php
+// Save any important settings e.g for mysql connections first 
+$savedconfigs = array("mysql_db","mysql_server","mysql_server_port","mysql_username","mysql_password","imagemagick_path","ghostscript_path","exiftool_path");
+
+foreach($savedconfigs as $savedconfig)
+    {
+    $saved[$savedconfig] = $$savedconfig;
+    }
+    
+include "../include/config.default.php";
+eval(file_get_contents("../include/config.new_installs.php"));
+   
+foreach($saved as $key => $savedsetting)    
+    {
+    $$key = $savedsetting;
+    }
+    
 sql_connect();
+
 if(array_search('nosetup',$argv)===false)
     {
     # Connect and create standard tables.
@@ -95,6 +114,8 @@ else
         die("Could not find existing '{$test_user_name}' user");
         }
     }
+
+
 
 # Setup user
 user_set_usergroup($u, 3);
