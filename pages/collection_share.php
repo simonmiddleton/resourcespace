@@ -175,35 +175,38 @@ include "../include/header.php";
 			</select>
 			<div class="clearerleft"> </div>
 			</div>
-			<?php endif; #hook replaceemailaccessselector ?>
+			<?php endif; #hook replaceemailaccessselector
 			
-			<div class="Question">
-			<label><?php echo $lang["expires"]?></label>
-			<select name="expires" class="stdwidth">
-			<?php 
-			global $collection_share_expire_days, $collection_share_expire_never;
-			if($collection_share_expire_never){?><option value=""><?php echo $lang["never"]?></option><?php }?>
-			<?php 
-			for ($n=1;$n<=$collection_share_expire_days;$n++)
+			if(!hook('replaceemailexpiryselector'))
 				{
-				$date = time()+(60*60*24*$n);
-				$d    = date("D",$date);
-				$option_class = '';
-				if (($d == "Sun") || ($d == "Sat"))
+				?>
+				<div class="Question">
+				<label><?php echo $lang["expires"]?></label>
+				<select name="expires" class="stdwidth">
+				<?php 
+				global $collection_share_expire_days, $collection_share_expire_never;
+				if($collection_share_expire_never){?><option value=""><?php echo $lang["never"]?></option><?php }?>
+				<?php 
+				for ($n=1;$n<=$collection_share_expire_days;$n++)
 					{
-					$option_class = 'optionWeekend';
-					} ?>
-				<option class="<?php echo $option_class ?>" value="<?php echo date("Y-m-d",$date)?>" <?php if(substr(getvalescaped("editexpiration",""),0,10)==date("Y-m-d",$date)){echo "selected";}?>><?php echo nicedate(date("Y-m-d",$date),false,true)?></option>
+					$date = time()+(60*60*24*$n);
+					$d    = date("D",$date);
+					$option_class = '';
+					if (($d == "Sun") || ($d == "Sat"))
+						{
+						$option_class = 'optionWeekend';
+						} ?>
+					<option class="<?php echo $option_class ?>" value="<?php echo date("Y-m-d",$date)?>" <?php if(substr(getvalescaped("editexpiration",""),0,10)==date("Y-m-d",$date)){echo "selected";}?>><?php echo nicedate(date("Y-m-d",$date),false,true)?></option>
+					<?php
+					}
+				?>
+				</select>
+				<div class="clearerleft"> </div>
+				</div>
 				<?php
 				}
-			?>
-			</select>
-			<div class="clearerleft"> </div>
-			</div>
 			
-			
-			
-			<?php if (checkperm("x")) {
+			if (checkperm("x")) {
 			# Allow the selection of a user group to inherit permissions from for this share (the default is to use the current user's user group).
 			?>
 			<div class="Question">

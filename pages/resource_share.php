@@ -148,36 +148,40 @@ if($editing && !$editexternalurl)
                                 </select>
                                 <div class="clearerleft"> </div>
                             </div>
-                        <?php endif; #hook replaceemailaccessselector ?>
+                        <?php endif; #hook replaceemailaccessselector
                         
-                        <div class="Question">
-                            <label><?php echo $lang["expires"]?></label>
-                            <select name="expires" class="stdwidth">
-                            <?php 
-                            if($resource_share_expire_never) 
-                                { ?>
-                                <option value=""><?php echo $lang["never"]?></option><?php 
-                                } 
-                            for ($n=1;$n<=$resource_share_expire_days;$n++)
-                                {
-                                $date       = time() + (60*60*24*$n);
-                                $ymd_date   = date('Y-m-d', $date);
-                                $selected   = (substr(getvalescaped("editexpiration",""),0,10) == $ymd_date);
-                                $date_text  = nicedate($ymd_date,false,true);
-                                $option_class = '';
-								$day_date = date('D', $date);
-                                if (($day_date == "Sun") || ($day_date == "Sat"))
-                                    {
-                                    $option_class = 'optionWeekend';
-                                    }
-                                ?>
-                                <option class="<?php echo $option_class ?>" value="<?php echo $ymd_date ?>" <?php if($selected) echo "selected"; ?>><?php echo $date_text ?></option>
-                                <?php
-                                } ?>
-                            </select>
-                            <div class="clearerleft"> </div>
-                        </div>
-                        <?php 
+                        if(!hook('replaceemailexpiryselector'))
+                        	{
+                        	?>
+							<div class="Question">
+								<label><?php echo $lang["expires"]?></label>
+								<select name="expires" class="stdwidth">
+								<?php 
+								if($resource_share_expire_never) 
+									{ ?>
+									<option value=""><?php echo $lang["never"]?></option><?php 
+									} 
+								for ($n=1;$n<=$resource_share_expire_days;$n++)
+									{
+									$date       = time() + (60*60*24*$n);
+									$ymd_date   = date('Y-m-d', $date);
+									$selected   = (substr(getvalescaped("editexpiration",""),0,10) == $ymd_date);
+									$date_text  = nicedate($ymd_date,false,true);
+									$option_class = '';
+									$day_date = date('D', $date);
+									if (($day_date == "Sun") || ($day_date == "Sat"))
+										{
+										$option_class = 'optionWeekend';
+										}
+									?>
+									<option class="<?php echo $option_class ?>" value="<?php echo $ymd_date ?>" <?php if($selected) echo "selected"; ?>><?php echo $date_text ?></option>
+									<?php
+									} ?>
+								</select>
+								<div class="clearerleft"> </div>
+							</div>
+							<?php 
+                        	}
                         if (checkperm("x")) 
                         	{
 							# Allow the selection of a user group to inherit permissions from 
