@@ -1238,8 +1238,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		# Get image's dimensions.
 		$identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
 		$identoutput=run_command($identcommand);
-        
-        if(!empty($identoutput))
+
+        if($extension == "svg")
+            {
+            list($sw, $sh) = getSvgSize($origfile);
+            $o_width  = $sw;
+            $o_height = $sh;
+            }
+        else if(!empty($identoutput))
 			{
 			$wh=explode("x",$identoutput);
 			$sw = $o_width = $wh[0];
