@@ -22,16 +22,15 @@ if($winuser['user'] != "")
     }
 
 # Allow login
-// TODO - needed?
-$user_select_sql = "AND u.username = '{$username}' AND usergroup IN (SELECT ref FROM usergroup)";
-$userref = sql_value("select ref value from user where username='" . escape_check($username) . "'",0);
+$userref = sql_value("select ref value from user where username='" . escape_check($username) . "' and active=1",0);
 if($userref != 0)
     {
     include_once dirname(__FILE__) . '/../../../../include/login_functions.php';
     $ip=get_ip();
     
     # Generate a new session hash.
-    $session_hash = generate_session_hash('sha256', md5("RS" . $username . "WINAUTH". uniqid()));  
+    $session_hash = generate_session_hash('sha256', md5("RS" . $username . "WINAUTH"));
+    
     # Update the user record.
     sql_query("update user set session='" . escape_check($session_hash) . "' where ref='$userref'"); 
 
