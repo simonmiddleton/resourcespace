@@ -22,7 +22,7 @@ if($winuser['user'] != "")
     }
 
 # Allow login
-$userref = sql_value("select ref value from user where username='" . escape_check($username) . "' and active=1",0);
+$userref = sql_value("select ref value from user where username='" . escape_check($username) . "' and approved=1",0);
 if($userref != 0)
     {
     include_once dirname(__FILE__) . '/../../../../include/login_functions.php';
