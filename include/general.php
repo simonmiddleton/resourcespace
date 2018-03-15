@@ -1272,7 +1272,7 @@ function get_data_by_field($resource, $field)
         $rt_fieldtype_cache[$field] = sql_value("SELECT type AS `value` FROM resource_type_field WHERE ref = '{$resource_type_field}' OR name = '{$resource_type_field}'", null);
         }
 
-    if (!in_array($field, $NODE_FIELDS))
+    if (!in_array($rt_fieldtype_cache[$field], $NODE_FIELDS))
         {
         // Let's first check how we deal with the field value we've got
         // Integer values => search for a specific ID
@@ -1290,9 +1290,6 @@ function get_data_by_field($resource, $field)
             $sql_where .= " AND rd.resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)";
             }
         
-    
-
-
         $results = sql_query("{$sql_select} {$sql_from} {$sql_join} {$sql_where} {$sql_order_by} {$sql_limit}");
         if(0 !== count($results))
             {
@@ -1313,7 +1310,6 @@ function get_data_by_field($resource, $field)
     else
         {
         $nodes = get_resource_nodes($resource, $resource_type_field, TRUE);
-        echo $nodes;
         $return = implode(', ', array_column($nodes, 'name'));    
         }
     return $return;   
