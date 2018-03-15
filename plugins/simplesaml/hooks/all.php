@@ -81,7 +81,7 @@ function HookSimplesamlAllProvideusercredentials()
 		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
         $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
         $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
-        $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block, $anonymous_login;
+        $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block, $anonymous_login,$allow_password_change;
 
         // Allow anonymous logins outside SSO if simplesaml is not configured to block access to site.
         // NOTE: if anonymous_login is set to an invalid user, then use SSO otherwise it goes in an indefinite loop
@@ -249,6 +249,7 @@ function HookSimplesamlAllProvideusercredentials()
                 }
 
 			$user_select_sql="and u.username='$username'";
+            $allow_password_change = false;
 			return true;
 			} 
 		else
@@ -267,7 +268,7 @@ function HookSimplesamlAllProvideusercredentials()
             # Generate a new session hash.
             include_once dirname(__FILE__) . '/../../../include/login_functions.php';
             $session_hash=generate_session_hash($password_hash);
-
+            $allow_password_change = false;
             return true;
 			}
 		return false;
