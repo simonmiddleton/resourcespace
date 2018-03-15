@@ -523,6 +523,18 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 				$headerlink       = '';
 				$link             = $baseurl_short."pages/themes.php?theme1=" . urlencode((!isset($themes[0]))? $headers[$n]:$themes[0]) . "&simpleview=true";
 				$theme_image_path = '';
+
+                if($themes_single_collection_shortcut)
+                    {
+                    // Get the collections for this theme header
+                    $get_themes = get_themes(array_merge($themes, array($headers[$n])));
+
+                    if(count($get_themes) == 1)
+                        {
+                        $link = "{$baseurl_short}pages/search.php?search=!collection{$get_themes[0]['ref']}";
+                        }
+                    }
+
 				if($themes_simple_images)
 					{
 					$targettheme=array_merge($themes,array($headers[$n]));
