@@ -1253,7 +1253,7 @@ function get_field_options($ref)
 */
 function get_data_by_field($resource, $field)
     {
-    global $rt_fieldtype_cache;
+    global $rt_fieldtype_cache, $NODE_FIELDS;
 
     $return              = '';
     $resource_type_field = escape_check($field);
@@ -1266,46 +1266,57 @@ function get_data_by_field($resource, $field)
     $sql_order_by = '';
     $sql_limit    = '';
 
-    // Let's first check how we deal with the field value we've got
-    // Integer values => search for a specific ID
-    // String values => search by using a shortname
-    if(is_numeric($field))
-        {
-        $sql_select = 'SELECT rd.`value`';
-        $sql_where .= " rd.resource = '{$resource}'";
-        $sql_where .= " AND rd.resource_type_field = '{$resource_type_field}'";
-        }
-    else
-        {
-        $sql_select = 'SELECT rd.`value`';
-        $sql_where .= " rd.resource = '{$resource}'";
-        $sql_where .= " AND rd.resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)";
-        }
-
-    $results = sql_query("{$sql_select} {$sql_from} {$sql_join} {$sql_where} {$sql_order_by} {$sql_limit}");
-    if(0 !== count($results))
-        {
-        $return = !is_null($resource) ? $results[0]['value'] : $return;
-        }
-    // Default values: '' when we are looking for a specific resource and empty array when looking through all resources
-    else
-        {
-        $return = !is_null($resource) ? $return : array();
-        }
-
-    // Update cache
+        // Update cache
     if(!isset($rt_fieldtype_cache[$field]))
         {
         $rt_fieldtype_cache[$field] = sql_value("SELECT type AS `value` FROM resource_type_field WHERE ref = '{$resource_type_field}' OR name = '{$resource_type_field}'", null);
         }
 
-    if(!is_array($return) && 8 == $rt_fieldtype_cache[$field])
+    if (!in_array($field, $NODE_FIELDS))
         {
-        $return = strip_tags($return);
-        $return = str_replace('&nbsp;', ' ', $return);
-        }
+        // Let's first check how we deal with the field value we've got
+        // Integer values => search for a specific ID
+        // String values => search by using a shortname
+        if(is_numeric($field))
+            {
+            $sql_select = 'SELECT rd.`value`';
+            $sql_where .= " rd.resource = '{$resource}'";
+            $sql_where .= " AND rd.resource_type_field = '{$resource_type_field}'";
+            }
+        else
+            {
+            $sql_select = 'SELECT rd.`value`';
+            $sql_where .= " rd.resource = '{$resource}'";
+            $sql_where .= " AND rd.resource_type_field = (SELECT ref FROM resource_type_field WHERE name = '{$resource_type_field}' LIMIT 1)";
+            }
+        
+    
 
-    return $return;
+
+        $results = sql_query("{$sql_select} {$sql_from} {$sql_join} {$sql_where} {$sql_order_by} {$sql_limit}");
+        if(0 !== count($results))
+            {
+            $return = !is_null($resource) ? $results[0]['value'] : $return;
+            }
+        // Default values: '' when we are looking for a specific resource and empty array when looking through all resources
+        else
+            {
+            $return = !is_null($resource) ? $return : array();
+            }
+
+        if(!is_array($return) && 8 == $rt_fieldtype_cache[$field])
+            {
+            $return = strip_tags($return);
+            $return = str_replace('&nbsp;', ' ', $return);
+            }
+        }
+    else
+        {
+        $nodes = get_resource_nodes($resource, $resource_type_field, TRUE);
+        echo $nodes;
+        $return = implode(', ', array_column($nodes, 'name'));    
+        }
+    return $return;   
     }
 
 
