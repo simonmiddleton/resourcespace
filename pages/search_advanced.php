@@ -179,6 +179,9 @@ if (getval("resetform","")!="")
   { 
   $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";$starsearch="";
   $restypes=get_search_default_restypes();
+  $selected_archive_states=array(0);
+  rs_setcookie("search","");
+  rs_setcookie("saved_archive","");
   }
 else
   {
