@@ -621,7 +621,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly)
       case "restore":
 		delete_previews($resource);
         sql_query("update resource set has_image=0, preview_attempts=0 WHERE ref='" . $ref . "'");
-        if ($enable_thumbnail_creation_on_upload)
+        if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > $preview_generate_max_file_size))        
             {
             create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
             refresh_collection_frame();
@@ -629,6 +629,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly)
         else
             {
             sql_query("update resource set preview_attempts=0, has_image=0 where ref='$ref'");
+            $onload_message["text"] = $lang["recreatepreviews_pending"];
             }
         break;
       }
