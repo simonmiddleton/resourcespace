@@ -1297,7 +1297,7 @@ else
 
 $lastrt=-1;
 
-if(isset($metadata_template_resource_type) && !$multiple)
+if(isset($metadata_template_resource_type) && !$multiple && $ref < 0)
     {
     // Show metadata templates here
     $metadatatemplate = getvalescaped(
@@ -1435,16 +1435,12 @@ if (getval("copyfrom","")!="")
     }
   }
 
-if(isset($metadata_template_resource_type)  && !$multiple && $metadatatemplate != 0)
+if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type)  && !$multiple && $metadatatemplate != 0)
     {
     $use             = $metadatatemplate;
     $original_fields = get_resource_field_data($ref, $multiple, true, -1, '', $tabs_on_edit);
     $original_nodes  = get_resource_nodes($ref);
-
-    if($ref < 0 || $upload_review_mode)
-        {
-        copyAllDataToResource($use, $ref);
-        }
+    copyAllDataToResource($use, $ref);
     }
 
 # Load resource data
@@ -1459,7 +1455,7 @@ if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
         }
 
 # if this is a metadata template, set the metadata template title field at the top
-if (isset($metadata_template_resource_type)&&(isset($metadata_template_title_field)) && $resource["resource_type"]==$metadata_template_resource_type){
+if (($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type)&&(isset($metadata_template_title_field)) && $resource["resource_type"]==$metadata_template_resource_type){
     # recreate fields array, first with metadata template field
   $x=0;
   for ($n=0;$n<count($fields);$n++){
