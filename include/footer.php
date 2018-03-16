@@ -325,97 +325,126 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
 }   
 ?>
 <script src="<?php echo $baseurl?>/lib/js/Placeholders.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
+
 <?php
-if (getval("ajax","")=="") {
-	// don't show closing tags if we're in ajax mode
-	?>
-
-
-<!--CollectionDiv-->
-<?php 
-$omit_collectiondiv_load_pages=array("login","user_request","user_password","index","preview_all");
-
-$more_omit_collectiondiv_load_pages=hook("more_omit_collectiondiv_load_pages");
-if(is_array($more_omit_collectiondiv_load_pages)){
-	$omit_collectiondiv_load_pages=array_merge($omit_collectiondiv_load_pages,$more_omit_collectiondiv_load_pages);
-}
-?></div>
-
-<?php # Work out the current collection (if any) from the search string if external access
-if (isset($k) && $k!="" && isset($search) && !isset($usercollection))
-    {
-    if (substr($search,0,11)=="!collection") {
-		$usercollection = substr($search,11);
-    }
-}
-?><script>
-<?php if (!isset($usercollection)){?>
-	usercollection='';
-<?php } else { ?>
-	usercollection='<?php echo htmlspecialchars($usercollection) ?>';
-	var collections_popout = <?php echo $collection_bar_popout? "true": "false"; ?>;
-<?php } ?>
-</script><?php 
-if (!hook("replacecdivrender"))
-	{
-	if ($collections_footer && !in_array($pagename,$omit_collectiondiv_load_pages) && !checkperm("b") && isset($usercollection)) 
+if(isset($onload_message["text"]))
+	{?>
+	<script>
+	jQuery(document).ready(function()
 		{
-        // Footer requires restypes as a string because it is urlencoding them
-        if(isset($restypes) && is_array($restypes))
-            {
-            $restypes = implode(',', $restypes);
-            }
-            ?>
-		<div id="CollectionDiv" class="CollectBack AjaxCollect ui-layout-south"></div>
-
-		<script type="text/javascript">
+		styledalert(<?php echo (isset($onload_message["title"]) ? json_encode($onload_message["title"]) : "''") . "," . json_encode($onload_message["text"]) ;?>);
+		});
+	</script>
+	<?php
+	}
+if (getval("ajax","") == "")
+	{
+	// don't show closing tags if we're in ajax mode
+	echo "<!--CollectionDiv-->";
+	$omit_collectiondiv_load_pages=array("login","user_request","user_password","index","preview_all");
+	
+	$more_omit_collectiondiv_load_pages=hook("more_omit_collectiondiv_load_pages");
+	if(is_array($more_omit_collectiondiv_load_pages))
+		{
+		$omit_collectiondiv_load_pages=array_merge($omit_collectiondiv_load_pages,$more_omit_collectiondiv_load_pages);
+		}
+	?></div>
+	
+	<?php # Work out the current collection (if any) from the search string if external access
+	if (isset($k) && $k!="" && isset($search) && !isset($usercollection))
+		{
+		if (substr($search,0,11)=="!collection")
+			{
+			$usercollection = substr($search,11);
+			}
+		}
+	?>
+	<script>
+	<?php
+	if (!isset($usercollection))
+		{?>
+		usercollection='';
+		<?php
+		}
+	else
+		{?>
+		usercollection='<?php echo htmlspecialchars($usercollection) ?>';
+		var collections_popout = <?php echo $collection_bar_popout? "true": "false"; ?>;
+		<?php
+		} ?>
+	</script><?php 
+	if (!hook("replacecdivrender"))
+		{
+		if ($collections_footer && !in_array($pagename,$omit_collectiondiv_load_pages) && !checkperm("b") && isset($usercollection)) 
+			{
+			// Footer requires restypes as a string because it is urlencoding them
+			if(isset($restypes) && is_array($restypes))
+				{
+				$restypes = implode(',', $restypes);
+				}
+				?>
+			<div id="CollectionDiv" class="CollectBack AjaxCollect ui-layout-south"></div>
+			
+			<script type="text/javascript">
 			var collection_frame_height=<?php echo $collection_frame_height?>;
 			var thumbs="<?php echo htmlspecialchars($thumbs); ?>";									
-			function ShowThumbs() {
+			function ShowThumbs()
+				{
 				myLayout.sizePane("south", collection_frame_height);
 				jQuery('.ui-layout-south').animate({scrollTop:0}, 'fast');
 				jQuery('#CollectionMinDiv').hide();
 				jQuery('#CollectionMaxDiv').show();
 				SetCookie('thumbs',"show",1000);
 				ModalCentre();
-				if(typeof chosenCollection !== 'undefined' && chosenCollection){
+				if(typeof chosenCollection !== 'undefined' && chosenCollection)
+					{
 					jQuery('#CollectionMaxDiv select').chosen({disable_search_threshold:chosenCollectionThreshold});
+					}
 				}
-			}
-			function HideThumbs() {
+			function HideThumbs()
+				{
 				myLayout.sizePane("south", 40);
 				jQuery('.ui-layout-south').animate({scrollTop:0}, 'fast');			
 				jQuery('#CollectionMinDiv').show();
 				jQuery('#CollectionMaxDiv').hide();
 				SetCookie('thumbs',"hide",1000);
 				ModalCentre();
-				
-				if(typeof chosenCollection !== 'undefined' && chosenCollection){
+	
+				if(typeof chosenCollection !== 'undefined' && chosenCollection)
+					{
 					jQuery('#CollectionMinDiv select').chosen({disable_search_threshold:chosenCollectionThreshold});
+					}
 				}
-			}
-			function ToggleThumbs() {
+			function ToggleThumbs()
+				{
 				thumbs = getCookie("thumbs");
-				if (thumbs=="show"){
-					HideThumbs();
-				} else { 
+				if (thumbs=="show")
+					{
+				HideThumbs();
+					}
+				else
+					{ 
 					ShowThumbs();
+					}
 				}
-			}
-			function InitThumbs() {
+			function InitThumbs()
+				{
 				<?php if ($collection_bar_hide_empty)
 					{					
 					echo "CheckHideCollectionBar();";
-					}
-					?>
-				if(thumbs!="hide") {
+					}?>
+				if(thumbs!="hide")
+					{
 					ShowThumbs();
-				} else if(thumbs=="hide") {
+					}
+				else if(thumbs=="hide")
+					{
 					HideThumbs();
+					}
 				}
-			}
-			
-			myLayout=jQuery('body').layout({
+	
+			myLayout=jQuery('body').layout(
+				{
 				//closable:false,
 				resizable:true,
 				livePaneResizing:true,
@@ -426,224 +455,264 @@ if (!hook("replacecdivrender"))
 				togglerLength_open:"200",
 				togglerTip_open: '<?php echo $lang["toggle"]?>',
 				resizerTip: '<?php echo $lang["resize"]?>',
-				south__onclose_start: function(pane){
-					if (pane=="south" && (typeof colbarresizeon === "undefined" || colbarresizeon==true)){
-						if(jQuery('.ui-layout-south').height()>40 && thumbs!="hide"){
+				south__onclose_start: function(pane)
+					{
+					if (pane=="south" && (typeof colbarresizeon === "undefined" || colbarresizeon==true))
+						{
+						if(jQuery('.ui-layout-south').height()>40 && thumbs!="hide")
+							{
 							HideThumbs();
-						} else if(jQuery('.ui-layout-south').height()<=40 && thumbs=="hide"){
+							}
+						else if(jQuery('.ui-layout-south').height()<=40 && thumbs=="hide")
+							{
 							ShowThumbs();
-						}
+							}
 						return false;
-					}
-				ModalCentre();
-				},
-				south__onresize: function(pane){
-					if (pane=="south" && (typeof colbarresizeon === "undefined" || colbarresizeon==true)){
-						thumbs = getCookie("thumbs");
-						if(jQuery('.ui-layout-south').height() < collection_frame_height && thumbs!="hide"){
-						HideThumbs();
-						} else if(jQuery('.ui-layout-south').height()> 40 && thumbs=="hide"){
-							ShowThumbs();
 						}
+					ModalCentre();
+					},
+				south__onresize: function(pane)
+					{
+					if (pane=="south" && (typeof colbarresizeon === "undefined" || colbarresizeon==true))
+						{
+						thumbs = getCookie("thumbs");
+						if(jQuery('.ui-layout-south').height() < collection_frame_height && thumbs!="hide")
+							{
+							HideThumbs();
+							}
+						else if(jQuery('.ui-layout-south').height()> 40 && thumbs=="hide")
+							{
+							ShowThumbs();
+							}
+						}
+					ModalCentre();
 					}
-				ModalCentre();
-				}
-			});
-			window.onload = function() {
+				});
+			window.onload = function()
+				{
 				CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?thumbs=<?php echo urlencode($thumbs); ?>&collection='+usercollection+'<?php echo (isset($k) ? "&k=".urlencode($k) : ""); ?>&order_by=<?php echo (isset($order_by) ? urlencode($order_by) : ""); ?>&sort=<?php echo (isset($sort) ? urlencode($sort) : ""); ?>&search=<?php echo (isset($search) ? urlencode($search) : ""); ?>&restypes=<?php echo (isset($restypes) ? urlencode($restypes) : "") ?>&archive=<?php echo (isset($archive) ? urlencode($archive) : "" ) ?>&daylimit=<?php echo (isset($daylimit) ? urlencode($daylimit) : "" ) ?>&offset=<?php echo (isset($offset) ? urlencode($offset) : "" );echo (isset($resources_count) ? "&resources_count=$resources_count" :""); ?>');
 				InitThumbs();
+				}
+			</script>
+			<?php
+			} // end omit_collectiondiv_load_pages 
+		else
+			{?>
+			<div class="ui-layout-south" ></div><script>myLayout=jQuery('body').layout({south__initHidden: true });	</script><?php
 			}
+		}
+	
+	if($responsive_ui && !hook("responsive_footer"))
+		{
+		?>
+		<!-- Responsive -->
+		<script src="<?php echo $baseurl_short; ?>lib/js/responsive.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+		<script>
+		function toggleSimpleSearch()
+			{
+			if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
+				{
+				jQuery("#searchspace").removeClass("ResponsiveSimpleSearch");
+				jQuery("#Rssearchexpand").val("<?php echo $lang["responsive_more"];?>");
+				}
+			else
+				{
+				jQuery("#searchspace").addClass("ResponsiveSimpleSearch");
+				jQuery("#Rssearchexpand").val(" <?php echo $lang["responsive_less"];?> ");
+				}
+			}
+		
+		function toggleResultOptions()
+			{
+			jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock").slideToggle(100);
+			jQuery("#SearchResultFound").hide();
+			jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock.icondisplay").css('display', 'inline-block');
+			}
+		
+		/* Responsive Stylesheet inclusion based upon viewing device */
+		if(document.createStyleSheet)
+			{
+			document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
+			}
+		else
+			{
+			jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+			}
+		
+		if(!is_touch_device() && jQuery(window).width() <= 1300)
+			{
+			if(document.createStyleSheet)
+				{
+				document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>');
+				}
+			else
+				{
+				jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+				}
+			}
+		
+		var responsive_show = "<?php echo $lang['responsive_collectiontogglehide'];?>";
+		var responsive_hide;
+		var responsive_newpage = true;
+		
+		if(jQuery(window).width() <= 1200)
+			{
+			jQuery('.ResponsiveViewFullSite').css('display', 'block');
+			}
+		else
+			{
+			jQuery('.ResponsiveViewFullSite').css('display', 'none');
+			}
+		
+		if(jQuery(window).width()<=700)
+			{
+			touchScroll("UICenter");
+			}
+		
+		jQuery(window).resize(function()
+			{
+			hideMyCollectionsCols();
+			responsiveCollectionBar();
+			});
+		if(jQuery(window).width()<=900)
+			{
+			jQuery('#CollectionDiv').hide(0);
+			}
+		jQuery("#HeaderNav1Click").click(function(event)
+			{
+			event.preventDefault();
+			if(jQuery(this).hasClass("RSelectedButton"))
+				{
+				jQuery(this).removeClass("RSelectedButton");
+				jQuery("#HeaderNav1").slideUp(0);
+				jQuery("#Header").removeClass("HeaderMenu");
+				}
+			else
+				{
+				jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
+				jQuery("#HeaderNav2").slideUp(80);				
+				jQuery("#Header").addClass("HeaderMenu");				
+				jQuery(this).addClass("RSelectedButton");
+				jQuery("#HeaderNav1").slideDown(80);
+				}
+			if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
+				{
+				toggleSimpleSearch();
+				}      
+			});
+		
+		jQuery("#HeaderNav2Click").click(function(event)
+			{
+			event.preventDefault();
+			if(jQuery(this).hasClass("RSelectedButton"))
+				{
+				jQuery(this).removeClass("RSelectedButton");
+				jQuery("#HeaderNav2").slideUp(0);
+				jQuery("#Header").removeClass("HeaderMenu");
+				
+				}
+			else
+				{
+				jQuery("#Header").addClass("HeaderMenu");
+				jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
+				jQuery("#HeaderNav1").slideUp(80);
+				jQuery(this).addClass("RSelectedButton");
+				jQuery("#HeaderNav2").slideDown(80);
+				} 
+			if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
+				{
+				toggleSimpleSearch();
+				}  
+			});
+		
+		jQuery("#HeaderNav2").on("click","a",function()
+			{
+			if(jQuery(window).width() <= 1200)
+				{
+				jQuery("#HeaderNav2").slideUp(0);
+				jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
+				}
+			});
+		jQuery("#HeaderNav1").on("click","a",function()
+			{
+			if(jQuery(window).width() <= 1200)
+				{
+				jQuery("#HeaderNav1").slideUp(00);
+				jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
+				}
+			});
+		jQuery("#SearchBarContainer").on("click","#Rssearchexpand",toggleSimpleSearch);
+		jQuery("#SearchBarContainer").on("click","a",toggleSimpleSearch);
+		jQuery("#CentralSpaceContainer").on("click","#Responsive_ResultDisplayOptions",function(event)
+			{
+			if(jQuery(this).hasClass("RSelectedButton"))
+				{
+				jQuery(this).removeClass("RSelectedButton");
+				}
+			else
+				{
+				jQuery(this).addClass("RSelectedButton");
+				}
+			toggleResultOptions();
+			});
+		
+		if(jQuery(window).width() <= 700 && jQuery(".ListviewStyle").length && is_touch_device())
+			{
+			jQuery("td:last-child,th:last-child").hide();
+			}
+		</script>
+		<!-- end of Responsive -->
+		<?php
+		} /* end of if $responsive_ui*/
+	
+	hook('afteruilayout');
+	?>
+	<!-- Start of modal support -->
+	<div id="modal_overlay" onClick="ModalClose();"></div>
+	<div id="modal_outer">
+	<div id="modal">
+	</div>
+	</div>
+	<div id="modal_dialog" style="display:none;"></div>
+	<script type="text/javascript">
+	jQuery(window).bind('resize.modal', ModalCentre);
 	</script>
-	<?php } // end omit_collectiondiv_load_pages 
-	else {?><div class="ui-layout-south" ></div><script>myLayout=jQuery('body').layout({south__initHidden: true });	</script><?php }
+	<!-- End of modal support -->
+	
+	<script>
+	
+	try
+		{
+		top.history.replaceState(document.title+'&&&'+jQuery('#CentralSpace').html(), applicationname);
+		}
+	catch(e){console.log(e);
+	//console.log("failed to load state");
 	}
-
-if($responsive_ui && !hook("responsive_footer"))
-    {
-    ?>
-    <!-- Responsive -->
-    <script src="<?php echo $baseurl_short; ?>lib/js/responsive.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
-    <script>
-    function toggleSimpleSearch()
-        {
-        if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
-            {
-            jQuery("#searchspace").removeClass("ResponsiveSimpleSearch");
-            jQuery("#Rssearchexpand").val("<?php echo $lang["responsive_more"];?>");
-            }
-        else
-            {
-            jQuery("#searchspace").addClass("ResponsiveSimpleSearch");
-            jQuery("#Rssearchexpand").val(" <?php echo $lang["responsive_less"];?> ");
-            }
-        }
-
-    function toggleResultOptions()
-        {
-        jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock").slideToggle(100);
-        jQuery("#SearchResultFound").hide();
-        jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock.icondisplay").css('display', 'inline-block');
-        }
-
-    /* Responsive Stylesheet inclusion based upon viewing device */
-    if(document.createStyleSheet)
-        {
-        document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
-        }
-    else
-        {
-        jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
-        }
-
-    if(!is_touch_device() && jQuery(window).width() <= 1300)
-        {
-        if(document.createStyleSheet)
-            {
-            document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>');
-            }
-        else
-            {
-            jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
-            }
-        }
-
-    var responsive_show = "<?php echo $lang['responsive_collectiontogglehide'];?>";
-    var responsive_hide;
-    var responsive_newpage = true;
-
-    if(jQuery(window).width() <= 1200)
-        {
-        jQuery('.ResponsiveViewFullSite').css('display', 'block');
-        }
-    else
-        {
-        jQuery('.ResponsiveViewFullSite').css('display', 'none');
-        }
-
-    if(jQuery(window).width()<=700) {
-        touchScroll("UICenter");
-    }
-
-    jQuery(window).resize(function() {
-        hideMyCollectionsCols();
-        responsiveCollectionBar();
-    });
-    if(jQuery(window).width()<=900) {
-        jQuery('#CollectionDiv').hide(0);
-    }
-    jQuery("#HeaderNav1Click").click(function(event) {
-        event.preventDefault();
-        if(jQuery(this).hasClass("RSelectedButton")) {
-            jQuery(this).removeClass("RSelectedButton");
-            jQuery("#HeaderNav1").slideUp(0);
-          jQuery("#Header").removeClass("HeaderMenu");
-           
-        }else {
-            jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
-            jQuery("#HeaderNav2").slideUp(80);
-
-                jQuery("#Header").addClass("HeaderMenu");
-
-            jQuery(this).addClass("RSelectedButton");
-            jQuery("#HeaderNav1").slideDown(80);
-        }
-        if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch")) {
-            toggleSimpleSearch();
-        }      
-    });
-    jQuery("#HeaderNav2Click").click(function(event) {
-        event.preventDefault();
-        if(jQuery(this).hasClass("RSelectedButton")) {
-            jQuery(this).removeClass("RSelectedButton");
-            jQuery("#HeaderNav2").slideUp(0);
-            jQuery("#Header").removeClass("HeaderMenu");
-
-        }else {
-
-            jQuery("#Header").addClass("HeaderMenu");
-            jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
-            jQuery("#HeaderNav1").slideUp(80);
-            jQuery(this).addClass("RSelectedButton");
-            jQuery("#HeaderNav2").slideDown(80);
-        } 
-        if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch")) {
-            toggleSimpleSearch();
-        }  
-    });
-    jQuery("#HeaderNav2").on("click","a",function() {
-        
-            if(jQuery(window).width() <= 1200) {
-
-            jQuery("#HeaderNav2").slideUp(0);
-            jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
-        }
-    });
-    jQuery("#HeaderNav1").on("click","a",function() {
-
-        if(jQuery(window).width() <= 1200) {
-            jQuery("#HeaderNav1").slideUp(00);
-            jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
-        }
-    });
-    jQuery("#SearchBarContainer").on("click","#Rssearchexpand",toggleSimpleSearch);
-    jQuery("#SearchBarContainer").on("click","a",toggleSimpleSearch);
-    jQuery("#CentralSpaceContainer").on("click","#Responsive_ResultDisplayOptions",function(event) {
-        if(jQuery(this).hasClass("RSelectedButton")) {
-            jQuery(this).removeClass("RSelectedButton");
-        }else {
-            jQuery(this).addClass("RSelectedButton");
-        }
-        toggleResultOptions();
-    });
-    if(jQuery(window).width() <= 700 && jQuery(".ListviewStyle").length && is_touch_device()) {
-        jQuery("td:last-child,th:last-child").hide();
-    }
-    </script>
-    <!-- end of Responsive -->
-    <?php
-    } /* end of if $responsive_ui*/
-
-    hook('afteruilayout');
-    ?>
-<!-- Start of modal support -->
-<div id="modal_overlay" onClick="ModalClose();"></div>
-<div id="modal_outer">
-<div id="modal">
-</div>
-</div>
-<div id="modal_dialog" style="display:none;"></div>
-<script type="text/javascript">
-jQuery(window).bind('resize.modal', ModalCentre);
-</script>
-<!-- End of modal support -->
-
-<script type="text/javascript">
-
-try{
-	top.history.replaceState(document.title+'&&&'+jQuery('#CentralSpace').html(), applicationname);
-	}
- catch(e){console.log(e);
-	 console.log("failed to load state");
-	}
-
-</script>
-
-<?php if ($chosen_dropdowns) { ?>
-<!-- Chosen support -->
-<script type="text/javascript">
-  jQuery(document).ready(function(){
-	  for (var selector in chosen_config) {
-	  	console.log("selector="+selector);
-		jQuery(selector).each(function(){
-			ChosenDropdownInit(this, selector);
-		});
-	  }
-  });
-</script>
-<!-- End of chosen support -->
-<?php
-}
-?>
-</body>
-</html>
-<?php } // end if !ajax ?>
+	
+	</script>
+	
+	<?php if ($chosen_dropdowns)
+		{ ?>
+		<!-- Chosen support -->
+		<script>
+		jQuery(document).ready(function()
+			{
+			for (var selector in chosen_config)
+				{
+				console.log("selector="+selector);
+				jQuery(selector).each(function()
+					{
+					ChosenDropdownInit(this, selector);
+					});
+				}
+			});
+		</script>
+		<!-- End of chosen support -->
+		<?php
+		}
+	?>
+	</body>
+	</html><?php
+	} // end if !ajax ?>
+	
+	
