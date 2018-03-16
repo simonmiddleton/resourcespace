@@ -57,7 +57,9 @@ if (!hook("replaceslideshow"))
 			$linkfile=substr($f,0,(strlen($f)-4)) . ".txt";
 			$reslinks[$filecount]="";
 			
-			$imagelink[$filecount]= $baseurl_short . $homeanim_folder . "/" . $f;
+			
+			$ssindex = substr($f,0,-4);
+			$imagelink[$filecount] = "{$baseurl_short}pages/download.php?slideshow={$ssindex}";
 			$linkref="";
 				
 			if(file_exists("../" . $homeanim_folder . "/" . $linkfile))
@@ -74,7 +76,7 @@ if (!hook("replaceslideshow"))
 			      	  ?>
 				 <script type="text/javascript">
 				 var big_slideshow_timer = <?php echo $slideshow_photo_delay;?>;
-				 RegisterSlideshowImage('<?php echo $baseurl_short . $homeanim_folder ?>/<?php echo $f ?>?nc=<?php echo $checksum ?>','<?php echo $linkref ?>');
+				 RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$ssindex}"; ?>&nc=<?php echo $checksum ?>','<?php echo $linkref ?>');
 				 </script>
 				 <?php
 				 }
@@ -138,7 +140,7 @@ if (!hook("replaceslideshow"))
 			    // image1.style.visibility='hidden';
 			    //Effect.Fade(image1);
 				jQuery('#image1').fadeOut(1000)
-			    window.setTimeout("image1.src='<?php echo $baseurl . "/" . $homeanim_folder?>/" + next_photo + ".jpg?checksum=<?php echo $checksum ?>';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
+			    window.setTimeout("image1.src=\'' + baseurl_short + \'/pages/download.php?slideshow=' + next_photo + '&checksum=<?php echo $checksum ?>';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
 		     	flip=1;
 		     	}
 			  else
@@ -146,7 +148,7 @@ if (!hook("replaceslideshow"))
 			    // image1.style.visibility='visible';
 			    //Effect.Appear(image1);
 				jQuery('#image1').fadeIn(1000)
-			    window.setTimeout("image2.style.backgroundImage='url(<?php echo $baseurl . "/" .  $homeanim_folder?>/" + next_photo + ".jpg?checksum=<?php echo $checksum ?>)';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
+			    window.setTimeout("image2.style.backgroundImage='url(baseurl_short + \'/pages/download.php?slideshow=\' + next_photo + '&checksum=<?php echo $checksum ?>')';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
 			    flip=0;
 				}	  	
 		     
@@ -211,9 +213,9 @@ if (!hook("replaceslideshow"))
 				} 
 			}
 			?>
-			background-image:url('<?php echo $baseurl . "/" . $homeanim_folder?>/1.jpg?checksum=<?php echo $checksum ?>');">
+			background-image:url('<?php echo  "{$baseurl}/pages/download.php?slideshow=1&checksum=<{$checksum}'"; ?>');">
 			
-			<img src='<?php echo $baseurl . "/" .  $homeanim_folder?>/<?php echo $homeimages>1?2:1;?>.jpg?checksum=<?php echo $checksum ?>' alt='' id='image1' style="display:none;<?php
+			<img src='<?php echo "{$baseurl}/pages/download.php?slideshow=" . ($homeimages>1?2:1)  . "&checksum={$checksum}"; ?>' alt='' id='image1' style="display:none;<?php
 			if (isset($home_slideshow_width)){
 				echo"width:" .  $home_slideshow_width ."px; ";
 				}

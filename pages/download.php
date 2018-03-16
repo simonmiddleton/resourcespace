@@ -62,6 +62,11 @@ if('' != $userfiledownload)
 
     hook('modifydownloadpath');
     }
+elseif(getval("slideshow",0,true) != 0)
+    {
+    $noattach       = true;
+    $path           = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . $homeanim_folder . DIRECTORY_SEPARATOR . getval("slideshow",0,true) . ".jpg";
+    }
 else
     {
     $resource_data = get_resource_data($ref);
