@@ -33,7 +33,9 @@ function WinauthAuthenticate()
     {
     global $baseurl_short;
     $userinit = getval("winauth_login","") != "";
-    redirect($baseurl_short . "plugins/winauth/pages/secure/winauth.php" . ($userinit ? "?winauth_login=true" : ""));
+    $url = getval("url","");
+    $redirecturl = generateURL($baseurl_short . "plugins/winauth/pages/secure/winauth.php", array("url"=>$url,"winauth_login"=> ($userinit ? "true" : "")));
+    redirect($redirecturl);
     return false;
     }
 

@@ -7,6 +7,7 @@ include_once dirname(__FILE__) . '/../../../../include/general.php';
 include_once dirname(__FILE__) . '/../../include/winauth_functions.php';
    
 $session_hash="";
+$url = getval("url","");
 
 $winuser = WinauthGetUser();
 
@@ -43,14 +44,16 @@ if($userref != 0)
     sql_query("delete from ip_lockout where ip='" . escape_check($ip) . "'");
     
     set_login_cookies($userref, $session_hash, "", $user_preferences, "/");
-    
-    //redirect($baseurl_short . "/pages/" . $default_home_page);
-    echo "<script>window.location = '" .  $baseurl_short . "pages/" . $default_home_page . "';</script>";
+    $redirecturl = $baseurl . urldecode($url);
+    redirect($redirecturl);
+   
     exit();
     }
 else
     {
-    $userinit = getval("winauth_login","") != "";
-    redirect($baseurl_short . "login.php" . ($userinit ? "?error=winauth_nouser" : ""));
+    $userinit = getval("winauth_login","") != "";    
+    $redirecturl = generateURL($baseurl_short. "login.php", array("url"=>$url,"winauth_login"=>"true", "error"=> ($userinit ? "winauth_nouser" : "")));    
+    redirect($redirecturl);
+    exit();
     }   
 

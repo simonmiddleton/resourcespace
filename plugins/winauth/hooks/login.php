@@ -7,6 +7,9 @@ function HookWinauthLoginLoginformlink()
     global $baseurl_short, $lang, $winauth_enable, $default_home_page;
     if($winauth_enable)
         {
-        echo "<br/><a href='" . $baseurl_short .  "pages/" . $default_home_page. "?winauth_login=true' >" . LINK_CARET . $lang["winauth_use_win_login"] . "</a>";
+        $url = getval("url","");
+        $redirpath = ($url != "") ? $baseurl_short . "?url=" . urlencode(urldecode($url)) . "&winauth_login=true" : $baseurl_short .  "pages/" . $default_home_page . "?winauth_login=true";
+        
+        echo "<br/><a href='" . $redirpath . "' >" . LINK_CARET . $lang["winauth_use_win_login"] . "</a>";
         }
     }
