@@ -198,11 +198,13 @@ function get_resource_path(
 			$path_suffix="/resized/";
 			}
 		}
-	else
-		{
-		$path_suffix="/";
-		}
-	
+    else
+        {
+        // If getting the physical path, use the appropriate directory separator. For URL, it can only use forward 
+        // slashes (/). For more information, see RFC 3986 (https://tools.ietf.org/html/rfc3986)
+        $path_suffix = ($getfilepath ? DIRECTORY_SEPARATOR : "/");
+        }
+
 	for ($n=0;$n<strlen($ref);$n++)
 		{
 		$folder.=substr($ref,$n,1);
