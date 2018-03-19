@@ -874,16 +874,18 @@ for($x = 0; $x < count($themes); $x++)
 	*/
 	$new_collection_additional_params['theme' . (0 == $x ? '': $x + 1)] = $themes[$x];
 	}
-
-renderCallToActionTile(
-	generateURL(
-		"{$baseurl_short}pages/themes.php",
-		array(
-			'new'              => 'true',
-			'call_to_action_tile' => 'true'
-		),
-		$new_collection_additional_params
-	));
+    if(!$smart_theme)
+        {
+        renderCallToActionTile(
+            generateURL(
+                "{$baseurl_short}pages/themes.php",
+                array(
+                    'new'              => 'true',
+                    'call_to_action_tile' => 'true'
+                ),
+                $new_collection_additional_params
+            ));
+        }
 ?>
 
 <?php
@@ -957,16 +959,36 @@ if ($header=="" && !isset($themes[0]))
 				
 			if($simpleview)
 				{
-				if (getval("smart_theme","")!="") // We are in the smart theme already
+				if (getval("smart_theme","") != "") // We are in the smart theme already
 					{
                     $themes = get_smart_themes_nodes($headers[$n]['ref'], (7 == $headers[$n]['type']), $node);
+                    
 					for ($m=0;$m<count($themes);$m++)
-						{										
+						{            
 						$s=$headers[$n]["name"] . ":" . $themes[$m]["name"];
+                        $theme_image_path = '';
+                        $theme_images = get_theme_image(array($themes[$m]), '', true);
+                        if(is_array($theme_images) && count($theme_images)>0)
+                            {
+                            foreach($theme_images as $theme_image)
+                                {
+                                if(file_exists(get_resource_path($theme_image,true,"pre",false)))
+                                    {
+                                    $theme_image_path=get_resource_path($theme_image,false,"pre",false);
+                                    $theme_image_detail= get_resource_data($theme_image);
+                                    break;
+                                    }
+                                }
+                            }
+                            
 						if ($themes[$m]['is_parent'])
 							{
 							?>
-							<div  id="FeaturedSimpleTile_smart_<?php echo $themes[$m]["ref"]  ; ?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
+							<div id="FeaturedSimpleTile_smart_<?php echo $themes[$m]["ref"] ; ?>"  class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile <?php
+                            if($theme_image_path != "")
+                                {	
+                                echo " FeaturedSimpleTileImage\" style=\"background: url(" . $theme_image_path . ");background-size: cover;";
+                                }?>" >
 							<a href="<?php echo $baseurl_short?>pages/themes.php?smart_theme=<?php echo $headers[$n]["ref"] ?>&node=<?php echo $themes[$m]["node"] ?>&parentnode=<?php echo urlencode($node) ?>&parentnodename=<?php echo urlencode(getval("nodename","")) ?>&nodename=<?php echo urlencode($themes[$m]["name"]) ?>&simpleview=true" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink TileContentShadow" id="featured_tile_<?php echo $themes[$m]["ref"] ;?>">
 								<div id="FeaturedSimpleTileContents_smart<?php echo $themes[$m]["ref"]; ?>"  class="FeaturedSimpleTileContents">	
                                     <h2>
@@ -982,8 +1004,12 @@ if ($header=="" && !isset($themes[0]))
 							{
 							# Has no children. Default action is to show matching resources.
 							?>
-							<div id="FeaturedSimpleTile_smart_<?php echo $themes[$m]["ref"]  ; ?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile">
-							<a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($s)?>&resetrestypes=true" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink TileContentShadow" id="featured_tile_<?php echo $themes[$m]["ref"]; ?>">
+                            <div id="FeaturedSimpleTile_smart_<?php echo $themes[$m]["ref"] ; ?>"  class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile <?php
+                            if($theme_image_path != "")
+                                {
+                                echo " FeaturedSimpleTileImage\" style=\"background: url(" . $theme_image_path . ");background-size: cover;";
+                                }?>" >
+							<a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo NODE_TOKEN_PREFIX . $themes[$m]["ref"] ?>&resetrestypes=true" onclick="return CentralSpaceLoad(this,true);" class="FeaturedSimpleLink TileContentShadow" id="featured_tile_<?php echo $themes[$m]["ref"]; ?>">
 							<div id="FeaturedSimpleTileContents_smart<?php echo $themes[$m]["ref"] ; ?>"  class="FeaturedSimpleTileContents" >	
                                     <h2>
                                         <span class="fa fa-folder"></span>

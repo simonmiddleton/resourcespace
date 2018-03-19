@@ -1536,48 +1536,59 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 		{
 		if ($smart)
 			{
-			$nodes='';
-			foreach($themes as $node){
-				$nodes.=($nodes!=='' ? ', ' : '') . $node['ref'];
-			}
-			if($nodes=='')
+			$nodestring = '';
+			foreach($themes as $node)
+                {
+				$nodestring .= NODE_TOKEN_PREFIX . $node['ref'];
+                }
+                
+			if($nodestring=='')
 				{
 				return false;
 				}
-			$sqlselect="select r.ref value from resource_node rn join resource r on rn.resource=r.ref where rn.node in (" . $nodes . ") and r.archive=0";
-			$orderby=" order by r.hit_count desc, r.ref desc";
+                
+            // As we are using nodes just do a simple search so that permissions are honoured
+            $images = do_search($nodestring,'','hit_count',0,-1,'desc',false,0,false,false,'',true,false,true);
+            return is_array($images) ? array_column($images, "ref") : array();
 			}
 		else
 			{
-			$sqlselect="select r.ref value from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
-		
+			$sqlselect="select r.ref from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
+            
+            // Add search sql so we honour permissions
+            $searchsql = do_search("",'','',0,-1,'desc',false,0,false,false,'',false,false,true,false,true);
 			$orderby=" order by cr.use_as_theme_thumbnail desc";
-			for ($n=2;$n<=count($themes)+1;$n++){
-				if (isset($themes[$n-1])){
+			for ($n=2;$n<=count($themes)+1;$n++)
+                {
+				if (isset($themes[$n-1]))
+                    {
 					$sqlselect.=" and theme".$n."='" . escape_check($themes[$n-1]) . "' ";
-				} 
-				else {
-					if ($n<=$theme_category_levels){
+                    } 
+				else
+                    {
+					if ($n<=$theme_category_levels)
+                        {
 						# Resources in sub categories can be used but should be below those in the current category
 						$orderby.=", theme".$n . " ";
-					}
-				}
-			} 
+                        }
+                    }
+                } 
 
-			if($collection!="")
+			if($collection != "")
 				{
 				$sqlselect.=" and c.ref = '" . escape_check($collection) .  "'";
+                $orderby.=",r.hit_count desc,r.ref desc";
 				}
 			
 			$orderby.=",r.hit_count desc,r.ref desc";
 			}
 	
-		$sqlselect.=" and r.has_image=1 ";
-	
-		$sql = $sqlselect . $orderby . " limit " .$theme_images_number;
-		$images=sql_array($sql,0);	
-		}
-	if (count($images)>0) {return $images;}
+		$sqlselect .= " and r.has_image=1 ";
+		$sql = "SELECT ti.ref value from (" . $sqlselect . $orderby . ") ti JOIN (" . $searchsql . ") ar ON ti.ref=ar.ref WHERE ar.ref IS NOT NULL limit " .$theme_images_number;
+		
+        $images=sql_array($sql,0);	
+        if (count($images)>0) {return $images;}
+        }
 	return false;
 	}
 
