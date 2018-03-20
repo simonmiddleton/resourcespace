@@ -3425,9 +3425,6 @@ $resource_type_force_selection=false;
 // Social media share buttons
 $social_media_links = array("facebook", "twitter", "linkedin");
 
-// Facebook App ID
-$facebook_app_id = '133361117324579'; # Standard ResourceSpace app
-
 /*
 Set the suffix used to identify alternatives for a particular resource when both the original file and its alternatives
 are being uploaded in a batch using the UI (plupload)

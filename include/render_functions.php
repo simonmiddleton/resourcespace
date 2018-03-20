@@ -2198,15 +2198,15 @@ function renderCallToActionTile($link)
 */
 function renderSocialMediaShareLinksForUrl($url)
     {
-    global $facebook_app_id, $social_media_links;
+    global $social_media_links;
 
     $url_encoded = urlencode($url);
 
-    if('' !== trim($facebook_app_id) && in_array("facebook", $social_media_links))
+    if(in_array("facebook", $social_media_links))
         {
         ?>
         <!-- Facebook -->
-        <a target="_blank" href="https://www.facebook.com/dialog/feed?app_id=<?php echo $facebook_app_id; ?>&link=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-facebook-official" aria-hidden="true"></i></a>
+        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-facebook-official" aria-hidden="true"></i></a>
         <?php
         }
 
