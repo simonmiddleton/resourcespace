@@ -8,7 +8,7 @@ function HookCheckmailAllAddteamresourcetool(){
 	global $lang;
 	global $baseurl;
 	if (in_array($userref,$checkmail_users)){?>
-	<li><a onClick="return CentralSpaceLoad(this,true);" target="<?php echo $target?>" href="<?php echo $baseurl?>/plugins/checkmail/pages/upload.php"><?php echo $lang['addresourcesviaemail'];?></a></li>
+	<li><i class="fa fa-fw fa-at"></i><a onClick="return CentralSpaceLoad(this,true);" target="<?php echo $target?>" href="<?php echo $baseurl?>/plugins/checkmail/pages/upload.php"> <?php echo $lang['addresourcesviaemail'];?></a></li>
 	<?php
 	}
 }
