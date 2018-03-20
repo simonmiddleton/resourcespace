@@ -62,7 +62,7 @@ $watched_searches_found=search_notifications_get($watched_searches,($all_users_m
 
 // ----- Start of pager variables
 
-$offset=getval('offset',0);
+$offset=getval('offset',0,true);
 $totalpages=ceil(count($watched_searches)/WATCHED_SEARCHES_ITEMS_PER_PAGE);
 $curpage=floor($offset/WATCHED_SEARCHES_ITEMS_PER_PAGE)+1;
 $per_page=WATCHED_SEARCHES_ITEMS_PER_PAGE;
@@ -191,6 +191,9 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 	if(!$watched_searches_found)
 	{
 		echo $lang['search_notifications_no_watched_searches'];
+        ?>
+        </div> <!-- end of BasicsBox -->
+        <?php
 		include "../../../include/footer.php";
 		return;
 	}
