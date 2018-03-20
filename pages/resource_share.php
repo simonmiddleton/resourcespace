@@ -25,6 +25,7 @@ $sort         = getval("sort", $default_sort_direction);
 $editaccess   = getvalescaped("editaccess", "");
 $editing      = ($editaccess=="") ? false : true;
 
+$generateurl  = getval("generateurl","") != "";
 $editexternalurl = (getval("editexternalurl","") != "");
 
 $access       = getvalescaped("access","");
@@ -86,7 +87,7 @@ if($editing && !$editexternalurl)
 
         <form method="post" id="resourceshareform" action="<?php echo $baseurl_short?>pages/resource_share.php?ref=<?php echo urlencode($ref)?>">
             <input type="hidden" name="ref" id="ref" value="<?php echo htmlspecialchars($ref) ?>">
-            <input type="hidden" name="generateurl" id="generateurl" value="<?php echo getval("generateurl","") ?>">
+            <input type="hidden" name="generateurl" id="generateurl" value="<?php echo $generateurl ? "true" :"" ?> ">
             <input type="hidden" name="deleteaccess" id="deleteaccess" value="">
             <input type="hidden" name="editaccess" id="editaccess" value="<?php echo htmlspecialchars($editaccess)?>">
             <input type="hidden" name="editexpiration" id="editexpiration" value="">
@@ -117,7 +118,7 @@ if($editing && !$editexternalurl)
                         <?php
                         }
                     }
-                if (!$internal_share_only && ($editing || getval("generateurl","") != "" && getval("deleteaccess","") == ""))
+                if (!$internal_share_only && ($editing || ($generateurl && getval("deleteaccess","") == "")))
                     {
                     if(!$editing)
                         { ?>
