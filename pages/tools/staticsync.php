@@ -234,7 +234,10 @@ function ProcessFolder($folder)
         # -------FILES---------------
         if (($filetype == "file") && (substr($file,0,1) != ".") && (strtolower($file) != "thumbs.db"))
             {                
-
+			
+			$modified_extension = hook('staticsync_modify_extension', 'staticsync', array($fullpath, $shortpath, $extension));
+			if ($modified_extension !== false) { $extension = $modified_extension; }
+			
             /* Below Code Adapted  from CMay's bug report */
             global $banned_extensions;
             # Check to see if extension is banned, do not add if it is banned
@@ -327,7 +330,7 @@ function ProcessFolder($folder)
                 if ($modified_title !== false) { $title = $modified_title; }
 
                 # Import this file
-                $r = import_resource($shortpath, $type, $title, $staticsync_ingest,$enable_thumbnail_creation_on_upload);
+                $r = import_resource($shortpath, $type, $title, $staticsync_ingest,$enable_thumbnail_creation_on_upload, $extension);
                 if ($r !== false)
                     {
                     # Add to mapped category tree (if configured)

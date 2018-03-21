@@ -2679,7 +2679,7 @@ function delete_exif_tmpfile($tmpfile)
 	if(file_exists($tmpfile)){unlink ($tmpfile);}
 }
 
-function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=true)
+function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=true, $extension='')
 	{
 	# Update the resource with the file at the given path
 	# Note that the file will be used at it's present location and will not be copied.
@@ -2688,18 +2688,16 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 	update_resource_type($r, $type);
 
 	# Work out extension based on path
-	$extension=explode(".",$path);
-        
-        if(count($extension)>1)
-            {
-            $extension=trim(strtolower(end($extension)));
-            }
-        else
-            {
-            //No extension
-            $extension="";
-            }
-            
+	
+	if($extension=='')
+		{
+		$extension=pathinfo($path, PATHINFO_EXTENSION);
+		}
+	
+    if($extension!=='')
+    	{
+    	$extension=trim(strtolower($extension));
+		}
 
 	# file_path should only really be set to indicate a staticsync location. Otherwise, it should just be left blank.
 	if ($ingest){$file_path="";} else {$file_path=escape_check($path);}
@@ -2794,7 +2792,7 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 	return $r;
 	}
 
-function import_resource($path,$type,$title,$ingest=false,$createPreviews=true)
+function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, $extension='')
 	{
 	# Import the resource at the given path
 	# This is used by staticsync.php and Camillo's SOAP API
@@ -2802,7 +2800,7 @@ function import_resource($path,$type,$title,$ingest=false,$createPreviews=true)
 
 	# Create resource
 	$r=create_resource($type);
-        return update_resource($r, $path, $type, $title, $ingest, $createPreviews);
+        return update_resource($r, $path, $type, $title, $ingest, $createPreviews, $extension);
 	}
 
 function get_alternative_files($resource,$order_by="",$sort="")
