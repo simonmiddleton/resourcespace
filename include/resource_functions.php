@@ -2271,11 +2271,6 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
                 break;
 
             default:                
-                if(strlen($tovalue)>60000)
-                    {
-                    // Trim this as it can cause out of memory errors with class.Diff.php e.g.when cresatng previews for large PDF files
-                    $tovalue = substr($tovalue,60000);
-                    }
                 $diff = log_diff($fromvalue, $tovalue);
             }
         }
@@ -3756,7 +3751,17 @@ function filter_match($filter,$name,$value)
 function log_diff($fromvalue, $tovalue)
     {
     $return = '';
-
+    
+    // Trim values as it can cause out of memory errors with class.Diff.php e.g. when saving extracted text or creating previews for large PDF files
+    if(strlen($tovalue)>10000)
+        {
+        $tovalue = mb_substr($tovalue,10000);
+        }    
+    if(strlen($tovalue)>10000)
+        {
+        $tovalue = mb_substr($tovalue,10000);
+        }
+    
     // Remove any database escaping
     $fromvalue = str_replace("\\", '', $fromvalue);
     $tovalue   = str_replace("\\", '', $tovalue);
