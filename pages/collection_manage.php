@@ -32,7 +32,8 @@ if('' != $name && $collection_allow_creation)
     // This is used to create collections directly from featured collections page when in simpleview mode
     if($themes_simple_view && filter_var(getvalescaped('call_to_action_tile', false), FILTER_VALIDATE_BOOLEAN))
         {
-        save_collection($new);
+        $coldata = array("name" => $name);
+        save_collection($new,$coldata);
         }
 
     set_user_collection($userref, $new);

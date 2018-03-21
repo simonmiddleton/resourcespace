@@ -12,24 +12,26 @@ $themes_order_by=getvalescaped("themes_order_by",getvalescaped("saved_themes_ord
 $sort=getvalescaped("sort",getvalescaped("saved_themes_sort","ASC"));rs_setcookie('saved_themes_sort', $sort);
 $per_page=getvalescaped("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);
 $simpleview=$themes_simple_view || getval("simpleview","")=="true";
-
 $themes = array();
 $themecount = 0;
-foreach ($_GET as $key => $value) {
+foreach ($_GET as $key => $value)
+    {
 	// only set necessary vars
-	
 	if (substr($key,0,5)=="theme" && substr($key,0,6)!="themes"){		
 		if (empty($value)) break;	# if the value is empty then there is no point in continuing iterations of the loop
 		$themes[$themecount] = rawurldecode($value);
 		$themecount++;
 		}
 	}
+    
 
 if(getval("create","") != "")
 	{
 	// Create the collection and reload the page
 	$collectionname = getvalescaped("collectionname","");
 	$newcategory = getvalescaped("category_name","");
+    $themes = GetThemesFromRequest($theme_category_levels);
+    $themecount = count($themes);
 	// Add the new category to the theme array
 	if($newcategory != ""){$themes[]=$newcategory;}
 	$new_collection = create_collection($userref,$collectionname,0,0,0,true,$themes);
@@ -874,21 +876,7 @@ for($x = 0; $x < count($themes); $x++)
 	*/
 	$new_collection_additional_params['theme' . (0 == $x ? '': $x + 1)] = $themes[$x];
 	}
-    if(!$smart_theme)
-        {
-        renderCallToActionTile(
-            generateURL(
-                "{$baseurl_short}pages/themes.php",
-                array(
-                    'new'              => 'true',
-                    'call_to_action_tile' => 'true'
-                ),
-                $new_collection_additional_params
-            ));
-        }
-?>
-
-<?php
+    
 # ------- Smart Themes -------------
 if ($header=="" && !isset($themes[0]))
 	{
@@ -1104,10 +1092,22 @@ if ($header=="" && !isset($themes[0]))
 			} //end of if ((checkperm("f*") || checkperm("f" . $headers[$n]["ref"])) && !checkperm("f-" . $headers[$n]["ref"]) && ($smart_theme=="" || $smart_theme==$headers[$n]["ref"]))
 		} // end of for ($n=0;$n<count($headers);$n++)
 	} // end of if ($header=="" && !isset($themes[0]))
-	
-?></div><!-- End of FeaturedSimpleLinks -->
-<?php
 
+if($simpleview && !$smart_theme)
+       {
+       renderCallToActionTile(
+           generateURL(
+               "{$baseurl_short}pages/themes.php",
+               array(
+                   'new'              => 'true',
+                   'call_to_action_tile' => 'true'
+               ),
+               $new_collection_additional_params
+           ));
+       }
+?>
+</div><!-- End of FeaturedSimpleLinks -->
+<?php
 if($simpleview && $themes_show_background_image)
     {
     $slideshow_files = get_slideshow_files_data();

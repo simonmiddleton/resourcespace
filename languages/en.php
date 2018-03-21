@@ -1274,6 +1274,8 @@ $lang["collectionlog-X"]="Collection deleted";
 $lang["collectionlog-b"]="Batch transformed";
 $lang["collectionlog-A"]="Changed access to "; // +notes field
 $lang["collectionlog-Z"]="Collection downloaded";
+$lang["collectionlog-U"]="Allow users to modify";
+$lang["collectionlog-e"]="Edited"; // Generic edit
 
 $lang["viewuncollectedresources"]="View resources not used in collections";
 

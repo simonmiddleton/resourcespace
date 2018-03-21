@@ -44,7 +44,43 @@ if ($copy!="")
 if (getval("submitted","")!="")
 	{
 	# Save collection data
-	save_collection($ref);
+    $coldata["name"]            = getval("name","");
+    $coldata["allow_changes"]   = getval("allow_changes","") != "" ? 1 : 0;
+    //$public = getvalescaped('public', 0, true);
+    $coldata["public"]          = getval('public', 0, true);
+    $coldata["keywords"]        = getval("keywords","");
+    for($n=1;$n<=$theme_category_levels;$n++)
+        {
+        if ($n==1)
+            {
+            $themeindex = "";
+            }
+        else
+            {
+            $themeindex = $n;
+            }
+        $themename = getval("theme$themeindex","");
+        if($themename != "")
+            {
+            $coldata["theme" . $themeindex] = $themename;
+            }
+        
+        if (getval("newtheme$themeindex","")!="")
+            {
+            $coldata["theme". $n] = trim(getval("newtheme$themeindex",""));
+            }    
+        }
+        
+    if (checkperm("h"))
+        {
+        $coldata["home_page_publish"]   = (getval("home_page_publish","") != "") ? "1" : "0";
+        $coldata["home_page_text"]      = getval("home_page_text","");
+        if (getval("home_page_image","") != "")
+            {
+            $coldata["home_page_image"] = getval("home_page_image","");
+            }
+        }
+	save_collection($ref, $coldata);
 	if (getval("redirect","")!="")
 		{
 		if (getval("addlevel","")=="yes"){
