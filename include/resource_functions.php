@@ -112,8 +112,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	
 	for ($n=0;$n<count($fields);$n++)
 		{
-        debug("save_resource_data(): Checking nodes to add/ remove for field {$fields[$n]['ref']} - {$fields[$n]['title']}");
-
         if(!(
             checkperm('F' . $fields[$n]['ref'])
             || (checkperm("F*") && !checkperm('F-' . $fields[$n]['ref']))
@@ -128,6 +126,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
             // Fixed list  fields use node IDs directly
             if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
                 {
+                debug("save_resource_data(): Checking nodes to add/ remove for field {$fields[$n]['ref']} - {$fields[$n]['title']}");
+
                 $val = '';
 
                 // Get currently selected nodes for this field 
@@ -2110,6 +2110,7 @@ function get_resource_ref_range($lower,$higher)
 	
 function copy_resource($from,$resource_type=-1)
 	{
+    debug("copy_resource: copy_resource(\$from = {$from}, \$resource_type = {$resource_type})");
 	# Create a new resource, copying all data from the resource with reference $from.
 	# Note this copies only the data and not any attached file. It's very unlikely the
 	# same file would be in the system twice, however users may want to clone an existing resource
@@ -4797,7 +4798,7 @@ function get_video_info($file)
 * Provides the ability to copy any metadata field data from one resource to another.
 * 
 * @param integer $from Resource we are copying data from
-* @param integer $ref  The Resource ID that needs updating
+* @param integer $to   The Resource ID that needs updating
 * 
 * @return void
 */

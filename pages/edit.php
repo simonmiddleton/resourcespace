@@ -26,7 +26,8 @@ $modal=(getval("modal","")=="true");
 $single=getval("single","") != "" || getval("forcesingle","") != "";
 $disablenavlinks=getval("disablenav","")=="true";
 $uploader = getvalescaped("uploader","");
-$collection     = getvalescaped('collection', '', true);
+$collection = getvalescaped('collection', '', true);
+$resetform = (getval("resetform", false) !== false);
 
 $archive=getvalescaped("archive",0,true); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $autorotate = getval("autorotate","");
@@ -85,6 +86,13 @@ if ($upload_review_mode)
         {
         redirect("pages/search.php?search=!last1000");
         }
+    }
+
+// Reset form (step 1 in upload) should clear all form data, including user template. The desired intention of the user is to clear it and 
+// have no old metadata values.
+if($resetform && $ref < 0 && !$upload_review_mode)
+    {
+    clear_resource_data($ref);
     }
 
 // Ability to avoid editing conflicts by checking checksums.
@@ -354,7 +362,7 @@ if(($embedded_data_user_select && getval("exif_option","")=="custom") || isset($
 #           PERFORM SAVE
 # -----------------------------------
 
-if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted","")!="" && getval("resetform","")=="" && getval("copyfrom","")==""))
+if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted","")!="" && !$resetform && getval("copyfrom","")==""))
     {
     hook("editbeforesave"); 
     
