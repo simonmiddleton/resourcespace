@@ -1297,7 +1297,7 @@ else
 
 $lastrt=-1;
 
-if(isset($metadata_template_resource_type) && !$multiple && $ref < 0)
+if(isset($metadata_template_resource_type) && !$multiple && ($ref < 0 || $upload_review_mode))
     {
     // Show metadata templates here
     $metadatatemplate = getvalescaped(
