@@ -1736,10 +1736,29 @@ if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_acce
 <?php hook("customrelations"); //For future template/spawned relations in Web to Print plugin ?>
 
 <?php
-
-
 # -------- Related Resources (must be able to search for this to work)
-if (isset($relatedresources) && (count($relatedresources) > $related_resources_shown)&& checkperm("s") && ($k=="" || $internal_share_access)) {
+if($enable_related_resources && !isset($relatedresources))
+    {
+    // $relatedresources should be defined when using tabs in related_resources.php otherwise we need to do it here
+    $relatedresources = do_search("!related{$ref}");
+
+    $related_restypes = array();
+    for($n = 0; $n < count($relatedresources); $n++)
+        {
+        $related_restypes[] = $relatedresources[$n]['resource_type'];
+        }
+    $related_restypes = array_unique($related_restypes);
+
+    $relatedtypes_shown = array();
+    $related_resources_shown = 0;
+    }
+if(
+    isset($relatedresources)
+    && (count($relatedresources) > $related_resources_shown)
+    && checkperm("s")
+    && ($k == "" || $internal_share_access)
+)
+    {
 $result=$relatedresources;
 if (count($result)>0) 
 	{
@@ -1926,7 +1945,6 @@ if (count($result)>0)
 	# -------- End Related Resources
 	
 	 } # end of related resources block that requires search permissions
-
 
 if ($show_related_themes==true ){
 # -------- Public Collections / Themes
