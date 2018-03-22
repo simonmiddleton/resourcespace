@@ -1076,24 +1076,24 @@ function CheckDBStruct($path,$verbose=false)
 									// - If column is of same type but smaller number, update
 									// - If target column is of type text, update
 									// - If target column is of type varchar and currently int, update (e.g. the 'archive' column in collection_savedsearch moved from a single state to a multiple)
-									
-									if	(
-										(count($matchbase)==3 && count($matchexisting)==3 && $matchbase[1] == $matchexisting[1] && $matchbase[2] > $matchexisting[2])
-										 ||
-										(stripos($basecoltype,"text")!==false && stripos($existingcoltype,"text")===false)
-										||
-										(strtoupper(substr($basecoltype,0,6))=="BIGINT" && strtoupper(substr($existingcoltype,0,3)=="INT"))
-										||
-										(strtoupper(substr($basecoltype,0,3))=="INT" && (strtoupper(substr($existingcoltype,0,7))=="TINYINT" || strtoupper(substr($existingcoltype,0,8))=="SMALLINT"))
-										||
-										(strtoupper(substr($basecoltype,0,7))=="VARCHAR" && strtoupper(substr($existingcoltype,0,3)=="INT"))
-									       )
-										{    
-										debug("DBSTRUCT - updating column " . $col[0] . " in table " . $table . " from " . $existing[$n]["Type"] . " to " . str_replace("§",",",$col[1]) );
-										// Update the column type
-										sql_query("alter table $table modify `" .$col[0] . "` " .  $col[1]);       
-										}																				
-									}							
+									// - If target column is of type longtext and currently is text
+                                    if(
+                                        (count($matchbase) == 3 && count($matchexisting) == 3 && $matchbase[1] == $matchexisting[1] && $matchbase[2] > $matchexisting[2])
+                                        || (stripos($basecoltype, "text") !== false && stripos($existingcoltype, "text") === false)
+                                        || (strtoupper(substr($basecoltype, 0, 6)) == "BIGINT" && strtoupper(substr($existingcoltype, 0, 3) == "INT"))
+                                        || (
+                                                strtoupper(substr($basecoltype, 0, 3)) == "INT"
+                                                && (strtoupper(substr($existingcoltype,0,7))=="TINYINT" || strtoupper(substr($existingcoltype,0,8))=="SMALLINT")
+                                           )
+                                        || (strtoupper(substr($basecoltype, 0, 7)) == "VARCHAR" && strtoupper(substr($existingcoltype, 0, 3) == "INT"))
+                                        || (strtoupper(substr($basecoltype, 0, 8)) == "LONGTEXT" && strtoupper(substr($existingcoltype, 0, 4) == "TEXT"))
+                                    )
+                                        {
+                                        debug("DBSTRUCT - updating column " . $col[0] . " in table " . $table . " from " . $existing[$n]["Type"] . " to " . str_replace("§",",",$col[1]) );
+                                        // Update the column type
+                                        sql_query("alter table $table modify `" .$col[0] . "` " .  $col[1]);
+                                        }
+									}
 								}
 							if (!$found)
 									{
