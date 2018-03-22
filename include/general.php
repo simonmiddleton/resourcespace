@@ -3254,33 +3254,33 @@ function sorthighlights($a, $b)
     return ($a < $b) ? -1 : 1;
     }
 
-function pager($break=true)
+function pager($break=true,$scrolltotop=true)
 	{
 	global $curpage,$url,$totalpages,$offset,$per_page,$lang,$jumpcount,$pager_dropdown,$pagename;
 
     $modal  = ('true' == getval('modal', ''));
-
+    $scroll =  $scrolltotop ? "true" : "false"; 
 	$jumpcount++;
 	if(!hook("replace_pager")){
 		if ($totalpages!=0 && $totalpages!=1){?>     
-			<span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo $url?>&amp;go=prev&amp;offset=<?php echo urlencode($offset-$per_page) ?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, true);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
+			<span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo $url?>&amp;go=prev&amp;offset=<?php echo urlencode($offset-$per_page) ?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
 
 			<?php if ($pager_dropdown){
 				$id=rand();?>
-				<select id="pager<?php echo $id;?>" class="ListDropdown" style="width:50px;" <?php if(!hook("replacepageronchange_drop","",array($id))){?>onChange="var jumpto=document.getElementById('pager<?php echo $id?>').value;if ((jumpto>0) && (jumpto<=<?php echo $totalpages?>)) {return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), true);}" <?php } ?>>
+				<select id="pager<?php echo $id;?>" class="ListDropdown" style="width:50px;" <?php if(!hook("replacepageronchange_drop","",array($id))){?>onChange="var jumpto=document.getElementById('pager<?php echo $id?>').value;if ((jumpto>0) && (jumpto<=<?php echo $totalpages?>)) {return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}" <?php } ?>>
 				<?php for ($n=1;$n<$totalpages+1;$n++){?>
 					<option value='<?php echo $n?>' <?php if ($n==$curpage){?>selected<?php } ?>><?php echo $n?></option>
 				<?php } ?>
 				</select>
 			<?php } else { ?>
 
-				<div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo $lang["jumptopage"]?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), true);}">
+				<div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo $lang["jumptopage"]?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}">
 			&nbsp;<a aria-hidden="true" class="fa fa-times-circle" href="#" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='inline';"></a></div>
 			
 				<a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo $lang["jumptopage"]?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo $lang["page"]?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo $lang["of"]?>&nbsp;<?php echo $totalpages?></a>
 			<?php } ?>
 
-			&nbsp;&nbsp;<?php if ($curpage<$totalpages) { ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo $url?>&amp;go=next&amp;offset=<?php echo urlencode($offset+$per_page) ?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, true);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-right"></i><?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
+			&nbsp;&nbsp;<?php if ($curpage<$totalpages) { ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo $url?>&amp;go=next&amp;offset=<?php echo urlencode($offset+$per_page) ?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-right"></i><?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
 			</span>
 			
 		<?php } else { ?><span class="HorizontalWhiteNav">&nbsp;</span><div <?php if ($pagename=="search"){?>style="display:block;"<?php } else { ?>style="display:inline;"<?php }?>>&nbsp;</div><?php } ?>

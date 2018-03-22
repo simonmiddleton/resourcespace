@@ -217,73 +217,91 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
 // [Import nodes]
 if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tmp_name']) && is_uploaded_file($_FILES['import_nodes']['tmp_name']))
     {
+    $error = false;
     $uploaded_file_pathinfo  = pathinfo($_FILES['import_nodes']['name']);
     $uploaded_file_extension = $uploaded_file_pathinfo['extension'];
 
-    if(in_array($uploaded_file_extension, $banned_extensions))
+    if(strtolower($uploaded_file_extension) != "txt")
         {
-        trigger_error('You are not allowed to upload "' . $uploaded_file_extension . '" files to the system!');
+        $error = true;
+        $onload_message= array("title" => $lang["error"],"text" => $lang["invalidextension_mustbe"] . " .txt");
         }
 
     $uploaded_tmp_filename   = $_FILES['import_nodes']['tmp_name'];
     
     // Get each line from file into an array
     $file_handle  = fopen($uploaded_tmp_filename, 'rb');
-    $file_content = fread($file_handle, filesize($uploaded_tmp_filename));
-    fclose($file_handle);
-
-    // Setup needed vars for this process
-    $import_options = getval('import_options', '');
-
-    $import_nodes   = array_filter(explode(PHP_EOL, $file_content));
-    $existing_nodes = get_nodes($field, $import_export_parent);
-
-
-    // Phase 1 - add new nodes, without creating duplicates
-    foreach($import_nodes as $import_node_name)
+    if ($file_handle)
         {
-        $existing_node_key = array_search($import_node_name, array_column($existing_nodes, 'name'));
-
-        // Node doesn't exist so we can create it now.
-        if(false === $existing_node_key)
+        $import_nodes = array();        
+        while (($line = fgets($file_handle)) !== false)
             {
-            set_node(null, $field, $import_node_name, $import_export_parent, '');
-
-            log_activity("{$lang['import']} metadata field options - field {$field}", LOG_CODE_CREATED, $import_node_name, 'node', 'name');
+            if(trim($line) != "" &&  mb_check_encoding($line,'UTF-8'))
+                {
+                $import_nodes[] = trim($line);
+                }
             }
+        fclose($file_handle);
         }
-
-    // Phase 2 - Remove any nodes that don't exist in the imported file
-    // Note: only for "Replace options" option
-    $reorder_required = false;
-    foreach($existing_nodes as $existing_node)
+    else
         {
-        if('replace_nodes' != $import_options)
-            {
-            break;
-            }
-
-        if(!in_array($existing_node['name'], $import_nodes))
-            {
-            delete_node($existing_node['ref']);
-
-            log_activity("{$lang['import']} metadata field options - field {$field}", LOG_CODE_DELETED, null, 'node', 'name', $existing_node['ref'], null, $existing_node['name']);
-
-            $reorder_required = true;
-            }
-        }
-
-    if($reorder_required)
+        // error opening the file.
+        $error = true;
+        $onload_message= array("title" => $lang["error"],"text" => $lang["invalidextension_mustbe"] . " .txt");
+        } 
+    
+    if(count($import_nodes) > 0 && !$error)
         {
-        $new_nodes_order = array();
-
-        foreach(get_nodes($field, $import_export_parent) as $node)
+        // Setup needed vars for this process
+        $import_options = getval('import_options', '');
+        $existing_nodes = get_nodes($field, $import_export_parent);
+    
+        // Phase 1 - add new nodes, without creating duplicates
+        foreach($import_nodes as $import_node_name)
             {
-            $new_nodes_order[] = $node['ref'];
+            $existing_node_key = array_search($import_node_name, array_column($existing_nodes, 'name'));
+    
+            // Node doesn't exist so we can create it now.
+            if(false === $existing_node_key)
+                {
+                set_node(null, $field, $import_node_name, $import_export_parent, '');
+    
+                log_activity("{$lang['import']} metadata field options - field {$field}", LOG_CODE_CREATED, $import_node_name, 'node', 'name');
+                }
             }
-
-        reorder_node($new_nodes_order);
-        }
+    
+        // Phase 2 - Remove any nodes that don't exist in the imported file
+        // Note: only for "Replace options" option
+        $reorder_required = false;
+        foreach($existing_nodes as $existing_node)
+            {
+            if('replace_nodes' != $import_options)
+                {
+                break;
+                }
+    
+            if(!in_array($existing_node['name'], $import_nodes))
+                {
+                delete_node($existing_node['ref']);
+    
+                log_activity("{$lang['import']} metadata field options - field {$field}", LOG_CODE_DELETED, null, 'node', 'name', $existing_node['ref'], null, $existing_node['name']);
+    
+                $reorder_required = true;
+                }
+            }
+    
+        if($reorder_required)
+            {
+            $new_nodes_order = array();
+    
+            foreach(get_nodes($field, $import_export_parent) as $node)
+                {
+                $new_nodes_order[] = $node['ref'];
+                }
+    
+            reorder_node($new_nodes_order);
+            }   
+        }    
     }
 
 // [Export nodes]
@@ -378,7 +396,7 @@ if($ajax)
         <!-- Pager -->
         <div class="TopInpageNavRight">
         <?php
-        pager();
+        pager(true,false);
         $draw_pager = true;
         ?>
         </div>
@@ -465,7 +483,7 @@ if($ajax)
             <?php 
             if(isset($draw_pager))
                 {
-                pager(false);
+                pager(false,false);
                 } 
                 ?>
             </div>
