@@ -132,7 +132,7 @@ function addColumnHeader($orderName, $labelKey)
 			<label for="name"><?php echo $lang['action-title_create_size_with_id']; ?></label>
 			<div class="tickset">
 				<div class="Inline">
-					<input name="newsizeid" type="text" value="" class="shrtwidth">
+					<input name="newsizeid" type="text" value="" class="shrtwidth" maxlength="3">
 				</div>
 				<div class="Inline">
 					<input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]; ?>&nbsp;&nbsp;" onclick="return (this.form.elements[0].value!='');">
