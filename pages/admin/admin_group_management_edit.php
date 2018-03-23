@@ -64,21 +64,21 @@ if (!$has_dependants && getval("deleteme",false))
 	
 if (getval("save",false))
 	{
+	$error = false;
+	$logo_dir="{$storagedir}/admin/groupheaderimg/";
 
-		$logo_dir="{$storagedir}/admin/groupheaderimg/";
-
-		if (isset($_POST['removelogo']))
+	if (isset($_POST['removelogo']))
 		{
-			$logo_extension=sql_value("select group_specific_logo as value from usergroup where ref='{$ref}'", false);
-			$logo_filename="{$logo_dir}/group{$ref}.{$logo_extension}";
-
-			if ($logo_extension && file_exists($logo_filename) && unlink($logo_filename))
+		$logo_extension=sql_value("select group_specific_logo as value from usergroup where ref='{$ref}'", false);
+		$logo_filename="{$logo_dir}/group{$ref}.{$logo_extension}";
+		
+	    if ($logo_extension && file_exists($logo_filename) && unlink($logo_filename))
 			{
-				$logo_extension="";
+			$logo_extension="";
 			}
-			else
+		else
 			{
-				unset ($logo_extension);
+			unset ($logo_extension);
 			}
 		}
 
@@ -93,13 +93,15 @@ if (getval("save",false))
 			$logo_pathinfo=pathinfo($_FILES['grouplogo']['name']);
 			$logo_extension=$logo_pathinfo['extension'];
 			$logo_filename="{$logo_dir}/group{$ref}.{$logo_extension}";
-
-            if(in_array($logo_extension, $banned_extensions))
+			
+            if(!in_array(strtolower($logo_extension), array("jpg","jpeg","gif","svg","png")))
                 {
-                trigger_error('You are not allowed to upload "' . $logo_extension . '" files to the system!');
+                //trigger_error('You are not allowed to upload "' . $logo_extension . '" files to the system!');
+				$error = true;
+				$onload_message= array("title" => $lang["error"],"text" => str_replace('%EXTENSIONS',"JPG, GIF, SVG, PNG",$lang["allowedextensions-extensions"]));
                 }
 
-			if (!move_uploaded_file($_FILES['grouplogo']['tmp_name'], $logo_filename))		// this will overwrite if already existing
+			if ($error || !move_uploaded_file($_FILES['grouplogo']['tmp_name'], $logo_filename))		// this will overwrite if already existing
 				{
 				unset ($logo_extension);
 				}
@@ -155,9 +157,11 @@ if (getval("save",false))
 	sql_query($sql);
 	
 	hook("usergroup_edit_add_form_save","",array($ref));
-	
-	redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");		// return to the user group management page
-	exit;
+	if(!$error)
+		{
+		redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");		// return to the user group management page
+		exit;
+		}
 	}
 
 $record = get_usergroup($ref);
