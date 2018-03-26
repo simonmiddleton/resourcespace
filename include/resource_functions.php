@@ -1707,8 +1707,8 @@ function update_field($resource, $field, $value, array &$errors = array())
                     # Not a translated string, return as-is
                     if (substr($fieldoptiontranslations[$n],2,1)!=":" && substr($fieldoptiontranslations[$n],5,1)!=":" && substr($fieldoptiontranslations[$n],0,1)!=":")
                         {
-                        $currentoptions[]=trim($fieldoption);
-                        debug("update_field: current field option: '" . $fieldoption . "'<br />");
+                        $currentoptions[]=trim($fieldoption['name']);
+                        debug("update_field: current field option: '" . $fieldoption['name'] . "'<br />");
                         }
                     else
                         {
