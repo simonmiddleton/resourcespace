@@ -13,7 +13,24 @@ $refinements=str_replace(" -",",-",rawurldecode($search));
 $refinements=explode(",",$search);
 if (substr($search,0,1)=="!" && substr($search,0,6)!="!empty"){$startsearchcrumbs=1;} else {$startsearchcrumbs=0;}
 if ($refinements[0]!=""){
+	
+	function search_title_node_processing($string)
+		{
+		
+		if(substr(ltrim($string), 0, 2)=='@@')
+			{
+			# convert to shortname:value
+			$node_id=substr(ltrim($string), 2);
+			$node_data=array();
+			get_node($node_id, $node_data);
+			$field_title=sql_value("select name value from resource_type_field where ref=" . $node_data['resource_type_field'], '');
+			return $field_title . ":" . $node_data['name'];
+			}
+		return $string;
+		}
+	
 	for ($n=$startsearchcrumbs;$n<count($refinements);$n++){
+		
 		# strip the first semi-colon so it's not swapped with an " OR "
 		$semi_pos = strpos($refinements[$n],":;");
 		if ($semi_pos !== false) {
@@ -21,14 +38,16 @@ if ($refinements[0]!=""){
 		}
 		
 		$search_title_element=str_replace(";"," OR ",$refinements[$n]);
+		$search_title_element=search_title_node_processing($search_title_element);
 		if ($n!=0 || !$archive_standard){$searchcrumbs.=" > </count> </count> </count> ";}
 		$searchcrumbs.="<a href=\"".$baseurl_short."pages/search.php?search=";
 		for ($x=0;$x<=$n;$x++){
 			$searchcrumbs.=urlencode($refinements[$x]);
 			if ($x!=$n && substr($refinements[$x+1],0)!="-"){$searchcrumbs.=",";}		
 		}
+		
 		if (!$search_titles_shortnames){
-			$search_title_element=explode(":",$refinements[$n]);
+			$search_title_element=explode(":", search_title_node_processing($refinements[$n]));
 			if (isset($search_title_element[1])){
 			$datefieldinfo=sql_query("select ref from resource_type_field where name='" . trim(escape_check($search_title_element[0])) . "' and type IN (4,6,10)",0);
 			if (count($datefieldinfo)) 
