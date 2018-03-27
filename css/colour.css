@@ -99,6 +99,7 @@ select {background-color:white; border-radius:5px;border:none;}
 .CollectionPanelInfo .IconCommentAnim {background: url(../gfx/interface/IcComment_anim.gif) no-repeat;}
 .CollectionPanelInfo .IconRemove {background: url(../gfx/interface/IcRemove.gif) no-repeat;}
 .CollectionPanelShell {background-color: #444;}
+#RelatedResources .CollectionPanelShell {background-color: #fff;}
 
 /* Home */
 .HomePanel a:link, 
