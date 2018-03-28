@@ -238,15 +238,16 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
 				$bin_tag = " -previewimage ";
 				}
 
-				// Attempt extraction. Replaced ">" with -w since this has been seen to fail on some Windows servers
+			// Attempt extraction. Replaced ">" with -w since this has been seen to fail on some Windows servers
             $cmd=$exiftool_fullpath.' -b '.$bin_tag.' '.escapeshellarg($file).' -w %d%f.jpg';
-	    $extractedpreview=preg_replace('"\.' . $extension . '$"', '.jpg', $file);
-	    if($target!=$extractedpreview && file_exists($extractedpreview))
-		{
-		rename($extractedpreview, $target);
-		}
+            $wait=run_command($cmd);
+	    	$extractedpreview=preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
+	    	if($target!=$extractedpreview && file_exists($extractedpreview))
+				{
+				rename($extractedpreview, $target);
+				}
             
-	    $wait=run_command($cmd);
+	    
 
 			// check for nef -otherimage failure
 			if ($extension=="nef"&&!filesize_unlimited($target)>0)
@@ -256,7 +257,7 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
 				//2nd attempt
 				$cmd=$exiftool_fullpath.' -b '.$bin_tag.' '.escapeshellarg($file).' -w %d%f.jpg';
 				$wait=run_command($cmd);
-				$extractedpreview=preg_replace('"\.' . $extension . '$"', '.jpg', $file);
+				$extractedpreview=preg_replace('"\.' . pathinfo($file, PATHINFO_EXTENSION) . '$"', '.jpg', $file);
 				if($target!=$extractedpreview && file_exists($extractedpreview))
 					{
 					rename($extractedpreview, $target);
