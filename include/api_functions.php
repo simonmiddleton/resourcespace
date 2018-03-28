@@ -61,6 +61,7 @@ function execute_api_call($query)
             }
         }
     $eval.=");";
+    debug("API: \$eval = {$eval}");
     return json_encode(eval($eval));
     }
     

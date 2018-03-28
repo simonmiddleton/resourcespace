@@ -10,6 +10,8 @@ include_once "../include/api_bindings.php";
 
 if (!$enable_remote_apis) {exit("API not enabled.");}
 
+debug("API:");
+
 # Get parameters
 $user=getvalescaped("user","");
 $sign=getvalescaped("sign","");
@@ -19,14 +21,19 @@ $query=$_SERVER["QUERY_STRING"];
 if (getval("query","")!="") {$query=getval("query","");}
 
 # Authenticate based on the provided signature.
-if (!check_api_key($user,$query,$sign)) {exit("Invalid signature");}
+if(!check_api_key($user, $query, $sign))
+    {
+    debug("API: Invalid signature");
+    exit("Invalid signature");
+    }
 
 # Log them in.
 setup_user(get_user(get_user_by_username($user)));
+debug("API: set up user '{$user}' signed with '{$sign}'");
 
 # Run the requested query
 echo execute_api_call($query);
-
+debug("API: finished execute_api_call({$query});");
 
 /*
  * API v2 - To Do
