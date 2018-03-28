@@ -325,7 +325,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 				
 				jQuery(document).ready(function () { 
 				
-					jQuery("#field_<?php echo htmlspecialchars($field["name"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo htmlspecialchars($field["name"]) ?>&fieldref=<?php echo $field["ref"]?>"} );
+					jQuery("#field_<?php echo htmlspecialchars($field["ref"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo htmlspecialchars($field["name"]) ?>&fieldref=<?php echo $field["ref"]?>"} );
 					})
 				
 				</script>

@@ -3494,13 +3494,45 @@ function get_suggested_keywords($search,$ref="")
 	{
 	# For the given partial word, suggest complete existing keywords.
 	global $autocomplete_search_items,$autocomplete_search_min_hitcount;
-	if ($ref==""){
-		return sql_array("select distinct keyword value from keyword where keyword like '" . escape_check($search) . "%' and hit_count >= '$autocomplete_search_min_hitcount' order by hit_count desc limit $autocomplete_search_items");
-		}
-	else 
-		{
-		return sql_array("select distinct k.keyword value,rk.resource_type_field from keyword k,resource_keyword rk where k.ref=rk.keyword and k.keyword like '" . escape_check($search) . "%' and rk.resource_type_field='".$ref."' and k.hit_count >= '$autocomplete_search_min_hitcount' order by k.hit_count desc limit $autocomplete_search_items");
-		}
+    
+    # Fetch a list of fields that are not available to the user - these must be omitted from the search.
+    $hidden_indexed_fields=get_hidden_indexed_fields();
+    
+    $restriction_clause_free = "";
+    $restriction_clause_node = ""; 
+    
+    if (count($hidden_indexed_fields) > 0)
+        {
+        $restriction_clause_free .= " AND rk.resource_type_field NOT IN ('" . join("','", $hidden_indexed_fields) . "')";
+        $restriction_clause_node .= " AND n.resource_type_field NOT IN ('" . join(",", $hidden_indexed_fields) . "')";                                        
+        }
+    
+    if ((string)(int)$ref == $ref)
+        {
+        $restriction_clause_free .= " AND rk.resource_type_field = '" . $ref . "'";
+        $restriction_clause_node .= " AND n.resource_type_field = '" . $ref . "'";                                        
+        }    
+	
+    return sql_array("SELECT ak.keyword value
+        FROM
+            (
+            SELECT k.keyword, k.hit_count
+            FROM keyword k
+            JOIN resource_keyword rk ON rk.keyword=k.ref
+            WHERE k.keyword LIKE '" . escape_check($search) . "%'" . $restriction_clause_free . "
+            AND k.hit_count >= '$autocomplete_search_min_hitcount'
+         
+            UNION
+         
+            SELECT k.keyword, k.hit_count
+            FROM keyword k
+            JOIN node_keyword nk ON nk.keyword=k.ref
+            JOIN node n ON n.ref=nk.node
+            WHERE k.keyword LIKE '" . escape_check($search) . "%'" . $restriction_clause_node . "
+            ) ak
+        GROUP BY ak.keyword, ak.hit_count 
+        ORDER BY ak.hit_count DESC LIMIT " . $autocomplete_search_items
+        );
 	}
 	
 function check_password($password)
