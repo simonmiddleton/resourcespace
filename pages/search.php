@@ -849,7 +849,7 @@ if (isset($result_title_height))
 
 #if (is_array($result)||(isset($collections)&&(count($collections)>0)))
 
-if($enable_theme_breadcrumbs && !$search_titles && isset($theme_link) && $k=="")
+if($enable_themes && $enable_theme_breadcrumbs && !$search_titles && isset($theme_link) && $k=="")
 	{
 	// Show the themes breadcrumbs if they exist, but not if we are using the search_titles
     renderBreadcrumbs(
