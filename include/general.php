@@ -5294,7 +5294,7 @@ function get_utility_path($utilityname, &$checked_path = null)
                     'win'  => $ghostscript_executable
                 ),
                 $checked_path,
-                true);
+                true) . ' -dPARANOIDSAFER'; 
 
         case 'ffmpeg':
             // FFmpeg path not configured
