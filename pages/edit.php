@@ -893,37 +893,47 @@ function EditNav() # Create a function so this can be repeated at the end of the
   }
   
 function SaveAndClearButtons($extraclass="")
-   { 
-   global $lang,$multiple,$ref,$clearbutton_on_edit,$upload_review_mode;
-   ?>
-   <div class="QuestionSubmit <?php echo $extraclass ?>">
-   <?php
-   if($clearbutton_on_edit)
-      { 
-      ?>
-      <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
-      <?php
-      } ?>
-    <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?> name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo ($ref>0)?($upload_review_mode?$lang["saveandnext"]:$lang["save"]):$lang["next"]?>&nbsp;&nbsp;" />
+    {
+    global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $data_only_resource_types;
+
+    $save_btn_value = ($ref > 0 ? ($upload_review_mode ? $lang["saveandnext"] : $lang["save"]) : $lang["next"]);
+    if($ref < 0 && in_array($resource['resource_type'], $data_only_resource_types))
+        {
+        $save_btn_value = $lang['create'];
+        }
+    ?>
+    <div class="QuestionSubmit <?php echo $extraclass ?>">
     <?php
-    if ($upload_review_mode)
+    if($clearbutton_on_edit)
+        { 
+        ?>
+        <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
+        <?php
+        }
+        ?>
+        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?>
+               name="save"
+               class="editsave"
+               type="submit"
+               value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
+    <?php
+    if($upload_review_mode)
         {
         ?>&nbsp;<input name="save_auto_next" class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save_and_auto"] ?>&nbsp;&nbsp;" />
         <?php
-        }?>
-    <br /><br />
-    
-   <div class="clearerleft"> </div>
-   </div>
-   <?php 
-   }
-
-?>
+        }
+        ?>
+        <br /><br />
+        <div class="clearerleft"> </div>
+    </div>
+    <?php 
+    }
+    ?>
 </script>
 
 <?php
 
-if(0 > $ref)
+if($ref < 0)
     {
     // Include upload_params in form action url
     if(in_array($resource['resource_type'], $data_only_resource_types))
@@ -1184,16 +1194,11 @@ if(!$is_template && $show_required_field_label)
     }
 
     $save_btn_value = $lang['next'];
-    if(0 > $ref && in_array($resource['resource_type'], $data_only_resource_types))
+    if($ref < 0 && in_array($resource['resource_type'], $data_only_resource_types))
         {
         $save_btn_value = $lang['create'];
         }
-if ($single)
-    {
-    ?>
-    <input name="save"  class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo $lang["noupload"] ; ?>&nbsp;&nbsp;" onClick="jQuery('#noupload').val('true');return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);" />&nbsp;&nbsp;
-    <input type=hidden id="noupload" name="noupload" value=""><?php
-    }?>
+        ?>
 <input name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" /><br />
 <div class="clearerleft"> </div>
 </div>
