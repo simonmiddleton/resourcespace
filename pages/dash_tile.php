@@ -158,38 +158,8 @@ if($submitdashtile)
 		if(($tile["all_users"] || $all_users ) && checkPermission_dashadmin())
             {
             log_activity($lang['manage_all_dash'], LOG_CODE_EDITED, $title . ($text == '' ? '' : " ({$text})"),'dash_tile',null,$tile['ref']);
-            update_dash_tile($tile,$buildurl,$link,$title,$reload_interval,$all_users,$default_order_by,$resource_count,$text);
-
-			if($tile_audience=='true')
-				{
-				// This is an all users dash tile, delete any existing usergroup entries
-				sql_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = '{$tile['ref']}'");
-				}
-			else
-				{
-				// This is a usergroup specific dash tile
-				// If admin decides a tile is not meant for a specific user group, remove it from the users immediately
-				$current_specific_user_groups = get_tile_user_groups($tile['ref']);
-                    
-                if(count($specific_user_groups)==0)
-                    {
-                    // This was an all users/usergroup dash tile, delete any existing user entries
-                    sql_query("DELETE FROM user_dash_tile WHERE dash_tile = '{$tile['ref']}'");
-                    }
-                    
-                // Remove tile from old user groups                    
-				foreach(array_diff($current_specific_user_groups,$specific_user_groups) as $remove_group)
-					{					
-                    delete_usergroup_dash_tile($tile['ref'],$remove_group);
-					}                
-                
-				// Newly selected user groups.
-				foreach(array_diff($specific_user_groups,$current_specific_user_groups) as $add_group)
-					{
-					add_usergroup_dash_tile($add_group, $tile['ref'], $default_order_by);
-					build_usergroup_dash($add_group,0,$tile['ref']);
-					}
-				}
+            $current_specific_user_groups = get_tile_user_groups($tile['ref']);
+			update_dash_tile($tile,$buildurl,$link,$title,$reload_interval,$all_users,$tile_audience,$current_specific_user_groups,$specific_user_groups,$default_order_by,$resource_count,$text);
             }
 		else if(!$tile["all_users"] && !$all_users) # Not an all_users tile
 			{
