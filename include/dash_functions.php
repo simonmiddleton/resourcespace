@@ -78,6 +78,7 @@ function update_dash_tile($tile,$url,$link,$title,$reload_interval,$all_users,$t
 		{$reload_interval=0;}
 	$delete = $delete?1:0;
 	$all_users=$all_users?1:0;
+	$escaped_tile_ref = escape_check($tile['ref']);
 
 	if(!is_numeric($default_order_by))
 		{
@@ -105,12 +106,12 @@ function update_dash_tile($tile,$url,$link,$title,$reload_interval,$all_users,$t
 		if (count($current_specific_user_groups)>0)
 			{
 			#Delete the users existing record to ensure they don't get a duplicate.
-			sql_query("DELETE FROM user_dash_tile WHERE dash_tile=".$tile["ref"]);
-			sql_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$tile["ref"]."',5 FROM user");	
+			sql_query("DELETE FROM user_dash_tile WHERE dash_tile=".$escaped_tile_ref);
+			sql_query("INSERT user_dash_tile (user,dash_tile,order_by) SELECT user.ref,'".$escaped_tile_ref."',5 FROM user");	
 			}
 
 		// This is an all users dash tile, delete any existing usergroup entries
-		sql_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = '{$tile['ref']}'");
+		sql_query("DELETE FROM usergroup_dash_tile WHERE dash_tile = '{$escaped_tile_ref}'");
    		}
 
 	else // Specific usergroups tile
@@ -120,20 +121,20 @@ function update_dash_tile($tile,$url,$link,$title,$reload_interval,$all_users,$t
         if(count($current_specific_user_groups)==0)
             {
             // This was an all users/usergroup dash tile, delete any existing user entries
-            sql_query("DELETE FROM user_dash_tile WHERE dash_tile = '{$tile['ref']}'");
+            sql_query("DELETE FROM user_dash_tile WHERE dash_tile = '{$escaped_tile_ref}'");
             }
             
         // Remove tile from old user groups                    
 		foreach(array_diff($current_specific_user_groups,$specific_user_groups) as $remove_group)
 			{					
-            delete_usergroup_dash_tile($tile['ref'],$remove_group);
+            delete_usergroup_dash_tile($escaped_tile_ref,$remove_group);
 			}                
         
 		// Newly selected user groups.
 		foreach(array_diff($specific_user_groups,$current_specific_user_groups) as $add_group)
 			{
-			add_usergroup_dash_tile($add_group, $tile['ref'], $default_order_by);
-			build_usergroup_dash($add_group,0,$tile['ref']);
+			add_usergroup_dash_tile($add_group, $escaped_tile_ref, $default_order_by);
+			build_usergroup_dash($add_group,0,$escaped_tile_ref);
 			}
 		}
 		
