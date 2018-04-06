@@ -1381,6 +1381,7 @@ $lang['plugins-noneinstalled'] = "No plugins currently activated.";
 $lang['plugins-noneavailable'] = "No plugins currently available.";
 $lang['plugins-availableheader'] = 'Available plugins';
 $lang['plugins-installedheader'] = 'Currently activated plugins';
+$lang['plugins-search-results-header'] = 'Plugins search results';
 $lang['plugins-author'] = 'Author';
 $lang['plugins-version'] = 'Version';
 $lang['plugins-instversion'] = 'Installed version';

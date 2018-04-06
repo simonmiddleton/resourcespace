@@ -214,7 +214,7 @@ ksort ($plugins_avail);
 
 
 // Search functionality
-$searching          = (getval("searching", "") != "" && getval("clear_search", "") == "" ? true : false);
+$searching          = ((getval("searching", "") != "" && getval("clear_search", "") == "") ? true : false);
 $find               = getval("find", "");
 $search_placeholder = ($searching ? $find : $lang['plugins-search-plugin-placeholder']);
 
@@ -303,8 +303,107 @@ include "../../include/header.php"; ?>
     </form>
 </h1>
 <p><?php echo $lang["plugins-headertext"]; ?></p>
-<h2 class="pageline"><?php echo $lang['plugins-installedheader']; ?></h2>
+<h2 class="pageline"><?php echo (!$searching ? $lang['plugins-installedheader'] : $lang['plugins-search-results-header']); ?></h2>
 <?php hook("before_active_plugin_list");
+
+if($searching)
+    {
+    $all_plugins = array_merge($inst_plugins, $plugins_avail);
+    ?>
+    <div class="Listview">
+        <table class= "ListviewStyle" cellspacing="0" cellpadding="0" border="0">
+            <thead>
+                <tr class="ListviewTitleStyle">
+                    <td><?php echo $lang['name']; ?></td>
+                    <td><?php echo $lang['description']; ?></td>
+                    <td><?php echo $lang['plugins-author']; ?></td>
+                    <td><?php echo $lang['plugins-version']; ?></td>
+                    <?php hook('additional_plugin_columns'); ?>
+                    <td><div class="ListTools"><?php echo $lang['tools']; ?></div></td>
+                </tr>
+            </thead>
+            <tbody>
+    <?php
+    foreach($all_plugins as $plugin)
+        {
+        if(!findPluginFromSearch($plugin, $find))
+            {
+            continue;
+            }
+
+        // Plugin description key is different if plugin is installed (desc|descrip)
+        $plugin_description = (isset($plugin["desc"]) ? $plugin["desc"] : "");
+        $plugin_description = (isset($plugin["descrip"]) ? $plugin["descrip"] : $plugin_description);
+
+        // Plugin version key is different if plugin is installed (version|inst_version)
+        $plugin_version = (isset($plugin["version"]) ? $plugin["version"] : "");
+        $plugin_version = (isset($plugin["inst_version"]) ? $plugin["inst_version"] : $plugin_version);
+        /* Make sure that the version number is displayed with at least one decimal place.
+        If the version number is 0 the displayed version is $lang["notavailableshort"].
+        (E.g. 0 -> (en:)N/A ; 1 -> 1.0 ; 0.92 -> 0.92)
+        */
+        if($plugin_version == 0)
+           {
+           $plugin_version = $lang["notavailableshort"];
+           }
+        else if(sprintf("%.1f", $plugin_version) == $plugin_version)
+            {
+            $plugin_version = sprintf("%.1f", $plugin_version);
+            }
+        ?>
+            <tr>
+                <td><?php echo htmlspecialchars($plugin["name"]); ?></td>
+                <td><?php echo htmlspecialchars($plugin_description); ?></td>
+                <td><?php echo htmlspecialchars($plugin["author"]); ?></td>
+                <td><?php echo htmlspecialchars($plugin_version); ?></td>
+                <?php hook('additional_plugin_column_data'); ?>
+                <td>
+                    <div class="ListTools">
+                <?php
+                if (isset($plugin['legacy_inst']))
+                   {
+                   echo '<a class="nowrap" href="#">' . LINK_CARET . $lang['plugins-legacyinst'].'</a> '; # TODO: Update this link to point to a help page on the wiki
+                   }
+                else
+                   {
+                   echo '<a href="#'.$plugin['name'].'" class="p-deactivate">' .  LINK_CARET . $lang['plugins-deactivate'].'</a> ';
+                   }
+                if ($plugin['info_url']!='')
+                   {
+                   echo '<a class="nowrap" href="'.$plugin['info_url'].'" target="_blank">' . LINK_CARET . $lang['plugins-moreinfo'].'</a> ';
+                   }
+                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '">' . LINK_CARET . $lang['groupaccess'].'</a> ';
+                $plugin['enabled_groups'] = (isset($plugin['enabled_groups']) ? array($plugin['enabled_groups']) : array());
+                if ($plugin['config_url']!='')        
+                   {
+                   // Correct path to support plugins that are located in filestore/plugins
+                   if(substr($plugin['config_url'],0,8)=="/plugins")
+                    {
+                    $pluginlugin_config_url = str_replace("/plugins/" . $plugin['name'], get_plugin_path($plugin['name'],true), $plugin['config_url']);
+                    }
+                   else
+                    {$pluginlugin_config_url = $baseurl . $plugin['config_url'];}
+                   echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $pluginlugin_config_url . '">' . LINK_CARET .$lang['options'].'</a> ';        
+                   if (sql_value("SELECT config_json as value from plugins where name='".$plugin['name']."'",'')!='' && function_exists('json_decode'))
+                         {
+                         echo '<a class="nowrap" href="'.$baseurl_short.'pages/team/team_download_plugin_config.php?pin='.$plugin['name'].'">' . LINK_CARET .$lang['plugins-download'].'</a> ';
+                         }
+                   }
+                ?>
+                    </div>
+                </td>
+            </tr>
+        <?php
+        }
+        ?>
+            </tbody>
+        </table>
+    </div>
+    </div> <!-- end of BasicBox -->
+    <?php
+    include "../../include/footer.php";
+    exit();
+    }
 
 if (count($inst_plugins)>0)
    { ?>
