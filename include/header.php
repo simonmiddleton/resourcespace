@@ -550,12 +550,12 @@ $scheme = @$parsed_url['scheme'];
 $host   = @$parsed_url['host'];
 $port   = (isset($parsed_url['port']) ? ":{$parsed_url['port']}" : "");
 
-$activate_header_link = "{$scheme}://{$host}{$port}" . urlencode(strip_tags_and_attributes(urldecode($_SERVER["REQUEST_URI"])));
+$activate_header_link = "{$scheme}://{$host}{$port}" . urlencode($_SERVER["REQUEST_URI"]);
 ?>
 <script>
 jQuery(document).ready(function()
     {
-    ActivateHeaderLink('<?php echo $activate_header_link; ?>');
+    ActivateHeaderLink(<?php echo json_encode($activate_header_link); ?>);
     });
 </script>
 <?php
