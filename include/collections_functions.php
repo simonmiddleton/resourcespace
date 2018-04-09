@@ -1439,7 +1439,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
     $searchcount = count($results);
     if($searchcount > 0)
         {
-        sql_query("UPDATE collection_resource SET sortorder = sortorder + '" . $searchcount . "' WHERE collection='" . $collection . "'");
+        sql_query("UPDATE collection_resource SET sortorder = if(isnull(sortorder),'" . $searchcount . "',sortorder + '" . $searchcount . "') WHERE collection='" . $collection . "'");
         }
 
 	for ($r=0;$r<$searchcount;$r++)
