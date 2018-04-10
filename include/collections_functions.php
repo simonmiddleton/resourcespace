@@ -876,11 +876,12 @@ function save_collection($ref, $coldata=array())
 
 		}
 		
+	$result_limit = getvalescaped("result_limit", 0, true);
+
 	# Update limit count for saved search
-	if (isset($_POST["result_limit"]))
+	if ($result_limit > 0)
 		{
-		sql_query("update collection_savedsearch set result_limit='" . getvalescaped("result_limit","") . "' where collection='$ref'");
-		
+		sql_query("update collection_savedsearch set result_limit='" . $result_limit . "' where collection='$ref'");
 		}
 	
 	refresh_collection_frame();
