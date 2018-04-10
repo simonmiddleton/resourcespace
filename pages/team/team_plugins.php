@@ -350,6 +350,9 @@ if($searching)
             {
             $plugin_version = sprintf("%.1f", $plugin_version);
             }
+
+        $activate_or_deactivate_label = (isset($plugin["inst_version"]) ? $lang["plugins-deactivate"] : $lang['plugins-activate']);
+        $activate_or_deactivate_class = (isset($plugin["inst_version"]) ? "p-deactivate" : "p-activate");
         ?>
             <tr>
                 <td><?php echo htmlspecialchars($plugin["name"]); ?></td>
@@ -359,15 +362,8 @@ if($searching)
                 <?php hook('additional_plugin_column_data'); ?>
                 <td>
                     <div class="ListTools">
-                <?php
-                if (isset($plugin['legacy_inst']))
-                   {
-                   echo '<a class="nowrap" href="#">' . LINK_CARET . $lang['plugins-legacyinst'].'</a> '; # TODO: Update this link to point to a help page on the wiki
-                   }
-                else
-                   {
-                   echo '<a href="#'.$plugin['name'].'" class="p-deactivate">' .  LINK_CARET . $lang['plugins-deactivate'].'</a> ';
-                   }
+                    <a href="#<?php echo $plugin['name']; ?>" class="<?php echo $activate_or_deactivate_class; ?>"><?php echo LINK_CARET . $activate_or_deactivate_label; ?></a>
+                    <?php
                 if ($plugin['info_url']!='')
                    {
                    echo '<a class="nowrap" href="'.$plugin['info_url'].'" target="_blank">' . LINK_CARET . $lang['plugins-moreinfo'].'</a> ';
@@ -390,7 +386,7 @@ if($searching)
                          }
                    }
                 ?>
-                    </div>
+                    </div><!-- End of ListTools -->
                 </td>
             </tr>
         <?php
@@ -398,7 +394,10 @@ if($searching)
         ?>
             </tbody>
         </table>
-    </div>
+        <form id="anc-post" method="post" action="<?php echo $baseurl_short; ?>pages/team/team_plugins.php" >
+            <input type="hidden" id="anc-input" name="" value="" />
+        </form>
+    </div><!-- end of ListView -->
     </div> <!-- end of BasicBox -->
     <?php
     include "../../include/footer.php";
