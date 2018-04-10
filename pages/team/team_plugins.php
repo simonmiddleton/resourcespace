@@ -353,6 +353,14 @@ if($searching)
 
         $activate_or_deactivate_label = (isset($plugin["inst_version"]) ? $lang["plugins-deactivate"] : $lang['plugins-activate']);
         $activate_or_deactivate_class = (isset($plugin["inst_version"]) ? "p-deactivate" : "p-activate");
+        $activate_or_deactivate_href  = $plugin['name'];
+
+        if(isset($plugin["legacy_inst"]))
+            {
+            $activate_or_deactivate_label = $lang["plugins-legacyinst"];
+            $activate_or_deactivate_class = "nowrap";
+            $activate_or_deactivate_href  = "";
+            }
         ?>
             <tr>
                 <td><?php echo htmlspecialchars($plugin["name"]); ?></td>
@@ -362,7 +370,7 @@ if($searching)
                 <?php hook('additional_plugin_column_data'); ?>
                 <td>
                     <div class="ListTools">
-                    <a href="#<?php echo $plugin['name']; ?>" class="<?php echo $activate_or_deactivate_class; ?>"><?php echo LINK_CARET . $activate_or_deactivate_label; ?></a>
+                    <a href="#<?php echo $activate_or_deactivate_href; ?>" class="<?php echo $activate_or_deactivate_class; ?>"><?php echo LINK_CARET . $activate_or_deactivate_label; ?></a>
                     <?php
                 if ($plugin['info_url']!='')
                    {
