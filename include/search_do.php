@@ -259,6 +259,7 @@ function do_search(
             {
             $search_field_restrict="";
             $keyword=$keywords[$n];
+            debug("do_search(): \$keyword = {$keyword}");
             $quoted_string=(substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"";
             $quoted_field_match=false;
             $field_short_name_specified=false;
@@ -278,6 +279,8 @@ function do_search(
                         global $fieldinfo_cache;
                         $fieldname=$kw[0];
 						$keystring=$kw[1];
+                        debug("do_search(): \$fieldname = {$fieldname}");
+                        debug("do_search(): \$keystring = {$keystring}");
                         if (isset($fieldinfo_cache[$fieldname]))
                             {
                             $fieldinfo=$fieldinfo_cache[$fieldname];
@@ -299,7 +302,7 @@ function do_search(
                             $fieldinfo_cache[$fieldname]=$fieldinfo;
                             }
                         }
-						
+
 					//First try and process special keyword types
                     if ($field_short_name_specified && !$quoted_string && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'],$DATE_FIELD_TYPES))
                         {
@@ -477,15 +480,14 @@ function do_search(
                             $keyword=$keystring;
                             $search_field_restrict=$fieldinfo['ref'];
                             }
-							
-                    
+
+
                     if(!$quoted_string && !$keywordprocessed && !($field_short_name_specified && hook('customsearchkeywordfilter', null, array($kw)))) // Need this also for string matching in a named text field
                         {
                         // Normal keyword
                         //
                         // Searches all fields that the user has access to
                         // If ignoring field specifications then remove them.
-    							
                         $keywords_expanded=explode(';',$keyword);
                         $keywords_expanded_or=count($keywords_expanded) > 1;
     
@@ -519,6 +521,7 @@ function do_search(
                         if (in_array($keyword, $noadd)) # skip common words that are excluded from indexing
                             {
                             $skipped_last = true;
+                            debug("do_search(): skipped common word: {$keyword}");
                             }
                         else
                             {
@@ -546,8 +549,9 @@ function do_search(
                                 global $wildcard_expand_limit;
                                 $wildcards = sql_array("select ref value from keyword where keyword like '" . escape_check(str_replace("*", "%", $keyword)) . "' order by hit_count desc limit " . $wildcard_expand_limit);
                                 }
-    
+
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
+
                             if ($keyref === false && !$omit && !$empty && count($wildcards) == 0)
                                 {
     
@@ -572,7 +576,30 @@ function do_search(
                                 // ********************************************************************************
                                 //                                                                  Found wildcards
                                 // ********************************************************************************
-    
+
+                                // Multiple alternative keywords
+                                $alternative_keywords_sql = "";
+                                $alternative_keywords = array();
+                                if($field_short_name_specified && $keywords_expanded_or)
+                                    {
+                                    foreach($keywords_expanded as $keyword_expanded)
+                                        {
+                                        $alternative_keyword_keyref = resolve_keyword($keyword_expanded, false, true, true);
+
+                                        if($alternative_keyword_keyref === false)
+                                            {
+                                            continue;
+                                            }
+
+                                        $alternative_keywords[] = $alternative_keyword_keyref;
+                                        }
+
+                                    if(count($alternative_keywords) > 0)
+                                        {
+                                        $alternative_keywords_sql = " OR [keyword_match_table].keyword IN ('" . join("','", $alternative_keywords) . "')";
+                                        }
+                                    }
+
                                 if ($keyref === false)
                                     {
                                     # make a new keyword
@@ -745,11 +772,14 @@ function do_search(
                                          // TODO: deprecate this once all field values are nodes  START
                                          
                                           $union .= " UNION SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_keyword k[union_index]
-                                          WHERE (k[union_index].keyword={$keyref} " . str_replace("[keyword_match_table]","k" . "[union_index]", $relatedsql) . " {$union_restriction_clause})" .
+                                          WHERE (k[union_index].keyword={$keyref} "
+                                            . str_replace("[keyword_match_table]","k" . "[union_index]", $relatedsql)
+                                            . str_replace("[keyword_match_table]", "k[union_index]", $alternative_keywords_sql)
+                                            . " {$union_restriction_clause})" .
                                              " GROUP BY resource, resource_type_field";
                                                                                                              
                                          // TODO: deprecate this once all field values are nodes  END
-                                         
+
                                          
                                          $sql_keyword_union[] = $union;
      
