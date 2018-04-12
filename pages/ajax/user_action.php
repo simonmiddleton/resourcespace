@@ -35,7 +35,7 @@ switch ($action)
         if(count($submit) > 0)
             {
             // Submit all the resources
-            update_archive_status($submit, -1,$submitstates);
+            update_archive_status($submit, -1,$submitstates, $collection_add);
             }
         
         $return['status'] = 200;

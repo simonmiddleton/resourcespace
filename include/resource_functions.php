@@ -4565,12 +4565,13 @@ function resource_type_config_override($resource_type)
 * @param integer|array $resource_id - Resource unique ref -or- array of Resource refs
 * @param integer $archive - Destination archive state
 * @param integer|array $existingstates -  existing archive state _or_ array of corresponding existing archive states
+* @param integer $collection - optional id of collection containing resources
 * 
 * @return void
 */
-function update_archive_status($resource, $archive, $existingstates = array())
+function update_archive_status($resource, $archive, $existingstates = array(), $collection  = 0)
     {
-    global $userref;
+    global $userref, $user_resources_approved_email;
 
     if(!is_array($resource))
         {
@@ -4595,6 +4596,31 @@ function update_archive_status($resource, $archive, $existingstates = array())
         }
 
     sql_query("UPDATE resource SET archive = '" . escape_check($archive) .  "' WHERE ref IN ('" . implode("', '", $resource) . "')");
+    
+    // Send notifications
+    debug("update_archive_status - resources=(" . implode(",",$resource) . "), archive: " . $archive . ", existingstates:(" . implode(",",$existingstates) . "), collection: " . $collection);
+    switch ($archive)
+        {
+        case '0':
+            if (isset($existingstates[0]) && $existingstates[0] == -1 && $user_resources_approved_email)
+                {
+                notify_user_resources_approved(array($ref));
+                }
+            break;
+        
+        case '-1':
+            if (isset($existingstates[0]) && $existingstates[0] == -2)
+                {
+                notify_user_contributed_submitted($resource, $collection);
+                }
+    
+        case '-2':
+            if (isset($existingstates[0]) && $existingstates[0] == -1)
+                {
+                notify_user_contributed_unsubmitted($resource);
+                }
+            break;
+        }
     
     return;
     }
