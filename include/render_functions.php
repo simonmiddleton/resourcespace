@@ -1006,9 +1006,12 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 {
                 global $search;
                 $search_collection='';
-                if(substr($search,0,11)=='!collection'){
-                	$search_collection=substr($search,11);
-                }
+                if(substr($search,0,11)=='!collection')
+                    {
+                    $search_trimmed = substr($search,11); // The collection search must always be the first part of the search string
+                    $search_elements = split_keywords($search_trimmed, false, false, false, false, true);
+                    $search_collection = (int)$search_elements[0];
+                    }
                 ?>
                 case 'delete_collection':
                     if(confirm('<?php echo $lang["collectiondeleteconfirm"]; ?>')) {

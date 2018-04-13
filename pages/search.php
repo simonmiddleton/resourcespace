@@ -304,16 +304,24 @@ if (is_numeric(trim(getvalescaped("searchresourceid","")))){
 	$searchresourceid = trim(getvalescaped("searchresourceid",""));
 	$search = "!resource$searchresourceid";
 }
-	
-hook("searchstringprocessing");
-
-# Fetch and set the values
-//setcookie("search",$search); # store the search in a cookie if not a special search
-$offset=getvalescaped("offset",0);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset);}
-if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 
 // Is this a collection search?
-$collectionsearch = strpos($search,"!collection")!==false; // We want the default collection order to be applied
+$collectionsearch = strpos($search,"!collection") !== false; // We want the default collection order to be applied
+if($collectionsearch)
+    {
+    // Collection search may also have extra search keywords passed to search within a collection
+    $search_trimmed = substr($search,11); // The collection search must always be the first part of the search string
+    $search_elements = split_keywords($search_trimmed, false, false, false, false, true);
+    $collection = (int)array_shift($search_elements);
+    $search = "!collection" . $collection . ", " . implode(", ",$search_elements);
+    }
+    
+hook("searchstringprocessing");
+
+
+# Fetch and set the values
+$offset=getvalescaped("offset",0);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset);}
+if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 
 $order_by=getvalescaped("order_by","");if (strpos($search,"!")===false || strpos($search,"!properties")!==false) {rs_setcookie('saved_order_by', $order_by);}
 if ($order_by=="")
@@ -529,15 +537,13 @@ $count_result = (is_array($result) ? count($result) : 0);
 
 if ($collectionsearch)
 	{
-	$collection=substr($search,11);
-	$collection=explode(",",$collection);
-	$collection=$collection[0];
-	$collectiondata=get_collection($collection);
-	
+    $collectiondata = get_collection($collection);	
 	if ($k!="" && !$internal_share_access) {$usercollection=$collection;} # External access - set current collection.
-	if (!$collectiondata){?>
+	if (!$collectiondata)
+        {?>
 		<script>alert('<?php echo $lang["error-collectionnotfound"];?>');document.location='<?php echo $baseurl."/pages/" . $default_home_page;?>'</script>
-	<?php } 
+        <?php
+        } 
 	# Check to see if this user can edit (and therefore reorder) this resource
 	if (($userref==$collectiondata["user"]) || ($collectiondata["allow_changes"]==1) || (checkperm("h")))
 		{
@@ -1098,9 +1104,9 @@ if($responsive_ui)
 			{
 			$collectiondata = array();
 			}
-		
-		$url=generateURL($baseurl . "/pages/search.php",$searchparams); // Moved above render_actions as $url is used to render search actions
-		render_actions($collectiondata,true,false);
+
+        $url=generateURL($baseurl . "/pages/search.php",$searchparams); // Moved above render_actions as $url is used to render search actions
+        render_actions($collectiondata,true,false);
 
 		hook("search_header_after_actions");
 		

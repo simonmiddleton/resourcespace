@@ -459,35 +459,56 @@ function refine_searchstring($search)
     $dynamic_keyword_fields=sql_array("select name value from resource_type_field where type=9");
     
     $fixedkeywords=array();
-    foreach ($keywords as $keyword){
+    foreach ($keywords as $keyword)
+        {
         if (strpos($keyword,"startdate")!==false || strpos($keyword,"enddate")!==false)
-            {$keyword=str_replace(" ","-",$keyword);}
-        if (strpos($keyword,":")>0){
+            {
+            $keyword=str_replace(" ","-",$keyword);
+            }
+             
+        if(strpos($keyword,"!collection") == 0)
+            {
+            $collection=intval(substr($search,11));
+            $keyword = "!collection" . $collection;
+            }
+    
+        if (strpos($keyword,":")>0)
+            {
             $keywordar=explode(":",$keyword,2);
             $keyname=$keywordar[0];
-            if (substr($keyname,0,1)!="!"){
+            if (substr($keyname,0,1)!="!")
+                {
                 if(substr($keywordar[1],0,5)=="range"){$keywordar[1]=str_replace(" ","-",$keywordar[1]);}
-                if (!in_array($keyname,$orfields) && (!$dynamic_keyword_and || ($dynamic_keyword_and && !in_array($keyname, $dynamic_keyword_fields)))){
+                if (!in_array($keyname,$orfields) && (!$dynamic_keyword_and || ($dynamic_keyword_and && !in_array($keyname, $dynamic_keyword_fields))))
+                    {
                     $keyvalues=explode(" ",str_replace($keywordar[0].":","",$keywordar[1]));
-                } else {
+                    }
+                else
+                    {
                     $keyvalues=array($keywordar[1]);
-                }
-                foreach ($keyvalues as $keyvalue){
-                    if (!in_array($keyvalue,$noadd)){ 
+                    }
+                foreach ($keyvalues as $keyvalue)
+                    {
+                    if (!in_array($keyvalue,$noadd))
+                        { 
                         $fixedkeywords[]=$keyname.":".$keyvalue;
+                        }
                     }
                 }
-            }
-            else if (!in_array($keyword,$noadd)){
+            else if (!in_array($keyword,$noadd))
+                {
                 $keywords=explode(" ",$keyword);
-                $fixedkeywords[]=$keywords[0];} // for searches such as !list
-        }
-        else {
-            if (!in_array($keyword,$noadd)){ 
+                $fixedkeywords[]=$keywords[0];
+                } // for searches such as !list
+            }
+        else
+            {
+            if (!in_array($keyword,$noadd))
+                { 
                 $fixedkeywords[]=$keyword;
+                }
             }
         }
-    }
     $keywords=$fixedkeywords;
     $keywords=array_unique($keywords);
     $search=implode(", ",$keywords);
@@ -545,12 +566,12 @@ function compile_search_actions($top_actions)
                 {
                 $option_name = 'save_collection_to_dash';
                 $data_attribute['url'] = sprintf('
-                    %spages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=%s&order_by=%s&sort=%s
+                    %spages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=!collection%s&order_by=%s&sort=%s
                     ',
                     $baseurl_short,
-                    $search,
-                    $order_by,
-                    $sort
+                    urlencode($collection),
+                    urlencode($order_by),
+                    urlencode($sort)
                 );
                 }
 
@@ -559,7 +580,6 @@ function compile_search_actions($top_actions)
 			$options[$o]['data_attr']=$data_attribute;
 			$o++;
             }
-
         // Save search as Smart Collections
         if($allow_smart_collections && substr($search, 0, 11) != '!collection')
             {
@@ -617,7 +637,7 @@ function compile_search_actions($top_actions)
                     urlencode($sort),
                     urlencode($archive),
                     urlencode($daylimit),
-                urlencode($starsearch)
+                     urlencode($starsearch)
                 );
 
                 $options[$o]['value']='save_search_items_to_collection';
@@ -648,7 +668,7 @@ function compile_search_actions($top_actions)
 				$options[$o]['data_attr']=array();
 				$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
 				$o++;
-                }
+                }                
             }
         }
 
@@ -1078,7 +1098,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection = explode(' ', $search);
         $collection = str_replace('!collection', '', $collection[0]);
         $collection = explode(',', $collection); // just get the number
-        $collection = escape_check($collection[0]);
+        $collection = (int)$collection[0];
 
         # Check access
         if(!collection_readable($collection))
