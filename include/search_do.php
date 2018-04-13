@@ -552,7 +552,7 @@ function do_search(
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
 
-                            if ($keyref === false && !$omit && !$empty && count($wildcards) == 0)
+                            if ($keyref === false && !$omit && !$empty && count($wildcards) == 0 && !$field_short_name_specified)
                                 {
     
                                 // ********************************************************************************
@@ -597,6 +597,7 @@ function do_search(
                                     if(count($alternative_keywords) > 0)
                                         {
                                         $alternative_keywords_sql = " OR [keyword_match_table].keyword IN ('" . join("','", $alternative_keywords) . "')";
+                                        debug("do_search(): \$alternative_keywords_sql = {$alternative_keywords_sql}");
                                         }
                                     }
 
