@@ -130,8 +130,6 @@ function HookSimplesamlAllProvideusercredentials()
 			simplesaml_authenticate();
 			}
 		$attributes = simplesaml_getattributes();
-
-		$usernamesuffix = $simplesaml_username_suffix;
         
         if(strpos($simplesaml_username_attribute,",")!==false) // Do we have to join two fields together?
 		    {
@@ -183,9 +181,29 @@ function HookSimplesamlAllProvideusercredentials()
 
 		$password_hash= md5("RSSAML" . $scramble_key . $username);
 
-		$userid=0;
+        $userid = 0;
         $currentuser = sql_query("select ref, usergroup from user where username='" . $username . "'");
-        if(count($currentuser)>0) {$userid = $currentuser[0]["ref"];}
+        $legacy_username_used = false;
+
+        // Attempt one more time with ".sso" suffix. Legacy way of distinguishing between SSO accounts and normal accounts
+        if(is_array($currentuser) && count($currentuser) == 0)
+            {
+            $legacy_username_escaped = escape_check("{$username}.sso");
+            $currentuser = sql_query("SELECT ref, usergroup FROM user WHERE username = '{$legacy_username_escaped}'");
+            $legacy_username_used = true;
+            }
+
+        if(count($currentuser) > 0)
+            {
+            $userid = $currentuser[0]["ref"];
+
+            if($legacy_username_used)
+                {
+                $username_escaped = escape_check($username);
+                $userid_escaped = escape_check($userid);
+                sql_query("UPDATE user SET username = '{$username_escaped}' WHERE ref = '{$userid_escaped}'");
+                }
+            }
 
 		debug ("SimpleSAML - got user details username=" . $username . ", email: " . (isset($email)?$email:""));
 
