@@ -466,7 +466,7 @@ function refine_searchstring($search)
             $keyword=str_replace(" ","-",$keyword);
             }
              
-        if(strpos($keyword,"!collection") == 0)
+        if(strpos($keyword,"!collection") === 0)
             {
             $collection=intval(substr($search,11));
             $keyword = "!collection" . $collection;
