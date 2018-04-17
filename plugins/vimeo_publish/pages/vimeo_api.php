@@ -88,11 +88,6 @@ if(0 < $vimeo_publish_video_description_field)
     $default_video_description = get_data_by_field($ref, $vimeo_publish_video_description_field);
     }
 
-if(0 < $vimeo_publish_video_tags_field)
-    {
-    $default_video_tags = get_data_by_field($ref, $vimeo_publish_video_tags_field);
-    }
-
 
 include '../../../include/header.php';
 ?>
