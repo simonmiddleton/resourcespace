@@ -1,0 +1,7 @@
+name: falcon_link
+desc: [Advanced] Publish resources to Falcon.io
+author: Montala Limited
+version: 1.0
+config_url: /plugins/falcon_link/pages/setup.php
+category: content sharing
+
