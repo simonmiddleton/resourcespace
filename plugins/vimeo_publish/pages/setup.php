@@ -15,14 +15,14 @@ if(!in_array($plugin_name, $plugins))
 $plugin_page_heading = $lang['vimeo_publish_configuration'];
 
 // Build Insructions from language strings:
-$vimeo_api_instructions = '<ul>';
+$vimeo_api_instructions = '<div class="Question"><ul>';
 $vimeo_api_instruction_conditions = 1;
 while(isset($lang['vimeo_api_instructions_condition_' . $vimeo_api_instruction_conditions]))
     {
     $vimeo_api_instructions .= '<li>' . $lang['vimeo_api_instructions_condition_' . $vimeo_api_instruction_conditions] . '</li>';
     $vimeo_api_instruction_conditions++;
     }
-$vimeo_api_instructions .= '</ul>';
+$vimeo_api_instructions .= '</ul><div class="clearerleft"></div></div>';
 
 
 
