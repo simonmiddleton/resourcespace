@@ -1700,32 +1700,46 @@ function register_plugin($plugin)
 	
 /**
  * Recursively removes a directory.
- * 
- * Recursively removes a directory.  Currently this is only used by the plugin
- * management interface to permanently delete a plugin.  This function does
- * not check to see that php is <em>allowed</em> to delete the specified
- * path currently.
- * 
- * @todo ADD - Check that PHP has permissions to delete $path
+ *  
  * @param string $path Directory path to remove.
+ *
+ * @return boolean
  */
-function rcRmdir ($path){ # Recursive rmdir function.
-	if (is_dir($path)){
-	    $dirh = opendir($path);
-	    while (false !== ($file = readdir($dirh))){
-	        if (is_dir($path.'/'.$file)){
-	        	if (!((strlen($file)==1 && $file[0]=='.') || (substr($file,0,2)=='..'))){
-	        		rcRmdir($path.'/'.$file);
-	        	}
-	        }
-	        else {
-	            unlink($path.'/'.$file);
+function rcRmdir ($path)
+	{
+	debug("rcRmdir: " . $path);
+	if (is_dir($path))
+		{
+		$foldercontents = new DirectoryIterator($path);
+		foreach($foldercontents as $objectindex => $object)
+			{
+			if($object->isDot())
+                {
+                continue;
+                }
+            $objectname = $object->getFilename();
+			
+			
+			if ($object->isDir() && $object->isWritable())
+                {
+				rcRmdir($path . DIRECTORY_SEPARATOR . $objectname);
+				}				
+	        else
+				{
+	            $success = @unlink($path . DIRECTORY_SEPARATOR . $objectname);
+				}
+				
+			if(!$success)
+				{
+				debug("rcRmdir: Unable to delete " . $path . DIRECTORY_SEPARATOR . $objectname);
+				return false;
+				}
 	        }
 		}
-		closedir($dirh);
-		rmdir($path);
+	$success = @rmdir($path);
+    debug("rcRmdir: " . $path . " - " . ($success ? "SUCCESS" : "FAILED"));
+	return $success;
 	}
-}
 
 function get_resource_table_joins(){
 	
