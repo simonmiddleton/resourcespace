@@ -280,7 +280,7 @@ function message_send_unread_emails()
 // Remove all messages related to a certain activity (e.g. resource request or resource submission) matching the given ref(s)
 function message_remove_related($remote_activity=0,$remote_refs=array())
 	{
-	if($remote_activity==0 || $remote_refs==0 || count($remote_refs)==0 ){return false;}
+	if($remote_activity==0 || $remote_refs==0 || (is_array($remote_refs) && count($remote_refs)==0) ){return false;}
 	if(!is_array($remote_refs)){$remote_refs=array($remote_refs);}
     $relatedmessages = sql_array("select ref value from message where related_activity='$remote_activity' and related_ref in (" . implode(',',$remote_refs) . ");","");
     if(count($relatedmessages)>0)
