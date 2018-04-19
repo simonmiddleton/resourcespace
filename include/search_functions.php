@@ -121,16 +121,16 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         if ($search!="") {$search.=", ";}
         $search.="enddate:" . getval("enddate",""); 
         }
-    if (getval("startyear","")!="")
+    if (getval("start_year","")!="")
         {       
         if ($search!="") {$search.=", ";}
-        $search.="startdate:" . getval("startyear","");
-        if (getval("startmonth","")!="")
+        $search.="startdate:" . getval("start_year","");
+        if (getval("start_month","")!="")
             {
-            $search.="-" . getval("startmonth","");
-            if (getval("startday","")!="")
+            $search.="-" . getval("start_month","");
+            if (getval("start_day","")!="")
                 {
-                $search.="-" . getval("startday","");
+                $search.="-" . getval("start_day","");
                 }
             else
                 {
@@ -142,16 +142,16 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             $search.="-01-01";
             }
         }   
-    if (getval("endyear","")!="")
+    if (getval("end_year","")!="")
         {
         if ($search!="") {$search.=", ";}
-        $search.="enddate:" . getval("endyear","");
-        if (getval("endmonth","")!="")
+        $search.="enddate:" . getval("end_year","");
+        if (getval("end_month","")!="")
             {
-            $search.="-" . getval("endmonth","");
-            if (getval("endday","")!="")
+            $search.="-" . getval("end_month","");
+            if (getval("end_day","")!="")
                 {
-                $search.="-" . getval("endday","");
+                $search.="-" . getval("end_day","");
                 }
             else
                 {
@@ -304,15 +304,15 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             else
                 {
                 #Date range search -  start date
-                if (getval($name . "_startyear","")!="")
+                if (getval($name . "_start_year","")!="")
                     {
-                    $datepart.= "start" . getval($name . "_startyear","");
-                    if (getval($name . "_startmonth","")!="")
+                    $datepart.= "start" . getval($name . "_start_year","");
+                    if (getval($name . "_start_month","")!="")
                         {
-                        $datepart.="-" . getval($name . "_startmonth","");
-                        if (getval($name . "_startday","")!="")
+                        $datepart.="-" . getval($name . "_start_month","");
+                        if (getval($name . "_start_day","")!="")
                             {
-                            $datepart.="-" . getval($name . "_startday","");
+                            $datepart.="-" . getval($name . "_start_day","");
                             }
                         else
                             {
@@ -326,15 +326,15 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     }           
                     
                 #Date range search -  end date  
-                if (getval($name . "_endyear","")!="")
+                if (getval($name . "_end_year","")!="")
                     {
-                    $datepart.= "end" . getval($name . "_endyear","");
-                    if (getval($name . "_endmonth","")!="")
+                    $datepart.= "end" . getval($name . "_end_year","");
+                    if (getval($name . "_end_month","")!="")
                         {
-                        $datepart.="-" . getval($name . "_endmonth","");
-                        if (getval($name . "_endday","")!="")
+                        $datepart.="-" . getval($name . "_end_month","");
+                        if (getval($name . "_end_day","")!="")
                             {
-                            $datepart.="-" . getval($name . "_endday","");
+                            $datepart.="-" . getval($name . "_end_day","");
                             }
                         else
                             {

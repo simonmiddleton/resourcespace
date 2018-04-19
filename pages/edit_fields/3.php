@@ -47,7 +47,7 @@ foreach($field['nodes'] as $node)
     if('' != trim($node['name']))
         {
         ?>
-        <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>"<?php if(in_array($node['ref'], $selected_nodes)) { ?> selected<?php } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
+        <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>"<?php if(in_array($node['ref'], $selected_nodes) || (isset($user_set_values[$field['ref']]) && $node['ref']==$user_set_values[$field['ref']])) { ?> selected<?php } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
         <?php
         }
     }

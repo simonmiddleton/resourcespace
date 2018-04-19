@@ -121,7 +121,7 @@ if($display_as_radiobuttons)
                            name="<?php echo $name; ?>"
                            value="<?php echo $node['ref']; ?>"
                        <?php
-                       if(in_array($node['ref'], $selected_nodes))
+                       if(in_array($node['ref'], $selected_nodes) || (isset($user_set_values[$field['ref']]) && $node['ref'] == $user_set_values[$field['ref']]))
                             {
                             ?>
                             checked
