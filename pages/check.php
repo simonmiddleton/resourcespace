@@ -36,22 +36,31 @@ function ResolveKB($value)
 
 # Check ResourceSpace Build
 $build = '';
-if ($productversion == 'SVN'){
- $p_version = 'Trunk (SVN)'; # Should not be translated as this information is sent to the bug tracker.
- //Try to run svn info to determine revision number
- $out = array();
- exec('svn info ../', $out);
- foreach($out as $outline){
-  $matches = array();
-  if (preg_match('/^Revision: (\d+)/i', $outline, $matches)!=0){
-   $build .= "r" . $matches[1];
-  }
-  $matches = array();
-  if (preg_match('/^Relative URL: (.*)/i', $outline, $matches)!=0){
-   $build = str_replace("^","",$matches[1]) . " " . $build;
-  }
- } 
-}
+if ($productversion == 'SVN')
+    {
+    $p_version = 'Trunk (SVN)'; # Should not be translated as this information is sent to the bug tracker.
+    //Try to run svn info to determine revision number
+    $out = array();
+    exec('svn info ../', $out);
+    foreach($out as $outline)
+        {
+        $matches = array();
+        if (preg_match('/^Revision: (\d+)/i', $outline, $matches)!=0)
+            {
+            $build .= "r" . $matches[1];
+            }
+        $matches = array();
+        if (preg_match('/^Relative URL: (.*)/i', $outline, $matches)!=0)
+            {
+            $build = str_replace("^","",$matches[1]) . " " . $build;
+            }
+        elseif (strpos($outline, "URL: ") === 0)
+            {
+            $urlparts = explode("/",$outline);
+            $build = end($urlparts) . " ";
+            }
+        } 
+    }
 
 # ResourceSpace version
 $p_version = $productversion == 'SVN'?'Subversion ' . $build:$productversion; # Should not be translated as this information is sent to the bug tracker.
