@@ -1889,7 +1889,7 @@ $lang['collection_disk_usage'] = 'Disk space used by all resources';
 $lang["matchingresourceslabel"]="Matching resources";
 
 # CSV Export of Search results
-$lang['csvExportResultsMetadata'] = 'CSV Export - Results metadata';
+$lang['csvExportResultsMetadata'] = 'CSV Export - All metadata';
 $lang['csvExportResultsMetadataPersonal'] = 'CSV Export - Personal data fields';
 $lang['csvAddMetadataCSVToArchive'] = 'Include metadata CSV file to the archive?';
 
