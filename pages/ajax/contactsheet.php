@@ -349,7 +349,7 @@ if ($preview && isset($imagemagick_path))
     }
 
 // Create a resource based on this PDF file or download it?
-if($contact_sheet_resource)
+if($contact_sheet_resource && enforcePostRequest(getval("ajax", false)))
     {
     $new_resource = create_resource(1, 0);
 

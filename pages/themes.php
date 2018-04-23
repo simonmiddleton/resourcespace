@@ -25,7 +25,7 @@ foreach ($_GET as $key => $value)
 	}
     
 
-if(getval("create","") != "")
+if(getval("create","") != "" && enforcePostRequest(getval("ajax", false)))
 	{
 	// Create the collection and reload the page
 	$collectionname = getvalescaped("collectionname","");

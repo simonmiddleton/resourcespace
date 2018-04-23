@@ -26,7 +26,7 @@ $comments=get_collection_comments($collection);
 if (count($comments)==0 && $feedback_resource_select==false) {$errors=$lang["feedbacknocomments"];}
 
 $comment="";
-if (getval("save","")!="")
+if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	# Save comment
 	$comment=trim(getvalescaped("comment",""));
@@ -69,8 +69,9 @@ if ($errors!="")
 <?php if ($done) { ?><p><?php echo $lang["feedbacksent"]?></p><?php } else { ?>
 
 <form method="post" action="<?php echo $baseurl_short?>pages/collection_feedback.php">
-<input type="hidden" name="k" value="<?php echo htmlspecialchars($k) ?>">
-<input type="hidden" name="collection" value="<?php echo htmlspecialchars($collection) ?>">
+    <?php generateFormToken("collection_feedback"); ?>
+    <input type="hidden" name="k" value="<?php echo htmlspecialchars($k) ?>">
+    <input type="hidden" name="collection" value="<?php echo htmlspecialchars($collection) ?>">
 
 <p><a class="downloadcollection" href="<?php echo $baseurl_short?>pages/collection_download.php?collection=<?php echo urlencode($collection)?>&k=<?php echo urlencode($k)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["download_collection"]?></a></p>
 <?php if ($feedback_resource_select)

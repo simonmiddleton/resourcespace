@@ -334,7 +334,7 @@ if($modify_resource_type_field_columns!=''){
 
 $type_change = false;
 
-if(getval("save","")!="" && getval("delete","")=="")
+if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false))
 	{
 	# Save field config
 	$sync_field = getvalescaped("sync_field",0);
@@ -405,7 +405,7 @@ if(getval("save","")!="" && getval("delete","")=="")
 	}
 
 $confirm_delete=false;	
-if (getval("delete","")!="")
+if (getval("delete","")!="" && enforcePostRequest(false))
 	{	
 	$confirmdelete=getvalescaped("confirmdelete","");
 	# Check for resources of this  type
@@ -476,7 +476,7 @@ var current_type      = <?php echo ('' != $fielddata['type'] ? $fielddata['type'
  
 
 <form method="post" class="FormWide" action="<?php echo $baseurl_short?>pages/admin/admin_resource_type_field_edit.php?ref=<?php echo $fielddata["ref"] . "&restypefilter=" . $restypefilter . "&field_order_by=" . $field_order_by . "&field_sort=" . $field_sort ."&find=" . urlencode($find); ?>" onSubmit="return CentralSpacePost(this,true);">
-
+    <?php generateFormToken("admin_resource_type_field_edit"); ?>
 <input type="hidden" name="ref" value="<?php echo urlencode($ref) ?>">
 
 <input type="hidden" name="newfield" value="<?php echo ($newfield)?"TRUE":""; ?>">

@@ -12,7 +12,7 @@ include "../../include/research_functions.php";
 
 $ref=getvalescaped("ref","",true);
 
-if (getval("submitted","")!="")
+if (getval("submitted", "") != "" && enforcePostRequest(false))
 	{
 	# Save research request data
 	save_research_request($ref);
@@ -28,6 +28,7 @@ include "../../include/header.php";
 <h1><?php echo $lang["editresearchrequest"]?></h1>
 
 <form method="post" action="<?php echo $baseurl_short?>pages/team/team_research_edit.php" onSubmit="return CentralSpacePost(this,true);">
+    <?php generateFormToken("team_research_edit"); ?>
 <input type=hidden name="submitted" value="true">
 <input type=hidden name="ref" value="<?php echo htmlspecialchars($ref) ?>">
 

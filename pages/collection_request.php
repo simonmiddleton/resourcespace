@@ -24,7 +24,7 @@ if($ref=="" && isset($usercollection))
 $cinfo=get_collection($ref);
 $error=false;
 
-if (getval("save","")!="")
+if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	if ($k!="" || $userrequestmode==0)
 		{
@@ -75,7 +75,8 @@ include "../include/header.php";
   <p><?php echo text("introtext")?></p>
   
 	<form method="post" onsubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_request.php">  
-	<input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
+	<?php generateFormToken("collection_request"); ?>
+    <input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
 	<input type=hidden name="k" value="<?php echo htmlspecialchars($k) ?>">
 	
 	<div class="Question">

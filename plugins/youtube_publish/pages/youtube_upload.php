@@ -10,7 +10,7 @@ global $baseurl, $baseurl_short,$view_title_field, $youtube_publish_url_field, $
 
 
 $deletetokens=getvalescaped("deletetokens",false);
-if ($deletetokens)
+if ($deletetokens && enforcePostRequest(false))
 	{
 	sql_query("update user set youtube_access_token='', youtube_refresh_token='', youtube_username='' where ref='$userref'");
 	}
@@ -256,6 +256,7 @@ if ($youtube_username != '')
 	<?php ;}?>
 
 <form action="<?php echo $baseurl ?>/plugins/youtube_publish/pages/youtube_upload.php?resource=<?php echo $ref ?>" method="post">
+    <?php generateFormToken("youtube_upload"); ?>
 	<div class="Question" >
 		<label for="video_title"><?php echo $lang["youtube_publish_video_title"] ?></label>
 		<input type="text" class="stdwidth" name="video_title" value="<?php echo $title; ?>"/>

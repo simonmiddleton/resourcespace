@@ -204,6 +204,8 @@ $found_day="";if (isset($set_fields["day"])) {$found_day=$set_fields["day"];}
 	
 	<form id="simple_search_form" method="post" action="<?php echo $baseurl?>/pages/search.php" onSubmit="return CentralSpacePost(this,true);">
     <?php
+    generateFormToken("simple_search_form");
+
     if(!hook("replacesearchbox"))
         {
         ?>
@@ -565,7 +567,7 @@ elseif($restypes=='')
 			} ?>
 		
 		// Send AJAX post request.
-		jQuery.post('<?php echo $baseurl_short?>pages/ajax/filter_basic_search_options.php?nofilter=' + encodeURIComponent(clickedfieldno) + '&filter=' + encodeURIComponent(Filter), { success: function(data, textStatus, jqXHR) {eval(data);} });
+		jQuery.get('<?php echo $baseurl_short?>pages/ajax/filter_basic_search_options.php?nofilter=' + encodeURIComponent(clickedfieldno) + '&filter=' + encodeURIComponent(Filter), { success: function(data, textStatus, jqXHR) {eval(data);} });
 		<?php } ?>
 		}
 		

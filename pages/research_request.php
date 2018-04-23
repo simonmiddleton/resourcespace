@@ -8,7 +8,7 @@ $name        = getval('name', '');
 $email       = getval('email', '');
 $description = getval('description', '');
 
-if (getval("save","") != "")
+if (getval("save","") != "" && enforcePostRequest(false))
     {
     $errors=false;
     if ($name == "") {$errors=true;$error_name=true;}
@@ -33,8 +33,10 @@ include "../include/header.php";
     <p class="greyText noPadding">* <?php echo $lang["requiredfield"]?></p>
     <?php if (!hook('replace_research_request_form')) { ?>
     <form method="post" action="<?php echo $baseurl_short?>pages/research_request.php">
+        <?php
+        generateFormToken("research_request");
 
-        <?php if (getval("assign","")!="") { ?>
+        if (getval("assign","")!="") { ?>
         <div class="Question">
             <label><?php echo $lang["requestasuser"]?></label>
             <select name="as_user" class="stdwidth">

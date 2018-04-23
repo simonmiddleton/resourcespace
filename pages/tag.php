@@ -6,7 +6,7 @@ include "../include/resource_functions.php";
 
 if (!$speedtagging) {exit("This function is not enabled.");}
 
-if (getval("save","")!="")
+if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	$ref=getvalescaped("ref","",true);
 	$keywords=getvalescaped("keywords","");
@@ -126,7 +126,7 @@ include "../include/header.php";
 
 <form method="post" id="mainform" action="<?php echo $baseurl_short?>pages/tag.php">
 <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref)?>">
-
+<?php generateFormToken("mainform"); ?>
 <h1><?php echo $lang["speedtagging"]?></h1>
 <p><?php echo text("introtext")?></p>
 

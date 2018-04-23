@@ -73,6 +73,7 @@ function deleteaction(ref)
 
 <div class="BasicsBox">
     <form method="post" name="form_filter_action" id="form_filter_action" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_actions.php">
+        <?php generateFormToken("form_filter_action"); ?>
 		<div class="Question">
 			<label for="filterstate"><?php echo $lang["rse_workflow_action_filter"]?></label>
 			<div class="tickset">

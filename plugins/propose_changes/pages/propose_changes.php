@@ -49,7 +49,7 @@ if($editaccess)
     {
     $view_user = getvalescaped("proposeuser",0);
     
-    if(getval("resetform","") != "")
+    if(getval("resetform","") != "" && enforcePostRequest(false))
         {
         delete_proposed_changes($ref, $view_user);
         }        
@@ -64,7 +64,7 @@ if($editaccess)
     }
 else
     {
-     if(getval("resetform","") != "")
+     if(getval("resetform","") != "" && enforcePostRequest(false))
         {
         delete_proposed_changes($ref, $userref);
         }
@@ -78,7 +78,13 @@ $resource=get_resource_data($ref);
 $proposefields=get_resource_field_data($ref,false,true);
 
 // Save data
-if (getval("save","")!="" || getval("submitted","")!="" && getval("resetform","")=="")
+if(
+    (
+        getval("save", "") != ""
+        || (getval("submitted", "") != "" && getval("resetform", "") == "")
+    )
+    && enforcePostRequest(false)
+)
 	{	
 	if($editaccess)
 		{
@@ -645,7 +651,8 @@ if(!$editaccess)
 		?>
 		<div class="Question" id="ProposeChangesUsers">
 		<form id="propose_changes_select_user_form" method="post" action="<?php echo $baseurl_short . "plugins/propose_changes/pages/propose_changes.php" . "?ref=" . urlencode($ref) . "&amp;search=" . urlencode($search) . "&amp;offset=" . urlencode($offset) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive)?>" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
-                <label><?php echo $lang["propose_changes_view_user"]; ?></label>
+            <?php generateFormToken("propose_changes_select_user_form"); ?>
+            <label><?php echo $lang["propose_changes_view_user"]; ?></label>
             <?php
             if(count($userproposals) > 1)
                 {?>
@@ -692,6 +699,7 @@ if(!$editaccess)
 	<form id="propose_changes_form" method="post" action="<?php
     echo $baseurl_short . "plugins/propose_changes/pages/propose_changes.php" . "?ref=" . urlencode($ref) . "&amp;search=" . urlencode($search) . "&amp;offset=" . urlencode($offset) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=" . urlencode($sort) . "&amp;archive=" . urlencode($archive) ;
     ?>"  onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+    <?php generateFormToken("propose_changes_form"); ?>
 	<h2 id="ProposeChangesHead"><?php echo $lang["propose_changes_proposed_changes"] ?></h2><?php
 		?><div id="ProposeChangesSection">
                 <div class="Question ProposeChangesQuestion" id="propose_changes_field_header" >

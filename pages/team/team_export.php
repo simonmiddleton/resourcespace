@@ -12,7 +12,7 @@ include "../../include/reporting_functions.php";
 set_time_limit(0);
 $type=getvalescaped("type","");
 
-if ($type!="")
+if ($type!="" && enforcePostRequest(false))
 	{
 	if ($type=="sql") { $param="";$extension="sql";}
 	if ($type=="xml") { $param="--xml";$extension="xml";}
@@ -42,6 +42,7 @@ include "../../include/header.php";
   <h1><?php echo $lang["exportdata"]?></h1>
   
 <form method="post" action="<?php echo $baseurl_short?>pages/team/team_export.php">
+    <?php generateFormToken("team_export"); ?>
 <div class="Question">
 <label for="type"><?php echo $lang["exporttype"]?></label>
 <select id="type" name="type" class="stdwidth">

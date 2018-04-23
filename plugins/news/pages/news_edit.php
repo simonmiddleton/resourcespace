@@ -16,7 +16,7 @@ if (array_key_exists("findtext",$_POST)) {$offset=0;} # reset page counter when 
 $findtext=getvalescaped("findtext","");
 
 $delete=getvalescaped("delete","");
-if ($delete!="")
+if ($delete!="" && enforcePostRequest(false))
 	{
 	# Delete news
 	delete_news($delete);
@@ -49,6 +49,7 @@ $jumpcount=1;
 
 <div class="BasicsBox">
 	<form method="post">
+        <?php generateFormToken("news_add"); ?>
 		<div class="QuestionSubmit">
 			<label for="buttons"> </label>		
 			<input name="create" type="submit" value="<?php echo $lang["news_add"]?>"/>
@@ -60,6 +61,7 @@ $jumpcount=1;
 
 
 <form method=post id="newsform">
+    <?php generateFormToken("newsform"); ?>
 <input type=hidden name="delete" id="newsdelete" value="">
 
 
@@ -101,6 +103,7 @@ for ($n=$offset;(($n<count($news)) && ($n<($offset+$per_page)));$n++)
 
 <div class="BasicsBox">
 	<form method="post">
+        <?php generateFormToken("news_search"); ?>
 		<div class="Question">
 			<label for="find"><?php echo $lang["news_search"]?><br/></label>
 			<div class="tickset">

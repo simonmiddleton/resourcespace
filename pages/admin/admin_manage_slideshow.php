@@ -18,7 +18,12 @@ $slideshow_id = getvalescaped('slideshow_id', null, true);
 $manageurl = $baseurl . "/pages/admin/admin_manage_slideshow.php";
 
 /* Re-order */
-if('true' === $ajax && ('moveup' === $action || 'movedown' === $action) && !is_null($slideshow_id))
+if(
+    'true' === $ajax
+    && ('moveup' === $action || 'movedown' === $action)
+    && !is_null($slideshow_id)
+    && enforcePostRequest($ajax)
+)
     {
     $response['sibling']           = null;
     $response['is_first_sibling']  = false;
@@ -88,7 +93,7 @@ if('true' === $ajax && ('moveup' === $action || 'movedown' === $action) && !is_n
     }
 
 /* Delete */
-if('true' === $ajax && 'delete' === $action && !is_null($slideshow_id))
+if('true' === $ajax && 'delete' === $action && !is_null($slideshow_id) && enforcePostRequest($ajax))
     {
     $response['error']   = '';
     $response['success'] = true;
@@ -174,7 +179,7 @@ foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
             <label>
             <?php echo $lang["slideshow_use_static_image"]; ?>    
             </label>
-            <input type="checkbox" name="slideshow_static_image" id="slideshow_static_image_checkbox" <?php if($static_slideshow_image){echo "checked";} ?> onchange="if(this.checked){jQuery.post('<?php echo $manageurl ?>?ajax=true&static=true');}else{jQuery.post('<?php echo $manageurl ?>?ajax=true&static=false');}"></input>
+            <input type="checkbox" name="slideshow_static_image" id="slideshow_static_image_checkbox" <?php if($static_slideshow_image){echo "checked";} ?> onchange="if(this.checked){jQuery.get('<?php echo $manageurl ?>?ajax=true&static=true');}else{jQuery.get('<?php echo $manageurl ?>?ajax=true&static=false');}"></input>
         <div class="clearerleft"></div>
         </div>
         <?php
@@ -190,7 +195,8 @@ function ReorderSlideshowImage(id, direction)
         {
         ajax: true,
         action: direction,
-        slideshow_id: id
+        slideshow_id: id,
+        <?php echo generateAjaxToken("ReorderSlideshowImage"); ?>
         };
 
     jQuery.post(post_url, post_data, function(response)
@@ -234,7 +240,8 @@ function DeleteSlideshowImage(id)
         {
         ajax: true,
         action: 'delete',
-        slideshow_id: id
+        slideshow_id: id,
+        <?php echo generateAjaxToken("DeleteSlideshowImage"); ?>
         };
 
     jQuery.post(post_url, post_data, function(response)

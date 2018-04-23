@@ -197,6 +197,7 @@ include "../../../include/header.php";
   <div class="VerticalNav">
 
     <form id="form1" name="form1" method="post" action="">
+        <?php generateFormToken("form1"); ?>
 	<p><a href="posixldapauth_manual.pdf" target="_blank">Click here for the Manual</a></p>
       <p><label for="enable"><?php echo $lang['posixldapauth_enabled'] ?></label><input type="checkbox" name="enable" id="enable" accesskey="e" tabindex="1" <?php echo $enabled ?> /></p>
 

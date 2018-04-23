@@ -83,7 +83,7 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
 
 
 <div class="BasicsBox">
-    <form method="post" action="<?php echo $baseurl_short?>pages/team/team_research.php">
+    <form method="GET" action="<?php echo $baseurl_short?>pages/team/team_research.php">
 		<div class="Question">
 			<label for="findpublic"><?php echo $lang["searchresearchrequests"]?></label>
 			<div class="tickset">

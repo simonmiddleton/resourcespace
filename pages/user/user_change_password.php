@@ -50,7 +50,7 @@ if(!$password_reset_mode)
    
 hook("preuserpreferencesform");
 
-if (getval("save","")!="")
+if(getval("save", "") != "" && enforcePostRequest(false))
 	{
 	if (hook('saveadditionaluserpreferences'))
 		{
@@ -110,7 +110,10 @@ include "../../include/header.php";
 
 	<form method="post" action="<?php echo $baseurl_short?>pages/user/user_change_password.php">
 	<input type="hidden" name="expired" value="<?php echo htmlspecialchars(getvalescaped("expired",""))?>">
-	<?php hook('additionaluserpreferences');
+	<?php
+    generateFormToken("user_change_password");
+
+    hook('additionaluserpreferences');
 	
 	if(!$password_reset_mode)
 	    {?>

@@ -99,7 +99,7 @@ if (isset($show_error)){?>
     exit();}
 	
 $errors="";
-if (getval("save","")!="")
+if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# Email / share collection
 	# Build a new list and insert
@@ -153,8 +153,10 @@ else
 <form name="collectionform" method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_email.php<?php echo $linksuffix ?>&catshare=<?php if($themeshare==true){echo "true";}else{echo "false";}?>">
 <input type=hidden name=redirect id=redirect value=yes>
 <input type=hidden name=ref id="ref" value="<?php echo htmlspecialchars(trim($refArray[0])) ?>">
+<?php
+generateFormToken("collectionform");
 
-<?php if ($email_multi_collections && !$themeshare) { ?>
+if ($email_multi_collections && !$themeshare) { ?>
 <script type="text/javascript">
    function getSelected(opt) {
       var sel = '';

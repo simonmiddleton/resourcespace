@@ -20,6 +20,7 @@ $entercolname = getvalescaped("entercolname","");
 	<h2><?php echo $titleh2 ?></h2>
 
 	<form method="post" action="<?php echo $baseurl_short?>pages/team/team_batch_select.php?resource_type=<?php echo $resource_type?>">
+        <?php generateFormToken("team_batch"); ?>
 	<input type="hidden" name="no_exif" value="<?php echo getval("no_exif","")?>">
 	<input type="hidden" name="autorotate" value="<?php echo getval("autorotate","")?>">
 	<input type="hidden" name="collection_add" value="<?php echo $collection_add?>">

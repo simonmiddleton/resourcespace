@@ -37,7 +37,7 @@ else
 	$newcustom = false;
 	}
 
-if(($save != '') && getval('langswitch', '') == '' && $html_validation === true)
+if(($save != '') && getval('langswitch', '') == '' && $html_validation === true && enforcePostRequest(false))
 	{
 	# Save data
 	save_site_text($page, $name, $editlanguage, $editgroup);
@@ -101,7 +101,8 @@ if($html_validation !== true && $html_validation !== '')
 	?>
 
 	<form method="post" id="mainform" action="<?php echo $baseurl_short; ?>pages/admin/admin_content_edit.php?page=<?php echo urlencode($page);?>&name=<?php echo urlencode($name);?>&editlanguage=<?php echo urlencode($editlanguage);?>&editgroup=<?php echo urlencode($editgroup);?>&findpage=<?php echo urlencode($findpage)?>&findname=<?php echo urlencode($findname)?>&findtext=<?php echo urlencode($findtext)?>&offset=<?php echo urlencode($offset)?>">
-		<input type=hidden name=page value="<?php echo $page?>">
+		<?php generateFormToken("mainform"); ?>
+        <input type=hidden name=page value="<?php echo $page?>">
 		<input type=hidden name=name value="<?php echo $name?>">
 		<input type=hidden name=langswitch id="langswitch" value="">
 		<input type=hidden name=groupswitch id="groupswitch" value="">
@@ -285,7 +286,7 @@ jQuery('#checkhtml').click(function(e) {
 		var checktext = jQuery('#text').val();
 	}
 
-	jQuery.post('../tools/check_html.php', {'text': checktext}, function(response, status, xhr){
+	jQuery.get('../tools/check_html.php', {'text': checktext}, function(response, status, xhr){
 		CentralSpaceHideLoading();
 		jQuery('#submissionResponse').html(response);
 	});

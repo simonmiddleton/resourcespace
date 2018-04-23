@@ -21,7 +21,7 @@ function HookRse_workflowViewPageevaluation()
       
     foreach ($workflowactions as $workflowaction)
         {
-        if(getvalescaped("rse_workflow_action_" . $workflowaction["ref"],"")!="")
+        if(getvalescaped("rse_workflow_action_" . $workflowaction["ref"],"")!="" && enforcePostRequest(false))
             {
             $validstates = explode(',', $workflowaction['statusfrom']);
             $edit_access = get_edit_access($ref,$resource['archive'], '', $resource);
@@ -252,7 +252,10 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
 					<input type="hidden" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] ?>" value="true" >
 					<input type="hidden" name="more_workflow_action_<?php echo $validaction["ref"] ?>" id="more_workflow_action_<?php echo $validaction["ref"] ?>" value="" >       
 					<input type="submit" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] ?>" value="&nbsp;<?php echo i18n_get_translated($validaction["buttontext"]) ?>&nbsp;" onClick="return CentralSpacePost(document.getElementById('resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>'), true);" >
-					<?php hook("rse_wf_formend","",array($resource["archive"],$validaction["statusto"])) ?>
+					<?php
+                    generateFormToken("resource_{$ref}_workflowaction{$validaction['ref']}");
+                    hook("rse_wf_formend","",array($resource["archive"],$validaction["statusto"]));
+                    ?>
 				</form>
 				</td>
             </tr>                               

@@ -37,7 +37,7 @@ if(empty($nodes))
 //echo "nodes:";print_r($nodes);echo"<br/>";
 $default_node_value=$nodes[0]['name'];
 	
-if (getval("submit","")!="")
+if (getval("submit","")!="" && enforcePostRequest(false))
 	{
 	# we also need the node ids of all other options
 	$node_refs=array();
@@ -73,6 +73,7 @@ else
 		}
 	?>
 	<form method="post" action="update_empty_field_with_default.php">
+        <?php generateFormToken("update_empty_field_with_default"); ?>
 	<input type="hidden" name="field" value="<?php echo $field ?>">
 	<input type="hidden" name="col" value="<?php echo $collectionid ?>">
 	<input type="submit" name="submit" value="Update empty values with default '<?php echo $default_node_value?>' for field '<?php echo $fieldinfo["title"] . "'" . $extratext ?>">

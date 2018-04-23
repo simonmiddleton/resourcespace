@@ -22,7 +22,7 @@ $body=getvalescaped("body",0);
 if (getval("ref","")=="new"){$createnews=true;} else {$news=get_news($ref,"",""); $createnews=false;}
 
 
-if (getval("save","")!="")
+if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	# Save news
 	If ($createnews) {add_news($date,$title,$body);}
@@ -41,6 +41,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 <h1><?php echo $lang["news_edit"]?></h1>
 
 <form method=post id="mainform">
+    <?php generateFormToken("mainform"); ?>
 <input type=hidden name=name value="<?php echo $ref?>">
 
 <div class="Question"><label><?php echo $lang["date"]?></label><input name="date" class="stdwidth" value="<?php If ($createnews){echo date("Y-m-d H:i:s");}else{echo $news[0]["date"];}?>"></div>

@@ -15,7 +15,7 @@ if(!$edit_access)
     exit("Access denied");
     }
 
-if(getval('submitted', '') != '')
+if(getval('submitted', '') != '' && enforcePostRequest(false))
     {
     sql_query("DELETE FROM resource_usage WHERE ref = '$ref' AND resource = '$resource'");
     
@@ -33,6 +33,7 @@ include "../../../include/header.php";
     <h1><?php echo $lang['delete_usage']; ?></h1>
 
     <form method="post" action="<?php echo $baseurl_short?>plugins/resource_usage/pages/delete.php" onSubmit="return CentralSpacePost(this,true);">
+        <?php generateFormToken("resource_usage_deleteForm"); ?>
         <input type=hidden name="submitted" value="true">
         <input type=hidden name="ref" value="<?php echo $ref; ?>">
         <input type=hidden name="resource" value="<?php echo $resource; ?>">

@@ -33,7 +33,7 @@ if (!$valid)
 	?>
     <p><?php echo $lang["waitingforpaymentauthorisation"] ?></p>
 	   
-	<form method="post" action="<?php echo $baseurl_short?>pages/purchase_download.php">
+	<form method="get" action="<?php echo $baseurl_short?>pages/purchase_download.php">
 	<input type="submit" name="reload" value="&nbsp;&nbsp;&nbsp;<?php echo $lang["reload"] ?>&nbsp;&nbsp;&nbsp;">
 	</form>
 	<?php

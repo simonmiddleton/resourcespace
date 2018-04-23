@@ -47,7 +47,7 @@ if (trim($ref) != '')
     $resource   = $usage_data['resource'];
     }
 
-if(getval('submitted', '') != '')
+if(getval('submitted', '') != '' && enforcePostRequest(false))
     {
     $usage_location = getvalescaped('usage_location', '');
     $usage_medium   = getvalescaped('usage_medium', '');
@@ -92,6 +92,7 @@ include "../../../include/header.php";
     <h1><?php echo ($new_record ? $lang['new_usage'] : $lang['edit_usage']); ?></h1>
 
     <form method="post" action="<?php echo $baseurl_short?>plugins/resource_usage/pages/edit.php" onSubmit="return CentralSpacePost(this, true);">
+        <?php generateFormToken("resource_usage_editForm"); ?>
         <input type=hidden name="submitted" value="true">
         <input type=hidden name="ref" value="<?php echo $ref; ?>">
         <input type=hidden name="resource" value="<?php echo $resource; ?>">

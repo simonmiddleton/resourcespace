@@ -41,7 +41,7 @@ if ($copy!="")
 	refresh_collection_frame();
 	}
 
-if (getval("submitted","")!="")
+if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	# Save collection data
     $coldata["name"]            = getval("name","");
@@ -109,6 +109,7 @@ include "../include/header.php";
 <h1><?php echo $lang["editcollection"]?></h1>
 <p><?php echo text("introtext")?></p>
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_edit.php">
+    <?php generateFormToken("collectionform"); ?>
 	<input type="hidden" name="redirect" id="redirect" value="yes" >
 	<input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
 	<input type=hidden name="submitted" value="true">

@@ -46,7 +46,7 @@ $url_params = array("restypefilter"=>$restypefilter,
 $url=generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params);
 
 
-if (getval("newfield","")!="")
+if (getval("newfield","")!="" && enforcePostRequest(false))
 	{
     $newfieldname = getvalescaped("newfield","");
 	$newfieldrestype = getvalescaped("newfieldrestype",0,true);
@@ -137,7 +137,7 @@ else
   ?>
 
 <form method="post" id="AdminResourceTypeFieldForm" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",array("field_order_by"=>$field_order_by,"field_sort"=>$field_sort,"find" =>$find)) ?>" >
-		
+    <?php generateFormToken("AdminResourceTypeFieldForm"); ?>		
 	<div class="Question">  
 		<label for="restypefilter"><?php echo $lang["property-resource_type"]; ?></label>
 		<div class="tickset">
@@ -242,8 +242,7 @@ for ($n=0;$n<count($fields);$n++)
 
 
 <form method="post" id="AdminResourceTypeFieldForm2" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",array("field_order_by"=>$field_order_by,"field_sort"=>$field_sort,"restypefilter"=>$restypefilter)) ?>" >
-		
-		
+    <?php generateFormToken("AdminResourceTypeFieldForm2"); ?>
 	<div class="Question">
 			<label for="find"><?php echo $lang["find"]?></label>
 			<div class="tickset">

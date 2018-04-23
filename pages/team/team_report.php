@@ -61,7 +61,7 @@ if ($report!="" && (getval("createemail","")==""))
 
 include "../../include/header.php";	
 	
-if(getval('createemail', '') != '')
+if(getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false)))
 	{
 	$send_all_users       = false;
 	$report_receiver      = getval('report_receiver', '');
@@ -90,7 +90,7 @@ if(getval('createemail', '') != '')
 $delete = getvalescaped('delete', '');
 if($delete != '')
 	{
-	if('yes' == getvalescaped('delete_confirmed', ''))
+	if('yes' == getvalescaped('delete_confirmed', '') && enforcePostRequest(getval("ajax", false)))
 		{
 		delete_periodic_report($delete);
 		?>
@@ -106,6 +106,7 @@ if($delete != '')
 		<div class="BasicsBox">
 			<h2><?php echo $lang['report_periodic_email_delete_title']; ?></h2>
 			<form method="post" action="<?php echo $baseurl_short; ?>pages/team/team_report.php?delete=<?php echo urlencode($delete); ?>">
+                <?php generateFormToken("delete_periodic_report"); ?>
 				<div class="Question">
 					<label for="delete_confirmed"><?php echo $lang['report_periodic_email_delete_confirmation']; ?></label>
 					<input id="delete_confirmed" type="checkbox" name="delete_confirmed" value="yes" />
@@ -127,7 +128,7 @@ if($delete != '')
 $unsubscribe = getvalescaped('unsubscribe', '');
 if($unsubscribe != '')
 	{
-	if('yes' == getvalescaped('unsubscription_confirmed', ''))
+	if('yes' == getvalescaped('unsubscription_confirmed', '') && enforcePostRequest(getval("ajax", false)))
 		{
 		unsubscribe_user_from_periodic_report($userref, $unsubscribe);
 		?>
@@ -143,6 +144,7 @@ if($unsubscribe != '')
 		<div class="BasicsBox">
 			<h2><?php echo $lang['report_periodic_email_unsubscribe_title']; ?></h2>
 			<form method="post" action="<?php echo $baseurl_short; ?>pages/team/team_report.php?unsubscribe=<?php echo urlencode($unsubscribe); ?>">
+                <?php generateFormToken("unsubscribe_user_from_periodic_report"); ?>
 				<div class="Question">
 					<label for="unsubscription_confirmed"><?php echo $lang['report_periodic_email_unsubscribe_confirmation']; ?></label>
 					<input id="unsubscription_confirmed" type="checkbox" name="unsubscription_confirmed" value="yes" />
@@ -167,6 +169,7 @@ else
   <p><?php echo text("introtext")?></p>
   
 <form method="post" action="<?php echo $baseurl ?>/pages/team/team_report.php" onSubmit="if (!do_download) {return CentralSpacePost(this);}">
+    <?php generateFormToken("team_report"); ?>
 <div class="Question">
 <label for="report"><?php echo $lang["viewreport"]?></label><select id="report" name="report" class="stdwidth">
 <?php

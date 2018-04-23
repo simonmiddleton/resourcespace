@@ -38,7 +38,7 @@ if($backurl=="")
     $backurl=$baseurl . "/pages/admin/admin_resource_types.php?ref=" . $ref;
     }
 
-if (getval("save","")!="")
+if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	# Save resource type data
 
@@ -63,7 +63,7 @@ if (getval("save","")!="")
 	redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
 	}
 	
-if (getval("delete","")!="")
+if (getval("delete","")!="" && enforcePostRequest(false))
 	{
 	
 	$targettype=getvalescaped("targettype","");
@@ -122,9 +122,10 @@ include "../../include/header.php";
 <?php if (isset($saved_text)) { ?><div class="PageInfoMessage"><?php echo $saved_text?></div><?php } ?>
 
 <form method=post action="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo urlencode($ref) ?>&backurl=<?php echo urlencode ($url) ?>">
+<?php
+generateFormToken("admin_resource_type_edit");
 
-
-<?php if($confirm_delete)
+if($confirm_delete)
     {
     ?>
     <div class="PageInfoMessage">

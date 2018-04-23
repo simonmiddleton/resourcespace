@@ -158,7 +158,12 @@ render_dropdown_question(
 			}			
 			jQuery.post(
 				window.location,
-				{"tile":tile,"quicksave":"true","revokeallusers":revoke_all_users},
+				{
+                "tile": tile,
+                "quicksave": "true",
+                "revokeallusers": revoke_all_users,
+                <?php echo generateAjaxToken("processTileChange"); ?>
+                },
 				function(data){
 					jQuery("#tile"+tile).removeClass("positiveglow");
 					jQuery("#tile"+tile).removeClass("negativeglow");
@@ -205,7 +210,14 @@ render_dropdown_question(
 			}
 		}
 		function deleteDefaultDashTile(tileid) {
-				jQuery.post( "<?php echo $baseurl?>/pages/ajax/dash_tile.php",{"tile":tileid,"delete":"true"});
+				jQuery.post(
+                    "<?php echo $baseurl; ?>/pages/ajax/dash_tile.php",
+                    {
+                    "tile": tileid,
+                    "delete": "true",
+                    <?php echo generateAjaxToken("deleteDefaultDashTile"); ?>
+                    }
+                );
 			}
 	</script>
 </div>

@@ -13,7 +13,7 @@ if(!in_array($plugin_name, $plugins))
 $page_heading = "Auto-assign Managed Requests Configuration";
 
 // Add map
-if(getval('add_new', '') !== '') {
+if(getval('add_new', '') !== '' && enforcePostRequest(false)) {
     $user_group_new  = getval('user_group_new', '');
     $field_new       = getval('field_new', '');
     $field_value_new = getval('field_value_new', '');
@@ -49,7 +49,7 @@ $field_value_row = getval('field_value_row', '');
 $user_id_row     = getval('user_id_row', '');
 
 // Save map
-if(getval('save', '') !== '') {
+if(getval('save', '') !== '' && enforcePostRequest(false)) {
     $save_query = sprintf('
             UPDATE assign_request_map
                SET user_id = \'%s\',
@@ -68,7 +68,7 @@ if(getval('save', '') !== '') {
 }
 
 // Delete map
-if(getval('delete', '') !== '') {
+if(getval('delete', '') !== '' && enforcePostRequest(false)) {
     $delete_query = sprintf('
             DELETE FROM assign_request_map
                   WHERE id = \'%s\';
@@ -122,6 +122,7 @@ $rows = sql_query(
                 {
                 ?>
                 <form id="form<?php echo $row['id']; ?>" name="form<?php echo $row['id']; ?>" method="post" action="<?php echo $baseurl; ?>/plugins/autoassign_mrequests/pages/setup.php">
+                    <?php generateFormToken("form{$row['id']}"); ?>
                     <input type="hidden" name="id_row" value="<?php echo $row['id']; ?>" />
                     <tr id="row<?php echo $row['id']; ?>">
                         <td>
@@ -192,6 +193,7 @@ $rows = sql_query(
 
                 <!-- Add new map row -->
                 <form id="form1" name="form1" method="post" action="<?php echo $baseurl; ?>/plugins/autoassign_mrequests/pages/setup.php">
+                    <?php generateFormToken("form1"); ?>
                     <tr id="new_map_row">
                         <td>
                             <select name="user_group_new" id="resource_type_new" style="width:300px" onChange="filterUsers(this);">

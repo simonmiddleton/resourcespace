@@ -28,7 +28,7 @@ if ((!get_edit_access($ref,$resource["archive"], false,$resource) || checkperm('
 hook("pageevaluation");
 
 # Handle deleting a file
-if (getval("filedelete","")!="")
+if (getval("filedelete","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	$filedelete=explode(',',getvalescaped('filedelete',''));
 	foreach ($filedelete as $filedel){
@@ -87,7 +87,7 @@ if($alternative_file_resource_title)
 
 <form method=post id="fileform" action="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo $sort?>&archive=<?php echo urlencode($archive)?>">
 <input type=hidden name="filedelete" id="filedelete" value="">
-
+<?php generateFormToken("fileform"); ?>
 <div class="Listview"  id="altlistitems">
 	
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">

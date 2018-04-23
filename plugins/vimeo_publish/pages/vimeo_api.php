@@ -44,7 +44,7 @@ $vimeo_user_data            = array();
 
 // Try uplpoading resource to Vimeo
 $successfully_uploaded = false;
-if(getvalescaped('upload', false))
+if(getvalescaped('upload', false) && enforcePostRequest(false))
     {
     $video_id   = '';
     $file_path  = get_resource_path($ref, true, '', false, $resource_data['file_extension'], -1, 1, false, '', -1);
@@ -119,6 +119,7 @@ if(get_vimeo_user($vimeo_publish_client_id, $vimeo_publish_client_secret, $vimeo
     ?>
 
 <form method="post" action="<?php echo $vimeo_callback_url; ?>?resource=<?php echo $ref; ?>">
+    <?php generateFormToken("vimeo_api"); ?>
     <input type="hidden" name="upload" value="true"/>
     <div class="Question">
         <br>

@@ -24,7 +24,7 @@ $collectionid=getvalescaped("col", "");
 # Fetch field info
 $fieldinfo=sql_query("select * from resource_type_field where ref='$field'");$fieldinfo=$fieldinfo[0];
 
-if (getval("submit","")!="")
+if (getval("submit","")!="" && enforcePostRequest(false))
 	{
 	echo "<pre>";
 	
@@ -55,6 +55,7 @@ else
 		}
 	?>
 	<form method="post" action="unindex_field.php">
+        <?php generateFormToken("Unindex_field"); ?>
 	<input type="hidden" name="field" value="<?php echo $field ?>">
 	<input type="hidden" name="col" value="<?php echo $collectionid ?>">
 	<input type="submit" name="submit" value="Un-Index field '<?php echo $fieldinfo["title"] . "'" . $extratext ?>">

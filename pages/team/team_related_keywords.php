@@ -67,12 +67,12 @@ for ($n=$offset;(($n<count($keywords)) && ($n<($offset+$per_page)));$n++)
 
 
 <div class="BasicsBox">
-    <form method="post" action="<?php echo $baseurl_short?>pages/team/team_related_keywords.php">
+    <form method="GET" action="<?php echo $baseurl_short?>pages/team/team_related_keywords.php">
 		<div class="Question">
 			<label for="find"><?php echo $lang["searchkeyword"]?></label>
 			<div class="tickset">
 			 <div class="Inline"><input type=text name="find" id="find" value="<?php echo $find?>" maxlength="100" class="shrtwidth" /></div>
-			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" /></div>
+			 <div class="Inline"><input name="Submit" type="submit" value="<?php echo $lang["searchbutton"]?>" /></div>
 			</div>
 			<div class="clearerleft"> </div>
 		</div>
@@ -81,11 +81,12 @@ for ($n=$offset;(($n<count($keywords)) && ($n<($offset+$per_page)));$n++)
 
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/team/team_related_keywords_edit.php">
+        <?php generateFormToken("related_keywords"); ?>
 		<div class="Question">
 			<label for="create"><?php echo $lang["newkeywordrelationship"]?></label>
 			<div class="tickset">
 			 <div class="Inline"><input type=text name="keyword" id="keyword" value="" maxlength="100" class="shrtwidth" /></div>
-			 <div class="Inline"><input name="createsubmit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" /></div>
+			 <div class="Inline"><input name="createsubmit" type="submit" value="<?php echo $lang["create"]?>" /></div>
 			</div>
 			<div class="clearerleft"> </div>
 		</div>

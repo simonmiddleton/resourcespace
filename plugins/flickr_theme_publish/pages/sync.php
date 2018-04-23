@@ -60,11 +60,11 @@ if ($validtoken){
 	}
 		
 		
-	if (getval("publish_all","")!=""){
+	if (getval("publish_all","")!="" && enforcePostRequest(false)){
 		# Perform sync publishing all (updating any existing)
 		sync_flickr("!collection" . $theme,false,$photoset,$photoset_name,getvalescaped("private",""));
 	}
-	elseif (getval("publish_new","")!=""){
+	elseif (getval("publish_new","")!="" && enforcePostRequest(false)){
 		# Perform sync publishing new only.
 		sync_flickr("!collection" . $theme,true,$photoset,$photoset_name,getvalescaped("private",""));
 	}
@@ -78,7 +78,7 @@ if ($validtoken){
 		
 		?>
 		<form method="post" id='flickr_publish'>
-	
+            <?php generateFormToken("flickr_publish"); ?>
 		<!-- Public/private? -->
 		<p><?php echo $lang["flickr_publish_as"] ?>
 		<select name="private">

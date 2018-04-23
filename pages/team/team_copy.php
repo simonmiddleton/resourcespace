@@ -12,7 +12,7 @@ include "../../include/resource_functions.php";
 
 # Fetch user data
 
-if (getval("from","")!="")
+if (getval("from","")!="" && enforcePostRequest(false))
 	{
 	# Copy data
 	$to=copy_resource(getvalescaped("from",""));
@@ -30,7 +30,7 @@ include "../../include/header.php";
 <p><?php echo text("introtext")?></p>
 
 <form method=post action="<?php echo $baseurl_short?>pages/team/team_copy.php" onSubmit="return CentralSpacePost(this,true);">
-
+    <?php generateFormToken("team_copy"); ?>
 <div class="Question"><label><?php echo $lang["resourceid"]?></label><input name="from" type="text" class="shrtwidth" value="">
 <?php if (isset($error)) { ?><div class="FormError">!! <?php echo $lang["resourceidnotfound"]?> !!</div><?php } ?><div class="clearerleft"> </div></div>
 

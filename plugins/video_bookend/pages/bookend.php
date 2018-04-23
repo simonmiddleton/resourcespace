@@ -12,7 +12,7 @@ $temp_dir     = get_temp_dir();
 $ref          = getvalescaped("ref", 0, true);
 $alternatives = get_alternative_files($ref);
 
-if (getval("submit", "") != "")
+if (getval("submit", "") != "" && enforcePostRequest(false))
     {
 	$ffmpeg_fullpath = get_utility_path("ffmpeg");
 
@@ -129,6 +129,8 @@ if(isset($error))
 <p><?php echo htmlspecialchars($lang["bookend-intro"]); ?></p>
 <form method="post">
 <?php
+generateFormToken("video_bookend");
+
 for($n = 1; $n <= 2; $n++)
     {
     ?>

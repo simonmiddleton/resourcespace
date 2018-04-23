@@ -18,7 +18,7 @@ if (!checkperm("u")) {redirect($baseurl_short ."login.php?error=error-permission
 $ref=getvalescaped("ref","",true);
 
 
-if (getval("unlock","")!="")
+if (getval("unlock","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# reset user lock
 	sql_query("update user set login_tries='0' where ref='$ref'");
@@ -28,7 +28,7 @@ elseif(getval("suggest","")!="")
 	echo make_password();
 	exit();
 	}
-elseif (getval("save","")!="")
+elseif (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# Save user data
 	$result=save_user($ref);
@@ -79,6 +79,7 @@ if (getval("loginas","")!="")
 	# A user key must be generated to enable login using the MD5 hash as the password.
 	?>
 	<form method="post" action="<?php echo $baseurl_short?>login.php" id="autologin">
+    <?php generateFormToken("autologin"); ?>
 	<input type="hidden" name="username" value="<?php echo $user["username"]?>">
 	<input type="hidden" name="password" value="<?php echo $user["password"]?>">
 	<input type="hidden" name="userkey" value="<?php echo md5($user["username"] . $scramble_key)?>">
@@ -120,13 +121,16 @@ if(!$modal)
 <?php if (isset($message)) { ?><div class="PageInfoMessage"><?php echo $message?></div><?php } ?>
 
 <form method=post action="<?php echo $baseurl_short?>pages/team/team_user_edit.php" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
-<?php if($modal)
+<?php 
+if($modal)
 	{
 	?>
 	<input type=hidden name="modal" value="true">
 	<?php
 	}
-	?>
+
+generateFormToken("team_user_edit");
+?>
 <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
 <input type=hidden name=backurl value="<?php echo getval("backurl", $baseurl_short . "pages/team/team_user.php?nc=" . time())?>">
 <input type=hidden name="save" value="save" /><!-- to capture default action -->

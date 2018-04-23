@@ -161,10 +161,84 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 # End of remote config support
 # ---------------------------------------------------------------------------------------------
 
+# ----------------------------------------------------------------------------------------------------------------------
+# Basic CORS and CSRF protection
+#
+if($CSRF_enabled && PHP_SAPI != 'cli')
+    {
+    /*
+    Based on OWASP: General Recommendations For Automated CSRF Defense
+    (https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet)
+    ==================================================================
+    # Verifying Same Origin with Standard Headers
+    There are two steps to this check:
+    1. Determining the origin the request is coming from (source origin)
+    2. Determining the origin the request is going to (target origin)
 
+    # What to do when Both Origin and Referer Headers Aren't Present
+    If neither of these headers is present, which should be VERY rare, you can either accept or block the request. 
+    We recommend blocking, particularly if you aren't using a random CSRF token as your second check. You might want to 
+    log when this happens for a while and if you basically never see it, start blocking such requests.
 
+    # Verifying the Two Origins Match
+    Once you've identified the source origin (from either the Origin or Referer header), and you've determined the target
+    origin, however you choose to do so, then you can simply compare the two values and if they don't match you know you 
+    have a cross-origin request.
+    */
+    $CSRF_source_origin = '';
+    $CSRF_target_origin = parse_url($baseurl, PHP_URL_SCHEME) . '://' . parse_url($baseurl, PHP_URL_HOST);
+    $CORS_whitelist     = array_merge(array($CSRF_target_origin), $CORS_whitelist);
 
+    // Determining the origin the request is coming from (source origin)
+    if(isset($_SERVER['HTTP_ORIGIN']))
+        {
+        $CSRF_source_origin = $_SERVER['HTTP_ORIGIN'];
+        }
+    else if(isset($_SERVER['HTTP_REFERER']))
+        {
+        $CSRF_source_origin = $_SERVER['HTTP_REFERER'];
+        }
 
+    if($CSRF_source_origin === '')
+        {
+        debug('WARNING: Automated CSRF protection could not detect "Origin" or "Referer" headers in the request!');
+        debug("CSRF: Logging attempted request: {$_SERVER['REQUEST_URI']}");
+
+        // If source origin cannot be obtained, set to base URL. The reason we can do this is because we have a second
+        // check on the CSRF Token, so if this is a malicious request, the CSRF Token validation will fail.
+        // This can also be a genuine request when users go to ResourceSpace straight to login/ home page.
+        $CSRF_source_origin = $baseurl;
+        }
+
+    $CSRF_source_origin = parse_url($CSRF_source_origin, PHP_URL_SCHEME) . '://' . parse_url($CSRF_source_origin, PHP_URL_HOST);
+
+    debug("CSRF: \$CSRF_source_origin = {$CSRF_source_origin}");
+    debug("CSRF: \$CSRF_target_origin = {$CSRF_target_origin}");
+
+    // Verifying the Two Origins Match
+    if($CSRF_source_origin !== $CSRF_target_origin && !in_array($CSRF_source_origin, $CORS_whitelist))
+        {
+        debug("CSRF: Cross-origin request detected and not white listed!");
+        debug("CSRF: Logging attempted request: {$_SERVER['REQUEST_URI']}");
+
+        http_response_code(403);
+        exit();
+        }
+
+    // CORS
+    if(in_array($CSRF_source_origin, $CORS_whitelist))
+        {
+        debug("CORS: Origin: {$CSRF_source_origin}");
+        debug("CORS: Access-Control-Allow-Origin: {$CSRF_source_origin}");
+
+        header("Origin: {$CSRF_target_origin}");
+        header("Access-Control-Allow-Origin: {CSRF_source_origin}");
+        }
+    header('Vary: Origin');
+    }
+#
+# End of basic CORS and automated CSRF protection
+# ----------------------------------------------------------------------------------------------------------------------
 
 if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
     {
@@ -1942,9 +2016,11 @@ function setup_user($userdata)
         # including permissions, current collection, config overrides and so on.
         
     global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
-           $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms, $anonymous_user_session_collection, 
-           $global_permissions_mask, $user_preferences, $userrequestmode, $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, 
-           $userresourcedefaults, $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences, $userorigin,$actions_enable,$actions_permissions,$actions_on;
+           $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
+           $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
+           $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
+           $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences,
+           $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -1978,6 +2054,7 @@ function setup_user($userdata)
         $userpassword=$userdata["password"];
         $userfullname=$userdata["fullname"];
         $userorigin=$userdata["origin"];
+        $usersession = $userdata["session"];
 
         $ip_restrict_group=trim($userdata["ip_restrict_group"]);
         $ip_restrict_user=trim($userdata["ip_restrict_user"]);
@@ -2058,8 +2135,7 @@ function setup_user($userdata)
 			# The request button (renamed "Buy" by the line above) should always add the item to the current collection.
 			$request_adds_to_collection=true;
 			}        
-    
-	
+
         # Apply config override options
         $config_options=trim($userdata["config_options"]);
         if ($config_options!="")
@@ -2068,7 +2144,6 @@ function setup_user($userdata)
             extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
             eval($config_options);
             }
-        
 	}
 
 /**
@@ -2127,7 +2202,8 @@ function validate_user($user_select_sql, $getuserdata=true)
                        g.request_mode,
                        g.derestrict_filter,
                        u.hidden_collections,
-                       u.accepted_terms
+                       u.accepted_terms,
+                       u.session
                   FROM user AS u
              LEFT JOIN usergroup AS g on u.usergroup = g.ref
 			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref

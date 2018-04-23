@@ -6,6 +6,8 @@ include "../../include/resource_functions.php";
 include_once "../../include/collections_functions.php";
 include "../../include/image_processing.php";
 
+enforcePostRequest(false);
+
 set_time_limit(60*60*4);
 
 $use_local = getvalescaped('use_local', '') !== '';

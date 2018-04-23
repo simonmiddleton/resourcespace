@@ -7,7 +7,7 @@ include "../../../include/search_functions.php";
 include "../../../include/resource_functions.php";
 include "../../../include/image_processing.php";
 
-if (getval("data","")!="")
+if (getval("data","")!="" && enforcePostRequest(false))
 	{
 	$vars=array();
 	parse_str(getval("data",""),$vars);
@@ -28,7 +28,7 @@ if (getval("data","")!="")
 # Fetch videos
 $videos=do_search("!collection" . $usercollection);
 
-if (getval("splice","")!="" && count($videos)>1)
+if (getval("splice","")!="" && count($videos)>1 && enforcePostRequest(false))
 	{
 	$ref=copy_resource($videos[0]["ref"]);	# Base new resource on first video (top copy metadata).
 
@@ -168,6 +168,7 @@ foreach ($videos as $video)
 </script>
 
 <form method="post">
+<?php generateFormToken("splice"); ?>
 <input type="submit" onClick="CentralSpaceShowLoading();" name="splice" value="<?php echo $lang["action-splice"]?>" style="width:150px;">
 </form>
 

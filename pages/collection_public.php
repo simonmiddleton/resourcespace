@@ -25,7 +25,7 @@ if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when post
 # pager
 
 $add=getvalescaped("add","");
-if ($add!="")
+if ($add != "" && enforcePostRequest(false))
 	{
 	# Add someone else's collection to your My Collections
 	add_collection($userref,$add);
@@ -43,6 +43,7 @@ include "../include/header.php";
     <p class="tight"><?php echo text("introtext")?></p>
 <div class="BasicsBox">
     <form method="post" id="pc_searchform" onSubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_public.php">
+        <?php generateFormToken("pc_searchform"); ?>
 		<div class="Question">
 			<label for="find"><?php echo $lang["searchpubliccollections"]?></label>
 			<div class="xtickset">
@@ -121,6 +122,7 @@ $url=$baseurl_short."pages/collection_public.php?paging=true&col_order_by=".urle
 </div>
 
 <form method=post id="collectionform" onSubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_public.php">
+    <?php generateFormToken("collectionform"); ?>
 <input type=hidden name="add" id="collectionadd" value="">
 
 <?php

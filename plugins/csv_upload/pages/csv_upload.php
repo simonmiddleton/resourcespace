@@ -33,7 +33,7 @@ if (!checkperm("c"))
 	
 $fd="user_{$userref}_uploaded_meta";			// file descriptor for uploaded file					// TODO: push these to a config file?
 $override_fields=array("status","access");		// user can set if empty or override these fields
-$process_csv=(getvalescaped("process_csv","")!="");
+$process_csv=(getvalescaped("process_csv","")!="" && enforcePostRequest(false));
 $override=getvalescaped("override","");
 $selected_resource_type=getvalescaped("resource_type","");
 $add_to_collection=getvalescaped("add_to_collection","");
@@ -56,7 +56,8 @@ if ((!isset($_FILES[$fd]) || $_FILES[$fd]['error']>0) && !$process_csv)
 		 }
 	echo "</ul>";
 	?>
-	<form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_form" method="post" enctype="multipart/form-data">		
+	<form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_form" method="post" enctype="multipart/form-data">
+        <?php generateFormToken("upload_csv_form"); ?>
 		<div class="Question">
 			<label for="<?php echo $fd; ?>"><?php echo $lang['csv_upload_file'] ?></label>
 			<input type="file" id="<?php echo $fd; ?>" name="<?php echo $fd; ?>" onchange="if(this.value==null || this.value=='') { jQuery('.file_selected').hide(); } else { jQuery('.file_selected').show(); } ">	
@@ -152,15 +153,9 @@ else
 	?>
 
 	<form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">
-		<input type="submit" value="Back" onClick="CentralSpacePost(this,true);return false;">
+		<?php generateFormToken("csv_upload_back"); ?>
+        <input type="submit" value="Back" onClick="CentralSpacePost(this,true);return false;">
 	</form><br/>
-	
-	<?php  // TODO remove
-		//echo "<pre>debug:";
-		//print_r ($_POST);
-		//echo "</pre>";	
-	?>
-	
 	<b><?php echo $_FILES[$fd]['name']; ?></b><br/><br/>
 	<?php
 	
@@ -208,8 +203,9 @@ else
 		$result=move_uploaded_file($_FILES[$fd]['tmp_name'], $csvdir . DIRECTORY_SEPARATOR  . "csv_upload.csv");
 		?>	
 		<form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">		
-		
-		<?php foreach ($override_fields as $s)
+		<?php
+        generateFormToken("csv_upload_process");
+        foreach ($override_fields as $s)
 			{	
 			?>
 			<input type="hidden" id="<?php echo $s ?>"  name="<?php echo $s ?>" value="<?php echo htmlspecialchars(getvalescaped($s,"")) ?>" > 

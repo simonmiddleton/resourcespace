@@ -29,7 +29,10 @@ if ($findpage!="" || $findname!="" || $findtext!="")
   }
 
 
-if ($page && $name){redirect($baseurl_short."pages/admin/admin_content_edit.php?page=$page&name=$name&offset=$offset&save=true&custom=1");}
+if($page && $name && enforcePostRequest(false))
+    {
+    redirect($baseurl_short."pages/admin/admin_content_edit.php?page=$page&name=$name&offset=$offset&save=true&custom=1");
+    }
 
 include "../../include/header.php";
 ?>
@@ -118,7 +121,8 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
 
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_content.php" onsubmit="return CentralSpacePost(this);">
-		<div class="Question">
+        <?php generateFormToken("admin_content_find"); ?>
+    	<div class="Question">
 			<label for="find"><?php echo $lang["searchcontent"]?><br/><?php echo $lang["searchcontenteg"]?></label>
 			<div class="tickset">
 			 <div class="Inline"><input type=text placeholder="<?php echo $lang['searchbypage']?>" name="findpage" id="findpage" value="<?php echo $findpage?>" maxlength="100" class="shrtwidth" />
@@ -141,7 +145,8 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
 <?php if ($site_text_custom_create){?>
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_content.php">
-		<div class="Question">
+		<?php generateFormToken("admin_content_new"); ?>
+        <div class="Question">
 			<label for="find"><?php echo $lang["addnewcontent"]?></label>
 			<div class="tickset">
 			 <div class="Inline"><input type=text name="page" id="page" maxlength="50" class="shrtwidth" /></div>

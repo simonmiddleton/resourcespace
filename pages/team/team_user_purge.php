@@ -21,7 +21,7 @@ if ($months!="")
 		}
 	}
 	
-if (isset($condition) && getval("purge2","")!="")
+if (isset($condition) && getval("purge2","")!="" && enforcePostRequest(false))
 	{
 	sql_query("delete from user where $condition");
 	redirect("pages/team/team_user.php");
@@ -35,10 +35,13 @@ include "../../include/header.php";
 <?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 
 <form method=post action="<?php echo $baseurl_short?>pages/team/team_user_purge.php">
+<?php
+generateFormToken("team_user_purge");
 
-<?php if (isset($count) && $count==0) { ?>
-
-<p><?php echo $lang["purgeusersnousers"] ?></p>
+if(isset($count) && $count==0)
+    {
+    ?>
+    <p><?php echo $lang["purgeusersnousers"] ?></p>
 
 <?php } elseif (isset($count)) { ?>
 

@@ -11,7 +11,7 @@ include "../../include/authenticate.php"; if (!checkperm("m")) {exit ("Permissio
 
 $message_type = intval(getval("message_type",MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL));
 
-if (getval("send","")!="")
+if (getval("send","")!="" && enforcePostRequest(false))
 	{
 	$result=bulk_mail(getvalescaped("users",""),getvalescaped("subject",""),getvalescaped("text",""),getval("html","")=="yes",$message_type,getval("url",""));
 	if ($result=="")
@@ -62,8 +62,10 @@ switch($message_type){
 <div class="BasicsBox">
 <h1><?php echo $title; ?></h1>
 <form id="myform" method="post" action="<?php echo $baseurl_short?>pages/team/team_mail.php">
+<?php
+generateFormToken("myform");
 
-<?php if (isset($error)) { ?><div class="FormError"><?php echo $error?></div><?php } ?>
+if (isset($error)) { ?><div class="FormError"><?php echo $error?></div><?php } ?>
 
 <div class="Question"><label><?php echo $lang["emailrecipients"]?></label><?php include "../../include/user_select.php"; ?>
 <div class="clearerleft"> </div></div>

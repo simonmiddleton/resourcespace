@@ -10,7 +10,7 @@ if(!hook("replace_dash_admin_permission_relocate")){
 	if(!($home_dash && checkPermission_dashmanage()))
 		{header("location: ".$baseurl_short."pages/user/user_home.php");exit;}
 	}
-if(getvalescaped("quicksave",FALSE))
+if(getvalescaped("quicksave",FALSE) && enforcePostRequest(false))
 	{
 	$tile = getvalescaped("tile","");
 	#If a valid tile value supplied
@@ -41,7 +41,7 @@ if(getvalescaped("quicksave",FALSE))
 	exit("Save Failed");
 	}
 
-if(getvalescaped("submit",FALSE))
+if(getvalescaped("submit",FALSE) && enforcePostRequest(false))
 	{
 	$tiles = getvalescaped("tiles","");
 	if(empty($tiles))
@@ -104,7 +104,11 @@ include "../../include/header.php";
 		function processTileChange(tile) {
 			jQuery.post(
 				window.location,
-				{"tile":tile,"quicksave":"true"},
+				{
+                "tile": tile,
+                "quicksave": "true",
+                <?php echo generateAjaxToken("processTileChange"); ?>
+                },
 				function(data){
 					jQuery("#tile"+tile).removeClass("positiveglow");
 					jQuery("#tile"+tile).removeClass("negativeglow");

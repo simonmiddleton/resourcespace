@@ -490,6 +490,7 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
             <td>
                 <div class="ListTools">
                     <form id="new_option" method="post" action="<?php echo $form_action; ?>">
+                        <?php generateFormToken("new_option"); ?>
                         <button type="submit" onClick="AddNode(<?php echo $parent; ?>); return false;"><?php echo $lang['add']; ?></button>
                     </form>
                 </div>
@@ -545,6 +546,7 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
                 <td>
                     <div class="ListTools">
                         <form id="new_node_<?php echo $parent; ?>_option" method="post" action="<?php echo $form_action; ?>">
+                            <?php generateFormToken("new_node_{$parent}_option"); ?>
                             <button type="submit" onClick="AddNode(<?php echo $parent; ?>); return false;"><?php echo $lang['add']; ?></button>
                         </form>
                     </div>
@@ -681,7 +683,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                     <div class="ListTools">
                         <form id="option_<?php echo $ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $resource_type_field; ?>">
                             <input type="hidden" name="option_order_by" value="<?php echo $order_by; ?>">
-
+                            <?php generateFormToken("option_{$ref}"); ?>
                             <button type="submit" onclick="SaveNode(<?php echo $ref; ?>); return false;"><?php echo $lang['save']; ?></button>
                             <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
                             <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>

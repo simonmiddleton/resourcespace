@@ -9,11 +9,11 @@ if(!in_array($plugin_name, $plugins))
 	
 $upload_status="";
 
-if (getval('upload','')!='')
+if (getval('upload','')!='' && enforcePostRequest(false))
        {
        $upload_status=handle_rsc_upload($plugin_name);
        }
-elseif (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag","")!="")
+elseif (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag","")!="" && enforcePostRequest(false))
 	{
 
 	$simpleldap['fallbackusergroup'] = getvalescaped('fallbackusergroup','');
@@ -176,8 +176,8 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
 				phone_attribute: '<?php echo htmlspecialchars($simpleldap['phone_attribute']) ?>',		
 				ldapuser: user,
 				ldappassword: password,
-				userdomain: userdomain				
-				
+				userdomain: userdomain,
+                <?php echo generateAjaxToken("simpleldap_test"); ?>
 			};
 			
 			jQuery.ajax({
@@ -254,9 +254,9 @@ if (!function_exists('ldap_connect'))
 ?>
  <h1>SimpleLDAP Configuration</h1>
   
- <form id="form1" name="form1" enctype= "multipart/form-data" method="post" action="<?php echo get_plugin_path("simpleldap",true) . "/pages/setup.php";?>">
-
+<form id="form1" name="form1" enctype= "multipart/form-data" method="post" action="<?php echo get_plugin_path("simpleldap",true) . "/pages/setup.php";?>">
 <?php
+generateFormToken("simpleldap_setup");
 echo config_single_select("ldaptype", $lang['simpleldap_ldaptype'], $simpleldap['ldaptype'], array(1=>"Active Directory",2=>"Oracle Directory"));
 echo config_boolean_field(
 	'LDAPTLS_REQCERT_never',

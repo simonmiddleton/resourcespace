@@ -176,7 +176,7 @@ function addColumnHeader($orderName, $labelKey)
 
 <div class="BasicsBox">
 	<form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_group_management.php" onSubmit="return CentralSpacePost(this,false);">
-
+        <?php generateFormToken("admin_group_management_find"); ?>
 		<input type="hidden" name="orderby" value="<?php echo $order_by; ?>">
 
 		<div class="Question">
@@ -243,7 +243,8 @@ foreach	($groups as $group)
 
 <div class="BasicsBox">
 	<form method="post" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_management_edit.php" onSubmit="return CentralSpacePost(this,false);">
-		<div class="Question">
+		<?php generateFormToken("admin_group_management"); ?>
+        <div class="Question">
 			<label for="name"><?php echo $lang['action-title_create_user_group_called']; ?></label>			
 			<div class="tickset">
 				<div class="Inline">

@@ -25,7 +25,7 @@ $url_params=
 
 # create new record from callback
 $new_group_name=getvalescaped("newusergroupname","");
-if ($new_group_name!="")
+if ($new_group_name!="" && enforcePostRequest(false))
 	{
 	sql_query("insert into usergroup(name,request_mode) values('$new_group_name','1')");
 	$ref=sql_insert_id();
@@ -50,7 +50,7 @@ $dependant_user_count=sql_value("select count(*) as value from user where usergr
 $dependant_groups=sql_value("select count(*) as value from usergroup where parent='{$ref}'",0);
 $has_dependants=$dependant_user_count + $dependant_groups > 0;
 	
-if (!$has_dependants && getval("deleteme",false))
+if (!$has_dependants && getval("deleteme",false) && enforcePostRequest(false))
 	{
 	sql_query("delete from usergroup where ref='{$ref}'");
 	log_activity('',LOG_CODE_DELETED,null,'usergroup',null,$ref);
@@ -62,7 +62,7 @@ if (!$has_dependants && getval("deleteme",false))
 	exit;
 	}	
 	
-if (getval("save",false))
+if (getval("save",false) && enforcePostRequest(false))
 	{
 	$error = false;
 	$logo_dir="{$storagedir}/admin/groupheaderimg/";
@@ -198,9 +198,8 @@ function dump_config_default_options()
 include "../../include/header.php";
 
 ?><form method="post" enctype="multipart/form-data" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_management_edit.php?ref=<?php echo $ref . $url_params ?>" id="mainform" class="FormWide">
-	<?php /* xonSubmit="return CentralSpacePost(this,true);" > */ // central space post submit of form containing file upload is currently not supported ?>
-
-	<div class="BasicsBox">
+    <?php generateFormToken("mainform"); ?>
+    <div class="BasicsBox">
 
 	<p>
 		<a href="" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_management.php?<?php echo $url_params; ?>',true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['page-title_user_group_management']; ?></a>

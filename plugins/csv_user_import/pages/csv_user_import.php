@@ -14,7 +14,7 @@ include_once dirname(__FILE__). '/../include/csv_functions.php';
 
 // Init
 $fd                  = 'user_' . $userref . '_csv_user_batch_uploaded_data';
-$process_csv         = ('' !== getvalescaped('process_csv', ''));
+$process_csv         = ('' !== getvalescaped('process_csv', '') && enforcePostRequest(false));
 $user_group_selector = getvalescaped('user_group_selector', '');
 
 
@@ -50,6 +50,7 @@ if((!isset($_FILES[$fd]) || 0 < $_FILES[$fd]['error']) && !$process_csv)
     ?>
     </ul>
     <form id="upload_csv_form" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>">
+        <?php generateFormToken("upload_csv_form"); ?>
         <div class="Question">
             <label for="<?php echo $fd; ?>"><?php echo $lang['csv_user_import_upload_file']; ?></label>
             <input
@@ -128,6 +129,7 @@ else
             {
             ?>
             <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">
+                <?php generateFormToken("csv_user_import"); ?>
                 <input type="hidden" id="process_csv"  name="process_csv" value="1">
                 <input type="hidden" id="user_group_selector"  name="user_group_selector" value="<?php echo $user_group_selector; ?>">
                 <input type="submit" name="process_csv" onClick="return CentralSpacePost(this, true);" value="Process CSV">

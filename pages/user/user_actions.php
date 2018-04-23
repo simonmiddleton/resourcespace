@@ -84,6 +84,7 @@ if(count($actiontypes)>1)
 	<div class="BasicsBox">
 		
 		<form id="FilterActions" class="FormFilter" method="post" action="<?php echo $url ?>">
+            <?php generateFormToken("FilterActions"); ?>
 			<fieldset>
 				<legend><?php echo $lang['filter_label']; ?></legend>  
 				<div class="tickset">

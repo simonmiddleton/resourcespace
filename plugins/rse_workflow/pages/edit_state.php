@@ -46,7 +46,7 @@ else
 	}
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && getvalescaped("submitted","")!="")
+if (getvalescaped("submitted","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	if ($name=="")
 		{
@@ -108,7 +108,7 @@ else if ($saved)
 <h1><?php echo $lang['rse_workflow_edit_state']; ?></h1>
 
 <form id="form_workflow_state" name="form_workflow_state" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_state.php?code=<?php echo $code ?>">
-
+    <?php generateFormToken("form_workflow_state"); ?>
 	<input type="hidden" name="submitted" value="true">
 	<input type="hidden" name="code" value="<?php echo htmlspecialchars($code);  ?>">
 		

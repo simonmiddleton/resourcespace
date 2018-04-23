@@ -106,7 +106,7 @@ function addColumnHeader($orderName, $labelKey)
 
 <div class="BasicsBox">
 	<form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_size_management.php" onSubmit="return CentralSpacePost(this,false);">
-
+        <?php generateFormToken("admin_size_management"); ?>
 		<div class="Question">
 			<label for="find"><?php echo $lang["property-search_filter"] ?></label>
 			<input name="find" type="text" class="medwidth" value="<?php echo $find; ?>">
@@ -128,7 +128,8 @@ function addColumnHeader($orderName, $labelKey)
 
 <div class="BasicsBox">
 	<form method="post" action="<?php echo $baseurl_short; ?>pages/admin/admin_size_management_edit.php" onSubmit="return CentralSpacePost(this,false);">
-		<div class="Question">
+        <?php generateFormToken("admin_size_management_edit"); ?>
+        <div class="Question">
 			<label for="name"><?php echo $lang['action-title_create_size_with_id']; ?></label>
 			<div class="tickset">
 				<div class="Inline">

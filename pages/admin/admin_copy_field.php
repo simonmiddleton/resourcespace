@@ -13,7 +13,7 @@ $copied = '';
 $title  = sql_value("SELECT title AS `value` FROM resource_type_field WHERE ref = '{$ref}'", '');
 
 # Perform copy
-if (getval("saveform","")!="")
+if (getval("saveform","")!="" && enforcePostRequest(false))
 	{
 	$sync=getvalescaped("sync","");
 	if ($sync==1) {$sync="'" . $ref . "'";} else {$sync="null";}
@@ -124,6 +124,7 @@ if(isset($saved_text))
     }
     ?>
     <form method="post" action="admin_copy_field.php">
+        <?php generateFormToken("admin_copy_field"); ?>
         <input type="hidden" name="saveform" value="true">
         <input type="hidden" name="ref" value="<?php echo $ref; ?>">
         <p><?php echo $lang['copy-to-resource-type']; ?><br />

@@ -46,7 +46,7 @@ foreach($resource_field_data as $resource_field)
 	$resource_title = $resource_field['value'];
 	}
 
-if (getval("save","")!="")
+if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	if ($k!="" || $user_is_anon || $userrequestmode==0)
 		{
@@ -94,7 +94,8 @@ include "../include/header.php";
   <h1><?php echo i18n_get_translated($lang["requestresource"]); ?></h1>
   <p><?php echo text("introtext")?></p>
   
-	<form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php" onsubmit="return CentralSpacePost(this,true);" >  
+	<form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php" onsubmit="return CentralSpacePost(this,true);">
+        <?php generateFormToken("resource_request"); ?>
 	<input type="hidden" name="k" value="<?php echo htmlspecialchars($k); ?>">
 	<input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref)?>">
 	

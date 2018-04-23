@@ -4,7 +4,7 @@ include_once "../../include/general.php";
 include "../../include/authenticate.php";
 
 #handle posts
-if (array_key_exists("userfile",$_FILES))
+if (array_key_exists("userfile",$_FILES) && enforcePostRequest(false))
     {
     #file uploads
     $filename=strtolower(str_replace(" ","_",$_FILES['userfile']['name']));
@@ -32,6 +32,7 @@ if (array_key_exists("userfile",$_FILES))
 
 <html><body bgcolor="#dddddd">
 <form enctype="multipart/form-data" method="post">
+<?php generateFormToken("admin_upload"); ?>
 <input type="hidden" name="MAX_FILE_SIZE" value="2000000">
 <label for="uploader">Upload file</label>
 <input id="uploader" name="userfile" type="file" size=30>

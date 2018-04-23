@@ -25,7 +25,7 @@ $resource=get_resource_data($ref);if ($resource===false) {exit($lang['resourceno
 $imagename=i18n_get_translated($resource["field".$view_title_field]);
 
 
-if (getval("send","")!="")
+if (getval("send","")!="" && enforcePostRequest(false))
 	{
 	$messagetext=getvalescaped("messagetext","");	
 	$templatevars['url']=$baseurl . "/?r=" . $ref;
@@ -145,6 +145,7 @@ function sendResourceMessage()
 <div id="contactadminbox">
 <p><php echo $lang["contactadmin"] ?></p>
 <form name="contactadminform" method=post id="contactadminform" action="<?php echo $baseurl_short?>pages/ajax/contactadmin.php?ref=<?php echo $ref ?>">
+    <?php generateFormToken("contactadminform"); ?>
 <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
 
 <div>

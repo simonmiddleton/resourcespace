@@ -47,7 +47,7 @@ foreach($altfiles as $altfile)
 	if(in_array(mb_strtolower($altfile["file_extension"]),$video_tracks_audio_extensions)){$audio_alts[]=$altfile;}
 	}
 		
-if($generate)
+if($generate && enforcePostRequest(false))
     {
     $video_track_format  = getvalescaped("video_track_format","");
     $video_subtitle_file = getvalescaped("video_subtitle_file","");
@@ -275,7 +275,8 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         echo "<div class=\"PageInformal\">" . $message . "</div>";
         }
     ?>
-    <form id="video_tracks_create_form" action="<?php echo $baseurl . "/plugins/video_tracks/pages/create_video.php" ;?>">
+    <form id="video_tracks_create_form" method="post"> action="<?php echo $baseurl . "/plugins/video_tracks/pages/create_video.php" ;?>">
+        <?php generateFormToken("video_tracks_create_form"); ?>
         <input name="ref" type="hidden" value="<?php echo $ref; ?>">
         <input type="hidden" name="generate" value="yes" />
         <div class="Question" id="question_video_track_format">

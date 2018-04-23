@@ -2007,6 +2007,8 @@ function <?php echo $context ?>UpdateFSResultCount()
 <input type="hidden" name="resource_type" value="<?php echo $resource["resource_type"]?>">
 <input type="hidden" name="countonly" id="<?php echo $context ?>countonly" value="">
 <?php
+generateFormToken("{$context}findsimilar");
+
 $keywords=get_resource_top_keywords($ref,50);
 if (count($keywords)!=0)
 	{

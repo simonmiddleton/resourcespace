@@ -26,7 +26,7 @@ include "../include/header.php";
 <p><?php echo $lang["batch_replace_filename_intro"] ?></p>
 
 <form action="<?php echo $baseurl_short?>pages/upload_plupload.php">
-
+<?php generateFormToken("upload_replace_batch"); ?>
 <input type="hidden" name="replace" value="true" />
 <input type="hidden" name="no_exif" value="<?php echo $no_exif; ?>" />
 

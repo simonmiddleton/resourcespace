@@ -1810,6 +1810,9 @@ $lang["error-permissiondenied"]="Permission denied.";
 $lang["error-permissions-login"]="Please log in to access this page";
 $lang["error-oldphp"] = "Requires PHP version %version or higher."; # %version will be replaced with, e.g., "5.2"
 $lang["error-collectionnotfound"]="Collection not found.";
+$lang["error-csrf-verification-failed"] = "CSRF verification failed! Try reloading page.";
+$lang["error-method-not_allowed"] = "Method Not Allowed.";
+$lang["error-405-method-not_allowed"] = "405 Method Not Allowed.";
 
 
 $lang["no-options-available"]="No options available";

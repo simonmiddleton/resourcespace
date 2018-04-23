@@ -34,14 +34,14 @@ $from=array("&","<",">");
 $to=array("&AMP;","&LT;","&GT;");
 
 # Save value?
-if (getval("submit","")!="")
+if (getval("submit","")!="" && enforcePostRequest(false))
 	{
 	$value=getval("value","");
 	$value=str_replace($to,$from,$value);
 	$f=fopen($file,"w");fwrite($f,$value);fclose($f);
 	}
 
-if (getval("delete","")!="")
+if (getval("delete","")!="" && enforcePostRequest(false))
 	{
 	unlink($file);
 	?>
@@ -119,6 +119,7 @@ if (basename($file)=="config.php"){echo "<br />" . $lang["config-title"];}?></di
 <div class="propbox">
 
 <form method=post>
+    <?php generateFormToken("fileedit"); ?>
 <textarea style="height:100%;" id="code" name="value"><?php echo $value?></textarea>
 <input type=hidden name="file" value="<?php echo $file?>">
 

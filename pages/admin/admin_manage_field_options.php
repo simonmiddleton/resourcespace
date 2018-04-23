@@ -49,7 +49,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
     $node_action     = getvalescaped('node_action', '');
 
     // [Save Option]
-    if('save' === $node_action)
+    if('save' === $node_action && enforcePostRequest($ajax))
         {
         $response['refresh_page'] = false;
         $node_ref_data            = array();
@@ -68,7 +68,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
         }
 
     // [Move Option]
-    if('movedown' === $node_action || 'moveup' === $node_action)
+    if(('movedown' === $node_action || 'moveup' === $node_action) && enforcePostRequest($ajax))
         {
         $response['error']   = null;
         $response['sibling'] = null;
@@ -146,7 +146,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
         }
 
     // [Delete Option]
-    if('delete' === $node_action)
+    if('delete' === $node_action && enforcePostRequest($ajax))
         {
         delete_node($node_ref);
         }
@@ -155,7 +155,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
 // [Toggle tree node]
 if('true' === $ajax && 'true' === getval('draw_tree_node_table', '') && 7 == $field_data['type'])
     {
-    $nodes         =  get_nodes($field, $node_ref);
+    $nodes         = get_nodes($field, $node_ref);
     $nodes_counter = count($nodes);
     $i             = 0;
     foreach($nodes as $node)
@@ -172,7 +172,7 @@ if('true' === $ajax && 'true' === getval('draw_tree_node_table', '') && 7 == $fi
 
 // [New Option]
 $submit_new_option = getvalescaped('submit_new_option', '');
-if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_new_option)
+if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_new_option && enforcePostRequest($ajax))
     {
     $new_option_name     = trim(getval('new_option_name', ''));
     $new_option_parent   = getvalescaped('new_option_parent', '');
@@ -382,12 +382,13 @@ if($ajax)
     if(7 != $field_data['type'])
         {
         ?>
-        <form id="FilterNodeOptions" class="FormFilter" method="post" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
+        <form id="FilterNodeOptions" class="FormFilter" method="GET" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php">
+            <input type="hidden" name="field" value="<?php echo htmlspecialchars($field); ?>">
             <fieldset>
                 <legend><?php echo $lang['filter_label']; ?></legend>
                 <div class="FilterItemContainer">
                     <label><?php echo $lang['name']; ?></label>
-                    <input type="text" name="filter_by_name" value="<?php echo $filter_by_name; ?>">
+                    <input type="text" name="filter_by_name" value="<?php echo htmlspecialchars($filter_by_name); ?>">
                 </div>
                 <button type="submit"><?php echo $lang['filterbutton']; ?></button>
                 <button class="ClearButton" type="submit" onCLick="ClearFilterForm('FilterNodeOptions'); return false;"><?php echo $lang['clearbutton']; ?></button>
@@ -449,6 +450,7 @@ if($ajax)
                         <form id="option_<?php echo $node['ref']; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
                             <input type="hidden" name="node_ref" value="<?php echo $node['ref']; ?>">
                             <input type="hidden" name="option_<?php echo $node['ref']; ?>_order_by" value="<?php echo $node['order_by']; ?>">
+                            <?php generateFormToken("option_{$node['ref']}"); ?>
 
                             <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo $lang['save']; ?></button>
                         <?php
@@ -551,7 +553,8 @@ function AddNode(parent)
         field: <?php echo $field; ?>,
         submit_new_option: 'add_new',
         new_option_name: new_option_name.val(),
-        new_option_parent: new_option_parent.val()
+        new_option_parent: new_option_parent.val(),
+        <?php echo generateAjaxToken("AddNode"); ?>
         };
 
     jQuery.post(post_url, post_data, function(response)
@@ -622,7 +625,8 @@ function SaveNode(ref)
         node_ref: ref,
         node_action: 'save',
         option_name: option_name,
-        option_parent: option_parent
+        option_parent: option_parent,
+        <?php echo generateAjaxToken("SaveNode"); ?>
         };
 
     jQuery.post(post_url, post_data, function(response)
@@ -649,7 +653,8 @@ function DeleteNode(ref)
         ajax: true,
         field: <?php echo $field; ?>,
         node_ref: ref,
-        node_action: 'delete'
+        node_action: 'delete',
+        <?php echo generateAjaxToken("DeleteNode"); ?>
         };
 
     jQuery.post(post_url, post_data);
@@ -679,7 +684,8 @@ function ReorderNode(ref, direction)
         ajax: true,
         field: <?php echo $field; ?>,
         node_ref: ref,
-        node_action: direction
+        node_action: direction,
+        <?php echo generateAjaxToken("ReorderNode"); ?>
         };
 
     jQuery.post(post_url, post_data, function(response)
@@ -711,7 +717,8 @@ function ToggleTreeNode(ref, field_ref)
         ajax: true,
         field: field_ref,
         node_ref: ref,
-        draw_tree_node_table: true
+        draw_tree_node_table: true,
+        <?php echo generateAjaxToken("ToggleTreeNode"); ?>
         };
 
     // Hide expanded children
@@ -752,7 +759,7 @@ function ToggleTreeNode(ref, field_ref)
 
     function ClearFilterForm(filter_form_id)
         {
-        var input_elements = document.getElementById(filter_form_id).getElementsByTagName('input');
+        var input_elements = jQuery("#" + filter_form_id + " input[type=text]");
 
         for(var index = input_elements.length - 1; index >= 0; index--)
             {

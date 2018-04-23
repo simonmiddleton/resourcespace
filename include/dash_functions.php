@@ -467,14 +467,32 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
 		<div id="delete_permanent_dialog" style="display:none;text-align:left;"><?php echo $lang['confirmdeleteconfigtile'];?></div>
 	
 		<script>
-			function deleteDefaultDashTile(id) {
-				jQuery.post( "<?php echo $baseurl?>/pages/ajax/dash_tile.php",{"tile":id,"delete":"true"},function(data){
-					jQuery("#tile"+id).remove();
-				});
-			}
-			function updateDashTileOrder(index,tile) {
-				jQuery.post( "<?php echo $baseurl?>/pages/ajax/dash_tile.php",{"tile":tile,"new_index":((index*10))<?php if(!is_null($user_group_id)) { echo ", \"selected_user_group\": {$user_group_id}";} ?>});
-			}
+            function deleteDefaultDashTile(id)
+                {
+                jQuery.post(
+                    "<?php echo $baseurl?>/pages/ajax/dash_tile.php",
+                    {
+                    "tile": id,
+                    "delete": "true",
+                    <?php echo generateAjaxToken("deleteDefaultDashTile"); ?>
+                    },
+                    function(data)
+                        {
+                        jQuery("#tile"+id).remove();
+                        });
+                }
+
+            function updateDashTileOrder(index,tile) {
+                jQuery.post(
+                    "<?php echo $baseurl?>/pages/ajax/dash_tile.php",
+                    {
+                    <?php echo generateAjaxToken("updateDashTileOrder"); ?>,
+                    "tile": tile,
+                    "new_index": ((index*10))<?php if(!is_null($user_group_id)) { echo ", \"selected_user_group\": {$user_group_id}";} ?>
+                    }
+                );
+            }
+
 			var dragging=false;
 				jQuery(function() {
 					if(is_touch_device())
@@ -1093,12 +1111,25 @@ function get_user_dash($user)
 		<div id="delete_permanent_dialog" style="display:none;text-align:left;"><?php echo $lang['confirmdeleteconfigtile'];?></div>
 		<script>
 			function deleteDashTile(id) {
-				jQuery.post( "<?php echo $baseurl?>/pages/ajax/dash_tile.php",{"user_tile":id,"delete":"true"},function(data){
+				jQuery.post(
+                    "<?php echo $baseurl?>/pages/ajax/dash_tile.php",
+                    {
+                    "user_tile": id,
+                    "delete": "true",
+                    <?php echo generateAjaxToken("deleteDashTile"); ?>
+                    },
+                    function(data){
 					jQuery("#user_tile"+id).remove();
 				});
 			}
 			function deleteDefaultDashTile(tileid,usertileid) {
-				jQuery.post( "<?php echo $baseurl?>/pages/ajax/dash_tile.php",{"tile":tileid,"delete":"true"},function(data){
+				jQuery.post(
+                    "<?php echo $baseurl?>/pages/ajax/dash_tile.php",
+                    {
+                    "tile": tileid,
+                    "delete": "true",
+                    <?php echo generateAjaxToken("deleteDefaultDashTile"); ?>
+                    },function(data){
 					jQuery("#user_tile"+usertileid).remove();
 				});
 			}
@@ -1109,7 +1140,14 @@ function get_user_dash($user)
 		echo "<script>";
 		} ?>
 		function updateDashTileOrder(index,tile) {
-			jQuery.post( "<?php echo $baseurl?>/pages/ajax/dash_tile.php",{"user_tile":tile,"new_index":((index*10))});
+			jQuery.post(
+                "<?php echo $baseurl?>/pages/ajax/dash_tile.php",
+                {
+                "user_tile": tile,
+                "new_index": ((index*10)),
+                <?php echo generateAjaxToken("updateDashTileOrder"); ?>
+                }
+            );
 		}
 		var dragging=false;
 			jQuery(function() {

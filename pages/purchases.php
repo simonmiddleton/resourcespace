@@ -25,7 +25,7 @@ if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when post
 $name=getvalescaped("name","");
 
 $delete=getvalescaped("delete","");
-if ($delete!="")
+if ($delete!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# Delete collection
 	delete_collection($delete);
@@ -54,7 +54,7 @@ if ($delete!="")
 	}
 
 $remove=getvalescaped("remove","");
-if ($remove!="")
+if ($remove!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# Remove someone else's collection from your My Collections
 	remove_collection($userref,$remove);
@@ -102,6 +102,7 @@ $url=$baseurl_short."pages/my_purchases.php?paging=true&col_order_by=".$col_orde
 	?>
   
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/my_purchases.php">
+<?php generateFormToken("collectionform"); ?>
 <input type=hidden name="delete" id="collectiondelete" value="">
 <input type=hidden name="remove" id="collectionremove" value="">
 <input type=hidden name="add" id="collectionadd" value="">

@@ -31,7 +31,7 @@ if (isset($error_text)) { ?><div class="PageInformal"><?php echo $error_text?></
 	<h1><?php echo $lang["admin_resource_type_field_migrate_data"] ?></h1>
 
 	<form method="post" action="<?php echo $baseurl_short ?>pages/tools/migrate_data_to_fixed.php" >
-
+        <?php generateFormToken("migrate_data_to_fixed"); ?>
 	<div class="Question" >
 		<label for="field" ><?php echo $lang["field"] ?></label>
 		<input type="number" name="field" value="<?php echo $migrate_field ?>">
@@ -61,7 +61,7 @@ if (isset($error_text)) { ?><div class="PageInformal"><?php echo $error_text?></
 
 include_once "../../include/footer.php";
 
-if(getval("submit","") != "")
+if(getval("submit","") != "" && enforcePostRequest(false))
     {
     
     $valid_fields = sql_array("SELECT ref value FROM resource_type_field WHERE type IN ('" . implode("','", $FIXED_LIST_FIELD_TYPES) . "')");

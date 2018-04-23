@@ -16,7 +16,7 @@ $delete_access_key = getvalescaped('delete_access_key', '');
 
 
 // Process access key deletion
-if($ajax && '' != $delete_access_key)
+if($ajax && '' != $delete_access_key && enforcePostRequest($ajax))
     {
     $resource   = getvalescaped('resource', '');
     $collection = getvalescaped('collection', '');
@@ -104,7 +104,8 @@ function delete_access_key(access_key, resource, collection)
     var post_data = {
         ajax: true,
         delete_access_key: access_key,
-        resource: resource
+        resource: resource,
+        <?php echo generateAjaxToken("delete_access_key"); ?>
     };
 
     if(collection != '')

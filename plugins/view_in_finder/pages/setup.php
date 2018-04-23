@@ -32,7 +32,7 @@ if (isset($staticSyncUseArray) && $staticSyncUseArray) {
 }
 
 
-if (getval("submit","")!="") {
+if (getval("submit","")!="" && enforcePostRequest(false)) {
 
 	$viewInFinder=array();
 	
@@ -93,6 +93,7 @@ include "../../../include/header.php";
 
     <form id="form1" name="form1" method="post" action="">
     <?php
+    generateFormToken("form1");
     if ($useMultiples) {
     	/* we have multiple paths, so we need to map them to the relevant shares
     	*/

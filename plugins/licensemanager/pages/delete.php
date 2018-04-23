@@ -11,7 +11,7 @@ $resource=getvalescaped("resource","");
 $edit_access=get_edit_access($resource);
 if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
 
-if (getval("submitted","")!="")
+if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	sql_query("delete from resource_license where ref='$ref' and resource='$resource'");
 	
@@ -31,7 +31,7 @@ include "../../../include/header.php";
 <input type=hidden name="submitted" value="true">
 <input type=hidden name="ref" value="<?php echo $ref?>">
 <input type=hidden name="resource" value="<?php echo $resource?>">
-
+<?php generateFormToken("licensemanager_delete"); ?>
 <div class="Question"><label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo htmlspecialchars($resource)?></div>
 <div class="clearerleft"> </div></div>
 

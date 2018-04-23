@@ -18,7 +18,7 @@ if(count($group_parents)==1){$single_parent_option=true;}
 $default_group=sql_value("select ref value from usergroup where name='$auto_group_template_default'",'');
 
 # ----- Save ----- #
-if (getval("save","")!=""){
+if (getval("save","")!="" && enforcePostRequest(false)){
 	$errors=false;
 	
 	$group_name=getvalescaped("auto_group_name","");
@@ -65,7 +65,7 @@ include '../../../include/header.php';
 	} ?>
 	
 	<form method="post">
-		
+        <?php generateFormToken("auto_group"); ?>
 		<div class="Question">
 			<label for="auto_group_name"><?php echo str_replace("%c",$auto_group_field_name,$lang["auto_group_name"])?> <sup>*</sup></label>
 			<input type=text name="auto_group_name" id="auto_group_name" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped('auto_group_name',''))?>">

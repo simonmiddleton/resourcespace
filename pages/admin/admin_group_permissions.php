@@ -26,7 +26,7 @@ $url_params=
 	($find ? "&find={$find}" : "") .
 	($filter_by_permissions ? "&filterbypermissions={$filter_by_permissions}" : "");
 
-if (getval("save","")!="")
+if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	$perms=array();
 	foreach ($_POST as $key=>$value)
@@ -83,7 +83,9 @@ function DrawOption($permission,$description,$reverse=false,$reload=false)
 
 	<form method="post" id="permissions" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php<?php echo $url_params ?>" onsubmit="return CentralSpacePost(this,true);" >	
 		<input type="hidden" name="save" value="1">		
-<?php
+        <?php
+        generateFormToken("permissions");
+
 	if ($offset) 
 		{
 ?>			<input type="hidden" name="offset" value="<?php echo $offset; ?>">

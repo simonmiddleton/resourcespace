@@ -8,6 +8,7 @@ function HookAuto_groupTeam_userReplace_create_user(){
 	?>
 	<div class="BasicsBox">
     	<form method="post" action="<?php echo $baseurl_short?>pages/team/team_user.php">
+            <?php generateFormToken("team_user"); ?>
 			<div class="Question">
 				<label for="newuser"><?php echo $lang["createuserwithusername"]?></label>
 				<div class="tickset">

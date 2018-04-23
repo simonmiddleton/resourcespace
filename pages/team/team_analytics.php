@@ -13,7 +13,7 @@ if (array_key_exists("findtext",$_POST)) {$offset=0;} # reset page counter when 
 $findtext=getvalescaped("findtext","");
 
 $delete=getvalescaped("delete","");
-if ($delete!="")
+if ($delete != "" && enforcePostRequest(false))
 	{
 	# Delete report
 	sql_query("delete from user_report where ref='$delete' and user='$userref'");
@@ -49,7 +49,8 @@ $jumpcount=1;
 <?php pager(); ?></div>
 
 <form method=post id="reportsform" onSubmit="return CentralSpacePost(this,true);">
-<input type=hidden name="delete" id="reportdelete" value="">
+    <?php generateFormToken("reportsform"); ?>
+    <input type=hidden name="delete" id="reportdelete" value="">
 </form>
 
 <div class="Listview">
@@ -83,6 +84,7 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
 
 <div class="BasicsBox">
 	<form method="post" onSubmit="return CentralSpacePost(this,true);">
+        <?php generateFormToken("team_analytics_search"); ?>
 		<div class="Question">
 			<label for="find"><?php echo $lang["find"]?><br/></label>
 			<div class="tickset">

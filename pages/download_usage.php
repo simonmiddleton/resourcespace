@@ -29,7 +29,7 @@ hook("pageevaluation");
 
 $download_url_suffix = hook("addtodownloadquerystring");
 
-if (getval("save",'') != '')
+if (getval("save",'') != '' && enforcePostRequest(false))
     {
     $usage = getvalescaped("usage", '');
     $usagecomment = getvalescaped("usagecomment", '');
@@ -83,7 +83,10 @@ if(isset($download_usage_prevent_options))
 <div class="BasicsBox">
 
     <form method="post" action="<?php echo $baseurl_short?>pages/download_usage.php<?php echo $download_url_suffix ?>" onSubmit="if (  <?php if (!$usage_comment_blank) { ?>  (jQuery('#usagecomment').val()=='') ||<?php } ?>     (jQuery('#usage').val()=='')) {alert('<?php echo $lang["usageincorrect"] ?>');return false;} else {return CentralSpacePost(this,true);}">
-        <?php if($download_usage && ($col != -1)) { ?>
+        <?php
+        generateFormToken("download_usage");
+
+        if($download_usage && ($col != -1)) { ?>
         <input type="hidden" name="col" value="<?php echo htmlspecialchars($col) ?>" />
         <?php } ?>
         <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>" />

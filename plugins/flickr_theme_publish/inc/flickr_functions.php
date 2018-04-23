@@ -329,7 +329,10 @@ function flickr_check_frob($userref){
 		?>
 		<p>&gt;&nbsp;<a target=_blank href="<?php echo $auth_url; ?>"><?php echo $lang["flickrnotloggedin"] ?></a></p>
 		<p><?php echo $lang["flickronceloggedinreload"] ?></p>
-		<form method="post" action="sync.php?theme=<?php echo $theme ?>"><input type="submit" name="reload" value="<?php echo $lang["reload"] ?>"></form>
+		<form method="post" action="sync.php?theme=<?php echo $theme ?>">
+            <?php generateFormToken("flickr_check_frob"); ?>
+            <input type="submit" name="reload" value="<?php echo $lang["reload"] ?>">
+        </form>
 		<?php
 	}
 	return $validtoken;

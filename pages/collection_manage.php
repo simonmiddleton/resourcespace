@@ -24,7 +24,7 @@ if (!in_array($col_order_by,$collection_valid_order_bys)) {$col_order_by="create
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
 
 $name = getvalescaped('name', '');
-if('' != $name && $collection_allow_creation)
+if('' != $name && $collection_allow_creation && enforcePostRequest(false))
     {
     // Create new collection
     $new = create_collection($userref, $name);
@@ -46,7 +46,7 @@ if('' != $name && $collection_allow_creation)
     }
 
 $delete=getvalescaped("delete","");
-if ($delete != '')
+if ($delete != '' && enforcePostRequest(getval("ajax", false)))
 	{
 	// Check user is actually allowed to delete the collection first
 	$collection_data = get_collection($delete);
@@ -96,13 +96,13 @@ if ($delete != '')
 	}
 
 $removeall=getvalescaped("removeall","");
-if ($removeall!=""){
+if ($removeall!="" && enforcePostRequest(false)){
 	remove_all_resources_from_collection($removeall);
 	refresh_collection_frame($usercollection);
 }
 
 $remove=getvalescaped("remove","");
-if ($remove!="")
+if ($remove!="" && enforcePostRequest(false))
 	{
 	# Remove someone else's collection from your My Collections
 	remove_collection($userref,$remove);
@@ -121,7 +121,7 @@ if ($remove!="")
 	}
 
 $add=getvalescaped("add","");
-if ($add!="")
+if ($add!="" && enforcePostRequest(false))
 	{
 	# Add someone else's collection to your My Collections
 	add_collection($userref,$add);
@@ -141,7 +141,7 @@ if ($reload!="")
 
 $purge=getvalescaped("purge","");
 $deleteall=getvalescaped("deleteall","");
-if ($purge!="" || $deleteall!="") {
+if(($purge != "" || $deleteall != "") && enforcePostRequest(false)) {
 	
 	if ($purge!=""){$deletecollection=$purge;}
 	if ($deleteall!=""){$deletecollection=$deleteall;}
@@ -190,7 +190,7 @@ if ($purge!="" || $deleteall!="") {
 }
 
 $deleteempty=getvalescaped("deleteempty","");
-if ($deleteempty!="") {
+if ($deleteempty!="" && enforcePostRequest(false)) {
 		
 	$collections=get_user_collections($userref);
 	$deleted_usercoll = false;
@@ -230,10 +230,11 @@ if ($deleteempty!="") {
 hook('customcollectionmanage');
 
 $removeall=getvalescaped("removeall","");
-if ($removeall!=""){
-	remove_all_resources_from_collection($removeall);
-	refresh_collection_frame($usercollection);
-}
+if($removeall != "" && enforcePostRequest(false))
+    {
+    remove_all_resources_from_collection($removeall);
+    refresh_collection_frame($usercollection);
+    }
 
 
 include "../include/header.php";
@@ -243,7 +244,8 @@ include "../include/header.php";
     <p class="tight"><?php echo text("introtext")?></p><br />
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/collection_manage.php">
-		<div class="Question">
+		<?php generateFormToken("find"); ?>
+        <div class="Question">
 			<div class="tickset">
 			 <div class="Inline"><input type=text name="find" id="find" value="<?php echo htmlspecialchars(unescape($find)); ?>" maxlength="100" class="shrtwidth" /></div>
 			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" /></div>
@@ -292,6 +294,7 @@ $url=$baseurl_short."pages/collection_manage.php?paging=true&col_order_by=".urle
 ?>
 
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_manage.php">
+<?php generateFormToken("collectionform"); ?>
 <input type=hidden name="delete" id="collectiondelete" value="">
 <input type=hidden name="remove" id="collectionremove" value="">
 <input type=hidden name="add" id="collectionadd" value="">
@@ -350,7 +353,7 @@ if (!hook('collectionaccessmode')) {
 ?></td><?php
 }?>
 
-<td class="collectionin"><input type="checkbox" onClick="UpdateHiddenCollections(this, '<?php echo $collections[$n]['ref'] ?>');" <?php if(!in_array($collections[$n]['ref'],$hidden_collections)){echo "checked";}?>></td>
+<td class="collectionin"><input type="checkbox" onClick='UpdateHiddenCollections(this, "<?php echo $collections[$n]['ref'] ?>", {<?php echo generateAjaxToken("colactions"); ?>});' <?php if(!in_array($collections[$n]['ref'],$hidden_collections)){echo "checked";}?>></td>
 
 <?php hook('beforecollectiontoolscolumn'); ?>
 	<td class="tools">	
@@ -402,7 +405,8 @@ echo " " . ($mycollcount==1 ? $lang["owned_by_you-1"] : str_replace("%mynumber",
 		<h1><?php echo $lang["createnewcollection"]?></h1>
 		<p class="tight"><?php echo text("newcollection")?></p>
 		<form method="post" action="<?php echo $baseurl_short?>pages/collection_manage.php">
-			<div class="Question">
+			<?php generateFormToken("newcollection"); ?>
+            <div class="Question">
 				<label for="newcollection"><?php echo $lang["collectionname"]?></label>
 				<div class="tickset">
 				 <div class="Inline"><input type=text name="name" id="newcollection" value="" maxlength="100" class="shrtwidth"></div>

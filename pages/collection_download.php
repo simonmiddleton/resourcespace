@@ -844,8 +844,7 @@ function ajax_download()
 </script>
 
 	<form id='myform' action="<?php echo $baseurl_short?>pages/collection_download.php?id=<?php echo urlencode($uniqid) ?>&submitted=true" method=post>
-
-
+        <?php generateFormToken("myform"); ?>
 <input type=hidden name="collection" value="<?php echo htmlspecialchars($collection) ?>">
 <input type=hidden name="usage" value="<?php echo htmlspecialchars($usage); ?>">
 <input type=hidden name="usagecomment" value="<?php echo htmlspecialchars($usagecomment); ?>">

@@ -8,13 +8,13 @@ if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
 	
 $delete_code=getval("delete_code","");
-if ($delete_code!="")
+if ($delete_code!="" && enforcePostRequest(false))
 	{
 	# Delete discount code.
 	sql_query("delete from discount_code where code='$delete_code'");
 	}
 
-elseif (getval("add","")!="")
+elseif (getval("add","")!="" && enforcePostRequest(false))
 	{
 	# Add discount code.
 	sql_query("delete from discount_code where code='" . getvalescaped("code","") . "'"); # Clear any existing matching code.
@@ -51,6 +51,7 @@ include "../../../include/header.php";
 <Br><br><br>
 <h2><?php echo $lang["add_discount_code"] ?></h2>
 <form id="discountform" name="discountform" method="post" action="">
+    <?php generateFormToken("discountform"); ?>
 <input type="hidden" name="delete_code" id="delete_code" value="">
 
 <?php echo $lang["code"] . ": " ?><input type="text" name="code" size="20" value="<?php echo $lang["newcode"] ?>">

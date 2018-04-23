@@ -28,7 +28,7 @@ $disablenavlinks=getval("disablenav","")=="true";
 $uploader = getvalescaped("uploader","");
 $collection = getvalescaped('collection', '', true);
 $resetform = (getval("resetform", false) !== false);
-
+$ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getvalescaped("archive",0,true); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $autorotate = getval("autorotate","");
 
@@ -268,13 +268,13 @@ if (!get_edit_access($ref,$resource["archive"],false,$resource))
   exit();
 }
 
-if (getval("regen","")!="")
+if (getval("regen","")!="" && enforcePostRequest($ajax))
 {
   sql_query("update resource set preview_attempts=0 WHERE ref='" . $ref . "'");
   create_previews($ref,false,$resource["file_extension"]);
 }
 
-if (getval("regenexif","")!="")
+if (getval("regenexif","")!="" && enforcePostRequest($ajax))
 {
   extract_exif_comment($ref);
 }
@@ -372,7 +372,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
         
         if (($save_errors === true || $is_template) && getval("tweak","")=="")
             {
-            if ($ref > 0 && getval("save","") != "")
+            if ($ref > 0 && getval("save","") != "" && enforcePostRequest($ajax))
                 {
                 # Log this
                 daily_stat("Resource edit",$ref);
@@ -538,7 +538,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             $show_error=true;
             }
         # If auto-saving, no need to continue as it will only add to bandwidth usage to send the whole edit page back to the client. Send a simple 'SAVED' message instead.
-        if (getval("autosave","")!="")
+        if (getval("autosave","")!="" && enforcePostRequest($ajax))
             {
             $return=array();
             if(!is_array($save_errors))
@@ -599,6 +599,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             }
         else
             {
+            enforcePostRequest($ajax);
+
             $save_errors=save_resource_data_multi($collection);
             if(!is_array($save_errors) && !hook("redirectaftermultisave"))
                 {
@@ -609,7 +611,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 		}
     }
     
-if (getval("tweak","")!="" && !$resource_file_readonly)
+if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($ajax))
    {
    $tweak=getval("tweak","");
    switch($tweak)
@@ -960,7 +962,8 @@ else
         preventautosave = true;
         return <?php echo ($modal ? 'Modal' : 'CentralSpace'); ?>Post(this, true);
       ">
-<input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
+    <?php generateFormToken("mainform"); ?>
+    <input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
    <div class="BasicsBox">
     
       <input type="hidden" name="submitted" value="true">
@@ -1940,7 +1943,8 @@ else
             ajax: 'true',
             resource: <?php echo $ref; ?>,
             ref: ref,
-            type: type
+            type: type,
+            <?php echo generateAjaxToken("removeCustomAccess"); ?>
          },
          success: function() {
 			 if(type=='user')

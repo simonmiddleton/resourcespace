@@ -29,7 +29,7 @@ if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 
 #handle posts
-if (array_key_exists("userfile",$_FILES))
+if (array_key_exists("userfile",$_FILES) && enforcePostRequest(false))
     {
 	$status=upload_preview($ref);
     if($status !== false)
@@ -56,6 +56,7 @@ function check(filename) {
 }
 </script>
 <form method="post" class="form" enctype="multipart/form-data" action="upload_preview.php">
+<?php generateFormToken("upload_preview"); ?>
 <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref)?>">
 <br/>
 <?php if ($status!="") { ?><?php echo $status?><?php } ?>

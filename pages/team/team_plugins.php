@@ -19,7 +19,7 @@ if(!checkperm('a'))
     exit($lang['error-permissiondenied']);
     }
 
-if (isset($_REQUEST['activate']))
+if (isset($_REQUEST['activate']) && enforcePostRequest(false))
    {
    $inst_name = trim(getvalescaped('activate',''), '#');
    if ($inst_name!='')
@@ -28,7 +28,7 @@ if (isset($_REQUEST['activate']))
       }
    redirect($baseurl_short.'pages/team/team_plugins.php');    # Redirect back to the plugin page so plugin is actually activated. 
    }
-elseif (isset($_REQUEST['deactivate']))
+elseif (isset($_REQUEST['deactivate']) && enforcePostRequest(false))
    { # Deactivate a plugin
    # Strip the leading hash mark added by javascript.
    $remove_name = trim(getvalescaped('deactivate',''), "#");
@@ -38,7 +38,7 @@ elseif (isset($_REQUEST['deactivate']))
       }
    redirect($baseurl_short.'pages/team/team_plugins.php');    # Redirect back to the plugin page so plugin is actually deactivated.
    }
- elseif (isset($_REQUEST['purge']))
+ elseif (isset($_REQUEST['purge']) && enforcePostRequest(false))
    { # Purge a plugin's configuration (if stored in DB)
    # Strip the leading hash mark added by javascript.
    $purge_name = trim(getvalescaped('purge',''), '#');
@@ -47,7 +47,7 @@ elseif (isset($_REQUEST['deactivate']))
       purge_plugin_config($purge_name);
       }
    }
-elseif ($enable_plugin_upload && isset($_REQUEST['submit']))
+elseif ($enable_plugin_upload && isset($_REQUEST['submit']) && enforcePostRequest(false))
    { # Upload a plugin .rsp file. 
    if (($_FILES['pfile']['error'] == 0) && (pathinfo($_FILES['pfile']['name'], PATHINFO_EXTENSION)=='rsp'))
       {
@@ -633,6 +633,7 @@ if ($enable_plugin_upload)
    <div class="plugin-upload">
    <h2 class="pageline"><?php echo $lang['plugins-uploadheader']; ?></h2>
    <form enctype="multipart/form-data" method="post" action="<?php echo $baseurl_short?>pages/team/team_plugins.php">
+        <?php generateFormToken("team_plugins"); ?>
       <input type="hidden" name="MAX_FILE_SIZE" value="30000000" />
       <p><?php echo $lang['plugins-uploadtext']; ?><input type="file" name="pfile" /><br /></p>
       <input type="submit" name="submit" value="<?php echo $lang['plugins-uploadbutton'] ?>" />
@@ -646,6 +647,7 @@ if ($enable_plugin_upload)
 ?>
 </div>
 <form id="anc-post" method="post" action="<?php echo $baseurl_short?>pages/team/team_plugins.php" >
+    <?php generateFormToken("anc_post"); ?>
   <input type="hidden" id="anc-input" name="" value="" />
 </form>
 <?php

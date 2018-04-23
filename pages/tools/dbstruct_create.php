@@ -13,7 +13,7 @@ $dataFor=array();
 $tableFor=array();
 $indicesFor=array();
 
-if (getval("execute","")!="")
+if (getval("execute","")!="" && enforcePostRequest(false))
 	{
 	# Fetch all tables
 	$tables=sql_query("show tables");
@@ -73,6 +73,7 @@ else
 	printArray('Creates data for tables', $createData, $dataFor);
 	?>
 	<form method="post">
+        <?php generateFormToken("dbstruct_create"); ?>
 	<input type="submit" name="execute" value="Execute">
 	</form>
 	<?php

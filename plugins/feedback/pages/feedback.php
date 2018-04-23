@@ -41,7 +41,7 @@ $error="";
 $errorfields=array();
 $sent=false;
 
-if (getval("send","")!="")
+if (getval("send","")!="" && enforcePostRequest(false))
 	{
 	$csvheaders="\"date\"";
 	$csvline="\"" . date("Y-m-d") . "\"";
@@ -130,7 +130,10 @@ h2 {font-size:18px;}
 } else { ?>
 
 <form method=post action="<?php echo $baseurl_short?>plugins/feedback/pages/feedback.php">
-<?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><br /><?php } ?>
+<?php
+generateFormToken("feedback");
+
+if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><br /><?php } ?>
 <?php 
 	
 for ($n=1;$n<=count($feedback_questions);$n++)

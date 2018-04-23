@@ -16,7 +16,7 @@ $url_params= ($order_by ? "&orderby={$order_by}" : "") . ($find ? "&find={$find}
 
 # create new record from callback
 $new_size_id=getvalescaped("newsizeid","");
-if ($new_size_id!="")
+if ($new_size_id!="" && enforcePostRequest(false))
 	{
 	sql_query("insert into preview_size(id,name,internal,width,height) values('" . strtolower($new_size_id) . "','{$new_size_id}',0,0,0)");
 	$ref=sql_insert_id();
@@ -33,7 +33,7 @@ if (!sql_value("select ref as value from preview_size where ref='{$ref}' and int
 	exit;
 	}
 
-if (getval("deleteme",false))
+if (getval("deleteme", false) && enforcePostRequest(false))
 	{
 	sql_query("delete from preview_size where ref='{$ref}'");
 	log_activity(null,LOG_CODE_DELETED,null,'preview_size',null,$ref);
@@ -41,7 +41,7 @@ if (getval("deleteme",false))
 	exit;
 	}
 
-if (getval("save",false))
+if (getval("save", false) && enforcePostRequest(false))
 	{
 	$cols=array();
 
@@ -95,9 +95,13 @@ $record = $record[0];
 
 include "../../include/header.php";
 
-?><form method="post" enctype="multipart/form-data" action="<?php echo $baseurl_short; ?>pages/admin/admin_size_management_edit.php?ref=<?php echo $ref . $url_params ?>" id="mainform"
-	onSubmit="return CentralSpacePost(this,true);" >
-
+?>
+<form method="post" 
+      enctype="multipart/form-data" 
+      action="<?php echo $baseurl_short; ?>pages/admin/admin_size_management_edit.php?ref=<?php echo $ref . $url_params ?>"
+      id="mainform"
+      onSubmit="return CentralSpacePost(this, true);">
+    <?php generateFormToken("mainform"); ?>
 	<div class="BasicsBox">
 
 	<p>

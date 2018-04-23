@@ -15,7 +15,7 @@ $run_mode = ('true' == getval('run_mode', '') ? true : false);
 
 
 // Process this script now
-if($ajax && $run_mode)
+if($ajax && $run_mode && enforcePostRequest($ajax))
     {
     $command = "\"{$php_path}" . ($config_windows ? '/php.exe" ' : '/php" ') . "{$SCRIPTS[$script]['file']} --emu_test_mode=false --emu_userref={$userref}";
     run_external($command, $return_code);
@@ -64,7 +64,8 @@ include '../../../include/header.php';
             {
             ajax     : true,
             script   : script,
-            run_mode : true
+            run_mode : true,
+            <?php echo generateAjaxToken("runScript"); ?>
             },
             function(response)
                 {

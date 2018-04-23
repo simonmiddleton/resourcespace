@@ -19,7 +19,7 @@ while(true)
 
 
 # Split action
-if (getval("method","")!="")
+if (getval("method","")!="" && enforcePostRequest(false))
 	{
 	$ranges=getval("ranges","");
 	$rs=explode(",",$ranges);
@@ -161,6 +161,7 @@ function UpdateRanges()
 </script>
 
 <form method="post" action="pdf_split.php">
+<?php generateFormToken("pdf_split"); ?>
 <input type="hidden" name="ref" value="<?php echo $ref ?>">
 <input type="hidden" name="ranges" id="ranges" value="<?php echo getval("ranges","1:$page") ?>">
 <div id="ranges_html">

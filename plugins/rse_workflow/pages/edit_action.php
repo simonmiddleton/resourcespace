@@ -28,7 +28,7 @@ else
 
 //print_r($workflowaction);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && getvalescaped("submitted","")!="")
+if (getvalescaped("submitted","")!="" && enforcePostRequest(false))
 	{
 	$saveerror=false;
 	$ref=getvalescaped("ref","");
@@ -123,7 +123,7 @@ if (isset($saveerror))
 <h1><?php echo $lang['rse_workflow_action_edit_action']; ?></h1>
 
 <form id="form_workflow_action" name="form_workflow_action" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $ref ?>">
-
+    <?php generateFormToken("form_workflow_action"); ?>
 	<input type="hidden" name="ref" id="actionref" value="<?php echo htmlspecialchars($ref) ?>" />
 	<input type="hidden" name="submitted" value="true">
 		

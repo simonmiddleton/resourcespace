@@ -19,7 +19,7 @@ $rating=$commentdata["rating"];
 # Check access
 if (!collection_readable($collection)) {exit("Access denied.");}
 
-if (getval("submitted","")!="")
+if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	# Save comment
 	$comment=trim(getvalescaped("comment",""));
@@ -55,6 +55,7 @@ if (file_exists($imagepath)){?>
 <?php if (!hook("replacecollectioncommentform")) { ?>
 
 <form method="post" action="<?php echo $baseurl_short?>pages/collection_comment.php"  onSubmit="return CentralSpacePost(this,true);">
+    <?php generateFormToken("collection_comment"); ?>
 <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>">
 <input type="hidden" name="k" value="<?php echo htmlspecialchars($k) ?>">
 <input type="hidden" name="collection" value="<?php echo htmlspecialchars($collection) ?>">

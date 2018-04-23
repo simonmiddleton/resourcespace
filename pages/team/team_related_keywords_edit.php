@@ -13,7 +13,7 @@ include "../../include/research_functions.php";
 $keyword=strtolower(getvalescaped("keyword",""));
 $related=strtolower(getvalescaped("related",""));
 
-if (getval("save","")!="")
+if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	# Save data
 	save_related_keywords($keyword,$related);
@@ -37,6 +37,7 @@ include "../../include/header.php";
 <h1><?php echo $lang["managerelatedkeywords"]?></h1>
 
 <form method=post id="mainform" action="<?php echo $baseurl_short?>pages/team/team_related_keywords_edit.php">
+    <?php generateFormToken("mainform"); ?>
 <input type="hidden" name="keyword" value="<?php echo $keyword?>">
 
 <div class="Question"><label><?php echo $lang["keyword"]?></label><div class="Fixed"><?php echo $keyword?></div><div class="clearerleft"> </div></div>

@@ -428,6 +428,7 @@ jQuery(document).ready(function()
 <h1><?php echo ($archiveonly)?$lang["archiveonlysearch"]:$lang["advancedsearch"];?> </h1>
 <p class="tight"><?php echo text("introtext")?></p>
 <form method="post" id="advancedform" action="<?php echo $baseurl ?>/pages/search_advanced.php" >
+<?php generateFormToken("advancedform"); ?>
 <input type="hidden" name="submitted" id="submitted" value="yes">
 <input type="hidden" name="countonly" id="countonly" value="">
 

@@ -17,7 +17,7 @@ $modal=(getval("modal","")=="true");
 $backurl=getval("backurl","");
 $url=$baseurl_short."pages/team/team_request_edit.php?ref=" . $ref . "&backurl=" . urlencode($backurl);
 
-if (getval("submitted","") != "")
+if (getval("submitted","") != "" && enforcePostRequest(false))
     {
     # Save research request data
     if(!hook("saverequest", "", array($ref)))
@@ -88,7 +88,10 @@ if ($request !== false)
         ?>
         
     <form method="post" action="<?php echo $baseurl_short?>pages/team/team_request_edit.php" onSubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
-        <?php if($modal)
+    <?php
+    generateFormToken("team_request_edit");
+
+    if($modal)
         {
         ?>
         <input type=hidden name="modal" value="true">

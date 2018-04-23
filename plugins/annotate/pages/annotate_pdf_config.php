@@ -171,8 +171,9 @@ function loadIt() {
 <form method=post name="annotateform" id="annotateform" action="<?php echo $baseurl_short?>plugins/annotate/pages/annotate_pdf_gen.php" >
 <input type=hidden name="ref" value="<?php echo $ref?>">
 <input type=hidden name="uniqid" value="<?php echo $uniqid?>">
-
-<?php if ($is_collection){?>
+<?php
+generateFormToken("annotateform");
+if ($is_collection){?>
 <div class="Question">
 <label><?php echo $lang["collection"]?></label><div class="Fixed"><?php echo i18n_get_collection_name($collection)?></div>
 <div class="clearerleft"> </div>

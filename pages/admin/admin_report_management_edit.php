@@ -19,7 +19,7 @@ $copyreport=getvalescaped("copyreport","");
 
 # create new record from callback
 $new_report_name=getvalescaped("newreportname","");
-if ($new_report_name!="")
+if ($new_report_name!="" && enforcePostRequest(false))
 	{
 	sql_query("insert into report(name) values('{$new_report_name}')");
 	$ref=sql_insert_id();
@@ -28,7 +28,7 @@ if ($new_report_name!="")
 	redirect($baseurl_short."pages/admin/admin_report_management_edit.php?ref={$ref}{$url_params}");	// redirect to prevent repost and expose form data
 	exit;
 	}
-elseif ($copyreport!="")
+elseif ($copyreport!="" && enforcePostRequest(false))
 	{
 	// Copy report?
 	sql_query("insert into report (name, query) select concat('" . $lang["copy_of"] . " ',name), query from report where ref='$ref'");
@@ -43,7 +43,7 @@ elseif (!sql_value("select ref as value from report where ref='{$ref}'",false))
 	exit;
 	}	
 
-if (getval("deleteme",false))
+if (getval("deleteme",false) && enforcePostRequest(false))
 	{
 	log_activity(null,LOG_CODE_DELETED,null,'report','name',$ref);
 	sql_query("delete from report where ref='{$ref}'");
@@ -53,7 +53,7 @@ if (getval("deleteme",false))
 
 $name=getvalescaped("name","");
 $query=getvalescaped("query","");
-if (getval("save",false) && $query!="")
+if (getval("save",false) && $query!="" && enforcePostRequest(false))
 	{
 	log_activity(null,LOG_CODE_EDITED,$name,'report','name',$ref,null,sql_value("SELECT `name` AS value FROM `report` WHERE ref={$ref}",""));
 	log_activity(null,LOG_CODE_EDITED,$query,'report','query',$ref,null,sql_value("SELECT `query` AS value FROM `report` WHERE ref={$ref}",""),null,true);
@@ -67,9 +67,13 @@ $record = $record[0];
 
 include "../../include/header.php";
 
-?><form method="post" enctype="multipart/form-data" action="<?php echo $baseurl_short; ?>pages/admin/admin_report_management_edit.php?ref=<?php echo $ref . $url_params ?>" id="mainform"
-	onSubmit="return CentralSpacePost(this,true);" class="FormWide">
-
+?>
+<form method="post"
+      enctype="multipart/form-data"
+      action="<?php echo $baseurl_short; ?>pages/admin/admin_report_management_edit.php?ref=<?php echo $ref . $url_params ?>"
+      id="mainform"
+      onSubmit="return CentralSpacePost(this,true);" class="FormWide">
+    <?php generateFormToken("mainform"); ?>
 	<div class="BasicsBox">
 
 	<p>

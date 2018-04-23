@@ -38,7 +38,7 @@ $index               = getvalescaped('new_index', '', true);
 $selected_user_group = getvalescaped('selected_user_group', '', true);
 
 // Re-order user tiles
-if(!empty($index) && isset($usertile) && '' == $selected_user_group)
+if(!empty($index) && isset($usertile) && '' == $selected_user_group && enforcePostRequest(true))
     {
     if($index > $usertile["order_by"])
         {$index+=5;}
@@ -50,7 +50,7 @@ if(!empty($index) && isset($usertile) && '' == $selected_user_group)
     }
 
 // Re-order user group tiles
-if(!empty($index) && isset($tile) && !isset($usertile) && '' != $selected_user_group)
+if(!empty($index) && isset($tile) && !isset($usertile) && '' != $selected_user_group && enforcePostRequest(true))
     {
     $usergroup_tile = get_usergroup_tile($tile['ref'], $selected_user_group);
     if(0 == count($usergroup_tile))
@@ -76,7 +76,7 @@ if(!empty($index) && isset($tile) && !isset($usertile) && '' != $selected_user_g
 	}
 
 // Re-order default dash tiles
-if(!empty($index) && isset($tile) && !isset($usertile) && '' == $selected_user_group)
+if(!empty($index) && isset($tile) && !isset($usertile) && '' == $selected_user_group && enforcePostRequest(true))
 	{
 	if($index > $tile["default_order_by"])
 		{$index+=5;}
@@ -93,7 +93,7 @@ if(!empty($index) && isset($tile) && !isset($usertile) && '' == $selected_user_g
  * Delete Tile 
  */
 $delete=getvalescaped("delete",false);
-if($delete && isset($usertile))
+if($delete && isset($usertile) && enforcePostRequest(true))
 	{
 	if(!checkPermission_dashmanage()){exit($lang["error-permissiondenied"]);}
 	delete_user_dash_tile($usertile["ref"],$userref);
@@ -101,7 +101,7 @@ if($delete && isset($usertile))
 	echo "Deleted U".$usertile['ref'];
 	exit();
 	}
-if($delete && isset($tile) && !isset($usertile))
+if($delete && isset($tile) && !isset($usertile) && enforcePostRequest(true))
 	{
 	if(!checkPermission_dashcreate()){exit($lang["error-permissiondenied"]);}
 

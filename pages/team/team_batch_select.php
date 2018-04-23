@@ -13,7 +13,7 @@ $alternative = getvalescaped('alternative','');
 $allowed_extensions=get_allowed_extensions_by_type($resource_type);
 
 # Create a new collection?
-if ($collection_add=="new")
+if ($collection_add=="new" && enforcePostRequest(false))
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("ymdHis");} # Do not translate this string, the collection name is translated when displayed!
@@ -105,6 +105,8 @@ if(!hook("replace_tbs_heading"))
 <input type="hidden" name="collection" value="<?php echo $collection_add?>">
 <input type="hidden" name="alternative" value="<?php echo $alternative?>">
 <?php
+generateFormToken("team_batch_select");
+
 hook("additional_tbs_hiddens");
 ?>
 

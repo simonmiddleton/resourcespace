@@ -177,6 +177,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 		<div id="comment_form">
 			<form class="comment_form" action="javascript:void(0);" method="">
 EOT;
+        generateFormToken("comment_form");
         hook("beforecommentbody");
         echo <<<EOT
 				<input id="comment_form_collection_ref" type="hidden" name="collection_ref" value="${collection_ref}"></input>
@@ -266,17 +267,16 @@ EOT;
 
 				}							
 			
-			if (checkPerm("o")) {
-				echo <<<EOT
-				
-				<form class="comment_removal_form" action="javascript:void(0);" method="">
-					<input type="hidden" name="comment_to_hide" value="${thisRef}"></input>					
-					<a href="javascript:void(0)" onclick="if (confirm ('${lang['comments_hide-comment-text-confirm']}')) submitForm(this.parentNode);">&gt; ${lang['comments_hide-comment-text-link']}</a>					
-				</form>
-				
-EOT;
-
-			}
+            if(checkPerm("o"))
+                {
+                ?>
+                <form class="comment_removal_form">
+                    <?php generateFormToken("comment_removal_form"); ?>
+                    <input type="hidden" name="comment_to_hide" value="<?php echo htmlspecialchars($thisRef); ?>"></input>                 
+                    <a href="javascript:void(0)" onclick="if (confirm ('<?php echo htmlspecialchars($lang['comments_hide-comment-text-confirm']); ?>')) submitForm(this.parentNode);">&gt; <?php echo htmlspecialchars($lang['comments_hide-comment-text-link']); ?></a>                  
+                </form>
+                <?php
+                }
 			
 			echo "</div>";		// end of CommentEntryInfoFlag
 			echo "</div>";	// end of CommentEntryInfoLine			
@@ -315,6 +315,7 @@ EOT;
 													
 EOT;
                 hook("beforecommentflagreason");
+                generateFormToken("comment_form");
                 echo <<<EOT
 				    <textarea class="CommentFlagReason" maxlength="${comments_max_characters}" name="comment_flag_reason" placeholder="${lang['comments_flag-reason-placeholder']}"></textarea><br />	
 EOT;

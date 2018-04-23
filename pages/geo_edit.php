@@ -21,7 +21,7 @@ if (!get_edit_access($ref,$resource["archive"],false,$resource)) {exit ("Permiss
 ?>
 <?php
 
-if (isset($_POST['submit'])) 
+if (isset($_POST['submit']) && enforcePostRequest(false))
     {
     $s=explode(",",getvalescaped('geo-loc',''));
     if (count($s)==2) 
@@ -172,6 +172,7 @@ hook("rendermapfooter");
 ?>
 <p><?php echo $lang['location-details']; ?></p>
 <form id="map-form" method="post" action="<?php echo $baseurl_short?>pages/geo_edit.php">
+    <?php generateFormToken("map-form"); ?>
 <input name="ref" type="hidden" value="<?php echo $ref; ?>" />
 <input name="geocol" type="hidden" value="<?php echo $geocol; ?>" />
 <input name="map-zoom" type="hidden" value="<?php echo $zoom ?>" id="map-zoom" />

@@ -31,7 +31,7 @@ if ($collection===false)
 	exit();
 	}
 
-if (getval("submitted","")!="")
+if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	$categories  = array();
 	for($n=0;$n<$theme_category_levels;$n++)
@@ -68,6 +68,7 @@ include "../include/header.php";
 <h1><?php echo $lang["collection_set_theme_category_title"]?></h1>
 <p><?php echo text("introtext")?></p>
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_set_category.php">
+    <?php generateFormToken("collectionform"); ?>
 	<input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
 	<input type="hidden" name="redirect" id="redirect" value="yes" >
 	<input type=hidden name="submitted" value="true">

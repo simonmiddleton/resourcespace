@@ -30,7 +30,7 @@ $collection=get_collection($ref);if ($collection===false) {
 $resources=do_search("!collection".$ref);
 $colcount=count($resources);
 
-if (getval("tweak","")!="")
+if (getval("tweak","")!="" && enforcePostRequest(false))
 	{
 	$tweak=getval("tweak","");
 	switch($tweak)
@@ -77,6 +77,7 @@ include "../include/header.php";
 <h1><?php echo $lang["editresourcepreviews"]?></h1>
 <p><?php echo text("introtext")?></p>
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_edit_previews.php">
+<?php generateFormToken("collectionform"); ?>
 <input type=hidden value='<?php echo urlencode($ref) ?>' name="ref" id="ref"/>
 
 <?php if (!checkperm("F*")) { ?>

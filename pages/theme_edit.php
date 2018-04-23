@@ -58,7 +58,7 @@ for ($x=0;$x<$themecount;$x++)
 		}
 	}
 
-if (getval("rename","")!="")
+if (getval("rename","")!="" && enforcePostRequest(false))
 	{
 		# Save theme category
 		save_themename();
@@ -88,8 +88,9 @@ if(!$modal)
 		<input type="hidden" name="collection_column" id="collection_column" value="<?php echo $collection_column?>">
 		<input type="hidden" name="link" id="link" value="<?php echo $link?>">
 		<input type="hidden" name="lastlevelchange" id="lastlevelchange" value="<?php echo htmlspecialchars($lastlevelchange)?>">
-
 		<?php
+        generateFormToken("themeform");
+
 		for ($x=0;$x<$themecount;$x++)
 			{
 			if ($x==0)

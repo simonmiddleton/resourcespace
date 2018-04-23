@@ -1018,7 +1018,8 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         var post_data = {
                             ajax: true,
                             dropdown_actions: true,
-                            delete: <?php echo urlencode($collection_data['ref']); ?> 
+                            delete: <?php echo urlencode($collection_data['ref']); ?>,
+                            <?php echo generateAjaxToken("delete_collection"); ?>
                         };
 
                         jQuery.post('<?php echo $baseurl; ?>/pages/collection_manage.php', post_data, function(response) {
@@ -1104,7 +1105,8 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                                 ref: '<?php echo $collection_data["ref"]; ?>',
                                 name: <?php echo json_encode($collection_data["name"]); ?>,
                                 public: '<?php echo $collection_data["public"]; ?>',
-                                deleteall: 'on'
+                                deleteall: 'on',
+                                <?php echo generateAjaxToken("delete_all_in_collection"); ?>
                             };
 
                             jQuery.post('<?php echo $baseurl; ?>/pages/collection_edit.php?ajax=true', post_data, function()
@@ -1121,11 +1123,12 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 						var action = 'hidecollection';
 						var collection = <?php echo urlencode($collection_data['ref']);?>;
 						var mycol = jQuery('#<?php echo $action_selection_id; ?> option:selected').data('mycol');
-						
+
 						jQuery.ajax({
 							type: 'POST',
 							url: baseurl_short + 'pages/ajax/showhide_collection.php?action=' + action + '&collection=' + collection,
-							success: function(data) {
+							data: {<?php echo generateAjaxToken("hide_collection"); ?>},
+                            success: function(data) {
 								if (data.trim() == "HIDDEN") {
 									CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection='+mycol);
 								}

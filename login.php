@@ -111,11 +111,20 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
     }
 }
 
-if ((getval("logout","")!="") && array_key_exists("user",$_COOKIE))
+if(getval("logout", "") != "" && enforcePostRequest(false) && array_key_exists("user", $_COOKIE))
     {
-    #fetch username and update logged in status
-    $session=escape_check($_COOKIE["user"]);
-    sql_query("update user set logged_in=0,session='' where session='$session'");
+    $session = escape_check($_COOKIE["user"]);
+
+    // Check CSRF Token
+    $csrf_token = getval($CSRF_token_identifier, "");
+    if($_SERVER["REQUEST_METHOD"] === "POST" && !isValidCSRFToken($csrf_token, $session))
+        {
+        http_response_code(400);
+        debug("WARNING: CSRF verification failed!");
+        trigger_error($lang["error-csrf-verification-failed"]);
+        }
+
+    sql_query("UPDATE user SET logged_in = 0, session = NULL, csrf_token = NULL WHERE session = '{$session}'");
     hook("removeuseridcookie");
     #blank cookie
     rs_setcookie('user', '', 0);

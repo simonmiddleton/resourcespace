@@ -3,7 +3,7 @@ include "../include/db.php";
 include_once "../include/general.php";
 if (!$allow_password_reset) {exit("Password requests have been disabled.");} # User should never see this.
 
-if (getval("save","")!="")
+if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	if (email_reset_link(getvalescaped("email","")) || $hide_failed_reset_text)
 		{
@@ -27,7 +27,8 @@ if($login_background)
 	
 	  
 	<form method="post" action="<?php echo $baseurl_short?>pages/user_password.php">  
-	<div class="Question">
+	<?php generateFormToken("user_password"); ?>
+    <div class="Question">
 	<label for="email"><?php echo $lang["youremailaddress"]?></label>
 	<input type=text name="email" id="email" class="stdwidth" value="<?php echo htmlspecialchars(getval("email",""))?>">
 	<?php if (isset($error) && !$hide_failed_reset_text) { ?><div class="FormError">!! <?php echo $lang["emailnotfound"]?> !!</div><?php hook("userpasswdextramsg"); ?><?php } ?>

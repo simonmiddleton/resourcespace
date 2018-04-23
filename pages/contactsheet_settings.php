@@ -104,6 +104,7 @@ if(!collection_readable($collection))
     and then thumbnails it for the ajax request. This creates a very small but helpful 
     preview image that can be judged before initiating a download of sometimes several MB.-->
     <form method="post" name="contactsheetform" id="contactsheetform" action="<?php echo $baseurl_short; ?>pages/ajax/contactsheet.php" >
+        <?php generateFormToken("contactsheetform"); ?>
         <input type=hidden name="c" value="<?php echo htmlspecialchars($collection); ?>">
         <input type=hidden name="field_value_limit" value="<?php echo urlencode($field_value_limit); ?>">
         <!--<div name="error" id="error"></div>-->
@@ -170,7 +171,7 @@ if(!collection_readable($collection))
                         action: 'get_sheetstyle_fields',
                         };
 
-                    jQuery.post(post_url, post_data, function(response)
+                    jQuery.get(post_url, post_data, function(response)
                         {
                         if(typeof response !== 'undefined')
                             {
@@ -316,7 +317,7 @@ if($contactsheet_use_field_templates)
                         action: 'get_sheetstyle_fields',
                         };
 
-                    jQuery.post(post_url, post_data, function(response)
+                    jQuery.get(post_url, post_data, function(response)
                         {
                         if(typeof response !== 'undefined')
                             {

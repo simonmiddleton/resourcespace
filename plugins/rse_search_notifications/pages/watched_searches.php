@@ -89,6 +89,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 	<div class="TopInpageNav">
 
 		<form method="post" action="<?php echo $url; ?>" onsubmit="return CentralSpacePost(this,true);">
+            <?php generateFormToken("rse_search_notifications_watched_searches"); ?>
 			<div class="Question">
 				<div class="tickset">
 					<div class="Inline">
@@ -118,6 +119,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 	if (checkperm("a"))
 		{
 		?><form action="<?php echo $watched_searches_url; ?>" onchange="CentralSpacePost(this,true);">
+            <?php generateFormToken("rse_search_notifications_watched_searches"); ?>
 			<input type="hidden" name="offset" id="offset" value="0" />
 			<input type="hidden" name="find" id="find" value="<?php echo htmlspecialchars($find); ?>" >
 			<label for="allusers"><?php echo $lang['search_notifications_show_for_all_users']; ?></label>

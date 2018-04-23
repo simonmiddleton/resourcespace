@@ -13,7 +13,7 @@ if(is_string($newurl))
     $url = $newurl;
     }
 
-if('' != getval('save', ''))
+if('' != getval('save', '') && enforcePostRequest(false))
     {
     if('on' == getvalescaped('iaccept', ''))
         {
@@ -57,7 +57,8 @@ include "../include/header.php";
 	</div>
 	
 	<form method="post" action="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k); ?>" onSubmit="if (!document.getElementById('iaccept').checked) {alert('<?php echo $lang["mustaccept"] ?>');return false;}">
-	<input type=hidden name="url" value="<?php echo htmlspecialchars($url)?>">
+	<?php generateFormToken("terms"); ?>
+    <input type=hidden name="url" value="<?php echo htmlspecialchars($url)?>">
 	
 	<div class="Question">
 	<label for="iaccept"><?php echo $lang["iaccept"] ?></label>

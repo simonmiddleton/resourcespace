@@ -79,7 +79,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
     $diff=log_diff($current,$log["previous_value"]);
 
     # Process submit
-    if (getval("action","")=="revert")
+    if (getval("action","")=="revert" && enforcePostRequest(false))
         {
         if($b_fixed_field)
             {
@@ -144,7 +144,7 @@ elseif($type==LOG_CODE_UPLOADED)
     # ----------------------------- PROCESSING FOR "u" IMAGE UPLOAD ROWS ---------------------------------------------
     
     # Process submit
-    if (getval("action","")=="revert")
+    if (getval("action","")=="revert" && enforcePostRequest(false))
         {
         # Perform the reversion. First this reversion itself needs to be logged and therefore 'revertable'.
         
@@ -210,8 +210,9 @@ include "../../../include/header.php";
 <form method=post name="form" id="form" action="<?php echo $baseurl_short ?>plugins/rse_version/pages/revert.php" onSubmit="CentralSpacePost(this,true);return false;">
 <input type="hidden" name="ref" value="<?php echo $ref ?>">
 <input type="hidden" name="action" value="revert">
-    
-<?php if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)
+<?php
+generateFormToken("form");
+if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)
     if ($b_fixed_field)
         {
         if(count($nodes_to_add)>0)

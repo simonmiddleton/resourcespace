@@ -57,7 +57,7 @@ else
 	}
 
 # Save report
-if (getval("name","")!="")
+if (getval("name", "") != "" && getval("save", "") != "" && enforcePostRequest(getval("ajax", false)))
     {
     if ($ref=="")
         {
@@ -85,6 +85,7 @@ include dirname(__FILE__)."/../../include/header.php";
 
 <div class="CollapsibleSection" id="ReportForm" <?php if ($ref!="") { ?>style="display:none;"<?php } ?>>
 <form method="post" id="mainform" onsubmit="return CentralSpacePost(this);" >
+    <?php generateFormToken("mainform"); ?>
 <input type="hidden" name="ref" value="<?php echo $ref?>">
 
 <div class="Question">

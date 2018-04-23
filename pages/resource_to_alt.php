@@ -33,7 +33,7 @@ if ($ref > 0 && $alt > 0) {
 		}
 
 		// we're in business - do a copy
-		if (alt_from_resource($alt,$ref,'',$delete)){
+		if (enforcePostRequest(false) && alt_from_resource($alt,$ref,'',$delete)){
 			redirect("pages/view.php?ref=".urlencode($ref));
 			exit;
 		} else {
@@ -48,6 +48,7 @@ if ($ref > 0 && $alt > 0) {
 	// show a form to set up a copy
 	include "../include/header.php";
 	echo "<form>Source resource: <input type='text' name='alt' />";
+    generateFormToken("resource_to_alt");
 	echo "<br />Target resource: <input type='text' name='ref' />";
 	// fixme - don't display delete option if they don't have permission to do so
 	echo "<br /><input type='checkbox' name='delete' value='1'>Delete original after copy</input> (Warning: this will delete the resource, all its metadata, and any alternative files. Use with caution!)"; 

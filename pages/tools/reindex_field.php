@@ -45,7 +45,7 @@ if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
 
 if (!in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES) && !$fieldinfo["keywords_index"]) {exit("Field is not set to be indexed.");}
 
-if (getval("submit","")!="")
+if (getval("submit","")!="" && enforcePostRequest(false))
 	{
 	echo "<pre>";
 	$resourcecount = 0;
@@ -121,6 +121,7 @@ else
 		}
 	?>
 	<form method="post" action="reindex_field.php?field=<?php echo $field ?>">
+        <?php generateFormToken("reindex_field"); ?>
 	<input type="hidden" name="col" value="<?php echo $collectionid ?>">
 	<input type="hidden" name="startid" value="<?php echo $startid ?>">
 	<input type="submit" name="submit" value="Reindex field '<?php echo $fieldinfo["title"] . "'" . $extratext ?>">

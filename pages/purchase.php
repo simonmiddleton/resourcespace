@@ -6,7 +6,7 @@ include "../include/resource_functions.php";
 include "../include/search_functions.php";
 include_once "../include/collections_functions.php";
 
-if (getval("purchaseonaccount","")!="" && $userrequestmode==3)
+if (getval("purchaseonaccount","")!="" && $userrequestmode==3 && enforcePostRequest(false))
 	{
 	# Invoice mode.
 	# Mark as payment complete.
@@ -35,6 +35,7 @@ if (getval("submit","")=="")
 	  <p><?php echo $lang["buynowintro"]?></p>
 	   
 	<form method="post" action="<?php echo $baseurl_short?>pages/purchase.php">
+        <?php generateFormToken("buynow"); ?>
 	<table class="InfoTable">
 	<?php 
 	$showbuy=false;
@@ -213,6 +214,7 @@ else
 		# Invoice payment.
 		?>
 		<form method="post" action="<?php echo $baseurl_short?>pages/purchase.php" onsubmit="return confirm('<?php echo $lang["areyousurepayaccount"] ?>');">
+            <?php generateFormToken("purchaseonaccount_form"); ?>
 		<p><input type="submit" name="purchaseonaccount"  value="&nbsp;&nbsp;&nbsp;<?php echo $lang["purchaseonaccount"]?>&nbsp;&nbsp;&nbsp;"></p>
 	
 		</form>

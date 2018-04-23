@@ -85,8 +85,7 @@ function deletestate(code)
 <div class="clearerleft" ></div>
 
 <form style="display:none" id="form_delete_state" name="form_delete_state" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_states.php">
-
-	
+    <?php generateFormToken("form_delete_state"); ?>	
 	<input type="hidden" id="deletecode" name="delete" value="">
 	<div id="status_name_question">
 	<?php echo $lang["rse_workflow_state_need_target"]?>

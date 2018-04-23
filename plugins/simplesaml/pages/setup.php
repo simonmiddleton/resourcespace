@@ -12,7 +12,7 @@ $plugin_name = 'simplesaml';
 if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
 	
-if ((getval('submit','')!='') || (getval('save','')!=''))
+if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest(false))
 	{
 		
 	$simplesaml['simplesaml_site_block'] = getvalescaped('simplesaml_site_block','');
@@ -86,6 +86,7 @@ include '../../../include/header.php';
 ?>
 <form id="form1" name="form1" method="post" action="">
 <?php
+generateFormToken("simplesaml_form");
 echo config_section_header($lang['simplesaml_main_options'],'');
 echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label'], $simplesaml_lib_path);
 ?>

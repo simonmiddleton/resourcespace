@@ -75,6 +75,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 
 	<div>
 	<form action="<?php echo $baseurl . '/plugins/news/pages/news.php?ref=' . $ref ?>" method="post">
+        <?php generateFormToken("news"); ?>
 			<label for="buttons"></label>		
 			<input name="previous" type="submit" value="&lt;"/>	
 <?php

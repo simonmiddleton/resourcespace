@@ -468,7 +468,7 @@ function config_gen_setup_post($page_def,$plugin_name)
         {
         return handle_rsc_upload($plugin_name);
         }
-    elseif ((getval('submit','')!='') || (getval('save','')!=''))
+    else if(enforcePostRequest(false) && (getval('submit', '') != '' || getval('save','') != ''))
         {
         $config=array();
         foreach ($page_def as $def)
@@ -560,8 +560,9 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
         echo $plugin_page_frontm;
         }
 ?>
-      <form id="form1" name="form1" method="post" action="">
-<?php
+        <form id="form1" name="form1" method="post" action="">
+    <?php
+    generateFormToken("form1");
 
     foreach ($page_def as $def)
         {

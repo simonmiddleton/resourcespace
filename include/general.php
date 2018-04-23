@@ -4,6 +4,7 @@ include_once 'definitions.php';
 include_once 'language_functions.php';
 include_once 'message_functions.php';
 include_once 'node_functions.php';
+include_once 'encryption_functions.php';
 
 $GLOBALS['get_resource_path_fpcache'] = array();
 /**
@@ -6413,8 +6414,8 @@ function user_set_usergroup($user,$usergroup)
  * 
  * Used to generate initial spider and scramble keys.
  * 
- * @param  int    $length Optional, default=12
- * @return string         Random character string.
+ * @param  int    $length Lenght of desired string of bytes
+ * @return string         Random character string
  */
 function generateSecureKey($length = 64)
     {
@@ -6644,3 +6645,152 @@ function IsModal()
     return $modal;
     }
     
+
+
+/**
+* Generates a CSRF token (Encrypted Token Pattern)
+* 
+* @uses generateSecureKey()
+* @uses rsEncrypt()
+* 
+* @param  string  $session_id  The current user session ID
+* @param  string  $form_id     A unique form ID
+* 
+* @return  string  Token base64 encoded
+*/
+function generateCSRFToken($session_id, $form_id)
+    {
+    // IMPORTANT: keep nonce at the beginning of the data array
+    $data = json_encode(array(
+        "nonce"     => generateSecureKey(128),
+        "session"   => $session_id,
+        "timestamp" => time(),
+        "form_id"   => $form_id
+    ));
+
+    return rsEncrypt($data, $session_id);
+    }
+
+/**
+* Checks if CSRF Token is valid
+* 
+* @uses rsDecrypt()
+* 
+* @return boolean  Returns TRUE if token has been decrypted or CSRF is not enabled, FALSE otherwise
+*/
+function isValidCSRFToken($token_data, $session_id)
+    {
+    global $CSRF_enabled;
+
+    if(!$CSRF_enabled)
+        {
+        return true;
+        }
+
+    if($token_data === "")
+        {
+        return false;
+        }
+
+    $plaintext = rsDecrypt($token_data, $session_id);
+
+    if($plaintext === false)
+        {
+        return false;
+        }
+
+    $csrf_data = json_decode($plaintext, true);
+
+    if($csrf_data["session"] == $session_id)
+        {
+        return true;
+        }
+
+    return false;
+    }
+
+
+/**
+* Render the CSRF Token input tag
+* 
+* @uses generateCSRFToken()
+* 
+* @param string $form_id The id/ name attribute of the form
+* 
+* @return void
+*/
+function generateFormToken($form_id)
+    {
+    global $CSRF_enabled, $CSRF_token_identifier, $usersession;
+
+    if(!$CSRF_enabled)
+        {
+        return;
+        }
+
+    $token = generateCSRFToken($usersession, $form_id);
+    ?>
+    <input type="hidden" name="<?php echo htmlspecialchars($CSRF_token_identifier); ?>" value="<?php echo $token; ?>">
+    <?php
+    return;
+    }
+
+
+/**
+* Render the CSRF Token for AJAX use
+* 
+* @uses generateCSRFToken()
+* 
+* @param string $form_id The id/ name attribute of the form or just the calling function for this type of request
+* 
+* @return string
+*/
+function generateAjaxToken($form_id)
+    {
+    global $CSRF_enabled, $CSRF_token_identifier, $usersession;
+
+    if(!$CSRF_enabled)
+        {
+        return "";
+        }
+
+    $identifier = htmlspecialchars($CSRF_token_identifier);
+    $token      = generateCSRFToken($usersession, $form_id);
+
+    return "{$identifier}: \"{$token}\"";
+    }
+
+
+/**
+* Enforce using POST requests
+* 
+* @param  boolean  $ajax  Set to TRUE if request is done via AJAX
+* 
+* @return  boolean|void  Returns true if request method is POST or sends 405 header otherwise
+*/
+function enforcePostRequest($ajax)
+    {
+    if($_SERVER["REQUEST_METHOD"] === "POST")
+        {
+        return true;
+        }
+
+    header("HTTP/1.1 405 Method Not Allowed");
+
+    $ajax = filter_var($ajax, FILTER_VALIDATE_BOOLEAN);
+    if($ajax)
+        {
+        global $lang;
+
+        $return["error"] = array(
+            "status" => 405,
+            "title"  => $lang["error-method-not_allowed"],
+            "detail" => $lang["error-405-method-not_allowed"]
+        );
+
+        echo json_encode($return);
+        exit();
+        }
+
+    return false;
+    }

@@ -23,6 +23,7 @@ function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slides
                 action="<?php echo $baseurl; ?>/plugins/transform/pages/crop.php"
                 onsubmit="return CentralSpacePost(this);"
             >
+                <?php generateFormToken("add_new_slideshow"); ?>
                 <input 
                     name="ref"
                     type="text"
@@ -84,6 +85,7 @@ function HookTransformAdmin_manage_slideshowRender_replace_slideshow_form_for_ma
         action="<?php echo $baseurl; ?>/plugins/transform/pages/crop.php"
         onsubmit="return CentralSpacePost(this);"
     >
+        <?php generateFormToken("replace_slideshow_image_form_{$slideshow_image}"); ?>
         <input
             name="ref"
             type="text"

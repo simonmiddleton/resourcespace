@@ -93,7 +93,7 @@ $serverversion = $_SERVER['SERVER_SOFTWARE'];
 $custom_field_3 = phpversion();
 
 
-if (isset($_REQUEST['submit']))
+if (isset($_REQUEST['submit']) && enforcePostRequest(false))
     {
     header ("Location: " . 
         'http://bugs.resourcespace.org/bug_report_advanced_page.php?'.
@@ -124,7 +124,10 @@ else
         <tr><td><?php echo $lang["browseruseragent"]; ?></td><td><?php echo $custom_field_2?></td></tr>
         </table>
         <br /><p><b><a href="http://bugs.resourcespace.org/login_page.php" target="_blank"><?php echo $lang['reportbug-login']?></a></b></p>
-        <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_reportbug.php"><input type="submit" name="submit" value="<?php echo $lang["reportbug-preparebutton"] ?>"/></form>
+        <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_reportbug.php">
+            <?php generateFormToken("admin_reportbug"); ?>
+            <input type="submit" name="submit" value="<?php echo $lang["reportbug-preparebutton"] ?>"/>
+        </form>
     </div>
     <?php include ("../../include/footer.php");
     }

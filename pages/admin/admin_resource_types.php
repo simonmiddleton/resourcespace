@@ -25,7 +25,7 @@ if($backurl=="")
     $backurl=$baseurl . "/pages/admin/admin_home.php";
     }
     
-if (getval("newtype","")!="")
+if (getval("newtype","")!="" && enforcePostRequest(false))
 	{
 	sql_query("insert into resource_type (name) values ('" . getvalescaped("newtype","") . "')");
 	$new=sql_insert_id();
@@ -222,7 +222,8 @@ for ($n=0;$n<count($resource_types);$n++)
 
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_resource_types.php"  onSubmit="return CentralSpacePost(this,true);" >
-		<div class="Question">
+	   <?php generateFormToken("admin_resource_types"); ?>
+    	<div class="Question">
 			<label for="newtype"><?php echo $lang["admin_resource_type_create"]?></label>
 			<div class="tickset">
 			 <div class="Inline"><input type=text name="newtype" id="newtype" maxlength="100" class="shrtwidth" /></div>

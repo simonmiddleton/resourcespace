@@ -76,7 +76,7 @@ if(!$allow_custom_access_share && isset($customgroupaccess) && isset($customuser
 
 
 # Process deletion of access keys
-if (getval("deleteaccess","")!="" && !isset($show_error))
+if (getval("deleteaccess","")!="" && !isset($show_error) && enforcePostRequest(getval("ajax", false)))
         {
         delete_collection_access_key($ref,getvalescaped("deleteaccess",""));
         }
@@ -103,7 +103,7 @@ include "../include/header.php";
 	<input type="hidden" name="editaccesslevel" id="editaccesslevel" value="">
 	<input type="hidden" name="editgroup" id="editgroup" value="">
 	<input type="hidden" name="generateurl" id="generateurl" value="">
-
+    <?php generateFormToken("collectionform"); ?>
 	<h1><?php echo $lang["sharecollection"]; if($editing && !$editexternalurl){echo " - ".$lang["editingexternalshare"]." ".$editaccess;}?></h1>
 	<?php
 	if(isset($warningtext))

@@ -239,7 +239,7 @@ if($send_collection_to_admin && $archive == -1 && getvalescaped('ajax' , 'false'
 	}
 
 global $php_path,$relate_on_upload,$enable_related_resources;
-if($relate_on_upload && $enable_related_resources && getval("uploaded_refs", "") != "")
+if($relate_on_upload && $enable_related_resources && getval("uploaded_refs", "") != "" && enforcePostRequest(getval("ajax", false)))
     {
     $resource_refs = getval("uploaded_refs", "");
     $valid_refs    = array();
@@ -998,7 +998,13 @@ var pluploadconfig = {
                             }
                         if($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes"){?>
                             uploader.bind('UploadComplete', function(up, files) {
-                                jQuery.post("<?php echo $baseurl_short; ?>pages/upload_plupload.php",{uploaded_refs:resource_keys});
+                                jQuery.post(
+                                    "<?php echo $baseurl_short; ?>pages/upload_plupload.php",
+                                    {
+                                    uploaded_refs: resource_keys,
+                                    <?php echo generateAjaxToken("plupload-UploadComplete"); ?>
+                                    }
+                                );
                                 processed_resource_keys=resource_keys;
                             });                           
                         <?php }
@@ -1197,9 +1203,13 @@ if($attach_alternatives_found_to_resources)
 								?>
 						
 						}
-                    }
-                
-            }; // End of pluploader config
+                    },
+    // Use multipart_params to send additional data to upload_plupload.php rather 
+    // than use the query strings in the URL
+    multipart_params: {
+        <?php echo generateAjaxToken("upload_plupload"); ?>
+    }
+}; // End of pluploader config
                 
         
 jQuery(document).ready(function () {            
@@ -1314,8 +1324,8 @@ if ($allowed_extensions!="" && $alternative==''){
 
 	
 <form class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
-
 <?php
+generateFormToken("upload_plupload");
 // Show the option to keep the existing file as alternative when replacing the resource
 if($replace_resource_preserve_option && ('' != $replace_resource  || '' != $replace))
     {

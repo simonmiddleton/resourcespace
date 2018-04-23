@@ -11,7 +11,7 @@ $resource=getvalescaped("resource","");
 $edit_access=get_edit_access($resource);
 if (!$edit_access) {exit("Access denied");} # Should never arrive at this page without edit access
 
-if (getval("submitted","")!="")
+if (getval("submitted","")!="" && enforcePostRequest(false))
 	{
 	# Save license data
 	
@@ -42,7 +42,7 @@ if (getval("submitted","")!="")
 	}
 
 # Fetch license data
-if ($ref=="new")
+if ($ref=="new" && enforcePostRequest(false))
 	{
 	# Set default values for the creation of a new record.
 	$license=array(
@@ -73,7 +73,7 @@ include "../../../include/header.php";
 <input type=hidden name="submitted" value="true">
 <input type=hidden name="ref" value="<?php echo $ref?>">
 <input type=hidden name="resource" value="<?php echo $resource?>">
-
+<?php generateFormToken("licensemanager_edit"); ?>
 <div class="Question"><label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo htmlspecialchars($license["resource"])?></div>
 <div class="clearerleft"> </div></div>
 

@@ -40,7 +40,7 @@ function file_newname($path, $filename){
 
 if (!isset($feedback_prompt_text)) {$feedback_prompt_text="";}
 
-if (getval("submit","")!="" || getval("add","")!="")
+if((getval("submit", "") != "" || getval("add", "") != "") && enforcePostRequest(false))
 	{
 	if (file_exists($storagedir . '/feedback/results.csv'))
 	    {
@@ -108,7 +108,7 @@ include "../../../include/header.php";
 
 
  <form id="form1" name="form1" method="post" action="">
-
+<?php generateFormToken("form1"); ?>
 <p><?php echo $lang["feedback_pop-up_prompt_box_text"]?><br />
 <textarea rows=6 cols=50 style="width:600px;" name="feedback_prompt_text"><?php echo $feedback_prompt_text ?></textarea>
 </p>

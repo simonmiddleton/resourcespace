@@ -20,7 +20,7 @@ $access=sql_value("select enabled_groups value from plugins where name='$plugin'
 $groups=get_usergroups();
 
 # Save group activation options
-if (getval("save","")!="")
+if (getval("save", "") != "" && enforcePostRequest(false))
 	{
 	$access="";
 	if (getval("access","")=="some")
@@ -50,6 +50,7 @@ $s=explode(",",$access);
   <h1><?php echo $lang["groupaccess"] . ': ' . $plugin ?></h1>
 
 <form onSubmit="return CentralSpacePost(this,true);" method="post" action="<?php echo $baseurl_short?>pages/team/team_plugins_groups.php?save=true">
+    <?php generateFormToken("team_plugins_groups"); ?>
 <p>
 <input type="radio" name="access" value="all" <?php if ($access=="") { ?>checked<?php } ?>> <?php echo $lang["plugin-groupsallaccess"] ?>
 <br/>
