@@ -1890,6 +1890,7 @@ $lang["matchingresourceslabel"]="Matching resources";
 
 # CSV Export of Search results
 $lang['csvExportResultsMetadata'] = 'CSV Export - Results metadata';
+$lang['csvExportResultsMetadataPersonal'] = 'CSV Export - Personal data fields';
 $lang['csvAddMetadataCSVToArchive'] = 'Include metadata CSV file to the archive?';
 
 $lang["saving"]="Saving...";

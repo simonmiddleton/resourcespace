@@ -2577,6 +2577,20 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             urlencode($sort),
             urlencode($starsearch)
         );
+		
+		$o++;
+		
+		
+		$options[$o]['value']            = 'csv_export_results_metadata_personal';
+		$options[$o]['label']            = $lang['csvExportResultsMetadataPersonal'];
+		$options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=!collection%s&restype=%s&order_by=%s&archive=0&sort=%s&starsearch=%s&personal=true',
+            $baseurl_short,
+            urlencode($collection_data['ref']),
+            isset($_COOKIE['restypes']) ? urlencode($_COOKIE['restypes']) : '',
+            urlencode($order_by),
+            urlencode($sort),
+            urlencode($starsearch)
+        );
 
 		$o++;
     

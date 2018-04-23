@@ -485,7 +485,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f1.required AS frequired,
                     f1.ref AS fref,
                     f1.field_constraint,
-                    f1.automatic_nodes_ordering 
+                    f1.automatic_nodes_ordering,
+                    f1.personal_data
                FROM resource_type_field AS f1
           LEFT JOIN resource_data d
                  ON d.resource_type_field = f1.ref AND d.resource = '{$ref}'
@@ -502,7 +503,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f2.required AS frequired,
                     f2.ref AS fref,
                     f2.field_constraint,
-                    f2.automatic_nodes_ordering
+                    f2.automatic_nodes_ordering,
+                    f2.personal_data
                FROM resource_type_field AS f2
           LEFT JOIN node AS n ON n.resource_type_field = f2.ref
           LEFT JOIN resource_node AS rn ON rn.node = n.ref AND rn.resource = '{$ref}'

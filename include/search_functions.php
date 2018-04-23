@@ -687,6 +687,20 @@ function compile_search_actions($top_actions)
         );
 
 		$o++;
+        
+        $options[$o]['value']            = 'csv_export_results_metadata_personal';
+		$options[$o]['label']            = $lang['csvExportResultsMetadataPersonal'];
+		$options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restype=%s&order_by=%s&archive=%s&sort=%s&starsearch=%s&personal=true',
+            $baseurl_short,
+            urlencode($search),
+            urlencode($restypes),
+            urlencode($order_by),
+            urlencode($archive),
+            urlencode($sort),
+            urlencode($starsearch)
+        );
+
+		$o++;
         }
 
     // Add extra search actions or modify existing options through plugins

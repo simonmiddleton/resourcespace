@@ -16,6 +16,7 @@ $order_by   = getvalescaped('order_by', '');
 $archive    = getvalescaped('archive', '');
 $sort       = getvalescaped('sort', '');
 $starsearch = getvalescaped('starsearch', '');
+$personal = (getvalescaped('personal', '')!="");
 
 // Do the search again to get the results back
 $search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch);
@@ -25,7 +26,7 @@ log_activity($lang['csvExportResultsMetadata'],LOG_CODE_DOWNLOADED,$search . ($r
 header("Content-type: application/octet-stream");
 header("Content-disposition: attachment; filename=search_results_metadata.csv");
 
-echo generateResourcesMetadataCSV($search_results);
+echo generateResourcesMetadataCSV($search_results,$personal);
 
 ob_flush();
 exit();
