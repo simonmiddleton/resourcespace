@@ -432,7 +432,8 @@ function get_resource_type_field($field)
                 field_constraint,
                 linked_data_field,
                 automatic_nodes_ordering,
-                fits_field
+                fits_field,
+                personal_data
            FROM resource_type_field
           WHERE ref = '{$field}'
     ";

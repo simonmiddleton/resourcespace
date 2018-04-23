@@ -295,6 +295,7 @@ $fieldcolumns = array(
     'simple_search'            => array($lang['property-enable_simple_search'],'',1,1),
     'exiftool_field'           => array($lang['property-exiftool_field'],'',0,1),
     'fits_field'               => array($lang['property-fits_field'], $lang['information-fits_field'], 0, 1),
+    'personal_data'          => array($lang['property-personal_data'],'',1,1),
     'use_for_similar'          => array($lang['property-use_for_find_similar_searching'],'',1,1),
     'hide_when_uploading'      => array($lang['property-hide_when_uploading'],'',1,1),
     'hide_when_restricted'     => array($lang['property-hide_when_restricted'],'',1,1),

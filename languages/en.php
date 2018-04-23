@@ -2688,3 +2688,4 @@ $lang['systemconfig_api'] = "API";
 $lang["iiif_enable_option"] = "Enable IIIF support";
 $lang["iiif_disabled"] = "IIIF is not configured";
 
+$lang["property-personal_data"]="May contain personal data";
