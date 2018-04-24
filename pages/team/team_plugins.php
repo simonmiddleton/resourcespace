@@ -403,6 +403,7 @@ if($searching)
             </tbody>
         </table>
         <form id="anc-post" method="post" action="<?php echo $baseurl_short; ?>pages/team/team_plugins.php" >
+            <?php generateFormToken("anc_post"); ?>
             <input type="hidden" id="anc-input" name="" value="" />
         </form>
     </div><!-- end of ListView -->
