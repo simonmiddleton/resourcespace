@@ -239,6 +239,11 @@ if($editing && !$editexternalurl)
                             {
                             $generated_access_key = generate_resource_access_key($ref, $userref, $access, $expires, 'URL', $user_group);
                             }
+                        else if (!empty($allowed_external_share_groups) && !in_array($usergroup, $allowed_external_share_groups))
+                        	{
+                        	// Not allowed to select usergroup but this usergroup can not be used, default to the first entry in allowed_external_share_groups
+                        	$generated_access_key = generate_resource_access_key($ref, $userref, $access, $expires, 'URL', $allowed_external_share_groups[0]);
+                        	}
 
                         if('' != $generated_access_key)
                             {
