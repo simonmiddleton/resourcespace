@@ -152,7 +152,7 @@ else
 	// Validate the submitted file
 	?>
 
-	<form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">
+	<form method="POST" action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">
 		<?php generateFormToken("csv_upload_back"); ?>
         <input type="submit" value="Back" onClick="CentralSpacePost(this,true);return false;">
 	</form><br/>
@@ -202,7 +202,7 @@ else
 	    
 		$result=move_uploaded_file($_FILES[$fd]['tmp_name'], $csvdir . DIRECTORY_SEPARATOR  . "csv_upload.csv");
 		?>	
-		<form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">		
+		<form method="POST" action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">		
 		<?php
         generateFormToken("csv_upload_process");
         foreach ($override_fields as $s)
