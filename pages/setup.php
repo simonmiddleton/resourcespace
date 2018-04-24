@@ -221,7 +221,9 @@ if(get_post_bool('ajax'))
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link href="../css/global.css?csr=5" rel="stylesheet" type="text/css" /> 
 <link href="../css/colour.css?csr=5" rel="stylesheet" type="text/css" /> 
-<script src="../lib/js/jquery-1.12.4.min.js"></script>
+<script src="../lib/js/jquery-3.3.1.min.js"></script>
+<!--- FontAwesome for icons-->
+<link rel="stylesheet" href="../lib/fontawesome/css/font-awesome.min.css">
 
 <script type="text/javascript"> 
  
@@ -386,15 +388,8 @@ $('#mysqlserver').keyup();
 .templateitem a.moreinfo{color:#72A939;padding-left: 0;}
 .structurepluginradio{margin-right:10px;}
 
-#tabs {font-size: 100%;}
-#tabs > ul {float: left;margin: 0;padding: 0;border-bottom: 5px solid #F7F7F7;}
-#tabs > ul >li { margin: 0; padding:0; margin-left: 8px; list-style: none; background: #777777; }
-* html #tabs li { display: inline; /* ie6 double float margin bug */ }
-#tabs > ul > li, #tabs  > ul > li a { float: left; border-top-left-radius: 10px; border-top-right-radius: 10px;}
-#tabs > ul > li a { text-decoration: none; padding: 8px; color: #CCCCCC; font-weight: bold; }
-#tabs > ul > li.active { background: #72A939; }
-#tabs > ul > li.active a { color: #FFF }
-#tabs div.tabs { background: #F7F7F7; clear: both; padding: 20px; text-align: left;}
+
+.settings { background: #F7F7F7; clear: both; padding: 20px; text-align: left;width:80%;margin:0 auto 0 auto;}
 
 p.iteminfo{ background: #e3fefa; width: 60%; color: #000; padding: 4px; margin: 10px; clear:both; }
 strong { padding:0 5px; color: #F00; font-weight: bold; }
@@ -428,10 +423,10 @@ h2#dbaseconfig{  min-height: 32px;}
 </style> 
 </head>
 <body class="SlimHeader">
-<div id="Header" class="slimheader_darken" style="height: 40px;margin-bottom: 20px;">
-    <a href="#" onclick="return CentralSpaceLoad(this,true);" class="HeaderImgLink">
+<div id="Header" style="height: 40px;">
+    <div class="HeaderImgLink">
     	<img src="../gfx/titles/title.svg" id="HeaderImg" />
-    </a>
+    </div>
     <div id="HeaderNav1" class="HorizontalNav "><ul></ul></div>
 	<div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav"><ul></ul></div> 
 	<div class="clearer"></div>
@@ -706,50 +701,15 @@ h2#dbaseconfig{  min-height: 32px;}
 				$errors['pdftotext_path'] = true;
 			else $config_output .= "\$pdftotext_path = '$pdftotext_path';\r\n\r\n";
 		
-		//Deal with some checkboxes
-		if (!$allow_account_request = get_post_bool('allow_account_request'))
-			$config_output .= "\$allow_account_request = false;\r\n";
-        if ($enable_remote_apis = get_post_bool('enable_remote_apis'))
-			$config_output .= "\$enable_remote_apis = true;\r\n";    
-		if (!$allow_password_change = get_post_bool('allow_password_change'))
-			$config_output .= "\$allow_password_change = false;\r\n";
-		if ($research_request = get_post_bool('research_request'))
-			$config_output .= "\$research_request = true;\r\n";
-		if ($use_theme_as_home = get_post_bool('use_theme_as_home'))
-			$config_output .= "\$use_theme_as_home = true;\r\n";
-		if ($disable_languages = get_post_bool('disable_languages'))
-			$config_output .= "\$disable_languages = true;\r\n";
+	
 		if ($config_windows)
 			$config_output .= "\$config_windows = true;\r\n";
 		if ($defaultlanguage!='en')
 			$config_output .= "\$defaultlanguage = '$defaultlanguage';\r\n";
 		
-		//Advanced Settings
-		if ($_REQUEST['applicationname']!=$applicationname){
-			$applicationname = get_post('applicationname');
-			$config_output .= "\$applicationname = '$applicationname';\r\n";
-		}
-		if (get_post_bool('configstoragelocations')){
-			$configstoragelocations = true;
-			$storagedir = get_post('storagedir');
-			$storageurl = get_post('storageurl');
-			$config_output .= "\$storagedir = '$storagedir';\r\n";
-			$config_output .= "\$storageurl = '$storageurl';\r\n";
-		}
-		else {
 			$storagedir = dirname(__FILE__)."/../filestore";
 			$configstoragelocations = false;
-		}
-		/*
-		$ftp_server = get_post('ftp_server');
-		$ftp_username = get_post('ftp_username');
-		$ftp_password = get_post('ftp_password');
-		$ftp_defaultfolder = get_post('ftp_defaultfolder');
-		$config_output .= "\$ftp_server = '$ftp_server';\r\n";
-		$config_output .= "\$ftp_username = '$ftp_username';\r\n";
-		$config_output .= "\$ftp_password = '$ftp_password';\r\n";
-		$config_output .= "\$ftp_defaultfolder = '$ftp_defaultfolder';\r\n";
-		*/
+
 		$use_smtp=get_post('use_smtp');
 		if($use_smtp)
 			{
@@ -774,16 +734,6 @@ h2#dbaseconfig{  min-height: 32px;}
 			$config_output .= " \r\n";
 			}
 
-
-
-        //Design Configuration
-        $slimtheme=get_post_bool('slim-theme');
-        if($slimtheme)
-        	{ 
-        	$config_output.= "\r\n#Design Changes\r\n\$slimheader=true;\r\n";
-        	#$config_output.= "\$available_themes=array('slimcharcoal', 'multi', 'whitegry','greyblu','black');\r\n\$defaulttheme='slimcharcoal';\r\n";
-        	}
-                
         # Append defaults for new systems.
         $config_output.=file_get_contents(dirname(__FILE__) . "/../include/config.new_installs.php");
 	}
@@ -1181,15 +1131,8 @@ else
 	<?php if (isset($warnings)){ ?>	
 		<div id="warnheader"><?php echo $lang["setup-warnheader"];?></div>
 	<?php } ?>	
-	<div id="tabs" class="starthidden" style="width:90%;margin:0 auto 0 auto;">
-		<ul>
-			<li><a href="#tab-1"><?php echo $lang["setup-basicsettings"];?></a></li>
-			<li><a href="#tab-2"><?php echo $lang["setup-advancedsettings"];?></a></li>
-		</ul>
-		<div class="tabs" id="tab-1">
-			<h1><?php echo $lang["setup-basicsettings"];?></h1>
-			<p><?php echo $lang["setup-basicsettingsdetails"];?></p>
-				<h2 id="dbaseconfig"><?php echo $lang["setup-dbaseconfig"];?><img class="starthidden ajloadicon" id="al-testconn" src="../gfx/ajax-loader.gif"/></h2>
+	<div class="settings">
+				<h2 id="dbaseconfig"><?php echo $lang["setup-dbaseconfig"];?><i class="starthidden ajloadicon fa fa-spinner fa-spin" id="al-testconn"></i></h2>
 				<?php if(isset($errors['database'])){?>
 					<div class="erroritem"><?php echo $lang["setup-mysqlerror"];?>
 						<?php 
@@ -1340,68 +1283,7 @@ else
 					<label for="pdftotextpath"><?php echo str_replace("%bin", "PDFtotext", $lang["setup-binpath"]) . ":"; ?></label><input id="pdftotextpath" type="text" name="pdftotext_path" value="<?php echo @$pdftotext_path; ?>"/>
 				</div>
 			</p>
-			<p><?php echo $lang["setup-basicsettingsfooter"];?></p>
-		</div>
-		<div class="tabs" id="tab-2">
-			<h1><?php echo $lang["setup-advancedsettings"];?></h2>
-			<h2><?php echo $lang["setup-generaloptions"];?></h2>
-			<div class="advsection" id="generaloptions">
-				<div class="configitem">
-					<label for="allow_password_change"><?php echo $lang["setup-allow_password_change"];?></label><input id="allow_password_change" type="checkbox" name="allow_password_change" <?php echo ($allow_password_change==true?'checked':'');?>/><a class="iflink" href="#if-allow_password_change">?</a>
-					<p class="iteminfo" id="if-allow_password_change"><?php echo $lang["setup-if_allowpasswordchange"];?></p>
-				</div>
-				<div class="configitem">
-					<label for="allow_account_request"><?php echo $lang["setup-allow_account_requests"];?></label><input id="allow_account_request" type="checkbox" name="allow_account_request" <?php echo ($allow_account_request==true?'checked':'');?>/>
-				</div>
-				<div class="configitem">
-					<label for="research_request"><?php echo $lang["setup-display_research_request"];?></label><input id="research_request" type="checkbox" name="research_request" <?php echo ($research_request==true?'checked':'');?>/><a class="iflink" href="#if-research_request">?</a>
-					<p class="iteminfo" id="if-research_request"><?php echo $lang["setup-if_displayresearchrequest"];?></p>
-				</div>
-				<div class="configitem">
-					<label for="use_theme_as_home"><?php echo $lang["setup-themes_as_home"];?></label><input id="use_theme_as_home" type="checkbox" name="use_theme_as_home" <?php echo ($use_theme_as_home==true?'checked':'');?>/>
-				</div>
-                <div class="configitem">
-					<label for="enable_remote_apis"><?php echo $lang["setup-enable_remote_apis"];?></label><input id="enable_remote_apis" type="checkbox" name="enable_remote_apis" <?php echo ($enable_remote_apis==true?'checked':'');?>/><a class="iflink" href="#if-enable_remote_apis">?</a>
-					<p class="iteminfo" id="if-enable_remote_apis"><?php echo $lang["setup-if_enableremoteapis"];?></p>
-				</div>
-				
-			</div>	
-			<h2><?php echo $lang["setup-remote_storage_locations"];?></h2>
-			<div class="advsection" id="storagelocations">
-				<div class="configitem">
-					<label for="configstoragelocations"><?php echo $lang["setup-use_remote_storage"];?></label><input id="configstoragelocations" type="checkbox" name="configstoragelocations" value="true" <?php echo ($configstoragelocations==true?'checked':'');?>/><a class="iflink" href="#if-remstorage">?</a>
-					<p class="iteminfo" id="if-remstorage"><?php echo $lang["setup-if_useremotestorage"];?></p>
-				</div>
-				<div id="remstorageoptions" class="starthidden">
-					<div class="configitem">
-						<label for="storagedir"><?php echo $lang["setup-storage_directory"] . ":"; ?></label><input id="storagedir" type="text" name="storagedir" value="<?php echo $storagedir;?>"/><a class="iflink" href="#if-storagedir">?</a>
-						<p class="iteminfo" id="if-storagedir"><?php echo $lang["setup-if_storagedirectory"];?></p>
-					</div>
-					<div class="configitem">
-						<label for="storageurl"><?php echo $lang["setup-storage_url"] . ":"; ?></label><input id="storageurl" type="text" name="storageurl" value="<?php echo $storageurl;?>"/><a class="iflink" href="#if-storageurl">?</a>
-						<p class="iteminfo" id="if-storageurl"><?php echo $lang["setup-if_storageurl"];?></p>
-					</div>
-				</div>
-			</div>
-			<?php
-			/* Remove FTP Settings
-			<h2><?php echo $lang["setup-ftp_settings"];?></h2>
-			<div class="advsection" id="ftpsettings">
-				<div class="configitem">
-					<label for="ftp_server"><?php echo $lang["ftpserver"] . ":"; ?></label><input id="ftp_server" name="ftp_server" type="text" value="<?php echo $ftp_server;?>"/><a class="iflink" href="#if-ftpserver">?</a>
-					<p class="iteminfo" id="if-ftpserver"><?php echo $lang["setup-if_ftpserver"];?></p>
-				</div>
-				<div class="configitem">
-					<label for="ftp_username"><?php echo $lang["ftpusername"] . ":"; ?></label><input id="ftp_username" name="ftp_username" type="text" value="<?php echo $ftp_username;?>"/>
-				</div>
-				<div class="configitem">
-					<label for="ftp_password"><?php echo $lang["ftppassword"] . ":"; ?></label><input id="ftp_password" name="ftp_password" type="text" value="<?php echo $ftp_password;?>"/>
-				</div>
-				<div class="configitem">
-					<label for="ftp_defaultfolder"><?php echo $lang["ftpfolder"] . ":"; ?></label><input id="ftp_defaultfolder" name="ftp_defaultfolder" type="text" value="<?php echo $ftp_defaultfolder;?>"/>
-				</div>
-			</div>
-			*/?>
+
 
 			<h2><?php echo $lang["setup-smtp-settings"]; ?></h2>
 			<div class="advsection" id="smtpsettings">
@@ -1451,15 +1333,7 @@ else
 				</div>
 			</div>
 
-			<h2><?php echo $lang["design-options"];?></h2>
-			<div class="advsection" id="designsettings">
-				<div class="configitem">
-					<label for="slim-theme"><?php echo $lang["use-slim-theme"] . ":"; ?></label>
-					<input id="slim-theme" name="slim-theme" type="checkbox" checked /><a class="iflink" href="#if-slimtheme">?</a>
-					<p class="iteminfo" id="if-slimtheme"><?php echo $lang["setup-if_slimtheme"];?></p>
-				</div>
-			</div>
-		</div>
+		
 		<input type="submit" id="submit" name="submit" value="<?php echo $lang["setup-begin_installation"];?>"/>
 	</div>
 </form>
