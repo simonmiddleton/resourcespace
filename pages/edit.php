@@ -210,6 +210,13 @@ else
 
 # Fetch resource data.
 $resource=get_resource_data($ref);
+
+$metadatatemplate = getvalescaped(
+    'metadatatemplate',
+    ($metadata_template_default_option == 0 ? 0 : $metadata_template_default_option),
+    true
+    );
+    
 if ($lockable_fields && $lastedited > 0)
     {
     // Update resource data with locked resource data from last edited resource
@@ -322,7 +329,6 @@ if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
 		redirect($explain);
 	}
   }
-
   
 $urlparams= array(
 	'ref'				=> $ref,
@@ -368,7 +374,15 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
     
 	if(!$multiple)
         {
-        $save_errors = process_edit_form($ref, $resource);
+        if(($ref < 0 || $upload_review_mode) && !$is_template && $metadata_template_mandatory && $metadatatemplate == 0)
+            {
+            $save_errors['metadatatemplate'] = $lang["usemetadatatemplate"] . ": " . $lang["requiredfield"];
+            $show_error=true;
+            }
+        else
+            {
+            $save_errors = process_edit_form($ref, $resource);
+            }
         
         if (($save_errors === true || $is_template) && getval("tweak","")=="")
             {
@@ -381,6 +395,12 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                     # Drop this resource from the collection and either save all subsequent resources, or redirect thus picking the next resource.
                     remove_resource_from_collection($ref,0-$userref);refresh_collection_frame();
                     
+                    // If the metadata template has been locked it needs to be passed in the redirect
+                    if(in_array("metadatatemplate",$locked_fields))
+                        {
+                        $urlparams['metadatatemplate'] = $metadatatemplate;
+                        }
+                            
                     if($save_auto_next)
                         {
                         // Process all remaining resources in the collection
@@ -389,10 +409,16 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                         for($n=1;$n<count($review_collection_contents);$n++)
                             {
                             $auto_errors = array();
-                            $ref = $review_collection_contents[$n]["ref"];           
+                            $ref = $review_collection_contents[$n]["ref"];
                             # Fetch resource data.
                             $resource=get_resource_data($ref);
                             
+                            // If the metadata template has been locked, copy the metadata from this first
+                            if(in_array("metadatatemplate",$locked_fields) && $metadatatemplate > 0)
+                                {
+                                copyAllDataToResource($metadatatemplate, $ref,$resource);
+                                }
+                                
                             // Load resource metadata
                             $fields=get_resource_field_data($ref,$multiple,!hook("customgetresourceperms"),-1,"",$tabs_on_edit);
                             $all_selected_nodes = get_resource_nodes($ref);
@@ -455,11 +481,13 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             
                             // If no errors, remove from collection and continue
                             if(count($auto_errors) == 0)
-                                {                
+                                {
+                                debug("edit: autosaved resource " . $ref . ", removing from collection " . (str)(0-$userref));
                                 remove_resource_from_collection($ref,0-$userref);
                                 }
                             else
-                                { 
+                                {
+                                debug("edit: autosave errors saving resource: " . $ref);
                                 $autosave_errors = true;                   
                                 }
                             }
@@ -538,7 +566,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             $show_error=true;
             }
         # If auto-saving, no need to continue as it will only add to bandwidth usage to send the whole edit page back to the client. Send a simple 'SAVED' message instead.
-        if (getval("autosave","")!="" && enforcePostRequest($ajax))
+        if (getval("autosave","") != "" && enforcePostRequest($ajax))
             {
             $return=array();
             if(!is_array($save_errors))
@@ -1316,18 +1344,21 @@ $lastrt=-1;
 if(isset($metadata_template_resource_type) && !$multiple && ($ref < 0 || $upload_review_mode))
     {
     // Show metadata templates here
-    $metadatatemplate = getvalescaped(
-    	'metadatatemplate',
-    	($metadata_template_default_option == 0 ? 0 : $metadata_template_default_option),
-    	true
-    );
-
     $templates = get_metadata_templates();
 
     $first_option_conditions = ($metadata_template_default_option == 0 && $metadatatemplate == 0);
     ?>
-    <div class="Question" id="question_metadatatemplate">
-        <label for="metadatatemplate"><?php echo $lang['usemetadatatemplate']; ?></label>
+    <div class="Question <?php if($lockable_fields && in_array("metadatatemplate",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('metadatatemplate',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_metadatatemplate">
+        <label for="metadatatemplate"><?php echo $lang['usemetadatatemplate'];
+        if (!$is_template && $metadata_template_mandatory)
+            {
+            echo "<sup>*</sup>";
+            }
+        if ($lockable_fields)
+            {
+            renderLockButton('metadatatemplate', $locked_fields);
+            }?>
+        </label>
         <select name="metadatatemplate" class="stdwidth" onchange="MetadataTemplateOptionChanged(jQuery(this).val());">
             <option value=""<?php echo $first_option_conditions ? ' selected' : ''; ?>><?php echo $first_option_conditions ? $lang['select'] : $lang['undometadatatemplate']; ?></option>
         <?php

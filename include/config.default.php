@@ -2396,6 +2396,9 @@ $debug_log=false;
 // Ability to default metadata templates to a particular resource ID
 $metadata_template_default_option = 0;
 
+// Force selection of a metadata template
+$metadata_template_mandatory = false;
+
 # enable a list of collections that a resource belongs to, on the view page
 $view_resource_collections=false;
 

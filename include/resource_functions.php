@@ -71,7 +71,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	global $lang, $auto_order_checkbox, $userresourcedefaults, $multilingual_text_fields,
            $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,
            $DATE_FIELD_TYPES, $range_separator, $reset_date_field, $reset_date_upload_template,
-           $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template;
+           $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template;
 
 	hook("befsaveresourcedata", "", array($ref));
 
@@ -91,7 +91,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
 	# Loop through the field data and save (if necessary)
 	$errors=array();
-	$fields=get_resource_field_data($ref,$multi, !hook("customgetresourceperms"));
+	$fields=get_resource_field_data($ref,$multi, !hook("customgetresourceperms"));    
 	$expiry_field_edited=false;
 	$resource_data=get_resource_data($ref);
 		
@@ -483,8 +483,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     ($ref > 0 && !($upload_review_mode && $blank_edit_template && $fields[$n]['value'] != ''))
                     // Template with blank template and existing value
                     || ($ref < 0 && !($blank_edit_template && $fields[$n]["value"] !== ''))
+                    )
+                // Not a metadata template
+                && !$is_template
                 )
-            )
                 {
                 $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
                 continue;
@@ -4826,13 +4828,44 @@ function get_video_info($file)
 * @param integer $from Resource we are copying data from
 * @param integer $to   The Resource ID that needs updating
 * 
-* @return void
+* @return boolean
 */
-function copyAllDataToResource($from, $to)
+function copyAllDataToResource($from, $to, $resourcedata = false)
     {
+    if((int)(string)$from !== (int)$from || (int)(string)$to !== (int)$to)
+        {
+        return false;
+        }
+        
+    if(!$resourcedata)
+        {
+        $resourcedata = get_resource_data($to);
+        }
+        
+    if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+        {
+        return false;
+        }
+        
     copyResourceDataValues($from, $to);
     copy_resource_nodes($from, $to);
-    return;
+    
+    # Update 'joined' fields in resource table 
+    $joins=get_resource_table_joins();
+    $joinsql = "UPDATE resource AS target LEFT JOIN resource AS source ON source.ref='{$from}' SET ";
+    $joinfields = "";
+    foreach($joins as $joinfield)
+        {
+        if($joinfields != "")
+            {
+            $joinfields .= ",";
+            }
+        $joinfields .= "target.field{$joinfield} = source.field{$joinfield}";
+        
+        }
+    $joinsql = $joinsql . $joinfields . " WHERE target.ref='{$to}'";
+    sql_query($joinsql);
+    return true;
     }
 
 
@@ -4925,7 +4958,7 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
         $resource["archive"] = $lastresource["archive"];
         if ($save && checkperm("e" . $lastresource["archive"]))
             {
-            update_archive_status($resource["ref"],$lastresource["archive"]);
+            update_archive_status($resource["ref"],$lastresource["archive"],$resource["archive"]);
             }
         }
         
@@ -4980,7 +5013,7 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
 */     
 function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$lastedited, $save=false)
     {
-    debug("copy_locked_data resource " . $ref . " lastedited: " . $lastedited);
+    debug("copy_locked_fields resource " . $ref . " lastedited: " . $lastedited);
     global $FIXED_LIST_FIELD_TYPES, $tabs_on_edit;
     foreach($locked_fields as $locked_field)
             {
