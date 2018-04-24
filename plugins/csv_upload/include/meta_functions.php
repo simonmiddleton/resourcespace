@@ -6,7 +6,7 @@ function meta_get_map()		// returns array of [resource_type][table][attributes],
 	
 	$meta=array();
 	
-	foreach (sql_query("SELECT ref, upper(title) AS `name`, `type`, title as `nicename`, resource_type, (SELECT GROUP_CONCAT(`name` SEPARATOR ',') FROM node WHERE resource_type_field = resource_type_field.ref) AS `options`, required FROM resource_type_field WHERE name IS NOT NULL AND `name` <> '' AND (resource_type IN (SELECT ref FROM resource_type) OR resource_type = 0)") as $field)
+	foreach (sql_query("SELECT ref, upper(title) AS `name`, `type`, title as `nicename`, resource_type, required FROM resource_type_field WHERE name IS NOT NULL AND `name` <> '' AND (resource_type IN (SELECT ref FROM resource_type) OR resource_type = 0)") as $field)
 	{
 		# Get translated - support i18n - upload columns must be in user's local language.
 		$field['name']=trim(i18n_get_translated($field['name']));
@@ -18,11 +18,8 @@ function meta_get_map()		// returns array of [resource_type][table][attributes],
 		$meta[$field['resource_type']][$field['name']]['required']=$field['required'];		
 		$meta[$field['resource_type']][$field['name']]['type']=$field['type'];
 		$meta[$field['resource_type']][$field['name']]['missing']=false;
-		$meta[$field['resource_type']][$field['name']]['options']=array_filter(explode(",",$field['options']));		
-		
-		
-		//echo $meta[$field['resource_type']][$field['name']]['nicename'] . " " . $meta[$field['resource_type']][$field['name']]['remote_ref'] . "<br>";
-		
+        $meta[$field['resource_type']][$field['name']]['options'] = extract_node_options(get_nodes($field['ref'], NULL, $field['type'] == FIELD_TYPE_CATEGORY_TREE));
+
 		if($meta[$field['resource_type']][$field['name']]['type']!=7) // Don't do this for category trees, not supported yet
 			{
 			for ($i=0; $i<count($meta[$field['resource_type']][$field['name']]['options']); $i++) 
