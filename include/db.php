@@ -161,85 +161,6 @@ if (isset($remote_config_url) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOUR
 # End of remote config support
 # ---------------------------------------------------------------------------------------------
 
-# ----------------------------------------------------------------------------------------------------------------------
-# Basic CORS and CSRF protection
-#
-if($CSRF_enabled && PHP_SAPI != 'cli')
-    {
-    /*
-    Based on OWASP: General Recommendations For Automated CSRF Defense
-    (https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet)
-    ==================================================================
-    # Verifying Same Origin with Standard Headers
-    There are two steps to this check:
-    1. Determining the origin the request is coming from (source origin)
-    2. Determining the origin the request is going to (target origin)
-
-    # What to do when Both Origin and Referer Headers Aren't Present
-    If neither of these headers is present, which should be VERY rare, you can either accept or block the request. 
-    We recommend blocking, particularly if you aren't using a random CSRF token as your second check. You might want to 
-    log when this happens for a while and if you basically never see it, start blocking such requests.
-
-    # Verifying the Two Origins Match
-    Once you've identified the source origin (from either the Origin or Referer header), and you've determined the target
-    origin, however you choose to do so, then you can simply compare the two values and if they don't match you know you 
-    have a cross-origin request.
-    */
-    $CSRF_source_origin = '';
-    $CSRF_target_origin = parse_url($baseurl, PHP_URL_SCHEME) . '://' . parse_url($baseurl, PHP_URL_HOST);
-    $CORS_whitelist     = array_merge(array($CSRF_target_origin), $CORS_whitelist);
-
-    // Determining the origin the request is coming from (source origin)
-    if(isset($_SERVER['HTTP_ORIGIN']))
-        {
-        $CSRF_source_origin = $_SERVER['HTTP_ORIGIN'];
-        }
-    else if(isset($_SERVER['HTTP_REFERER']))
-        {
-        $CSRF_source_origin = $_SERVER['HTTP_REFERER'];
-        }
-
-    if($CSRF_source_origin === '')
-        {
-        debug('WARNING: Automated CSRF protection could not detect "Origin" or "Referer" headers in the request!');
-        debug("CSRF: Logging attempted request: {$_SERVER['REQUEST_URI']}");
-
-        // If source origin cannot be obtained, set to base URL. The reason we can do this is because we have a second
-        // check on the CSRF Token, so if this is a malicious request, the CSRF Token validation will fail.
-        // This can also be a genuine request when users go to ResourceSpace straight to login/ home page.
-        $CSRF_source_origin = $baseurl;
-        }
-
-    $CSRF_source_origin = parse_url($CSRF_source_origin, PHP_URL_SCHEME) . '://' . parse_url($CSRF_source_origin, PHP_URL_HOST);
-
-    debug("CSRF: \$CSRF_source_origin = {$CSRF_source_origin}");
-    debug("CSRF: \$CSRF_target_origin = {$CSRF_target_origin}");
-
-    // Verifying the Two Origins Match
-    if($CSRF_source_origin !== $CSRF_target_origin && !in_array($CSRF_source_origin, $CORS_whitelist))
-        {
-        debug("CSRF: Cross-origin request detected and not white listed!");
-        debug("CSRF: Logging attempted request: {$_SERVER['REQUEST_URI']}");
-
-        http_response_code(403);
-        exit();
-        }
-
-    // CORS
-    if(in_array($CSRF_source_origin, $CORS_whitelist))
-        {
-        debug("CORS: Origin: {$CSRF_source_origin}");
-        debug("CORS: Access-Control-Allow-Origin: {$CSRF_source_origin}");
-
-        header("Origin: {$CSRF_target_origin}");
-        header("Access-Control-Allow-Origin: {CSRF_source_origin}");
-        }
-    header('Vary: Origin');
-    }
-#
-# End of basic CORS and automated CSRF protection
-# ----------------------------------------------------------------------------------------------------------------------
-
 if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
     {
     // Add X-Frame-Options to HTTP header, so that page cannot be shown in an iframe unless specifically set in config.
@@ -442,6 +363,88 @@ global $suppress_headers;
 if (($pagename!="download") && ($pagename!="graph") && !$suppress_headers) {header("Content-Type: text/html; charset=UTF-8");} // Make sure we're using UTF-8.
 #------------------------------------------------------
 
+# ----------------------------------------------------------------------------------------------------------------------
+# Basic CORS and CSRF protection
+#
+if($CSRF_enabled && PHP_SAPI != 'cli')
+    {
+    /*
+    Based on OWASP: General Recommendations For Automated CSRF Defense
+    (https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet)
+    ==================================================================
+    # Verifying Same Origin with Standard Headers
+    There are two steps to this check:
+    1. Determining the origin the request is coming from (source origin)
+    2. Determining the origin the request is going to (target origin)
+
+    # What to do when Both Origin and Referer Headers Aren't Present
+    If neither of these headers is present, which should be VERY rare, you can either accept or block the request. 
+    We recommend blocking, particularly if you aren't using a random CSRF token as your second check. You might want to 
+    log when this happens for a while and if you basically never see it, start blocking such requests.
+
+    # Verifying the Two Origins Match
+    Once you've identified the source origin (from either the Origin or Referer header), and you've determined the target
+    origin, however you choose to do so, then you can simply compare the two values and if they don't match you know you 
+    have a cross-origin request.
+    */
+    $CSRF_source_origin = '';
+    $CSRF_target_origin = parse_url($baseurl, PHP_URL_SCHEME) . '://' . parse_url($baseurl, PHP_URL_HOST);
+    $CORS_whitelist     = array_merge(array($CSRF_target_origin), $CORS_whitelist);
+
+    // Determining the origin the request is coming from (source origin)
+    if(isset($_SERVER['HTTP_ORIGIN']))
+        {
+        $CSRF_source_origin = $_SERVER['HTTP_ORIGIN'];
+        }
+    else if(isset($_SERVER['HTTP_REFERER']))
+        {
+        $CSRF_source_origin = $_SERVER['HTTP_REFERER'];
+        }
+
+    if($CSRF_source_origin === '')
+        {
+        debug('WARNING: Automated CSRF protection could not detect "Origin" or "Referer" headers in the request!');
+        debug("CSRF: Logging attempted request: {$_SERVER['REQUEST_URI']}");
+
+        // If source origin cannot be obtained, set to base URL. The reason we can do this is because we have a second
+        // check on the CSRF Token, so if this is a malicious request, the CSRF Token validation will fail.
+        // This can also be a genuine request when users go to ResourceSpace straight to login/ home page.
+        $CSRF_source_origin = $baseurl;
+        }
+
+    $CSRF_source_origin = parse_url($CSRF_source_origin, PHP_URL_SCHEME) . '://' . parse_url($CSRF_source_origin, PHP_URL_HOST);
+
+    debug("CSRF: \$CSRF_source_origin = {$CSRF_source_origin}");
+    debug("CSRF: \$CSRF_target_origin = {$CSRF_target_origin}");
+
+    // Verifying the Two Origins Match
+    if(
+        $CSRF_source_origin !== $CSRF_target_origin && !in_array($CSRF_source_origin, $CORS_whitelist)
+        && !hook('modified_cors_process')
+    )
+        {
+        debug("CSRF: Cross-origin request detected and not white listed!");
+        debug("CSRF: Logging attempted request: {$_SERVER['REQUEST_URI']}");
+
+        http_response_code(403);
+        exit();
+        }
+
+    // CORS
+    if(in_array($CSRF_source_origin, $CORS_whitelist))
+        {
+        debug("CORS: Origin: {$CSRF_source_origin}");
+        debug("CORS: Access-Control-Allow-Origin: {$CSRF_source_origin}");
+
+        header("Origin: {$CSRF_target_origin}");
+        header("Access-Control-Allow-Origin: {$CSRF_source_origin}");
+        }
+    header('Vary: Origin');
+    }
+#
+# End of basic CORS and automated CSRF protection
+# ----------------------------------------------------------------------------------------------------------------------
+
 
 // Facial recognition setup
 if($facial_recognition)
@@ -638,7 +641,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	
 	# this will hold all of the functions to call when hitting this hook name and page combination
 	$function_list = array();
-	
+
 	for ($n=0;$n<count($plugins);$n++)
 		{	
 		# "All" hooks
