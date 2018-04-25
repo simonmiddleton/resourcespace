@@ -67,8 +67,7 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
 		}
 	?>
 	
-	<div class="RecordBox clearerleft" id="RefineResults" style="display:none;">
-	<div class="RecordPanel" id="refine_panel">  
+	<div class="RecordBox clearerleft" id="RefineResults" style="display:none;"> 
 	
 	<form method="post" action="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search) ?>&amp;k=<?php echo $k ?>" onSubmit="return CentralSpacePost (this,true);">
 	   <?php generateFormToken("refineresults_before_search_results"); ?>
@@ -81,9 +80,7 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
 	</div>
 
 	</form>
-	
-	</div>
-	
+
 	</div>
 	<?php
 	
