@@ -1,3 +1,8 @@
-#refine_panel {padding-bottom: 6px;}
+#question_refine{padding-bottom: 10px;}
 
-#question_refine{padding-bottom: 5px;}
+#refine_results_button {
+    background-color: white;
+    padding: 4px;
+    border-radius: 5px;
+    color: black;
+}
