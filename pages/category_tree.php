@@ -27,7 +27,7 @@ if (!(checkperm("f{$fieldref}") || (checkperm('f*') && !checkperm("f-{$fieldref}
         // Show tree and move into Modal
         jQuery('#cattree_<?php echo $fieldname;?>').show().insertAfter('#cat_tree_selection');
         // Hide and move tree back then close Modal
-        jQuery('#modal_overlay').removeProp('onclick');
+        jQuery('#modal_overlay').attr('onclick','').unbind('click');
         jQuery('#modal_overlay, #cat_tree_close').click(function()
             {
             document.getElementById('cattree_<?php echo $fieldname;?>').style.display='none';
