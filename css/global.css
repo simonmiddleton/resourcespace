@@ -260,7 +260,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #SearchBox {padding:0;float: right;width: 282px;margin: 0px 25px 0px 0px;display:inline;text-align:left;}
 #SearchBoxPanel {width: 280px;}
 #ResearchBoxPanel {width: 280px;margin-top: 15px;}
-#SearchBox .PopupCategoryTree { display: none; position: fixed; text-align: left; z-index: 999; }
+#SearchBox .PopupCategoryTree { display: none; position: fixed; text-align: left; z-index: 999; left: -999px;}
 .BasicsBox .PopupCategoryTree {width: 540px; margin-bottom: 20px;}
 
 /*Resource Panel layout*/
