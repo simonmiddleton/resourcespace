@@ -7,10 +7,10 @@ if(PHP_SAPI != 'cli')
 include_once(__DIR__ . '/../../include/encryption_functions.php');
 
 $data = "Test encryption data";
-$key  = "654b5005395f10488aae744b8615e007";
+$encryption_key = "654b5005395f10488aae744b8615e007";
 
-$encrypted_data = rsEncrypt($data, $key);
-$plaintext      = rsDecrypt($encrypted_data, $key);
+$encrypted_data = rsEncrypt($data, $encryption_key);
+$plaintext      = rsDecrypt($encrypted_data, $encryption_key);
 
 if($plaintext === false)
     {
