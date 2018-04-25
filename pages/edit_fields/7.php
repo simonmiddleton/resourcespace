@@ -72,7 +72,7 @@ if(!(isset($treeonly) && true == $treeonly))
                     document.getElementById('<?php echo $tree_id; ?>').style.display='none';
                     }
                 return false;"
-        >&gt; <?php echo $lang['showhidetree']; ?></a>
+        ><?php echo LINK_CARET . $lang['showhidetree']; ?></a>
         &nbsp;
         <a href="#"
            onclick="
@@ -111,7 +111,7 @@ if(!(isset($treeonly) && true == $treeonly))
 					}
 				?>
                 return false;"
-        >&gt; <?php echo $lang['clearall']; ?></a>
+        ><?php echo LINK_CARET .  $lang['clearall']; ?></a>
     </div>
     <?php
     }
