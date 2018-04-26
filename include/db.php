@@ -396,10 +396,6 @@ if($CSRF_enabled && PHP_SAPI != 'cli')
         {
         $CSRF_source_origin = $_SERVER['HTTP_ORIGIN'];
         }
-    else if(isset($_SERVER['HTTP_REFERER']))
-        {
-        $CSRF_source_origin = $_SERVER['HTTP_REFERER'];
-        }
 
     if($CSRF_source_origin === '')
         {
