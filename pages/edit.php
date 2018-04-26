@@ -31,10 +31,8 @@ $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getvalescaped("archive",0,true); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $autorotate = getval("autorotate","");
-
 $collection_add = getvalescaped('collection_add', '');
 $local = getvalescaped("local","");
-
 if($embedded_data_user_select)
   {
   $no_exif=getval("exif_option","");
@@ -237,7 +235,9 @@ if ($ref<0 && $resource_type!="" && $resource_type!=$resource["resource_type"] &
     $resource["resource_type"] = $resource_type;
 	}
 
-if(in_array($resource['resource_type'], $data_only_resource_types))
+$noupload = getval("noupload","") != "" || in_array($resource['resource_type'], $data_only_resource_types);
+
+if($noupload)
     {
     $single=true;
     $uploadparams["single"] = "true";
@@ -924,10 +924,10 @@ function EditNav() # Create a function so this can be repeated at the end of the
   
 function SaveAndClearButtons($extraclass="")
     {
-    global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $data_only_resource_types;
+    global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $noupload;
 
     $save_btn_value = ($ref > 0 ? ($upload_review_mode ? $lang["saveandnext"] : $lang["save"]) : $lang["next"]);
-    if($ref < 0 && in_array($resource['resource_type'], $data_only_resource_types))
+    if($ref < 0 && $noupload)
         {
         $save_btn_value = $lang['create'];
         }
@@ -966,7 +966,7 @@ function SaveAndClearButtons($extraclass="")
 if($ref < 0)
     {
     // Include upload_params in form action url
-    if(in_array($resource['resource_type'], $data_only_resource_types))
+    if($noupload)
         {
         $uploadparams["noupload"] = "true";
         }
@@ -1103,7 +1103,7 @@ else
             }
 
         // Allow to upload only if resource is not a data only type
-        if (0 < $ref && !in_array($resource['resource_type'], $data_only_resource_types) && !$resource_file_readonly && !$upload_review_mode)
+        if (0 < $ref && !$noupload && !$resource_file_readonly && !$upload_review_mode)
             {
             ?>
             <a href="<?php echo generateURL($baseurl_short . "pages/upload_" . $replace_upload_type . ".php",$urlparams, array("replace_resource"=>$ref, "resource_type"=>$resource['resource_type'])); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo (($resource["file_extension"]!="")?$lang["replacefile"]:$lang["uploadafile"]) ?></a>
@@ -1220,12 +1220,12 @@ if(!$is_template && $show_required_field_label)
    <?php
    global $clearbutton_on_upload;
    if(($clearbutton_on_upload && $ref<0 && !$multiple) || ($ref>0 && $clearbutton_on_edit)) 
-     { ?>
-  <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;&nbsp;<?php
-    }
+        { ?>
+        <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;&nbsp;<?php
+        }
 
     $save_btn_value = $lang['next'];
-    if($ref < 0 && in_array($resource['resource_type'], $data_only_resource_types))
+    if($ref < 0 && $noupload)
         {
         $save_btn_value = $lang['create'];
         }
