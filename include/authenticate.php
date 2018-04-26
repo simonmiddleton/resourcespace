@@ -356,7 +356,11 @@ if(true == getvalescaped('ui_view_full_site', false))
 
 // Check CSRF Token
 $csrf_token = getval($CSRF_token_identifier, "");
-if($_SERVER["REQUEST_METHOD"] === "POST" && !isValidCSRFToken($csrf_token, $usersession) && !isset($anonymous_login))
+if(
+    $_SERVER["REQUEST_METHOD"] === "POST"
+    && !isValidCSRFToken($csrf_token, $usersession)
+    && !(isset($anonymous_login) && $username == $anonymous_login)
+)
     {
     http_response_code(400);
     debug("WARNING: CSRF verification failed!");
