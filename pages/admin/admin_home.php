@@ -64,18 +64,6 @@ include ("../../include/header.php");
 			<li><i aria-hidden="true" class="fa fa-fw fa-cog"></i>&nbsp;<a href="<?php echo $baseurl; ?>/pages/admin/admin_system_config.php" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['systemconfig']; ?></a></li>
 			<?php
 			}
-			?>
-
-		
-
-<?php
-if ($web_config_edit)
-	{
-?>		<li><i aria-hidden="true" class="fa fa-fw fa-pencil-square-o"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/fileedit.php?file=../../include/config.php" target="_blank"><?php echo $lang["action-edit"]; ?> config.php</a></li>
-		<li><i aria-hidden="true" class="fa fa-fw fa-pencil-square-o"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/fileedit.php?file=../../include/config.default.php" target="_blank"><?php echo $lang["action-view"]; ?> config.default.php</a></li>
-<?php
-	}	
-
 hook("customadminfunction");
 ?>
 
