@@ -580,7 +580,7 @@ function do_search(
                                 // Multiple alternative keywords
                                 $alternative_keywords_sql = "";
                                 $alternative_keywords = array();
-                                if($field_short_name_specified && $keywords_expanded_or)
+                                if($keywords_expanded_or)
                                     {
                                     foreach($keywords_expanded as $keyword_expanded)
                                         {
@@ -760,13 +760,14 @@ function do_search(
 										
                                         }
                                     else  // we are dealing with a standard keyword match
-                                        {  
+                                        { 
                                          // ----- resource_node -> node_keyword sub query -----
      
                                          $union = " SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_node rn[union_index]" .
-                                             " LEFT OUTER JOIN `node_keyword` nk[union_index] ON rn[union_index].node=nk[union_index].node LEFT OUTER JOIN `node` n[union_index] ON rn[union_index].node=n[union_index].ref " .
-                                             " WHERE (nk[union_index].keyword={$keyref} " . str_replace("[keyword_match_table]","nk[union_index]", $relatedsql) . " {$union_restriction_clause_node})" .
-                                             " GROUP BY resource,resource_type_field ";					    
+                                            " LEFT OUTER JOIN `node_keyword` nk[union_index] ON rn[union_index].node=nk[union_index].node LEFT OUTER JOIN `node` n[union_index] ON rn[union_index].node=n[union_index].ref " .
+                                            " WHERE (nk[union_index].keyword={$keyref} " . str_replace("[keyword_match_table]","nk[union_index]", $relatedsql) . " {$union_restriction_clause_node})"
+                                            . (($alternative_keywords_sql != "") ? (str_replace("[keyword_match_table]", "nk[union_index]", $alternative_keywords_sql) . $union_restriction_clause_node) : "" )
+                                            . " GROUP BY resource,resource_type_field ";					    
                      
                                          // ----- resource_keyword sub query -----
                      
