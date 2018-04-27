@@ -57,7 +57,7 @@ else
 	}
 
 # Save report
-if (getval("name", "") != "" && enforcePostRequest(getval("ajax", false)))
+if (getval("name", "") != "" && getval("save", "") && enforcePostRequest(getval("ajax", false)))
     {
     if ($ref=="")
         {
@@ -202,6 +202,7 @@ for ($n=0;$n<count($list);$n++)
 
 
 <div class="QuestionSubmit">
+    <input type="hidden" name="save" value="save report">
 <label for="buttons"> </label>			
 <input name="update" type="submit" value="&nbsp;&nbsp;<?php echo $lang["update_report"]?>&nbsp;&nbsp;" />
 <input name="save" type="submit" onClick="if (document.getElementById('report_name').value=='') {alert('<?php echo addslashes($lang["report_please_enter_name"]) ?>');}" value="&nbsp;&nbsp;<?php echo $lang["save_report"]?>&nbsp;&nbsp;" />
