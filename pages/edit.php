@@ -1716,7 +1716,9 @@ else # Edit Resource(s).
    {
    $setarchivestate = $resource["archive"];
    }
-
+?>
+</div><!-- end of ResourceMetadataSection -->
+<?php
 # Status / Access / Related Resources
 
 if (eval($show_status_and_access_on_upload_perm) && !hook("editstatushide")) # Only display Status / Access / Related Resources if permissions match.
@@ -1727,11 +1729,11 @@ if (eval($show_status_and_access_on_upload_perm) && !hook("editstatushide")) # O
     {
             if ($enable_related_resources && ($multiple || $ref>0)) # Showing relationships
             {
-              ?></div><!-- end of ResourceMetadataSection --><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?> id="StatusRelationshipsSectionHead"><?php echo $lang["statusandrelationships"]?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusRelationshipsSection<?php if ($ref==-1) echo "Upload"; ?>"><?php
+              ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?> id="StatusRelationshipsSectionHead"><?php echo $lang["statusandrelationships"]?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusRelationshipsSection<?php if ($ref==-1) echo "Upload"; ?>"><?php
            }
            else
            {
-                ?></div><!-- end of ResourceMetadataSection --><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo $lang["status"]?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusSection<?php if ($ref==-1) echo "Upload"; ?>"><?php # Not showing relationships
+                ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo $lang["status"]?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusSection<?php if ($ref==-1) echo "Upload"; ?>"><?php # Not showing relationships
              }
           }
 
