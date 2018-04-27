@@ -2481,11 +2481,6 @@ $direct_download_allow_ie7=false; // ie7 blocks initial downloads but after allo
 $direct_download_allow_ie8=false; // ie7 blocks initial downloads but after allowing once, it seems to work, so this option is available (no guarantees).
 $direct_download_allow_opera=false; // opera can also allow popups, but this is recommended off as well since by default it won't work for most users.
 
-# web-based config.php editing, using CodeMirror for highlighting. 
-# must make config.php writable. 
-# note that caution must be used not to break syntax, or else you must edit the file server side to fix the site.
-$web_config_edit=false;
-
 # enable option to autorotate new images based on embedded camera orientation data
 # requires ImageMagick to work.
 $camera_autorotation = false;
