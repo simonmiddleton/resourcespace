@@ -57,7 +57,7 @@ else
 	}
 
 # Save report
-if (getval("name", "") != "" && getval("save", "") && enforcePostRequest(getval("ajax", false)))
+if (getval("name", "") != "" && getval("save", "") != "" && enforcePostRequest(getval("ajax", false)))
     {
     if ($ref=="")
         {
