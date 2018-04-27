@@ -222,3 +222,6 @@ $permitted_html_tags =  array(
 
 // Array of default html attributes that are permitted in field data
 $permitted_html_attributes = array('id', 'class', 'style');
+
+$jquery_path = "/lib/js/jquery-3.3.1.min.js";
+$jquery_ui_path = "/lib/js/jquery-ui-1.12.1.min.js";

@@ -33,8 +33,8 @@ $use_watermark=check_use_watermark();
 ?>
 <html>
 <head>
-<link href="../css/embedslideshow.css" rel="stylesheet" type="text/css" media="screen,projection,print" /> 
-<script src="../../../lib/js/jquery-1.12.4.min.js" type="text/javascript"></script>
+<link href="../css/embedslideshow.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" /> 
+<script src="../../..<?php echo $jquery_path ?>?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
 </head>
 <body>
 
