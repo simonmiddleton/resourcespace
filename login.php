@@ -111,7 +111,7 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
     }
 }
 
-if(getval("logout", "") != "" && enforcePostRequest(false) && array_key_exists("user", $_COOKIE))
+if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
     {
     $session = escape_check($_COOKIE["user"]);
 
