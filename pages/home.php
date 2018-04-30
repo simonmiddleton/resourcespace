@@ -37,143 +37,117 @@ function loadWelcomeText()
 if (!hook("replaceslideshow"))
 	{
 	global $slideshow_photo_delay;
+    $slideshow_files = get_slideshow_files_data();
+    $homeimages = count($slideshow_files);
 
-	# Count the files in the configured $homeanim_folder.
-	$dir = dirname(__FILE__) . "/../" . $homeanim_folder; 
-	$filecount = 0; 
-	$checksum=0; # Work out a checksum which is the total of all the image files in bytes - used in image URLs to force a refresh if any of the images change.
-	$d = scandir($dir); 
-	sort($d, SORT_NUMERIC);
-	$reslinks=array();	
-	$login_image_skipped=false;
-	foreach ($d as $f) 
-		{ 
-		if(preg_match("/[0-9]+\.(jpg)$/",$f))
-		 	{ 
-		 	if($login_background && $filecount==0 && !$login_image_skipped){$login_image_skipped=true;continue;}
-			$filecount++;
-
-			$checksum+=filemtime($dir . "/" . $f);
-			$linkfile=substr($f,0,(strlen($f)-4)) . ".txt";
-			$reslinks[$filecount]="";
-			
-			
-			$ssindex = substr($f,0,-4);
-			$imagelink[$filecount] = "{$baseurl_short}pages/download.php?slideshow={$ssindex}";
-			$linkref="";
-				
-			if(file_exists("../" . $homeanim_folder . "/" . $linkfile))
-				{
-				$linkref=file_get_contents("../" . $homeanim_folder . "/" . $linkfile);
-				$linkaccess = get_resource_access($linkref);
-				if (($linkaccess!=="") && (($linkaccess==0) || ($linkaccess==1))){$reslinks[$filecount]=$baseurl . "/pages/view.php?ref=" . $linkref;}
-				}
-		       
-		       if ($slideshow_big && !$static_slideshow_image)
-				  {
-				  # Register with the new large slideshow.
-				  # Include the checksum calculated so far, to ensure a reloaded image if the image on disk has changed.
-			      	  ?>
-				 <script type="text/javascript">
-				 var big_slideshow_timer = <?php echo $slideshow_photo_delay;?>;
-				 RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$ssindex}"; ?>&nc=<?php echo $checksum ?>','<?php echo $linkref ?>');
-				 </script>
-				 <?php
-				 }
-			}
-	 	} 
-
-	if($static_slideshow_image && $filecount > 0 && $slideshow_big)
-		{
-		$randomimage=rand(1,$filecount);
-		// We only want to use one of the available images	
-		# Register this image with the large slideshow.
-		?>
-		<script type="text/javascript">
-		var big_slideshow_timer = 0;
-		RegisterSlideshowImage('<?php echo $imagelink[$randomimage] ?>', undefined, true);
-		</script>
-		 <?php
-		}
-		
-	$homeimages=$filecount;
-	if ($filecount>1 && !$slideshow_big) 
-		{ # Only add Javascript if more than one image.
-		?>
-		<script type="text/javascript">
-
-		var num_photos=<?php echo $homeimages?>;  // <---- number of photos (/images/slideshow?.jpg)
-		var photo_delay= <?php echo $slideshow_photo_delay;?>;
-		var link = new Array();
-
-		<?php 
-		$l=1;
-		foreach ($reslinks as $reslink)
-			{
-			echo "link[" . $l . "]=\"" .  $reslink . "\";";
-			$l++;
-			}
-		?>
-
-		var cur_photo=2;
-		var last_photo=1;
-		var next_photo=2;
-
-		flip=1;
-
-		var image1=0;
-		var image2=0;
-
-		function nextPhoto()
-		    {
-		    if (!document.getElementById('image1')) {return false;} /* Photo slideshow no longer available (AJAX page move) */
-		    
-		      if (cur_photo==num_photos) {next_photo=1;} else {next_photo=cur_photo+1;}
-			
-			
-		      image1 = document.getElementById("image1");
-		      image2 = document.getElementById("photoholder");
-		      sslink = document.getElementById("slideshowlink");
-			  linktarget=link[cur_photo];
-			  if (flip==0)
-			  	{
-			    // image1.style.visibility='hidden';
-			    //Effect.Fade(image1);
-				jQuery('#image1').fadeOut(1000)
-			    window.setTimeout("image1.src=\'' + baseurl_short + \'/pages/download.php?slideshow=' + next_photo + '&checksum=<?php echo $checksum ?>';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
-		     	flip=1;
-		     	}
-			  else
-			  	{
-			    // image1.style.visibility='visible';
-			    //Effect.Appear(image1);
-				jQuery('#image1').fadeIn(1000)
-			    window.setTimeout("image2.style.backgroundImage='url(baseurl_short + \'/pages/download.php?slideshow=\' + next_photo + '&checksum=<?php echo $checksum ?>')';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
-			    flip=0;
-				}	  	
-		     
-		      last_photo=cur_photo;
-		      cur_photo=next_photo;
-		      timers.push(window.setTimeout("nextPhoto()", 1000 * photo_delay));
-			}
-
-		jQuery(document).ready( function ()
-			{ 
-		    /* Clear all old timers */
-		    ClearTimers();
-			timers.push(window.setTimeout("nextPhoto()", 1000 * photo_delay));
-			}
-			);
-			
-		</script><?php 
-		}
-	if($slideshow_big) 
-		{?>
-		<style>
-			#Footer {display:none;}
-		</style>
-		<?php
-		}
+    if($slideshow_big && $homeimages > 0)
+        {
+        if($static_slideshow_image)
+            {
+            $randomimage=rand(1,$homeimages);
+            // We only want to use one of the available images	
+            ?>
+            <script>
+            var big_slideshow_timer = 0;
+            RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$randomimage}"; ?>','<?php echo (isset($homeimages[$randomimage]["link"])) ? $homeimages[$randomimage]["link"] : "" ?>');
+            </script>
+            <?php
+            }
+        else
+            {
+            ?>
+            <script>
+            var big_slideshow_timer = <?php echo $slideshow_photo_delay;?>;
+            <?php
+            foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
+                {
+                if(!file_exists($slideshow_file_info['file_path']))
+                    {
+                    continue;
+                    }
+                ?>
+                RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$slideshow_image}"; ?>','<?php echo (isset($slideshow_file_info["link"])) ? $slideshow_file_info["link"] : "" ?>');
+                <?php
+                }
+            ?>
+            </script>
+            <?php
+            }
+        }
+    elseif ($homeimages > 1 && !$slideshow_big) 
+        { # Only add Javascript if more than one image.
+        ?>
+        <script type="text/javascript">
+    
+        var num_photos=<?php echo $homeimages ?>;  // <---- number of photos (/images/slideshow?.jpg)
+        var photo_delay= <?php echo $slideshow_photo_delay;?>;
+        var link = new Array();
+    
+        <?php 
+        //$l=1;
+        foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
+            {
+            echo "link[" . $slideshow_image . "]=\"" .  (isset($slideshow_file_info["link"]) ? $slideshow_file_info["link"] : "#") . "\";";
+            }
+        ?>
+    
+        var cur_photo=2;
+        var last_photo=1;
+        var next_photo=2;
+    
+        flip=1;
+    
+        var image1=0;
+        var image2=0;
+    
+        function nextPhoto()
+            {
+            if (!document.getElementById('image1')) {return false;} /* Photo slideshow no longer available (AJAX page move) */
+            
+              if (cur_photo==num_photos) {next_photo=1;} else {next_photo=cur_photo+1;}
+            
+            
+              image1 = document.getElementById("image1");
+              image2 = document.getElementById("photoholder");
+              sslink = document.getElementById("slideshowlink");
+              linktarget=link[cur_photo];
+              if (flip==0)
+                {
+                // image1.style.visibility='hidden';
+                //Effect.Fade(image1);
+                jQuery('#image1').fadeOut(1000)
+                window.setTimeout("image1.src=\'' + baseurl_short + '/pages/download.php?slideshow=' + next_photo + '\';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
+                flip=1;
+                }
+              else
+                {
+                jQuery('#image1').fadeIn(1000)
+                window.setTimeout("image2.style.backgroundImage='url(' + baseurl_short + 'pages/download.php?slideshow=' + next_photo +')';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
+                flip=0;
+                }	  	
+             
+              last_photo=cur_photo;
+              cur_photo=next_photo;
+              timers.push(window.setTimeout("nextPhoto()", 1000 * photo_delay));
+            }
+    
+        jQuery(document).ready( function ()
+            { 
+            /* Clear all old timers */
+            ClearTimers();
+            timers.push(window.setTimeout("nextPhoto()", 1000 * photo_delay));
+            }
+            );
+            
+        </script><?php 
+        }
+    if($slideshow_big) 
+        {?>
+        <style>
+            #Footer {display:none;}
+        </style>
+        <?php
+        }
 
 	if ($small_slideshow && !$slideshow_big) 
 		{ ?>
@@ -193,14 +167,10 @@ if (!hook("replaceslideshow"))
 			
 			<a id="slideshowlink"
 			<?php
-			 
-			$linkurl="#";
-			if(file_exists("../" . $homeanim_folder . "/1.txt"))
+		
+			if(isset($slideshow_files[0]["link"]))
 				{
-				$linkres=file_get_contents("../" . $homeanim_folder . "/1.txt");
-				$linkaccess = get_resource_access($linkres);
-				if (($linkaccess!=="") && (($linkaccess==0) || ($linkaccess==1))) {$linkurl=$baseurl . "/pages/view.php?ref=" . $linkres;}
-				echo "href=\"" . $linkurl ."\" ";
+				echo "href=\"" . $slideshow_files[0]["link"] ."\" ";
 				}
 			
 			?>
@@ -213,9 +183,9 @@ if (!hook("replaceslideshow"))
 				} 
 			}
 			?>
-			background-image:url('<?php echo  "{$baseurl}/pages/download.php?slideshow=1&checksum=<{$checksum}'"; ?>');">
+			background-image:url('<?php echo  "{$baseurl}/pages/download.php?slideshow=1"; ?>');">
 			
-			<img src='<?php echo "{$baseurl}/pages/download.php?slideshow=" . ($homeimages>1?2:1)  . "&checksum={$checksum}"; ?>' alt='' id='image1' style="display:none;<?php
+			<img src='<?php echo "{$baseurl}/pages/download.php?slideshow=" . ($homeimages>1?2:1); ?>' alt='' id='image1' style="display:none;<?php
 			if (isset($home_slideshow_width)){
 				echo"width:" .  $home_slideshow_width ."px; ";
 				}
