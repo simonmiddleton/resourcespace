@@ -482,7 +482,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             // If no errors, remove from collection and continue
                             if(count($auto_errors) == 0)
                                 {
-                                debug("edit: autosaved resource " . $ref . ", removing from collection " . (str)(0-$userref));
+                                debug("edit: autosaved resource " . $ref . ", removing from collection " . (string)(0-$userref));
                                 remove_resource_from_collection($ref,0-$userref);
                                 }
                             else
