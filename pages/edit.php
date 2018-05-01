@@ -1278,7 +1278,7 @@ if(!$multiple)
             ?>
             <option value="<?php echo $types[$n]['ref']; ?>"
                 <?php
-                if($resource['resource_type'] == $types[$n]['ref'])
+                if(($resource['resource_type'] == $types[$n]['ref'] && getval("resource_type","") == "") || getval("resource_type","") == $types[$n]['ref'])
                     {
                     $selected_type = $types[$n]['ref'];
                     ?>selected<?php
