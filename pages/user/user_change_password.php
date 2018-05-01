@@ -5,6 +5,12 @@ $password_reset_mode=false;
 $resetvalues=getvalescaped("rp","");
 if($resetvalues!="")
     {
+    if(substr($resetvalues,0,2) == "3D")
+        {
+        // Email Smay have encoded the = character
+        $resetvalues = substr($resetvalues,2);
+        }
+        
     $rplength=strlen($resetvalues);
     $resetuserref=substr($resetvalues,0,$rplength-15);
     $resetkey=substr($resetvalues,$rplength-15);
