@@ -175,7 +175,8 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
         // Add the word.
         args = {
             field: '<?php echo $field["ref"]; ?>',
-            keyword: keyword
+            keyword: keyword,
+            <?php echo generateAjaxToken("selectKeyword_{$js_keywords_suffix}"); ?>
             };
 
         jQuery.ajax({
