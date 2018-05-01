@@ -67,7 +67,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         
         if (getval("newtheme$themeindex","")!="")
             {
-            $coldata["theme". $n] = trim(getval("newtheme$themeindex",""));
+            $coldata["theme". $themeindex] = trim(getval("newtheme$themeindex",""));
             }    
         }
         
