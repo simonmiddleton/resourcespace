@@ -34,34 +34,38 @@ if (isset($_REQUEST['mode']) && strtolower($_REQUEST['mode']) == 'original'){
     $original = false;
 }
 
-
-
 // if they can't download this resource, they shouldn't be doing this
 // also, if they are trying to modify the original but don't have edit access
 // they should never get these errors, because the links shouldn't show up if no perms
-if ($access!=0 || ($original && !$edit_access)){
+if ($access!=0 || ($original && !$edit_access))
+    {
 	include "../../../include/header.php";
 	echo "Permission denied.";
 	include "../../../include/footer.php";
 	exit;
-}
+    }
 
 
 $imversion = get_imagemagick_version();
 
 // generate a preview image for the operation if it doesn't already exist
-if (!file_exists(get_temp_dir() . "/transform_plugin/pre_$ref.jpg")){
+$crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date(time()) . $scramble_key) . ".jpg";
+$crop_pre_url = $baseurl . "/pages/download.php?tempfile=transform_" . $ref . "_" . date(time()) . ".jpg";
+if (!file_exists($crop_pre_file))
+    {
 	//echo  "generating preview";
-	//exit();
-	generate_transform_preview($ref) or die("Error generating transform preview.");
-}
-
-
+	//exit($crop_pre_file);
+	if(!generate_transform_preview($ref,$crop_pre_file))
+        {
+        die("Error generating transform preview.");
+        }
+    }
 # Locate imagemagick.
-if (!isset($imagemagick_path)){
+if (!isset($imagemagick_path))
+    {
 	echo "Error: ImageMagick must be configured for crop functionality. Please contact your system administrator.";
 	exit;
-}
+    }
 
 $command = get_utility_path("im-convert");
 if ($command==false) {exit("Could not find ImageMagick 'convert' utility.");}
@@ -71,16 +75,12 @@ $orig_ext = sql_value("select file_extension value from resource where ref = '$r
 $preview_ext = sql_value("select preview_extension value from resource where ref = '$ref'",'');
 
 // retrieve image paths for preview image and original file
-//$previewpath = get_resource_path($ref,true,$cropper_cropsize,false,$preview_ext);
-$previewpath = get_temp_dir() . "/transform_plugin/".$cropper_cropsize."_$ref.jpg";
-//echo $previewpath;
-//exit();
 $originalpath= get_resource_path($ref,true,'',false,$orig_ext);
 
 hook('transformcropbeforegetsize');
 
 // retrieve image sizes for original image and preview used for cropping
-$cropsizes  = @getimagesize($previewpath);
+$cropsizes  = @getimagesize($crop_pre_file);
 $origsizes  = @getimagesize($originalpath);
 $cropwidth  = $cropsizes[0];
 $cropheight = $cropsizes[1];
@@ -482,11 +482,6 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
     # call remove annotations, since they will not apply to transformed
     hook("removeannotations","",array($ref));
 
-    // remove the cached transform preview, since it will no longer be accurate
-    if (file_exists(get_temp_dir() . "/transform_plugin/pre_$ref.jpg")){
-	unlink(get_temp_dir() . "/transform_plugin/pre_$ref.jpg");
-    }
-
 	hook("transformcropafterreplaceoriginal");
 
     if('' !== $return_to_url)
@@ -527,7 +522,7 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
 		if (file_exists($sslinkfile)){unlink($sslinkfile);}
 		}
 	unlink($newpath);
-	unlink(get_temp_dir() . "/transform_plugin/pre_$ref.jpg");
+	unlink($crop_pre_file);
 	}
 else
 	{
@@ -540,7 +535,8 @@ else
 	set_time_limit(0);
 	readfile($newpath);
 	unlink($newpath);	
-	unlink(get_temp_dir() . "/transform_plugin/pre_$ref.jpg");
+	unlink($crop_pre_file);
+    //unlink(get_temp_dir() . "/transform_plugin/pre_$ref.jpg");
 	exit();
 }
 hook("aftercropfinish");
@@ -562,26 +558,21 @@ $resource = get_resource_data($ref);
 
 // retrieve path to image and figure out size we're using
 if ($resource["has_image"]==1)
+    {
+    if (!file_exists($crop_pre_file))
         {
-		$imageurl = get_temp_dir(true) . "/transform_plugin/pre_$ref.jpg";
-		$imagepath = get_temp_dir(false) . "/transform_plugin/pre_$ref.jpg";
-
-        	//$imagepath=get_resource_path($ref,true,$cropper_cropsize,false,$resource["preview_extension"],-1,1);
-        	if (!file_exists($imagepath)){
-				echo $lang['noimagefound'];
-				exit;
-			}
-        	//$imageurl=get_resource_path($ref,false,$cropper_cropsize,false,$resource["preview_extension"],-1,1);
-        	
-			$origpresizes = getimagesize($imagepath);
-			$origprewidth = $origpresizes[0];
-			$origpreheight = $origpresizes[1];
-        
-		} else {
-		
-			echo $lang['noimagefound'];
-			exit;
-		}
+        echo $lang['noimagefound'];
+        exit;
+        }
+    $origpresizes = getimagesize($crop_pre_file);
+    $origprewidth = $origpresizes[0];
+    $origpreheight = $origpresizes[1];
+    }
+else
+    {
+	echo $lang['noimagefound'];
+	exit;
+    }
 
 
 //header("X-UA-Compatible:IE=EmulateIE7"); // hack to make cropperUI work in IE8	
@@ -605,10 +596,10 @@ include "../../../include/header.php";
 </p>
 <?php
 
-if (file_exists($imagepath))
+if (file_exists($crop_pre_file))
     {
     ?>
-    <div id='cropimgdiv' style='float:left;padding:0;margin:0;' onmouseover='unfocus_widths();' ><img src="<?php echo $imageurl?>" id='cropimage' /></div>
+    <div id='cropimgdiv' style='float:left;padding:0;margin:0;' onmouseover='unfocus_widths();' ><img src="<?php echo $crop_pre_url?>" id='cropimage' /></div>
     <?php
     }
 		

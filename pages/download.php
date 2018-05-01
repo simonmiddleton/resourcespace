@@ -67,6 +67,17 @@ elseif(getval("slideshow",0,true) != 0)
     $noattach       = true;
     $path           = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . $homeanim_folder . DIRECTORY_SEPARATOR . getval("slideshow",0,true) . ".jpg";
     }
+elseif(getval("tempfile","") != "")
+    {
+    $noattach       = true;
+    $exiftool_write = false;
+    $filedetails    = explode('_', getval("tempfile",""));
+    $code           = $filedetails[0];
+    $ref            = $filedetails[1];
+    $downloadkey    = strip_extension($filedetails[2]);
+    $ext            = substr($filedetails[2], strlen($downloadkey) + 1);
+    $path           = get_temp_dir(false,"") . '/' . $code . '_' . $ref . "_" . md5($username . $downloadkey . $scramble_key) . '.' . $ext;
+    }
 else
     {
     $resource_data = get_resource_data($ref);
