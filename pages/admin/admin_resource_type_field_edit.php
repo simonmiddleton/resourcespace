@@ -23,7 +23,7 @@ $restypefilter=getvalescaped("restypefilter","",true);
 $field_order_by=getvalescaped("field_order_by","ref");
 $field_sort=getvalescaped("field_sort","asc");
 $newfield = getval("newfield","") != "";
-
+$ajax = getval('ajax', '');
 $url_params = array("ref"=>$ref,
 		    "restypefilter"=>$restypefilter,
 		    "$field_order_by"=>$field_order_by,
@@ -406,7 +406,7 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 	}
 
 $confirm_delete=false;	
-if (getval("delete","")!="" && enforcePostRequest(false))
+if (getval("delete","")!="" && enforcePostRequest($ajax))
 	{	
 	$confirmdelete=getvalescaped("confirmdelete","");
 	# Check for resources of this  type
@@ -423,7 +423,18 @@ if (getval("delete","")!="" && enforcePostRequest(false))
 	    //Remove all keywords	    
 	    sql_query("delete from resource_keyword where resource_type_field='$ref'");
 	    hook("after_delete_resource_type_field");
-	    redirect(generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,array("ref"=>"","deleted"=>urlencode($ref))));
+
+        if($ajax)
+            {
+            echo json_encode(
+                array(
+                    'deleted' => $ref
+                )
+            );
+            exit();
+            }
+
+        redirect(generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,array("ref"=>"","deleted"=>urlencode($ref))));
 	    }
         else
 	    {	    
