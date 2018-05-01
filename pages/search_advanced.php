@@ -102,31 +102,25 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 	if (getval("countonly","")!="")
 		{        
 		# Only show the results (this will appear in an iframe)
-		if (count($search)==0)
-			{
-			$count=0;            
-			}
-		else
-			{
-			if (substr($restypes,0,11)!="Collections" && !$collection_search_includes_resource_metadata)
-			    {
-				$result=do_search($search,$restypes,"relevance",$archive,1,"",false,$starsearch);
-				}
-			else 
-			    {
-			    $order_by=$default_collection_sort;
-			    $sort="DESC";
-				$result=do_collections_search($search,$restypes,$archive,$order_by,$sort);
-				}
-			if (is_array($result))
-				{
-				$count=count($result);
-				}
-			else
-				{
-				$count=0;				
-				}
-			}
+        if (substr($restypes,0,11)!="Collections" && !$collection_search_includes_resource_metadata)
+            {
+            $result=do_search($search,$restypes,"relevance",$archive,1,"",false,$starsearch);
+            }
+        else 
+            {
+            $order_by=$default_collection_sort;
+            $sort="DESC";
+            $result=do_collections_search($search,$restypes,$archive,$order_by,$sort);
+            }
+        if (is_array($result))
+            {
+            $count=count($result);
+            }
+        else
+            {
+            $count=0;				
+            }
+			
 		?>
 		<html>
 		<script type="text/javascript">
