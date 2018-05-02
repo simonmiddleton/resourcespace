@@ -264,8 +264,12 @@ echo $hidden_input_elements;
 
             // Trigger an event so we can chain actions once we've changed a category tree option
             jQuery('#CentralSpace').trigger('categoryTreeChanged', [{node: selected_rs_node_ids[i]}]);
-
-            console.log('Category tree: Sending node ID ' + selected_rs_node_ids[i]);
+            //console.log('Category tree: Sending node ID ' + selected_rs_node_ids[i]);
+            }
+        if(selected_rs_node_ids.length == 0)
+            {
+            //console.log('Category tree cleared');
+            jQuery('#CentralSpace').trigger('categoryTreeChanged', 0);
             }
 
         <?php

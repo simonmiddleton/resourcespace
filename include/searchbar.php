@@ -7,6 +7,7 @@ $stored_restypes=(isset($restypes)?$restypes:'');
 $stored_search=(isset($search)?$search:'');
 $stored_quicksearch=(isset($quicksearch)?$quicksearch:'');
 $stored_starsearch=(isset($starsearch)?$starsearch:'');
+$stored_category_tree_add_parents = $category_tree_add_parents;
 
 if ($simple_search_reset_after_search)
     {
@@ -887,3 +888,4 @@ $restypes=$stored_restypes;
 $search=$stored_search;
 $quicksearch=$stored_quicksearch;
 $starsearch=$stored_starsearch;
+$category_tree_add_parents = $stored_category_tree_add_parents;
