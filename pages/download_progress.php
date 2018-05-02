@@ -70,7 +70,7 @@ if (!$save_as)
 	$sort= getval("saved_sort",getval("sort",""));
 	$archive= getval("saved_archive",getval("archive",""));
 	
-	// Set parameters for liks
+	// Set parameters for links
 	$url_parameters=array
 		(
 		"ref"=>$ref,
