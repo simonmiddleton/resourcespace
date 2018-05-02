@@ -55,9 +55,9 @@ if('' != $userfiledownload)
     $noattach       = '';
     $exiftool_write = false;
     $filedetails    = explode('_', $userfiledownload);
-    $ref            = $filedetails[0];
+    $ref            = (int)$filedetails[0];
     $downloadkey    = strip_extension($filedetails[1]);
-    $ext            = substr($filedetails[1], strlen($downloadkey) + 1);
+    $ext            = safe_file_name(substr($filedetails[1], strlen($downloadkey) + 1));
     $path           = get_temp_dir(false, 'user_downloads') . '/' . $ref . '_' . md5($username . $downloadkey . $scramble_key) . '.' . $ext;
 
     hook('modifydownloadpath');
@@ -72,12 +72,12 @@ elseif(getval("tempfile","") != "")
     $noattach       = true;
     $exiftool_write = false;
     $filedetails    = explode('_', getval("tempfile",""));
-    $code           = $filedetails[0];
-    $ref            = $filedetails[1];
+    $code           = safe_file_name($filedetails[0]);
+    $ref            = (int)$filedetails[1];
     $downloadkey    = strip_extension($filedetails[2]);
-    $ext            = substr($filedetails[2], strlen($downloadkey) + 1);
+    $ext            = safe_file_name(substr($filedetails[2], strlen($downloadkey) + 1));
     $path           = get_temp_dir(false,"") . '/' . $code . '_' . $ref . "_" . md5($username . $downloadkey . $scramble_key) . '.' . $ext;
-    }
+   }
 else
     {
     $resource_data = get_resource_data($ref);

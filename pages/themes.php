@@ -1122,8 +1122,6 @@ if($simpleview && $themes_show_background_image)
         // Set first image found when refreshing. Otherwise, the system picks up the last image that dash background
         // changed to when navigating using CentralSpaceLoad.
         $background_image_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_image}";
-        //$baseurl_short . $homeanim_folder . '/' . $slideshow_image . '.jpg' . '?nc=' . time();
-        //break;
         }
         
     if(!$featured_collection_static_bg)

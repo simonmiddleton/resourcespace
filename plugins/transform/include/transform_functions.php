@@ -45,13 +45,12 @@ function generate_transform_preview($ref, $destpath)
     $parentfolder = dirname($destpath);
     $foldercontents = new DirectoryIterator($parentfolder);
     foreach($foldercontents as $objectindex => $object)
-        {
-           
+        {           
         if($object->isDot())
             {
             continue;
             }
-        if(time()-$object->getMTime() > 24*60*60)
+        if($object->isReadable() && time()-$object->getMTime() > 24*60*60)
             {
             $tmpfilename = $object->getFilename();
             if($object->isFile() && strpos($tmpfilename,"transform") === 0)
