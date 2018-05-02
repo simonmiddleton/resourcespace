@@ -229,19 +229,13 @@ if ($user_edit_created_by)
 <div class="Question"><label><?php echo $lang["private-api-key"] ?></label>
 <div class="Fixed"><?php echo get_api_key($user["ref"]) ?></div>
 <div class="clearerleft"> </div></div>
-<?php } ?>
+<?php }
 
-
-
-
-<?php 
-// Tick to e-mail plain text password is depreacated for security reasons. We can only reset it
-// manually (as an Administrator) or by sending a reset link
 if(!hook('ticktoemailpassword')) 
     {
     ?>
     <div class="Question"><label><?php echo $lang["ticktoemaillink"]?></label>
-    <input name="emailresetlink" type="checkbox" value="yes" <?php if ($user["approved"]==0) { ?>checked<?php } ?>>
+    <input name="emailresetlink" type="checkbox" value="yes" <?php if ($user["approved"]==0 || getval("emailresetlink","") != "") { ?>checked<?php } ?>>
     <div class="clearerleft"> </div></div>
     <?php
     }
