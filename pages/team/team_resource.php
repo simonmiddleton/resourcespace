@@ -23,7 +23,7 @@ include "../../include/header.php";
 	<?php if (checkperm("c")): // Check if user can create resources ?>
 
         <?php if($upload_methods['single_upload']):// Test if Add Single Resource is allowed. ?>
-			<li><i aria-hidden="true" class="fa fa-fw fa-file"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&amp;single=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresource"]?></a></li>
+			<li><i aria-hidden="true" class="fa fa-fw fa-file"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&amp;noupload=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresource"]?></a></li>
 		<?php endif // Test if Add Single Resource is allowed. ?>
 
 		<?php if($upload_methods['in_browser_upload']): // Test if Add Resource Batch - In Browser is allowed. ?>
