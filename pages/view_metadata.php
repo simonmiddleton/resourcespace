@@ -77,6 +77,7 @@ if(isset($display_field_below_preview) && is_int($display_field_below_preview))
         
 <div id="Metadata">
 <?php
+global $extra;
 $extra="";
 
 #  -----------------------------  Draw tabs ---------------------------
