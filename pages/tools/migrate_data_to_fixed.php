@@ -169,7 +169,7 @@ if(getval("submit","") != "" && enforcePostRequest(false))
 		foreach ($log as $logtext)
 			{
 			?>
-			jQuery('#migration_log').append('<?php echo ($dryrun?"TESTING: ":"") . str_pad($logtext,2048); ?>');
+			jQuery('#migration_log').append("<?php echo ($dryrun?"TESTING: ":"") . str_pad($logtext,2048); ?>");
 			<?php
 			}
 			?>
@@ -179,7 +179,7 @@ if(getval("submit","") != "" && enforcePostRequest(false))
 	
 	if($deletedata)
 		{?>
-		jQuery('#migration_log').append('\n<?php echo ($dryrun?"TESTING: ":"") ?>DELETING EXISTING DATA\n');
+		jQuery('#migration_log').append("\n<?php echo ($dryrun?"TESTING: ":"") ?>DELETING EXISTING DATA\n");
 		<?php
 		if(!$dryrun)
 			{
