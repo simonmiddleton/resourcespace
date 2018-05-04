@@ -126,7 +126,7 @@ $df=array();
 $all_field_info=get_fields_for_search_display(array_unique(array_merge($sort_fields,$thumbs_display_fields,$list_display_fields)));
 
 # get display and normalize display specific variables
-$display=getvalescaped("display",$default_display);rs_setcookie('display', $display);
+$display=getvalescaped("display",$default_display);rs_setcookie('display', $display,0,"","",false,false);
 
 switch ($display)
 	{
@@ -318,12 +318,11 @@ if($collectionsearch)
     
 hook("searchstringprocessing");
 
-
 # Fetch and set the values
-$offset=getvalescaped("offset",0);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset);}
+$offset=getvalescaped("offset",0);if (strpos($search,"!")===false) {rs_setcookie('saved_offset', $offset,0,"","",false,false);}
 if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 
-$order_by=getvalescaped("order_by","");if (strpos($search,"!")===false || strpos($search,"!properties")!==false) {rs_setcookie('saved_order_by', $order_by);}
+$order_by=getvalescaped("order_by","");if (strpos($search,"!")===false || strpos($search,"!properties")!==false) {rs_setcookie('saved_order_by', $order_by,0,"","",false,false);}
 if ($order_by=="")
 	{
 	if ($collectionsearch) // We want the default collection order to be applied
@@ -341,7 +340,7 @@ if(empty($per_page))
     {
     $per_page=$default_perpage;
     }
-rs_setcookie('per_page', $per_page);
+rs_setcookie('per_page', $per_page,0,"","",false,false);
 
 // Construct archive string and array
 $archive_choices=getvalescaped("archive","");
@@ -365,13 +364,13 @@ if($search_all_workflow_states && 0 != $archive)
 
 if(false === strpos($search, '!'))
     {
-    rs_setcookie('saved_archive', $archive);
+    rs_setcookie('saved_archive', $archive,0,"","",false,false);
     }
 
 if($resetlockedfields)
     {
     // Reset locked metadata fields cookie after editing resources in upload_review_mode
-    rs_setcookie('lockedfields', '');
+    rs_setcookie('lockedfields', '',0,"","",false,false);
     }
 
 
@@ -384,7 +383,7 @@ if (getvalescaped('recentdaylimit', '', true)!="") //set for recent search, don'
 else if($recent_search_period_select==true && strpos($search,"!")===false) //set cookie for paging
 	{
 	$daylimit=getvalescaped("daylimit",""); 
-	rs_setcookie('daylimit', $daylimit);
+	rs_setcookie('daylimit', $daylimit,0,"","",false,false);
 	}
 else {$daylimit="";} // clear cookie for new search
 
@@ -399,7 +398,7 @@ if ($order_by=="field{$date_field}")
     {
     $default_sort_direction="DESC";
     }
-$sort=getvalescaped("sort",$default_sort_direction);rs_setcookie('saved_sort', $sort);
+$sort=getvalescaped("sort",$default_sort_direction);rs_setcookie('saved_sort', $sort,0,"","",false,false);
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 
 ## If displaying a collection
@@ -430,7 +429,7 @@ else
 		if ((substr($key,0,8)=="resource")&&!in_array($key, $hiddenfields)) {if ($restypes!="") {$restypes.=",";} $restypes.=substr($key,8);}
 		}
 
-	rs_setcookie('restypes', $restypes);
+	rs_setcookie('restypes', $restypes,0,"","",false,false);
 
 	# This is a new search, log this activity
 	if ($archivesearched) {daily_stat("Archive search",0);} else {daily_stat("Search",0);}
@@ -446,13 +445,13 @@ if (getvalescaped("search","")!="" && strpos(getvalescaped("search",""),"!")!==f
 else
 	{
 	$starsearch=getvalescaped("starsearch","");	
-	rs_setcookie('starsearch', $starsearch);
+	rs_setcookie('starsearch', $starsearch,0,"","",false,false);
 }
 
 # If returning to an old search, restore the page/order by and other non search string parameters
 if (!array_key_exists("search",$_GET) && !array_key_exists("search",$_POST))
 	{
-	$offset=getvalescaped("saved_offset",0,true);rs_setcookie('saved_offset', $offset);
+	$offset=getvalescaped("saved_offset",0,true);rs_setcookie('saved_offset', $offset,0,"","",false,false);
 	$order_by=getvalescaped("saved_order_by","relevance");
 	if ($collectionsearch) // We want the default collection order to be applied
 		{
@@ -462,9 +461,9 @@ if (!array_key_exists("search",$_GET) && !array_key_exists("search",$_POST))
 		{
 		$order_by=$default_sort;
 		}
-	rs_setcookie('saved_order_by', $order_by);
-	$sort=getvalescaped("saved_sort","");rs_setcookie('saved_sort', $sort);
-	$archivechoices=getvalescaped("saved_archive",0);rs_setcookie('saved_archive', $archivechoices);
+	rs_setcookie('saved_order_by', $order_by,0,"","",false,false);
+	$sort=getvalescaped("saved_sort","");rs_setcookie('saved_sort', $sort,0,"","",false,false);
+	$archivechoices=getvalescaped("saved_archive",0);rs_setcookie('saved_archive', $archivechoices,0,"","",false,false);
     if(!is_array($archivechoices)){$archivechoices=explode(",",$archivechoices);}
     foreach($archivechoices as $archivechoice)
         {
@@ -510,7 +509,7 @@ $searchparams= array(
 
 if(false === strpos($search, '!') || '!properties' == substr($search, 0, 11))
     {
-    rs_setcookie('search', $search);
+    rs_setcookie('search', $search,0,"","",false,false);
     }
 
 hook('searchaftersearchcookie');

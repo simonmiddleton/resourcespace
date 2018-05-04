@@ -344,7 +344,8 @@ if (!$basic_simple_search)
 	<?php }?>
 	<?php
 	$rt=explode(",",@$restypes);
-	$clear_function="";
+	$clear_function = "SetCookie('search','');SetCookie('restypes','');SetCookie('saved_offset','');SetCookie('saved_archive','');";
+    
 	for ($n=0;$n<count($types);$n++)
 		{
 			if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }

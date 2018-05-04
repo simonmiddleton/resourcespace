@@ -71,7 +71,7 @@ $archive=implode(",",$selected_archive_states);
 $archiveonly=count(array_intersect($selected_archive_states,array(1,2)))>0;
 
 $starsearch=getvalescaped("starsearch","");	
-rs_setcookie('starsearch', $starsearch);
+rs_setcookie('starsearch', $starsearch,0,"","",false,false);
 
 $opensections=get_search_open_sections();
 
@@ -89,7 +89,7 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
 		    $hiddenfields=$value;
 		    }
 		}
-	rs_setcookie('restypes', $restypes);
+	rs_setcookie('restypes', $restypes,0,"","",false,false);
 		
 	# advanced search - build a search query and redirect
 	$fields=array_merge(get_advanced_search_fields(false, $hiddenfields ),get_advanced_search_collection_fields(false, $hiddenfields ));
@@ -174,8 +174,8 @@ if (getval("resetform","")!="")
   $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";$starsearch="";
   $restypes=get_search_default_restypes();
   $selected_archive_states=array(0);
-  rs_setcookie("search","");
-  rs_setcookie("saved_archive","");
+  rs_setcookie("search","",0,"","",false,false);
+  rs_setcookie("saved_archive","",0,"","",false,false);
   }
 else
   {
