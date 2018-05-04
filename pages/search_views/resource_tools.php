@@ -105,7 +105,7 @@ if(!hook("iconemail"))
 <?php 
 if ($pagename=="collections" || (!checkperm("b") && substr($search,0,11)=="!collection" && ($k=="" || $internal_share_access) && !$use_checkboxes_for_selection))
         {
-        if ($pagename=="collections" || $search=="!collection".$usercollection)
+        if ($pagename=="collections" || trim($search)=="!collection".$usercollection)
                 { ?>
                         <?php echo remove_from_collection_link($ref,$search,"fa fa-minus-circle")?>
                         </a>
