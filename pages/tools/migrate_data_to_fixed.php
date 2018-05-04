@@ -79,7 +79,14 @@ if(getval("submit","") != "" && enforcePostRequest(false))
 	?>
 	<script>
 	<?php
-    $resdata = sql_query("SELECT resource, value FROM resource_data WHERE resource_type_field='" . $migrate_field . "'");
+    $resdata = sql_query(
+        "SELECT resource,
+                `value` 
+           FROM resource_data 
+          WHERE resource_type_field = '{$migrate_field}'
+            AND `value` IS NOT NULL
+            AND `value` != ''"
+    );
     
     // Get all existing nodes
     $existing_nodes = get_nodes($migrate_field, NULL, TRUE);
@@ -91,11 +98,17 @@ if(getval("submit","") != "" && enforcePostRequest(false))
 		
     foreach($resdata as $resdata_row)
         {
-		
+        // No need to process any further if no data is found set for this resource
+        if(trim($resdata_row['value']) == '')
+            {
+            continue;
+            }
+
         $nodes_to_add = array();
         $resource = $resdata_row["resource"];
 		$log = array();
         $log[] = "Checking data for resource id #" . $resource . "";
+
         if($splitvalue != "")
             {
             $data_values = explode($splitvalue,$resdata_row["value"]);
@@ -107,13 +120,20 @@ if(getval("submit","") != "" && enforcePostRequest(false))
             
         foreach($data_values as $data_value)
             {
+            // Skip if this value is empty (e.g if users left a separator at the end of the value by mistake)
+            if(trim($data_value) == '')
+                {
+                continue;
+                }
+
             $log[] = "- value: " . $data_value . "";
        
             $nodeidx = array_search($data_value,array_column($existing_nodes,"name"));
+
             if($nodeidx !== false)
                 {
                 $log[] = " - found matching node. ref:" . $existing_nodes[$nodeidx]["ref"] ;
-                $nodes_to_add[] = $existing_nodes[$nodeidx]["ref"];              
+                $nodes_to_add[] = $existing_nodes[$nodeidx]["ref"];      
                 }
             else
                 {
