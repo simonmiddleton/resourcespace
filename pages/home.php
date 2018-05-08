@@ -39,24 +39,27 @@ if (!hook("replaceslideshow"))
 	global $slideshow_photo_delay;
     $slideshow_files = get_slideshow_files_data();
     $homeimages = count($slideshow_files);
-
     if($slideshow_big && $homeimages > 0)
         {
+        ?>
+        <script>
+        var SlideshowImages = new Array();
+        var SlideshowLinks = new Array();
+        var SlideshowCurrent = -1;
+        var SlideshowTimer = 0;
+        <?php
         if($static_slideshow_image)
             {
-            $randomimage=rand(1,$homeimages);
+            $randomimage = array_rand($slideshow_files);
             // We only want to use one of the available images	
             ?>
-            <script>
             var big_slideshow_timer = 0;
-            RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$randomimage}"; ?>','<?php echo (isset($homeimages[$randomimage]["link"])) ? $homeimages[$randomimage]["link"] : "" ?>');
-            </script>
+            RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$randomimage}"; ?>','<?php echo (isset($homeimages[$randomimage]["link"])) ? $homeimages[$randomimage]["link"] : "" ?>',1);
             <?php
             }
         else
             {
             ?>
-            <script>
             var big_slideshow_timer = <?php echo $slideshow_photo_delay;?>;
             <?php
             foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
@@ -69,15 +72,20 @@ if (!hook("replaceslideshow"))
                 RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$slideshow_image}"; ?>','<?php echo (isset($slideshow_file_info["link"])) ? $slideshow_file_info["link"] : "" ?>');
                 <?php
                 }
-            ?>
-            </script>
-            <?php
             }
+        ?>
+        jQuery( document ).ready(function() 
+            {
+            window.clearTimeout(SlideshowTimer);
+            ActivateSlideshow();
+            });
+        </script>
+        <?php
         }
     elseif ($homeimages > 1 && !$slideshow_big) 
         { # Only add Javascript if more than one image.
         ?>
-        <script type="text/javascript">
+        <script>
     
         var num_photos=<?php echo $homeimages ?>;  // <---- number of photos (/images/slideshow?.jpg)
         var photo_delay= <?php echo $slideshow_photo_delay;?>;
