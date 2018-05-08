@@ -1930,6 +1930,10 @@ $enable_theme_breadcrumbs = true;
 $themes_simple_view=false;
 # Option to show images on featured collection and featured collection category tiles if $themes_simple_view is enabled
 $themes_simple_images=true;
+
+# Option to show single hoem slideshow image on featured collection page (themes.php) if $themes_simple_view is enabled
+$featured_collection_static_bg = false;
+
 # Display theme categories as links, and themes on separate pages?
 $themes_category_split_pages=false;
 # Display breadcrumb-style theme parent links instead of "Subcategories"

@@ -1114,11 +1114,6 @@ if($simpleview && $themes_show_background_image)
 
     foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
         {
-        if(isset($background_image_url))
-            {
-            continue;
-            }
-
         if(isset($background_image_url) || !file_exists($slideshow_file_info['file_path']))
             {
             continue;
@@ -1126,13 +1121,16 @@ if($simpleview && $themes_show_background_image)
 
         // Set first image found when refreshing. Otherwise, the system picks up the last image that dash background
         // changed to when navigating using CentralSpaceLoad.
-        $background_image_url = $baseurl_short . $homeanim_folder . '/' . $slideshow_image . '.jpg' . '?nc=' . time();
-        break;
+        $background_image_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_image}";
+        //$baseurl_short . $homeanim_folder . '/' . $slideshow_image . '.jpg' . '?nc=' . time();
+        //break;
         }
-
-    // Overwrite background_image_url with theme specific ones
-    $background_theme_images = get_theme_image(0 < count($themes) ? $themes : array(''), '', $smart_theme!=='');
-
+        
+    if(!$featured_collection_static_bg)
+        {
+        // Overwrite background_image_url with theme specific ones
+        $background_theme_images = get_theme_image(0 < count($themes) ? $themes : array(''), '', $smart_theme!=='');
+    
         if(is_array($background_theme_images) && 0 < count($background_theme_images))
             {
             foreach($background_theme_images as $background_theme_image)
@@ -1144,7 +1142,8 @@ if($simpleview && $themes_show_background_image)
                     }
                 }
             }
-            ?>
+        }?>
+        
     <script>
     jQuery(document).ready(function ()
         {
