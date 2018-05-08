@@ -70,7 +70,7 @@ if(strpos($header_favicon, '[storage_url]') !== false)
 <!-- Load jQuery and jQueryUI -->
 <script src="<?php echo $baseurl; ?>/lib/js/jquery-3.3.1.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 <script src="<?php echo $baseurl?>/lib/js/jquery-ui-1.12.1.min.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
-<script src="<?php echo $baseurl; ?>/lib/js/jquery.layout.js"></script>
+<script src="<?php echo $baseurl; ?>/lib/js/jquery.layout.js?css_reload_key=<?php echo $css_reload_key?>"></script>
 <script src="<?php echo $baseurl?>/lib/js/easyTooltip.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <link type="text/css" href="<?php echo $baseurl?>/css/smoothness/jquery-ui.min.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
 <script src="<?php echo $baseurl?>/lib/js/jquery.ui.touch-punch.min.js"></script>
