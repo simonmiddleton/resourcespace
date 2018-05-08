@@ -2259,11 +2259,11 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         {
         switch ($type)
             {
-            case LOG_CODE_STATUS_CHANGED:
+            case LOG_CODE_STATUS_CHANGED && is_numeric($fromValue) && is_numeric($toValue):
                 $diff = $lang["status" . $fromvalue] . " -> " . $lang["status" . $tovalue];
                 break;
 
-            case LOG_CODE_ACCESS_CHANGED:
+            case LOG_CODE_ACCESS_CHANGED && is_numeric($fromValue) && is_numeric($toValue):
                 $diff = $lang["access" . $fromvalue] . " -> " . $lang["access" . $tovalue];
                 break;
 
