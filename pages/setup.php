@@ -8,6 +8,7 @@
 include_once '../include/file_functions.php';
 include_once '../include/general.php';
 include_once '../include/collections_functions.php';
+include_once '../include/definitions.php';
 if (!function_exists('filter_var')){  //If running on PHP without filter_var, define a do-fer function, otherwise use php's filter_var (PHP > 5.2.0)
     define(FILTER_SANITIZE_STRING, 1);
     define(FILTER_SANITIZE_EMAIL, 2);
@@ -221,11 +222,11 @@ if(get_post_bool('ajax'))
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link href="../css/global.css?csr=5" rel="stylesheet" type="text/css" /> 
 <link href="../css/colour.css?csr=5" rel="stylesheet" type="text/css" /> 
-<script src="../lib/js/jquery-3.3.1.min.js"></script>
+<script src="..<?php echo $jquery_path; ?>"></script>
 <!--- FontAwesome for icons-->
 <link rel="stylesheet" href="../lib/fontawesome/css/font-awesome.min.css">
 
-<script type="text/javascript"> 
+<script> 
  
 $(document).ready(function(){
 $('p.iteminfo').hide();
