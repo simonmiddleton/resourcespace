@@ -262,11 +262,13 @@ function collection_writeable($collection)
 	$collectiondata=get_collection($collection);
 	global $userref,$usergroup;
 	global $allow_smart_collections;
-	if ($allow_smart_collections && !isset($userref)){ 
-		if (isset($collectiondata['savedsearch'])&&$collectiondata['savedsearch']!=null){
+	if ($allow_smart_collections && !isset($userref))
+		{ 
+		if (isset($collectiondata['savedsearch'])&&$collectiondata['savedsearch']!=null)
+			{
 			return false; // so "you cannot modify this collection"
 			}
-	}
+		}
 	
 	# Load a list of attached users
 	$attached=sql_array("select user value from user_collection where collection='$collection'");
@@ -288,9 +290,14 @@ function collection_writeable($collection)
 	debug("username : " . $username);
 	debug("anonymous_user_session_collection : " . (($anonymous_user_session_collection)?"TRUE":"FALSE"));
 		
-	$writable=($userref==$collectiondata["user"] && (!isset($anonymous_login) || $username!=$anonymous_login || !$anonymous_user_session_collection || $collectiondata["session_id"]==$rs_session))
-		|| 
-		(($collectiondata["allow_changes"]==1 || checkperm("h")) && ((in_array($userref,$attached) || in_array($usergroup,$attached_groups)) || $collectiondata["public"]==1))
+	$writable=
+	    // User either owns collection AND is not the anonymous user, or is the anonymous user with a matching/no session
+		($userref==$collectiondata["user"] && (!isset($anonymous_login) || $username!=$anonymous_login || !$anonymous_user_session_collection || $collectiondata["session_id"]==$rs_session))
+		// Collection is public AND either they have the 'h' permission OR allow_changes has been set
+		|| ((checkperm("h") || $collectiondata["allow_changes"]==1) && $collectiondata["public"]==1)
+		// Collection has been shared but is not public AND user is either attached or in attached group
+		|| ($collectiondata["allow_changes"]==1 && $collectiondata["public"]==0 && (in_array($userref,$attached) || in_array($usergroup,$attached_groups)))
+		// System admin
 		|| checkperm("a");
 	return $writable;
 	
