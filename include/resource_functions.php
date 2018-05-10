@@ -2553,7 +2553,7 @@ function write_metadata($path, $ref, $uniqid="")
         # Argument -E: Escape values for HTML. Used for handling foreign characters in shells not using UTF-8.
         # Arguments -EXIF:all= -XMP:all= -IPTC:all=: Remove the metadata in the tag groups EXIF, XMP and IPTC.
 		$command = $exiftool_fullpath . " -m -overwrite_original -E ";
-        if ($exiftool_remove_existing) {$command.= "-EXIF:all= -XMP:all= -IPTC:all= ";}
+        if ($exiftool_remove_existing) {$command.= "-gps:all= -EXIF:all= -XMP:all= -IPTC:all= ";}
 
         //$write_to = get_exiftool_fields($resource_type); # Returns an array of exiftool fields for the particular resource type, which are basically fields with an 'exiftool field' set.
         $metadata_all=get_resource_field_data($ref, false,true,-1,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
