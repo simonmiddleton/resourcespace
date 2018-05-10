@@ -687,9 +687,9 @@ function get_resource_top_keywords($resource,$count)
                 $r =  $keyword["name"] ;   
                 }
             }
-            
-        if(isset($r) && is_array($r) && count($r)!=0)
-			{    
+
+        if(isset($r) && trim($r) != '')
+			{  
 			if (substr($r,0,1)==","){$r=substr($r,1);}
 			$s=split_keywords($r);
 			foreach ($s as $a)
