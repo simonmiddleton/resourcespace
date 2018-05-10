@@ -460,7 +460,6 @@ if (getval("ajax","") == "")
 				resizerTip: '<?php echo $lang["resize"]?>',
 				south__onclose_start: function(pane)
 					{
-                    console.log("south__onclose_start");
 					if (pane=="south" && (typeof colbarresizeon === "undefined" || colbarresizeon==true))
 						{
 						if(jQuery('.ui-layout-south').height()>40 && thumbs!="hide")
@@ -477,8 +476,6 @@ if (getval("ajax","") == "")
 					},
 				south__onresize: function(pane)
 					{
-                    console.log("south__onresize");
-
 					if (pane=="south" && (typeof colbarresizeon === "undefined" || colbarresizeon==true))
 						{
 						thumbs = getCookie("thumbs");
