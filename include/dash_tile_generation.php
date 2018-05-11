@@ -195,12 +195,15 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
 	$archive = $linkstring["archive"];
 	$sort = "";
 	$tile_search=do_search($search,$restypes,$order_by,$archive,$count,$sort,false,0,false,false,"",false,false);
-	$found_resources=true;
-	$count=count($tile_search);
 	if(!is_array($tile_search))
 		{
 		$found_resources=false;
 		$count=0;
+		}
+	else
+		{
+		$found_resources=true;
+		$count=count($tile_search);
 		}
 	/* Hide if wish to not hide */
 	if(!$found_resources)
