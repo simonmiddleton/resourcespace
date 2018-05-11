@@ -1,0 +1,12 @@
+#CookiesUseWrapper { background-color: #6C7A89; padding: 15px 25px; }
+#CookieUseMessage { padding: unset; float: left; text-align: left; color: #ECF0F1; }
+#CookiesUseActions { float: right; }
+.CookiesUseBtn { padding: 5px 10px; }
+.HighlightBtn { background-color: #F9BF3B; }
+
+
+/* Responsive */
+@media(max-width: 1100px) {
+    #CookieUseMessage { margin-bottom: 10px; }
+    #CookiesUseActions { float: initial; }
+}
