@@ -2,15 +2,16 @@
 if(!hook("replaceuploadoptions")):	
 if ($ref<0)
 	{
+	if($show_status_and_access_on_upload){?></div><!-- end of previous collapsing section --><?php}
 	if($tabs_on_edit)
 		{
-		?></div><h1><?php echo $lang["upload-options"] ?></h1>
+		?><h1><?php echo $lang["upload-options"] ?></h1>
 		<div id="UploadOptionsSection">
 		<?php
 		}
 	else
 		{		
-		?></div><h2 class="CollapsibleSectionHead"><?php echo $lang["upload-options"] ?></h2>
+		?><h2 class="CollapsibleSectionHead"><?php echo $lang["upload-options"] ?></h2>
 		<div class="CollapsibleSection" id="UploadOptionsSection">
 		<?php
 		}

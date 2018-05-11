@@ -1549,9 +1549,13 @@ if ($display_any_fields && $enable_copy_data_from && !$upload_review_mode)
  </div><!-- end of question_copyfrom -->
  <?php
 }
-?>
-</div>
-<?php hook('editbeforesectionhead');
+if($multiple)// this is closing a div that can be omitted via hook("replaceedittype")
+	{
+	?>
+	</div><!-- end collapisble ResourceTypeSection -->
+	<?php
+	}
+hook('editbeforesectionhead');
 
 global $collapsible_sections;
 if($collapsible_sections)
@@ -2120,7 +2124,8 @@ if($collapsible_sections)
 </div><!-- end of collapsible section -->
 <?php
 }
-if($multiple){echo "</div>";} ?>
+?>
+</div><!-- end of BasicsBox -->
 </form>
 
 <script>
