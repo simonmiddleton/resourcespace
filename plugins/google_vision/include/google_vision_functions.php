@@ -47,7 +47,8 @@ function google_visionProcess($resource)
         array(
             'method'  => 'POST',
             'header'  => 'Content-type: application/json',
-            'content' => $request
+            'content' => $request,
+            'ignore_errors' => true
         )
     );
     $context  = stream_context_create($opts);
@@ -69,6 +70,12 @@ function google_visionProcess($resource)
     */
     
     $result=json_decode($result,true); # Parse and return as associative arrays
+    
+    if(isset($result['error']))
+    	{
+    	debug('google vision error: ' . $result['error']['code'] . ': ' . $result['error']['message']);
+    	return false;
+    	}
     
     # echo "<pre>";
     # print_r($result);
