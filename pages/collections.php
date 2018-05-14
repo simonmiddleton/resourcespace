@@ -503,7 +503,7 @@ if ($addsearch!=-1)
         else
             {
             #add saved search (the items themselves rather than just the query)
-            $resourcesnotadded=add_saved_search_items($usercollection, $search, $restypes,$archive, $order_by, $sort, $daylimit, $starsearch);
+            $resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $starsearch);
             if (!empty($resourcesnotadded))
                 {
                 $warningtext="";
