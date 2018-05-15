@@ -5652,17 +5652,15 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
     	$secure=true;
     	}
      	
+    // Set new cookie, first remove any old previously set pages cookies to avoid clashes;           
     if ($global_cookies)
         {
-        # Remove previously set cookies to avoid clashes
-        //setcookie($name, "", time() - 3600, $baseurl_short . "pages/", $domain, $secure, $httponly);
-        //setcookie($name, "", time() - 3600, $baseurl_short, $domain, $secure, $httponly);
-        # Set new cookie
+        setcookie($name, "", time() - 3600, "/pages", $domain, $secure, $httponly);
         setcookie($name, $value, (int) $expire, "/", $domain, $secure, $httponly);
         }
     else
         {
-        # Set new cookie
+        setcookie($name, "", time() - 3600, $path . "pages", $domain, $secure, $httponly);
         setcookie($name, $value, (int) $expire, $path, $domain, $secure, $httponly);
         }
     }
