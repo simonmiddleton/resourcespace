@@ -19,7 +19,23 @@ $page_def[] = config_add_html('</div>');
 
 
 // User interface section
+
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="SystemConfigUserInterfaceSection" class="CollapsibleSection">');
+
+
+// Font selection
+$fontsdir=scandir(dirname(__FILE__) . "/../../css/fonts/");
+$fonts=array();
+foreach ($fontsdir as $f)
+    {
+    if (strpos($f,".css")!==false) // Valid font CSS definition
+        {
+        $fn=substr($f,0,strlen($f)-4);
+        $fonts[$fn]=$fn;
+        }
+    }
+$page_def[] = config_add_single_select('global_font', $lang['font'], $fonts, true, 420, '', true,"jQuery('#global_font_link').attr('href','" .  $baseurl . "/css/fonts/' + this.value + '.css');");
+
 $page_def[] = config_add_file_input(
     'linkedheaderimgsrc',
     $lang['systemconfig_linkedheaderimgsrc_label'],

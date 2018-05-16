@@ -3451,3 +3451,10 @@ $CSRF_token_identifier = "CSRFToken";
 $CORS_whitelist = array();
 ##################################################
 ##################################################
+
+
+/* Font selection */
+$global_font="WorkSans";
+
+
+

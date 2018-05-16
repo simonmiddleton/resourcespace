@@ -1,24 +1,8 @@
 
-/* Include font */
-@font-face
-    {
-    font-family: 'WorkSans';
-    src: 
-        url('../lib/Work-Sans-1.51/fonts/webfonts/woff2/WorkSans-Regular.woff2') format('woff2'), /* Super Modern Browsers */
-        url('../lib/Work-Sans-1.51/fonts/webfonts/woff/WorkSans-Regular.woff') format('woff'), /* Pretty Modern Browsers */
-        url('../lib/Work-Sans-1.51/fonts/webfonts/ttf/WorkSans-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
-    }
-@font-face
-    {
-    font-family: 'WorkSansMedium';
-    src: 
-        url('../lib/Work-Sans-1.51/fonts/webfonts/woff2/WorkSans-Medium.woff2') format('woff2'), /* Super Modern Browsers */
-        url('../lib/Work-Sans-1.51/fonts/webfonts/woff/WorkSans-Medium.woff') format('woff'), /* Pretty Modern Browsers */
-        url('../lib/Work-Sans-1.51/fonts/webfonts/ttf/WorkSans-Medium.ttf')  format('truetype'); /* Safari, Android, iOS */
-    }
 
-h1,h2,h3,h4,h5,h6,.Title {font-family:WorkSansMedium, Tahoma, Arial, Helvetica, sans-serif;}
-.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button,.ui-widget, body, input, textarea, select {font-family:WorkSans, Tahoma, Arial, Helvetica, sans-serif;}
+h1,h2,h3,h4,h5,h6,.Title {font-family:Tahoma, Arial, Helvetica, sans-serif;}
+
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button,.ui-widget, body, input, textarea, select {font-family: Tahoma, Arial, Helvetica, sans-serif;}
 
 select {font-size:1em;}
 .TopInpageNav select {padding:3px;}
