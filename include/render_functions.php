@@ -708,7 +708,7 @@ function render_sort_order(array $order_fields)
     // can depend on other params
     $modal  = ('true' == getval('modal', ''));
     ?>
-    <select id="sort_order_selection">
+    <select id="sort_order_selection" onChange="UpdateResultOrder();">
     
     <?php
     $options = '';
@@ -755,80 +755,25 @@ function render_sort_order(array $order_fields)
     ?>
     
     </select>
-    <select id="sort_selection">
-        <option value="ASC" <?php if($sort == 'ASC') {echo 'selected';} ?>><?php echo $lang['sortorder-asc']; ?></option>
-        <option value="DESC" <?php if($sort == 'DESC') {echo 'selected';} ?>><?php echo $lang['sortorder-desc']; ?></option>
-    </select>
-    &nbsp;<i class="fa fa-sort-amount-<?php echo strtolower(safe_file_name($sort)) ?>"></i>
+    &nbsp;<a href="#" onClick="UpdateResultOrder(true);"><i id="sort_selection_toggle" class="fa fa-sort-amount-<?php echo strtolower(safe_file_name($sort)) ?>"></i></a>
 
     <script>
-    function updateCollectionActions(order_by,sort_direction){
-    	jQuery("#CollectionDiv .ActionsContainer select option").each(function(){
-    		dataURL = jQuery(this).data("url");
-    		if(typeof dataURL!=='undefined'){
-    			dataURLVars = dataURL.split('&');
-    			
-    			replace_needed=false;
-    			
-    			for (i = 0; i < dataURLVars.length; i++) {
-        			dataURLParameterName = dataURLVars[i].split('=');
-	
-   	     			if (dataURLParameterName[0] === 'order_by') {
-   	        			dataURLVars[i] = dataURLParameterName[0]+'='+order_by;
-   	        			replace_needed=true;
-   		     		}
-       		 		else if (dataURLParameterName[0] === 'sort') {
-      	     			dataURLVars[i] = dataURLParameterName[0]+'='+sort_direction;
-      	     			replace_needed=true;
-      		  		}
-     		   	}
-   		     	if(replace_needed){
-   		     		newDataURL=dataURLVars.join("&");
-    				jQuery(this).attr("data-url", newDataURL);
-    			}
-    		}
-    	});
-    }
-    
-    jQuery('#sort_order_selection').change(function() {
-        var selected_option      = jQuery('#sort_order_selection option[value="' + this.value + '"]');
-        var selected_sort_option = jQuery('#sort_selection option:selected').val();
+    function UpdateResultOrder(toggle_order)
+        {
+        var selected_option      = jQuery('#sort_order_selection :selected');
         var option_url           = selected_option.data('url');
-
+        
+        if (toggle_order)
+            {
+            var selected_sort_option='<?php echo ($sort=='ASC'?'DESC':'ASC'); ?>';
+            }
+        else
+            {
+            var selected_sort_option='<?php echo ($sort=='ASC'?'ASC':'DESC'); ?>';
+            }
         option_url += '&sort=' + selected_sort_option;
-
          <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(option_url);
-        updateCollectionActions(selected_option.val(), selected_sort_option);
-
-        // Update collection
-        var query_strings = getQueryStrings();
-        if(is_special_search('!collection', 11) && !is_empty(query_strings) && query_strings.search.substring(11) == usercollection)
-            {
-            /*Because we are looking at the same collection in both CentralSpace and CollectionDiv,
-            make sure to keep both sections in sync*/
-            CollectionDivLoad(baseurl_short + 'pages/collections.php?collection=' + usercollection + '&k=<?php echo htmlspecialchars($k); ?>' + '&order_by=' + selected_option.val() + '&sort=' + selected_sort_option);
-            }
-    });
-
-    jQuery('#sort_selection').change(function() {
-        var selected_option                = this.value;
-        var selected_sort_order_option     = jQuery('#sort_order_selection option:selected');
-        var selected_sort_order_option_url = selected_sort_order_option.data('url');
-
-        selected_sort_order_option_url += '&sort=' + selected_option;
-
-        <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(selected_sort_order_option_url);
-        updateCollectionActions(selected_sort_order_option.val(), selected_option);
-
-        // Update collection
-        var query_strings = getQueryStrings();
-        if(is_special_search('!collection', 11) && !is_empty(query_strings) && query_strings.search.substring(11) == usercollection)
-            {
-            /*Because we are looking at the same collection in both CentralSpace and CollectionDiv,
-            make sure to keep both sections in sync*/
-            CollectionDivLoad(baseurl_short + 'pages/collections.php?collection=' + usercollection + '&k=<?php echo htmlspecialchars($k); ?>' + '&order_by=' + selected_sort_order_option.val() + '&sort=' + selected_option);
-            }
-    });
+        }
     </script>
     <?php
     return;
