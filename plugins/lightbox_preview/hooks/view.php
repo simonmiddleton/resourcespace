@@ -4,6 +4,11 @@ include dirname(__FILE__) . "/../include/utility.php";
 
 function HookLightbox_previewViewRenderbeforerecorddownload()
 	{
+	if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false)
+		{
+		return false;	
+		}
+	
 	global $resource, $title_field;
 
     $url = getPreviewURL($resource);
@@ -46,6 +51,10 @@ function HookLightbox_previewViewRenderbeforerecorddownload()
 
 function HookLightbox_previewViewRenderaltthumb()
 	{
+	if(strpos($_SERVER['HTTP_USER_AGENT'],"TRIDENT") !== false || strpos($_SERVER['HTTP_USER_AGENT'],"MSIE") !== false)
+		{
+		return false;	
+		}
 	global $baseurl_short, $ref, $resource, $alt_thm, $altfiles, $n, $k, $search,
 			$offset, $sort, $order_by, $archive;
 
@@ -71,12 +80,20 @@ function HookLightbox_previewViewRenderaltthumb()
 
 function HookLightbox_previewViewRenderbeforeresourcedetails()
     {
+	if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false)
+		{
+		return false;	
+		}
     addLightBox('a[rel="lightbox"]');
     addLightBox('a[rel="lightbox-other"]');
     }
 
 function HookLightbox_previewViewAftersearchimg()
 	{
+	if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false)
+		{
+		return false;	
+		}
 	// Prevent loading of Central Space when clicking preview image
 	?>
 
