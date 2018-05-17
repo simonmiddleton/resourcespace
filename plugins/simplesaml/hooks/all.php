@@ -249,7 +249,8 @@ function HookSimplesamlAllProvideusercredentials()
 			{
 			if(!isset($email) || $email==""){$email=sql_value("select email value from user where ref='$userid'","");} // Allows accounts without an email address to have one set by the admin without it getting overwritten
 			// user exists, so update info
-			global $simplesaml_update_group;
+			global $simplesaml_update_group, $session_autologout;
+
 			if($simplesaml_update_group || (isset($currentuser[0]["usergroup"]) && $currentuser[0]["usergroup"]==""))
 				{
 				sql_query("update user set origin='simplesaml', password = '$password_hash', usergroup = '$group', fullname='" . escape_check($displayname) . "', email='" . escape_check($email) . "' where ref = '$userid'");
@@ -268,6 +269,7 @@ function HookSimplesamlAllProvideusercredentials()
 
 			$user_select_sql="and u.username='$username'";
             $allow_password_change = false;
+            $session_autologout = false;
 			return true;
 			} 
 		else
