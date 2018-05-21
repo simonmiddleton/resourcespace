@@ -1621,6 +1621,12 @@ function display_field($n, $field, $newtab=false,$modal=false)
      <?php 
      $labelname = $name;
 
+     // For batch editing, CKEditor renders as a text box, as it does not work at all well when appending / prepending (it expects to work with HTML only)
+     if ($field['type'] == 8 && $multiple)
+        {
+        $field['type']=1;
+        }
+      
      // Add _selector to label so it will keep working:
      if($field['type'] == 9)
       {
