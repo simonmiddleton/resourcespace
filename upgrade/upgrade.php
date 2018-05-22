@@ -194,7 +194,7 @@ if($cli)
 else
 	{
 	echo PHP_EOL . "Upgrade complete. Please wait for redirect<br />
-	<script src=\"" . $baseurl . "/lib/js/jquery-1.12.4.min.js?css_reload_key=" . $css_reload_key . "\"></script>
+	<script src=\"" . $baseurl . "/lib/js/jquery-3.3.1.min.js?css_reload_key=" . $css_reload_key . "\"></script>
 	<script>
 	jQuery(document).ready(function () {
 		setTimeout(function () {
