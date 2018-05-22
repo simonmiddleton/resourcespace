@@ -60,10 +60,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
             $themeindex = $n;
             }
         $themename = getval("theme$themeindex","");
-        if($themename != "")
-            {
-            $coldata["theme" . $themeindex] = $themename;
-            }
+        $coldata["theme" . $themeindex] = $themename;
         
         if (getval("newtheme$themeindex","")!="")
             {
