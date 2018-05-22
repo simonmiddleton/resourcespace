@@ -337,10 +337,15 @@ if ($submitted != "")
 						
 						# do an extra check to see if the original filename might have uppercase extension that can be preserved.	
 						# also, set extension to "" if the original filename didn't have an extension (exiftool identification of filetypes)
-						$pathparts=pathinfo($filename);
-						if (isset($pathparts['extension'])){
-							if (strtolower($pathparts['extension'])==$pextension){$pextension=$pathparts['extension'];}
-						} else {$pextension="jpg";}	
+						$pathparts = pathinfo($filename);
+                        if(isset($pathparts['extension']))
+                            {
+                            if(strtolower($pathparts['extension']) == $pextension)
+                                {
+                                $pextension = $pathparts['extension'];
+                                }
+                            }
+
 						if ($usesize!=""&&!$subbed_original){$append="-".$usesize;}else {$append="";}
 						$basename_minus_extension=remove_extension($pathparts['basename']);
 						$filename=$basename_minus_extension.$append.".".$pextension;
