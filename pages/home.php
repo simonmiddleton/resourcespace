@@ -124,7 +124,7 @@ if (!hook("replaceslideshow"))
                 // image1.style.visibility='hidden';
                 //Effect.Fade(image1);
                 jQuery('#image1').fadeOut(1000)
-                window.setTimeout("image1.src=\'' + baseurl_short + '/pages/download.php?slideshow=' + next_photo + '\';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
+                window.setTimeout("image1.src=\'" + baseurl_short + "pages/download.php?slideshow=' + next_photo + '\';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
                 flip=1;
                 }
               else
