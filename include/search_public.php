@@ -42,7 +42,7 @@ for ($n=0;$n<count($collections);$n++)
 			}
 		?>
 		</a>
-		</div>
+		</div><!-- End of ImageWrapper -->
 
         <?php hook("icons","search",array("collections"=>true)); //for spacing ?>
         <?php //add spacing for display fields to even out the box size
@@ -55,14 +55,14 @@ for ($n=0;$n<count($collections);$n++)
             <?php } ?>
             <?php if ($x==count($df)-1){?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo htmlspecialchars(str_replace(array("\"","'"),"",i18n_get_collection_name($collections[$n]))) ?>"><?php echo highlightkeywords(tidy_trim(i18n_get_collection_name($collections[$n]),32),$search)?></a><?php } ?>&nbsp;<?php if (in_array($df[$x]['ref'],$thumbs_display_extended_fields)){ ?></div>
             <?php }
-        ?></div><?php } ?>
+        ?></div><!-- End of ResourcePanelInfo --><?php } ?>
         <?php } ?>
         <?php if (!hook("replacecollectiontools")){?>
         <div class="ResourcePanelIcons" style="float:right;"><a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]?>" onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]?></a>&nbsp;&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . $lang["view"]?></a></div>		
         <?php } ?>
-		<?php hook("searchiconpublic");?></div>
+		<?php hook("searchiconpublic");?>
 		<div class="clearer"></div>
-		</div>
+		</div><!-- End of ResourcePanel -->
 	<?php } 
 	
 	
