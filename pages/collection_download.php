@@ -94,6 +94,7 @@ $available_sizes=array();
 # get file extension from database or use jpg.
 function get_extension($resource, $size)
 	{
+    if ($size=="") {$size="original";}
 	$pextension = $size == 'original' ? $resource["file_extension"] : 'jpg';
 	$replace_extension = hook('replacedownloadextension', '', array($resource, $pextension));
 	if (!empty($replace_extension))
