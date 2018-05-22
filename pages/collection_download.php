@@ -172,6 +172,7 @@ if ($submitted != "")
 	$totalsize=0;
 	for ($n=0;$n<count($result);$n++)
 		{
+        $ref = $result[$n]['ref'];
 		$usesize = ($size == 'original') ? "" : $usesize=$size;
 		$use_watermark=check_use_watermark();
 		
