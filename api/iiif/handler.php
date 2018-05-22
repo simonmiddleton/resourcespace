@@ -546,7 +546,7 @@ else
 		}
 	else
 		{
-		if(function_exists("http_response_code"))
+		if(function_exists("http_response_code") && isset($errorcode))
 		    {
 			http_response_code($errorcode); # Send error status
 			}
