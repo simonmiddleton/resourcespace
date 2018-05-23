@@ -432,8 +432,8 @@ else
         <li>
             <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
                 <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?>
+                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
             </a>
-            <span class="MessageTotalCountPill Pill" style="display: none;"></span>
             <div id="MessageContainer" style="position:absolute; "></div>
         <?php
         }

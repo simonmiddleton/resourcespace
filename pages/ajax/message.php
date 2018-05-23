@@ -127,9 +127,7 @@
 						messagecount=messagecount-1;
 						totalcount=actioncount+messagecount;
 						}
-					jQuery('span.MessageTotalCountPill').html(totalcount).click(function() {
-						CentralSpaceLoad('<?php echo $baseurl; ?>/pages/user/user_messages.php',true);
-					}).fadeIn();
+					jQuery('span.MessageTotalCountPill').html(totalcount).fadeIn();
 					if (activeSeconds > 0 || message_poll_first_run)
 						{
 						for(var i=0; i < messagecount; i++)
