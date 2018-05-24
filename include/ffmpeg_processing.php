@@ -177,7 +177,24 @@ if($video_preview_hls_support!=0)
         }
             
     $output=run_command($shell_exec_cmd);
-      
+     
+    if (!file_exists($hlsfile))
+        {
+        // Check if '-strict experimental' flag 
+        if(strpos($shell_exec_cmd,"experimental") == false)
+            {
+            $shell_exec_cmd = str_replace($hlswidth . "x" . $hlsheight,$hlswidth . "x" . $hlsheight . " -strict experimental ",$shell_exec_cmd);
+            
+            if ($config_windows)
+                {
+                file_put_contents($tmp_ffmpeg_file,$shell_exec_cmd);
+                $shell_exec_cmd = $tmp_ffmpeg_file;
+                $deletefiles[] = $tmp_ffmpeg_file;
+                }
+            $output=run_command($shell_exec_cmd);
+            }
+        }
+            
     if(file_exists($hlsfile))
         {
         if(!isset($hls_codec_info))
@@ -230,7 +247,7 @@ if($video_preview_hls_support!=1)
     if (!file_exists($targetfile))
         {
         // Check if trying to create MP4 file as this may require the '-strict experimental' flag due to the AAC codec required for most MP4 web video
-        if($ffmpeg_preview_extension == "mp4" && strpos($ffmpeg_preview_options,"experimental" == false))
+        if($ffmpeg_preview_extension == "mp4" && strpos($ffmpeg_preview_options,"experimental") == false)
             {
             $shell_exec_cmd = str_replace($ffmpeg_preview_options,$ffmpeg_preview_options . " -strict experimental ",$ffmpeg_command);
             if ($config_windows)
