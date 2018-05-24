@@ -1360,17 +1360,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 										
         if(in_array($hasdatafieldtype,$FIXED_LIST_FIELD_TYPES))
             {   
-            // Check that nodes are empty
-            /*$union = "select ref as resource, [bit_or_condition] 1 as score from resource r[union_index] where r[union_index].ref not in 
-                    (
-                    select rn.resource from  
-                    node n 
-                    right join resource_node rn on rn.node=n.ref  
-                    where  n.resource_type_field='" . $nodatafield . "'
-                    group by rn.resource
-                    )";
-                    
-            */
             $sql_join.=" RIGHT JOIN resource_node rn ON r.ref=rn.resource JOIN node n ON n.ref=rn.node where  n.resource_type_field='" . $fieldref . "'";
             $sql = $sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
             return $returnsql?$sql:sql_query($sql,false,$fetchrows);        
