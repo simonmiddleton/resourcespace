@@ -30,7 +30,11 @@ foreach ($fields_tab_names as $tabname) {
 	}
 }
 $fields_tab_names = array_intersect($fields_tab_names, $tabs_with_data);
-sort($fields_tab_names);
+
+if ($sort_tabs)
+    {
+    sort($fields_tab_names);
+    }
 
 if(isset($related_type_show_with_data)) {
 	// Get resource type tab names, excluding the current resource type (if any set):

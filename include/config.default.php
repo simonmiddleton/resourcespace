@@ -3456,5 +3456,6 @@ $CORS_whitelist = array();
 /* Font selection */
 $global_font="WorkSans";
 
-
+// Sort tabs alphabetically
+$sort_tabs = true;
 
