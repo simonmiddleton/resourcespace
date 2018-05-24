@@ -984,7 +984,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false, $returnsql=false)
 	{
 	# Process special searches. These return early with results.
-
+    global $FIXED_LIST_FIELD_TYPES;
 	
     # View Last
     if (substr($search,0,5)=="!last") 
@@ -1356,9 +1356,32 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search,0,8)=="!hasdata") 
         {       
         $fieldref=intval(trim(substr($search,8)));
-        $sql_join.=" join resource_data on r.ref=resource_data.resource and resource_data.resource_type_field=$fieldref and resource_data.value<>'' ";
-        $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        $hasdatafieldtype = sql_value("SELECT  `type` value FROM resource_type_field WHERE ref = '{$fieldref}'", 0);	
+										
+        if(in_array($hasdatafieldtype,$FIXED_LIST_FIELD_TYPES))
+            {   
+            // Check that nodes are empty
+            /*$union = "select ref as resource, [bit_or_condition] 1 as score from resource r[union_index] where r[union_index].ref not in 
+                    (
+                    select rn.resource from  
+                    node n 
+                    right join resource_node rn on rn.node=n.ref  
+                    where  n.resource_type_field='" . $nodatafield . "'
+                    group by rn.resource
+                    )";
+                    
+            */
+            $sql_join.=" RIGHT JOIN resource_node rn ON r.ref=rn.resource JOIN node n ON n.ref=rn.node where  n.resource_type_field='" . $fieldref . "'";
+            $sql = $sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
+            return $returnsql?$sql:sql_query($sql,false,$fetchrows);        
+            
+            }
+        else
+            {
+            $sql_join.=" join resource_data on r.ref=resource_data.resource and resource_data.resource_type_field=$fieldref and resource_data.value<>'' ";
+            $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
+            return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+            }
         }
         
     # Search for resource properties
