@@ -1,6 +1,6 @@
 <?php
 $productname="ResourceSpace"; # Product name. Do not change.
-$productversion="SVN";
+$productversion="SVN 8.5";
 
 # External items reload key
 # Increment the below value to force a reload of the CSS, JavaScripts and other included items.
