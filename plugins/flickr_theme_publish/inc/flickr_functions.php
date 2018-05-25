@@ -300,6 +300,7 @@ function flickr_get_access_token($userref,$fromrequest=false)
         
 	if(isset($flickr_tokens[0]) && $flickr_tokens[0]["flickr_token"] != "" && $flickr_tokens[0]["flickr_token_secret"] != "")
         {
+        debug("flickr_theme_publish - using existing user Flickr access token");
         $OauthToken = $flickr_tokens[0]["flickr_token"];
         $OauthSecretToken = $flickr_tokens[0]["flickr_token_secret"];
         $flickr->setOauthToken ($flickr_tokens[0]['flickr_token'], $flickr_tokens[0]['flickr_token_secret']);
@@ -308,6 +309,7 @@ function flickr_get_access_token($userref,$fromrequest=false)
         
         if(!$flickr->auth_oauth_checkToken())
             {
+            debug("flickr_theme_publish - access token invalid. Deleting");
             flickr_update_tokens($userref,"","");
             flickr_get_request_token("write");
             exit("ERROR - unable to get token for Flickr communication, please reload the page");    
@@ -322,8 +324,10 @@ function flickr_get_access_token($userref,$fromrequest=false)
         debug("flickr_theme_publish - tokens updated");
         }
     else
-        {        
-        flickr_get_request_token("write"); 
+        {
+        debug("flickr_theme_publish - redirect to obtain new request token");
+        flickr_get_request_token("write");
+        exit();
         }
     
 	return array("flickr_token"=>$OauthToken,"flickr_token_secret"=>$OauthSecretToken);
@@ -367,7 +371,7 @@ function flickr_update_tokens($userref = 0, $OauthToken,$OauthSecretToken)
 function flickr_get_request_token($access)
     {
     global $flickr,$baseurl;
-    debug("flickr_theme_publish -  requesting authorisation");
     $callback_url = $baseurl . $_SERVER["SCRIPT_NAME"] . "?" . $_SERVER["QUERY_STRING"];
+    debug("flickr_theme_publish -  requesting authorisation. Callback URL: " . $callback_url);
     $flickr->getRequestToken($callback_url, $access);
     }

@@ -9,9 +9,12 @@ include "../inc/flickr_functions.php";
 include __DIR__ . "/../lib/phpFlickr.php";
 
 
-# Get a Flickr token first
-$flickr = new phpFlickr($flickr_api_key,$flickr_api_secret);
-flickr_get_access_token($userref,(isset($_GET['oauth_verifier']) && $_GET['oauth_verifier'] != ''));
+if (getval("publish_all","")!="" || getval("publish_new","")!="" || isset($_GET['oauth_verifier']))
+	{
+	# Get a Flickr token first
+	$flickr = new phpFlickr($flickr_api_key,$flickr_api_secret);
+	flickr_get_access_token($userref,(isset($_GET['oauth_verifier']) && $_GET['oauth_verifier'] != ''));
+	}
 
 include "../../../include/header.php";
 
