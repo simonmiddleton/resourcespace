@@ -13,6 +13,8 @@ $page_heading = $lang['flickr_theme_publish'];
 $page_intro = '';
 
 // Build configuration variable descriptions
+$page_def[] = config_add_text_input('flickr_api_key',$lang['flickr_api_key']);
+$page_def[] = config_add_text_input('flickr_api_secret',$lang['flickr_api_secret']);
 $page_def[]= config_add_section_header("General","");
 $page_def[]= config_add_single_ftype_select("flickr_caption_field", $lang["flickr_caption_field"]); 
 $page_def[]= config_add_single_ftype_select("flickr_keywords_field", $lang["flickr_keywords_field"]);
