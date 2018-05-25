@@ -5,6 +5,7 @@ include "../../../include/authenticate.php";
 include "../../../include/search_functions.php";
 include_once "../../../include/collections_functions.php";
 include "../inc/flickr_functions.php";
+include __DIR__ . "/../lib/phpFlickr.php";
 
 include "../../../include/header.php";
 
@@ -21,8 +22,13 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 
 # Does this user have a Flickr token set? If so let's try and use it.
 $last_xml="";
-$validtoken=flickr_check_token($userref);
 
+// Get a Request Token
+
+$validtoken=flickr_get_token($userref);
+// Getting the User Authorization
+
+//Exchanging the Request Token for an Access Token
 
 if (!$validtoken){
 	# We must first authenticate this user.

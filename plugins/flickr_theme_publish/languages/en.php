@@ -63,3 +63,6 @@ $lang['flickr_nice_progress']="Use a popout with nicer output when publishing";
 $lang['flickr_nice_progress_previews']="Show previews on popout";
 $lang['flickr_nice_progress_metadata']="Show metadata to be published on popout";
 $lang['flickr_nice_progress_min_timeout']="Time between progress pings (ms)";
+
+$lang["flickr_api_key"] = "Flickr API key";
+$lang["flickr_api_secret"] = "Flickr API secret";
