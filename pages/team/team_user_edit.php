@@ -82,7 +82,7 @@ if (getval("loginas","")!="")
     <?php generateFormToken("autologin"); ?>
 	<input type="hidden" name="username" value="<?php echo $user["username"]?>">
 	<input type="hidden" name="password" value="<?php echo $user["password"]?>">
-	<input type="hidden" name="userkey" value="<?php echo md5($user["username"] . $scramble_key)?>">
+	<input type="hidden" name="userkey" value="<?php echo md5(escape_check($user["username"]) . $scramble_key)?>">
 	<noscript><input type="submit" value="<?php echo $lang["login"]?>"></noscript>
 	</form>
 	<script type="text/javascript">
