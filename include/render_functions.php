@@ -1411,7 +1411,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
-  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums, $upload_review_lock_metadata, $locked_fields;
+  $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
+  $upload_review_lock_metadata, $locked_fields, $lastedited;
 
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
@@ -1424,24 +1425,31 @@ function display_field($n, $field, $newtab=false,$modal=false)
   $name="field_" . $field["ref"];
   $value=$field["value"];
   $value=trim($value);
-  if ($use != $ref && ($field["omit_when_copying"] || in_array($field["ref"], $locked_fields)))
-    {
-    # Return this field value back to the original value, instead of using the value from the copied resource/metadata template
-    # This is triggered if field has the 'omit_when_copying' flag set or if the field value has been locked e.g. in upload_then_edit mode
-    reset($original_fields);
-    foreach ($original_fields as $original_field)
-      {
-      if ($original_field["ref"]==$field["ref"])
+    if ($use != $ref && ($field["omit_when_copying"]))
         {
-        $value=$original_field["value"];
+        debug("display_field: reverting copied value for field " . $field["ref"] . " as omit_when_copying is enabled");
+        # Return this field value back to the original value, instead of using the value from the copied resource/metadata template
+        # This is triggered if field has the 'omit_when_copying' flag set
+        reset($original_fields);
+        foreach ($original_fields as $original_field)
+            {
+            if ($original_field["ref"]==$field["ref"])
+                {
+                $value=$original_field["value"];
+                }
+            }
+        $selected_nodes = $original_nodes;
         }
-      }
-    $selected_nodes = $original_nodes;
-    }
-  else
-    {
-    $selected_nodes = $all_selected_nodes;
-    }
+    elseif(($ref<0 || $upload_review_mode) && isset($locked_fields) && in_array($field["ref"], $locked_fields) && $lastedited > 0)
+        {
+        // Get value from last edited resource 
+        debug("display_field: locked field " . $field['ref'] . ". Using nodes from last resource edited - " . $lastedited);
+        $selected_nodes = get_resource_nodes($lastedited,$field["ref"]);
+        }
+    else
+        {
+        $selected_nodes = $all_selected_nodes;
+        }
     
   $displaycondition=true;
   if ($field["display_condition"]!="")
@@ -1478,6 +1486,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         }
     else
         {
+        debug("display_field: getting all user selected values from form data for field " . $field['ref']);
         $user_set_values = getval('nodes', array());
         }
 

@@ -58,7 +58,7 @@ $uploadparams["entercolname"] = getvalescaped("entercolname","");
 $upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collection-" . $userref);
 $lastedited = getval('lastedited',0,true);
 $lockable_fields = $upload_review_lock_metadata && $upload_review_mode;
-$locked_fields = (getval("lockedfields","") != "") ? trim_array(explode(",",getval("lockedfields",""))) : array();
+$locked_fields = (!$resetform && getval("lockedfields","") != "") ? trim_array(explode(",",getval("lockedfields",""))) : array();
 $save_auto_next = getval("save_auto_next","") != "";
 
 if ($upload_review_mode)
@@ -209,11 +209,16 @@ else
 # Fetch resource data.
 $resource=get_resource_data($ref);
 
-$metadatatemplate = getvalescaped(
+$metadatatemplate = !$resetform ? (getvalescaped(
     'metadatatemplate',
     ($metadata_template_default_option == 0 ? 0 : $metadata_template_default_option),
     true
-    );
+    )) : $metadata_template_default_option;
+
+if($resetform)
+    {
+    $metadatatemplate =  $metadata_template_default_option;
+    }
     
 if ($lockable_fields && $lastedited > 0)
     {
