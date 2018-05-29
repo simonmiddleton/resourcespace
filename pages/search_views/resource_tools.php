@@ -1,14 +1,3 @@
-
-
-
-
-
-
-        
-
-
-        
-        
 <!-- Edit icon -->
 <?php
 // The permissions check here is intentionally more basic. It doesn't check edit_filter as this would be computationally intensive
@@ -27,8 +16,7 @@ if($search_results_edit_icon && checkperm("e" . $result[$n]["archive"]) && !hook
                 $showkeyedit = true;
                 }
         } ?>	
-        
-        
+          
 <!-- Star icon -->
 <?php 
 if (isset($result[$n][$rating]) && $result[$n][$rating]>0) 
@@ -36,6 +24,7 @@ if (isset($result[$n][$rating]) && $result[$n][$rating]>0)
         <div class="IconStar"></div>
         <?php $showkeystar = true; 
         } ?>
+
 <!-- Collection comment icon -->
 <?php 
 if($k=="" || $internal_share_access)
@@ -43,7 +32,7 @@ if($k=="" || $internal_share_access)
         if (($collection_reorder_caption || $collection_commenting) && (substr($search,0,11)=="!collection")) 
                 { ?>
                         <a aria-hidden="true" class="fa fa-comment"
-                                href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref)?>&collection=<?php echo urlencode(substr($search,11))?>"  
+                                href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref)?>&collection=<?php echo urlencode(trim(substr($search,11)))?>"
                                 onClick="return ModalLoad(this,true);" 
                                 title="<?php echo $lang["addorviewcomments"]?>"
                         ></a>
@@ -54,13 +43,8 @@ if($k=="" || $internal_share_access)
         } 
 hook("largesearchicon");
 ?>
-
-
-
-        
-        
-        
-        <!-- Preview icon -->
+   
+<!-- Preview icon -->
 <?php 
 if (!hook("replacefullscreenpreviewicon"))
         {
@@ -76,9 +60,6 @@ if (!hook("replacefullscreenpreviewicon"))
                 }
         } /* end hook replacefullscreenpreviewicon */?>
 
-
-
-        
 <!-- Email icon -->
 <?php 
 if(!hook("iconemail")) 
@@ -95,12 +76,6 @@ if(!hook("iconemail"))
                 }
         } ?>
         
-
-
-
-
-
-
 <!-- Remove from collection icon -->
 <?php 
 if ($pagename=="collections" || (!checkperm("b") && substr($search,0,11)=="!collection" && ($k=="" || $internal_share_access) && !$use_checkboxes_for_selection))
@@ -114,12 +89,6 @@ if ($pagename=="collections" || (!checkperm("b") && substr($search,0,11)=="!coll
                 }
         } ?>
         
-        
-        
-        
-
-
-
 <!-- Add to collection icon -->
 <?php
 if(!hook('iconcollect') && $pagename!="collections")
@@ -140,11 +109,5 @@ if(!hook('iconcollect') && $pagename!="collections")
         }
     } # end hook iconcollect
     ?>
-
-
-
-
-
-
 
 <div class="clearer"></div>
