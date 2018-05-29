@@ -789,6 +789,10 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 	if ($extension=="ps") {$pdf_pages=1;}
 	$resolution=$pdf_resolution;
 	$scr_size=sql_query("select width,height from preview_size where id='scr'");
+	if(empty($scr_size)){
+		# since this is not an application required size we can't assume there's a record for it
+		$scr_size=sql_query("select width,height from preview_size where id='pre'");
+	}
 	$scr_width=$scr_size[0]['width'];
 	$scr_height=$scr_size[0]['height'];
 	
