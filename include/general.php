@@ -121,7 +121,7 @@ function get_resource_path(
 			if ($getfilepath)
 				{
 				global $syncdir; 
-            	$syncdirmodified=hook("modifysyncdir","all",array($ref)); if ($syncdirmodified!=""){return $syncdirmodified;}
+            	$syncdirmodified=hook("modifysyncdir","all",array($ref, $fp)); if ($syncdirmodified!=""){return $syncdirmodified;}
                 if(!($alternative>0))
                     {return $syncdir . "/" . $fp;}
                 elseif(!$generate)
