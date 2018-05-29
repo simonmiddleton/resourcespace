@@ -687,7 +687,7 @@ $lang["collectionlog-*"]="Évaluation d'un document";
 $lang["resourcemetadata"]="Document de métadonnées";
 
 $lang["about__about"]="Placez ici votre texte d\'à propos.";
-$lang["all__footer"]="Ce site utilise le système de gestion des actifs numériques <a href=\"http://www.resourcespace.org/\">ResourceSpace</a>.";
+$lang["all__footer"]="Ce site utilise le système de gestion des actifs numériques <a href=\"https://www.resourcespace.com/\">ResourceSpace</a>.";
 $lang["all__researchrequest"]="Laissez notre équipe documents trouver les documents dont vous avez besoin.";
 $lang["all__searchpanel"]="Recherchez en utilisant les descriptions, mots clés et numéros de documents";
 $lang["change_language__introtext"]="Veuillez sélectionner votre langue ci-dessous.";

@@ -607,7 +607,7 @@ $lang["externalselectresourceaccess"]="Si el destinatario es un usuario externo,
 $lang["externalselectresourceexpires"]="Si el destinatario es un usuario externo, por favor especifique una fecha de caducidad para la URL generada.";
 $lang["emailfromuser"]="Enviar el mail desde";
 $lang["about__about"]="Imágenes y Palabras pretende ser un lugar...";
-$lang["all__footer"]="Accionado por el <a href=\"http://www.resourcespace.org/\">ResourceSpace</a>";
+$lang["all__footer"]="Accionado por el <a href=\"https://www.resourcespace.com/\">ResourceSpace</a>";
 $lang["all__researchrequest"]="Let our resources team find the resources you need.";
 $lang["all__searchpanel"]="Search using descriptions, keywords and resource numbers";
 $lang["change_language__introtext"]="Por favor, selecciona el idioma en el que deseas trabajar.";
@@ -656,7 +656,7 @@ $lang["team_resource__introtext"]="Añade material individual o sube varios mate
 $lang["team_stats__introtext"]="Los gráficos son generados a bajo demanda. Marca la casilla para imprimir todos los gráficos del años seleccionado.";
 $lang["team_user__introtext"]="Utiliza esta sección para añadir, eliminar o modificar usuarios.";
 $lang["terms__introtext"]="Antes de iniciar el proceso de descarga debes aceptar los siguientes términos y condiciones de uso.\n\n";
-$lang["themes__findpublic"]="Powered by <a href=\"http://www.resourcespace.org/\">ResourceSpace</a>";
+$lang["themes__findpublic"]="Powered by <a href=\"https://www.resourcespace.com/\">ResourceSpace</a>";
 $lang["themes__introtext"]="Los temas están formados por grupos con nuestros mejores materiales";
 $lang["themes__manage"]="Organiza y edita los temas disponibles en la red. Los temas aparecen organizados en colecciones. Para crear una nueva entrada e incluirla en un tema, debes pinchar en \"Construye una colección\" y elegir \"Mis Colecciones\" del menú principal. Recuerda incluir el nombre de un tema durante la configuración y crear una nueva colección. Puedes usar un nombre ya existente para agrupar la nueva colección en un apartado ya establecido (es importante asegurarse de que el nombre es exactamente el mismo) o elegir un nuevo título para crear una nueva categoría de temas. Nunca permitas a los usuarios que añadan o cambien materiales de las colecciones ya establecidas. Para editar el contenido de una entrada existente bajo un tema, elige “Editar una Colección”. Los iconos de esta colección aparecerán en el botón de la pantalla “Mis Colecciones”. Emplea las herramientas estándar para editar, mover o añadir material. Para cambiar el  nombre de un tema o mover una colección y que ésta aparezca ubicada en un tema diferente. Elige: “Editar Propiedades” y edita la categoría del tema o el nombre de la colección. Selecciona un nombre existente para el tema y así agruparlo en de las categorías existentes (asegúrate de que lo escribes exactamente igual), o elige un nuevo título para crear un nuevo tipo de tema. Para borrar una selección del tema. Elige: “Editar Propiedades” y borra las palabras de la caja de categorías del tema.";
 $lang["upload__introtext"]="";

@@ -1149,7 +1149,7 @@ $lang["setup-successheader"]="Congratulations!";
 $lang["setup-successdetails"]="Your initial ResourceSpace setup is complete.  Be sure to check out 'include/default.config.php' for more configuration options.";
 $lang["setup-successnextsteps"]="Next steps:";
 $lang["setup-successremovewrite"]="You can now remove write access to 'include/'.";
-$lang["setup-visitwiki"]='Visit the <a target="_blank" href="http://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> for more information about customizing your installation.';
+$lang["setup-visitwiki"]='Visit the <a target="_blank" href="https://www.resourcespace.com/knowledge-base/">ResourceSpace Knowledge Base</a> for more information about customizing your installation.';
 $lang["php-config-file"]="PHP config: '%phpinifile'"; # %phpinifile will be replaced, e.g. PHP config: '/etc/php5/apache2/php.ini'
 $lang["setup-checkconfigwrite"]="Write access to config directory:";
 $lang["setup-checkstoragewrite"]="Write access to storage directory:";
@@ -2094,7 +2094,7 @@ $lang["fieldhelp-permissions_filter"]="You may enter a single permission or comm
 $lang['page-title_user_group_management_edit'] = "Edit user group";
 $lang['page-subtitle_user_group_management_edit'] = "Use this section to modify user group properties.";
 $lang["action-title_remove_user_group_logo"]="Tick to remove user group logo";
-$lang["action-title_see_wiki_for_advanced_options"]="Please refer to the <a href='http://www.resourcespace.com/knowledge-base/'>Knowledge Base</a> for further help with Advanced options.";
+$lang["action-title_see_wiki_for_advanced_options"]="Please refer to the <a href='https://www.resourcespace.com/knowledge-base/'>Knowledge Base</a> for further help with Advanced options.";
 
 # admin web edit
 $lang['page-title_web_edit'] = "Edit file";
@@ -2204,7 +2204,7 @@ $lang["all__emailresearchrequestassigned"]="[img_gfx/titles/title.gif]<br />\n[l
 $lang["all__emailresearchrequestcomplete"]="[img_gfx/titles/title.gif]<br />\n[lang_researchrequestcompletemessage] <br /><br /> \n[lang_clicklinkviewcollection] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["all__emailresource"]="[img_gfx/titles/title.gif]<br />\n[fromusername] [lang_hasemailedyouaresource]<br /><br />\n[message]<br /><br />\n<a href=\"[url]\">[embed_thumbnail]</a><br /><br />\n[lang_clicktoviewresource]<br /><a href=\"[url]\">[resourcename] - [url]</a><br /><br />\n[text_footer]\n";
 $lang["all__emailresourcerequest"]="[img_gfx/titles/title.gif]<br />\n[lang_username] : [username] <br />\n[list] <br />\n[details]<br /><br />\n[lang_clicktoviewresource] <br /><br />\n<a href=\"[url]\">[url]</a>\n";
-$lang["all__footer"]="Powered by <a target=\"_blank\" href=\"http://www.resourcespace.com/\">ResourceSpace</a>: Open Source Digital Asset Management";
+$lang["all__footer"]="Powered by <a target=\"_blank\" href=\"https://www.resourcespace.com/\">ResourceSpace</a>: Open Source Digital Asset Management";
 $lang["all__researchrequest"]="Let our resources team find the resources you need.";
 $lang["all__searchpanel"]="Search using descriptions, keywords and resource numbers";
 $lang["change_language__introtext"]="Please select your language below.";

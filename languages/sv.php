@@ -1816,7 +1816,7 @@ $lang["tagcloud"]="Taggmoln";
 
 
 $lang["about__about"]="Din egen text för ’Om oss’ …";
-$lang["all__footer"]="<a target=\"_blank\" href=\"http://www.resourcespace.org/\">ResourceSpace</a>: Digital materialförvaltning (dam) med öppen källkod";
+$lang["all__footer"]="<a target=\"_blank\" href=\"https://www.resourcespace.com/\">ResourceSpace</a>: Digital materialförvaltning (dam) med öppen källkod";
 $lang["all__researchrequest"]="Låt vårt team hitta materialen du är ute efter.";
 $lang["all__searchpanel"]="Sök efter material genom att ange beskrivning, nyckelord eller materialnr.";
 $lang["change_language__introtext"]="Välj ditt önskade språk nedan.";

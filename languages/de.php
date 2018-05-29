@@ -1878,7 +1878,7 @@ $lang["fieldhelp-permissions_filter"]="Sie können eine einzelne Berechtigung od
 $lang['page-title_user_group_management_edit'] = "Benutzergruppe ändern";
 $lang['page-subtitle_user_group_management_edit'] = "In diesem Bereich können Sie die Eigenschaften einer Benutzergruppe ändern.";
 $lang["action-title_remove_user_group_logo"]="Anwählen um das Benutzergruppenlogo zu entfernen";
-$lang["action-title_see_wiki_for_advanced_options"]="Im <a href='http://wiki.resourcespace.org/index.php?title=Main_Page#System_Administrator.27s_Guide'>WIKI</a> finden Sie Informationen für weiterführende Optionen.";
+$lang["action-title_see_wiki_for_advanced_options"]="Im <a href='https://www.resourcespace.com/knowledge-base/'>WIKI</a> finden Sie Informationen für weiterführende Optionen.";
 
 # Report management
 $lang['page-title_report_management'] = "Reporte verwalten";
