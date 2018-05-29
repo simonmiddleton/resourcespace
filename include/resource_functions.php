@@ -4603,7 +4603,7 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
         }
 
     sql_query("UPDATE resource SET archive = '" . escape_check($archive) .  "' WHERE ref IN ('" . implode("', '", $resource) . "')");
-    
+    hook('after_update_archive_status', '', array($resource));
     // Send notifications
     debug("update_archive_status - resources=(" . implode(",",$resource) . "), archive: " . $archive . ", existingstates:(" . implode(",",$existingstates) . "), collection: " . $collection);
     switch ($archive)
