@@ -2,7 +2,7 @@
 if(!hook("replaceuploadoptions")):	
 if ($ref<0)
 	{
-	if($show_status_and_access_on_upload){?></div><!-- end of previous collapsing section --><?php}
+	if($show_status_and_access_on_upload){?></div><!-- end of previous collapsing section --> <?php }
 	if($tabs_on_edit)
 		{
 		?><h1><?php echo $lang["upload-options"] ?></h1>

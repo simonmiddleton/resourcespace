@@ -12,7 +12,7 @@
 include_once 'metadata_functions.php';
 
 if (!function_exists("upload_file")){
-function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="")
+function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="",$after_upload_processing=false)
 	{
 	hook("beforeuploadfile","",array($ref));
 	hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
@@ -21,279 +21,388 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
 	hook ("removeannotations","",array($ref));
 
-    if(!(checkperm('c') || checkperm('d') || hook('upload_file_permission_check_override')))
+    if(!$after_upload_processing && !(checkperm('c') || checkperm('d') || hook('upload_file_permission_check_override')))
         {
         return false;
         }
 
-    global $lang;
-    resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['upload_file']);
+    global $lang, $upload_then_process, $offline_job_queue;
+    
+    if($upload_then_process && !$offline_job_queue)
+    	{
+    	$upload_then_process=false;
+    	}
+    
+    if(!$after_upload_processing)
+    	{
+    	resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['upload_file']);
 
-	$exiftool_fullpath = get_utility_path("exiftool");
+		$exiftool_fullpath = get_utility_path("exiftool");
+
+		# Process file upload for resource $ref
+		if ($revert==true)
+			{
+			global $filename_field;
+			$original_filename=get_data_by_field($ref,$filename_field);
 	
-	# Process file upload for resource $ref
-	if ($revert==true){
-		global $filename_field;
-		$original_filename=get_data_by_field($ref,$filename_field);
-		
-		# Field 8 is used in a special way for staticsync, don't overwrite.
-		$test_for_staticsync=get_resource_data($ref);
-		if ($test_for_staticsync['file_path']!=""){$staticsync_mod=" and resource_type_field != 8";} else {$staticsync_mod="";}
-		
-		sql_query("delete from resource_data where resource=$ref $staticsync_mod");
-		sql_query("delete from resource_keyword where resource=$ref $staticsync_mod");
-		#clear 'joined' display fields which are based on metadata that is being deleted in a revert (original filename is reinserted later)
-		$display_fields=get_resource_table_joins();
-		if ($staticsync_mod!=""){
-			$display_fields_new=array();
-			for($n=0;$n<count($display_fields);$n++){
-				if ($display_fields[$n]!=8){$display_fields_new[]=$display_fields[$n];}
+			# Field 8 is used in a special way for staticsync, don't overwrite.
+			$test_for_staticsync=get_resource_data($ref);
+			if ($test_for_staticsync['file_path']!="")
+				{
+				$staticsync_mod=" and resource_type_field != 8";
+				}
+			else 
+				{
+				$staticsync_mod="";
+				}
+	
+			sql_query("delete from resource_data where resource=$ref $staticsync_mod");
+			sql_query("delete from resource_keyword where resource=$ref $staticsync_mod");
+			#clear 'joined' display fields which are based on metadata that is being deleted in a revert (original filename is reinserted later)
+			$display_fields=get_resource_table_joins();
+			if ($staticsync_mod!="")
+				{
+				$display_fields_new=array();
+				for($n=0;$n<count($display_fields);$n++)
+					{
+					if ($display_fields[$n]!=8)
+						{
+						$display_fields_new[]=$display_fields[$n];
+						}
+					}
+				$display_fields=$display_fields_new;
+				}
+			$clear_fields="";
+			for ($x=0;$x<count($display_fields);$x++)
+				{ 
+				$clear_fields.="field".$display_fields[$x]."=''";
+				if ($x<count($display_fields)-1)
+					{
+					$clear_fields.=",";
+					}
+				}	
+			sql_query("update resource set ".$clear_fields." where ref=$ref");
+			#also add the ref back into keywords:
+			add_keyword_mappings($ref, $ref , -1);
+			$extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
+			$filename=get_resource_path($ref,true,"",false,$extension);
+			$processfile['tmp_name']=$filename;
 			}
-			$display_fields=$display_fields_new;
-		}
-		$clear_fields="";
-		for ($x=0;$x<count($display_fields);$x++){ 
-			$clear_fields.="field".$display_fields[$x]."=''";
-			if ($x<count($display_fields)-1){$clear_fields.=",";}
-			}	
-		sql_query("update resource set ".$clear_fields." where ref=$ref");
-		#also add the ref back into keywords:
-		add_keyword_mappings($ref, $ref , -1);
-		$extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
-		$filename=get_resource_path($ref,true,"",false,$extension);
-		$processfile['tmp_name']=$filename; }
-	else{
-		# Work out which file has been posted
-		if (isset($_FILES['userfile'])) {$processfile=$_FILES['userfile'];} # Single upload (at least) needs this
-		elseif (isset($_FILES['Filedata'])) {$processfile=$_FILES['Filedata'];} # Java upload (at least) needs this
-
-		# Work out the filename.
-		if (isset($_REQUEST['name']))
-			{
-			$filename=$_REQUEST['name']; # For PLupload
-			}
-		elseif ($file_path!="")
-			{
-			$filename=basename($file_path); # The file path was provided
-			}
+	
 		else
 			{
-			$filename=$processfile['name']; # Standard uploads
-			}
+			# Work out which file has been posted
+			if (isset($_FILES['userfile']))
+				{
+				$processfile=$_FILES['userfile'];# Single upload (at least) needs this
+				} 
+			elseif (isset($_FILES['Filedata'])) 
+				{
+				$processfile=$_FILES['Filedata'];# Java upload (at least) needs this
+				} 
 
-		global $filename_field;
-		if($no_exif && isset($filename_field)) {
-			$user_set_filename            = get_data_by_field($ref, $filename_field);
-			$user_set_filename_path_parts = pathinfo($user_set_filename);
+			# Work out the filename.
+			if (isset($_REQUEST['name']))
+				{
+				$filename=$_REQUEST['name']; # For PLupload
+				}
+			elseif ($file_path!="")
+				{
+				$filename=basename($file_path); # The file path was provided
+				}
+			else
+				{
+				$filename=$processfile['name']; # Standard uploads
+				}
 
-			// $user_set_filename is for an already existing resource or when original filename is a visible field
-			// on the upload form
-			if(trim($user_set_filename) != '') {
-				// Get extension of file just in case the user didn't provide one
-				$path_parts = pathinfo($filename);
-					
-				$original_extension = $path_parts['extension'];
+			global $filename_field;
+			if($no_exif && isset($filename_field)) 
+				{
+				$user_set_filename            = get_data_by_field($ref, $filename_field);
+				$user_set_filename_path_parts = pathinfo($user_set_filename);
 
-				if(isset($user_set_filename_path_parts['extension']) && $original_extension == $user_set_filename_path_parts['extension'])
+				// $user_set_filename is for an already existing resource or when original filename is a visible field
+				// on the upload form
+				if(trim($user_set_filename) != '') 
 					{
-					$filename = $user_set_filename;
-					}
+					// Get extension of file just in case the user didn't provide one
+					$path_parts = pathinfo($filename);
+				
+					$original_extension = $path_parts['extension'];
 
-				// If the user filename doesn't have an extension add the original one
-				$path_parts = pathinfo($filename);
-				if(!isset($path_parts['extension'])) {
-					$filename .= '.' . $original_extension;
+					if(isset($user_set_filename_path_parts['extension']) && $original_extension == $user_set_filename_path_parts['extension'])
+						{
+						$filename = $user_set_filename;
+						}
+
+					// If the user filename doesn't have an extension add the original one
+					$path_parts = pathinfo($filename);
+					if(!isset($path_parts['extension'])) 
+						{
+						$filename .= '.' . $original_extension;
+						}
+					}
 				}
 			}
-		}
-	}
-    # Work out extension
-	if (!isset($extension)){
-		# first try to get it from the filename
-		$extension=explode(".",$filename);
-		if(count($extension)>1){
-			$extension=escape_check(trim(strtolower($extension[count($extension)-1])));
-			} 
-		# if not, try exiftool	
-		else if ($exiftool_fullpath!=false)
-			{
-            $cmd=$exiftool_fullpath." -filetype -s -s -s ".escapeshellarg($processfile['tmp_name']);
-			$file_type_by_exiftool=run_command($cmd);
-            if (strlen($file_type_by_exiftool)>0){$extension=str_replace(" ","_",trim(strtolower($file_type_by_exiftool)));$filename=$filename;}else{return false;}
-			}
-		# if no clue of extension by now, return false		
-		else {return false;}	
-	}
 	
-    # Banned extension?
-    global $banned_extensions;
-    if (in_array($extension,$banned_extensions)) {return false;}
-    
-    $filepath=get_resource_path($ref,true,"",true,$extension);
+		# Work out extension
+		if (!isset($extension))
+			{
+			# first try to get it from the filename
+			$extension=explode(".",$filename);
+			if(count($extension)>1)
+				{
+				$extension=escape_check(trim(strtolower($extension[count($extension)-1])));
+				} 
+			# if not, try exiftool	
+			else if ($exiftool_fullpath!=false)
+				{
+				$cmd=$exiftool_fullpath." -filetype -s -s -s ".escapeshellarg($processfile['tmp_name']);
+				$file_type_by_exiftool=run_command($cmd);
+				if (strlen($file_type_by_exiftool)>0)
+					{
+					$extension=str_replace(" ","_",trim(strtolower($file_type_by_exiftool)));
+					$filename=$filename;
+					}
+				else
+					{
+					return false;
+					}
+				}
+			# if no clue of extension by now, return false		
+			else 
+				{
+				return false;
+				}	
+			}
 
-	if (!$revert){ 
-    # Remove existing file, if present
+		# Banned extension?
+		global $banned_extensions;
+		if (in_array($extension,$banned_extensions)) {return false;}
 
-    hook("beforeremoveexistingfile", "", array( "resourceId" => $ref ) );
+		$filepath=get_resource_path($ref,true,"",true,$extension);
 
-    $old_extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
-    if ($old_extension!="")	
-    	{
-    	$old_path=get_resource_path($ref,true,"",true,$old_extension);
-    	if (file_exists($old_path)) {unlink($old_path);}
+		if (!$revert)
+			{ 
+			# Remove existing file, if present
+
+			hook("beforeremoveexistingfile", "", array( "resourceId" => $ref ) );
+
+			$old_extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
+			if ($old_extension!="")	
+				{
+				$old_path=get_resource_path($ref,true,"",true,$old_extension);
+				if (file_exists($old_path)) {unlink($old_path);}
+				}
+
+			// also remove any existing extracted icc profiles
+			$icc_path = get_resource_path($ref,true,'',false,'icc');
+			if (file_exists($icc_path)) 
+				{
+				unlink($icc_path);
+				}
+	
+			global $pdf_pages;
+			$iccx=0; // if there is a -0.icc page, run through and delete as many as necessary.
+			$finished=false;
+			$badicc_path=str_replace(".icc","-$iccx.icc",$icc_path);
+	
+			while (!$finished)
+				{
+				if (file_exists($badicc_path))
+					{
+					unlink($badicc_path);
+					$iccx++;
+					$badicc_path=str_replace(".icc","-$iccx.icc",$icc_path);
+					}
+				else 
+					{
+					$finished=true;
+					}
+				}
+			$iccx=0;
+			}
     	}
-
-	// also remove any existing extracted icc profiles
-    	$icc_path = get_resource_path($ref,true,'',false,'icc');
-    	if (file_exists($icc_path)) {unlink($icc_path);}
-    	global $pdf_pages;
-    	$iccx=0; // if there is a -0.icc page, run through and delete as many as necessary.
-    	$finished=false;
-		$badicc_path=str_replace(".icc","-$iccx.icc",$icc_path);
-		while (!$finished){
-			if (file_exists($badicc_path)){unlink($badicc_path);$iccx++;$badicc_path=str_replace(".icc","-$iccx.icc",$icc_path);}
-			else {$finished=true;}
+	else
+		{
+		global $filename_field;
+		$resource=get_resource_data($ref);
+		$extension=$resource['file_extension'];
+		$filepath=get_resource_path($ref,true,"",true,$extension);
+		$filename=get_data_by_field($ref,$filename_field);
 		}
-		$iccx=0;
-	}	
-
-	if (!$revert){
-    if ($filename!="")
-    	{
-		global $replace_batch_existing;
-	    if (!$replace_batch_existing && $file_path!="")
-			{
-			# File path has been specified. Let's use that directly.
-			$result=rename($file_path, $filepath);
-			}
-		elseif ($file_path!="" && $replace_batch_existing)
-			{
-			$result=copy($file_path, $filepath);	
-			}
-		else
-			{
-			# Standard upload.
-			if (!$revert){
-		    $result=move_uploaded_file($processfile['tmp_name'], $filepath);
-			} else {$result=true;}
-		}
-			
-    	if ($result==false)
-       	 	{
-       	 	return false;
-       	 	}
-     	else
-     		{
 		
-		global $camera_autorotation;
-		global $ffmpeg_audio_extensions;
-		if ($camera_autorotation){
-			if ($autorotate && (!in_array($extension,$ffmpeg_audio_extensions))){
-				AutoRotateImage($filepath);
+    	
+
+	if (!$revert)
+		{
+    	if ($after_upload_processing || $filename!="")
+    		{
+    		if(!$after_upload_processing)
+    			{
+    			global $replace_batch_existing;
+				if (!$replace_batch_existing && $file_path!="")
+					{
+					# File path has been specified. Let's use that directly.
+					$result=rename($file_path, $filepath);
+					}
+				elseif ($file_path!="" && $replace_batch_existing)
+					{
+					$result=copy($file_path, $filepath);	
+					}
+				else
+					{
+					# Standard upload.
+					if (!$revert)
+						{
+						$result=move_uploaded_file($processfile['tmp_name'], $filepath);
+						}
+					else
+						{
+						$result=true;
+						}
+					}
+			
+				if ($result==false)
+					{
+					return false;
+					}
+    			}
+		
+			if(!$upload_then_process || $after_upload_processing)
+				{
+				global $camera_autorotation, $ffmpeg_audio_extensions;
+				if ($camera_autorotation)
+					{
+					if ($autorotate && (!in_array($extension,$ffmpeg_audio_extensions)))
+						{
+						AutoRotateImage($filepath);
+						}
+					}
+				chmod($filepath,0777);
+
+				global $icc_extraction, $ffmpeg_supported_extensions;
+				if ($icc_extraction && $extension!="pdf" && !in_array($extension, $ffmpeg_supported_extensions))
+					{
+					extract_icc_profile($ref,$extension);
+					}
+
+				}
 			}
-		}
-
-     		chmod($filepath,0777);
-
-		global $icc_extraction;
-		global $ffmpeg_supported_extensions;
-		if ($icc_extraction && $extension!="pdf" && !in_array($extension, $ffmpeg_supported_extensions)){
-			extract_icc_profile($ref,$extension);
-		}
-
-    	 	}
-    	}
-    }	
+    	}	
     
 	# Store extension in the database and update file modified time.
-	if ($revert){$has_image="";} else {$has_image=",has_image=0";}
-    sql_query("update resource set file_extension='$extension',preview_extension='jpg',file_modified=now() $has_image where ref='$ref'");
-
-	# delete existing resource_dimensions
-    sql_query("delete from resource_dimensions where resource='$ref'");
-	# get file metadata 
-    if(!$no_exif) {
-    	extract_exif_comment($ref,$extension);
-    } else {
-    	
-    	global $merge_filename_with_title, $lang;
-		if($merge_filename_with_title) {
-
-			$merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
-			$merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
-			$merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
-
-			$original_filename = '';
-			if(isset($_REQUEST['name'])) {
-				$original_filename = $_REQUEST['name'];
-			} else {
-				$original_filename = $processfile['name'];
-			}
-
-			if($merge_filename_with_title_include_extensions == 'yes') {
-				$merged_filename = $original_filename;
-			} else {
-				$merged_filename = strip_extension($original_filename);
-			}
-
-			// Get title field:
-			$resource = get_resource_data($ref);
-			$read_from = get_exiftool_fields($resource['resource_type']);
-
-			for($i = 0; $i < count($read_from); $i++) {
-				
-				if($read_from[$i]['name'] == 'title') {
-					$oldval = get_data_by_field($ref, $read_from[$i]['ref']);
-
-					if(strpos($oldval, $merged_filename) !== FALSE) {
-						continue;
-					}
-					
-					switch ($merge_filename_with_title_option) {
-						case $lang['merge_filename_title_do_not_use']:
-							// Do nothing since the user doesn't want to use this feature
-							break;
-
-						case $lang['merge_filename_title_replace']:
-							$newval = $merged_filename;
-							break;
-
-						case $lang['merge_filename_title_prefix']:
-							$newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
-							if($oldval == '') {
-								$newval = $merged_filename;
-							}
-							break;
-
-						case $lang['merge_filename_title_suffix']:
-							$newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
-							if($oldval == '') {
-								$newval = $merged_filename;
-							}
-							break;
-
-						default:
-							// Do nothing
-							break;
-					}
-
-					if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
-				
-				}
-
-			}
-
-		}
-
-    }
-	
-	# Extract text from documents (e.g. PDF, DOC)
-	global $extracted_text_field;
-	if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
+	if ($revert)
 		{
-		// This is skipped if the unoconv process will do it during preview creation later
-		extract_text($ref,$extension);
+		$has_image="";
 		}
+	else 
+		{
+		$has_image=",has_image=0";
+		}
+    sql_query("update resource set file_extension='$extension',preview_extension='jpg',file_modified=now() $has_image where ref='$ref'");
+	
+	if(!$upload_then_process || $after_upload_processing)
+		{
+		# delete existing resource_dimensions
+   		sql_query("delete from resource_dimensions where resource='$ref'");
+   		
+   		# get file metadata 
+    	if(!$no_exif) 
+    		{
+    		extract_exif_comment($ref,$extension);
+    		}
+    	else
+    		{
+    	
+    		global $merge_filename_with_title, $lang;
+			if($merge_filename_with_title) 
+				{
+
+				$merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
+				$merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
+				$merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
+
+				$original_filename = '';
+				if(isset($_REQUEST['name'])) 
+					{
+					$original_filename = $_REQUEST['name'];
+					}
+				else
+					{
+					$original_filename = $processfile['name'];
+					}
+
+				if($merge_filename_with_title_include_extensions == 'yes') 
+					{
+					$merged_filename = $original_filename;
+					} 
+				else 
+					{
+					$merged_filename = strip_extension($original_filename);
+					}
+
+				// Get title field:
+				$resource = get_resource_data($ref);
+				$read_from = get_exiftool_fields($resource['resource_type']);
+
+				for($i = 0; $i < count($read_from); $i++) 
+					{
+				
+					if($read_from[$i]['name'] == 'title') 
+						{
+						$oldval = get_data_by_field($ref, $read_from[$i]['ref']);
+
+						if(strpos($oldval, $merged_filename) !== FALSE) 
+							{
+							continue;
+							}
+					
+						switch ($merge_filename_with_title_option) 
+							{
+							case $lang['merge_filename_title_do_not_use']:
+								// Do nothing since the user doesn't want to use this feature
+								break;
+
+							case $lang['merge_filename_title_replace']:
+								$newval = $merged_filename;
+								break;
+
+							case $lang['merge_filename_title_prefix']:
+								$newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
+								if($oldval == '') {
+									$newval = $merged_filename;
+								}
+								break;
+
+							case $lang['merge_filename_title_suffix']:
+								$newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
+								if($oldval == '') {
+									$newval = $merged_filename;
+								}
+								break;
+
+							default:
+								// Do nothing
+								break;
+							}
+
+						if(isset($newval)){update_field($ref,$read_from[$i]['ref'],$newval);}
+						}
+					}
+				}
+			}
+	
+		# Extract text from documents (e.g. PDF, DOC)
+		global $extracted_text_field;
+		if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
+			{
+			// This is skipped if the unoconv process will do it during preview creation later
+			extract_text($ref,$extension);
+			}
+		}
+	
+	
 
 	# Store original filename in field, if set
 	global $filename_field,$amended_filename;
@@ -307,72 +416,114 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 			update_field($ref,$filename_field,$original_filename);
 			}		
 		}
-    
-   if (!$revert)
+    if (!$upload_then_process || $after_upload_processing)
+    	{
+    	if (!$revert)
+			{
+			# Clear any existing FLV file or multi-page previews.
+			global $pdf_pages;
+			for ($n=2;$n<=$pdf_pages;$n++)
+				{
+				# Remove preview page.
+				$path=get_resource_path($ref,true,"scr",false,"jpg",-1,$n,false);
+				if (file_exists($path)) {unlink($path);}
+				# Also try the watermarked version.
+				$path=get_resource_path($ref,true,"scr",false,"jpg",-1,$n,true);
+				if (file_exists($path)) {unlink($path);}
+				}
+		
+			# Remove any FLV video preview (except if the actual resource is an FLV file).
+			global $ffmpeg_preview_extension;
+			if ($extension!=$ffmpeg_preview_extension)
+				{
+				$path=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);
+				if (file_exists($path)) {unlink($path);}
+				}
+			# Remove any FLV preview-only file
+			$path=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
+			if (file_exists($path)) {unlink($path);}
+	
+		
+			# Remove any MP3 (except if the actual resource is an MP3 file).
+			if ($extension!="mp3")
+				{
+				$path=get_resource_path($ref,true,"",false,"mp3");
+				if (file_exists($path)) {unlink($path);}
+				}	
+		
+			# Create previews
+			global $enable_thumbnail_creation_on_upload,$file_upload_block_duplicates,$checksum;
+			# Checksums are also normally created at preview generation time, but we may already have a checksum if $file_upload_block_duplicates is enabled
+			$checksum_required=true;
+			if($file_upload_block_duplicates && isset($checksum))
+				{
+				sql_query("update resource set file_checksum='" . escape_check($checksum) . "' where ref='$ref'");
+				$checksum_required=false;
+				}
+			if ($enable_thumbnail_creation_on_upload)
+				{ 
+				create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
+				}
+			else
+				{
+				# Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
+				delete_previews($ref);
+				sql_query("update resource set has_image=0 where ref='$ref'");
+				}
+			}
+	
+		# Update file dimensions
+		get_original_imagesize($ref,$filepath,$extension);
+    	}
+	if($upload_then_process && !$after_upload_processing)
 		{
-		# Clear any existing FLV file or multi-page previews.
-		global $pdf_pages;
-		for ($n=2;$n<=$pdf_pages;$n++)
+		/*# add this file to the queue
+		sql_query("INSERT into upload_processing_queue (resource, extract, autorotate) values ({$ref}," . ($no_exif ? 1 : 0) ."," . ($autorotate ? 1 : 0) . ")");
+		global $upload_then_process_holding_state;
+		if(isset($upload_then_process_holding_state))
 			{
-			# Remove preview page.
-			$path=get_resource_path($ref,true,"scr",false,"jpg",-1,$n,false);
-			if (file_exists($path)) {unlink($path);}
-			# Also try the watermarked version.
-			$path=get_resource_path($ref,true,"scr",false,"jpg",-1,$n,true);
-			if (file_exists($path)) {unlink($path);}
+			$cur_archive=sql_value("SELECT archive value from resource where ref={$ref}", "");
+			update_archive_status($ref, $upload_then_process_holding_state);
+			sql_query("UPDATE upload_processing_queue set archive={$cur_archive} where resource={$ref}");
+			}
+		if(!is_process_lock("upload_processing"))
+			{
+			# trigger the queue
+			process_uploads();
+			}
+			*/
+		# Add this to the job queue for offline processing
+		global $userref;
+		
+		$job_data=array();
+		$job_data["resource"]=$ref;
+		$job_data["extract"]=($no_exif);
+		$job_data["autorotate"]=$autorotate;
+		
+		global $upload_then_process_holding_state;
+		if(isset($upload_then_process_holding_state))
+			{
+			$job_data["archive"]=sql_value("SELECT archive value from resource where ref={$ref}", "");
+			update_archive_status($ref, $upload_then_process_holding_state);
 			}
 		
-		# Remove any FLV video preview (except if the actual resource is an FLV file).
-		global $ffmpeg_preview_extension;
-		if ($extension!=$ffmpeg_preview_extension)
-			{
-			$path=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);
-			if (file_exists($path)) {unlink($path);}
-			}
-		# Remove any FLV preview-only file
-		$path=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
-		if (file_exists($path)) {unlink($path);}
-	
-		
-		# Remove any MP3 (except if the actual resource is an MP3 file).
-		if ($extension!="mp3")
-			{
-			$path=get_resource_path($ref,true,"",false,"mp3");
-			if (file_exists($path)) {unlink($path);}
-			}	
-		
-		# Create previews
-		global $enable_thumbnail_creation_on_upload,$file_upload_block_duplicates,$checksum;
-		# Checksums are also normally created at preview generation time, but we may already have a checksum if $file_upload_block_duplicates is enabled
-		$checksum_required=true;
-		if($file_upload_block_duplicates && isset($checksum))
-			{
-			sql_query("update resource set file_checksum='" . escape_check($checksum) . "' where ref='$ref'");
-			$checksum_required=false;
-			}
-		if ($enable_thumbnail_creation_on_upload)
-			{ 
-			create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
-			}
-		else
-			{
-			# Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
-            delete_previews($ref);
-			sql_query("update resource set has_image=0 where ref='$ref'");
-			}
+		$job_code=$ref . md5($job_data["resource"] . strtotime('now'));
+		$job_success_lang="upload processing success " . str_replace(array('%ref','%title'),array($ref,$filename),$lang["ref-title"]);
+		$job_failure_lang="upload processing fail " . ": " . str_replace(array('%ref','%title'),array($ref,$filename),$lang["ref-title"]);
+		$jobadded=job_queue_add("upload_processing", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);				
 		}
-	
-	# Update file dimensions
-	get_original_imagesize($ref,$filepath,$extension);
 	
 	hook("uploadfilesuccess", "", array( "resourceId" => $ref ) );
 	
 	# Update disk usage
 	update_disk_usage($ref);
 	
-	# Log this activity.
-	$log_ref=resource_log($ref,"u",0);
-	hook("upload_image_after_log_write","",array($ref,$log_ref));
+	if(!$upload_then_process || !$after_upload_processing)
+		{
+		# Log this activity.
+		$log_ref=resource_log($ref,"u",0);
+		hook("upload_image_after_log_write","",array($ref,$log_ref));
+		}
 	
     return true;
     }}

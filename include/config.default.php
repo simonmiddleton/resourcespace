@@ -3326,6 +3326,15 @@ $upload_then_edit=false;
 # Option to allow users to 'lock' metadata fields in upload_then_edit_mode
 $upload_review_lock_metadata = false;
 
+# New upload mode that focuses on getting files into the filestore, then working off a queue for further processing (metadata extract, preview creation, etc).
+# requires $offline_job_queue=true;
+$upload_then_process=false;
+
+# Uncomment and set to an archive state where $upload_then_process files are stored before processing.
+# It is strongly recommended that a unique archive state be created to handle this
+# $upload_then_process_holding_state=-3;
+# $lang['status-3']="Pending upload processing";
+
 #######################################
 ########################## Annotations:
 #######################################
