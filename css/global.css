@@ -235,9 +235,13 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #CollectionDiv .chosen-results li.active-result {display:list-item; float:none; padding:5px 6px;}
 #colselect2 .chosen-container, #CollectionMinDiv .ActionsContainer .chosen-container {text-align:left;}
 
-/* Chosen support - edit.php dates with  $tabs_on_edit=true*/
+/* Chosen support */
 #CentralSpace .ChosenDateMonth {width:88px !important;}
 #CentralSpace .ChosenDateDay, #CentralSpace .ChosenDateHour, #CentralSpace .ChosenDateMinute {width:60px !important;}
+
+#CentralSpace .ChosenDateRangeMonth {width:115px !important;}
+#CentralSpace .ChosenDateRangeDay {width:95px !important;}
+#CentralSpace .ChosenDateRangeYear {width:100px !important;}
 
 
 /*Right Search Box layout*/
