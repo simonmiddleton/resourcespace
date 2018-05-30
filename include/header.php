@@ -157,7 +157,7 @@ if($simple_search_pills_view)
 
 <!-- Chosen support -->
 <?php 
-if ($chosen_dropdowns) 
+if ($chosen_dropdowns || $chosen_dropdowns_collection) 
         { 
         ?>
         <script src="<?php echo $baseurl_short ?>lib/chosen/chosen.jquery.min.js" type="text/javascript"></script>
@@ -197,11 +197,18 @@ if ($chosen_dropdowns)
 	{ 
 	?>
 	var chosen_config = 
-			{
-			"#CentralSpace select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_main ?>, allow_single_deselect: true, width:"0px"},
-			"#SearchBox select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_simplesearch ?>, allow_single_deselect: true, width:"0px"}
-	  		}
-    var chosenCollection='<?php echo ($chosen_dropdowns && $chosen_dropdowns_collection)?>';
+		{
+		"#CentralSpace select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_main ?>, allow_single_deselect: true, width:"0px"},
+		"#SearchBox select"           : {disable_search_threshold:<?php echo $chosen_dropdowns_threshold_simplesearch ?>, allow_single_deselect: true, width:"0px"}
+		}
+	<?php
+	}
+?>
+var chosenCollection='<?php echo ($chosen_dropdowns_collection)?>';
+<?php
+if($chosen_dropdowns_collection)
+    {
+    ?>
     var chosenCollectionThreshold='<?php echo $chosen_dropdowns_threshold_collection ?>';
 	<?php
 	}

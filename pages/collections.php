@@ -1147,7 +1147,7 @@ if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_view
 <?php
 draw_performance_footer();
 
-if ($chosen_dropdowns && $chosen_dropdowns_collection) { ?>
+if ($chosen_dropdowns_collection) { ?>
 <!-- Chosen support -->
 <script type="text/javascript">
 	chosenColElm = (thumbs=='show' ? '#CollectionMaxDiv' : '#CollectionMinDiv');

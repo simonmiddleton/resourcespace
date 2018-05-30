@@ -3093,7 +3093,7 @@ $chosen_dropdowns=false;
 $chosen_dropdowns_threshold_main=10;
 $chosen_dropdowns_threshold_simplesearch=10;
 
-# Use the 'chosen' library for rendering dropdowns in the collection bar. $chosen_dropdowns must be set to true.
+# Use the 'chosen' library for rendering dropdowns in the collection bar.
 $chosen_dropdowns_collection=false;
 
 # The number of options that must be present before including seach capability for collection bar dropdowns.
