@@ -15,7 +15,13 @@ if ($ref!="" && $_SERVER['REQUEST_METHOD']=="GET")
     # Load a saved report
     $report=sql_query("select * from user_report where ref='$ref' and user='$userref'");if (count($report)==0) {exit("Report not found.");}
     $report=$report[0];
-    $_POST=unserialize($report["params"]);
+    $params = unserialize($report['params']);
+
+    // Remove params that should not persist as we are just loading an existing report
+    unset($params[$CSRF_token_identifier]);
+    unset($params['save']);
+
+    $_POST = $params;
     }
     
 $offset=getvalescaped("offset",0);
@@ -66,6 +72,8 @@ if (getval("name", "") != "" && getval("save", "") != "" && enforcePostRequest(g
         $ref=sql_insert_id();
         }
     # Saving
+    unset($_POST[$CSRF_token_identifier]);
+    unset($_POST['save']);
     $params=serialize($_POST);
     sql_query("update user_report set `name`='" . getvalescaped("name","") . "',`params`='" . escape_check($params) . "' where ref='$ref' and user='$userref'");
     }
