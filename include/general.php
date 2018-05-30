@@ -212,7 +212,7 @@ function get_resource_path(
 		if ($scramble && isset($scramblepath) && ($n==(strlen($ref)-1))) {$folder.="_" . $scramblepath;}
 		$folder.="/";
 		#echo "<li>" . $folder;
-		if ((!(file_exists($storagedir . $path_suffix . $folder))) && $generate) {@mkdir($storagedir . $path_suffix . $folder,0777);chmod($storagedir . $path_suffix . $folder,0777);}
+		if ((!(file_exists($storagedir . $path_suffix . $folder))) && $generate) {@mkdir($storagedir . $path_suffix . $folder,0777,true);chmod($storagedir . $path_suffix . $folder,0777);}
 		}
 		
 	# Add the page to the filename for everything except page 1.
