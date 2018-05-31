@@ -3762,6 +3762,7 @@ function check_display_condition($n, $field)
                         <script>
                         jQuery(document).ready(function()
                             {
+                            checkDisplayCondition<?php echo $field['ref']; ?>(node);
                             jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
                                 {
                                 checkDisplayCondition<?php echo $field['ref']; ?>(node);
@@ -3779,6 +3780,7 @@ function check_display_condition($n, $field)
                         <script>
                         jQuery(document).ready(function()
                             {
+                            checkDisplayCondition<?php echo $field['ref']; ?>(node);
                             jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
                                 {
                                 checkDisplayCondition<?php echo $field['ref']; ?>(node);
@@ -3809,6 +3811,7 @@ function check_display_condition($n, $field)
                     <script type="text/javascript">
                     jQuery(document).ready(function()
                         {
+                        checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
                         jQuery('<?php echo $jquery_selector; ?>').change(function ()
                             {
                             checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
@@ -3823,6 +3826,7 @@ function check_display_condition($n, $field)
                     <script type="text/javascript">
                     jQuery(document).ready(function()
                         {
+                        checkDisplayCondition<?php echo $field['ref']; ?>();
                         jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
                             {
                             checkDisplayCondition<?php echo $field['ref']; ?>();
