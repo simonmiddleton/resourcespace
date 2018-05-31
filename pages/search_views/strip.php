@@ -27,6 +27,7 @@ if(isset($result[$n]['thm_url']))
     } # Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
     ?>
     <a
+        id="ResourceStrip<?php echo $ref ?>"
         class="ImageStripLink"
         href="<?php echo $url; ?>"  
         onClick="return <?php echo ($resource_view_modal ? 'Modal' : 'CentralSpace'); ?>Load(this, true);" 
