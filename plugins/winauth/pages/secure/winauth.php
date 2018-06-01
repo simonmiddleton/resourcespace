@@ -33,7 +33,7 @@ if($userref != 0)
     $session_hash = generate_session_hash('sha256', md5("RS" . $username . "WINAUTH"));
     
     # Update the user record.
-    sql_query("update user set session='" . escape_check($session_hash) . "' where ref='$userref'"); 
+    sql_query("update user set session='" . escape_check($session_hash) . "', last_active = NOW() where ref='$userref'"); 
 
     # Log this
     daily_stat("User session",$userref);
