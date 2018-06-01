@@ -49,14 +49,9 @@ if (getval("tweak","")!="")
          if ($enable_thumbnail_creation_on_upload)
             {
             $wait=create_previews($resource,false,"jpg",false,false,$ref);
-            //refresh_collection_frame();
             }
          break;
       }
-   //hook("moretweakingaction", "", array($tweak, $ref, $resource));
-   # Reload resource data.
-   //$resource=get_resource_data($ref,false);
-   //sleep(1);
    }
 
 
