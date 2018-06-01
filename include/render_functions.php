@@ -1412,7 +1412,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
   $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
-  $upload_review_lock_metadata, $locked_fields, $lastedited;
+  $upload_review_lock_metadata, $locked_fields, $lastedited, $copyfrom;
 
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
@@ -1421,7 +1421,12 @@ function display_field($n, $field, $newtab=false,$modal=false)
     {
     $locked_fields = explode(",",getval("lockedfields",""));
     }
-  
+
+    if(!isset($copyfrom))
+        {
+        $copyfrom = getval('copyfrom', '');
+        }
+
   $name="field_" . $field["ref"];
   $value=$field["value"];
   $value=trim($value);
@@ -1482,6 +1487,11 @@ function display_field($n, $field, $newtab=false,$modal=false)
             {
             $selected_nodes = array();
             }
+        $user_set_values = array();
+        }
+    // Copy from resource should only show values from the resource we are copying from
+    else if($ref != $use && $copyfrom != '')
+        {
         $user_set_values = array();
         }
     else
