@@ -34,7 +34,7 @@ hook("pageevaluation");
 $file=get_alternative_file($resource,$ref);if ($file===false) {exit("Alternative file not found.");}
 
 # Tweak images
-if (getval("tweak","")!="")
+if (getval("tweak","")!="" && enforcePostRequest(false))
    {
    $tweak=getval("tweak","");
    switch($tweak)
@@ -61,7 +61,7 @@ if (getval("tweak","")!="")
 
 
 
-if (getval("name","")!="" && getval("tweak","")=="") // do not do this during a tweak operation! 
+if (getval("name","")!="" && getval("tweak","")=="" && enforcePostRequest(false)) // do not do this during a tweak operation! 
 	{
 	hook("markmanualupload");
 	# Save file data
@@ -91,7 +91,7 @@ include "../include/header.php";
 
 
 <form method="post" class="form" id="fileform" onsubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/alternative_file.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>">
-
+<?php generateFormToken('fileform'); ?>
 <input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
 <input type=hidden name=resource value="<?php echo htmlspecialchars($resource) ?>">
 
