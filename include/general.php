@@ -3508,7 +3508,7 @@ function get_suggested_keywords($search,$ref="")
     if (count($hidden_indexed_fields) > 0)
         {
         $restriction_clause_free .= " AND rk.resource_type_field NOT IN ('" . join("','", $hidden_indexed_fields) . "')";
-        $restriction_clause_node .= " AND n.resource_type_field NOT IN ('" . join(",", $hidden_indexed_fields) . "')";                                        
+        $restriction_clause_node .= " AND n.resource_type_field NOT IN ('" . join("','", $hidden_indexed_fields) . "')";                                 
         }
     
     if ((string)(int)$ref == $ref)
