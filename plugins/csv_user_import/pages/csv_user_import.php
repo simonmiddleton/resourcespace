@@ -128,7 +128,7 @@ else
         if(move_uploaded_file($_FILES[$fd]['tmp_name'], $csv_file))
             {
             ?>
-            <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">
+            <form method="post" action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>">
                 <?php generateFormToken("csv_user_import"); ?>
                 <input type="hidden" id="process_csv"  name="process_csv" value="1">
                 <input type="hidden" id="user_group_selector"  name="user_group_selector" value="<?php echo $user_group_selector; ?>">
