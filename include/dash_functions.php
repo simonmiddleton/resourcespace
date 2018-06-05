@@ -486,9 +486,9 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                 jQuery.post(
                     "<?php echo $baseurl?>/pages/ajax/dash_tile.php",
                     {
-                    <?php echo generateAjaxToken("updateDashTileOrder"); ?>,
                     "tile": tile,
-                    "new_index": ((index*10))<?php if(!is_null($user_group_id)) { echo ", \"selected_user_group\": {$user_group_id}";} ?>
+                    "new_index": ((index*10))<?php if(!is_null($user_group_id)) { echo ", \"selected_user_group\": {$user_group_id}";} ?>,
+                    <?php echo generateAjaxToken("updateDashTileOrder"); ?>
                     }
                 );
             }
