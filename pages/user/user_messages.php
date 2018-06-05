@@ -78,9 +78,11 @@ if (getval("allseen","")!="")
 <?php
 for ($n=0;$n<count($messages);$n++)
 	{
-	$message=escape_check(strip_tags_and_attributes($messages[$n]["message"]));
-	$message=htmlspecialchars($message,ENT_QUOTES);
-	$url_encoded=urlencode($messages[$n]["url"]);
+	$fullmessage=escape_check(strip_tags_and_attributes($messages[$n]["message"],array("table","tbody","th","tr","td","a"),array("href","target","width","border")));
+    $fullmessage=htmlspecialchars($fullmessage,ENT_QUOTES);
+    $message=escape_check(strip_tags_and_attributes($messages[$n]["message"]));
+	$message=nl2br($message,ENT_QUOTES);
+    $url_encoded=urlencode($messages[$n]["url"]);
 	$unread_css = ($messages[$n]["seen"]==0 ? " class='MessageUnread'" : "");
 	$userbyname = get_user_by_username($messages[$n]["owner"]);
 	$user = get_user($userbyname);
@@ -95,9 +97,9 @@ for ($n=0;$n<count($messages);$n++)
 			<?php if ($messages_actions_usergroup){?>
 				<td<?php echo $unread_css; ?>><?php echo $user['groupname']; ?></td>
 				<?php } ?>
-			<td<?php echo $unread_css; ?>><a href="#Header" onclick="message_modal('<?php echo $message; ?>','<?php
+			<td<?php echo $unread_css; ?>><a href="#Header" onclick="message_modal('<?php echo $fullmessage; ?>','<?php
 				echo $url_encoded; ?>',<?php echo $messages[$n]["ref"]; ?>,'<?php echo $messages[$n]["owner"] ?>');"><?php
-					echo nl2br($messages[$n]["message"]);
+					echo $message;
 					?></a></td>
 			<td<?php echo $unread_css; ?>><?php echo nicedate($messages[$n]["expires"]); ?></td>
 			<td<?php echo $unread_css; ?>><?php echo ($messages[$n]["seen"]==0 ? $lang['no'] : $lang['yes']); ?></td>
