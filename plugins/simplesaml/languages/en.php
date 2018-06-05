@@ -33,3 +33,14 @@ $lang["simplesaml_usercomment"] = "Created by SimpleSAML plugin";
 $lang["origin_simplesaml"] = "SimpleSAML plugin";
 $lang['simplesaml_lib_path_label'] = 'SAML lib path (please specify full server path)';
 $lang['simplesaml_login'] = 'Use SAML credentials to login to ResourceSpace? (This is only relevant if above option is enabled)';
+
+$lang['simplesaml_create_new_match_email'] = "Email-match: Before creating new users, check if the SAML user email matches an existing RS account email. If a match is found the SAML user will 'adopt' that account";
+$lang['simplesaml_allow_duplicate_email'] ="Allow new accounts to be created if there are existing ResourceSpace accounts with the same email address? (this is overridden if email-match is set above and one match is found)";
+$lang['simplesaml_multiple_email_match_subject'] ="ResourceSpace SAML - conflicting email login attempt";
+$lang['simplesaml_multiple_email_match_text'] ="A new SAML user has accessed the system but there is already more than one account with the same email address.";
+$lang['simplesaml_multiple_email_notify']="Email address to notify if an email conflict is found";
+$lang['simplesaml_duplicate_email_error']="There is an existing account with the same email address. Please contact your administrator.";
+$lang['simplesaml_usermatchcomment'] = "Updated to SAML user by SimpleSAML plugin.";
+$lang['simplesaml_usercreated'] = "Created new SAML user";
+$lang['simplesaml_duplicate_email_behaviour'] = "Duplicate account management";
+$lang['simplesaml_duplicate_email_behaviour_description'] = "This section controls what happens if a new SAML user logging in conflicts with an existing acount";

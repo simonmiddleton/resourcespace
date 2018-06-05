@@ -81,7 +81,8 @@ function HookSimplesamlAllProvideusercredentials()
 		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
         $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
         $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
-        $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block, $anonymous_login,$allow_password_change;
+        $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block, $anonymous_login,$allow_password_change, $simplesaml_create_new_match_email,
+        $simplesaml_allow_duplicate_email, $simplesaml_multiple_email_notify;
 
         // Allow anonymous logins outside SSO if simplesaml is not configured to block access to site.
         // NOTE: if anonymous_login is set to an invalid user, then use SSO otherwise it goes in an indefinite loop
@@ -162,14 +163,19 @@ function HookSimplesamlAllProvideusercredentials()
 		    }
 		else // Previous version used semi-colons
 		    { 
-	            $fullname_attributes=explode(";",$simplesaml_fullname_attribute);
+	        $fullname_attributes=explode(";",$simplesaml_fullname_attribute);
 		    }
         
         $displayname ="";
         foreach ($fullname_attributes as $fullname_attribute)
             {
             if($displayname!=""){$displayname.=$simplesaml_fullname_separator;}
-            debug("simplesaml: constructing fullname from attribute " . $fullname_attribute . ": "  . $attributes[$fullname_attribute][0]);
+            if(!isset($attributes[$fullname_attribute][0]))
+                {
+                debug("simplesaml: error - invalid fullname attribute: " . $fullname_attribute . ". Please check your configuration");                      
+                return false;
+                }
+            debug("simplesaml: constructing fullname FROM attribute " . $fullname_attribute . ": "  . $attributes[$fullname_attribute][0]);
             $displayname.=  $attributes[$fullname_attribute][0]; 				
             }
         
@@ -182,7 +188,7 @@ function HookSimplesamlAllProvideusercredentials()
 		$password_hash= md5("RSSAML" . $scramble_key . $username);
 
         $userid = 0;
-        $currentuser = sql_query("select ref, usergroup from user where username='" . $username . "'");
+        $currentuser = sql_query("SELECT ref, usergroup FROM user WHERE username='" . escape_check($username) . "'");
         $legacy_username_used = false;
 
         // Attempt one more time with ".sso" suffix. Legacy way of distinguishing between SSO accounts and normal accounts
@@ -205,7 +211,7 @@ function HookSimplesamlAllProvideusercredentials()
                 }
             }
 
-		debug ("SimpleSAML - got user details username=" . $username . ", email: " . (isset($email)?$email:""));
+		debug ("simplesaml - got user details username=" . $username . ", email: " . (isset($email)?$email:""));
 
 		// figure out group
 		$group = $simplesaml_fallback_group;
@@ -245,51 +251,98 @@ function HookSimplesamlAllProvideusercredentials()
                 }
             }
 
-		if ($userid > 0)
+        if ($userid <= 0)
 			{
-			if(!isset($email) || $email==""){$email=sql_value("select email value from user where ref='$userid'","");} // Allows accounts without an email address to have one set by the admin without it getting overwritten
-			// user exists, so update info
+            // User authenticated, but does not exist
+            // First see if there is a matching account
+            $email_matches=sql_query("SELECT ref, username, fullname, origin FROM user WHERE email='" . $email . "'");				
+			if(count($email_matches)>0)
+				{			
+				if(count($email_matches)==1 && $simplesaml_create_new_match_email)
+					{
+                    // We want adopt this matching account - update the username and details to match the new login credentials
+                    debug("simplesaml - user authenticated with matching email for existing user . " . $email . ", updating user account '" . $email_matches[0]["username"] . "' (id #" .$email_matches[0]["ref"] . ") to new username " . $username);
+                    $userid = $email_matches[0]["ref"];
+                    $origin = $email_matches[0]["origin"];
+					$comment = $lang["simplesaml_usermatchcomment"]; 
+                    }
+				else
+                    {   
+                    if(!$simplesaml_allow_duplicate_email)
+                        {
+                        if (filter_var($simplesaml_multiple_email_notify, FILTER_VALIDATE_EMAIL) && getval("usesso","") != "")
+                            {
+                            // Already account(s) with this email address, notify the administrator (provided it is an actual attempt to pevent unnecessary duplicates)
+                            simplesaml_duplicate_notify($username,$group,$email,$email_matches,$email,$userid);
+                            }
+                        // We are blocking accounts with the same email
+                        if($simplesaml_allow_standard_login)
+                            {
+                            ?>
+                            <script>
+                            top.location.href="<?php echo $baseurl; ?>/login.php?error=simplesaml_duplicate_email_error";
+                            </script>
+                            <?php
+                            exit();
+                            }
+                        else
+                            {
+                            return false;
+                            }
+                        }
+                    else
+                        {
+                        // Create the user
+                        $userid=new_user($username,$group);
+                        if (!$userid)
+                            {
+                            debug("simplesaml - unable to create user: " . $userid);
+                            return false;
+                            }
+                        if (filter_var($simplesaml_multiple_email_notify, FILTER_VALIDATE_EMAIL) && getval("usesso","") != "")
+                            {
+                            // Already account(s) with this email address, notify the administrator (provided it is an actual attempt to pevent unnecessary duplicates)
+                            simplesaml_duplicate_notify($username,$group,$email,$email_matches,$userid);
+                            }
+                        }
+                    }
+                }    
+            }
+            
+        if ($userid > 0)
+			{
+			// Update user info
 			global $simplesaml_update_group, $session_autologout;
-
-			if($simplesaml_update_group || (isset($currentuser[0]["usergroup"]) && $currentuser[0]["usergroup"]==""))
+            $sql = "UPDATE user SET origin='simplesaml', username='" . escape_check($username) . "', password = '$password_hash', fullname='" . escape_check($displayname) . "'";
+            
+            if(isset($email) && $email != "")
+                {
+                // Only set email if provided. Allows accounts without an email address to have one set by the admin without it getting overwritten
+                $sql .= ", email='" . escape_check($email) . "'";
+                }
+            if(isset($comment))
+                {
+                $sql .= ",comments=concat(comments,'\n" . date("Y-m-d") . " " . escape_check($comment) . "')";
+                log_activity($comment, LOG_CODE_UNSPECIFIED, 'simplesaml', 'user', 'origin', $userid, null, (isset($origin) ? $origin : null), $userid);
+                //log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=null, $remote_table=null, $remote_column=null, $remote_ref=null, $ref_column_override=null, $value_old=null, $user=null, $generate_diff=false)
+                }
+			if($simplesaml_update_group || (isset($currentuser[0]["usergroup"]) && $currentuser[0]["usergroup"] == ""))
 				{
-				sql_query("update user set origin='simplesaml', password = '$password_hash', usergroup = '$group', fullname='" . escape_check($displayname) . "', email='" . escape_check($email) . "' where ref = '$userid'");
+				$sql .= ", usergroup = '$group'";
 				}
-			else
-				{
-				sql_query("update user set origin='simplesaml', password = '$password_hash', fullname='" . escape_check($displayname) . "',  email='" . escape_check($email) . "' where ref = '$userid'");
-				}
-
             if(0 < count($custom_attributes))
                 {
                 $custom_attributes = json_encode($custom_attributes);
- 
-                sql_query("UPDATE user SET simplesaml_custom_attributes = '" . escape_check($custom_attributes) . "' WHERE ref = '$userid'");
+                $sql .=",simplesaml_custom_attributes = '" . escape_check($custom_attributes) . "'";
                 }
 
+			$sql .= " WHERE ref = '$userid'";
+			sql_query($sql);			
+           
 			$user_select_sql="and u.username='$username'";
             $allow_password_change = false;
             $session_autologout = false;
 			return true;
-			} 
-		else
-			{
-			// user authenticated, but does not exist, so create if necessary
-			// Create the user
-			$userref=new_user($username);
-			 if (!$userref) { echo "returning false!";  return false;} // this shouldn't ever happen
-
-             $custom_attributes = (0 < count($custom_attributes) ? json_encode($custom_attributes) : '');
- 
-            sql_query("UPDATE user SET origin='simplesaml', password = '$password_hash', fullname = '" . escape_check($displayname) . "', email = '" . escape_check($email) . "', usergroup = '$group', comments = '" . $lang["simplesaml_usercomment"] . "', simplesaml_custom_attributes = '" . escape_check($custom_attributes) . "' WHERE ref = '$userref'");
-
-			$user_select_sql="and u.username='$username'";
-            
-            # Generate a new session hash.
-            include_once dirname(__FILE__) . '/../../../include/login_functions.php';
-            $session_hash=generate_session_hash($password_hash);
-            $allow_password_change = false;
-            return true;
 			}
 		return false;
         }

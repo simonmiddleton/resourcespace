@@ -31,6 +31,9 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
 	$simplesaml['simplesaml_group_attribute'] = getvalescaped('simplesaml_group_attribute','');	
 	$simplesaml['simplesaml_fallback_group'] = getvalescaped('simplesaml_fallback_group','');
 	$simplesaml['simplesaml_update_group'] = getvalescaped('simplesaml_update_group','');
+	$simplesaml['simplesaml_create_new_match_email'] = getvalescaped('simplesaml_create_new_match_email','');
+	$simplesaml['simplesaml_allow_duplicate_email'] = getvalescaped('simplesaml_allow_duplicate_email','');
+	$simplesaml['simplesaml_multiple_email_notify'] = getvalescaped('simplesaml_multiple_email_notify','');
 	$simplesaml['simplesaml_fullname_separator'] = getvalescaped('simplesaml_fullname_separator','');
 	$simplesaml['simplesaml_username_separator'] = getvalescaped('simplesaml_username_separator','');
     $simplesaml['simplesaml_custom_attributes'] = getvalescaped('simplesaml_custom_attributes', '');
@@ -70,6 +73,15 @@ global $baseurl;
 // Retrieve list of groups for use in mapping dropdown
 $rsgroups = sql_query('select ref, name from usergroup order by name asc');
 
+// If any new values aren't set yet, fudge them so we don't get an undefined error
+// this is important for updates to the plugin that introduce new variables
+foreach (array('simplesaml_create_new_match_email','simplesaml_allow_duplicate_email','simplesaml_multiple_email_notify') as $thefield)
+	{
+	if (!isset($simplesaml[$thefield]))
+		{
+		$simplesaml[$thefield] = '';
+		}
+	}
 
 include '../../../include/header.php';
 ?>
@@ -95,24 +107,23 @@ echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label']
 <?php echo config_boolean_field("simplesaml_allow_public_shares",$lang['simplesaml_allow_public_shares'],$simplesaml_allow_public_shares,30);?>
 <?php echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp);?>
 <?php echo config_text_input("simplesaml_login_expiry",$lang['simplesaml_login_expiry'],$simplesaml_login_expiry);?>
-
 <?php echo config_text_input("simplesaml_allowedpaths",$lang['simplesaml_allowedpaths'],implode(',',$simplesaml_allowedpaths));?>
 <?php echo config_boolean_field("simplesaml_allow_standard_login",$lang['simplesaml_allow_standard_login'],$simplesaml_allow_standard_login,30);?>
 <?php echo config_boolean_field("simplesaml_prefer_standard_login",$lang['simplesaml_prefer_standard_login'],$simplesaml_prefer_standard_login,30);?>
+<?php echo config_boolean_field("simplesaml_update_group",$lang['simplesaml_update_group'],$simplesaml_update_group,30);?>
 
+<?php echo config_section_header($lang['simplesaml_duplicate_email_behaviour'],$lang['simplesaml_duplicate_email_behaviour_description']);?>
+<?php echo config_boolean_field("simplesaml_create_new_match_email",$lang['simplesaml_create_new_match_email'],$simplesaml_create_new_match_email,30);?>
+<?php echo config_boolean_field("simplesaml_allow_duplicate_email",$lang['simplesaml_allow_duplicate_email'],$simplesaml_allow_duplicate_email,30);?>
+<?php echo config_text_input("simplesaml_multiple_email_notify",$lang['simplesaml_multiple_email_notify'],$simplesaml_multiple_email_notify);?>
 
 <?php echo config_section_header($lang['simplesaml_idp_configuration'],$lang['simplesaml_idp_configuration_description']);?>
-
-
 <?php echo config_text_input("simplesaml_username_attribute",$lang['simplesaml_username_attribute'],$simplesaml_username_attribute);?>
 <?php echo config_text_input("simplesaml_username_separator",$lang['simplesaml_username_separator'],$simplesaml_username_separator);?>
 <?php echo config_text_input("simplesaml_fullname_attribute",$lang['simplesaml_fullname_attribute'],$simplesaml_fullname_attribute);?>
 <?php echo config_text_input("simplesaml_fullname_separator",$lang['simplesaml_fullname_separator'],$simplesaml_fullname_separator);?>
 <?php echo config_text_input("simplesaml_email_attribute",$lang['simplesaml_email_attribute'],$simplesaml_email_attribute);?>
 <?php echo config_text_input("simplesaml_group_attribute",$lang['simplesaml_group_attribute'],$simplesaml_group_attribute);?>
-
-
-<?php echo config_boolean_field("simplesaml_update_group",$lang['simplesaml_update_group'],$simplesaml_update_group,30);?>
 
 <?php
 $rsgroupoption=array();
