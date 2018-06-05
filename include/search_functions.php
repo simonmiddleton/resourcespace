@@ -581,7 +581,7 @@ function compile_search_actions($top_actions)
 			$o++;
             }
         // Save search as Smart Collections
-        if($allow_smart_collections && substr($search, 0, 11) != '!collection')
+        if($top_actions && $allow_smart_collections && substr($search, 0, 11) != '!collection')
             {
             $extra_tag_attributes = sprintf('
                     data-url="%spages/collections.php?addsmartcollection=%s&restypes=%s&archive=%s&starsearch=%s"
