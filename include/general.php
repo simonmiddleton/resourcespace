@@ -2039,34 +2039,50 @@ function email_user_request()
     return true;
     }
 
-
-function new_user($newuser)
-	{
-	global $lang,$home_dash;
-	# Username already exists?
-	$c=sql_value("select count(*) value from user where username='$newuser'",0);
-	if ($c>0) {return false;}
+/**
+* Create a new user
+* * 
+* @param string $newuser  - username to create
+* @param integer $usergroup  - optional usergroup to assign
+* 
+* @return boolean|integer  - id of new user or false if user already exists
+*/
+function new_user($newuser, $usergroup = 0)
+    {
+    global $lang,$home_dash;
+    # Username already exists?
+    $c=sql_value("select count(*) value from user where username='$newuser'",0);
+    if ($c>0) {return false;}
 	
-	# Create a new user with username $newuser. Returns the created user reference.
-	sql_query("insert into user(username) values ('" . escape_check($newuser) . "')");
+    $cols = array("username");
+    $vals = array(escape_check($newuser));
+    
+    if($usergroup > 0)
+        {
+        $cols[] = "usergroup";
+        $vals[] = (int)$usergroup;    
+        }
+        
+    $sql = "INSERT INTO user (" . implode(",",$cols) . ") VALUES ('" . implode("','",$vals) . "')";
+    sql_query($sql);
 	
 	$newref=sql_insert_id();
 	
-	#Create Default Dash for the new user
-	if($home_dash)
-		{
-		include_once dirname(__FILE__)."/dash_functions.php";
-		create_new_user_dash($newref);
-		}
+    #Create Default Dash for the new user
+    if($home_dash)
+        {
+        include_once dirname(__FILE__)."/dash_functions.php";
+        create_new_user_dash($newref);
+        }
 	
-	# Create a collection for this user, the collection name is translated when displayed!
+    # Create a collection for this user, the collection name is translated when displayed!
 	$new=create_collection($newref,"My Collection",0,1); # Do not translate this string!
-	# set this to be the user's current collection
-	sql_query("update user set current_collection='$new' where ref='$newref'");
-	log_activity($lang["createuserwithusername"],LOG_CODE_CREATED,$newuser,'user','ref',$newref,null,'');
-	
-	return $newref;
-	}
+    # set this to be the user's current collection
+    sql_query("update user set current_collection='$new' where ref='$newref'");
+    log_activity($lang["createuserwithusername"],LOG_CODE_CREATED,$newuser,'user','ref',$newref,null,'');
+    
+    return $newref;
+    }
 
 function get_stats_activity_types()
 	{
