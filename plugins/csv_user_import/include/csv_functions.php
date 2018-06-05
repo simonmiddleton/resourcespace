@@ -146,7 +146,7 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
 
     fclose($file);
 
-    if(!$processcsv && 1 === $line_count)
+    if(!$processcsv && $line_count === 0)
         {
         array_push($messages, 'Error: No lines of data found in the uploaded file');
 
