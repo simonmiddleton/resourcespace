@@ -140,7 +140,7 @@ function simplesaml_duplicate_notify($username, $group, $email, $email_matches, 
         $emailmessage .= $lang["simplesaml_usercreated"] . ": <a href=\"" . $messageurl . "\">" . $username . "</a><br />";   
         }
     
-    $notify_users = sql_query("SELECT ref, email FROM user WHERE email='" . $simplesaml_multiple_email_notify . "'");				
+    $notify_users = sql_query("SELECT ref, email FROM user WHERE email='" . escape_check($simplesaml_multiple_email_notify) . "'");				
     $message_users=array();
     foreach($notify_users as $notify_user)
         {
