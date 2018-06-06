@@ -4237,7 +4237,7 @@ function update_disk_usage($resource)
 	{
 
 	# we're also going to record the size of the primary resource here before we do the entire folder
-	$ext = sql_value("select file_extension value from resource where ref = '$resource'",'jpg');
+	$ext = sql_value("SELECT file_extension value FROM resource where ref = '$resource' AND file_path IS NULL",'jpg');
 	$path = get_resource_path($resource,true,'',false,$ext);
 	if (file_exists($path)){
 		$rsize = filesize_unlimited($path);
@@ -4245,8 +4245,8 @@ function update_disk_usage($resource)
 		$rsize = 0;
 	}
 
-	# Scan the appropriate filestore folder and update the disk usage fields on the resource table.
-	$dir=dirname(get_resource_path($resource,true,"",false));
+	# Scan the appropriate filestore folder and update the disk usage fields on the resource table. Use the thm size so that we don't get a Staticsync location
+	$dir=dirname(get_resource_path($resource,true,"thm",false));
 	if (!file_exists($dir)) {return false;} # Folder does not yet exist.
 	$d = dir($dir); 
 	$total=0;
