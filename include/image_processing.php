@@ -1027,10 +1027,9 @@ function extract_exif_comment($ref,$extension="")
 
 	# Update the XML metadata dump file.
 	update_xml_metadump($ref);
-	
-	# Auto fill any blank fields.
-	autocomplete_blank_fields($ref);
-	
+
+    // Autocomplete any blank fields without overwriting any existing metadata
+    autocomplete_blank_fields($ref, true);
 	}
 
 function iptc_return_utf8($text)

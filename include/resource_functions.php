@@ -36,7 +36,7 @@ function create_resource($resource_type,$archive=999,$user=-1)
 	set_resource_defaults($insert);	
 	
 	# Autocomplete any blank fields.
-	autocomplete_blank_fields($insert);
+	autocomplete_blank_fields($insert, true);
 
 	# Always index the resource ID as a keyword
 	remove_keyword_mappings($insert, $insert, -1);
@@ -599,8 +599,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
         }
     db_end_transaction();
 
-    // Autocomplete any blank fields.
-    autocomplete_blank_fields($ref);
+    // Autocomplete any blank fields without overwriting any existing metadata
+    autocomplete_blank_fields($ref, false);
 
 	// Initialise an array of updates for the resource table
     $resource_update_sql = array();
@@ -2219,8 +2219,8 @@ function copy_resource($from,$resource_type=-1)
             }
         }
 	
-	# Autocomplete any blank fields.
-	autocomplete_blank_fields($to);
+	// Autocomplete any blank fields without overwriting any existing metadata
+	autocomplete_blank_fields($to, false);
 
 	# Reindex the resource so the resource_keyword entries are created
 	reindex_resource($to);
@@ -3932,12 +3932,18 @@ function check_use_watermark(){
 * @uses sql_value()
 * @uses sql_query()
 * @uses update_field()
+* @uses get_resource_nodes()
 * 
-* @param  integer  $resource  Resource ID
+* @param integer $resource  Resource ID
+* @param boolean $force_run Allow code to force running this function and update the fields even if there is data.
+* For example:
+* - when creating a resource, autocomplete_blank_fields() should always be triggered regardless if user has data in its user template.
+* - when copying resource/ extracting embedded metadata, autocomplete_blank_fields() should not overwrite if there is data 
+* for that field as at this point you probably have the expected data for your field.
 * 
 * @return void
 */
-function autocomplete_blank_fields($resource)
+function autocomplete_blank_fields($resource, $force_run)
     {
     global $FIXED_LIST_FIELD_TYPES;
 
@@ -3966,7 +3972,9 @@ function autocomplete_blank_fields($resource)
                 }
             }
 
-        if(strlen(trim($value)) == 0)
+        $run_autocomplete_macro = $force_run || hook('run_autocomplete_macro');
+
+        if(strlen(trim($value)) == 0 || $run_autocomplete_macro)
             {
             # Empty value. Autocomplete and set.
             $value = eval($field['autocomplete_macro']);
