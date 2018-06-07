@@ -151,32 +151,33 @@ else
 					$errors[] = "Invalid format requested. Only 'jpg' is permitted";   
 					}
 					
-				if(!isset($errorcode))
-					{                 
-					// Request is supported, send the image
-					$imgfound = false;
-					if(strpos($size,",") !==false)
-						{
-						$custom = true;
-						$force = false;
-						$getdims = explode(",",$size);
-						$getwidth = $getdims[0];
-						if(substr($getwidth,0,1) == "!")
-							{
-							$force=true;
-							$getwidth = substr($getwidth,1);
-							}
-						$getheight = $getdims[1];
-						$getsize = $getwidth . "x" . $getheight; 
-						$imgpath =  get_resource_path($resourceid,true,$getsize,false,"jpg");
-						}
+                if(!isset($errorcode))
+                    {                 
+                    // Request is supported, send the image
+                    $imgfound = false;
+                    if(strpos($size,",") !==false)
+                        {
+                        $custom = true;
+                        $force = false;
+                        $getdims = explode(",",$size);
+                        $getwidth = $getdims[0];
+                        if(substr($getwidth,0,1) == "!")
+                            {
+                            $force=true;
+                            $getwidth = substr($getwidth,1);
+                            }
+                        $getheight = $getdims[1];
+                        $getsize = $getwidth . "x" . $getheight; 
+                        $imgpath =  get_resource_path($resourceid,true,$getsize,false,"jpg");
+                        }
 					else
-						{
-						$custom=false;
-						$getsize = ($size == "thm") ? 'thm' : ((strtolower($resource["file_extension"]) != "jpg") ? "hpr" : "");
-						$imgpath = get_resource_path($resourceid,true,$getsize,false,"jpg");
-						}
-					//exit($imgpath);
+                        {
+                        $custom=false;
+                        $isjpeg = in_array(strtolower($resource["file_extension"]),array("jpg","jpeg"));
+                        $getsize = ($size == "thm") ? 'thm' : ($isjpeg ? "" : "hpr");
+                        $getext = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+                        $imgpath = get_resource_path($resourceid,true,$getsize,false,$getext);
+                        }
 					
 					if(file_exists($imgpath))
 						{
