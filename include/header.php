@@ -509,7 +509,8 @@ $omit_searchbar_pages = array(
     'admin_header',
     'login',
     'user_request',
-    'user_password'
+    'user_password',
+    'document_viewer'
 );
 $modified_omit_searchbar_pages=hook("modifyomitsearchbarpages");
 if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}

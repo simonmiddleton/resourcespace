@@ -747,16 +747,42 @@ else if(1 == $resource['has_image'])
 		}
 	
     $imageurl = get_resource_path($ref, false, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
-        
-	if (!hook("replacepreviewlink")) { ?>
+
+    $previewimagelink = generateURL("{$baseurl_short}pages/preview.php", $urlparams, array("ext" => $resource["preview_extension"])) . "&" . hook("previewextraurl");
+    $previewimagelink_onclick = 'return CentralSpaceLoad(this);';
+
+    // PDFjs works only for PDF files. Because this requires the PDF file itself, we can only use this mode if user has
+    // full access to the resource.
+    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access === 0)
+        {
+        // IMPORTANT: never show the real file path with this feature
+        $hide_real_filepath_initial = $hide_real_filepath;
+        $hide_real_filepath = true;
+        $pdfjs_original_file_path = get_resource_path($ref, false, '', false, $resource['file_extension']);
+        $hide_real_filepath = $hide_real_filepath_initial;
+
+        $previewimagelink = generateURL(
+            "{$baseurl_short}lib/pdfjs-1.9.426/web/viewer.php",
+            array(
+                'ref'  => $ref,
+                'file' => $pdfjs_original_file_path
+            )
+        );
+        $previewimagelink_onclick = '';
+        }
+
+	if (!hook("replacepreviewlink"))
+        {
+        ?>
     <div id="previewimagewrapper">
         <a id="previewimagelink"
            class="enterLink"
-           href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams, array("ext"=>$resource["preview_extension"])) . "&" . hook("previewextraurl") ?>"
+           href="<?php echo $previewimagelink; ?>"
            title="<?php echo $lang["fullscreenpreview"]; ?>"
            style="position:relative;"
-           onclick="return CentralSpaceLoad(this);">
-		<?php } 
+           onclick="<?php echo $previewimagelink_onclick; ?>">
+        <?php
+        } 
 
     if(file_exists($imagepath))
         {
@@ -1553,6 +1579,17 @@ hook ("resourceactions") ?>
 		<?php echo "<i class='fa fa-history'></i>&nbsp;" .$lang["requestlog"]?>
 		</a></li><?php 
 		}
+
+    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access === 0)
+        {
+        $find_in_pdf_url = generateURL("{$baseurl_short}pages/search_text_in_pdf.php", array( 'ref' => $ref));
+        ?>
+        <li>
+            <a href="<?php echo $find_in_pdf_url; ?>" onClick="return ModalLoad(this, true, true);"><i class='fa fa-search'></i>&nbsp;<?php echo $lang['findtextinpdf']; ?></a>
+        </li>
+        <?php 
+        }
+
     } /* End replaceresourceactions */ 
 hook("afterresourceactions");
 hook("afterresourceactions2");

@@ -554,6 +554,7 @@ $lang["offlineresource"]="Offline resource";
 $lang["action-request"]="Request";
 $lang["request"]="Request";
 $lang["requestlog"]="Request log";
+$lang['findtextinpdf'] = 'Find text in PDF';
 $lang["searchforsimilarresources"]="Search for similar resources";
 $lang["clicktoviewasresultset"]="View these resources as a result set";
 $lang["searchnomatches"]="Your search did not have any results.";
@@ -1811,6 +1812,7 @@ $lang["error-collectionnotfound"]="Collection not found.";
 $lang["error-csrf-verification-failed"] = "CSRF verification failed! Try reloading page.";
 $lang["error-method-not_allowed"] = "Method Not Allowed.";
 $lang["error-405-method-not_allowed"] = "405 Method Not Allowed.";
+$lang["error-403-forbidden"] = "403 Forbidden.";
 
 
 $lang["no-options-available"]="No options available";
