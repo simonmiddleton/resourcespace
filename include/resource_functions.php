@@ -590,9 +590,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
             if (count($ok)>0) {sql_query("insert into resource_related(resource,related) values ($ref," . join("),(" . $ref . ",",$ok) . ")");}
             }
 
-    // Autocomplete any blank fields.
-    autocomplete_blank_fields($ref);
-
     // Update resource_node table
     db_begin_transaction();
     delete_resource_nodes($ref, $nodes_to_remove);
@@ -601,6 +598,9 @@ function save_resource_data($ref,$multi,$autosave_field="")
         add_resource_nodes($ref, $nodes_to_add);
         }
     db_end_transaction();
+
+    // Autocomplete any blank fields.
+    autocomplete_blank_fields($ref);
 
 	// Initialise an array of updates for the resource table
     $resource_update_sql = array();
@@ -3939,12 +3939,15 @@ function check_use_watermark(){
 */
 function autocomplete_blank_fields($resource)
     {
+    global $FIXED_LIST_FIELD_TYPES;
+
     $resource_escaped = escape_check($resource);
 
     $resource_type = sql_value("SELECT resource_type AS `value` FROM resource WHERE ref = '{$resource_escaped}'", 0);
 
     $fields = sql_query("
         SELECT ref,
+               type,
                autocomplete_macro
           FROM resource_type_field
          WHERE (resource_type = 0 || resource_type = '{$resource_type}')
@@ -3954,6 +3957,14 @@ function autocomplete_blank_fields($resource)
     foreach($fields as $field)
         {
         $value = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource_escaped}' AND resource_type_field = '{$field['ref']}'", '');
+
+        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            {
+            if(count(get_resource_nodes($resource, $field['ref'], true)) == 0)
+                {
+                $value = '';
+                }
+            }
 
         if(strlen(trim($value)) == 0)
             {
