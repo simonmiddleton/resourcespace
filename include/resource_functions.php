@@ -3924,26 +3924,45 @@ function check_use_watermark(){
 	if (($watermark_open && ($pagename == "preview" || $pagename == "view" || ($pagename == "search" && $watermark_open_search)) || $access==1) && (checkperm('w') || ($k!="" && isset($watermark)))){return true;} else {return false;}
 }
 
+
+/**
+* Fill in any blank fields for the resource
+* 
+* @uses escape_check()
+* @uses sql_value()
+* @uses sql_query()
+* @uses update_field()
+* 
+* @param  integer  $resource  Resource ID
+* 
+* @return void
+*/
 function autocomplete_blank_fields($resource)
-	{
-	# Fill in any blank fields for the resource
-	
-	# Fetch resource type
-	$resource_type=sql_value("select resource_type value from resource where ref='$resource'",0);
-	
-	# Fetch field list
-	$fields=sql_query("select ref,autocomplete_macro from resource_type_field where (resource_type=0 || resource_type='$resource_type') and length(autocomplete_macro)>0");
-	foreach ($fields as $field)
-		{
-		$value=sql_value("select value from resource_data where resource='$resource' and resource_type_field='" . $field["ref"] . "'","");
-		if (strlen(trim($value))==0)
-			{
-			# Empty value. Autocomplete and set.
-			$value=eval($field["autocomplete_macro"]);	
-			update_field($resource,$field["ref"],$value);
-			}
-		}
-	}
+    {
+    $resource_escaped = escape_check($resource);
+
+    $resource_type = sql_value("SELECT resource_type AS `value` FROM resource WHERE ref = '{$resource_escaped}'", 0);
+
+    $fields = sql_query("
+        SELECT ref,
+               autocomplete_macro
+          FROM resource_type_field
+         WHERE (resource_type = 0 || resource_type = '{$resource_type}')
+           AND length(autocomplete_macro) > 0
+    ");
+
+    foreach($fields as $field)
+        {
+        $value = sql_value("SELECT `value` FROM resource_data WHERE resource = '{$resource_escaped}' AND resource_type_field = '{$field['ref']}'", '');
+
+        if(strlen(trim($value)) == 0)
+            {
+            # Empty value. Autocomplete and set.
+            $value = eval($field['autocomplete_macro']);
+            update_field($resource, $field['ref'], $value);
+            }
+        }
+    }
 
 
 function get_resource_files($ref,$includeorphan=false){
