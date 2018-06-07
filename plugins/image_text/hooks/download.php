@@ -22,7 +22,7 @@ function HookImage_textDownloadModifydownloadfile()
 		}
 	
 	# If this is not a temporary file having metadata written see if we already have a suitable size with the correct text
-	$image_text_saved_file=get_resource_path($ref,true,$size . "_image_text_" . md5($overlaytext . $image_text_height_proportion . $image_text_max_height . $image_text_min_height . $image_text_font . $image_text_position . $image_text_banner_position) . "_" ,false,$ext,-1,$page);
+	$image_text_saved_file=get_resource_path($ref,true,$size . "_image_text_" . md5($overlaytext . $image_text_height_proportion . $image_text_max_height . $image_text_min_height . $image_text_font . $image_text_position . $image_text_banner_position) . "_" ,false,$ext,-1,$page,$use_watermark,'',$alternative);
     
 	if ($path!=$tmpfile && file_exists ($image_text_saved_file))
 		{
