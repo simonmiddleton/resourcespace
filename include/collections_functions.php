@@ -1601,11 +1601,11 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 			}
 		else
 			{
-			$sqlselect="select r.ref from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
+			$sqlselect="select r.ref, cr.use_as_theme_thumbnail, theme2, r.hit_count from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
             
             // Add search sql so we honour permissions
             $searchsql = do_search("",'','',0,-1,'desc',false,0,false,false,'',false,false,true,false,true);
-			$orderby=" order by cr.use_as_theme_thumbnail desc";
+			$orderby=" order by ti.use_as_theme_thumbnail desc";
 			for ($n=2;$n<=count($themes)+1;$n++)
                 {
 				if (isset($themes[$n-1]))
@@ -1625,16 +1625,17 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 			if($collection != "")
 				{
 				$sqlselect.=" and c.ref = '" . escape_check($collection) .  "'";
-                $orderby.=",r.hit_count desc,r.ref desc";
+                $orderby.=",ti.hit_count desc,ti.ref desc";
 				}
 			
-			$orderby.=",r.hit_count desc,r.ref desc";
+			$orderby.=",ti.hit_count desc,ti.ref desc";
 			}
 	
 		$sqlselect .= " and r.has_image=1 ";
-		$sql = "SELECT ti.ref value from (" . $sqlselect . $orderby . ") ti JOIN (" . $searchsql . ") ar ON ti.ref=ar.ref WHERE ar.ref IS NOT NULL limit " .$theme_images_number;
-		
-        $images=sql_array($sql,0);	
+		$sql = "SELECT ti.ref value from (" . $sqlselect . ") ti JOIN (" . $searchsql . ") ar ON ti.ref=ar.ref WHERE ar.ref IS NOT NULL " . $orderby . " limit " . escape_check($theme_images_number);
+
+        $images=sql_array($sql,0);
+
         if (count($images)>0) {return $images;}
         }
 	return false;
