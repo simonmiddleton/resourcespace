@@ -7,8 +7,8 @@ include_once dirname(__FILE__) . '/../../../../include/general.php';
 include_once dirname(__FILE__) . '/../../include/winauth_functions.php';
    
 $session_hash="";
-$url = getval("url","");
-
+$url = urldecode(getval("url",""));
+$redirecturl = (trim($url) != "/" && trim($url) != "") ? $url : "pages/" . $default_home_page;
 $winuser = WinauthGetUser();
 
 if(count($winauth_domains) > 0 && !in_array($winuser['domain'], $winauth_domains))
@@ -44,14 +44,18 @@ if($userref != 0)
     sql_query("delete from ip_lockout where ip='" . escape_check($ip) . "'");
     
     set_login_cookies($userref, $session_hash, "", $user_preferences, "/");
+    
+    // Set cookie to disable password change and requirement to re-enter password
+    rs_setcookie("winauth_user", "true", 0, "", "", substr($baseurl,0,5)=="https", true);
+    
     $redirecturl = $baseurl . urldecode($url);
-    redirect($redirecturl);
-   
+    $redirecturl = str_replace("winauth_login=true","",$redirecturl);
+    redirect($redirecturl);   
     exit();
     }
 else
     {
-    $userinit = getval("winauth_login","") != "";    
+    $userinit = getval("winauth_login","") != ""; 
     $redirecturl = generateURL($baseurl_short. "login.php", array("url"=>$url,"winauth_login"=>"true", "error"=> ($userinit ? "winauth_nouser" : "")));    
     redirect($redirecturl);
     exit();

@@ -2,17 +2,11 @@
 
 include_once dirname(__FILE__) . '/../include/winauth_functions.php';
 
-function HookWinauthAllInitialize()
+function HookWinauthAllPreheaderoutput()
     {
     global $winauth_enable,$allow_password_change, $delete_requires_password;
-    
-    // If not enabled OR has a user cookie and not specified to login with Windows
-	if (!$winauth_enable || (isset($_COOKIE["user"]) && getval("winauth_login","")==""))
-        {
-        return false;
-        }
-    
-    if(WinauthIsAuthenticated())
+   
+	if ($winauth_enable && isset($_COOKIE["winauth_user"]))
         {
         // Disable password change and requirement to re-enter password
         $allow_password_change=false;
@@ -26,19 +20,20 @@ function HookWinauthAllInitialize()
         
 function HookWinauthAllProvideusercredentials()
         {
-        global $winauth_enable, $winauth_prefer_normal, $session_hash, $username, $user_select_sql, $baseurl_short, $winauth_domains, $lang, $user_preferences;
-
+        global $winauth_enable, $winauth_prefer_normal, $session_hash, $username, $user_select_sql, $baseurl_short, $winauth_domains, $lang, $user_preferences,$pagename,$allow_password_change, $delete_requires_password;
+        debug("winauth - Provideusercredentials hook: Enabled=" . ($winauth_enable ? "TRUE" : "FALSE") . ", Page=" . $pagename . ", user cookie=" . (isset($_COOKIE["user"]) ? "TRUE" : "FALSE") . ", winauth_prefer_normal=" . ($winauth_prefer_normal ? "TRUE" : "FALSE") . ", winauth requested=" . (getval("winauth_login","") == "" ? "FALSE" : "TRUE"));
+         
         // If not enabled OR has a user cookie and not specified to login with Windows
-        if (!$winauth_enable || (isset($_COOKIE["user"]) && getval("winauth_login","") == ""))
+        if ((!$winauth_enable)
+            ||
+           $pagename == "login"
+            ||
+           isset($_COOKIE["user"])
+            ||
+          ($winauth_prefer_normal && getval("winauth_login","") == ""))
             {
             return false;
             }
-            
-        if($winauth_prefer_normal && getval("winauth_login","") == "")
-            {
-            return false;
-            }
-        
         WinauthAuthenticate();
         
         return false;
