@@ -74,6 +74,5 @@ foreach ($filestodelete as $filetodelete)
     debug(__FILE__. " - deleting file " . $filetodelete ." - " . ($success ? "SUCCESS" : "FAILED"));
     }
     
-exit();
 
 
