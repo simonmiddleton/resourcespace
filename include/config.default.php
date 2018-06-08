@@ -2380,6 +2380,9 @@ $qlpreview_exclude_extensions=array("tif","tiff");
 # As the default location is world-readable it is recommended for live systems to change the location to somewhere outside of the web directory by setting $debug_log_location below
 $debug_log=false;
 
+# Optional extended debugging information from backtrace (records pagename and calling functions)
+# debug_extended_info = true;
+
 # Debug log location. Optional. Used to specify a full path to debug file. Ensure folder permissions allow write access by web service account
 #$debug_log_location="d:/logs/resourcespace.log";
 #$debug_log_location="/var/log/resourcespace/resourcespace.log";

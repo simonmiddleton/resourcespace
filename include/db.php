@@ -1867,7 +1867,7 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
 
 	# Output some text to a debug file.
 	# For developers only
-	global $debug_log, $debug_log_override, $debug_log_location;
+	global $debug_log, $debug_log_override, $debug_log_location, $debug_extended_info;
 	if (!$debug_log && !$debug_log_override) {return true;} # Do not execute if switched off.
 	
 	# Cannot use the general.php: get_temp_dir() method here since general may not have been included.
@@ -1890,7 +1890,37 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
         {
 		$f=fopen($debug_log_location,"a");
 		}
-    fwrite($f,date("Y-m-d H:i:s") . " " . $text . "\n");
+	
+	$extendedtext = "";	
+	if(isset($debug_extended_info) && $debug_extended_info && function_exists("debug_backtrace"))
+		{
+		$backtrace = debug_backtrace(0);
+		$btc = count($backtrace);
+		$callingfunctions = array();
+		$page = "";
+		for($n=$btc;$n>0;$n--)
+			{
+			if($page == "" && isset($backtrace[$n]["file"]))
+				{
+				$page = $backtrace[$n]["file"];
+				}
+				
+			if(isset($backtrace[$n]["function"]) && !in_array($backtrace[$n]["function"],array("sql_connect","sql_query","sql_value","sql_array")))
+				{
+				if(in_array($backtrace[$n]["function"],array("include","include_once","require","require_once")) && isset($backtrace[$n]["args"][0]))
+					{
+					$callingfunctions[] = $backtrace[$n]["args"][0];
+					}
+				else
+					{
+					$callingfunctions[] = $backtrace[$n]["function"];
+					}
+				}
+			}
+		$extendedtext .= "[" . $page . "] " . (count($callingfunctions)>0 ? "(" . implode("->",$callingfunctions)  . ") " : " ");
+		}
+		
+    fwrite($f,date("Y-m-d H:i:s") . " " . $extendedtext . $text . "\n");
     fclose ($f);
 	return true;
 	}
