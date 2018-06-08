@@ -3,12 +3,11 @@
 /**
  * Exception which will show a 404 Not Found error page.
  *
- * This exception can be thrown from within an module page handler. The user will then be
- * shown a 404 Not Found error page.
+ * This exception can be thrown from within a module page handler. The user will then be shown a 404 Not Found error
+ * page.
  *
  * @author Olav Morken, UNINETT AS.
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 class SimpleSAML_Error_NotFound extends SimpleSAML_Error_Error {
 
@@ -28,15 +27,18 @@ class SimpleSAML_Error_NotFound extends SimpleSAML_Error_Error {
 
 		assert('is_null($reason) || is_string($reason)');
 
-		$url = SimpleSAML_Utilities::selfURL();
+		$url = \SimpleSAML\Utils\HTTP::getSelfURL();
 
 		if($reason === NULL) {
 			parent::__construct(array('NOTFOUND', '%URL%' => $url));
+			$this->message = "The requested page '$url' could not be found.";
 		} else {
 			parent::__construct(array('NOTFOUNDREASON', '%URL%' => $url, '%REASON%' => $reason));
+			$this->message = "The requested page '$url' could not be found. ".$reason;
 		}
 
 		$this->reason = $reason;
+		$this->httpCode = 404;
 	}
 
 
@@ -51,14 +53,16 @@ class SimpleSAML_Error_NotFound extends SimpleSAML_Error_Error {
 
 
 	/**
-	 * Set the HTTP return code for this error.
+	 * NotFound exceptions don't need to display a backtrace, as they are very simple and the trace is usually trivial,
+	 * so just log the message without any backtrace at all.
 	 *
-	 * This should be overridden by subclasses who want a different return code than 500 Internal Server Error.
+	 * @param bool $anonymize Whether to anonymize the trace or not.
+	 *
+	 * @return array
 	 */
-	protected function setHTTPCode() {
-		header('HTTP/1.0 404 Not Found');
+	public function format($anonymize = false) {
+		return array(
+			$this->getClass().': '.$this->getMessage(),
+		);
 	}
-
 }
-
-?>

@@ -5,8 +5,7 @@
  * other authentication sources
  *
  * @author Lorenzo Gil, Yaco Sistemas S.L.
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 
 class sspmod_multiauth_Auth_Source_MultiAuth extends SimpleSAML_Auth_Source {
@@ -46,7 +45,7 @@ class sspmod_multiauth_Auth_Source_MultiAuth extends SimpleSAML_Auth_Source {
 		assert('is_array($info)');
 		assert('is_array($config)');
 
-		/* Call the parent constructor first, as required by the interface. */
+		// Call the parent constructor first, as required by the interface
 		parent::__construct($info, $config);
 
 		if (!array_key_exists('sources', $config)) {
@@ -73,7 +72,7 @@ class sspmod_multiauth_Auth_Source_MultiAuth extends SimpleSAML_Auth_Source {
 			if (array_key_exists('css-class', $info)) {
 				$css_class = $info['css-class'];
 			} else {
-				/* Use the authtype as the css class */
+				// Use the authtype as the css class
 				$authconfig = $authsources->getArray($source, NULL);
 				if (!array_key_exists(0, $authconfig) || !is_string($authconfig[0])) {
 					$css_class = "";
@@ -113,7 +112,7 @@ class sspmod_multiauth_Auth_Source_MultiAuth extends SimpleSAML_Auth_Source {
 
 		/* Redirect to the select source page. We include the identifier of the
 		saved state array as a parameter to the login form */
-		$url = SimpleSAML_Module::getModuleURL('multiauth/selectsource.php');
+		$url = SimpleSAML\Module::getModuleURL('multiauth/selectsource.php');
 		$params = array('AuthState' => $id);
 
 		// Allowes the user to specify the auth souce to be used
@@ -121,7 +120,7 @@ class sspmod_multiauth_Auth_Source_MultiAuth extends SimpleSAML_Auth_Source {
 			$params['source'] = $_GET['source'];
 		}
 
-		SimpleSAML_Utilities::redirect($url, $params);
+		\SimpleSAML\Utils\HTTP::redirectTrustedURL($url, $params);
 
 		/* The previous function never returns, so this code is never
 		executed */
@@ -144,13 +143,19 @@ class sspmod_multiauth_Auth_Source_MultiAuth extends SimpleSAML_Auth_Source {
 		assert('is_array($state)');
 
 		$as = SimpleSAML_Auth_Source::getById($authId);
-		if ($as === NULL) {
+		$valid_sources = array_map(
+			function($src) {
+				return $src['source'];
+			},
+			$state[self::SOURCESID]
+        );
+		if ($as === NULL || !in_array($authId, $valid_sources, true)) {
 			throw new Exception('Invalid authentication source: ' . $authId);
 		}
 
 		/* Save the selected authentication source for the logout process. */
-		$session = SimpleSAML_Session::getInstance();
-		$session->setData(self::SESSION_SOURCE, $state[self::AUTHID], $authId);
+		$session = SimpleSAML_Session::getSessionFromRequest();
+		$session->setData(self::SESSION_SOURCE, $state[self::AUTHID], $authId, SimpleSAML_Session::DATA_TIMEOUT_SESSION_END);
 
 		try {
 			$as->authenticate($state);
@@ -175,7 +180,7 @@ class sspmod_multiauth_Auth_Source_MultiAuth extends SimpleSAML_Auth_Source {
 		assert('is_array($state)');
 
 		/* Get the source that was used to authenticate */
-		$session = SimpleSAML_Session::getInstance();
+		$session = SimpleSAML_Session::getSessionFromRequest();
 		$authId = $session->getData(self::SESSION_SOURCE, $this->authId);
 
 		$source = SimpleSAML_Auth_Source::getById($authId);
@@ -199,15 +204,17 @@ class sspmod_multiauth_Auth_Source_MultiAuth extends SimpleSAML_Auth_Source {
 
 		$cookieName = 'multiauth_source_' . $this->authId;
 
-		/* We save the cookies for 90 days. */
-		$saveUntil = time() + 60*60*24*90;
-
-		/* The base path for cookies. 
-		This should be the installation directory for simpleSAMLphp. */
 		$config = SimpleSAML_Configuration::getInstance();
-		$cookiePath = '/' . $config->getBaseUrl();
+		$params = array(
+			/* We save the cookies for 90 days. */
+			'lifetime' => (60*60*24*90),
+			/* The base path for cookies.
+			This should be the installation directory for SimpleSAMLphp. */
+			'path' => $config->getBasePath(),
+			'httponly' => FALSE,
+		);
 
-		setcookie($cookieName, $source, $saveUntil, $cookiePath);
+        \SimpleSAML\Utils\HTTP::setCookie($cookieName, $source, $params, FALSE);
 	}
 
 	/**
@@ -225,5 +232,3 @@ class sspmod_multiauth_Auth_Source_MultiAuth extends SimpleSAML_Auth_Source {
 		}
 	}
 }
-
-?>

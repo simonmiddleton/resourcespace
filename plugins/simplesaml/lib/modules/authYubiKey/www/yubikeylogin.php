@@ -6,8 +6,7 @@
  * username/password authentication.
  *
  * @author Olav Morken, UNINETT AS.
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 
 if (!array_key_exists('AuthState', $_REQUEST)) {
@@ -22,7 +21,7 @@ if (array_key_exists('otp', $_REQUEST)) {
 }
 
 if (!empty($otp)) {
-	/*  attempt to log in. */
+	// attempt to log in
 	$errorCode = sspmod_authYubiKey_Auth_Source_YubiKey::handleLogin($authStateId, $otp);
 } else {
 	$errorCode = NULL;
@@ -32,8 +31,8 @@ $globalConfig = SimpleSAML_Configuration::getInstance();
 $t = new SimpleSAML_XHTML_Template($globalConfig, 'authYubiKey:yubikeylogin.php');
 $t->data['stateparams'] = array('AuthState' => $authStateId);
 $t->data['errorcode'] = $errorCode;
+$t->data['errorcodes'] = SimpleSAML\Error\ErrorCodes::getAllErrorCodeMessages();
+$t->data['logo_url'] = SimpleSAML\Module::getModuleURL('authYubiKey/resources/logo.jpg');
+$t->data['devicepic_url'] = SimpleSAML\Module::getModuleURL('authYubiKey/resources/yubikey.jpg');
 $t->show();
 exit();
-
-
-?>

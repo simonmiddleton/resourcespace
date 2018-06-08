@@ -1,6 +1,6 @@
 <?php
 
-$this->data['head'] = '<style>
+$this->data['head'] = '<style type="text/css">
 	table.statustable td, table.statustable th { 
 		border: 1px solid #eee;
 		padding: 2px 6px;
@@ -29,11 +29,11 @@ $title = $this->data['title'];
 $table = $this->data['table'];
 
 
-/* Identify column headings. */
+// Identify column headings
 $column_titles = array();
 foreach($table as $row_title => $row_data) {
 	foreach($row_data as $ct => $foo) {
-		if(!in_array($ct, $column_titles)) {
+		if(!in_array($ct, $column_titles, true)) {
 			$column_titles[] = $ct;
 		}
 	}
@@ -57,8 +57,7 @@ foreach($column_titles as $ct) {
 <?php
 foreach($table as $row_title => $row_data) {
 	echo '<tr>' . "\n";
-	echo '<th class="rowtitle" style="text-align: right">' . $this->t('{memcacheMonitor:memcachestat:' . $row_title . '}') . '</th>' . "\n";
-#	echo '<th class="rowtitle" style="text-align: right">' . $row_title . '</th>' . "\n";
+	echo '<th class="rowtitle" style="text-align: right">' . $this->t($this->data['rowtitles'][$row_title]) . '</th>' . "\n";
 
 	foreach($column_titles as $ct) {
 		echo '<td>';
@@ -77,10 +76,6 @@ foreach($table as $row_title => $row_data) {
 </table>
 
 <?php
-
-
-#echo('<pre>'); print_r($this->data['statsraw']); exit;
-
 if (array_key_exists('bytes', $this->data['statsraw']) && array_key_exists('limit_maxbytes', $this->data['statsraw'])) {
 	foreach($this->data['statsraw']['bytes'] as $key => $row_data) {
 		echo ('<h3>Storage usage on [' . $key . ']</h3>');
@@ -93,10 +88,4 @@ if (array_key_exists('bytes', $this->data['statsraw']) && array_key_exists('limi
 	}
 }
 
-?>
-
-
-
-<?php
 $this->includeAtTemplateBase('includes/footer.php');
-?>

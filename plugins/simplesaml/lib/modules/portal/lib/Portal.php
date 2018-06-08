@@ -13,7 +13,7 @@ class sspmod_portal_Portal {
 	function getTabset($thispage) {
 		if (!isset($this->config)) return NULL;
 		foreach($this->config AS $set) {
-			if (in_array($thispage, $set)) {
+			if (in_array($thispage, $set, true)) {
 				return $set;
 			}
 		}
@@ -23,42 +23,29 @@ class sspmod_portal_Portal {
 	function isPortalized($thispage) {
 		
 		foreach($this->config AS $set) {
-			if (in_array($thispage, $set)) {
+			if (in_array($thispage, $set, true)) {
 				return TRUE;
 			}
 		}
 		return FALSE;
 	}
 	
-	function getLoginInfo($t, $thispage) {
-		$info = array('info' => '', 'template' => $t, 'thispage' => $thispage);
-		SimpleSAML_Module::callHooks('portalLoginInfo', $info);
+	function getLoginInfo($translator, $thispage) {
+		$info = array('info' => '', 'translator' => $translator, 'thispage' => $thispage);
+		SimpleSAML\Module::callHooks('portalLoginInfo', $info);
 		return $info['info'];
 	}
 	
 	function getMenu($thispage) {
-	
 		$config = SimpleSAML_Configuration::getInstance();
-		$t = new SimpleSAML_XHTML_Template($config, 'sanitycheck:check-tpl.php');
-		
+		$t = new SimpleSAML\Locale\Translate($config);
 		$tabset = $this->getTabset($thispage);
-		
-		#echo($thispage);
-		#echo('<pre>'); print_r($this->pages); exit;
-		
 		$logininfo = $this->getLoginInfo($t, $thispage);
-		#echo $logininfo; exit;
-		
 		$text = '';
-		
-		
 		$text .= '<ul class="tabset_tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">';
 		foreach($this->pages AS $pageid => $page) {
 			
 			if (isset($tabset) && !in_array($pageid, $tabset, TRUE)) continue;
-			
-			#echo('This page [' . $pageid . '] is part of [' . join(',', $tabset) . ']');
-			
 			$name = 'uknown';
 			if (isset($page['text'])) $name = $page['text'];
 			if (isset($page['shorttext'])) $name = $page['shorttext'];

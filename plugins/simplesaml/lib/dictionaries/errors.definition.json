@@ -1,6 +1,6 @@
 {
 	"error_header": {
-		"en": "simpleSAMLphp error"
+		"en": "SimpleSAMLphp error"
 	},
 	"report_trackid": {
 		"en": "If you report this error, please also report this tracking number which makes it possible to locate your session in the logs available to the system administrator:"
@@ -30,7 +30,7 @@
 		"en": "How to get help"
 	},
 	"howto_text": {
-		"en": "This error probably is due to some unexpected behaviour or to misconfiguration of simpleSAMLphp. Contact the administrator of this login service, and send them the error message above."
+		"en": "This error probably is due to some unexpected behaviour or to misconfiguration of SimpleSAMLphp. Contact the administrator of this login service, and send them the error message above."
 	},
 	"title_CREATEREQUEST": {
 		"en": "Error creating request"
@@ -66,13 +66,13 @@
 		"en": "Error loading metadata"
 	},
 	"descr_METADATA": {
-		"en": "There is some misconfiguration of your simpleSAMLphp installation. If you are the administrator of this service, you should make sure your metadata configuration is correctly setup."
+		"en": "There is some misconfiguration of your SimpleSAMLphp installation. If you are the administrator of this service, you should make sure your metadata configuration is correctly setup."
 	},
 	"title_NOACCESS": {
 		"en": "No access"
 	},
 	"descr_NOACCESS": {
-		"en": "This endpoint is not enabled. Check the enable options in your configuration of simpleSAMLphp."
+		"en": "This endpoint is not enabled. Check the enable options in your configuration of SimpleSAMLphp."
 	},
 	"title_NORELAYSTATE": {
 		"en": "No RelayState"
@@ -96,14 +96,26 @@
 		"en": "No SAML message provided"
 	},
 	"descr_SLOSERVICEPARAMS": {
-		"en": "You accessed the SingleLogoutService interface, but did not provide a SAML LogoutRequest or LogoutResponse."
+		"en": "You accessed the SingleLogoutService interface, but did not provide a SAML LogoutRequest or LogoutResponse. Please note that this endpoint is not intended to be accessed directly."
 	},
 	"title_ACSPARAMS": {
 		"en": "No SAML response provided"
 	},
 	"descr_ACSPARAMS": {
-		"en": "You accessed the Assertion Consumer Service interface, but did not provide a SAML Authentication Response."
+		"en": "You accessed the Assertion Consumer Service interface, but did not provide a SAML Authentication Response. Please note that this endpoint is not intended to be accessed directly."
 	},
+    "title_SSOPARAMS": {
+        "en": "No SAML request provided"
+    },
+    "descr_SSOPARAMS": {
+        "en": "You accessed the Single Sign On Service interface, but did not provide a SAML Authentication Request. Please note that this endpoint is not intended to be accessed directly."
+    },
+    "title_ARSPARAMS": {
+        "en": "No SAML message provided"
+    },
+    "descr_ARSPARAMS": {
+        "en": "You accessed the Artifact Resolution Service interface, but did not provide a SAML ArtifactResolve message. Please note that this endpoint is not intended to be accessed directly."
+    },
 	"title_CASERROR": {
 		"en": "CAS Error"
 	},
@@ -114,7 +126,7 @@
 		"en": "Configuration error"
 	},
 	"descr_CONFIG": {
-		"en": "simpleSAMLphp appears to be misconfigured."
+		"en": "SimpleSAMLphp appears to be misconfigured."
 	},
 	"title_NOTVALIDCERT": {
 		"en": "Invalid certificate"
@@ -217,5 +229,11 @@
 	},
 	"descr_AUTHSOURCEERROR": {
 		"en": "Authentication error in source %AUTHSOURCE%. The reason was: %REASON%"
+	},
+	"title_MEMCACHEDOWN": {
+		"en": "Cannot retrieve session data"
+	},
+	"descr_MEMCACHEDOWN": {
+		"en": "Your session data cannot be retrieved right now due to technical difficulties. Please try again in a few minutes."
 	}
 }

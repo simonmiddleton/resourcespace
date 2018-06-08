@@ -16,7 +16,6 @@ if ($response === NULL) {
 if (!isset($response['id'])) {
 	throw new SimpleSAML_Error_BadRequest('CDCResponse without id.');
 }
-
 $state = SimpleSAML_Auth_State::loadState($response['id'], 'cdc:resume');
 
 SimpleSAML_Auth_ProcessingChain::resumeProcessing($state);

@@ -6,8 +6,7 @@ require_once(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/oauth/lib
  * Authenticate using MySpace.
  *
  * @author Brook Schofield, TERENA.
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 class sspmod_authmyspace_Auth_Source_MySpace extends SimpleSAML_Auth_Source {
 
@@ -35,7 +34,7 @@ class sspmod_authmyspace_Auth_Source_MySpace extends SimpleSAML_Auth_Source {
 		assert('is_array($info)');
 		assert('is_array($config)');
 
-		/* Call the parent constructor first, as required by the interface. */
+		// Call the parent constructor first, as required by the interface
 		parent::__construct($info, $config);
 
 		if (!array_key_exists('key', $config))
@@ -58,23 +57,23 @@ class sspmod_authmyspace_Auth_Source_MySpace extends SimpleSAML_Auth_Source {
 	public function authenticate(&$state) {
 		assert('is_array($state)');
 
-		/* We are going to need the authId in order to retrieve this authentication source later. */
+		// We are going to need the authId in order to retrieve this authentication source later
 		$state[self::AUTHID] = $this->authId;
 
 		$consumer = new sspmod_oauth_Consumer($this->key, $this->secret);
 
 		// Get the request token
 		$requestToken = $consumer->getRequestToken('http://api.myspace.com/request_token');
-		SimpleSAML_Logger::debug("Got a request token from the OAuth service provider [" .
+		SimpleSAML\Logger::debug("Got a request token from the OAuth service provider [" .
 			$requestToken->key . "] with the secret [" . $requestToken->secret . "]");
 
 		$state['authmyspace:requestToken'] = $requestToken;
 
 		$stateID = SimpleSAML_Auth_State::saveState($state, self::STAGE_INIT);
-		SimpleSAML_Logger::debug('authmyspace auth state id = ' . $stateID);
+		SimpleSAML\Logger::debug('authmyspace auth state id = ' . $stateID);
 
 		// Authorize the request token
-		$consumer->getAuthorizeRequest('http://api.myspace.com/authorize', $requestToken, TRUE, SimpleSAML_Module::getModuleUrl('authmyspace') . '/linkback.php?stateid=' . $stateID);
+		$consumer->getAuthorizeRequest('http://api.myspace.com/authorize', $requestToken, TRUE, SimpleSAML\Module::getModuleUrl('authmyspace') . '/linkback.php?stateid=' . $stateID);
 
 	}
 
@@ -86,16 +85,13 @@ class sspmod_authmyspace_Auth_Source_MySpace extends SimpleSAML_Auth_Source {
 
 		$consumer = new sspmod_oauth_Consumer($this->key, $this->secret);
 
-		SimpleSAML_Logger::debug("oauth: Using this request token [" .
+		SimpleSAML\Logger::debug("oauth: Using this request token [" .
 			$requestToken->key . "] with the secret [" . $requestToken->secret . "]");
 
 		// Replace the request token with an access token
 		$accessToken = $consumer->getAccessToken('http://api.myspace.com/access_token', $requestToken);
-		SimpleSAML_Logger::debug("Got an access token from the OAuth service provider [" .
+		SimpleSAML\Logger::debug("Got an access token from the OAuth service provider [" .
 			$accessToken->key . "] with the secret [" . $accessToken->secret . "]");
-
-		// API depricated on 20th September 2010
-		//$userdata = $consumer->getUserInfo('http://api.myspace.com/v1/user.json', $accessToken);
 
 		// People API -  http://developerwiki.myspace.com/index.php?title=People_API
 		$userdata = $consumer->getUserInfo('http://api.myspace.com/1.0/people/@me/@self?fields=@all', $accessToken);
@@ -134,7 +130,7 @@ class sspmod_authmyspace_Auth_Source_MySpace extends SimpleSAML_Auth_Source {
 			}
 		}
 
-		SimpleSAML_Logger::debug('MySpace Returned Attributes: '. implode(", ",array_keys($attributes)));
+		SimpleSAML\Logger::debug('MySpace Returned Attributes: '. implode(", ",array_keys($attributes)));
 
 		$state['Attributes'] = $attributes;
 	}

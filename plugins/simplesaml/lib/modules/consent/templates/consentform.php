@@ -12,8 +12,7 @@
  * - 'attributes': The attributes which are about to be released.
  * - 'sppp': URL to the privacy policy of the destination, or FALSE.
  *
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 assert('is_array($this->data["srcMetadata"])');
 assert('is_array($this->data["dstMetadata"])');
@@ -61,7 +60,6 @@ $this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' .
 
 $this->includeAtTemplateBase('includes/header.php');
 ?>
-
 <p>
 <?php
 echo $this->t(
@@ -71,11 +69,11 @@ echo $this->t(
 
 if (array_key_exists('descr_purpose', $this->data['dstMetadata'])) {
     echo '</p><p>' . $this->t(
-        '{consent:consent:consent_purpose}', 
+        '{consent:consent:consent_purpose}',
         array(
             'SPNAME' => $dstName,
-            'SPDESC' => $this->getTranslation(
-                SimpleSAML_Utilities::arrayize(
+            'SPDESC' => $this->getTranslator()->getPreferredTranslation(
+                SimpleSAML\Utils\Arrays::arrayize(
                     $this->data['dstMetadata']['descr_purpose'],
                     'en'
                 )
@@ -86,7 +84,8 @@ if (array_key_exists('descr_purpose', $this->data['dstMetadata'])) {
 ?>
 </p>
 
-<form style="display: inline; margin: 0px; padding: 0px" action="<?php echo htmlspecialchars($this->data['yesTarget']); ?>">
+<form style="display: inline; margin: 0px; padding: 0px"
+      action="<?php echo htmlspecialchars($this->data['yesTarget']); ?>">
 <p style="margin: 1em">
 
 <?php
@@ -103,10 +102,13 @@ foreach ($this->data['yesData'] as $name => $value) {
 }
 ?>
     </p>
-    <input type="submit" name="yes" id="yesbutton" value="<?php echo htmlspecialchars($this->t('{consent:consent:yes}')) ?>" />
+    <button type="submit" name="yes" class="btn" id="yesbutton">
+        <?php echo htmlspecialchars($this->t('{consent:consent:yes}')) ?>
+    </button>
 </form>
 
-<form style="display: inline; margin-left: .5em;" action="<?php echo htmlspecialchars($this->data['noTarget']); ?>" method="get">
+<form style="display: inline; margin-left: .5em;" action="<?php echo htmlspecialchars($this->data['noTarget']); ?>"
+      method="get">
 
 <?php
 foreach ($this->data['noData'] as $name => $value) {
@@ -114,18 +116,20 @@ foreach ($this->data['noData'] as $name => $value) {
         '" value="' . htmlspecialchars($value) . '" />');
 }
 ?>
-    <input type="submit" style="display: inline" name="no" id="nobutton" value="<?php echo htmlspecialchars($this->t('{consent:consent:no}')) ?>" />
+    <button type="submit" class="btn" name="no" id="nobutton">
+        <?php echo htmlspecialchars($this->t('{consent:consent:no}')) ?>
+    </button>
 </form>
 
 <?php
 if ($this->data['sppp'] !== false) {
     echo "<p>" . htmlspecialchars($this->t('{consent:consent:consent_privacypolicy}')) . " ";
-    echo "<a target='_blank' href='" . htmlspecialchars($this->data['sppp']) . "'>" . $dstName . "</a>";
+    echo '<a target="_blank" href="' . htmlspecialchars($this->data['sppp']) . '">' . $dstName . "</a>";
     echo "</p>";
 }
 
 /**
- * Recursiv attribute array listing function
+ * Recursive attribute array listing function
  *
  * @param SimpleSAML_XHTML_Template $t          Template object
  * @param array                     $attributes Attributes to be presented
@@ -135,6 +139,8 @@ if ($this->data['sppp'] !== false) {
  */
 function present_attributes($t, $attributes, $nameParent)
 {
+    $translator = $t->getTranslator();
+
     $alternate = array('odd', 'even');
     $i = 0;
     $summary = 'summary="' . $t->t('{consent:consent:table_summary}') . '"';
@@ -151,24 +157,24 @@ function present_attributes($t, $attributes, $nameParent)
 
     foreach ($attributes as $name => $value) {
         $nameraw = $name;
-        $name = $t->getAttributeTranslation($parentStr . $nameraw);
+        $name = $translator->getAttributeTranslation($parentStr . $nameraw);
 
         if (preg_match('/^child_/', $nameraw)) {
-            // Insert child table
+            // insert child table
             $parentName = preg_replace('/^child_/', '', $nameraw);
-            foreach ($value AS $child) {
+            foreach ($value as $child) {
                 $str .= "\n" . '<tr class="odd"><td style="padding: 2em">' .
                     present_attributes($t, $child, $parentName) . '</td></tr>';
             }
         } else {
-            // Insert values directly
+            // insert values directly
 
             $str .= "\n" . '<tr class="' . $alternate[($i++ % 2)] .
                 '"><td><span class="attrname">' . htmlspecialchars($name) . '</span>';
 
             $isHidden = in_array($nameraw, $t->data['hiddenAttributes'], true);
             if ($isHidden) {
-                $hiddenId = SimpleSAML_Utilities::generateID();
+                $hiddenId = SimpleSAML\Utils\Random::generateID();
 
                 $str .= '<div class="attrvalue" style="display: none;" id="hidden_' . $hiddenId . '">';
             } else {
@@ -176,9 +182,9 @@ function present_attributes($t, $attributes, $nameParent)
             }
 
             if (sizeof($value) > 1) {
-                // We hawe several values
+                // we hawe several values
                 $str .= '<ul>';
-                foreach ($value AS $listitem) {
+                foreach ($value as $listitem) {
                     if ($nameraw === 'jpegPhoto') {
                         $str .= '<li><img src="data:image/jpeg;base64,' .
                             htmlspecialchars($listitem) .
@@ -189,7 +195,7 @@ function present_attributes($t, $attributes, $nameParent)
                 }
                 $str .= '</ul>';
             } elseif (isset($value[0])) {
-                // We hawe only one value
+                // we hawe only one value
                 if ($nameraw === 'jpegPhoto') {
                     $str .= '<img src="data:image/jpeg;base64,' .
                         htmlspecialchars($value[0]) .
@@ -197,13 +203,14 @@ function present_attributes($t, $attributes, $nameParent)
                 } else {
                     $str .= htmlspecialchars($value[0]);
                 }
-            }	// end of if multivalue
+            } // end of if multivalue
             $str .= '</div>';
 
             if ($isHidden) {
                 $str .= '<div class="attrvalue consent_showattribute" id="visible_' . $hiddenId . '">';
                 $str .= '... ';
-                $str .= '<a class="consent_showattributelink" href="javascript:SimpleSAML_show(\'hidden_' . $hiddenId . '\'); SimpleSAML_hide(\'visible_' . $hiddenId . '\');">';
+                $str .= '<a class="consent_showattributelink" href="javascript:SimpleSAML_show(\'hidden_' . $hiddenId;
+                $str .= '\'); SimpleSAML_hide(\'visible_' . $hiddenId . '\');">';
                 $str .= $t->t('{consent:consent:show_attribute}');
                 $str .= '</a>';
                 $str .= '</div>';
@@ -223,6 +230,6 @@ echo '<h3 id="attributeheader">' .
     ) .
     '</h3>';
 
-echo(present_attributes($this, $attributes, '')); 
+echo present_attributes($this, $attributes, '');
 
 $this->includeAtTemplateBase('includes/footer.php');

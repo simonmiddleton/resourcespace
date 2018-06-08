@@ -13,8 +13,7 @@
  * - 'attributes': The attributes which are about to be released.
  * - 'sppp': URL to the privacy policy of the destination, or FALSE.
  *
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 
 
@@ -43,4 +42,3 @@ $this->includeAtTemplateBase('includes/header.php');
 <?php
 
 $this->includeAtTemplateBase('includes/footer.php');
-?>

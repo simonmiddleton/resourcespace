@@ -4,13 +4,10 @@
  * Handle linkback() response from LinkedIn.
  */
 
-if (array_key_exists('stateid', $_REQUEST)) {
-        $stateId = $_REQUEST['stateid'];
-} else {
-        throw new Exception('Lost OAuth Client State');
+if (!array_key_exists('stateid', $_REQUEST)) {
+    throw new Exception('Lost OAuth Client State');
 }
-
-$state = SimpleSAML_Auth_State::loadState($stateId, sspmod_authlinkedin_Auth_Source_LinkedIn::STAGE_INIT);
+$state = SimpleSAML_Auth_State::loadState($_REQUEST['stateid'], sspmod_authlinkedin_Auth_Source_LinkedIn::STAGE_INIT);
 
 // http://developer.linkedin.com/docs/DOC-1008#2_Redirect_the_User_to_our_Authorization_Server
 if (array_key_exists('oauth_verifier', $_REQUEST)) {
@@ -19,7 +16,7 @@ if (array_key_exists('oauth_verifier', $_REQUEST)) {
 	throw new Exception('OAuth verifier not returned.');;
 }
 
-/* Find authentication source. */
+// Find authentication source
 assert('array_key_exists(sspmod_authlinkedin_Auth_Source_LinkedIn::AUTHID, $state)');
 $sourceId = $state[sspmod_authlinkedin_Auth_Source_LinkedIn::AUTHID];
 

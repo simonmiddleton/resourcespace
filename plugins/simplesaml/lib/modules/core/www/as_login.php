@@ -3,15 +3,14 @@
 /**
  * Endpoint for logging in with an authentication source.
  *
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 
-if (!is_string($_REQUEST['ReturnTo'])) {
+if (!isset($_REQUEST['ReturnTo'])) {
 	throw new SimpleSAML_Error_BadRequest('Missing ReturnTo parameter.');
 }
 
-if (!is_string($_REQUEST['AuthId'])) {
+if (!isset($_REQUEST['AuthId'])) {
 	throw new SimpleSAML_Error_BadRequest('Missing AuthId parameter.');
 }
 
@@ -19,7 +18,7 @@ if (!is_string($_REQUEST['AuthId'])) {
  * Setting up the options for the requireAuth() call later..
  */
 $options = array(
-	'ReturnTo' => $_REQUEST['ReturnTo'],
+	'ReturnTo' => \SimpleSAML\Utils\HTTP::checkURLAllowed($_REQUEST['ReturnTo']),
 );
 
 /*
@@ -30,9 +29,7 @@ if (!empty($_REQUEST['saml:idp'])) {
 	$options['saml:idp'] = $_REQUEST['saml:idp'];
 }
 
-
-
-$as = new SimpleSAML_Auth_Simple($_REQUEST['AuthId']);
+$as = new \SimpleSAML\Auth\Simple($_REQUEST['AuthId']);
 $as->requireAuth($options);
 
-SimpleSAML_Utilities::redirect($_REQUEST['ReturnTo']);
+\SimpleSAML\Utils\HTTP::redirectTrustedURL($options['ReturnTo']);

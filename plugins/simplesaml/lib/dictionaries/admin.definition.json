@@ -68,6 +68,12 @@
 	"metaover_group_metadata.shib13-idp-remote": {
 		"en": "Shib 1.3 Identity Provider (Remote)"
 	},
+    "metaover_group_metadata.adfs-sp-remote": {
+        "en": "ADFS Service Provider (Remote)"
+    },
+    "metaover_group_metadata.adfs-idp-hosted": {
+        "en": "ADFS Identity Provider (Hosted)"
+    },
 	"metaover_group_metadata.wsfed-sp-hosted": {
 		"en": "WS-Federation Service Provider (Hosted)"
 	},
@@ -76,6 +82,9 @@
 	},
 	"metaconv_title": {
 		"en": "Metadata parser"
+	},
+	"metaconv_selectfile": {
+		"en": "or select a file:"
 	},
 	"metaconv_parse": {
 		"en": "Parse"
@@ -95,8 +104,14 @@
 	"metadata_shib13-idp": {
 		"en": "Shib 1.3 IdP Metadata"
 	},
+    "metadata_adfs-sp": {
+        "en": "ADFS SP Metadata"
+    },
+    "metadata_adfs-idp": {
+        "en": "ADFS IdP Metadata"
+    },
 	"metadata_intro": {
-		"en": "Here is the metadata that simpleSAMLphp has generated for you. You may send this metadata document to trusted partners to setup a trusted federation."
+		"en": "Here is the metadata that SimpleSAMLphp has generated for you. You may send this metadata document to trusted partners to setup a trusted federation."
 	},
 	"metadata_xmlurl": {
 		"en": "You can <a href=\"%METAURL%\">get the metadata xml on a dedicated URL<\/a>:"
@@ -114,7 +129,7 @@
 		"en": "In SAML 2.0 Metadata XML format:"
 	},
 	"metadata_simplesamlformat": {
-		"en": "In simpleSAMLphp flat file format - use this if you are using a simpleSAMLphp entity on the other side:"
+		"en": "In SimpleSAMLphp flat file format - use this if you are using a SimpleSAMLphp entity on the other side:"
 	},
 	"debug_sending_message_title": {
 		"en": "Sending message"
@@ -135,7 +150,7 @@
 		"en": "As you are in debug mode, you get to see the content of the message you are sending:"
 	},
 	"debug_disable_debug_mode": {
-		"en": "You can turn off debug mode in the global simpleSAMLphp configuration file <tt>config\/config.php<\/tt>."
+		"en": "You can turn off debug mode in the global SimpleSAMLphp configuration file <tt>config\/config.php<\/tt>."
 	},
 	"metaconv_xmlmetadata": {
 		"en": "XML metadata"

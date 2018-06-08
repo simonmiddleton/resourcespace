@@ -24,7 +24,12 @@
 		"lv": "Tr\u016bkst s\u012bkdatnes",
 		"id": "Cookie hilang",
 		"sr": "Nedostaje kola\u010di\u0107 (cookie)",
-		"cs": "Chyb\u011bj\u00edc\u00ed cookie"
+		"cs": "Chyb\u011bj\u00edc\u00ed cookie",
+		"ro": "<i>Cookie<\/i> lips\u0103",
+		"ru": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 cookie-\u0444\u0430\u0439\u043b",
+		"eu": "Cookie-a falta da",
+		"af": "Verlore cookie",
+		"el": "\u03a0\u03c1\u03cc\u03b2\u03bb\u03b7\u03bc\u03b1 \u03bb\u03b5\u03b9\u03c4\u03bf\u03c5\u03c1\u03b3\u03af\u03b1\u03c2 cookie"
 	},
 	"description": {
 		"no": "Du ser ut til \u00e5 ha deaktivert informasjonskapsler. Kontroller innstillingene i nettleseren din og pr\u00f8v igjen.",
@@ -34,7 +39,7 @@
 		"pt": "Provavelmente desligou o suporte de cookies no seu browser. Por favor verifique se tem o suporte de cookies ligado e tente de novo.",
 		"sv": "Det verkar som om du har st\u00e4ngt av m\u00f6jligheten till kakor (cookies) i din webbl\u00e4sare. Kontrollera inst\u00e4llningarna i webbl\u00e4saren och f\u00f6rs\u00f6k igen.",
 		"hr": "Izgleda da ste onemogu\u0107ili kola\u010di\u0107e (cookies) u va\u0161em web pregledniku. Molimo provjerite postavke va\u0161eg web preglednika i poku\u0161ajte ponovo.",
-		"da": "Det ser ud til at du har sl\u00e5et cookies fra i din browser. Tjek dine browserinstillinger og pr\u00f8v igen.",
+		"da": "Det ser ud til at du har sl\u00e5et cookies fra i din browser. Tjek dine browserindstillinger og pr\u00f8v igen.",
 		"fr": "Il semble que votre navigateur refuse les cookies. Merci de v\u00e9rifier les r\u00e9glages de votre navigateur, puis de r\u00e9-essayer.",
 		"nn": "Det ser ut til at informasjonskapslar er avsl\u00e5tt i nettlesaren din. V\u00e6r vennleg og sjekk instillingane i nettlesaren din, og pr\u00f8v p\u00e5 nytt.",
 		"lt": "Atrodo J\u016bs\u0173 nar\u0161ykl\u0117 nepalaiko slapuk\u0173. Patikrinkite nar\u0161ykl\u0117s nustatymus ir bandykite dar kart\u0105.",
@@ -51,7 +56,12 @@
 		"lv": "Izskat\u0101s, ka J\u016bsu interneta p\u0101rl\u016bk\u0101 ir aizliegtas s\u012bkdatnes. L\u016bdzu p\u0101rbaudiet sava p\u0101rl\u016bka uzst\u0101d\u012bjumus un m\u0113\u0123iniet v\u0113lreiz.",
 		"id": "Anda sepertinya menonaktifkan cookie di browser anda. Silahkan periksa  pengaturan pada browser anda, dan coba lagi.",
 		"sr": "Izgleda da ste onemogu\u0107ili kola\u010di\u0107e (cookies) u va\u0161em web pretra\u017eiva\u010du. Molimo proverite pode\u0161avanja va\u0161eg web pretra\u017eiva\u010da i poku\u0161ajte ponovo.",
-		"cs": "V\u00e1\u0161 internetov\u00fd prohl\u00ed\u017ee\u010d m\u00e1 z\u0159ejm\u011b vypnutou podporu cookies. Pros\u00edme, zkontrolujte nastaven\u00ed cookies ve va\u0161em prohl\u00ed\u017ee\u010di a zkuste znovu."
+		"cs": "V\u00e1\u0161 internetov\u00fd prohl\u00ed\u017ee\u010d m\u00e1 z\u0159ejm\u011b vypnutou podporu cookies. Pros\u00edme, zkontrolujte nastaven\u00ed cookies ve va\u0161em prohl\u00ed\u017ee\u010di a zkuste znovu.",
+		"ro": "<i>Cookies<\/i> au fost dezactivate \u00een browser-ul dumneavoastr\u0103. V\u0103 rug\u0103m s\u0103 verifica\u021bi configurarea browser-ului dup\u0103 care \u00eencerca\u021bi din nou.",
+		"ru": "\u0412\u0438\u0434\u0438\u043c\u043e, \u0432\u044b \u043e\u0442\u043a\u043b\u044e\u0447\u0438\u043b\u0438 \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0443 cookies \u0432 \u0432\u0430\u0448\u0435\u043c \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0435. \u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043f\u0440\u043e\u0432\u0435\u0440\u044c\u0442\u0435 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u0432\u0430\u0448\u0435\u0433\u043e \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0430 \u0438 \u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435 \u043f\u043e\u043f\u044b\u0442\u043a\u0443.",
+		"eu": "Badirudi zure nabigatzaileko cookie-ak desgaitu dituzula. Mesedez, berrikusi zure nabigatzaileko lehentasunak eta saiatu berriro.",
+		"af": "Dit blyk dat jy cookies in jou webblaaier af geskakel het. Gaan asseblief die stellings in jou webblaaier na en probeer weer.",
+		"el": "\u0395\u03bd\u03b4\u03ad\u03c7\u03b5\u03c4\u03b1\u03b9 \u03c4\u03b1 cookie \u03c4\u03bf\u03c5 \u03c0\u03c1\u03bf\u03b3\u03c1\u03ac\u03bc\u03bc\u03b1\u03c4\u03bf\u03c2 \u03c0\u03b5\u03c1\u03b9\u03ae\u03b3\u03b7\u03c3\u03ae\u03c2 \u03c3\u03b1\u03c2 \u03bd\u03b1 \u03ad\u03c7\u03bf\u03c5\u03bd \u03b1\u03c0\u03b5\u03bd\u03b5\u03c1\u03b3\u03bf\u03c0\u03bf\u03b9\u03b7\u03b8\u03b5\u03af. \u03a0\u03b1\u03c1\u03b1\u03ba\u03b1\u03bb\u03bf\u03cd\u03bc\u03b5 \u03b5\u03bb\u03ad\u03b3\u03be\u03c4\u03b5 \u03c4\u03b9\u03c2 \u03c3\u03c7\u03b5\u03c4\u03b9\u03ba\u03ad\u03c2 \u03c1\u03c5\u03b8\u03bc\u03af\u03c3\u03b5\u03b9\u03c2 \u03ba\u03b1\u03b9 \u03ba\u03b1\u03b9 \u03b4\u03bf\u03ba\u03b9\u03bc\u03ac\u03c3\u03c4\u03b5 \u03be\u03b1\u03bd\u03ac."
 	},
 	"retry": {
 		"no": "Pr\u00f8v igjen",
@@ -79,6 +89,10 @@
 		"lv": "M\u0113\u0123in\u0101t v\u0113lreiz",
 		"id": "Coba lagi",
 		"sr": "Poku\u0161aj ponovo",
-		"cs": "Opakujte"
+		"cs": "Opakujte",
+		"ro": "\u00cencearc\u0103 din nou",
+		"eu": "Saiatu berriro",
+		"af": "Probeer weer",
+		"el": "\u0394\u03bf\u03ba\u03b9\u03bc\u03ac\u03c3\u03c4\u03b5 \u03be\u03b1\u03bd\u03ac"
 	}
 }

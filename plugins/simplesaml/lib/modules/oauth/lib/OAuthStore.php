@@ -9,8 +9,7 @@ require_once(dirname(dirname(__FILE__)) . '/libextinc/OAuth.php');
  *
  * @author Andreas Åkre Solberg, <andreas.solberg@uninett.no>, UNINETT AS.
  * @author Mark Dobrinic, <mdobrinic@cozmanova.com>, Cozmanova bv
- * @package simpleSAMLphp
- * @version $Id: OAuthStore.php 2843 2011-05-20 14:34:26Z comel.ah $
+ * @package SimpleSAMLphp
  */
 class sspmod_oauth_OAuthStore extends OAuthDataStore {
 
@@ -63,8 +62,8 @@ class sspmod_oauth_OAuthStore extends OAuthDataStore {
 		
 		if ($oConsumer && ($oConsumer->callback_url)) $url = $oConsumer->callback_url;
 		
-		$verifier = SimpleSAML_Utilities::generateID();
-		$url = SimpleSAML_Utilities::addURLparameter($url, array("oauth_verifier"=>$verifier));
+		$verifier = SimpleSAML\Utils\Random::generateID();
+		$url = \SimpleSAML\Utils\HTTP::addURLParameters($url, array("oauth_verifier"=>$verifier));
 		
 		$this->store->set('authorized', $requestTokenKey, $verifier, $data, $this->config->getValue('requestTokenDuration', 60*30) );
 		
@@ -80,18 +79,18 @@ class sspmod_oauth_OAuthStore extends OAuthDataStore {
 	 * @return unknown_type
 	 */
 	public function isAuthorized($requestToken, $verifier='') {
-		SimpleSAML_Logger::info('OAuth isAuthorized(' . $requestToken . ')');
+		SimpleSAML\Logger::info('OAuth isAuthorized(' . $requestToken . ')');
 		return $this->store->exists('authorized', $requestToken, $verifier);
 	}
 	
 	public function getAuthorizedData($token, $verifier = '') {
-		SimpleSAML_Logger::info('OAuth getAuthorizedData(' . $token . ')');
+		SimpleSAML\Logger::info('OAuth getAuthorizedData(' . $token . ')');
 		$data = $this->store->get('authorized', $token, $verifier);
 		return $data['value'];
 	}
 	
 	public function moveAuthorizedData($requestToken, $verifier, $accessTokenKey) {
-		SimpleSAML_Logger::info('OAuth moveAuthorizedData(' . $requestToken . ', ' . $accessTokenKey . ')');
+		SimpleSAML\Logger::info('OAuth moveAuthorizedData(' . $requestToken . ', ' . $accessTokenKey . ')');
 
 		// Retrieve authorizedData from authorized.requestToken (with provider verifier)
 		$authorizedData = $this->getAuthorizedData($requestToken, $verifier);
@@ -105,14 +104,13 @@ class sspmod_oauth_OAuthStore extends OAuthDataStore {
 	}
 	
     public function lookup_consumer($consumer_key) {
-		SimpleSAML_Logger::info('OAuth lookup_consumer(' . $consumer_key . ')');
+		SimpleSAML\Logger::info('OAuth lookup_consumer(' . $consumer_key . ')');
 		if (! $this->store->exists('consumers', $consumer_key, ''))  return NULL;
 		$consumer = $this->store->get('consumers', $consumer_key, '');
 		
 		$callback = NULL;
 		if ($consumer['value']['callback_url']) $callback = $consumer['value']['callback_url'];
 
-		// SimpleSAML_Logger::info('OAuth consumer dump(' . var_export($consumer, TRUE) . ')');
 		if ($consumer['value']['RSAcertificate']) {
 			return new OAuthConsumer($consumer['value']['key'], $consumer['value']['RSAcertificate'], $callback);
 		} else {
@@ -121,25 +119,25 @@ class sspmod_oauth_OAuthStore extends OAuthDataStore {
     }
 
     function lookup_token($consumer, $tokenType = 'default', $token) {
-		SimpleSAML_Logger::info('OAuth lookup_token(' . $consumer->key . ', ' . $tokenType. ',' . $token . ')');
+		SimpleSAML\Logger::info('OAuth lookup_token(' . $consumer->key . ', ' . $tokenType. ',' . $token . ')');
 		$data = $this->store->get($tokenType, $token, $consumer->key);
 		if ($data == NULL) throw new Exception('Could not find token');
 		return $data['value'];
     }
 
     function lookup_nonce($consumer, $token, $nonce, $timestamp) {
-		SimpleSAML_Logger::info('OAuth lookup_nonce(' . $consumer . ', ' . $token. ',' . $nonce . ')');
+		SimpleSAML\Logger::info('OAuth lookup_nonce(' . $consumer . ', ' . $token. ',' . $nonce . ')');
 		if ($this->store->exists('nonce', $nonce, $consumer->key))  return TRUE;
 		$this->store->set('nonce', $nonce, $consumer->key, TRUE, $this->config->getValue('nonceCache', 60*60*24*14));
 		return FALSE;
     }
 
     function new_request_token($consumer, $callback = null, $version = null) {
-		SimpleSAML_Logger::info('OAuth new_request_token(' . $consumer . ')');
+		SimpleSAML\Logger::info('OAuth new_request_token(' . $consumer . ')');
 		
 		$lifetime = $this->config->getValue('requestTokenDuration', 60*30); 
 		
-		$token = new OAuthToken(SimpleSAML_Utilities::generateID(), SimpleSAML_Utilities::generateID());
+		$token = new OAuthToken(SimpleSAML\Utils\Random::generateID(), SimpleSAML\Utils\Random::generateID());
 		$token->callback = $callback;	// OAuth1.0-RevA
 		$this->store->set('request', $token->key, $consumer->key, $token, $lifetime);
 		
@@ -158,9 +156,8 @@ class sspmod_oauth_OAuthStore extends OAuthDataStore {
     }
 
     function new_access_token($requestToken, $consumer, $verifier = null) {
-		SimpleSAML_Logger::info('OAuth new_access_token(' . $requestToken . ',' . $consumer . ')');
-		$accestoken = new OAuthToken(SimpleSAML_Utilities::generateID(), SimpleSAML_Utilities::generateID());
-		// SimpleSAML_Logger::info('OAuth new_access_token(' . $requestToken . ',' . $consumer . ',' . $accestoken . ')');
+		SimpleSAML\Logger::info('OAuth new_access_token(' . $requestToken . ',' . $consumer . ')');
+		$accestoken = new OAuthToken(SimpleSAML\Utils\Random::generateID(), SimpleSAML\Utils\Random::generateID());
 		$this->store->set('access', $accestoken->key, $consumer->key, $accestoken, $this->config->getValue('accessTokenDuration', 60*60*24) );
         return $accestoken;
     }
@@ -171,7 +168,7 @@ class sspmod_oauth_OAuthStore extends OAuthDataStore {
      * @return unknown_type
      */
     public function lookup_consumer_by_requestToken($requestTokenKey) {
-		SimpleSAML_Logger::info('OAuth lookup_consumer_by_requestToken(' . $requestTokenKey . ')');
+		SimpleSAML\Logger::info('OAuth lookup_consumer_by_requestToken(' . $requestTokenKey . ')');
 		if (! $this->store->exists('requesttorequest', $requestTokenKey, '')) return NULL;
 		
 		$request = $this->store->get('requesttorequest', $requestTokenKey, '');

@@ -3,14 +3,14 @@
 /*
  * Copyright (C) 2009  Simon Josefsson <simon@yubico.com>.
  *
- * This file is part of simpleSAMLphp
+ * This file is part of SimpleSAMLphp
  *
- * simpleSAMLphp is free software; you can redistribute it and/or
+ * SimpleSAMLphp is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
  * as published by the Free Software Foundation; either version 3 of
  * the License, or (at your option) any later version.
  *
- * simpleSAMLphp is distributed in the hope that it will be useful,
+ * SimpleSAMLphp is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
@@ -56,7 +56,7 @@ class sspmod_authYubiKey_Auth_Process_OTP2YubiPrefix extends SimpleSAML_Auth_Pro
 		assert('array_key_exists("Attributes", $state)');
 		$attributes = $state['Attributes'];
 
-		SimpleSAML_Logger::debug('OTP2YubiPrefix: enter with attributes: ' . implode(',', array_keys($attributes)));
+		SimpleSAML\Logger::debug('OTP2YubiPrefix: enter with attributes: ' . implode(',', array_keys($attributes)));
 
 		$otps = $attributes['otp'];
 		$otp = $otps['0'];
@@ -66,13 +66,11 @@ class sspmod_authYubiKey_Auth_Process_OTP2YubiPrefix extends SimpleSAML_Auth_Pro
 
 		$attributes['yubiPrefix'] = array($identity);
 
-		SimpleSAML_Logger::info('OTP2YubiPrefix: otp: ' . $otp . ' identity: ' . $identity . ' (otp keys: ' . implode(',', array_keys($otps)) . ')');
+		SimpleSAML\Logger::info('OTP2YubiPrefix: otp: ' . $otp . ' identity: ' . $identity . ' (otp keys: ' . implode(',', array_keys($otps)) . ')');
 
 		unset($attributes['otp']);
 
-		SimpleSAML_Logger::debug('OTP2YubiPrefix: leaving with attributes: ' . implode(',', array_keys($attributes)));
+		SimpleSAML\Logger::debug('OTP2YubiPrefix: leaving with attributes: ' . implode(',', array_keys($attributes)));
 	}
 
 }
-
-?>

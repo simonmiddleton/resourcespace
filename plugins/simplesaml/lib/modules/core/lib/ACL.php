@@ -3,8 +3,7 @@
 /**
  * Generic library for access control lists.
  *
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 class sspmod_core_ACL {
 
@@ -100,7 +99,7 @@ class sspmod_core_ACL {
 
 		$op = array_shift($rule);
 		if ($op === NULL) {
-			/* An empty rule always matches. */
+			// An empty rule always matches
 			return TRUE;
 		}
 
@@ -120,7 +119,7 @@ class sspmod_core_ACL {
 		case 'or':
 			return self::opOr($attributes, $rule);
 		default:
-			throw new SimpleSAML_Error_Exception('Invalid ACL operation: ' . var_export($op. TRUE));
+			throw new SimpleSAML_Error_Exception('Invalid ACL operation: ' . var_export($op, TRUE));
 		}
 	}
 
@@ -140,7 +139,7 @@ class sspmod_core_ACL {
 			}
 		}
 
-		/* All matches. */
+		// All matches
 		return TRUE;
 	}
 

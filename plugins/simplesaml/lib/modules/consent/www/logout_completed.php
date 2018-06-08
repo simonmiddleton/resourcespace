@@ -2,8 +2,7 @@
 /**
  * This is the handler for logout completed from the consent page.
  *
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 
 $globalConfig = SimpleSAML_Configuration::getInstance();

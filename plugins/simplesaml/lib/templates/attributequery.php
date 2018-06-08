@@ -59,7 +59,7 @@ assert('is_null($attributes) || is_array($attributes)');
 </p>
 
 <p>
-<input type="submit" name="send" value="Send query" />
+<button type="submit" name="send" class="btn">Send query</button>
 </p>
 </form>
 
@@ -78,4 +78,4 @@ if ($attributes !== NULL) {
 }
 ?>
 
-<?php $this->includeAtTemplateBase('includes/footer.php'); ?>
+<?php $this->includeAtTemplateBase('includes/footer.php');

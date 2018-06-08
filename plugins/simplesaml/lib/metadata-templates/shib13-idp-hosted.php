@@ -1,8 +1,8 @@
 <?php
 /**
- * SAML 1.1 IdP configuration for simpleSAMLphp.
+ * SAML 1.1 IdP configuration for SimpleSAMLphp.
  *
- * See: https://rnd.feide.no/content/idp-hosted-metadata-reference
+ * See: https://simplesamlphp.org/docs/stable/simplesamlphp-reference-idp-hosted
  */
 
 $metadata['__DYNAMIC:1__'] = array(
@@ -14,7 +14,7 @@ $metadata['__DYNAMIC:1__'] = array(
 	 */
 	'host' => '__DEFAULT__',
 
-	/* X.509 key and certificate. Relative to the cert directory. */
+	// X.509 key and certificate. Relative to the cert directory.
 	'privatekey' => 'server.pem',
 	'certificate' => 'server.crt',
 

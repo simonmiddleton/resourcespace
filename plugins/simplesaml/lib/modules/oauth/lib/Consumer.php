@@ -6,8 +6,7 @@ require_once(dirname(dirname(__FILE__)) . '/libextinc/OAuth.php');
  * OAuth Consumer
  *
  * @author Andreas Åkre Solberg, <andreas.solberg@uninett.no>, UNINETT AS.
- * @package simpleSAMLphp
- * @version $Id: Consumer.php 2734 2011-02-08 13:50:51Z olavmrk $
+ * @package SimpleSAMLphp
  */
 class sspmod_oauth_Consumer {
 	
@@ -19,7 +18,7 @@ class sspmod_oauth_Consumer {
 		$this->signer = new OAuthSignatureMethod_HMAC_SHA1();
 	}
 	
-	// Used only to load the libextinc library early.
+	// Used only to load the libextinc library early
 	public static function dummy() {}
 	
 	
@@ -79,7 +78,7 @@ class sspmod_oauth_Consumer {
 		parse_str($response_req, $responseParsed);
 		
 		if(array_key_exists('error', $responseParsed))
-			throw new Exception('Error getting request token: ') . $responseParsed['error'];
+			throw new Exception('Error getting request token: ' . $responseParsed['error']);
 			
 		$requestToken = $responseParsed['oauth_token'];
 		$requestTokenSecret = $responseParsed['oauth_token_secret'];
@@ -88,12 +87,13 @@ class sspmod_oauth_Consumer {
 	}
 	
 	public function getAuthorizeRequest($url, $requestToken, $redirect = TRUE, $callback = NULL) {
-		$authorizeURL = $url . '?oauth_token=' . $requestToken->key;
+		$params = array('oauth_token' => $requestToken->key);
 		if ($callback) {
-			$authorizeURL .= '&oauth_callback=' . urlencode($callback);
+			$params['oauth_callback'] = $callback;
 		}
+		$authorizeURL = \SimpleSAML\Utils\HTTP::addURLParameters($url, $params);
 		if ($redirect) {
-			SimpleSAML_Utilities::redirect($authorizeURL);
+			\SimpleSAML\Utils\HTTP::redirectTrustedURL($authorizeURL);
 			exit;
 		}	
 		return $authorizeURL;
@@ -109,12 +109,12 @@ class sspmod_oauth_Consumer {
 			throw new Exception('Error contacting request_token endpoint on the OAuth Provider');
 		}
 
-		SimpleSAML_Logger::debug('oauth: Reponse to get access token: '. $response_acc);
+		SimpleSAML\Logger::debug('oauth: Reponse to get access token: '. $response_acc);
 		
 		parse_str($response_acc, $accessResponseParsed);
 		
 		if(array_key_exists('error', $accessResponseParsed))
-			throw new Exception('Error getting request token: ') . $accessResponseParsed['error'];
+			throw new Exception('Error getting request token: ' . $accessResponseParsed['error']);
 		
 		$accessToken = $accessResponseParsed['oauth_token'];
 		$accessTokenSecret = $accessResponseParsed['oauth_token_secret'];
@@ -130,8 +130,6 @@ class sspmod_oauth_Consumer {
 		$opts = array(
 			'ssl' => array(
 				'verify_peer' => FALSE,
-				// 'cafile' => $file,
-				// 'local_cert' => $spKeyCertFile,
 				'capture_peer_cert' => TRUE,
 				'capture_peer_chain' => TRUE,
 			),
@@ -144,7 +142,7 @@ class sspmod_oauth_Consumer {
 		$context = stream_context_create($opts);
 		$response = file_get_contents($url, FALSE, $context);
 		if ($response === FALSE) {
-			throw new SimpleSAML_Error_Exception('Failed to push definition file to ' . $pushURL);
+			throw new SimpleSAML_Error_Exception('Failed to push definition file to ' . $url);
 		}
 		return $response;
 	}
@@ -158,7 +156,6 @@ class sspmod_oauth_Consumer {
 			$opts = stream_context_create($opts);
 		}
 		$data = file_get_contents($data_req->to_url(), FALSE, $opts);
-		#print_r($data);
 
 		$dataDecoded = json_decode($data, TRUE);
 		return $dataDecoded;

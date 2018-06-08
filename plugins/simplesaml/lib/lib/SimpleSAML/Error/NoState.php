@@ -4,8 +4,7 @@
  * Exception which will show a page telling the user
  * that we don't know what to do.
  *
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 class SimpleSAML_Error_NoState extends SimpleSAML_Error_Error {
 

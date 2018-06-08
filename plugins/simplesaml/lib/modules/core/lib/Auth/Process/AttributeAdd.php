@@ -6,8 +6,7 @@
  * This filter allows you to add attributes to the attribute set being processed.
  *
  * @author Olav Morken, UNINETT AS.
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 class sspmod_core_Auth_Process_AttributeAdd extends SimpleSAML_Auth_ProcessingFilter {
 
@@ -44,10 +43,6 @@ class sspmod_core_Auth_Process_AttributeAdd extends SimpleSAML_Auth_ProcessingFi
 					throw new Exception('Unknown flag: ' . var_export($values, TRUE));
 				}
 				continue;
-			}
-
-			if(!is_string($name)) {
-				throw new Exception('Invalid attribute name: ' . var_export($name, TRUE));
 			}
 
 			if(!is_array($values)) {
@@ -88,5 +83,3 @@ class sspmod_core_Auth_Process_AttributeAdd extends SimpleSAML_Auth_ProcessingFi
 	}
 
 }
-
-?>

@@ -18,8 +18,7 @@
  *            '<mymodule>:External',
  *        ),
  *
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 class sspmod_exampleauth_Auth_Source_External extends SimpleSAML_Auth_Source {
 
@@ -33,10 +32,10 @@ class sspmod_exampleauth_Auth_Source_External extends SimpleSAML_Auth_Source {
 		assert('is_array($info)');
 		assert('is_array($config)');
 
-		/* Call the parent constructor first, as required by the interface. */
+		// Call the parent constructor first, as required by the interface
 		parent::__construct($info, $config);
 
-		/* Do any other configuration we need here. */
+		// Do any other configuration we need here
 	}
 
 
@@ -65,7 +64,7 @@ class sspmod_exampleauth_Auth_Source_External extends SimpleSAML_Auth_Source {
 
 		/*
 		 * Find the attributes for the user.
-		 * Note that all attributes in simpleSAMLphp are multivalued, so we need
+		 * Note that all attributes in SimpleSAMLphp are multivalued, so we need
 		 * to store them as arrays.
 		 */
 
@@ -133,11 +132,11 @@ class sspmod_exampleauth_Auth_Source_External extends SimpleSAML_Auth_Source {
 		$stateId = SimpleSAML_Auth_State::saveState($state, 'exampleauth:External');
 
 		/*
-		 * Now we generate an URL the user should return to after authentication.
+		 * Now we generate a URL the user should return to after authentication.
 		 * We assume that whatever authentication page we send the user to has an
 		 * option to return the user to a specific page afterwards.
 		 */
-		$returnTo = SimpleSAML_Module::getModuleURL('exampleauth/resume.php', array(
+		$returnTo = SimpleSAML\Module::getModuleURL('exampleauth/resume.php', array(
 			'State' => $stateId,
 		));
 
@@ -148,7 +147,7 @@ class sspmod_exampleauth_Auth_Source_External extends SimpleSAML_Auth_Source {
 		 * is also part of this module, but in a real example, this would likely be
 		 * the absolute URL of the login page for the site.
 		 */
-		$authPage = SimpleSAML_Module::getModuleURL('exampleauth/authpage.php');
+		$authPage = SimpleSAML\Module::getModuleURL('exampleauth/authpage.php');
 
 		/*
 		 * The redirect to the authentication page.
@@ -156,7 +155,7 @@ class sspmod_exampleauth_Auth_Source_External extends SimpleSAML_Auth_Source {
 		 * Note the 'ReturnTo' parameter. This must most likely be replaced with
 		 * the real name of the parameter for the login page.
 		 */
-		SimpleSAML_Utilities::redirect($authPage, array(
+		\SimpleSAML\Utils\HTTP::redirectTrustedURL($authPage, array(
 			'ReturnTo' => $returnTo,
 		));
 
@@ -184,13 +183,12 @@ class sspmod_exampleauth_Auth_Source_External extends SimpleSAML_Auth_Source {
 		if (!isset($_REQUEST['State'])) {
 			throw new SimpleSAML_Error_BadRequest('Missing "State" parameter.');
 		}
-		$stateId = (string)$_REQUEST['State'];
 
 		/*
 		 * Once again, note the second parameter to the loadState function. This must
 		 * match the string we used in the saveState-call above.
 		 */
-		$state = SimpleSAML_Auth_State::loadState($stateId, 'exampleauth:External');
+		$state = SimpleSAML_Auth_State::loadState($_REQUEST['State'], 'exampleauth:External');
 
 		/*
 		 * Now we have the $state-array, and can use it to locate the authentication

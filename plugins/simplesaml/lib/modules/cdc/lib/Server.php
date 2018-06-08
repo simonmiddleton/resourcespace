@@ -3,8 +3,7 @@
 /**
  * CDC server class.
  *
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 class sspmod_cdc_Server {
 
@@ -116,6 +115,8 @@ class sspmod_cdc_Server {
 		$domain = $request['domain'];
 		$server = new sspmod_cdc_Server($domain);
 
+		$server->validate('CDCRequest');
+
 		$server->handleRequest($request);
 	}
 
@@ -132,7 +133,7 @@ class sspmod_cdc_Server {
 		}
 		$op = (string)$request['op'];
 
-		SimpleSAML_Logger::info('Received CDC request with "op": ' . var_export($op, TRUE));
+		SimpleSAML\Logger::info('Received CDC request with "op": ' . var_export($op, TRUE));
 
 		if (!isset($request['return'])) {
 			throw new SimpleSAML_Error_BadRequest('Missing "return" in CDC request.');
@@ -203,8 +204,14 @@ class sspmod_cdc_Server {
 	 * @return array  The response.
 	 */
 	private function handleDelete(array $request) {
+		$params = array(
+			'path' => '/',
+			'domain' => '.' . $this->domain,
+			'secure' => TRUE,
+			'httponly' => FALSE,
+		);
 
-		setcookie('_saml_idp', 'DELETE', time() - 86400 , '/', '.' . $this->domain, TRUE);
+        \SimpleSAML\Utils\HTTP::setCookie('_saml_idp', NULL, $params, FALSE);
 		return 'ok';
 	}
 
@@ -317,11 +324,11 @@ class sspmod_cdc_Server {
 			'Signature' => $signature,
 		);
 
-		$url = SimpleSAML_Utilities::addURLparameter($to, $params);
+		$url = \SimpleSAML\Utils\HTTP::addURLParameters($to, $params);
 		if (strlen($url) < 2048) {
-			SimpleSAML_Utilities::redirect($url);
+			\SimpleSAML\Utils\HTTP::redirectTrustedURL($url);
 		} else {
-			SimpleSAML_Utilities::postRedirect($to, $params);
+			\SimpleSAML\Utils\HTTP::submitPOSTData($to, $params);
 		}
 	}
 
@@ -355,8 +362,8 @@ class sspmod_cdc_Server {
 		foreach ($ret as &$idp) {
 			$idp = base64_decode($idp);
 			if ($idp === FALSE) {
-				/* Not properly base64 encoded. */
-				SimpleSAML_Logger::warning('CDC - Invalid base64-encoding of CDC entry.');
+				// Not properly base64 encoded
+				SimpleSAML\Logger::warning('CDC - Invalid base64-encoding of CDC entry.');
 				return array();
 			}
 		}
@@ -380,7 +387,7 @@ class sspmod_cdc_Server {
 		$cookie = implode(' ', $list);
 
 		while (strlen($cookie) > 4000) {
-			/* The cookie is too long. Remove the oldest elements until it is short enough. */
+			// The cookie is too long. Remove the oldest elements until it is short enough
 			$tmp = explode(' ', $cookie, 2);
 			if (count($tmp) === 1) {
 				/*
@@ -392,13 +399,15 @@ class sspmod_cdc_Server {
 			$cookie = $tmp[1];
 		}
 
-		if ($this->cookieLifetime === 0) {
-			$expire = 0;
-		} else {
-			$expire = time() + $this->cookieLifetime;
-		}
+		$params = array(
+			'lifetime' => $this->cookieLifetime,
+			'path' => '/',
+			'domain' => '.' . $this->domain,
+			'secure' => TRUE,
+			'httponly' => FALSE,
+		);
 
-		setcookie('_saml_idp', $cookie, $expire, '/', '.' . $this->domain, TRUE);
+        \SimpleSAML\Utils\HTTP::setCookie('_saml_idp', $cookie, $params, FALSE);
 	}
 
 }

@@ -8,8 +8,7 @@
  * checks, or attribute consent requirements.
  *
  * @author Olav Morken, UNINETT AS.
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 class SimpleSAML_Auth_ProcessingChain {
 
@@ -71,7 +70,7 @@ class SimpleSAML_Auth_ProcessingChain {
 		}
 
 
-		SimpleSAML_Logger::debug('Filter config for ' . $idpMetadata['entityid'] . '->' .
+		SimpleSAML\Logger::debug('Filter config for ' . $idpMetadata['entityid'] . '->' .
 			$spMetadata['entityid'] . ': ' . str_replace("\n", '', var_export($this->filters, TRUE)));
 
 	}
@@ -92,10 +91,10 @@ class SimpleSAML_Auth_ProcessingChain {
 		foreach ($src as $filter) {
 			$fp = $filter->priority;
 
-			/* Find insertion position for filter. */
+			// Find insertion position for filter
 			for($i = count($target)-1; $i >= 0; $i--) {
 				if ($target[$i]->priority <= $fp) {
-					/* The new filter should be inserted after this one. */
+					// The new filter should be inserted after this one
 					break;
 				}
 			}
@@ -149,7 +148,7 @@ class SimpleSAML_Auth_ProcessingChain {
 		if (!array_key_exists('class', $config)) 
 			throw new Exception('Authentication processing filter without name given.');
 
-		$className = SimpleSAML_Module::resolveClass($config['class'], 'Auth_Process', 'SimpleSAML_Auth_ProcessingFilter');
+		$className = SimpleSAML\Module::resolveClass($config['class'], 'Auth_Process', 'SimpleSAML_Auth_ProcessingFilter');
 		$config['%priority'] = $priority;
 		unset($config['class']);
 		return new $className($config, NULL);
@@ -162,7 +161,7 @@ class SimpleSAML_Auth_ProcessingChain {
 	 * This function will only return if processing completes. If processing requires showing
 	 * a page to the user, we will not be able to return from this function. There are two ways
 	 * this can be handled:
-	 * - Redirect to an URL: We will redirect to the URL set in $state['ReturnURL'].
+	 * - Redirect to a URL: We will redirect to the URL set in $state['ReturnURL'].
 	 * - Call a function: We will call the function set in $state['ReturnCall'].
 	 *
 	 * If an exception is thrown during processing, it should be handled by the caller of
@@ -185,8 +184,9 @@ class SimpleSAML_Auth_ProcessingChain {
 
 		try {
 
+			// TODO: remove this in SSP 2.0
 			if (!array_key_exists('UserID', $state)) {
-				/* No unique user ID present. Attempt to add one. */
+				// No unique user ID present. Attempt to add one.
 				self::addUserID($state);
 			}
 
@@ -196,7 +196,7 @@ class SimpleSAML_Auth_ProcessingChain {
 			}
 
 		} catch (SimpleSAML_Error_Exception $e) {
-			/* No need to convert the exception. */
+			// No need to convert the exception
 			throw $e;
 		} catch (Exception $e) {
 			/*
@@ -206,7 +206,7 @@ class SimpleSAML_Auth_ProcessingChain {
 			throw new SimpleSAML_Error_UnserializableException($e);
 		}
 
-		/* Completed. */
+		// Completed
 	}
 
 
@@ -236,7 +236,7 @@ class SimpleSAML_Auth_ProcessingChain {
 			}
 		}
 
-		/* Completed. */
+		// Completed
 
 		assert('array_key_exists("ReturnURL", $state) || array_key_exists("ReturnCall", $state)');
 		assert('!array_key_exists("ReturnURL", $state) || !array_key_exists("ReturnCall", $state)');
@@ -248,11 +248,11 @@ class SimpleSAML_Auth_ProcessingChain {
 			 * in $state['ReturnURL'].
 			 */
 			$id = SimpleSAML_Auth_State::saveState($state, self::COMPLETED_STAGE);
-			SimpleSAML_Utilities::redirect($state['ReturnURL'], array(self::AUTHPARAM => $id));
+			\SimpleSAML\Utils\HTTP::redirectTrustedURL($state['ReturnURL'], array(self::AUTHPARAM => $id));
 		} else {
 			/* Pass the state to the function defined in $state['ReturnCall']. */
 
-			/* We are done with the state array in the session. Delete it. */
+			// We are done with the state array in the session. Delete it.
 			SimpleSAML_Auth_State::deleteState($state);
 
 			$func = $state['ReturnCall'];
@@ -284,8 +284,9 @@ class SimpleSAML_Auth_ProcessingChain {
 
 		$state[self::FILTERS_INDEX] = $this->filters;
 
+		// TODO: remove this in SSP 2.0
 		if (!array_key_exists('UserID', $state)) {
-			/* No unique user ID present. Attempt to add one. */
+			// No unique user ID present. Attempt to add one.
 			self::addUserID($state);
 		}
 
@@ -302,8 +303,9 @@ class SimpleSAML_Auth_ProcessingChain {
 	/**
 	 * Retrieve a state which has finished processing.
 	 *
-	 * @param string $id  The identifier of the state. This can be found in the request parameter
-	 *                    with index from SimpleSAML_Auth_ProcessingChain::AUTHPARAM.
+	 * @param string $id The state identifier.
+     * @see SimpleSAML_Auth_State::parseStateID()
+     * @return Array The state referenced by the $id parameter.
 	 */
 	public static function fetchProcessedState($id) {
 		assert('is_string($id)');
@@ -313,11 +315,7 @@ class SimpleSAML_Auth_ProcessingChain {
 
 
 	/**
-	 * Add unique user ID.
-	 *
-	 * This function attempts to add an unique user ID to the state.
-	 *
-	 * @param array &$state  The state we should update.
+	 * @deprecated This method will be removed in SSP 2.0.
 	 */
 	private static function addUserID(&$state) {
 		assert('is_array($state)');
@@ -325,10 +323,12 @@ class SimpleSAML_Auth_ProcessingChain {
 
 		if (isset($state['Destination']['userid.attribute'])) {
 			$attributeName = $state['Destination']['userid.attribute'];
+			SimpleSAML\Logger::warning("The 'userid.attribute' option has been deprecated.");
 		} elseif (isset($state['Source']['userid.attribute'])) {
 			$attributeName = $state['Source']['userid.attribute'];
+			SimpleSAML\Logger::warning("The 'userid.attribute' option has been deprecated.");
 		} else {
-			/* Default attribute. */
+			// Default attribute
 			$attributeName = 'eduPersonPrincipalName';
 		}
 
@@ -338,18 +338,23 @@ class SimpleSAML_Auth_ProcessingChain {
 
 		$uid = $state['Attributes'][$attributeName];
 		if (count($uid) === 0) {
-			SimpleSAML_Logger::warning('Empty user id attribute [' . $attributeName . '].');
+			SimpleSAML\Logger::warning('Empty user id attribute [' . $attributeName . '].');
 			return;
 		}
 
 		if (count($uid) > 1) {
-			SimpleSAML_Logger::warning('Multiple attribute values for user id attribute [' . $attributeName . '].');
+			SimpleSAML\Logger::warning('Multiple attribute values for user id attribute [' . $attributeName . '].');
+			return;
 		}
 
+		// TODO: the attribute value should be trimmed
 		$uid = $uid[0];
+
+		if (empty($uid)) {
+			SimpleSAML\Logger::warning('Empty value in attribute '.$attributeName.". on user. Cannot set UserID.");
+			return;
+		}
 		$state['UserID'] = $uid;
 	}
 
 }
-
-?>

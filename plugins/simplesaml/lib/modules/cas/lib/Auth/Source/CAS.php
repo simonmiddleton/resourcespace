@@ -6,8 +6,7 @@
  * Based on www/auth/login-cas.php by Mads Freek, RUC.
  *
  * @author Danny Bollaert, UGent.
- * @package simpleSAMLphp
- * @version $Id$
+ * @package SimpleSAMLphp
  */
 class sspmod_cas_Auth_Source_CAS  extends SimpleSAML_Auth_Source  {
 
@@ -52,7 +51,7 @@ class sspmod_cas_Auth_Source_CAS  extends SimpleSAML_Auth_Source  {
 		assert('is_array($info)');
 		assert('is_array($config)');
 
-		/* Call the parent constructor first, as required by the interface. */
+		// Call the parent constructor first, as required by the interface
 		parent::__construct($info, $config);
 
 		if (!array_key_exists('cas', $config)){
@@ -77,7 +76,7 @@ class sspmod_cas_Auth_Source_CAS  extends SimpleSAML_Auth_Source  {
 		if(isset($this->_casConfig['login'])){
 			$this->_loginMethod =  $this->_casConfig['login'];
 		}else{
-			throw new Exception("cas login url not specified");
+			throw new Exception("cas login URL not specified");
 		}
 	}
 
@@ -90,11 +89,11 @@ class sspmod_cas_Auth_Source_CAS  extends SimpleSAML_Auth_Source  {
 	 * @return list username and attributes
 	 */
 	private function casValidate($ticket, $service){
-		$url = SimpleSAML_Utilities::addURLparameter($this->_casConfig['validate'], array(
+		$url = \SimpleSAML\Utils\HTTP::addURLParameters($this->_casConfig['validate'], array(
 				'ticket' => $ticket,
 				'service' => $service,
 		));
-		$result = SimpleSAML_Utilities::fetch($url);
+		$result = \SimpleSAML\Utils\HTTP::fetch($url);
 		$res = preg_split("/\r?\n/",$result);
 
 		if (strcmp($res[0], "yes") == 0) {
@@ -113,13 +112,13 @@ class sspmod_cas_Auth_Source_CAS  extends SimpleSAML_Auth_Source  {
 	 * @return list username and attributes
 	 */
 	private function casServiceValidate($ticket, $service){
-		$url = SimpleSAML_Utilities::addURLparameter($this->_casConfig['serviceValidate'], array(
+		$url = \SimpleSAML\Utils\HTTP::addURLParameters($this->_casConfig['serviceValidate'], array(
 				'ticket' => $ticket,
 				'service' => $service,
 		));
-		$result = SimpleSAML_Utilities::fetch($url);
+		$result = \SimpleSAML\Utils\HTTP::fetch($url);
 
-		$dom = DOMDocument::loadXML($result);
+		$dom = \SAML2\DOMDocumentFactory::fromString($result);
 		$xPath = new DOMXpath($dom);
 		$xPath->registerNamespace("cas", 'http://www.yale.edu/tp/cas');
 		$success = $xPath->query("/cas:serviceResponse/cas:authenticationSuccess/cas:user");
@@ -175,7 +174,7 @@ class sspmod_cas_Auth_Source_CAS  extends SimpleSAML_Auth_Source  {
 
 		$ticket = $state['cas:ticket'];
 		$stateID = SimpleSAML_Auth_State::saveState($state, self::STAGE_INIT);
-		$service =  SimpleSAML_Module::getModuleURL('cas/linkback.php', array('stateID' => $stateID));
+		$service =  SimpleSAML\Module::getModuleURL('cas/linkback.php', array('stateID' => $stateID));
 		list($username, $casattributes) = $this->casValidation($ticket, $service);
 		$ldapattributes = array();
 		if ($this->_ldapConfig['servers']) {
@@ -197,16 +196,16 @@ class sspmod_cas_Auth_Source_CAS  extends SimpleSAML_Auth_Source  {
 	public function authenticate(&$state) {
 		assert('is_array($state)');
 
-		/* We are going to need the authId in order to retrieve this authentication source later. */
+		// We are going to need the authId in order to retrieve this authentication source later
 		$state[self::AUTHID] = $this->authId;
 
 		$stateID = SimpleSAML_Auth_State::saveState($state, self::STAGE_INIT);
 
 
 
-		$serviceUrl = SimpleSAML_Module::getModuleURL('cas/linkback.php', array('stateID' => $stateID));
+		$serviceUrl = SimpleSAML\Module::getModuleURL('cas/linkback.php', array('stateID' => $stateID));
 
-		SimpleSAML_Utilities::redirect($this->_loginMethod, array(
+		\SimpleSAML\Utils\HTTP::redirectTrustedURL($this->_loginMethod, array(
 			'service' => $serviceUrl));
 	}
 
@@ -230,7 +229,7 @@ class sspmod_cas_Auth_Source_CAS  extends SimpleSAML_Auth_Source  {
 
 		SimpleSAML_Auth_State::deleteState($state);
 		// we want cas to log us out
-		SimpleSAML_Utilities::redirect($logoutUrl, array());
+		\SimpleSAML\Utils\HTTP::redirectTrustedURL($logoutUrl);
 	}
 
 }
