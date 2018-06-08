@@ -1632,7 +1632,7 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 			}
 	
 		$sqlselect .= " and r.has_image=1 ";
-		$sql = "SELECT ti.ref value from (" . $sqlselect . ") ti JOIN (" . $searchsql . ") ar ON ti.ref=ar.ref WHERE ar.ref IS NOT NULL " . $orderby . " limit " .$theme_images_number;
+		$sql = "SELECT ti.ref value from (" . $sqlselect . ") ti JOIN (" . $searchsql . ") ar ON ti.ref=ar.ref WHERE ar.ref IS NOT NULL " . $orderby . " limit " . escape_check($theme_images_number);
 
         $images=sql_array($sql,0);
 
