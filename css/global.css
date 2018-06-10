@@ -528,6 +528,7 @@ div.autocomplete ul li {
 #lightbox{  position: absolute; left: 0; width: 100%; z-index: 100; text-align: center; line-height: 0;}
 #lightbox img{ width: auto; height: auto;}
 #lightbox a img{ border: none; }
+.lightboxOverlay {z-index: 10;}
 
 #outerImageContainer{ position: relative; width: 250px; height: 250px; margin: 0 auto; }
 #imageContainer{ padding: 10px; }
@@ -540,8 +541,6 @@ div.autocomplete ul li {
 #prevLink, #nextLink{ width: 49%; height: 100%; background-image: url(data:image/gif;base64,AAAA); /* Trick IE into showing hover */ display: block; }
 #prevLink { left: 0; float: left;}
 #nextLink { right: 0; float: right;}
-#prevLink:hover, #prevLink:visited:hover { background: url(../gfx/lightbox/prevlabel.gif) left 15% no-repeat; }
-#nextLink:hover, #nextLink:visited:hover { background: url(../gfx/lightbox/nextlabel.gif) right 15% no-repeat; }
 
 #imageDataContainer{font-size: 0.7em; margin: 0 auto; line-height: 1.4em; overflow: auto; width: 100%   ; }
 

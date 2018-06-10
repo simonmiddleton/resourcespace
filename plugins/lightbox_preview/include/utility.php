@@ -51,48 +51,23 @@ function getPreviewURL($resource, $alternative = -1, $page = 1)
 	return $url;
 	}
 
-function addLightBox($selector)
+function addLightBox($selector, $url = "", $title = "", $set = "")
     {
-    global $baseurl_short, $lang;
     ?>
     <script>
-    jQuery(document).ready(function()
-        {
+    jQuery(document).ready(function() {
         jQuery('<?php echo $selector ?>')
-            .lightBox({
-                imageLoading: '<?php echo $baseurl_short?>gfx/lightbox/loading.gif',
-                imageBtnClose: '<?php echo $baseurl_short?>gfx/lightbox/close.gif',
-                imageBtnPrev: '<?php echo $baseurl_short?>gfx/lightbox/previous.png',
-                imageBtnNext: '<?php echo $baseurl_short?>gfx/lightbox/next.png',
-                containerResizeSpeed: 250,
-                txtImage: '<?php echo $lang["lightbox-image"]?>',
-                txtOf: '<?php echo $lang["lightbox-of"]?>',
-                shrinkToFit: true
-            });
-        });
+                <?php if ($url != "")
+                    { ?>
+                    .attr('href', '<?php echo $url ?>')
+                    <?php }
+                ?>
+                .attr('data-title', "<?php echo htmlspecialchars(strip_tags(i18n_get_translated($title))); ?>")
+                .attr('data-lightbox', 'lightbox<?php if ($set != "") {echo $set;} ?>')
+                .attr('onmouseup', 'closeModalOnLightBoxEnable();');
+    });
     </script>
     <?php
     }
-
-function setLink($selector, $url, $title, $rel = 'lightbox')
-	{
-	?>
-		<script>
-		jQuery(document).ready(function() {
-			jQuery('<?php echo $selector ?>')
-					.attr('href', '<?php echo $url ?>')
-					.attr('title', "<?php echo htmlspecialchars(strip_tags(i18n_get_translated($title))); ?>")
-					.attr('rel', '<?php echo $rel ?>')
-					.attr('onmouseup', 'closeModalOnLightBoxEnable();');
-		});
-		</script>
-	<?php
-	}
-
-function addLightBoxToLink($selector, $url, $title, $rel = 'lightbox')
-	{
-	setLink($selector, $url, $title, $rel);
-	addLightBox($selector);
-	}
 
 ?>

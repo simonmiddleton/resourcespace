@@ -49,8 +49,8 @@ if (getval("save","")!="" && enforcePostRequest(false))
 		}
 	}
 
-$headerinsert.="<script src=\"../lib/lightbox/js/jquery.lightbox.min.js\" type=\"text/javascript\"></script>";
-$headerinsert.="<link type=\"text/css\" href=\"../lib/lightbox/css/jquery.lightbox.css?css_reload_key=" . $css_reload_key . "\" rel=\"stylesheet\">";
+$headerinsert.="<script src=\"../lib/lightbox/js/lightbox.min.js\" type=\"text/javascript\"></script>";
+$headerinsert.="<link type=\"text/css\" href=\"../lib/lightbox/css/lightbox.min.css?css_reload_key=" . $css_reload_key . "\" rel=\"stylesheet\">";
 
 
 
@@ -110,7 +110,7 @@ if ($errors!="")
 				$path=get_resource_path ($ref, false,"",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
 				}
 		
-		?><a class="lightbox" href="<?php echo $path?>" title="<?php echo htmlspecialchars($displaytitle) ?>"><img width="<?php echo $result[$n]["thumb_width"]?>" height="<?php echo $result[$n]["thumb_height"]?>" src="<?php echo get_resource_path($ref,false,"thm",false,$result[$n]["preview_extension"],-1,1,(checkperm("w") || ($k!="" && isset($watermark))) && $access==1,$result[$n]["file_modified"])?>" class="ImageBorder"></a>
+		?><a class="lightbox-feedback" href="<?php echo $path?>" title="<?php echo htmlspecialchars($displaytitle) ?>"><img width="<?php echo $result[$n]["thumb_width"]?>" height="<?php echo $result[$n]["thumb_height"]?>" src="<?php echo get_resource_path($ref,false,"thm",false,$result[$n]["preview_extension"],-1,1,(checkperm("w") || ($k!="" && isset($watermark))) && $access==1,$result[$n]["file_modified"])?>" class="ImageBorder"></a>
 		<?php } else { ?>		<img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>"/><?php } ?>
 
 		
@@ -160,24 +160,9 @@ if ($errors!="")
 </form>
 <?php } ?>
 </div>
-<?php if ($feedback_resource_select){?>
-<script type="text/javascript">
-    jQuery('.lightbox').lightBox(
-        {
-        imageLoading: '<?php echo $baseurl_short?>gfx/lightbox/loading.gif',
-        imageBtnClose: '<?php echo $baseurl_short?>gfx/lightbox/close.gif',
-        imageBtnPrev: '<?php echo $baseurl_short?>gfx/lightbox/previous.png',
-        imageBtnNext: '<?php echo $baseurl_short?>gfx/lightbox/next.png',
-        keyToClose: 'c', // The key to close the lightBox.
-        keyToPrev: 'p', // The key to show the previous image.
-        keyToNext: 'n', // The key to show the next image.
-        txtImage: '<?php echo $lang["lightbox-image"]?>',
-        txtOf: '<?php echo $lang["lightbox-of"]?>'
-        }
-        ); 
-</script>
-<?php } ?>
-
-<?php
+<?php if ($feedback_resource_select)
+	{
+	addLightBox('.lightbox-feedback');
+	}
 include "../include/footer.php";
 ?>

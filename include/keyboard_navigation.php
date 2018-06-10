@@ -10,8 +10,12 @@ jQuery(document).ready(function() {
        // don't listen to keyboard arrows when focused on form elements
        <?php hook("keyboardnavtextfocus");?>
     }
+    else if (jQuery('#lightbox').is(':visible'))
+        {
+        // Don't listen to keyboard arrows if viewing resources in lightbox
+        }
     else
-    { 
+        {
         var share='<?php echo htmlspecialchars($k) ?>';
         var modAlt=e.altKey;
         var modShift=e.shiftKey;

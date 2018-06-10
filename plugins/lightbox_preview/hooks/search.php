@@ -24,13 +24,8 @@ function HookLightbox_previewSearchReplacefullscreenpreviewicon()
 			echo $lang["fullscreenpreview"]?>"></a></span>
 			
 	<?php
-	setLink('#previewlink' . $ref, $url, $result[$n]["field".$view_title_field]);
+	addLightBox('#previewlink' . $ref, $url, $result[$n]["field".$view_title_field]);
 	return true;
-	}
-
-function HookLightbox_previewSearchEndofsearchpage()
-	{
-	addLightBox('.IconPreview a');
 	}
 
 ?>

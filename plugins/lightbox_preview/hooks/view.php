@@ -9,6 +9,17 @@ function HookLightbox_previewViewRenderbeforerecorddownload()
 		return false;	
 		}
 	
+    ?>
+    <script type="text/javascript">
+        // Simulate clicking of preview button when clicking View
+        jQuery(document).on('click', '#previewlink', function(event) {
+            event.preventDefault();
+            jQuery('#previewimage').click(); 
+            ModalClose();
+        });
+    </script>
+    <?php
+
 	global $resource, $title_field;
 
     $url = getPreviewURL($resource);
@@ -26,8 +37,7 @@ function HookLightbox_previewViewRenderbeforerecorddownload()
         // Handle first preview (regardless if it is multi page or just one preview)
         if(1 == $i)
             {
-            setLink('#previewimagelink', $url, $title);
-            setLink('#previewlink', $url, $title, 'lightbox-other');
+            addLightBox('#previewimagelink', $url, $title, $resource['ref']);
 
             continue;
             }
@@ -40,11 +50,11 @@ function HookLightbox_previewViewRenderbeforerecorddownload()
             continue;
             }
             ?>
-        <a href="<?php echo $preview_url; ?>"
-           rel="lightbox"
-           title="<?php echo htmlspecialchars(i18n_get_translated($title)); ?>"
-           onmouseup="closeModalOnLightBoxEnable();">
-       </a>
+            <a href="<?php echo $preview_url; ?>"
+                data-lightbox='lightbox<?php echo $resource['ref']; ?>'
+                data-title="<?php echo htmlspecialchars(i18n_get_translated($title)); ?>"
+                onmouseup="closeModalOnLightBoxEnable();">
+            </a>
         <?php
         }
     }
@@ -73,20 +83,10 @@ function HookLightbox_previewViewRenderaltthumb()
 		<img src="<?php echo $alt_thm; ?>" class="AltThumb">
 	</a>
 	<?php
-	setLink('#altlink_' . $n, $url, $altfiles[$n]['name']);
+	addLightBox('#altlink_' . $n, $url, $altfiles[$n]['name'], "alt");
 
 	return true;
 	}
-
-function HookLightbox_previewViewRenderbeforeresourcedetails()
-    {
-	if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false)
-		{
-		return false;	
-		}
-    addLightBox('a[rel="lightbox"]');
-    addLightBox('a[rel="lightbox-other"]');
-    }
 
 function HookLightbox_previewViewAftersearchimg()
 	{
