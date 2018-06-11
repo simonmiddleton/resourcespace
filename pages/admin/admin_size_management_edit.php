@@ -67,7 +67,6 @@ if (getval("save", false) && enforcePostRequest(false))
 			}
 		}
 
-	$cols["padtosize"]=(getval('padtosize',false) ? "1" : "0");
 	$cols["allow_preview"]=(getval('allowpreview',false) ? "1" : "0");
 	$cols["allow_restricted"]=(getval('allowrestricted',false) ? "1" : "0");
 
@@ -149,12 +148,6 @@ include "../../include/header.php";
 			<?php
 			}
 		?>
-
-		<div class="Question">
-			<label><?php echo $lang['property-pad_to_size']; ?></label>
-			<input name="padtosize" type="checkbox" value="1"<?php if($record['padtosize']) {?> checked="checked"<?php }?>>
-			<div class="clearerleft"></div>
-		</div>
 
 		<div class="Question">
 			<label><?php echo $lang['property-allow_preview']; ?></label>
