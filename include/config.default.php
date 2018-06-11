@@ -2364,6 +2364,9 @@ $geo_search_restrict=array
 	# ,array(1,1,2,2) # Example omission zone 3
 	);
 
+# Add OpenLayers configuration options to this variable to overwrite all other options. 
+$geo_override_options = "";
+
 
 # QuickLook previews (Mac Only)
 # If configured, attempt to produce a preview for files using Mac OS-X's built in QuickLook preview system which support multiple files.
