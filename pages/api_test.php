@@ -14,7 +14,7 @@ $api_function=getvalescaped("api_function","");
 
 if ($api_function!="")
     {
-    $fct = new ReflectionFunction($api_function);
+    $fct = new ReflectionFunction("api_" . $api_function);
     $paramcount=$fct->getNumberOfParameters();
     $rparamcount=$fct->getNumberOfRequiredParameters();
     }
@@ -26,7 +26,7 @@ if (getval("submitting","")!="" && $api_function!="")
     
     # Execute API call.
     $query="function=" . $api_function;
-    for ($n=1;$n<$paramcount;$n++)
+    for ($n=1;$n<=$paramcount;$n++)
         {
         $query.="&param" . $n . "=" . urlencode(getval("param" . $n,""));
         }
@@ -67,6 +67,7 @@ if (getval("submitting","")!="" && $api_function!="")
     ?>
     
 </select>
+<?php if ($api_function!="") { ?>&nbsp;&nbsp;<a target="_blank" href="https://www.resourcespace.com/knowledge-base/api/<?php echo $api_function ?>"><?php echo $lang["api-view-documentation"] ?></a><?php } ?>
 </div>
 
 <?php

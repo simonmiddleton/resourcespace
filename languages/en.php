@@ -2691,3 +2691,6 @@ $lang["property-personal_data"]="May contain personal data";
 $lang["api-test-tool"]="API test tool";
 $lang["api-function"]="API function";
 $lang["api-help"]='Please refer to the <a target="_blank" href="https://www.resourcespace.com/knowledge-base/api">API documentation</a> for function specifics. Be careful - any commands you enter will be executed using your live data.';
+$lang["api-view-documentation"]="View documentation";
+
+$lang["font"]="Font";
