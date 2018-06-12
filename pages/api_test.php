@@ -67,6 +67,7 @@ if (getval("submitting","")!="" && $api_function!="")
     ?>
     
 </select>
+<?php if ($api_function!="") { ?>&nbsp;&nbsp;<a target="_blank" href="https://www.resourcespace.com/knowledge-base/api/<?php echo $api_function ?>"><?php echo $lang["api-view-documentation"] ?></a><?php } ?>
 </div>
 
 <?php
