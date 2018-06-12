@@ -26,7 +26,7 @@ if (getval("submitting","")!="" && $api_function!="")
     
     # Execute API call.
     $query="function=" . $api_function;
-    for ($n=1;$n<$paramcount;$n++)
+    for ($n=1;$n<=$paramcount;$n++)
         {
         $query.="&param" . $n . "=" . urlencode(getval("param" . $n,""));
         }
