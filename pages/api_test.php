@@ -10,6 +10,8 @@ include_once "../include/api_functions.php";
 include_once "../include/api_bindings.php";
 include "../include/header.php";
 
+if (!$enable_remote_apis) {exit("API not enabled.");}
+
 $api_function=getvalescaped("api_function","");
 
 if ($api_function!="")

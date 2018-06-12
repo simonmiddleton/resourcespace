@@ -56,8 +56,14 @@ include ("../../include/header.php");
 
 		if (checkperm('a'))
 			{
+			
+			if ($enable_remote_apis)
+			  {
+			  ?>
+			  <li><i aria-hidden="true" class="fa fa-fw fa-stethoscope"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/api_test.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["api-test-tool"]?></a></li>
+			  <?php
+			  }
 			?>
-			<li><i aria-hidden="true" class="fa fa-fw fa-stethoscope"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/api_test.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["api-test-tool"]?></a></li>
 			<li><i aria-hidden="true" class="fa fa-fw fa-check-square"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/check.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["installationcheck"]?></a></li>
 			<li><i aria-hidden="true" class="fa fa-fw fa-history"></i>&nbsp;<a href="<?php echo $baseurl_short; ?>pages/admin/admin_system_log.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["systemlog"]; ?></a></li>
 			<li><i aria-hidden="true" class="fa fa-fw fa-terminal"></i>&nbsp;<a href="<?php echo $baseurl?>/pages/team/team_system_console.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["systemconsole"]?></a></li>
