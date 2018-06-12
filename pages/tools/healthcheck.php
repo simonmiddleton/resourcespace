@@ -57,48 +57,37 @@ if ($diff_days>5) {exit("FAIL - cron was executed " . round($diff_days,0) . " da
 
 
 // All is OK.
-// If the Subversion extension is installed, return the repo branch name and also the revision number after the OK message.
-$version="";
-if (function_exists("svn_info"))
+
+// Formulate a version number. Start with the one set in version.php, which is already changed on each release branch, and also when building a new release ZIP.
+$version=" " . $productversion;
+
+// Work out the Subversion revision if possible.
+$svncommand = "svn info "  . __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
+$svninfo=run_command($svncommand);
+$matches = array();
+
+// If a branch, add on the branch name.
+if (preg_match('/\nURL: .+\/branches\/(.+)\\n/', $svninfo, $matches)!=0)
     {
-    $svn_info=@svn_info(dirname(__FILE__) . "/../../",false);
-    if (is_array($svn_info))
-        {
-	// Fetch the SVN revision. Unfortunately this needs to use the command line 
-	// "svnversion" utility as the revision provided by svn_info()
-	// is the latest revision of the repo itselfand not the local checkout - probably a bug.
-        $svnrevision=trim(shell_exec("svnversion ". dirname(__FILE__)));      
-
-        $svn_url=explode("/",$svn_info[0]["url"]);
-        $version.=" " . $svn_url[count($svn_url)-1] . "." . $svnrevision;
-        }
+    $version .= " BRANCH " . $matches[1];
     }
-else
-	{
-	$svncommand = "svn info "  . __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
-	$svninfo=run_command($svncommand);
-	$matches = array();
 	
-	// Get version
-	if (preg_match('/\nURL: .+\/releases\/(.+)\\n/', $svninfo, $matches)!=0)
-		{
-		$version .= " " . $matches[1];
-		}
-	elseif (preg_match('/\nURL: .+\/branches\/(.+)\\n/', $svninfo, $matches)!=0)
-		{
-		$version .= " BRANCH " . $matches[1];
-		}
-	else
-		{
-		$version .= " TRUNK ";
-		}	
-	// Get revision
-	if (preg_match('/\nRevision: (\d+)/i', $svninfo, $matches)!=0)
-		{
-		$version .= "." . $matches[1];
-		}
-	}
+// Add on the revision if we can find it.
+// If 'svnversion' is available, run this as it will produce a better output with 'M' signifying local modifications.
+$svncommand = "svnversion "  . __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
+$svnversion=run_command($svncommand);
+if ($svnversion!="")
+    {
+    # 'svnversion' worked - use this value and also flag local mods using a detectable string.
+    $version.=" r" . str_replace("M","(mods)",$svnversion);    
+    }
+elseif (preg_match('/\nRevision: (\d+)/i', $svninfo, $matches)!=0)
+    {
+    // No 'svnversion' command, but we found the revision in the results from 'svn info'.
+    $version .= " r" . $matches[1];
+    }
 
+    
 echo("OK" . $version);
 
 // Warning if quota set and nearing quota limit
