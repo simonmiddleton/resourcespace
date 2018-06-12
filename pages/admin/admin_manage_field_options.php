@@ -187,8 +187,9 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
             ?>
             <tr id="node_<?php echo $new_record_ref; ?>">
                 <td>
-                    <input type="text" name="option_name" form="option_<?php echo $new_record_ref; ?>" value="<?php echo htmlspecialchars($new_option_name); ?>" onblur="this.value=this.value.trim()" >
+                    <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $new_record_ref; ?>" value="<?php echo htmlspecialchars($new_option_name); ?>" onblur="this.value=this.value.trim()" >
                 </td>
+                <td align="right">0</td>
                 <td>
                     <div class="ListTools">
                         <form id="option_<?php echo $new_record_ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
@@ -414,8 +415,9 @@ if($ajax)
             ?>
             <thead>
                 <tr class="ListviewTitleStyle">
-                    <td>Name</td>
-                    <td><div class="ListTools"><?php echo $lang['tools']; ?></div></td>
+                    <td><?php echo $lang['name']; ?></td>
+                    <td><?php echo $lang['resources']; ?></td>
+                    <td> </td>
                 </tr>
             </thead>
             <tbody>
@@ -443,9 +445,14 @@ if($ajax)
             ?>
             <tr id="node_<?php echo $node['ref']; ?>">
                 <td>
-                    <input type="text" name="option_name" form="option_<?php echo $node['ref']; ?>" value="<?php echo htmlspecialchars($node['name']); ?>" onblur="this.value=this.value.trim()" >
+                    <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $node['ref']; ?>" value="<?php echo htmlspecialchars($node['name']); ?>" onblur="this.value=this.value.trim()" >
                 </td>
+                <td align="right">
+                    
+                    <?php echo $node['use_count'] ?></td>
+                
                 <td>
+                    
                     <div class="ListTools">
                         <form id="option_<?php echo $node['ref']; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
                             <input type="hidden" name="node_ref" value="<?php echo $node['ref']; ?>">

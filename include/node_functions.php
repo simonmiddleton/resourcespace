@@ -236,7 +236,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         $filter_by_name = " AND `name` LIKE '%" . escape_check($name) . "%'";
         }
  
-    $query = sprintf('SELECT * FROM node WHERE resource_type_field = \'%s\' %s AND %s ORDER BY order_by ASC %s',
+    $query = sprintf('SELECT *,(select count(resource) from resource_node where resource_node.resource>0 and resource_node.node=node.ref) as use_count FROM node WHERE resource_type_field = \'%s\' %s AND %s ORDER BY order_by ASC %s',
         escape_check($resource_type_field),
         $filter_by_name,
         (trim($parent)=="") ? 'parent IS NULL' : "parent = '" . escape_check($parent) . "'",
@@ -485,8 +485,9 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
         ?>
         <tr id="new_node_<?php echo $parent; ?>_children">
             <td>
-                <input type="text" name="new_option_name" form="new_option" value="">
+                <input type="text" class="stdwidth" name="new_option_name" form="new_option" value="">
             </td>
+            <td> </td>
             <td>
                 <div class="ListTools">
                     <form id="new_option" method="post" action="<?php echo $form_action; ?>">
