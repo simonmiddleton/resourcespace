@@ -1,0 +1,105 @@
+<?php
+include "../include/db.php";
+include "../include/authenticate.php";
+include_once "../include/general.php";
+include_once "../include/search_functions.php";
+include_once "../include/resource_functions.php";
+include_once "../include/collections_functions.php";
+include_once "../include/image_processing.php";
+include_once "../include/api_functions.php";
+include_once "../include/api_bindings.php";
+include "../include/header.php";
+
+$api_function=getvalescaped("api_function","");
+
+if ($api_function!="")
+    {
+    $fct = new ReflectionFunction($api_function);
+    $paramcount=$fct->getNumberOfParameters();
+    $rparamcount=$fct->getNumberOfRequiredParameters();
+    }
+    
+$output="";
+if (getval("submitting","")!="" && $api_function!="")
+    {
+    $output="";
+    
+    # Execute API call.
+    $query="function=" . $api_function;
+    for ($n=1;$n<$paramcount;$n++)
+        {
+        $query.="&param" . $n . "=" . urlencode(getval("param" . $n,""));
+        }
+    $output.="Query: " . $query . "\n\n";
+    $output.="Response:\n";
+    $output.=@execute_api_call($query);
+    
+    }
+
+?>
+
+
+<div class="RecordBox">
+<div class="RecordPanel">
+<div class="Title"><?php echo $lang['api-test-tool']; ?></div>
+
+<p><?php echo $lang["api-help"] ?></p>
+
+<form id="api-form" method="post" action="<?php echo $baseurl_short?>pages/api_test.php" onSubmit="return CentralSpacePost(this);">
+<?php generateFormToken("api-form"); ?>
+
+<div class="Question">
+<label><?php echo $lang["api-function"] ?></label>
+<select class="stdwidth" name="api_function" onChange="CentralSpacePost(document.getElementById('api-form'));">
+    <option value=""><?php echo $lang["select"] ?></option>
+    <?php
+    # Allow selection from built in functions
+    $functions=get_defined_functions();$functions=$functions["user"];asort($functions);
+    foreach ($functions as $function)
+        {
+            if (substr($function,0,4)=="api_")
+                {
+                ?>
+                <option <?php if ($function=="api_" . $api_function) {echo " selected";} ?>><?php echo substr($function,4) ?></option>
+                <?php
+                }
+        }
+    ?>
+    
+</select>
+</div>
+
+<?php
+if ($api_function!="")
+    {
+    for($n=1;$n<=$paramcount;$n++)
+        {
+        ?>
+        <div class="Question">
+        <label>Param<?php echo $n ?> <?php if ($n<=$rparamcount) {echo "*";} ?></label>
+        <input <?php if ($n<=$rparamcount) {echo "required";} ?> type="text" name="param<?php echo $n ?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("param" . $n,"")) ?>"/>
+        </div>
+        <?php
+        }
+    }
+
+
+?>
+<div class="QuestionSubmit">
+    <label></label>
+    <input type="hidden" name="submitting" value="" id="submitting" />
+    <input type="submit" name="submit" value="Submit" onclick="document.getElementById('submitting').value='true';" />
+</div>
+
+</form>
+
+<?php if ($output!="") { ?>
+<pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:black;color:white;padding:5px;border-left:10px solid #666;"><?php echo htmlspecialchars($output) ?></pre>
+<?php } ?>
+
+
+</div>
+</div>
+<?php
+include "../include/footer.php";
+?>
