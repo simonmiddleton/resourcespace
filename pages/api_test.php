@@ -14,7 +14,7 @@ $api_function=getvalescaped("api_function","");
 
 if ($api_function!="")
     {
-    $fct = new ReflectionFunction($api_function);
+    $fct = new ReflectionFunction("api_" . $api_function);
     $paramcount=$fct->getNumberOfParameters();
     $rparamcount=$fct->getNumberOfRequiredParameters();
     }
