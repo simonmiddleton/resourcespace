@@ -852,6 +852,8 @@ if (isset($result_title_height))
 	<?php
 	}
 
+hook('searchresultsheader');
+
 #if (is_array($result)||(isset($collections)&&(count($collections)>0)))
 
 if($enable_themes && $enable_theme_breadcrumbs && !$search_titles && isset($theme_link) && $k=="")
@@ -1063,19 +1065,23 @@ if($responsive_ui)
 		$modifiedFields = hook('modifyorderfields', '', array($orderFields));
 		if ($modifiedFields)
 			$orderFields = $modifiedFields;
-		?>
-		<div id="searchSortOrderContainer" class="InpageNavLeftBlock ">
-		<?php
 
-		if(!hook('render_sort_order_differently', '', array($orderFields)))
-			{
-			render_sort_order($orderFields);
-			}
+        if (!hook('sortordercontainer'))
+            {
+		    ?>
+		    <div id="searchSortOrderContainer" class="InpageNavLeftBlock ">
+		    <?php
 
-		hook('sortorder');
-		?>
-		</div>
-		<?php
+		    if(!hook('render_sort_order_differently', '', array($orderFields)))
+		    	{
+		    	render_sort_order($orderFields);
+		    	}
+
+		    hook('sortorder');
+		    ?>
+		    </div>
+		    <?php
+            }
 		}
 
 		if($display_selector_dropdowns || $perpage_dropdown)
@@ -1269,6 +1275,8 @@ if($responsive_ui)
 			include "../include/search_public.php";
 			}
 	if ($search_includes_resources) {
+
+    hook('searchresources');
 	
 	# work out common keywords among the results
 	if (is_array($result) && (count($result)>$suggest_threshold) && (strpos($search,"!")===false) && ($suggest_threshold!=-1))
@@ -1404,18 +1412,21 @@ $url=generateURL($baseurl . "/pages/search.php",$searchparams);
 <?php
 if(!$modal)
     {
-    ?>
-    <!--Bottom Navigation - Archive, Saved Search plus Collection-->
-    <div class="BottomInpageNav">
-        <?php hook('add_bottom_in_page_nav_left'); ?>
-        <div class="BottomInpageNavRight">	
-        <?php 
-        if (isset($draw_pager)) {pager(false);} 
+    if(!hook('bottomnavigation'))
+        {
         ?>
+        <!--Bottom Navigation - Archive, Saved Search plus Collection-->
+        <div class="BottomInpageNav">
+            <?php hook('add_bottom_in_page_nav_left'); ?>
+            <div class="BottomInpageNavRight">	
+           <?php 
+           if (isset($draw_pager)) {pager(false);} 
+            ?>
+            </div>
+            <div class="clearerleft"></div>
         </div>
-        <div class="clearerleft"></div>
-    </div>
-	<?php
+    	<?php
+        }
 	}
 } # End of replace all results hook conditional
 

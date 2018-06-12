@@ -49,6 +49,8 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     //$public = getvalescaped('public', 0, true);
     $coldata["public"]          = getval('public', 0, true);
     $coldata["keywords"]        = getval("keywords","");
+    hook('saveadditionalfields');
+
     for($n=1;$n<=$theme_category_levels;$n++)
         {
         if ($n==1)
