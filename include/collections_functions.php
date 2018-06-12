@@ -1606,6 +1606,7 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
             // Add search sql so we honour permissions
             $searchsql = do_search("",'','',0,-1,'desc',false,0,false,false,'',false,false,true,false,true);
 			$orderby=" order by ti.use_as_theme_thumbnail desc";
+			$orderby_theme='';
 			for ($n=2;$n<=count($themes)+1;$n++)
                 {
 				if (isset($themes[$n-1]))
@@ -1617,7 +1618,7 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 					if ($n<=$theme_category_levels)
                         {
 						# Resources in sub categories can be used but should be below those in the current category
-						$orderby.=", theme".$n . " ";
+						$orderby_theme=" order by theme".$n;
                         }
                     }
                 } 
@@ -1632,7 +1633,7 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 			}
 	
 		$sqlselect .= " and r.has_image=1 ";
-		$sql = "SELECT ti.ref value from (" . $sqlselect . ") ti JOIN (" . $searchsql . ") ar ON ti.ref=ar.ref WHERE ar.ref IS NOT NULL " . $orderby . " limit " . escape_check($theme_images_number);
+		$sql = "SELECT ti.ref value from (" . $sqlselect . $orderby_theme . ") ti JOIN (" . $searchsql . ") ar ON ti.ref=ar.ref WHERE ar.ref IS NOT NULL " . $orderby . " limit " . escape_check($theme_images_number);
 
         $images=sql_array($sql,0);
 
