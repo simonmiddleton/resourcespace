@@ -11,6 +11,7 @@ include_once "../include/api_bindings.php";
 include "../include/header.php";
 
 if (!$enable_remote_apis) {exit("API not enabled.");}
+if (!checkperm("a")) {exit("Access denied");}
 
 $api_function=getvalescaped("api_function","");
 
@@ -30,11 +31,11 @@ if (getval("submitting","")!="" && $api_function!="")
     $query="function=" . $api_function;
     for ($n=1;$n<=$paramcount;$n++)
         {
-        $query.="&param" . $n . "=" . urlencode(getval("param" . $n,""));
+        if (getval("param" . $n,"")!="") { $query.="&param" . $n . "=" . urlencode(getval("param" . $n,"")); }
         }
     $output.="Query: " . $query . "\n\n";
     $output.="Response:\n";
-    $output.=@execute_api_call($query);
+    $output.=execute_api_call($query);
     
     }
 
@@ -98,6 +99,31 @@ if ($api_function!="")
 
 <?php if ($output!="") { ?>
 <pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:black;color:white;padding:5px;border-left:10px solid #666;"><?php echo htmlspecialchars($output) ?></pre>
+
+
+<br /><br />
+<h2><?php echo $lang["api-php-code"] ?></h2>
+<p><?php echo $lang["api-php-help"] ?></p>
+
+<style>.codecomment {color:#090;}</style>
+<pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:white;color:black;padding:10px;">
+&lt;?php
+
+<span class="codecomment">// Set the private API key for the user (from the user account page) and the user we're accessing the system as.</span>
+$private_key="<?php echo get_api_key($userref) ?>";
+$user="<?php echo $username ?>";
+
+<span class="codecomment">// Formulate the query</span>
+$query="user=" . $user . "&amp;<?php echo htmlspecialchars($query) ?>";
+
+<span class="codecomment">// Sign the query using the private key</span>
+$sign=hash("sha256",$private_key . $query);
+
+<span class="codecomment">// Make the request and output the JSON results.</span>
+$results=json_decode(file_get_contents("<?php echo htmlspecialchars($baseurl) ?>/api/?" . $query . "&sign=" . $sign));
+print_r($results);
+</pre>
+
 <?php } ?>
 
 
