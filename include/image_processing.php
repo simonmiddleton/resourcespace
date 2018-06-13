@@ -2716,6 +2716,8 @@ function upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,
 	# Download a file from the provided URL, then upload it as if it was a local upload.
 	global $userref;
 	$file_path=get_temp_dir(false,$userref) . "/" . basename($url); # Temporary path creation for the downloaded file.
+    $s=explode("?",$file_path);$file_path=$s[0]; # Remove query string if it was present in the URL
+
 	copy($url, $file_path); # Download the file.
 	return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);	# Process as a normal upload...
 	}
