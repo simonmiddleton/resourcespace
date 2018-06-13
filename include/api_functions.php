@@ -62,7 +62,7 @@ function execute_api_call($query)
         }
     $eval.=");";
     debug("API: \$eval = {$eval}");
-    return json_encode(eval($eval),JSON_PRETTY_PRINT);
+    return json_encode(eval($eval),(defined('JSON_PRETTY_PRINT')?JSON_PRETTY_PRINT:0));
     }
     
 /**
