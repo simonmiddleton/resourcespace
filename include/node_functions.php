@@ -212,7 +212,7 @@ function get_node($ref, array &$returned_node)
 * 
 * @return array
 */
-function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '')
+function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', $use_count=false)
     {
     $return_nodes = array();
 	
@@ -236,7 +236,11 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         $filter_by_name = " AND `name` LIKE '%" . escape_check($name) . "%'";
         }
  
-    $query = sprintf('SELECT *,(select count(resource) from resource_node where resource_node.resource>0 and resource_node.node=node.ref) as use_count FROM node WHERE resource_type_field = \'%s\' %s AND %s ORDER BY order_by ASC %s',
+    // Option to include a usage count alongside each node
+    $use_count_sql="";
+    if ($use_count) {$use_count_sql=",(select count(resource) from resource_node where resource_node.resource>0 and resource_node.node=node.ref) as use_count";}
+    
+    $query = sprintf('SELECT * ' . $use_count_sql . ' FROM node WHERE resource_type_field = \'%s\' %s AND %s ORDER BY order_by ASC %s',
         escape_check($resource_type_field),
         $filter_by_name,
         (trim($parent)=="") ? 'parent IS NULL' : "parent = '" . escape_check($parent) . "'",
@@ -609,7 +613,7 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
 *
 * @return boolean
 */
-function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order_by, $last_node = false)
+function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order_by, $last_node = false, $use_count=0)
     {
     global $baseurl_short, $lang;
 
@@ -632,7 +636,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     // Determine Node depth
     $node_depth_level = get_tree_node_level($ref);
 
-    $all_nodes = get_nodes($resource_type_field, NULL, TRUE);
+    $all_nodes = get_nodes($resource_type_field, NULL, TRUE, NULL, NULL, '', TRUE);
 
     // We remove the current node from the list of parents for it( a node should not add to itself)
     $nodes = $all_nodes;
@@ -680,6 +684,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                         ?>
                     </select>
                 </td>
+                <td><?php echo $use_count ?></td>
                 <td>
                     <div class="ListTools">
                         <form id="option_<?php echo $ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $resource_type_field; ?>">

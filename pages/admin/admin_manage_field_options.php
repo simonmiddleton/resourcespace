@@ -155,7 +155,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
 // [Toggle tree node]
 if('true' === $ajax && 'true' === getval('draw_tree_node_table', '') && 7 == $field_data['type'])
     {
-    $nodes         = get_nodes($field, $node_ref);
+    $nodes         = get_nodes($field, $node_ref, FALSE, NULL, NULL, '', true);
     $nodes_counter = count($nodes);
     $i             = 0;
     foreach($nodes as $node)
@@ -165,7 +165,7 @@ if('true' === $ajax && 'true' === getval('draw_tree_node_table', '') && 7 == $fi
             {
             $last_node = true;
             }
-        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node);
+        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node, $node['use_count']);
         }
     exit();
     }
@@ -423,7 +423,7 @@ if($ajax)
             <tbody>
         <?php
         // Render existing nodes
-        $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name);
+        $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name, true);
 
         if(0 == count($nodes))
             {
@@ -431,7 +431,7 @@ if($ajax)
 
             migrate_resource_type_field_check($fieldinfo);
 
-            $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name);
+            $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name, true);
             }
 
         if((bool) $field_data['automatic_nodes_ordering'])
@@ -505,7 +505,7 @@ if($ajax)
 
 <?php
 // Category trees
-$tree_nodes = get_nodes($field);
+$tree_nodes = get_nodes($field,null,false,null,null,'',true,'',true);
 if($field_data['type'] == 7 && !($tree_nodes==""))
     {
     $nodes_counter = count($tree_nodes);
@@ -521,7 +521,7 @@ if($field_data['type'] == 7 && !($tree_nodes==""))
             $last_node = true;
             }
 
-        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node);
+        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node, $node['use_count']);
         }
     }
 
