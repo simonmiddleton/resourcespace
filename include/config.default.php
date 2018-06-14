@@ -2124,6 +2124,8 @@ $staticsync_title_includes_path=true;
 # Should the sync'd resource files be 'ingested' i.e. moved into ResourceSpace's own filestore structure?
 # In this scenario, the sync'd folder merely acts as an upload mechanism. If path to metadata mapping is used then this allows metadata to be extracted based on the file's location.
 $staticsync_ingest=false;
+# Option to force ingest of existing files into filestore if switching from $staticsync_ingest=false to $staticsync_ingest=true;
+$staticsync_ingest_force=false;
 # Try to rotate images automatically when not ingesting resources? If set to TRUE you must also set $imagemagick_preserve_profiles=true;
 $autorotate_no_ingest=false;
 # Try to rotate images automatically when ingesting resources? If set to TRUE you must also set $imagemagick_preserve_profiles=true;

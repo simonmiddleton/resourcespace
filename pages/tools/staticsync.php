@@ -61,6 +61,7 @@ $merge_filename_with_title=false;
 
 $count = 0;
 $done=array();
+$errors = array();
 $syncedresources = sql_query("SELECT ref, file_path, file_modified, archive FROM resource WHERE LENGTH(file_path)>0 AND file_path LIKE '%/%'");
 foreach($syncedresources as $syncedresource)
     {
@@ -73,7 +74,7 @@ foreach($syncedresources as $syncedresource)
 $alternativefiles=array();
 
 // Add all the synced alternative files to the list of completed
-if(isset($staticsync_alternative_file_text) && !$staticsync_ingest)
+if(isset($staticsync_alternative_file_text) && (!$staticsync_ingest || $staticsync_ingest_force))
     {
     // Add any staticsynced alternative files to the array so we don't process them unnecessarily
     $syncedalternatives = sql_query("SELECT ref, file_name, resource, creation_date FROM resource_alt_files WHERE file_name like '%" . escape_check($syncdir) . "%'");
@@ -161,7 +162,7 @@ function ProcessFolder($folder)
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
            $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
            $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field,
-           $staticsync_whitelist_folders;
+           $staticsync_whitelist_folders,$staticsync_ingest_force,$errors;
     
     $collection = 0;
     $treeprocessed=false;
@@ -182,7 +183,7 @@ function ProcessFolder($folder)
         $shortpath       = str_replace($syncdir . '/', '', $fullpath);
         $shortpath_parts = explode('/', $shortpath);
         
-        if(isset($staticsync_alternative_file_text) && strpos($file,$staticsync_alternative_file_text)!==false)
+        if(isset($staticsync_alternative_file_text) && strpos($file,$staticsync_alternative_file_text)!==false && !$staticsync_ingest_force)
             {
             // Set a flag so we can process this later in case we don't processs this along with a primary resource file (it may be a new alternative file for an existing resource)
             $alternativefiles[]=$syncdir . '/' . $shortpath;
@@ -522,6 +523,37 @@ function ProcessFolder($folder)
                     echo " *** Skipping file - it was not possible to move the file (still being imported/uploaded?)" . PHP_EOL;
                     }                
                 }
+            elseif($staticsync_ingest_force)
+                {
+                // If the resource has a path but $ingest is true then the $ingest has been changed, need to copy original file into filestore
+                global $get_resource_path_fpcache;
+                $existing = $done[$shortpath]["ref"];
+                $alternative = isset($done[$shortpath]["alternative"]) ? $done[$shortpath]["alternative"] : -1;
+                
+                echo "File already imported - $shortpath (resource #$existing, alternative #$alternative). Ingesting.." . PHP_EOL;
+               
+                $get_resource_path_fpcache[$existing] = ""; // Forces get_resource_path to ignore the syncdir file_path
+                $extension=pathinfo($shortpath, PATHINFO_EXTENSION);
+                $destination=get_resource_path($existing,true,"",true,$extension,-1,1,false,"",$alternative);
+                $result=rename($syncdir . "/" . $shortpath,$destination);
+                if ($result===false)
+                    {
+                    # The rename failed. Log an error and continue}
+                    $errors[] = "Unable to move resource " . $existing . " from " . $syncdir . DIRECTORY_SEPARATOR . $shortpath  . " to " . $destination;
+					}
+                else
+                    {
+                    chmod($destination,0777);
+                    if($alternative == -1)
+                        {
+                        sql_query("UPDATE resource SET file_path=NULL WHERE ref = '{$existing}'");
+                        }
+                    else
+                        {
+                        sql_query("UPDATE resource_alt_files SET file_name = '" . escape_check($file) . "' WHERE resource = '{$existing}' AND ref='{$alternative}'");                            
+                        }
+                    }
+                }
             elseif (!isset($done[$shortpath]["archive"]) // Check modified times and and update previews if no existing archive state is set,
                     || (isset($resource_deletion_state) && $done[$shortpath]["archive"]!=$resource_deletion_state) // or if resource is not in system deleted state,
                     || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state)) // or resource is currently in staticsync deleted state and needs to be reinstated
@@ -756,6 +788,12 @@ if (!$staticsync_ingest)
     sql_query("DELETE FROM collection WHERE theme IS NOT NULL AND LENGTH(theme) > 0 AND 
                 (SELECT count(*) FROM collection_resource cr WHERE cr.collection=collection.ref) = 0;");
 
+    if(count($errors) > 0)
+        {
+        echo PHP_EOL . "ERRORS: -" . PHP_EOL;
+        echo implode(PHP_EOL,$errors);
+        }
+        
     echo "...Complete" . PHP_EOL;
     }
 
