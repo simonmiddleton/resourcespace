@@ -18,6 +18,8 @@ $simpleldap['email_attribute']       = getvalescaped('email_attribute', '');
 $simpleldap['phone_attribute']       = getvalescaped('phone_attribute', '');
 $simpleldap['LDAPTLS_REQCERT_never'] = getvalescaped('LDAPTLS_REQCERT_never', false);
 
+$escaped_ldapuser=ldap_escape($simpleldap['ldapuser'], '', LDAP_ESCAPE_DN);
+
 // Test we can connect to domain
 $bindsuccess=false;	
 
@@ -37,13 +39,13 @@ else
 
 if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1) 
 	{
-    if(strpos($simpleldap['ldapuser'], $userdomain) !== false)
+    if(strpos($escaped_ldapuser, $userdomain) !== false)
         {
-        $binduserstring = $simpleldap['ldapuser'];
+        $binduserstring = $escaped_ldapuser;
         }
     else
         {
-        $binduserstring = "{$simpleldap['ldapuser']}@{$userdomain}";
+        $binduserstring = "{$escaped_ldapuser}@{$userdomain}";
         }
 
 	debug("LDAP - Attempting to bind to AD server as : " . $binduserstring);
@@ -65,7 +67,7 @@ else
 	$searchdns=explode(";",$simpleldap['basedn']);
 	foreach($searchdns as $searchdn)
 		{
-		$binduserstring = $simpleldap['loginfield'] . "=" . $simpleldap['ldapuser'] . "," . $searchdn;
+		$binduserstring = $simpleldap['loginfield'] . "=" . $escaped_ldapuser . "," . $searchdn;
 		debug("LDAP - Attempting to bind to LDAP server as : " . $binduserstring . ": " .$simpleldap['ldappassword']);
 		$login = @ldap_bind( $ds, $binduserstring, $simpleldap['ldappassword'] );
 		if (!$login)
