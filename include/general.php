@@ -3703,9 +3703,27 @@ function get_simple_search_fields()
     return $return;
     }
 
-function check_display_condition($n, $field)
+
+/**
+* Check display condition for a field. 
+* 
+* @uses get_nodes()
+* @uses extract_node_options()
+* @uses get_resource_nodes()
+* @uses get_node_by_name()
+* 
+* @param integer $n         Question sequence number on the rendered form
+* @param array   $field     Field on which we check display conditions
+* @param array   $fields    Resource field data and properties as returned by get_resource_field_data()
+* @param boolean $render_js Set to TRUE to render the client side code for checking display conditions or FALSE otherwise
+* 
+* TODO: split rendering the JS parts into different function(s)
+* 
+* @return boolean Returns TRUE if no display condition or if field shoud be displayed or FALSE if field should not be displayed.
+*/
+function check_display_condition($n, array $field, array $fields, $render_js)
     {
-    global $fields, $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
+    global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
 
     if(trim($field['display_condition']) == "")
         {
@@ -3717,9 +3735,9 @@ function check_display_condition($n, $field)
     $condref          = 0;
     $scriptconditions = array();
 
-    // echo "<b>{$field['title']}</b>";
-    // echo '<pre>';print_r($s);echo '</pre>';
-    
+    // On upload, you want to check against the posted nodes as save_resource_data() saves nodes after going through all the fields
+    $user_set_values = getval('nodes', array());
+
     foreach ($s as $condition) # Check each condition
         {
         $displayconditioncheck = false;
@@ -3727,6 +3745,22 @@ function check_display_condition($n, $field)
 
         for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
             {
+            // Work out nodes submitted by user, if any
+            $ui_selected_node_values = array();
+            if(
+                isset($user_set_values[$fields[$cf]['ref']])
+                && !is_array($user_set_values[$fields[$cf]['ref']])
+                && $user_set_values[$fields[$cf]['ref']] != ''
+                && is_numeric($user_set_values[$fields[$cf]['ref']])
+            )
+                {
+                $ui_selected_node_values[] = $user_set_values[$fields[$cf]['ref']];
+                }
+            else if(isset($user_set_values[$fields[$cf]['ref']]) && is_array($user_set_values[$fields[$cf]['ref']]))
+                {
+                $ui_selected_node_values = $user_set_values[$fields[$cf]['ref']];
+                }
+
             if($s[0] == $fields[$cf]['name']) # this field needs to be checked
                 {
                 $fields[$cf]['nodes'] = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
@@ -3740,6 +3774,11 @@ function check_display_condition($n, $field)
                 $validvalues=explode("|",mb_strtoupper($checkvalues));
                 $scriptconditions[$condref]['valid'] = array();
                 $v = trim_array(get_resource_nodes($ref, $fields[$cf]['ref']));
+
+                if(count($ui_selected_node_values) > 0)
+                    {
+                    $v = $ui_selected_node_values;
+                    }
 
                 // If blank edit template is used, on upload form the dependent fields should be hidden
                 if($blank_edit_template && $ref < 0 && $use == $ref)
@@ -3766,6 +3805,12 @@ function check_display_condition($n, $field)
                     {
                     $displaycondition = false;
                     $required_fields_exempt[]=$field["ref"];
+                    }
+
+                // Skip rendering the JS calls to checkDisplayCondition functions
+                if(!$render_js)
+                    {
+                    continue;
                     }
 
                 // Check display conditions
@@ -3858,8 +3903,10 @@ function check_display_condition($n, $field)
     $condref++;
 
     } # check next condition
-    // echo '<pre>';print_r($scriptconditions);echo '</pre>';
-    ?>
+
+    if($render_js)
+        {
+        ?>
         <script type="text/javascript">
         function checkDisplayCondition<?php echo $field["ref"];?>(node)
 			{
@@ -3950,7 +3997,8 @@ function check_display_condition($n, $field)
                     }
             }
         </script>
-    <?php
+        <?php
+        }
 
     return $displaycondition;
     }

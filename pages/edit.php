@@ -448,7 +448,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 $fielderror = false;
                                 if($field['required'] == 1)
                                     {
-                                    $displaycondition = check_display_condition(0, $field, true); 
+                                    $displaycondition = check_display_condition(0, $field, $fields, false); 
                                     if($displaycondition)
                                         {
                                         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))

@@ -67,7 +67,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	{
 	# Save all submitted data for resource $ref.
 	# Also re-index all keywords from indexable fields.
-		
 	global $lang, $auto_order_checkbox, $userresourcedefaults, $multilingual_text_fields,
            $languages, $language, $user_resources_approved_email, $FIXED_LIST_FIELD_TYPES,
            $DATE_FIELD_TYPES, $range_separator, $reset_date_field, $reset_date_upload_template,
@@ -465,13 +464,9 @@ function save_resource_data($ref,$multi,$autosave_field="")
 				
 				} // End of if not a fixed list (node) field
 
-            // Check required fields have been entered.
-            $exemptfields = getvalescaped('exemptfields', '');
-            $exemptfields = explode(',', $exemptfields);
             if(
                 $fields[$n]['required'] == 1
-                // Not exempt
-                && !in_array($fields[$n]['ref'], $exemptfields)
+                && check_display_condition($n, $fields[$n], $fields, false)
                 && (
                     // No nodes submitted
                     (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0)
@@ -483,10 +478,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     ($ref > 0 && !($upload_review_mode && $blank_edit_template && $fields[$n]['value'] != ''))
                     // Template with blank template and existing value
                     || ($ref < 0 && !($blank_edit_template && $fields[$n]["value"] !== ''))
-                    )
+                )
                 // Not a metadata template
                 && !$is_template
-                )
+            )
                 {
                 $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
                 continue;
@@ -560,7 +555,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
 			}
 		}
 
-    if(count($errors) > 0)
+    // When editing a resource, prevent applying the change to the resource if there are any errors
+    if(count($errors) > 0 && $ref > 0)
         {
         return $errors;
         }
