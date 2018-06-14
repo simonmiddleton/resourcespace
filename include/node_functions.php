@@ -209,10 +209,11 @@ function get_node($ref, array &$returned_node)
 * @param  integer  $offset                 Specifies the offset of the first row to return
 * @param  integer  $rows                   Specifies the maximum number of rows to return
 * @param  string   $name                   Filter by name of node
+* @param  boolean  $use_count              Show how many resources use a particular node in the node properties?
 * 
 * @return array
 */
-function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', $use_count=false)
+function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', $use_count = false)
     {
     $return_nodes = array();
 	
@@ -235,12 +236,16 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         {
         $filter_by_name = " AND `name` LIKE '%" . escape_check($name) . "%'";
         }
- 
+
     // Option to include a usage count alongside each node
     $use_count_sql="";
-    if ($use_count) {$use_count_sql=",(select count(resource) from resource_node where resource_node.resource>0 and resource_node.node=node.ref) as use_count";}
+    if($use_count)
+        {
+        $use_count_sql = ",(SELECT count(resource) FROM resource_node WHERE resource_node.resource > 0 AND resource_node.node = node.ref) AS use_count";
+        }
     
-    $query = sprintf('SELECT * ' . $use_count_sql . ' FROM node WHERE resource_type_field = \'%s\' %s AND %s ORDER BY order_by ASC %s',
+    $query = sprintf('SELECT * %s FROM node WHERE resource_type_field = \'%s\' %s AND %s ORDER BY order_by ASC %s',
+        $use_count_sql,
         escape_check($resource_type_field),
         $filter_by_name,
         (trim($parent)=="") ? 'parent IS NULL' : "parent = '" . escape_check($parent) . "'",
@@ -608,12 +613,12 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
 * @param  string   $name                  Node name to be used (international)
 * @param  integer  $parent                ID of the parent of this node
 * @param  integer  $order_by              Value of the order in the list (e.g. 10)
-* @param  boolean  $last_node             Set to true to allow to insert new records after
-*                                         last node in each level
+* @param  boolean  $last_node             Set to true to allow to insert new records after last node in each level
+* @param  integer  $use_count             Counter of how many resources use a particular node
 *
 * @return boolean
 */
-function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order_by, $last_node = false, $use_count=0)
+function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order_by, $last_node = false, $use_count = 0)
     {
     global $baseurl_short, $lang;
 
