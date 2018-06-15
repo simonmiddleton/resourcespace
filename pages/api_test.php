@@ -31,7 +31,7 @@ if (getval("submitting","")!="" && $api_function!="")
     $query="function=" . $api_function;
     for ($n=1;$n<=$paramcount;$n++)
         {
-        if (getval("param" . $n,"")!="") { $query.="&param" . $n . "=" . urlencode(getval("param" . $n,"")); }
+        $query.="&param" . $n . "=" . urlencode(getval("param" . $n,""));
         }
     $output.="Query: " . $query . "\n\n";
     $output.="Response:\n";
