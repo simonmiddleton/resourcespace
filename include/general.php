@@ -2794,9 +2794,10 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 
 	# Include footer
 	global $email_footer, $storagedir, $mime_type_by_extension;
-	
-    include_once(__DIR__ . '/../lib/PHPMailer-5.2.23/PHPMailerAutoload.php');
-	
+    include_once(__DIR__ . '/../lib/PHPMailer/PHPMailer.php');
+    include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
+    include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
+    
 	global $email_from;
 	if ($from=="") {$from=$email_from;}
 	if ($reply_to=="") {$reply_to=$email_from;}
@@ -2950,7 +2951,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 	if (!isset($body)){$body=$message;}
 
 	global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password;
-	$mail = new PHPMailer();
+	$mail = new PHPMailer\PHPMailer\PHPMailer();
 	// use an external SMTP server? (e.g. Gmail)
 	if ($use_smtp) {
 		$mail->IsSMTP(); // enable SMTP
@@ -3072,13 +3073,23 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         {
         $mail->AltBody = $mail->html2text($body); 
         }
-
-	if(!$mail->Send())
-		{
+        
+    try
+        {
+        $mail->Send();
+        }
+	catch (Exception $e)
+        {
 		echo "Message could not be sent. <p>";
-		echo "Mailer Error: " . $mail->ErrorInfo;
+        debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
 		exit;
 		}
+    catch (\Exception $e)
+        {
+		echo "Message could not be sent. <p>";
+        debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
+		exit;
+        }
 	hook("aftersendmailphpmailer","",$email);	
 }
 }
