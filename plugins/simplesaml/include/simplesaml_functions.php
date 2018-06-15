@@ -36,7 +36,7 @@ function simplesaml_authenticate()
 	if(!isset($as))
 		{
 		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-		$as = new SimpleSAML_Auth_Simple($simplesaml_sp);
+		$as = new SimpleSAML\Auth\Simple($simplesaml_sp);
 		}
 	$as->requireAuth();
 	return true;
@@ -48,7 +48,7 @@ function simplesaml_getattributes()
 	if(!isset($as))
 		{
 		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-		$as = new SimpleSAML_Auth_Simple($simplesaml_sp);
+		$as = new SimpleSAML\Auth\Simple($simplesaml_sp);
 		}
 	$as->requireAuth();
 	$attributes = $as->getAttributes();
@@ -67,8 +67,7 @@ function simplesaml_signout()
 	if(!isset($as))
 		{
 		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-		$as = new SimpleSAML_Auth_Simple($simplesaml_sp);
-	
+		$as = new SimpleSAML\Auth\Simple($simplesaml_sp);	
 		}
 	if($as->isAuthenticated())
 		{
@@ -88,7 +87,7 @@ function simplesaml_is_authenticated()
     if(!isset($as))
 		{
 		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-		$as = new SimpleSAML_Auth_Simple($simplesaml_sp);
+		$as = new SimpleSAML\Auth\Simple($simplesaml_sp);
 		}
 	if(isset($as) && $as->isAuthenticated())
 		{
@@ -108,7 +107,7 @@ function simplesaml_getauthdata($value)
 	if(!isset($as))
 		{
 		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
-		$as = new SimpleSAML_Auth_Simple($simplesaml_sp);
+		$as = new SimpleSAML\Auth\Simple($simplesaml_sp);
 		}
 	$as->requireAuth();
 	$authdata = $as->getAuthData($value);
