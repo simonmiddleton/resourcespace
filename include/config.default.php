@@ -3448,3 +3448,6 @@ $CSRF_token_identifier = "CSRFToken";
 $CORS_whitelist = array();
 ##################################################
 ##################################################
+
+// Sort tabs alphabetically
+$sort_tabs = true;
