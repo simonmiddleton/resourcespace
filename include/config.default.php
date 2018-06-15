@@ -3461,7 +3461,7 @@ $migrating_scrambled = false;
 ##################################################
 ############### Cross-Site Request Forgery (CSRF):
 ##################################################
-$CSRF_enabled = false;
+$CSRF_enabled = true;
 $CSRF_token_identifier = "CSRFToken";
 // Allow other systems to make cross-origin requests. The elements of this configuration option should follow the 
 // "<scheme>://<hostname>" syntax
