@@ -2790,7 +2790,7 @@ function GetThemesFromRequest($levels)
     $themes = array();
     for($n=1;$n <= $levels;$n++)
         {
-        $themeindex = ($n == 1 ? "" : $n + 1);
+        $themeindex = ($n == 1 ? "" : $n);
         $themename = getval("theme$themeindex","");
         if($themename != "")
             {
