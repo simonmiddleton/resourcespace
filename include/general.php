@@ -6441,7 +6441,16 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
 	return $jobs;
 	}
 	
-function job_queue_run_job($job)
+
+/**
+* Run offline job
+* 
+* @param  array    $job                 Metadata of the queued job as returned by job_queue_get_jobs()
+* @param  boolean  $clear_process_lock  Clear process lock for this job
+* 
+* @return void
+*/
+function job_queue_run_job($job, $clear_process_lock)
 	{
 	// Runs offline job using defined job handler
 	$jobref = $job["ref"];
@@ -6449,14 +6458,28 @@ function job_queue_run_job($job)
 	$jobuser = $job["user"];
     $job_success_text=$job["success_text"];
 	$job_failure_text=$job["failure_text"];
-	
-	if(is_process_lock('job_' . $jobref)){return;}
+
+    if(is_process_lock('job_' . $jobref) && !$clear_process_lock)
+        {
+        $logmessage =  " - Process lock for job #{$jobref}" . PHP_EOL;
+        echo $logmessage;
+        debug($logmessage);
+        return;
+        }
+    else if($clear_process_lock)
+        {
+        $logmessage =  " - Clearing process lock for job #{$jobref}" . PHP_EOL;
+        echo $logmessage;
+        debug($logmessage);
+        clear_process_lock("job_{$jobref}");
+        }
+
 	set_process_lock('job_' . $jobref);
 	
 	$logmessage =  " - Running job #" . $jobref . PHP_EOL;
 	echo $logmessage;
 	debug($logmessage);
-	
+
 	$logmessage =  " - Looking for " . __DIR__ . "/job_handlers/" . $job["type"] . ".php" . PHP_EOL;
 	echo $logmessage;
 	debug($logmessage);
