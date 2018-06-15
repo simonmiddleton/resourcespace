@@ -2789,7 +2789,28 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 		if($ingest && $autorotate_ingest){AutoRotateImage($destination);}
 		# Generate previews/thumbnails (if configured i.e if not completed by offline process 'create_previews.php')
 		global $enable_thumbnail_creation_on_upload;
-		if ($enable_thumbnail_creation_on_upload) {create_previews($r,false,$extension,false,false,-1,false,$ingest);}
+		if($enable_thumbnail_creation_on_upload)
+            {
+            create_previews($r, false, $extension, false, false, -1, false, $ingest);
+            }
+        else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
+            {
+            // create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true);
+            $create_previews_job_data = array(
+                'resource' => $r,
+                'thumbonly' => false,
+                'extension' => $extension,
+                'previewonly' => false,
+                'previewbased' => false,
+                'alternative' => -1,
+                'ignoremaxsize' => false,
+                'ingested' => $ingest
+            );
+            $create_previews_job_success_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_success_text']);
+            $create_previews_job_failure_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_failure_text']);
+
+            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+            }
 		}
 	hook('after_update_resource', '', array("resourceId" => $r ));
 	# Pass back the newly created resource ID.

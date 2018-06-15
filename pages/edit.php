@@ -669,6 +669,22 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
             create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
             refresh_collection_frame();
             }
+        else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
+            {
+            $create_previews_job_data = array(
+                'resource' => $ref,
+                'thumbonly' => false,
+                'extension' => $resource["file_extension"],
+                'previewonly' => false,
+                'previewbased' => false,
+                'alternative' => -1,
+                'ignoremaxsize' => true,
+            );
+            $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
+            $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
+
+            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+            }
         else
             {
             sql_query("update resource set preview_attempts=0, has_image=0 where ref='$ref'");

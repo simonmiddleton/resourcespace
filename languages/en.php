@@ -2563,6 +2563,8 @@ $lang["download_file_creation_failed"] = "Your file download request failed.";
 $lang["replace_resource_preserve_original"]="Keep the existing file as an alternative?";
 $lang["replace_resource_original_description"]= "Original %EXTENSION file"; // %EXTENSION  will be relaced by originl file extension
 $lang['replace_resource_original_alt_filename'] = 'Alternative filename';
+$lang['jq_create_previews_success_text'] = 'Previews created for resource #%RESOURCE successfully';
+$lang['jq_create_previews_failure_text'] = 'Failed to create previews for resource #%RESOURCE';
 
 /* Manage external shares */
 $lang['permission_manage_external_shares'] = 'Can manage external shares with expiry set to "Never"';
