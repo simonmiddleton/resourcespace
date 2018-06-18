@@ -1036,6 +1036,9 @@ $contact_sheet_single_select_size=false;
 $contact_sheet_link_on_collection_bar = true;
 
 ##  Contact Print settings - paper size options
+# To add a custom size, simply add a new line with the size as the value attribute in "<WIDTH>x<HEIGHT>" format. Sizes in mm.
+# e.g.
+# <option value="216x343">Foolscap</option>
 $papersize_select = '
 <option value="a4">A4 - 210mm x 297mm</option>
 <option value="a3">A3 - 297mm x 420mm</option>

@@ -14,6 +14,10 @@ require_once '../../lib/html2pdf/html2pdf.class.php';
 
 $collection        = getvalescaped('c', '');
 $size              = getvalescaped('size', '');
+if(strpos($size,"x") !== false)
+    {
+    $size = explode("x",$size);
+    }
 $columns           = getvalescaped('columns', 1);
 $order_by          = getvalescaped('orderby', 'relevance');
 $sort              = getvalescaped('sort', 'asc');
