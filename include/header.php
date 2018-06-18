@@ -432,6 +432,27 @@ else
 	if (!hook("replaceheadernav1")) {
 	?>
     <ul>
+        
+    <?php if ($header_search && $k=="") { ?>
+    <li>
+	<form class="HeaderSearchForm" id="header_search_form" method="post" action="<?php echo $baseurl?>/pages/search.php" onSubmit="return CentralSpacePost(this,true);">
+    <?php
+    generateFormToken("header_search_form");
+    ?>
+    <input id="ssearchbox" name="search" class="searchwidth" value="<?php echo (isset($quicksearch)?$htmlspecialchars($quicksearch):"") ?>" />
+    
+    <a href="<?php echo $baseurl; ?>/pages/simple_search.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
+                <i aria-hidden="true" class="fa fa-filter fa-lg fa-fw"></i>
+            </a>
+    </form>
+         
+         
+    
+        
+    </li>
+    <?php } ?>
+        
+        
     <?php
     if(!hook('replaceheaderfullnamelink'))
         {
@@ -490,34 +511,37 @@ include (dirname(__FILE__) . "/header_links.php");
 <div class="clearer"></div><?php if ($pagename!="preview" && $pagename!="preview_all") { ?></div><?php } #end of header ?>
 
 <?php
-# Include simple search sidebar?
-$omit_searchbar_pages = array(
-    'terms',
-    'index',
-    'preview_all',
-    'search_advanced',
-    'preview',
-    'admin_header',
-    'login',
-    'user_request',
-    'user_password',
-    'document_viewer'
-);
-$modified_omit_searchbar_pages=hook("modifyomitsearchbarpages");
-if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}
-	
-if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") ) 	
-	{
-	?>
-    <div id="SearchBarContainer">
-    <?php
-	include dirname(__FILE__)."/searchbar.php";
-	
-	?>
-    </div>
-    <?php
-    }	
-    ?>
+if (!$header_search)
+    {
+    # Include simple search sidebar?
+    $omit_searchbar_pages = array(
+        'terms',
+        'index',
+        'preview_all',
+        'search_advanced',
+        'preview',
+        'admin_header',
+        'login',
+        'user_request',
+        'user_password',
+        'document_viewer'
+    );
+    $modified_omit_searchbar_pages=hook("modifyomitsearchbarpages");
+    if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}
+        
+    if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") ) 	
+        {
+        ?>
+        <div id="SearchBarContainer">
+        <?php
+        include dirname(__FILE__)."/searchbar.php";
+        
+        ?>
+        </div>
+        <?php
+        }
+    }
+?>
 
 <?php
 # Determine which content holder div to use

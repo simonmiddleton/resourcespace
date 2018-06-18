@@ -1405,3 +1405,5 @@ a.Enabled, a:visited.Enabled {
 .ui-menu-item {
     text-align: left;
 }
+
+.HeaderSearchForm {padding:0;margin:0;display:inline;}
