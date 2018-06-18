@@ -550,9 +550,9 @@ else {$div="CentralSpace";}
 ?>
 <!--Main Part of the page-->
         <?php if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="user_request")) { ?><div id="CentralSpaceContainer"<?php
-        if(isset($slimheader_fixed_position) && $slimheader_fixed_position)
+        if($header_search)
             {
-            ?> class="SlimHeaderFixedPosition"<?php
+            ?> class="NoSearchBar"<?php
             }
         ?>><?php }
 

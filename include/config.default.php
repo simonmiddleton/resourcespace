@@ -1082,6 +1082,7 @@ $watermark_open_search=false;
 $basic_simple_search=false;
 
 # Simpler search in header, expanding for the full box.
+# Work in progress - in development for larger ResourceSpace 9.0 release. Some functions may not work currently.
 $header_search=false;
 
 # include an "all" toggle checkbox for Resource Types in Search bar
