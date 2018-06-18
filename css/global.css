@@ -106,7 +106,7 @@ h2#CollectionsPanelHeader {display:none;}
 .HeaderSmall #HeaderImg{max-height:40px;}
 .HeaderSmall #HeaderNav1 {height:30px;}
 
-.HeaderMid #HeaderNav1, .HeaderMid #HeaderNav2 {margin:9px 0 0 0;line-height: 35px;}
+.HeaderMid #HeaderNav1, .HeaderMid #HeaderNav2 {margin:6px 0 0 0;line-height: 35px;}
 .HeaderMid #HeaderImg{max-height:50px;}
 .HeaderMid #HeaderNav1 {height:50px;}
 
@@ -1077,10 +1077,12 @@ div.video-js {margin:auto;}
 
 /* Messaging */
 span.Pill {
-    margin-left: 5px;
-    border-radius: 5px;
-    padding: 2px 5px 2px 5px;
+    margin-left: -3px;
+    border-radius: 8px;
+    padding: 1px 5px 2px 5px;
     cursor: pointer;
+    font-size:10px;
+    vertical-align: super;
 }
 div#MessageContainer {
     width: 200px;

@@ -1078,6 +1078,9 @@ $watermark_open_search=false;
 # Set to 'true' to make the simple search bar more basic, with just the single search box.
 $basic_simple_search=false;
 
+# Simpler search in header, expanding for the full box.
+$header_search=false;
+
 # include an "all" toggle checkbox for Resource Types in Search bar
 $searchbar_selectall=false;
 

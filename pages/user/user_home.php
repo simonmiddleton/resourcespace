@@ -8,7 +8,7 @@ include "../../include/header.php";
 $introtext=text("introtext");
 ?>
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["myaccount"]?></h1>
+  <h1><?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?></h1>
   
   <?php if (trim($introtext)!="") { ?>
   <p><?php echo $introtext ?></p>
@@ -78,8 +78,16 @@ $introtext=text("introtext");
 
 		<?php
 			hook('user_home_additional_links');
-		?>
-
+	
+		# Log out
+		if(!isset($password_reset_mode) || !$password_reset_mode)
+		{?>
+		<hr />
+		<li><a href="<?php echo $baseurl?>/login.php?logout=true&amp;nc=<?php echo time()?>"><i aria-hidden="true" class="fa fa-sign-out fa-fw"></i>&nbsp;<?php echo $lang["logout"]?></a></li>
+		<?php
+		}
+	  ?>
+		
 	</ul>
 	</div>
 

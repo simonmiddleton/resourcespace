@@ -438,8 +438,7 @@ else
         ?>
         <li>
             <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
-                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?>
-                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i><span class="MessageTotalCountPill Pill" style="display: none;"></span>
             </a>
             <div id="MessageContainer" style="position:absolute; "></div>
         <?php
@@ -447,8 +446,8 @@ else
         ?>
         </li>
 	
-	<!-- Team centre link -->
-	<?php if (checkperm("t")) { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-bars fa-fw"></i>&nbsp;<?php echo $lang["teamcentre"]?></a>
+	<!-- Admin menu link -->
+	<?php if (checkperm("t")) { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i></a>
 	<?php if (!$actions_on && $team_centre_alert_icon && (checkperm("R")||checkperm("r")))
 			{
 			# Show pill count if there are any pending requests
@@ -462,15 +461,7 @@ else
 	</li><?php } ?>
 	<!-- End of team centre link -->
 	
-	<?php hook("addtoplinks");
-	if(!isset($password_reset_mode) || !$password_reset_mode)
-		{?>
-		<li><a href="<?php echo $baseurl?>/login.php?logout=true&amp;nc=<?php echo time()?>"><i aria-hidden="true" class="fa fa-sign-out fa-fw"></i>&nbsp;<?php echo $lang["logout"]?></a></li>
-		<?php
-		}
-	hook("addtologintoolbarmiddle");?>
-	
-
+	<?php hook("addtoplinks"); ?>
 	
 	</ul>
 	<?php

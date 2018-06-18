@@ -866,6 +866,8 @@ var pluploadconfig = {
         
         preinit: {
                 PostInit: function(uploader) {
+                    
+                    
                     <?php hook('upload_uploader_defined'); ?>
         
                         //Show link to java if chunking not supported
