@@ -92,7 +92,7 @@ input[type=submit], input[type=button] {border-radius: 5px; font-size: 1em;}
 #HeaderNav1, #HeaderNav2 {padding:0;}
 #HeaderNav1 {float:right;}
 #HeaderNav2 {float:left; padding-left: 30px;}
-#HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0.5em;}
+#HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0em;}
 .HeaderImgLink{float:left;height:100%;}
 #HeaderImg{margin:0;max-height: 40px; }
 .HorizontalNav li,  .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
@@ -114,6 +114,11 @@ h2#CollectionsPanelHeader {display:none;}
 .HeaderLarge #HeaderImg{max-height:85px;}
 .HeaderLarge #HeaderNav1 {height:70px;}
 .HeaderLarge #HeaderNav2 {float:right; clear:both; padding-left: 20px;margin-top:0;}
+
+#HeaderNav1 .fa-user, #HeaderNav1 .fa-bars
+    {
+    font-size: 24px;
+    }
 
 .HeaderImgLink
     {
@@ -1077,12 +1082,9 @@ div.video-js {margin:auto;}
 
 /* Messaging */
 span.Pill {
-    margin-left: -3px;
-    border-radius: 8px;
-    padding: 1px 5px 2px 5px;
+    border-radius: 3px;
+    padding: 2px 5px 2px 5px;
     cursor: pointer;
-    font-size:10px;
-    vertical-align: super;
 }
 div#MessageContainer {
     width: 200px;
