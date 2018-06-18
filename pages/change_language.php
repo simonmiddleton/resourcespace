@@ -13,7 +13,8 @@ if (getval("save","")!="" && enforcePostRequest(false))
 	}
 include "../include/header.php";
 ?>
-
+<div class="BasicsBox">
+	
 <h1><?php echo $lang["languageselection"]?></h1>
 <p><?php echo text("introtext")?></p>
   
@@ -35,6 +36,7 @@ include "../include/header.php";
 </div>
 </form>
 
+</div>
 
 <?php
 include "../include/footer.php";

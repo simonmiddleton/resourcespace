@@ -50,10 +50,11 @@ $url=generateURL($baseurl . "/pages/user/user_actions.php",$url_params);
 include "../../include/header.php";
 
 ?>
+<div class="BasicsBox">
+
   <h1><?php echo $lang["actions_myactions"]?></h1>
   <p><?php echo $lang["actions_introtext"] ?></p>
   
-<div class="BasicsBox">
 <div class="VerticalNav">
 <ul>
 <?php
