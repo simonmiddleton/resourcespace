@@ -299,11 +299,6 @@ hook('afterlogin');
 if($login_background)
 	{
 	?>
-	<div> <!-- end of login_box -->
-	<?php
+	<div> <!-- end of login_box --><?php
 	}
-?>
-</div>
-</div>
-</body>
-</html>
+include "include/footer.php";
