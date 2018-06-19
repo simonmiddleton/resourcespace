@@ -10,7 +10,7 @@ $plugin_name = 'google_vision';
 if (!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
 $page_heading = $lang['google_vision_api'];
-$page_intro = '';
+$page_intro = "<p>" . $lang['google_vision_help'] . "</p>";
 
 // Build configuration variable descriptions
 $page_def[] = config_add_text_input("google_vision_api_key",$lang["google_vision_api_key"]);
