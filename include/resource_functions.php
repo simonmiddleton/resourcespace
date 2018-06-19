@@ -4609,7 +4609,7 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
         case '0':
             if (isset($existingstates[0]) && $existingstates[0] == -1 && $user_resources_approved_email)
                 {
-                notify_user_resources_approved(array($ref));
+                notify_user_resources_approved(array($resource));
                 }
             break;
         
