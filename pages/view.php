@@ -1032,7 +1032,6 @@ else
 
 hook("renderbeforerecorddownload");
 
-if ($download_summary) {include "../include/download_summary.php";}
 ?>
 <?php if (!hook("renderresourcedownloadspace")) { ?>
 <div class="RecordDownload" id="RecordDownload">
@@ -1580,7 +1579,12 @@ if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/us
 </div>
 </div>
 <?php } /* End of renderresourcedownloadspace hook */ ?>
-<?php } /* End of renderinnerresourceview hook */ ?>
+<?php } /* End of renderinnerresourceview hook */
+
+
+if ($download_summary) {include "../include/download_summary.php";}
+
+?>
 
 <?php hook("renderbeforeresourcedetails"); ?>
 
