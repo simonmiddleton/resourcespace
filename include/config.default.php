@@ -1046,6 +1046,10 @@ $papersize_select = '
 <option value="legal">US Legal - 8.5" x 14"</option>
 <option value="tabloid">US Tabloid - 11" x 17"</option>';
 
+#Optional array to set customised title and margins for named templates
+# e.g.
+# $contact_sheet_custom_size_settings = array('label'=>array("title"=>"ResourceSpace default label title","margins"=>"0,0,0,0"));
+
 ## Columns options (May want to limit options if you are adding text fields to the Thumbnail style contact sheet).
 $columns_select = '
 <option value=2>2</option>

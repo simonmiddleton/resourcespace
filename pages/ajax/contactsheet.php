@@ -146,12 +146,26 @@ if($contact_sheet_footer)
 // Set PDF properties:
 $pdf_properties['orientation'] = $orientation;
 $pdf_properties['format']      = $size;
-$pdf_properties['margins']     = array(10, 12, 10, 7);
-$pdf_properties['title']       = $title;
 $pdf_properties['author']      = $user['fullname'];
 $pdf_properties['subject']     = "{$applicationname} - {$lang['contactsheet']}";
 $pdf_properties['font']        = $contact_sheet_font;
 $pdf_properties['language']    = resolve_pdf_language();
+if(isset($contact_sheet_custom_size_settings[$sheetstyle]["margins"]))
+    {
+    $pdf_properties['margins'] = $contact_sheet_custom_size_settings[$sheetstyle]["margins"];    
+    }
+else
+    {
+    $pdf_properties['margins'] = array(10, 12, 10, 7);
+    }
+if(isset($contact_sheet_custom_size_settings[$sheetstyle]["title"]))
+    {
+    $pdf_properties['title']       = $contact_sheet_custom_size_settings[$sheetstyle]["title"];    
+    }
+else
+    {    
+    $pdf_properties['title']       = $title;    
+    }
 
 // Choose the image size requirements
 $img_size = ('single' == $sheetstyle ? getvalescaped('ressize', 'lpr') : 'pre');

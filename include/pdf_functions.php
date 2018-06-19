@@ -254,7 +254,7 @@ function get_template_path($template_name, $template_namespace)
 */
 function process_template($template_path, array $bind_placeholders = array())
     {
-    global $applicationname, $baseurl, $baseurl_short, $storagedir, $lang, $linkedheaderimgsrc, $contact_sheet_date_include_time, $contact_sheet_date_wordy;
+    global $applicationname, $baseurl, $baseurl_short, $storagedir, $lang, $linkedheaderimgsrc, $contact_sheet_date_include_time, $contact_sheet_date_wordy, $pdf_properties;
 
     // General placeholders available to templates
     $general_params = array(
@@ -402,3 +402,40 @@ function resolve_pdf_language(){
 			}
 		}
 }
+
+
+/**
+* Returns an array of available PDF template names
+* * 
+* @param string  $template_namespace  The name by which multiple templates are grouped together e.g. contact_sheet
+* 
+* @return array()
+*/
+function get_pdf_templates($template_namespace)
+    {
+    global $storagedir;
+
+    $templates = array();
+    $remove_directory_listings = array('.', '..');
+
+    // Directories that may contain these files
+    $default_tpl_dir   = dirname(__FILE__) . "/../templates/{$template_namespace}";
+    $filestore_tpl_dir = "{$storagedir}/system/templates/{$template_namespace}";
+
+    if(!file_exists($default_tpl_dir))
+        {
+        trigger_error("ResourceSpace could not find templates folder '{$template_namespace}'");
+        }
+
+    // Get default path
+    $templates = array_diff(scandir($default_tpl_dir), $remove_directory_listings);
+
+    // Get custom template (if any)
+    if(file_exists($filestore_tpl_dir))
+        {
+        $filestore_templates = array_diff(scandir($filestore_tpl_dir), $remove_directory_listings);
+        $templates = array_merge($templates,$filestore_templates);
+        }
+    $templates = array_map(function($e){return pathinfo($e, PATHINFO_FILENAME);}, $templates);
+    return $templates;
+    }

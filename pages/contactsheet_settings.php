@@ -3,6 +3,7 @@ include '../include/db.php';
 include_once '../include/general.php';
 include '../include/authenticate.php'; 
 include_once '../include/collections_functions.php';
+include_once '../include/pdf_functions.php';
 
 $collection        	= getvalescaped('ref', '', true);
 $collectiondata    	= get_collection($collection);
@@ -16,7 +17,9 @@ if($contactsheet_use_field_templates && !isset($contactsheet_field_template))
 	{
 	$contactsheet_use_field_templates=false;
 	}
-	
+
+$templates = get_pdf_templates("contact_sheet");
+
 if($contactsheet_use_field_templates)
 	{
 	$field_template = getvalescaped('field_template', 0, true);
@@ -153,9 +156,18 @@ if(!collection_readable($collection))
                 		}
                 	jQuery().rsContactSheet('revert', '<?php echo $filename_uid; ?>');	
                 		">
+                    <?php
+                    foreach($templates as $template)
+                        {
+                        echo "<option value='" . htmlspecialchars($template) . "'>" .  (isset($lang[$template]) ? $lang[$template] : htmlspecialchars($template)) . "</option>";
+                        ?>
+                    <!--
                     <option value="thumbnails" selected><?php echo $lang["thumbnails"]; ?></option>
                     <option value="list"><?php echo $lang["list"]; ?></option>
                     <option value="single" ><?php echo $lang["contactsheet-single"]; ?></option>
+                    -->
+                    <?php
+                        }?>
                 </select>
                 <div class="clearerleft"></div>
                 <script>
