@@ -150,7 +150,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
 			   $themes_category_split_pages,$themes_category_split_pages_parents,$collections_compact_style,$pagename,
 			   $show_edit_all_link,$preview_all,$userref,$collection_purge,$themes_category_split_pages,
 			   $themes_category_split_pages_parents_root_node,$enable_theme_category_sharing,$enable_theme_category_edit,
-			   $show_theme_collection_stats,$lastlevelchange,$themes_single_collection_shortcut, $download_usage;
+			   $show_theme_collection_stats,$lastlevelchange,$themes_single_collection_shortcut, $download_usage, $usersession;
 	
 		$themes_order_by=getvalescaped("themes_order_by",getvalescaped("saved_themes_order_by","name"));
 		$sort=getvalescaped("sort",getvalescaped("saved_themes_sort","ASC"));	
@@ -345,6 +345,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
 						<div class="ActionsContainer  ">
 						<div class="DropdownActionsLabel">Actions:</div>
 						<select class="themeactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+                        <option><?php echo $lang["actions-select"]?></option>
 						</select>
 						</div>					
 						</div>
@@ -354,7 +355,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
 				<script>
 				jQuery('#<?php echo $action_selection_id ?>').bind({
 					mouseenter:function(e){
-					LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $getthemes[$m]["ref"] ?>');
+					LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $getthemes[$m]["ref"] ?>','<?php echo generateCSRFToken($usersession,"theme_actions"); ?>');
 					}});
 				</script>
 				<?php
