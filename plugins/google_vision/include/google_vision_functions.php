@@ -1,6 +1,6 @@
 <?php
 
-function google_visionProcess($resource)
+function google_visionProcess($resource,$verbose=false)
     {
     global $google_vision_api_key,$google_vision_label_field,$google_vision_landmarks_field,$google_vision_text_field,$google_vision_restypes,$baseurl,$google_vision_features;
     
@@ -53,6 +53,8 @@ function google_visionProcess($resource)
     $context  = stream_context_create($opts);
     $result = file_get_contents($url, false, $context);
     
+    if ($verbose) echo $result;
+
     /*
      * Alternative CURL code if preferred or required at some future stage....
      * 
@@ -131,6 +133,9 @@ function google_visionProcess($resource)
         {
         update_field($resource,$view_title_field,ucfirst($title));
         }
+    
+    # Mark as processed
+    sql_query("update resource set google_vision_processed=1 where ref='" . escape_check($resource) . "'");
     
     return true;
     }
