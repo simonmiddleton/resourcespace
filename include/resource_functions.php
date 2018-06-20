@@ -1647,7 +1647,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 * 
 * @return boolean
 */
-function update_field($resource, $field, $value, array &$errors = array())
+function update_field($resource, $field, $value, array &$errors = array(), $log=true)
     {
     global $FIXED_LIST_FIELD_TYPES;
     
@@ -1835,7 +1835,10 @@ function update_field($resource, $field, $value, array &$errors = array())
         }
     
     // Log this update
-    resource_log($resource,'e',$field,"",$existing,unescape($value));
+    if ($log)
+        {
+        resource_log($resource,'e',$field,"",$existing,unescape($value));
+        }
     
     # Allow plugins to perform additional actions.
     hook("update_field","",array($resource,$field,$value,$existing));
