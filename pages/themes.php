@@ -50,11 +50,11 @@ hook("themeheader");
 if (!function_exists("DisplayTheme")){
 function DisplayTheme($themes=array(), $simpleview=false)
 	{
+    global $collection_download_only;
 	if($simpleview)
 		{
 		global $baseurl_short, $lang, $themecount, $themes_simple_images;
-		$getthemes=get_themes($themes);
-		#
+		$getthemes=get_themes($themes);        
 		for ($m=0;$m<count($getthemes);$m++)
 			{
 			$theme_image_path="";
@@ -336,29 +336,45 @@ function DisplayTheme($themes=array(), $simpleview=false)
 				<td class="count" width="5%"><?php echo $getthemes[$m]["c"]?></td>
 				<?php hook('beforecollectiontoolscolumn');
 				
-				 $action_selection_id = 'themes_action_selection' . $getthemes[$m]["ref"] . "_bottom_" . $getthemes[$m]["ref"] ;
-				
-					?>
-				<td class="tools" nowrap>
-					<div class="ListTools" >
-						<?php hook('render_themes_list_tools', '', array($getthemes[$m])); ?>
-						<div class="ActionsContainer  ">
-						<div class="DropdownActionsLabel">Actions:</div>
-						<select class="themeactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
-                        <option><?php echo $lang["actions-select"]?></option>
-						</select>
-						</div>					
-						</div>
-					</div>
-				</td>
-				</tr>
-				<script>
-				jQuery('#<?php echo $action_selection_id ?>').bind({
-					mouseenter:function(e){
-					LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $getthemes[$m]["ref"] ?>','<?php echo generateCSRFToken($usersession,"theme_actions"); ?>');
-					}});
-				</script>
-				<?php
+                echo "<td class='tools' nowrap>
+                          <div class='ListTools' >";
+                if((isset($zipcommand) || $collection_download) && $getthemes[$m]['c'] > 0 && $collection_download_only)
+                    {
+                    if ($download_usage)
+                        {?>
+                        <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?url=<?php echo urlencode("pages/download_usage.php?collection=" .  $getthemes[$m]["ref"])?>"><?php echo LINK_CARET ?><?php echo $lang["action-download"]?></a>
+                        <?php
+                        }
+                    else
+                        {?>
+                        <a href="<?php echo $baseurl_short?>pages/terms.php?url=<?php echo urlencode("pages/collection_download.php?collection=" .  $getthemes[$m]['ref'])?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-download"]?></a>
+                        <?php 
+                        }
+                    echo "</div>
+                          </td>";
+                    }
+                else
+                    {
+                    $action_selection_id = 'themes_action_selection' . $getthemes[$m]["ref"] . "_bottom_" . $getthemes[$m]["ref"] ;
+                    hook('render_themes_list_tools', '', array($getthemes[$m])); ?>
+                            <div class="ActionsContainer">
+                                <div class="DropdownActionsLabel">Actions:</div>
+                            <select class="themeactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+                            <option><?php echo $lang["actions-select"]?></option>
+                            </select>
+                            </div>					
+                            </div>
+                        </div>
+                    </td>
+                    </tr>
+                    <script>
+                    jQuery('#<?php echo $action_selection_id ?>').bind({
+                        mouseenter:function(e){
+                        LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $getthemes[$m]["ref"] ?>','<?php echo generateCSRFToken($usersession,"theme_actions"); ?>');
+                        }});
+                    </script>
+                    <?php
+                    }
 				}
 			?>
 			</table>

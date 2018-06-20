@@ -708,7 +708,7 @@ else if ($basket)
 	</div>
 	<?php	
 	}
-elseif ($k!="" && !$internal_share_access)
+elseif (($k != "" && !$internal_share_access) || $collection_download_only)
 	{
 	# ------------- Anonymous access, slightly different display ------------------
 	$tempcol=$cinfo;
@@ -1058,7 +1058,7 @@ if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_view
 		</div>
 		<?php	
 		} // end of Basket Mode
-	elseif ($k!="")
+	elseif (($k != "" && !$internal_share_access) || $collection_download_only)
 		{
 		# Anonymous access, slightly different display
 		$tempcol=$cinfo;

@@ -842,6 +842,9 @@ $orderbyrating=false;
 # (And don't forget to set $archiver_path etc. in the path section.)
 $collection_download = false;
 
+# Option to replace the collection actions dropdown with a simple 'download' link if collection_download is enabled
+$collection_download_only = false;
+
 # The total size, in bytes, of the collection download possible PRIOR to zipping. Prevents users attempting very large downloads.
 $collection_download_max_size = 1024 * 1024 * 1024; # default 1GB.
 
