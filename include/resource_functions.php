@@ -1834,6 +1834,9 @@ function update_field($resource, $field, $value, array &$errors = array())
         eval($fieldinfo["onchange_macro"]);    
         }
     
+    // Log this update
+    resource_log($resource,'e',$field,"",$existing,unescape($value));
+    
     # Allow plugins to perform additional actions.
     hook("update_field","",array($resource,$field,$value,$existing));
     return true;
