@@ -121,7 +121,7 @@ if(isset($videojs_resolution_selection))
 		}
 	
 	// Add in each of the videojs_resolution_selection items that use alternative files	for previews
-	$s_count=count($videojs_resolution_selection);
+	$s_count = is_array($videojs_resolution_selection) ? count($videojs_resolution_selection) : 0;
 	for($s=0;$s<$s_count;$s++)
 		{
 		if($videojs_resolution_selection[$s]['name']=='' && isset($video_preview_path))
