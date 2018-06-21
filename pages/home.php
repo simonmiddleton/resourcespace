@@ -62,10 +62,18 @@ if (!hook("replaceslideshow"))
             ?>
             var big_slideshow_timer = <?php echo $slideshow_photo_delay;?>;
             <?php
+			$login_background_skipped = false;
             foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
                 {
                 if(!file_exists($slideshow_file_info['file_path']))
                     {
+                    continue;
+                    }
+					
+				 if($login_background && !$login_background_skipped)
+                    {
+					// Don't use the first image as this is used for the login page
+					$login_background_skipped = true;
                     continue;
                     }
                 ?>

@@ -9,9 +9,6 @@ include_once dirname(__FILE__) . '/../include/resource_functions.php';
 include_once dirname(__FILE__) . '/../include/search_functions.php';
 ob_end_clean(); 
 
-
-debug('PAGES/DOWNLOAD.PHP:');
-
 if($download_no_session_cache_limiter)
     {
     session_cache_limiter(false);
@@ -25,7 +22,7 @@ if(!($direct_download_noauth && $direct))
     // External access support (authenticate only if no key provided, or if invalid access key provided)
     $k = getvalescaped('k', '');
 
-    if('' == $k || !check_access_key(getvalescaped('ref', '', true), $k))
+    if(('' == $k || !check_access_key(getvalescaped('ref', '', true), $k)) && !($login_background && getval("slideshow",0,true) > 0))
         {
         include dirname(__FILE__) . '/../include/authenticate.php';
         }

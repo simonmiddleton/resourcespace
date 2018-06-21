@@ -1,20 +1,20 @@
 <?php
 $backimageurl = "";
-    $dir = dirname(__FILE__) . "/../" . $homeanim_folder;
-    $d = scandir($dir);    
-	sort($d, SORT_NUMERIC);
-    foreach ($d as $f) 
-		{ 
-		if(preg_match("/[0-9]+\.(jpg)$/",$f))
-            {
-            $backimageurl= $baseurl_short . $homeanim_folder . "/" . $f;  
-            break;    
-            }
-        }
-	?>
-	<style>
-	#UICenter {
-		background-image: url('<?php echo $backimageurl; ?>');
-		}
-	</style>
-	<div id="login_box">
+
+$slideshow_files = get_slideshow_files_data();
+foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
+	{
+	if($backimageurl == "" && file_exists($slideshow_file_info['file_path']))
+		{
+		$backimageurl = "{$baseurl_short}pages/download.php?slideshow={$slideshow_image}";  
+		continue;
+		}	
+	}
+
+?>
+<style>
+#UICenter {
+	background-image: url('<?php echo $backimageurl; ?>');
+	}
+</style>
+<div id="login_box">
