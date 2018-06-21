@@ -108,8 +108,9 @@ foreach($getfields as $field_id)
     }
 
 $pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
-$filename_uid      = generateUserFilenameUID($userref);
-$PDF_filename      = get_temp_dir() . "/contactsheet_{$filename_uid}.pdf";
+$filename_uid	= generateUserFilenameUID($userref);
+$PDF_filename	= get_temp_dir(false,'') . "/contactsheet_" . $collection . "_" . md5($username . $filename_uid . $scramble_key) . ".pdf";
+
 $placeholders      = array(
     'date'                          			=> nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy),
     'titlefontsize'                 			=> $titlefontsize,
@@ -327,13 +328,13 @@ catch(Html2Pdf_exception $e)
 // Make AJAX preview
 if ($preview && isset($imagemagick_path)) 
     {
-    $contact_sheet_rip = get_temp_dir() . "/contactsheetrip_{$filename_uid}.jpg";
+	$contact_sheet_rip= get_temp_dir(false,'') . "/contactsheetrip_" . $collection . "_" . md5($username . $filename_uid . $scramble_key) . ".jpg";
     if(file_exists($contact_sheet_rip))
         {
         unlink($contact_sheet_rip);
         }
 
-    $contact_sheet_preview_img = get_temp_dir() . "/contactsheet_{$filename_uid}.jpg";
+	$contact_sheet_preview_img= get_temp_dir(false,'') . "/contactsheet_" . $collection . "_" . md5($username . $filename_uid . $scramble_key) . ".jpg";
     if(file_exists($contact_sheet_preview_img))
         {
         unlink($contact_sheet_preview_img);
