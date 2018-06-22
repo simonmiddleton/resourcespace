@@ -279,3 +279,23 @@ function api_search_public_collections($search="", $order_by="name", $sort="ASC"
         }
     return $results;
     }
+
+        
+function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by = 0,$returnexisting = false)
+    {
+    global $FIXED_LIST_FIELD_TYPES;
+        
+    $fieldinfo = get_resource_type_field($resource_type_field);
+    if(
+       !in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES)
+        ||
+       !(checkperm('a') || checkperm('k') || ($fieldinfo['type'] == 9 && !checkperm('bdk' . $resource_type_field)))
+       )
+        {
+        // API user doesn't have permission to add new nodes
+        return false;
+        }
+    if($ref='NULL'){$ref = null;}
+    if($parent='NULL'){$parent = null;}
+    return set_node($ref, $resource_type_field, $name, $parent, $order_by,$returnexisting = false);  
+    }
