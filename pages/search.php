@@ -675,7 +675,10 @@ if ($allow_reorder && $display!="list") {
 		jQuery.ajax({
 		  type: 'POST',
 		  url: 'search.php?search=!collection<?php echo urlencode($collection) ?>&reorder=true',
-		  data: {order:JSON.stringify(newOrder)},
+		  data: {
+            order: JSON.stringify(newOrder),
+            CSRFToken: '<?php echo generateCSRFToken($usersession,"reorder_search"); ?>'
+            },
 		  success: function(){
 		  <?php if (isset($usercollection) && ($usercollection==$collection)) { ?>
 			 UpdateCollectionDisplay('<?php echo isset($k)?htmlspecialchars($k):"" ?>');

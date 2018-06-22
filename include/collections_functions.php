@@ -2451,7 +2451,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // View all
     if(($k=="" || $internal_share_access) && (isset($collection_data["c"]) && $collection_data["c"]>0) || (is_array($result) && count($result) > 0))
         {
-        $data_attribute['url'] =  $baseurl_short . 'pages/search.php?search=!collection' . urlencode($collection_data['ref']) . "&k=" . urlencode($k);
+        $data_attribute['url'] =  $baseurl_short . 'pages/search.php?search=' . urlencode('!collection' . $collection_data['ref']) . "&k=" . urlencode($k);
         $options[$o]['value']='view_all_resources_in_collection';
 		$options[$o]['label']=$lang['view_all_resources'];
 		$options[$o]['data_attr']=$data_attribute;
