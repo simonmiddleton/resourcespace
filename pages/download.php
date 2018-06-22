@@ -74,7 +74,7 @@ elseif(getval("tempfile","") != "")
     $downloadkey    = strip_extension($filedetails[2]);
     $ext            = safe_file_name(substr($filedetails[2], strlen($downloadkey) + 1));
     $path           = get_temp_dir(false,"") . '/' . $code . '_' . $ref . "_" . md5($username . $downloadkey . $scramble_key) . '.' . $ext;
-   }
+    }
 else
     {
     $resource_data = get_resource_data($ref);
@@ -91,8 +91,7 @@ else
         // Permissions check
         $allowed = resource_download_allowed($ref, $size, $resource_data['resource_type'], $alternative);
         }
-
-    if(!$allowed)
+    if(!$allowed || $ref <= 0)
         {
         # This download is not allowed. How did the user get here?
         exit('Permission denied');

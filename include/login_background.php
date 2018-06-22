@@ -4,7 +4,7 @@ $backimageurl = "";
 $slideshow_files = get_slideshow_files_data();
 foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
 	{
-	if($backimageurl == "" && file_exists($slideshow_file_info['file_path']))
+	if($backimageurl == "")
 		{
 		$backimageurl = "{$baseurl_short}pages/download.php?slideshow={$slideshow_image}";  
 		continue;
