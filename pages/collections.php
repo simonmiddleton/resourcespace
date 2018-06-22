@@ -184,11 +184,24 @@ if ($allow_reorder)
 			jQuery.ajax({
 			  type: 'POST',
 			  url: '<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo urlencode($usercollection) ?>&search=<?php echo urlencode($search)?>&reorder=true',
-			  data: {order:JSON.stringify(newOrder)},
+			  data:
+                {
+                order:JSON.stringify(newOrder),
+                CSRFToken: '<?php echo generateCSRFToken($usersession,"reorder_collection"); ?>'
+                },
 			  success: function() {
+                /*
+                 * Reload the top results if we're looking at the user's current collection.
+                 * The !collectionX part may be urlencoded, or not, depending on how the page was reached.
+                 */
 			    var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
 			    var ref = new RegExp('[\\?&amp;]' + 'ref' + '=([^&amp;#]*)').exec(window.location.href);
-			    if ((ref==null)&&(results!== null)&&('<?php echo urlencode("!collection" . $usercollection); ?>' === results[1])) CentralSpaceLoad('<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection); ?>',true);
+			    if ((ref==null)&&(results!== null)&&
+                    ('<?php echo urlencode("!collection" . $usercollection); ?>' === results[1]
+                    ||
+                    '<?php echo ("!collection" . $usercollection); ?>' === results[1])
+                    
+                    ) CentralSpaceLoad('<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection); ?>',true);
 			  }
 			});		
 		}
