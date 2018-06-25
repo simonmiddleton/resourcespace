@@ -663,6 +663,7 @@ if(!$collectionsearch)
 	}
 	
 if ($allow_reorder && $display!="list") {
+    global $usersession;
 ?>
 	<script type="text/javascript">
 	var allow_reorder = true;

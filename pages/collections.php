@@ -173,6 +173,7 @@ if ($allow_reorder)
 # Include function for reordering
 if ($allow_reorder)
 	{
+	global $usersession;
 	?>
 	<script type="text/javascript">
 		function ReorderResourcesInCollection(idsInOrder) {
