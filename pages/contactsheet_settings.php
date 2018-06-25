@@ -160,13 +160,6 @@ if(!collection_readable($collection))
                     foreach($templates as $template)
                         {
                         echo "<option value='" . htmlspecialchars($template) . "'>" .  (isset($lang[$template]) ? $lang[$template] : htmlspecialchars($template)) . "</option>";
-                        ?>
-                    <!--
-                    <option value="thumbnails" selected><?php echo $lang["thumbnails"]; ?></option>
-                    <option value="list"><?php echo $lang["list"]; ?></option>
-                    <option value="single" ><?php echo $lang["contactsheet-single"]; ?></option>
-                    -->
-                    <?php
                         }?>
                 </select>
                 <div class="clearerleft"></div>
