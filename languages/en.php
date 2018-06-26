@@ -1830,11 +1830,6 @@ $lang["intro-plupload_dragdrop"] = "Drag and drop or click 'Add files' to locate
 $lang["intro-plupload_upload-replace_resource"] = "Click 'Add files' to locate a file and then click 'Start upload'.";
 $lang["intro-batch_edit"] = "Please specify the default upload settings and the default values for the metadata of the resources you are about to upload.";
 $lang["plupload-maxfilesize"] = "The maximum allowed upload file size is %s.";
-$lang["pluploader_warning"]="Your browser may not support very large file uploads. If you are having problems please try either upgrading your browser or using the links below.";
-$lang["getsilverlight"]="To ensure that you have the latest version of Silverlight on your system, visit the Microsoft Silverlight site.";
-$lang["getbrowserplus"]="To get the latest BrowserPlus software, visit the Yahoo BrowserPlus website.";
-$lang["pluploader_usejava"]="Use the legacy Java uploader.";
-
 $lang["collections-1"] = "(<strong>1</strong> Collection)";
 $lang["collections-2"] = "(<strong>%d</strong> Collections with <strong>%d</strong> items)"; # %number will be replaced, e.g. 3 Collections
 $lang["total-collections-0"] = "<strong>Total: 0</strong> Collections";
@@ -2700,3 +2695,5 @@ $lang["api-php-code"]="PHP code";
 $lang["api-php-help"]="Paste the below into the remote system to call the entered API function with the provided parameters.";
 
 $lang["font"]="Font";
+
+$lang["upload_success"] = "Success";

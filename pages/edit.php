@@ -806,19 +806,7 @@ function ShowHelp(field)
     }
  }
 
- jQuery(document).ready(function() {
-    jQuery('#collection_add').change(function (){
-      if(jQuery('#collection_add').val()=='new'){
-        jQuery('#collectioninfo').fadeIn();
-     } 
-     else {
-        jQuery('#collectioninfo').fadeOut();
-     }
-  });
-    jQuery('#collection_add').change();
- }); 
-
- <?php
+<?php
 # Function to automatically save the form on field changes, if configured.
  if ($edit_autosave)
     { ?>
