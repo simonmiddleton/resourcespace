@@ -58,7 +58,7 @@ if ($geo_override_options == "")
     }
 else 
     {
-    echo htmlspecialchars($geo_override_options);
+    echo $geo_override_options;
     }
 ?>
     
