@@ -1,4 +1,5 @@
 <?php
+include_once 'resource_functions.php';
 $backimageurl = "";
 
 $slideshow_files = get_slideshow_files_data();
