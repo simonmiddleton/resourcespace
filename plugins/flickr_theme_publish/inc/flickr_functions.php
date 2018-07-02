@@ -41,7 +41,7 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
 			// Output: Processing resource...
 			if(!$flickr_nice_progress)
                 {
-                echo "<li>" . $lang["processing"] . ": " . $title . "\n";
+                echo "<li>" . $lang["processing"] . ": '" . $title . "'\n";
                 }
 			else
                 {
@@ -130,33 +130,29 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
                 }
 
 			$created_new_photoset=false;
-			if ($photoset==0)
+            if ($photoset==0)
                 {
-				# Photoset must be created.
-				flickr_api("http://flickr.com/services/rest/",array("api_key"=>$flickr_api_key,"method"=>"flickr.photosets.create","auth_token"=>$flickr_token, "title"=>$photoset_name, "primary_photo_id"=>$photoid),"","POST");
-				global $last_xml;
-				$pos_1=strpos($last_xml,"id=\"");
-				$pos_2=strpos($last_xml,"\"",$pos_1+5);
-				$photoset=substr($last_xml,$pos_1+4,$pos_2-$pos_1-4);
-				
-				
-				// Output: New photoset created...
-				if(!$flickr_nice_progress)
+                # Photoset must be created.
+                $response = $flickr->call("flickr.photosets.create",array("title"=>$photoset_name, "primary_photo_id"=>$photoid));
+                $photoset = $response["photoset"]["id"];				
+                
+                // Output: New photoset created...
+                if(!$flickr_nice_progress)
                     {
                     echo "<li>" . str_replace(array("%photoset_name", "%photoset"), array($photoset_name, $photoset), $lang["created-new-photoset"]);
                     }
-				else
+                else
                     {
                     flickr_update_progress_file("new photoset ".$photoset_name);
                     }
-				$created_new_photoset=true;
+                $created_new_photoset=true;
                 }
 
 			# Add to photoset
 			if (!$created_new_photoset)
                 {
                 # If we've just created a photoset then this will already be present within it as the primary photo (added during the create photoset request).
-				flickr_api("http://flickr.com/services/rest/",array("api_key"=>$flickr_api_key,"method"=>"flickr.photosets.addPhoto","auth_token"=>$flickr_token, "photoset_id"=>$photoset, "photo_id"=>$photoid));
+				 $flickr->call("flickr.photosets.addPhoto",array("photoset_id"=>$photoset, "photo_id"=>$photoid));
 				// Output: Added new upload to photoset...
 				if(!$flickr_nice_progress)
                     {
@@ -179,7 +175,7 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
 				$perm=$private==0 ? $lang["flickr_public"] : $lang["flickr_private"];
 				flickr_update_progress_file("permissions ".$perm);
                 }
-			flickr_api("http://flickr.com/services/rest/",array("api_key"=>$flickr_api_key,"method"=>"flickr.photos.setPerms","auth_token"=>$flickr_token, "photo_id"=>$photoid, "is_public"=>($private==0?1:0),"is_friend"=>0,"is_family"=>0,"perm_comment"=>0,"perm_addmetadata"=>0),"","POST");
+			$flickr->call("flickr.photos.setPerms",array("photo_id"=>$photoid, "is_public"=>($private==0?1:0),"is_friend"=>0,"is_family"=>0,"perm_comment"=>0,"perm_addmetadata"=>0));
 		}
         }
 	// Output: Done with all requests...
@@ -189,108 +185,18 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
         }
 	else
         {
-        //flickr_update_progress_file($lang["done"]." | processed=".$results_processed);}
 		flickr_update_progress_file($lang["done"]." | processed=".$results_processed." new_publish=".$results_new_publish." no_publish=".$results_no_publish." update_meta=".$results_update_publish);
         }
     }
 	
-
-
-function flickr_api($url,$params,$response_tag="",$method="GET")
-	{
-	# Automatically sign the request, process it, and return it
-
-	# Build query and sign it
-	$url.="?" . flickr_sign($params);
-	
-	# Run query
-	
-	$opts = array(
-	  'https'=>array(
-	    'method'=>$method
-	  )
-	);
-
-	$context = stream_context_create($opts);
-
-	
-	$xml=file_get_contents($url,false,$context);
-	global $last_xml;$last_xml=$xml;
-	
-	if ($response_tag=="")
-		{
-		return true;
-		}
-	else
-		{
-		return flickr_get_response_tag($xml,$response_tag);
-		}
-	}
-
-
-
-function flickr_sign($params,$ignore=array(),$output_sig=false)
-	{
-	global $flickr_api_secret;
-	
-	ksort($params);
-	$string=$flickr_api_secret; 
-	foreach ($params as $param=>$value) {if (!in_array($param,$ignore)) {$string.=$param . $value;}}
-	if ($output_sig)
-		{
-		return md5($string);
-		}
-	else
-		{
-		return http_build_query($params) . "&api_sig=" . md5($string);
-		}
-	}
-
-
-
-function do_post_request($url, $data, $optional_headers = null)
-{
-  global $lang;
-  $params = array('http' => array(
-              'method' => 'POST',
-              'content' => $data
-            ));
-  if ($optional_headers !== null) {
-    $params['http']['header'] = $optional_headers;
-  }
-  $ctx = stream_context_create($params);
-  $fp = @fopen($url, 'rb', false, $ctx);
-  if (!$fp) {
-    throw new Exception(str_replace(array("%url", "%php_errormsg"), array($url, $php_errormsg), $lang["problem-with-url"]));
-  }
-  $response = @stream_get_contents($fp);
-  if ($response === false) {
-    throw new Exception(str_replace(array("%url", "%php_errormsg"), array($url, $php_errormsg), $lang["problem-reading-data"]));
-  }
-  return $response;
-}
-
-function flickr_get_response_tag($xml,$response_tag)
-	{
-	$start=strpos($xml,"<" . $response_tag . ">");
-	$end=strpos($xml,"</" . $response_tag . ">");	
-	
-	if ($start===false)
-		{
-		#echo "<pre>" . htmlspecialchars($xml) . "</pre>";
-		return false;
-		}
-	
-	return trim(substr($xml,$start+strlen($response_tag) + 2,$end-$start-strlen($response_tag)-2));
-	}
-
-function flickr_update_progress_file($note){
+function flickr_update_progress_file($note)
+    {
 	global $progress_file;
 	$fp = fopen($progress_file, 'w');		
 	$filedata=$note;
 	fwrite($fp, $filedata);
 	fclose($fp);
-}
+    }
 
 function flickr_get_access_token($userref,$fromrequest=false)
     {

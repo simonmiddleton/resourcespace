@@ -24,35 +24,29 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 $last_xml="";
 
 // Get a Request Token
-
-$validtoken=flickr_get_token($userref);
-// Getting the User Authorization
-
-//Exchanging the Request Token for an Access Token
-
-if (!$validtoken){
-	# We must first authenticate this user.
-	$validtoken=flickr_check_frob($userref);
-}
+# Get a Flickr token first
+$flickr = new phpFlickr($flickr_api_key,$flickr_api_secret);
+flickr_get_access_token($userref,(isset($_GET['oauth_verifier']) && $_GET['oauth_verifier'] != ''));
 
 
-if ($validtoken){
-	# Valid token... we have a valid token for this user so we're ready to publish.
-	if($publish_type!=''){
-		$photoset_array=flickr_get_photoset();	
-		$photoset_name=$photoset_array[0];
-		$photoset=$photoset_array[1];
-	}
-		
-	if(getval("start_publish","")!=""){
-		if($publish_type=="all"){
-			# Perform sync publishing all (updating any existing)
-			sync_flickr("!collection" . $theme,false,$photoset,$photoset_name,getvalescaped("private",""));
-		}
-		elseif($publish_type=="new"){
-			# Perform sync publishing new only.
-			sync_flickr("!collection" . $theme,true,$photoset,$photoset_name,getvalescaped("private",""));
-		}
-	}
-}
+if($publish_type!='')
+    {
+    $photoset_array=flickr_get_photoset();	
+    $photoset_name=$photoset_array[0];
+    $photoset=$photoset_array[1];
+    }
+    
+if(getval("start_publish","")!="")
+    {
+    if($publish_type=="all")
+        {
+        # Perform sync publishing all (updating any existing)
+        sync_flickr("!collection" . $theme,false,$photoset,$photoset_name,getvalescaped("private",""));
+        }
+    elseif($publish_type=="new")
+        {
+        # Perform sync publishing new only.
+        sync_flickr("!collection" . $theme,true,$photoset,$photoset_name,getvalescaped("private",""));
+        }
+    }
 ?>

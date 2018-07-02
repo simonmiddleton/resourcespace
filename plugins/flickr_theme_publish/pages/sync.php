@@ -18,8 +18,6 @@ if (getval("publish_all","")!="" || getval("publish_new","")!="" || isset($_GET[
 
 include "../../../include/header.php";
 
-//echo "Tokens: " . print_r($flickrtokens);
-
 $theme=getvalescaped("theme","");
 
 $id="flickr_" . $userref . "_" .$theme;
