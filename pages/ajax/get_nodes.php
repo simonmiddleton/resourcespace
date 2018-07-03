@@ -13,7 +13,7 @@ Otherwise, we get all results back based on the name we've searched for.
 */
 $node                = getvalescaped('node', 0, true);
 $resource_type_field = getvalescaped('resource_type_field', 0, true);
-$name                = getvalescaped('name', '');
+$name                = trim(getvalescaped('name', ''));
 $rows                = getvalescaped('rows', 10, true);
 
 // Prevent access to fields to which user does not have access to
@@ -79,7 +79,7 @@ if(($node > 0 || $name != "") && !isset($return['data']) && 0 === count($return)
     }
 
 // Only resource type field specified? That means client code is querying for all options of this field
-if($resource_type_field > 0)
+if($resource_type_field > 0 && $name == "")
     {
     foreach(get_nodes($resource_type_field, null, true) as $node)
         {
