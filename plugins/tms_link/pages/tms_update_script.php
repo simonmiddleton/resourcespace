@@ -12,6 +12,11 @@ $debug_log=false;
 ob_end_clean();
 set_time_limit($cron_job_time_limit);
 
+if(!in_array("tms_link",$plugins))
+    {
+    exit("TMS link plugin is not enabled - exiting.". PHP_EOL);    
+    }
+    
 if($tms_link_email_notify!=""){$email_notify=$tms_link_email_notify;}
 
 // Check when this script was last run - do it now in case of permanent process locks
@@ -22,11 +27,11 @@ $tms_link_script_failure_notify_seconds=intval($tms_link_script_failure_notify_d
 if($scriptlastran=="" || time()>=(strtotime($scriptlastran)+$tms_link_script_failure_notify_seconds))
 	{
 	$tmsfailedsubject=(($tms_link_test_mode)?"TESTING MODE ":"") . "TMS Import script - WARNING";
-	send_mail($email_notify,$tmsfailedsubject,"WARNING: The TMS Import Script has not completed since "  . (($scriptlastran!="")?date("l F jS Y @ H:i:s",strtotime($scriptlastran)):$lang["status-never"]) . ".\r\n You can safely ignore this warning only if you subsequently receive notification of a successful script completion.",$email_from);
+	send_mail($email_notify,$tmsfailedsubject,"WARNING: The TMS Import Script has not completed since "  . (($scriptlastran!="")?date("l F jS Y @ H:i:s",strtotime($scriptlastran)):$lang["status-never"]) . PHP_EOL . " You can safely ignore this warning only if you subsequently receive notification of a successful script completion.",$email_from);
 	}
 
 
-if (php_sapi_name() == 'cli' && $argc == 2)
+if ($argc == 2)
 	{
 	if ( in_array($argv[1], array('--help', '-help', '-h', '-?')) )
 		{
@@ -53,7 +58,7 @@ if (is_process_lock("tms_link"))
 	echo 'TMS script lock is in place. Deferring.' . PHP_EOL;
 	echo 'To clear the lock after a failed run use --clearlock flag.' . PHP_EOL;
 	$tmsfailedsubject=(($tms_link_test_mode)?"TESTING MODE ":"") . "TMS Import script - FAILED";
-	send_mail($email_notify,$tmsfailedsubject,"The TMS script failed to run because a process lock was in place. This indicates that the previous run did not complete. If you need to clear the lock after a failed run, run the script as follows:-\r\n\r\nphp tms_update_script.php --clearlock\r\n",$email_from);
+	send_mail($email_notify,$tmsfailedsubject,"The TMS script failed to run because a process lock was in place. This indicates that the previous run did not complete. If you need to clear the lock after a failed run, run the script as follows:-" . PHP_EOL . PHP_EOL . " php tms_update_script.php --clearlock" . PHP_EOL ,$email_from);
 	exit();
 	}
 set_process_lock("tms_link");
@@ -64,10 +69,10 @@ $tms_script_start_time = microtime(true);
 $tms_resources=tms_link_get_tms_resources();
 
 $tmscount=count($tms_resources);
-$tmsupdated=0;
 $logtext="";
 $tms_updated_array=array();
 $tmserrors=array();
+$tms_log=false;
 
 if(trim($tms_link_log_directory)!="")
 	{
@@ -100,9 +105,15 @@ if(trim($tms_link_log_directory)!="")
 			}
 		
 		$logfile=fopen($tms_link_log_directory . DIRECTORY_SEPARATOR . "tms_import_log_" . date("Y_m_d_H_i") . ".log","ab");
+        $tms_log = true;
 		}
 	}
-	
+
+$logmessage = "Script started at " . date("Y-m-d H:i",time()) . PHP_EOL;
+echo $logmessage;
+if($tms_log){fwrite($logfile,$logmessage);}
+    
+    
 // Get field mapping configuration
 $tms_link_field_mappings=unserialize(base64_decode($tms_link_field_mappings_saved));
 
@@ -122,17 +133,19 @@ while ($tmspointer<$tmscount && $tmspointer<$tms_link_test_count)
 			}
 		else
 			{
-			$logmessage = "Invalid TMS data stored in ResourceSpace: " . $tms_resources[$t]["objectid"];
+			$logmessage = "Invalid TMS data stored in ResourceSpace: '" . $tms_resources[$t]["objectid"] . "'";
 			$tmserrors[$tms_resources[$t]["resource"]] = $logmessage;
-			//echo $logmessage;
-			fwrite($logfile,$logmessage);
-			}
+			if($tms_log){fwrite($logfile,$logmessage . PHP_EOL);}
+            }
 		}
 		
 				
-	fwrite($logfile,"Retrieving data from TMS system\r\n");
-	$tmsresults=tms_link_get_tms_data("", $tms_query_ids);	
+	$logmessage = "Retrieving data from TMS system" . PHP_EOL;
+    echo $logmessage;
+	if($tms_log){fwrite($logfile,$logmessage);}
 	
+    $tmsresults=tms_link_get_tms_data("", $tms_query_ids);
+     
 	if(!is_array($tmsresults) || count($tmsresults)==0)
 		{
 		echo "No TMS data received, continuing" . PHP_EOL;
@@ -152,26 +165,25 @@ while ($tmspointer<$tmscount && $tmspointer<$tms_link_test_count)
 				{
 				$tms_data_found=true;
 				debug("TMS_LINK - Checking resource: "  . $tms_resources[$ri]["resource"]  . ". Object ID: " . $tms_resources[$ri]["objectid"]);
-				$logmessage= "Checking resource: "  . $tms_resources[$ri]["resource"]  . ". Object ID: " . $tms_resources[$ri]["objectid"] . "\r\n";
+				$logmessage= "Checking resource: "  . $tms_resources[$ri]["resource"]  . ". Object ID: " . $tms_resources[$ri]["objectid"] . PHP_EOL;
 				echo $logmessage;
-				fwrite($logfile,$logmessage);
-				//exit();
+                if($tms_log){fwrite($logfile,$logmessage);}
 				
 				// Check checksum
 				if(isset($tmsresult["RowChecksum"]) && $tms_resources[$ri]["checksum"]==$tmsresult["RowChecksum"])
 					{
-					debug("TMS_LINK ---- Checksum matches for resource #" .  $tms_resources[$ri]["resource"] . ". Skipping...\r\n");
-					$logmessage = "-- Checksum matches. Skipping...\r\n";
+					debug("TMS_LINK ---- Checksum matches for resource #" .  $tms_resources[$ri]["resource"] . ". Skipping..." . PHP_EOL);
+					$logmessage = "-- Checksum matches. Skipping...". PHP_EOL;
 					echo $logmessage;
-					fwrite($logfile,$logmessage);
+                    if($tms_log){fwrite($logfile,$logmessage);}
 					}
 				else
 					{
 					//print_r($tmsresult);
-					debug("TMS_LINK ---- UPDATE! Checksum differs for resource #" .  $tms_resources[$ri]["resource"] . "\r\n");
-					$logmessage = "-- Checksum differs.(CURRENT: " . $tms_resources[$ri]["checksum"] . " vs NEW: " . (isset($tmsresult["RowChecksum"])?$tmsresult["RowChecksum"]:"EMPTY") . ") Updating.\r\n";
+					debug("TMS_LINK ---- UPDATE! Checksum differs for resource #" .  $tms_resources[$ri]["resource"] . PHP_EOL);
+					$logmessage = "-- Checksum differs.(CURRENT: " . $tms_resources[$ri]["checksum"] . " vs NEW: " . (isset($tmsresult["RowChecksum"])?$tmsresult["RowChecksum"]:"EMPTY") . ") Updating." . PHP_EOL;
 					echo $logmessage;
-					fwrite($logfile,$logmessage);
+                    if($tms_log){fwrite($logfile,$logmessage);}
 					
 					$updatedok=false;
 					// Update fields if necessary
@@ -184,9 +196,9 @@ while ($tmspointer<$tmscount && $tmspointer<$tms_link_test_count)
 								{
 								if(!$tms_link_test_mode)
 									{
-									$logmessage = "---- Updating RS field " . $tms_link_field_id . " from column " . $tms_link_column_name . ". VALUE: " . $tmsresult[$tms_link_column_name] . "\r\n";
+									$logmessage = "---- Updating RS field " . $tms_link_field_id . " from column " . $tms_link_column_name . ". VALUE: " . $tmsresult[$tms_link_column_name] . PHP_EOL;
 									echo $logmessage;
-									fwrite($logfile,$logmessage);
+									if($tms_log){fwrite($logfile,$logmessage);}
 									update_field($tms_resources[$ri]["resource"],$tms_link_field_id,escape_check($tmsresult[$tms_link_column_name]));
 									}
 								if($tms_link_field_id!=$tms_link_checksum_field){$updatedok=true;} // Don't record as successful - if it is only the checksum that has changed then this has not really been worth processing 
@@ -195,17 +207,15 @@ while ($tmspointer<$tmscount && $tmspointer<$tms_link_test_count)
 						}
 					if($updatedok)
 						{
-						$tmsupdated++;
 						$tms_updated_array[$tms_resources[$ri]["resource"]]=$tms_resources[$ri]["objectid"];
-						
-						fwrite($logfile,"Resource " . $tms_resources[$ri]["resource"] . " : Updated successfully \r\n");
+						if($tms_log){fwrite($logfile,"Resource " . $tms_resources[$ri]["resource"] . " : Updated successfully" . PHP_EOL);}
 						}
 					else
 						{
-						$logmessage="Checksum differs but no changes were found when comparing ResourceSpace data with TMS data.\r\n";
+						$logmessage="Checksum differs but no changes were found when comparing ResourceSpace data with TMS data.";
 						$tmserrors[$tms_resources[$ri]["resource"]]=$logmessage;
 						echo $logmessage;
-						fwrite($logfile,"Resource " . $tms_resources[$ri]["resource"] . " : " . $logmessage);
+                        if($tms_log){fwrite($logfile,"Resource " . $tms_resources[$ri]["resource"] . " : " . $logmessage . PHP_EOL);}
 						}
 					}
 				}
@@ -223,39 +233,38 @@ while ($tmspointer<$tmscount && $tmspointer<$tms_link_test_count)
 	
 	}
 	
-$logtext.=sprintf("TMS Script completed in %01.2f seconds.\n", microtime(true) - $tms_script_start_time) . "\r\n";
+$logtext .= PHP_EOL . sprintf("TMS Script completed in %01.2f seconds.\n", microtime(true) - $tms_script_start_time) . PHP_EOL;
 
 if($tmscount==0)
 	{
 	$tmsstatustext="Completed with errors";
-	fwrite($logfile,$tmsstatustext);
+	if($tms_log){fwrite($logfile,$tmsstatustext);}
 	$logtext.="No Resources found with TMS IDs. Please check the tms_link plugin configuration.";	
-	fwrite($logfile,"No Resources found with TMS IDs. Please check the tms_link plugin configuration.");
+	if($tms_log){fwrite($logfile,"No Resources found with TMS IDs. Please check the tms_link plugin configuration.");}
 	}
 else
 	{
-	$logtext.="Processed " . $tmscount .  " resource(s) with TMS Object IDs.\r\n\r\n";
-	
-	
-	$logtext.="Successfully updated " . $tmsupdated .  " resource(s).\r\n\r\n";
+	$logtext.="Processed " . $tmscount .  " resource(s) with TMS Object IDs." . PHP_EOL . PHP_EOL;
+	$tmsupdated = count($tms_updated_array);
+	$logtext.="Successfully updated " . $tmsupdated .  " resource(s)." . PHP_EOL . PHP_EOL;
 	if($tmsupdated>0)
-		{$logtext .= "Resource ID :  TMS ObjectID \r\n";}
+		{$logtext .= " Resource ID : TMS ObjectID" . PHP_EOL;}
 	foreach($tms_updated_array as $success_ref=>$success_tmsid)
 		{
-		$logtext .=  $success_ref . " : " . $success_tmsid . "\r\n";
+		$logtext .=  " " . str_pad($success_ref,12) . ": " . $success_tmsid . PHP_EOL;
 		}
 		
 	
 	if(count($tmserrors)!=0)
 		{
-		$tmsstatustext="\r\nCompleted with errors";
-		$logtext.="\r\n\r\nFailed to update " . count($tmserrors) .  " resource(s).\r\n";
-
+		$tmsstatustext= PHP_EOL . "Completed with errors" . PHP_EOL;
+		$logtext.= PHP_EOL . "Failed to update " . count($tmserrors) .  " resource(s)" . PHP_EOL;
 		
-		$logtext .= "\r\nError summary: -\r\n"; 
-		foreach($tmserrors as $errorresource=>$tmserror)
+		$logtext .= PHP_EOL . "Error summary: -" . PHP_EOL; 
+		$logtext .= " Resource ID : Error" . PHP_EOL;
+        foreach($tmserrors as $errorresource=>$tmserror)
 			{
-			$logtext .= "Resource ID " . $errorresource . " " . $tmserror . "\r\n";		
+			$logtext .= " " . str_pad($errorresource,12) . ": " . $tmserror . PHP_EOL;		
 			}
 		}	
 	else
@@ -263,14 +272,21 @@ else
 		$tmsstatustext="Success!";
 		}
 	
-	fwrite($logfile,$tmsstatustext);
+	if($tms_log){fwrite($logfile,$tmsstatustext);}
 	}
 	
 $tmssubject=(($tms_link_test_mode)?"TESTING MODE - ":"") . "TMS Import script - " . $tmsstatustext;
 send_mail($email_notify,$tmssubject,$logtext,$email_from);
 
 echo $logtext;
-fclose($logfile);
+$endmessage = PHP_EOL . "Script completed at " . date("Y-m-d H:i",time()) . PHP_EOL;
+
+if($tms_log)
+    {
+    fwrite($logfile,$logtext);
+    fwrite($logfile,$endmessage);
+    fclose($logfile);
+    }
 
 clear_process_lock("tms_link");
 sql_query("delete from sysvars where name='last_tms_import'");

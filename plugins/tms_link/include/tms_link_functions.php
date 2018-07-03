@@ -130,7 +130,7 @@ function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
 function tms_link_get_tms_resources()
   {
   global $tms_link_checksum_field,$tms_link_object_id_field, $tms_test_count, $tms_link_resource_types;  
-  $tms_resources=sql_query("select rd.resource as resource, rd.value as objectid, rd2.value as checksum from resource_data rd left join resource_data rd2 on rd2.resource=rd.resource and rd2.resource_type_field='" . $tms_link_checksum_field . "' WHERE rd.resource>0 and rd.resource_type_field='" . $tms_link_object_id_field . "' order by rd.resource");    
+  $tms_resources=sql_query("select rd.resource as resource, rd.value as objectid, rd2.value as checksum from resource_data rd left join resource_data rd2 on rd2.resource=rd.resource and rd2.resource_type_field='" . $tms_link_checksum_field . "' WHERE rd.resource>0 and rd.resource_type_field='" . $tms_link_object_id_field . "' AND rd.value <> '' ORDER BY rd.resource");    
   return $tms_resources;    
   }
   
