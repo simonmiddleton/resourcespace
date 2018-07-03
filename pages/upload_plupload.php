@@ -1242,6 +1242,7 @@ if($attach_alternatives_found_to_resources)
                 
         
 jQuery(document).ready(function () {            
+    registerCollapsibleSections();
     jQuery("#pluploader").plupload<?php if(!$plupload_widget) { ?>Queue<?php } ?>(pluploadconfig);
 });
 
@@ -1350,7 +1351,13 @@ if ($allowed_extensions!="" && $alternative==''){
     $allowed_extensions=implode(",",$list);
     ?><p><?php echo str_replace_formatted_placeholder("%extensions", str_replace(",",", ",$allowed_extensions), $lang['allowedextensions-extensions'])?></p><?php } ?>
 
-	
+<div class="BasicsBox">
+        <div id="pluploader"></div>
+</div>	
+
+
+<h2 class="CollapsibleSectionHead collapsed" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
+<div class="CollapsibleSection" id="UploadOptionsSection">
 <form class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
 <?php
 generateFormToken("upload_plupload");
@@ -1423,34 +1430,20 @@ else
 <?php hook ("beforepluploadform");?>
 
 <?php if ($status!="") { ?><?php echo $status?><?php } ?>
-    </div>
-    <div class="BasicsBox">
-	<div id="pluploader">
-	</div>
 </form>
+</div><!-- End of UploadOptionsSection -->
 
 <?php 
-
-if($upload_no_file)
-	{
-	?>
-	<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/upload_plupload.php?createblank=true&replace=<?php echo urlencode($replace) ?>&alternative=<?php echo urlencode($alternative) ?>&collection_add=<?php echo urlencode($collection_add)?>&resource_type=<?php echo urlencode($resource_type)?>&replace_resource=<?php echo urlencode($replace_resource)?>"> &gt; <?php echo $lang["create_empty_resource"]; ?></a></p>
-	<?php
-	}?>
-	
-<?php if ($show_upload_log){
+if ($show_upload_log)
+    {
     ?>
-    <div id="showlog" ><a href="" onClick="jQuery('#upload_results').show();jQuery('#showlog').hide();jQuery('#hidelog').show();return false;" >&#x25B8;&nbsp;Show upload log</a></div>
-    <div id="hidelog" style="display: none"><a href="" onClick="jQuery('#upload_results').hide();jQuery('#showlog').show();jQuery('#hidelog').hide();return false;" >&#x25BE;&nbsp;Hide upload log</a></div>
-    <div id="upload_results" class="upload_results" style="display: none">
+    <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead"><?php echo $lang["log"]; ?></h2>
+    <div class="CollapsibleSection" id="UploadLogSection">
         <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo  $lang["plupload_log_intro"] . date("d M y @ H:i"); ?></textarea>
-        
-    </div>
+    </div> <!-- End of UploadLogSection -->
     <?php
     }
     ?>    
-
-
 </div>
 
 
@@ -1458,12 +1451,4 @@ if($upload_no_file)
 <?php
 
 hook("upload_page_bottom");
-
-
-
 include "../include/footer.php";
-
-?>
-
-
-

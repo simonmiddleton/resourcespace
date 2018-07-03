@@ -4,7 +4,7 @@ if(!hook("replaceuploadoptions")):
 if ($on_upload || $ref<0)
 	{
 	if($show_status_and_access_on_upload && !$on_upload){?></div><!-- end of previous collapsing section --> <?php }
-	if($tabs_on_edit)
+	if($tabs_on_edit && !$on_upload)
 		{
 		?><h1><?php echo $lang["upload-options"] ?></h1>
 		<div id="UploadOptionsSection">
@@ -320,6 +320,18 @@ if ($on_upload || $ref<0)
   
 if($on_upload)
     {
+    if($upload_no_file)
+	{
+	?>
+    <div class="Question" id="question_noupload">
+        <label for="noupload" ><?php echo $lang["noupload"]; ?></label>
+        <div id="noupolad">
+            <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams,array("createblank"=>"true"))?>"><?php echo $lang["create_empty_resource"]; ?></a>
+        </div>
+        <div class="clearerleft"> </div>
+    </div>
+	<?php
+    }
     ?>
     </div> <!-- End of Upload options -->
     <div class="BasicsBox">
