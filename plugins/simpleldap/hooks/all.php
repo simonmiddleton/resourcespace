@@ -27,7 +27,8 @@ function HookSimpleldapAllExternalauth($uname, $pword){
         $addsuffix     = ($usersuffix=="")?"":"." . $usersuffix;
         $username      = escape_check($uname . $addsuffix);
         $password_hash = md5('RS' . $username . generateSecureKey());
-        $userid        = sql_value("SELECT ref AS `value` FROM user WHERE username = '{$username}'", 0);
+        $user          = sql_query("SELECT ref, approved, account_expires FROM user WHERE username = '{$username}'");
+		
         $email         = escape_check($userinfo["email"]);
         $phone         = escape_check($userinfo["phone"]);
         $displayname   = escape_check($userinfo['displayname']);
@@ -51,7 +52,20 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 			}
 					
 
-		if ($userid > 0){
+		if (count($user) > 0)
+			{
+			$userid = $user[0]["ref"];
+            $expires = $user[0]["account_expires"];
+			if ($expires != "" && $expires != "0000-00-00 00:00:00" && strtotime($expires)<=time())
+				{
+				$result['error']=$lang["accountexpired"];
+				return $result;
+				}
+			if ($user[0]["approved"] != 1)
+				{
+				return false;
+				}
+				
 			// user exists, so update info
 			if($simpleldap['update_group'])
 				{
@@ -63,10 +77,12 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 				sql_query("update user set origin='simpleldap', password = '$password_hash', fullname='$displayname', email='$email', telephone='$phone' where ref = '$userid'");
 				}
 			return true;
-		} else {
+			}
+		else
+			{
 			// user authenticated, but does not exist, so create if necessary
-			if ($simpleldap['createusers']){	
-				
+			if ($simpleldap['createusers'])
+				{	
 				$email_matches=sql_query("select ref, username, fullname from user where email='" . $email . "'");				
 												
 				if(count($email_matches)>0)
@@ -143,12 +159,14 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 						
 				
 				return true;
-			} else {
+				}
+			else
+				{
 				// user creation is disabled, so return false
 				return false;
-			}
+				}
 
-		}
+			}
 	
 
 	} else {
