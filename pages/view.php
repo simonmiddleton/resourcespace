@@ -872,6 +872,9 @@ else if(1 == $resource['has_image'])
                             {
                             facial_recognition_endpoint: '<?php echo $baseurl; ?>/pages/ajax/facial_recognition.php',
                             resource                   : <?php echo (int) $ref; ?>,
+                            // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
+                            fr_csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
+                            <?php echo generateAjaxToken('RSFaceRecognition'); ?>
                             });
                     <?php
                     }
