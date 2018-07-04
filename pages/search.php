@@ -678,7 +678,7 @@ if ($allow_reorder && $display!="list") {
 		  url: 'search.php?search=!collection<?php echo urlencode($collection) ?>&reorder=true',
 		  data: {
             order: JSON.stringify(newOrder),
-            CSRFToken: '<?php echo generateCSRFToken($usersession,"reorder_search"); ?>'
+            <?php echo generateAjaxToken('reorder_search'); ?>
             },
 		  success: function(){
 		  <?php if (isset($usercollection) && ($usercollection==$collection)) { ?>

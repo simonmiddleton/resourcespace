@@ -239,7 +239,6 @@ for ($n=0;$n<count($resource_types);$n++)
   
 function ReorderResourceTypes(idsInOrder)
 	{
-	//alert(idsInOrder);
 	var newOrder = [];
 	jQuery.each(idsInOrder, function() {
 		newOrder.push(this.substring(13));
@@ -248,7 +247,10 @@ function ReorderResourceTypes(idsInOrder)
 	jQuery.ajax({
 	  type: 'POST',
 	  url: '<?php echo $baseurl_short?>pages/admin/ajax/update_resource_type_order.php?reorder=true',
-	  data: {order:JSON.stringify(newOrder)},
+    data: {
+        order:JSON.stringify(newOrder),
+        <?php echo generateAjaxToken('ReorderResourceTypes'); ?>
+    },
 	  success: function() {
 		
 		//jQuery('.movelink').show();

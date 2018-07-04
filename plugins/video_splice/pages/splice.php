@@ -137,7 +137,10 @@ foreach ($videos as $video)
 		jQuery.ajax({
 		  type: 'POST',
 		  url: '<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo urlencode($usercollection) ?>&reorder=true',
-		  data: {order:JSON.stringify(newOrder)},
+        data: {
+            order:JSON.stringify(newOrder),
+            <?php echo generateAjaxToken('ReorderResourcesInCollectionSplice'); ?>
+        },
 		  success: function() {
 		    var results = new RegExp('[\\?&amp;]' + 'search' + '=([^&amp;#]*)').exec(window.location.href);
 		    var ref = new RegExp('[\\?&amp;]' + 'ref' + '=([^&amp;#]*)').exec(window.location.href);

@@ -261,7 +261,8 @@ function filterUsers(select_element)
         url: '<?php echo $baseurl_short; ?>plugins/autoassign_mrequests/ajax/filters.php',
         data: {
             ajax: 'true',
-            user_group_id: selected_option.value
+            user_group_id: selected_option.value,
+            <?php echo generateAjaxToken('filterUsers'); ?>
         },
         dataType: "json",
         success: function(data) {
@@ -291,7 +292,6 @@ function filterUsers(select_element)
                                     option += ' (' + obj[prop] + ')</option>';
                                     break;
                             }
-                            // alert(prop + " = " + obj[prop]);
                         }
                     }
                 }

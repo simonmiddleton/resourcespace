@@ -172,7 +172,11 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 				if(resource_id!=''){
 					jQuery.ajax({
 						type: "POST",
-						url: "<?php echo $baseurl_short?>plugins/flickr_theme_publish/pages/flickr_preview.php?ref="+resource_id,
+						url: "<?php echo $baseurl_short?>plugins/flickr_theme_publish/pages/flickr_preview.php",
+                        data: {
+                            ref: resource_id,
+                            <?php echo generateAjaxToken('flickr_ajax_progress'); ?>
+                        },
 						dataType:"json",
 						success: function(data){
 							if(flickr_previews==true){

@@ -50,7 +50,10 @@ include '../../../include/footer.php';
 			jQuery.ajax({
 				type: 'POST',
 				async: false,
-				data: {data:field},
+				data: {
+                    data:field,
+                    <?php echo generateAjaxToken('check_group_field'); ?>
+                },
 				url:  '<?php echo $baseurl_short?>plugins/auto_group/pages/check_group_field.php',
 			}).done(function(data){
 				data=data.replace(/<!--(.*?)-->/gm, "");

@@ -188,7 +188,7 @@ if ($allow_reorder)
 			  data:
                 {
                 order:JSON.stringify(newOrder),
-                CSRFToken: '<?php echo generateCSRFToken($usersession,"reorder_collection"); ?>'
+                <?php echo generateAjaxToken('reorder_collection'); ?>
                 },
 			  success: function() {
                 /*

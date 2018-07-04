@@ -989,7 +989,8 @@ var pluploadconfig = {
                                             ajax: 'true',
                                             ajax_action: 'send_collection_to_admin',
                                             collection: '<?php echo $collection_add; ?>',
-                                            archive: '<?php echo $setarchivestate; ?>'
+                                            archive: '<?php echo $setarchivestate; ?>',
+                                            <?php echo generateAjaxToken('UploadComplete'); ?>
                                         }
                                     });
                                     console.log('A copy of the collection ID <?php echo $collection_add; ?> has been sent via e-mail to admin.');

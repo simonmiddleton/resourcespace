@@ -147,7 +147,12 @@ function HookGrant_editEditReplacesubmitbuttons()
 				async: true,
 				url: '<?php echo $baseurl ?>/pages/edit.php',
 				type: 'POST',
-				data: { ref:'<?php echo $ref ?>', grant_edit_action:'delete', remove_user:user},
+				data: {
+                    ref:'<?php echo $ref ?>',
+                    grant_edit_action:'delete',
+                    remove_user:user,
+                    <?php echo generateAjaxToken('remove_grant_edit'); ?>
+                },
 				timeout: 4000,
 				success: function(result) {
 					if(result='deleted')
