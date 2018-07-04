@@ -2,7 +2,10 @@
 {
 
 global $google_analytics_key;
-
+if (!is_array($google_analytics_key) || count($google_analytics_key)==0)
+    {
+    return false;
+    }
 ?> 
 
 <!-- Google Analytics -->
@@ -18,8 +21,5 @@ ga('send','pageview');
 </script>
 <!-- End Google Analytics -->
 
-
-
 <?php
 }
-	
