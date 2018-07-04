@@ -321,7 +321,7 @@ function ReorderResourceTypeFields(idsInOrder)
         url: '<?php echo $baseurl_short?>pages/admin/ajax/update_resource_type_field_order.php?restypefilter=<?php echo $restypefilter ?>&reorder=true',
         data: {
         order:JSON.stringify(newOrder),
-        CSRFToken: '<?php echo generateCSRFToken($usersession, "reorder_resource_type_fields"); ?>'
+        <?php echo generateAjaxToken('reorder_resource_type_fields');?>
         },
         success: function() {
         

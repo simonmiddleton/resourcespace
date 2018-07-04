@@ -803,7 +803,7 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                                     data: {
                                                         "action" : "submitpending",
                                                         "collection_add" : "<?php echo $collection_add ?>",
-                                                        CSRFToken: '<?php echo generateCSRFToken($usersession, "submit_for_review"); ?>'
+                                                        <?php echo generateAjaxToken('submit_for_review'); ?>
                                                     },
                                                     success: function(response){
                                                             <?php
