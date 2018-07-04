@@ -2801,7 +2801,6 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
             }
         else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
             {
-            // create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true);
             $create_previews_job_data = array(
                 'resource' => $r,
                 'thumbonly' => false,
