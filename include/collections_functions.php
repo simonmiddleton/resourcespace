@@ -1298,7 +1298,8 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 		else {
 			$template=($themeshare)?"emailtheme":"emailcollection";
 		}
-		if (count($emails > 1) && $list_recipients===true) {
+
+		if (is_array($emails) && (count($emails) > 1) && $list_recipients===true) {
 			$body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
 			$templatevars['list-recipients']=$lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
 		}
