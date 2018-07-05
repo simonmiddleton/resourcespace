@@ -14,7 +14,6 @@ if(!in_array($plugin_name, $plugins))
 	
 if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest(false))
 	{
-		
 	$simplesaml['simplesaml_site_block'] = getvalescaped('simplesaml_site_block','');
 	$simplesaml['simplesaml_login'] = getvalescaped('simplesaml_login','');
 	$simplesaml['simplesaml_allow_public_shares'] = getvalescaped('simplesaml_allow_public_shares','');
@@ -22,8 +21,6 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
 	$simplesaml['simplesaml_allow_standard_login'] = getvalescaped('simplesaml_allow_standard_login','');
 	$simplesaml['simplesaml_prefer_standard_login'] = getvalescaped('simplesaml_prefer_standard_login','');
 	$simplesaml['simplesaml_sp'] = getvalescaped('simplesaml_sp','');
-	$simplesaml['simplesaml_login_expiry'] = getvalescaped('simplesaml_login_expiry','');
-	
 	
 	$simplesaml['simplesaml_username_attribute'] = getvalescaped('simplesaml_username_attribute','');
 	$simplesaml['simplesaml_fullname_attribute'] = getvalescaped('simplesaml_fullname_attribute','');
@@ -106,7 +103,6 @@ echo config_text_input('simplesaml_lib_path', $lang['simplesaml_lib_path_label']
 <?php echo config_boolean_field("simplesaml_login",$lang['simplesaml_login'],$simplesaml_login,30);?>
 <?php echo config_boolean_field("simplesaml_allow_public_shares",$lang['simplesaml_allow_public_shares'],$simplesaml_allow_public_shares,30);?>
 <?php echo config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesaml_sp);?>
-<?php echo config_text_input("simplesaml_login_expiry",$lang['simplesaml_login_expiry'],$simplesaml_login_expiry);?>
 <?php echo config_text_input("simplesaml_allowedpaths",$lang['simplesaml_allowedpaths'],implode(',',$simplesaml_allowedpaths));?>
 <?php echo config_boolean_field("simplesaml_allow_standard_login",$lang['simplesaml_allow_standard_login'],$simplesaml_allow_standard_login,30);?>
 <?php echo config_boolean_field("simplesaml_prefer_standard_login",$lang['simplesaml_prefer_standard_login'],$simplesaml_prefer_standard_login,30);?>
