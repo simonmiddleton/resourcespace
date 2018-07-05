@@ -224,7 +224,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 //$options=trim_array(explode(",",$fields[$n]["options"]));
                 $options=array();                
                 node_field_options_override($options,$fields[$n]['ref']);
-				$p="";
+                $p="";
                 $c=0;
                 for ($m=0;$m<count($options);$m++)
                     {
@@ -246,11 +246,11 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 if ($p!="")
                     {
                     if ($search!="") {$search.=", ";}
-					if($checkbox_and)
-						{
-						$p=str_replace(";",", {$fields[$n]["name"]}:",$p);	// this will force each and condition into a separate union in do_search (which will AND)
+                    if($checkbox_and)
+                        {
+                        $p=str_replace(";",", {$fields[$n]["name"]}:",$p);  // this will force each and condition into a separate union in do_search (which will AND)
                         if ($search!="") {$search.=", ";}
-						}
+                        }
                     $search.=$fields[$n]["name"] . ":" . $p;
                     }
                 }
@@ -355,21 +355,21 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
             break;
    
-			case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes  
-			default: 
-				$value=getvalescaped('field_'.$fields[$n]["ref"],'');
-				if ($value!="")
-					{
-					$valueparts=split_keywords($value, false, false, false, false, true);
-					foreach($valueparts as $valuepart)
-						{
-						if ($search!="") {$search.=", ";}
-						// Move any quotes around whole field:value element so that they are kept together
-						$search.= (strpos($valuepart,"\"")===false)?($fields[$n]["name"] . ":" . $valuepart):("\"" . $fields[$n]["name"] . ":" .substr($valuepart,1,-1) . "\"");
-						}
-					}
+            case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes  
+            default: 
+                $value=getvalescaped('field_'.$fields[$n]["ref"],'');
+                if ($value!="")
+                    {
+                    $valueparts=split_keywords($value, false, false, false, false, true);
+                    foreach($valueparts as $valuepart)
+                        {
+                        if ($search!="") {$search.=", ";}
+                        // Move any quotes around whole field:value element so that they are kept together
+                        $search.= (strpos($valuepart,"\"")===false)?($fields[$n]["name"] . ":" . $valuepart):("\"" . $fields[$n]["name"] . ":" .substr($valuepart,1,-1) . "\"");
+                        }
+                    }
             break;
-			}
+            }
         }
 
         ##### NODES #####
@@ -388,7 +388,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             else if(!is_array($searched_field_nodes))
                 {
                 $node_ref .= ', ' . NODE_TOKEN_PREFIX . escape_check($searched_field_nodes);
-				continue;
+                continue;
                 }
 
             $fieldinfo = get_resource_type_field($searchedfield);
@@ -398,11 +398,11 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
             foreach($searched_field_nodes as $searched_node_ref)
                 {
-				if(($fieldinfo["type"] == FIELD_TYPE_CHECK_BOX_LIST && $checkbox_and) || ($fieldinfo["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && $dynamic_keyword_and))
-					{
-					// Split into an additional search element to force a join since this is a separate condition
-					$node_ref .= ', ';
-					}
+                if(($fieldinfo["type"] == FIELD_TYPE_CHECK_BOX_LIST && $checkbox_and) || ($fieldinfo["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && $dynamic_keyword_and))
+                    {
+                    // Split into an additional search element to force a join since this is a separate condition
+                    $node_ref .= ', ';
+                    }
                 $node_ref .= NODE_TOKEN_PREFIX . escape_check($searched_node_ref);
                 }
             }
@@ -520,14 +520,14 @@ function refine_searchstring($search)
 function compile_search_actions($top_actions)
     {
     $options = array();
-	$o=0;
+    $o=0;
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
            $collection, $usercollection, $internal_share_access;
 
-	if(!isset($internal_share_access)){$internal_share_access=false;}
-	
+    if(!isset($internal_share_access)){$internal_share_access=false;}
+    
 
     // globals that could also be passed as a reference
     global $starsearch;
@@ -547,10 +547,10 @@ function compile_search_actions($top_actions)
             );
 
             $options[$o]['value']='save_search_to_collection';
-			$options[$o]['label']=$lang['savethissearchtocollection'];
-			$options[$o]['data_attr']=array();
-			$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
-			$o++;
+            $options[$o]['label']=$lang['savethissearchtocollection'];
+            $options[$o]['data_attr']=array();
+            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+            $o++;
             }
 
         #Home_dash is on, AND NOT Anonymous use, AND (Dash tile user (NOT with a managed dash) || Dash Tile Admin)
@@ -576,9 +576,9 @@ function compile_search_actions($top_actions)
                 }
 
             $options[$o]['value']=$option_name;
-			$options[$o]['label']=$lang['savethissearchtodash'];
-			$options[$o]['data_attr']=$data_attribute;
-			$o++;
+            $options[$o]['label']=$lang['savethissearchtodash'];
+            $options[$o]['data_attr']=$data_attribute;
+            $o++;
             }
         // Save search as Smart Collections
         if($top_actions && $allow_smart_collections && substr($search, 0, 11) != '!collection')
@@ -594,10 +594,10 @@ function compile_search_actions($top_actions)
             );
 
             $options[$o]['value']='save_search_smart_collection';
-			$options[$o]['label']=$lang['savesearchassmartcollection'];
-			$options[$o]['data_attr']=array();
-			$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
-			$o++;
+            $options[$o]['label']=$lang['savesearchassmartcollection'];
+            $options[$o]['data_attr']=array();
+            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+            $o++;
             }
 
         /*// Wasn't able to see this working even in the old code
@@ -619,15 +619,15 @@ function compile_search_actions($top_actions)
             );
 
             $options[$o]['value']='do_saved_search';
-			$options[$o]['label']=$lang['dosavedsearch'];
-			$options[$o]['data_attr']=array();
-			$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
-			$o++;
+            $options[$o]['label']=$lang['dosavedsearch'];
+            $options[$o]['data_attr']=array();
+            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+            $o++;
             }*/
 
         if($resources_count != 0)
             {
-				$extra_tag_attributes = sprintf('
+                $extra_tag_attributes = sprintf('
                         data-url="%spages/collections.php?addsearch=%s&restypes=%s&order_by=%s&sort=%s&archive=%s&mode=resources&daylimit=%s&starsearch=%s"
                     ',
                     $baseurl_short,
@@ -641,10 +641,10 @@ function compile_search_actions($top_actions)
                 );
 
                 $options[$o]['value']='save_search_items_to_collection';
-    			$options[$o]['label']=$lang['savesearchitemstocollection'];
-    			$options[$o]['data_attr']=array();
-    			$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
-    			$o++;
+                $options[$o]['label']=$lang['savesearchitemstocollection'];
+                $options[$o]['data_attr']=array();
+                $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+                $o++;
                 
 
             if(0 != $resources_count && $show_searchitemsdiskusage) 
@@ -664,10 +664,10 @@ function compile_search_actions($top_actions)
                 );
 
                 $options[$o]['value']='search_items_disk_usage';
-				$options[$o]['label']=$lang['searchitemsdiskusage'];
-				$options[$o]['data_attr']=array();
-				$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
-				$o++;
+                $options[$o]['label']=$lang['searchitemsdiskusage'];
+                $options[$o]['data_attr']=array();
+                $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+                $o++;
                 }                
             }
         }
@@ -675,8 +675,8 @@ function compile_search_actions($top_actions)
     if($top_actions && ($k == '' || $internal_share_access))
         {
         $options[$o]['value']            = 'csv_export_results_metadata';
-		$options[$o]['label']            = $lang['csvExportResultsMetadata'];
-		$options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restype=%s&order_by=%s&archive=%s&sort=%s&starsearch=%s',
+        $options[$o]['label']            = $lang['csvExportResultsMetadata'];
+        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restype=%s&order_by=%s&archive=%s&sort=%s&starsearch=%s',
             $baseurl_short,
             urlencode($search),
             urlencode($restypes),
@@ -686,11 +686,11 @@ function compile_search_actions($top_actions)
             urlencode($starsearch)
         );
 
-		$o++;
+        $o++;
         
         $options[$o]['value']            = 'csv_export_results_metadata_personal';
-		$options[$o]['label']            = $lang['csvExportResultsMetadataPersonal'];
-		$options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restype=%s&order_by=%s&archive=%s&sort=%s&starsearch=%s&personal=true',
+        $options[$o]['label']            = $lang['csvExportResultsMetadataPersonal'];
+        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restype=%s&order_by=%s&archive=%s&sort=%s&starsearch=%s&personal=true',
             $baseurl_short,
             urlencode($search),
             urlencode($restypes),
@@ -700,52 +700,52 @@ function compile_search_actions($top_actions)
             urlencode($starsearch)
         );
 
-		$o++;
+        $o++;
         }
 
     // Add extra search actions or modify existing options through plugins
     $modified_options = hook('render_search_actions_add_option','',array($options));
-	if($top_actions && !empty($modified_options))
-		{
+    if($top_actions && !empty($modified_options))
+        {
         $options=$modified_options;
-		}
+        }
 
     return $options;
     }
 
 function search_filter($search,$archive,$restypes,$starsearch,$recent_search_daylimit,$access_override,$return_disk_usage,$editable_only=false)
-	{
-	global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
-	$heightmax,$widthmin,$widthmax,$filesizemin,$filesizemax,$fileextension,$haspreviewimage,$geo_search_restrict,$pending_review_visible_to_all,
-	$search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
-	
-	# Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
-	if(!is_array($archive)){$archive=explode(",",$archive);}
-	# Start with an empty string = an open query.
-	$sql_filter="";
-		
-	# Apply resource types
-	if (($restypes!="")&&(substr($restypes,0,6)!="Global") && substr($search, 0, 11) != '!collection')
-	    {
-	    if ($sql_filter!="") {$sql_filter.=" and ";}
-	    $restypes_x=explode(",",$restypes);
-	    $sql_filter.="resource_type in ('" . join("','",$restypes_x) . "')";
-	    }
-	
-	# Apply star search
-	if ($starsearch!="" && $starsearch!=0 && $starsearch!=-1)
-	    {
-	    if ($sql_filter!="") {$sql_filter.=" and ";}
-	    $sql_filter.="user_rating >= '$starsearch'";
-	    }   
-	if ($starsearch==-1)
-	    {
-	    if ($sql_filter!="") {$sql_filter.=" and ";}
-	    $sql_filter.="user_rating = '-1'";
-	    }
-	
-	# Apply day limit
-	if('' != $recent_search_daylimit && is_numeric($recent_search_daylimit))
+    {
+    global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
+    $heightmax,$widthmin,$widthmax,$filesizemin,$filesizemax,$fileextension,$haspreviewimage,$geo_search_restrict,$pending_review_visible_to_all,
+    $search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
+    
+    # Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
+    if(!is_array($archive)){$archive=explode(",",$archive);}
+    # Start with an empty string = an open query.
+    $sql_filter="";
+        
+    # Apply resource types
+    if (($restypes!="")&&(substr($restypes,0,6)!="Global") && substr($search, 0, 11) != '!collection')
+        {
+        if ($sql_filter!="") {$sql_filter.=" and ";}
+        $restypes_x=explode(",",$restypes);
+        $sql_filter.="resource_type in ('" . join("','",$restypes_x) . "')";
+        }
+    
+    # Apply star search
+    if ($starsearch!="" && $starsearch!=0 && $starsearch!=-1)
+        {
+        if ($sql_filter!="") {$sql_filter.=" and ";}
+        $sql_filter.="user_rating >= '$starsearch'";
+        }   
+    if ($starsearch==-1)
+        {
+        if ($sql_filter!="") {$sql_filter.=" and ";}
+        $sql_filter.="user_rating = '-1'";
+        }
+    
+    # Apply day limit
+    if('' != $recent_search_daylimit && is_numeric($recent_search_daylimit))
         {
         if('' != $sql_filter)
             {
@@ -754,84 +754,84 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 
         $sql_filter.= "creation_date > (curdate() - interval '" . escape_check($recent_search_daylimit) . "' DAY)";
         }
-	
-	# The ability to restrict access by the user that created the resource.
-	if (isset($resource_created_by_filter) && count($resource_created_by_filter)>0)
-	    {
-	    $created_filter="";
-	    foreach ($resource_created_by_filter as $filter_user)
-		{
-		if ($filter_user==-1) {$filter_user=$userref;} # '-1' can be used as an alias to the current user. I.e. they can only see their own resources in search results.
-		if ($created_filter!="") {$created_filter.=" or ";} 
-		$created_filter.= "created_by = '" . $filter_user . "'";
-		}    
-	    if ($created_filter!="")
-		{
-		if ($sql_filter!="") {$sql_filter.=" and ";}            
-		$sql_filter.="(" . $created_filter . ")";
-		}
-	    }
-	
-	
-	# Geo zone exclusion
-	# A list of upper/lower long/lat bounds, defining areas that will be excluded from geo search results.
-	# Areas are defined as southwest lat, southwest long, northeast lat, northeast long
-	if (count($geo_search_restrict)>0 && substr($search,0,4)=="!geo")
-	    {
-	    foreach ($geo_search_restrict   as $zone)
-		{
-		if ($sql_filter!="") {$sql_filter.=" and ";}
-		$sql_filter.= "(geo_lat is null or geo_long is null or not(geo_lat >= '" . $zone[0] . "' and geo_lat<= '" . $zone[2] . "'";
-		$sql_filter.= "and geo_long >= '" . $zone[1] . "' and geo_long<= '" . $zone[3] . "'))";
-		}
-	    }
-	
-	# append resource type restrictions based on 'T' permission 
-	# look for all 'T' permissions and append to the SQL filter.
-	$rtfilter=array();
-	for ($n=0;$n<count($userpermissions);$n++)
-	    {
-	    if (substr($userpermissions[$n],0,1)=="T")
-			{
-			$rt=substr($userpermissions[$n],1);
-			if (is_numeric($rt)&&!$access_override) {$rtfilter[]=$rt;}
-			}
-	    }
-	if (count($rtfilter)>0)
-	    {
-	    if ($sql_filter!="") {$sql_filter.=" and ";}
-	    $sql_filter.="resource_type not in (" . join(",",$rtfilter) . ")";
-	    }
-	
-	# append "use" access rights, do not show confidential resources unless admin
-	if (!checkperm("v")&&!$access_override)
-	    {
-	    if ($sql_filter!="") {$sql_filter.=" and ";}
-	    # Check both the resource access, but if confidential is returned, also look at the joined user-specific or group-specific custom access for rows.
-	    $sql_filter.="(r.access<>'2' or (r.access=2 and ((rca.access is not null and rca.access<>2) or (rca2.access is not null and rca2.access<>2))))";
-	    }
-	    
-	# append archive searching. Updated Jan 2016 to apply to collections as resources in a pending state that are in a shared collection could bypass approval process
-	if (!$access_override)
-	    {
-	    if(substr($search,0,11)=="!collection" || substr($search,0,5)=="!list")
-			{
-			# Resources in a collection or list may be in any archive state
-			if(substr($search,0,11)=="!collection" && $collections_omit_archived && !checkperm("e2"))
-				{
-				$sql_filter.= (($sql_filter!="")?" and ":"") . "archive<>2";
-				}			
-			}
-		elseif ($search_all_workflow_states)
-			{hook("search_all_workflow_states_filter");}   
-		elseif ($archive_standard && $pending_review_visible_to_all)
+    
+    # The ability to restrict access by the user that created the resource.
+    if (isset($resource_created_by_filter) && count($resource_created_by_filter)>0)
+        {
+        $created_filter="";
+        foreach ($resource_created_by_filter as $filter_user)
+        {
+        if ($filter_user==-1) {$filter_user=$userref;} # '-1' can be used as an alias to the current user. I.e. they can only see their own resources in search results.
+        if ($created_filter!="") {$created_filter.=" or ";} 
+        $created_filter.= "created_by = '" . $filter_user . "'";
+        }    
+        if ($created_filter!="")
+        {
+        if ($sql_filter!="") {$sql_filter.=" and ";}            
+        $sql_filter.="(" . $created_filter . ")";
+        }
+        }
+    
+    
+    # Geo zone exclusion
+    # A list of upper/lower long/lat bounds, defining areas that will be excluded from geo search results.
+    # Areas are defined as southwest lat, southwest long, northeast lat, northeast long
+    if (count($geo_search_restrict)>0 && substr($search,0,4)=="!geo")
+        {
+        foreach ($geo_search_restrict   as $zone)
+        {
+        if ($sql_filter!="") {$sql_filter.=" and ";}
+        $sql_filter.= "(geo_lat is null or geo_long is null or not(geo_lat >= '" . $zone[0] . "' and geo_lat<= '" . $zone[2] . "'";
+        $sql_filter.= "and geo_long >= '" . $zone[1] . "' and geo_long<= '" . $zone[3] . "'))";
+        }
+        }
+    
+    # append resource type restrictions based on 'T' permission 
+    # look for all 'T' permissions and append to the SQL filter.
+    $rtfilter=array();
+    for ($n=0;$n<count($userpermissions);$n++)
+        {
+        if (substr($userpermissions[$n],0,1)=="T")
+            {
+            $rt=substr($userpermissions[$n],1);
+            if (is_numeric($rt)&&!$access_override) {$rtfilter[]=$rt;}
+            }
+        }
+    if (count($rtfilter)>0)
+        {
+        if ($sql_filter!="") {$sql_filter.=" and ";}
+        $sql_filter.="resource_type not in (" . join(",",$rtfilter) . ")";
+        }
+    
+    # append "use" access rights, do not show confidential resources unless admin
+    if (!checkperm("v")&&!$access_override)
+        {
+        if ($sql_filter!="") {$sql_filter.=" and ";}
+        # Check both the resource access, but if confidential is returned, also look at the joined user-specific or group-specific custom access for rows.
+        $sql_filter.="(r.access<>'2' or (r.access=2 and ((rca.access is not null and rca.access<>2) or (rca2.access is not null and rca2.access<>2))))";
+        }
+        
+    # append archive searching. Updated Jan 2016 to apply to collections as resources in a pending state that are in a shared collection could bypass approval process
+    if (!$access_override)
+        {
+        if(substr($search,0,11)=="!collection" || substr($search,0,5)=="!list")
+            {
+            # Resources in a collection or list may be in any archive state
+            if(substr($search,0,11)=="!collection" && $collections_omit_archived && !checkperm("e2"))
+                {
+                $sql_filter.= (($sql_filter!="")?" and ":"") . "archive<>2";
+                }           
+            }
+        elseif ($search_all_workflow_states || substr($search,0,8)=="!related")
+            {hook("search_all_workflow_states_filter");}   
+        elseif ($archive_standard && $pending_review_visible_to_all)
             {
             # If resources pending review are visible to all, when performing a default search with no archive specified 
             # that normally returns only active resources, include pending review (-1) resources too.
             if ($sql_filter!="") {$sql_filter.=" and ";}
             $sql_filter.="archive in('0','-1')";
             } 
-		else
+        else
             {
             # Append normal filtering - extended as advanced search now allows searching by archive state
             if($sql_filter!="")
@@ -852,140 +852,140 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             if (!$pending_submission_searchable_to_all) {$sql_filter.= (($sql_filter!="")?" and ":"") . "(r.archive<>-2 or r.created_by='" . $userref . "')";}
             if (!$pending_review_visible_to_all){$sql_filter.=(($sql_filter!="")?" and ":"") . "(r.archive<>-1 or r.created_by='" . $userref . "')";}
             }
-		}
-		
-	# Add code to filter out resoures in archive states that the user does not have access to due to a 'z' permission
-	$filterblockstates="";
-	for ($n=-2;$n<=3;$n++)
-	    {
-	    if(checkperm("z" . $n) && !$access_override)
-			{           
-			if ($filterblockstates!="") {$filterblockstates.="','";}
-			$filterblockstates .= $n;
-			}
-	    }
-	
-	foreach ($additional_archive_states as $additional_archive_state)
-	    {
-	    if(checkperm("z" . $additional_archive_state))
-			{
-			if ($filterblockstates!="") {$filterblockstates.="','";}
-			$filterblockstates .= $additional_archive_state;
-			}
-	    }
-	if ($filterblockstates!=""&&!$access_override)
-	    {
-	    if ($uploader_view_override)
-			{
-			if ($sql_filter!="") {$sql_filter.=" and ";}
-			$sql_filter.="(archive not in ('$filterblockstates') or created_by='" . $userref . "')";
-			}
-	    else
-			{
-			if ($sql_filter!="") {$sql_filter.=" and ";}
-			$sql_filter.="archive not in ('$filterblockstates')";
-			}
-	    }
-	
-	# Append media restrictions
-	
-	if ($heightmin!='')
-		{		
-		if ($sql_filter!="") {$sql_filter.=" and ";}
-		$sql_filter.= "dim.height>='$heightmin'";
-		}
-		
-		
-	# append ref filter - never return the batch upload template (negative refs)
-	if ($sql_filter!="") {$sql_filter.=" and ";}
-	$sql_filter.="r.ref>0";
-	
-	
-	// Append filter if only searching for editable resources
-	// ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref) && !checkperm("ert" . $resourcedata['resource_type']))
-	if($editable_only)
-		{		
-		$editable_filter = "";
-		# Construct resource type exclusion based on 'ert' permission 
-		# look for all 'ert' permissions and append to the exclusion array.
-		$rtexclusions=array();
-		for ($n=0;$n<count($userpermissions);$n++)
-			{
-			if (substr($userpermissions[$n],0,3)=="ert")
-				{
-				$rt=substr($userpermissions[$n],3);
-				if (is_numeric($rt)) {$rtexclusions[]=$rt;}
-				}
-			}	
-			
-		$blockeditstates=array();
-		for ($n=-2;$n<=3;$n++)
-			{
-			if(!checkperm("e" . $n))
-				{           
-				$blockeditstates[] = $n;
-				}
-			}
-	
-		foreach ($additional_archive_states as $additional_archive_state)
-			{
-			if(!checkperm("e" . $n))
-				{
-				$blockeditstates[] = $n;
-				}
-			}
+        }
+        
+    # Add code to filter out resoures in archive states that the user does not have access to due to a 'z' permission
+    $filterblockstates="";
+    for ($n=-2;$n<=3;$n++)
+        {
+        if(checkperm("z" . $n) && !$access_override)
+            {           
+            if ($filterblockstates!="") {$filterblockstates.="','";}
+            $filterblockstates .= $n;
+            }
+        }
+    
+    foreach ($additional_archive_states as $additional_archive_state)
+        {
+        if(checkperm("z" . $additional_archive_state))
+            {
+            if ($filterblockstates!="") {$filterblockstates.="','";}
+            $filterblockstates .= $additional_archive_state;
+            }
+        }
+    if ($filterblockstates!=""&&!$access_override)
+        {
+        if ($uploader_view_override)
+            {
+            if ($sql_filter!="") {$sql_filter.=" and ";}
+            $sql_filter.="(archive not in ('$filterblockstates') or created_by='" . $userref . "')";
+            }
+        else
+            {
+            if ($sql_filter!="") {$sql_filter.=" and ";}
+            $sql_filter.="archive not in ('$filterblockstates')";
+            }
+        }
+    
+    # Append media restrictions
+    
+    if ($heightmin!='')
+        {       
+        if ($sql_filter!="") {$sql_filter.=" and ";}
+        $sql_filter.= "dim.height>='$heightmin'";
+        }
+        
+        
+    # append ref filter - never return the batch upload template (negative refs)
+    if ($sql_filter!="") {$sql_filter.=" and ";}
+    $sql_filter.="r.ref>0";
+    
+    
+    // Append filter if only searching for editable resources
+    // ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref) && !checkperm("ert" . $resourcedata['resource_type']))
+    if($editable_only)
+        {       
+        $editable_filter = "";
+        # Construct resource type exclusion based on 'ert' permission 
+        # look for all 'ert' permissions and append to the exclusion array.
+        $rtexclusions=array();
+        for ($n=0;$n<count($userpermissions);$n++)
+            {
+            if (substr($userpermissions[$n],0,3)=="ert")
+                {
+                $rt=substr($userpermissions[$n],3);
+                if (is_numeric($rt)) {$rtexclusions[]=$rt;}
+                }
+            }   
+            
+        $blockeditstates=array();
+        for ($n=-2;$n<=3;$n++)
+            {
+            if(!checkperm("e" . $n))
+                {           
+                $blockeditstates[] = $n;
+                }
+            }
+    
+        foreach ($additional_archive_states as $additional_archive_state)
+            {
+            if(!checkperm("e" . $n))
+                {
+                $blockeditstates[] = $n;
+                }
+            }
 
-		// Add code to hide resources in archive<0 unless has 't' permission, resource has been contributed by user or has ert permission
+        // Add code to hide resources in archive<0 unless has 't' permission, resource has been contributed by user or has ert permission
         if(!checkperm("t"))
-			{
-			$editable_filter.="(archive not in (-2,-1) or (created_by='" . $userref . "' ";
-			if(count($rtexclusions)>0)
-				{
-				$editable_filter .= " or resource_type in (" . implode(",",$rtexclusions) . ")";				
-				}
-			$editable_filter .= "))";
-			}	
-				
-		if (count($blockeditstates) > 0)
-			{
-			$blockeditoverride="";
-			global $userref;
-			if ($edit_access_for_contributor)
-				{
-				$blockeditoverride .= " created_by='" . $userref . "'";
-				}
-			if(count($rtexclusions)>0)
-				{
-				if ($blockeditoverride!="") {$blockeditoverride.=" and ";}
-				$blockeditoverride .= " resource_type in (" . implode(",",$rtexclusions) . ")";				
-				}
-			if ($editable_filter!="") {$editable_filter.=" and ";}
-			$editable_filter.="(archive not in ('" . implode("','",$blockeditstates) . "')" . (($blockeditoverride!="")?" or " . $blockeditoverride:"") . ")";
-			}
+            {
+            $editable_filter.="(archive not in (-2,-1) or (created_by='" . $userref . "' ";
+            if(count($rtexclusions)>0)
+                {
+                $editable_filter .= " or resource_type in (" . implode(",",$rtexclusions) . ")";                
+                }
+            $editable_filter .= "))";
+            }   
+                
+        if (count($blockeditstates) > 0)
+            {
+            $blockeditoverride="";
+            global $userref;
+            if ($edit_access_for_contributor)
+                {
+                $blockeditoverride .= " created_by='" . $userref . "'";
+                }
+            if(count($rtexclusions)>0)
+                {
+                if ($blockeditoverride!="") {$blockeditoverride.=" and ";}
+                $blockeditoverride .= " resource_type in (" . implode(",",$rtexclusions) . ")";             
+                }
+            if ($editable_filter!="") {$editable_filter.=" and ";}
+            $editable_filter.="(archive not in ('" . implode("','",$blockeditstates) . "')" . (($blockeditoverride!="")?" or " . $blockeditoverride:"") . ")";
+            }
             
         $updated_editable_filter = hook("modifysearcheditable","",array($editable_filter,$userref));
         if($updated_editable_filter !== false)
             {
             $editable_filter = $updated_editable_filter;
-            }		
+            }       
         
          if($editable_filter != "")
-			{
-			if ($sql_filter != "")
-				{
-				$sql_filter .= " AND ";
-			    }
-			$sql_filter .= $editable_filter;
-			}
-		}
-	return $sql_filter;
-	}
+            {
+            if ($sql_filter != "")
+                {
+                $sql_filter .= " AND ";
+                }
+            $sql_filter .= $editable_filter;
+            }
+        }
+    return $sql_filter;
+    }
 
 function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only=false, $returnsql=false)
-	{
-	# Process special searches. These return early with results.
+    {
+    # Process special searches. These return early with results.
     global $FIXED_LIST_FIELD_TYPES;
-	
+    
     # View Last
     if (substr($search,0,5)=="!last") 
         {
@@ -1019,7 +1019,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search,0,19)=="!contentscollection")
         {
         $flags=substr($search,19,((strpos($search," ")!==false)?strpos($search," "):strlen($search)) -19); # Extract User/Public/Theme flags from the beginning of the search parameter.
-    	
+        
         if ($flags=="") {$flags="TP";} # Sensible default
 
         # Add collections based on the provided collection type flags.
@@ -1029,8 +1029,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             if ($collection_filter!="(") {$collection_filter.=" or ";}
             $collection_filter.=" (c.public=1 and (length(c.theme)>0))";
             }
-	
-	 if (strpos($flags,"P")!==false) # Include public collections
+    
+     if (strpos($flags,"P")!==false) # Include public collections
             {
             if ($collection_filter!="(") {$collection_filter.=" or ";}
             $collection_filter.=" (c.public=1 and (length(c.theme)=0 or c.theme is null))";
@@ -1302,8 +1302,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $cuser=explode(" ",$search);$cuser=str_replace("!contributions","",$cuser[0]);
         
         // Don't filter if user is searching for their own resources and $open_access_for_contributor=true;
-		global $open_access_for_contributor;
-		if($open_access_for_contributor && $userref==$cuser){$sql_filter="archive in(" . implode(",",$archive) . ")";$sql_join="";}
+        global $open_access_for_contributor;
+        if($open_access_for_contributor && $userref==$cuser){$sql_filter="archive in(" . implode(",",$archive) . ")";$sql_join="";}
         
         $select=str_replace(",rca.access group_access,rca2.access user_access ",",null group_access, null user_access ",$select);
         $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where created_by='" . $cuser . "' and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
@@ -1356,8 +1356,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search,0,8)=="!hasdata") 
         {       
         $fieldref=intval(trim(substr($search,8)));
-        $hasdatafieldtype = sql_value("SELECT  `type` value FROM resource_type_field WHERE ref = '{$fieldref}'", 0);	
-										
+        $hasdatafieldtype = sql_value("SELECT  `type` value FROM resource_type_field WHERE ref = '{$fieldref}'", 0);    
+                                        
         if(in_array($hasdatafieldtype,$FIXED_LIST_FIELD_TYPES))
             {   
             $sql_join.=" RIGHT JOIN resource_node rn ON r.ref=rn.resource JOIN node n ON n.ref=rn.node where  n.resource_type_field='" . $fieldref . "'";
@@ -1542,7 +1542,7 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
                     {
                     $results[$n]["url_" . $getsize]=get_resource_path($results[$n]["ref"],false,$getsize,false,$previewextension,-1,1,$use_watermark);
                     }
-                }		
+                }       
 
             }
         }
