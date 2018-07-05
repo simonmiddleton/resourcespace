@@ -118,11 +118,13 @@ include "../../include/header.php";
 	<input type="hidden" name="expired" value="<?php echo htmlspecialchars(getvalescaped("expired",""))?>">
 	<?php
     generateFormToken("user_change_password");
-
-    hook('additionaluserpreferences');
 	
 	if(!$password_reset_mode)
-	    {?>
+	    {
+	    // Additional user preferences only available in use cases other than password reset
+        hook('additionaluserpreferences');
+
+	    ?>
 	    <div class="Question">
 	    <label for="password"><?php echo $lang["currentpassword"]?></label>
 	    <input type="password" class="stdwidth" name="currentpassword" id="currentpassword" value="<?php if ($userpassword=="b58d18f375f68d13587ce8a520a87919"){?>admin<?php } ?>"/>

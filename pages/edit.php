@@ -2107,10 +2107,6 @@ if($disablenavlinks)
         
 if (!$edit_upload_options_at_top){include '../include/edit_upload_options.php';}
 
-if(!hook('replacesubmitbuttons'))
-    {
-    SaveAndClearButtons("NoPaddingSaveClear");
-    }
 ?>
 
 
@@ -2119,6 +2115,11 @@ if(!hook('replacesubmitbuttons'))
 <?php 
 # Duplicate navigation
 if (!$multiple && !$modal && $ref>0 && !hook("dontshoweditnav")) {EditNav();}
+
+if(!hook('replacesubmitbuttons'))
+    {
+    SaveAndClearButtons("NoPaddingSaveClear");
+    }
 
 if(!$is_template && $show_required_field_label)
     {
