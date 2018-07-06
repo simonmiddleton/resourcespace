@@ -916,7 +916,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews']);
 
 	# Debug
-	debug("create_previews(ref = {$ref}, thumbonly = {$thumbonly}, extension = {$extension}, previewonly = {$previewonly}, previewbased = {$previewbased}, alternative = {$alternative}, ignoremaxsize = {$ignoremaxsize}, ingested = {$ingested}, checksum_required = {$checksum_required})", RESOURCE_LOG_APPEND_PREVIOUS);
+    debug("create_previews(ref = {$ref}, thumbonly = {$thumbonly}, extension = {$extension}, previewonly = {$previewonly}, previewbased = {$previewbased}, alternative = {$alternative}, ignoremaxsize = {$ignoremaxsize}, ingested = {$ingested}, checksum_required = {$checksum_required})", RESOURCE_LOG_APPEND_PREVIOUS);
 
 	if (!$previewonly) {
 		// make sure the extension is the same as the original so checksums aren't done for previews
@@ -965,9 +965,9 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 		# We're generating based on a new preview (scr) image.
 		$file=get_resource_path($ref,true,"tmp",false,"jpg");	
 		}
-	
-	# Debug
-	debug("File source is $file",RESOURCE_LOG_APPEND_PREVIOUS);
+
+    debug("File source is $file",RESOURCE_LOG_APPEND_PREVIOUS);
+
 	# Make sure the file exists, if not update preview_attempts so that we don't keep trying to generate a preview
 	if (!file_exists($file)) 
 		{
@@ -1174,7 +1174,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles;
 
 	$icc_transform_complete=false;
-	debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested)",RESOURCE_LOG_APPEND_PREVIOUS);
+    debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested)",RESOURCE_LOG_APPEND_PREVIOUS);
 
 	if (isset($imagemagick_path))
 		{
@@ -1384,7 +1384,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				
 
 			# Debug
-			debug("Contemplating " . $ps[$n]["id"] . " (sw=$sw, tw=$tw, sh=$sh, th=$th, extension=$extension)",RESOURCE_LOG_APPEND_PREVIOUS);
+            debug("Contemplating " . $ps[$n]["id"] . " (sw=$sw, tw=$tw, sh=$sh, th=$th, extension=$extension)",RESOURCE_LOG_APPEND_PREVIOUS);
 
 			# Find the target path
 			if ($extension=="png" || $extension=="gif"){$target_ext=$extension;} else {$target_ext="jpg";}
@@ -1420,7 +1420,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
 				{			
 				# Debug
-				debug("Generating preview size " . $ps[$n]["id"] . " to " . $path,RESOURCE_LOG_APPEND_PREVIOUS);
+                debug("Generating preview size " . $ps[$n]["id"] . " to " . $path,RESOURCE_LOG_APPEND_PREVIOUS);
 	
 				# EXPERIMENTAL CODE TO USE EXISTING ICC PROFILE IF PRESENT
 				global $icc_extraction, $icc_preview_profile, $icc_preview_options,$ffmpeg_supported_extensions;
@@ -1428,11 +1428,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					$iccpath = get_resource_path($ref,true,'',false,'icc',-1,1,false,"",$alternative);
 					if (!file_exists($iccpath) && !isset($iccfound) && $extension!="pdf" && !in_array($extension,$ffmpeg_supported_extensions)) {
 						// extracted profile doesn't exist. Try extracting.
-						if (extract_icc_profile($ref,$extension)){
-							$iccfound = true;
-						} else {
-							$iccfound = false;
-						}
+						if(extract_icc_profile($ref, $extension, $alternative))
+                            {
+                            $iccfound = true;
+                            }
+                        else 
+                            {
+                            $iccfound = false;
+                            }
 					}
 				}
 				$profile='';
@@ -2578,16 +2581,32 @@ function AutoRotateImage($src_image, $ref = false)
     return true; 
     }
 
-function extract_icc_profile ($ref,$extension){
-	// this is provided for compatibility. However, we are now going to rely on the caller to tell us the
-	// path of the file. extract_icc() is where the real work will happen.
-	$infile=get_resource_path($ref,true,"",true,$extension);	
-	if (extract_icc($infile)){
-		return true;
-	} else {
-		return false;
-	}
-}
+
+/**
+* Provides ability to extract the ICC profile for a specified resource/ alternative file
+* 
+* @uses get_resource_path()
+* @uses extract_icc()
+* 
+* @param  integer  $ref          Resource ref
+* @param  string   $extension    Extension of the file
+* @param  integer  $alternative  Resource alternative ref. Default -1 as per get_resource_path() defintion
+* 
+* @return boolean
+*/
+function extract_icc_profile($ref, $extension, $alternative = -1)
+    {
+    // this is provided for compatibility. However, we are now going to rely on the caller to tell us the
+    // path of the file. extract_icc() is where the real work will happen.
+    $infile = get_resource_path($ref, true, '', true, $extension, true, 1, false, '', $alternative);
+
+    if(extract_icc($infile))
+        {
+        return true;
+        }
+
+    return false;
+    }
 	
 
 function extract_icc($infile) {
