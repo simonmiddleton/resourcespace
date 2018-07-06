@@ -803,7 +803,8 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                                     url: baseurl_short+"pages/ajax/user_action.php",
                                                     data: {
                                                         "action" : "submitpending",
-                                                        "collection_add" : "<?php echo $collection_add ?>"
+                                                        "collection_add" : "<?php echo $collection_add ?>",
+                                                        <?php echo generateAjaxToken('submit_for_review'); ?>
                                                     },
                                                     success: function(response){
                                                             <?php
