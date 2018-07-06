@@ -6897,3 +6897,26 @@ function enforcePostRequest($ajax)
 
     return false;
     }
+
+/**
+* Find duplicates in array based on value
+* 
+* @param array $data   Array to search
+* @param mixed $search Value to search in the array
+* 
+* @return integer Returns number of duplicates found
+*/
+function findDuplicates(array $data, $search)
+    {
+    $duplicates = 0;
+
+    foreach($data as $key => $val)
+        {
+        if($val == $search)
+            {
+            $duplicates++;
+            }
+        }
+
+    return $duplicates;
+    }

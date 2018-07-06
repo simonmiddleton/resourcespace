@@ -45,11 +45,6 @@ $uniqid=getval("id",uniqid("Col".$collection."-"));
 
 $usage = getvalescaped('usage', '-1');
 $usagecomment = getvalescaped('usagecomment', '');
-function findDuplicates($data,$dupval) {
-$nb= 0;
-foreach($data as $key => $val) {if ($val==$dupval) {$nb++;}}
-return $nb;
-}
 
 // set the time limit to unlimited, default 300 is not sufficient here.
 set_time_limit(0);
