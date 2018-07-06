@@ -48,6 +48,7 @@ if($resource > 0 && create_previews($resource, $thumbonly, $extension, $previewo
 else
     {
     // fail
+    job_queue_update($jobref, $job_data, STATUS_ERROR);
     $create_previews_job_failure_text = str_replace('%RESOURCE', $resource, $lang['jq_create_previews_failure_text']);
     $message = $job_failure_text != '' ? $job_failure_text : $create_previews_job_failure_text;
 
