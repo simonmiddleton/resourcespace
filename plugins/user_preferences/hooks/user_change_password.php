@@ -54,8 +54,8 @@ function HookUser_preferencesuser_change_passwordSaveadditionaluserpreferences()
 		$userfullname = $newFullname;
 		}
 
-	return (getvalescaped('currentpassword', '')=='') || (getvalescaped('password', '')=='')
-			&& (getvalescaped('password2', '')=='');
+	return ((getval('currentpassword', '')=='' && getval('rp', '')=='') || (getval('password', '')=='')
+			&& (getval('password2', '')==''));
 	}
 
 function HookUser_preferencesuser_change_passwordAdditionaluserpreferences()
