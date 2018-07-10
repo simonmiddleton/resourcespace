@@ -5250,3 +5250,31 @@ function update_timestamp($resource)
         }
     sql_query("UPDATE resource SET modified=NOW() WHERE ref='" . $resource . "'");
     }    
+
+/**
+* Get resource file extension from the database or use JPG, for download
+* 
+* @uses hook()
+* 
+* @param array  $resource
+* @param string $size      Preview size as defined in the system
+* 
+* @return string
+*/
+function get_extension(array $resource, $size)
+    {
+    if($size == '')
+        {
+        $size = 'original';
+        }
+
+    $pextension = ($size == 'original' ? $resource['file_extension'] : 'jpg');
+
+    $replace_extension = hook('replacedownloadextension', '', array($resource, $pextension));
+    if(trim($replace_extension) !== '')
+        {
+        return $replace_extension;
+        }
+
+    return $pextension;
+    }
