@@ -84,20 +84,7 @@ $modified_result=hook("modifycollectiondownload");
 if (is_array($modified_result)){$result=$modified_result;}
 
 #this array will store all the available downloads.
-$available_sizes=array();
-
-# get file extension from database or use jpg.
-function get_extension($resource, $size)
-	{
-    if ($size=="") {$size="original";}
-	$pextension = $size == 'original' ? $resource["file_extension"] : 'jpg';
-	$replace_extension = hook('replacedownloadextension', '', array($resource, $pextension));
-	if (!empty($replace_extension))
-		return $replace_extension;
-
-	return $pextension;
-	}
-
+$available_sizes = array();
 $count_data_only_types = 0;
 
 #build the available sizes array
