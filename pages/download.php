@@ -125,15 +125,30 @@ else
         $path = '../gfx/' . get_nopreview_icon($info['resource_type'], $ext, 'thm');
         }
 
-    // writing RS metadata to files: exiftool
+    // Process metadata
     // Note: only for downloads (not previews)
-    if('' == $noattach && -1 == $alternative && $exiftool_write)
+    if('' == $noattach && -1 == $alternative)
         {
-        $tmpfile = write_metadata($path, $ref);
-
-        if(false !== $tmpfile && file_exists($tmpfile))
+        // Strip existing metadata only if we do not plan on writing metadata, otherwise this will be done twice
+        if($exiftool_remove_existing && !$exiftool_write)
             {
-            $path = $tmpfile;
+            $temp_file_stripped_metadata = createTempFile($path, '', '');
+
+            if($temp_file_stripped_metadata !== false && stripMetadata($temp_file_stripped_metadata))
+                {
+                $path = $temp_file_stripped_metadata;
+                }
+            }
+
+        // writing RS metadata to files: exiftool
+        if($exiftool_write)
+            {
+            $tmpfile = write_metadata($path, $ref);
+
+            if(false !== $tmpfile && file_exists($tmpfile))
+                {
+                $path = $tmpfile;
+                }
             }
         }
     }

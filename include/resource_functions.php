@@ -2519,6 +2519,77 @@ function get_exiftool_fields($resource_type)
 	return sql_query("select f.ref,f.type,f.exiftool_field,f.exiftool_filter,group_concat(n.name) as options,f.name from resource_type_field f left join node n on f.ref=n.resource_type_field where length(exiftool_field)>0 and (resource_type='$resource_type' or resource_type='0')  group by f.ref order by exiftool_field");
 	}
 
+/**
+* Create a temporary copy of the file in the tmp folder (ie. the usual filestore/tmp/)
+* 
+* @uses get_temp_dir()
+* 
+* @param  string  $path      File path
+* @param  string  $uniqid    If a uniqid is provided, create a folder within tmp. See get_temp_dir() for more information.
+* @param  string  $filename  Filename of the new file
+* 
+* @return boolean|string  Returns FALSE or the file path of the temporary file
+*/
+function createTempFile($path, $uniqid, $filename)
+    {
+    if(!file_exists($path) || !is_readable($path))
+        {
+        return false;
+        }
+
+    $tmp_dir = get_temp_dir(false, $uniqid);
+
+    if(trim($filename) == '')
+        {
+        $file_path_info = pathinfo($path);
+        $filename = md5(mt_rand()) . "_{$file_path_info['basename']}";
+        }
+
+    $tmpfile = "{$tmp_dir}/{$filename}";
+
+    copy($path, $tmpfile);
+
+    return $tmpfile;
+    }
+
+/**
+* Strips metadata from file
+* 
+* @uses get_utility_path()
+* @uses run_command()
+* 
+* @param string  $file_path  Physical path to file that will have metadata stripped. Use NULL to just get the exiftool
+*                            command returned instead of running the command on the file
+* 
+* @return boolean|string  Returns TRUE or the Exiftool command for stripping metadata
+*/
+function stripMetadata($file_path)
+    {
+    $exiftool_fullpath = get_utility_path('exiftool');
+
+    if($exiftool_fullpath === false)
+        {
+        trigger_error('stripMetadata function requires Exiftool utility!');
+        }
+
+    $command = "{$exiftool_fullpath} -m -overwrite_original -E -gps:all= -EXIF:all= -XMP:all= -IPTC:all=";
+
+    if(is_null($file_path))
+        {
+        return $command;
+        }
+
+    if(!file_exists($file_path) || !is_writable($file_path))
+        {
+        return false;
+        }
+
+    $file_path = escapeshellarg($file_path);
+    run_command("{$command} {$file_path}");
+
+    return true;
+    }
+
 function write_metadata($path, $ref, $uniqid="")
 	{
 	// copys the file to tmp and runs exiftool on it	
@@ -2535,29 +2606,30 @@ function write_metadata($path, $ref, $uniqid="")
     # Check if an attempt to write the metadata shall be performed.
 	if(false != $exiftool_fullpath && $exiftool_write && $exiftool_write_option && !in_array($extension, $exiftool_no_process))
 		{
-		# Trust Exiftool's list of writable formats	
-		$command=$exiftool_fullpath . " -listwf";
-		$writable_formats=run_command($command);
-		$writable_formats=str_replace("\n","",$writable_formats);
-		$writable_formats_array=explode(" ",$writable_formats);
-		if (!in_array(strtoupper($extension),$writable_formats_array)){return false;}
-				
-		$filename = pathinfo($path);
-		$filename = $filename['basename'];	
-		$randstring=md5(mt_rand()); // Added to make sure that simultaneous downloads are not attempting to write to the same file
-		$tmpfile=get_temp_dir(false,$uniqid) . "/" . $randstring . "_" .  $filename;
-		$tmpfile_mod=hook("write_metadata_tmpfile",'', array($path, $ref, $uniqid));
-		if($tmpfile_mod!==false){
-			$tmpfile=$tmpfile_mod;
-		}
-		copy($path,$tmpfile);
-		
+        // Trust Exiftool's list of writable formats 
+        $writable_formats = run_command("{$exiftool_fullpath} -listwf");
+        $writable_formats = str_replace("\n", "", $writable_formats);
+        $writable_formats_array = explode(" ", $writable_formats);
+        if(!in_array(strtoupper($extension), $writable_formats_array))
+            {
+            return false;
+            }
+
+		$tmpfile = createTempFile($path, $uniqid, '');
+		if($tmpfile === false)
+            {
+            return false;
+            }
+
         # Add the call to exiftool and some generic arguments to the command string.
         # Argument -overwrite_original: Now that we have already copied the original file, we can use exiftool's overwrite_original on the tmpfile.
         # Argument -E: Escape values for HTML. Used for handling foreign characters in shells not using UTF-8.
         # Arguments -EXIF:all= -XMP:all= -IPTC:all=: Remove the metadata in the tag groups EXIF, XMP and IPTC.
 		$command = $exiftool_fullpath . " -m -overwrite_original -E ";
-        if ($exiftool_remove_existing) {$command.= "-gps:all= -EXIF:all= -XMP:all= -IPTC:all= ";}
+        if($exiftool_remove_existing)
+            {
+            $command = stripMetadata(null) . ' ';
+            }
 
         //$write_to = get_exiftool_fields($resource_type); # Returns an array of exiftool fields for the particular resource type, which are basically fields with an 'exiftool field' set.
         $metadata_all=get_resource_field_data($ref, false,true,-1,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
