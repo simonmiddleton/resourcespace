@@ -48,7 +48,7 @@ if($userref != 0)
     // Set cookie to disable password change and requirement to re-enter password
     rs_setcookie("winauth_user", "true", 0, "", "", substr($baseurl,0,5)=="https", true);
     
-    $redirecturl = $baseurl . urldecode($url);
+    $redirecturl = $baseurl_short . urldecode($url);
     $redirecturl = str_replace("winauth_login=true","",$redirecturl);
     redirect($redirecturl);   
     exit();
