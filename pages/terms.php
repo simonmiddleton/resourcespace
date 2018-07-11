@@ -5,7 +5,16 @@ include_once "../include/general.php";
 # No need to check access key for this page as it merely redirects to other pages
 $k=getvalescaped("k","");if ($k=="") {include "../include/authenticate.php";}
 
-$url=getvalescaped("url","pages/home.php?login=true");
+//$url=getvalescaped("url","pages/home.php?login=true");
+$url=getvalescaped("url","");
+if ($url != "") {
+	if ($k != "") {
+		$url = $url . "&k=" . $k;
+	}
+}
+else {
+	$url = "pages/home.php?login=true";
+}
 
 $newurl = hook("beforeredirectchangeurl");
 if(is_string($newurl))

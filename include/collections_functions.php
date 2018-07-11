@@ -2355,7 +2355,8 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Download option
     if( $download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
         {
-        $data_attribute['url'] = $baseurl_short . "pages/terms.php?k=" . urlencode($k) . "&url=pages/download_usage.php?collection=" . urlencode($collection_data['ref']) ."%26k=" . urlencode($k);
+        // $data_attribute['url'] = $baseurl_short . "pages/terms.php?k=" . urlencode($k) . "&url=pages/download_usage.php?collection=" . urlencode($collection_data['ref']) ."%26k=" . urlencode($k);
+        $data_attribute['url'] = $baseurl_short . "pages/download_usage.php?collection=" . urlencode($collection_data['ref']) ."&k=" . urlencode($k);
         $options[$o]['value']='download_collection';
 		$options[$o]['label']=$lang['action-download'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -2363,7 +2364,8 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
     else if( (isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
         {
-		$data_attribute['url'] = $baseurl_short . "pages/terms.php?k=" . urlencode($k) . "&url=pages/collection_download.php?collection=" . urlencode($collection_data['ref']) ."%26k=" . urlencode($k);
+		// $data_attribute['url'] = $baseurl_short . "pages/terms.php?k=" . urlencode($k) . "&url=pages/collection_download.php?collection=" . urlencode($collection_data['ref']) ."%26k=" . urlencode($k);
+		$data_attribute['url'] = $baseurl_short . "pages/collection_download.php?collection=" . urlencode($collection_data['ref']) ."&k=" . urlencode($k);
         $options[$o]['value']='download_collection';
 		$options[$o]['label']=$lang['action-download'];
 		$options[$o]['data_attr']=$data_attribute;
