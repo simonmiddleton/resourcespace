@@ -54,3 +54,32 @@ function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=nul
 		")");
 	}
 
+
+/**
+* Log script messages on screen and optionally in a file
+* 
+* @param string   $message
+* @param resource $file
+* 
+* @return void
+*/
+function logScript($message, $file = null)
+    {
+    $message .= PHP_EOL;
+    $date_time = date('Y-m-d H:i:s');
+
+    if(PHP_SAPI == 'cli')
+        {
+        echo "{$date_time} {$message}";
+        }
+
+    // TODO: consider checking the backtrace and record the script that called this and log it in the debug log
+    // debug("{$date_time} {$message}");
+
+    if(!is_null($file) && (is_resource($file) && 'file' == get_resource_type($file) || 'stream' == get_resource_type($file)))
+        {
+        fwrite($file, "{$date_time} {$message}");
+        }
+
+    return;
+    }
