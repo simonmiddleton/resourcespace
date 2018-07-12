@@ -30,8 +30,8 @@ function HookSimplesamlTeam_user_editAdditionaluserfields()
         <div class="Question">
             <label><?php echo $lang['simplesaml_custom_attribute_label'] . ucfirst(htmlspecialchars($custom_attribute)); ?></label>
             <input type="text" class="stdwidth" value="<?php echo htmlspecialchars($custom_attribute_value); ?>" disabled>
+            <div class="clearerleft"></div>
         </div>
-        <div class="clearerleft"></div>
         <?php
         }
     }
