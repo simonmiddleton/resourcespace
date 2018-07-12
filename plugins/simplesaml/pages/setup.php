@@ -35,6 +35,8 @@ if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest
 	$simplesaml['simplesaml_username_separator'] = getvalescaped('simplesaml_username_separator','');
     $simplesaml['simplesaml_custom_attributes'] = getvalescaped('simplesaml_custom_attributes', '');
     $simplesaml['simplesaml_lib_path'] = getvalescaped('simplesaml_lib_path', '');
+    $simplesaml['simplesaml_authorisation_claim_name'] = getvalescaped('simplesaml_authorisation_claim_name', '');
+    $simplesaml['simplesaml_authorisation_claim_value'] = getvalescaped('simplesaml_authorisation_claim_value', '');
 	
 	$samlgroups = $_REQUEST['samlgroup'];
 	$rsgroups = $_REQUEST['rsgroup'];
@@ -128,6 +130,16 @@ foreach($rsgroups as $rsgroup)
 
 echo config_single_select("simplesaml_fallback_group",$lang['simplesaml_fallback_group'],$simplesaml_fallback_group,$rsgroupoption, true);
 echo config_text_input('simplesaml_custom_attributes', $lang['simplesaml_custom_attributes'], $simplesaml_custom_attributes);
+?>
+<div class="Question">
+    <br>
+    <h2><?php echo htmlspecialchars($lang['simplesaml_authorisation_rules_header']); ?></h2>
+        <p><?php echo htmlspecialchars($lang['simplesaml_authorisation_rules_description']); ?></p>
+    <div class="clearerleft"></div>
+  </div>
+<?php
+echo config_text_input('simplesaml_authorisation_claim_name', $lang['simplesaml_authorisation_claim_name_label'], $simplesaml_authorisation_claim_name);
+echo config_text_input('simplesaml_authorisation_claim_value', $lang['simplesaml_authorisation_claim_value_label'], $simplesaml_authorisation_claim_value);
 ?>
 <div class="Question">
 <h3><?php echo $lang['simplesaml_groupmapping']; ?></h3>

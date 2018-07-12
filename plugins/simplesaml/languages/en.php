@@ -43,3 +43,9 @@ $lang['simplesaml_usermatchcomment'] = "Updated to SAML user by SimpleSAML plugi
 $lang['simplesaml_usercreated'] = "Created new SAML user";
 $lang['simplesaml_duplicate_email_behaviour'] = "Duplicate account management";
 $lang['simplesaml_duplicate_email_behaviour_description'] = "This section controls what happens if a new SAML user logging in conflicts with an existing acount";
+
+$lang['simplesaml_authorisation_rules_header'] = 'Authorisation rule';
+$lang['simplesaml_authorisation_rules_description'] = 'Enable ResourceSpace to be configured with additional local authorisation of users based upon an extra attribute (ie. assertion/ claim) in the response from the IdP. This assertion will be used by the plugin to determine whether the user is allowed to log in to ResourceSpace or not.';
+$lang['simplesaml_authorisation_claim_name_label'] = 'Attribute (assertion/ claim) name';
+$lang['simplesaml_authorisation_claim_value_label'] = 'Attribute (assertion/ claim) value';
+$lang['simplesaml_authorisation_login_error'] = "You don't have access to this application! Please contact the administrator for your account!";

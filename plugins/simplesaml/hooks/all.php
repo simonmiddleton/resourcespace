@@ -82,7 +82,8 @@ function HookSimplesamlAllProvideusercredentials()
         $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
         $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
         $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block, $anonymous_login,$allow_password_change, $simplesaml_create_new_match_email,
-        $simplesaml_allow_duplicate_email, $simplesaml_multiple_email_notify;
+        $simplesaml_allow_duplicate_email, $simplesaml_multiple_email_notify, $simplesaml_authorisation_claim_name, 
+        $simplesaml_authorisation_claim_value;
 
         // Allow anonymous logins outside SSO if simplesaml is not configured to block access to site.
         // NOTE: if anonymous_login is set to an invalid user, then use SSO otherwise it goes in an indefinite loop
@@ -156,7 +157,23 @@ function HookSimplesamlAllProvideusercredentials()
                 $username=$attributes[$simplesaml_username_attribute][0] . $simplesaml_username_suffix;
                 }
 		    }
-        
+
+        // If local authorisation based on assertion/ claim is needed, check now and make sure we don't process any further!
+        if(
+            (trim($simplesaml_authorisation_claim_name) != '' && trim($simplesaml_authorisation_claim_value) != '')
+            && array_key_exists($simplesaml_authorisation_claim_name, $attributes)
+            && !in_array($simplesaml_authorisation_claim_value, $attributes[$simplesaml_authorisation_claim_name])
+        )
+            {
+            debug("simplesaml: WARNING: Unauthorised login attempt recorded for username '{$username}'!");
+            ?>
+            <script>
+            top.location.href = "<?php echo generateURL("{$baseurl}/login.php", array('error' => 'simplesaml_authorisation_login_error')); ?>";
+            </script>   
+            <?php
+            return false;
+            }
+
         if(strpos($simplesaml_fullname_attribute,",")!==false) // Do we have to join two fields together?
 		    {
 		    $fullname_attributes=explode(",",$simplesaml_fullname_attribute);		   

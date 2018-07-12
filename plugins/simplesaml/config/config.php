@@ -23,3 +23,9 @@ $simplesaml_lib_path = '';
 $simplesaml_create_new_match_email = false;
 $simplesaml_allow_duplicate_email = false;
 $simplesaml_multiple_email_notify = "";
+
+// Enable ResourceSpace to be configured with additional local authorisation of users based upon an extra attribute 
+// (ie. assertion/ claim) in the response from the IdP. This assertion will be used by the plugin to determine whether 
+// the user is allowed to log in to ResourceSpace or not
+$simplesaml_authorisation_claim_name = '';
+$simplesaml_authorisation_claim_value = '';
