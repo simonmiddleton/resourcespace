@@ -94,18 +94,21 @@ if (!hook("replaceslideshow"))
         var num_photos=<?php echo $homeimages ?>;  // <---- number of photos (/images/slideshow?.jpg)
         var photo_delay= <?php echo $slideshow_photo_delay;?>;
         var link = new Array();
+		var images = new Array();
     
-        <?php 
-        //$l=1;
+        <?php
+		$images_indexed = array();
         foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
             {
-            echo "link[" . $slideshow_image . "]=\"" .  (isset($slideshow_file_info["link"]) ? $slideshow_file_info["link"] : "#") . "\";";
+            echo "link.push(\"" .  (isset($slideshow_file_info["link"]) ? $slideshow_file_info["link"] : "#") . "\");\n";
+            echo "images.push(" .  $slideshow_image . ");\n";
+            $images_indexed[] = $slideshow_image;
             }
         ?>
     
-        var cur_photo=2;
-        var last_photo=1;
-        var next_photo=2;
+        var cur_photo=1;
+        var last_photo=0;
+        var next_photo=1;
     
         flip=1;
     
@@ -116,9 +119,7 @@ if (!hook("replaceslideshow"))
             {
             if (!document.getElementById('image1')) {return false;} /* Photo slideshow no longer available (AJAX page move) */
             
-              if (cur_photo==num_photos) {next_photo=1;} else {next_photo=cur_photo+1;}
-            
-            
+              if (cur_photo==num_photos-1) {next_photo=0;} else {next_photo=cur_photo+1;}
               image1 = document.getElementById("image1");
               image2 = document.getElementById("photoholder");
               sslink = document.getElementById("slideshowlink");
@@ -128,13 +129,13 @@ if (!hook("replaceslideshow"))
                 // image1.style.visibility='hidden';
                 //Effect.Fade(image1);
                 jQuery('#image1').fadeOut(1000)
-                window.setTimeout("image1.src=\'" + baseurl_short + "pages/download.php?slideshow=' + next_photo + '\';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
+                window.setTimeout("image1.src=\'" + baseurl_short + "pages/download.php?slideshow=' + images[next_photo] + '\';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
                 flip=1;
                 }
               else
                 {
                 jQuery('#image1').fadeIn(1000)
-                window.setTimeout("image2.style.backgroundImage='url(' + baseurl_short + 'pages/download.php?slideshow=' + next_photo +')';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
+                window.setTimeout("image2.style.backgroundImage='url(' + baseurl_short + 'pages/download.php?slideshow=' + images[next_photo] +')';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
                 flip=0;
                 }	  	
              
@@ -195,9 +196,9 @@ if (!hook("replaceslideshow"))
 				} 
 			}
 			?>
-			background-image:url('<?php echo  "{$baseurl}/pages/download.php?slideshow=1"; ?>');">
+			background-image:url('<?php echo  "{$baseurl}/pages/download.php?slideshow=" . $images_indexed[0]; ?>');">
 			
-			<img src='<?php echo "{$baseurl}/pages/download.php?slideshow=" . ($homeimages>1?2:1); ?>' alt='' id='image1' style="display:none;<?php
+			<img src='<?php echo "{$baseurl}/pages/download.php?slideshow=" . ($homeimages>1?$images_indexed[1]:$images_indexed[0]); ?>' alt='' id='image1' style="display:none;<?php
 			if (isset($home_slideshow_width)){
 				echo"width:" .  $home_slideshow_width ."px; ";
 				}
