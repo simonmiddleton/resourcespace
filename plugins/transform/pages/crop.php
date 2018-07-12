@@ -10,14 +10,9 @@ include_once "../../../include/image_processing.php";
 
 include_once "../include/transform_functions.php";
 
-// verify that the requested ResourceID is numeric.
-$ref = $_REQUEST['ref'];
-if (!is_numeric($ref)){ echo "Error: non numeric ref."; exit; }
-if(-2147483648 >= $ref || 2147483647 <= $ref)
-    {
-    echo 'The value you chose is not correct, it is out of range for an ID';
-    exit;
-    }
+$ref = getval("ref",true,0);
+$resource=get_resource_data($ref);
+if ($resource===false || $ref < 0) {exit($lang['resourcenotfound']);}
 
 # Load edit access level
 $edit_access=get_edit_access($ref);
