@@ -22,6 +22,7 @@ function HookWinauthAllProvideusercredentials()
         {
         global $winauth_enable, $winauth_prefer_normal, $session_hash, $username, $user_select_sql, $baseurl_short, $winauth_domains, $lang, $user_preferences,$pagename,$allow_password_change, $delete_requires_password;
         debug("winauth - Provideusercredentials hook: Enabled=" . ($winauth_enable ? "TRUE" : "FALSE") . ", Page=" . $pagename . ", user cookie=" . (isset($_COOKIE["user"]) ? "TRUE" : "FALSE") . ", winauth_prefer_normal=" . ($winauth_prefer_normal ? "TRUE" : "FALSE") . ", winauth requested=" . (getval("winauth_login","") == "" ? "FALSE" : "TRUE"));
+                  
          
         // If not enabled OR has a user cookie and not specified to login with Windows
         if ((!$winauth_enable)
@@ -30,7 +31,7 @@ function HookWinauthAllProvideusercredentials()
             ||
            isset($_COOKIE["user"])
             ||
-          ($winauth_prefer_normal && getval("winauth_login","") == ""))
+          ($pagename != "login" && $winauth_prefer_normal && getval("winauth_login","") == ""))
             {
             return false;
             }
