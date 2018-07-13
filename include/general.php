@@ -6460,6 +6460,11 @@ function job_queue_run_job($job, $clear_process_lock)
     $job_success_text=$job["success_text"];
 	$job_failure_text=$job["failure_text"];
 
+    // Variable used to avoid spinning off offline jobs from an already existing job.
+    // Example: create_previews() is using extract_text() and both can run offline.
+    global $offline_job_in_progress;
+    $offline_job_in_progress = false;
+
     if(is_process_lock('job_' . $jobref) && !$clear_process_lock)
         {
         $logmessage =  " - Process lock for job #{$jobref}" . PHP_EOL;
@@ -6484,12 +6489,15 @@ function job_queue_run_job($job, $clear_process_lock)
 	$logmessage =  " - Looking for " . __DIR__ . "/job_handlers/" . $job["type"] . ".php" . PHP_EOL;
 	echo $logmessage;
 	debug($logmessage);
-		
+
 	if (file_exists(__DIR__ . "/job_handlers/" . $job["type"] . ".php"))
 		{
 		$logmessage="Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
 		echo $logmessage;
 		debug($logmessage);
+
+        $offline_job_in_progress = true;
+
 		include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
 		}
 	else
