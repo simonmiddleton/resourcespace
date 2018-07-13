@@ -2485,11 +2485,26 @@ function upload_preview($ref)
     
     return true;
     }}
- 
+
+/**
+* Extract text from the resource and save to the configured field
+* 
+* @uses resource_log()
+* @uses get_resource_path()
+* @uses debug()
+* @uses run_command()
+* @uses hook()
+* @uses update_field()
+* @uses update_xml_metadump()
+* 
+* @param integer $ref        Resource ref
+* @param string  $extension  File extension
+* @param string  $path       Path can be set to use an alternate file, for example, in the case of unoconv
+* 
+* @return void
+*/
 function extract_text($ref,$extension,$path="")
 	{
-	# path can be set to use an alternate file, for example, in the case of unoconv	
-	# Extract text from the resource and save to the configured field.
 	global $extracted_text_field,$antiword_path,$pdftotext_path,$zip_contents_field,$lang;
 
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['embedded_metadata_extract_option']);
