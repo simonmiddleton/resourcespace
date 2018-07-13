@@ -352,7 +352,25 @@ if (in_array($extension,$unoconv_extensions) && isset($unoconv_path) && !isset($
 		# Set vars so we continue generating thumbs/previews as if this is a PDF file
 	    $extension="pdf";
 	    $file=$alt_path;
-	    extract_text($ref,$extension,$alt_path);
+
+        // We need to avoid a job spinning off another job because create_previews() can run as an offline job and it 
+        // includes preview_preprocessing.php.
+        global $offline_job_queue, $offline_job_in_progress;
+
+        if($offline_job_queue && !$offline_job_in_progress)
+            {
+            $extract_text_job_data = array(
+                'ref'       => $ref,
+                'extension' => $extension,
+                'path'      => $alt_path,
+            );
+
+            job_queue_add('extract_text', $extract_text_job_data);
+            }
+        else
+            {
+            extract_text($ref, $extension, $alt_path);
+            }
 		}
 	}
     

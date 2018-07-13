@@ -2853,8 +2853,20 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
 	global $extracted_text_field;
 	if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
 		{
-		// This is skipped if the unoconv process will do it during preview creation later
-		extract_text($r,$extension);
+        global $offline_job_queue, $offline_job_in_progress;
+        if($offline_job_queue && !$offline_job_in_progress)
+            {
+            $extract_text_job_data = array(
+                'ref'       => $ref,
+                'extension' => $extension,
+            );
+
+            job_queue_add('extract_text', $extract_text_job_data);
+            }
+        else
+            {
+            extract_text($ref, $extension);
+            }
 		}
 		
 	# Ensure folder is created, then create previews.

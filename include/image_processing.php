@@ -397,8 +397,22 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 		global $extracted_text_field;
 		if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
 			{
-			// This is skipped if the unoconv process will do it during preview creation later
-			extract_text($ref,$extension);
+            // We need to make sure we don't spin off a new offline job for this when upload_file() is being used in 
+            // upload_processing job handler
+            global $offline_job_queue, $offline_job_in_progress;
+            if($offline_job_queue && !$offline_job_in_progress)
+                {
+                $extract_text_job_data = array(
+                    'ref'       => $ref,
+                    'extension' => $extension,
+                );
+
+                job_queue_add('extract_text', $extract_text_job_data);
+                }
+            else
+                {
+                extract_text($ref, $extension);
+                }
 			}
 		}
 	

@@ -255,7 +255,23 @@ for ($n=0;$n<count($uploadfiles);$n++)
 		
 			# extract text from documents (e.g. PDF, DOC).
 			global $extracted_text_field;
-			if (isset($extracted_text_field) && !$no_exif) {extract_text($ref,$extension);}
+			if(isset($extracted_text_field) && !$no_exif && in_array($extension, $unoconv_extensions))
+                {
+                global $offline_job_queue;
+                if($offline_job_queue)
+                    {
+                    $extract_text_job_data = array(
+                        'ref'       => $ref,
+                        'extension' => $extension,
+                    );
+
+                    job_queue_add('extract_text', $extract_text_job_data);
+                    }
+                else
+                    {
+                    extract_text($ref, $extension);
+                    }
+                }
 
 			$done++;
 

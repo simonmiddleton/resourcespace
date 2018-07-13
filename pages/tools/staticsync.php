@@ -576,14 +576,30 @@ function ProcessFolder($folder)
 
                         # extract text from documents (e.g. PDF, DOC).
                         global $extracted_text_field;
-                        if (isset($extracted_text_field)) {
-                            if (isset($unoconv_path) && in_array($extension,$unoconv_extensions)){
+                        if(isset($extracted_text_field))
+                            {
+                            if(isset($unoconv_path) && in_array($extension, $unoconv_extensions))
+                                {
                                 // omit, since the unoconv process will do it during preview creation below
                                 }
-                            else {
-                            extract_text($rref,$extension);
+                            else
+                                {
+                                global $offline_job_queue, $offline_job_in_progress;
+                                if($offline_job_queue && !$offline_job_in_progress)
+                                    {
+                                    $extract_text_job_data = array(
+                                        'ref'       => $rref,
+                                        'extension' => $extension,
+                                    );
+
+                                    job_queue_add('extract_text', $extract_text_job_data);
+                                    }
+                                else
+                                    {
+                                    extract_text($rref, $extension);
+                                    }
+                                }
                             }
-                        }
 
                         # Store original filename in field, if set
                         global $filename_field;
