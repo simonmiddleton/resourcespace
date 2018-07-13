@@ -6482,7 +6482,7 @@ function job_queue_run_job($job, $clear_process_lock)
 
 	set_process_lock('job_' . $jobref);
 	
-	$logmessage =  " - Running job #" . $jobref . PHP_EOL;
+	$logmessage =  "Running job #" . $jobref . PHP_EOL;
 	echo $logmessage;
 	debug($logmessage);
 
@@ -6492,7 +6492,7 @@ function job_queue_run_job($job, $clear_process_lock)
 
 	if (file_exists(__DIR__ . "/job_handlers/" . $job["type"] . ".php"))
 		{
-		$logmessage="Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
+		$logmessage=" - Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
 		echo $logmessage;
 		debug($logmessage);
 
