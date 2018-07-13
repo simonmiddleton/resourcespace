@@ -6181,13 +6181,12 @@ function get_slideshow_files_data()
         {
         if(preg_match("/[0-9]+\.(jpg)$/", $file))
             {
-            $filecount++;
             $slideshow_file_id = substr($file, 0, -4);
             $checksum += filemtime($dir . '/' . $file);
 
-            $slideshow_files[$slideshow_file_id] = array();
-            $slideshow_files[$slideshow_file_id]['file_path'] = $dir . '/' . $file;
-            $slideshow_files[$slideshow_file_id]['checksum']  = $checksum;
+            $slideshow_files[$filecount]["ref"] = $slideshow_file_id;
+            $slideshow_files[$filecount]['file_path'] = $dir . '/' . $file;
+            $slideshow_files[$filecount]['checksum']  = $checksum;
 
             $linkref        = '';
             $linkfile       = substr($file, 0, (strlen($file) - 4)) . '.txt';
@@ -6199,10 +6198,12 @@ function get_slideshow_files_data()
                 $linkaccess = get_resource_access($linkref);
                 if('' !== $linkaccess && (0 == $linkaccess || 1 == $linkaccess))
                     {
-                    $slideshow_files[$slideshow_file_id]['link'] = $baseurl . "/pages/view.php?ref=" . $linkref;
-                    $slideshow_files[$slideshow_file_id]['link_file_path'] = $link_file_path;
+                    $slideshow_files[$filecount]['link'] = $baseurl . "/pages/view.php?ref=" . $linkref;
+                    $slideshow_files[$filecount]['link_file_path'] = $link_file_path;
                     }
                 }
+            
+            $filecount++;
             }
         }
 

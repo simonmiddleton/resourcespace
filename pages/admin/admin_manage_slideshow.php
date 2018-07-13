@@ -31,54 +31,23 @@ if(
 
     $allow_reorder = false;
 
-    // Set array pointer to the slideshow ID
-    reset($slideshow_files);
-    while(!in_array(key($slideshow_files), array($slideshow_id, null)))
-        {
-        next($slideshow_files);
-        }
-    // We found the key and set the pointer!
-    if(false !== current($slideshow_files))
-        {
-        key($slideshow_files);
-        }
-
     // Based on current pointer and direction of movement we can find the "to" element
     switch($action)
         {
         case 'moveup':
-            prev($slideshow_files);
-            $to = key($slideshow_files);
-
-            if(!is_null($to))
+            if($slideshow_id > 0)
                 {
-                $allow_reorder       = true;
-                $response['sibling'] = $to;
-                }
-
-            // Check if the new location will be the first one
-            prev($slideshow_files);
-            if(is_null(key($slideshow_files)))
-                {
-                $response['is_first_sibling'] = true;
+                $to = $slideshow_id - 1;
+                $response['is_first_sibling'] = $slideshow_id == 1;
+                $allow_reorder = true;   
                 }
             break;
-
         case 'movedown':
-            next($slideshow_files);
-            $to = key($slideshow_files);
-
-            if(!is_null($to))
+            if($slideshow_id < count($slideshow_files) + 1)
                 {
-                $allow_reorder       = true;
-                $response['sibling'] = $to;
-                }
-
-            // Check if the new location will be the last one
-            next($slideshow_files);
-            if(is_null(key($slideshow_files)))
-                {
-                $response['is_last_sibling'] = true;
+                $response['is_last_sibling'] = $slideshow_id >= count($slideshow_files);
+                $to = $slideshow_id + 1;
+                $allow_reorder = true;   
                 }
             break;
         }
@@ -86,7 +55,9 @@ if(
     if($allow_reorder)
         {
         reorder_slideshow_images($slideshow_id, $to);
+        $response['sibling'] = $to;
         }
+    
 
     echo json_encode($response);
     exit();
@@ -143,7 +114,7 @@ foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
 		$login_image=false;
 		if($login_background && $i==0){$login_image=true;}
         ++$i;
-        $slideshow_image_src = $baseurl_short . $homeanim_folder . '/' . $slideshow_image . '.jpg' . '?nc=' . time();
+        $slideshow_image_src = $baseurl_short . "pages/download.php?slideshow=" . $slideshow_file_info["ref"] . "&nc=" . time();
         ?>
     <div id="slideshow_<?php echo $slideshow_image; ?>" class="Question">
         <label>
@@ -162,10 +133,10 @@ foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
                     type="submit"
                     onclick="ReorderSlideshowImage(<?php echo $slideshow_image; ?>, 'movedown');"
                     <?php if(count($slideshow_files) === $i) { echo 'disabled'; } ?>><?php echo $lang['action-move-down']; ?></button>
-            <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_image)); ?>
+            <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_file_info["ref"])); ?>
             <button id="slideshow_<?php echo $slideshow_image; ?>_delete"
-                    type="submit" onclick="DeleteSlideshowImage(<?php echo $slideshow_image; ?>);"<?php if(count($slideshow_files)==1) { echo 'disabled'; } ?>><?php echo $lang['action-delete']; ?></button>
-            <?php hook('render_replace_slideshow_form_for_manage_slideshow', '', array($slideshow_image, $slideshow_files)); ?>
+                    type="submit" onclick="DeleteSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>);"<?php if(count($slideshow_files)==1) { echo 'disabled'; } ?>><?php echo $lang['action-delete']; ?></button>
+            <?php hook('render_replace_slideshow_form_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_files)); ?>
         </span>
 		<div class="clearerleft"></div>
     </div>
@@ -201,7 +172,8 @@ function ReorderSlideshowImage(id, direction)
 
     jQuery.post(post_url, post_data, function(response)
         {
-        if(response.sibling && response.sibling > 0)
+        console.log(response.sibling);
+        if(response.sibling !== false)
             {
             var from_img_elem = jQuery('#slideshow_img_' + id);
             var to_img_elem   = jQuery('#slideshow_img_' + response.sibling);

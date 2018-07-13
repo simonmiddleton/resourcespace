@@ -38,12 +38,9 @@ if (!hook("replaceslideshow"))
 	{
 	global $slideshow_photo_delay;
     $slideshow_files = get_slideshow_files_data();
-	
 	if($login_background)
 		{
-		$first = reset($slideshow_files);
-		$firstkey   = key($slideshow_files);
-		unset($slideshow_files[$firstkey]);
+		array_shift($slideshow_files);
 		}
 		
     $homeimages = count($slideshow_files);
@@ -62,7 +59,7 @@ if (!hook("replaceslideshow"))
             // We only want to use one of the available images	
             ?>
             var big_slideshow_timer = 0;
-            RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$randomimage}"; ?>','<?php echo (isset($homeimages[$randomimage]["link"])) ? $homeimages[$randomimage]["link"] : "" ?>',1);
+            RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$slideshow_files[$randomimage]["ref"]}"; ?>','<?php echo (isset($slideshow_files[$randomimage]["link"])) ? $slideshow_files[$randomimage]["link"] : "" ?>',1);
             <?php
             }
         else
@@ -70,10 +67,10 @@ if (!hook("replaceslideshow"))
             ?>
             var big_slideshow_timer = <?php echo $slideshow_photo_delay;?>;
             <?php
-            foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
+            foreach($slideshow_files as $slideshow_file_info)
                 {		
                 ?>
-                RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$slideshow_image}"; ?>','<?php echo (isset($slideshow_file_info["link"])) ? $slideshow_file_info["link"] : "" ?>');
+                RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info["ref"]}"; ?>','<?php echo (isset($slideshow_file_info["link"])) ? $slideshow_file_info["link"] : "" ?>');
                 <?php
                 }
             }
@@ -97,12 +94,10 @@ if (!hook("replaceslideshow"))
 		var images = new Array();
     
         <?php
-		$images_indexed = array();
-        foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
+        foreach($slideshow_files as $slideshow_file_info)
             {
             echo "link.push(\"" .  (isset($slideshow_file_info["link"]) ? $slideshow_file_info["link"] : "#") . "\");\n";
-            echo "images.push(" .  $slideshow_image . ");\n";
-            $images_indexed[] = $slideshow_image;
+            echo "images.push(" .  $slideshow_file_info["ref"] . ");\n";
             }
         ?>
     
@@ -196,9 +191,9 @@ if (!hook("replaceslideshow"))
 				} 
 			}
 			?>
-			background-image:url('<?php echo  "{$baseurl}/pages/download.php?slideshow=" . $images_indexed[0]; ?>');">
+			background-image:url('<?php echo  "{$baseurl}/pages/download.php?slideshow=" . $slideshow_files[0]["ref"]; ?>');">
 			
-			<img src='<?php echo "{$baseurl}/pages/download.php?slideshow=" . ($homeimages>1?$images_indexed[1]:$images_indexed[0]); ?>' alt='' id='image1' style="display:none;<?php
+			<img src='<?php echo "{$baseurl}/pages/download.php?slideshow=" . ($homeimages>1?$slideshow_files[1]["ref"]:$slideshow_files[0]["ref"]); ?>' alt='' id='image1' style="display:none;<?php
 			if (isset($home_slideshow_width)){
 				echo"width:" .  $home_slideshow_width ."px; ";
 				}

@@ -7,11 +7,8 @@ function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slides
 
     // Calculate the next slideshow image ID (ie. filename will be ID.jpg)
     $new_slideshow_id = 1;
-    if(false !== reset($slideshow_files))
-        {
-        end($slideshow_files);
-        $new_slideshow_id = key($slideshow_files) + 1;
-        }
+    end($slideshow_files);
+    $new_slideshow_id = key($slideshow_files) + 1;
     ?>
     <div id="add_new_slideshow" class="Question">
         <label></label>
@@ -52,40 +49,19 @@ function HookTransformAdmin_manage_slideshowRender_replace_button_for_manage_sli
     }
 
 
-function HookTransformAdmin_manage_slideshowRender_replace_slideshow_form_for_manage_slideshow($slideshow_image, array $slideshow_files)
+function HookTransformAdmin_manage_slideshowRender_replace_slideshow_form_for_manage_slideshow($replace_slideshow_id)
     {
     global $baseurl, $lang;
 
     $return_to_url = $baseurl . '/pages/admin/admin_manage_slideshow.php';
-
-    // Calculate the next slideshow image ID (ie. filename will be ID.jpg)
-    $replace_slideshow_id = null;
-    if(false !== reset($slideshow_files))
-        {
-        while(!in_array(key($slideshow_files), array($slideshow_image, null)))
-            {
-            next($slideshow_files);
-            }
-
-        if(false !== current($slideshow_files))
-            {
-            $replace_slideshow_id = key($slideshow_files);
-            }
-        }
-
-    // if there is no slideshow
-    if(is_null($replace_slideshow_id))
-        {
-        return;
-        }
     ?>
     <form
-        id="replace_slideshow_image_form_<?php echo $slideshow_image; ?>"
+        id="replace_slideshow_image_form_<?php echo $replace_slideshow_id; ?>"
         method="POST"
         action="<?php echo $baseurl; ?>/plugins/transform/pages/crop.php"
         onsubmit="return CentralSpacePost(this);"
     >
-        <?php generateFormToken("replace_slideshow_image_form_{$slideshow_image}"); ?>
+        <?php generateFormToken("replace_slideshow_image_form_{$replace_slideshow_id}"); ?>
         <input
             name="ref"
             type="text"
