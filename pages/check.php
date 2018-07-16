@@ -355,8 +355,16 @@ function get_utility_version($utilityname)
             else {$expected = true;}
             break;
         case "exiftool":
-            if (preg_match("/^([0-9]+)+\.([0-9]+)$/", $version)==false) {$expected = false;} # E.g. 8.84
-            else {$expected = true;}
+            if(preg_match("/^([0-9]+)+\.([0-9]+)/", $version) === 1)
+                {
+                // E.g. 8.84
+                // Note: if there is a warning like "10.11 [Warning: Library version is 10.10]" this should also be seen as expected.
+                $expected = true;
+                }
+            else
+                {
+                $expected = false;
+                }
             break;
         }
 
