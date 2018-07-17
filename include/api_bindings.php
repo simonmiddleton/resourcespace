@@ -299,3 +299,18 @@ function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by
     if($parent='NULL'){$parent = null;}
     return set_node($ref, $resource_type_field, $name, $parent, $order_by,$returnexisting = false);  
     }
+
+function api_add_resource_nodes($resource,$nodestring)
+    {
+    $nodes = explode(",",$nodestring);
+    return add_resource_nodes($resource,$nodes);
+    }
+    
+ function api_add_resource_nodes_multi($resources,$nodestring)
+    {
+    $resourcearr = explode(",",$resources);
+    $nodes = explode(",",$nodestring);
+    return add_resource_nodes_multi($resourcearr,$nodes);
+    }
+  
+

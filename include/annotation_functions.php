@@ -349,7 +349,7 @@ function createAnnotation(array $annotation)
     if(0 < count($tags))
         {
         addAnnotationNodes($annotation_ref, $prepared_tags);
-        add_resource_nodes($resource, array_column($prepared_tags, 'ref'));
+        add_resource_nodes($resource, array_column($prepared_tags, 'ref'), false);
         }
 
     return $annotation_ref;
@@ -430,7 +430,7 @@ function updateAnnotation(array $annotation)
 
         // Add new associations
         addAnnotationNodes($annotation_ref, $prepared_tags);
-        add_resource_nodes($resource, array_column($prepared_tags, 'ref'));
+        add_resource_nodes($resource, array_column($prepared_tags, 'ref'), false);
         }
 
     db_end_transaction();

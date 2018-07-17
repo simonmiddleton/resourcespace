@@ -1045,16 +1045,63 @@ function remove_node_keyword_mappings(array $node, $partial_index = false)
 
     return true;
     }
-    
-function add_resource_nodes($resourceid,$nodes=array())
+
+
+/**
+* Add nodes in array to resource
+*
+* @param  integer      $resourceid         Resource ID to add nodes to
+* @param  array        $nodes              Array of node IDs to add
+* @param  boolean      $checkperms         Check permissions before adding? 
+*  
+* @return boolean
+*/        
+function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
 	{
+    if(!is_array($nodes) && (string)(int)$nodes != $nodes)
+		{return false;}
+             
+    if($checkperms)
+        {
+        // Need to check user has permissions to add nodes
+        $resourcedata = get_resource_data($resourceid);
+        $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
+        if(!$access)
+            {return false;}
+        }
 	if(!is_array($nodes))
 		{$nodes=array($nodes);}
+     
     sql_query("insert into resource_node (resource, node) values ('" . $resourceid . "','" . implode("'),('" . $resourceid . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
+    return true;
     }
-    
-function add_resource_nodes_multi($resources=array(),$nodes=array())
+
+/**
+* Add nodes in array to multiple resources
+*
+* @param  array        $resources           Array of resource IDs to add nodes to
+* @param  array        $nodes               Array of node IDs to add
+* @param  boolean      $checkperms          Check permissions before adding? 
+*  
+* @return boolean
+*/  
+function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms = true)
 	{
+    if((!is_array($resources) && (string)(int)$resources != $resources) || (!is_array($nodes) && (string)(int)$nodes != $nodes))
+		{return false;}
+    
+    if($checkperms)
+        {
+        // Need to check user has permissions to add nodes
+        foreach($resources as $resourceid)
+            {
+            $resourcedata = get_resource_data($resourceid);
+            $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
+            if(!$access)
+                {return false;}
+            }
+        }
+    
 	if(!is_array($nodes))
 		{$nodes=array($nodes);}
         
@@ -1067,6 +1114,7 @@ function add_resource_nodes_multi($resources=array(),$nodes=array())
         }
     $sql = "insert into resource_node (resource, node) values " . $nodesql . "  ON DUPLICATE KEY UPDATE hit_count=hit_count";
     sql_query($sql);
+    return true;
     }
 
 /**

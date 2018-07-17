@@ -7,6 +7,15 @@ include_once '../../../include/image_processing.php';
 
 $ref=getvalescaped("ref","");
 
+# Check edit permission.
+if (!get_edit_access($ref))
+    {
+    # The user is not allowed to edit this resource or the resource doesn't exist.
+    $error=$lang['error-permissiondenied'];
+    error_alert($error,true);
+    exit();
+    }
+
 # Load log entry
 $log=sql_query("select resource_log.*, rtf.ref `resource_type_field_ref`, rtf.type `resource_type_field_type` from resource_log left outer join resource_type_field rtf on resource_log.resource_type_field=rtf.ref where resource_log.ref='$ref'");
 if (count($log)==0) {exit("Log entry not found");}
@@ -86,7 +95,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
             $log_entry='';
             if (count($nodes_to_add) > 0)
                 {
-                add_resource_nodes($resource, array_values($nodes_to_add));
+                add_resource_nodes($resource, array_values($nodes_to_add),false);
 
                 foreach($nodes_to_add as $node_to_add)
                     {

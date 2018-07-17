@@ -591,7 +591,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     delete_resource_nodes($ref, $nodes_to_remove);
     if(0 < count($nodes_to_add))
         {
-        add_resource_nodes($ref, $nodes_to_add);
+        add_resource_nodes($ref, $nodes_to_add, false);
         }
     db_end_transaction();
 
@@ -1236,7 +1236,7 @@ function save_resource_data_multi($collection)
     // Add/remove nodes for all resources (we have already created log for this)
     if(count($all_nodes_to_add)>0)
         {
-        add_resource_nodes_multi($list, $all_nodes_to_add);
+        add_resource_nodes_multi($list, $all_nodes_to_add, false);
         }
     if(count($all_nodes_to_remove)>0)
         {
@@ -1771,7 +1771,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
 
         if(count($nodes_to_add)>0)
             {
-            add_resource_nodes($resource,$nodes_to_add);
+            add_resource_nodes($resource,$nodes_to_add, false);
             }
         db_end_transaction();
         }
@@ -5198,7 +5198,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                     delete_resource_nodes($ref,$field_node_refs);
                     if(count($locked_nodes) > 0)
                         {
-                        add_resource_nodes($ref,$locked_nodes);
+                        add_resource_nodes($ref, $locked_nodes, false);
                         }
                     }
                 }
