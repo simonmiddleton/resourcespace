@@ -1001,6 +1001,8 @@ var pluploadconfig = {
 								{
 								uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'lastqueued','');                                	
 								}
+                            jQuery('.pluploadform input').prop('disabled','true'); 
+                            jQuery('.pluploadform select').prop('disabled','true');   
                             <?php hook('beforeupload_end'); ?>
                         });       
                 
@@ -1093,6 +1095,9 @@ var pluploadconfig = {
                                                   });
 												 // Reset the lastqueued flag in case more files are added now
 												 uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'lastqueued','');
+                                                 
+                                                jQuery('.pluploadform input').prop('disabled',''); 
+                                                jQuery('.pluploadform select').prop('disabled','');
                           });
                           <?php }
 
@@ -1355,82 +1360,86 @@ if ($allowed_extensions!="" && $alternative==''){
 <div class="BasicsBox">
         <div id="pluploader"></div>
 </div>	
-
-
-<h2 class="CollapsibleSectionHead collapsed" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
-<div class="CollapsibleSection" id="UploadOptionsSection">
-<form class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
 <?php
-generateFormToken("upload_plupload");
-
-// Show the option to keep the existing file as alternative when replacing the resource
-if($replace_resource_preserve_option && ('' != $replace_resource  || '' != $replace))
+hook ("beforepluploadform");
+if($replace_resource != '' || $replace != '' || $upload_then_edit)
     {
-    if(!isset($default_replace_resource_original_alt_filename))
-        {
-        $default_replace_resource_original_alt_filename = '';
-        }
+    // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
-    <div class="Question">
-        <label for="keep_original"><?php echo $lang["replace_resource_preserve_original"]; ?></label>
-        <input id="keep_original" type="checkbox" name="keep_original" <?php if($replace_resource_preserve_default) { ?>checked<?php } ?> value="yes">
-        <div class="clearerleft"></div>
-    </div>
-    <div class="Question">
-        <label for="replace_resource_original_alt_filename"><?php echo $lang['replace_resource_original_alt_filename']; ?></label>
-        <input id="replace_resource_original_alt_filename" type="text" name="replace_resource_original_alt_filename" value="<?php echo $default_replace_resource_original_alt_filename; ?>">
-        <div class="clearerleft"></div>
-        <script>
-        jQuery(document).ready(function () {
-            if(jQuery('#keep_original').is(':checked'))
-                {
-                jQuery('#replace_resource_original_alt_filename').parent().show();
-                }
-            else
-                {
-                jQuery('#replace_resource_original_alt_filename').parent().hide();
-                }
-        });
-
-        jQuery('#keep_original').change(function() {
-            if(jQuery(this).is(':checked'))
-                {
-                jQuery('#replace_resource_original_alt_filename').parent().show();
-                }
-            else
-                {
-                jQuery('#replace_resource_original_alt_filename').parent().hide();
-                }
-        });
-        </script>
-    </div>
-	<?php
-	}
-elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
-    {
-    //$upload_page_options = true;
-    include '../include/edit_upload_options.php';
-    }
-	
-else
-    {
-    /* Show the import embedded metadata checkbox when uploading a missing file or replacing a file.
-    In the other upload workflows this checkbox is shown in a previous page. */
-    if (!hook("replacemetadatacheckbox")) 
+    <h2 class="CollapsibleSectionHead collapsed" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
+    <div class="CollapsibleSection" id="UploadOptionsSection">
+    <form class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
+    <?php
+    generateFormToken("upload_plupload");
+    
+    // Show the option to keep the existing file as alternative when replacing the resource
+    if($replace_resource_preserve_option && ($replace_resource != '' || $replace != ''))
         {
-        if (getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="")
-            { ?>
-            <div class="Question">
-                <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if (getval("no_exif","")=="no"){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
-                <div class="clearerleft"> </div>
-            </div>
-            <?php
+        if(!isset($default_replace_resource_original_alt_filename))
+            {
+            $default_replace_resource_original_alt_filename = '';
+            }
+        ?>
+        <div class="Question">
+            <label for="keep_original"><?php echo $lang["replace_resource_preserve_original"]; ?></label>
+            <input id="keep_original" type="checkbox" name="keep_original" <?php if($replace_resource_preserve_default) { ?>checked<?php } ?> value="yes">
+            <div class="clearerleft"></div>
+        </div>
+        <div class="Question">
+            <label for="replace_resource_original_alt_filename"><?php echo $lang['replace_resource_original_alt_filename']; ?></label>
+            <input id="replace_resource_original_alt_filename" type="text" name="replace_resource_original_alt_filename" value="<?php echo $default_replace_resource_original_alt_filename; ?>">
+            <div class="clearerleft"></div>
+            <script>
+            jQuery(document).ready(function () {
+                if(jQuery('#keep_original').is(':checked'))
+                    {
+                    jQuery('#replace_resource_original_alt_filename').parent().show();
+                    }
+                else
+                    {
+                    jQuery('#replace_resource_original_alt_filename').parent().hide();
+                    }
+            });
+    
+            jQuery('#keep_original').change(function() {
+                if(jQuery(this).is(':checked'))
+                    {
+                    jQuery('#replace_resource_original_alt_filename').parent().show();
+                    }
+                else
+                    {
+                    jQuery('#replace_resource_original_alt_filename').parent().hide();
+                    }
+            });
+            </script>
+        </div>
+        <?php
+        }
+    elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
+        {
+        //$upload_page_options = true;
+        include '../include/edit_upload_options.php';
+        }
+        
+    else
+        {
+        /* Show the import embedded metadata checkbox when uploading a missing file or replacing a file.
+        In the other upload workflows this checkbox is shown in a previous page. */
+        if (!hook("replacemetadatacheckbox")) 
+            {
+            if (getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="")
+                { ?>
+                <div class="Question">
+                    <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if (getval("no_exif","")=="no"){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
+                    <div class="clearerleft"> </div>
+                </div>
+                <?php
+                }
             }
         }
-    }?>
-<?php hook ("beforepluploadform");?>
-
-<?php if ($status!="") { ?><?php echo $status?><?php } ?>
+    } // End of upload options
+    
+if ($status!="") { ?><?php echo $status?><?php } ?>
 </form>
 </div><!-- End of UploadOptionsSection -->
 
