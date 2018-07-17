@@ -295,8 +295,8 @@ function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by
         // API user doesn't have permission to add new nodes
         return false;
         }
-    if($ref='NULL'){$ref = null;}
-    if($parent='NULL'){$parent = null;}
+    if(strtoupper($ref) == 'NULL'){$ref = null;}
+    if(strtoupper($parent) == 'NULL'){$parent = null;}
     return set_node($ref, $resource_type_field, $name, $parent, $order_by,$returnexisting = false);  
     }
 
@@ -312,5 +312,9 @@ function api_add_resource_nodes($resource,$nodestring)
     $nodes = explode(",",$nodestring);
     return add_resource_nodes_multi($resourcearr,$nodes);
     }
-  
+    
+function api_resourceLogLastRows($minref = 0, $days = 7, $maxrecords = 0)
+    {
+    return resourceLogLastRows($minref, $days, $maxrecords);
+    }    
 

@@ -46,21 +46,30 @@ function execute_api_call($query)
     if (!function_exists("api_" . $function)) {return false;}
     
     $eval="return api_" . $function . "(";
-    $n=1;while (true)
+    $n=1;
+    $fct = new ReflectionFunction("api_" . $function);
+    foreach ($fct->getParameters() as $fparam)
         {
+        if ($n>1) {$eval.=",";}
+        
         if (array_key_exists("param" . $n,$params))
             {
-            if ($n>1) {$eval.=",";}
-            # Add to the eval, removing backslash (to avoid escaping out of the quote - PHP 5 bug) and the quote itself, again to avoid exiting the string and executing arbirtrary code.
-            $eval.="\"" . str_replace(array("\\","\""),"\\\"",$params["param" . $n]) . "\"";
-            $n++;
+            $paramval = $params["param" . $n];
             }
-        else
+        
+        if ($fparam->isOptional() && $paramval == '')
             {
-            break;
+            // Set default value if nothing passed e.g. from API test tool
+            $paramval = $fparam->getDefaultValue();
             }
+        
+        # Add to the eval, removing backslash (to avoid escaping out of the quote - PHP 5 bug) and the quote itself, again to avoid exiting the string and executing arbirtrary code.
+        $eval.="\"" . str_replace(array("\\","\""),"\\\"",$paramval) . "\"";
+        $n++;
         }
+        
     $eval.=");";
+    
     debug("API: \$eval = {$eval}");
     return json_encode(eval($eval),(defined('JSON_PRETTY_PRINT')?JSON_PRETTY_PRINT:0));
     }

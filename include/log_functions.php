@@ -83,3 +83,42 @@ function logScript($message, $file = null)
 
     return;
     }
+ 
+/**
+* Retrieve entries from resource log based on date or references
+* 
+* @param integer   $minref      (Optional) Minimum ref of resource log entry to return (default 0)
+* @param integer   $days       (Optional) Number of days to return. e.g 3 = all results for today, yesterday and the day before. Default = 7 (ignored if minref supplied)
+* @param integer   $maxrecords  (Optional) Maximum number of records to return. Default = all rows (0)
+* 
+* @return array
+*/   
+ function resourceLogLastRows($minref = 0, $days = 7, $maxrecords = 0)
+    {
+    if(!checkperm('v'))
+        {
+        return array();
+        }
+        
+    $sql = "SELECT date, ref, resource, type, resource_type_field AS field, user, notes, diff, usageoption FROM resource_log WHERE type not in ('l', 't')";
+    if($minref > 0)
+        {
+        $sql .= " AND ref>=" . (int)$minref;
+        }
+    else
+        {
+        $sql .= " AND datediff(now(),date)<'" . (int)$days . "'";
+        }
+        
+    if($maxrecords > 0)
+        {
+        $sql .= " LIMIT " . (int)$maxrecords;
+        }
+        
+    $results = sql_query($sql);
+    return $results;
+    }
+ 
+ 
+ 
+ 
