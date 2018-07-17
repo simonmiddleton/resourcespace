@@ -755,7 +755,8 @@ elseif($restypes=='')
 			xOffset: -50,
 			yOffset: 40,
 			charwidth: 25,
-			cssclass: "ListviewStyle"
+			cssclass: "ListviewStyle",
+            clickRemove: true
 			});
 		});
 
