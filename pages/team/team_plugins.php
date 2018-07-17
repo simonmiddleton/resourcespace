@@ -370,8 +370,16 @@ if($searching)
                 <?php hook('additional_plugin_column_data'); ?>
                 <td>
                     <div class="ListTools">
-                    <a href="#<?php echo $activate_or_deactivate_href; ?>" class="<?php echo $activate_or_deactivate_class; ?>"><?php echo LINK_CARET . $activate_or_deactivate_label; ?></a>
                     <?php
+                    if(!in_array($plugin["name"],$disabled_plugins) || isset($plugin["inst_version"]))
+                        {?>
+                        <a href="#<?php echo $activate_or_deactivate_href; ?>" class="<?php echo $activate_or_deactivate_class; ?>"><?php echo LINK_CARET . $activate_or_deactivate_label; ?></a>
+                        <?php
+                        }
+                    elseif(in_array($plugin["name"],$disabled_plugins))
+                        {
+                        echo ($disabled_plugins_message != "") ? strip_tags_and_attributes(i18n_get_translated($disabled_plugins_message),array("a"),array("href","target")) : ("<a href='#' >" . LINK_CARET . "&nbsp;" . strip_tags_and_attributes($lang['plugins-disabled-plugin-message'],array("a"),array("href","target")) . "</a>");
+                        }
                 if ($plugin['info_url']!='')
                    {
                    echo '<a class="nowrap" href="'.$plugin['info_url'].'" target="_blank">' . LINK_CARET . $lang['plugins-moreinfo'].'</a> ';
@@ -520,8 +528,18 @@ if (count($plugins_avail)>0)
          {
          $plugin_row .= '<td>'.$p['version'].'</td>';
          }
-      $plugin_row .= '<td><div class="ListTools">';
-      $plugin_row .= '<a href="#'.$p['name'].'" class="p-activate">' . LINK_CARET .$lang['plugins-activate'].'</a> ';
+        $plugin_row .= '<td><div class="ListTools">';
+      
+        if(!in_array($p["name"],$disabled_plugins) || isset($p["inst_version"]))
+            {
+            $plugin_row .= '<a href="#'.$p['name'].'" class="p-activate">' . LINK_CARET .$lang['plugins-activate'].'</a> ';
+            }
+        elseif(in_array($p["name"],$disabled_plugins))
+            {
+            $plugin_row .=  ($disabled_plugins_message != "") ? strip_tags_and_attributes(i18n_get_translated($disabled_plugins_message),array("a"),array("href","target")) : ("<a href='#' >" . LINK_CARET . "&nbsp;" . $lang['plugins-disabled-plugin-message'] . "</a>");
+            }
+                        
+     
       if ($p['info_url']!='')
          {
          $plugin_row .= '<a class="nowrap" href="'.$p['info_url'].'" target="_blank">' . LINK_CARET . $lang['plugins-moreinfo'].'</a> ';
