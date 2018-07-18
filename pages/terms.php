@@ -5,7 +5,6 @@ include_once "../include/general.php";
 # No need to check access key for this page as it merely redirects to other pages
 $k=getvalescaped("k","");if ($k=="") {include "../include/authenticate.php";}
 
-//$url=getvalescaped("url","pages/home.php?login=true");
 $url=getvalescaped("url","");
 if ($url != "") {
 	if ($k != "") {
