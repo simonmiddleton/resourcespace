@@ -161,8 +161,10 @@ function HookSimplesamlAllProvideusercredentials()
         // If local authorisation based on assertion/ claim is needed, check now and make sure we don't process any further!
         if(
             (trim($simplesaml_authorisation_claim_name) != '' && trim($simplesaml_authorisation_claim_value) != '')
-            && array_key_exists($simplesaml_authorisation_claim_name, $attributes)
-            && !in_array($simplesaml_authorisation_claim_value, $attributes[$simplesaml_authorisation_claim_name])
+            && (
+                !array_key_exists($simplesaml_authorisation_claim_name, $attributes)
+                || !in_array($simplesaml_authorisation_claim_value, $attributes[$simplesaml_authorisation_claim_name])
+            )
         )
             {
             debug("simplesaml: WARNING: Unauthorised login attempt recorded for username '{$username}'!");
