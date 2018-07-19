@@ -94,7 +94,7 @@ function HookVr_viewPreviewReplacepreviewimage()
     else
         {
         $preview_ext = "jpg";
-        $preview_size = "pre";
+        $preview_size = "lpr";
         }
     // We can't use $hide_real_filepath with this plugin
     global $hide_real_filepath;
