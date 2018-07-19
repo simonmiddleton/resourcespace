@@ -9,11 +9,10 @@ $return               = array();
 
 if(!is_null($accepted_cookies_use))
     {
-    updateAcceptedCookiesUse($userref, $accepted_cookies_use);
-    rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', false);
-
     if((int) $accepted_cookies_use === 0)
         {
+        rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', false);
+
         $return['error'] = array(
             'status' => 307,
             'title'  => 'Temporary redirect',

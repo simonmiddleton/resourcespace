@@ -1,7 +1,7 @@
 <?php
-function HookCookies_notificationAllHandleuserref($user_id)
+function HookCookies_notificationAllHandleuserref()
     {
-    global $baseurl, $cookies_notification_accepted_cookies, $cookies_notification_allow_using_site_on_no_feedback;
+    global $baseurl, $cookies_notification_allow_using_site_on_no_feedback;
 
     // Ajax calls are handled by cookies_notification/pages/ajax/cookies_user_feedback.php
     if(getval('ajax', '') == 'true')
@@ -9,35 +9,25 @@ function HookCookies_notificationAllHandleuserref($user_id)
         return;
         }
 
-    $user_id = escape_check($user_id);
-
     // Update cookie use option first
     $accepted_cookies_use = getval('accepted_cookies_use', NULL, true);
     if(!is_null($accepted_cookies_use))
         {
-        updateAcceptedCookiesUse($user_id, $accepted_cookies_use);
-        rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', false);
-        }
-
-    $cookies_notification_accepted_cookies = sql_value("SELECT accepted_cookies AS `value` FROM user WHERE ref = '{$user_id}'", $accepted_cookies_use);
-
-    if($cookies_notification_accepted_cookies === '')
-        {
-        $cookies_notification_accepted_cookies = NULL;
+        rs_setcookie('accepted_cookies_use', $accepted_cookies_use, 365, '', '', substr($baseurl, 0, 5) == 'https', true);
         }
 
     /*
     * We redirect back to login in 2 cases:
-    * - if plugin is to now allow users to continue using ResourceSpace if users did not select one of the options for cookies use
+    * - if plugin is set to now allow users to continue using ResourceSpace if users did not select one of the options for cookies use
     * - if user opted to NOT ACCEPT cookies use
     */
-    if(is_null($cookies_notification_accepted_cookies) && !$cookies_notification_allow_using_site_on_no_feedback)
+    if(is_null($accepted_cookies_use) && !$cookies_notification_allow_using_site_on_no_feedback)
         {
         redirect("{$baseurl}/login.php?logout=true&cookies_use=true&require_option=true");
         }
-    else if(!is_null($cookies_notification_accepted_cookies) && (int) $cookies_notification_accepted_cookies === 0)
+    else if(!is_null($accepted_cookies_use) && (int) $accepted_cookies_use === 0)
         {
-        updateAcceptedCookiesUse($user_id, NULL);
+        rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', true);
         redirect("{$baseurl}/login.php?logout=true&cookies_use=true");
         }
 
@@ -47,10 +37,12 @@ function HookCookies_notificationAllHandleuserref($user_id)
 
 function HookCookies_notificationAllBeforeheader()
     {
-    global $baseurl, $lang, $cookies_notification_accepted_cookies, $is_authenticated;
+    global $baseurl, $lang, $is_authenticated;
+
+    $accepted_cookies_use = getval('accepted_cookies_use', NULL, true);
 
     // Don't show if user accepted the use of cookies
-    if(!is_null($cookies_notification_accepted_cookies) && (int) $cookies_notification_accepted_cookies === 1)
+    if(!is_null($accepted_cookies_use) && (int) $accepted_cookies_use === 1)
         {
         return;
         }
@@ -121,6 +113,21 @@ function HookCookies_notificationAllBeforeheader()
                 });
         </script>
         <?php
+        }
+
+    return;
+    }
+
+function HookCookies_notificationLoginPostlogout()
+    {
+    global $baseurl;
+
+    rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', true);
+
+    $cookies_use = getval('cookies_use', false);
+    if(!$cookies_use)
+        {
+        redirect($baseurl);
         }
 
     return;
