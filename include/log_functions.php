@@ -56,7 +56,10 @@ function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=nul
 
 
 /**
-* Log script messages on screen and optionally in a file
+* Log script messages on screen and optionally in a file. If debug_log is enabled, it will also write the message in the 
+* debug log file.
+* 
+* @uses debug()
 * 
 * @param string   $message
 * @param resource $file
@@ -65,20 +68,24 @@ function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=nul
 */
 function logScript($message, $file = null)
     {
-    $message .= PHP_EOL;
     $date_time = date('Y-m-d H:i:s');
 
     if(PHP_SAPI == 'cli')
         {
-        echo "{$date_time} {$message}";
+        echo "{$date_time} {$message}" . PHP_EOL;
         }
 
-    // TODO: consider checking the backtrace and record the script that called this and log it in the debug log
-    // debug("{$date_time} {$message}");
+    // Log in debug as well, with extended information to show the backtrace
+    global $debug_extended_info;
+    $orig_debug_extended_info = $debug_extended_info;
+    $debug_extended_info = true;
+    debug($message);
+    $debug_extended_info = $orig_debug_extended_info;
 
+    // If a file resource has been passed, then write to that file as well
     if(!is_null($file) && (is_resource($file) && 'file' == get_resource_type($file) || 'stream' == get_resource_type($file)))
         {
-        fwrite($file, "{$date_time} {$message}");
+        fwrite($file, "{$date_time} {$message}" . PHP_EOL);
         }
 
     return;
