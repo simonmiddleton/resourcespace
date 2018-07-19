@@ -24,7 +24,12 @@ if (!hook("renderresultthumb"))
         if ($resource_type_icons && !hook("replaceresourcetypeicon")) 
             {
             ?>
-            <div class="ResourceTypeIcon IconResourceType<?php echo $result[$n]["resource_type"];  ?>" ></div>
+            <div class="ResourceTypeIcon<?php
+            if (array_key_exists($result[$n]['resource_type'], $resource_type_icons_mapping))
+                {
+                echo ' fa fa-fw fa-' . $resource_type_icons_mapping[$result[$n]['resource_type']];  
+                }
+            ?>" ></div>
             <?php 
             }
         hook ("resourcethumbtop");

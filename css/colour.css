@@ -87,7 +87,7 @@ select {background-color:white; border-radius:5px;border:none;}
 
 /* Collection Bar */
 .ui-layout-resizer {background-color: #383838;background: linear-gradient(#A5A5A5,#000000); }
-.ui-layout-toggler-open-hover{border-radius:2px;background-color:#E0E0E0;background: linear-gradient(#E0E0E0,#383838);}
+.ui-layout-toggler-open-hover{border-radius:2px;}
 .CollectBack {color:#E0E0E0;background: linear-gradient(#2E2E2E , #1B1B1B);}
 
 #CollectionMinRightNav li {border-left:1px solid #E0E0E0;}
@@ -240,7 +240,7 @@ li.plupload_droptext {color:#999;}
 .plupload_view_list .plupload_filelist_header {border-top:1px;border-right:0px;border-left:0px;}
 .plupload_view_list .plupload_file {border-top:0px;border-right:0px;border-left:0px;background: #e6e6e6 url("smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png") 0% 54% repeat-x;}
 .Terms{color:#000;border: 1px solid #ccc;background: #fff;}
-.ui-layout-toggler-open-hover{background-color:rgb(160,175,195);}
+.ui-layout-toggler-open-hover{background-color:rgba(255,255,255,0.3);}
 .proptitle{color: #FFFFFF;background: rgb(119,119,119);}	
 .propbox{color: #000000;background: #FFFFFF;}
 .propbox a:link {color: rgb(115,115,115); background: none;}

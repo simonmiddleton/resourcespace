@@ -270,10 +270,6 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
 .ResourceTypeIcon { height: 16px;width:16px;float:right;margin-right:5px;margin-top:6px; }
-.IconResourceType1  {background: url(../gfx/interface/IcPhoto.png); }
-.IconResourceType2  {background: url(../gfx/interface/IcDocument.png);}
-.IconResourceType3  {background: url(../gfx/interface/IcVideo.png);}
-.IconResourceType4  {background: url(../gfx/interface/IcAudio.png);}
 .ResourcePanelShell a:link, .ResourcePanelShell a:visited {text-decoration:none;}
 .ResourcePanelShell a:hover, .ResourcePanelShell a:active {text-decoration:underline;}
 .ResourcePanelShell.ui-draggable {text-align: left;}

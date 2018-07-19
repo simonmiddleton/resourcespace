@@ -206,6 +206,13 @@ $include_rs_header_info=true;
 $header_colour_style_override='';
 $header_link_style_override='';
 
+# Used for specifying custom colours for home page elements (site text, dash tiles, simple search)
+$home_colour_style_override='';
+
+# Used for specifying custom colours for collection bar elements
+$collection_bar_background_override='';
+$collection_bar_foreground_override='';
+
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
 $defaultlanguage="en"; # default language, uses ISO 639-1 language codes ( en, es etc.)
@@ -897,9 +904,11 @@ $speedtaggingfield=1;
 
 # A list of types which get the extra video icon in the search results
 $videotypes=array(3);
-# add icons for resource types - add style IconResourceType<resourcetyperef> and 
-# IconResourceTypeLarge<resourcetyperef> similar to videotypes, this option overrides $videtypes option
+
+# Small icon above thumbnails showing the resource type
 $resource_type_icons=false;
+# Map the resource type to a font awesome 4 icon
+$resource_type_icons_mapping = array(1 => "camera", 2 => "file", 3 => "video-camera", 4 => "music");
 
 
 /** USER PREFERENCES **/

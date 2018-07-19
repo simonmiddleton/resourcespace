@@ -232,6 +232,8 @@ $extrafooterhtml="";
 <link href="<?php echo $baseurl?>/css/global.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!-- Colour stylesheet -->
 <link href="<?php echo $baseurl?>/css/colour.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
+<!-- Override stylesheet -->
+<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo $k; ?>&css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!--- FontAwesome for icons-->
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/font-awesome.min.css">
 <!-- Load specified font CSS -->
@@ -302,8 +304,7 @@ $linkUrl=isset($header_link_url) ? $header_link_url : $homepage_url;
         echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
         echo ((isset($slimheader_fixed_position) && $slimheader_fixed_position) ? ' SlimHeaderFixedPosition' : '');
         echo " " . $header_size;
-?>"<?php
-if (isset($header_colour_style_override) && $header_colour_style_override!='') { ?> style="background: <?php echo $header_colour_style_override; ?>;"<?php } ?>>
+?>">
 
 <?php
 if($responsive_ui)
@@ -399,16 +400,6 @@ $not_authenticated_pages = array('login', 'user_change_password');
 
 if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
     {
-    # Custom header links
-    if (isset($header_link_style_override) && $header_link_style_override!='')
-        {
-        ?>
-        <style>
-        #HeaderNav1 li a, #HeaderNav2 li a { color: <?php echo $header_link_style_override; ?>; }
-        #HeaderNav2 li { border-color: <?php echo $header_link_style_override; ?>; }
-        </style>
-        <?php
-        }
 	?>
 	<div id="HeaderNav1" class="HorizontalNav">
 

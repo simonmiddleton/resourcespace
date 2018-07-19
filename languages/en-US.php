@@ -28,3 +28,7 @@ $lang["userpreferencecolourtheme"]="Interface color theme";
 $lang['userpreference_colourtheme'] = 'Color theme';
 $lang["setup-headercolourstyleoverride"]="Custom header color";
 $lang["maximise"]="Maximize";
+
+$lang["setup-homecolourstyleoverride"]="Custom home background color";
+$lang["setup-collectionbarbackground"]="Custom collection bar background color";
+$lang["setup-collectionbarforeground"]="Custom collection bar foreground color";
