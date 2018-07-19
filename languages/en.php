@@ -614,6 +614,7 @@ $lang["log_code_e"]="Edited";
 $lang["log_code_E"]="Emailed";
 $lang["log_code_l"]=$lang["log-l"];
 $lang["log_code_m"]="Multi-edited";
+$lang['log_code_O'] = 'User opt-in';
 $lang["log_code_p"]="Payed";
 $lang["log_code_r"]="Reverted or re-uploaded";
 $lang["log_code_R"]="Reordered";
@@ -2678,6 +2679,7 @@ $lang["byte_prefix_mode_decimal"]="Use decimal for file sizes (1000 multiples, K
 /* Errors */
 $lang['error_upload_resource_alternatives_batch'] = 'When using this feature (see $upload_alternatives_suffix) your original file MUST be the first one in the queue!';
 $lang['error_upload_resource_not_found'] = 'A resource ID could not be found!';
+$lang['error_user_registration_opt_in'] = 'Access cannot be allowed without consent being given to process your personal data for the purpose of accessing this system!';
 
 $lang['image_quality_100'] = "Maximum";
 $lang['image_quality_92'] = "Print";
@@ -2701,3 +2703,4 @@ $lang["api-php-help"]="Paste the below into the remote system to call the entere
 $lang["font"]="Font";
 
 $lang["upload_success"] = "Success";
+$lang['user_registration_opt_in_message'] = "I consent to the personal data I have provided above being processed for the purposes of accessing this system. This processing includes logging my activity and contacting me as necessary for the use of the system.";

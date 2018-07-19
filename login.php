@@ -69,7 +69,6 @@ if ($lockouts>0 || $ulockouts>0)
 # Process the submitted login
 elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
     {
-   
     $password=trim(getvalescaped("password",""));
 	$result=perform_login();
 	if ($result['valid'])
@@ -214,15 +213,27 @@ if (!hook("replaceloginform")) {
 			 <div id="capswarning"><?php echo $lang["caps-lock-on"]; ?></div>
 			<div class="clearerleft"> </div>
 		</div>
-	
-		<?php if ($allow_keep_logged_in) { ?>
+
+<?php
+if($user_registration_opt_in)
+    {
+    ?>
+    <div class="Question">
+        <label for="login_opt_in"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
+        <input type="checkbox" id="login_opt_in" name="login_opt_in" value="yes">
+        <div class="clearerleft"> </div>
+    </div>
+    <?php
+    }
+
+    if ($allow_keep_logged_in) { ?>
 		<div class="Question">
 			<label for="remember"><?php echo $lang["keepmeloggedin"]?></label>
 			<input style="margin-top: 0.5em;" name="remember" id="remember" type="checkbox" value="yes" <?php echo ($remember_me_checked === true) ? "checked='checked'" : "";?>>
 			<div class="clearerleft"> </div>
 		</div>
 		<?php } ?>
-		
+
 		<div class="QuestionSubmit">
 			<label for="buttons"> </label>			
 			<input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
