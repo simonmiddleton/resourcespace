@@ -2704,3 +2704,4 @@ $lang["font"]="Font";
 
 $lang["upload_success"] = "Success";
 $lang['user_registration_opt_in_message'] = "I consent to the personal data I have provided above being processed for the purposes of accessing this system. This processing includes logging my activity and contacting me as necessary for the use of the system.";
+$lang['activity_log_admin_log_in_as'] = "Admin user '%USERNAME_FROM' logged in as '%USERNAME_TO'";
