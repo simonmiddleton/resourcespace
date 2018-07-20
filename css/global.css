@@ -344,7 +344,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .OptionTable, .Question .OptionToggle {margin: 0 0 0 190px;padding:0;}
 .Question .InnerLabel {width:90px; margin-top:  0px;}
 .Question .ExifOptions {margin: 0 0 0 290px;padding:0;}
-
+.WideTextQuestion label { width: 95%; float: right; }
 
 .Question .indent {
     float:left;
