@@ -10,28 +10,47 @@ function HookSimplesamlAllPreheaderoutput()
         return false;
         }
         
-	global $simplesaml_site_block, $simplesaml_allow_public_shares, $simplesaml_allowedpaths, $simplesaml_login;
-    
-	if(simplesaml_is_authenticated())
-		{
-		// Need to make sure we don't ask the user to type in a password, since we don't have it!
-		global $delete_requires_password;
-		$delete_requires_password=false;
-		return true;
-		}
-    
-     // Prevent password change if SAML authenticated and signed in to RS with SAML
-    if ($simplesaml_login && simplesaml_is_authenticated())
+	global $simplesaml_site_block, $simplesaml_allow_public_shares, $simplesaml_allowedpaths, $simplesaml_login, $simplesaml_allow_standard_login,
+    $anonymous_login, $pagename, $baseurl;
+   
+    if($simplesaml_login && simplesaml_is_authenticated())
         {
-        global $allow_password_change;
+        // Prevent password change if SAML authenticated and signed in to RS with SAML
+        // Also ensure we don't ask the user to type in a password, since we don't have it!
+        global $allow_password_change, $delete_requires_password;
+        $delete_requires_password=false;
         $allow_password_change=false;
+        return true;
         }
         
-	// If authenticated do nothing and return
-	if (isset($_COOKIE["user"])) {return true;}
-    
-	// If not blocking site do nothing and return
-	if (!$simplesaml_site_block){return true;}
+    if($pagename == "login" && !$simplesaml_allow_standard_login && ($simplesaml_login || trim($anonymous_login) !== ''))
+        {
+        // Shouldn't be able to see the login page, unless misconfigured in which case show to avoid a redirect loop and allow user to log in and recover
+        debug("simplesaml: blocking access to login page");
+        redirect($baseurl);
+        exit();
+        }
+        
+	// If normal user is logged in and allowing standard logins do nothing and return. If user is invalid they will be taken to login page as usual and cookie wiped
+	if ($simplesaml_allow_standard_login && isset($_COOKIE["user"]))
+        {
+        debug("simplesaml: standard user login - no action required");
+        return true;
+        }
+        
+    if(!$simplesaml_allow_standard_login)
+        {
+        global $show_anonymous_login_panel;
+        $show_anonymous_login_panel = false;    
+        }                
+                
+	// If not blocking site completely and allowing standard logins but not on login page, do nothing and return
+	if (!$simplesaml_site_block && $simplesaml_allow_standard_login)
+        {
+        debug("simplesaml: standard user login - no action required");
+        return true;
+        }
+
 
 	// Check for exclusions
     $k = getvalescaped('k', '');
@@ -77,18 +96,19 @@ function HookSimplesamlAllProvideusercredentials()
             debug("simplesaml: plugin not configured.");
             return false;
             }
-			
+            
 		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
         $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
         $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
         $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block, $anonymous_login,$allow_password_change, $simplesaml_create_new_match_email,
         $simplesaml_allow_duplicate_email, $simplesaml_multiple_email_notify, $simplesaml_authorisation_claim_name, 
         $simplesaml_authorisation_claim_value;
-
+                    
         // Allow anonymous logins outside SSO if simplesaml is not configured to block access to site.
         // NOTE: if anonymous_login is set to an invalid user, then use SSO otherwise it goes in an indefinite loop
         if(!$simplesaml_site_block && isset($anonymous_login) && trim($anonymous_login) !== '' && getval("usesso","")=="")
             {
+            debug("simplesaml: checking for anonymous user");
             $anonymous_login_escaped = escape_check($anonymous_login);
             $anonymous_login_found   = sql_value("SELECT username AS `value` FROM user WHERE username = '{$anonymous_login_escaped}'", '');
 
@@ -102,16 +122,22 @@ function HookSimplesamlAllProvideusercredentials()
                 {
                 return true;
                 }
+            elseif(!$simplesaml_login)
+                {
+                global $show_anonymous_login_panel;
+                $show_anonymous_login_panel = false;    
+                }
             }
 
-        // If user is logged or if SAML is not being used to login to ResourceSpace (just as a simple barrier, 
+        // If user is logged in or if SAML is not being used to login to ResourceSpace (just as a simple barrier, 
         // usually with anonymous access configured) then use standard authentication if available
         if($simplesaml_site_block && !simplesaml_is_authenticated())
             {
+            debug("simplesaml: site block enabled, performing SAML authentication");
             simplesaml_authenticate();
             }
         
-        if(isset($_COOKIE['user']) || (!$simplesaml_login && simplesaml_is_authenticated()))
+        if((isset($_COOKIE['user']) && $simplesaml_allow_standard_login) || (!$simplesaml_login && simplesaml_is_authenticated() ))
             {
             return true;
             }
@@ -119,6 +145,7 @@ function HookSimplesamlAllProvideusercredentials()
 		// Redirect to login page if not already authenticated and local login option is preferred
 		if(!simplesaml_is_authenticated() && $simplesaml_allow_standard_login  && $simplesaml_prefer_standard_login && getval("usesso","")=="" )
 			{
+            debug("simplesaml: redirecting to standard login page");
 			?>
 			<script>
 			top.location.href="<?php echo $baseurl?>/login.php?url=<?php echo urlencode($path)?>";
@@ -127,10 +154,12 @@ function HookSimplesamlAllProvideusercredentials()
 			exit;
 			}
 		
-		if(!simplesaml_is_authenticated())
-			{
-			simplesaml_authenticate();
-			}
+        if(!simplesaml_is_authenticated())
+            {
+            debug("simplesaml: authenticating");
+            simplesaml_authenticate();
+            }
+            
 		$attributes = simplesaml_getattributes();
         
         if(strpos($simplesaml_username_attribute,",")!==false) // Do we have to join two fields together?
@@ -391,14 +420,14 @@ function HookSimplesamlLoginPostlogout()
         {
 		global $simplesaml_login;
 		
-		if($simplesaml_login) 
+		if($simplesaml_login && simplesaml_is_authenticated()) 
 			{simplesaml_signout();}
         }
 
 function HookSimplesamlLoginPostlogout2()
         {
 		global $baseurl,$simplesaml_login;
-		if (getval("logout","")!="" && $simplesaml_login)
+		if (getval("logout","")!="" && $simplesaml_login && simplesaml_is_authenticated())
 			{
 			simplesaml_signout();
 			header( 'Location: '.$baseurl ) ;
@@ -419,8 +448,14 @@ function HookSimplesamlAllCheckuserloggedin()
 */
 function HookSimplesamlAllReplaceheadernav1anon()
     {
-    global $baseurl, $lang, $anon_login_modal, $contact_link, $simplesaml_prefer_standard_login, $simplesaml_site_block;
+    global $baseurl, $lang, $anon_login_modal, $contact_link, $simplesaml_prefer_standard_login, $simplesaml_site_block, $simplesaml_allow_standard_login, $simplesaml_login;
 
+    // Don't show any link if signed in via SAML already and standard logins have been disabled
+    if(!$simplesaml_allow_standard_login && !$simplesaml_login && simplesaml_is_authenticated())
+        {
+        return true;
+        }
+        
     if($simplesaml_prefer_standard_login || $simplesaml_site_block)
         {
         return false;
