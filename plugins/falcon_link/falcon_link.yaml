@@ -4,4 +4,5 @@ author: Montala Limited
 version: 1.0
 config_url: /plugins/falcon_link/pages/setup.php
 category: content sharing
+disable_group_select: 1
 

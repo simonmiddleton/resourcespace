@@ -4,3 +4,4 @@ version: 0.99
 desc: [Deprecated] LDAP plugin for AD & LDAP. Use simpleldap for AD integration.
 config_url: /plugins/posixldapauth/pages/setup.php
 category: authentication
+disable_group_select: 1

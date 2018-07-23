@@ -4,3 +4,4 @@ version: 1.0
 desc: [Advanced] Allows ingestion of e-mailed attachments
 config_url: /plugins/checkmail/pages/setup.php
 category: system
+disable_group_select: 1

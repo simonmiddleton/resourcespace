@@ -1,3 +1,4 @@
 name: remotedownload
 desc: [Advanced] Allows an alternative URL/server to be used for downloads. WARNING - do not enable unless you are specifically using this functionality, as download behaviour will be altered.
 category: system
+disable_group_select: 1

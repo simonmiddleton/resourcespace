@@ -4,3 +4,4 @@ author: Montala Limited
 version: 2.0
 default_priority: 100
 category: asset processing,system,user interface
+disable_group_select: 1

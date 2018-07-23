@@ -12,6 +12,16 @@ include "../../include/authenticate.php";if (!checkperm("a")) {exit ("Permission
 
 $plugin=getvalescaped("plugin","");
 
+$plugin_yaml_path = get_plugin_path($plugin) . "/" . $plugin . ".yaml";
+$py = get_plugin_yaml($plugin_yaml_path, false);  
+if($py['disable_group_select'])
+    {
+    $error = $lang['plugins-disabled-plugin-message'];
+    error_alert($error);
+    exit();
+    }
+
+
 # Fetch current access level
 $access=sql_value("select enabled_groups value from plugins where name='$plugin'","");
 

@@ -4,3 +4,4 @@ version : 1.0
 desc    : [Advanced] Allows resource metadata to be extracted from TMS database. 
 config_url: /plugins/tms_link/pages/setup.php
 category: asset processing
+disable_group_select: 1

@@ -142,8 +142,8 @@ elseif ($enable_plugin_upload && isset($_REQUEST['submit']) && enforcePostReques
       }
    }
 
- $inst_plugins = sql_query('SELECT name, config_url, descrip, author, '.
-    'inst_version, update_url, info_url, enabled_groups '.
+ $inst_plugins = sql_query('SELECT name, config_url, descrip, author, ' .
+    'inst_version, update_url, info_url, enabled_groups, disable_group_select ' .
     'FROM plugins WHERE inst_version>=0 order by name');
 /**
  * Ad hoc function for array_walk through plugins array.
@@ -163,6 +163,15 @@ function legacy_check(&$i_plugin, $key)
       $i_plugin['legacy_inst'] = true;
       }
    }
+
+for ($n=0;$n<count($inst_plugins)-1;$n++)
+    {
+    # Check if group access is permitted by YAML file. Needed because plugin may have been enabled before this development)
+    $plugin_yaml_path = get_plugin_path($inst_plugins[$n]["name"])."/".$inst_plugins[$n]["name"].".yaml";
+    $py = get_plugin_yaml($plugin_yaml_path, false);  
+    $inst_plugins[$n]['disable_group_select'] = $py['disable_group_select'];
+    }
+        
 array_walk($inst_plugins, 'legacy_check');
 # Build an array of available plugins.
 $plugins_avail = array();
@@ -305,7 +314,6 @@ include "../../include/header.php"; ?>
 <p><?php echo $lang["plugins-headertext"]; ?></p>
 <h2 class="pageline"><?php echo (!$searching ? $lang['plugins-installedheader'] : $lang['plugins-search-results-header']); ?></h2>
 <?php hook("before_active_plugin_list");
-
 if($searching)
     {
     $all_plugins = array_merge($inst_plugins, $plugins_avail);
@@ -384,8 +392,11 @@ if($searching)
                    {
                    echo '<a class="nowrap" href="'.$plugin['info_url'].'" target="_blank">' . LINK_CARET . $lang['plugins-moreinfo'].'</a> ';
                    }
-                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '">' . LINK_CARET . $lang['groupaccess'].'</a> ';
-                $plugin['enabled_groups'] = (isset($plugin['enabled_groups']) ? array($plugin['enabled_groups']) : array());
+                if (!$plugin['disable_group_select'])
+                    {
+                    echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '">' . LINK_CARET . $lang['groupaccess'] . ((trim($plugin['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '') . '</a> ';
+                    $plugin['enabled_groups'] = (isset($plugin['enabled_groups']) ? array($plugin['enabled_groups']) : array());
+                    }
                 if ($plugin['config_url']!='')        
                    {
                    // Correct path to support plugins that are located in filestore/plugins
@@ -420,7 +431,7 @@ if($searching)
     include "../../include/footer.php";
     exit();
     }
-
+    
 if (count($inst_plugins)>0)
    { ?>
    <div class="Listview">
@@ -477,8 +488,11 @@ if (count($inst_plugins)>0)
                {
                echo '<a class="nowrap" href="'.$p['info_url'].'" target="_blank">' . LINK_CARET . $lang['plugins-moreinfo'].'</a> ';
                }
-            echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '">' . LINK_CARET . $lang['groupaccess'].'</a> ';
-            $p['enabled_groups'] = array($p['enabled_groups']);
+            if (!$p['disable_group_select'])
+                {
+                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '">' . LINK_CARET . $lang['groupaccess'] . ((trim($p['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '')  . '</a> ';
+                $p['enabled_groups'] = array($p['enabled_groups']);
+                }
             if ($p['config_url']!='')        
                {
                // Correct path to support plugins that are located in filestore/plugins
@@ -508,7 +522,8 @@ else
    } ?>
 
 <h2 class="pageline"><?php echo $lang['plugins-availableheader']; ?></h2>
-<?php 
+<?php
+
 if (count($plugins_avail)>0) 
    { 
    $plugin_categories = array();

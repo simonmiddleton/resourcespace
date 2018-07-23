@@ -4,3 +4,4 @@ version : 1.2
 desc    : [Advanced] Simpler implementation of ldap authentication, targeted at Active Directory but also supports Oracle directory
 config_url: /plugins/simpleldap/pages/setup.php
 category: authentication
+disable_group_select: 1

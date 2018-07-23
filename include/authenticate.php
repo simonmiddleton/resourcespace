@@ -308,7 +308,7 @@ else
 
 # Load group specific plugins and reorder plugins list
 $plugins= array();
-$active_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 ORDER BY priority"));
+$active_plugins = (sql_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version>=0 ORDER BY priority"));
 
 
 foreach($active_plugins as $plugin)
@@ -318,8 +318,8 @@ foreach($active_plugins as $plugin)
 	$py="";
 	$py = get_plugin_yaml($plugin_yaml_path, false);
 
-	# Check group access and applicable for this user in the group
-	if($plugin['enabled_groups']!='')
+	# Check group access and applicable for this user in the group, only if group access is permitted as otherwise will have been processed already
+	if(!$py['disable_group_select'] && $plugin['enabled_groups'] != '')
 		{
 		$s=explode(",",$plugin['enabled_groups']);
 		if (isset($usergroup) && in_array($usergroup,$s))
@@ -330,7 +330,7 @@ foreach($active_plugins as $plugin)
 			$plugins[]=$plugin['name'];
 			}
 		}
-	elseif($plugin['enabled_groups']=='')
+	else
 		{
 		$plugins[]=$plugin['name'];
 		}

@@ -5,3 +5,4 @@ desc        : [Advanced] Windows Integrated Authentication
 info_url    : https://www.resourcespace.com/knowledge-base/user/plugin-winauth
 config_url  : /plugins/winauth/pages/setup.php
 category    : authentication
+disable_group_select: 1

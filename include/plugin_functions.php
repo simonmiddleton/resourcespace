@@ -31,12 +31,14 @@ function activate_plugin($name)
                 $plugin_yaml['desc'] = substr(file_get_contents($about), 0, 95) . '...';
                 }
             }
+            
     # escape the plugin information
     $plugin_yaml_esc = array();
     foreach (array_keys($plugin_yaml) as $thekey)
         {
         $plugin_yaml_esc[$thekey] = escape_check($plugin_yaml[$thekey]);
         }
+    
 
 
         # Add/Update plugin information.
@@ -50,7 +52,8 @@ function activate_plugin($name)
                   "descrip='{$plugin_yaml_esc['desc']}', author='{$plugin_yaml_esc['author']}', " .
                   "inst_version='{$plugin_yaml_esc['version']}', " .
                   "priority='{$plugin_yaml_esc['default_priority']}', " .
-                  "update_url='{$plugin_yaml_esc['update_url']}', info_url='{$plugin_yaml_esc['info_url']}' " .
+                  "update_url='{$plugin_yaml_esc['update_url']}', info_url='{$plugin_yaml_esc['info_url']}', " .
+                  "disable_group_select='{$plugin_yaml_esc['disable_group_select']}' " .
                   "WHERE name='{$plugin_yaml_esc['name']}'");
         hook("after_activate_plugin","",array($name));
         return true;
@@ -116,6 +119,7 @@ function get_plugin_yaml($path, $validate=true)
     $plugin_yaml['config_url'] = '';
     $plugin_yaml['desc'] = '';
     $plugin_yaml['default_priority'] = '999';
+    $plugin_yaml['disable_group_select'] = '0';
     if ($yaml_file_ptr!=false)
         {
         while (($line = fgets($yaml_file_ptr))!='')
@@ -128,6 +132,7 @@ function get_plugin_yaml($path, $validate=true)
                     }
                 }
             }
+            
         if ($plugin_yaml['config_url']!='' && $plugin_yaml['config_url'][0]=='/') # Strip leading spaces from the config url.
             {
             trim($plugin_yaml['config_url'], '/');
@@ -154,6 +159,7 @@ function get_plugin_yaml($path, $validate=true)
         {
         $plugin_yaml['version'] = '0';
         }
+        
     return $plugin_yaml;
     }
 

@@ -4,3 +4,4 @@ version : 1.1
 desc    : Enables scheduled deletion or restriction of resources based upon date fields
 config_url: /plugins/action_dates/pages/setup.php
 category: Workflow and access
+disable_group_select: 1

@@ -277,13 +277,13 @@ if ($use_plugins_manager)
 				$plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
 				$p_y = get_plugin_yaml($plugin_yaml_path, false);
 				# Write what information we have to the plugin DB.
-				sql_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority) ".
+				sql_query("REPLACE plugins(inst_version, author, descrip, name, info_url, update_url, config_url, priority, disable_group_select) ".
 						  "VALUES ('{$p_y['version']}','{$p_y['author']}','{$p_y['desc']}','{$plugin_name}'," .
-						  "'{$p_y['info_url']}','{$p_y['update_url']}','{$p_y['config_url']}','{$p_y['default_priority']}')");
+						  "'{$p_y['info_url']}','{$p_y['update_url']}','{$p_y['config_url']}','{$p_y['default_priority']}','{$p_y['disable_group_select']}')");
 				}
 			}
 		}
-    # Need verbatum queries for this query
+    # Need verbatim queries for this query
     $mysql_vq = $mysql_verbatim_queries;
     $mysql_verbatim_queries = true;
 	$active_plugins = sql_query("SELECT name,enabled_groups,config,config_json FROM plugins WHERE inst_version>=0 order by priority");
@@ -297,7 +297,7 @@ if ($use_plugins_manager)
 	    $plugin_yaml_path = get_plugin_path($plugin["name"])."/".$plugin["name"].".yaml";
 	    $py = get_plugin_yaml($plugin_yaml_path, false);
 	    array_push($active_yaml,$py);
-	    if ($plugin['enabled_groups'] == '')
+	    if ($py['disable_group_select'] || $plugin['enabled_groups'] == '')
 		    {
 		    # Add to the plugins array if not already present which is what we are working with
 		    $plugins[]=$plugin['name'];
@@ -307,7 +307,10 @@ if ($use_plugins_manager)
 	for ($n=count($active_plugins)-1;$n>=0;$n--)
 		{
 		$plugin=$active_plugins[$n];
-		if ($plugin['enabled_groups'] == '')
+        # Check group access && YAML, only enable for global access at this point
+	    $plugin_yaml_path = get_plugin_path($plugin["name"])."/".$plugin["name"].".yaml";
+	    $py = get_plugin_yaml($plugin_yaml_path, false);
+		if ($py['disable_group_select'] || $plugin['enabled_groups'] == '')
 			{
 			include_plugin_config($plugin['name'], $plugin['config'], $plugin['config_json']);
 			}

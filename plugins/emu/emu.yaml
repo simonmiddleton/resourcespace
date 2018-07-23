@@ -6,3 +6,4 @@ info_url: http://www.resourcespace.com/knowledge-base/user/plugin-emu
 config_url: /plugins/emu/pages/setup.php
 default_priority: 100
 category: asset processing
+disable_group_select: 1
