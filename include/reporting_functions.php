@@ -162,7 +162,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
 						}
 					else
 						{
-						$output.="<td>" . lang_or_i18n_get_translated($value, "usergroup-") . "</td>\r\n";
+						$output.="<td>" . strip_tags_and_attributes(lang_or_i18n_get_translated($value, "usergroup-"),array("a"),array("href","target")) . "</td>\r\n";
 						}
 					}
 				}
