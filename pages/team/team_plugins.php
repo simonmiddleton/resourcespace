@@ -22,7 +22,7 @@ if(!checkperm('a'))
 if (isset($_REQUEST['activate']) && enforcePostRequest(false))
    {
    $inst_name = trim(getvalescaped('activate',''), '#');
-   if ($inst_name!='')
+   if ($inst_name != '' && !in_array($inst_name,$disabled_plugins))
       {
       activate_plugin($inst_name);   
       }
