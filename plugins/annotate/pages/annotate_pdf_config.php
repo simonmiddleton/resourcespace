@@ -7,40 +7,53 @@ include_once ("../../../include/collections_functions.php");
 include("../../../include/search_functions.php");
 include_once("../include/general.php");
 
+global $plugins;
+if (!in_array("annotate",$plugins))
+	{
+	header("Status: 403 plugin not activated");
+	exit($lang["error-plugin-not-activated"]);
+	}
+
 $ref=getvalescaped("ref","");
 $col=getvalescaped("col","");
 $previewpage=getvalescaped("previewpage",1,true);
 
-if ($col!=""){
+if ($col!="")
+	{
 	$is_collection=true;
 	$collection=get_collection($col);
 	$resources=do_search("!collection".$col);
 	set_user_collection($userref,$col);
 	refresh_collection_frame();
 	$ref="C".$col;$realref=$col; // C allows us to distinguish a collection from a resource in the JS without adding extra params.
-} 
-else { 
+	} 
+else
+	{ 
 	$is_collection=false;
 	$resources=do_search("!list".$ref);
 	$realref=$ref;
-}
+	}
 
 // prune unnannotated resources if necessary
-	$annotate=true;
-	if ($annotate_pdf_output_only_annotated){
-		$resources_modified=array();
-		$x=0;
-		for ($n=0;$n<count($resources);$n++){
-			unset($notes);
-			if ($annotate_pdf_output_only_annotated && $resources[$n]['annotation_count']!=0){
-				$resources_modified[$x]=$resources[$n];
-				$x++;
+$annotate=true;
+
+if ($annotate_pdf_output_only_annotated)
+	{
+	$resources_modified=array();
+	$x=0;
+	for ($n=0;$n<count($resources);$n++)
+		{
+		unset($notes);
+		if ($annotate_pdf_output_only_annotated && $resources[$n]['annotation_count']!=0)
+			{
+			$resources_modified[$x]=$resources[$n];
+			$x++;
 			} 
 		}
-		$resources=$resources_modified;
+	$resources=$resources_modified;
 	}
-	if (count($resources)==0){$annotate=false;}
 
+if (count($resources)==0){$annotate=false;}
 
 # Fetch search details (for next/back browsing and forwarding of search params)
 $search=getvalescaped("search","");
@@ -53,8 +66,6 @@ $archive=getvalescaped("archive",0,true);
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
-
-
 
 include "../../../include/header.php";
 

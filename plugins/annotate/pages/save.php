@@ -5,9 +5,18 @@ include_once "../../../include/general.php";
 include_once "../../../include/authenticate.php";
 include_once "../../../include/resource_functions.php";
 
+$ref=getvalescaped("ref", 0, true);
+if ($ref==0)
+    {
+    die($lang["annotate_ref_not_supplied"]);
+    }
 
-$ref=getvalescaped("ref","");
-if ($ref==""){die("no");}
+global $plugins;
+if (!in_array("annotate",$plugins))
+    {
+    header("Status: 403 plugin not activated");
+    exit($lang["error-plugin-not-activated"]);
+    }
 
 $top=getvalescaped('top','');
 $left=getvalescaped('left','');
@@ -20,16 +29,18 @@ $id=getvalescaped('id','');
 $preview_width=getvalescaped('pw','');
 $preview_height=getvalescaped('ph','');
 
-
 $oldtext=sql_value("select note value from annotate_notes where ref='$ref' and note_id='$id'","");
-if ($oldtext!=""){
+if ($oldtext!="")
+    {
 	remove_keyword_mappings($ref,i18n_get_indexable($oldtext),-1,false,false,"annotation_ref",$id);
-}
+    }
 
 sql_query("delete from annotate_notes where ref='$ref' and note_id='$id'");
 
-
-if (substr($text,0,strlen($username))!=$username){$text=$username.": ".$text;}
+if (substr($text,0,strlen($username))!=$username)
+    {
+    $text=$username.": ".$text;
+    }
 
 sql_query("insert into annotate_notes (ref,top_pos,left_pos,width,height,preview_width,preview_height,note,user,page) values ('$ref','$top','$left','$width','$height','$preview_width','$preview_height','$text','$userref',$page) ");
 

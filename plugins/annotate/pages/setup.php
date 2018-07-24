@@ -10,14 +10,15 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 
 $plugin_name = 'annotate';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {
+    plugin_activate_for_setup($plugin_name);
+    }
 
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'annotate';
 $plugin_page_heading = $lang['annotate_configuration'];
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
-
 $page_def[] = config_add_text_list_input('annotate_ext_exclude', $lang['extensions_to_exclude']);
 $page_def[] = config_add_multi_rtype_select('annotate_rt_exclude', $lang['resource_types_to_exclude']);
 $page_def[] = config_add_single_select('annotate_font', $lang['annotate_font'], array('helvetica', 'dejavusanscondensed'), false);

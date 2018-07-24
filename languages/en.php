@@ -1818,6 +1818,7 @@ $lang["error-csrf-verification-failed"] = "CSRF verification failed! Try reloadi
 $lang["error-method-not_allowed"] = "Method Not Allowed.";
 $lang["error-405-method-not_allowed"] = "405 Method Not Allowed.";
 $lang["error-403-forbidden"] = "403 Forbidden.";
+$lang["error-plugin-not-activated"] = "Plugin not activated";
 
 
 $lang["no-options-available"]="No options available";
