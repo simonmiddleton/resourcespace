@@ -9,10 +9,9 @@
 * @param $resources
 * @return string
 */
-function generateResourcesMetadataCSV(array $resources,$personal=false)
+function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false)
     {
     global $lang, $csv_export_add_original_size_url_column;
-
     $return                 = '';
     $csv_field_headers      = array();
     $resources_fields_data  = array();
@@ -21,7 +20,9 @@ function generateResourcesMetadataCSV(array $resources,$personal=false)
         {
         foreach(get_resource_field_data($resource['ref'], false, true, -1, '' != getval('k', '')) as $field_data)
             {
-            if (!$personal || $field_data["personal_data"]) # If $personal=true, return personal_data fields only.
+            // If $personal=true, return personal_data fields only.
+            // If $alldata=false, return only fields marked as 'Include in CSV export'
+            if ((!$personal || $field_data["personal_data"]) && ($alldata || $field_data["include_in_csv_export"]))
                 {
                 $csv_field_headers[$field_data['ref']] = $field_data['title'];
                 $resources_fields_data[$resource['ref']][$field_data['resource_type_field']] = $field_data['value'];

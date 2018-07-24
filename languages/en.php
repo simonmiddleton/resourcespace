@@ -1890,8 +1890,9 @@ $lang['collection_disk_usage'] = 'Disk space used by all resources';
 $lang["matchingresourceslabel"]="Matching resources";
 
 # CSV Export of Search results
-$lang['csvExportResultsMetadata'] = 'CSV Export - All metadata';
+$lang['csvExportResultsMetadata'] = 'CSV Export - metadata';
 $lang['csvExportResultsMetadataPersonal'] = 'CSV Export - Personal data fields';
+$lang['csvExportResultsMetadataAll'] = 'CSV Export - All permitted metadata';
 $lang['csvAddMetadataCSVToArchive'] = 'Include metadata CSV file to the archive?';
 
 $lang["saving"]="Saving...";
@@ -2706,3 +2707,5 @@ $lang["font"]="Font";
 $lang["upload_success"] = "Success";
 $lang['user_registration_opt_in_message'] = "I consent to the personal data I have provided above being processed for the purposes of accessing this system. This processing includes logging my activity and contacting me as necessary for the use of the system.";
 $lang['activity_log_admin_log_in_as'] = "Admin user '%USERNAME_FROM' logged in as '%USERNAME_TO'";
+
+$lang["property-include_in_csv_export"]="Include in CSV export";

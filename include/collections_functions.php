@@ -2169,7 +2169,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $starsearch, $restricted_share, $hidden_collections, $internal_share_access, $search,
            $usercollection, $disable_geocoding, $geo_locate_collection, $collection_download_settings, $contact_sheet,
-           $allow_resource_deletion, $pagename;
+           $allow_resource_deletion, $pagename,$upload_then_edit;
                
 	#This is to properly render the actions drop down in the themes page	
 	if ( isset($collection_data['ref']) && $pagename!="collections" )
@@ -2185,7 +2185,21 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	$search_collection = explode(',', $search_collection); // just get the number
     	$search_collection = escape_check($search_collection[0]);
     	}
-
+        
+    $urlparams = array(
+                      "search"      =>  (isset($collection_data['ref']) ? "!collection" . $collection_data['ref'] : $search),
+                      "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
+                      "ref"         =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
+                      "restypes"    =>  isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "",
+                      "starsearch"  =>  $starsearch,
+                      "order_by"    =>  $order_by,
+                      "col_order_by"=>  $col_order_by,
+                      "sort"        =>  $sort,
+                      "offset"      =>  $offset,
+                      "find"        =>  $find,
+                      "k"           =>  $k
+                       );
+    
     $options = array();
 	$o=0;
 
@@ -2230,17 +2244,14 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $research = sql_value('SELECT ref value FROM research_request WHERE collection="' . $collection_data['ref'] . '";', 0);
 
         // Manage research requests
-        $data_attribute['url'] = sprintf('%spages/team/team_research.php', $baseurl_short);
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/team/team_research.php",$urlparams);
         $options[$o]['value']='manage_research_requests';
 		$options[$o]['label']=$lang['manageresearchrequests'];
 		$options[$o]['data_attr']=$data_attribute;
 		$o++;
 
         // Edit research requests
-        $data_attribute['url'] = sprintf('%spages/team/team_research_edit.php?ref=%s',
-            $baseurl_short,
-            urlencode($research)
-        );
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/team/team_research_edit.php",$urlparams,array("ref"=>$research));
         $options[$o]['value']='edit_research_requests';
 		$options[$o]['label']=$lang['editresearchrequests'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -2262,30 +2273,24 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Edit Collection
     if((($userref == $collection_data['user']) || (checkperm('h')))  && ($k == '' || $internal_share_access)) 
         {
-        $extra_tag_attributes = sprintf('
-                data-url="%spages/collection_edit.php?ref=%s"
-            ',
-            $baseurl_short,
-            urlencode($collection_data['ref'])
-        );
-
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_edit.php",$urlparams);
         $options[$o]['value']='edit_collection';
 		$options[$o]['label']=$lang['action-edit'];
-		$options[$o]['data_attr']=array();
-		$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+		$options[$o]['data_attr'] = $data_attribute;
 		$o++;
         }
 
     // Upload to collection
     if(((checkperm('c') || checkperm('d')) && $collection_data['savedsearch'] == 0 && ($userref == $collection_data['user'] || $collection_data['allow_changes'] == 1 || checkperm('h'))) && ($k == '' || $internal_share_access))
         {
-        $data_attribute['url'] = sprintf('%spages/edit.php?uploader=%s&ref=-%s&collection_add=%s',
-            $baseurl_short,
-            urlencode($top_nav_upload_type),
-            urlencode($userref),
-            urlencode($collection_data['ref'])
-        );
-
+        if($upload_then_edit)
+            {
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/upload_plupload.php",array(),array("collection_add"=>$collection_data['ref']));
+            }
+        else
+            {
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",array(),array("uploader"=>$top_nav_upload_type,"ref"=>-$userref, "collection_add"=>$collection_data['ref']));
+            }
         $options[$o]['value']='upload_collection';
 		$options[$o]['label']=$lang['action-upload-to-collection'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -2295,15 +2300,16 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Home_dash is on, AND NOT Anonymous use, AND (Dash tile user (NOT with a managed dash) || Dash Tile Admin)
     if(!$top_actions && $home_dash && ($k == '' || $internal_share_access) && checkPermission_dashcreate())
         {
-        $data_attribute['url'] = sprintf('
-            %spages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=!collection%s&order_by=%s&sort=%s
-            ',
-            $baseurl_short,
-            $collection_data['ref'],
-            $order_by,
-            $sort
-        );
-
+        $tileparams = array(
+                            "create"            =>"true",
+                            "tltype"            =>"srch",
+                            "promoted_resource" =>"true",
+                            "freetext"          =>"true",
+                            "all_users"         =>"1",
+                            "link"              => $baseurl_short . "pages/search.php?search=!collection" . $collection_data['ref'],
+                            );
+        
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/dash_tile.php",$urlparams,$tileparams);
         $options[$o]['value']='save_collection_to_dash';
 		$options[$o]['label']=$lang['createnewdashtile'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -2313,7 +2319,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 	// Add option to publish as featured collection
     if(checkperm("h") && ($k == '' || $internal_share_access))
         {
-        $data_attribute['url'] = $baseurl_short . 'pages/collection_set_category.php?ref=' . $collection_data['ref'];
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_set_category.php",$urlparams);
         $options[$o]['value']='collection_set_category';
 		$options[$o]['label']=$lang['collection_set_theme_category'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -2326,12 +2332,8 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         # Ability to request a whole collection (only if user has restricted access to any of these resources)
         $min_access = collection_min_access($result);
         if($min_access != 0)
-            {
-            $data_attribute['url'] = sprintf('%spages/collection_request.php?ref=%s&k=%s',
-                $baseurl_short,
-                urlencode($collection_data['ref']),
-                urlencode($k)
-            );
+            {                
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_request.php",$urlparams);
             $options[$o]['value']='request_all';
             $options[$o]['label']=$lang['requestall'];
             $options[$o]['data_attr']=$data_attribute;
@@ -2341,21 +2343,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
 	if(($geo_locate_collection && !$disable_geocoding) && $count_result > 0)
         {
-            $data_attribute['url'] = sprintf('%spages/geolocate_collection.php?ref=%s',
-                $baseurl_short,
-		urlencode($collection_data['ref'])
-            );
-            $options[$o]['value']='geolocatecollection';
-            $options[$o]['label']=$lang["geolocatecollection"];
-            $options[$o]['data_attr']=$data_attribute;
-            $o++;
-            
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/geolocate_collection.php",$urlparams);
+        $options[$o]['value']='geolocatecollection';
+        $options[$o]['label']=$lang["geolocatecollection"];
+        $options[$o]['data_attr']=$data_attribute;
+        $o++;            
         }
 	
     // Download option
     if( $download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
         {
-        $data_attribute['url'] = $baseurl_short . "pages/download_usage.php?collection=" . urlencode($collection_data['ref']) ."&k=" . urlencode($k);
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/download_usage.php",$urlparams);
         $options[$o]['value']='download_collection';
 		$options[$o]['label']=$lang['action-download'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -2363,7 +2361,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
     else if( (isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
         {
-		$data_attribute['url'] = $baseurl_short . "pages/collection_download.php?collection=" . urlencode($collection_data['ref']) ."&k=" . urlencode($k);
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_download.php",$urlparams);
         $options[$o]['value']='download_collection';
 		$options[$o]['label']=$lang['action-download'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -2373,13 +2371,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Contact Sheet
     if(0 < $count_result && ($k=="" || $internal_share_access) && $contact_sheet == true && ($manage_collections_contact_sheet_link || $contact_sheet_link_on_collection_bar))
         {
-        $data_attribute = array(
-            'url' => sprintf('%spages/contactsheet_settings.php?ref=%s',
-                $baseurl_short,
-                urlencode($collection_data['ref'])
-            )
-        );
-
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/contactsheet_settings.php",$urlparams);
         $options[$o]['value']='contact_sheet';
 		$options[$o]['label']=$lang['contactsheet'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -2389,17 +2381,12 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Share
     if(0 < $count_result && ($k=="" || $internal_share_access) && $manage_collections_share_link && $allow_share && (checkperm('v') || checkperm ('g') || (collection_min_access($collection_data['ref'])<=1 && $restricted_share))) 
         {
-        $extra_tag_attributes = sprintf('
-                data-url="%spages/collection_share.php?ref=%s"
-            ',
-            $baseurl_short,
-            urlencode($collection_data['ref'])
-        );
-
+        
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_share.php",$urlparams);
         $options[$o]['value']='share_collection';
 		$options[$o]['label']=$lang['share'];
 		$options[$o]['data_attr']=array();
-		$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+		//$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
 		$o++;
         }
 
@@ -2435,24 +2422,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Collection log
     if(($k=="" || $internal_share_access) && ($userref== $collection_data['user'] || (checkperm('h'))))
         {
-        $extra_tag_attributes = sprintf('
-                data-url="%spages/collection_log.php?ref=%s"
-            ',
-            $baseurl_short,
-            urlencode($collection_data['ref'])
-        );
-
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_log.php",$urlparams);
         $options[$o]['value']='collection_log';
 		$options[$o]['label']=$lang['action-log'];
-		$options[$o]['data_attr']=array();
-		$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+		$options[$o]['data_attr']=$data_attribute;
 		$o++;
         }
         
     // View all
     if(($k=="" || $internal_share_access) && (isset($collection_data["c"]) && $collection_data["c"]>0) || (is_array($result) && count($result) > 0))
         {
-        $data_attribute['url'] =  $baseurl_short . 'pages/search.php?search=' . urlencode('!collection' . $collection_data['ref']) . "&k=" . urlencode($k);
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/search.php",$urlparams);
         $options[$o]['value']='view_all_resources_in_collection';
 		$options[$o]['label']=$lang['view_all_resources'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -2468,17 +2448,10 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         {
         if($allow_multi_edit)
             {
-            $extra_tag_attributes = sprintf('
-                    data-url="%spages/edit.php?collection=%s"
-                ',
-                $baseurl_short,
-                urlencode($collection_data['ref'])
-            );
-
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams);
             $options[$o]['value']='edit_all_in_collection';
             $options[$o]['label']=$lang['edit_all_resources'];
-            $options[$o]['data_attr']=array();
-            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+            $options[$o]['data_attr']=$data_attribute;
             $o++;
             }
         }
@@ -2501,28 +2474,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Preview all
     if((is_array($result) && count($result) != 0) && ($k=="" || $internal_share_access) && $preview_all)
         {
-        $extra_tag_attributes = sprintf('
-                data-url="%spages/preview_all.php?ref=%s"
-            ',
-            $baseurl_short,
-            urlencode($collection_data['ref'])
-        );
-
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/preview_all.php",$urlparams);
         $options[$o]['value']='preview_all';
 		$options[$o]['label']=$lang['preview_all'];
-		$options[$o]['data_attr']=array();
-		$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+        $options[$o]['data_attr']=$data_attribute;
 		$o++;
         }
 
     // Remove all
     if(0 < $count_result && ($k=="" || $internal_share_access) && isset($emptycollection) && $remove_resources_link_on_collection_bar && collection_writeable($collection_data['ref']))
         {
-        $data_attribute['url'] = sprintf('%spages/collections.php?emptycollection=%s&removeall=true&submitted=removeall&ajax=true',
-            $baseurl_short,
-            urlencode($collection_data['ref'])
-        );
-
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/collections.php",$urlparams,array("emptycollection"=>$collection_data['ref'],"removeall"=>"true","ajax"=>"true","submitted"=>"removeall"));
         $options[$o]['value']     = 'empty_collection';
 		$options[$o]['label']     = $lang['emptycollection'];
 		$options[$o]['data_attr'] = $data_attribute;
@@ -2534,17 +2496,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		{
 		$main_pages   = array('search', 'collection_manage', 'collection_public', 'themes');
 		$back_to_page = (in_array($pagename, $main_pages) ? htmlspecialchars($pagename) : '');
-		$data_attribute['url'] = sprintf('%spages/collection_edit_previews.php?ref=%s&offset=%s&order_by=%s&col_order_by=<%s&sort=%s&find=%s&backto=%s',
-            $baseurl_short,
-            urlencode($collection_data['ref']),
-            urlencode($offset),
-            urlencode($order_by),
-            urlencode($col_order_by),
-            urlencode($sort),
-            urlencode($find),
-            $back_to_page
-        );
-
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_edit_previews.php",$urlparams,array("backto"=>$back_to_page));
         $options[$o]['value']     = 'edit_previews';
 		$options[$o]['label']     = $lang['editcollectionresources'];
 		$options[$o]['data_attr'] = $data_attribute;
@@ -2554,18 +2506,10 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Show disk usage
     if(($k=="" || $internal_share_access) && !$top_actions && $show_searchitemsdiskusage && 0 < $count_result) 
         {
-        $extra_tag_attributes = sprintf('
-                data-url="%spages/search_disk_usage.php?search=!collection%s&k=%s"
-            ',
-            $baseurl_short,
-            urlencode($collection_data['ref']),
-            urlencode($k)
-        );
-
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/search_disk_usage.php",$urlparams);
         $options[$o]['value']='search_items_disk_usage';
 		$options[$o]['label']=$lang['collection_disk_usage'];
-		$options[$o]['data_attr']=array();
-		$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+		$options[$o]['data_attr'] = $data_attribute;
 		$o++;
         }
 
@@ -2576,32 +2520,22 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         && collection_readable($collection_data['ref'])
     )
         {
-
         $options[$o]['value']            = 'csv_export_results_metadata';
 		$options[$o]['label']            = $lang['csvExportResultsMetadata'];
-		$options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=!collection%s&restype=%s&order_by=%s&archive=0&sort=%s&starsearch=%s',
-            $baseurl_short,
-            urlencode($collection_data['ref']),
-            isset($_COOKIE['restypes']) ? urlencode($_COOKIE['restypes']) : '',
-            urlencode($order_by),
-            urlencode($sort),
-            urlencode($starsearch)
-        );
-		
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/csv_export_results_metadata.php",$urlparams);
+		$options[$o]['data_attr'] = $data_attribute;
 		$o++;
-		
+        
+        $options[$o]['value']            = 'csv_export_results_metadata_all';
+		$options[$o]['label']            = $lang['csvExportResultsMetadataAll'];
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/csv_export_results_metadata.php",$urlparams, array("alldata"=>"true"));
+		$options[$o]['data_attr'] = $data_attribute;
+		$o++;		
 		
 		$options[$o]['value']            = 'csv_export_results_metadata_personal';
 		$options[$o]['label']            = $lang['csvExportResultsMetadataPersonal'];
-		$options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=!collection%s&restype=%s&order_by=%s&archive=0&sort=%s&starsearch=%s&personal=true',
-            $baseurl_short,
-            urlencode($collection_data['ref']),
-            isset($_COOKIE['restypes']) ? urlencode($_COOKIE['restypes']) : '',
-            urlencode($order_by),
-            urlencode($sort),
-            urlencode($starsearch)
-        );
-
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/csv_export_results_metadata.php",$urlparams, array("personal"=>"true"));
+		$options[$o]['data_attr'] = $data_attribute;
 		$o++;
     
 		// Hide Collection

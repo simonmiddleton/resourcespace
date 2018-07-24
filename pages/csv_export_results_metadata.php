@@ -16,7 +16,8 @@ $order_by   = getvalescaped('order_by', '');
 $archive    = getvalescaped('archive', '');
 $sort       = getvalescaped('sort', '');
 $starsearch = getvalescaped('starsearch', '');
-$personal = (getvalescaped('personal', '')!="");
+$personal   = (getvalescaped('personal', '') != '');
+$alldata    = (getvalescaped('alldata', '') != '');
 
 // Do the search again to get the results back
 $search_results = do_search($search, $restypes, $order_by, $archive, -1, $sort, false, $starsearch);
@@ -29,7 +30,7 @@ if (!hook('csvreplaceheader'))
     header("Content-disposition: attachment; filename=search_results_metadata.csv");
     }
 
-echo generateResourcesMetadataCSV($search_results,$personal);
+echo generateResourcesMetadataCSV($search_results,$personal, $alldata);
 
 ob_flush();
 exit();

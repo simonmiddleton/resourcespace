@@ -295,7 +295,7 @@ $fieldcolumns = array(
     'simple_search'            => array($lang['property-enable_simple_search'],'',1,1),
     'exiftool_field'           => array($lang['property-exiftool_field'],'',0,1),
     'fits_field'               => array($lang['property-fits_field'], $lang['information-fits_field'], 0, 1),
-    'personal_data'          => array($lang['property-personal_data'],'',1,1),
+    'personal_data'            => array($lang['property-personal_data'],'',1,1),
     'use_for_similar'          => array($lang['property-use_for_find_similar_searching'],'',1,1),
     'hide_when_uploading'      => array($lang['property-hide_when_uploading'],'',1,1),
     'hide_when_restricted'     => array($lang['property-hide_when_restricted'],'',1,1),
@@ -316,7 +316,8 @@ $fieldcolumns = array(
     'autocomplete_macro'       => array($lang['property-autocomplete_macro'],'',2,1),
     'omit_when_copying'        => array($lang['property-omit_when_copying'],'',1,1),
     'sync_field'               => array($lang['property-sync_with_field'],'',0,0),
-    'onchange_macro'           => array($lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1)				
+    'onchange_macro'           => array($lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1),
+    'include_in_csv_export'    => array($lang['property-include_in_csv_export'],'',1,1)			
 );
 
 # Remove some items if $execution_lockout is set to prevent code execution

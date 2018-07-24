@@ -433,7 +433,8 @@ function get_resource_type_field($field)
                 linked_data_field,
                 automatic_nodes_ordering,
                 fits_field,
-                personal_data
+                personal_data,
+                include_in_csv_export
            FROM resource_type_field
           WHERE ref = '{$field}'
     ";
@@ -486,7 +487,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f1.ref AS fref,
                     f1.field_constraint,
                     f1.automatic_nodes_ordering,
-                    f1.personal_data
+                    f1.personal_data,
+                    f1.include_in_csv_export
                FROM resource_type_field AS f1
           LEFT JOIN resource_data d
                  ON d.resource_type_field = f1.ref AND d.resource = '{$ref}'
@@ -504,7 +506,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f2.ref AS fref,
                     f2.field_constraint,
                     f2.automatic_nodes_ordering,
-                    f2.personal_data
+                    f2.personal_data,
+                    f2.include_in_csv_export
                FROM resource_type_field AS f2
           LEFT JOIN node AS n ON n.resource_type_field = f2.ref
           LEFT JOIN resource_node AS rn ON rn.node = n.ref AND rn.resource = '{$ref}'
@@ -5853,7 +5856,9 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                field_constraint,
                linked_data_field,
                automatic_nodes_ordering,
-               fits_field
+               fits_field,
+               personal_data,
+               include_in_csv_export
           FROM resource_type_field" . $conditionsql . " ORDER BY " . escape_check($field_order_by) . " " . escape_check($field_sort));
 
     return $allfields;
