@@ -304,7 +304,8 @@ function HookSimplesamlAllProvideusercredentials()
             // User authenticated, but does not exist
             // First see if there is a matching account
             $email_matches=sql_query("SELECT ref, username, fullname, origin FROM user WHERE email='" . escape_check($email) . "'");				
-			if(count($email_matches)>0)
+			
+            if(count($email_matches)>0)
 				{			
 				if(count($email_matches)==1 && $simplesaml_create_new_match_email)
 					{
@@ -354,7 +355,12 @@ function HookSimplesamlAllProvideusercredentials()
                             }
                         }
                     }
-                }    
+                }
+            else
+                {
+                // Create the user
+                $userid=new_user($username,$group);    
+                }
             }
             
         if ($userid > 0)
