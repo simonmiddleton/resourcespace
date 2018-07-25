@@ -13,6 +13,11 @@ ob_implicit_flush();
 ob_start();
 echo "Starting cron process...<br />\n";
 
+# Get last cron date
+$lastcron = sql_value("SELECT value FROM sysvars where name='last_cron'",'1970-01-01');
+$lastcrontime = strtotime($lastcron);
+$sincelast  = time() - $lastcrontime;
+
 // grab a list of files to run as part of the upgrade process
 $new_system_version_files=array();
 $files=scandir(__DIR__ .  '/cron_jobs');
