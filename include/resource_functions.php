@@ -2857,7 +2857,7 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
         if($offline_job_queue && !$offline_job_in_progress)
             {
             $extract_text_job_data = array(
-                'ref'       => $ref,
+                'ref'       => $r,
                 'extension' => $extension,
             );
 
@@ -2865,7 +2865,7 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
             }
         else
             {
-            extract_text($ref, $extension);
+            extract_text($r, $extension);
             }
 		}
 		
