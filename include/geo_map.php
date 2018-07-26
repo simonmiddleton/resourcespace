@@ -15,22 +15,32 @@ if ($geo_override_options == "")
     map = new OpenLayers.Map("map_canvas");
 
     var osm = new OpenLayers.Layer.OSM("<?php echo $lang["openstreetmap"]?>"
-    	
-    	<?php if ($geo_tile_caching && extension_loaded("curl")){
-    	    $tilecache=get_temp_dir()."/tiles";
-            if (!file_exists($tilecache)){
+        <?php
+        if ($geo_tile_caching && extension_loaded("curl"))
+            {
+            if(isset($geo_tile_cache_directory))
+                {
+                $tilecache = $geo_tile_cache_directory;    
+                }
+            else
+                {
+                $tilecache = get_temp_dir()."/tiles";
+                }
+                
+            if (!file_exists($tilecache))
+                    {
                     mkdir($tilecache);
                     chmod($tilecache,0777);
-            }
-    	?>
-    		,"<?php echo $baseurl?>/pages/ajax/tiles.php?z=${z}&x=${x}&y=${y}&r=mapnik",{transitionEffect: 'resize'}
-    	
-    	<?php } else { ?>
-    	
-    		,"http://tile.openstreetmap.org/${z}/${x}/${y}.png",{transitionEffect: 'resize'}
-    		
-    	<?php } ?>
-    	
+                    }
+        ?>
+        ,"<?php echo $baseurl?>/pages/ajax/tiles.php?z=${z}&x=${x}&y=${y}&r=mapnik",{transitionEffect: 'resize'}
+        
+        <?php }
+        else
+            {?>
+            ,"http://tile.openstreetmap.org/${z}/${x}/${y}.png",{transitionEffect: 'resize'}
+            <?php
+            } ?>
     );
 
     <?php if ($use_google_maps) { ?>

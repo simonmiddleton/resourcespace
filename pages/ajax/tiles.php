@@ -1,12 +1,19 @@
 <?php
+include_once "../../include/db.php";
 include_once "../../include/general.php";
 
 # from
 # http://wiki.openstreetmap.org/wiki/ProxySimplePHP
 # The main benefit is for SSL sites which don't want to be making HTTP calls which result in content warnings
 
-
-    $tilecache=get_temp_dir()."/tiles";
+    if(isset($geo_tile_cache_directory))
+        {
+        $tilecache = $geo_tile_cache_directory;    
+        }
+    else
+        {
+        $tilecache = get_temp_dir()."/tiles";
+        }
 
     $ttl = 86400; //cache timeout in seconds
 
