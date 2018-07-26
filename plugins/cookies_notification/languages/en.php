@@ -9,4 +9,4 @@ $lang['cookies_notification_allow_using_site_on_no_feedback_label'] = "Allow use
 
 $lang['cookies_notification_cookies_use_title'] = 'Cookies use';
 $lang['cookies_notification_cookies_use_error_msg'] = 'You have decided to not allow Cookies to be used by ResourceSpace. We had to log you out as ResourceSpace requires cookies in order to work properly.';
-$lang['cookies_notification_cookies_use_require_option_error_msg'] = 'The admins of the system require users to decide on cookies use before accessing ResourceSpace.';
+$lang['cookies_notification_cookies_use_require_option_error_msg'] = 'You are required to accept the use of cookies before accessing the system.';
