@@ -1,0 +1,9 @@
+name: image_banks
+author: Montala Ltd.
+version: 1.0
+desc: [IN DEVELOPMENT] Allows users to select an external Image Bank to search through. Users can then download or create new resources based on the returned results.
+info_url: http://www.resourcespace.com/knowledge-base/user/plugin-image-banks
+config_url: /plugins/image_banks/pages/setup.php
+default_priority: 100
+category: system
+disable_group_select: 1
