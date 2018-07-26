@@ -68,7 +68,7 @@ if ($collection_add=="new")
 		collection_set_themes($collection_add,$themearr);
 		}
 	}
-if ($upload_then_edit && $replace == "" && $replace_resource == "" && $collection_add === "false")
+if ($upload_then_edit && $replace == "" && $replace_resource == "")
 	{
 	# Switch to the user's special upload collection.
 	$upload_review_col = 0-$userref;
