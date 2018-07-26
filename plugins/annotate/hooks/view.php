@@ -85,7 +85,20 @@ function HookAnnotateViewRenderinnerresourcepreview()
                 </div>
 
                 <div class="annotate-view-preview-links" >
-                    <a class="enterLink" href="<?php echo $baseurl_short?>pages/preview.php?<?php if (getval("annotate","")!=""){?>annotate=true&<?php } ?>ref=<?php echo $ref?>&amp;ext=<?php echo $resource["preview_extension"]?>&amp;k=<?php echo $k?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo $offset?>&amp;order_by=<?php echo $order_by?>&amp;sort=<?php echo $sort?>&amp;archive=<?php echo $archive?><?php if($multipage_document) { echo '&amp;page=1'; } ?>" title="<?php echo $lang["fullscreenpreview"]?>">&gt;&nbsp;<?php echo $lang["fullscreenpreview"]?></a>
+                <?php    
+                $urlparams = array(
+                    "annotate"  => (getval("annotate","") == "true" ? "true" : ""),
+                    "ref"       => $ref,
+                    "ext"       => $resource["preview_extension"],
+                    "search"    => $search,
+                    "offset"    => $offset,
+                    "order_by"  => $order_by,
+                    "sort"      => $sort,
+                    "archive"   => $archive,
+                    "k"         => $k
+                    ); ?>
+                    
+                    <a class="enterLink" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams); ?>" title="<?php echo $lang["fullscreenpreview"]?>"><?php echo LINK_CARET . $lang["fullscreenpreview"]?></a>
                 <?php
                 // Magictouch plugin compatibility
                 global $magictouch_account_id;
@@ -99,8 +112,11 @@ function HookAnnotateViewRenderinnerresourcepreview()
                         && !in_array($resource['file_extension'], $magictouch_ext_exclude)
                         && !defined('MTFAIL'))
                         {
+                            
+                        // Set alternative target based on where user came from
+                        $targetpage = $baseurl_short . "pages/" . ((getval("from","")=="search") ? "search.php" : "view.php");                            
                         ?>
-                        &nbsp;<a style="display:inline;" href="<?php echo ((getval("from","")=="search")?$baseurl_short."pages/search.php?":$baseurl_short."pages/view.php?ref=" . $ref . "&")?>search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>&k=<?php echo $k?>" onClick="document.cookie='annotate=off';return CentralSpaceLoad(this);">&gt;&nbsp;<?php echo $lang['zoom']?></a>
+                        &nbsp;<a style="display:inline;" href="<?php echo generateURL($targetpage, $urlparams, $mtparams); ?>" onClick="document.cookie='annotate=off';return CentralSpaceLoad(this);">&gt;&nbsp;<?php echo $lang['zoom']?></a>
                         <?php
                         }
                     }

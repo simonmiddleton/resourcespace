@@ -1,7 +1,19 @@
 <?php
 function HookAnnotatePreviewReplacepreviewbacktoview(){
-	global $baseurl,$lang,$ref,$search,$offset,$order_by,$sort,$archive,$k;?>
-<p style="margin:7px 0 7px 0;padding:0;"><a class="enterLink" href="<?php echo $baseurl?>/pages/view.php?<?php if (getval("annotate","")=="true"){?>annotate=true&<?php } ?>ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>&k=<?php echo $k?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+	global $baseurl,$lang,$ref,$search,$offset,$order_by,$sort,$archive,$k;
+    
+    $urlparams = array(
+        "annotate"  => (getval("annotate","") == "true" ? "true" : ""),
+        "ref"       => $ref,
+        "search"    => $search,
+        "offset"    => $offset,
+        "order_by"  => $order_by,
+        "sort"      => $sort,
+        "archive"   => $archive,
+        "k"         => $k,
+        );
+    ?>
+<p style="margin:7px 0 7px 0;padding:0;"><a class="enterLink" href="<?php echo generateURL($baseurl . "/pages/view.php", $urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
 <?php return true;
 } 
 
@@ -47,9 +59,22 @@ $h = $sizes[1];
     <table cellpadding="0" cellspacing="0">
     <tr>
     <?php
+    
+     $urlparams = array(
+        "ref"           => $ref,
+        "alternative"   => $alternative,
+        "ext"           => $ext,
+        "search"        => $search,
+        "offset"        => $offset,
+        "order_by"      => $order_by,
+        "sort"          => $sort,
+        "archive"       => $archive,
+        "k"             => $k
+        );
+    
     if($resource['file_extension'] != "jpg" && $previouspage != -1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>
         <td valign="middle">
-            <a onClick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>&ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&page=<?php echo urlencode($previouspage)?>" class="PDFnav  pagePrev">&lt;</a>
+            <a onClick="return CentralSpaceLoad(this);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams,array("page" => $previouspage)); ?>" class="PDFnav  pagePrev">&lt;</a>
         </td>
     <?php 
     } else if($nextpage !=-1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>
@@ -65,7 +90,7 @@ $h = $sizes[1];
     <?php
     if($nextpage != -1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>
         <td valign="middle">
-            <a onClick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>&ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&page=<?php echo urlencode($nextpage)?>" class="PDFnav pageNext">&gt;</a>
+            <a onClick="return CentralSpaceLoad(this);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams, array("page" => $nextpage)); ?>" class="PDFnav pageNext">&gt;</a>
         </td>
     <?php 
     } ?>
