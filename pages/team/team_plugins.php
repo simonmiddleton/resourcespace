@@ -394,7 +394,7 @@ if($searching)
                    }
                 if (!$plugin['disable_group_select'])
                     {
-                    echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '">' . LINK_CARET . $lang['groupaccess'] . ((trim($plugin['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '') . '</a> ';
+                    echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '">' . LINK_CARET . $lang['groupaccess'] . ((isset($plugin['enabled_groups']) && trim($plugin['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '') . '</a> ';
                     $plugin['enabled_groups'] = (isset($plugin['enabled_groups']) ? array($plugin['enabled_groups']) : array());
                     }
                 if ($plugin['config_url']!='')        
