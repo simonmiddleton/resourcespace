@@ -25,4 +25,5 @@ abstract class Provider
 
     abstract static function checkDependencies();
     abstract public function buildConfigPageDefinition(array $page_def);
+    abstract public function search($keywords);
     }
