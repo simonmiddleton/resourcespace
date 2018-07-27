@@ -8,7 +8,7 @@ if(!checkperm('a'))
     exit($lang['error-permissiondenied']);
     }
 
-$plugin_name = 'image_bank';
+$plugin_name = 'image_banks';
 if(!in_array($plugin_name, $plugins))
     {
     plugin_activate_for_setup($plugin_name);
