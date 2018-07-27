@@ -537,6 +537,7 @@ $count_result = (is_array($result) ? count($result) : 0);
 if ($collectionsearch)
     {
     $collectiondata = get_collection($collection);  
+
     if ($k!="" && !$internal_share_access) {$usercollection=$collection;} # External access - set current collection.
     if (!$collectiondata)
         {?>
@@ -1193,13 +1194,21 @@ if($responsive_ui)
             }
         }
     echo $search_title_links;
+    if($collectionsearch) // Fetch collection name 
+        {
+            $collectionsearchname = htmlspecialchars($collectiondata["name"]);
+        }
+    else
+        {
+            $collectionsearchname = "";
+        }
     hook("beforesearchresults2");
     hook("beforesearchresultsexpandspace");
     ?>
     <div class="clearerleft"></div>
-    <div id="CentralSpaceResources">
+    <div id="CentralSpaceResources" collectionSearchName="<?php echo $collectionsearchname ?>">
     <?php
-    
+
     if ((!is_array($result) || count($result)<1) && empty($collections))
         {
             // No matches found? Log this in

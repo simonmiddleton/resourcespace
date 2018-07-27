@@ -312,8 +312,32 @@ else { ?>
 				hoverClass: "ui-state-active",
 
 				drop: function(event, ui) {
-					var resource_id = jQuery(ui.draggable).attr("id");
+					var resource_id = ui.draggable.attr("id");
 					resource_id = resource_id.replace('ResourceShell', '');
+					
+					// Resolve the collection depending on the origin of the resource been dragged
+					var class_of_drag = ui.draggable.attr("class");
+					var collection_id = "";
+					var collection_name = "";
+
+					// If resource is dragged from the ResourcePanel (ie. CentralSpace) then collection is in querystring
+					if (class_of_drag.indexOf("ResourcePanel") >= 0)
+						{
+						var query_strings = getQueryStrings();
+						if( !is_empty(query_strings) )
+							{
+						    collection_id = query_strings.search.substring(11);
+						    // Collection name now stored in custom attribute
+   							collection_name = jQuery("#CentralSpaceResources").attr("collectionsearchname").trim();
+							}
+						}
+					
+					// If resource is dragged from the CollectionPanelShell then use the collection from within the CollectionDiv
+					if (class_of_drag.indexOf("CollectionPanelShell") >= 0)
+						{
+						collection_id = jQuery("#collection").val();
+						collection_name = jQuery("#collection option:selected").text().trim();
+						}
 
 					jQuery('#trash_bin').hide();
 
@@ -328,32 +352,45 @@ else { ?>
 						}
 
 					jQuery('#trash_bin_delete_dialog').dialog({
-						title:'<?php echo $lang["trash_bin_delete_dialog_title"]; ?>',
+						title: 'single line title', // this title is replaced by chained ".closest" at end of this statement
 						autoOpen: false,
 						modal: true,
 						resizable: false,
 						dialogClass: 'delete-dialog no-close',
 						buttons: {
-							// Confirm removal of this resource from current collection
+							// Confirm removal of this resource from the resolved collection
 							"<?php echo $lang['yes']; ?>": function() {
-								var query_strings = getQueryStrings();
-								if(is_empty(query_strings))
+								if(collection_id == "")
 									{
-									console.error('RS_debug: query_strings returned an empty object. Search param was expected to get the collection ID in order to remove the resource from the collection using Drag & Drop.');
+									console.error('RS_debug: Unable to resolve from which collection drag and drop resource removal is being requested.');
 									jQuery(this).dialog('close');
 									}
-								var collection_id = query_strings.search.substring(11);
 
 								RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id);
 								jQuery('#ResourceShell' + resource_id).fadeOut();
 								jQuery(this).dialog('close');
 							},
-							// Cancel action
+							// Cancel resource removal
 							"<?php echo $lang['no']; ?>": function() {
+								if(collection_id == "")
+									{
+									console.error('RS_debug: Unable to resolve which collection to reload following cancellation of resource removal.');
+									jQuery(this).dialog('close');
+									}
+
+								// If resource was dragged from the CollectionPanelShell then refresh the current collection within the CollectionDiv
+								if (class_of_drag.indexOf("CollectionPanelShell") >= 0)
+									{
+									collection_id = jQuery("#collection").val();
+    	                            CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=' + collection_id);
+									}
 								jQuery(this).dialog('close');
 							}
 						}
-					});
+					})
+					.closest(".ui-dialog")
+					  .find(".ui-dialog-title")
+					    .html("<?php echo $lang["trash_bin_delete_dialog_title"] . "<br>(" . $lang["from"]; ?> " + collection_name + ")");
 
 					// Only show confirmation dialog when resource is being dragged from top (ie. CentralSpace)
 					if(ui.draggable.attr('class') === 'CollectionPanelShell')
