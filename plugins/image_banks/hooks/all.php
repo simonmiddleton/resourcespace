@@ -1,13 +1,9 @@
 <?php
 function HookImage_banksAllSearchfiltertop()
     {
-    global $lang, $image_banks_loaded_providers;
+    global $lang, $image_banks_loaded_providers, $clear_function;
 
-    // TODO: by the end of dev, this should return provider objects
-    // make sure to extract the id and title/ name of the provider and use them in the option tags
     $providers = \ImageBanks\getProviders($image_banks_loaded_providers);
-
-    echo "<p>TODO: check " . __FILE__ . " at line " . __LINE__ . "</p>";return;
 
     if(count($providers) == 0)
         {
@@ -16,6 +12,7 @@ function HookImage_banksAllSearchfiltertop()
 
     $search_image_banks_text = htmlspecialchars($lang["image_banks_search_image_banks_label"]);
     $search_image_banks_info_text = htmlspecialchars($lang["image_banks_search_image_banks_info_text"]);
+    $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
     ?>
     <div id="" class="SearchItem" title="">
         <label>
@@ -26,17 +23,14 @@ function HookImage_banksAllSearchfiltertop()
                <i class="fa fa-info-circle"></i>
            </a>
         </label>
-        <!-- TODO: change name and onchange attributes -->
-        <select id="SearchImageBanks"
-                class="SearchWidth"
-                name="nodes_searched[89]"
-                onchange="FilterBasicSearchOptions('fixedlistwithautocom',0);">
+        <select id="SearchImageBanks" class="SearchWidth" name="image_bank_provider_id">
             <option value=""></option>
             <?php
-            foreach($providers as $provider_value => $provider_title)
+            foreach($providers as $provider)
                 {
+                $selected = ($image_bank_provider_id == $provider->getId() ? "selected" : "");
                 ?>
-                <option value="<?php echo $provider_value; ?>"><?php echo htmlspecialchars($provider_title); ?></option>
+                <option value="<?php echo $provider->getId(); ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($provider->getName()); ?></option>
                 <?php
                 }
                 ?>
@@ -44,5 +38,7 @@ function HookImage_banksAllSearchfiltertop()
         <div class="clearerleft"></div>
     </div>
     <?php
+    $clear_function .= 'jQuery("#SearchImageBanks").val([\'\']) ;';
+
     return;
     }

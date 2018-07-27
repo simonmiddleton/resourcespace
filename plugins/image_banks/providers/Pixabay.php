@@ -3,7 +3,7 @@ namespace ImageBanks;
 
 class Pixabay extends Provider
     {
-    protected $id   = 0;
+    protected $id   = 1;
     protected $name = 'Pixabay';
 
 
