@@ -35,6 +35,7 @@ function HookImage_banksAllSearchfiltertop()
                 }
                 ?>
         </select>
+        <input type="hidden" name="search_image_banks" value="true">
         <div class="clearerleft"></div>
     </div>
     <?php
