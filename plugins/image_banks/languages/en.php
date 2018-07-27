@@ -6,6 +6,8 @@ $lang["image_banks_pixabay_api_key"] = "API key";
 
 // Errors
 $lang["image_banks_provider_unmet_dependencies"] = "Provider '%PROVIDER' has unmet dependencies!";
+$lang["image_banks_provider_id_required"] = "Provider ID required to complete search";
+$lang["image_banks_provider_not_found"] = "Provider could not be identified using ID";
 
 
 

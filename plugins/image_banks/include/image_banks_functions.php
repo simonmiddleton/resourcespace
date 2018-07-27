@@ -44,7 +44,31 @@ function getProviders(array $loaded_providers)
         {
         // TODO: check provider IDs are unique. If not, try at most 3 times until we decide not to include it.
         $provider_class = "\ImageBanks\\$loaded_provider";
-        $providers[] = new $provider_class($lang);
+
+        $provider = new $provider_class($lang);
+
+        if(!($provider instanceof Provider))
+            {
+            $admin_notify_users = array();
+
+            foreach(get_notification_users("SYSTEM_ADMIN") as $notify_user)
+                {
+                get_config_option($notify_user['ref'], 'user_pref_system_management_notifications', $send_message);
+
+                if($send_message == false)
+                    {
+                    continue;
+                    }
+
+                $admin_notify_users[] = $notify_user['ref'];
+                }
+
+            message_add($admin_notify_users, "image_banks plugin: Provider - {$loaded_provider} - MUST be an instance of Provider");
+
+            continue;
+            }
+
+        $providers[$provider->getId()] = $provider;
         }
 
     return $providers;
