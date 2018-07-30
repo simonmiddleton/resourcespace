@@ -2526,18 +2526,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		$options[$o]['data_attr'] = $data_attribute;
 		$o++;
         
-        $options[$o]['value']            = 'csv_export_results_metadata_all';
-		$options[$o]['label']            = $lang['csvExportResultsMetadataAll'];
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/csv_export_results_metadata.php",$urlparams, array("alldata"=>"true"));
-		$options[$o]['data_attr'] = $data_attribute;
-		$o++;		
-		
-		$options[$o]['value']            = 'csv_export_results_metadata_personal';
-		$options[$o]['label']            = $lang['csvExportResultsMetadataPersonal'];
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/csv_export_results_metadata.php",$urlparams, array("personal"=>"true"));
-		$options[$o]['data_attr'] = $data_attribute;
-		$o++;
-    
 		// Hide Collection
 		$user_mycollection=sql_value("select ref value from collection where user={$userref} and name='My Collection' order by ref limit 1","");
 		// check that this collection is not hidden. use first in alphabetical order otherwise
