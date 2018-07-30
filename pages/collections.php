@@ -407,6 +407,10 @@ else { ?>
 						}
 					else
 						{
+						jQuery('#trash_bin_delete_dialog')
+						  .closest(".ui-dialog")
+						    .find(".ui-dialog-title")
+					          .html("<?php echo $lang["trash_bin_delete_dialog_title"] . "<br>(" . $lang["from"]; ?> " + collection_name + ")");
 						jQuery('#trash_bin_delete_dialog').dialog('open');
 						}
 				}
