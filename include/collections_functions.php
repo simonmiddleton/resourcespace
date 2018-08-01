@@ -2385,7 +2385,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_share.php",$urlparams);
         $options[$o]['value']='share_collection';
 		$options[$o]['label']=$lang['share'];
-		$options[$o]['data_attr']=array();
+		$options[$o]['data_attr']=$data_attribute;
 		//$options[$o]['extra_tag_attributes']=$extra_tag_attributes;
 		$o++;
         }
