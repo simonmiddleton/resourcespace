@@ -32,7 +32,7 @@ class Pixabay extends Provider
         return $page_def;
         }
 
-    public function search($keywords)
+    public function search($keywords, $page = 1, $per_page = 24)
         {
         // TODO: build API request
         // TODO: do API request or retrieve from cache (24h old max) as per https://pixabay.com/api/docs/
@@ -44,7 +44,7 @@ class Pixabay extends Provider
         $api_results = fread($pixabay_api_response_file, filesize(dirname(__DIR__) . '/pixabay_api_response.json'));
         $api_results = json_decode($api_results, true);
 
-        $provider_results = array();
+        $provider_results = new ProviderSearchResults();
 
         foreach($api_results["hits"] as $result)
             {
@@ -61,8 +61,10 @@ class Pixabay extends Provider
 
             $provider_result
                 ->setOriginalFileUrl($original_file_url)
+                ->setProviderUrl($result['pageURL'])
                 ->setPreviewUrl($result['previewURL'])
-                ->setProviderUrl($result['pageURL']);
+                ->setPreviewWidth($result['previewWidth'])
+                ->setPreviewHeight($result['previewHeight']);
 
             $provider_results[] = $provider_result;
             }

@@ -25,5 +25,15 @@ abstract class Provider
 
     abstract static function checkDependencies();
     abstract public function buildConfigPageDefinition(array $page_def);
-    abstract public function search($keywords);
+
+    /**
+    * Search providers' database based on specified keywords
+    * 
+    * @param  string   $keywords  Search keyword(s)
+    * @param  integer  $page      Select the page number
+    * @param  integer  $per_page  Number of results per page
+    * 
+    * @return ProviderSearchResults
+    */
+    abstract public function search($keywords, $page = 1, $per_page = 24);
     }

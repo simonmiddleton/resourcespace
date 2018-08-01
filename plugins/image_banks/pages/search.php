@@ -23,45 +23,37 @@ $provider = $providers[$image_bank_provider_id];
 
 $results = $provider->search($search);
 
+if(!($results instanceof \ImageBanks\ProviderSearchResults))
+    {
+    trigger_error("Provider search is not of type ProviderSearchResults");
+    }
 
 // TODO: add results count
 // TODO: add pager functionality
-
-// TODO: add Image Bank Provider name that user searched through
 ?>
 <div class="BasicsBox">
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">
-
-            <div class="ResponsiveResultDisplayControls">
-                <div id="ResponsiveResultCount">
-                    <span class="Selected">49 </span>resources
-                </div>
+            <div id="SearchResultFound" class="InpageNavLeftBlock">
+                <span class="Selected">49</span> <?php echo htmlspecialchars($lang["youfoundresults"]); ?>
             </div>
             <div id="SearchResultFound" class="InpageNavLeftBlock">
-                <span class="Selected">49 </span>resources
+                <span class="Selected"><?php echo htmlspecialchars($lang["image_banks_image_bank"]); ?>: </span> <?php echo htmlspecialchars($provider->getName()); ?>
             </div>
-            <div class="clearerleft"></div>
         </div>
+        <div class="clearerleft"></div>
     </div>
 </div>
 <?php
 foreach($results as $result)
     {
-    if(!($result instanceof \ImageBanks\ProviderResult))
-        {
-        continue;
-        }
-
     ?>
     <div class="ResourcePanel" style="height: 214px;">
         <a href="<?php echo $result->getProviderUrl(); ?>" target="_blank" class="ImageWrapper" title="<?php echo htmlspecialchars($result->getSource()); ?>">
-            <img border="0" width="106" height="150" style="margin-top:auto;" src="<?php echo $result->getPreviewUrl(); ?>" alt="Brochure">
+            <img border="0" width="<?php echo $result->getPreviewWidth(); ?>" height="<?php echo $result->getPreviewHeight(); ?>" style="margin-top:auto;" src="<?php echo $result->getPreviewUrl(); ?>" alt="Brochure">
         </a>
         <div class="ResourcePanelInfo">
-        <a href="/trunk/pages/view.php?search=%21last1000&amp;k=&amp;modal=&amp;display=thumbs&amp;order_by=resourceid&amp;offset=0&amp;per_page=48&amp;archive=&amp;sort=DESC&amp;restypes=&amp;recentdaylimit=&amp;foredit=&amp;ref=150" onclick="return ModalLoad(this,true);" title="Brochure">
-        <?php echo htmlspecialchars($result->getId()); ?></a>
-        &nbsp;
+            <!-- <a href="#" target="_blank" title="License">link</a> -->
         </div>
         <div class="clearer"></div>
 

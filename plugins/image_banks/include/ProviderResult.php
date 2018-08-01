@@ -4,15 +4,19 @@ namespace ImageBanks;
 class ProviderResult
     {
     private $id;
-    private $source;
+    private $provider;
+
     protected $original_file_url;
-    protected $preview_url;
     protected $provider_url;
+
+    protected $preview_url;
+    protected $preview_width;
+    protected $preview_height;
 
     public function __construct($id, Provider $provider)
         {
         $this->id = $id;
-        $this->source = $provider->getName();
+        $this->provider = $provider;
         }
 
     public function getId()
@@ -22,8 +26,9 @@ class ProviderResult
 
     public function getSource()
         {
-        return $this->source;
+        return $this->provider->getName();
         }
+
 
     public function setOriginalFileUrl($url)
         {
@@ -31,7 +36,6 @@ class ProviderResult
 
         return $this;
         }
-
     public function getOriginalFileUrl()
         {
         return $this->original_file_url;
@@ -43,7 +47,6 @@ class ProviderResult
 
         return $this;
         }
-
     public function getPreviewUrl()
         {
         return $this->preview_url;
@@ -55,9 +58,40 @@ class ProviderResult
 
         return $this;
         }
-
     public function getProviderUrl()
         {
         return $this->provider_url;
+        }
+
+    public function setPreviewWidth($width)
+        {
+        if(!is_int($width))
+            {
+            trigger_error("setPreviewWidth function only accepts integers. Argument supplied was: '{$width}'");
+            }
+
+        $this->preview_width = $width;
+
+        return $this;
+        }
+    public function getPreviewWidth()
+        {
+        return $this->preview_width;
+        }
+
+    public function setPreviewHeight($height)
+        {
+        if(!is_int($height))
+            {
+            trigger_error("setPreviewHeight function only accepts integers. Argument supplied was: '{$height}'");
+            }
+
+        $this->preview_height = $height;
+
+        return $this;
+        }
+    public function getPreviewHeight()
+        {
+        return $this->preview_height;
         }
     }

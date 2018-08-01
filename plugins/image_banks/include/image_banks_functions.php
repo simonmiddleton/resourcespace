@@ -3,6 +3,7 @@ namespace ImageBanks;
 
 require_once 'AbstractProvider.php';
 require_once 'ProviderResult.php';
+require_once 'ProviderSearchResults.php';
 
 
 function autoloadProviders()
