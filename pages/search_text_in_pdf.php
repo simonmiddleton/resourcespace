@@ -26,9 +26,9 @@ if($access !== 0)
     }
 
 
-$search = trim(getval('search' , ''));
-$findtext = (getval('search' , '') != '' ? true : false);
-if($findtext && $search != '')
+$searchtext = trim(getval('searchtext' , ''));
+$findtext = (getval('findtext' , '') != '' ? true : false);
+if($findtext && $searchtext != '')
     {
     // IMPORTANT: never show the real file path with this feature
     $hide_real_filepath_initial = $hide_real_filepath;
@@ -43,9 +43,9 @@ if($findtext && $search != '')
             'file' => $pdfjs_original_file_path
         )
     );
-    // IMPORTANT: intentionally not urlencoding the search param. This is because PDFjs will not support multiple words
+    // IMPORTANT: intentionally not urlencoding the searchtext param. This is because PDFjs will not support multiple words
     // if urlencoded
-    $pdfjs_viewer_url .= "#search={$search}";
+    $pdfjs_viewer_url .= "#search={$searchtext}";
 
     redirect($pdfjs_viewer_url);
     exit();
@@ -57,13 +57,13 @@ if($findtext && $search != '')
         <?php generateFormToken("FindTextInPDF"); ?>
         <input type="hidden" name="ref" value="<?php echo $ref; ?>">
         <div class="Question">
-            <label for="search"><?php echo $lang["searchbytext"]; ?></label>
-            <input type="text" name="search"></input>
+            <label for="searchtext"><?php echo $lang["searchbytext"]; ?></label>
+            <input type="text" id="searchtext" name="searchtext"></input>
             <div class="clearleft"></div>
         </div>
         <div class="QuestionSubmit" >
             <label></label>
-            <input type="submit" name="findtext" value="<?php echo $lang["searchbutton"]; ?>"></input>
+            <input type="submit" name="findtext" value="<?php echo $lang["searchbutton"]; ?>" onclick="if(jQuery('#searchtext').val().trim()==''){return false;}"></input>
             <div class="clearleft"></div>
         </div>
     </form>
