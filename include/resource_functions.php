@@ -1959,7 +1959,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 		}
 		
 		# Build message and send.
-		if (count($emails > 1) && $list_recipients===true) {
+		if (count($emails) > 1 && $list_recipients===true) {
 			$body = $lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
 			$templatevars['list-recipients']=$lang["list-recipients"] ."\n". implode("\n",$emails) ."\n\n";
 		}
