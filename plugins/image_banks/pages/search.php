@@ -3,9 +3,27 @@ $rs_root = dirname(dirname(dirname(__DIR__)));
 include "{$rs_root}/include/db.php";
 include_once "{$rs_root}/include/general.php";
 include "{$rs_root}/include/authenticate.php";
+include "{$rs_root}/include/render_functions.php";
 
-$search                 = getval('search', '');
+$search                 = getval("search", "");
 $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
+
+$search_params = array(
+    "search"                 => $search,
+    "image_bank_provider_id" => $image_bank_provider_id,
+    "search_image_banks"     => true,
+);
+
+// Paging functionality
+$url = generateURL("{$baseurl_short}pages/search.php", $search_params);
+
+$offset = (int) getval("offset", 0, true);
+
+$per_page = (int) getval("per_page", $default_perpage, true);
+rs_setcookie("per_page", $per_page, 0, "", "", false, false);
+
+$curpage = floor($offset / $per_page) + 1;
+// End of Paging functionality
 
 if($image_bank_provider_id == 0)
     {
@@ -21,9 +39,9 @@ if(!array_key_exists($image_bank_provider_id, $providers))
 
 $provider = $providers[$image_bank_provider_id];
 
-$results = $provider->search($search);
+$results = $provider->search($search, $per_page, $curpage);
 
-// TODO: add pager functionality
+$totalpages  = ceil($results->total / $per_page);
 ?>
 <div class="BasicsBox">
     <div class="TopInpageNav">
@@ -31,9 +49,37 @@ $results = $provider->search($search);
             <div id="SearchResultFound" class="InpageNavLeftBlock">
                 <span class="Selected"><?php echo number_format($results->total); ?></span> <?php echo htmlspecialchars($lang["youfoundresults"]); ?>
             </div>
-            <div id="SearchResultFound" class="InpageNavLeftBlock">
+            <div class="InpageNavLeftBlock">
                 <span class="Selected"><?php echo htmlspecialchars($lang["image_banks_image_bank"]); ?>: </span> <?php echo htmlspecialchars($provider->getName()); ?>
             </div>
+            <div class="InpageNavLeftBlock">
+                <select name="per_page" onchange="CentralSpaceLoad(this.value, true);">
+                    <?php
+                    foreach($results_display_array as $results_display_per_page)
+                        {
+                        $value = generateURL(
+                            "{$baseurl_short}pages/search.php",
+                            $search_params,
+                            array(
+                                "per_page" => $results_display_per_page
+                            )
+                        );
+                        $label = str_replace("?", $results_display_per_page, $lang["perpage_option"]);
+                        $extra_attributes = "";
+
+                        if($results_display_per_page === $per_page)
+                            {
+                            $extra_attributes = " selected";
+                            }
+
+                        echo render_dropdown_option($value, $label, array(), $extra_attributes);
+                        }                    
+                        ?>
+                </select>
+            </div>
+        </div>
+        <div class="TopInpageNavRight">
+            <?php pager(false); ?>
         </div>
         <div class="clearerleft"></div>
     </div>
