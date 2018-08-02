@@ -1,9 +1,9 @@
 <?php
 $rs_root = dirname(dirname(dirname(__DIR__)));
-include "{$rs_root}/include/db.php";
+include_once "{$rs_root}/include/db.php";
 include_once "{$rs_root}/include/general.php";
-include "{$rs_root}/include/authenticate.php";
-include "{$rs_root}/include/render_functions.php";
+include_once "{$rs_root}/include/authenticate.php";
+include_once "{$rs_root}/include/render_functions.php";
 
 $search                 = getval("search", "");
 $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
@@ -90,7 +90,10 @@ foreach($results as $result)
     ?>
     <div class="ResourcePanel" style="height: 214px;">
         <a href="<?php echo $result->getProviderUrl(); ?>" target="_blank" class="ImageWrapper" title="<?php echo htmlspecialchars($result->getSource()); ?>">
-            <img src="<?php echo $result->getPreviewUrl(); ?>" width="<?php echo $result->getPreviewWidth(); ?>" height="<?php echo $result->getPreviewHeight(); ?>" border="0">
+            <img src="<?php echo $result->getPreviewUrl(); ?>"
+                 width="<?php echo $result->getPreviewWidth(); ?>"
+                 height="<?php echo $result->getPreviewHeight(); ?>"
+                 border="0">
         </a>
         <div class="ResourcePanelInfo">
             <!-- <a href="#" target="_blank" title="License">link</a> -->
@@ -98,10 +101,37 @@ foreach($results as $result)
         <div class="clearer"></div>
 
         <div class="ResourcePanelIcons">
-            <a href="#" class="fa fa-download" aria-hidden="true" title="Download resource" onclick="downloadFile(); return false;"></a>
-            <a href="#" class="fa fa-file" aria-hidden="true" title="create new resource" onclick="createNewResource(); return false;"></a>
+            <a href="<?php echo $result->getOriginalFileUrl(); ?>"
+               class="fa fa-download"
+               aria-hidden="true"
+               title="Download resource"
+               data-id="<?php echo $result->getId(); ?>"
+               onclick="downloadImageBankFile(this);"></a>
+
+            <!-- based on permissions "c" and "d" -->
+            <a href="<?php echo $result->getOriginalFileUrl(); ?>"
+               class="fa fa-file"
+               aria-hidden="true"
+               title="create new resource"
+               onclick="createNewResource(this);"></a>
             <div class="clearer"></div>
         </div>
     </div>
     <?php
     }
+    ?>
+<script>
+    function downloadImageBankFile(element)
+        {
+        event.preventDefault();
+
+        var form = jQuery('<form id="downloadImageBankFile"></form>')
+            .attr("action", "<?php echo $baseurl; ?>/plugins/image_banks/pages/download.php")
+            .attr("method", "get");
+
+        form.append(jQuery("<input></input>").attr("type", "hidden").attr("name", "file").attr("value", element.href));
+        form.append(jQuery("<input></input>").attr("type", "hidden").attr("name", "id").attr("value", jQuery(element).data("id")));
+
+        form.appendTo('body').submit().remove();
+        }
+</script>
