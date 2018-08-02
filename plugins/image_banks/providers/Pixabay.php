@@ -32,7 +32,7 @@ class Pixabay extends Provider
         return $page_def;
         }
 
-    public function search($keywords, $page = 1, $per_page = 24)
+    public function runSearch($keywords, $page = 1, $per_page = 24)
         {
         // TODO: build API request
         // TODO: do API request or retrieve from cache (24h old max) as per https://pixabay.com/api/docs/

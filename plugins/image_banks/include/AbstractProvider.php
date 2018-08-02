@@ -29,11 +29,34 @@ abstract class Provider
     /**
     * Search providers' database based on specified keywords
     * 
+    * @abstract
+    * 
     * @param  string   $keywords  Search keyword(s)
     * @param  integer  $page      Select the page number
     * @param  integer  $per_page  Number of results per page
     * 
-    * @return ProviderSearchResults
+    * @return \ImageBanks\ProviderSearchResults
     */
-    abstract public function search($keywords, $page = 1, $per_page = 24);
+    abstract protected function runSearch($keywords, $page = 1, $per_page = 24);
+
+    /**
+    * Search providers' database based on specified keywords
+    * 
+    * @param  string   $keywords  Search keyword(s)
+    * @param  integer  $page      Select the page number
+    * @param  integer  $per_page  Number of results per page
+    * 
+    * @return \ImageBanks\ProviderSearchResults
+    */
+    public final function search($keywords, $page = 1, $per_page = 24)
+        {
+        $search_results = $this->runSearch($keywords, $page, $per_page);
+
+        if(!($search_results instanceof \ImageBanks\ProviderSearchResults))
+            {
+            trigger_error("Provider '{$this->getName()}' search results must be of type ProviderSearchResults");
+            }
+
+        return $search_results;
+        }
     }

@@ -23,11 +23,6 @@ $provider = $providers[$image_bank_provider_id];
 
 $results = $provider->search($search);
 
-if(!($results instanceof \ImageBanks\ProviderSearchResults))
-    {
-    trigger_error("Provider search is not of type ProviderSearchResults");
-    }
-
 // TODO: add pager functionality
 ?>
 <div class="BasicsBox">
@@ -49,7 +44,7 @@ foreach($results as $result)
     ?>
     <div class="ResourcePanel" style="height: 214px;">
         <a href="<?php echo $result->getProviderUrl(); ?>" target="_blank" class="ImageWrapper" title="<?php echo htmlspecialchars($result->getSource()); ?>">
-            <img border="0" width="<?php echo $result->getPreviewWidth(); ?>" height="<?php echo $result->getPreviewHeight(); ?>" style="margin-top:auto;" src="<?php echo $result->getPreviewUrl(); ?>" alt="Brochure">
+            <img src="<?php echo $result->getPreviewUrl(); ?>" width="<?php echo $result->getPreviewWidth(); ?>" height="<?php echo $result->getPreviewHeight(); ?>" border="0">
         </a>
         <div class="ResourcePanelInfo">
             <!-- <a href="#" target="_blank" title="License">link</a> -->
