@@ -150,7 +150,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
 			   $themes_category_split_pages,$themes_category_split_pages_parents,$collections_compact_style,$pagename,
 			   $show_edit_all_link,$preview_all,$userref,$collection_purge,$themes_category_split_pages,
 			   $themes_category_split_pages_parents_root_node,$enable_theme_category_sharing,$enable_theme_category_edit,
-			   $show_theme_collection_stats,$lastlevelchange,$themes_single_collection_shortcut, $download_usage;
+			   $show_theme_collection_stats,$lastlevelchange,$themes_single_collection_shortcut, $download_usage, $usersession,$CSRF_token_identifier;
 	
 		$themes_order_by=getvalescaped("themes_order_by",getvalescaped("saved_themes_order_by","name"));
 		$sort=getvalescaped("sort",getvalescaped("saved_themes_sort","ASC"));	
@@ -354,7 +354,7 @@ function DisplayTheme($themes=array(), $simpleview=false)
 				<script>
 				jQuery('#<?php echo $action_selection_id ?>').bind({
 					mouseenter:function(e){
-					LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $getthemes[$m]["ref"] ?>');
+					LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $getthemes[$m]["ref"] ?>','<?php echo $CSRF_token_identifier; ?>','<?php echo generateCSRFToken($usersession,"theme_actions"); ?>');
 					}});
 				</script>
 				<?php
