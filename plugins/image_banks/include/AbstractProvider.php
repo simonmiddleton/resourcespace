@@ -32,25 +32,25 @@ abstract class Provider
     * @abstract
     * 
     * @param  string   $keywords  Search keyword(s)
-    * @param  integer  $page      Select the page number
     * @param  integer  $per_page  Number of results per page
+    * @param  integer  $page      Select the page number
     * 
     * @return \ImageBanks\ProviderSearchResults
     */
-    abstract protected function runSearch($keywords, $page = 1, $per_page = 24);
+    abstract protected function runSearch($keywords, $per_page = 24, $page = 1);
 
     /**
     * Search providers' database based on specified keywords
     * 
     * @param  string   $keywords  Search keyword(s)
-    * @param  integer  $page      Select the page number
     * @param  integer  $per_page  Number of results per page
+    * @param  integer  $page      Select the page number
     * 
     * @return \ImageBanks\ProviderSearchResults
     */
-    public final function search($keywords, $page = 1, $per_page = 24)
+    public final function search($keywords, $per_page = 24, $page = 1)
         {
-        $search_results = $this->runSearch($keywords, $page, $per_page);
+        $search_results = $this->runSearch($keywords, $per_page, $page);
 
         if(!($search_results instanceof \ImageBanks\ProviderSearchResults))
             {
