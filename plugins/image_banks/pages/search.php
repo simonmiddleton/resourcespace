@@ -28,14 +28,13 @@ if(!($results instanceof \ImageBanks\ProviderSearchResults))
     trigger_error("Provider search is not of type ProviderSearchResults");
     }
 
-// TODO: add results count
 // TODO: add pager functionality
 ?>
 <div class="BasicsBox">
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">
             <div id="SearchResultFound" class="InpageNavLeftBlock">
-                <span class="Selected">49</span> <?php echo htmlspecialchars($lang["youfoundresults"]); ?>
+                <span class="Selected"><?php echo number_format($results->total); ?></span> <?php echo htmlspecialchars($lang["youfoundresults"]); ?>
             </div>
             <div id="SearchResultFound" class="InpageNavLeftBlock">
                 <span class="Selected"><?php echo htmlspecialchars($lang["image_banks_image_bank"]); ?>: </span> <?php echo htmlspecialchars($provider->getName()); ?>

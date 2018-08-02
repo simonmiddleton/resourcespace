@@ -67,6 +67,12 @@ class Pixabay extends Provider
             $provider_results[] = $provider_result;
             }
 
+        $provider_results->total = count($provider_results);
+        if(isset($api_results["total"]))
+            {
+            $provider_results->total = $api_results["total"];
+            }
+
         return $provider_results;
         }
     }

@@ -6,6 +6,8 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     private $position = 0;
     private $results = array();
 
+    public $total = 0;
+
     /**
     * Assign a value to the specified offset
     * 
