@@ -10,6 +10,17 @@ if (!hook("renderresultthumb"))
         {
         $thumbs_displayed_fields_height += 16;
         }
+    # Increase height of search panel for each extended field
+    if(isset($search_result_title_height))
+        {
+        for ($i=0; $i<count($df); $i++)
+            {
+            if(in_array($df[$i]['ref'],$thumbs_display_fields) && in_array($df[$i]['ref'],$thumbs_display_extended_fields))
+                {
+                $thumbs_displayed_fields_height += ($search_result_title_height - 18);
+                }
+            }
+        }
     $hook_thumbs_displayed_fields_height = hook('thumbs_resourceshell_height', '', array($thumbs_displayed_fields_height));
     if(false !== $hook_thumbs_displayed_fields_height)
         {
