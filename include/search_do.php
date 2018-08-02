@@ -157,7 +157,7 @@ function do_search(
     # Dedupe keywords 
     $keywords=array_values(array_unique($keywords));
 
-    $modified_keywords=hook('dosearchmodifykeywords', '', array($keywords));
+    $modified_keywords=hook('dosearchmodifykeywords', '', array($keywords, $search));
     if ($modified_keywords)
         {
         $keywords=$modified_keywords;
