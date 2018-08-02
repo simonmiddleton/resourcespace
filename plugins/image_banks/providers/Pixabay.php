@@ -48,9 +48,6 @@ class Pixabay extends Provider
 
         foreach($api_results["hits"] as $result)
             {
-            // echo "<pre>";print_r($result);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
-            $provider_result = new \ImageBanks\ProviderResult($result["id"], $this);
-
             // As per https://pixabay.com/api/docs/ , imageURL key/value pair is only available if the account has been 
             // approved for full API access
             $original_file_url = $result['largeImageURL'];
@@ -59,6 +56,7 @@ class Pixabay extends Provider
                 $original_file_url = $result['imageURL'];
                 }
 
+            $provider_result = new \ImageBanks\ProviderResult($result["id"], $this);
             $provider_result
                 ->setOriginalFileUrl($original_file_url)
                 ->setProviderUrl($result['pageURL'])

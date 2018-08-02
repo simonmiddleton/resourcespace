@@ -17,6 +17,8 @@ class ProviderResult
         {
         $this->id = $id;
         $this->provider = $provider;
+
+        return $this;
         }
 
     public function getId()
