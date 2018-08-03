@@ -857,7 +857,15 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 				
 			}
 			if ($extension=="eps"){
-				$pdfinfocommand="identify ".escapeshellarg($file);
+                # Locate imagemagick.
+                $identify_fullpath = get_utility_path("im-identify");
+                if ($identify_fullpath==false)
+                    {
+                    debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'.",RESOURCE_LOG_APPEND_PREVIOUS);
+                    return false;
+                    }
+
+                $pdfinfocommand = $identify_fullpath . " " .escapeshellarg($file);
 				$pdfinfo=run_command($pdfinfocommand);
 				$pdfinfo=explode(" ",$pdfinfo);
 				if (isset($pdfinfo[2])){
