@@ -37,21 +37,11 @@ class Pixabay extends Provider
 
     public function runSearch($keywords, $per_page = 24, $page = 1)
         {
-        // TODO: build API request
         // TODO: do API request or retrieve from cache (24h old max) as per https://pixabay.com/api/docs/
         // TODO: handle expected errors and notify users nicely
-        $pixabay_api_url = \generateURL(
-            "https://pixabay.com/api/",
-            array(
-                "key"      => $this->configs["pixabay_api_key"],
-                "q"        => $keywords,
-                "per_page" => $per_page,
-                "page"     => $page,
-            )
-        );
 
-        echo "<pre>";print_r($pixabay_api_url);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
-        die("You died in file " . __FILE__ . " at line " . __LINE__);
+        // check cache based on hash of keywords,per_page and page and if nothing found, searchPixabay()
+        // $api_results = $this->searchPixabay($keywords, $per_page, $page);
 
         // get test API response from file which is not in CVS for obvious reasons
         $pixabay_api_response_file = fopen(dirname(__DIR__) . '/pixabay_api_response.json', 'rb');
@@ -88,5 +78,63 @@ class Pixabay extends Provider
             }
 
         return $provider_results;
+        }
+
+
+    private function searchPixabay($keywords, $per_page = 24, $page = 1)
+        {
+        $pixabay_api_url = generateURL(
+            "https://pixabay.com/api/",
+            array(
+                "key"      => $this->configs["pixabay_api_key"],
+                "q"        => $keywords,
+                "per_page" => $per_page,
+                "page"     => $page,
+            )
+        );
+
+        $curl_handle = curl_init();
+        $curl_response_headers = array();
+
+        curl_setopt($curl_handle, CURLOPT_URL, $pixabay_api_url);
+        curl_setopt($curl_handle, CURLOPT_HEADER, 0);
+        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt(
+            $curl_handle,
+            CURLOPT_HEADERFUNCTION,
+            function($curl, $header) use (&$curl_response_headers)
+                {
+                $length = strlen($header);
+                $header = explode(':', $header, 2);
+
+                // Invalid header
+                if(count($header) < 2)
+                    {
+                    return $length;
+                    }
+
+                $name = strtolower(trim($header[0]));
+
+                if(!array_key_exists($name, $curl_response_headers))
+                    {
+                    $curl_response_headers[$name] = array(trim($header[1]));
+                    }
+                else
+                    {
+                    $curl_response_headers[$name][] = trim($header[1]);
+                    }
+
+                return $length;
+                }
+        );
+
+        $result = curl_exec($curl_handle);
+        curl_close($curl_handle);
+
+        // TODO: deal with the case of running out of allowed requests to the API
+        // echo "<pre>";print_r($curl_response_headers["x-ratelimit-remaining"]);echo "</pre>";
+        // echo "<pre>";print_r($curl_response_headers["x-ratelimit-reset"]);echo "</pre>";
+        
+        return json_decode($result, true);
         }
     }
