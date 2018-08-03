@@ -17,6 +17,11 @@ abstract class Provider
             throw new \LogicException(get_class($this) . ' must have a $name property');
             }
 
+        if(!isset($this->configs))
+            {
+            throw new \LogicException(get_class($this) . ' must have a $configs property');
+            }
+
         $this->lang = $lang;
         }
 
@@ -25,6 +30,32 @@ abstract class Provider
 
     abstract static function checkDependencies();
     abstract public function buildConfigPageDefinition(array $page_def);
+
+
+    /**
+    * Register configuration options required by the Provider in the GLOBAL scope
+    * 
+    * @param  array $globals The globals variable - $GLOBALS
+    * 
+    * @return array Returns the $GLOBALS array back with any config vars required by a provider
+    */
+    public final function registerConfigurationNeeds(array $globals)
+        {
+        foreach($this->configs as $config => $value)
+            {
+            if(array_key_exists($config, $globals))
+                {
+                // GLOBALS have been set from the plugin configuration, no reason to set to the default value now
+                $this->configs[$config] = $globals[$config];
+
+                continue;
+                }
+
+            $globals[$config] = $value;
+            }
+
+        return $globals;
+        }
 
     /**
     * Search providers' database based on specified keywords

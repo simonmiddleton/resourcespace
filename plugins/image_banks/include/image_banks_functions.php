@@ -70,6 +70,8 @@ function getProviders(array $loaded_providers)
             continue;
             }
 
+        $GLOBALS = $provider->registerConfigurationNeeds($GLOBALS);
+
         $providers[$provider->getId()] = $provider;
         }
 

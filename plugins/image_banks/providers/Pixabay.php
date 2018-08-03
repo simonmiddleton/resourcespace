@@ -4,7 +4,10 @@ namespace ImageBanks;
 class Pixabay extends Provider
     {
     protected $id   = 1;
-    protected $name = 'Pixabay';
+    protected $name = "Pixabay";
+    protected $configs = array(
+        "pixabay_api_key" => ""
+    );
 
 
     public function getId()
@@ -37,7 +40,18 @@ class Pixabay extends Provider
         // TODO: build API request
         // TODO: do API request or retrieve from cache (24h old max) as per https://pixabay.com/api/docs/
         // TODO: handle expected errors and notify users nicely
-        // TODO: based on the result set, return back a list of ProviderResult objects
+        $pixabay_api_url = \generateURL(
+            "https://pixabay.com/api/",
+            array(
+                "key"      => $this->configs["pixabay_api_key"],
+                "q"        => $keywords,
+                "per_page" => $per_page,
+                "page"     => $page,
+            )
+        );
+
+        echo "<pre>";print_r($pixabay_api_url);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
+        die("You died in file " . __FILE__ . " at line " . __LINE__);
 
         // get test API response from file which is not in CVS for obvious reasons
         $pixabay_api_response_file = fopen(dirname(__DIR__) . '/pixabay_api_response.json', 'rb');
