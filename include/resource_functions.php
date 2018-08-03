@@ -44,7 +44,7 @@ function create_resource($resource_type,$archive=999,$user=-1)
 
 	# Log this			
 	daily_stat("Create resource",$insert);
-	resource_log($insert,'c',0);
+	resource_log($insert, LOG_CODE_CREATED, 0);
 	
 	# Also index contributed by field, unless disabled
 	if ($index_contributed_by)

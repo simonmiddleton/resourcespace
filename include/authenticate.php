@@ -362,7 +362,19 @@ if(
     && !(isset($anonymous_login) && $username == $anonymous_login)
 )
     {
-    http_response_code(400);
     debug("WARNING: CSRF verification failed!");
+
+    http_response_code(400);
+
+    if(filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN))
+        {
+        $return['error'] = array(
+            'title'  => $lang["error-csrf-verification"],
+            'detail' => $lang["error-csrf-verification-failed"]);
+
+        echo json_encode($return);
+        exit();
+        }
+
     trigger_error($lang["error-csrf-verification-failed"]);
     }

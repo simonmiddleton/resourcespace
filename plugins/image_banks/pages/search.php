@@ -49,7 +49,7 @@ $totalpages  = ceil($results->total / $per_page);
             <div id="SearchResultFound" class="InpageNavLeftBlock">
                 <span class="Selected"><?php echo number_format($results->total); ?></span> <?php echo htmlspecialchars($lang["youfoundresults"]); ?>
             </div>
-            <div class="InpageNavLeftBlock">
+            <div class="InpageNavLeftBlock ExternalImageBankDisplay">
                 <span class="Selected"><?php echo htmlspecialchars($lang["image_banks_image_bank"]); ?>: </span> <?php echo htmlspecialchars($provider->getName()); ?>
             </div>
             <div class="InpageNavLeftBlock">
@@ -108,12 +108,18 @@ foreach($results as $result)
                data-id="<?php echo $result->getId(); ?>"
                onclick="downloadImageBankFile(this);"></a>
 
-            <!-- based on permissions "c" and "d" -->
+        <?php
+        if(checkperm("c") || checkperm("d"))
+            {
+            ?>
             <a href="<?php echo $result->getOriginalFileUrl(); ?>"
                class="fa fa-file"
                aria-hidden="true"
-               title="create new resource"
+               title="<?php echo htmlspecialchars($lang["image_banks_create_new_resource"]); ?>"
                onclick="createNewResource(this);"></a>
+            <?php
+            }
+            ?>
             <div class="clearer"></div>
         </div>
     </div>
@@ -121,17 +127,47 @@ foreach($results as $result)
     }
     ?>
 <script>
-    function downloadImageBankFile(element)
+function downloadImageBankFile(element)
+    {
+    event.preventDefault();
+
+    var form = jQuery('<form id="downloadImageBankFile"></form>')
+        .attr("action", "<?php echo $baseurl; ?>/plugins/image_banks/pages/download.php")
+        .attr("method", "get");
+
+    form.append(jQuery("<input></input>").attr("type", "hidden").attr("name", "file").attr("value", element.href));
+    form.append(jQuery("<input></input>").attr("type", "hidden").attr("name", "id").attr("value", jQuery(element).data("id")));
+
+    form.appendTo('body').submit().remove();
+    }
+
+function createNewResource(element)
+    {
+    event.preventDefault();
+
+    jQuery.ajax(
         {
-        event.preventDefault();
+        type: 'POST',
+        url: "<?php echo $baseurl; ?>/plugins/image_banks/pages/ajax.php",
+        data: {
+            ajax: true,
+            original_file_url: element.href,
+            <?php echo generateAjaxToken("ImageBanks_createNewResource"); ?>
+        },
+        dataType: "json"
+        }).done(function(response, textStatus, jqXHR) {
+            var message = "<?php echo str_replace("%RESOURCE", "<a href=\\\"{$baseurl_short}?r=%RESOURCE\\\">%RESOURCE</a>", $lang["image_banks_created_resource"]); ?>";
+            message = message.replace(/\%RESOURCE/g, response.data.new_resource_ref);
 
-        var form = jQuery('<form id="downloadImageBankFile"></form>')
-            .attr("action", "<?php echo $baseurl; ?>/plugins/image_banks/pages/download.php")
-            .attr("method", "get");
+            styledalert("<?php echo htmlspecialchars($lang["image_banks_create_new_resource"]); ?>", message);
+        }).fail(function(data, textStatus, jqXHR) {
+            if(data.status == 500)
+                {
+                styledalert(data.status, data.statusText);
+                return;
+                }
 
-        form.append(jQuery("<input></input>").attr("type", "hidden").attr("name", "file").attr("value", element.href));
-        form.append(jQuery("<input></input>").attr("type", "hidden").attr("name", "id").attr("value", jQuery(element).data("id")));
-
-        form.appendTo('body').submit().remove();
-        }
+            styledalert(data.responseJSON.error.title, data.responseJSON.error.detail);
+        });
+    }
 </script>
