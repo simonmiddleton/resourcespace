@@ -434,7 +434,7 @@ function get_resource_type_field($field)
                 automatic_nodes_ordering,
                 fits_field,
                 personal_data,
-                include_in_csv_export
+                include_in_csv_export" . hook('add_resource_type_field_column') . "
            FROM resource_type_field
           WHERE ref = '{$field}'
     ";
