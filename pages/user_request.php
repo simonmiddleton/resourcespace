@@ -83,6 +83,10 @@ if (getval("save","")!="")
 		# E-mail already exists
 		$error=$lang["accountemailalreadyexists"];$error_extra="<br/><a href=\"".$baseurl_short."pages/user_password.php?email=" . urlencode($user_email) . "\">" . $lang["forgottenpassword"] . "</a>";
 		}
+    else if(getval("login_opt_in", "") != "yes")
+        {
+        $error = $lang["error_user_registration_opt_in"];
+        }
 	else
 		{
 		# E-mail is unique
@@ -124,21 +128,32 @@ if($login_background)
 
 <form method="post" action="<?php echo $baseurl_short?>pages/user_request.php">  
 
-<?php if (!hook("replacemain")) { /* BEGIN hook Replacemain */ ?>
+<?php
+if (!hook("replacemain"))
+    { /* BEGIN hook Replacemain */ ?>
+    <div class="Question">
+    <label for="name"><?php echo $lang["yourname"]?> <sup>*</sup></label>
+    <input type=text name="name" id="name" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("name",""))?>">
+    <div class="clearerleft"> </div>
+    </div>
 
-<div class="Question">
-<label for="name"><?php echo $lang["yourname"]?> <sup>*</sup></label>
-<input type=text name="name" id="name" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("name",""))?>">
-<div class="clearerleft"> </div>
-</div>
-
-<div class="Question">
-<label for="email"><?php echo $lang["youremailaddress"]?> <sup>*</sup></label>
-<input type=text name="email" id="email" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("email",""))?>">
-<div class="clearerleft"> </div>
-</div>
-
-<?php } /* END hook Replacemain */ ?>
+    <div class="Question">
+    <label for="email"><?php echo $lang["youremailaddress"]?> <sup>*</sup></label>
+    <input type=text name="email" id="email" class="stdwidth" value="<?php echo htmlspecialchars(getvalescaped("email",""))?>">
+    <div class="clearerleft"> </div>
+    </div>
+    <?php
+    if($user_registration_opt_in)
+        {
+        ?>
+        <div class="Question WideTextQuestion">
+            <label for="login_opt_in"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
+            <input type="checkbox" id="login_opt_in" name="login_opt_in" value="yes">
+            <div class="clearer"></div>
+        </div>
+        <?php
+        }
+    } /* END hook Replacemain */ ?>
 
 <?php # Add custom fields 
 if (isset($custom_registration_fields))

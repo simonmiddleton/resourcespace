@@ -827,17 +827,6 @@ elseif($restypes=='')
     <form id="simple_search_form" method="post" action="<?php echo $baseurl?>/login.php">
         <div class="SearchItem"><?php echo $lang["username"]?><br/><input type="text" name="username" id="name" class="SearchWidth" /></div>
         <div class="SearchItem"><?php echo $lang["password"]?><br/><input type="password" name="password" id="name" class="SearchWidth" /></div>
-    <?php
-    if($user_registration_opt_in)
-        {
-        ?>
-        <div class="SearchItem">
-            <input type="checkbox" id="login_opt_in" name="login_opt_in" value="yes">
-            <label for="login_opt_in"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
-        </div>
-        <?php
-        }
-        ?>
         <div class="SearchItem">
             <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
         </div>

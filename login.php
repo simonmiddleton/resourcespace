@@ -214,18 +214,7 @@ if (!hook("replaceloginform")) {
 			<div class="clearerleft"> </div>
 		</div>
 
-<?php
-if($user_registration_opt_in)
-    {
-    ?>
-    <div class="Question WideTextQuestion">
-        <label for="login_opt_in"><?php echo htmlspecialchars($lang['user_registration_opt_in_message']); ?></label>
-        <input type="checkbox" id="login_opt_in" name="login_opt_in" value="yes">
-        <div class="clearer"> </div>
-    </div>
     <?php
-    }
-
     if ($allow_keep_logged_in) { ?>
 		<div class="Question WideTextQuestion">
 			<label for="remember"><?php echo $lang["keepmeloggedin"]?></label>

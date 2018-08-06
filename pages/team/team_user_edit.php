@@ -83,24 +83,12 @@ if(getval('loginas', '') != '')
     );
     log_activity($log_activity_note, LOG_CODE_LOGGED_IN, null, 'user', null, null, null, null, $userref, false);
     log_activity($log_activity_note, LOG_CODE_LOGGED_IN, null, 'user', null, null, null, null, $user['ref'], false);
-
-    // Sleep 1 second otherwise the log can show consent opt-in was given before admin logged in as this user.
-    // This makes it very clear what happened if audited
-    sleep(1);
     ?>
     <form method="post" action="<?php echo $baseurl_short?>login.php" id="autologin">
         <?php generateFormToken("autologin"); ?>
         <input type="hidden" name="username" value="<?php echo $user["username"]?>">
         <input type="hidden" name="password" value="<?php echo $user["password"]?>">
         <input type="hidden" name="userkey" value="<?php echo md5(escape_check($user["username"]) . $scramble_key)?>">
-    <?php
-    if($user_registration_opt_in)
-        {
-        ?>
-        <input type="hidden" name="login_opt_in" value="yes">
-        <?php
-        }
-        ?>
         <noscript><input type="submit" value="<?php echo $lang["login"]?>"></noscript>
     </form>
     <script type="text/javascript">

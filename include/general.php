@@ -1873,6 +1873,12 @@ function auto_create_user_account($hash="")
         build_usergroup_dash($usergroup, $new);
         }
 
+    global $user_registration_opt_in;
+    if($user_registration_opt_in && getval("login_opt_in", "") == "yes")
+        {
+        log_activity($lang["user_registration_opt_in_message"], LOG_CODE_USER_OPT_IN, null, "user", null, null, null, null, $new, false);
+        }
+
     hook("afteruserautocreated", "all",array("new"=>$new));
 	global $anonymous_login;
     if(isset($anonymous_login))
@@ -1981,16 +1987,22 @@ function email_user_request()
     {
     // E-mails the submitted user request form to the team.
     global $applicationname, $user_email, $baseurl, $email_notify, $lang, $customContents, $account_email_exists_note,
-           $account_request_send_confirmation_email_to_requester;
+           $account_request_send_confirmation_email_to_requester, $user_registration_opt_in;
 
     // Get posted vars sanitized:
     $name               = strip_tags(getvalescaped('name', ''));
     $email              = strip_tags(getvalescaped('email', ''));
     $userrequestcomment = strip_tags(getvalescaped('userrequestcomment', ''));
 
+    $user_registration_opt_in_message = "";
+    if($user_registration_opt_in && getval("login_opt_in", "") == "yes")
+        {
+        $user_registration_opt_in_message .= "\n\n{$lang["user_registration_opt_in_message"]}";
+        }
+
     // Build a message
-    $message             = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
-    $notificationmessage = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n";
+    $message             = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n\n{$lang['name']}: {$name}\n\n{$lang['email']}: {$email}{$user_registration_opt_in_message}\n\n{$lang['comment']}: {$userrequestcomment}\n\n{$lang['ipaddress']}: '{$_SERVER['REMOTE_ADDR']}'\n\n{$customContents}\n\n" . ($account_email_exists_note ? $lang['userrequestnotification2'] : $lang["userrequestnotificationemailprotection2"]) . "\n{$baseurl}";
+    $notificationmessage = ($account_email_exists_note ? $lang['userrequestnotification1'] : $lang["userrequestnotificationemailprotection1"]) . "\n" . $lang["name"] . ": " . $name . "\n" . $lang["email"] . ": " . $email . "\n" . $lang["comment"] . ": " . $userrequestcomment . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . escape_check($customContents) . "\n{$user_registration_opt_in_message}";
 
     $approval_notify_users = get_notification_users("USER_ADMIN"); 
     $message_users         = array();

@@ -15,17 +15,7 @@ if (!function_exists('hash'))
 function perform_login()
 	{
     global $scramble_key, $lang, $max_login_attempts_wait_minutes, $max_login_attempts_per_ip, $max_login_attempts_per_username,
-    $global_cookies, $username, $password, $password_hash, $session_hash, $user_registration_opt_in;
-
-    $login_opt_in = (getval('login_opt_in', '') == 'yes' ? true : false);
-
-    if($user_registration_opt_in && !$login_opt_in)
-        {
-        $result['valid'] = false;
-        $result['error'] = $lang['error_user_registration_opt_in'];
-
-        return $result;
-        }
+    $global_cookies, $username, $password, $password_hash, $session_hash;
 
     if ((strlen($password)==32 || strlen($password)==64) && getval("userkey","")!=md5($username . $scramble_key))
 		{
@@ -108,11 +98,6 @@ function perform_login()
 
 		# Blank the IP address lockout counter for this IP
 		sql_query("delete from ip_lockout where ip='" . escape_check($ip) . "'");
-
-        if($user_registration_opt_in && $login_opt_in)
-            {
-            log_activity($lang['user_registration_opt_in_message'], LOG_CODE_USER_OPT_IN, null, 'user', null, null, null, null, $userref, false);
-            }
 
 		return $result;
 		}
