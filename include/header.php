@@ -572,7 +572,26 @@ $activate_header_link = "{$scheme}://{$host}{$port}" . urlencode($_SERVER["REQUE
 jQuery(document).ready(function()
     {
     ActivateHeaderLink(<?php echo json_encode($activate_header_link); ?>);
+    headerLinksDropdown();
+
+    jQuery(document).mouseup(function(e) 
+        {
+        var linksContainer = jQuery("#DropdownCaret");
+
+        if (linksContainer.has(e.target).length === 0 && !linksContainer.is(e.target)) 
+            {
+            jQuery('#OverFlowLinks').css("display", "none");
+            }
+        });
+
     });
+
+window.onresize=function()
+    {
+    jQuery('#HiddenLinks .HeaderLink').detach().appendTo("#HeaderLinksContainer");
+    jQuery('#OverflowListElement').remove();
+    headerLinksDropdown();
+    }
 </script>
 <?php
 // Non-ajax specific hook 

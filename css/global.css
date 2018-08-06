@@ -91,7 +91,7 @@ input[type=submit], input[type=button] {border-radius: 5px; font-size: 1em;}
 #Header {margin: 0;padding: 5px 25px 5px 25px;background-image:none;}
 #HeaderNav1, #HeaderNav2 {padding:0;}
 #HeaderNav1 {float:right;}
-#HeaderNav2 {float:left; padding-left: 30px;}
+#HeaderNav2 {padding-left: 30px;}
 #HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0em;}
 .HeaderImgLink{float:left;height:100%;}
 #HeaderImg{margin:0;max-height: 40px; }
@@ -176,8 +176,8 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .TopInpageNav a:hover, .TopInpageNav a:active, .BottomInpageNav a:hover, .BottomInpageNav a:active, #CentralSpaceLogin a:hover, #CentralSpaceLogin a:active {text-decoration:underline;}
 .Selected {font-weight: bold;}
 
-.HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;}
-.HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0px;}
+.HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;white-space: nowrap; overflow: hidden;font-size: 0px;}
+.HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0px; font-size: 15px; line-height: 36px;}
 .HorizontalNav a:link, .HorizontalNav a:visited {text-decoration:none;}
 .HorizontalNav a:hover, .HorizontalNav a:active {text-decoration:underline;}
 .HorizontalWhiteNav li:first-child {border-left:none;}
@@ -1405,3 +1405,16 @@ a.Enabled, a:visited.Enabled {
 
 .HeaderSearchForm {padding:0;margin:0;display:inline;}
 .NoSearchBar {padding-right:0 !important;}
+
+#OverFlowLinks {
+    margin: 5px;
+    padding: 5px;
+    background-color: rgb(0, 0, 0);
+    display: none;
+    position: absolute;
+    right: 100px;
+}
+
+#HiddenLinks li {
+    display: block;
+}
