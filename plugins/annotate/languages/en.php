@@ -30,3 +30,4 @@ $lang["annotate_font"]="Font:";
 $lang["annotate_pdf_output"]="PDF Output Option (experimental)";
 $lang["annotate_pdf_output_only_annotated"]="Only include Annotated Resources in PDF Output";
 $lang["annotate_admin_edit_access"]="Ability to edit other users annotations";
+$lang["annotate_ref_not_supplied"]="Reference not supplied";
