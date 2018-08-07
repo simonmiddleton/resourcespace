@@ -25,7 +25,7 @@ select {background-color:white; border-radius:5px;border:none;}
 }
 #Header #HeaderButtons a:link, #Header #HeaderButtons a:visited,#Header #HeaderButtons a:active {color:#1B1B1B;}
 #Header #HeaderButtons a:hover{color:rgba(0, 62, 81, 0.82); text-decoration: none;}
-#Header {background: linear-gradient(#424242 , #1B1B1B);border:none;}
+#Header {background: rgba(0, 0, 0, 0.65);border:none;}
 #Header li a{color:#fff;opacity:0.7;}
 #Header a:hover, #Header .current {opacity:1;text-decoration: none}
 #Header #HeaderButtons a:link, #Header #HeaderButtons a:visited, #Header #HeaderButtons a:active {color:#1B1B1B;}
@@ -86,9 +86,9 @@ select {background-color:white; border-radius:5px;border:none;}
 #SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2{color: #fff;}
 
 /* Collection Bar */
-.ui-layout-resizer {background-color: #383838;background: linear-gradient(#A5A5A5,#000000); }
+.ui-layout-resizer {background-color: #383838;background: #444444; }
 .ui-layout-toggler-open-hover{border-radius:2px;}
-.CollectBack {color:#E0E0E0;background: linear-gradient(#2E2E2E , #1B1B1B);}
+.CollectBack {color:#E0E0E0;background: #2b2b2b;}
 
 #CollectionMinRightNav li {border-left:1px solid #E0E0E0;}
 .CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2 {color:#E0E0E0;}
