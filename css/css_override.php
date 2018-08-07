@@ -23,13 +23,9 @@ $collection_bar_foreground_override;
 if ((isset($header_colour_style_override) && $header_colour_style_override != ''))
     {
     ?>
-    #HeaderNav1 li a, #HeaderNav2 li a
+    #Header
         {
-        color: <?php echo $header_link_style_override; ?>;
-        }
-    #HeaderNav2 li
-        {
-        border-color: <?php echo $header_link_style_override; ?>;
+        background: <?php echo $header_colour_style_override; ?>;
         }
     <?php
     }
@@ -38,9 +34,13 @@ if ((isset($header_colour_style_override) && $header_colour_style_override != ''
 if ((isset($header_link_style_override) && $header_link_style_override != ''))
     {
     ?>
-    #Header
+    #HeaderNav1 li a, #HeaderNav2 li a
         {
-        background: <?php echo $header_colour_style_override; ?>;
+        color: <?php echo $header_link_style_override; ?>;
+        }
+    #HeaderNav2 li
+        {
+        border-color: <?php echo $header_link_style_override; ?>;
         }
     <?php
     }
