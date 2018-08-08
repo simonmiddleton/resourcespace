@@ -37,16 +37,39 @@ class Pixabay extends Provider
 
     public function runSearch($keywords, $per_page = 24, $page = 1)
         {
-        // TODO: do API request or retrieve from cache (24h old max) as per https://pixabay.com/api/docs/
-        // TODO: handle expected errors and notify users nicely
+        if($per_page < 3)
+            {
+            $per_page = 3;
+            }
+        else if($per_page > 200)
+            {
+            $per_page = 200;
+            }
 
-        // check cache based on hash of keywords,per_page and page and if nothing found, searchPixabay()
-        // $api_results = $this->searchPixabay($keywords, $per_page, $page);
+        if($page < 1)
+            {
+            $page = 1;
+            }
 
-        // get test API response from file which is not in CVS for obvious reasons
-        $pixabay_api_response_file = fopen(dirname(__DIR__) . '/pixabay_api_response.json', 'rb');
-        $api_results = fread($pixabay_api_response_file, filesize(dirname(__DIR__) . '/pixabay_api_response.json'));
-        $api_results = json_decode($api_results, true);
+        $search_hash = md5("{$this->configs["pixabay_api_key"]}--{$keywords}--{$per_page}--{$page}");
+        $api_cached_results = $this->getCache($search_hash);
+        if(!$api_cached_results)
+            {
+            $api_results = $this->searchPixabay($keywords, $per_page, $page);
+            }
+
+        // TODO: probably need to json_decode here and continue with our request
+
+        if(isset($api_results["error"]))
+            {
+            // TODO: implement this and a way to nicely render the error for the user (check error and then call renderError or something)
+            $provider_error = new ProviderSearchResults();
+            $provider_error->setError($api_results["error"]["message"]);
+
+            return $provider_error;
+            }
+
+        // TODO: cache results $this->setCache($search_hash, $api_results);
 
         $provider_results = new ProviderSearchResults();
 
@@ -97,8 +120,8 @@ class Pixabay extends Provider
         $curl_response_headers = array();
 
         curl_setopt($curl_handle, CURLOPT_URL, $pixabay_api_url);
-        curl_setopt($curl_handle, CURLOPT_HEADER, 0);
-        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl_handle, CURLOPT_HEADER, false);
+        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
         curl_setopt(
             $curl_handle,
             CURLOPT_HEADERFUNCTION,
@@ -129,12 +152,20 @@ class Pixabay extends Provider
         );
 
         $result = curl_exec($curl_handle);
+        $response_status_code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
         curl_close($curl_handle);
 
-        // TODO: deal with the case of running out of allowed requests to the API
-        // echo "<pre>";print_r($curl_response_headers["x-ratelimit-remaining"]);echo "</pre>";
-        // echo "<pre>";print_r($curl_response_headers["x-ratelimit-reset"]);echo "</pre>";
-        
+        if($response_status_code != 200)
+            {
+            $error_data = array(
+                "error" => array(
+                    "message"  => $result
+                )
+            );
+
+            return $error_data;
+            }
+
         return json_decode($result, true);
         }
     }

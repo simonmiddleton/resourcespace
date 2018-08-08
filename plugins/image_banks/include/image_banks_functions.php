@@ -47,7 +47,9 @@ function getProviders(array $loaded_providers)
         // TODO: check provider IDs are unique. If not, try at most 3 times until we decide not to include it.
         $provider_class = "\ImageBanks\\$loaded_provider";
 
-        $provider = new $provider_class($lang);
+        $temp_dir_path = get_temp_dir(false, "ImageBanks-{$loaded_provider}");
+
+        $provider = new $provider_class($lang, $temp_dir_path);
 
         if(!($provider instanceof Provider))
             {

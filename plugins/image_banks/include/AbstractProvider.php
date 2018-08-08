@@ -4,8 +4,9 @@ namespace ImageBanks;
 abstract class Provider
     {
     protected $lang;
+    protected $temp_dir_path;
 
-    public final function __construct(array $lang)
+    public final function __construct(array $lang, $temp_dir_path)
         {
         if(!isset($this->id))
             {
@@ -23,6 +24,7 @@ abstract class Provider
             }
 
         $this->lang = $lang;
+        $this->temp_dir_path = $temp_dir_path;
         }
 
     abstract public function getId();
@@ -89,5 +91,31 @@ abstract class Provider
             }
 
         return $search_results;
+        }
+
+    /**
+    * Get Cache from the providers' temporary directory
+    * 
+    * @return boolean|string  Returns FALSE if no cache found or the content of the file
+    */
+    protected final function getCache($id)
+        {
+        $files = new \DirectoryIterator($this->temp_dir_path);
+        foreach($files as $file)
+            {
+            if($file->isDot())
+                {
+                continue;
+                }
+
+            $filename = $file->getFilename();
+
+            if($filename != $id)
+                {
+                continue;
+                }
+            }
+
+        return false;
         }
     }
