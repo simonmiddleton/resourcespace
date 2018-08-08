@@ -96,20 +96,23 @@ function do_search(
         "status"          => "archive $sort"
     );
 
+    # Append order by field to the above array if absent and if named "fieldn" (where n is one or more digits)
     if (!in_array($order_by,$order)&&(substr($order_by,0,5)=="field"))
         {
         if (!is_numeric(str_replace("field","",$order_by)))
             {
             exit("Order field incorrect.");
             }
-        # check for field type and modify sort order (if numeric)
+        # Check for field type
         $field_order_check=sql_value("select field_constraint value from resource_type_field where ref=".str_replace("field","",$order_by),"");
+        # Establish sort order (numeric or otherwise)
+        # Attach ref as a final key to foster stable result sets which should eliminate resequencing when moving <- and -> through resources (in view.php)
         if ($field_order_check==1)
 			{
-			$order[$order_by]="$order_by +0 $sort";
+			$order[$order_by]="$order_by +0 $sort,r.ref $sort";
 			}
 		else {
-			$order[$order_by]="$order_by $sort";
+			$order[$order_by]="$order_by $sort,r.ref $sort";
 		}
         }
 		
