@@ -43,14 +43,13 @@ function HookAnnotateSearchIcons($collections = false)
         }
     }
 
-function HookAnnotateSearchThumbs_resourceshell_height($current_height)
+function HookAnnotateSearchThumbs_resourceshell_height()
     {
-    global $baseurl, $k, $search, $archive, $sort, $offset, $order_by, $result, $n, $lang, $k, $annotate_public_view;
+    global $baseurl, $k, $search, $archive, $sort, $offset, $order_by, $result, $n, $lang, $k, $annotate_public_view, $thumbs_displayed_fields_height;
 
-    if('' != $k && !$annotate_public_view)
+    if(!('' != $k && !$annotate_public_view))
         {
-        return false;
+        $thumbs_displayed_fields_height=$thumbs_displayed_fields_height + 28;
         }
-
-    return $current_height + 28;
+    
     }

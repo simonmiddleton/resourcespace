@@ -21,11 +21,8 @@ if (!hook("renderresultthumb"))
                 }
             }
         }
-    $hook_thumbs_displayed_fields_height = hook('thumbs_resourceshell_height', '', array($thumbs_displayed_fields_height));
-    if(false !== $hook_thumbs_displayed_fields_height)
-        {
-        $thumbs_displayed_fields_height = $hook_thumbs_displayed_fields_height;
-        }
+    hook('thumbs_resourceshell_height');
+    
     ?>
     <!--Resource Panel-->
     <div class="ResourcePanel <?php echo ($display == 'xlthumbs' ? 'ResourcePanelLarge' : '') ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
