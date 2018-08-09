@@ -61,7 +61,6 @@ class Pixabay extends Provider
 
             if(isset($search_results["error"]))
                 {
-                // TODO: implement this and a way to nicely render the error for the user (check error and then call renderError or something)
                 $provider_error = new ProviderSearchResults();
                 $provider_error->setError($search_results["error"]["message"]);
 

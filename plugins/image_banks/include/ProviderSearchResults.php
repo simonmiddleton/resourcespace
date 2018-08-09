@@ -5,6 +5,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     {
     private $position = 0;
     private $results = array();
+    private $error = "";
 
     public $total = 0;
 
@@ -138,5 +139,27 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     public function count()
         {
         return count($this->results);
+        }
+
+    /**
+    * Set error message
+    * 
+    * @return void
+    */
+    public function setError($message)
+        {
+        $this->error = $message;
+
+        return;
+        }
+
+    /**
+    * Get error message
+    * 
+    * @return string
+    */
+    public function getError()
+        {
+        return $this->error;
         }
     }

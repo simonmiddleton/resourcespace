@@ -40,6 +40,7 @@ if(!array_key_exists($image_bank_provider_id, $providers))
 $provider = $providers[$image_bank_provider_id];
 
 $results = $provider->search($search, $per_page, $curpage);
+$results_error = $results->getError();
 
 $totalpages  = ceil($results->total / $per_page);
 ?>
@@ -84,7 +85,22 @@ $totalpages  = ceil($results->total / $per_page);
         <div class="clearerleft"></div>
     </div>
 </div>
+<div id="CentralSpaceResources">
 <?php
+if($results_error !== "")
+    {
+    ?>
+    <div id="CentralSpaceResources">
+        <div class="BasicsBox"> 
+            <div class="NoFind">
+                <p><?php echo htmlspecialchars($lang["searchnomatches"]); ?></p>
+                <p><?php echo htmlspecialchars($results_error); ?></p>
+            </div>
+        </div>
+    </div>
+    <?php
+    }
+
 foreach($results as $result)
     {
     ?>
@@ -126,6 +142,7 @@ foreach($results as $result)
     <?php
     }
     ?>
+</div>
 <script>
 function downloadImageBankFile(element)
     {
