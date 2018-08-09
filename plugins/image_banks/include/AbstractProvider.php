@@ -23,6 +23,11 @@ abstract class Provider
             throw new \LogicException(get_class($this) . ' must have a $configs property');
             }
 
+        if(!isset($this->warning))
+            {
+            throw new \LogicException(get_class($this) . ' must have a $warning property');
+            }
+
         $this->lang = $lang;
         $this->temp_dir_path = $temp_dir_path;
         }

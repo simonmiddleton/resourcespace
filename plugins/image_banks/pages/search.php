@@ -41,6 +41,7 @@ $provider = $providers[$image_bank_provider_id];
 
 $results = $provider->search($search, $per_page, $curpage);
 $results_error = $results->getError();
+$results_warning = $results->getWarning();
 
 $totalpages  = ceil($results->total / $per_page);
 ?>
@@ -50,7 +51,7 @@ $totalpages  = ceil($results->total / $per_page);
             <div id="SearchResultFound" class="InpageNavLeftBlock">
                 <span class="Selected"><?php echo number_format($results->total); ?></span> <?php echo htmlspecialchars($lang["youfoundresults"]); ?>
             </div>
-            <div class="InpageNavLeftBlock ExternalImageBankDisplay">
+            <div class="InpageNavLeftBlock AlignLeftBlockText">
                 <span class="Selected"><?php echo htmlspecialchars($lang["image_banks_image_bank"]); ?>: </span> <?php echo htmlspecialchars($provider->getName()); ?>
             </div>
             <div class="InpageNavLeftBlock">
@@ -74,10 +75,20 @@ $totalpages  = ceil($results->total / $per_page);
                             }
 
                         echo render_dropdown_option($value, $label, array(), $extra_attributes);
-                        }                    
+                        }
                         ?>
                 </select>
             </div>
+            <?php
+            if($results_warning !== "")
+                {
+                ?>
+                <div class="InpageNavLeftBlock AlignLeftBlockText WarningBox">
+                    <span class="Selected RedText"><?php echo htmlspecialchars($lang["image_banks_warning"]); ?></span><span><?php echo htmlspecialchars($results_warning); ?></span>
+                </div>
+                <?php
+                }
+                ?>
         </div>
         <div class="TopInpageNavRight">
             <?php pager(false); ?>

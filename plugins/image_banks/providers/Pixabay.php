@@ -8,6 +8,7 @@ class Pixabay extends Provider
     protected $configs = array(
         "pixabay_api_key" => ""
     );
+    protected $warning = "";
 
 
     public function getId()
@@ -98,6 +99,13 @@ class Pixabay extends Provider
             $provider_results[] = $provider_result;
             }
 
+        if($this->warning != "")
+            {
+            $provider_results->setWarning($this->warning);
+
+            $this->warning = "";
+            }
+
         $provider_results->total = count($provider_results);
         if(isset($search_results["total"]))
             {
@@ -161,13 +169,43 @@ class Pixabay extends Provider
 
         if($response_status_code != 200)
             {
+            switch($response_status_code)
+                {
+                case 429:
+                    $message = $this->lang["image_banks_try_again_later"];
+                    break;
+
+                default:
+                    $message = $result;
+                    break;
+                }
+
             $error_data = array(
                 "error" => array(
-                    "message"  => $result
+                    "message"  => $message
                 )
             );
 
             return json_encode($error_data);
+            }
+
+        if($curl_response_headers["x-ratelimit-remaining"][0] <= 20)
+            {
+            $warning_message = str_replace(
+                array(
+                    "%PROVIDER",
+                    "%RATE-LIMIT-REMAINING",
+                    "%TIME"
+                ),
+                array(
+                    $this->name,
+                    $curl_response_headers["x-ratelimit-remaining"][0],
+                    date("i:s", $curl_response_headers["x-ratelimit-reset"][0])
+                ),
+                $this->lang["image_banks_warning_rate_limit_almost_reached"]
+            );
+
+            $this->warning = $warning_message;
             }
 
         return $result;

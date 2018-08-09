@@ -6,6 +6,7 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     private $position = 0;
     private $results = array();
     private $error = "";
+    private $warning = "";
 
     public $total = 0;
 
@@ -161,5 +162,27 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     public function getError()
         {
         return $this->error;
+        }
+
+    /**
+    * Set warning message
+    * 
+    * @return void
+    */
+    public function setWarning($message)
+        {
+        $this->warning = $message;
+
+        return;
+        }
+
+    /**
+    * Get warning message
+    * 
+    * @return string
+    */
+    public function getWarning()
+        {
+        return $this->warning;
         }
     }

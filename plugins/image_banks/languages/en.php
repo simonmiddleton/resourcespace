@@ -15,7 +15,6 @@ $lang["image_banks_bad_request_title"] = "Bad Request";
 $lang["image_banks_bad_request_detail"] = "Request could not be handled by '%FILE'";
 $lang["image_banks_unable_to_create_resource"] = "Unable to create a new resource!";
 $lang["image_banks_unable_to_upload_file"] = "Unable to upload file from external Image Bank for resource #%RESOURCE";
-
-
-
-$lang["image_banks_"] = "";
+$lang["image_banks_try_again_later"] = "Please try again later!";
+$lang["image_banks_warning"] = "WARNING: ";
+$lang["image_banks_warning_rate_limit_almost_reached"] = "Provider '%PROVIDER' will only allow %RATE-LIMIT-REMAINING more searches. This limit will reset in %TIME";
