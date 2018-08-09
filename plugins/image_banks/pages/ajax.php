@@ -21,6 +21,14 @@ $return = array();
 
 $original_file_url = getval("original_file_url", "");
 
+if(!\ImageBanks\validFileSource($original_file_url, $image_banks_loaded_providers))
+    {
+    $log_activity_note = str_replace("%FILE", $original_file_url, $lang["image_banks_bad_file_create_attempt"]);
+    log_activity($log_activity_note, LOG_CODE_SYSTEM, null, 'user', null, null, null, null, $userref, false);
+
+    $original_file_url = "";
+    }
+
 if($original_file_url != "")
     {
     $new_resource_ref = create_resource($default_resource_type, 999, $userref);

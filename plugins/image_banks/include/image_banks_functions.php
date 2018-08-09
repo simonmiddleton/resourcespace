@@ -79,3 +79,25 @@ function getProviders(array $loaded_providers)
 
     return $providers;
     }
+
+function validFileSource($file, array $loaded_providers)
+    {
+    $valid_source = false;
+
+    $providers = getProviders($loaded_providers);
+    foreach($providers as $provider)
+        {
+        $download_endpoint = $provider->getAllowedDownloadEndpoint();
+
+        if(substr($file, 0, strlen($download_endpoint)) == $download_endpoint)
+            {
+            $valid_source = true;
+
+            break;
+            }
+
+        $valid_source = false;
+        }
+
+    return $valid_source;
+    }

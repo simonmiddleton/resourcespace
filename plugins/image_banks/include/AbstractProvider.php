@@ -18,6 +18,11 @@ abstract class Provider
             throw new \LogicException(get_class($this) . ' must have a $name property');
             }
 
+        if(!isset($this->download_endpoint))
+            {
+            throw new \LogicException(get_class($this) . ' must have a $download_endpoint property');
+            }
+
         if(!isset($this->configs))
             {
             throw new \LogicException(get_class($this) . ' must have a $configs property');
@@ -34,6 +39,7 @@ abstract class Provider
 
     abstract public function getId();
     abstract public function getName();
+    abstract public function getAllowedDownloadEndpoint();
 
     abstract static function checkDependencies();
     abstract public function buildConfigPageDefinition(array $page_def);

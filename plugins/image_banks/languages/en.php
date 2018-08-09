@@ -21,3 +21,4 @@ $lang["image_banks_warning_rate_limit_almost_reached"] = "Provider '%PROVIDER' w
 
 // Logs
 $lang["image_banks_local_download_attempt"] = "User tried to download '%FILE' using the ImageBank plugin by pointing to a system which is not part of allowed providers";
+$lang["image_banks_bad_file_create_attempt"] = "User tried to create a resource with '%FILE' file using the ImageBank plugin by pointing to a system which is not part of allowed providers";

@@ -3,8 +3,10 @@ namespace ImageBanks;
 
 class Pixabay extends Provider
     {
-    protected $id   = 1;
-    protected $name = "Pixabay";
+    protected $id                = 1;
+    protected $name              = "Pixabay";
+    protected $download_endpoint = "https://pixabay.com/get/";
+    
     protected $configs = array(
         "pixabay_api_key" => ""
     );
@@ -19,6 +21,11 @@ class Pixabay extends Provider
     public function getName()
         {
         return $this->name;
+        }
+
+    public function getAllowedDownloadEndpoint()
+        {
+        return $this->download_endpoint;
         }
 
 
