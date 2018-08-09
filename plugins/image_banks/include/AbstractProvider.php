@@ -96,11 +96,16 @@ abstract class Provider
     /**
     * Get Cache from the providers' temporary directory
     * 
+    * @param  string  $id   The cache ID. This is also the filename when saved on disk
+    * @param  int     $ttl  The time to live (in hours) of the cache value. This is measured based on the last modified 
+    *                       timestamp of the cache file
+    * 
     * @return boolean|string  Returns FALSE if no cache found or the content of the file
     */
-    protected final function getCache($id)
+    protected final function getCache($id, $ttl)
         {
         $files = new \DirectoryIterator($this->temp_dir_path);
+
         foreach($files as $file)
             {
             if($file->isDot())
@@ -108,14 +113,49 @@ abstract class Provider
                 continue;
                 }
 
-            $filename = $file->getFilename();
-
-            if($filename != $id)
+            if($file->getFilename() != $id)
                 {
                 continue;
                 }
+
+            $interval = \DateTime::createFromFormat('U', $file->getMTime())->diff(new \DateTime());
+            $hours = $interval->h + ($interval->days * 24);
+
+            if($hours > $ttl)
+                {
+                return false;
+                }
+
+            return file_get_contents($file->getPathname());
             }
 
         return false;
+        }
+
+    /**
+    * Set cache in the providers' temporary directory
+    * 
+    * @param  string  $id     The cache ID
+    * @param  mixed   $value  The value to store in the file
+    * 
+    * @throws  Error if unable to open file
+    * 
+    * @return void
+    */
+    protected final function setCache($id, $value)
+        {
+        $file = $this->temp_dir_path . DIRECTORY_SEPARATOR . $id;
+
+        $fh = fopen($file, "wb");
+
+        if($fh === false)
+            {
+            trigger_error("Unable to open file '{$file}' to set cache for {$this->name}");
+            }
+
+        fwrite($fh, $value);
+        fclose($fh);
+
+        return;
         }
     }

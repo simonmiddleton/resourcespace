@@ -52,28 +52,33 @@ class Pixabay extends Provider
             }
 
         $search_hash = md5("{$this->configs["pixabay_api_key"]}--{$keywords}--{$per_page}--{$page}");
-        $api_cached_results = $this->getCache($search_hash);
+        $api_cached_results = $this->getCache($search_hash, 24);
         if(!$api_cached_results)
             {
             $api_results = $this->searchPixabay($keywords, $per_page, $page);
+
+            $search_results = json_decode($api_results, true);
+
+            if(isset($search_results["error"]))
+                {
+                // TODO: implement this and a way to nicely render the error for the user (check error and then call renderError or something)
+                $provider_error = new ProviderSearchResults();
+                $provider_error->setError($search_results["error"]["message"]);
+
+                return $provider_error;
+                }
+
+            $this->setCache($search_hash, $api_results);
             }
 
-        // TODO: probably need to json_decode here and continue with our request
-
-        if(isset($api_results["error"]))
+        if(!isset($search_results))
             {
-            // TODO: implement this and a way to nicely render the error for the user (check error and then call renderError or something)
-            $provider_error = new ProviderSearchResults();
-            $provider_error->setError($api_results["error"]["message"]);
-
-            return $provider_error;
+            $search_results = json_decode($api_cached_results, true);
             }
-
-        // TODO: cache results $this->setCache($search_hash, $api_results);
 
         $provider_results = new ProviderSearchResults();
 
-        foreach($api_results["hits"] as $result)
+        foreach($search_results["hits"] as $result)
             {
             // As per https://pixabay.com/api/docs/ , imageURL key/value pair is only available if the account has been 
             // approved for full API access
@@ -95,9 +100,9 @@ class Pixabay extends Provider
             }
 
         $provider_results->total = count($provider_results);
-        if(isset($api_results["total"]))
+        if(isset($search_results["total"]))
             {
-            $provider_results->total = $api_results["total"];
+            $provider_results->total = $search_results["total"];
             }
 
         return $provider_results;
@@ -163,9 +168,9 @@ class Pixabay extends Provider
                 )
             );
 
-            return $error_data;
+            return json_encode($error_data);
             }
 
-        return json_decode($result, true);
+        return $result;
         }
     }
