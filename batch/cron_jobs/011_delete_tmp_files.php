@@ -11,6 +11,12 @@ $folderstoscan = array();
 $folderstoscan[] = get_temp_dir(false);
 $folderstoscan[] = get_temp_dir(false) . DIRECTORY_SEPARATOR . "plupload";
 
+$modified_folderstoscan = hook("add_folders_to_delete_from_temp", "", array($folderstoscan));
+if(is_array($modified_folderstoscan) && !empty($modified_folderstoscan))
+    {
+    $folderstoscan = $modified_folderstoscan;
+    }
+
 // Set up array of folders to exclude
 $excludepaths = array();
 $excludepaths[] = "process_locks";

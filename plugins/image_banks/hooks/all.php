@@ -43,3 +43,29 @@ function HookImage_banksAllSearchfiltertop()
 
     return;
     }
+
+function HookImage_banksAllAdd_folders_to_delete_from_temp(array $folders_scan_list)
+    {
+    global $image_banks_loaded_providers;
+
+    $providers = \ImageBanks\getProviders($image_banks_loaded_providers);
+
+    if(count($providers) == 0)
+        {
+        return false;
+        }
+
+    foreach($providers as $provider)
+        {
+        $tmp_dir = $provider->getTempDirPath();
+
+        if($tmp_dir == "")
+            {
+            continue;
+            }
+
+        $folders_scan_list[] = $tmp_dir;
+        }
+
+    return $folders_scan_list;
+    }

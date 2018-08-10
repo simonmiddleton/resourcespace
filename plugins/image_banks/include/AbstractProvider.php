@@ -4,7 +4,7 @@ namespace ImageBanks;
 abstract class Provider
     {
     protected $lang;
-    protected $temp_dir_path;
+    protected $temp_dir_path = "";
 
     public final function __construct(array $lang, $temp_dir_path)
         {
@@ -102,6 +102,17 @@ abstract class Provider
             }
 
         return $search_results;
+        }
+
+
+    /**
+    * Get Image Bank providers' temporary directory path
+    * 
+    * @return string
+    */
+    public final function getTempDirPath()
+        {
+        return $this->temp_dir_path;
         }
 
     /**
