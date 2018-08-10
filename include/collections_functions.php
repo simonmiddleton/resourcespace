@@ -1638,8 +1638,8 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 
         $images=sql_array($sql,0);
 
-        if (count($images)>0) {return $images;}
         }
+    if (count($images)>0) {return $images;}
 	return false;
 	}
 
