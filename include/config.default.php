@@ -2060,6 +2060,9 @@ $checkbox_and = false;
 # For dynamic keyword list searching, perform logical AND instead of OR when selecting multiple options.
 $dynamic_keyword_and = false;
 
+# For dynamic keyword list suggestions, use logic 'contains' instead of 'starts with'.
+$dynamic_keyword_suggest_contains=false;
+
 # Option to show resource ID in the thumbnail, next to the action icons.
 $display_resource_id_in_thumbnail=false;
 
