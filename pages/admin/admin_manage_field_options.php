@@ -861,6 +861,7 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
     <div class="Question">
         <form id="import_nodes_form" method="POST" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>" enctype="multipart/form-data">
             <label for="import_nodes"><?php echo $lang['import']; ?></label>
+            <?php generateFormToken("import_nodes_form"); ?>
             <input type="file" name="import_nodes">
             <input type="submit" name="upload_import_nodes" value="<?php echo $lang['import']; ?>">
         </form>
