@@ -1,6 +1,6 @@
 <?php
 /* -------- Dynamic Keywords List ----------- */ 
-global $baseurl, $pagename, $edit_autosave;
+global $baseurl, $pagename, $edit_autosave, $dynamic_keyword_and;
 
 if(!isset($selected_nodes))
     {
@@ -86,6 +86,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     {
     var html                  = '';
     var hidden_input_elements = '';
+    var keyword_count         = 0;
 
     Keywords_<?php echo $js_keywords_suffix; ?>.forEach(function (item, index)
         {
@@ -96,6 +97,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
         html += ' onClick="removeKeyword_<?php echo $js_keywords_suffix; ?>(\'' + escape(index) + '\', true); return false;"';
         html += '>x</a></div>';
         
+        keyword_count ++;
         });
 
     // Update DOM with all our recent changes
@@ -106,6 +108,15 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
         }
     document.getElementById('<?php echo $name; ?>_selected').insertAdjacentHTML('beforeBegin', hidden_input_elements);
     document.getElementById('<?php echo $name; ?>_selected').innerHTML = html;
+    
+    if("<?php echo $field['field_constraint']?>"==1 && keyword_count>=1 && (pagename!='search_advanced' || '<?php echo var_export($dynamic_keyword_and, true) ?>'==='true'))
+    	{
+    	document.getElementById('<?php echo $name; ?>_selector').disabled = true;
+    	}
+    else
+    	{
+    	document.getElementById('<?php echo $name; ?>_selector').disabled = false;
+    	}
 
     // Update the result counter, if the function is available (e.g. on Advanced Search).
     if(typeof(UpdateResultCount) == 'function')

@@ -66,6 +66,24 @@ else
 
 $url=generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php",$url_params);
 
+function admin_resource_type_field_constraint($ref, $currentvalue)
+	{
+	global $lang;
+ 	
+	$addconstraint=true;
+	$constraint=sql_value("select field_constraint value from resource_type_field where ref='$ref'",0);
+	?>
+		<div class="clearerleft"></div>
+	</div> <!-- end question -->
+	<div class="Question">
+		<label><?php echo $lang["property-field_constraint"]?></label>
+		<select id="field_constraint" name="field_constraint" class="stdwidth" onchange="CentralSpacePost(this.form);">
+
+			<option value="0" <?php if ($constraint==0) { echo " selected"; } ?>><?php echo $lang["property-field_constraint-none"]?></option>
+			<option value="1" <?php if ($constraint==1) { echo " selected"; } ?>><?php echo ($currentvalue==FIELD_TYPE_TEXT_BOX_SINGLE_LINE ? $lang["property-field_constraint-number"] : $lang["property-field_constraint-singlekeyword"])?></option>
+		</select>
+		<?php
+	}
 	
 function admin_resource_type_field_option($propertyname,$propertytitle,$helptext="",$type, $currentvalue,$fieldtype)
 	{
@@ -183,22 +201,13 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                         <label><?php echo $lang['property-automatic_nodes_ordering_label']; ?></label>
                         <input type="checkbox" name="automatic_nodes_ordering" value="1"<?php if(1 == $automatic_nodes_ordering) { ?> checked="checked"<?php } ?>>
                     <?php
+                    // create constraints selector
+					admin_resource_type_field_constraint($ref, $currentvalue);
                     }
                 }            
             elseif (in_array($currentvalue, array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE)))
                 { // create constraints selector
-				$addconstraint=true;
-				$constraint=sql_value("select field_constraint value from resource_type_field where ref='$ref'",0);?>
-                <div class="clearerleft"></div>
-                </div> <!-- end question -->
-				<div class="Question">
-				<label><?php echo $lang["property-field_constraint"]?></label>
-                <select id="field_constraint" name="field_constraint" class="stdwidth" onchange="CentralSpacePost(this.form);">
-
-				<option value="0" <?php if ($constraint==0) { echo " selected"; } ?>><?php echo $lang["property-field_constraint-none"]?></option>
-				<option value="1" <?php if ($constraint==1) { echo " selected"; } ?>><?php echo $lang["property-field_constraint-number"]?></option>
-				</select>
-                <?php
+				admin_resource_type_field_constraint($ref, $currentvalue);
                 }			
 			}
 		elseif($propertyname=="linked_data_field")
