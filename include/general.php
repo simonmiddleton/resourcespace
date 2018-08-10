@@ -46,18 +46,18 @@ function get_resource_path(
     $alternative = -1,
     $includemodified = true
 )
-	{
-	# returns the correct path to resource $ref of size $size ($size==empty string is original resource)
-	# If one or more of the folders do not exist, and $generate=true, then they are generated
+    {
+    # returns the correct path to resource $ref of size $size ($size==empty string is original resource)
+    # If one or more of the folders do not exist, and $generate=true, then they are generated
     if(!preg_match('/^[a-zA-Z0-9]+$/', $extension))
         {
         $extension = 'jpg';
         }
     if($extension=='xml' || $extension=='icc')
-    	{
-    	# use the preview path
-    	$size='pre';
-    	}
+        {
+        # use the preview path
+        $size='pre';
+        }
 
     $override = hook(
         'get_resource_path_override',
@@ -79,13 +79,13 @@ function get_resource_path(
         global $baseurl, $k, $get_resource_path_extra_download_query_string_params;
 
         if(
-        	!isset($get_resource_path_extra_download_query_string_params)
-        	|| is_null($get_resource_path_extra_download_query_string_params)
-        	|| !is_array($get_resource_path_extra_download_query_string_params)
-    	)
-        	{
-    		$get_resource_path_extra_download_query_string_params = array();
-        	}
+            !isset($get_resource_path_extra_download_query_string_params)
+            || is_null($get_resource_path_extra_download_query_string_params)
+            || !is_array($get_resource_path_extra_download_query_string_params)
+        )
+            {
+            $get_resource_path_extra_download_query_string_params = array();
+            }
 
         return generateURL(
             "{$baseurl}/pages/download.php",
@@ -101,27 +101,27 @@ function get_resource_path(
             $get_resource_path_extra_download_query_string_params);
         }
 
-	if ($size=="")
-		{
-		# For the full size, check to see if the full path is set and if so return that.
-		global $get_resource_path_fpcache;
-		truncate_cache_arrays();
+    if ($size=="")
+        {
+        # For the full size, check to see if the full path is set and if so return that.
+        global $get_resource_path_fpcache;
+        truncate_cache_arrays();
 
-		if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=sql_value("select file_path value from resource where ref='$ref'","");}
-		$fp=$get_resource_path_fpcache[$ref];
-		
-		# Test to see if this nosize file is of the extension asked for, else skip the file_path and return a $storagedir path. 
-		# If using staticsync, file path will be set already, but we still want the $storagedir path for a nosize preview jpg.
-		# Also, returning the original filename when a nosize 'jpg' is looked for is no good, since preview_preprocessing.php deletes $target.
-		
-		$test_ext = explode(".",$fp);$test_ext=trim(strtolower($test_ext[count($test_ext)-1]));
-		
+        if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=sql_value("select file_path value from resource where ref='$ref'","");}
+        $fp=$get_resource_path_fpcache[$ref];
+        
+        # Test to see if this nosize file is of the extension asked for, else skip the file_path and return a $storagedir path. 
+        # If using staticsync, file path will be set already, but we still want the $storagedir path for a nosize preview jpg.
+        # Also, returning the original filename when a nosize 'jpg' is looked for is no good, since preview_preprocessing.php deletes $target.
+        
+        $test_ext = explode(".",$fp);$test_ext=trim(strtolower($test_ext[count($test_ext)-1]));
+        
         if (($test_ext == $extension || $alternative > 0) && strlen($fp)>0 && (strpos($fp,"/")!==false || strlen($fp)>1))
-			{				
-			if ($getfilepath)
-				{
-				global $syncdir; 
-            	$syncdirmodified=hook("modifysyncdir","all",array($ref, $fp)); if ($syncdirmodified!=""){return $syncdirmodified;}
+            {               
+            if ($getfilepath)
+                {
+                global $syncdir; 
+                $syncdirmodified=hook("modifysyncdir","all",array($ref, $fp)); if ($syncdirmodified!=""){return $syncdirmodified;}
                 if(!($alternative>0))
                     {return $syncdir . "/" . $fp;}
                 elseif(!$generate)
@@ -132,14 +132,14 @@ function get_resource_path(
                     if($altfile["file_extension"]==$extension && file_exists($altfile["file_name"]))
                         {return $altfile["file_name"];}
                     }
-				}
-			else 
-				{
-				global $baseurl_short, $k;
-				return $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}"; 
-				}
-			}
-		}
+                }
+            else 
+                {
+                global $baseurl_short, $k;
+                return $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}"; 
+                }
+            }
+        }
 
     // Create a scrambled path using the scramble key
     // It should be very difficult or impossible to work out the scramble key, and therefore access
@@ -156,49 +156,49 @@ function get_resource_path(
 
         $scramblepath = substr(md5("{$ref}_{$skey}"), 0, 15);
         }
-	
     
-	if ($extension=="") {$extension="jpg";}
-	
-	$folder="";
-	#if (!file_exists(dirname(__FILE__) . $folder)) {mkdir(dirname(__FILE__) . $folder,0777);}
-	
-	# Original separation support
-	if($originals_separate_storage)
-		{
-		global $originals_separate_storage_ffmpegalts_as_previews;
-		if($alternative>0 && $originals_separate_storage_ffmpegalts_as_previews)
-			{
-			$alt_data=sql_query('select * from resource_alt_files where ref=' . $alternative);
-			if(!empty($alt_data))
-				{
-				// determin if this file was created from $ffmpeg_alternatives
-				$ffmpeg_alt=alt_is_ffmpeg_alternative($alt_data[0]);
-				if($ffmpeg_alt)
-					{
-					$path_suffix="/resized/";
-					}
-				else
-					{
-					$path_suffix="/original/";
-					}
-				}
-			else
-				{
-				$path_suffix="/original/";
-				}
-			}
-		elseif($size=="")
-			{
-			# Original file (core file or alternative)
-			$path_suffix="/original/";
-			}
-		else
-			{
-			# Preview or thumb
-			$path_suffix="/resized/";
-			}
-		}
+    
+    if ($extension=="") {$extension="jpg";}
+    
+    $folder="";
+    #if (!file_exists(dirname(__FILE__) . $folder)) {mkdir(dirname(__FILE__) . $folder,0777);}
+    
+    # Original separation support
+    if($originals_separate_storage)
+        {
+        global $originals_separate_storage_ffmpegalts_as_previews;
+        if($alternative>0 && $originals_separate_storage_ffmpegalts_as_previews)
+            {
+            $alt_data=sql_query('select * from resource_alt_files where ref=' . $alternative);
+            if(!empty($alt_data))
+                {
+                // determin if this file was created from $ffmpeg_alternatives
+                $ffmpeg_alt=alt_is_ffmpeg_alternative($alt_data[0]);
+                if($ffmpeg_alt)
+                    {
+                    $path_suffix="/resized/";
+                    }
+                else
+                    {
+                    $path_suffix="/original/";
+                    }
+                }
+            else
+                {
+                $path_suffix="/original/";
+                }
+            }
+        elseif($size=="")
+            {
+            # Original file (core file or alternative)
+            $path_suffix="/original/";
+            }
+        else
+            {
+            # Preview or thumb
+            $path_suffix="/resized/";
+            }
+        }
     else
         {
         // If getting the physical path, use the appropriate directory separator. For URL, it can only use forward 
@@ -206,25 +206,25 @@ function get_resource_path(
         $path_suffix = ($getfilepath ? DIRECTORY_SEPARATOR : "/");
         }
 
-	for ($n=0;$n<strlen($ref);$n++)
-		{
-		$folder.=substr($ref,$n,1);
-		if ($scramble && isset($scramblepath) && ($n==(strlen($ref)-1))) {$folder.="_" . $scramblepath;}
-		$folder.="/";
-		#echo "<li>" . $folder;
-		if ((!(file_exists($storagedir . $path_suffix . $folder))) && $generate) {@mkdir($storagedir . $path_suffix . $folder,0777,true);chmod($storagedir . $path_suffix . $folder,0777);}
-		}
-		
-	# Add the page to the filename for everything except page 1.
-	if ($page==1) {$p="";} else {$p="_" . $page;}
-	
-	# Add the alternative file ID to the filename if provided
-	if ($alternative>0) {$a="_alt_" . $alternative;} else {$a="";}
-	
-	# Add the watermarked url too
-	if ($watermarked) {$p.="_wm";}
-	
-	$sdir=$storagedir;
+    for ($n=0;$n<strlen($ref);$n++)
+        {
+        $folder.=substr($ref,$n,1);
+        if ($scramble && isset($scramblepath) && ($n==(strlen($ref)-1))) {$folder.="_" . $scramblepath;}
+        $folder.="/";
+        #echo "<li>" . $folder;
+        if ((!(file_exists($storagedir . $path_suffix . $folder))) && $generate) {@mkdir($storagedir . $path_suffix . $folder,0777,true);chmod($storagedir . $path_suffix . $folder,0777);}
+        }
+        
+    # Add the page to the filename for everything except page 1.
+    if ($page==1) {$p="";} else {$p="_" . $page;}
+    
+    # Add the alternative file ID to the filename if provided
+    if ($alternative>0) {$a="_alt_" . $alternative;} else {$a="";}
+    
+    # Add the watermarked url too
+    if ($watermarked) {$p.="_wm";}
+    
+    $sdir=$storagedir;
     
     # FSTemplate support - for trial system templates
     if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
@@ -234,23 +234,23 @@ function get_resource_path(
     # switch the size back so the icc profile name matches the original name and find the original extension
     $icc=false;
     if ($extension=='icc')
-    	{
-    	$size='';
-    	$icc=true;
-    	$extension=sql_value("select file_extension value from resource where ref={$ref}", 'jpg');
-    	}
+        {
+        $size='';
+        $icc=true;
+        $extension=sql_value("select file_extension value from resource where ref={$ref}", 'jpg');
+        }
             
-		
-	$filefolder=$sdir . $path_suffix . $folder;
-	
-	# Fetching the file path? Add the full path to the file
-	if ($getfilepath)
-	    {
-	    $folder=$filefolder; 
-	    }
-	else
-	    {
-	    global $storageurl;$surl=$storageurl;
+        
+    $filefolder=$sdir . $path_suffix . $folder;
+    
+    # Fetching the file path? Add the full path to the file
+    if ($getfilepath)
+        {
+        $folder=$filefolder; 
+        }
+    else
+        {
+        global $storageurl;$surl=$storageurl;
         
         # FSTemplate support - for trial system templates
         if ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold && $alternative==-1)
@@ -258,49 +258,49 @@ function get_resource_path(
             $surl=$fstemplate_alt_storageurl;
             }
         
-	    $folder=$surl . $path_suffix . $folder;
-	    }
-	if ($extension=='xml')
-		{
-		$file=$folder . 'metadump.xml';
-		}
-	elseif ($scramble && isset($skey))
-		{
-		$file_old=$filefolder . $ref . $size . $p . $a . "." . $extension;
-		$file_new=$filefolder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
-		$file=$folder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
-		if (file_exists($file_old))
-		  	{
-			rename($file_old, $file_new);
-		  	}
-		}
-	else
-		{
-		$file=$folder . $ref . $size . $p . $a . "." . $extension;
-		}
-		
-	if($icc)
-		{
-		$file.='.icc';
-		}
+        $folder=$surl . $path_suffix . $folder;
+        }
+    if ($extension=='xml')
+        {
+        $file=$folder . 'metadump.xml';
+        }
+    elseif ($scramble && isset($skey))
+        {
+        $file_old=$filefolder . $ref . $size . $p . $a . "." . $extension;
+        $file_new=$filefolder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
+        $file=$folder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;
+        if (file_exists($file_old))
+            {
+            rename($file_old, $file_new);
+            }
+        }
+    else
+        {
+        $file=$folder . $ref . $size . $p . $a . "." . $extension;
+        }
+        
+    if($icc)
+        {
+        $file.='.icc';
+        }
 
 # Append modified date/time to the URL so the cached copy is not used if the file is changed.
-	if (!$getfilepath && $includemodified)
-		{
-		if ($file_modified=="")
-			{
-			$data=get_resource_data($ref);
-			$file .= "?v=" . urlencode($data['file_modified']);
-			}
-		else
-			{
-			# Use the provided value
-			$file .= "?v=" . urlencode($file_modified);
-			}
-		}
+    if (!$getfilepath && $includemodified)
+        {
+        if ($file_modified=="")
+            {
+            $data=get_resource_data($ref);
+            $file .= "?v=" . urlencode($data['file_modified']);
+            }
+        else
+            {
+            # Use the provided value
+            $file .= "?v=" . urlencode($file_modified);
+            }
+        }
 
     if ($scramble && isset($migrating_scrambled) && $migrating_scrambled)
-			{
+            {
             // Check if there is a scrambled version using no/previous key, most will normally be moved using pages/tools/xfer_scrambled.php
             $migrating_scrambled = false;
             $newpath = $getfilepath ? $file : get_resource_path($ref,true,$size,true,$extension,true,$page,false,'',$alternative);
@@ -321,30 +321,30 @@ function get_resource_path(
             // Reset key
             $scramble_key = $scramble_key_saved;
             $migrating_scrambled = true;
-			}
+            }
 
-	return  $file;
-	}
+    return  $file;
+    }
 
 
 $GLOBALS['get_resource_data_cache'] = array();
 function get_resource_data($ref,$cache=true)
-	{
-	if ($ref==""){return false;}
-	# Returns basic resource data (from the resource table alone) for resource $ref.
-	# For 'dynamic' field data, see get_resource_field_data
-	global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
-	truncate_cache_arrays();
-	if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
-	$resource=sql_query("select *,mapzoom from resource where ref='$ref'");
-	if (count($resource)==0) 
-		{
-		if ($ref>0)
-			{
-			return false;
-			}
-		else
-			{
+    {
+    if ($ref==""){return false;}
+    # Returns basic resource data (from the resource table alone) for resource $ref.
+    # For 'dynamic' field data, see get_resource_field_data
+    global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
+    truncate_cache_arrays();
+    if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
+    $resource=sql_query("select *,mapzoom from resource where ref='$ref'");
+    if (count($resource)==0) 
+        {
+        if ($ref>0)
+            {
+            return false;
+            }
+        else
+            {
             # For upload templates (negative reference numbers), generate a new resource if upload permission.
             if (!(checkperm("c") || checkperm("d"))) {return false;}
             elseif(!hook('replace_upload_template_creation'))
@@ -360,28 +360,28 @@ function get_resource_data($ref,$cache=true)
                 }
             }
         }
-	if (isset($resource[0]))
-		{
-		$get_resource_data_cache[$ref]=$resource[0];
-		return $resource[0];
-		}
-	else
-		{
-		return false;
-		}
-	}
+    if (isset($resource[0]))
+        {
+        $get_resource_data_cache[$ref]=$resource[0];
+        return $resource[0];
+        }
+    else
+        {
+        return false;
+        }
+    }
 
 function update_hitcount($ref)
-	{
-	global $resource_hit_count_on_downloads;
-	
-	# update hit count if not tracking downloads only
-	if (!$resource_hit_count_on_downloads) 
-		{ 
-		# greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
-		sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='$ref'",false,-1,true,0);
-		}
-	}	
+    {
+    global $resource_hit_count_on_downloads;
+    
+    # update hit count if not tracking downloads only
+    if (!$resource_hit_count_on_downloads) 
+        { 
+        # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
+        sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='$ref'",false,-1,true,0);
+        }
+    }   
 
 /**
 * Returns field data from resource_type_field for the given field
@@ -396,7 +396,7 @@ function update_hitcount($ref)
 function get_resource_type_field($field)
     {
     $field = escape_check($field);
-	$rtf_query="SELECT ref,
+    $rtf_query="SELECT ref,
                 name,
                 title,
                 type,
@@ -440,7 +440,7 @@ function get_resource_type_field($field)
     ";
     $modified_rtf_query=hook('modify_rtf_query','', array($field, $rtf_query));
     if($modified_rtf_query!==false){
-    	$rtf_query=$modified_rtf_query;
+        $rtf_query=$modified_rtf_query;
     }
     $return = sql_query($rtf_query);
     
@@ -456,7 +456,7 @@ function get_resource_type_field($field)
 
 if (!function_exists('get_resource_field_data')) {
 function get_resource_field_data($ref,$multi=false,$use_permissions=true,$originalref=-1,$external_access=false,$ord_by=false)
-	{
+    {
     # Returns field data and field properties (resource_type_field and resource_data tables)
     # for this resource, for display in an edit / view form.
     # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
@@ -523,8 +523,8 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         {
         debug('GENERAL/GET_RESOURCE_FIELD_DATA: use perms: ' . !$use_permissions);
         }
-    	
-	$fields = sql_query($fieldsSQL);
+        
+    $fields = sql_query($fieldsSQL);
 
     # Build an array of valid types and only return fields of this type. Translate field titles. 
     $validtypes = sql_array('SELECT ref AS `value` FROM resource_type');
@@ -558,117 +558,117 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     for ($n = 0; $n < count($fields); $n++)
     {
         if
-	(
-		(
-		!$use_permissions || 
-			(
-			# Upload only edit access to this field?
-			$ref<0 && checkperm("P" . $fields[$n]["fref"])
-			)    
-		||
-			(
-				(
-				checkperm("f*") || checkperm("f" . $fields[$n]["fref"])
-				)
-			&& !checkperm("f-" . $fields[$n]["fref"]) && !checkperm("T" . $fields[$n]["resource_type"])
-			)
-		)
+    (
+        (
+        !$use_permissions || 
+            (
+            # Upload only edit access to this field?
+            $ref<0 && checkperm("P" . $fields[$n]["fref"])
+            )    
+        ||
+            (
+                (
+                checkperm("f*") || checkperm("f" . $fields[$n]["fref"])
+                )
+            && !checkperm("f-" . $fields[$n]["fref"]) && !checkperm("T" . $fields[$n]["resource_type"])
+            )
+        )
         && in_array($fields[$n]["resource_type"],$validtypes) &&
-		(
-		!
-			(
-			$external_access && !$fields[$n]["external_user_access"]
-			)
-		)
-	) {    
-	debug("field".$fields[$n]["title"]."=".$fields[$n]["value"]);
+        (
+        !
+            (
+            $external_access && !$fields[$n]["external_user_access"]
+            )
+        )
+    ) {    
+    debug("field".$fields[$n]["title"]."=".$fields[$n]["value"]);
             $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-"); 
             $return[] = $fields[$n];
         }
-    }	
+    }   
     return $return;
-	}
+    }
 }
 
 function get_resource_field_data_batch($refs)
-	{
-	# Returns field data and field properties (resource_type_field and resource_data tables)
-	# for all the resource references in the array $refs.
-	# This will use a single SQL query and is therefore a much more efficient way of gathering
-	# resource data for a list of resources (e.g. search result display for a page of resources).
-	if (count($refs)==0) {return array();} # return an empty array if no resources specified (for empty result sets)
-	$refsin=join(",",$refs);
-	$results=sql_query("select d.resource,f.*, f.field_constraint,d.value from resource_type_field f left join resource_data d on d.resource_type_field=f.ref and d.resource in ($refsin) where (f.resource_type=0 or f.resource_type in (select resource_type from resource where ref=d.resource)) order by d.resource,f.order_by,f.ref");
-	$return=array();
-	$res=0;
-	for ($n=0;$n<count($results);$n++)
-		{
-		if ($results[$n]["resource"]!=$res)
-			{
-			# moved on to the next resource
-			if ($res!=0) {$return[$res]=$resdata;}
-			$resdata=array();
-			$res=$results[$n]["resource"];
-			}
-		# copy name/value into resdata array
-		$resdata[$results[$n]["ref"]]=$results[$n];
-		}
-	$return[$res]=$resdata;
-	return $return;
-	}
-	
+    {
+    # Returns field data and field properties (resource_type_field and resource_data tables)
+    # for all the resource references in the array $refs.
+    # This will use a single SQL query and is therefore a much more efficient way of gathering
+    # resource data for a list of resources (e.g. search result display for a page of resources).
+    if (count($refs)==0) {return array();} # return an empty array if no resources specified (for empty result sets)
+    $refsin=join(",",$refs);
+    $results=sql_query("select d.resource,f.*, f.field_constraint,d.value from resource_type_field f left join resource_data d on d.resource_type_field=f.ref and d.resource in ($refsin) where (f.resource_type=0 or f.resource_type in (select resource_type from resource where ref=d.resource)) order by d.resource,f.order_by,f.ref");
+    $return=array();
+    $res=0;
+    for ($n=0;$n<count($results);$n++)
+        {
+        if ($results[$n]["resource"]!=$res)
+            {
+            # moved on to the next resource
+            if ($res!=0) {$return[$res]=$resdata;}
+            $resdata=array();
+            $res=$results[$n]["resource"];
+            }
+        # copy name/value into resdata array
+        $resdata[$results[$n]["ref"]]=$results[$n];
+        }
+    $return[$res]=$resdata;
+    return $return;
+    }
+    
 function get_resource_types($types = "", $translate = true)
-	{
-	# Returns a list of resource types. The standard resource types are translated using $lang. Custom resource types are i18n translated.
-	// support getting info for a comma-delimited list of restypes (as in a search)
-	if ($types==""){$sql="";} else
-		{
-		# Ensure $types are suitably quoted and escaped
-		$cleantypes="";
-		$s=explode(",",$types);
-		foreach ($s as $type)
-			{
-			if (is_numeric(str_replace("'","",$type))) # Process numeric types only, to avoid inclusion of collection-based filters (mycol, public, etc.)
-				{
-				if (strpos($type,"'")===false) {$type="'" . $type . "'";}
-				if ($cleantypes!="") {$cleantypes.=",";}
-				$cleantypes.=$type;
-				}
-			}
-		$sql=" where ref in ($cleantypes) ";
-		}
-	
-	$r=sql_query("select * from resource_type $sql order by order_by,ref");
-	$return=array();
-	# Translate names (if $translate==true) and check permissions
-	for ($n=0;$n<count($r);$n++)
-		{
-		if (!checkperm('T' . $r[$n]['ref']))
-			{
-			if ($translate==true) {$r[$n]["name"]=lang_or_i18n_get_translated($r[$n]["name"], "resourcetype-");} # Translate name
-			$return[]=$r[$n]; # Add to return array
-			}
-		}
-	return $return;
-	}
+    {
+    # Returns a list of resource types. The standard resource types are translated using $lang. Custom resource types are i18n translated.
+    // support getting info for a comma-delimited list of restypes (as in a search)
+    if ($types==""){$sql="";} else
+        {
+        # Ensure $types are suitably quoted and escaped
+        $cleantypes="";
+        $s=explode(",",$types);
+        foreach ($s as $type)
+            {
+            if (is_numeric(str_replace("'","",$type))) # Process numeric types only, to avoid inclusion of collection-based filters (mycol, public, etc.)
+                {
+                if (strpos($type,"'")===false) {$type="'" . $type . "'";}
+                if ($cleantypes!="") {$cleantypes.=",";}
+                $cleantypes.=$type;
+                }
+            }
+        $sql=" where ref in ($cleantypes) ";
+        }
+    
+    $r=sql_query("select * from resource_type $sql order by order_by,ref");
+    $return=array();
+    # Translate names (if $translate==true) and check permissions
+    for ($n=0;$n<count($r);$n++)
+        {
+        if (!checkperm('T' . $r[$n]['ref']))
+            {
+            if ($translate==true) {$r[$n]["name"]=lang_or_i18n_get_translated($r[$n]["name"], "resourcetype-");} # Translate name
+            $return[]=$r[$n]; # Add to return array
+            }
+        }
+    return $return;
+    }
 
 function get_resource_top_keywords($resource,$count)
-	{
-	# Return the top $count keywords (by hitcount) used by $resource.
-	# This section is for the 'Find Similar' search.
-	# These are now derived from a join of node and resource_node for fixed keyword lists and resource_data for free text fields
-	# Currently the date fields are not used for this feature
+    {
+    # Return the top $count keywords (by hitcount) used by $resource.
+    # This section is for the 'Find Similar' search.
+    # These are now derived from a join of node and resource_node for fixed keyword lists and resource_data for free text fields
+    # Currently the date fields are not used for this feature
         
     $return=array();
-	
-	$keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (0,1,5,8,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
+    
+    $keywords = sql_query("select distinct rd.value keyword,f.ref field,f.resource_type from resource_data rd,resource_type_field f where rd.resource='$resource' and f.ref=rd.resource_type_field and f.type in (0,1,5,8,13) and f.keywords_index=1 and f.use_for_similar=1 and length(rd.value)>0 limit $count");
     
     $fixed_dynamic_keywords = sql_query("select distinct n.ref, n.name, n.resource_type_field from node n inner join resource_node rn on n.ref=rn.node where (rn.resource='$resource' and n.resource_type_field in (select rtf.ref from resource_type_field rtf where use_for_similar=1) ) order by new_hit_count desc limit $count");
     
     $combined = array_merge($keywords,$fixed_dynamic_keywords);
     
-	foreach ( $combined as $keyword )
-		{
+    foreach ( $combined as $keyword )
+        {
         # If isset($keyword['keyword']) this means that the value is coming free text in general    
         if ( isset($keyword['keyword']) )
             {
@@ -692,47 +692,47 @@ function get_resource_top_keywords($resource,$count)
             }
 
         if(isset($r) && trim($r) != '')
-			{  
-			if (substr($r,0,1)==","){$r=substr($r,1);}
-			$s=split_keywords($r);
-			foreach ($s as $a)
-				{
-				if(!empty($a))
-					{
-					$return[]=$a;
-					}
-				}
-			}
-		}	
-			
-	return $return;
-	}
+            {  
+            if (substr($r,0,1)==","){$r=substr($r,1);}
+            $s=split_keywords($r);
+            foreach ($s as $a)
+                {
+                if(!empty($a))
+                    {
+                    $return[]=$a;
+                    }
+                }
+            }
+        }   
+            
+    return $return;
+    }
 
 if (!function_exists("split_keywords")){
 function split_keywords($search,$index=false,$partial_index=false,$is_date=false,$is_html=false, $keepquotes=false)
-	{
-	# Takes $search and returns an array of individual keywords.
-	global $config_trimchars,$permitted_html_tags, $permitted_html_attributes;
+    {
+    # Takes $search and returns an array of individual keywords.
+    global $config_trimchars,$permitted_html_tags, $permitted_html_attributes;
 
-	if ($index && $is_date)
-		{
-		# Date handling... index a little differently to support various levels of date matching (Year, Year+Month, Year+Month+Day).
-		$s=explode("-",$search);
-		if (count($s)>=3)
-			{
-			return (array($s[0],$s[0] . "-" . $s[1],$search));
-			}
-		else
-			{
-			return $search;
-			}
-		}
-		
-	# Remove any real / unescaped lf/cr
-	$search=str_replace("\r"," ",$search);
-	$search=str_replace("\n"," ",$search);
-	$search=str_replace("\\r"," ",$search);
-	$search=str_replace("\\n"," ",$search);
+    if ($index && $is_date)
+        {
+        # Date handling... index a little differently to support various levels of date matching (Year, Year+Month, Year+Month+Day).
+        $s=explode("-",$search);
+        if (count($s)>=3)
+            {
+            return (array($s[0],$s[0] . "-" . $s[1],$search));
+            }
+        else
+            {
+            return $search;
+            }
+        }
+        
+    # Remove any real / unescaped lf/cr
+    $search=str_replace("\r"," ",$search);
+    $search=str_replace("\n"," ",$search);
+    $search=str_replace("\\r"," ",$search);
+    $search=str_replace("\\n"," ",$search);
     
     if($is_html || (substr($search,0,1) == "<" && substr($search,-1,1) == ">"))
         {
@@ -760,12 +760,12 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
             }
         }
 
-	$ns=trim_spaces($search);
+    $ns=trim_spaces($search);
 
-	if ((substr($ns,0,1)==",") ||  ($index==false && strpos($ns,":")!==false)) # special 'constructed' query type, split using comma so
-	# we support keywords with spaces.
-		{	
-		if(!$index && $keepquotes)
+    if ((substr($ns,0,1)==",") ||  ($index==false && strpos($ns,":")!==false)) # special 'constructed' query type, split using comma so
+    # we support keywords with spaces.
+        {   
+        if(!$index && $keepquotes)
             {
             preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
             $return=trim_array($matches[0],$config_trimchars . ",");
@@ -777,41 +777,41 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
             $return=explode(",",$ns);
             }
         
-		# If we are indexing, append any values that contain spaces.
+        # If we are indexing, append any values that contain spaces.
         
-		# Important! Solves the searching for keywords with spaces issue.
-		# Consider: for any keyword that has spaces, append to the array each individual word too
-		# so for example: South Asia,USA becomes South Asia,USA,South,Asia
-		# so a plain search for 'south asia' will match those with the keyword 'south asia' because the resource
-		# will also be linked to the words 'south' and 'asia'.
-		if ($index)
-			{
-			$return2=$return;
-			for ($n=0;$n<count($return);$n++)
-				{
-				$keyword=trim($return[$n]);
-				if (strpos($keyword," ")!==false)
-					{
-					# append each word
-					$words=explode(" ",$keyword);
-					for ($m=0;$m<count($words);$m++) {$return2[]=trim($words[$m]);}
-					}
-				}
-				
-			$return2=trim_array($return2,$config_trimchars . ",");
-			if ($partial_index) {return add_partial_index($return2);}
-			return $return2;
-			}
-		else
-			{
+        # Important! Solves the searching for keywords with spaces issue.
+        # Consider: for any keyword that has spaces, append to the array each individual word too
+        # so for example: South Asia,USA becomes South Asia,USA,South,Asia
+        # so a plain search for 'south asia' will match those with the keyword 'south asia' because the resource
+        # will also be linked to the words 'south' and 'asia'.
+        if ($index)
+            {
+            $return2=$return;
+            for ($n=0;$n<count($return);$n++)
+                {
+                $keyword=trim($return[$n]);
+                if (strpos($keyword," ")!==false)
+                    {
+                    # append each word
+                    $words=explode(" ",$keyword);
+                    for ($m=0;$m<count($words);$m++) {$return2[]=trim($words[$m]);}
+                    }
+                }
+                
+            $return2=trim_array($return2,$config_trimchars . ",");
+            if ($partial_index) {return add_partial_index($return2);}
+            return $return2;
+            }
+        else
+            {
             // If we are not breaking quotes we may end up a with commas in the array of keywords which need to be removed
             return trim_array($return,$config_trimchars . ($keepquotes?",":""));
-			}
-		}
-	else
-		{
-		# split using spaces and similar chars (according to configured whitespace characters)
-		if(!$index && $keepquotes && strpos($ns,"\"")!==false)
+            }
+        }
+    else
+        {
+        # split using spaces and similar chars (according to configured whitespace characters)
+        if(!$index && $keepquotes && strpos($ns,"\"")!==false)
             {
             preg_match_all('/("|-")(?:\\\\.|[^\\\\"])*"|\S+/', $ns, $matches);
             
@@ -842,13 +842,13 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
         $ns=trim_array($ns,$config_trimchars . ($keepquotes?",":""));
         
 //print_r($ns) . "<br /><br />";
-		if ($index && $partial_index) {
-			return add_partial_index($ns);
-		}
-		return $ns;
-		}
+        if ($index && $partial_index) {
+            return add_partial_index($ns);
+        }
+        return $ns;
+        }
 
-	}
+    }
 }
 
 if (!function_exists("cleanse_string")){
@@ -872,23 +872,23 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
         $string = str_replace('&rdquo;', ' ', $string);
         $string = str_replace('&ndash;', ' ', $string);
 
-		// Revert the htmlentities as otherwise we lose ability to identify certain text e.g. diacritics
-	  	$string= html_entity_decode($string,ENT_QUOTES,'UTF-8');
+        // Revert the htmlentities as otherwise we lose ability to identify certain text e.g. diacritics
+        $string= html_entity_decode($string,ENT_QUOTES,'UTF-8');
         
         if ($preserve_hyphen)
-        	{
-        	# Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
-			if ((substr($string,0,1)=="-" /*support minus as first character for simple NOT searches */ || strpos($string," -")!==false) && strpos($string," - ")==false)
-				{
-					$separators=array_diff($separators,array("-")); # Remove hyphen from separator array.
-				}
-        	}
+            {
+            # Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
+            if ((substr($string,0,1)=="-" /*support minus as first character for simple NOT searches */ || strpos($string," -")!==false) && strpos($string," - ")==false)
+                {
+                    $separators=array_diff($separators,array("-")); # Remove hyphen from separator array.
+                }
+            }
         if (substr($string,0,1)=="!" && strpos(substr($string,1),"!")===false) 
                 {
                 // If we have the exclamation mark configured as a config separator but we are doing a special search we don't want to remove it
                 $separators=array_diff($separators,array("!")); 
                 }
-				
+                
         if ($preserve_separators)
                 {
                 return mb_strtolower(trim_spaces(str_replace($separators," ",$string)),'UTF-8');
@@ -906,18 +906,18 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
 
 if (!function_exists("resolve_keyword")){
 function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
-	{
-	global $quoted_string, $stemming;
+    {
+    global $quoted_string, $stemming;
     
     debug("resolving keyword " . $keyword  . ". Create=" . (($create)?"true":"false") . ", normalize:" . ($normalize?"TRUE":"FALSE") . ", stem:" . ($stem?"TRUE":"FALSE"));
-	$keyword=substr($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
-    		
-	if(!$quoted_string && $normalize)
-		{
-		$keyword=normalize_keyword($keyword);		
-		debug("resolving normalized keyword " . $keyword  . ".");
-		}
-	
+    $keyword=substr($keyword,0,100); # Trim keywords to 100 chars for indexing, as this is the length of the keywords column.
+            
+    if(!$quoted_string && $normalize)
+        {
+        $keyword=normalize_keyword($keyword);       
+        debug("resolving normalized keyword " . $keyword  . ".");
+        }
+    
     # Stemming support. If enabled and a stemmer is available for the current language, index the stem of the keyword not the keyword itself.
     # This means plural/singular (and other) forms of a word are treated as equivalents.
    
@@ -926,328 +926,328 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         $keyword=GetStem($keyword);
         }
 
-	# Returns the keyword reference for $keyword, or false if no such keyword exists.
-	$return=sql_value("select ref value from keyword where keyword='" . trim(escape_check($keyword)) . "'",false);
-	if ($return===false && $create)
-		{
-		# Create a new keyword.
-		debug("Creating new keyword for " . $keyword);
-		sql_query("insert into keyword (keyword,soundex,hit_count) values ('" . escape_check($keyword) . "',left('".soundex(escape_check($keyword))."',10),0)");
-		$return=sql_insert_id();
-		}
-	return $return;
-	}
+    # Returns the keyword reference for $keyword, or false if no such keyword exists.
+    $return=sql_value("select ref value from keyword where keyword='" . trim(escape_check($keyword)) . "'",false);
+    if ($return===false && $create)
+        {
+        # Create a new keyword.
+        debug("Creating new keyword for " . $keyword);
+        sql_query("insert into keyword (keyword,soundex,hit_count) values ('" . escape_check($keyword) . "',left('".soundex(escape_check($keyword))."',10),0)");
+        $return=sql_insert_id();
+        }
+    return $return;
+    }
 }
 
 function add_partial_index($keywords)
-	{
-	# For each keywords in the supplied keywords list add all possible infixes and return the combined array.
-	# This therefore returns all keywords that need indexing for the given string.
-	# Only for fields with 'partial_index' enabled.
-	$return=array();
-	$position=0;
-	$x=0;
-	for ($n=0;$n<count($keywords);$n++)
-		{
-		$keyword=trim($keywords[$n]);
-		$return[$x]['keyword']=$keyword;
-		$return[$x]['position']=$position;
-		$x++;
-		if (strpos($keyword," ")===false) # Do not do this for keywords containing spaces as these have already been broken to individual words using the code above.
-			{
-			global $partial_index_min_word_length;
-			# For each appropriate infix length
-			for ($m=$partial_index_min_word_length;$m<strlen($keyword);$m++)
-				{
-				# For each position an infix of this length can exist in the string
-				for ($o=0;$o<=strlen($keyword)-$m;$o++)
-					{
-					$infix=mb_substr($keyword,$o,$m);
-					$return[$x]['keyword']=$infix;
-					$return[$x]['position']=$position; // infix has same position as root
-					$x++;
-					}
-				}
-			} # End of no-spaces condition
-		$position++; // end of root keyword
-		} # End of partial indexing keywords loop
-	return $return;
-	}
+    {
+    # For each keywords in the supplied keywords list add all possible infixes and return the combined array.
+    # This therefore returns all keywords that need indexing for the given string.
+    # Only for fields with 'partial_index' enabled.
+    $return=array();
+    $position=0;
+    $x=0;
+    for ($n=0;$n<count($keywords);$n++)
+        {
+        $keyword=trim($keywords[$n]);
+        $return[$x]['keyword']=$keyword;
+        $return[$x]['position']=$position;
+        $x++;
+        if (strpos($keyword," ")===false) # Do not do this for keywords containing spaces as these have already been broken to individual words using the code above.
+            {
+            global $partial_index_min_word_length;
+            # For each appropriate infix length
+            for ($m=$partial_index_min_word_length;$m<strlen($keyword);$m++)
+                {
+                # For each position an infix of this length can exist in the string
+                for ($o=0;$o<=strlen($keyword)-$m;$o++)
+                    {
+                    $infix=mb_substr($keyword,$o,$m);
+                    $return[$x]['keyword']=$infix;
+                    $return[$x]['position']=$position; // infix has same position as root
+                    $x++;
+                    }
+                }
+            } # End of no-spaces condition
+        $position++; // end of root keyword
+        } # End of partial indexing keywords loop
+    return $return;
+    }
 
 
 function trim_spaces($text)
-	{
-	# replace multiple spaces with a single space
-	while (strpos($text,"  ")!==false)
-		{
-		$text=str_replace("  "," ",$text);
-		}
-	return trim($text);
-	}	
-		
+    {
+    # replace multiple spaces with a single space
+    while (strpos($text,"  ")!==false)
+        {
+        $text=str_replace("  "," ",$text);
+        }
+    return trim($text);
+    }   
+        
 
-if (!function_exists("update_resource_keyword_hitcount")){	
+if (!function_exists("update_resource_keyword_hitcount")){  
 function update_resource_keyword_hitcount($resource,$search)
-	{
-	# For the specified $resource, increment the hitcount for each matching keyword in $search
-	# This is done into a temporary column first (new_hit_count) so existing results are not affected.
-	# copy_hitcount_to_live() is then executed at a set interval to make this data live.
-	$keywords=split_keywords($search);
-	$keys=array();
-	for ($n=0;$n<count($keywords);$n++)
-		{
-		$keyword=$keywords[$n];
-		if (strpos($keyword,":")!==false)
-			{
-			$k=explode(":",$keyword);
-			$keyword=$k[1];
-			}
-		$found=resolve_keyword($keyword);
-		if ($found!==false) {$keys[]=resolve_keyword($keyword);}
-		}	
-	if (count($keys)>0)
+    {
+    # For the specified $resource, increment the hitcount for each matching keyword in $search
+    # This is done into a temporary column first (new_hit_count) so existing results are not affected.
+    # copy_hitcount_to_live() is then executed at a set interval to make this data live.
+    $keywords=split_keywords($search);
+    $keys=array();
+    for ($n=0;$n<count($keywords);$n++)
+        {
+        $keyword=$keywords[$n];
+        if (strpos($keyword,":")!==false)
+            {
+            $k=explode(":",$keyword);
+            $keyword=$k[1];
+            }
+        $found=resolve_keyword($keyword);
+        if ($found!==false) {$keys[]=resolve_keyword($keyword);}
+        }   
+    if (count($keys)>0)
         {
         // Get all nodes matching these keywords
-		$nodes = get_nodes_from_keywords($keys);
+        $nodes = get_nodes_from_keywords($keys);
         update_resource_node_hitcount($resource,$nodes);
         sql_query("update resource_keyword set new_hit_count=new_hit_count+1 where resource='$resource' and keyword in (" . join(",",$keys) . ")",false,-1,true,0);
         }
-	}
+    }
 }
-	
-function copy_hitcount_to_live()
-	{
-	# Copy the temporary hit count used for relevance matching to the live column so it's activated (see comment for
-	# update_resource_keyword_hitcount())
-	sql_query("update resource_keyword set hit_count=new_hit_count");
-	
-	# Also update the resource table
-	# greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability)
-	sql_query("update resource set hit_count=greatest(hit_count,new_hit_count)");
     
-	# Also now update resource_node_hitcount())
-	sql_query("update resource_node set hit_count=new_hit_count");
-	}
+function copy_hitcount_to_live()
+    {
+    # Copy the temporary hit count used for relevance matching to the live column so it's activated (see comment for
+    # update_resource_keyword_hitcount())
+    sql_query("update resource_keyword set hit_count=new_hit_count");
+    
+    # Also update the resource table
+    # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability)
+    sql_query("update resource set hit_count=greatest(hit_count,new_hit_count)");
+    
+    # Also now update resource_node_hitcount())
+    sql_query("update resource_node set hit_count=new_hit_count");
+    }
 if(!function_exists("get_image_sizes")){
 function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=true)
-	{
-	# Returns a table of available image sizes for resource $ref. The standard image sizes are translated using $lang. Custom image sizes are i18n translated.
-	# The original image file assumes the name of the 'nearest size (up)' in the table
+    {
+    # Returns a table of available image sizes for resource $ref. The standard image sizes are translated using $lang. Custom image sizes are i18n translated.
+    # The original image file assumes the name of the 'nearest size (up)' in the table
 
-	global $imagemagick_calculate_sizes;
+    global $imagemagick_calculate_sizes;
 
-	# Work out resource type
-	$resource_type=sql_value("select resource_type value from resource where ref='$ref'","");
+    # Work out resource type
+    $resource_type=sql_value("select resource_type value from resource where ref='$ref'","");
 
-	# add the original image
-	$return=array();
-	$lastname=sql_value("select name value from preview_size where width=(select max(width) from preview_size)",""); # Start with the highest resolution.
-	$lastpreview=0;$lastrestricted=0;
-	$path2=get_resource_path($ref,true,'',false,$extension);
+    # add the original image
+    $return=array();
+    $lastname=sql_value("select name value from preview_size where width=(select max(width) from preview_size)",""); # Start with the highest resolution.
+    $lastpreview=0;$lastrestricted=0;
+    $path2=get_resource_path($ref,true,'',false,$extension);
 
-	if (file_exists($path2) && !checkperm("T" . $resource_type . "_"))
-	{ 
-		$returnline=array();
-		$returnline["name"]=lang_or_i18n_get_translated($lastname, "imagesize-");
-		$returnline["allow_preview"]=$lastpreview;
-		$returnline["allow_restricted"]=$lastrestricted;
-		$returnline["path"]=$path2;
-		$returnline["id"]="";
-		$dimensions = sql_query("select width,height,file_size,resolution,unit from resource_dimensions where resource=". $ref);
-		
-		if (count($dimensions))
-			{
-			$sw = $dimensions[0]['width']; if ($sw==0) {$sw="?";}
-			$sh = $dimensions[0]['height']; if ($sh==0) {$sh="?";}
-			$filesize=$dimensions[0]['file_size'];
-			# resolution and unit are not necessarily available, set to empty string if so.
-			$resolution = ($dimensions[0]['resolution'])?$dimensions[0]['resolution']:"";
-			$unit = ($dimensions[0]['unit'])?$dimensions[0]['unit']:"";
-			}
-		else
-			{
-			$fileinfo=get_original_imagesize($ref,$path2,$extension);
-			$filesize = $fileinfo[0];
-			$sw = $fileinfo[1];
-			$sh = $fileinfo[2];
-			}
-		if (!is_numeric($filesize)) {$returnline["filesize"]="?";$returnline["filedown"]="?";}
-		else {$returnline["filedown"]=ceil($filesize/50000) . " seconds @ broadband";$returnline["filesize"]=formatfilesize($filesize);}
-		$returnline["width"]=$sw;			
-		$returnline["height"]=$sh;
-		$returnline["extension"]=$extension;
-		(isset($resolution))?$returnline["resolution"]=$resolution:$returnline["resolution"]="";
-		(isset($unit))?$returnline["unit"]=$unit:$returnline["unit"]="";
-		$return[]=$returnline;
-	}
-	# loop through all image sizes
-	$sizes=sql_query("select * from preview_size order by width desc");
-	for ($n=0;$n<count($sizes);$n++)
-		{
-		$path=get_resource_path($ref,true,$sizes[$n]["id"],false,"jpg");
+    if (file_exists($path2) && !checkperm("T" . $resource_type . "_"))
+    { 
+        $returnline=array();
+        $returnline["name"]=lang_or_i18n_get_translated($lastname, "imagesize-");
+        $returnline["allow_preview"]=$lastpreview;
+        $returnline["allow_restricted"]=$lastrestricted;
+        $returnline["path"]=$path2;
+        $returnline["id"]="";
+        $dimensions = sql_query("select width,height,file_size,resolution,unit from resource_dimensions where resource=". $ref);
+        
+        if (count($dimensions))
+            {
+            $sw = $dimensions[0]['width']; if ($sw==0) {$sw="?";}
+            $sh = $dimensions[0]['height']; if ($sh==0) {$sh="?";}
+            $filesize=$dimensions[0]['file_size'];
+            # resolution and unit are not necessarily available, set to empty string if so.
+            $resolution = ($dimensions[0]['resolution'])?$dimensions[0]['resolution']:"";
+            $unit = ($dimensions[0]['unit'])?$dimensions[0]['unit']:"";
+            }
+        else
+            {
+            $fileinfo=get_original_imagesize($ref,$path2,$extension);
+            $filesize = $fileinfo[0];
+            $sw = $fileinfo[1];
+            $sh = $fileinfo[2];
+            }
+        if (!is_numeric($filesize)) {$returnline["filesize"]="?";$returnline["filedown"]="?";}
+        else {$returnline["filedown"]=ceil($filesize/50000) . " seconds @ broadband";$returnline["filesize"]=formatfilesize($filesize);}
+        $returnline["width"]=$sw;           
+        $returnline["height"]=$sh;
+        $returnline["extension"]=$extension;
+        (isset($resolution))?$returnline["resolution"]=$resolution:$returnline["resolution"]="";
+        (isset($unit))?$returnline["unit"]=$unit:$returnline["unit"]="";
+        $return[]=$returnline;
+    }
+    # loop through all image sizes
+    $sizes=sql_query("select * from preview_size order by width desc");
+    for ($n=0;$n<count($sizes);$n++)
+        {
+        $path=get_resource_path($ref,true,$sizes[$n]["id"],false,"jpg");
 
-		$file_exists = file_exists($path);
-		if (($file_exists || (!$onlyifexists)) && !checkperm("T" . $resource_type . "_" . $sizes[$n]["id"]))
-			{
-			if (($sizes[$n]["internal"]==0) || ($internal))
-				{
-				$returnline=array();
-				$returnline["name"]=lang_or_i18n_get_translated($sizes[$n]["name"], "imagesize-");
-				$returnline["allow_preview"]=$sizes[$n]["allow_preview"];
+        $file_exists = file_exists($path);
+        if (($file_exists || (!$onlyifexists)) && !checkperm("T" . $resource_type . "_" . $sizes[$n]["id"]))
+            {
+            if (($sizes[$n]["internal"]==0) || ($internal))
+                {
+                $returnline=array();
+                $returnline["name"]=lang_or_i18n_get_translated($sizes[$n]["name"], "imagesize-");
+                $returnline["allow_preview"]=$sizes[$n]["allow_preview"];
 
-				# The ability to restrict download size by user group and resource type.
-				if (checkperm("X" . $resource_type . "_" . $sizes[$n]["id"]))
-					{
-					# Permission set. Always restrict this download if this resource is restricted.
-					$returnline["allow_restricted"]=false;
-					}
-				else
-					{
-					# Take the restriction from the settings for this download size.
-					$returnline["allow_restricted"]=$sizes[$n]["allow_restricted"];
-					}
-				$returnline["path"]=$path;
-				$returnline["id"]=$sizes[$n]["id"];
-				if ((list($sw,$sh) = @getimagesize($path))===false) {$sw=0;$sh=0;}
-				if ($file_exists)
-					$filesize=@filesize_unlimited($path);
-				else
-					$filesize=0;
-				if ($filesize===false) {$returnline["filesize"]="?";$returnline["filedown"]="?";}
-				else {$returnline["filedown"]=ceil($filesize/50000) . " seconds @ broadband";$filesize=formatfilesize($filesize);}
-				$returnline["filesize"]=$filesize;			
-				$returnline["width"]=$sw;			
-				$returnline["height"]=$sh;
-				$returnline["extension"]='jpg';
-				$return[]=$returnline;
-				}
-			}
-		$lastname=lang_or_i18n_get_translated($sizes[$n]["name"], "imagesize-");
-		$lastpreview=$sizes[$n]["allow_preview"];
-		$lastrestricted=$sizes[$n]["allow_restricted"];
-		}
-	return $return;
-	}
+                # The ability to restrict download size by user group and resource type.
+                if (checkperm("X" . $resource_type . "_" . $sizes[$n]["id"]))
+                    {
+                    # Permission set. Always restrict this download if this resource is restricted.
+                    $returnline["allow_restricted"]=false;
+                    }
+                else
+                    {
+                    # Take the restriction from the settings for this download size.
+                    $returnline["allow_restricted"]=$sizes[$n]["allow_restricted"];
+                    }
+                $returnline["path"]=$path;
+                $returnline["id"]=$sizes[$n]["id"];
+                if ((list($sw,$sh) = @getimagesize($path))===false) {$sw=0;$sh=0;}
+                if ($file_exists)
+                    $filesize=@filesize_unlimited($path);
+                else
+                    $filesize=0;
+                if ($filesize===false) {$returnline["filesize"]="?";$returnline["filedown"]="?";}
+                else {$returnline["filedown"]=ceil($filesize/50000) . " seconds @ broadband";$filesize=formatfilesize($filesize);}
+                $returnline["filesize"]=$filesize;          
+                $returnline["width"]=$sw;           
+                $returnline["height"]=$sh;
+                $returnline["extension"]='jpg';
+                $return[]=$returnline;
+                }
+            }
+        $lastname=lang_or_i18n_get_translated($sizes[$n]["name"], "imagesize-");
+        $lastpreview=$sizes[$n]["allow_preview"];
+        $lastrestricted=$sizes[$n]["allow_restricted"];
+        }
+    return $return;
+    }
 }
 function get_preview_quality($size)
-	{
-	global $imagemagick_quality,$preview_quality_unique;
-	$preview_quality=$imagemagick_quality; // default
-	if($preview_quality_unique)
-		{
-		debug("convert: select quality value from preview_size where id='$size'");
-		$quality_val=sql_value("select quality value from preview_size where id='{$size}'",'');
-		if($quality_val!='')
-			{
-			$preview_quality=$quality_val;
-			}
-		}
-	debug("convert: preview quality for $size=$preview_quality");
-	return $preview_quality;
-	}
+    {
+    global $imagemagick_quality,$preview_quality_unique;
+    $preview_quality=$imagemagick_quality; // default
+    if($preview_quality_unique)
+        {
+        debug("convert: select quality value from preview_size where id='$size'");
+        $quality_val=sql_value("select quality value from preview_size where id='{$size}'",'');
+        if($quality_val!='')
+            {
+            $preview_quality=$quality_val;
+            }
+        }
+    debug("convert: preview quality for $size=$preview_quality");
+    return $preview_quality;
+    }
 
 function trim_array($array,$trimchars='')
-	{
-	if(isset($array[0]) && empty($array[0]) && !(emptyiszero($array[0]))){$unshiftblank=true;}
+    {
+    if(isset($array[0]) && empty($array[0]) && !(emptyiszero($array[0]))){$unshiftblank=true;}
     $array = array_filter($array,'emptyiszero');
-	$array_trimmed=array();
-	$index=0;
-	# removes whitespace from the beginning/end of all elements in an array
-	foreach($array as $el)
-		{
-		$el=trim($el);
-		if (strlen($trimchars) > 0)
-			{
-			// also trim off extra characters they want gone
-			$el=trim($el,$trimchars);
-			}
+    $array_trimmed=array();
+    $index=0;
+    # removes whitespace from the beginning/end of all elements in an array
+    foreach($array as $el)
+        {
+        $el=trim($el);
+        if (strlen($trimchars) > 0)
+            {
+            // also trim off extra characters they want gone
+            $el=trim($el,$trimchars);
+            }
         // Add to the returned array if there is anything left
         if (strlen($el) > 0)
-			{
+            {
             $array_trimmed[$index]=$el;
             $index++;
             }
-		}
-	if(isset($unshiftblank)){array_unshift($array_trimmed,"");}
-	return $array_trimmed;
-	}
+        }
+    if(isset($unshiftblank)){array_unshift($array_trimmed,"");}
+    return $array_trimmed;
+    }
 
 
 function tidylist($list)
-	{
-	# Takes a value as returned from a check-list field type and reformats to be more display-friendly.
-	# Check-list fields have a leading comma.
-	$list=trim($list);
-	if (strpos($list,",")===false) {return $list;}
-	$list=explode(",",$list);
-	if (trim($list[0])=="") {array_shift($list);} # remove initial comma used to identify item is a list
-	$op=join(", ",trim_array($list));
-	#if (strpos($op,".")!==false) {$op=str_replace(", ","<br/>",$op);}
-	return $op;
-	}
+    {
+    # Takes a value as returned from a check-list field type and reformats to be more display-friendly.
+    # Check-list fields have a leading comma.
+    $list=trim($list);
+    if (strpos($list,",")===false) {return $list;}
+    $list=explode(",",$list);
+    if (trim($list[0])=="") {array_shift($list);} # remove initial comma used to identify item is a list
+    $op=join(", ",trim_array($list));
+    #if (strpos($op,".")!==false) {$op=str_replace(", ","<br/>",$op);}
+    return $op;
+    }
 
 function tidy_trim($text,$length)
-	{
-	# Trims $text to $length if necessary. Tries to trim at a space if possible. Adds three full stops
-	# if trimmed...
-	$text=trim($text);
-	if (strlen($text)>$length)
-		{
-		$text=mb_substr($text,0,$length-3,'utf-8');
-		# Trim back to the last space
-		$t=strrpos($text," ");
-		$c=strrpos($text,",");
-		if ($c!==false) {$t=$c;}
-		if ($t>5) 
+    {
+    # Trims $text to $length if necessary. Tries to trim at a space if possible. Adds three full stops
+    # if trimmed...
+    $text=trim($text);
+    if (strlen($text)>$length)
+        {
+        $text=mb_substr($text,0,$length-3,'utf-8');
+        # Trim back to the last space
+        $t=strrpos($text," ");
+        $c=strrpos($text,",");
+        if ($c!==false) {$t=$c;}
+        if ($t>5) 
             {
             $text=substr($text,0,$t);
             }
-		$text=$text . "...";
-		}
-	return $text;
-	}
+        $text=$text . "...";
+        }
+    return $text;
+    }
 
 function get_related_resources($ref)
-	{
-	# Return an array of resource references that are related to resource $ref
-	return sql_array("select related value from resource_related where resource='$ref' union select resource value from resource_related where related='$ref'");
-	}
-	
+    {
+    # Return an array of resource references that are related to resource $ref
+    return sql_array("select related value from resource_related where resource='$ref' union select resource value from resource_related where related='$ref'");
+    }
+    
 function average_length($array)
-	{
-	# Returns the average length of the strings in an array
+    {
+    # Returns the average length of the strings in an array
         if (count($array)==0) {return 0;}
-	$total=0;
-	for ($n=0;$n<count($array);$n++)
-		{
-		$total+=strlen(i18n_get_translated($array[$n]));
-		}
-	return ($total/count($array));
-	}
-	
+    $total=0;
+    for ($n=0;$n<count($array);$n++)
+        {
+        $total+=strlen(i18n_get_translated($array[$n]));
+        }
+    return ($total/count($array));
+    }
+    
 function get_field_options($ref)
-	{
-	# For the field with reference $ref, return a sorted array of options.
+    {
+    # For the field with reference $ref, return a sorted array of options.
 
-	//$options=sql_value("select options value from resource_type_field where ref='$ref'","");
+    //$options=sql_value("select options value from resource_type_field where ref='$ref'","");
 
     $options = array();
     node_field_options_override($options,$ref);
 
-	# Translate all options
-	for ($m=0;$m<count($options);$m++)
-		{
-		$options[$m]=i18n_get_translated($options[$m]);
-		}
+    # Translate all options
+    for ($m=0;$m<count($options);$m++)
+        {
+        $options[$m]=i18n_get_translated($options[$m]);
+        }
 
-	global $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
-	if ($auto_order_checkbox) {
-		if($auto_order_checkbox_case_insensitive){natcasesort($options);$options=array_values($options);}
-		else{sort($options);}
-	}
-	
-	return $options;
-	}
+    global $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
+    if ($auto_order_checkbox) {
+        if($auto_order_checkbox_case_insensitive){natcasesort($options);$options=array_values($options);}
+        else{sort($options);}
+    }
+    
+    return $options;
+    }
 
 
 /**
@@ -1345,15 +1345,15 @@ function get_resources_by_resource_data_value($resource_type_field, $value)
     }
 
 
-if (!function_exists("get_users")){		
+if (!function_exists("get_users")){     
 function get_users($group=0,$find="",$order_by="u.username",$usepermissions=false,$fetchrows=-1,$approvalstate="",$returnsql=false, $selectcolumns="")
-	{
+    {
     # Returns a user list. Group or search term is optional.
     # The standard user group names are translated using $lang. Custom user group names are i18n translated.
     global $usergroup, $U_perm_strict;
 
     $sql = "";
-	$find=strtolower($find);
+    $find=strtolower($find);
     if ($group != 0) {$sql = "where usergroup IN ($group)";}
     if (strlen($find)>1)
       {
@@ -1380,12 +1380,12 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
 
     // Return users in both user's user group and children groups
     if ($usepermissions && checkperm('U') && !$U_perm_strict) {
-    	$sql .= sprintf('
-    			%1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent))
-    		',
-    		($sql == '') ? 'WHERE' : ' AND',
-    		$usergroup
-    	);
+        $sql .= sprintf('
+                %1$s (g.ref = "%2$s" OR find_in_set("%2$s", g.parent))
+            ',
+            ($sql == '') ? 'WHERE' : ' AND',
+            $usergroup
+        );
     }
     $select=($selectcolumns!="")?$selectcolumns:"u.ref, u.username,u.approved,u.created, u.*, g.name groupname,g.ref groupref,g.parent groupparent";
     $query = "SELECT " . $select . " from user u left outer join usergroup g on u.usergroup=g.ref $sql order by $order_by";
@@ -1402,12 +1402,12 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
     return $r;
 
 }
-}	
+}   
 
 function get_users_with_permission($permission)
 {
     # Returns all the users who have the permission $permission.
-    # The standard user group names are translated using $lang. Custom user group names are i18n translated.	
+    # The standard user group names are translated using $lang. Custom user group names are i18n translated.    
 
     # First find all matching groups.
     $groups = sql_query("SELECT ref,permissions FROM usergroup");
@@ -1417,7 +1417,7 @@ function get_users_with_permission($permission)
         if (in_array($permission,$perms)) {$matched[] = $groups[$n]["ref"];}
     }
     # Executes query.
-	$r = sql_query("SELECT u.*,g.name groupname,g.ref groupref,g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup=g.ref WHERE (g.ref IN ('" . join("','",$matched) . "') OR (find_in_set('permissions',g.inherit_flags)>0 AND g.parent IN ('" . join("','",$matched) . "'))) ORDER BY username",false);
+    $r = sql_query("SELECT u.*,g.name groupname,g.ref groupref,g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup=g.ref WHERE (g.ref IN ('" . join("','",$matched) . "') OR (find_in_set('permissions',g.inherit_flags)>0 AND g.parent IN ('" . join("','",$matched) . "'))) ORDER BY username",false);
 
     # Translates group names in the newly created array.
     $return = array();
@@ -1431,7 +1431,7 @@ function get_users_with_permission($permission)
 
 function get_user_by_email($email)
 {
-	$r = sql_query("SELECT u.*,g.name groupname,g.ref groupref,g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup=g.ref WHERE u.email LIKE '%$email%' ORDER BY username",false);
+    $r = sql_query("SELECT u.*,g.name groupname,g.ref groupref,g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup=g.ref WHERE u.email LIKE '%$email%' ORDER BY username",false);
 
     # Translates group names in the newly created array.
     $return = array();
@@ -1516,26 +1516,26 @@ function get_usergroup($ref)
     if (count($return)==0) {return false;}
     else {
         $return[0]["name"] = lang_or_i18n_get_translated($return[0]["name"], "usergroup-");
-		$return[0]["inherit"]=explode(",",trim($return[0]["inherit_flags"]));
+        $return[0]["inherit"]=explode(",",trim($return[0]["inherit_flags"]));
         return $return[0];
     }
 }
 
 if (!function_exists("get_user")){
 function get_user($ref)
-	{
-	global $udata_cache;
+    {
+    global $udata_cache;
         if (isset($udata_cache[$ref])){
           $return=$udata_cache[$ref];
         } else {
-	$udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
+    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
     }
     
-	# Return a user's credentials.
-	if (count($udata_cache[$ref])>0) {return $udata_cache[$ref][0];} else {return false;}
-	}
+    # Return a user's credentials.
+    if (count($udata_cache[$ref])>0) {return $udata_cache[$ref][0];} else {return false;}
+    }
 }
-	
+    
 if(!function_exists('save_user')){
 /**
 * Function used to update or delete a user.
@@ -1590,7 +1590,7 @@ function save_user($ref)
             {
             $password = make_password();
             }
-        elseif($password != $lang['hidden'])	
+        elseif($password != $lang['hidden'])    
             {
             $message = check_password($password);
             if($message !== true)
@@ -1635,7 +1635,7 @@ function save_user($ref)
         log_activity(null, LOG_CODE_EDITED, $fullname, 'user', 'fullname', $ref);
         log_activity(null, LOG_CODE_EDITED, $email, 'user', 'email', $ref);
 
-    	if((isset($current_user_data['usergroup']) && '' != $current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
+        if((isset($current_user_data['usergroup']) && '' != $current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
             {
             log_activity(null, LOG_CODE_EDITED, $usergroup, 'user', 'usergroup', $ref);
             sql_query("DELETE FROM resource WHERE ref = '-{$ref}'");
@@ -1676,24 +1676,24 @@ function save_user($ref)
         {
         email_reset_link($email, true);
         }
-		
-	if(getval('approved', '')!='')
-		{
-		# Clear any user request messages
-	    message_remove_related(USER_REQUEST,$ref);
-		}
+        
+    if(getval('approved', '')!='')
+        {
+        # Clear any user request messages
+        message_remove_related(USER_REQUEST,$ref);
+        }
 
     return true;
     }
 }
 
 function email_user_welcome($email,$username,$password,$usergroup)
-	{
-	global $applicationname,$email_from,$baseurl,$lang,$email_url_save_user;
-	
-	# Fetch any welcome message for this user group
-	$welcome=sql_value("select welcome_message value from usergroup where ref='" . $usergroup . "'","");
-	if (trim($welcome)!="") {$welcome.="\n\n";}
+    {
+    global $applicationname,$email_from,$baseurl,$lang,$email_url_save_user;
+    
+    # Fetch any welcome message for this user group
+    $welcome=sql_value("select welcome_message value from usergroup where ref='" . $usergroup . "'","");
+    if (trim($welcome)!="") {$welcome.="\n\n";}
 
     $templatevars['welcome']  = i18n_get_translated($welcome);
     $templatevars['username'] = $username;
@@ -1702,68 +1702,68 @@ function email_user_welcome($email,$username,$password,$usergroup)
         if (trim($email_url_save_user)!=""){$templatevars['url']=$email_url_save_user;}
         else {$templatevars['url']=$baseurl;}
         $message=$templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n" . $templatevars['url'];
-          	
-	send_mail($email,$applicationname . ": " . $lang["youraccountdetails"],$message,"","","emaillogindetails",$templatevars);
-	}
+            
+    send_mail($email,$applicationname . ": " . $lang["youraccountdetails"],$message,"","","emaillogindetails",$templatevars);
+    }
         
 
 
 if (!function_exists("email_reminder")){
 function email_reminder($email)
-	{
-	# Send a password reminder.
-	global $password_brute_force_delay, $allow_password_email;
-	if ($allow_password_email || $email=="") {return false;}
-	$details=sql_query("select username from user where email like '$email' and approved=1");
-	if (count($details)==0) {sleep($password_brute_force_delay);return false;}
-	$details=$details[0];
-	global $applicationname,$email_from,$baseurl,$lang,$email_url_remind_user;
-	$password=make_password();
-	$password_hash=md5("RS" . $details["username"] . $password);
-	
-	sql_query("update user set password='$password_hash' where username='" . escape_check($details["username"]) . "'");
-	
-	$templatevars['username']=$details["username"];
-	$templatevars['password']=$password;
+    {
+    # Send a password reminder.
+    global $password_brute_force_delay, $allow_password_email;
+    if ($allow_password_email || $email=="") {return false;}
+    $details=sql_query("select username from user where email like '$email' and approved=1");
+    if (count($details)==0) {sleep($password_brute_force_delay);return false;}
+    $details=$details[0];
+    global $applicationname,$email_from,$baseurl,$lang,$email_url_remind_user;
+    $password=make_password();
+    $password_hash=md5("RS" . $details["username"] . $password);
+    
+    sql_query("update user set password='$password_hash' where username='" . escape_check($details["username"]) . "'");
+    
+    $templatevars['username']=$details["username"];
+    $templatevars['password']=$password;
     if (trim($email_url_remind_user)!=""){$templatevars['url']=$email_url_remind_user;}
     else {$templatevars['url']=$baseurl;}
 
-	
-	$message=$lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n" . $lang["password"] . ": " . $templatevars['password'] . "\n\n". $templatevars['url'];
-	send_mail($email,$applicationname . ": " . $lang["newpassword"],$message,"","","emailreminder",$templatevars);
-	return true;
-	}
+    
+    $message=$lang["newlogindetails"] . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n" . $lang["password"] . ": " . $templatevars['password'] . "\n\n". $templatevars['url'];
+    send_mail($email,$applicationname . ": " . $lang["newpassword"],$message,"","","emailreminder",$templatevars);
+    return true;
+    }
 }
 
 if (!function_exists("email_reset_link")){
 function email_reset_link($email,$newuser=false)
-	{
-	debug("password_reset - checking for email: " . $email);
-	# Send a link to reset password
-	global $password_brute_force_delay, $scramble_key;
+    {
+    debug("password_reset - checking for email: " . $email);
+    # Send a link to reset password
+    global $password_brute_force_delay, $scramble_key;
 
-	if($email == '')
-		{
-		return false;
-		}
+    if($email == '')
+        {
+        return false;
+        }
 
-	$details = sql_query("SELECT ref, username, usergroup FROM user WHERE email LIKE '" . escape_check($email) . "' AND approved = 1 AND (account_expires IS NULL OR account_expires > now());");
+    $details = sql_query("SELECT ref, username, usergroup FROM user WHERE email LIKE '" . escape_check($email) . "' AND approved = 1 AND (account_expires IS NULL OR account_expires > now());");
 
-	if(count($details) == 0)
-		{
-		sleep($password_brute_force_delay);
-		return false;
-		}
+    if(count($details) == 0)
+        {
+        sleep($password_brute_force_delay);
+        return false;
+        }
 
-	$details = $details[0];
+    $details = $details[0];
 
-	global $applicationname, $email_from, $baseurl, $lang, $email_url_remind_user;
+    global $applicationname, $email_from, $baseurl, $lang, $email_url_remind_user;
 
-	$password_reset_url_key = create_password_reset_key($details['username']);        
+    $password_reset_url_key = create_password_reset_key($details['username']);        
 
-	$templatevars['url'] = $baseurl . '/?rp=' . $details['ref'] . $password_reset_url_key;
+    $templatevars['url'] = $baseurl . '/?rp=' . $details['ref'] . $password_reset_url_key;
         
-	if($newuser)
+    if($newuser)
         {
         $templatevars['username']=$details["username"];
 
@@ -1786,84 +1786,84 @@ function email_reset_link($email,$newuser=false)
         $message=$lang["username"] . ": " . $templatevars['username'];
         $message.="\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
         send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
-        }	
-	
-	return true;
-	}
+        }   
+    
+    return true;
+    }
 }
 
 if (!function_exists("auto_create_user_account")){
 function auto_create_user_account($hash="")
-	{
-	# Automatically creates a user account (which requires approval unless $auto_approve_accounts is true).
-	global $applicationname, $user_email, $baseurl, $email_notify, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
+    {
+    # Automatically creates a user account (which requires approval unless $auto_approve_accounts is true).
+    global $applicationname, $user_email, $baseurl, $email_notify, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
            $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash;
 
-	# Work out which user group to set. Allow a hook to change this, if necessary.
-	$altgroup=hook("auto_approve_account_switch_group");
-	if ($altgroup!==false)
-		{
-		$usergroup=$altgroup;
-		}
-	else
-		{
-		$usergroup=$user_account_auto_creation_usergroup;
-		}
+    # Work out which user group to set. Allow a hook to change this, if necessary.
+    $altgroup=hook("auto_approve_account_switch_group");
+    if ($altgroup!==false)
+        {
+        $usergroup=$altgroup;
+        }
+    else
+        {
+        $usergroup=$user_account_auto_creation_usergroup;
+        }
 
-	if ($registration_group_select)
-		{
-		$usergroup=getvalescaped("usergroup","",true);
-		# Check this is a valid selectable usergroup (should always be valid unless this is a hack attempt)
-		if (sql_value("select allow_registration_selection value from usergroup where ref='$usergroup'",0)!=1) {exit("Invalid user group selection");}
-		}
+    if ($registration_group_select)
+        {
+        $usergroup=getvalescaped("usergroup","",true);
+        # Check this is a valid selectable usergroup (should always be valid unless this is a hack attempt)
+        if (sql_value("select allow_registration_selection value from usergroup where ref='$usergroup'",0)!=1) {exit("Invalid user group selection");}
+        }
 
-	$newusername=escape_check(make_username(getval("name","")));
+    $newusername=escape_check(make_username(getval("name","")));
 
     // Check valid email
     if(!filter_var($user_email, FILTER_VALIDATE_EMAIL))
         {return $lang['setup-emailerr'];}
     
-	#check if account already exists
-	$check=sql_value("select email value from user where email = '" . escape_check($user_email) . "'","");
-	if ($check!=""){return $lang["useremailalreadyexists"];}
+    #check if account already exists
+    $check=sql_value("select email value from user where email = '" . escape_check($user_email) . "'","");
+    if ($check!=""){return $lang["useremailalreadyexists"];}
 
-	# Prepare to create the user.
-	$email=trim(getvalescaped("email","")) ;
-	$password=make_password();
-	$password = hash('sha256', md5('RS' . $newusername . $password));
+    # Prepare to create the user.
+    $email=trim(getvalescaped("email","")) ;
+    $password=make_password();
+    $password = hash('sha256', md5('RS' . $newusername . $password));
 
-	# Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
-	$approve=false;
+    # Work out if we should automatically approve this account based on $auto_approve_accounts or $auto_approve_domains
+    $approve=false;
         
-	# Block immediate reset
-	$bypassemail=false;
+    # Block immediate reset
+    $bypassemail=false;
         
-	if ($auto_approve_accounts==true)
-		{
-		$approve=true;
-		$bypassemail=true; // We can send user  direct to password reset page
-		}
-	elseif (count($auto_approve_domains)>0)
-		{
-		# Check e-mail domain.
-		foreach ($auto_approve_domains as $domain=>$set_usergroup)
-			{
-			// If a group is not specified the variables don't get set correctly so we need to correct this
-			if (is_numeric($domain)){$domain=$set_usergroup;$set_usergroup="";}
-			if (substr(strtolower($email),strlen($email)-strlen($domain)-1)==("@" . strtolower($domain)))
-				{
-				# E-mail domain match.
-				$approve=true;                                
+    if ($auto_approve_accounts==true)
+        {
+        $approve=true;
+        $bypassemail=true; // We can send user  direct to password reset page
+        }
+    elseif (count($auto_approve_domains)>0)
+        {
+        # Check e-mail domain.
+        foreach ($auto_approve_domains as $domain=>$set_usergroup)
+            {
+            // If a group is not specified the variables don't get set correctly so we need to correct this
+            if (is_numeric($domain)){$domain=$set_usergroup;$set_usergroup="";}
+            if (substr(strtolower($email),strlen($email)-strlen($domain)-1)==("@" . strtolower($domain)))
+                {
+                # E-mail domain match.
+                $approve=true;                                
 
-				# If user group is supplied, set this
-				if (is_numeric($set_usergroup)) {$usergroup=$set_usergroup;}
-				}
-			}
-		}
+                # If user group is supplied, set this
+                if (is_numeric($set_usergroup)) {$usergroup=$set_usergroup;}
+                }
+            }
+        }
 
-	# Create the user
-	sql_query("insert into user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) values ('" . $newusername . "','" . $password . "','" . getvalescaped("name","") . "','" . $email . "','" . $usergroup . "','" . ( escape_check($customContents) . "\n" . getvalescaped("userrequestcomment","")  ) . "'," . (($approve)?1:0) . ",'$language'," . ($hash!=""?"'" . $hash . "'":"null") . ")");
-	$new = sql_insert_id();
+    # Create the user
+    sql_query("insert into user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) values ('" . $newusername . "','" . $password . "','" . getvalescaped("name","") . "','" . $email . "','" . $usergroup . "','" . ( escape_check($customContents) . "\n" . getvalescaped("userrequestcomment","")  ) . "'," . (($approve)?1:0) . ",'$language'," . ($hash!=""?"'" . $hash . "'":"null") . ")");
+    $new = sql_insert_id();
 
     // Create dash tiles for the new user
     if($home_dash)
@@ -1881,13 +1881,13 @@ function auto_create_user_account($hash="")
         }
 
     hook("afteruserautocreated", "all",array("new"=>$new));
-	global $anonymous_login;
+    global $anonymous_login;
     if(isset($anonymous_login))
         {
         global $rs_session;
         $rs_session=get_rs_session_id();
         if($rs_session!==false)
-            {				
+            {               
             # Copy any anonymous session collections to the new user account 
             if (!function_exists("get_session_collections"))
                 {
@@ -1915,67 +1915,67 @@ function auto_create_user_account($hash="")
             }
         }
     if ($approve)
-		{
-		# Auto approving		
-		if($bypassemail)
-			{
-			// No requirement to check anything else e.g. a valid email domain. We can take user direct to the password reset page to set the new account
-			$password_reset_url_key=create_password_reset_key($newusername);
-			redirect($baseurl . "?rp=" . $new . $password_reset_url_key);			
-			exit();
-			}
-		else
-			{
-			email_reset_link($email, true);
-			redirect($baseurl."/pages/done.php?text=user_request");
-			exit();
-			}			
-		}
-	else
-		{
-		# Not auto approving.
-		# Build a message to send to an admin notifying of unapproved user (same as email_user_request(),
-		# but also adds the new user name to the mail)
-		
-		$templatevars['name']=getval("name","");
-		$templatevars['email']=getval("email","");
-		$templatevars['userrequestcomment']=strip_tags(getval("userrequestcomment",""));
-		$templatevars['userrequestcustom']=strip_tags($customContents);
-		$templatevars['linktouser']="$baseurl?u=$new";
+        {
+        # Auto approving        
+        if($bypassemail)
+            {
+            // No requirement to check anything else e.g. a valid email domain. We can take user direct to the password reset page to set the new account
+            $password_reset_url_key=create_password_reset_key($newusername);
+            redirect($baseurl . "?rp=" . $new . $password_reset_url_key);           
+            exit();
+            }
+        else
+            {
+            email_reset_link($email, true);
+            redirect($baseurl."/pages/done.php?text=user_request");
+            exit();
+            }           
+        }
+    else
+        {
+        # Not auto approving.
+        # Build a message to send to an admin notifying of unapproved user (same as email_user_request(),
+        # but also adds the new user name to the mail)
+        
+        $templatevars['name']=getval("name","");
+        $templatevars['email']=getval("email","");
+        $templatevars['userrequestcomment']=strip_tags(getval("userrequestcomment",""));
+        $templatevars['userrequestcustom']=strip_tags($customContents);
+        $templatevars['linktouser']="$baseurl?u=$new";
 
-		$message=$lang["userrequestnotification1"] . "\n\n" . $lang["name"] . ": " . $templatevars['name'] . "\n\n" . $lang["email"] . ": " . $templatevars['email'] . "\n\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang["userrequestnotification3"] . "\n$baseurl?u=$new";
-		
-		$notificationmessage=$lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . $templatevars['name'] . "\n" . $lang["email"] . ": " . $templatevars['email'] . "\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang["userrequestnotification3"];
+        $message=$lang["userrequestnotification1"] . "\n\n" . $lang["name"] . ": " . $templatevars['name'] . "\n\n" . $lang["email"] . ": " . $templatevars['email'] . "\n\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n\n" . $customContents . "\n\n" . $lang["userrequestnotification3"] . "\n$baseurl?u=$new";
+        
+        $notificationmessage=$lang["userrequestnotification1"] . "\n" . $lang["name"] . ": " . $templatevars['name'] . "\n" . $lang["email"] . ": " . $templatevars['email'] . "\n" . $lang["comment"] . ": " . $templatevars['userrequestcomment'] . "\n" . $lang["ipaddress"] . ": '" . $_SERVER["REMOTE_ADDR"] . "'\n" . $customContents . "\n" . $lang["userrequestnotification3"];
        
-	   // Need to global the usergroup so that we can find the appropriate admins
-	   global $usergroup;
+       // Need to global the usergroup so that we can find the appropriate admins
+       global $usergroup;
        $approval_notify_users=get_notification_users("USER_ADMIN"); 
        $message_users=array();
-	   global $user_pref_user_management_notifications, $email_user_notifications;
-	   foreach($approval_notify_users as $approval_notify_user)
-			{
-			get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message, $user_pref_user_management_notifications);
-			if(!$send_message){continue;} 
-			
-			get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email, $email_user_notifications);    
-			if($send_email && $approval_notify_user["email"]!="")
-				{
-				send_mail($approval_notify_user["email"],$applicationname . ": " . $lang["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
-				}        
-			else
-				{
-				$message_users[]=$approval_notify_user["ref"];
-				}
-			}
-		if (count($message_users)>0)
-			{
-			// Send a message with long timeout (30 days)
-			message_add($message_users,$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
-			}
-		}
+       global $user_pref_user_management_notifications, $email_user_notifications;
+       foreach($approval_notify_users as $approval_notify_user)
+            {
+            get_config_option($approval_notify_user['ref'],'user_pref_user_management_notifications', $send_message, $user_pref_user_management_notifications);
+            if(!$send_message){continue;} 
+            
+            get_config_option($approval_notify_user['ref'],'email_user_notifications', $send_email, $email_user_notifications);    
+            if($send_email && $approval_notify_user["email"]!="")
+                {
+                send_mail($approval_notify_user["email"],$applicationname . ": " . $lang["requestuserlogin"] . " - " . getval("name",""),$message,"",$user_email,"emailuserrequest",$templatevars,getval("name",""));
+                }        
+            else
+                {
+                $message_users[]=$approval_notify_user["ref"];
+                }
+            }
+        if (count($message_users)>0)
+            {
+            // Send a message with long timeout (30 days)
+            message_add($message_users,$notificationmessage,$templatevars['linktouser'],$new,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,60 * 60 *24 * 30, USER_REQUEST,$new );
+            }
+        }
 
-	return true;
-	}
+    return true;
+    }
 } //end function replace hook
 
 
@@ -2069,7 +2069,7 @@ function new_user($newuser, $usergroup = 0)
     # Username already exists?
     $c=sql_value("select count(*) value from user where username='$newuser'",0);
     if ($c>0) {return false;}
-	
+    
     $cols = array("username");
     $vals = array(escape_check($newuser));
     
@@ -2081,18 +2081,18 @@ function new_user($newuser, $usergroup = 0)
         
     $sql = "INSERT INTO user (" . implode(",",$cols) . ") VALUES ('" . implode("','",$vals) . "')";
     sql_query($sql);
-	
-	$newref=sql_insert_id();
-	
+    
+    $newref=sql_insert_id();
+    
     #Create Default Dash for the new user
     if($home_dash)
         {
         include_once dirname(__FILE__)."/dash_functions.php";
         create_new_user_dash($newref);
         }
-	
+    
     # Create a collection for this user, the collection name is translated when displayed!
-	$new=create_collection($newref,"My Collection",0,1); # Do not translate this string!
+    $new=create_collection($newref,"My Collection",0,1); # Do not translate this string!
     # set this to be the user's current collection
     sql_query("update user set current_collection='$new' where ref='$newref'");
     log_activity($lang["createuserwithusername"],LOG_CODE_CREATED,$newuser,'user','ref',$newref,null,'');
@@ -2101,27 +2101,27 @@ function new_user($newuser, $usergroup = 0)
     }
 
 function get_stats_activity_types()
-	{
-	# Returns a list of activity types for which we have stats data (Search, User Session etc.)
-	return sql_array("SELECT DISTINCT activity_type `value` FROM daily_stat ORDER BY activity_type");
-	}
+    {
+    # Returns a list of activity types for which we have stats data (Search, User Session etc.)
+    return sql_array("SELECT DISTINCT activity_type `value` FROM daily_stat ORDER BY activity_type");
+    }
 
 function get_stats_years()
-	{
-	# Returns a list of years for which we have statistics.
-	return sql_array("select distinct year value from daily_stat order by year");
-	}
+    {
+    # Returns a list of years for which we have statistics.
+    return sql_array("select distinct year value from daily_stat order by year");
+    }
 
 function newlines($text)
-	{
-	# Replace escaped newlines with real newlines.
-	$text=str_replace("\\n","\n",$text);
-	$text=str_replace("\\r","\r",$text);
-	return $text;
-	}
+    {
+    # Replace escaped newlines with real newlines.
+    $text=str_replace("\\n","\n",$text);
+    $text=str_replace("\\r","\r",$text);
+    return $text;
+    }
 
 function get_active_users()
-	{
+    {
     global $usergroup, $U_perm_strict;
     $sql = "where logged_in=1 and unix_timestamp(now())-unix_timestamp(last_active)<(3600*2)";
     if (checkperm("U") && $U_perm_strict)
@@ -2132,7 +2132,7 @@ function get_active_users()
     // Return users in both user's user group and children groups
     elseif (checkperm('U') && !$U_perm_strict)
         {
-    	$sql .= " and (g.ref = '" . $usergroup . "' OR find_in_set('" . $usergroup . "', g.parent))";
+        $sql .= " and (g.ref = '" . $usergroup . "' OR find_in_set('" . $usergroup . "', g.parent))";
         }
     
     # Returns a list of all active users, i.e. users still logged on with a last-active time within the last 2 hours.
@@ -2140,14 +2140,14 @@ function get_active_users()
     }
 
 function get_all_site_text($findpage="",$findname="",$findtext="")
-	{
-	# Returns a list of all available editable site text (content).
-	# If $find is specified a search is performed across page, name and text fields.
-	global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder;
+    {
+    # Returns a list of all available editable site text (content).
+    # If $find is specified a search is performed across page, name and text fields.
+    global $defaultlanguage,$languages,$applicationname,$storagedir,$homeanim_folder;
 
-	$findname = trim($findname);
-	$findpage = trim($findpage);
-	$findtext = trim($findtext);
+    $findname = trim($findname);
+    $findpage = trim($findpage);
+    $findtext = trim($findtext);
 
     $return = array();
 
@@ -2162,13 +2162,13 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
     // When searching text, search all languages to pick up matches for languages other than the default. Add array so that default is first then we can skip adding duplicates.
     if('' != $findtext)
         {
-        $search_languages = $search_languages + array_keys($languages);	
+        $search_languages = $search_languages + array_keys($languages); 
         }
 
-		global $language, $lang; // Need to save these for later so we can revert after search
-		$languagesaved=$language;
-		$langsaved=$lang;
-		
+        global $language, $lang; // Need to save these for later so we can revert after search
+        $languagesaved=$language;
+        $langsaved=$lang;
+        
         foreach ($search_languages as $search_language)
             {
             # Reset $lang and include the appropriate file to search.
@@ -2182,14 +2182,14 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
                 }
             include dirname(__FILE__)."/../languages/" . safe_file_name($search_language) . ".php";
             
-			# Include plugin languages in reverse order as per db.php
-			global $plugins;
-			$language = $search_language;
-			for ($n=count($plugins)-1;$n>=0;$n--)
-				{				
-				register_plugin_language($plugins[$n]);
-				}		
-			
+            # Include plugin languages in reverse order as per db.php
+            global $plugins;
+            $language = $search_language;
+            for ($n=count($plugins)-1;$n>=0;$n--)
+                {               
+                register_plugin_language($plugins[$n]);
+                }       
+            
             # Find language strings.
             ksort($lang);
             foreach ($lang as $key=>$text)
@@ -2209,29 +2209,29 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
                     ($findtext=="" || stripos($text,$findtext)!==false)
                     )
                     {
-					$testrow=array();
+                    $testrow=array();
                     $testrow["page"]=$pagename;
                     $testrow["name"]=$key;
                     $testrow["text"]=$text;
                     $testrow["language"]=$defaultlanguage;
                     $testrow["group"]="";
-					// Make sure this isn't already set for default/another language
-					if(!in_array($testrow,$return))
-						{
-						$row["page"]=$pagename;
-						$row["name"]=$key;
-						$row["text"]=$text;
-						$row["language"]=$search_language;
-						$row["group"]="";
-						$return[]=$row;
-						}
+                    // Make sure this isn't already set for default/another language
+                    if(!in_array($testrow,$return))
+                        {
+                        $row["page"]=$pagename;
+                        $row["name"]=$key;
+                        $row["text"]=$text;
+                        $row["language"]=$search_language;
+                        $row["group"]="";
+                        $return[]=$row;
+                        }
                     }
                 }
             }
 
-		// Need to revert to saved values
-		$language=$languagesaved;
-		$lang=$langsaved;
+        // Need to revert to saved values
+        $language=$languagesaved;
+        $lang=$langsaved;
         
         # If searching, also search overridden text in site_text and return that also.
         if ($findtext!="" || $findpage!="" || $findname!="")
@@ -2241,7 +2241,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
             if ($findname!="") {$search="name like '%" . escape_check($findname) . "%'";}          
             
             $site_text=sql_query ("select * from site_text where $search");
-			
+            
             foreach ($site_text as $text)
                 {
                 $row["page"]=$text["page"];
@@ -2249,18 +2249,18 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
                 $row["text"]=$text["text"];
                 $row["language"]=$text["language"];
                 $row["group"]=$text["specific_to_group"];
-				// Make sure we dont'include the default if we have overwritten 
+                // Make sure we dont'include the default if we have overwritten 
                 $customisedtext=false;
-				for($n=0;$n<count($return);$n++)
-					{
-					if ($row["page"]==$return[$n]["page"] && $row["name"]==$return[$n]["name"] && $row["language"]==$return[$n]["language"] && $row["group"]==$return[$n]["group"])
-						{
-						$customisedtext=true;
-						$return[$n]=$row;
-						}						
-					}
-				if(!$customisedtext)
-					{$return[]=$row;}				
+                for($n=0;$n<count($return);$n++)
+                    {
+                    if ($row["page"]==$return[$n]["page"] && $row["name"]==$return[$n]["name"] && $row["language"]==$return[$n]["language"] && $row["group"]==$return[$n]["group"])
+                        {
+                        $customisedtext=true;
+                        $return[$n]=$row;
+                        }                       
+                    }
+                if(!$customisedtext)
+                    {$return[]=$row;}               
                 }
             }
 
@@ -2281,31 +2281,31 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
     $return = array_values($unique_returned_records);
 
     return $return;
-	}
+    }
 
 function get_site_text($page,$name,$getlanguage,$group)
-	{
-	# Returns a specific site text entry.
-    global $defaultlanguage, $lang, $language; // Registering plugin text uses $language and $lang 	
+    {
+    # Returns a specific site text entry.
+    global $defaultlanguage, $lang, $language; // Registering plugin text uses $language and $lang  
     global $applicationname, $storagedir, $homeanim_folder; // These are needed as they are referenced in lang files
-	if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
-	
-	$text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$getlanguage' and specific_to_group $gc $g");
-	if (count($text)>0)
-		{
+    if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
+    
+    $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$getlanguage' and specific_to_group $gc $g");
+    if (count($text)>0)
+        {
                 return $text[0]["text"];
                 }
         # Fall back to default language.
-	$text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group $gc $g");
-	if (count($text)>0)
-		{
+    $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group $gc $g");
+    if (count($text)>0)
+        {
                 return $text[0]["text"];
                 }
                 
         # Fall back to default group.
-	$text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group is null");
-	if (count($text)>0)
-		{
+    $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group is null");
+    if (count($text)>0)
+        {
         return $text[0]["text"];
         }
         
@@ -2323,18 +2323,18 @@ function get_site_text($page,$name,$getlanguage,$group)
         {
         include $getlangfile;
         }
-		
+        
     # Include plugin languages in reverse order as per db.php
-    global $plugins;	
+    global $plugins;    
     $language = $defaultlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
-        {				
+        {               
         register_plugin_language($plugins[$n]);
         }
 
     $language = $getlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
-        {				
+        {               
         register_plugin_language($plugins[$n]);
         }
             
@@ -2350,98 +2350,98 @@ function get_site_text($page,$name,$getlanguage,$group)
         {
         return "";
         }
-	}
+    }
 
 function check_site_text_custom($page,$name)
-	{
-	# Check if site text section is custom, i.e. deletable.
-	
-	$check=sql_query ("select custom from site_text where page='$page' and name='$name'");
-	if (isset($check[0]["custom"])){return $check[0]["custom"];}
-	}
+    {
+    # Check if site text section is custom, i.e. deletable.
+    
+    $check=sql_query ("select custom from site_text where page='$page' and name='$name'");
+    if (isset($check[0]["custom"])){return $check[0]["custom"];}
+    }
 
 function save_site_text($page,$name,$language,$group)
-	{
-	global $lang;
-	# Saves the submitted site text changes to the database.
+    {
+    global $lang;
+    # Saves the submitted site text changes to the database.
 
-	if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
-	
-	global $custom,$newcustom,$defaultlanguage;
-	
-	if($newcustom)
-		{
-		$test=sql_query("select * from site_text where page='$page' and name='$name'");
-		if (count($test)>0){return true;}
-		}
-	if ($custom==""){$custom=0;}
-	if (getval("deletecustom","")!="")
-		{
-		sql_query("delete from site_text where page='$page' and name='$name'");
-		}
-	elseif (getval("deleteme","")!="")
-		{
-		sql_query("delete from site_text where page='$page' and name='$name' and specific_to_group $gc $g");
-		}
-	elseif (getval("copyme","")!="")
-		{
-		sql_query("insert into site_text(page,name,text,language,specific_to_group,custom) values ('$page','$name','" . getvalescaped("text","") . "','$language',$g,'$custom')");
-		}
-	elseif (getval("newhelp","")!="")
-		{
-		global $newhelp;
-		$check=sql_query("select * from site_text where page = 'help' and name='$newhelp'");
-		if (!isset($check[0])){
-			sql_query("insert into site_text(page,name,text,language,specific_to_group) values ('$page','$newhelp','','$language',$g)");
-			}
-		}	
-	else
-		{
-		$text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$language' and specific_to_group $gc $g");
-		if (count($text)==0)
-			{
-			# Insert a new row for this language/group.
-			sql_query("insert into site_text(page,name,language,specific_to_group,text,custom) values ('$page','$name','$language',$g,'" . getvalescaped("text","") . "','$custom')");
-			log_activity($lang["text"],LOG_CODE_CREATED,getvalescaped("text",""),'site_text',null,"'{$page}','{$name}','{$language}',{$g}");
-			}
-		else
-			{
-			# Update existing row
-			sql_query("update site_text set text='" . getvalescaped("text","") . "' where page='$page' and name='$name' and language='$language' and specific_to_group $gc $g");
-			log_activity($lang["text"],LOG_CODE_EDITED,getvalescaped("text",""),'site_text',null,"'{$page}','{$name}','{$language}',{$g}");
-			}
+    if ($group=="") {$g="null";$gc="is";} else {$g="'" . $group . "'";$gc="=";}
+    
+    global $custom,$newcustom,$defaultlanguage;
+    
+    if($newcustom)
+        {
+        $test=sql_query("select * from site_text where page='$page' and name='$name'");
+        if (count($test)>0){return true;}
+        }
+    if ($custom==""){$custom=0;}
+    if (getval("deletecustom","")!="")
+        {
+        sql_query("delete from site_text where page='$page' and name='$name'");
+        }
+    elseif (getval("deleteme","")!="")
+        {
+        sql_query("delete from site_text where page='$page' and name='$name' and specific_to_group $gc $g");
+        }
+    elseif (getval("copyme","")!="")
+        {
+        sql_query("insert into site_text(page,name,text,language,specific_to_group,custom) values ('$page','$name','" . getvalescaped("text","") . "','$language',$g,'$custom')");
+        }
+    elseif (getval("newhelp","")!="")
+        {
+        global $newhelp;
+        $check=sql_query("select * from site_text where page = 'help' and name='$newhelp'");
+        if (!isset($check[0])){
+            sql_query("insert into site_text(page,name,text,language,specific_to_group) values ('$page','$newhelp','','$language',$g)");
+            }
+        }   
+    else
+        {
+        $text=sql_query ("select * from site_text where page='$page' and name='$name' and language='$language' and specific_to_group $gc $g");
+        if (count($text)==0)
+            {
+            # Insert a new row for this language/group.
+            sql_query("insert into site_text(page,name,language,specific_to_group,text,custom) values ('$page','$name','$language',$g,'" . getvalescaped("text","") . "','$custom')");
+            log_activity($lang["text"],LOG_CODE_CREATED,getvalescaped("text",""),'site_text',null,"'{$page}','{$name}','{$language}',{$g}");
+            }
+        else
+            {
+            # Update existing row
+            sql_query("update site_text set text='" . getvalescaped("text","") . "' where page='$page' and name='$name' and language='$language' and specific_to_group $gc $g");
+            log_activity($lang["text"],LOG_CODE_EDITED,getvalescaped("text",""),'site_text',null,"'{$page}','{$name}','{$language}',{$g}");
+            }
                         
                 # Language clean up - remove all entries that are exactly the same as the default text.
                 $defaulttext=sql_value ("select text value from site_text where page='$page' and name='$name' and language='$defaultlanguage' and specific_to_group $gc $g","");
                 sql_query("delete from site_text where page='$page' and name='$name' and language!='$defaultlanguage' and trim(text)='" . trim(escape_check($defaulttext)) . "'");
                 
-		}
-	}
-	
+        }
+    }
+    
 function string_similar($string1,$string2)
-	{
-	# Returns an integer score based on how similar the two strings are.
-	# This was used when importing data for "fuzzy" keyword/option matching.
-	$score=0;
-	$string1=trim(strtolower($string1));$string2=trim(strtolower($string2));
-	if ($string1==$string2) {return 9999;}
-	if (substr($string1,0,1)==substr($string2,0,1)) {$score+=10;}
-	for ($n=0;$n<strlen($string1)-1;$n++)
-		{
-		$pair=substr($string1,$n,2);
-		for ($m=0;$m<strlen($string2)-1;$m++)
-			{
-			if ($pair==substr($string2,$m,2)) {$score++;}
-			}
-		}
-	
-	return $score;
-	}
+    {
+    # Returns an integer score based on how similar the two strings are.
+    # This was used when importing data for "fuzzy" keyword/option matching.
+    $score=0;
+    $string1=trim(strtolower($string1));$string2=trim(strtolower($string2));
+    if ($string1==$string2) {return 9999;}
+    if (substr($string1,0,1)==substr($string2,0,1)) {$score+=10;}
+    for ($n=0;$n<strlen($string1)-1;$n++)
+        {
+        $pair=substr($string1,$n,2);
+        for ($m=0;$m<strlen($string2)-1;$m++)
+            {
+            if ($pair==substr($string2,$m,2)) {$score++;}
+            }
+        }
+    
+    return $score;
+    }
 
 function formatfilesize($bytes)
-	{
-	# Return a human-readable string representing $bytes in either KB or MB.
-	
+    {
+    # Return a human-readable string representing $bytes in either KB or MB.
+    
     # Binary mode
     $multiple=1024;$lang_suffix="-binary";
     
@@ -2453,28 +2453,28 @@ function formatfilesize($bytes)
         $lang_suffix="";
         }
     
-	global $lang;
-	if ($bytes<$multiple)
-		{
-		return number_format((double)$bytes) . "&nbsp;".$lang["byte-symbol"];
-		}
-	elseif ($bytes<pow($multiple,2))
-		{
-		return number_format((double)ceil($bytes/$multiple)) . "&nbsp;".$lang["kilobyte-symbol" . $lang_suffix];
-		}
-	elseif ($bytes<pow($multiple,3))
-		{
-		return number_format((double)$bytes/pow($multiple,2),1) . "&nbsp;".$lang["megabyte-symbol" . $lang_suffix];
-		}
-	elseif ($bytes<pow($multiple,4))
-		{
-		return number_format((double)$bytes/pow($multiple,3),1) . "&nbsp;".$lang["gigabyte-symbol" . $lang_suffix];
-		}
-	else
-		{
-		return number_format((double)$bytes/pow($multiple,4),1) . "&nbsp;".$lang["terabyte-symbol" . $lang_suffix];
-		}
-	}
+    global $lang;
+    if ($bytes<$multiple)
+        {
+        return number_format((double)$bytes) . "&nbsp;".$lang["byte-symbol"];
+        }
+    elseif ($bytes<pow($multiple,2))
+        {
+        return number_format((double)ceil($bytes/$multiple)) . "&nbsp;".$lang["kilobyte-symbol" . $lang_suffix];
+        }
+    elseif ($bytes<pow($multiple,3))
+        {
+        return number_format((double)$bytes/pow($multiple,2),1) . "&nbsp;".$lang["megabyte-symbol" . $lang_suffix];
+        }
+    elseif ($bytes<pow($multiple,4))
+        {
+        return number_format((double)$bytes/pow($multiple,3),1) . "&nbsp;".$lang["gigabyte-symbol" . $lang_suffix];
+        }
+    else
+        {
+        return number_format((double)$bytes/pow($multiple,4),1) . "&nbsp;".$lang["terabyte-symbol" . $lang_suffix];
+        }
+    }
 
 
 function filesize2bytes($str) {
@@ -2502,107 +2502,107 @@ function filesize2bytes($str) {
     }
 
     $bytes = intval(round($bytes, 2));
-	
-	#add leading zeroes (as this can be used to format filesize data in resource_data for sorting)
+    
+    #add leading zeroes (as this can be used to format filesize data in resource_data for sorting)
     return sprintf("%010d",$bytes);
 } 
 
 function get_mime_type($path, $ext = null)
-	{
-	global $mime_type_by_extension;
-	if (empty($ext))
-		$ext = pathinfo($path, PATHINFO_EXTENSION);
-	if (isset($mime_type_by_extension[$ext]))
-		{
-		return $mime_type_by_extension[$ext];
-		}
+    {
+    global $mime_type_by_extension;
+    if (empty($ext))
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+    if (isset($mime_type_by_extension[$ext]))
+        {
+        return $mime_type_by_extension[$ext];
+        }
 
-	# Get mime type via exiftool if possible
-	$exiftool_fullpath = get_utility_path("exiftool");
-	if ($exiftool_fullpath!=false)
-		{
-		$command=$exiftool_fullpath . " -s -s -s -t -mimetype " . escapeshellarg($path);
-		return run_command($command);
-		}
+    # Get mime type via exiftool if possible
+    $exiftool_fullpath = get_utility_path("exiftool");
+    if ($exiftool_fullpath!=false)
+        {
+        $command=$exiftool_fullpath . " -s -s -s -t -mimetype " . escapeshellarg($path);
+        return run_command($command);
+        }
 
-	return "application/octet-stream";
-	}
+    return "application/octet-stream";
+    }
 
 if (!function_exists("change_password")){
 function change_password($password)
-	{
-	# Sets a new password for the current user.
-	global $userref,$username,$lang,$userpassword, $password_reset_mode;
+    {
+    # Sets a new password for the current user.
+    global $userref,$username,$lang,$userpassword, $password_reset_mode;
 
-	# Check password
-	$message=check_password($password);
-	if ($message!==true) {return $message;}
+    # Check password
+    $message=check_password($password);
+    if ($message!==true) {return $message;}
 
-	# Generate new password hash
-	$password_hash=hash('sha256', md5("RS" . $username . $password));
-	
-	# Check password is not the same as the current
-	if ($userpassword==$password_hash) {return $lang["password_matches_existing"];}
-	
-	sql_query("update user set password='$password_hash', password_reset_hash=NULL, login_tries=0, password_last_change=now() where ref='$userref' limit 1");
+    # Generate new password hash
+    $password_hash=hash('sha256', md5("RS" . $username . $password));
+    
+    # Check password is not the same as the current
+    if ($userpassword==$password_hash) {return $lang["password_matches_existing"];}
+    
+    sql_query("update user set password='$password_hash', password_reset_hash=NULL, login_tries=0, password_last_change=now() where ref='$userref' limit 1");
         return true;
-	}
+    }
 }
-	
+    
 function make_password()
-	{
-	# Generate a password using the configured settings.
-	
-	global $password_min_length, $password_min_alpha, $password_min_uppercase, $password_min_numeric, $password_min_special;
+    {
+    # Generate a password using the configured settings.
+    
+    global $password_min_length, $password_min_alpha, $password_min_uppercase, $password_min_numeric, $password_min_special;
 
-	$lowercase="abcdefghijklmnopqrstuvwxyz";
-	$uppercase="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	$alpha=$uppercase . $lowercase;
-	$numeric="0123456789";
-	$special="!@$%^&*().?";
-	
-	$password="";
-	
-	# Add alphanumerics
-	for ($n=0;$n<$password_min_alpha;$n++)
-		{
-		$password.=substr($alpha,rand(0,strlen($alpha)-1),1);
-		}
-	
-	# Add upper case
-	for ($n=0;$n<$password_min_uppercase;$n++)
-		{
-		$password.=substr($uppercase,rand(0,strlen($uppercase)-1),1);
-		}
-	
-	# Add numerics
-	for ($n=0;$n<$password_min_numeric;$n++)
-		{
-		$password.=substr($numeric,rand(0,strlen($numeric)-1),1);
-		}
-	
-	# Add special
-	for ($n=0;$n<$password_min_special;$n++)
-		{
-		$password.=substr($special,rand(0,strlen($special)-1),1);
-		}
+    $lowercase="abcdefghijklmnopqrstuvwxyz";
+    $uppercase="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $alpha=$uppercase . $lowercase;
+    $numeric="0123456789";
+    $special="!@$%^&*().?";
+    
+    $password="";
+    
+    # Add alphanumerics
+    for ($n=0;$n<$password_min_alpha;$n++)
+        {
+        $password.=substr($alpha,rand(0,strlen($alpha)-1),1);
+        }
+    
+    # Add upper case
+    for ($n=0;$n<$password_min_uppercase;$n++)
+        {
+        $password.=substr($uppercase,rand(0,strlen($uppercase)-1),1);
+        }
+    
+    # Add numerics
+    for ($n=0;$n<$password_min_numeric;$n++)
+        {
+        $password.=substr($numeric,rand(0,strlen($numeric)-1),1);
+        }
+    
+    # Add special
+    for ($n=0;$n<$password_min_special;$n++)
+        {
+        $password.=substr($special,rand(0,strlen($special)-1),1);
+        }
 
-	# Pad with lower case
-	$padchars=$password_min_length-strlen($password);
-	for ($n=0;$n<$padchars;$n++)
-		{
-		$password.=substr($lowercase,rand(0,strlen($lowercase)-1),1);
-		}
-		
-	# Shuffle the password.
-	$password=str_shuffle($password);
-	
-	# Check the password
-	$check=check_password($password);
-	if ($check!==true) {exit("Error: unable to automatically produce a password that met the criteria. Please check the password criteria in config.php. Generated password was '$password'. Error was: " . $check);}
-	
+    # Pad with lower case
+    $padchars=$password_min_length-strlen($password);
+    for ($n=0;$n<$padchars;$n++)
+        {
+        $password.=substr($lowercase,rand(0,strlen($lowercase)-1),1);
+        }
+        
+    # Shuffle the password.
+    $password=str_shuffle($password);
+    
+    # Check the password
+    $check=check_password($password);
+    if ($check!==true) {exit("Error: unable to automatically produce a password that met the criteria. Please check the password criteria in config.php. Generated password was '$password'. Error was: " . $check);}
+    
     return $password;
-	}
+    }
 
 function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL,$url="")
     {
@@ -2613,304 +2613,305 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
     $userlist=resolve_userlist_groups($userlist);
     $ulist=trim_array(explode(",",$userlist));
 
-	$templatevars['text']=stripslashes(str_replace("\\r\\n","\n",$text));
-	$body=$templatevars['text'];
-	
-	if ($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL || $message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN))
-		{
-		$emails = resolve_user_emails($ulist);
+    $templatevars['text']=stripslashes(str_replace("\\r\\n","\n",$text));
+    $body=$templatevars['text'];
+    
+    if ($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL || $message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN))
+        {
+        $emails = resolve_user_emails($ulist);
 
         if(0 === count($emails))
             {
             return $lang['email_error_user_list_not_valid'];
             }
 
-		$emails = $emails['emails'];
+        $emails = $emails['emails'];
 
-		# Send an e-mail to each resolved user
-		foreach($emails as $email)
-			{
-			if(filter_var($email, FILTER_VALIDATE_EMAIL))
-				{
-				send_mail($email,$subject,$body,$applicationname,$email_from,"emailbulk",$templatevars,$applicationname,"",$html);
-				}
-			}
-		}
-	if ($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN || $message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN))
-		{
-		$user_refs = array();
-		foreach ($ulist as $user)
-			{
-			$user_ref = sql_value("SELECT ref AS value FROM user WHERE username='" . escape_check($user) . "'", false);
-			if ($user_ref !== false)
-				{
-				array_push($user_refs,$user_ref);
-				}
-			}
-		if($message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN) && $html)
-			{
-			# strip the tags out
-			$body=strip_tags($body);
-			}
-		message_add($user_refs,$body,$url,null,$message_type);
-		}
+        # Send an e-mail to each resolved user
+        foreach($emails as $email)
+            {
+            if(filter_var($email, FILTER_VALIDATE_EMAIL))
+                {
+                send_mail($email,$subject,$body,$applicationname,$email_from,"emailbulk",$templatevars,$applicationname,"",$html);
+                }
+            }
+        }
+    if ($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN || $message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN))
+        {
+        $user_refs = array();
+        foreach ($ulist as $user)
+            {
+            $user_ref = sql_value("SELECT ref AS value FROM user WHERE username='" . escape_check($user) . "'", false);
+            if ($user_ref !== false)
+                {
+                array_push($user_refs,$user_ref);
+                }
+            }
+        if($message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN) && $html)
+            {
+            # strip the tags out
+            $body=strip_tags($body);
+            }
+        message_add($user_refs,$body,$url,null,$message_type);
+        }
 
     # Return an empty string (all OK).
     return "";
     }
 
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="")
-	{
-	# Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
-	
-	# NOTE: $from is the name of the user sending the email,
-	# while $from_name is the name that should be put in the header, which can be the system name
-	# It is necessary to specify two since in all cases the email should be able to contain the user's name.
-	
-	# old mail function remains the same to avoid possible issues with phpmailer
-	# send_mail_phpmailer allows for the use of text and html (multipart) emails,
-	# and the use of email templates in Manage Content 
-
-	global $always_email_from_user;
-	if($always_email_from_user)
-		{
-		global $username, $useremail, $userfullname;
-		$from_name=($userfullname!="")?$userfullname:$username;
-		$from=$useremail;
-		$reply_to=$useremail;
-		}
-
-	global $always_email_copy_admin;
-	if($always_email_copy_admin)
-		{
-		global $email_notify;
-		$bcc.="," . $email_notify;
-		}
-    # No/invalid email address? Exit.
-	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {return false;}
+    {
+    # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
     
-	# Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
-	global $use_phpmailer;
-	if ($use_phpmailer){
-		send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc); 
-		return true;
-		}
-	
-	# Include footer
-	global $email_footer;
-	global $disable_quoted_printable_enc;
-	
-	# Work out correct EOL to use for mails (should use the system EOL).
-	if (defined("PHP_EOL")) {$eol=PHP_EOL;} else {$eol="\r\n";}
-	
-	$message.=$eol.$eol.$eol . $email_footer;
-	
-	if ($disable_quoted_printable_enc==false){
-	$message=rs_quoted_printable_encode($message);
-	$subject=rs_quoted_printable_encode_subject($subject);
-	}
-	
-	global $email_from;
-	if ($from=="") {$from=$email_from;}
-	if ($reply_to=="") {$reply_to=$email_from;}
-	global $applicationname;
-	if ($from_name==""){$from_name=$applicationname;}
-	
-	if (substr($reply_to,-1)==","){$reply_to=substr($reply_to,0,-1);}
-	
-	$reply_tos=explode(",",$reply_to);
-	
-	# Add headers
-	$headers="";
-	#$headers .= "X-Sender:  x-sender" . $eol;
-   	$headers .= "From: ";
-   	#allow multiple emails, and fix for long format emails
-   	for ($n=0;$n<count($reply_tos);$n++){
-		if ($n!=0){$headers.=",";}
-		if (strstr($reply_tos[$n],"<")){ 
-			$rtparts=explode("<",$reply_tos[$n]);
-			$headers.=$rtparts[0]." <".$rtparts[1];
-		}
-		else {
-			mb_internal_encoding("UTF-8");
-			$headers.=mb_encode_mimeheader($from_name, "UTF-8") . " <".$reply_tos[$n].">";
-		}
- 	}
- 	$headers.=$eol;
- 	$headers .= "Reply-To: $reply_to" . $eol;
- 	
-	if ($cc!=""){
-		global $userfullname;
-		#allow multiple emails, and fix for long format emails
-		$ccs=explode(",",$cc);
-		$headers .= "Cc: ";
-		for ($n=0;$n<count($ccs);$n++){
-			if ($n!=0){$headers.=",";}
-			if (strstr($ccs[$n],"<")){ 
-				$ccparts=explode("<",$ccs[$n]);
-				$headers.=$ccparts[0]." <".$ccparts[1];
-			}
-			else {
-				mb_internal_encoding("UTF-8");
-				$headers.=mb_encode_mimeheader($userfullname, "UTF-8"). " <".$ccs[$n].">";
-			}
-		}
-		$headers.=$eol;
-	}
-	
-	if ($bcc!=""){
-		global $userfullname;
-		#add bcc 
-		$bccs=explode(",",$bcc);
-		$headers .= "Bcc: ";
-		for ($n=0;$n<count($bccs);$n++){
-			if ($n!=0){$headers.=",";}
-			if (strstr($bccs[$n],"<")){ 
-				$bccparts=explode("<",$bccs[$n]);
-				$headers.=$bccparts[0]." <".$bccparts[1];
-			}
-			else {
-				mb_internal_encoding("UTF-8");
-				$headers.=mb_encode_mimeheader($userfullname, "UTF-8"). " <".$bccs[$n].">";
-			}
-		}
-		$headers.=$eol;
-	}
-	
-	$headers .= "Date: " . date("r") .  $eol;
-   	$headers .= "Message-ID: <" . date("YmdHis") . $from . ">" . $eol;
-   	#$headers .= "Return-Path: returnpath" . $eol;
-   	//$headers .= "Delivered-to: $email" . $eol;
-   	$headers .= "MIME-Version: 1.0" . $eol;
-   	$headers .= "X-Mailer: PHP Mail Function" . $eol;
-   	if (!is_html($message))
-   		{
-		$headers .= "Content-Type: text/plain; charset=\"UTF-8\"" . $eol;
-		}
-	else
-		{
-		$headers .= "Content-Type: text/html; charset=\"UTF-8\"" . $eol;
-		}
-	$headers .= "Content-Transfer-Encoding: quoted-printable" . $eol;
-	mail ($email,$subject,$message,$headers);
-	}
+    # NOTE: $from is the name of the user sending the email,
+    # while $from_name is the name that should be put in the header, which can be the system name
+    # It is necessary to specify two since in all cases the email should be able to contain the user's name.
+    
+    # old mail function remains the same to avoid possible issues with phpmailer
+    # send_mail_phpmailer allows for the use of text and html (multipart) emails,
+    # and the use of email templates in Manage Content 
+
+    global $always_email_from_user;
+    if($always_email_from_user)
+        {
+        global $username, $useremail, $userfullname;
+        $from_name=($userfullname!="")?$userfullname:$username;
+        $from=$useremail;
+        $reply_to=$useremail;
+        }
+
+    global $always_email_copy_admin;
+    if($always_email_copy_admin)
+        {
+        global $email_notify;
+        $bcc.="," . $email_notify;
+        }
+    # No/invalid email address? Exit.
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {return false;}
+    
+    # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
+    global $use_phpmailer;
+    if ($use_phpmailer){
+        send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc); 
+        return true;
+        }
+    
+    # Include footer
+    global $email_footer;
+    global $disable_quoted_printable_enc;
+    
+    # Work out correct EOL to use for mails (should use the system EOL).
+    if (defined("PHP_EOL")) {$eol=PHP_EOL;} else {$eol="\r\n";}
+    
+    $message.=$eol.$eol.$eol . $email_footer;
+    
+    if ($disable_quoted_printable_enc==false){
+    $message=rs_quoted_printable_encode($message);
+    $subject=rs_quoted_printable_encode_subject($subject);
+    }
+    
+    global $email_from;
+    if ($from=="") {$from=$email_from;}
+    if ($reply_to=="") {$reply_to=$email_from;}
+    global $applicationname;
+    if ($from_name==""){$from_name=$applicationname;}
+    
+    if (substr($reply_to,-1)==","){$reply_to=substr($reply_to,0,-1);}
+    
+    $reply_tos=explode(",",$reply_to);
+    
+    # Add headers
+    $headers="";
+    #$headers .= "X-Sender:  x-sender" . $eol;
+    $headers .= "From: ";
+    #allow multiple emails, and fix for long format emails
+    for ($n=0;$n<count($reply_tos);$n++){
+        if ($n!=0){$headers.=",";}
+        if (strstr($reply_tos[$n],"<")){ 
+            $rtparts=explode("<",$reply_tos[$n]);
+            $headers.=$rtparts[0]." <".$rtparts[1];
+        }
+        else {
+            mb_internal_encoding("UTF-8");
+            $headers.=mb_encode_mimeheader($from_name, "UTF-8") . " <".$reply_tos[$n].">";
+        }
+    }
+    $headers.=$eol;
+    $headers .= "Reply-To: $reply_to" . $eol;
+    
+    if ($cc!=""){
+        global $userfullname;
+        #allow multiple emails, and fix for long format emails
+        $ccs=explode(",",$cc);
+        $headers .= "Cc: ";
+        for ($n=0;$n<count($ccs);$n++){
+            if ($n!=0){$headers.=",";}
+            if (strstr($ccs[$n],"<")){ 
+                $ccparts=explode("<",$ccs[$n]);
+                $headers.=$ccparts[0]." <".$ccparts[1];
+            }
+            else {
+                mb_internal_encoding("UTF-8");
+                $headers.=mb_encode_mimeheader($userfullname, "UTF-8"). " <".$ccs[$n].">";
+            }
+        }
+        $headers.=$eol;
+    }
+    
+    if ($bcc!=""){
+        global $userfullname;
+        #add bcc 
+        $bccs=explode(",",$bcc);
+        $headers .= "Bcc: ";
+        for ($n=0;$n<count($bccs);$n++){
+            if ($n!=0){$headers.=",";}
+            if (strstr($bccs[$n],"<")){ 
+                $bccparts=explode("<",$bccs[$n]);
+                $headers.=$bccparts[0]." <".$bccparts[1];
+            }
+            else {
+                mb_internal_encoding("UTF-8");
+                $headers.=mb_encode_mimeheader($userfullname, "UTF-8"). " <".$bccs[$n].">";
+            }
+        }
+        $headers.=$eol;
+    }
+    
+    $headers .= "Date: " . date("r") .  $eol;
+    $headers .= "Message-ID: <" . date("YmdHis") . $from . ">" . $eol;
+    #$headers .= "Return-Path: returnpath" . $eol;
+    //$headers .= "Delivered-to: $email" . $eol;
+    $headers .= "MIME-Version: 1.0" . $eol;
+    $headers .= "X-Mailer: PHP Mail Function" . $eol;
+    if (!is_html($message))
+        {
+        $headers .= "Content-Type: text/plain; charset=\"UTF-8\"" . $eol;
+        }
+    else
+        {
+        $headers .= "Content-Type: text/html; charset=\"UTF-8\"" . $eol;
+        }
+    $headers .= "Content-Transfer-Encoding: quoted-printable" . $eol;
+    log_mail($email,$subject);
+    mail ($email,$subject,$message,$headers);
+    }
 
 if (!function_exists("send_mail_phpmailer")){
 function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="")
-	{
+    {
         # if ($use_phpmailer==true) this function is used instead.
-	# Mail templates can include lang, server, site_text, and POST variables by default
-	# ex ( [lang_mycollections], [server_REMOTE_ADDR], [text_footer] , [message]
-	
-	# additional values must be made available through $templatevars
-	# For example, a complex url or image path that may be sent in an 
-	# email should be added to the templatevars array and passed into send_mail.
-	# available templatevars need to be well-documented, and sample templates
-	# need to be available.
+    # Mail templates can include lang, server, site_text, and POST variables by default
+    # ex ( [lang_mycollections], [server_REMOTE_ADDR], [text_footer] , [message]
+    
+    # additional values must be made available through $templatevars
+    # For example, a complex url or image path that may be sent in an 
+    # email should be added to the templatevars array and passed into send_mail.
+    # available templatevars need to be well-documented, and sample templates
+    # need to be available.
 
-	# Include footer
-	global $email_footer, $storagedir, $mime_type_by_extension;
+    # Include footer
+    global $email_footer, $storagedir, $mime_type_by_extension;
     include_once(__DIR__ . '/../lib/PHPMailer/PHPMailer.php');
     include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
     
-	global $email_from;
-	if ($from=="") {$from=$email_from;}
-	if ($reply_to=="") {$reply_to=$email_from;}
-	global $applicationname;
-	if ($from_name==""){$from_name=$applicationname;}
-	
-	#check for html template. If exists, attempt to include vars into message
-	if ($html_template!="")
-		{
-		# Attempt to verify users by email, which allows us to get the email template by lang and usergroup
-		$to_usergroup=sql_query("select lang,usergroup from user where email ='" . escape_check($email) . "'","");
+    global $email_from;
+    if ($from=="") {$from=$email_from;}
+    if ($reply_to=="") {$reply_to=$email_from;}
+    global $applicationname;
+    if ($from_name==""){$from_name=$applicationname;}
+    
+    #check for html template. If exists, attempt to include vars into message
+    if ($html_template!="")
+        {
+        # Attempt to verify users by email, which allows us to get the email template by lang and usergroup
+        $to_usergroup=sql_query("select lang,usergroup from user where email ='" . escape_check($email) . "'","");
         
-		if (count($to_usergroup)!=0)
-			{
-			$to_usergroupref=$to_usergroup[0]['usergroup'];
-			$to_usergrouplang=$to_usergroup[0]['lang'];
-			}
-		else 
-			{
-			$to_usergrouplang="";	
-			}
-			
-		if ($to_usergrouplang==""){global $defaultlanguage; $to_usergrouplang=$defaultlanguage;}
-			
-		if (isset($to_usergroupref))
-			{	
-			$modified_to_usergroupref=hook("modifytousergroup","",$to_usergroupref);
-			if (is_int($modified_to_usergroupref)){$to_usergroupref=$modified_to_usergroupref;}
-			$results=sql_query("select language,name,text from site_text where page='all' and name='$html_template' and specific_to_group='$to_usergroupref'");
-			}
-		else 
-			{	
-			$results=sql_query("select language,name,text from site_text where page='all' and name='$html_template' and specific_to_group is null");
-			}
-			
-		global $site_text;
-		for ($n=0;$n<count($results);$n++) {$site_text[$results[$n]["language"] . "-" . $results[$n]["name"]]=$results[$n]["text"];} 
-				
-		$language=$to_usergrouplang;
+        if (count($to_usergroup)!=0)
+            {
+            $to_usergroupref=$to_usergroup[0]['usergroup'];
+            $to_usergrouplang=$to_usergroup[0]['lang'];
+            }
+        else 
+            {
+            $to_usergrouplang="";   
+            }
+            
+        if ($to_usergrouplang==""){global $defaultlanguage; $to_usergrouplang=$defaultlanguage;}
+            
+        if (isset($to_usergroupref))
+            {   
+            $modified_to_usergroupref=hook("modifytousergroup","",$to_usergroupref);
+            if (is_int($modified_to_usergroupref)){$to_usergroupref=$modified_to_usergroupref;}
+            $results=sql_query("select language,name,text from site_text where page='all' and name='$html_template' and specific_to_group='$to_usergroupref'");
+            }
+        else 
+            {   
+            $results=sql_query("select language,name,text from site_text where page='all' and name='$html_template' and specific_to_group is null");
+            }
+            
+        global $site_text;
+        for ($n=0;$n<count($results);$n++) {$site_text[$results[$n]["language"] . "-" . $results[$n]["name"]]=$results[$n]["text"];} 
+                
+        $language=$to_usergrouplang;
                                 
-		if (array_key_exists($language . "-" . $html_template,$site_text)) 
-			{
-			$template=$site_text[$language . "-" .$html_template];
-			} 
-		else 
-			{
-			global $languages;
+        if (array_key_exists($language . "-" . $html_template,$site_text)) 
+            {
+            $template=$site_text[$language . "-" .$html_template];
+            } 
+        else 
+            {
+            global $languages;
 
-			# Can't find the language key? Look for it in other languages.
-			reset($languages);
-			foreach ($languages as $key=>$value)
-				{
-				if (array_key_exists($key . "-" . $html_template,$site_text)) {$template = $site_text[$key . "-" . $html_template];break;} 		
-				}
-			// Fall back to language file if not in site text
-			global $lang;
-			if(!isset($template))
-				{
-				if(isset($lang["all__" . $html_template])){$template=$lang["all__" . $html_template];}
-				elseif(isset($lang[$html_template])){$template=$lang[$html_template];}
-				}
-			}		
+            # Can't find the language key? Look for it in other languages.
+            reset($languages);
+            foreach ($languages as $key=>$value)
+                {
+                if (array_key_exists($key . "-" . $html_template,$site_text)) {$template = $site_text[$key . "-" . $html_template];break;}      
+                }
+            // Fall back to language file if not in site text
+            global $lang;
+            if(!isset($template))
+                {
+                if(isset($lang["all__" . $html_template])){$template=$lang["all__" . $html_template];}
+                elseif(isset($lang[$html_template])){$template=$lang[$html_template];}
+                }
+            }       
 
 
-		if (isset($template) && $template!="")
-			{
-			preg_match_all('/\[[^\]]*\]/',$template,$test);
-			foreach($test[0] as $variable)
-				{
-			
-				$variable=str_replace("[","",$variable);
-				$variable=str_replace("]","",$variable);
-			
-				
-				# get lang variables (ex. [lang_mycollections])
-				if (substr($variable,0,5)=="lang_"){
-					global $lang;
-					$$variable=$lang[substr($variable,5)];
-				}
-				
-				# get server variables (ex. [server_REMOTE_ADDR] for a user request)
-				else if (substr($variable,0,7)=="server_"){
-					$$variable=$_SERVER[substr($variable,7)];
-				}
-				
-				# [embed_thumbnail] (requires url in templatevars['thumbnail'])
-				else if (substr($variable,0,15)=="embed_thumbnail"){
-					$thumbcid=uniqid('thumb');
-					$$variable="<img style='border:1px solid #d1d1d1;' src='cid:$thumbcid' />";
-				}
-				
-				# deprecated by improved [img_] tag below
-				# embed images (find them in relation to storagedir so that templates are portable)...  (ex [img_storagedir_/../gfx/whitegry/titles/title.gif])
-				else if (substr($variable,0,15)=="img_storagedir_"){
-					$$variable="<img src='cid:".basename(substr($variable,15))."'/>";
-					$images[]=dirname(__FILE__).substr($variable,15);
-				}
+        if (isset($template) && $template!="")
+            {
+            preg_match_all('/\[[^\]]*\]/',$template,$test);
+            foreach($test[0] as $variable)
+                {
+            
+                $variable=str_replace("[","",$variable);
+                $variable=str_replace("]","",$variable);
+            
+                
+                # get lang variables (ex. [lang_mycollections])
+                if (substr($variable,0,5)=="lang_"){
+                    global $lang;
+                    $$variable=$lang[substr($variable,5)];
+                }
+                
+                # get server variables (ex. [server_REMOTE_ADDR] for a user request)
+                else if (substr($variable,0,7)=="server_"){
+                    $$variable=$_SERVER[substr($variable,7)];
+                }
+                
+                # [embed_thumbnail] (requires url in templatevars['thumbnail'])
+                else if (substr($variable,0,15)=="embed_thumbnail"){
+                    $thumbcid=uniqid('thumb');
+                    $$variable="<img style='border:1px solid #d1d1d1;' src='cid:$thumbcid' />";
+                }
+                
+                # deprecated by improved [img_] tag below
+                # embed images (find them in relation to storagedir so that templates are portable)...  (ex [img_storagedir_/../gfx/whitegry/titles/title.gif])
+                else if (substr($variable,0,15)=="img_storagedir_"){
+                    $$variable="<img src='cid:".basename(substr($variable,15))."'/>";
+                    $images[]=dirname(__FILE__).substr($variable,15);
+                }
 
                 // embed images - ex [img_gfx/whitegry/titles/title.gif]
                 else if('img_' == substr($variable, 0, 4))
@@ -2932,137 +2933,137 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                     $$variable = '<img src="cid:' . basename($image_path) . '"/>';
                     }
 
-				# attach files (ex [attach_/var/www/resourcespace/gfx/whitegry/titles/title.gif])
-				else if (substr($variable,0,7)=="attach_"){
-					$$variable="";
-					$attachments[]=substr($variable,7);
-				}
-				
-				# get site text variables (ex. [text_footer], for example to 
-				# manage html snippets that you want available in all emails.)
-				else if (substr($variable,0,5)=="text_"){
-					$$variable=text(substr($variable,5));
-				}
+                # attach files (ex [attach_/var/www/resourcespace/gfx/whitegry/titles/title.gif])
+                else if (substr($variable,0,7)=="attach_"){
+                    $$variable="";
+                    $attachments[]=substr($variable,7);
+                }
+                
+                # get site text variables (ex. [text_footer], for example to 
+                # manage html snippets that you want available in all emails.)
+                else if (substr($variable,0,5)=="text_"){
+                    $$variable=text(substr($variable,5));
+                }
 
-				# try to get the variable from POST
-				else{
-					$$variable=getval($variable,"");
-				}
-				
-				# avoid resetting templatevars that may have been passed here
-				if (!isset($templatevars[$variable])){$templatevars[$variable]=$$variable;}
-				}
+                # try to get the variable from POST
+                else{
+                    $$variable=getval($variable,"");
+                }
+                
+                # avoid resetting templatevars that may have been passed here
+                if (!isset($templatevars[$variable])){$templatevars[$variable]=$$variable;}
+                }
 
-			if (isset($templatevars))
-				{
-				foreach($templatevars as $key=>$value)
-					{
-					$template=str_replace("[" . $key . "]",nl2br($value),$template);
-					}
-				}
-			$body=$template;	
-			} 
-		}		
+            if (isset($templatevars))
+                {
+                foreach($templatevars as $key=>$value)
+                    {
+                    $template=str_replace("[" . $key . "]",nl2br($value),$template);
+                    }
+                }
+            $body=$template;    
+            } 
+        }       
 
-	if (!isset($body)){$body=$message;}
+    if (!isset($body)){$body=$message;}
 
-	global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password;
-	$mail = new PHPMailer\PHPMailer\PHPMailer();
-	// use an external SMTP server? (e.g. Gmail)
-	if ($use_smtp) {
-		$mail->IsSMTP(); // enable SMTP
-		$mail->SMTPDebug = 0;  // debugging: 1 = errors and messages, 2 = messages only
-		$mail->SMTPAuth = $smtp_auth;  // authentication enabled/disabled
-		$mail->SMTPSecure = $smtp_secure; // '', 'tls' or 'ssl'
-		$mail->Host = $smtp_host; // hostname
-		$mail->Port = $smtp_port; // port number
-		$mail->Username = $smtp_username; // username
-		$mail->Password = $smtp_password; // password
-	}
-	$reply_tos=explode(",",$reply_to);
+    global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password;
+    $mail = new PHPMailer\PHPMailer\PHPMailer();
+    // use an external SMTP server? (e.g. Gmail)
+    if ($use_smtp) {
+        $mail->IsSMTP(); // enable SMTP
+        $mail->SMTPDebug = 0;  // debugging: 1 = errors and messages, 2 = messages only
+        $mail->SMTPAuth = $smtp_auth;  // authentication enabled/disabled
+        $mail->SMTPSecure = $smtp_secure; // '', 'tls' or 'ssl'
+        $mail->Host = $smtp_host; // hostname
+        $mail->Port = $smtp_port; // port number
+        $mail->Username = $smtp_username; // username
+        $mail->Password = $smtp_password; // password
+    }
+    $reply_tos=explode(",",$reply_to);
 
-	// only one from address is possible, so only use the first one:
-	if (strstr($reply_tos[0],"<")){
-		$rtparts=explode("<",$reply_tos[0]);
-		$mail->From = str_replace(">","",$rtparts[1]);
-		$mail->FromName = $rtparts[0];
-	}
-	else {
-		$mail->From = $reply_tos[0];
-		$mail->FromName = $from_name;
-	}
-	
-	// if there are multiple addresses, that's what replyto handles.
-	for ($n=0;$n<count($reply_tos);$n++){
-		if (strstr($reply_tos[$n],"<")){
-			$rtparts=explode("<",$reply_tos[$n]);
-			$mail->AddReplyto(str_replace(">","",$rtparts[1]),$rtparts[0]);
-		}
-		else {
-			$mail->AddReplyto($reply_tos[$n],$from_name);
-		}
-	}
-	
-	# modification to handle multiple comma delimited emails
-	# such as for a multiple $email_notify
-	$emails = $email;
-	$emails = explode(',', $emails);
-	$emails = array_map('trim', $emails);
-	foreach ($emails as $email){
-		if (strstr($email,"<")){
-			$emparts=explode("<",$email);
-			$mail->AddAddress(str_replace(">","",$emparts[1]),$emparts[0]);
-		}
-		else {
-			$mail->AddAddress($email);
-		}
-	}
-	
-	if ($cc!=""){
-		# modification for multiple is also necessary here, though a broken cc seems to be simply removed by phpmailer rather than breaking it.
-		$ccs = $cc;
-		$ccs = explode(',', $ccs);
-		$ccs = array_map('trim', $ccs);
-		global $userfullname;
-		foreach ($ccs as $cc){
-			if (strstr($cc,"<")){
-				$ccparts=explode("<",$cc);
-				$mail->AddCC(str_replace(">","",$ccparts[1]),$ccparts[0]);
-			}
-			else{
-				$mail->AddCC($cc,$userfullname);
-			}
-		}
-	}
-	if ($bcc!=""){
-		# modification for multiple is also necessary here, though a broken cc seems to be simply removed by phpmailer rather than breaking it.
-		$bccs = $bcc;
-		$bccs = explode(',', $bccs);
-		$bccs = array_map('trim', $bccs);
-		global $userfullname;
-		foreach ($bccs as $bccemail){
-			if (strstr($bccemail,"<")){
-				$bccparts=explode("<",$bccemail);
-				$mail->AddBCC(str_replace(">","",$bccparts[1]),$bccparts[0]);
-			}
-			else{
-				$mail->AddBCC($bccemail,$userfullname);
-			}
-		}
-	}
-	
-	
-	$mail->CharSet = "utf-8"; 
-	
-	if (is_html($body)) {$mail->IsHTML(true);}  	
-	else {$mail->IsHTML(false);}
-	
-	$mail->Subject = $subject;
-	$mail->Body    = $body;
-	
-	if (isset($embed_thumbnail)&&isset($templatevars['thumbnail'])){
-		$mail->AddEmbeddedImage($templatevars['thumbnail'],$thumbcid,$thumbcid,'base64','image/jpeg'); 
-		}
+    // only one from address is possible, so only use the first one:
+    if (strstr($reply_tos[0],"<")){
+        $rtparts=explode("<",$reply_tos[0]);
+        $mail->From = str_replace(">","",$rtparts[1]);
+        $mail->FromName = $rtparts[0];
+    }
+    else {
+        $mail->From = $reply_tos[0];
+        $mail->FromName = $from_name;
+    }
+    
+    // if there are multiple addresses, that's what replyto handles.
+    for ($n=0;$n<count($reply_tos);$n++){
+        if (strstr($reply_tos[$n],"<")){
+            $rtparts=explode("<",$reply_tos[$n]);
+            $mail->AddReplyto(str_replace(">","",$rtparts[1]),$rtparts[0]);
+        }
+        else {
+            $mail->AddReplyto($reply_tos[$n],$from_name);
+        }
+    }
+    
+    # modification to handle multiple comma delimited emails
+    # such as for a multiple $email_notify
+    $emails = $email;
+    $emails = explode(',', $emails);
+    $emails = array_map('trim', $emails);
+    foreach ($emails as $email){
+        if (strstr($email,"<")){
+            $emparts=explode("<",$email);
+            $mail->AddAddress(str_replace(">","",$emparts[1]),$emparts[0]);
+        }
+        else {
+            $mail->AddAddress($email);
+        }
+    }
+    
+    if ($cc!=""){
+        # modification for multiple is also necessary here, though a broken cc seems to be simply removed by phpmailer rather than breaking it.
+        $ccs = $cc;
+        $ccs = explode(',', $ccs);
+        $ccs = array_map('trim', $ccs);
+        global $userfullname;
+        foreach ($ccs as $cc){
+            if (strstr($cc,"<")){
+                $ccparts=explode("<",$cc);
+                $mail->AddCC(str_replace(">","",$ccparts[1]),$ccparts[0]);
+            }
+            else{
+                $mail->AddCC($cc,$userfullname);
+            }
+        }
+    }
+    if ($bcc!=""){
+        # modification for multiple is also necessary here, though a broken cc seems to be simply removed by phpmailer rather than breaking it.
+        $bccs = $bcc;
+        $bccs = explode(',', $bccs);
+        $bccs = array_map('trim', $bccs);
+        global $userfullname;
+        foreach ($bccs as $bccemail){
+            if (strstr($bccemail,"<")){
+                $bccparts=explode("<",$bccemail);
+                $mail->AddBCC(str_replace(">","",$bccparts[1]),$bccparts[0]);
+            }
+            else{
+                $mail->AddBCC($bccemail,$userfullname);
+            }
+        }
+    }
+    
+    
+    $mail->CharSet = "utf-8"; 
+    
+    if (is_html($body)) {$mail->IsHTML(true);}      
+    else {$mail->IsHTML(false);}
+    
+    $mail->Subject = $subject;
+    $mail->Body    = $body;
+    
+    if (isset($embed_thumbnail)&&isset($templatevars['thumbnail'])){
+        $mail->AddEmbeddedImage($templatevars['thumbnail'],$thumbcid,$thumbcid,'base64','image/jpeg'); 
+        }
 
     if(isset($images))
         {
@@ -3080,34 +3081,73 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
             }
         }
 
-	if (isset($attachments)){
-		foreach ($attachments as $attachment){
-		$mail->AddAttachment($attachment,basename($attachment));}
-	}
+    if (isset($attachments)){
+        foreach ($attachments as $attachment){
+        $mail->AddAttachment($attachment,basename($attachment));}
+    }
 
-	if (is_html($body))
+    if (is_html($body))
         {
         $mail->AltBody = $mail->html2text($body); 
         }
         
+    log_mail($email,$subject);
+
     try
         {
         $mail->Send();
         }
-	catch (Exception $e)
+    catch (Exception $e)
         {
-		echo "Message could not be sent. <p>";
+        echo "Message could not be sent. <p>";
         debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
-		exit;
-		}
+        exit;
+        }
     catch (\Exception $e)
         {
-		echo "Message could not be sent. <p>";
+        echo "Message could not be sent. <p>";
         debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
-		exit;
+        exit;
         }
-	hook("aftersendmailphpmailer","",$email);	
+    hook("aftersendmailphpmailer","",$email);   
 }
+}
+
+function log_mail($email,$subject) {
+    // Log email 
+    // Data logged is:
+    //  Time
+    //  To address
+    //  From, User ID or 0 for system emails (cron etc.)
+    //  Subject
+    global $userref;
+    $to = escape_check($email);
+    if (isset($userref))
+        {
+        $from = $userref;
+        }
+    else
+        {
+        $from = 0;
+        }
+    $sub = escape_check(mb_substr($subject,0,100));
+
+    // Write log to database
+    sql_query("
+        INSERT into
+            mail_log (
+                date,
+                mail_to,
+                mail_from,
+                subject
+                )
+            VALUES (
+                NOW(),
+                '" . $to . "',
+                '" . $from . "',
+                '" . $sub . "'
+        );
+        ");
 }
 
 function rs_quoted_printable_encode($string, $linelen = 0, $linebreak="=\r\n", $breaklen = 0, $encodecrlf = false) {
@@ -3142,8 +3182,8 @@ function rs_quoted_printable_encode($string, $linelen = 0, $linebreak="=\r\n", $
 
 
 function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
-	{
-	// use this function with headers, not with the email body as it misses word wrapping
+    {
+    // use this function with headers, not with the email body as it misses word wrapping
        $len = strlen($string);
        $result = '';
        $enc = false;
@@ -3162,19 +3202,19 @@ function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
        //L: so spam agents won't mark your email with QP_EXCESS
        if (!$enc) return $string;
        return '=?'.$encoding.'?q?'.$result.'?=';
-	}
+    }
 
 if (!function_exists("highlightkeywords")){
 function highlightkeywords($text,$search,$partial_index=false,$field_name="",$keywords_index=1, $str_highlight_options = STR_HIGHLIGHT_SIMPLE)
-	{
-	# do not highlight if the field is not indexed, so it is clearer where results came from.	
-	if ($keywords_index!=1){return $text;}
+    {
+    # do not highlight if the field is not indexed, so it is clearer where results came from.   
+    if ($keywords_index!=1){return $text;}
 
-	# Highlight searched keywords in $text
-	# Optional - depends on $highlightkeywords being set in config.php.
-	global $highlightkeywords;
-	# Situations where we do not need to do this.
-	if (!isset($highlightkeywords) || ($highlightkeywords==false) || ($search=="") || ($text=="")) {return $text;}
+    # Highlight searched keywords in $text
+    # Optional - depends on $highlightkeywords being set in config.php.
+    global $highlightkeywords;
+    # Situations where we do not need to do this.
+    if (!isset($highlightkeywords) || ($highlightkeywords==false) || ($search=="") || ($text=="")) {return $text;}
 
 
         # Generate the cache of search keywords (no longer global so it can test against particular fields.
@@ -3188,8 +3228,8 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
                         $c=explode(":",$s[$n]);
                         # only add field specific keywords
                         if($field_name!="" && $c[0]==$field_name){
-                                $hlkeycache[]=$c[1];			
-                        }	
+                                $hlkeycache[]=$c[1];            
+                        }   
                 }
                 # else add general keywords
                 else {
@@ -3203,12 +3243,12 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
                         
                         if (strpos($keyword,"*")!==false) {$wildcards_found=true;$keyword=str_replace("*","",$keyword);}
                         $hlkeycache[]=$keyword;
-                }	
+                }   
              }
         
-	# Parse and replace.
-	return str_highlight($text, $hlkeycache, $str_highlight_options);
-	}
+    # Parse and replace.
+    return str_highlight($text, $hlkeycache, $str_highlight_options);
+    }
 }
 # These lines go with str_highlight (next).
 define('STR_HIGHLIGHT_SIMPLE', 1);
@@ -3217,7 +3257,7 @@ define('STR_HIGHLIGHT_CASESENS', 4);
 define('STR_HIGHLIGHT_STRIPLINKS', 8);
 
 function str_highlight($text, $needle, $options = null, $highlight = null)
-	{
+    {
     /*
     Sometimes the text can contain HTML entities and can break the hilghlighting feature
     Example: searching for "q&a" in a string like "q&amp;a" will highlight the wrong string
@@ -3230,12 +3270,12 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
         $options = $options & STR_HIGHLIGHT_STRIPLINKS;
         }
 
-	# Thanks to Aidan Lister <aidan@php.net>
-	# Sourced from http://aidanlister.com/repos/v/function.str_highlight.php on 2007-10-09
-	# License on the website reads: "All code on this website resides in the Public Domain, you are free to use and modify it however you wish."
-	# http://aidanlister.com/repos/license/
+    # Thanks to Aidan Lister <aidan@php.net>
+    # Sourced from http://aidanlister.com/repos/v/function.str_highlight.php on 2007-10-09
+    # License on the website reads: "All code on this website resides in the Public Domain, you are free to use and modify it however you wish."
+    # http://aidanlister.com/repos/license/
 
-	$text=str_replace("_","♠",$text);// underscores are considered part of words, so temporarily replace them for better \b search.
+    $text=str_replace("_","♠",$text);// underscores are considered part of words, so temporarily replace them for better \b search.
     $text=str_replace("#zwspace;","♣",$text);
     
     // Default highlighting
@@ -3263,34 +3303,34 @@ function str_highlight($text, $needle, $options = null, $highlight = null)
     usort($needle, "sorthighlights");
 
     foreach ($needle as $needle_s) {
-    	if (strlen($needle_s) > 0) {
-	        $needle_s = preg_quote($needle_s);
-	        $needle_s = str_replace("#","\\#",$needle_s);
-	 
-	        // Escape needle with optional whole word check
-	        if ($options & STR_HIGHLIGHT_WHOLEWD) {
-	            $needle_s = '\b' . $needle_s . '\b';
-	        }
-	 
-	        // Strip links
-	        if ($options & STR_HIGHLIGHT_STRIPLINKS) {
-	            $sl_regex = sprintf($sl_pattern, $needle_s);
-	            $text = preg_replace($sl_regex, '\1', $text);
-	        }
-	 
-	        $regex = sprintf($pattern, $needle_s);
-	        $text = preg_replace($regex, $highlight, $text);
-	    }
+        if (strlen($needle_s) > 0) {
+            $needle_s = preg_quote($needle_s);
+            $needle_s = str_replace("#","\\#",$needle_s);
+     
+            // Escape needle with optional whole word check
+            if ($options & STR_HIGHLIGHT_WHOLEWD) {
+                $needle_s = '\b' . $needle_s . '\b';
+            }
+     
+            // Strip links
+            if ($options & STR_HIGHLIGHT_STRIPLINKS) {
+                $sl_regex = sprintf($sl_pattern, $needle_s);
+                $text = preg_replace($sl_regex, '\1', $text);
+            }
+     
+            $regex = sprintf($pattern, $needle_s);
+            $text = preg_replace($regex, $highlight, $text);
+        }
     }
-	$text=str_replace("♠","_",$text);
-	$text=str_replace("♣","#zwspace;",$text);
+    $text=str_replace("♠","_",$text);
+    $text=str_replace("♣","#zwspace;",$text);
 
-	# Fix - do the final replace at the end - fixes a glitch whereby the highlight HTML itself gets highlighted if it matches search terms, and you get nested HTML.
-	$text=str_replace("||<||",'<span class="highlight">',$text);
-	$text=str_replace("||>||",'</span>',$text);
+    # Fix - do the final replace at the end - fixes a glitch whereby the highlight HTML itself gets highlighted if it matches search terms, and you get nested HTML.
+    $text=str_replace("||<||",'<span class="highlight">',$text);
+    $text=str_replace("||>||",'</span>',$text);
 
     return $text;
-	}
+    }
 
 function sorthighlights($a, $b)
     {
@@ -3302,39 +3342,39 @@ function sorthighlights($a, $b)
     }
 
 function pager($break=true,$scrolltotop=true)
-	{
-	global $curpage,$url,$totalpages,$offset,$per_page,$lang,$jumpcount,$pager_dropdown,$pagename;
+    {
+    global $curpage,$url,$totalpages,$offset,$per_page,$lang,$jumpcount,$pager_dropdown,$pagename;
 
     $modal  = ('true' == getval('modal', ''));
     $scroll =  $scrolltotop ? "true" : "false"; 
-	$jumpcount++;
-	if(!hook("replace_pager")){
-		if ($totalpages!=0 && $totalpages!=1){?>     
-			<span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo $url?>&amp;go=prev&amp;offset=<?php echo urlencode($offset-$per_page) ?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
+    $jumpcount++;
+    if(!hook("replace_pager")){
+        if ($totalpages!=0 && $totalpages!=1){?>     
+            <span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo $lang["previous"]?>" href="<?php echo $url?>&amp;go=prev&amp;offset=<?php echo urlencode($offset-$per_page) ?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
 
-			<?php if ($pager_dropdown){
-				$id=rand();?>
-				<select id="pager<?php echo $id;?>" class="ListDropdown" style="width:50px;" <?php if(!hook("replacepageronchange_drop","",array($id))){?>onChange="var jumpto=document.getElementById('pager<?php echo $id?>').value;if ((jumpto>0) && (jumpto<=<?php echo $totalpages?>)) {return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}" <?php } ?>>
-				<?php for ($n=1;$n<$totalpages+1;$n++){?>
-					<option value='<?php echo $n?>' <?php if ($n==$curpage){?>selected<?php } ?>><?php echo $n?></option>
-				<?php } ?>
-				</select>
-			<?php } else { ?>
+            <?php if ($pager_dropdown){
+                $id=rand();?>
+                <select id="pager<?php echo $id;?>" class="ListDropdown" style="width:50px;" <?php if(!hook("replacepageronchange_drop","",array($id))){?>onChange="var jumpto=document.getElementById('pager<?php echo $id?>').value;if ((jumpto>0) && (jumpto<=<?php echo $totalpages?>)) {return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}" <?php } ?>>
+                <?php for ($n=1;$n<$totalpages+1;$n++){?>
+                    <option value='<?php echo $n?>' <?php if ($n==$curpage){?>selected<?php } ?>><?php echo $n?></option>
+                <?php } ?>
+                </select>
+            <?php } else { ?>
 
-				<div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo $lang["jumptopage"]?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}">
-			&nbsp;<a aria-hidden="true" class="fa fa-times-circle" href="#" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='inline';"></a></div>
-			
-				<a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo $lang["jumptopage"]?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo $lang["page"]?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo $lang["of"]?>&nbsp;<?php echo $totalpages?></a>
-			<?php } ?>
+                <div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo $lang["jumptopage"]?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo $url?>&amp;go=page&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}">
+            &nbsp;<a aria-hidden="true" class="fa fa-times-circle" href="#" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='inline';"></a></div>
+            
+                <a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo $lang["jumptopage"]?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo $lang["page"]?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo $lang["of"]?>&nbsp;<?php echo $totalpages?></a>
+            <?php } ?>
 
-			&nbsp;&nbsp;<?php if ($curpage<$totalpages) { ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo $url?>&amp;go=next&amp;offset=<?php echo urlencode($offset+$per_page) ?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-right"></i><?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
-			</span>
-			
-		<?php } else { ?><span class="HorizontalWhiteNav">&nbsp;</span><div <?php if ($pagename=="search"){?>style="display:block;"<?php } else { ?>style="display:inline;"<?php }?>>&nbsp;</div><?php } ?>
-		<?php
-		}
-	}
-	
+            &nbsp;&nbsp;<?php if ($curpage<$totalpages) { ?><a class="nextPageLink" title="<?php echo $lang["next"]?>" href="<?php echo $url?>&amp;go=next&amp;offset=<?php echo urlencode($offset+$per_page) ?>" <?php if(!hook("replacepageronclick_next")){?>onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-right"></i><?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
+            </span>
+            
+        <?php } else { ?><span class="HorizontalWhiteNav">&nbsp;</span><div <?php if ($pagename=="search"){?>style="display:block;"<?php } else { ?>style="display:inline;"<?php }?>>&nbsp;</div><?php } ?>
+        <?php
+        }
+    }
+    
 function get_all_image_sizes($internal=false,$restricted=false)
 {
     # Returns all image sizes available.
@@ -3354,193 +3394,193 @@ function get_all_image_sizes($internal=false,$restricted=false)
     return $return;
 
 }
-	
+    
 function image_size_restricted_access($id)
-	{
-	# Returns true if the indicated size is allowed for a restricted user.
-	return sql_value("select allow_restricted value from preview_size where id='$id'",false);
-	}
-	
+    {
+    # Returns true if the indicated size is allowed for a restricted user.
+    return sql_value("select allow_restricted value from preview_size where id='$id'",false);
+    }
+    
 function get_user_log($user, $fetchrows=-1)
-	{
+    {
     # Returns a user action log for $user.
     # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
-	global $view_title_field;
+    global $view_title_field;
     # Executes query.
     $r = sql_query("select r.ref resourceid,r.field".$view_title_field." resourcetitle,l.date,l.type,f.title,l.purchase_size,l.purchase_price, l.notes,l.diff from resource_log l left outer join resource r on l.resource=r.ref left outer join resource_type_field f on f.ref=l.resource_type_field where l.user='$user' order by l.date desc",false,$fetchrows);
 
     # Translates field titles in the newly created array.
     $return = array();
     for ($n = 0;$n<count($r);$n++) {
-		if (is_array($r[$n])) {$r[$n]["title"] = lang_or_i18n_get_translated($r[$n]["title"], "fieldtitle-");}
+        if (is_array($r[$n])) {$r[$n]["title"] = lang_or_i18n_get_translated($r[$n]["title"], "fieldtitle-");}
         $return[] = $r[$n];
     }
     return $return;
-	}
-	
+    }
+    
 function resolve_userlist_groups($userlist)
-	{
-	# Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
-	# Note that this function can't decode default groupnames containing special characters.
+    {
+    # Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
+    # Note that this function can't decode default groupnames containing special characters.
 
-	global $lang;
-	$ulist=explode(",",$userlist);
-	$newlist="";
-	for ($n=0;$n<count($ulist);$n++)
-		{
-		$u=trim($ulist[$n]);
-		if (strpos($u,$lang["group"] . ": ")===0)
-			{
-			# Group entry, resolve
+    global $lang;
+    $ulist=explode(",",$userlist);
+    $newlist="";
+    for ($n=0;$n<count($ulist);$n++)
+        {
+        $u=trim($ulist[$n]);
+        if (strpos($u,$lang["group"] . ": ")===0)
+            {
+            # Group entry, resolve
 
-			# Find the translated groupname.
-			$translated_groupname = trim(substr($u,strlen($lang["group"] . ": ")));
-			# Search for corresponding $lang indices.
-			$default_group = false;
-			$langindices = array_keys($lang, $translated_groupname);
-			if (count($langindices)>0);
-				{
-				foreach ($langindices as $langindex)
-					{
-					# Check if it is a default group
-					if (strstr($langindex, "usergroup-")!==false)
-						{
-						# Decode the groupname by using the code from lang_or_i18n_get_translated the other way around (it could be possible that someone have renamed the English groupnames in the language file).
-						$untranslated_groupname = trim(substr($langindex,strlen("usergroup-")));
-						$untranslated_groupname = str_replace(array("_", "and"), array(" "), $untranslated_groupname);
-						$groupref = sql_value("select ref as value from usergroup where lower(name)='$untranslated_groupname'",false);
-						if ($groupref!==false)
-							{
-							$default_group = true;
-							break;
-							}
-						}
-					}
-				}
-			if ($default_group==false)
-				{
-				# Custom group
-				# Decode the groupname
-				$untranslated_groups = sql_query("select ref, name from usergroup");
-				foreach ($untranslated_groups as $group)
-					{
-					if (i18n_get_translated($group['name'])==$translated_groupname)
-						{
-						$groupref = $group['ref'];
-						break;
-						}
-					}
-				}
+            # Find the translated groupname.
+            $translated_groupname = trim(substr($u,strlen($lang["group"] . ": ")));
+            # Search for corresponding $lang indices.
+            $default_group = false;
+            $langindices = array_keys($lang, $translated_groupname);
+            if (count($langindices)>0);
+                {
+                foreach ($langindices as $langindex)
+                    {
+                    # Check if it is a default group
+                    if (strstr($langindex, "usergroup-")!==false)
+                        {
+                        # Decode the groupname by using the code from lang_or_i18n_get_translated the other way around (it could be possible that someone have renamed the English groupnames in the language file).
+                        $untranslated_groupname = trim(substr($langindex,strlen("usergroup-")));
+                        $untranslated_groupname = str_replace(array("_", "and"), array(" "), $untranslated_groupname);
+                        $groupref = sql_value("select ref as value from usergroup where lower(name)='$untranslated_groupname'",false);
+                        if ($groupref!==false)
+                            {
+                            $default_group = true;
+                            break;
+                            }
+                        }
+                    }
+                }
+            if ($default_group==false)
+                {
+                # Custom group
+                # Decode the groupname
+                $untranslated_groups = sql_query("select ref, name from usergroup");
+                foreach ($untranslated_groups as $group)
+                    {
+                    if (i18n_get_translated($group['name'])==$translated_groupname)
+                        {
+                        $groupref = $group['ref'];
+                        break;
+                        }
+                    }
+                }
 
-			# Find and add the users.
-			$users = sql_array("SELECT username AS `value` FROM user WHERE usergroup = '{$groupref}'");
-			if ($newlist!="") {$newlist.=",";}
-			$newlist.=join(",",$users);
-			}
-		else
-			{
-			# Username, just add as-is
-			if ($newlist!="") {$newlist.=",";}
-			$newlist.=$u;
-			}
-		}
-	return $newlist;
-	}
+            # Find and add the users.
+            $users = sql_array("SELECT username AS `value` FROM user WHERE usergroup = '{$groupref}'");
+            if ($newlist!="") {$newlist.=",";}
+            $newlist.=join(",",$users);
+            }
+        else
+            {
+            # Username, just add as-is
+            if ($newlist!="") {$newlist.=",";}
+            $newlist.=$u;
+            }
+        }
+    return $newlist;
+    }
 function resolve_userlist_groups_smart($userlist,$return_usernames=false)
-	{
-	# Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
-	# Note that this function can't decode default groupnames containing special characters.
+    {
+    # Given a comma separated user list (from the user select include file) turn all Group: entries into fully resolved list of usernames.
+    # Note that this function can't decode default groupnames containing special characters.
 
-	global $lang;
-	$ulist=explode(",",$userlist);
-	$newlist="";
-	for ($n=0;$n<count($ulist);$n++)
-		{
-		$u=trim($ulist[$n]);
-		if (strpos($u,$lang["groupsmart"] . ": ")===0)
-			{
-			# Group entry, resolve
+    global $lang;
+    $ulist=explode(",",$userlist);
+    $newlist="";
+    for ($n=0;$n<count($ulist);$n++)
+        {
+        $u=trim($ulist[$n]);
+        if (strpos($u,$lang["groupsmart"] . ": ")===0)
+            {
+            # Group entry, resolve
 
-			# Find the translated groupname.
-			$translated_groupname = trim(substr($u,strlen($lang["groupsmart"] . ": ")));
-			# Search for corresponding $lang indices.
-			$default_group = false;
-			$langindices = array_keys($lang, $translated_groupname);
-			if (count($langindices)>0);
-				{ 
-				foreach ($langindices as $langindex)
-					{
-					# Check if it is a default group
-					if (strstr($langindex, "usergroup-")!==false)
-						{
-						# Decode the groupname by using the code from lang_or_i18n_get_translated the other way around (it could be possible that someone have renamed the English groupnames in the language file).
-						$untranslated_groupname = trim(substr($langindex,strlen("usergroup-")));
-						$untranslated_groupname = str_replace(array("_", "and"), array(" "), $untranslated_groupname);
-						$groupref = sql_value("select ref as value from usergroup where lower(name)='$untranslated_groupname'",false);
-						if ($groupref!==false)
-							{
-							$default_group = true;
-							break;
-							}
-						}
-					}
-				}
-			if ($default_group==false)
-				{ 
-				# Custom group
-				# Decode the groupname
-				$untranslated_groups = sql_query("select ref, name from usergroup");
-				
-				foreach ($untranslated_groups as $group)
-					{
-					if (i18n_get_translated($group['name'])==$translated_groupname)
-						{ 
-						$groupref = $group['ref'];
-						break;
-						}
-					}
-				}
-			if($return_usernames)
-				{
-				$users = sql_array("select username value from user where usergroup='$groupref'");
-				if ($newlist!="") {$newlist.=",";}
-				$newlist.=join(",",$users);
-				}
-			else
-				{
-				# Find and add the users.
-				if ($newlist!="") {$newlist.=",";}
-				$newlist.=$groupref;
-				}
-			}
-		}
-	return $newlist;
-	}
+            # Find the translated groupname.
+            $translated_groupname = trim(substr($u,strlen($lang["groupsmart"] . ": ")));
+            # Search for corresponding $lang indices.
+            $default_group = false;
+            $langindices = array_keys($lang, $translated_groupname);
+            if (count($langindices)>0);
+                { 
+                foreach ($langindices as $langindex)
+                    {
+                    # Check if it is a default group
+                    if (strstr($langindex, "usergroup-")!==false)
+                        {
+                        # Decode the groupname by using the code from lang_or_i18n_get_translated the other way around (it could be possible that someone have renamed the English groupnames in the language file).
+                        $untranslated_groupname = trim(substr($langindex,strlen("usergroup-")));
+                        $untranslated_groupname = str_replace(array("_", "and"), array(" "), $untranslated_groupname);
+                        $groupref = sql_value("select ref as value from usergroup where lower(name)='$untranslated_groupname'",false);
+                        if ($groupref!==false)
+                            {
+                            $default_group = true;
+                            break;
+                            }
+                        }
+                    }
+                }
+            if ($default_group==false)
+                { 
+                # Custom group
+                # Decode the groupname
+                $untranslated_groups = sql_query("select ref, name from usergroup");
+                
+                foreach ($untranslated_groups as $group)
+                    {
+                    if (i18n_get_translated($group['name'])==$translated_groupname)
+                        { 
+                        $groupref = $group['ref'];
+                        break;
+                        }
+                    }
+                }
+            if($return_usernames)
+                {
+                $users = sql_array("select username value from user where usergroup='$groupref'");
+                if ($newlist!="") {$newlist.=",";}
+                $newlist.=join(",",$users);
+                }
+            else
+                {
+                # Find and add the users.
+                if ($newlist!="") {$newlist.=",";}
+                $newlist.=$groupref;
+                }
+            }
+        }
+    return $newlist;
+    }
 
 function remove_groups_smart_from_userlist($ulist)
-	{
-	global $lang;
-	
-	$ulist=explode(",",$ulist);
-	$new_ulist='';
-	foreach($ulist as $option)
-		{
-		if(strpos($option,$lang["groupsmart"] . ": ")===false)
-			{
-			if($new_ulist!="")
-				{
-				$new_ulist.=",";
-				}
-			$new_ulist.=$option;
-			}
-		}
-	return $new_ulist;
-	}
+    {
+    global $lang;
+    
+    $ulist=explode(",",$ulist);
+    $new_ulist='';
+    foreach($ulist as $option)
+        {
+        if(strpos($option,$lang["groupsmart"] . ": ")===false)
+            {
+            if($new_ulist!="")
+                {
+                $new_ulist.=",";
+                }
+            $new_ulist.=$option;
+            }
+        }
+    return $new_ulist;
+    }
 
 function get_suggested_keywords($search,$ref="")
-	{
-	# For the given partial word, suggest complete existing keywords.
-	global $autocomplete_search_items,$autocomplete_search_min_hitcount;
+    {
+    # For the given partial word, suggest complete existing keywords.
+    global $autocomplete_search_items,$autocomplete_search_min_hitcount;
     
     # Fetch a list of fields that are not available to the user - these must be omitted from the search.
     $hidden_indexed_fields=get_hidden_indexed_fields();
@@ -3559,7 +3599,7 @@ function get_suggested_keywords($search,$ref="")
         $restriction_clause_free .= " AND rk.resource_type_field = '" . $ref . "'";
         $restriction_clause_node .= " AND n.resource_type_field = '" . $ref . "'";                                        
         }    
-	
+    
     return sql_array("SELECT ak.keyword value
         FROM
             (
@@ -3580,122 +3620,122 @@ function get_suggested_keywords($search,$ref="")
         GROUP BY ak.keyword, ak.hit_count 
         ORDER BY ak.hit_count DESC LIMIT " . $autocomplete_search_items
         );
-	}
-	
+    }
+    
 function check_password($password)
-	{
-	# Checks that a password conforms to the configured paramaters.
-	# Returns true if it does, or a descriptive string if it doesn't.
-	global $lang, $password_min_length, $password_min_alpha, $password_min_uppercase, $password_min_numeric, $password_min_special;
+    {
+    # Checks that a password conforms to the configured paramaters.
+    # Returns true if it does, or a descriptive string if it doesn't.
+    global $lang, $password_min_length, $password_min_alpha, $password_min_uppercase, $password_min_numeric, $password_min_special;
 
-	if (strlen($password)<$password_min_length) {return str_replace("?",$password_min_length,$lang["password_not_min_length"]);}
+    if (strlen($password)<$password_min_length) {return str_replace("?",$password_min_length,$lang["password_not_min_length"]);}
 
-	$uppercase="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	$alpha=$uppercase . "abcdefghijklmnopqrstuvwxyz";
-	$numeric="0123456789";
-	
-	$a=0;$u=0;$n=0;$s=0;
-	for ($m=0;$m<strlen($password);$m++)
-		{
-		$l=substr($password,$m,1);
-		if (strpos($uppercase,$l)!==false) {$u++;}
+    $uppercase="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $alpha=$uppercase . "abcdefghijklmnopqrstuvwxyz";
+    $numeric="0123456789";
+    
+    $a=0;$u=0;$n=0;$s=0;
+    for ($m=0;$m<strlen($password);$m++)
+        {
+        $l=substr($password,$m,1);
+        if (strpos($uppercase,$l)!==false) {$u++;}
 
-		if (strpos($alpha,$l)!==false) {$a++;}
-		elseif (strpos($numeric,$l)!==false) {$n++;}
-		else {$s++;} # Not alpha/numeric, must be a special char.
-		}
-	
-	if ($a<$password_min_alpha) {return str_replace("?",$password_min_alpha,$lang["password_not_min_alpha"]);}
-	if ($u<$password_min_uppercase) {return str_replace("?",$password_min_uppercase,$lang["password_not_min_uppercase"]);}
-	if ($n<$password_min_numeric) {return str_replace("?",$password_min_numeric,$lang["password_not_min_numeric"]);}
-	if ($s<$password_min_special) {return str_replace("?",$password_min_special,$lang["password_not_min_special"]);}
-	
-	
-	return true;
-	}
+        if (strpos($alpha,$l)!==false) {$a++;}
+        elseif (strpos($numeric,$l)!==false) {$n++;}
+        else {$s++;} # Not alpha/numeric, must be a special char.
+        }
+    
+    if ($a<$password_min_alpha) {return str_replace("?",$password_min_alpha,$lang["password_not_min_alpha"]);}
+    if ($u<$password_min_uppercase) {return str_replace("?",$password_min_uppercase,$lang["password_not_min_uppercase"]);}
+    if ($n<$password_min_numeric) {return str_replace("?",$password_min_numeric,$lang["password_not_min_numeric"]);}
+    if ($s<$password_min_special) {return str_replace("?",$password_min_special,$lang["password_not_min_special"]);}
+    
+    
+    return true;
+    }
 
 function get_related_keywords($keyref)
-	{
-	# For a given keyword reference returns the related keywords
-	# Also reverses the process, returning keywords for matching related words
-	# and for matching related words, also returns other words related to the same keyword.
-	global $keyword_relationships_one_way;
-	global $related_keywords_cache;
-	if (isset($related_keywords_cache[$keyref])){
-		return $related_keywords_cache[$keyref];
-	} else {
-		if ($keyword_relationships_one_way){
-			$related_keywords_cache[$keyref]=sql_array("select related value from keyword_related where keyword='$keyref'");
-			return $related_keywords_cache[$keyref];
-			}
-		else {
-			$related_keywords_cache[$keyref]=sql_array("select keyword value from keyword_related where related='$keyref' union select related value from keyword_related where (keyword='$keyref' or keyword in (select keyword value from keyword_related where related='$keyref')) and related<>'$keyref'");
-			return $related_keywords_cache[$keyref];
-			}
-		}
-	}
-	
-	
+    {
+    # For a given keyword reference returns the related keywords
+    # Also reverses the process, returning keywords for matching related words
+    # and for matching related words, also returns other words related to the same keyword.
+    global $keyword_relationships_one_way;
+    global $related_keywords_cache;
+    if (isset($related_keywords_cache[$keyref])){
+        return $related_keywords_cache[$keyref];
+    } else {
+        if ($keyword_relationships_one_way){
+            $related_keywords_cache[$keyref]=sql_array("select related value from keyword_related where keyword='$keyref'");
+            return $related_keywords_cache[$keyref];
+            }
+        else {
+            $related_keywords_cache[$keyref]=sql_array("select keyword value from keyword_related where related='$keyref' union select related value from keyword_related where (keyword='$keyref' or keyword in (select keyword value from keyword_related where related='$keyref')) and related<>'$keyref'");
+            return $related_keywords_cache[$keyref];
+            }
+        }
+    }
+    
+    
 function get_grouped_related_keywords($find="",$specific="")
-	{
-	# Returns each keyword and the related keywords grouped, along with the resolved keywords strings.
-	$sql="";
-	if ($find!="") {$sql="where k1.keyword='" . escape_check($find) . "' or k2.keyword='" . escape_check($find) . "'";}
-	if ($specific!="") {$sql="where k1.keyword='" . escape_check($specific) . "'";}
-	
-	return sql_query("
-		select k1.keyword,group_concat(k2.keyword order by k2.keyword separator ', ') related from keyword_related kr
-			join keyword k1 on kr.keyword=k1.ref
-			join keyword k2 on kr.related=k2.ref
-		$sql
-		group by k1.keyword order by k1.keyword
-		");
-	}
+    {
+    # Returns each keyword and the related keywords grouped, along with the resolved keywords strings.
+    $sql="";
+    if ($find!="") {$sql="where k1.keyword='" . escape_check($find) . "' or k2.keyword='" . escape_check($find) . "'";}
+    if ($specific!="") {$sql="where k1.keyword='" . escape_check($specific) . "'";}
+    
+    return sql_query("
+        select k1.keyword,group_concat(k2.keyword order by k2.keyword separator ', ') related from keyword_related kr
+            join keyword k1 on kr.keyword=k1.ref
+            join keyword k2 on kr.related=k2.ref
+        $sql
+        group by k1.keyword order by k1.keyword
+        ");
+    }
 
 function save_related_keywords($keyword,$related)
-	{
-	$keyref=resolve_keyword($keyword,true,false,false);
-	$s=trim_array(explode(",",$related));
+    {
+    $keyref=resolve_keyword($keyword,true,false,false);
+    $s=trim_array(explode(",",$related));
 
-	# Blank existing relationships.
-	sql_query("delete from keyword_related where keyword='$keyref'");
-	if (trim($related)!="")
-		{
-		for ($n=0;$n<count($s);$n++)
-			{
-			sql_query("insert into keyword_related (keyword,related) values ('$keyref','" . resolve_keyword($s[$n],true,false,false) . "')");
-			}
-		}
-	return true;
-	}
+    # Blank existing relationships.
+    sql_query("delete from keyword_related where keyword='$keyref'");
+    if (trim($related)!="")
+        {
+        for ($n=0;$n<count($s);$n++)
+            {
+            sql_query("insert into keyword_related (keyword,related) values ('$keyref','" . resolve_keyword($s[$n],true,false,false) . "')");
+            }
+        }
+    return true;
+    }
 
 function send_statistics()
-	{
-	# If configured, send two metrics to Montala.
-	$last_sent=sql_value("select value from sysvars where name='last_sent_stats'","");
-	
-	# No need to send stats if already sent in last week.
-	if ($last_sent!="" && time()-strtotime($last_sent)<(60*60*24*7)) {return false;}
-	
-	# Gather stats
-	$total_users=sql_value("select count(*) value from user",0);
-	$total_resources=sql_value("select count(*) value from resource",0);
-	
-	# Send stats
-	@file("http://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
-	
-	# Update last sent date/time.
-	sql_query("delete from sysvars where name='last_sent_stats'");
-	sql_query("insert into sysvars(name,value) values ('last_sent_stats',now())");
-	}
+    {
+    # If configured, send two metrics to Montala.
+    $last_sent=sql_value("select value from sysvars where name='last_sent_stats'","");
+    
+    # No need to send stats if already sent in last week.
+    if ($last_sent!="" && time()-strtotime($last_sent)<(60*60*24*7)) {return false;}
+    
+    # Gather stats
+    $total_users=sql_value("select count(*) value from user",0);
+    $total_resources=sql_value("select count(*) value from resource",0);
+    
+    # Send stats
+    @file("http://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
+    
+    # Update last sent date/time.
+    sql_query("delete from sysvars where name='last_sent_stats'");
+    sql_query("insert into sysvars(name,value) values ('last_sent_stats',now())");
+    }
 
 function resolve_users($users)
-	{
-	# For a given comma-separated list of user refs (e.g. returned from a group_concat()), return a string of matching usernames.
-	if (trim($users)=="") {return "";}
-	$resolved=sql_array("select concat(fullname,' (',username,')') value from user where ref in ($users)");
-	return join(", ",$resolved);
-	}
+    {
+    # For a given comma-separated list of user refs (e.g. returned from a group_concat()), return a string of matching usernames.
+    if (trim($users)=="") {return "";}
+    $resolved=sql_array("select concat(fullname,' (',username,')') value from user where ref in ($users)");
+    return join(", ",$resolved);
+    }
 
 function get_simple_search_fields()
     {
@@ -3936,14 +3976,14 @@ function check_display_condition($n, array $field, array $fields, $render_js)
         ?>
         <script type="text/javascript">
         function checkDisplayCondition<?php echo $field["ref"];?>(node)
-			{
-			field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
-			newfield<?php echo $field['ref']; ?>status = 'none';
-			newfield<?php echo $field['ref']; ?>show   = false;
+            {
+            field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+            newfield<?php echo $field['ref']; ?>status = 'none';
+            newfield<?php echo $field['ref']; ?>show   = false;
             newfield<?php echo $field['ref']; ?>provisional = true;
-			<?php
-			foreach($scriptconditions as $scriptcondition)
-				{
+            <?php
+            foreach($scriptconditions as $scriptcondition)
+                {
                 /*
                 Example of $scriptcondition:
                 Array
@@ -3957,7 +3997,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         )
                     )
                 */
-				?>
+                ?>
                 newfield<?php echo $field['ref']; ?>subcheck = false;
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
                 <?php
@@ -4031,133 +4071,133 @@ function check_display_condition($n, array $field, array $fields, $render_js)
     }
 
 function check_access_key($resource,$key)
-	{
-	# Verify a supplied external access key
-	
-	# Option to plugin in some extra functionality to check keys
-	if (hook("check_access_key","",array($resource,$key))===true) {return true;}
-	global $external_share_view_as_internal, $is_authenticated;
-    	if($external_share_view_as_internal && (isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false) && !(isset($is_authenticated) && $is_authenticated))){return false;} // We want to authenticate the user if not already authenticated so we can show the page as internal
-	
-	$keys=sql_query("select user,usergroup,expires from external_access_keys where resource='$resource' and access_key='$key' and (expires is null or expires>now())");
+    {
+    # Verify a supplied external access key
+    
+    # Option to plugin in some extra functionality to check keys
+    if (hook("check_access_key","",array($resource,$key))===true) {return true;}
+    global $external_share_view_as_internal, $is_authenticated;
+        if($external_share_view_as_internal && (isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false) && !(isset($is_authenticated) && $is_authenticated))){return false;} // We want to authenticate the user if not already authenticated so we can show the page as internal
+    
+    $keys=sql_query("select user,usergroup,expires from external_access_keys where resource='$resource' and access_key='$key' and (expires is null or expires>now())");
 
-	if (count($keys)==0)
-		{
-		return false;
-		}
-	else
-		{
-		# "Emulate" the user that e-mailed the resource by setting the same group and permissions
-		
-		$user=$keys[0]["user"];
-		$expires=$keys[0]["expires"];
+    if (count($keys)==0)
+        {
+        return false;
+        }
+    else
+        {
+        # "Emulate" the user that e-mailed the resource by setting the same group and permissions
+        
+        $user=$keys[0]["user"];
+        $expires=$keys[0]["expires"];
                 
-		# Has this expired?
-		if ($expires!="" && strtotime($expires)<time())
-			{
-			global $lang;
-			?>
-			<script type="text/javascript">
-			alert("<?php echo $lang["externalshareexpired"] ?>");
-			history.go(-1);
-			</script>
-			<?php
-			exit();
-			}
-		
-		global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options; 
+        # Has this expired?
+        if ($expires!="" && strtotime($expires)<time())
+            {
+            global $lang;
+            ?>
+            <script type="text/javascript">
+            alert("<?php echo $lang["externalshareexpired"] ?>");
+            history.go(-1);
+            </script>
+            <?php
+            exit();
+            }
+        
+        global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options; 
                 $groupjoin="u.usergroup=g.ref";
-				$permissionselect="g.permissions";
+                $permissionselect="g.permissions";
                 if ($keys[0]["usergroup"]!="")
                     {
                     # Select the user group from the access key instead.
                     $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
-					$permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
+                    $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
                     }
-		$userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
-		if (count($userinfo)>0)
-			{
+        $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
+        if (count($userinfo)>0)
+            {
             $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
-			$userpermissions=explode(",",$userinfo[0]["permissions"]);
-			$usersearchfilter=$userinfo[0]["search_filter"];
+            $userpermissions=explode(",",$userinfo[0]["permissions"]);
+            $usersearchfilter=$userinfo[0]["search_filter"];
 
             $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
 
-			if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
-			$userrequestmode=0; # Always use 'email' request mode for external users
-			
-			# Load any plugins specific to the group of the sharing user, but only once as may be checking multiple keys
-			global $emulate_plugins_set;			
-			if ($emulate_plugins_set!==true)
-				{
-				global $plugins;
-				$enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
-				foreach($enabled_plugins as $plugin)
-					{
-					$s=explode(",",$plugin['enabled_groups']);
-					if (in_array($usergroup,$s))
-						{
-						include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
-						register_plugin($plugin['name']);
-						$plugins[]=$plugin['name'];
-						}
-					}
-				for ($n=count($plugins)-1;$n>=0;$n--)
-				    {
-				    register_plugin_language($plugins[$n]);
-				    }
-				$emulate_plugins_set=true;					
-				}
-				
-			}
-			
-			if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
-				{
-				# Apply config override options
-				$config_options=trim($userinfo[0]["config_options"]);
-				if ($config_options!="")
-					{
-					$co=explode(";",$config_options);
-					foreach($co as $ext_co)
-						{
-						$co_parts=explode("=",$ext_co);
-						
-						if($co_parts[0]!='' && isset($co_parts[1]))
-							{
-							$name=str_replace("$","",$co_parts[0]);
-							$value=ltrim($co_parts[1]); 
-							if(strtolower($value)=='false'){$value=0;}
-							elseif(strtolower($value)=='true'){$value=1;}
-							
-							global $$name;
-							$$name = $value;
-							}
-						}
-					}
-				}
-		
-		# Special case for anonymous logins.
-		# When a valid key is present, we need to log the user in as the anonymous user so they will be able to browse the public links.
-		global $anonymous_login;
-		if (isset($anonymous_login))
-			{
-			global $username,$baseurl;
-			if(is_array($anonymous_login))
-			{
-			foreach($anonymous_login as $key => $val)
-				{
-				if($baseurl==$key){$anonymous_login=$val;}
-				}
-			}
-			$username=$anonymous_login;		
-			}
-		
-		# Set the 'last used' date for this key
-		sql_query("update external_access_keys set lastused=now() where resource='$resource' and access_key='$key'");
-		
-		return true;
-		}
-	}
+            if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
+            $userrequestmode=0; # Always use 'email' request mode for external users
+            
+            # Load any plugins specific to the group of the sharing user, but only once as may be checking multiple keys
+            global $emulate_plugins_set;            
+            if ($emulate_plugins_set!==true)
+                {
+                global $plugins;
+                $enabled_plugins = (sql_query("SELECT name,enabled_groups, config, config_json FROM plugins WHERE inst_version>=0 AND length(enabled_groups)>0  ORDER BY priority"));
+                foreach($enabled_plugins as $plugin)
+                    {
+                    $s=explode(",",$plugin['enabled_groups']);
+                    if (in_array($usergroup,$s))
+                        {
+                        include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
+                        register_plugin($plugin['name']);
+                        $plugins[]=$plugin['name'];
+                        }
+                    }
+                for ($n=count($plugins)-1;$n>=0;$n--)
+                    {
+                    register_plugin_language($plugins[$n]);
+                    }
+                $emulate_plugins_set=true;                  
+                }
+                
+            }
+            
+            if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
+                {
+                # Apply config override options
+                $config_options=trim($userinfo[0]["config_options"]);
+                if ($config_options!="")
+                    {
+                    $co=explode(";",$config_options);
+                    foreach($co as $ext_co)
+                        {
+                        $co_parts=explode("=",$ext_co);
+                        
+                        if($co_parts[0]!='' && isset($co_parts[1]))
+                            {
+                            $name=str_replace("$","",$co_parts[0]);
+                            $value=ltrim($co_parts[1]); 
+                            if(strtolower($value)=='false'){$value=0;}
+                            elseif(strtolower($value)=='true'){$value=1;}
+                            
+                            global $$name;
+                            $$name = $value;
+                            }
+                        }
+                    }
+                }
+        
+        # Special case for anonymous logins.
+        # When a valid key is present, we need to log the user in as the anonymous user so they will be able to browse the public links.
+        global $anonymous_login;
+        if (isset($anonymous_login))
+            {
+            global $username,$baseurl;
+            if(is_array($anonymous_login))
+            {
+            foreach($anonymous_login as $key => $val)
+                {
+                if($baseurl==$key){$anonymous_login=$val;}
+                }
+            }
+            $username=$anonymous_login;     
+            }
+        
+        # Set the 'last used' date for this key
+        sql_query("update external_access_keys set lastused=now() where resource='$resource' and access_key='$key'");
+        
+        return true;
+        }
+    }
 
 
 /**
@@ -4179,7 +4219,7 @@ function check_access_key_collection($collection, $key)
     if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
         {
         // We want to authenticate the user so we can show the page as internal
-		return false;
+        return false;
         }
 
     $resources = get_collection_resources($collection);
@@ -4211,44 +4251,44 @@ function check_access_key_collection($collection, $key)
     }
 
 function make_username($name)
-	{
-	# Generates a unique username for the given name
-	
-	# First compress the various name parts
-	$s=trim_array(explode(" ",$name));
-	
-	$name=$s[count($s)-1];
-	for ($n=count($s)-2;$n>=0;$n--)
-		{
-		$name=substr($s[$n],0,1) . $name;
-		}
-	$name=safe_file_name(strtolower($name));
+    {
+    # Generates a unique username for the given name
+    
+    # First compress the various name parts
+    $s=trim_array(explode(" ",$name));
+    
+    $name=$s[count($s)-1];
+    for ($n=count($s)-2;$n>=0;$n--)
+        {
+        $name=substr($s[$n],0,1) . $name;
+        }
+    $name=safe_file_name(strtolower($name));
 
-	# Create fullname usernames:
-	global $user_account_fullname_create;
-	if($user_account_fullname_create) {
-		$name = '';
+    # Create fullname usernames:
+    global $user_account_fullname_create;
+    if($user_account_fullname_create) {
+        $name = '';
 
-		foreach ($s as $name_part) {
-			$name .= '_' . $name_part;
-		}
-		
-		$name = substr($name, 1);
-		$name = safe_file_name($name);
-	}
-	
-	# Check for uniqueness... append an ever-increasing number until unique.
-	$unique=false;
-	$num=-1;
-	while (!$unique)
-		{
-		$num++;
-		$c=sql_value("select count(*) value from user where username='" . escape_check($name . (($num==0)?"":$num)) . "'",0);
-		$unique=($c==0);
-		}
-	return $name . (($num==0)?"":$num);
-	}
-	
+        foreach ($s as $name_part) {
+            $name .= '_' . $name_part;
+        }
+        
+        $name = substr($name, 1);
+        $name = safe_file_name($name);
+    }
+    
+    # Check for uniqueness... append an ever-increasing number until unique.
+    $unique=false;
+    $num=-1;
+    while (!$unique)
+        {
+        $num++;
+        $c=sql_value("select count(*) value from user where username='" . escape_check($name . (($num==0)?"":$num)) . "'",0);
+        $unique=($c==0);
+        }
+    return $name . (($num==0)?"":$num);
+    }
+    
 function get_registration_selectable_usergroups()
 {
     # Returns a list of  user groups selectable in the registration . The standard user groups are translated using $lang. Custom user groups are i18n translated.
@@ -4278,84 +4318,84 @@ return $strName;
 }
 
 function get_fields($field_refs)
-	{
-	# Returns a list of fields with refs matching the supplied field refs.
-	if (!is_array($field_refs)) {print_r($field_refs);exit(" passed to get_fields() is not an array. ");}
-	$return=array();
-	$fields=sql_query("select *, ref, name, title, type, order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, display_as_dropdown,tooltip_text,display_condition, onchange_macro from resource_type_field where  ref in ('" . join("','",$field_refs) . "') order by order_by");
-	# Apply field permissions
-	for ($n=0;$n<count($fields);$n++)
-		{
-		if ((checkperm("f*") || checkperm("f" . $fields[$n]["ref"]))
-		&& !checkperm("f-" . $fields[$n]["ref"]))
-		{$return[]=$fields[$n];}
-		}
-	return $return;
-	}
+    {
+    # Returns a list of fields with refs matching the supplied field refs.
+    if (!is_array($field_refs)) {print_r($field_refs);exit(" passed to get_fields() is not an array. ");}
+    $return=array();
+    $fields=sql_query("select *, ref, name, title, type, order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, display_as_dropdown,tooltip_text,display_condition, onchange_macro from resource_type_field where  ref in ('" . join("','",$field_refs) . "') order by order_by");
+    # Apply field permissions
+    for ($n=0;$n<count($fields);$n++)
+        {
+        if ((checkperm("f*") || checkperm("f" . $fields[$n]["ref"]))
+        && !checkperm("f-" . $fields[$n]["ref"]))
+        {$return[]=$fields[$n];}
+        }
+    return $return;
+    }
 
 function get_hidden_indexed_fields()
-	{
-	# Return an array of indexed fields to which the current user does not have access
-	# Used by do_search to ommit fields when searching.
-	$hidden=array();
-	global $hidden_fields_cache;
-	if (is_array($hidden_fields_cache)){
-		return $hidden_fields_cache;
-	} else { 
-		$fields=sql_query("select ref from resource_type_field where keywords_index=1 and length(name)>0");
-		# Apply field permissions
-		for ($n=0;$n<count($fields);$n++)
-			{
-			if ((checkperm("f*") || checkperm("f" . $fields[$n]["ref"]))
-			&& !checkperm("f-" . $fields[$n]["ref"]))
-				{
-				# Visible field
-				}
-			else
-				{
-				# Hidden field
-				$hidden[]=$fields[$n]["ref"];
-				}
-			}
-		$hidden_fields_cache=$hidden;
-		return $hidden;
-		}
-	}
-	
+    {
+    # Return an array of indexed fields to which the current user does not have access
+    # Used by do_search to ommit fields when searching.
+    $hidden=array();
+    global $hidden_fields_cache;
+    if (is_array($hidden_fields_cache)){
+        return $hidden_fields_cache;
+    } else { 
+        $fields=sql_query("select ref from resource_type_field where keywords_index=1 and length(name)>0");
+        # Apply field permissions
+        for ($n=0;$n<count($fields);$n++)
+            {
+            if ((checkperm("f*") || checkperm("f" . $fields[$n]["ref"]))
+            && !checkperm("f-" . $fields[$n]["ref"]))
+                {
+                # Visible field
+                }
+            else
+                {
+                # Hidden field
+                $hidden[]=$fields[$n]["ref"];
+                }
+            }
+        $hidden_fields_cache=$hidden;
+        return $hidden;
+        }
+    }
+    
 function get_category_tree_fields()
-	{
-	# Returns a list of fields with refs matching the supplied field refs.
-	global $cattreefields_cache;
-	if (is_array($cattreefields_cache)){
-		return $cattreefields_cache;
-	} else {
-		$fields=sql_query("select name from resource_type_field where type=7 and length(name)>0 order by order_by");
-		$cattreefields=array();
-		foreach ($fields as $field){
-			$cattreefields[]=$field['name'];
-		}
-		$cattreefields_cache=$cattreefields;
-		return $cattreefields;
-		}
-	}	
+    {
+    # Returns a list of fields with refs matching the supplied field refs.
+    global $cattreefields_cache;
+    if (is_array($cattreefields_cache)){
+        return $cattreefields_cache;
+    } else {
+        $fields=sql_query("select name from resource_type_field where type=7 and length(name)>0 order by order_by");
+        $cattreefields=array();
+        foreach ($fields as $field){
+            $cattreefields[]=$field['name'];
+        }
+        $cattreefields_cache=$cattreefields;
+        return $cattreefields;
+        }
+    }   
 
 function get_OR_fields()
-	{
-	# Returns a list of fields that should retain semicolon separation of keywords in a search string
-	global $orfields_cache;
-	if (is_array($orfields_cache)){
-		return $orfields_cache;
-	} else {
-		$fields=sql_query("select name from resource_type_field where type=7 or type=2 or type=3 and length(name)>0 order by order_by");
-		$orfields=array();
-		foreach ($fields as $field){
-			$orfields[]=$field['name'];
-		}
-		$orfields_cache=$orfields;
-		return $orfields;
-		}
-	}		
-	
+    {
+    # Returns a list of fields that should retain semicolon separation of keywords in a search string
+    global $orfields_cache;
+    if (is_array($orfields_cache)){
+        return $orfields_cache;
+    } else {
+        $fields=sql_query("select name from resource_type_field where type=7 or type=2 or type=3 and length(name)>0 order by order_by");
+        $orfields=array();
+        foreach ($fields as $field){
+            $orfields[]=$field['name'];
+        }
+        $orfields_cache=$orfields;
+        return $orfields;
+        }
+    }       
+    
 function get_fields_for_search_display($field_refs)
 {
     # Returns a list of fields/properties with refs matching the supplied field refs, for search display setup
@@ -4383,29 +4423,29 @@ function get_fields_for_search_display($field_refs)
 }
 
 function verify_extension($filename,$allowed_extensions=""){
-	# Allowed extension?
-	$extension=explode(".",$filename);
+    # Allowed extension?
+    $extension=explode(".",$filename);
     if(count($extension)>1){
-    	$extension=trim(strtolower($extension[count($extension)-1]));
-		} else { return false;}
-		
-	if ($allowed_extensions!=""){
-		$allowed_extensions=explode(",",strtolower($allowed_extensions));
-		if (!in_array($extension,$allowed_extensions)){ return false;}
-	}
-	
-	
-	return true;
+        $extension=trim(strtolower($extension[count($extension)-1]));
+        } else { return false;}
+        
+    if ($allowed_extensions!=""){
+        $allowed_extensions=explode(",",strtolower($allowed_extensions));
+        if (!in_array($extension,$allowed_extensions)){ return false;}
+    }
+    
+    
+    return true;
 }
 
 function get_allowed_extensions($ref){
-	$type = sql_value("select resource_type value from resource where ref=$ref","");
-	$allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref=$type","");
-	return $allowed_extensions;
+    $type = sql_value("select resource_type value from resource where ref=$ref","");
+    $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref=$type","");
+    return $allowed_extensions;
 }
 function get_allowed_extensions_by_type($resource_type){
-	$allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref='$resource_type'","");
-	return $allowed_extensions;
+    $allowed_extensions=sql_value("select allowed_extensions value from resource_type where ref='$resource_type'","");
+    return $allowed_extensions;
 }
 
 /**
@@ -4419,23 +4459,23 @@ function get_allowed_extensions_by_type($resource_type){
  * @return string A absolute path
  */
 function getAbsolutePath($path, $create_if_not_exists = false)
-	{
-	if(preg_match('/^(\/|[a-zA-Z]:[\\/]{1})/', $path)) // If the path start by a '/' or 'c:\', it is an absolute path.
-		{
-		$folder = $path;
-		}
-	else // It is a relative path.
-		{
-		$folder = sprintf('%s%s..%s%s', dirname(__FILE__), DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $path);
-		}
+    {
+    if(preg_match('/^(\/|[a-zA-Z]:[\\/]{1})/', $path)) // If the path start by a '/' or 'c:\', it is an absolute path.
+        {
+        $folder = $path;
+        }
+    else // It is a relative path.
+        {
+        $folder = sprintf('%s%s..%s%s', dirname(__FILE__), DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $path);
+        }
 
-	if ($create_if_not_exists && !file_exists($folder)) // Test if the path need to be created.
-		{
-		mkdir($folder,0777);
-		} // Test if the path need to be created.
+    if ($create_if_not_exists && !file_exists($folder)) // Test if the path need to be created.
+        {
+        mkdir($folder,0777);
+        } // Test if the path need to be created.
 
-	return $folder;
-	} // getAbsolutePath()
+    return $folder;
+    } // getAbsolutePath()
 
 
 
@@ -4449,50 +4489,50 @@ function getAbsolutePath($path, $create_if_not_exists = false)
  * @return array A list of files present in the inspected folder (paths are relative to the inspected folder path).
  */
 function getFolderContents($path, $recurse = true, $include_hidden = false)
-	{
-	if(!is_dir($path)) // Test if the path is not a folder.
-		{
-			return array();
-		} // Test if the path is not a folder.
+    {
+    if(!is_dir($path)) // Test if the path is not a folder.
+        {
+            return array();
+        } // Test if the path is not a folder.
 
-	$directory_handle = opendir($path);
-	if($directory_handle === false) // Test if the directory listing failed.
-		{
-		return array();
-		} // Test if the directory listing failed.
+    $directory_handle = opendir($path);
+    if($directory_handle === false) // Test if the directory listing failed.
+        {
+        return array();
+        } // Test if the directory listing failed.
 
-	$files = array();
-	while(($file = readdir($directory_handle)) !== false) // For each directory listing entry.
-		{
-		if(! in_array($file, array('.', '..'))) // Test if file is not unix parent and current path.
-			{
-			if($include_hidden || ! preg_match('/^\./', $file)) // Test if the file can be listed.
-				{
-				$complete_path = $path . DIRECTORY_SEPARATOR . $file;
-				if(is_dir($complete_path) && $recurse) // If the path is a directory, and need to be explored.
-					{
-					$sub_dir_files = getFolderContents($complete_path, $recurse, $include_hidden);
-					foreach($sub_dir_files as $sub_dir_file) // For each subdirectory contents.
-						{
-						$files[] = $file . DIRECTORY_SEPARATOR . $sub_dir_file;
-						} // For each subdirectory contents.
-					}
-				elseif(is_file($complete_path)) // If the path is a file.
-					{
-					$files[] = $file;
-					}
-				} // Test if the file can be listed.
-			} // Test if file is not unix parent and current path.
-		} // For each directory listing entry.
+    $files = array();
+    while(($file = readdir($directory_handle)) !== false) // For each directory listing entry.
+        {
+        if(! in_array($file, array('.', '..'))) // Test if file is not unix parent and current path.
+            {
+            if($include_hidden || ! preg_match('/^\./', $file)) // Test if the file can be listed.
+                {
+                $complete_path = $path . DIRECTORY_SEPARATOR . $file;
+                if(is_dir($complete_path) && $recurse) // If the path is a directory, and need to be explored.
+                    {
+                    $sub_dir_files = getFolderContents($complete_path, $recurse, $include_hidden);
+                    foreach($sub_dir_files as $sub_dir_file) // For each subdirectory contents.
+                        {
+                        $files[] = $file . DIRECTORY_SEPARATOR . $sub_dir_file;
+                        } // For each subdirectory contents.
+                    }
+                elseif(is_file($complete_path)) // If the path is a file.
+                    {
+                    $files[] = $file;
+                    }
+                } // Test if the file can be listed.
+            } // Test if file is not unix parent and current path.
+        } // For each directory listing entry.
 
-	// We close the directory handle:
-	closedir($directory_handle);
+    // We close the directory handle:
+    closedir($directory_handle);
 
-	// We sort the files alphabetically.
-	natsort($files);
+    // We sort the files alphabetically.
+    natsort($files);
 
-	return $files;
-	} // getPathFiles()
+    return $files;
+    } // getPathFiles()
 
 
 
@@ -4507,10 +4547,10 @@ function getFolderContents($path, $recurse = true, $include_hidden = false)
  * @return string Returns the base name of the given path.
  */
 function mb_basename($file)
-	{
-	$exploded_path = preg_split('/[\\/]+/',$file);
-	return end($exploded_path);
-	} // mb_basename()
+    {
+    $exploded_path = preg_split('/[\\/]+/',$file);
+    return end($exploded_path);
+    } // mb_basename()
 
 
 
@@ -4524,14 +4564,14 @@ function mb_basename($file)
  * @return string Return the file name without the extension part.
  */
 function strip_extension($name)
-	{
-	$ext = strrchr($name, '.');
-	if($ext !== false)
-		{
-		$name = substr($name, 0, -strlen($ext));
-		}
-	return $name;
-	} // strip_extension()
+    {
+    $ext = strrchr($name, '.');
+    if($ext !== false)
+        {
+        $name = substr($name, 0, -strlen($ext));
+        }
+    return $name;
+    } // strip_extension()
 
 
 
@@ -4549,178 +4589,178 @@ function strip_extension($name)
 * @return string
 */
 function get_nopreview_icon($resource_type, $extension, $col_size)
-	{
-	global $language;
-	
-	$col=($col_size?"_col":"");
-	$folder=dirname(dirname(__FILE__)) . "/gfx/";
-	$extension=strtolower($extension);
+    {
+    global $language;
+    
+    $col=($col_size?"_col":"");
+    $folder=dirname(dirname(__FILE__)) . "/gfx/";
+    $extension=strtolower($extension);
 
-	# Metadata template? Always use icon for 'mdtr', although typically no file will be attached.
-	global $metadata_template_resource_type;
-	if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$resource_type) {$extension="mdtr";}
+    # Metadata template? Always use icon for 'mdtr', although typically no file will be attached.
+    global $metadata_template_resource_type;
+    if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$resource_type) {$extension="mdtr";}
 
     # Try a plugin
-	$try=hook('plugin_nopreview_icon','',array($resource_type,$col, $extension));
-	if (false !== $try && file_exists($folder . $try))
-		{
-		return $try;
-		}
+    $try=hook('plugin_nopreview_icon','',array($resource_type,$col, $extension));
+    if (false !== $try && file_exists($folder . $try))
+        {
+        return $try;
+        }
 
-	# Try extension (language specific)
-	$try="no_preview/extension/" . $extension . $col . "_" . $language . ".png";
-	if (file_exists($folder . $try))
-		{
-		return $try;
-		}
-	# Try extension (default)
-	$try="no_preview/extension/" . $extension . $col . ".png";
-	if (file_exists($folder . $try))
-		{
-		return $try;
-		}
-	
-	# --- Legacy ---
-	# Support the old location for resource type and GIF format (root of gfx folder)
-	# Some installations use custom types in this location.
-	$try="type" . $resource_type . $col . ".gif";
-	if (file_exists($folder . $try))
-		{
-		return $try;
-		}
+    # Try extension (language specific)
+    $try="no_preview/extension/" . $extension . $col . "_" . $language . ".png";
+    if (file_exists($folder . $try))
+        {
+        return $try;
+        }
+    # Try extension (default)
+    $try="no_preview/extension/" . $extension . $col . ".png";
+    if (file_exists($folder . $try))
+        {
+        return $try;
+        }
+    
+    # --- Legacy ---
+    # Support the old location for resource type and GIF format (root of gfx folder)
+    # Some installations use custom types in this location.
+    $try="type" . $resource_type . $col . ".gif";
+    if (file_exists($folder . $try))
+        {
+        return $try;
+        }
 
 
-	# Try resource type (language specific)
-	$try="no_preview/resource_type/type" . $resource_type . $col . "_" . $language . ".png";
-	if (file_exists($folder . $try))
-		{
-		return $try;
-		}
-	# Try resource type (default)
-	$try="no_preview/resource_type/type" . $resource_type . $col . ".png";
-	if (file_exists($folder . $try))
-		{
-		return $try;
-		}
-	
-	
-	# Fall back to the 'no preview' icon used for type 1.
-	return "no_preview/resource_type/type1" . $col . ".png";
-	}
-	
-	
+    # Try resource type (language specific)
+    $try="no_preview/resource_type/type" . $resource_type . $col . "_" . $language . ".png";
+    if (file_exists($folder . $try))
+        {
+        return $try;
+        }
+    # Try resource type (default)
+    $try="no_preview/resource_type/type" . $resource_type . $col . ".png";
+    if (file_exists($folder . $try))
+        {
+        return $try;
+        }
+    
+    
+    # Fall back to the 'no preview' icon used for type 1.
+    return "no_preview/resource_type/type1" . $col . ".png";
+    }
+    
+    
 function is_process_lock($name)
-	{
-	# Checks to see if a process lock exists for the given process name.
-	global $storagedir,$process_locks_max_seconds;
-	
-	# Check that tmp/process_locks exists, create if not.
-	# Since the get_temp_dir() method does this checking, omit: if(!is_dir($storagedir . "/tmp")){mkdir($storagedir . "/tmp",0777);}
-	if(!is_dir(get_temp_dir() . "/process_locks")){mkdir(get_temp_dir() . "/process_locks",0777);}
-	
-	# No lock file? return false
-	if (!file_exists(get_temp_dir() . "/process_locks/" . $name)) {return false;}
-	
-	$time=trim(file_get_contents(get_temp_dir() . "/process_locks/" . $name));
-	if ((time()-$time)>$process_locks_max_seconds) {return false;} # Lock has expired
-	
-	return true; # Lock is valid
-	}
-	
+    {
+    # Checks to see if a process lock exists for the given process name.
+    global $storagedir,$process_locks_max_seconds;
+    
+    # Check that tmp/process_locks exists, create if not.
+    # Since the get_temp_dir() method does this checking, omit: if(!is_dir($storagedir . "/tmp")){mkdir($storagedir . "/tmp",0777);}
+    if(!is_dir(get_temp_dir() . "/process_locks")){mkdir(get_temp_dir() . "/process_locks",0777);}
+    
+    # No lock file? return false
+    if (!file_exists(get_temp_dir() . "/process_locks/" . $name)) {return false;}
+    
+    $time=trim(file_get_contents(get_temp_dir() . "/process_locks/" . $name));
+    if ((time()-$time)>$process_locks_max_seconds) {return false;} # Lock has expired
+    
+    return true; # Lock is valid
+    }
+    
 function set_process_lock($name)
-	{
-	# Set a process lock
-	file_put_contents(get_temp_dir() . "/process_locks/" . $name,time());
-	// make sure this is editable by the server in case a process lock could be set by different system users
-	chmod(get_temp_dir() . "/process_locks/" . $name,0777);
-	return true;
-	}
-	
+    {
+    # Set a process lock
+    file_put_contents(get_temp_dir() . "/process_locks/" . $name,time());
+    // make sure this is editable by the server in case a process lock could be set by different system users
+    chmod(get_temp_dir() . "/process_locks/" . $name,0777);
+    return true;
+    }
+    
 function clear_process_lock($name)
-	{
-	# Clear a process lock
-	if (!file_exists(get_temp_dir() . "/process_locks/" . $name)) {return false;}
+    {
+    # Clear a process lock
+    if (!file_exists(get_temp_dir() . "/process_locks/" . $name)) {return false;}
         unlink(get_temp_dir() . "/process_locks/" . $name);
-	return true;
-	}
-	
-	
+    return true;
+    }
+    
+    
 function open_access_to_user($user,$resource,$expires)
-	{
-	# Give the user full access to the given resource.
-	# Used when approving requests.
-	
-	# Delete any existing custom access
-	sql_query("delete from resource_custom_access where user='$user' and resource='$resource'");
-	
-	# Insert new row
-	sql_query("insert into resource_custom_access(resource,access,user,user_expires) values ('$resource','0','$user'," . ($expires==""?"null":"'$expires'") . ")");
-	
-	return true;
-	}
+    {
+    # Give the user full access to the given resource.
+    # Used when approving requests.
+    
+    # Delete any existing custom access
+    sql_query("delete from resource_custom_access where user='$user' and resource='$resource'");
+    
+    # Insert new row
+    sql_query("insert into resource_custom_access(resource,access,user,user_expires) values ('$resource','0','$user'," . ($expires==""?"null":"'$expires'") . ")");
+    
+    return true;
+    }
 
 function open_access_to_group($group,$resource,$expires)
-	{
-	# Give the user full access to the given resource.
-	# Used when approving requests.
-	
-	# Delete any existing custom access
-	sql_query("delete from resource_custom_access where usergroup=$group and resource=$resource");
-	
-	# Insert new row
-	sql_query("insert into resource_custom_access(resource,access,usergroup,user_expires) values ('$resource','0',$group," . ($expires==""?"null":"'$expires'") . ")");
-	
-	return true;
-	}
+    {
+    # Give the user full access to the given resource.
+    # Used when approving requests.
+    
+    # Delete any existing custom access
+    sql_query("delete from resource_custom_access where usergroup=$group and resource=$resource");
+    
+    # Insert new row
+    sql_query("insert into resource_custom_access(resource,access,usergroup,user_expires) values ('$resource','0',$group," . ($expires==""?"null":"'$expires'") . ")");
+    
+    return true;
+    }
 
 function resolve_open_access($userlist,$resource,$expires)
-	{
-	global $open_internal_access,$lang;
-	
-	$groupids=resolve_userlist_groups_smart($userlist);
-	debug("smart_groups: list=".$groupids);
-	if($groupids!='')
-		{
-		$groupids=explode(",",$groupids);
-		foreach ($groupids as $group)
-			{
-			open_access_to_group($group,$resource,$expires);
-			}
-		$userlist=remove_groups_smart_from_userlist($userlist); 
-		}
-	if($userlist!='')
-		{
-		$userlist_array=explode(",",$userlist);
-		debug("smart_groups: userlist=".$userlist);
-		foreach($userlist_array as $option)
-			{
-			#user
-			$userid=sql_value("select ref value from user where username='$option'","");
-			if($userid!="")
-				{
-				open_access_to_user($userid,$resource,$expires);   
-				}
-			}
-		}
-	}
-	
+    {
+    global $open_internal_access,$lang;
+    
+    $groupids=resolve_userlist_groups_smart($userlist);
+    debug("smart_groups: list=".$groupids);
+    if($groupids!='')
+        {
+        $groupids=explode(",",$groupids);
+        foreach ($groupids as $group)
+            {
+            open_access_to_group($group,$resource,$expires);
+            }
+        $userlist=remove_groups_smart_from_userlist($userlist); 
+        }
+    if($userlist!='')
+        {
+        $userlist_array=explode(",",$userlist);
+        debug("smart_groups: userlist=".$userlist);
+        foreach($userlist_array as $option)
+            {
+            #user
+            $userid=sql_value("select ref value from user where username='$option'","");
+            if($userid!="")
+                {
+                open_access_to_user($userid,$resource,$expires);   
+                }
+            }
+        }
+    }
+    
 function remove_access_to_user($user,$resource)
-	{
-	# Remove any user-specific access granted by an 'approve'.
-	# Used when declining requests.
-	
-	# Delete any existing custom access
-	sql_query("delete from resource_custom_access where user='$user' and resource='$resource'");
-	
-	return true;
-	}
-	
+    {
+    # Remove any user-specific access granted by an 'approve'.
+    # Used when declining requests.
+    
+    # Delete any existing custom access
+    sql_query("delete from resource_custom_access where user='$user' and resource='$resource'");
+    
+    return true;
+    }
+    
 function user_email_exists($email)
-	{
-	# Returns true if a user account exists with e-mail address $email
-	$email=escape_check(trim(strtolower($email)));
-	return (sql_value("select count(*) value from user where email like '$email'",0)>0);
-	}
+    {
+    # Returns true if a user account exists with e-mail address $email
+    $email=escape_check(trim(strtolower($email)));
+    return (sql_value("select count(*) value from user where email like '$email'",0)>0);
+    }
 
 function filesize_unlimited($path)
     {
@@ -4812,66 +4852,66 @@ function convert($text, $key = '') {
 } 
 
 function purchase_set_size($collection,$resource,$size,$price)
-	{
-	// Set the selected size for an item in a collection. This is used later on when the items are downloaded.
-	sql_query("update collection_resource set purchase_size='" . escape_check($size) . "',purchase_price='" . escape_check($price) . "' where collection='$collection' and resource='$resource'");
-	return true;
-	}
+    {
+    // Set the selected size for an item in a collection. This is used later on when the items are downloaded.
+    sql_query("update collection_resource set purchase_size='" . escape_check($size) . "',purchase_price='" . escape_check($price) . "' where collection='$collection' and resource='$resource'");
+    return true;
+    }
 
 function payment_set_complete($collection,$emailconfirmation="")
-	{
-	global $applicationname,$baseurl,$userref,$username,$useremail,$userfullname,$email_notify,$lang,$currency_symbol;
-	// Mark items in the collection as paid so they can be downloaded.
-	sql_query("update collection_resource set purchase_complete=1 where collection='$collection'");
-	
-	// For each resource, add an entry to the log to show it has been purchased.
-	$resources=sql_query("select * from collection_resource where collection='$collection'");
-	$summary="<style>.InfoTable td {padding:5px;}</style><table border=\"1\" class=\"InfoTable\"><tr><td><strong>" . $lang["property-reference"] . "</strong></td><td><strong>" . $lang["size"] . "</strong></td><td><strong>" . $lang["price"] . "</strong></td></tr>";
-	foreach ($resources as $resource)
-		{
-		$purchasesize=$resource["purchase_size"];
-		if ($purchasesize==""){$purchasesize=$lang["original"];}
-		resource_log($resource["resource"],"p",0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
-		$summary.="<tr><td>" . $resource["resource"] . "</td><td>" . $purchasesize . "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>";
-		}
-	$summary.="</table>";
-	// Send email or notification to admin
-	$message=$lang["purchase_complete_email_admin_body"] . "<br />" . $lang["username"] . ": " . $username . "(" . $userfullname . ")<br />" . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
-	$notificationmessage=$lang["purchase_complete_email_admin_body"] . "\r\n" . $lang["username"] . ": " . $username . "(" . $userfullname . ")";
-	$notify_users=get_notification_users("RESOURCE_ACCESS"); 
-	$message_users=array();
-	foreach($notify_users as $notify_user)
-			{
-			get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message);		  
-            if($send_message==false){continue;}		
-			
-			get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $notify_user["email"]!="")
-				{
-				send_mail($notify_user["email"],$applicationname . ": " . $lang["purchase_complete_email_admin"],$message);
-				}        
-			else
-				{
-				$message_users[]=$notify_user["ref"];
-				}
-			}
-			
-	if (count($message_users)>0)
-		{		
+    {
+    global $applicationname,$baseurl,$userref,$username,$useremail,$userfullname,$email_notify,$lang,$currency_symbol;
+    // Mark items in the collection as paid so they can be downloaded.
+    sql_query("update collection_resource set purchase_complete=1 where collection='$collection'");
+    
+    // For each resource, add an entry to the log to show it has been purchased.
+    $resources=sql_query("select * from collection_resource where collection='$collection'");
+    $summary="<style>.InfoTable td {padding:5px;}</style><table border=\"1\" class=\"InfoTable\"><tr><td><strong>" . $lang["property-reference"] . "</strong></td><td><strong>" . $lang["size"] . "</strong></td><td><strong>" . $lang["price"] . "</strong></td></tr>";
+    foreach ($resources as $resource)
+        {
+        $purchasesize=$resource["purchase_size"];
+        if ($purchasesize==""){$purchasesize=$lang["original"];}
+        resource_log($resource["resource"],"p",0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
+        $summary.="<tr><td>" . $resource["resource"] . "</td><td>" . $purchasesize . "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>";
+        }
+    $summary.="</table>";
+    // Send email or notification to admin
+    $message=$lang["purchase_complete_email_admin_body"] . "<br />" . $lang["username"] . ": " . $username . "(" . $userfullname . ")<br />" . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
+    $notificationmessage=$lang["purchase_complete_email_admin_body"] . "\r\n" . $lang["username"] . ": " . $username . "(" . $userfullname . ")";
+    $notify_users=get_notification_users("RESOURCE_ACCESS"); 
+    $message_users=array();
+    foreach($notify_users as $notify_user)
+            {
+            get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message);          
+            if($send_message==false){continue;}     
+            
+            get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
+            if($send_email && $notify_user["email"]!="")
+                {
+                send_mail($notify_user["email"],$applicationname . ": " . $lang["purchase_complete_email_admin"],$message);
+                }        
+            else
+                {
+                $message_users[]=$notify_user["ref"];
+                }
+            }
+            
+    if (count($message_users)>0)
+        {       
         message_add($message_users,$notificationmessage,$baseurl . "/?c=" . $collection,$userref);
-		}	
-	
-	// Send email to user (not a notification as may need to be kept for reference)
-	$confirmation_address=($emailconfirmation!="")?$emailconfirmation:$useremail;	
-	$userconfirmmessage= $lang["purchase_complete_email_user_body"] . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
-	send_mail($useremail,$applicationname . ": " . $lang["purchase_complete_email_user"] ,$userconfirmmessage);
-	
-	// Rename so that can be viewed on my purchases page
-	sql_query("update collection set name= '" . date("Y-m-d H:i") . "' where ref='$collection'");
-	
-	return true;
+        }   
+    
+    // Send email to user (not a notification as may need to be kept for reference)
+    $confirmation_address=($emailconfirmation!="")?$emailconfirmation:$useremail;   
+    $userconfirmmessage= $lang["purchase_complete_email_user_body"] . $summary . "<br /><br />$baseurl/?c=" . $collection . "<br />";
+    send_mail($useremail,$applicationname . ": " . $lang["purchase_complete_email_user"] ,$userconfirmmessage);
+    
+    // Rename so that can be viewed on my purchases page
+    sql_query("update collection set name= '" . date("Y-m-d H:i") . "' where ref='$collection'");
+    
+    return true;
 
-	}
+    }
 
 
 /**
@@ -4888,7 +4928,7 @@ function get_temp_dir($asUrl = false,$uniqid="")
     global $storagedir, $tempdir;
     // Set up the default.
     $result = dirname(dirname(__FILE__)) . "/filestore/tmp";
-	
+    
     // if $tempdir is explicity set, use it.
     if(isset($tempdir))
     {
@@ -4922,9 +4962,9 @@ function get_temp_dir($asUrl = false,$uniqid="")
     }
     
     if ($uniqid!=""){
-		$uniqid=str_replace("../","",$uniqid);//restrict to forward-only movements
-		$result.="/$uniqid";
-		if(!is_dir($result)){
+        $uniqid=str_replace("../","",$uniqid);//restrict to forward-only movements
+        $result.="/$uniqid";
+        if(!is_dir($result)){
             // If it does not exist, create it.
             mkdir($result, 0777,true);
         }
@@ -4934,7 +4974,7 @@ function get_temp_dir($asUrl = false,$uniqid="")
     if($asUrl==true)
     {
         $result = convert_path_to_url($result);
-	$result = str_replace('\\','/',$result);
+    $result = str_replace('\\','/',$result);
     }
     return $result;
 }
@@ -5048,15 +5088,15 @@ function run_external($cmd,&$code)
 
 function error_alert($error,$back=true){
 
-	foreach ($GLOBALS as $key=>$value){
-		$$key=$value;
-	} 
-	if ($back){include(dirname(__FILE__)."/header.php");}
-	echo "<script type='text/javascript'>
+    foreach ($GLOBALS as $key=>$value){
+        $$key=$value;
+    } 
+    if ($back){include(dirname(__FILE__)."/header.php");}
+    echo "<script type='text/javascript'>
         ModalClose();
-	alert('$error');";
-	if ($back){echo "history.go(-1);";}
-	echo "</script>";
+    alert('$error');";
+    if ($back){echo "history.go(-1);";}
+    echo "</script>";
 }
 /**
  * Returns an xml compliant string in UTF-8
@@ -5125,9 +5165,9 @@ function sanitize_char($char)
     }
 
 function format_display_field($value){
-	
-	// applies trim/wordwrap/highlights 
-	global $results_title_trim,$results_title_wordwrap,$df,$x,$search;
+    
+    // applies trim/wordwrap/highlights 
+    global $results_title_trim,$results_title_wordwrap,$df,$x,$search;
 
     $value = strip_tags_and_attributes($value);
 
@@ -5136,13 +5176,13 @@ function format_display_field($value){
         $value = strip_tags($value);
         }
 
-	$string=i18n_get_translated($value);
-	$string=TidyList($string);
-	//$string=tidy_trim($string,$results_title_trim);
-	$string=htmlspecialchars($string);
-	$string=highlightkeywords($string,$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
-	
-	return $string;
+    $string=i18n_get_translated($value);
+    $string=TidyList($string);
+    //$string=tidy_trim($string,$results_title_trim);
+    $string=htmlspecialchars($string);
+    $string=highlightkeywords($string,$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
+    
+    return $string;
 }
 
 // formats a string with a collapsible more / less section
@@ -5211,107 +5251,107 @@ function format_string_more_link($string,$max_words_before_more=-1)
 
 if (!function_exists("draw_performance_footer")){
 function draw_performance_footer(){
-	global $config_show_performance_footer,$querycount,$querytime,$querylog,$pagename,$hook_cache_hits,$hook_cache;
-	$performance_footer_id=uniqid("performance");
-	if ($config_show_performance_footer){	
-	$querylog=sortmulti ($querylog, "time", "desc", FALSE, FALSE);
-	# --- If configured (for debug/development only) show query statistics
-	?>
-	<?php if ($pagename=="collections"){?><br/><br/><br/><br/><br/><br/><br/>
-	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><div style="float:left;"><?php } else { ?><div style="float:right; margin-right: 10px;"><?php } ?>
-	<table class="InfoTable" style="float: right;margin-right: 10px;">
-	<tr><td>Page Load</td><td><?php show_pagetime();?></td></tr>
-	<?php 
-		if(isset($hook_cache_hits) && isset($hook_cache)) {			
-		?>
-		<tr><td>Hook cache hits</td><td><?php echo $hook_cache_hits;?></td></tr>	
-		<tr><td>Hook cache entries</td><td><?php echo count($hook_cache); ?></td></tr>
-		<?php
-		}
-	?>
-	<tr><td>Query count</td><td><?php echo $querycount?></td></tr>
-	<tr><td>Query time</td><td><?php echo round($querytime,4)?></td></tr>
-	<?php $dupes=0;
-	foreach ($querylog as $query=>$values){
-			if ($values['dupe']>1){$dupes++;}
-		}
-	?>
-	<tr><td>Dupes</td><td><?php echo $dupes?></td></tr>
-	<tr><td colspan=2><a href="#" onClick="document.getElementById('querylog<?php echo $performance_footer_id?>').style.display='block';return false;"><?php echo LINK_CARET ?>details</a></td></tr>
-	</table>
-	<table class="InfoTable" id="querylog<?php echo $performance_footer_id?>" style="display: none; float: <?php if ($pagename=='collections'){?>left<?php } else {?>right<?php }?>; margin: 10px;">
-	<?php
+    global $config_show_performance_footer,$querycount,$querytime,$querylog,$pagename,$hook_cache_hits,$hook_cache;
+    $performance_footer_id=uniqid("performance");
+    if ($config_show_performance_footer){   
+    $querylog=sortmulti ($querylog, "time", "desc", FALSE, FALSE);
+    # --- If configured (for debug/development only) show query statistics
+    ?>
+    <?php if ($pagename=="collections"){?><br/><br/><br/><br/><br/><br/><br/>
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><div style="float:left;"><?php } else { ?><div style="float:right; margin-right: 10px;"><?php } ?>
+    <table class="InfoTable" style="float: right;margin-right: 10px;">
+    <tr><td>Page Load</td><td><?php show_pagetime();?></td></tr>
+    <?php 
+        if(isset($hook_cache_hits) && isset($hook_cache)) {         
+        ?>
+        <tr><td>Hook cache hits</td><td><?php echo $hook_cache_hits;?></td></tr>    
+        <tr><td>Hook cache entries</td><td><?php echo count($hook_cache); ?></td></tr>
+        <?php
+        }
+    ?>
+    <tr><td>Query count</td><td><?php echo $querycount?></td></tr>
+    <tr><td>Query time</td><td><?php echo round($querytime,4)?></td></tr>
+    <?php $dupes=0;
+    foreach ($querylog as $query=>$values){
+            if ($values['dupe']>1){$dupes++;}
+        }
+    ?>
+    <tr><td>Dupes</td><td><?php echo $dupes?></td></tr>
+    <tr><td colspan=2><a href="#" onClick="document.getElementById('querylog<?php echo $performance_footer_id?>').style.display='block';return false;"><?php echo LINK_CARET ?>details</a></td></tr>
+    </table>
+    <table class="InfoTable" id="querylog<?php echo $performance_footer_id?>" style="display: none; float: <?php if ($pagename=='collections'){?>left<?php } else {?>right<?php }?>; margin: 10px;">
+    <?php
 
-		foreach($querylog as $query=>$values){
-		if (substr($query,0,7)!="explain" && $query!="show warnings"){
-		$show_warnings=false;
-		if (strtolower(substr($query,0,6))=="select"){
-			$explain=sql_query("explain extended ".$query);
-			/*$warnings=sql_query("show warnings");
-			$show_warnings=true;*/
-		}
-		?>
-		<tr><td align="left"><div style="word-wrap: break-word; width:350px;"><?php echo $query?><?php if ($show_warnings){ foreach ($warnings as $warning){echo "<br /><br />".$warning['Level'].": ".htmlentities($warning['Message']);}}?></div></td><td>&nbsp;
-		<table class="InfoTable">
-		<?php if (strtolower(substr($query,0,6))=="select"){
-			?><tr>
-			<?php
-			foreach ($explain[0] as $explainitem=>$value){?>
-				<td align="left">   
-				<?php echo $explainitem?><br /></td><?php 
-				}
-			?></tr><?php
+        foreach($querylog as $query=>$values){
+        if (substr($query,0,7)!="explain" && $query!="show warnings"){
+        $show_warnings=false;
+        if (strtolower(substr($query,0,6))=="select"){
+            $explain=sql_query("explain extended ".$query);
+            /*$warnings=sql_query("show warnings");
+            $show_warnings=true;*/
+        }
+        ?>
+        <tr><td align="left"><div style="word-wrap: break-word; width:350px;"><?php echo $query?><?php if ($show_warnings){ foreach ($warnings as $warning){echo "<br /><br />".$warning['Level'].": ".htmlentities($warning['Message']);}}?></div></td><td>&nbsp;
+        <table class="InfoTable">
+        <?php if (strtolower(substr($query,0,6))=="select"){
+            ?><tr>
+            <?php
+            foreach ($explain[0] as $explainitem=>$value){?>
+                <td align="left">   
+                <?php echo $explainitem?><br /></td><?php 
+                }
+            ?></tr><?php
 
-			for($n=0;$n<count($explain);$n++){
-				?><tr><?php
-				foreach ($explain[$n] as $explainitem=>$value){?>
-				<td align="left">   
-					<?php echo str_replace(",",", ",$value)?></td><?php 
-					}
-				?></tr><?php	
-				}
-			}	?>
-		</table>
-		</td><td><?php echo round($values['time'],4)?></td>
-		</td><td><?php echo ($values['dupe']>1)?''.$values["dupe"].'X':'1'?></td></tr>
-		<?php	
-		}
-		}
-	?>
-	</table>
-	</div>
-	<?php
-	}
+            for($n=0;$n<count($explain);$n++){
+                ?><tr><?php
+                foreach ($explain[$n] as $explainitem=>$value){?>
+                <td align="left">   
+                    <?php echo str_replace(",",", ",$value)?></td><?php 
+                    }
+                ?></tr><?php    
+                }
+            }   ?>
+        </table>
+        </td><td><?php echo round($values['time'],4)?></td>
+        </td><td><?php echo ($values['dupe']>1)?''.$values["dupe"].'X':'1'?></td></tr>
+        <?php   
+        }
+        }
+    ?>
+    </table>
+    </div>
+    <?php
+    }
 }
 }
 
 function sql_affected_rows(){
-	global $use_mysqli;
-	if ($use_mysqli){
-		global $db;
-		return mysqli_affected_rows($db);
-	}
-	else {
-		return mysql_affected_rows();
-	}
+    global $use_mysqli;
+    if ($use_mysqli){
+        global $db;
+        return mysqli_affected_rows($db);
+    }
+    else {
+        return mysql_affected_rows();
+    }
 }
 
 function get_imagemagick_path($utilityname, $exeNames, &$checked_path)
 {
     global $imagemagick_path;
-	if (!isset($imagemagick_path))
-		{
-		# ImageMagick convert path not configured.
-		return false;
-		}
-	$path=get_executable_path($imagemagick_path, $exeNames, $checked_path);
-	if ($path===false)
-		{
-		# Support 'magick' also, ie. ImageMagick 7+
-		return get_executable_path($imagemagick_path, array("unix"=>"magick", "win"=>"magick.exe"),
-				$checked_path) . ' ' . $utilityname;
-		}
-	return $path;
+    if (!isset($imagemagick_path))
+        {
+        # ImageMagick convert path not configured.
+        return false;
+        }
+    $path=get_executable_path($imagemagick_path, $exeNames, $checked_path);
+    if ($path===false)
+        {
+        # Support 'magick' also, ie. ImageMagick 7+
+        return get_executable_path($imagemagick_path, array("unix"=>"magick", "win"=>"magick.exe"),
+                $checked_path) . ' ' . $utilityname;
+        }
+    return $path;
 }
 
 /**
@@ -5679,16 +5719,16 @@ function txt2html($txt) {
 
 /* General rules for replacing images */ 
 $imgReplacement = 
-	"<img align=left width=180 src=../..$5$6$7$8 /><br/>";
+    "<img align=left width=180 src=../..$5$6$7$8 /><br/>";
 
 /* Rules per supported file type */ 
 $extArray = array (
-//	".html" => "<" . "a href=../..$5$6$7$8>$4$5$6$7$8"."</a>",
-//	".php" => "<" . "a href=../..$5$6$7$8>$4$5$6$7$8"."</a>",
-	".jpg" => $imgReplacement,
-	".png" => $imgReplacement,
-	".gif" => $imgReplacement,
-	"" => "<" . "a href=http://$4$5$6$7$8>$4$5$6$7$8"."</a>");
+//  ".html" => "<" . "a href=../..$5$6$7$8>$4$5$6$7$8"."</a>",
+//  ".php" => "<" . "a href=../..$5$6$7$8>$4$5$6$7$8"."</a>",
+    ".jpg" => $imgReplacement,
+    ".png" => $imgReplacement,
+    ".gif" => $imgReplacement,
+    "" => "<" . "a href=http://$4$5$6$7$8>$4$5$6$7$8"."</a>");
 /* $1 = http:
  * $2 = http
  * $3 = //www.eilertech.com
@@ -5743,10 +5783,10 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
     else {$expire = time() + (3600*24*$daysexpire);}
 
     if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] === getservbyname("https", "tcp")))
-    	{
-    	$secure=true;
-    	}
-     	
+        {
+        $secure=true;
+        }
+        
     // Set new cookie, first remove any old previously set pages cookies to avoid clashes;           
     if ($global_cookies)
         {
@@ -5761,22 +5801,22 @@ function rs_setcookie($name, $value, $daysexpire = 0, $path = "", $domain = "", 
     }
 
 function get_editable_states($userref)
-	// Get an array of all the states that a user has edit access to
-	{
-	global $additional_archive_states, $lang;
-	if($userref==-1){return false;}
-	$editable_states=array();
-	$x=0;
-	for ($n=-2;$n<=3;$n++)
-		{
-		if (checkperm("e" . $n)) {$editable_states[$x]['id']=$n;$editable_states[$x]['name']=$lang["status" . $n];$x++;}		
-		}
-	foreach ($additional_archive_states as $additional_archive_state)
-		{
-		if (checkperm("e" . $additional_archive_state)) { $editable_states[$x]['id']=$additional_archive_state;$editable_states[$x]['name']=$lang["status" . $additional_archive_state];$x++;}		
-		}
-	return $editable_states;
-	}
+    // Get an array of all the states that a user has edit access to
+    {
+    global $additional_archive_states, $lang;
+    if($userref==-1){return false;}
+    $editable_states=array();
+    $x=0;
+    for ($n=-2;$n<=3;$n++)
+        {
+        if (checkperm("e" . $n)) {$editable_states[$x]['id']=$n;$editable_states[$x]['name']=$lang["status" . $n];$x++;}        
+        }
+    foreach ($additional_archive_states as $additional_archive_state)
+        {
+        if (checkperm("e" . $additional_archive_state)) { $editable_states[$x]['id']=$additional_archive_state;$editable_states[$x]['name']=$lang["status" . $additional_archive_state];$x++;}      
+        }
+    return $editable_states;
+    }
         
 function validate_html($html)
     {
@@ -5786,16 +5826,16 @@ function validate_html($html)
     xml_parse_into_struct($parser,"<div>" . str_replace("&","&amp;",$html) . "</div>",$vals,$index);
     $errcode=xml_get_error_code($parser);
     if ($errcode!==0)
-	{
-	$line=xml_get_current_line_number($parser);
+    {
+    $line=xml_get_current_line_number($parser);
         
-	$error=htmlspecialchars(xml_error_string($errcode)) . "<br />Line: " . $line . "<br /><br />";
-	$s=explode("\n",$html);
-	$error.= "<pre>" . trim(htmlspecialchars(@$s[$line-2])) . "<br />";
-	$error.= "<strong>" . trim(htmlspecialchars(@$s[$line-1])) . "</strong><br />";
-	$error.= trim(htmlspecialchars(@$s[$line])) . "<br /></pre>";		
-	return $error;
-	}
+    $error=htmlspecialchars(xml_error_string($errcode)) . "<br />Line: " . $line . "<br /><br />";
+    $s=explode("\n",$html);
+    $error.= "<pre>" . trim(htmlspecialchars(@$s[$line-2])) . "<br />";
+    $error.= "<strong>" . trim(htmlspecialchars(@$s[$line-1])) . "</strong><br />";
+    $error.= trim(htmlspecialchars(@$s[$line])) . "<br /></pre>";       
+    return $error;
+    }
     else
         {
         return true;
@@ -5803,35 +5843,35 @@ function validate_html($html)
     }
 
 function get_indexed_resource_type_fields()
-	{
-	return sql_array("select ref as value from resource_type_field where keywords_index=1");
-	}
+    {
+    return sql_array("select ref as value from resource_type_field where keywords_index=1");
+    }
 
 function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="")
-	{
-	// Gets all metadata fields, optionally for a specified array of resource types 
-	$conditionsql="";
-	if(is_array($restypes))
-		{
-		$conditionsql = " where resource_type in (" . implode(",",$restypes) . ")";
-		}
-	if($find!="")
-		{
-		$find=escape_check($find);
-		if($conditionsql!="")
-			{
-			$conditionsql.=" and ( ";
-			}
-		else
-			{
-			$conditionsql.=" where ( ";
-			}
-		$conditionsql.=" name like '%" . $find . "%' or title like '%" . $find . "%' or tab_name like '%" . $find . "%' or exiftool_field like '%" . $find . "%' or help_text like '%" . $find . "%' or ref like '%" . $find . "%' or tooltip_text like '%" .$find . "%' or display_template like '%" .$find . "%')";
-		}
+    {
+    // Gets all metadata fields, optionally for a specified array of resource types 
+    $conditionsql="";
+    if(is_array($restypes))
+        {
+        $conditionsql = " where resource_type in (" . implode(",",$restypes) . ")";
+        }
+    if($find!="")
+        {
+        $find=escape_check($find);
+        if($conditionsql!="")
+            {
+            $conditionsql.=" and ( ";
+            }
+        else
+            {
+            $conditionsql.=" where ( ";
+            }
+        $conditionsql.=" name like '%" . $find . "%' or title like '%" . $find . "%' or tab_name like '%" . $find . "%' or exiftool_field like '%" . $find . "%' or help_text like '%" . $find . "%' or ref like '%" . $find . "%' or tooltip_text like '%" .$find . "%' or display_template like '%" .$find . "%')";
+        }
 
-	// Allow for sorting, enabled for use by System Setup pages
-	//if(!in_array($field_order_by,array("ref","name","tab_name","type","order_by","keywords_index","resource_type","display_field","required"))){$field_order_by="ref";}		
-		
+    // Allow for sorting, enabled for use by System Setup pages
+    //if(!in_array($field_order_by,array("ref","name","tab_name","type","order_by","keywords_index","resource_type","display_field","required"))){$field_order_by="ref";}       
+        
     $allfields = sql_query("
         SELECT ref,
                name,
@@ -5875,7 +5915,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
           FROM resource_type_field" . $conditionsql . " ORDER BY " . escape_check($field_order_by) . " " . escape_check($field_sort));
 
     return $allfields;
-	}
+    }
 
 
 /**
@@ -5913,26 +5953,26 @@ function generateURL($url, $parameters = array(), $set_params = array())
     }
 
 function notify_resource_change($resource)
-	{
-	debug("notify_resource_change " . $resource);
-	global $notify_on_resource_change_days;
-	// Check to see if we need to notify users of this change
-	if($notify_on_resource_change_days==0 || !is_int($notify_on_resource_change_days))
-		{
-		return false;
-		}
-		
-	debug("notify_resource_change - checking for users that have downloaded this resource " . $resource);
-	$download_users=sql_query("select u.ref, u.email from resource_log rl left join user u on rl.user=u.ref where rl.type='d' and rl.resource=$resource and datediff(now(),date)<'$notify_on_resource_change_days'","");
-	$message_users=array();
-	if(count($download_users>0))
-		{
-		global $applicationname, $lang, $baseurl;
-		foreach ($download_users as $download_user)
-			{
-			get_config_option($download_user['ref'],'user_pref_resource_notifications', $send_message);		  
-            if($send_message==false){continue;}		
-			
+    {
+    debug("notify_resource_change " . $resource);
+    global $notify_on_resource_change_days;
+    // Check to see if we need to notify users of this change
+    if($notify_on_resource_change_days==0 || !is_int($notify_on_resource_change_days))
+        {
+        return false;
+        }
+        
+    debug("notify_resource_change - checking for users that have downloaded this resource " . $resource);
+    $download_users=sql_query("select u.ref, u.email from resource_log rl left join user u on rl.user=u.ref where rl.type='d' and rl.resource=$resource and datediff(now(),date)<'$notify_on_resource_change_days'","");
+    $message_users=array();
+    if(count($download_users>0))
+        {
+        global $applicationname, $lang, $baseurl;
+        foreach ($download_users as $download_user)
+            {
+            get_config_option($download_user['ref'],'user_pref_resource_notifications', $send_message);       
+            if($send_message==false){continue;}     
+            
             get_config_option($download_user['ref'],'email_user_notifications', $send_email);
             if($send_email && $download_user["email"]!="")
                 {
@@ -5940,137 +5980,137 @@ function notify_resource_change($resource)
                 }
             else
                 {
-				$message_users[]=$download_user["ref"];
+                $message_users[]=$download_user["ref"];
                 }
-			}
-		if (count($message_users)>0)
-			{
+            }
+        if (count($message_users)>0)
+            {
             message_add($message_users,str_replace(array("[days]","[url]"),array($notify_on_resource_change_days,$baseurl . "/?r=" . $resource),$lang["notify_resource_change_notification"]),$baseurl . "/?r=" . $resource);
-			}
-		}
-	}
+            }
+        }
+    }
 
 # Takes a string and add verbatim regex matches to the keywords list on found matches (for that field)
 # It solves the problem, for example, indexing an entire "nnn.nnn.nnn" string value when '.' are used as a keyword separator.
 # Uses config option $resource_field_verbatim_keyword_regex[resource type field] = '/regex/'
 # Also changes "field:<value>" type searches to "field:,<value>" for full matching for field types such as "Check box list" (config option to specify this)
 function add_verbatim_keywords(&$keywords, $string, $resource_type_field, $called_from_search=false)
-	{
-	global $resource_field_verbatim_keyword_regex,$resource_field_checkbox_match_full;
+    {
+    global $resource_field_verbatim_keyword_regex,$resource_field_checkbox_match_full;
 
-	// add ",<string>" if specified resource_type_field is found within $resource_field_checkbox_match_full array.
-	if( !$called_from_search &&
-		isset($resource_field_checkbox_match_full) &&
-		is_array($resource_field_checkbox_match_full) &&
-		in_array($resource_type_field,$resource_field_checkbox_match_full))
-		{
-		preg_match_all('/,[^,]+/', $string, $matches);
-		if (isset($matches[0][0]))
-			{
-			foreach ($matches[0] as $match)
-				{
-				$match=strtolower($match);
-				array_push($keywords,$match);
-				}
-			}
-		}
+    // add ",<string>" if specified resource_type_field is found within $resource_field_checkbox_match_full array.
+    if( !$called_from_search &&
+        isset($resource_field_checkbox_match_full) &&
+        is_array($resource_field_checkbox_match_full) &&
+        in_array($resource_type_field,$resource_field_checkbox_match_full))
+        {
+        preg_match_all('/,[^,]+/', $string, $matches);
+        if (isset($matches[0][0]))
+            {
+            foreach ($matches[0] as $match)
+                {
+                $match=strtolower($match);
+                array_push($keywords,$match);
+                }
+            }
+        }
 
-	// normal verbatim expansion of keywords as defined in config.php
-	if (!empty($resource_field_verbatim_keyword_regex[$resource_type_field]))
-		{
-		preg_match_all($resource_field_verbatim_keyword_regex[$resource_type_field], $string, $matches);
-		foreach ($matches as $match)
-			{
-			foreach ($match as $sub_match)
-				{
-				array_push($keywords, $sub_match);        // note that the keywords array is passed in by reference.
-				}
-			}
-		}
+    // normal verbatim expansion of keywords as defined in config.php
+    if (!empty($resource_field_verbatim_keyword_regex[$resource_type_field]))
+        {
+        preg_match_all($resource_field_verbatim_keyword_regex[$resource_type_field], $string, $matches);
+        foreach ($matches as $match)
+            {
+            foreach ($match as $sub_match)
+                {
+                array_push($keywords, $sub_match);        // note that the keywords array is passed in by reference.
+                }
+            }
+        }
 
-	// when searching change "field:<string>" to "field:,<string>" if specified resource_type_field is found within $resource_field_checkbox_match_full array.
-	if ($called_from_search &&
-		isset($resource_field_checkbox_match_full) &&
-		is_array($resource_field_checkbox_match_full) &&
-		in_array($resource_type_field,$resource_field_checkbox_match_full))
-		{
-		$found_name = sql_value("SELECT `name` AS 'value' FROM `resource_type_field` WHERE `ref`='{$resource_type_field}'", "");
-		preg_match_all('/' . $found_name . ':([^,]+)/', $string, $matches);
-		if (isset($matches[1][0]))
-			{
-			foreach ($matches[1] as $match)
-				{
-				$match=strtolower($match);
-				$remove = "{$found_name}:{$match}";
-				if (in_array($remove,$keywords))
-					{
-					unset($keywords[array_search($remove,$keywords)]);
-					}
-				array_push($keywords, "{$found_name}:,{$match}");
-				}
-			}
-		}
-	}
+    // when searching change "field:<string>" to "field:,<string>" if specified resource_type_field is found within $resource_field_checkbox_match_full array.
+    if ($called_from_search &&
+        isset($resource_field_checkbox_match_full) &&
+        is_array($resource_field_checkbox_match_full) &&
+        in_array($resource_type_field,$resource_field_checkbox_match_full))
+        {
+        $found_name = sql_value("SELECT `name` AS 'value' FROM `resource_type_field` WHERE `ref`='{$resource_type_field}'", "");
+        preg_match_all('/' . $found_name . ':([^,]+)/', $string, $matches);
+        if (isset($matches[1][0]))
+            {
+            foreach ($matches[1] as $match)
+                {
+                $match=strtolower($match);
+                $remove = "{$found_name}:{$match}";
+                if (in_array($remove,$keywords))
+                    {
+                    unset($keywords[array_search($remove,$keywords)]);
+                    }
+                array_push($keywords, "{$found_name}:,{$match}");
+                }
+            }
+        }
+    }
 
 # Tails a file using native PHP functions.
 # First introduced with system console.
 # Credit to:
 # http://www.geekality.net/2011/05/28/php-tail-tackling-large-files
 function tail($filename, $lines = 10, $buffer = 4096)
-	{
-	$f = fopen($filename, "rb");		// Open the file
-	fseek($f, -1, SEEK_END);		// Jump to last character
+    {
+    $f = fopen($filename, "rb");        // Open the file
+    fseek($f, -1, SEEK_END);        // Jump to last character
 
-	// Read it and adjust line number if necessary
-	// (Otherwise the result would be wrong if file doesn't end with a blank line)
-	if(fread($f, 1) != "\n") $lines -= 1;
+    // Read it and adjust line number if necessary
+    // (Otherwise the result would be wrong if file doesn't end with a blank line)
+    if(fread($f, 1) != "\n") $lines -= 1;
 
-	// Start reading
-	$output = '';
-	$chunk = '';
+    // Start reading
+    $output = '';
+    $chunk = '';
 
-	// While we would like more
-	while(ftell($f) > 0 && $lines >= 0)
-		{
-		$seek = min(ftell($f), $buffer);		// Figure out how far back we should jump
-		fseek($f, -$seek, SEEK_CUR);		// Do the jump (backwards, relative to where we are)
-		$output = ($chunk = fread($f, $seek)).$output;		// Read a chunk and prepend it to our output
-		fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);		// Jump back to where we started reading
-		$lines -= substr_count($chunk, "\n");		// Decrease our line counter
-		}
+    // While we would like more
+    while(ftell($f) > 0 && $lines >= 0)
+        {
+        $seek = min(ftell($f), $buffer);        // Figure out how far back we should jump
+        fseek($f, -$seek, SEEK_CUR);        // Do the jump (backwards, relative to where we are)
+        $output = ($chunk = fread($f, $seek)).$output;      // Read a chunk and prepend it to our output
+        fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);        // Jump back to where we started reading
+        $lines -= substr_count($chunk, "\n");       // Decrease our line counter
+        }
 
-	// While we have too many lines
-	// (Because of buffer size we might have read too many)
-	while($lines++ < 0)
-		{
-		// Find first newline and remove all text before that
-		$output = substr($output, strpos($output, "\n") + 1);
-		}
+    // While we have too many lines
+    // (Because of buffer size we might have read too many)
+    while($lines++ < 0)
+        {
+        // Find first newline and remove all text before that
+        $output = substr($output, strpos($output, "\n") + 1);
+        }
 
-	// Close file and return
-	fclose($f);
-	return $output;
-	}	
-	
+    // Close file and return
+    fclose($f);
+    return $output;
+    }   
+    
 function create_password_reset_key($username)
     {
     global $scramble_key;
     $resetuniquecode=make_password();
     $password_reset_hash=hash('sha256', date("Ymd") . md5("RS" . $resetuniquecode . $username . $scramble_key));  
-    sql_query("update user set password_reset_hash='$password_reset_hash' where username='" . escape_check($username) . "'");	
+    sql_query("update user set password_reset_hash='$password_reset_hash' where username='" . escape_check($username) . "'");   
     $password_reset_url_key=substr(hash('sha256', date("Ymd") . $password_reset_hash . $username . $scramble_key),0,15);
     return $password_reset_url_key;
     }
-	
+    
 function get_rs_session_id($create=false)
     {
-	global $baseurl, $anonymous_login, $usergroup;
+    global $baseurl, $anonymous_login, $usergroup;
     // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users
     if(isset($_COOKIE["rs_session"]))
         {
-		rs_setcookie("rs_session",$_COOKIE["rs_session"], 7, "", "", substr($baseurl,0,5)=="https", true); // extend the life of the cookie
-		return($_COOKIE["rs_session"]);
-		}
+        rs_setcookie("rs_session",$_COOKIE["rs_session"], 7, "", "", substr($baseurl,0,5)=="https", true); // extend the life of the cookie
+        return($_COOKIE["rs_session"]);
+        }
     if ($create) 
         {
         // Create a new ID - numeric values only so we can search for it easily
@@ -6100,16 +6140,16 @@ function get_rs_session_id($create=false)
             daily_stat("User session", $valid[0]["ref"]);
             }
 
-		return $rs_session;
+        return $rs_session;
         }
     return false;
     }
-	
+    
         
 function metadata_field_edit_access($field)
-	{
-	return (!checkperm("F*") || checkperm("F-" . $field))&& !checkperm("F" . $field);
-	}
+    {
+    return (!checkperm("F*") || checkperm("F-" . $field))&& !checkperm("F" . $field);
+    }
 
 
 /**
@@ -6228,82 +6268,82 @@ function get_slideshow_files_data()
     return $slideshow_files;
     }
 
-	
-	
+    
+    
 function get_notification_users($userpermission="SYSTEM_ADMIN")
     {
     // Returns an array of users (refs and emails) for use when sending email notifications (messages that in the past went to $email_notify, which can be emulated by using $email_notify_usergroups)
-	// Can be passed a specific user type or an array of permissions
-	// Types supported:-
-	// SYSTEM_ADMIN
-	// RESOURCE_ACCESS
-	// RESEARCH_ADMIN
-	// USER_ADMIN
+    // Can be passed a specific user type or an array of permissions
+    // Types supported:-
+    // SYSTEM_ADMIN
+    // RESOURCE_ACCESS
+    // RESEARCH_ADMIN
+    // USER_ADMIN
     // RESOURCE_ADMIN
-	
+    
     global $notification_users_cache, $usergroup,$email_notify_usergroups;
-	$userpermissionindex=is_array($userpermission)?implode("_",$userpermission):$userpermission;
+    $userpermissionindex=is_array($userpermission)?implode("_",$userpermission):$userpermission;
     if(isset($notification_users_cache[$userpermissionindex]))
         {return $notification_users_cache[$userpermissionindex];}
         
     if(is_array($email_notify_usergroups) && count($email_notify_usergroups)>0)
-		{
-		// If email_notify_usergroups is set we use these over everything else, as long as they have an email address set
+        {
+        // If email_notify_usergroups is set we use these over everything else, as long as they have an email address set
         $notification_users_cache[$userpermissionindex] = sql_query("select ref, email from user where usergroup in (" . implode(",",$email_notify_usergroups) . ") and email <>'' AND approved=1 AND (account_expires IS NULL OR account_expires > NOW())");
         return $notification_users_cache[$userpermissionindex];
-		}
-	
-	if(!is_array($userpermission))
-		{
-		// We have been passed a specific type of administrator to find 
-		switch($userpermission)
-			{
-			case "USER_ADMIN";
-			// Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_int($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));	
-			return $notification_users_cache[$userpermissionindex];
-			break;
-			
-			case "RESOURCE_ACCESS";
-			// Notify users who can grant access to resources, get all users in groups with R permissions
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND find_in_set(binary 'Rb',ug.permissions) = 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");	
-			return $notification_users_cache[$userpermissionindex];		
-			break;
-			
-			case "RESEARCH_ADMIN";
-			// Notify research admins, get all users in groups with r permissions
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");	
-			return $notification_users_cache[$userpermissionindex];		
-			break;
-					
-			case "RESOURCE_ADMIN";
-			// Get all users in groups with t and e0 permissions
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 AND find_in_set(binary 'e0',ug.permissions) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");	
-			return $notification_users_cache[$userpermissionindex];
-			break;
+        }
+    
+    if(!is_array($userpermission))
+        {
+        // We have been passed a specific type of administrator to find 
+        switch($userpermission)
+            {
+            case "USER_ADMIN";
+            // Return all users in groups with u permissions AND either no 'U' restriction, or with 'U' but in appropriate group
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'u',ug.permissions) <> 0 and u.ref<>'' and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())" . (is_int($usergroup)?" and (find_in_set(binary 'U',ug.permissions) = 0 or ug.ref =(select parent from usergroup where ref=" . $usergroup . "))":""));    
+            return $notification_users_cache[$userpermissionindex];
+            break;
+            
+            case "RESOURCE_ACCESS";
+            // Notify users who can grant access to resources, get all users in groups with R permissions
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'R',ug.permissions) <> 0 AND find_in_set(binary 'Rb',ug.permissions) = 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            return $notification_users_cache[$userpermissionindex];     
+            break;
+            
+            case "RESEARCH_ADMIN";
+            // Notify research admins, get all users in groups with r permissions
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'r',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            return $notification_users_cache[$userpermissionindex];     
+            break;
+                    
+            case "RESOURCE_ADMIN";
+            // Get all users in groups with t and e0 permissions
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 't',ug.permissions) <> 0 AND find_in_set(binary 'e0',ug.permissions) and u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            return $notification_users_cache[$userpermissionindex];
+            break;
             
             case "SYSTEM_ADMIN";
-			default;
-			// Get all users in groups with a permission (default if incorrect admin type has been passed)
-			$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'a',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");	
-			return $notification_users_cache[$userpermissionindex];
-			break;
-		
-			}
-		}
-	else
-		{
-		// An array has been passed, find all users with these permissions
-		$condition="";
-		foreach ($userpermission as $permission)
-			{
-			if($condition!=""){$condition.=" and ";}
-			$condition.="find_in_set(binary '" . $permission . "',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())";
-			}
-		$notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where $condition");	
-		return $notification_users_cache[$userpermissionindex];
-		}
-	}
+            default;
+            // Get all users in groups with a permission (default if incorrect admin type has been passed)
+            $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where find_in_set(binary 'a',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())");   
+            return $notification_users_cache[$userpermissionindex];
+            break;
+        
+            }
+        }
+    else
+        {
+        // An array has been passed, find all users with these permissions
+        $condition="";
+        foreach ($userpermission as $permission)
+            {
+            if($condition!=""){$condition.=" and ";}
+            $condition.="find_in_set(binary '" . $permission . "',ug.permissions) <> 0 AND u.approved=1 AND (u.account_expires IS NULL OR u.account_expires > NOW())";
+            }
+        $notification_users_cache[$userpermissionindex] = sql_query("select u.ref, u.email from usergroup ug join user u on u.usergroup=ug.ref where $condition");  
+        return $notification_users_cache[$userpermissionindex];
+        }
+    }
         
 function form_value_display($row,$name,$default="")
     {
@@ -6314,152 +6354,152 @@ function form_value_display($row,$name,$default="")
     }
 
 function get_download_filename($ref,$size,$alternative,$ext)
-	{
-	# Constructs a filename for download
-	global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,$download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,$prefix_filename_string, $filename;
-	
-	$filename = $ref . $size . ($alternative>0?"_" . $alternative:"") . "." . $ext;
-	
-	if ($original_filenames_when_downloading)
-		{
-		# Use the original filename.
-		if ($alternative>0)
-			{
-			# Fetch from the resource_alt_files alternatives table (this is an alternative file)
-			$origfile=get_alternative_file($ref,$alternative);
-			$origfile=$origfile["file_name"];
-			}
-		else
-			{
-			# Fetch from field data or standard table	
-			$origfile=get_data_by_field($ref,$filename_field);	
-			}
-		if (strlen($origfile)>0)
-			{
-			# do an extra check to see if the original filename might have uppercase extension that can be preserved.	
-			$pathparts=pathinfo($origfile);
-			if (isset($pathparts['extension'])){
-				if (strtolower($pathparts['extension'])==$ext){$ext=$pathparts['extension'];}	
-			} 
-			
-			# Use the original filename if one has been set.
-			# Strip any path information (e.g. if the staticsync.php is used).
-			# append preview size to base name if not the original
-			if($size != '' && !$download_filenames_without_size)
-				{
-				$filename = strip_extension(mb_basename($origfile)) . '-' . $size . '.' . $ext;
-				}
-			else
-				{
-				$filename = strip_extension(mb_basename($origfile)) . '.' . $ext;
-				}
+    {
+    # Constructs a filename for download
+    global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,$download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,$prefix_filename_string, $filename;
+    
+    $filename = $ref . $size . ($alternative>0?"_" . $alternative:"") . "." . $ext;
+    
+    if ($original_filenames_when_downloading)
+        {
+        # Use the original filename.
+        if ($alternative>0)
+            {
+            # Fetch from the resource_alt_files alternatives table (this is an alternative file)
+            $origfile=get_alternative_file($ref,$alternative);
+            $origfile=$origfile["file_name"];
+            }
+        else
+            {
+            # Fetch from field data or standard table   
+            $origfile=get_data_by_field($ref,$filename_field);  
+            }
+        if (strlen($origfile)>0)
+            {
+            # do an extra check to see if the original filename might have uppercase extension that can be preserved.   
+            $pathparts=pathinfo($origfile);
+            if (isset($pathparts['extension'])){
+                if (strtolower($pathparts['extension'])==$ext){$ext=$pathparts['extension'];}   
+            } 
+            
+            # Use the original filename if one has been set.
+            # Strip any path information (e.g. if the staticsync.php is used).
+            # append preview size to base name if not the original
+            if($size != '' && !$download_filenames_without_size)
+                {
+                $filename = strip_extension(mb_basename($origfile)) . '-' . $size . '.' . $ext;
+                }
+            else
+                {
+                $filename = strip_extension(mb_basename($origfile)) . '.' . $ext;
+                }
 
-			if($prefix_resource_id_to_filename)
-				{
-				$filename = $prefix_filename_string . $ref . "_" . $filename;
-				}
-			}
-		}
+            if($prefix_resource_id_to_filename)
+                {
+                $filename = $prefix_filename_string . $ref . "_" . $filename;
+                }
+            }
+        }
 
-	if ($download_filename_id_only){
-		if(!hook('customdownloadidonly', '', array($ref, $ext, $alternative))) {
-			$filename=$ref . "." . $ext;
+    if ($download_filename_id_only){
+        if(!hook('customdownloadidonly', '', array($ref, $ext, $alternative))) {
+            $filename=$ref . "." . $ext;
 
-			if($size != '' && $download_id_only_with_size) {
-				$filename = $ref . '-' . $size . '.' . $ext;
-			}
+            if($size != '' && $download_id_only_with_size) {
+                $filename = $ref . '-' . $size . '.' . $ext;
+            }
 
-			if(isset($prefix_filename_string) && trim($prefix_filename_string) != '') {
-				$filename = $prefix_filename_string . $filename;
-			}
+            if(isset($prefix_filename_string) && trim($prefix_filename_string) != '') {
+                $filename = $prefix_filename_string . $filename;
+            }
 
-		}
-	}
-	
-	if (isset($download_filename_field))
-		{
-		$newfilename=get_data_by_field($ref,$download_filename_field);
-		if ($newfilename)
-			{
-			$filename = trim(nl2br(strip_tags($newfilename)));
-			if($size != "" && !$download_filenames_without_size)
-				{
-				$filename = substr($filename, 0, 200) . '-' . $size . '.' . $ext;
-				}
-			else
-				{
-				$filename = substr($filename, 0, 200) . '.' . $ext;
-				}
+        }
+    }
+    
+    if (isset($download_filename_field))
+        {
+        $newfilename=get_data_by_field($ref,$download_filename_field);
+        if ($newfilename)
+            {
+            $filename = trim(nl2br(strip_tags($newfilename)));
+            if($size != "" && !$download_filenames_without_size)
+                {
+                $filename = substr($filename, 0, 200) . '-' . $size . '.' . $ext;
+                }
+            else
+                {
+                $filename = substr($filename, 0, 200) . '.' . $ext;
+                }
 
-			if($prefix_resource_id_to_filename)
-				{
-				$filename = $prefix_filename_string . $ref . '_' . $filename;
-				}
-			}
-		}
+            if($prefix_resource_id_to_filename)
+                {
+                $filename = $prefix_filename_string . $ref . '_' . $filename;
+                }
+            }
+        }
 
-	# Remove critical characters from filename
-	$altfilename=hook("downloadfilenamealt");
-	if(!($altfilename)) $filename = preg_replace('/:/', '_', $filename);
-	else $filename=$altfilename;
+    # Remove critical characters from filename
+    $altfilename=hook("downloadfilenamealt");
+    if(!($altfilename)) $filename = preg_replace('/:/', '_', $filename);
+    else $filename=$altfilename;
 
     hook("downloadfilename");
-	return $filename;
-	}
+    return $filename;
+    }
 
 function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_text="", $failure_text="", $job_code="")
-	{
-	// Adds a job to the job_queue table.
-	if($time==""){$time=date('Y-m-d H:i:s');}
-	if($type==""){return false;}
-	if($user==""){global $userref;$user=isset($userref)?$userref:0;}
+    {
+    // Adds a job to the job_queue table.
+    if($time==""){$time=date('Y-m-d H:i:s');}
+    if($type==""){return false;}
+    if($user==""){global $userref;$user=isset($userref)?$userref:0;}
     $job_data_json=json_encode($job_data,JSON_UNESCAPED_SLASHES); // JSON_UNESCAPED_SLASHES is needed so we can effectively compare jobs
     // Check for existing job matching
     $existing_user_jobs=job_queue_get_jobs($type,STATUS_ACTIVE,"",$job_code);
-	if(count($existing_user_jobs)>0)
+    if(count($existing_user_jobs)>0)
             {
             global $lang;
             return $lang["job_queue_duplicate_message"];
             }
-	sql_query("insert into job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code) values('" . escape_check($type) . "','" . escape_check($job_data_json) . "','" . $user . "','" . $time . "','" . STATUS_ACTIVE .  "','" . $success_text . "','" . $failure_text . "','" . escape_check($job_code) . "')");
+    sql_query("insert into job_queue (type,job_data,user,start_date,status,success_text,failure_text,job_code) values('" . escape_check($type) . "','" . escape_check($job_data_json) . "','" . $user . "','" . $time . "','" . STATUS_ACTIVE .  "','" . $success_text . "','" . $failure_text . "','" . escape_check($job_code) . "')");
     return true;
-	}
-	
+    }
+    
 function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="")
-	{
-	$sql="update  job_queue set job_data='" . escape_check(json_encode($job_data)) . "'";
-	if($newtime!=""){$sql.=",start_date='" . $newtime . "'";}
-	if($newstatus!=""){$sql.=",status='" . $newstatus . "'";}
-	$sql.=" where ref='" . $ref . "'";
-	sql_query($sql);
-	}
+    {
+    $sql="update  job_queue set job_data='" . escape_check(json_encode($job_data)) . "'";
+    if($newtime!=""){$sql.=",start_date='" . $newtime . "'";}
+    if($newstatus!=""){$sql.=",status='" . $newstatus . "'";}
+    $sql.=" where ref='" . $ref . "'";
+    sql_query($sql);
+    }
 
 function job_queue_delete($ref)
-	{
-	sql_query("delete from job_queue where ref='" . $ref . "'");
-	}
+    {
+    sql_query("delete from job_queue where ref='" . $ref . "'");
+    }
 
 function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_order_by="ref", $job_sort="desc", $find="")
-	{
-	// Gets offline jobs
-	$condition=array();
-	if($type!=""){$condition[] = " type ='" . escape_check($type) . "'";}
-	if($status!=""){$condition[] =" status ='" . escape_check($status) . "'";}
-	if($user!=""){$condition[] =" user ='" . escape_check($user) . "'";}
-	if($job_code!=""){$condition[] =" job_code ='" . escape_check($job_code) . "'";}
-	if($find!="")
-		{
-		$find=escape_check($find);
-		$condition[] = " (j.ref like '%" . $find . "%'  or j.job_data like '%" . $find . "%' or j.success_text like '%" . $find . "%' or j.failure_text like '%" . $find . "%' or j.user like '%" . $find . "%' or u.username like '%" . $find . "%' or u.fullname like '%" . $find . "%')";
-		}
-	$conditional_sql="";
-	if (count($condition)>0){$conditional_sql=" where " . implode(" and ",$condition);}
-		
-	$sql = "select j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.success_text, j.failure_text,j.job_code, u.username, u.fullname from job_queue j left join user u on u.ref=j.user " . $conditional_sql . " order by " . escape_check($job_order_by) . " " . escape_check($job_sort);
-	$jobs=sql_query($sql);
-	return $jobs;
-	}
-	
+    {
+    // Gets offline jobs
+    $condition=array();
+    if($type!=""){$condition[] = " type ='" . escape_check($type) . "'";}
+    if($status!=""){$condition[] =" status ='" . escape_check($status) . "'";}
+    if($user!=""){$condition[] =" user ='" . escape_check($user) . "'";}
+    if($job_code!=""){$condition[] =" job_code ='" . escape_check($job_code) . "'";}
+    if($find!="")
+        {
+        $find=escape_check($find);
+        $condition[] = " (j.ref like '%" . $find . "%'  or j.job_data like '%" . $find . "%' or j.success_text like '%" . $find . "%' or j.failure_text like '%" . $find . "%' or j.user like '%" . $find . "%' or u.username like '%" . $find . "%' or u.fullname like '%" . $find . "%')";
+        }
+    $conditional_sql="";
+    if (count($condition)>0){$conditional_sql=" where " . implode(" and ",$condition);}
+        
+    $sql = "select j.ref,j.type,j.job_data,j.user,j.status, j.start_date, j.success_text, j.failure_text,j.job_code, u.username, u.fullname from job_queue j left join user u on u.ref=j.user " . $conditional_sql . " order by " . escape_check($job_order_by) . " " . escape_check($job_sort);
+    $jobs=sql_query($sql);
+    return $jobs;
+    }
+    
 
 /**
 * Run offline job
@@ -6470,13 +6510,13 @@ function job_queue_get_jobs($type="", $status="", $user="", $job_code="", $job_o
 * @return void
 */
 function job_queue_run_job($job, $clear_process_lock)
-	{
-	// Runs offline job using defined job handler
-	$jobref = $job["ref"];
-	$job_data=json_decode($job["job_data"], true);
-	$jobuser = $job["user"];
+    {
+    // Runs offline job using defined job handler
+    $jobref = $job["ref"];
+    $job_data=json_decode($job["job_data"], true);
+    $jobuser = $job["user"];
     $job_success_text=$job["success_text"];
-	$job_failure_text=$job["failure_text"];
+    $job_failure_text=$job["failure_text"];
 
     // Variable used to avoid spinning off offline jobs from an already existing job.
     // Example: create_previews() is using extract_text() and both can run offline.
@@ -6498,40 +6538,40 @@ function job_queue_run_job($job, $clear_process_lock)
         clear_process_lock("job_{$jobref}");
         }
 
-	set_process_lock('job_' . $jobref);
-	
-	$logmessage =  "Running job #" . $jobref . PHP_EOL;
-	echo $logmessage;
-	debug($logmessage);
+    set_process_lock('job_' . $jobref);
+    
+    $logmessage =  "Running job #" . $jobref . PHP_EOL;
+    echo $logmessage;
+    debug($logmessage);
 
-	$logmessage =  " - Looking for " . __DIR__ . "/job_handlers/" . $job["type"] . ".php" . PHP_EOL;
-	echo $logmessage;
-	debug($logmessage);
+    $logmessage =  " - Looking for " . __DIR__ . "/job_handlers/" . $job["type"] . ".php" . PHP_EOL;
+    echo $logmessage;
+    debug($logmessage);
 
-	if (file_exists(__DIR__ . "/job_handlers/" . $job["type"] . ".php"))
-		{
-		$logmessage=" - Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
-		echo $logmessage;
-		debug($logmessage);
+    if (file_exists(__DIR__ . "/job_handlers/" . $job["type"] . ".php"))
+        {
+        $logmessage=" - Attempting to run job #" . $jobref . " using handler " . $job["type"]. PHP_EOL;
+        echo $logmessage;
+        debug($logmessage);
 
         $offline_job_in_progress = true;
 
-		include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
-		}
-	else
-		{
-		$logmessage="Unable to find handlerfile: " . $job["type"]. PHP_EOL;
-		echo $logmessage;
-		debug($logmessage);
-		job_queue_update($jobref,$job_data,STATUS_ERROR);
-		}
-	
-	$logmessage =  " - Finished job #" . $jobref . PHP_EOL;
-	echo $logmessage;
-	debug($logmessage);
-	
-	clear_process_lock('job_' . $jobref);
-	}
+        include __DIR__ . "/job_handlers/" . $job["type"] . ".php";
+        }
+    else
+        {
+        $logmessage="Unable to find handlerfile: " . $job["type"]. PHP_EOL;
+        echo $logmessage;
+        debug($logmessage);
+        job_queue_update($jobref,$job_data,STATUS_ERROR);
+        }
+    
+    $logmessage =  " - Finished job #" . $jobref . PHP_EOL;
+    echo $logmessage;
+    debug($logmessage);
+    
+    clear_process_lock('job_' . $jobref);
+    }
         
 function user_set_usergroup($user,$usergroup)
     {
@@ -6558,30 +6598,30 @@ function generateSecureKey($length = 64)
 /**
  * Validates the user entered antispam code
  *  
- * @param  string    			$spamcode The antispam hash to check against
- * @param  string    			$usercode The antispam code the user entered
- * @param  string    			$spamtime The antispam timestamp
- * @return boolean         		Returnd tru if the code was successfully validated, otherwise false
- */	
+ * @param  string               $spamcode The antispam hash to check against
+ * @param  string               $usercode The antispam code the user entered
+ * @param  string               $spamtime The antispam timestamp
+ * @return boolean              Returnd tru if the code was successfully validated, otherwise false
+ */ 
 function verify_antispam($spamcode="",$usercode="",$spamtime=0)
-	{
-	global $scramble_key,$password_brute_force_delay;
-	if($usercode=="" || $spamcode=="" || $spamtime==0){debug("antispam failed");return false;}
-	if($spamcode != hash("SHA256",strtoupper($usercode) . $scramble_key . $spamtime))
-		{
-		debug("antispam failed: invalid code entered. IP: " . get_ip());
-		sleep($password_brute_force_delay);
-		return false;
-		}
-	$prevhashes=sql_array("SELECT unique_hash value FROM user WHERE unique_hash IS NOT null","");
-	if(in_array(md5($usercode . $spamtime),$prevhashes))
-		{
-		debug("antispam failed: code has previously been used  IP: " . get_ip());
-		sleep($password_brute_force_delay);
-		return false;
-		}
-	return true;
-	}
+    {
+    global $scramble_key,$password_brute_force_delay;
+    if($usercode=="" || $spamcode=="" || $spamtime==0){debug("antispam failed");return false;}
+    if($spamcode != hash("SHA256",strtoupper($usercode) . $scramble_key . $spamtime))
+        {
+        debug("antispam failed: invalid code entered. IP: " . get_ip());
+        sleep($password_brute_force_delay);
+        return false;
+        }
+    $prevhashes=sql_array("SELECT unique_hash value FROM user WHERE unique_hash IS NOT null","");
+    if(in_array(md5($usercode . $spamtime),$prevhashes))
+        {
+        debug("antispam failed: code has previously been used  IP: " . get_ip());
+        sleep($password_brute_force_delay);
+        return false;
+        }
+    return true;
+    }
 
 
 /**
@@ -6683,24 +6723,24 @@ function checkPreviewToolsOptionUniqueness($config_option)
 * @return boolean True means alternative was created from $ffmpeg_alternatives settings
 */
 function alt_is_ffmpeg_alternative($alternative)
-	{
-	global $ffmpeg_alternatives;
-	
-	$alt_is_ffmpeg_alternative=false;
-	
-	if(isset($ffmpeg_alternatives) && !empty($ffmpeg_alternatives))
-		{
-		foreach($ffmpeg_alternatives as $alt_setting)
-			{
-			if($alternative['name']==$alt_setting['name'] && $alternative['file_name']==$alt_setting['filename'] . '.' . $alt_setting['extension'])
-				{
-				$alt_is_ffmpeg_alternative=true;
-				return $alt_is_ffmpeg_alternative;
-				}
-			}
-		}
-	return $alt_is_ffmpeg_alternative;
-	}
+    {
+    global $ffmpeg_alternatives;
+    
+    $alt_is_ffmpeg_alternative=false;
+    
+    if(isset($ffmpeg_alternatives) && !empty($ffmpeg_alternatives))
+        {
+        foreach($ffmpeg_alternatives as $alt_setting)
+            {
+            if($alternative['name']==$alt_setting['name'] && $alternative['file_name']==$alt_setting['filename'] . '.' . $alt_setting['extension'])
+                {
+                $alt_is_ffmpeg_alternative=true;
+                return $alt_is_ffmpeg_alternative;
+                }
+            }
+        }
+    return $alt_is_ffmpeg_alternative;
+    }
 
 /**
 * Delete all collections that are not in use e.g. session collections for the anonymous user. Will not affect collections that are public.
@@ -6751,9 +6791,9 @@ function create_resource_type_field($name,$restype = 0, $type = FIELD_TYPE_TEXT_
         $shortname = mb_substr(mb_strtolower(str_replace("_","",safe_file_name($name))),0,20);
         }
 
-	sql_query("insert into resource_type_field (title,resource_type, type, name, keywords_index) values ('" . escape_check($name) . "','" . escape_check($restype) . "','" . escape_check($type) . "','" . escape_check($shortname) . "'," . ($index ? "1" : "0") . ")");
-	$new=sql_insert_id();
-	log_activity(null,LOG_CODE_CREATED,$name,'resource_type_field','title',$new,null,'');
+    sql_query("insert into resource_type_field (title,resource_type, type, name, keywords_index) values ('" . escape_check($name) . "','" . escape_check($restype) . "','" . escape_check($type) . "','" . escape_check($shortname) . "'," . ($index ? "1" : "0") . ")");
+    $new=sql_insert_id();
+    log_activity(null,LOG_CODE_CREATED,$name,'resource_type_field','title',$new,null,'');
     return $new;    
     }
 
