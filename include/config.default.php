@@ -2063,6 +2063,11 @@ $dynamic_keyword_and = false;
 # For dynamic keyword list suggestions, use logic 'contains' instead of 'starts with'.
 $dynamic_keyword_suggest_contains=false;
 
+# Uncomment if you wish to limit the suggestions to display after a certain number of characters have been entered.
+# Useful if your dynamic keyword fields have a large number options.
+# Be sure to set this to a value equal to your shortest dynamic keyword option.
+# $dynamic_keyword_suggest_contains_characters=2;
+
 # Option to show resource ID in the thumbnail, next to the action icons.
 $display_resource_id_in_thumbnail=false;
 

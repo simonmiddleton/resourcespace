@@ -22,7 +22,7 @@ foreach($fielddata['nodes'] as $node)
     
     if($dynamic_keyword_suggest_contains)
 		{
-		if('' != $trans && strpos(strtolower($trans), strtolower($keyword)) !== false)
+		if('' != $trans && (!isset($dynamic_keyword_suggest_contains_characters) || $dynamic_keyword_suggest_contains_characters <= strlen($keyword)) && strpos(strtolower($trans), strtolower($keyword)) !== false)
 			{
 			if(strtolower($trans) == strtolower($keyword))
 				{
