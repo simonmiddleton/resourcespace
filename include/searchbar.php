@@ -55,7 +55,7 @@ for ($n=0;$n<count($fields);$n++)
 	$simple_fields[]=$fields[$n]["name"];
 	}
 # Also strip date related fields.
-$simple_fields[]="year";$simple_fields[]="month";$simple_fields[]="day";
+$simple_fields[]="basicyear";$simple_fields[]="basicmonth";$simple_fields[]="basicday";
 hook("simplesearch_stripsimplefields");
 
 # Check for fields with the same short name and add to an array used for deduplication.
@@ -172,9 +172,9 @@ $initial_tags=array_unique($initial_tags);
 $quicksearch=join(" ",trim_array($simple));
 
 # Set the predefined date fields
-$found_year="";if (isset($set_fields["year"])) {$found_year=$set_fields["year"];}
-$found_month="";if (isset($set_fields["month"])) {$found_month=$set_fields["month"];}
-$found_day="";if (isset($set_fields["day"])) {$found_day=$set_fields["day"];}
+$found_year="";if (isset($set_fields["basicyear"])) {$found_year=$set_fields["basicyear"];}
+$found_month="";if (isset($set_fields["basicmonth"])) {$found_month=$set_fields["basicmonth"];}
+$found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basicday"];}
 
 
 
@@ -696,7 +696,7 @@ elseif($restypes=='')
 				?>	
 	
 				 <?php  echo $lang["bydate"]?><br />
-	<select id="basicyear" name="year" class="SearchWidthHalf">
+	<select id="basicyear" name="basicyear" class="SearchWidthHalf">
 	          <option selected="selected" value=""><?php echo $lang["anyyear"]?></option>
 	          <?php
 	          
@@ -711,7 +711,7 @@ elseif($restypes=='')
 	
 	        <?php if ($searchbyday) { ?><br /><?php } ?>
 	
-	        <select id="basicmonth" name="month" class="SearchWidthHalf SearchWidthRight">
+	        <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight">
 	          <option selected="selected" value=""><?php echo $lang["anymonth"]?></option>
 	          <?php
 	          for ($n=1;$n<=12;$n++)
@@ -721,7 +721,7 @@ elseif($restypes=='')
 	                }
 	          ?>
 	
-	        </select><?php if ($searchbyday) { ?><select id="basicday" name="day" class="SearchWidth">
+	        </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidth">
 	          <option selected="selected" value=""><?php echo $lang["anyday"]?></option>
 	          <?php
 	          for ($n=1;$n<=31;$n++)

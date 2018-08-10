@@ -293,7 +293,7 @@ function do_search(
                             $fieldinfo = sql_query("SELECT ref, `type` FROM resource_type_field WHERE name = '" . escape_check($fieldname) . "'", 0);
 
                             // Checking for date from Simple Search will result with a fieldname like 'year' which obviously does not exist
-                            if(0 === count($fieldinfo) && ('year' == $kw[0] || 'month' == $kw[0] || 'day' == $kw[0]))
+                            if(0 === count($fieldinfo) && ('basicyear' == $kw[0] || 'basicmonth' == $kw[0] || 'basicday' == $kw[0]))
                                 {
                                 $fieldinfo = sql_query("SELECT ref, `type` FROM resource_type_field WHERE ref = '{$date_field}'", 0);
                                 }
@@ -343,7 +343,7 @@ function do_search(
 								$sql_join.=" JOIN resource_data rdf" . $c . " ON rdf" . $c . ".resource=r.ref AND rdf" . $c . ".resource_type_field='" . $datefield . "'";
 								}
                             }
-                        elseif(in_array($kw[0],array("day","month","year")))
+                        elseif(in_array($kw[0],array("basicday","basicmonth","basicyear")))
                             {
                                 
                             if(!isset($datefieldjoin))
@@ -353,17 +353,17 @@ function do_search(
                                 $datefieldjoin = $c;
                                 }
                                 
-                            if('day' == $kw[0])
+                            if('basicday' == $kw[0])
                                 {
                                 $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '____-__-" . $keystring . "%' ";
                                 $c++;	
                                 }
-                            else if('month' == $kw[0])
+                            else if('basicmonth' == $kw[0])
                                 {
                                 $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '____-" . $keystring . "%' ";
                                 $c++;
                                 }
-                            elseif('year' == $kw[0])
+                            elseif('basicyear' == $kw[0])
                                 {
                                 $sql_filter.= ($sql_filter!=""?" AND ":"") . "rdf" . $datefieldjoin . ".value like '" . $keystring . "-__-__%' ";
                                 $c++;

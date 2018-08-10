@@ -96,20 +96,20 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     
     global $auto_order_checkbox,$checkbox_and,$dynamic_keyword_and;
     $search="";
-    if (getval("year","")!="")
+    if (getval("basicyear","")!="")
         {
         if ($search!="") {$search.=", ";}
-        $search.="year:" . getval("year","");   
+        $search.="basicyear:" . getval("basicyear","");   
         }
-    if (getval("month","")!="")
+    if (getval("basicmonth","")!="")
         {
         if ($search!="") {$search.=", ";}
-        $search.="month:" . getval("month",""); 
+        $search.="basicmonth:" . getval("basicmonth",""); 
         }
-    if (getval("day","")!="")
+    if (getval("basicday","")!="")
         {
         if ($search!="") {$search.=", ";}
-        $search.="day:" . getval("day",""); 
+        $search.="basicday:" . getval("basicday",""); 
         }
     if (getval("startdate","")!="")
         {

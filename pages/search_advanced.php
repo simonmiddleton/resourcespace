@@ -202,9 +202,9 @@ else
             $name=trim($nk[0]);
             $keyword=trim($nk[1]);
             }
-		  if ($name=="day") {$found_day=$keyword;}
-		  if ($name=="month") {$found_month=$keyword;}
-		  if ($name=="year") {$found_year=$keyword;}
+		  if ($name=="basicday") {$found_day=$keyword;}
+		  if ($name=="basicmonth") {$found_month=$keyword;}
+		  if ($name=="basicyear") {$found_year=$keyword;}
 		  if ($name=="startdate") {$found_start_date=$keyword;}
 		  if ($name=="enddate") {$found_end_date=$keyword;}
 		  if (isset($values[$name])){$values[$name].=" ".$keyword;}
@@ -532,7 +532,7 @@ if (!$daterange_search)
 	{
 	?>
 	<div class="Question"><label><?php echo $lang["bydate"]?></label>
-	<select name="year" class="SearchWidth" style="width:100px;" onChange="UpdateResultCount();">
+	<select name="basicyear" class="SearchWidth" style="width:100px;" onChange="UpdateResultCount();">
 	  <option value=""><?php echo $lang["anyyear"]?></option>
 	  <?php
 	  $y=date("Y");
@@ -542,7 +542,7 @@ if (!$daterange_search)
 		}
 	  ?>
 	</select>
-	<select name="month" class="SearchWidth" style="width:100px;" onChange="UpdateResultCount();">
+	<select name="basicmonth" class="SearchWidth" style="width:100px;" onChange="UpdateResultCount();">
 	  <option value=""><?php echo $lang["anymonth"]?></option>
 	  <?php
 	  for ($n=1;$n<=12;$n++)
@@ -552,7 +552,7 @@ if (!$daterange_search)
 		}
 	  ?>
 	</select>
-	<select name="day" class="SearchWidth" style="width:100px;" onChange="UpdateResultCount();">
+	<select name="basicday" class="SearchWidth" style="width:100px;" onChange="UpdateResultCount();">
 	  <option value=""><?php echo $lang["anyday"]?></option>
 	  <?php
 	  for ($n=1;$n<=31;$n++)

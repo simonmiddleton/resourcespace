@@ -358,8 +358,11 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 				$migrate_data = true;				
 				}
 			
-			// Set shortname if not already set
-			if($column=="name" && $val==""){$val="field" . $ref;}
+			// Set shortname if not already set or invalid
+			if($column=="name" && ($val=="" || in_array($val,array("basicday","basicmonth","basicyear"))))
+                {
+                $val="field" . $ref;
+                }
 			}
 		if (isset($sql))
 			{

@@ -291,12 +291,12 @@ if (!$config_search_for_number || !is_numeric($search)) # Don't do this when the
             }
         }
 
-    $year=getvalescaped("year","");
-    if ($year!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "year:" . $year;}
-    $month=getvalescaped("month","");
-    if ($month!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "month:" . $month;}
-    $day=getvalescaped("day","");
-    if ($day!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "day:" . $day;}
+    $year=getvalescaped("basicyear","");
+    if ($year!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "basicyear:" . $year;}
+    $month=getvalescaped("basicmonth","");
+    if ($month!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "basicmonth:" . $month;}
+    $day=getvalescaped("basicday","");
+    if ($day!="") {$search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . "basicday:" . $day;}
     }
 
 $searchresourceid = "";
@@ -1237,8 +1237,8 @@ if($responsive_ui)
                     {
                     ?>
                     <p><?php if (strpos($search,"country:")!==false) { ?><p><?php echo $lang["tryselectingallcountries"]?> <?php } 
-                    elseif (strpos($search,"year:")!==false) { ?><p><?php echo $lang["tryselectinganyyear"]?> <?php } 
-                    elseif (strpos($search,"month:")!==false) { ?><p><?php echo $lang["tryselectinganymonth"]?> <?php } 
+                    elseif (strpos($search,"basicyear:")!==false) { ?><p><?php echo $lang["tryselectinganyyear"]?> <?php } 
+                    elseif (strpos($search,"basicmonth:")!==false) { ?><p><?php echo $lang["tryselectinganymonth"]?> <?php } 
                     elseif (strpos($search,":")!==false) { ?><p><?php echo $lang["field_search_no_results"]; } 
                     else        {?><?php echo $lang["trybeinglessspecific"]?><?php } ?> <?php echo $lang["enteringfewerkeywords"]?></p>
                     <?php
