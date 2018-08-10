@@ -1576,6 +1576,7 @@ function save_user($ref)
         $search_filter_override = trim(getvalescaped('search_filter_override', ''));
         $comments               = trim(getvalescaped('comments', ''));
         $suggest                = getval('suggest', '');
+        $emailresetlink         = getval('emailresetlink', '');
 
         # Username or e-mail address already exists?
         $c = sql_value("SELECT count(*) value FROM user WHERE ref <> '$ref' AND (username = '" . $username . "' OR email = '" . $email . "')", 0);
@@ -1585,7 +1586,7 @@ function save_user($ref)
             }
 
         // Password checks:
-        if($suggest != '')
+        if($suggest != '' || ($password == '' && $emailresetlink != ''))
             {
             $password = make_password();
             }
@@ -1671,7 +1672,7 @@ function save_user($ref)
                 }
             }
 
-    if('' != getval('emailresetlink', ''))
+    if($emailresetlink != '')
         {
         email_reset_link($email, true);
         }
