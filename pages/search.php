@@ -1035,14 +1035,26 @@ if($responsive_ui)
     #if (strpos($search,"!")===false)
     if ($search!="!duplicates" && $search!="!unused" && !hook("replacesearchsortorder")) 
         {
+        // Relevance is the default sort sequence if viewing resources following a search
+        $default_sort_order='relevance';
         $rel=$lang["relevance"];
         if(!hook("replaceasadded"))
             {
-            if (isset($collection)){$rel=$lang["collection_order_description"];}
-            elseif (strpos($search,"!")!==false && substr($search,0,11)!="!properties") {$rel=$lang["asadded"];}
+            if (isset($collection))
+                {
+                // Collection is the default sort sequence if viewing resources in a collection
+                $default_sort_order='collection';
+                $rel=$lang["collection_order_description"];
+                }
+            elseif (strpos($search,"!")!==false && substr($search,0,11)!="!properties") 
+                {
+                // As Added is the default sort sequence if viewing recently added resources 
+                $default_sort_order='asadded';
+                $rel=$lang["asadded"];
+                }
             }
-
-        $orderFields = array('relevance' => $rel);
+        // Build the available sort sequence entries, starting with the default derived above
+        $orderFields = array($default_sort_order => $rel);
         if ($random_sort)
             $orderFields['random'] = $lang['random'];
         if ($popularity_sort)
@@ -1080,7 +1092,7 @@ if($responsive_ui)
 
             if(!hook('render_sort_order_differently', '', array($orderFields)))
                 {
-                render_sort_order($orderFields);
+                render_sort_order($orderFields,$default_sort_order);
                 }
 
             hook('sortorder');

@@ -700,7 +700,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 *
 */
 if (!function_exists("render_sort_order")){
-function render_sort_order(array $order_fields)
+function render_sort_order(array $order_fields,$default_sort_order)
     {
     global $order_by, $baseurl_short, $lang, $search, $archive, $restypes, $k, $sort, $date_field;
 
@@ -720,13 +720,17 @@ function render_sort_order(array $order_fields)
 			$name='date';
 			}
 		
-        $fixed_order = $name == 'relevance';
-        $selected    = ($order_by == $name || ($name=='date' && $order_by=='field'.$date_field));
+        // Are we constructing the option for the default order (ie. the first entry in the order_fields array)
+        $current_is_default = ($name == $default_sort_order);
+
+        // Is the currently set order that of the current field
+        $selected = ($order_by == $name || ($name=='date' && $order_by=='field'.$date_field));
 		
         // Build the option:
         $option = '<option value="' . $name . '"';
 
-        if(($selected && $fixed_order) || $selected)
+        // Set selection attribute if necessary
+        if(($selected && $current_is_default) || $selected)
             {
             $option .= ' selected';
             }
@@ -821,7 +825,6 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         }
 
     global $baseurl, $lang, $k, $pagename, $order_by, $sort, $chosen_dropdowns, $allow_resource_deletion;
-
     
     // globals that could also be passed as a reference
     global $result /*search result*/;

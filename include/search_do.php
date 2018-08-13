@@ -81,6 +81,8 @@ function do_search(
     $orig_order=$order_by;
     global $date_field;
     $order = array(
+        "asadded"         => "r.ref $sort",  
+        "collection"      => "c.sortorder $sort,c.date_added DESC,r.ref DESC",
         "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort, field$date_field $sort,r.ref $sort",
         "popularity"      => "user_rating $sort,total_hit_count $sort,field$date_field $sort,r.ref $sort",
         "rating"          => "r.rating $sort, user_rating $sort, score $sort,r.ref $sort",
@@ -1015,6 +1017,7 @@ function do_search(
     // *******************************************************************************
 
     global $usersearchfilter;
+
     if (strlen($usersearchfilter)>0)
         {
         $sf=explode(";",$usersearchfilter);

@@ -1079,10 +1079,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # View Collection
     if (substr($search, 0, 11) == '!collection')
         {
-        if($orig_order == 'relevance')
-            {
-            $order_by = 'c.sortorder ASC, c.date_added DESC, r.ref DESC';
-            }
 
         $colcustperm   = $sql_join;
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
