@@ -3,15 +3,18 @@ function HookAction_datesCronCron()
 	{
 	global $lang, $action_dates_restrictfield,$action_dates_deletefield, $resource_deletion_state,
            $action_dates_reallydelete, $action_dates_email_admin_days, $email_notify, $email_from,
-           $applicationname, $action_dates_new_state;
+           $applicationname, $action_dates_new_state, $action_dates_remove_from_collection,
+           $action_dates_extra_config, $DATE_FIELD_TYPES;
 	
-	
+	echo "action_dates: running cron tasks" . PHP_EOL;
+    
 	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)");
 	
 	# Check that this is a valid date field to use
 	if(in_array($action_dates_restrictfield, $allowable_fields))
 		{
-		$restrict_resources=sql_query("select rd.resource, rd.value from resource_data rd left join resource r on r.ref=rd.resource where r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
+        echo "action_dates: Checking field " . $action_dates_restrictfield . PHP_EOL;
+        $restrict_resources=sql_query("select rd.resource, rd.value from resource_data rd left join resource r on r.ref=rd.resource where r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
 		$emailrefs=array();
 		foreach ($restrict_resources as $resource)
 			{
@@ -31,7 +34,7 @@ function HookAction_datesCronCron()
 				$existing_access=sql_value("select access as value from resource where ref='$ref'","");
 				if($existing_access==0) # Only apply to resources that are currently open
 					{
-					echo "restricting resource " . $ref ."\r\n";
+					echo " - restricting resource " . $ref ."\r\n";
 					sql_query("update resource set access=1 where ref='$ref'");
 					resource_log($ref,'a','',$lang['action_dates_restrict_logtext'],$existing_access,1);		
 					}
@@ -82,7 +85,10 @@ function HookAction_datesCronCron()
 	if(in_array($action_dates_deletefield, $allowable_fields))
         {
         $change_archive_state = false;
-
+        
+        $fieldinfo = get_resource_type_field($action_dates_deletefield);
+        
+        echo "action_dates: Checking dates in field " . $fieldinfo["title"] . PHP_EOL;
         if($action_dates_reallydelete)
             {
             $delete_resources = sql_query("SELECT resource, value FROM resource_data WHERE resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND value IS NOT NULL");
@@ -115,11 +121,11 @@ function HookAction_datesCronCron()
                 if(!$change_archive_state)
                     {
                     // Delete the resource as date has been reached
-                    echo "deleting resource {$ref}\r\n";
+                    echo " - Deleting resource {$ref}\r\n";
                     }
                 else
                     {
-                    echo "Moving resource with ID {$ref} to archive state '{$resource_deletion_state}'\r\n";
+                    echo " - Moving resource with ID {$ref} to archive state '{$resource_deletion_state}'\r\n";
                     }
                 
                 if ($action_dates_reallydelete)
@@ -129,16 +135,46 @@ function HookAction_datesCronCron()
                 else
                     {
                     sql_query("UPDATE resource SET archive = '{$resource_deletion_state}' WHERE ref = '{$ref}'");
+                    
+                    if($action_dates_remove_from_collection)
+                        {
+                        // Remove the resource from any collections
+                        sql_query("delete from collection_resource where resource='$ref'");
+                        }
+                
                     }
 
-                // Remove the resource from any collections
-                sql_query("delete from collection_resource where resource='$ref'");
 
                 resource_log($ref,'x','',$lang['action_dates_delete_logtext']);
                 }
             }
         }
-	}
+        
+        
+    // Perform additional actions based on fields
+    foreach($action_dates_extra_config as $action_dates_extra_config)
+        {
+        $datefield = get_resource_type_field($action_dates_extra_config["field"]);
+        $field = $datefield["ref"];
+        $newstatus = $action_dates_extra_config["status"];
+        if(in_array($datefield['type'],$DATE_FIELD_TYPES))
+            {
+            echo "action_dates: Checking dates for field " . $datefield["title"] . PHP_EOL;
+            $additional_resources=sql_query("SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource WHERE rd.resource_type_field = '$field' AND rd.value <>'' AND rd.value IS NOT null AND r.archive<>'$resource_deletion_state' AND r.archive<>'$newstatus'");
+            
+            foreach ($additional_resources as $resource)
+                {
+                $ref=$resource["resource"];
+			
+                if (time()>=strtotime($resource["value"]))		
+                    {		
+                    echo "action_dates: moving resource " . $ref . " to  archive state " . $lang["status" . $newstatus] . "\r\n";
+                    update_archive_status($ref, $newstatus);		
+                    }
+                }
+            }
+        }
+    }
 
 // This is required if cron task is run via pages/tools/cron_copy_hitcount.php
 function HookAction_datesCron_copy_hitcountCron()

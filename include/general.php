@@ -5847,28 +5847,42 @@ function get_indexed_resource_type_fields()
     return sql_array("select ref as value from resource_type_field where keywords_index=1");
     }
 
-function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="")
+function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="", $fieldtypes = array())
     {
     // Gets all metadata fields, optionally for a specified array of resource types 
     $conditionsql="";
     if(is_array($restypes))
         {
-        $conditionsql = " where resource_type in (" . implode(",",$restypes) . ")";
+        $conditionsql = " WHERE resource_type IN (" . implode(",",$restypes) . ")";
         }
     if($find!="")
         {
         $find=escape_check($find);
-        if($conditionsql!="")
+        if($conditionsql != "")
             {
-            $conditionsql.=" and ( ";
+            $conditionsql .= " AND ( ";
             }
         else
             {
-            $conditionsql.=" where ( ";
+            $conditionsql .= " WHERE ( ";
             }
-        $conditionsql.=" name like '%" . $find . "%' or title like '%" . $find . "%' or tab_name like '%" . $find . "%' or exiftool_field like '%" . $find . "%' or help_text like '%" . $find . "%' or ref like '%" . $find . "%' or tooltip_text like '%" .$find . "%' or display_template like '%" .$find . "%')";
+        $conditionsql.=" name LIKE '%" . $find . "%' OR title LIKE '%" . $find . "%' OR tab_name LIKE '%" . $find . "%' OR exiftool_field LIKE '%" . $find . "%' OR help_text LIKE '%" . $find . "%' OR ref LIKE '%" . $find . "%' OR tooltip_text LIKE '%" . $find . "%' OR display_template LIKE '%" . $find . "%')";
         }
-
+    
+    $newfieldtypes = array_filter($fieldtypes,function($v){return (string)(int)$v == $v;}); 
+    
+    if(count($newfieldtypes) > 0)
+        {
+        if($conditionsql != "")
+			{
+			$conditionsql .= " AND ( ";
+			}
+		else
+			{
+			$conditionsql .= " WHERE ( ";
+			}
+        $conditionsql .= " type IN ('" . implode("','",$newfieldtypes) . "'))";
+		}
     // Allow for sorting, enabled for use by System Setup pages
     //if(!in_array($field_order_by,array("ref","name","tab_name","type","order_by","keywords_index","resource_type","display_field","required"))){$field_order_by="ref";}       
         
