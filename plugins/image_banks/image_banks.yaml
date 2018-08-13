@@ -5,5 +5,5 @@ desc: Allows users to select an external Image Bank to search through. Users can
 info_url: http://www.resourcespace.com/knowledge-base/user/plugin-image-banks
 config_url: /plugins/image_banks/pages/setup.php
 default_priority: 100
-category: system
+category: Content Sharing
 disable_group_select: 0
