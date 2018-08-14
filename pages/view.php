@@ -1558,7 +1558,7 @@ hook ("resourceactions") ?>
 	$can_see_fields_individually = false;
 	foreach ($fields as $field => $field_option_value) 
 		{
-		if(checkperm('f' . $field_option_value['ref'])) 
+		if(metadata_field_view_access($field_option_value['ref'])) 
 			{
 			$can_see_fields_individually = true;
 			break;

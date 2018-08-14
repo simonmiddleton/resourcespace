@@ -509,12 +509,7 @@ function prepareTags(array $dirty_tags)
             }
 
         // No access to field? Next...
-        if(
-            !(
-                (checkperm('f*') || checkperm("f{$dirty_tag['resource_type_field']}"))
-                && !checkperm("f-{$dirty_tag['resource_type_field']}")
-            )
-        )
+        if(!metadata_field_view_access($dirty_tag['resource_type_field']))
             {
             continue;
             }

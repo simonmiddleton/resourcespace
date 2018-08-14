@@ -902,8 +902,7 @@ if ($header=="" && !isset($themes[0]))
 		{
 		$node=getval("node",0);
 
-		if ((checkperm("f*") || checkperm("f" . $headers[$n]["ref"]))
-		&& !checkperm("f-" . $headers[$n]["ref"]) && ($smart_theme=="" || $smart_theme==$headers[$n]["ref"]))
+		if (metadata_field_view_access($headers[$n]["ref"]) && ($smart_theme=="" || $smart_theme==$headers[$n]["ref"]))
 			{				
 			if($simpleview)
 				{

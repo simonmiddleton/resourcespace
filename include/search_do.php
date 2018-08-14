@@ -55,6 +55,9 @@ function do_search(
     {
     debug("search=$search $go $fetchrows restypes=$restypes archive=$archive daylimit=$recent_search_daylimit editable_only=" . ($editable_only?"true":"false"));
 
+    if(!checkperm('s'))
+        {return false;}
+        
     # globals needed for hooks
      global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
            $search_sql_double_pass_mode, $usergroup, $search_filter_strict, $default_sort, 
@@ -232,7 +235,10 @@ function do_search(
     $joins=$return_refs_only===false ? get_resource_table_joins() : array();
     foreach( $joins as $datajoin)
         {
-        $select.=",r.field".$datajoin." ";
+        if(metadata_field_view_access($datajoin))
+            {
+            $select.=",r.field".$datajoin." ";
+            }
         }
 
     # Prepare SQL to add join table for all provided keywords

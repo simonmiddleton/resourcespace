@@ -56,8 +56,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {
-        if ((checkperm("f*") || checkperm("f" . $fields[$n]["ref"]))
-            && !checkperm("f-" . $fields[$n]["ref"]) && !checkperm("T" . $fields[$n]["resource_type"]) && !in_array($fields[$n]["ref"], $hiddenfields))
+        if (metadata_field_view_access($fields[$n]["ref"]) && !checkperm("T" . $fields[$n]["resource_type"]) && !in_array($fields[$n]["ref"], $hiddenfields))
             {$return[]=$fields[$n];}
         }
 

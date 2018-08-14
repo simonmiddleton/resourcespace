@@ -543,49 +543,38 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
         # Add title field even if $inherit_global_fields = false
         for ($n = 0; $n < count($fields); $n++)
             {
-                if  
-                    (
-                        $fields[$n]['ref'] == $view_title_field  #Check field against $title_field for default title reference
-                        && (checkperm("f*") || checkperm("f" . $fields[$n]["fref"])) #Check permissions to access title field
-                    )
-                            {
-                                $return[] = $fields[$n];
-                                break;
-                            }
+            if  (
+                $fields[$n]['ref'] == $view_title_field  #Check field against $title_field for default title reference
+                && 
+                metadata_field_view_access($fields[$n]["fref"]) #Check permissions to access title field
+            )
+                {
+                $return[] = $fields[$n];
+                break;
+                }
             }
         }
 
     for ($n = 0; $n < count($fields); $n++)
-    {
-        if
-    (
-        (
-        !$use_permissions || 
-            (
-            # Upload only edit access to this field?
-            $ref<0 && checkperm("P" . $fields[$n]["fref"])
-            )    
-        ||
-            (
-                (
-                checkperm("f*") || checkperm("f" . $fields[$n]["fref"])
+        {
+        if  (
+                (!$use_permissions
+                || 
+                ($ref<0 && checkperm("P" . $fields[$n]["fref"])) // Upload only edit access to this field
+                ||
+                (metadata_field_view_access($fields[$n]["fref"]) &&  !checkperm("T" . $fields[$n]["resource_type"]))
                 )
-            && !checkperm("f-" . $fields[$n]["fref"]) && !checkperm("T" . $fields[$n]["resource_type"])
-            )
+            &&
+                in_array($fields[$n]["resource_type"],$validtypes)
+            &&
+                (!($external_access && !$fields[$n]["external_user_access"]))
         )
-        && in_array($fields[$n]["resource_type"],$validtypes) &&
-        (
-        !
-            (
-            $external_access && !$fields[$n]["external_user_access"]
-            )
-        )
-    ) {    
-    debug("field".$fields[$n]["title"]."=".$fields[$n]["value"]);
+            {    
+            debug("field".$fields[$n]["title"]."=".$fields[$n]["value"]);
             $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-"); 
             $return[] = $fields[$n];
-        }
-    }   
+            }
+        }   
     return $return;
     }
 }
@@ -673,8 +662,7 @@ function get_resource_top_keywords($resource,$count)
         if ( isset($keyword['keyword']) )
             {
             # Apply permissions and strip out any results the user does not have access to.
-            if ((checkperm("f*") || checkperm("f" . $keyword["field"]))
-            && !checkperm("f-" . $keyword["field"]) && !checkperm("T" . $keyword["resource_type"]))
+            if (metadata_field_view_access($keyword["field"]) && !checkperm("T" . $keyword["resource_type"]))
                 {
                 $r =  $keyword["keyword"] ;
                 }   
@@ -684,8 +672,7 @@ function get_resource_top_keywords($resource,$count)
             {
             # In this case the keyword is coming from nodes
             # Apply permissions and strip out any results the user does not have access to.
-            if ( (checkperm("f*") || checkperm("f" . $keyword["resource_type_field"]))
-            && !checkperm("f-" . $keyword["resource_type_field"]) && !checkperm("T" . $resource) )
+            if (metadata_field_view_access($keyword["resource_type_field"]) && !checkperm("T" . $resource))
                 {
                 $r =  $keyword["name"] ;   
                 }
@@ -3760,8 +3747,7 @@ function get_simple_search_fields()
             # Must be either indexed or a fixed list type
             ($allfields[$n]["keywords_index"] == 1 || in_array($allfields[$n]["type"],$FIXED_LIST_FIELD_TYPES))
         &&    
-            (checkperm("f*") || checkperm("f" . $allfields[$n]["ref"]))
-        && !checkperm("f-" . $allfields[$n]["ref"]) && !checkperm("T" . $allfields[$n]["resource_type"] ))
+            metadata_field_view_access($allfields[$n]["ref"]) && !checkperm("T" . $allfields[$n]["resource_type"] ))
             {
             $allfields[$n]["title"] = lang_or_i18n_get_translated($allfields[$n]["title"], "fieldtitle-");            
             $return[] = $allfields[$n];
@@ -4326,9 +4312,8 @@ function get_fields($field_refs)
     # Apply field permissions
     for ($n=0;$n<count($fields);$n++)
         {
-        if ((checkperm("f*") || checkperm("f" . $fields[$n]["ref"]))
-        && !checkperm("f-" . $fields[$n]["ref"]))
-        {$return[]=$fields[$n];}
+        if (metadata_field_view_access($fields[$n]["ref"]))
+            {$return[]=$fields[$n];}
         }
     return $return;
     }
@@ -4346,8 +4331,7 @@ function get_hidden_indexed_fields()
         # Apply field permissions
         for ($n=0;$n<count($fields);$n++)
             {
-            if ((checkperm("f*") || checkperm("f" . $fields[$n]["ref"]))
-            && !checkperm("f-" . $fields[$n]["ref"]))
+            if (metadata_field_view_access($fields[$n]["ref"]))
                 {
                 # Visible field
                 }
@@ -4412,13 +4396,14 @@ function get_fields_for_search_display($field_refs)
 
     # Applies field permissions and translates field titles in the newly created array.
     $return = array();
-    for ($n = 0;$n<count($fields);$n++) {
-        if ((checkperm("f*") || checkperm("f" . $fields[$n]["ref"]))
-        && !checkperm("f-" . $fields[$n]["ref"])) {
+    for ($n = 0;$n<count($fields);$n++)
+        {
+        if (metadata_field_view_access($fields[$n]["ref"]))
+            {
             $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");
             $return[] = $fields[$n];
+            }
         }
-    }
     return $return;
 }
 
@@ -7000,4 +6985,9 @@ function findDuplicates(array $data, $search)
         }
 
     return $duplicates;
+    }
+
+function metadata_field_view_access($field)
+    {
+    return ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field));
     }

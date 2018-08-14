@@ -17,7 +17,7 @@ $name                = trim(getvalescaped('name', ''));
 $rows                = getvalescaped('rows', 10, true);
 
 // Prevent access to fields to which user does not have access to
-if(!(checkperm("f{$resource_type_field}") || (checkperm('f*') && !checkperm("f-{$resource_type_field}"))))
+if(!metadata_field_view_access($resource_type_field))
     {
     header('HTTP/1.1 401 Unauthorized');
     $return['error'] = array(

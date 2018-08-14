@@ -6,7 +6,7 @@ include "../include/authenticate.php";
 $fieldname = getvalescaped("fieldname","");
 $fieldref = getvalescaped("fieldref",0,true);
 
-if (!(checkperm("f{$fieldref}") || (checkperm('f*') && !checkperm("f-{$fieldref}"))))
+if (!metadata_field_view_access($fieldref))
     {
     header('HTTP/1.1 401 Unauthorized');
     exit();

@@ -3231,27 +3231,6 @@ function notify_user_contributed_unsubmitted($refs,$collection=0)
 		}
 	}		
 	
-function get_fields_with_options()
-{
-    # Returns a list of fields that have option lists (checking user permissions).
-    # The standard field titles are translated using $lang. Custom field titles are i18n translated.
-    # Used for 'manage field options' page.
-
-    # Executes query.
-    $fields = sql_query("select ref, name, title, type, order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, display_as_dropdown from resource_type_field where type in (2,3,9,12) order by resource_type,order_by");
-
-    # Applies permissions and translates field titles in the newly created array.
-    $return = array();
-    for ($n = 0;$n<count($fields);$n++) {
-        if ((checkperm("f*") || checkperm("f" . $fields[$n]["ref"]))
-        && !checkperm("f-" . $fields[$n]["ref"])) {
-            $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");
-            $return[] = $fields[$n];
-        }
-    }
-    return $return;
-}
-
 function get_field($field)
     {
     # A standard field title is translated using $lang.  A custom field title is i18n translated.
@@ -4665,7 +4644,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 	
 	}
         
-function generate_resource_access_key($resource,$userref,$access,$expires,$email,$group="")
+function generate_resource_access_key($resource,$userref,$access,$expires,$email,$group="",$sharepwd="")
         {
         if(checkperm("noex"))
             {
@@ -4673,10 +4652,10 @@ function generate_resource_access_key($resource,$userref,$access,$expires,$email
             return false;
             }
                 
-        global $userref,$usergroup;
+        global $userref,$usergroup, $scramble_key;
 		if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
         $k=substr(md5(time()),0,10);
-		sql_query("insert into external_access_keys(resource,access_key,user,access,expires,email,date,usergroup) values ('$resource','$k','$userref','$access'," . (($expires=="")?"null":"'" . $expires . "'"). ",'" . escape_check($email) . "',now(),'$group');");
+		sql_query("insert into external_access_keys(resource,access_key,user,access,expires,email,date,usergroup) values ('$resource','$k','$userref','$access'," . (($expires=="")?"null":"'" . $expires . "'"). ",'" . escape_check($email) . "',now(),'$group'," . ($sharepwd != "" ? "'" . hash('sha256', $k . $sharepwd . $scramble_key) . "'": "null") . ");");
 		hook("generate_resource_access_key","",array($resource,$k,$userref,$email,$access,$expires,$group));
         return $k;
         }

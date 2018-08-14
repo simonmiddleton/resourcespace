@@ -97,9 +97,7 @@ if('get_allowed_fields' == $action)
         $field_data = get_resource_type_field($annotate_field);
 
         // Make sure user has access to this field
-        if((checkperm('f*') || checkperm("f{$annotate_field}"))
-            && !checkperm("f-{$annotate_field}")
-        )
+        if(metadata_field_view_access($annotate_field))
             {
             $field_data['title'] = i18n_get_translated($field_data['title']);
 
