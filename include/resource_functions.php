@@ -1075,14 +1075,20 @@ function save_resource_data_multi($collection)
                     }
     
                 $origval = $val;
-    
+
                 # Loop through all the resources and save.
                 for ($m=0;$m<count($list);$m++)
                     {
                     $ref            = $list[$m];
                     $resource_sql   = '';
-                    $value_changed  = false;
-    
+                    $value_changed  = false;  
+                    $resource_data  = get_resource_data($ref, true);
+
+                    if($resource_data["resource_type"] != $fields[$n]["resource_type"])
+                        {
+                        continue;
+                        }
+
                     # Work out existing field value.
                     $existing       = escape_check(sql_value("SELECT `value` FROM resource_data WHERE resource = '{$ref}' AND resource_type_field = '{$fields[$n]['ref']}'", ''));
                         
