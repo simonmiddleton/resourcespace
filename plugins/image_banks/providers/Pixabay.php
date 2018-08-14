@@ -8,7 +8,7 @@ class Pixabay extends Provider
     protected $download_endpoint = "https://pixabay.com/get/";
     
     protected $configs = array(
-        "pixabay_api_key" => ""
+        "pixabay_api_key" => "9664540-83e27f5c4cefd1aeb14fd8009"
     );
     protected $warning = "";
 
