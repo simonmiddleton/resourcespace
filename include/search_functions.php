@@ -1504,7 +1504,7 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
    # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
    $results= do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort,$access_override,$starsearch,$ignore_filters,$return_disk_usage,$recent_search_daylimit,$go,$stats_logging,$return_refs_only,$editable_only,$returnsql);
    if(is_string($getsizes)){$getsizes=explode(",",$getsizes);}
-   if(is_array($getsizes) && count($getsizes)>0)
+   if(is_array($results) && is_array($getsizes) && count($getsizes)>0)
         {
         $resultcount=count($results);
         for($n=0;$n<$resultcount;$n++)

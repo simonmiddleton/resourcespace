@@ -43,8 +43,18 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
 function api_search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$recent_search_daylimit="",$getsizes="",$previewext="jpg")
     {
     # Extension to search capability that also returns the URLs of preview file sizes requested using the $getsizes parameter that match the requested extension.
+     if(!checkperm('s'))
+        {
+        return array();
+        }
     $getsizes=explode(",",$getsizes);
     $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,0,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);
+    
+    if (!is_array($results))
+        {
+        return array();
+        }
+        
     $resultcount= count ($results);
     for($n=0;$n<$resultcount;$n++)
         {
@@ -72,6 +82,11 @@ function api_get_resource_field_data($resource)
 
 function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,$revert=false,$autorotate=false,$metadata="")
     {
+    if (!(checkperm("c") || checkperm("d")) || checkperm("XU" . $resource_type))
+        {
+        return false;
+        }
+
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);

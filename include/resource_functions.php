@@ -5,29 +5,38 @@
 include_once __DIR__ . '/definitions.php';		// includes log code definitions for resource_log() callers.
 
 function create_resource($resource_type,$archive=999,$user=-1)
-	{
-	# Create a new resource.
-	global $always_record_resource_creator,$index_contributed_by;
+    {
+    # Create a new resource.
+    global $always_record_resource_creator,$index_contributed_by;
 
-	if ($archive==999)
-		{
-		# Work out an appropriate default state
-		for ($n=-2;$n<3;$n++)
-			{
-			if (checkperm("e" . $n))
-				{
-				$archive = $n;
-				break;
-				}
-			}
-		}
+    $alltypes=get_resource_types();    
+    if(!in_array($resource_type,array_column($alltypes,"ref")))
+        {
+        return false;    
+        }
+    
+    if ($archive==999)
+        {
+        # Work out an appropriate default state
+        for ($n=-2;$n<3;$n++)
+            {
+            if (checkperm("e" . $n))
+                {
+                $archive = $n;
+                break;
+                }
+            }
+        }
 
 	if ($archive==-2 || $archive==-1 || (isset($always_record_resource_creator) and $always_record_resource_creator))
 		{
 		# Work out user ref - note: only for content in status -2 and -1 (user submitted / pending review).
 		global $userref;
 		$user=$userref;
-		} else {$user=-1;}
+		}
+    else
+        {$user=-1;}
+        
 	sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'$archive','$user')");
 	
 	$insert=sql_insert_id();
