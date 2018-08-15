@@ -17,6 +17,12 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
 
     # Search capability.
     # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
+        
+    if(!checkperm('s'))
+        {
+        return array();
+        }
+        
     $results = do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort);
 
     if (!is_array($results))
