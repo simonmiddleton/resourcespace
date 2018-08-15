@@ -18,6 +18,7 @@ $lang["image_banks_unable_to_upload_file"] = "Unable to upload file from externa
 $lang["image_banks_try_again_later"] = "Please try again later!";
 $lang["image_banks_warning"] = "WARNING: ";
 $lang["image_banks_warning_rate_limit_almost_reached"] = "Provider '%PROVIDER' will only allow %RATE-LIMIT-REMAINING more searches. This limit will reset in %TIME";
+$lang["image_banks_try_something_else"] = "Try something else.";
 
 // Logs
 $lang["image_banks_local_download_attempt"] = "User tried to download '%FILE' using the ImageBank plugin by pointing to a system which is not part of allowed providers";

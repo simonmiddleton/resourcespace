@@ -14,7 +14,7 @@ function HookImage_banksAllSearchfiltertop()
     $search_image_banks_info_text = htmlspecialchars($lang["image_banks_search_image_banks_info_text"]);
     $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
     ?>
-    <div id="" class="SearchItem" title="">
+    <div id="SearchImageBanksItem" class="SearchItem" title="">
         <label>
             <span><?php echo $search_image_banks_text; ?></span>
             <a href="#"
@@ -23,7 +23,7 @@ function HookImage_banksAllSearchfiltertop()
                <i class="fa fa-info-circle"></i>
            </a>
         </label>
-        <select id="SearchImageBanks" class="SearchWidth" name="image_bank_provider_id">
+        <select id="SearchImageBanks" class="SearchWidth" name="image_bank_provider_id" onchange="removeUnwantedElementsFromSimpleSearch(this);">
             <option value=""></option>
             <?php
             foreach($providers as $provider)
@@ -36,10 +36,33 @@ function HookImage_banksAllSearchfiltertop()
                 ?>
         </select>
         <input type="hidden" name="search_image_banks" value="true">
+        <script>
+        function removeUnwantedElementsFromSimpleSearch(selector)
+            {
+            var selected_option = selector.value;
+            var siblings = jQuery("#SearchImageBanksItem")
+                .siblings()
+                .not("input[type=hidden]")
+                .not("script")
+                .not(".ui-widget")
+                .not("#simplesearchbuttons");
+
+            if(selected_option == "")
+                {
+                siblings.show();
+
+                return;
+                }
+
+            siblings.hide();
+
+            return;
+            }
+        </script>
         <div class="clearerleft"></div>
     </div>
     <?php
-    $clear_function .= 'jQuery("#SearchImageBanks").val([\'\']) ;';
+    $clear_function .= 'jQuery("#SearchImageBanks").val([\'\']);';
 
     return;
     }

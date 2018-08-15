@@ -175,10 +175,19 @@ class Pixabay extends Provider
         $response_status_code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
         curl_close($curl_handle);
 
-        if($response_status_code != 200)
+        $result_json_decoded = json_decode($result, true);
+
+        if(
+            $response_status_code != 200
+            || ($response_status_code == 200 && $result_json_decoded["totalHits"] == 0)
+        )
             {
             switch($response_status_code)
                 {
+                case 200:
+                    $message = $this->lang["image_banks_try_something_else"];
+                    break;
+
                 case 429:
                     $message = $this->lang["image_banks_try_again_later"];
                     break;
@@ -197,7 +206,7 @@ class Pixabay extends Provider
             return json_encode($error_data);
             }
 
-        if($curl_response_headers["x-ratelimit-remaining"][0] <= 20)
+        if(isset($curl_response_headers["x-ratelimit-remaining"][0]) && $curl_response_headers["x-ratelimit-remaining"][0] <= 20)
             {
             $warning_message = str_replace(
                 array(
