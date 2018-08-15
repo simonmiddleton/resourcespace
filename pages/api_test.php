@@ -11,7 +11,7 @@ include_once "../include/api_bindings.php";
 include "../include/header.php";
 
 if (!$enable_remote_apis) {exit("API not enabled.");}
-//if (!checkperm("a")) {exit("Access denied");}
+if (!checkperm("a")) {exit("Access denied");}
 
 $api_function=getvalescaped("api_function","");
 
