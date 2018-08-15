@@ -173,6 +173,8 @@ function createNewResource(element)
     {
     event.preventDefault();
 
+    CentralSpaceShowLoading();
+
     jQuery.ajax(
         {
         type: 'POST',
@@ -196,6 +198,8 @@ function createNewResource(element)
                 }
 
             styledalert(data.responseJSON.error.title, data.responseJSON.error.detail);
+        }).always(function() {
+            CentralSpaceHideLoading();
         });
     }
 </script>
