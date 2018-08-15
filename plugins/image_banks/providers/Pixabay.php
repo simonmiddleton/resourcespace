@@ -115,9 +115,9 @@ class Pixabay extends Provider
             }
 
         $provider_results->total = count($provider_results);
-        if(isset($search_results["total"]))
+        if(isset($search_results["totalHits"]))
             {
-            $provider_results->total = $search_results["total"];
+            $provider_results->total = $search_results["totalHits"];
             }
 
         return $provider_results;
