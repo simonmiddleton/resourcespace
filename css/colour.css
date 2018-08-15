@@ -5,7 +5,7 @@
  * Standard structural styling should be placed inside global.css
  * 
  */
-body,html {color:#474747;background: #ebebeb;}
+body,html {color:#474747;background: #f4f4f4;}
 h2 {color: #000000;}
 h1 {color: #000000;}
 
@@ -15,17 +15,13 @@ a:hover {color:#000000;}
 a:active {opacity:0.6;}
 input[readonly] {color: #000000;}
 
-select {background-color:white; border-radius:5px;border:none;}
-.Question select {border-radius:0; border:1px solid #999;}
-.ListTools .ActionsContainer select {border: 1px solid #a2a2a2;}
-
 
 #Header {
   border-bottom: 1px solid #d7d7d7;
 }
 #Header #HeaderButtons a:link, #Header #HeaderButtons a:visited,#Header #HeaderButtons a:active {color:#1B1B1B;}
 #Header #HeaderButtons a:hover{color:rgba(0, 62, 81, 0.82); text-decoration: none;}
-#Header {background: rgba(0, 0, 0, 0.65);border:none;}
+#Header {background: rgba(0, 0, 0, 0.6);border:none;}
 #Header li a{color:#fff;opacity:0.7;}
 #Header a:hover, #Header .current {opacity:1;text-decoration: none}
 #Header #HeaderButtons a:link, #Header #HeaderButtons a:visited, #Header #HeaderButtons a:active {color:#1B1B1B;}
@@ -48,7 +44,7 @@ select {background-color:white; border-radius:5px;border:none;}
 .ListTitle a:visited, 
 .ListTitle a:active 
 	{color:#666666;}
-.HorizontalWhiteNav a:hover, .BasicsBox .VerticalNav a:hover, .ListTitle a:hover {color:#000000;}
+.HorizontalWhiteNav a:hover, .BasicsBox .VerticalNav a:hover, .ListTitle a:hover {color:#2e99e6;}
 
 /* Search Bar */
 #SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover,
@@ -58,13 +54,23 @@ select {background-color:white; border-radius:5px;border:none;}
 #ThemeBoxPanel,  .RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge{background: #eee;}
 #ThemeBoxPanel, #SearchBoxPanel, #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge
 	{
-	border-radius:5px;
+	border-radius:4px;
+    overflow: auto;
 	}
 .ResourcePanel
 	{
 	background-color: white;
-	border-radius: 5px;
+    border-radius: 4px;
+    transition: all 0.1s ease-in-out;
+    transform: scale(1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 	}
+
+.ResourcePanel:hover {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transform: scale(1.05);
+    z-index: 100;
+    }
 
 .ImageWrapper
 	{
@@ -110,7 +116,7 @@ select {background-color:white; border-radius:5px;border:none;}
 .HomePanel h2{color:#FFF;}
 
 #SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN {
-	background: rgba(0, 0, 0, 0.65);
+	background: rgba(0, 0, 0, 0.6);
 	color:#FFF;
 }
 #HomeSiteText{padding:10px;}
@@ -129,10 +135,29 @@ select {background-color:white; border-radius:5px;border:none;}
 .StarEmpty {background: transparent url('../gfx/interface/RatingStarMedGrey.gif') no-repeat;}
 .StarCurrent {background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 
-.NavUnderline,.Question,.QuestionSubmit {border-bottom: 1px solid #ddd;}
-.ListviewStyle thead,.ListviewTitleStyle{background:#555;color: white;}
-.ListviewTitleStyle a,.ListviewTitleStyle a:visited,.ListviewTitleStyle a:hover {color: white;}
-.Question, .QuestionSubmit {background: #fff;}
+.NavUnderline,.Question,.QuestionSubmit {border-bottom: 1px solid #ebebeb;}
+
+.ListviewStyle thead,.ListviewTitleStyle {
+    background:gray;
+    color: #999;
+    text-transform: uppercase;
+}
+
+.ListviewTitleStyle td, .ListviewTitleStyle a, .ListviewTitleStyle a:visited {
+    color: #fff;
+    font-size: 0.875rem;
+}
+
+.ListviewTitleStyle td {
+    border-bottom: 2px solid #ebebeb;
+}
+
+.ListviewTitleStyle a:hover {
+    color: #2e99e6;
+    text-decoration:none;
+}
+
+.Question, .QuestionSubmit {background: none;}
 
 /* Put rounded corners on the first and last Question/QuestionSubmit in each block only */
 .Question, .QuestionSubmit {border-top-left-radius:5px;border-top-right-radius: 5px;}
@@ -153,23 +178,22 @@ div.autocomplete ul li {color: #000;}
 #imageData #caption{ font-weight: bold;	}
 #overlay{ background-color: #000;}
 .FormHelpInner{background-color:#ffffff;color:black;border:1px solid #000000;border-radius:3px;}
-.RecordPanel .RecordDownloadSpace .DownloadDBlend h2 {color: white;}
+.RecordPanel .RecordDownloadSpace .DownloadDBlend h2 {/*color: white;*/}
 .RecordDownloadSpace .HorizontalWhiteNav a:active, .RecordPanel .RecordDownloadSpace .HorizontalWhiteNav a:hover {color:#FFFFFF;} 
-.NoFind {border: 1px solid #BBBBBB;background: #FFFFFF;}
+.NoFind {border: none;background: #FFFFFF;}
 .NoFind .highlight {color:#000000;font-weight: bold;}
-.NoFind a:link, .NoFind a:visited, .NoFind a:hover, .NoFind a:active {color:#000000;text-decoration:underline;}
+.NoFind a:link, .NoFind a:visited, .NoFind a:hover, .NoFind a:active {color:#2e99e6;text-decoration:underline;}
 .RecordPanel .Title,  {	border-bottom: 1px solid #BBBBBB;}
-.ViewPanelTitles { 	border-bottom: 1px solid #BBBBBB;}
+/*.ViewPanelTitles { 	border-bottom: 1px solid #BBBBBB;}*/
 .ViewPanelTitles .Title { border-bottom: 0; }
 .RecordDownload {  background: #fff;}
-.RecordPanel .RecordDownload .DownloadDBlend td {border: 1px solid #E2E2E2;color: #FFFFFF;}
-.RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {background: linear-gradient(rgba(0, 90, 117, 0.82),rgba(0, 71, 93, 0.81));background-color: rgba(0, 62, 81, 0.82);}
-.RecordPanel .RecordDownloadSpace .DownloadDBlend p {color: #F0F0F0;text-align: left;}
-.RecordPanel .RecordDownloadSpace .DownloadDBlend a {color: #FFFFFF;text-align: left;}
-.RecordPanel .RecordDownloadSpace .DownloadDBlend {background: #979797;	border-color: #6D6D6D;}
+.RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;padding: 0.4rem 0;}
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {background: transparent;background-color: transparent;}
+.RecordPanel .RecordDownloadSpace .DownloadDBlend p {color: #888;text-align: left;font-size: 0.75rem;}
+.RecordPanel .RecordDownloadSpace .DownloadDBlend {background: #fff; border-color: #6D6D6D;}
 .ArchiveResourceTitle, .ResourcePendingSubmissionTitle, .ResourcePendingReviewTitle {color: #888;}
 .DeletedResourceTitle {color: #FF0000;}
-.RecordStory{color: #000000;background: #FFFFFF; border: 1px solid #BBBBBB;}
+.RecordStory{color: #000000;background: #FFFFFF; .Rec border-top : 1px solid #ddd;}
 .RecordStory h1{color: #000000;}
 .RecordStory a:hover{color: #000000;}
 .RecordStory .highlight {color:black;}
@@ -185,15 +209,14 @@ div.autocomplete ul li {color: #000;}
 .StarGrey {background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 .RatingStars a:hover {text-decoration:none;}
 .Listview .ListViewSubTable,.Listview .ListViewSubTable td,.Listview .ListViewSubTable tr {background-image: none;}
-.Listview {background-color: white;border-radius:5px;}
+.Listview {background-color: white;border-radius:6px;}
 .StarEmpty {  background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 .StarCurrent { background: transparent url('../gfx/interface/RatingStarWhite.gif') no-repeat;}
 .highlight {color: #000;background-color: #ff0;}
-.Tab a {border: 1px solid #BBBBBB;color: #aaaaaa;  }
+.Tab a {color: #aaaaaa; padding: 8px 1rem;}
 .StyledTabbedPanel 
     {
-    background: #fefefe linear-gradient(#fff,#eee);
-	border: 1px solid #BBBBBB;
+    background: #fff;
     }
 .TabSelected  
     {    
@@ -201,9 +224,10 @@ div.autocomplete ul li {color: #000;}
     border-left: #bbbbbb;
     }
 .TabSelected a {background: #ffffff; color: #666666; border-bottom: 1px solid #ffffff; }
-.InfoTable {border-collapse:collapse;}
-.InfoTable tr {background: #597499 linear-gradient(#FFF,#EEE);}
-.InfoTable td {border:1px solid #BBBBBB;border-top:1px solid #BBBBBB;}
+.InfoTable {border-collapse:collapse;border-radius: 4px;}
+.InfoTable {background: #fff;}
+.InfoTable tr+tr>td {border-top:1px solid #ddd;}
+.InfoTable td+td {border-left:1px solid #BBBBBB;}
 #InfoBoxInner {color:black;}
 #InfoBoxInner h2 {color:black;font-weight:bold;}
 #InfoBoxInner p {color:black;}
@@ -321,26 +345,29 @@ li.plupload_droptext {color:#999;}
     {
     background-color: #e6e6e6;
     box-shadow: 0 0 40px rgba(0,0,0,0.5);
-    border-radius: 5px;
+    border-radius: 4px;
     }
 #modal .RecordHeader, #modal .BasicsBox h1, #modal .TopInpageNav
   {
-  background: linear-gradient(#424242 , #1B1B1B);
-  color: #fff;
+  background: none;
+  color: #999;
   }
 #modal .RecordHeader h1, #modal .BasicsBox h1
   {
-  color: #fff;
+  color: #333;
   }
 #modal .RecordHeader a, #modal .TopInpageNav, #modal .TopInpageNav a
   {
-  color:#e0e0e0;
+  color:#777;
   }
 #CollectionDiv select
   {
-  background-color: #555;
-  color:#fff;
-  border:none; 
+    background-color: #555;
+    color:#fff;
+    border:none; 
+    height: 22px;
+    line-height: 1.4rem;
+    padding-left: 4px;
   }
 
 /* Messaging */
@@ -373,7 +400,7 @@ div.MessageBox a {
 }
 UL.jqueryFileTree A {color:#000;background-color:initial;}
 UL.jqueryFileTree A:hover {background-color:initial !important;}
-#previewimage, #previewimagecopy { border: 1px solid #CCC; }
+#previewimage, #previewimagecopy { border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.2 );}
 
 /* chosen collection div */
 #CollectionDiv #MinColDrop .chosen-single:hover, #CollectionDiv #colselect .chosen-single:hover {color:#444;}
@@ -387,7 +414,8 @@ UL.jqueryFileTree A:hover {background-color:initial !important;}
 /* Highlight selected keywords */
 input:checked + .customFieldLabel, .keywordselected
   {
-  background-color: #ccc;
+    background-color: #2e99e6;
+    color: #fff;
   }
   
 #LoadingBox
@@ -406,3 +434,7 @@ input:checked + .customFieldLabel, .keywordselected
 
 .BreadcrumbsBox { color:#FFF; }
 .BreadcrumbsBox a, .BreadcrumbsBox a:link, .BreadcrumbsBox a:visited { color: #FFF; }
+
+.TopInpageNav select {
+    background-color: #fff;
+}
