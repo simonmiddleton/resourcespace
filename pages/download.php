@@ -312,12 +312,9 @@ if(!hook('replacefileoutput'))
 
 // Deleting Exiftool temp File:
 // Note: Only for downloads (not previews)
-if('' == $noattach && -1 == $alternative)
+if('' == $noattach && -1 == $alternative && $exiftool_write && file_exists($tmpfile))
     {
-    if(file_exists($tmpfile))
-        {
-        delete_exif_tmpfile($tmpfile);
-        }
+    delete_exif_tmpfile($tmpfile);
     }
 
 hook('beforedownloadresourceexit');
