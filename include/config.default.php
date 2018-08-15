@@ -716,7 +716,7 @@ $default_sort="relevance";
 # What is the default sort order when viewing collection resources?
 # Options are date, colour, relevance, popularity, country
 # Note: when users are expecting resources to be shown in the order they provided, make sure this is set to 'relevance'
-$default_collection_sort = 'relevance';
+$default_collection_sort = 'collection';
 
 # Enable themes (promoted collections intended for showcasing selected resources)
 $enable_themes=true;
@@ -967,7 +967,10 @@ $email_footer="";
 # Requires ImageMagick/Ghostscript.
 $contact_sheet=true;
 # Produce a separate resource file when creating contact sheets?
-$contact_sheet_resource=false; 
+$contact_sheet_resource=false;
+# ID of resource type to create
+$contact_sheet_resource_type=1; 
+ 
 # Ajax previews in contact sheet configuration. 
 $contact_sheet_previews=true;
 # Ajax previews in contact sheet, preview image size in pixels. 
@@ -3523,3 +3526,4 @@ $use_pdfjs_viewer = false;
 
 // Ask users to opt-in registering to access the system. This can address requirements data protection laws (e.g. GDPR) may have
 $user_registration_opt_in = true;
+
