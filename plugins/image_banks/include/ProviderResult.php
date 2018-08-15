@@ -5,6 +5,7 @@ class ProviderResult
     {
     private $id;
     private $provider;
+    private $title = "";
 
     protected $original_file_url;
     protected $provider_url;
@@ -95,5 +96,16 @@ class ProviderResult
     public function getPreviewHeight()
         {
         return $this->preview_height;
+        }
+
+    public function setTitle($title)
+        {
+        $this->title = trim($title);
+
+        return $this;
+        }
+    public function getTitle()
+        {
+        return $this->title;
         }
     }

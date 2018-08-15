@@ -114,13 +114,15 @@ if($results_error !== "")
 
 foreach($results as $result)
     {
+    $image_data = array(
+        "thumb_width"  => $result->getPreviewWidth(),
+        "thumb_height" => $result->getPreviewHeight(),
+        "field{$view_title_field}" => $result->getTitle(),
+    );
     ?>
     <div class="ResourcePanel" style="height: 214px;">
         <a href="<?php echo $result->getProviderUrl(); ?>" target="_blank" class="ImageWrapper" title="<?php echo htmlspecialchars($result->getSource()); ?>">
-            <img src="<?php echo $result->getPreviewUrl(); ?>"
-                 width="<?php echo $result->getPreviewWidth(); ?>"
-                 height="<?php echo $result->getPreviewHeight(); ?>"
-                 border="0">
+            <?php render_resource_image($image_data, $result->getPreviewUrl(), "thumbs"); ?>
         </a>
         <div class="ResourcePanelInfo">
             <!-- <a href="#" target="_blank" title="License">link</a> -->

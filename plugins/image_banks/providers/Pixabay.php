@@ -97,6 +97,7 @@ class Pixabay extends Provider
 
             $provider_result = new \ImageBanks\ProviderResult($result["id"], $this);
             $provider_result
+                ->setTitle($result['tags'])
                 ->setOriginalFileUrl($original_file_url)
                 ->setProviderUrl($result['pageURL'])
                 ->setPreviewUrl($result['previewURL'])
