@@ -320,7 +320,25 @@ function api_get_resource_path($ref, $getfilepath, $size, $generate=true, $exten
     
 function api_get_resource_data($resource)
     {
-    return get_resource_data($resource);
+    $resdata = get_resource_data($resource);
+    
+    // Check access
+    $access = get_resource_access($resource);
+    if($access == 2)
+        {return false;}
+    
+    // Remove column data from inaccessible fields
+    $joins = get_resource_table_joins();
+    foreach($joins as $datajoin)
+        {
+        $joinfield = get_resource_type_field($datajoin);
+        if((!metadata_field_view_access($datajoin)) || ($access == 1 && $joinfield["hide_when_restricted"] == 1))
+            {
+            unset($resdata["field" . $datajoin]);
+            }
+        }
+        
+    return $resdata;
     }
 
 function api_get_alternative_files($resource,$order_by="",$sort="")
