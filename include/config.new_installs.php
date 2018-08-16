@@ -21,7 +21,6 @@ $slideshow_big=true;
 $home_slideshow_width=1400;
 $home_slideshow_height=900;
 
-$homeanim_folder = 'filestore/system/slideshow';
 $login_background=true;
 
 $themes_simple_view=true;

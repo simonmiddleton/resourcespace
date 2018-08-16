@@ -663,11 +663,13 @@ h2#dbaseconfig{  min-height: 32px;}
             $errors['email_from'] = true;
             }
 
-		// Set random keys. These used to be requested on the setup form but there was no reason to ask the user for these.
-                $config_output .= "# Secure keys\r\n";
-                $config_output .= "\$spider_password = '" . generateSecureKey(64) . "';\r\n";
-                $config_output .= "\$scramble_key = '" . generateSecureKey(64) . "';\r\n";
-                $config_output .= "\$api_scramble_key = '" . generateSecureKey(64) . "';\r\n\r\n";
+        // Set random keys. These used to be requested on the setup form but there was no reason to ask the user for these.
+        $scramble_key = generateSecureKey(64);
+
+        $config_output .= "# Secure keys\r\n";
+        $config_output .= "\$spider_password = '" . generateSecureKey(64) . "';\r\n";
+        $config_output .= "\$scramble_key = '{$scramble_key}';\r\n";
+        $config_output .= "\$api_scramble_key = '" . generateSecureKey(64) . "';\r\n\r\n";
 		
 		$config_output .= "# Paths\r\n";
 		//Verify paths actually point to a useable binary
@@ -734,6 +736,18 @@ h2#dbaseconfig{  min-height: 32px;}
 				}
 			$config_output .= " \r\n";
 			}
+
+        // Scramble slideshow folder path
+        $homeanim_folder_name = "slideshow";
+        if(isset($scramble_key) && $scramble_key != "")
+            {
+            $nonce = generateSecureKey(24);
+            $homeanim_folder_hash = substr(md5("{$nonce}_slideshow_{$scramble_key}"), 0, 15);
+            $homeanim_folder_name = "slideshow_{$homeanim_folder_hash}";
+            $homeanim_folder = "filestore/system/{$homeanim_folder_name}";
+
+            $config_output .= "\$homeanim_folder = '{$homeanim_folder}';\r\n";
+            }
 
         # Append defaults for new systems.
         $config_output.=file_get_contents(dirname(__FILE__) . "/../include/config.new_installs.php");
@@ -848,7 +862,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)))
 
     foreach($slideshow_files as $id => $file_info)
         {
-        $to_folder = $storagedir . '/system/slideshow';
+        $to_folder = "{$storagedir}/system/{$homeanim_folder_name}";
         $to_file   = $to_folder . '/' . basename($file_info['file_path']);
 
         // Make sure there is a target location
