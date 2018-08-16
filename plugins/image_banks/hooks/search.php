@@ -1,25 +1,40 @@
 <?php
-function HookImage_banksSearchMoresearchcriteria()
-    {
-    $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
-    rs_setcookie("image_bank_provider_id", $image_bank_provider_id);
-
-    return;
-    }
-
 function HookImage_banksSearchSearchaftersearchcookie()
     {
-    $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
     $search_image_banks = filter_var(getval("search_image_banks", false), FILTER_VALIDATE_BOOLEAN);
+    $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
 
-    if(!$search_image_banks)
+    $per_page = getval("per_page", 0, true);
+    $saved_offset = getval("saved_offset", 0, true);
+    $offset = getval("offset", $saved_offset, true);
+    $posting = filter_var(getval("posting", false), FILTER_VALIDATE_BOOLEAN);
+
+    rs_setcookie("image_bank_provider_id", $image_bank_provider_id);
+
+    // Allow pixabay search using saved params using the Search results link that appears in the header links
+    // This is not passing anything in the params other than ajax argument
+    parse_str($_SERVER['QUERY_STRING'], $qs_params);
+    if(
+        $image_bank_provider_id > 0
+        && (
+                // Search results
+                count($qs_params) == 2
+                // User searched external IB providers from simple search
+                || $posting
+                // Normal search in IB (e.g changing per page or going through pages)
+                || (count($qs_params) > 2 && $search_image_banks)
+            )
+    )
         {
-        rs_setcookie("image_bank_provider_id", 0);
-
-        return;
+        $search_image_banks = true;
         }
 
-    if($image_bank_provider_id == 0)
+    debug("image_banks_search_hook: \$offset = {$offset}");
+    debug("image_banks_search_hook: \$image_bank_provider_id = {$image_bank_provider_id}");
+    debug("image_banks_search_hook: \$posting = " . ($posting ? "true" : "false"));
+    debug("image_banks_search_hook: \$search_image_banks = " . ($search_image_banks ? "true" : "false"));
+
+    if(!$search_image_banks)
         {
         return;
         }
