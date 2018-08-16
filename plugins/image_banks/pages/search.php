@@ -114,18 +114,22 @@ if($results_error !== "")
 
 foreach($results as $result)
     {
+    $title = $result->getTitle();
+
     $image_data = array(
         "thumb_width"  => $result->getPreviewWidth(),
         "thumb_height" => $result->getPreviewHeight(),
-        "field{$view_title_field}" => $result->getTitle(),
+        "field{$view_title_field}" => $title,
     );
+
+    $title_link_text = highlightkeywords(tidy_trim(tidylist(strip_tags_and_attributes($title)), $search_results_title_trim), $search);
     ?>
     <div class="ResourcePanel" style="height: 214px;">
-        <a href="<?php echo $result->getProviderUrl(); ?>" target="_blank" class="ImageWrapper" title="<?php echo htmlspecialchars($result->getSource()); ?>">
+        <a href="<?php echo $result->getProviderUrl(); ?>" target="_blank" class="ImageWrapper" title="<?php echo htmlspecialchars($title); ?>">
             <?php render_resource_image($image_data, $result->getPreviewUrl(), "thumbs"); ?>
         </a>
         <div class="ResourcePanelInfo">
-            <!-- <a href="#" target="_blank" title="License">link</a> -->
+            <a href="<?php echo $result->getProviderUrl(); ?>" target="_blank" title="<?php echo htmlspecialchars($title); ?>"><?php echo $title_link_text; ?></a>
         </div>
         <div class="clearer"></div>
 
