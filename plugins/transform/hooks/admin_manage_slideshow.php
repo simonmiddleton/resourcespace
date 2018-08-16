@@ -6,7 +6,8 @@ function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slides
     $return_to_url = $baseurl . '/pages/admin/admin_manage_slideshow.php';
 
     // Calculate the next slideshow image ID (ie. filename will be ID.jpg)
-    $new_slideshow_id = count($slideshow_files) + 1;
+    $last_slideshow_file = end($slideshow_files);
+    $new_slideshow_id = $last_slideshow_file["ref"] + 1;
     ?>
     <div id="add_new_slideshow" class="Question">
         <label></label>
