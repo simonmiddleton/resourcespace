@@ -214,6 +214,12 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
 else
 	{
 	$tmpdir = get_temp_dir();
+	if(!is_dir("$tmpdir/transform_plugin"))
+        {
+        // If it does not exist, create it.
+        mkdir("$tmpdir/transform_plugin", 0777);
+        }
+	
 	$newpath = "$tmpdir/transform_plugin/download_$ref." . $new_ext;
 	}
 
