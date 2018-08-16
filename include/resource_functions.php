@@ -1664,7 +1664,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 */
 function update_field($resource, $field, $value, array &$errors = array(), $log=true)
     {
-    global $FIXED_LIST_FIELD_TYPES;
+    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents;
     
     // accept shortnames in addition to field refs
     if(!is_numeric($field))
@@ -1761,7 +1761,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 {
                 $nodes_to_add[] = $nodedata["ref"];
                 // We need to add all parent nodes for category trees
-                if($fieldinfo['type']==7) 
+                if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 
                     {
                     $parent_nodes=get_parent_nodes($nodedata["ref"]);
                     foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
@@ -1850,7 +1850,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
     
     // Log this update
-    if ($log)
+    if ($log && $value != $existing)
         {
         resource_log($resource,'e',$field,"",$existing,unescape($value));
         }

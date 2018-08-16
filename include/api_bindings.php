@@ -116,8 +116,154 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
 
 function api_update_field($resource,$field,$value)
     {
-    # Update a metadata field
-    return update_field($resource,$field,$value);
+    // Provides simple way to update field by passing in simple string values for text fields,
+    // comma separated values for fixed list (node) fields, using double quotes
+    // to enclose strings and backslash as escape character
+    // Uses update_field and add_resource_nodes/delete_resource_nodes
+    
+    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents;
+    
+    $resourcedata=get_resource_data($resource,true);
+    $editaccess = get_edit_access($resource,$resourcedata['archive'],false,$resourcedata);
+    
+    if(!$editaccess || !metadata_field_edit_access($field))
+        {return false;}        
+    
+    $fieldinfo = get_resource_type_field($field);
+    
+    if(!$fieldinfo)
+        {
+        return false;
+        }
+    
+    if(in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        $fieldnodes = get_nodes($field,null,$fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE);
+        
+        // Set up arrays of node ids to add/remove and all new nodes. 
+        $nodes_to_add    = array();
+        $nodes_to_remove = array();
+        $newnodes        = array();
+        
+        // Get all the new values into an array
+        $newvalues    = trim_array(str_getcsv($value));
+        
+        // Get currently selected nodes for this field 
+        $current_field_nodes = get_resource_nodes($resource, $field);
+               
+        # If this is a dynamic keyword field need to add any new entries to the field nodes
+        if($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field))
+            {
+            $currentoptions = array();    
+            foreach($fieldnodes as $fieldnode)
+                {
+                $fieldoptiontranslations = explode('~', $fieldnode['name']);
+                if(count($fieldoptiontranslations) < 2)
+                    {
+                    $currentoptions[]=trim($fieldnode['name']); # Not a translatable field
+                    debug("update_field: current field option: '" . trim($fieldnode['name']) . "'<br />");
+                    }
+                else
+                    {
+                    $default="";
+                    for ($n=1;$n<count($fieldoptiontranslations);$n++)
+                        {
+                        # Not a translated string, return as-is
+                        if (substr($fieldoptiontranslations[$n],2,1)!=":" && substr($fieldoptiontranslations[$n],5,1)!=":" && substr($fieldoptiontranslations[$n],0,1)!=":")
+                            {
+                            $currentoptions[]=trim($fieldnode['name']);
+                            debug("update_field: current field option: '" . $fieldnode['name'] . "'<br />");
+                            }
+                        else
+                            {
+                            # Support both 2 character and 5 character language codes (for example en, en-US).
+                            $p=strpos($fieldoptiontranslations[$n],':');                         
+                            $currentoptions[]=trim(substr($fieldoptiontranslations[$n],$p+1));
+                            debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)) . "'<br />");
+                            }
+                        }
+                    }
+                }
+    
+            foreach($newvalues as $newvalue)
+                {
+                # Check if each new value exists in current options list
+                if(!in_array($newvalue, $currentoptions) && $newvalue != '')
+                    {
+                    # Append the option and update the field
+                    $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                    $nodes_to_add[]   = $newnode;
+                    $currentoptions[] = trim($newvalue);
+                    $fieldnodes[]  = array("ref" => $newnode,"name" => trim($newvalue));                    
+    
+                    debug("update_field: field option added: '" . trim($newvalue) . "'<br />");
+                    }
+                }
+            }
+                        
+        foreach($fieldnodes as $fieldnode)
+            {
+            // Add to array of nodes, unless it has been added to array already as a parent for a previous node
+            if (in_array($fieldnode["name"],$newvalues) && !in_array($fieldnode["ref"],$nodes_to_add))
+                {
+                if(!in_array($fieldnode["ref"],$current_field_nodes))
+                    {
+                    $nodes_to_add[] = $fieldnode["ref"];
+                    if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 
+                        {
+                        // Add all parent nodes for category trees
+                        $parent_nodes=get_parent_nodes($fieldnode["ref"]);
+                        foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
+                            {
+                            $nodes_to_add[]=$parent_node_ref;
+                            if (!in_array($parent_node_name,$newvalues))
+                                {
+                                $value = $parent_node_name . "," . $value;    
+                                }
+                            }
+                        }
+                    }
+                $newnodes[] = $fieldnode["ref"];
+                }
+            else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["name"],$newvalues))
+                {
+                debug("BANG removing node " . $fieldnode["name"]);
+                $nodes_to_remove[] = $fieldnode["ref"];
+                }
+            }
+
+        if(count($nodes_to_add) > 0 || count($nodes_to_remove) > 0)
+            {
+            # Update resource_node table
+            db_begin_transaction();
+            delete_resource_nodes($resource,$nodes_to_remove);
+    
+            if(count($nodes_to_add)>0)
+                {
+                add_resource_nodes($resource,$nodes_to_add, false);
+                }
+            db_end_transaction();
+            
+            // Update log
+            // First use the node array to getnames with node id as key
+            $node_options = array_column($fieldnodes, 'name', 'ref');
+                
+            // Build existing value for log:
+            $curr_nodes = array_intersect_key($node_options,array_flip($current_field_nodes));    
+            $curr_nodes_str  = "," . implode(",",$curr_nodes);
+            
+            // Build new value for log:
+            $new_nodes = array_intersect_key($node_options,array_flip($newnodes));  
+            $new_nodes_str = "," . implode(",",$new_nodes);
+            
+            resource_log($resource, LOG_CODE_EDITED, $field, '', $curr_nodes_str, $new_nodes_str);
+            }
+        return true;
+        }
+    else
+        {
+        return update_field($resource,$field,$value);
+        }
     }
 
 function api_delete_resource($resource)
