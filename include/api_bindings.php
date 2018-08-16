@@ -287,7 +287,7 @@ function api_update_resource_type($resource,$type)
     }
 
 function api_get_resource_path($ref, $getfilepath, $size, $generate=true, $extension="jpg", $page=1, $watermarked=false, $alternative=-1)
-    {
+    {   
     # Set defaults
     if ($alternative=="") {$alternative=-1;}
     if ($page=="") {$page=1;}
@@ -296,20 +296,25 @@ function api_get_resource_path($ref, $getfilepath, $size, $generate=true, $exten
     if(is_array($refs))
         {
         $return = array();
-
         foreach($refs as $ref)
             {
-            if(!is_numeric($ref))
+            $resource = get_resource_data($ref);
+            if(!is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
                 {
+                $return[$ref] = "";
                 continue;
                 }
-
             $return[$ref] = get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
             }
-
         return $return;
         }
-
+        
+    $resource = get_resource_data($ref);
+    if(!is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
+        {
+        return false;
+        }
+            
     return get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, "", $alternative, false);
     }
     
