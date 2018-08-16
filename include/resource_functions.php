@@ -1093,7 +1093,7 @@ function save_resource_data_multi($collection)
                     $value_changed  = false;  
                     $resource_data  = get_resource_data($ref, true);
 
-                    if($resource_data["resource_type"] != $fields[$n]["resource_type"])
+                    if($fields[$n]["resource_type"] != 0 && $resource_data["resource_type"] != $fields[$n]["resource_type"])
                         {
                         continue;
                         }
