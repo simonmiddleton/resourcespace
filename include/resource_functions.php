@@ -1999,8 +1999,22 @@ function delete_resource($ref)
 	# Delete the resource, all related entries in tables and all files on disk
 	$ref      = escape_check($ref);
 	$resource = get_resource_data($ref);
-
-	if (!$resource) {return false;} # Resource not found in database
+        
+	if (!$resource
+        ||
+            (
+                (
+                checkperm("D")
+                ||
+                (isset($allow_resource_deletion) && !$allow_resource_deletion)
+                ||
+                !get_edit_access($ref,$resource["archive"], false,$resource)
+                )
+            &&
+                !hook('check_single_delete')
+            )
+        )
+        {return false;} 
 	
 	$current_state=$resource['archive'];
 	
