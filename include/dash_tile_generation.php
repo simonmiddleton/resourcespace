@@ -301,7 +301,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 	$sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
 	$tile_search=do_search($search,$restypes,$order_by,$archive,$count,$sort,false,0,false,false,"",false,false);
 	$found_resources=true;
-	if(!is_array($tile_search))
+	if(!is_array($tile_search) || empty($tile_search))
 		{
 		$found_resources=false;
 		$count=0;
