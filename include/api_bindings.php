@@ -397,6 +397,11 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
 
 function api_delete_alternative_file($resource,$ref)
 	{
+    global $disable_alternative_files;
+    if($disable_alternative_files || (0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
+        {
+        return false;
+        }
 	return delete_alternative_file($resource,$ref);
     }
 
