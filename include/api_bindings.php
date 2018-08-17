@@ -458,7 +458,12 @@ function api_remove_resource_from_collection($resource,$collection)
     
 function api_create_collection($name)
 	{
-    global $userref;
+    global $userref, $collection_allow_creation;
+    if (checkperm("b") || !$collection_allow_creation)
+        {
+        return false;
+        }
+    
     return create_collection($userref,$name);
     }
     
