@@ -439,6 +439,10 @@ function api_get_field_options($ref, $nodeinfo = false)
 function api_get_user_collections()
 	{
     global $userref;
+    if (checkperm("b"))
+        {
+        return array();
+        }
     return get_user_collections($userref);
     }
     
