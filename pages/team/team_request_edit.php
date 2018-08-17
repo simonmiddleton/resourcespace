@@ -79,7 +79,7 @@ if (isset($resulttext))
 if ($request !== false)
 	{
     # Check access
-    if (checkperm("Rb") && $request["assigned_to"]!=$userref)
+    if (checkperm("Rb") && ($request["assigned_to"]!=$userref))
         {
         ?><p><?php echo str_replace("%","<b>" . ($request["assigned_to_username"]==""?"(unassigned)":$request["assigned_to_username"]) . "</b>",$lang["requestnotassignedtoyou"]) ?></p><?php
         }

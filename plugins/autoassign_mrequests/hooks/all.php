@@ -23,7 +23,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
     }
 
     // Default back to auto assign based on resource type (if set to do so)
-    if($assigned_administrator === 0 && isset($manage_request_admin) && !$manage_collection_request) {
+    if($assigned_administrator === 0 && isset($manage_request_admin)) {
         return false;
     }
 
@@ -53,9 +53,12 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
         $assigned_administrator
     );
 
-    $assigned_to_user = get_user($assigned_administrator);
-    $notify_manage_request_admin = true;
-
+    // If there is a matched mapping then fetch the associated user details
+    if($assigned_administrator !== 0) 
+        {
+        $assigned_to_user = get_user($assigned_administrator);
+        $notify_manage_request_admin = true;
+        }
 
     // If we've got this far, make sure auto assigning managed requests based on resource types won't overwrite this
     unset($manage_request_admin);
@@ -77,8 +80,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
     $collection_resources_by_assigned_user = array();
     $collections                           = array();
 
-
-    // Build the collections map between asigned user and resources the collection should contain
+    // Build the collections map between assigned user and resources the collection should contain
     foreach ($resources as $resource) {
         $resource_data          = get_resource_field_data($resource);
         $assigned_administrator = 0;
@@ -195,7 +197,6 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
 
     }
 
-
     // If we've got this far, make sure auto assigning managed requests based on resource types won't overwrite this
     unset($manage_request_admin);
 
@@ -222,6 +223,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
 
     # Automatically notify the admin who was assigned the request:
     if($notify_manage_request_admin) {
+
         // Attach assigned admin to this collection
         add_collection($assigned_to_user['ref'], $collection_id);
 
