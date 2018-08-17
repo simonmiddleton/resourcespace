@@ -227,7 +227,6 @@ function api_update_field($resource,$field,$value)
                 }
             else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["name"],$newvalues))
                 {
-                debug("BANG removing node " . $fieldnode["name"]);
                 $nodes_to_remove[] = $fieldnode["ref"];
                 }
             }
@@ -343,6 +342,10 @@ function api_get_resource_data($resource)
 
 function api_get_alternative_files($resource,$order_by="",$sort="")
     {
+    global $disable_alternative_files, $alt_files_visible_when_restricted;
+    $access = get_resource_access($resource);
+    if($disable_alternative_files || ($access!=0 && !($access==1 && $alt_files_visible_when_restricted)))
+        {return false;}
     return get_alternative_files($resource,$order_by,$sort);
     }
     
