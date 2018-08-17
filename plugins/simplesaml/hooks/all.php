@@ -96,7 +96,7 @@ function HookSimplesamlAllProvideusercredentials()
             debug("simplesaml: plugin not configured.");
             return false;
             }
-            
+          
 		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
         $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
         $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
@@ -153,9 +153,21 @@ function HookSimplesamlAllProvideusercredentials()
 			<?php
 			exit;
 			}
-		
+                           
         if(!simplesaml_is_authenticated())
             {
+            if(getval("ajax","") != "")
+                {
+                // Ajax loads can't be redirected. Need a full reload if session has timed out
+                $reload_url = isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : $_SERVER["REQUEST_URL"];
+                debug("simplesaml: ajax request - reloading page " . $reload_url);
+                ?>
+                <script>
+                top.location.href="<?php echo str_replace(array("modal=true","ajax=true"),"",$reload_url); ?>";
+                </script>	
+                <?php    
+                exit();
+                }
             debug("simplesaml: authenticating");
             simplesaml_authenticate();
             }
