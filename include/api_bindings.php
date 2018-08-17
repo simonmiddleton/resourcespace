@@ -114,7 +114,7 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     return $ref;
     }
 
-function api_update_field($resource,$field,$value)
+function api_update_field($resource,$field,$value,$nodevalues=false)
     {
     // Provides simple way to update field by passing in simple string values for text fields,
     // comma separated values for fixed list (node) fields, using double quotes
@@ -126,6 +126,12 @@ function api_update_field($resource,$field,$value)
     $resourcedata=get_resource_data($resource,true);
     $editaccess = get_edit_access($resource,$resourcedata['archive'],false,$resourcedata);
     
+    if(!is_numeric($field))
+        {
+        // Name may have been passed    
+        $field = sql_value("select ref value from resource_type_field where name='" . escape_check($field) . "'","");
+        }
+        
     if(!$editaccess || !metadata_field_edit_access($field))
         {return false;}        
     
@@ -145,89 +151,118 @@ function api_update_field($resource,$field,$value)
         $nodes_to_remove = array();
         $newnodes        = array();
         
-        // Get all the new values into an array
-        $newvalues    = trim_array(str_getcsv($value));
-        
         // Get currently selected nodes for this field 
         $current_field_nodes = get_resource_nodes($resource, $field);
-               
-        # If this is a dynamic keyword field need to add any new entries to the field nodes
-        if($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field))
+        
+        if($nodevalues)
             {
-            $currentoptions = array();    
+            // An array of node IDs has been passed, we can use these directly
+            $sent_nodes = explode(",",$value);
             foreach($fieldnodes as $fieldnode)
                 {
-                $fieldoptiontranslations = explode('~', $fieldnode['name']);
-                if(count($fieldoptiontranslations) < 2)
+                // Add to array of nodes, unless it has been added to array already as a parent for a previous node
+                if (in_array($fieldnode["ref"],$sent_nodes) && !in_array($fieldnode["ref"],$nodes_to_add))
                     {
-                    $currentoptions[]=trim($fieldnode['name']); # Not a translatable field
-                    debug("update_field: current field option: '" . trim($fieldnode['name']) . "'<br />");
-                    }
-                else
-                    {
-                    $default="";
-                    for ($n=1;$n<count($fieldoptiontranslations);$n++)
+                    if(!in_array($fieldnode["ref"],$current_field_nodes))
                         {
-                        # Not a translated string, return as-is
-                        if (substr($fieldoptiontranslations[$n],2,1)!=":" && substr($fieldoptiontranslations[$n],5,1)!=":" && substr($fieldoptiontranslations[$n],0,1)!=":")
+                        $nodes_to_add[] = $fieldnode["ref"];
+                        if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 
                             {
-                            $currentoptions[]=trim($fieldnode['name']);
-                            debug("update_field: current field option: '" . $fieldnode['name'] . "'<br />");
-                            }
-                        else
-                            {
-                            # Support both 2 character and 5 character language codes (for example en, en-US).
-                            $p=strpos($fieldoptiontranslations[$n],':');                         
-                            $currentoptions[]=trim(substr($fieldoptiontranslations[$n],$p+1));
-                            debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)) . "'<br />");
+                            // Add all parent nodes for category trees
+                            $parent_nodes=get_parent_nodes($fieldnode["ref"]);
+                            foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
+                                {
+                                $nodes_to_add[]=$parent_node_ref;
+                                }
                             }
                         }
+                    $newnodes[] = $fieldnode["ref"];
                     }
-                }
-    
-            foreach($newvalues as $newvalue)
-                {
-                # Check if each new value exists in current options list
-                if(!in_array($newvalue, $currentoptions) && $newvalue != '')
+                else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["name"],$sent_nodes))
                     {
-                    # Append the option and update the field
-                    $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
-                    $nodes_to_add[]   = $newnode;
-                    $currentoptions[] = trim($newvalue);
-                    $fieldnodes[]  = array("ref" => $newnode,"name" => trim($newvalue));                    
-    
-                    debug("update_field: field option added: '" . trim($newvalue) . "'<br />");
+                    $nodes_to_remove[] = $fieldnode["ref"];
                     }
                 }
             }
-                        
-        foreach($fieldnodes as $fieldnode)
+        else
             {
-            // Add to array of nodes, unless it has been added to array already as a parent for a previous node
-            if (in_array($fieldnode["name"],$newvalues) && !in_array($fieldnode["ref"],$nodes_to_add))
+            // Get all the new values into an array
+            $newvalues    = trim_array(str_getcsv($value));
+               
+            # If this is a dynamic keyword field need to add any new entries to the field nodes
+            if($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field))
                 {
-                if(!in_array($fieldnode["ref"],$current_field_nodes))
+                $currentoptions = array();    
+                foreach($fieldnodes as $fieldnode)
                     {
-                    $nodes_to_add[] = $fieldnode["ref"];
-                    if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 
+                    $fieldoptiontranslations = explode('~', $fieldnode['name']);
+                    if(count($fieldoptiontranslations) < 2)
                         {
-                        // Add all parent nodes for category trees
-                        $parent_nodes=get_parent_nodes($fieldnode["ref"]);
-                        foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
+                        $currentoptions[]=trim($fieldnode['name']); # Not a translatable field
+                        debug("update_field: current field option: '" . trim($fieldnode['name']) . "'<br />");
+                        }
+                    else
+                        {
+                        $default="";
+                        for ($n=1;$n<count($fieldoptiontranslations);$n++)
                             {
-                            $nodes_to_add[]=$parent_node_ref;
-                            if (!in_array($parent_node_name,$newvalues))
+                            # Not a translated string, return as-is
+                            if (substr($fieldoptiontranslations[$n],2,1)!=":" && substr($fieldoptiontranslations[$n],5,1)!=":" && substr($fieldoptiontranslations[$n],0,1)!=":")
                                 {
-                                $value = $parent_node_name . "," . $value;    
+                                $currentoptions[]=trim($fieldnode['name']);
+                                debug("update_field: current field option: '" . $fieldnode['name'] . "'<br />");
+                                }
+                            else
+                                {
+                                # Support both 2 character and 5 character language codes (for example en, en-US).
+                                $p=strpos($fieldoptiontranslations[$n],':');                         
+                                $currentoptions[]=trim(substr($fieldoptiontranslations[$n],$p+1));
+                                debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)) . "'<br />");
                                 }
                             }
                         }
                     }
-                $newnodes[] = $fieldnode["ref"];
+    
+                foreach($newvalues as $newvalue)
+                    {
+                    # Check if each new value exists in current options list
+                    if(!in_array($newvalue, $currentoptions) && $newvalue != '')
+                        {
+                        # Append the option and update the field
+                        $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+                        $nodes_to_add[]   = $newnode;
+                        $currentoptions[] = trim($newvalue);
+                        $fieldnodes[]  = array("ref" => $newnode,"name" => trim($newvalue));                    
+        
+                        debug("update_field: field option added: '" . trim($newvalue) . "'<br />");
+                        }
+                    }
                 }
-            else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["name"],$newvalues))
+                        
+            foreach($fieldnodes as $fieldnode)
                 {
-                $nodes_to_remove[] = $fieldnode["ref"];
+                // Add to array of nodes, unless it has been added to array already as a parent for a previous node
+                if (in_array($fieldnode["name"],$newvalues) && !in_array($fieldnode["ref"],$nodes_to_add))
+                    {
+                    if(!in_array($fieldnode["ref"],$current_field_nodes))
+                        {
+                        $nodes_to_add[] = $fieldnode["ref"];
+                        if($fieldinfo['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 
+                            {
+                            // Add all parent nodes for category trees
+                            $parent_nodes=get_parent_nodes($fieldnode["ref"]);
+                            foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
+                                {
+                                $nodes_to_add[]=$parent_node_ref;
+                                }
+                            }
+                        }
+                    $newnodes[] = $fieldnode["ref"];
+                    }
+                else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["name"],$newvalues))
+                    {
+                    $nodes_to_remove[] = $fieldnode["ref"];
+                    }
                 }
             }
 
@@ -436,6 +471,12 @@ function api_get_related_resources($ref)
 
 function api_get_field_options($ref, $nodeinfo = false)
     {
+    if(!is_numeric($ref))
+        {
+        // Name may have been passed    
+        $ref = sql_value("select ref value from resource_type_field where name='" . escape_check($ref) . "'","");
+        }
+        
     if(!metadata_field_view_access($ref))
         {return false;}
         
@@ -497,8 +538,7 @@ function api_search_public_collections($search="", $order_by="name", $sort="ASC"
         }
     return $results;
     }
-
-        
+    
 function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by = 0,$returnexisting = false)
     {
     global $FIXED_LIST_FIELD_TYPES;
@@ -507,7 +547,7 @@ function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by
     if(
        !in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES)
         ||
-       !(checkperm('a') || checkperm('k') || ($fieldinfo['type'] == 9 && !checkperm('bdk' . $resource_type_field)))
+       !(checkperm('a') || checkperm('k') || ($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $resource_type_field)))
        )
         {
         // API user doesn't have permission to add new nodes
