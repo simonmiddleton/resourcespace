@@ -428,9 +428,12 @@ function api_get_related_resources($ref)
     return get_related_resources($ref);
     }
 
-function api_get_field_options($ref)
+function api_get_field_options($ref, $nodeinfo = false)
     {
-    return get_field_options($ref);
+    if(!metadata_field_view_access($ref))
+        {return false;}
+        
+    return get_field_options($ref, $nodeinfo);
     }
     
 function api_get_user_collections()

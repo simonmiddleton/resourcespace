@@ -1212,27 +1212,39 @@ function average_length($array)
     return ($total/count($array));
     }
     
-function get_field_options($ref)
+function get_field_options($ref,$nodeinfo = false)
     {
-    # For the field with reference $ref, return a sorted array of options.
-
-    //$options=sql_value("select options value from resource_type_field where ref='$ref'","");
-
-    $options = array();
-    node_field_options_override($options,$ref);
-
-    # Translate all options
+    # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
+    if(!is_numeric($ref))
+        {
+        $ref = sql_value("select ref value from resource_type_field where name='" . escape_check($ref) . "'","");
+        }
+        
+    $options = get_nodes($ref, null, true);
+    
+    # Translate options, 
     for ($m=0;$m<count($options);$m++)
         {
-        $options[$m]=i18n_get_translated($options[$m]);
+        $options[$m]["name"] = i18n_get_translated($options[$m]["name"]);
+        unset($options[$m]["resource_type_field"]); // Not needed
         }
-
-    global $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
-    if ($auto_order_checkbox) {
-        if($auto_order_checkbox_case_insensitive){natcasesort($options);$options=array_values($options);}
-        else{sort($options);}
-    }
-    
+        
+    if(!$nodeinfo)
+        {
+        $options = array_column($options,"name");
+        global $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
+        if ($auto_order_checkbox)
+            {
+            if($auto_order_checkbox_case_insensitive)
+                {
+                natcasesort($options);
+                $return=array_values($options);
+                }
+            else
+                {sort($options);}
+            }
+        }
+        
     return $options;
     }
 
