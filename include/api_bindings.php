@@ -469,6 +469,8 @@ function api_create_collection($name)
     
 function api_delete_collection($ref)
     {
+    if (checkperm("b") || !collection_writeable($ref))
+        {return false;}
     return delete_collection($ref);
     }
     
