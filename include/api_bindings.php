@@ -425,6 +425,12 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
 
 function api_get_related_resources($ref)
     {
+    global $enable_related_resources;
+    $access = get_resource_access($ref);
+    if(!$enable_related_resources || $access == 2)
+        {
+        return array();
+        }
     return get_related_resources($ref);
     }
 
