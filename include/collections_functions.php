@@ -618,15 +618,15 @@ function add_collection($user,$collection)
 	# Insert row
 	sql_query("insert into user_collection(user,collection) values ('$user','$collection')");
 	#log this
-	collection_log($collection,"S",0, sql_value ("select username as value from user where ref = $user",""));
+	collection_log($collection,"S",0, sql_value ("select username as value from user where ref = '$user'",""));
 	}
 
 function remove_collection($user,$collection)
 	{
 	# Remove someone else's collection from a user's My Collections
 	sql_query("delete from user_collection where user='$user' and collection='$collection'");
-			#log this
-	collection_log($collection,"T",0, sql_value ("select username as value from user where ref = $user",""));
+	#log this
+	collection_log($collection,"T",0, sql_value ("select username as value from user where ref = '$user'",""));
 	}
 
 if (!function_exists("index_collection")){
