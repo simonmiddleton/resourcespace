@@ -560,12 +560,18 @@ function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by
 
 function api_add_resource_nodes($resource,$nodestring)
     {
+    // This is only for super admins
+    if(!checkperm('a'))
+        {return false;}        
     $nodes = explode(",",$nodestring);
     return add_resource_nodes($resource,$nodes);
     }
     
  function api_add_resource_nodes_multi($resources,$nodestring)
     {
+    // This is only for super admins
+    if(!checkperm('a'))
+        {return false;}        
     $resourcearr = explode(",",$resources);
     $nodes = explode(",",$nodestring);
     return add_resource_nodes_multi($resourcearr,$nodes);
