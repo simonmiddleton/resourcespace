@@ -344,16 +344,15 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 .BasicsBox .PopupCategoryTree {width: 540px; margin-bottom: 20px;}
 
 /*Resource Panel layout*/
-.ResourcePanel {padding:0;margin:0 14px 14px 0;width: 174px;float:left;height:230px;position:relative;}
+.ResourcePanel {padding:0;margin:0 14px 14px 0;width: 174px;float:left;height:230px;position:relative; overflow: hidden;}
 .ResourcePanelPreview {height: 156px;width: 156px;margin: 3px;}
 .ResourcePanelInfo {margin: 5px;overflow:hidden;white-space:nowrap;padding:0;text-align:justify;text-overflow: ellipsis;}   
 .ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0px;float: left;clear: left;display:inline;}   
 .ResourcePanelIcons {padding: 5px;text-align:right;position:absolute;bottom:0;right:0;width:166px;} 
 .ResourcePanelSmallIcons {padding-left: 5px;}   
-.ImageWrapper {height:150px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
+.ImageWrapper {height:174px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperSmall {height:75px;display:block;padding:0;;vertical-align: middle;text-align: center;clear: right;}
 .ImageWrapperLarge {height:320px; display:block; padding:0; vertical-align: middle; text-align:center; clear:right;}
-.ResourcePanel .ImageWrapper {margin-top: 12px;}
 
 .ResourceAlign {width:172px;height:177px;text-align: center;vertical-align: middle;}
 .ResourceTypeIcon { height: 16px;width:16px;float:right;margin-right:5px;margin-top:6px; }

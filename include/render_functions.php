@@ -2266,8 +2266,8 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
         break;
     
         case "thumbs":
-            $defaultwidth = 150;
-            $defaultheight = 150;
+            $defaultwidth = 174;
+            $defaultheight = 174;
         break;        
         
         case "collection":
@@ -2294,7 +2294,6 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
         $width = round($defaultwidth * $ratio);
         $margin = "auto";
         }
-    
     
     ?>
     
