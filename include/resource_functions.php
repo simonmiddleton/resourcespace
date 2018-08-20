@@ -2012,6 +2012,8 @@ function delete_resource($ref)
                 )
             &&
                 !hook('check_single_delete')
+            &&
+                PHP_SAPI != 'cli'
             )
         )
         {return false;} 
