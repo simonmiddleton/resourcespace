@@ -438,3 +438,7 @@ input:checked + .customFieldLabel, .keywordselected
 .TopInpageNav select {
     background-color: #fff;
 }
+
+.keywordselected a:visited, .keywordselected a:link {
+    color: #fff;
+}

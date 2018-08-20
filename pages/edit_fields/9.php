@@ -27,37 +27,22 @@ $add_searched_nodes_function_call = '';
 <div class="dynamickeywords ui-front">
     <input id="<?php echo $name; ?>_selector" type="text" <?php if ($pagename=="search_advanced") { ?> class="SearchWidth" <?php } else {?>  class="stdwidth" <?php } ?>
            name="<?php echo $name; ?>_selector"
-           value="<?php echo $lang['starttypingkeyword']; ?>"
+           placeholder="<?php echo $lang['starttypingkeyword']; ?>"
            onFocus="
                 <?php
                 if($pagename=="edit")
                     {
                     echo "ShowHelp(" . $field["ref"] . ");";
                     }
-                    ?>
-
-                if(this.value=='<?php echo $lang["starttypingkeyword"]; ?>')
-                    {
-                    this.value='';
-                    }
-            "
+                ?>"
            onBlur="
                 <?php
                 if($pagename=="edit")
                     {
                     echo "HideHelp(" . $field["ref"] . ");";
                     }
-                    ?>
-
-                if(this.value=='')
-                    {
-                    this.value='<?php echo $lang["starttypingkeyword"]; ?>'
-                    };
-
-                if(typeof(UpdateResultCount) == 'function' && this.value!='' && this.value!='<?php echo $lang["starttypingkeyword"]; ?>')
-                    {
-                    this.value='<?php echo $lang["starttypingkeyword"]; ?>';
-                    }" />
+                ?>"
+/>
 <?php
 foreach($field['nodes'] as $node)
     {
