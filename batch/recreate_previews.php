@@ -88,7 +88,7 @@ else
     $resources = get_collection_resources($collectionid);   
     }
 
-if(is_array($resources) && count($resources>0))
+if(is_array($resources) && count($resources) > 0)
     {
     foreach ($resources as $resource)
         {
