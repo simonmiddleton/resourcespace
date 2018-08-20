@@ -7001,5 +7001,5 @@ function findDuplicates(array $data, $search)
 
 function metadata_field_view_access($field)
     {
-    return ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field));
+    return (PHP_SAPI == 'cli' || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
     }
