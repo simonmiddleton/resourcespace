@@ -453,6 +453,29 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			}
 		}
 	}
+	
+//Check if we want to use a specified field as a caption below the preview
+if(isset($display_field_below_preview) && is_int($display_field_below_preview))
+	{
+	$df=0;
+	foreach ($fields as $field)
+		{
+		if($field["fref"]==$display_field_below_preview)
+			{
+			$displaycondition=check_view_display_condition($fields,$df);
+			if($displaycondition)
+				{
+				$previewcaption=$fields[$df];
+				// Remove from the array so we don't display it twice
+				unset($fields[$df]);
+				//Reorder array 
+				$fields=array_values($fields);				
+				}
+			}
+		$df++;			
+		}
+	}
+
 
 // Add custom CSS for external users: 
 if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
@@ -644,6 +667,8 @@ if(!hook('replaceviewtitle'))
 
 <?php hook('renderbeforeresourceview', '', array('resource' => $resource)); 
 $download_multisize=true;
+
+
 ?>
 
 <div class="RecordResource">

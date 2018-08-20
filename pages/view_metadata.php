@@ -53,28 +53,6 @@ foreach ($fields_tab_names as $key => $value) {
 }
 
 $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));if($modified_view_tabs!=='' && is_array($modified_view_tabs)){$fields_tab_names=$modified_view_tabs;}
-
-//Check if we want to use a specified field as a caption below the preview
-if(isset($display_field_below_preview) && is_int($display_field_below_preview))
-	{
-	$df=0;
-	foreach ($fields as $field)
-		{
-		if($field["fref"]==$display_field_below_preview)
-			{
-			$displaycondition=check_view_display_condition($fields,$df);
-			if($displaycondition)
-				{
-				$previewcaption=$fields[$df];
-				// Remove from the array so we don't display it twice
-				unset($fields[$df]);
-				//Reorder array 
-				$fields=array_values($fields);				
-				}
-			}
-		$df++;			
-		}
-	}
         
 ?>
         
