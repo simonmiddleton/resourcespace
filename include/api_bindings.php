@@ -577,8 +577,8 @@ function api_add_resource_nodes($resource,$nodestring)
     return add_resource_nodes_multi($resourcearr,$nodes);
     }
     
-function api_resourceLogLastRows($minref = 0, $days = 7, $maxrecords = 0)
+function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0)
     {
-    return resourceLogLastRows($minref, $days, $maxrecords);
+    return resource_log_last_rows($minref, $days, $maxrecords);
     }    
 

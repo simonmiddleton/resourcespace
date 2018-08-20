@@ -100,7 +100,7 @@ function logScript($message, $file = null)
 * 
 * @return array
 */   
- function resourceLogLastRows($minref = 0, $days = 7, $maxrecords = 0)
+ function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0)
     {
     if(!checkperm('v'))
         {
