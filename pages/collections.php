@@ -962,7 +962,9 @@ if ($count_result>0)
 		?>
 <?php if (!hook("resourceview")) { ?>
 		<!--Resource Panel-->
-		<div class="CollectionPanelShell" id="ResourceShell<?php echo urlencode($ref) ?>">
+		<div class="CollectionPanelShell" id="ResourceShell<?php echo urlencode($ref) ?>"
+        <?php if ($add==$ref) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
+        
 		<?php if (!hook("rendercollectionthumb")){?>
 		<?php $access=get_resource_access($result[$n]);
 		$use_watermark=check_use_watermark();?>
@@ -1072,6 +1074,15 @@ if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_view
 	<?php
 	}
 
+if ($add!="")
+{
+# Animate the new item
+?>
+<script type="text/javascript">
+jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($add) ?>").slideDown('fast');
+</script>
+<?php      
+}
 
 ?>
 </div></div>
@@ -1209,6 +1220,9 @@ if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_view
 
 <?php
 draw_performance_footer();
+
+
+
 
 if ($chosen_dropdowns_collection) { ?>
 <!-- Chosen support -->
