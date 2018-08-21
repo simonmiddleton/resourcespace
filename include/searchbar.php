@@ -199,20 +199,18 @@ $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basic
 
 <?php if (!hook("searchbarreplace")) { ?>
 
-  <?php if (!hook("replacesimplesearchheader")){?><h2><?php echo $lang["simplesearch"]?></h2><?php } ?>
+  <?php if (!hook("replacesimplesearchheader") && !$header_search){?><h2><?php echo $lang["simplesearch"]?></h2><?php } ?>
 
-	<p><label for="ssearchbox"><?php echo text("searchpanel")?></label></p>
+	<?php if (!$header_search) { ?><p><label for="ssearchbox"><?php echo text("searchpanel")?></label></p><?php }?>
 	
 	<form id="simple_search_form" method="post" action="<?php echo $baseurl?>/pages/search.php" onSubmit="return CentralSpacePost(this,true);">
     <?php
     generateFormToken("simple_search_form");
 
-    if(!hook("replacesearchbox"))
+    if(!hook("replacesearchbox") && !$header_search)
         {
         ?>
-        <div class="ui-widget">
         <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo htmlspecialchars(stripslashes(@$quicksearch))?>">
-        </div>
         <script>
         <?php
         $autocomplete_src = '';

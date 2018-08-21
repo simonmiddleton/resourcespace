@@ -619,7 +619,7 @@ if (in_array($usergroup,$launch_kb_on_login_for_groups) && getval("login","")!="
 	<?php
 	}
 
-
+hook("homeafterpanels");
 
 
 include "../include/footer.php";

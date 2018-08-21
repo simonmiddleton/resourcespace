@@ -1,5 +1,5 @@
 <?php
-function HookRemote_assistAllSearchbarbottomtoolbar()
+function HookRemote_assistAllHomeafterpanels()
         {
     # Load HTML from the ResourceSpace site, passing the base URL. The base URL allows the ResourceSpace website to feed appropriate options based
     # on whether the installation is a registered trial system, user installation, etc.

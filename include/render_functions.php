@@ -618,7 +618,12 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 			<div id="field_<?php echo htmlspecialchars($field['name']); ?>">
     			<div id="nodes_searched_<?php echo $field['ref']; ?>_statusbox" class="MiniCategoryBox">
                     <?php echo $status_box_elements; ?>
-                </div>
+                </div> 
+                <a href="#"
+                   onClick="
+                        jQuery('#cattree_<?php echo $field['name']; ?>').slideToggle();
+                        
+                        return false;"><?php echo $lang['showhidetree']; ?></a>
                 <div id="cattree_<?php echo $fields[$n]['name']; ?>" class="RecordPanel PopupCategoryTree">
                     <?php
                     include __DIR__ . '/../pages/edit_fields/7.php';
@@ -627,9 +632,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                     $category_tree_open = $original_category_tree_open;
                     ?>
                 </div>
-                <a href="<?php echo "$baseurl/pages/category_tree.php?fieldname=" . $field['name'] . "&fieldref=" . $field['ref']; ?>"
-                   onClick="jQuery('#cattree_<?php echo $field['name']; ?>').show();
-                        return ModalLoad(this, true, true);"><?php echo $lang['select']; ?></a>
+                
             </div>
 			<?php
 			# Add to clear function

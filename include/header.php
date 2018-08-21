@@ -430,7 +430,7 @@ else
     <?php
     generateFormToken("header_search_form");
     ?>
-    <input id="ssearchbox" name="search" class="searchwidth" value="<?php echo (isset($quicksearch)?$htmlspecialchars($quicksearch):"") ?>" />
+    <input id="ssearchbox" name="search" type="text" class="searchwidth" placeholder="<?php echo $lang['simplesearch'] . '...'; ?>" value="<?php echo (isset($quicksearch)?$htmlspecialchars($quicksearch):"") ?>" />
     
     <a href="<?php echo $baseurl; ?>/pages/simple_search.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
                 <i aria-hidden="true" class="fa fa-filter fa-lg fa-fw"></i>
@@ -573,14 +573,14 @@ jQuery(document).ready(function()
     {
     ActivateHeaderLink(<?php echo json_encode($activate_header_link); ?>);
     headerLinksDropdown();
-
     jQuery(document).mouseup(function(e) 
         {
         var linksContainer = jQuery("#DropdownCaret");
 
         if (linksContainer.has(e.target).length === 0 && !linksContainer.is(e.target)) 
             {
-            jQuery('#OverFlowLinks').css("display", "none");
+            jQuery('#OverFlowLinks').fadeOut();
+            //jQuery('#OverFlowLinks').css("display", "none");
             }
         });
 

@@ -1,5 +1,3 @@
-	
-
 #NewsBox {
 	width: 267px;
 	height: 200px;
@@ -19,20 +17,32 @@
 }
 
 #title {
-color: #FFFFFF
+	color: #FFFFFF
 }
 
 #NewsDisplayBox {
 	font-size: 14px;
-        color: #FFFFFF;
+	color: #FFFFFF;
 }
 
-
-#NewsBodyDisplay, #NewsBodyDisplay a:link, #NewsBodyDisplay a:visited{
+#NewsBodyDisplay, #NewsBodyDisplay a:link, #NewsBodyDisplay a:visited {
 	font-size: 14px;
-        color: #FFFFFF;
+	color: #FFFFFF;
 }
 
 #NewsBodyDisplay {
-		color:black;
+	color:black;
+}
+
+#NewsPanel h2 {
+	color: #fff;
+	font-size: 1.4em;
+}
+
+#NewsPanel p {
+	padding: 3px 0;
+}
+
+#NewsPanel {
+	padding: 15px;
 }
