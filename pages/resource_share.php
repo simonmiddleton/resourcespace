@@ -31,7 +31,7 @@ $editexternalurl = (getval("editexternalurl","") != "");
 
 $access       = getvalescaped("access","");
 $expires      = getvalescaped("expires","");
-//$sharepwd     = getvalescaped('sharepassword', '');
+$sharepwd     = getvalescaped('sharepassword', '');
 
 $minaccess=get_resource_access($ref);
 

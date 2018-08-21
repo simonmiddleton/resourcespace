@@ -4085,14 +4085,14 @@ function check_access_key($resource,$key)
         }
     else
         {
-        if($keys[0]["password_hash"] != "");
+        if($keys[0]["password_hash"] != "" && PHP_SAPI != "cli")
             {
             // A share password has been set. Check if user has a valid cookie set
             $share_access_cookie = isset($_COOKIE["share_access"]) ? $_COOKIE["share_access"] : "";
             $check = check_share_password($key,"",$share_access_cookie);
             if(!$check)
                 {
-                $url = generateURL($baseurl . "/pages/share_access.php",array("k"=>$key,"resource"=>$resource,"return_url" => $baseurl . urlencode($_SERVER["REQUEST_URI"])));
+                $url = generateURL($baseurl . "/pages/share_access.php",array("k"=>$key,"resource"=>$resource,"return_url" => $baseurl . (isset($_SERVER["REQUEST_URI"]) ? urlencode($_SERVER["REQUEST_URI"]) : "/r=" . $resource . "&k=" . $key)));
                 redirect($url);
                 exit();
                 }
