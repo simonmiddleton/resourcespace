@@ -89,7 +89,7 @@ $lang["fieldtype-warning_message"]="Warning message";
 $lang["fieldtype-date_range"]="Date Range";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="See <a href=../../documentation/permissions.txt target=_blank>the permissions help text file</a> for further information on permissions.";
+$lang["documentation-permissions"]="See <b><a href=../../documentation/permissions.txt target=_blank>the permissions help text file</a></b> for further information on permissions.";
 $lang["property-reference"]="Reference";
 $lang["property-name"]="Name";
 $lang["property-permissions"]="Permissions";
