@@ -27,6 +27,10 @@ if ((isset($header_colour_style_override) && $header_colour_style_override != ''
         {
         background: <?php echo $header_colour_style_override; ?>;
         }
+    #OverFlowLinks
+        {
+        background: <?php echo $header_colour_style_override; ?>;
+        }
     <?php
     }
 
