@@ -41,6 +41,7 @@ function HookImage_banksAllSearchfiltertop()
             var selected_option = selector.val();
             var siblings = jQuery("#SearchImageBanksItem")
                 .siblings()
+                .not("#ssearchbox")
                 .not("input[type=hidden]")
                 .not("script")
                 .not(".ui-widget")
