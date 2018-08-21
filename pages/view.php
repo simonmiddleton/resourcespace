@@ -755,7 +755,7 @@ elseif ($resource['file_extension']=="swf" && $display_swf){
 else if(1 == $resource['has_image'])
     {
     $use_watermark = check_use_watermark();
-	$use_size="pre";
+	$use_size="scr";
     $imagepath     = get_resource_path($ref, true, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
 	
 	# Retina mode. Get scr if it exists
@@ -765,11 +765,18 @@ else if(1 == $resource['has_image'])
 		if (file_exists($imagepath_retina)) {$imagepath=$imagepath_retina;$use_size="scr";}
 		}
 	
-	# Fall back to thumbnail if pre doesn't exist	
+	# Fall back to preview, then thumbnail if scr doesn't exist	
     if(!file_exists($imagepath))
         {
-		$use_size="thm";
+		$use_size="pre";
 		}
+
+    $imagepath = get_resource_path($ref, true, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
+
+    if(!file_exists($imagepath))
+        {
+        $use_size="thm";
+        }
 	
     $imageurl = get_resource_path($ref, false, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
 

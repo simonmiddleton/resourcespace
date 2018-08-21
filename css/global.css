@@ -1523,3 +1523,7 @@ a.Enabled, a:visited.Enabled {
     width: 250px;
     background-color: rgba(255, 255, 255, 0.9);
 }
+
+#previewimage {
+    max-height: 600px;
+}
