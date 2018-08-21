@@ -2310,3 +2310,102 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     />
     <?php
     }
+
+/**
+* Render the share options (used on collection_share.php and resource_share.php)
+* 
+* @return void
+*/
+function render_share_options($collectionshare=true, $ref, $emailing=false)
+    {
+    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url;
+    global $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string;   
+    
+    if(!hook('replaceemailaccessselector')): ?>
+        <div class="Question" id="question_access">
+            <label for="archive"><?php echo ($emailing ? $lang["externalselectresourceaccess"] : $lang["access"]) ?></label>
+            <select class="stdwidth" name="access" id="access">
+            <?php
+            # List available access levels. The highest level must be the minimum user access level.
+            for ($n=$minaccess;$n<=1;$n++) 
+                { 
+                $selected = getvalescaped("editaccesslevel","") == $n;
+                ?>
+                <option value="<?php echo $n?>" <?php if($selected) echo "selected";?>><?php echo $lang["access" . $n]?></option>
+                <?php 
+                } 
+                ?>
+            </select>
+            <div class="clearerleft"> </div>
+        </div>
+    <?php endif; #hook replaceemailaccessselector
+    
+    if(!hook('replaceemailexpiryselector'))
+        {
+        ?>
+        <div class="Question">
+            <label><?php echo ($emailing ? $lang["externalselectresourceexpires"] : $lang["expires"]) ?></label>
+            <select name="expires" class="stdwidth">
+            <?php 
+            if($resource_share_expire_never) 
+                { ?>
+                <option value=""><?php echo $lang["never"]?></option><?php 
+                } 
+            for ($n=1;$n<=$resource_share_expire_days;$n++)
+                {
+                $date       = time() + (60*60*24*$n);
+                $ymd_date   = date('Y-m-d', $date);
+                $selected   = (substr(getvalescaped("editexpiration",""),0,10) == $ymd_date);
+                $date_text  = nicedate($ymd_date,false,true);
+                $option_class = '';
+                $day_date = date('D', $date);
+                if (($day_date == "Sun") || ($day_date == "Sat"))
+                    {
+                    $option_class = 'optionWeekend';
+                    }
+                ?>
+                <option class="<?php echo $option_class ?>" value="<?php echo $ymd_date ?>" <?php if($selected) echo "selected"; ?>><?php echo $date_text ?></option>
+                <?php
+                } ?>
+            </select>
+            <div class="clearerleft"> </div>
+        </div>
+        <?php 
+        }
+    if (checkperm("x")) 
+        {
+        # Allow the selection of a user group to inherit permissions from 
+        # for this share (the default is to use the current user's user group).
+        ?>
+        <div class="Question">
+            <label for="groupselect"><?php echo ($emailing ? $lang["externalshare_using_permissions_from_user_group"] : $lang["share_using_permissions_from_user_group"]) ?></label>
+            <select id="groupselect" name="usergroup" class="stdwidth">
+            <?php $grouplist = get_usergroups(true);
+            foreach ($grouplist as $group)
+                {
+                if(!empty($allowed_external_share_groups) && !in_array($group['ref'], $allowed_external_share_groups))
+                    {
+                    continue;
+                    }
+
+                $selected = getval("editgroup","") == $group["ref"] || (getval("editgroup","") == "" && $usergroup == $group["ref"]);
+                ?>
+                <option value="<?php echo $group["ref"] ?>" <?php if ($selected) echo "selected" ?>><?php echo $group["name"] ?></option>
+                <?php
+                }
+                ?>
+            </select>
+            <div class="clearerleft"> </div>
+        </div>
+        <?php 
+        }?>
+        
+        <div class="Question">
+            <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
+            <input type="password" id="sharepassword" name="sharepassword" class="stdwidth" <?php if(getval("posting","") == "true"){echo "value=\"(unchanged)\"";} ?>>
+        </div>
+        <?php
+        hook("additionalresourceshare");
+        ?>
+    <?php        
+    }

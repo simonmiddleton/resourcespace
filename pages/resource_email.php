@@ -5,6 +5,7 @@ include "../include/authenticate.php";
 include "../include/resource_functions.php";
 include "../include/search_functions.php";
 include_once "../include/collections_functions.php";
+include_once '../include/render_functions.php';
 
 $ref=getvalescaped("ref","",true);
 // Fetch resource data
@@ -40,6 +41,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	if (hook("modifyresourceaccess")){$access=hook("modifyresourceaccess");}
 	$expires=getvalescaped("expires","");
 	$group=getvalescaped("usergroup","");
+    $sharepwd = getvalescaped('sharepassword', '');
 	$list_recipients=getvalescaped("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
 	
 	$use_user_email=getvalescaped("use_user_email",false);
@@ -69,8 +71,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 				add_resource_to_collection($relatedshare,$sharedcollection);
 				}			
 			}
-			
-		$errors=email_collection($sharedcollection,i18n_get_collection_name($sharedcollection),$userfullname,$users,$message,false,$access,$expires,$user_email,$from_name,$cc,false,"","",$list_recipients,$add_internal_access);
+		$errors=email_collection($sharedcollection,i18n_get_collection_name($sharedcollection),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,false,"","",$list_recipients,$add_internal_access, $sharepwd);
 		// Hide from drop down by default
 		show_hide_collection($sharedcollection, false, $userref);
 		
@@ -90,7 +91,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	else
 		{
 		// Email single resource
-		$errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$useraccess,$group);
+		$errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$useraccess,$group, $sharepwd);
 		if ($errors=="")
 			{
 			// Log this			
@@ -277,72 +278,8 @@ include "../include/user_select.php"; ?>
 
 if(!$user_select_internal)
 	{
-
-	if(!hook("replaceemailaccessselector")){?>
-	<div class="Question" id="question_access">
-	<label for="access"><?php echo $lang["externalselectresourceaccess"]?></label>
-	<select class="stdwidth" name="access" id="access">
-	<?php
-	// List available access levels. The highest level must be the minimum user access level.
-	for ($n=$useraccess;$n<=1;$n++)  { ?>
-	<option value="<?php echo $n?>"><?php echo $lang["access" . $n]?></option>
-	<?php } ?>
-	</select>
-	<div class="clearerleft"> </div>
-	</div>
-	<?php } ?>
-
-
-
-	<?php if(!hook("replaceemailexpiryselector")){?>
-	<div class="Question">
-	<label><?php echo $lang["externalselectresourceexpires"]?></label>
-	<select name="expires" class="stdwidth">
-	<?php if($resource_share_expire_never) { ?><option value=""><?php echo $lang["never"]?></option><?php }
-					
-	for ($n=1;$n<=150;$n++)
-		{
-		$date = time()+(60*60*24*$n);
-		$d    = date("D",$date);
-		$option_class = '';
-		if (($d == "Sun") || ($d == "Sat"))
-			{
-			$option_class = 'optionWeekend';
-			} ?>
-		<option class="<?php echo $option_class ?>" value="<?php echo date("Y-m-d",$date)?>"><?php echo nicedate(date("Y-m-d",$date),false,true)?></option>
-		<?php
-		}
-	?>
-	</select>
-	<div class="clearerleft"> </div>
-	</div>
-	<?php } ?>
-
-
-	<?php if (checkperm("x")) {
-	# Allow the selection of a user group to inherit permissions from for this share (the default is to use the current user's user group).
-	?>
-	<div class="Question">
-	<label for="groupselect"><?php echo $lang["externalshare_using_permissions_from_user_group"] ?></label>
-	<select id="groupselect" name="usergroup" class="stdwidth">
-    <?php
-    $grouplist = get_usergroups(true);
-    foreach($grouplist as $group)
-        {
-        if(!empty($allowed_external_share_groups) && !in_array($group['ref'], $allowed_external_share_groups))
-            {
-            continue;
-            }
-        ?>
-        <option value="<?php echo $group["ref"] ?>" <?php if ($usergroup==$group["ref"]) { ?>selected<?php } ?>><?php echo $group["name"] ?></option>
-        <?php
-        }
-        ?>
-	</select>
-	<div class="clearerleft"> </div>
-	</div>
-	<?php } 
-	}
+    render_share_options(false, $ref, true);    
+    }
 	?>
 
 <?php hook("resourceemailafterexternal");?>

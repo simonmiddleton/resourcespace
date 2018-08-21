@@ -31,6 +31,7 @@ $editexternalurl = (getval("editexternalurl","") != "");
 
 $access       = getvalescaped("access","");
 $expires      = getvalescaped("expires","");
+//$sharepwd     = getvalescaped('sharepassword', '');
 
 $minaccess=get_resource_access($ref);
 
@@ -130,89 +131,11 @@ if($editing && !$editexternalurl)
                                  
                     if ($access=="" || ($editing && !$editexternalurl))
                         {
-                        ?>
+                        ?>                    
                         <p><?php if (!$editing || $editexternalurl){ echo $lang["selectgenerateurlexternal"]; } ?></p>
-                        
-                        <?php if(!hook('replaceemailaccessselector')): ?>
-                            <div class="Question" id="question_access">
-                                <label for="archive"><?php echo $lang["access"]?></label>
-                                <select class="stdwidth" name="access" id="access">
-                                <?php
-                                # List available access levels. The highest level must be the minimum user access level.
-                                for ($n=$minaccess;$n<=1;$n++) 
-                                    { 
-                                    $selected = getvalescaped("editaccesslevel","") == $n;
-                                    ?>
-                                    <option value="<?php echo $n?>" <?php if($selected) echo "selected";?>><?php echo $lang["access" . $n]?></option>
-                                    <?php 
-                                    } 
-                                    ?>
-                                </select>
-                                <div class="clearerleft"> </div>
-                            </div>
-                        <?php endif; #hook replaceemailaccessselector
-                        
-                        if(!hook('replaceemailexpiryselector'))
-                        	{
-                        	?>
-							<div class="Question">
-								<label><?php echo $lang["expires"]?></label>
-								<select name="expires" class="stdwidth">
-								<?php 
-								if($resource_share_expire_never) 
-									{ ?>
-									<option value=""><?php echo $lang["never"]?></option><?php 
-									} 
-								for ($n=1;$n<=$resource_share_expire_days;$n++)
-									{
-									$date       = time() + (60*60*24*$n);
-									$ymd_date   = date('Y-m-d', $date);
-									$selected   = (substr(getvalescaped("editexpiration",""),0,10) == $ymd_date);
-									$date_text  = nicedate($ymd_date,false,true);
-									$option_class = '';
-									$day_date = date('D', $date);
-									if (($day_date == "Sun") || ($day_date == "Sat"))
-										{
-										$option_class = 'optionWeekend';
-										}
-									?>
-									<option class="<?php echo $option_class ?>" value="<?php echo $ymd_date ?>" <?php if($selected) echo "selected"; ?>><?php echo $date_text ?></option>
-									<?php
-									} ?>
-								</select>
-								<div class="clearerleft"> </div>
-							</div>
-							<?php 
-                        	}
-                        if (checkperm("x")) 
-                        	{
-							# Allow the selection of a user group to inherit permissions from 
-                        	# for this share (the default is to use the current user's user group).
-							?>
-							<div class="Question">
-								<label for="groupselect"><?php echo $lang["share_using_permissions_from_user_group"] ?></label>
-								<select id="groupselect" name="usergroup" class="stdwidth">
-								<?php $grouplist = get_usergroups(true);
-								foreach ($grouplist as $group)
-									{
-                                    if(!empty($allowed_external_share_groups) && !in_array($group['ref'], $allowed_external_share_groups))
-                                        {
-                                        continue;
-                                        }
-
-									$selected = getval("editgroup","") == $group["ref"] || (getval("editgroup","") == "" && $usergroup == $group["ref"]);
-									?>
-									<option value="<?php echo $group["ref"] ?>" <?php if ($selected) echo "selected" ?>><?php echo $group["name"] ?></option>
-									<?php
-									}
-									?>
-								</select>
-								<div class="clearerleft"> </div>
-							</div>
-							<?php 
-							}
-							hook("additionalresourceshare");
-							?>
+                        <?php
+                        render_share_options(false, $ref);
+                        ?>
                         <div class="QuestionSubmit" s]]>
                             <label>&nbsp;</label>
                             <?php
@@ -237,12 +160,12 @@ if($editing && !$editexternalurl)
 
                         if(empty($allowed_external_share_groups) || (!empty($allowed_external_share_groups) && in_array($user_group, $allowed_external_share_groups)))
                             {
-                            $generated_access_key = generate_resource_access_key($ref, $userref, $access, $expires, 'URL', $user_group);
+                            $generated_access_key = generate_resource_access_key($ref, $userref, $access, $expires, 'URL', $user_group, $sharepwd);
                             }
                         else if (!empty($allowed_external_share_groups) && !in_array($usergroup, $allowed_external_share_groups))
                         	{
                         	// Not allowed to select usergroup but this usergroup can not be used, default to the first entry in allowed_external_share_groups
-                        	$generated_access_key = generate_resource_access_key($ref, $userref, $access, $expires, 'URL', $allowed_external_share_groups[0]);
+                        	$generated_access_key = generate_resource_access_key($ref, $userref, $access, $expires, 'URL', $allowed_external_share_groups[0], $sharepwd);
                         	}
 
                         if('' != $generated_access_key)
@@ -265,7 +188,7 @@ if($editing && !$editexternalurl)
                     # Process editing of external share
                     if ($editexternalurl)
                         {
-                        $editsuccess = edit_resource_external_access($editaccess,$access,$expires);
+                        $editsuccess = edit_resource_external_access($editaccess,$access,$expires,$user_group,$sharepwd);
                         if($editsuccess)
                             {
                             echo "<span style='font-weight:bold;'>".$lang['changessaved']." - <em>".$editaccess."</em>";
@@ -331,8 +254,8 @@ if($editing && !$editexternalurl)
                         	}                                                  
                         $url    .= "&k=" . urlencode($key["access_key"]);
                         $type    = ($collection_share)     ? $lang["sharecollection"] : $lang["share-resource"];
-                        $expires = ($key["expires"] == "") ? $lang["never"] : nicedate($key["expires"],false);
-                        $access  = ($key["access"] == -1)  ? "" : $lang["access" . $key["access"]];
+                        $keyexpires = ($key["expires"] == "") ? $lang["never"] : nicedate($key["expires"],false);
+                        $keyaccess  = ($key["access"] == -1)  ? "" : $lang["access" . $key["access"]];
                         ?>
                         <tr>
                             <td><div class="ListTitle"><a target="_blank" href="<?php echo $url ?>"><?php echo htmlspecialchars($key["access_key"]) ?></a></div></td>
@@ -341,8 +264,8 @@ if($editing && !$editexternalurl)
                             <td><?php echo htmlspecialchars($key["emails"])                   ?></td>
                             <td><?php echo htmlspecialchars(nicedate($key["maxdate"],true));  ?></td>
                             <td><?php echo htmlspecialchars(nicedate($key["lastused"],true)); ?></td>
-                            <td><?php echo htmlspecialchars($expires)                         ?></td>
-                            <td><?php echo htmlspecialchars($access);                         ?></td>
+                            <td><?php echo htmlspecialchars($keyexpires)                         ?></td>
+                            <td><?php echo htmlspecialchars($keyaccess);                         ?></td>
                             <?php
                             if (!empty($social_media_links))
                                 {
@@ -436,13 +359,13 @@ if($editing && !$editexternalurl)
 					<?php
 						foreach ($custom_access_rows as $ca)
 						{
-						$expires = ($ca["expires"] == "") ? $lang["never"] : nicedate($ca["expires"],false);
-						$access  = ($ca["access"] == -1)  ? "" : $lang["access" . $ca["access"]];
+						$custexpires = ($ca["expires"] == "") ? $lang["never"] : nicedate($ca["expires"],false);
+						$custaccess  = ($ca["access"] == -1)  ? "" : $lang["access" . $ca["access"]];
 						?><tr>
 							<td><?php echo htmlspecialchars($ca["user"]); ?></td>
 							<td><?php echo htmlspecialchars($ca["usergroup"]); ?></td>
-							<td><?php echo htmlspecialchars($expires); ?></td>
-							<td><?php echo htmlspecialchars($access); ?></td>
+							<td><?php echo htmlspecialchars($custexpires); ?></td>
+							<td><?php echo htmlspecialchars($custaccess); ?></td>
 							<td><div class="ListTools"><a href="#" onClick="return resourceShareDeleteUserCustomAccess(<?php echo get_user_by_username($ca["user"]) ?>);"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a> </td>
 						</tr>
 						<?php

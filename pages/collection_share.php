@@ -158,78 +158,16 @@ include "../include/header.php";
 			
 		$access=getvalescaped("access","");
 		$expires=getvalescaped("expires","");
+        $sharepwd = getvalescaped('sharepassword', '');
 		if ($access=="" || ($editing && !$editexternalurl))
 			{
 			?>
 			<p><?php if (!$editing || $editexternalurl){echo $lang["selectgenerateurlexternal"];} ?></p>
 			
-			<?php if(!hook('replaceemailaccessselector')): ?>
-			<div class="Question" id="question_access">
-			<label for="archive"><?php echo $lang["access"]?></label>
-			<select class="stdwidth" name="access" id="access">
 			<?php
-			# List available access levels. The highest level must be the minimum user access level.
-			for ($n=$minaccess;$n<=1;$n++) { ?>
-			<option value="<?php echo $n?>" <?php if(getvalescaped("editaccesslevel","")==$n){echo "selected";}?>><?php echo $lang["access" . $n]?></option>
-			<?php } ?>
-			</select>
-			<div class="clearerleft"> </div>
-			</div>
-			<?php endif; #hook replaceemailaccessselector
-			
-			if(!hook('replaceemailexpiryselector'))
-				{
-				?>
-				<div class="Question">
-				<label><?php echo $lang["expires"]?></label>
-				<select name="expires" class="stdwidth">
-				<?php 
-				global $collection_share_expire_days, $collection_share_expire_never;
-				if($collection_share_expire_never){?><option value=""><?php echo $lang["never"]?></option><?php }?>
-				<?php 
-				for ($n=1;$n<=$collection_share_expire_days;$n++)
-					{
-					$date = time()+(60*60*24*$n);
-					$d    = date("D",$date);
-					$option_class = '';
-					if (($d == "Sun") || ($d == "Sat"))
-						{
-						$option_class = 'optionWeekend';
-						} ?>
-					<option class="<?php echo $option_class ?>" value="<?php echo date("Y-m-d",$date)?>" <?php if(substr(getvalescaped("editexpiration",""),0,10)==date("Y-m-d",$date)){echo "selected";}?>><?php echo nicedate(date("Y-m-d",$date),false,true)?></option>
-					<?php
-					}
-				?>
-				</select>
-				<div class="clearerleft"> </div>
-				</div>
-				<?php
-				}
-			
-			if (checkperm("x")) {
-			# Allow the selection of a user group to inherit permissions from for this share (the default is to use the current user's user group).
-			?>
-			<div class="Question">
-			<label for="groupselect"><?php echo $lang["share_using_permissions_from_user_group"] ?></label>
-			<select id="groupselect" name="usergroup" class="stdwidth">
-			<?php $grouplist=get_usergroups(true);
-			foreach ($grouplist as $group)
-				{
-                if(!empty($allowed_external_share_groups) && !in_array($group['ref'], $allowed_external_share_groups))
-                    {
-                    continue;
-                    }
-				?>
-				<option value="<?php echo $group["ref"] ?>" <?php if (getval("editgroup","")==$group["ref"] || (getval("editgroup","")=="" && $usergroup==$group["ref"])) { ?>selected<?php } ?>><?php echo $group["name"] ?></option>
-				<?php
-				}
-			?>
-			</select>
-			<div class="clearerleft"> </div>
-			</div>
-			<?php } ?>
-			
-			<?php hook("additionalcollectionshare");?>
+            render_share_options(true, $ref);
+            
+			hook("additionalcollectionshare");?>
 			
 			<div class="QuestionSubmit">
 			<label for="buttons"> </label>
@@ -255,12 +193,12 @@ include "../include/header.php";
 
             if(empty($allowed_external_share_groups) || (!empty($allowed_external_share_groups) && in_array($user_group, $allowed_external_share_groups)))
                 {
-                $generated_access_key = generate_collection_access_key($ref, 0, 'URL', $access, $expires, $user_group);
+                $generated_access_key = generate_collection_access_key($ref, 0, 'URL', $access, $expires, $user_group, $sharepwd);
                 }
             else if (!empty($allowed_external_share_groups) && !in_array($usergroup, $allowed_external_share_groups))
                     	{
                     	// Not allowed to select usergroup but this usergroup can not be used, default to the first entry in allowed_external_share_groups
-                    	$generated_access_key = generate_resource_access_key($ref, $userref, $access, $expires, 'URL', $allowed_external_share_groups[0]);
+                    	$generated_access_key = generate_resource_access_key($ref, $userref, $access, $expires, 'URL', $allowed_external_share_groups[0], $sharepwd);
                     	}
 
             if('' != $generated_access_key)
@@ -283,7 +221,7 @@ include "../include/header.php";
 		# Process editing of external share
 		if ($editexternalurl)
 			{
-			$editsuccess=edit_collection_external_access($editaccess,$access,$expires,getvalescaped("usergroup",""));
+			$editsuccess=edit_collection_external_access($editaccess,$access,$expires,getvalescaped("usergroup",""),$sharepwd);
 			if($editsuccess){echo "<span style='font-weight:bold;'>".$lang['changessaved']." - <em>".$editaccess."</em>";}
 			}
 		}

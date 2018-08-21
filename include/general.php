@@ -4074,10 +4074,10 @@ function check_access_key($resource,$key)
     
     # Option to plugin in some extra functionality to check keys
     if (hook("check_access_key","",array($resource,$key))===true) {return true;}
-    global $external_share_view_as_internal, $is_authenticated;
+    global $external_share_view_as_internal, $is_authenticated, $baseurl;
         if($external_share_view_as_internal && (isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false) && !(isset($is_authenticated) && $is_authenticated))){return false;} // We want to authenticate the user if not already authenticated so we can show the page as internal
     
-    $keys=sql_query("select user,usergroup,expires from external_access_keys where resource='$resource' and access_key='$key' and (expires is null or expires>now())");
+    $keys=sql_query("select user,usergroup,expires,password_hash from external_access_keys where resource='$resource' and access_key='$key' and (expires is null or expires>now())");
 
     if (count($keys)==0)
         {
@@ -4085,8 +4085,20 @@ function check_access_key($resource,$key)
         }
     else
         {
-        # "Emulate" the user that e-mailed the resource by setting the same group and permissions
-        
+        if($keys[0]["password_hash"] != "");
+            {
+            // A share password has been set. Check if user has a valid cookie set
+            $share_access_cookie = isset($_COOKIE["share_access"]) ? $_COOKIE["share_access"] : "";
+            $check = check_share_password($key,"",$share_access_cookie);
+            if(!$check)
+                {
+                $url = generateURL($baseurl . "/pages/share_access.php",array("k"=>$key,"resource"=>$resource,"return_url" => $baseurl . urlencode($_SERVER["REQUEST_URI"])));
+                redirect($url);
+                exit();
+                }
+            }
+            
+        # "Emulate" the user that e-mailed the resource by setting the same group and permissions        
         $user=$keys[0]["user"];
         $expires=$keys[0]["expires"];
                 
@@ -7002,4 +7014,47 @@ function findDuplicates(array $data, $search)
 function metadata_field_view_access($field)
     {
     return (PHP_SAPI == 'cli' || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
+    }
+
+
+/**
+* Check that access for given external share key is correct
+* 
+* @param array  $key       External access key 
+* @param string $password  Share password to check
+* @param string $cookie    Share session cookie that has been set previously
+* 
+* @return boolean
+*/    
+function check_share_password($key,$password,$cookie)
+    {
+    global $scramble_key, $baseurl;
+    $sharehash = sql_value("SELECT password_hash value FROM external_access_keys WHERE access_key='" . escape_check($key) . "'","");
+    if($password != "")
+        {
+        $hashcheck = hash('sha256', $key . $password . $scramble_key);
+        $valid = $hashcheck == $sharehash;
+        debug("checking share access password for key: " . $key);
+        }
+    else
+        {
+        $hashcheck = hash('sha256',  date("Ymd") . $key . $sharehash . $scramble_key);
+        $valid = $hashcheck == $cookie;
+        debug("checking share access cookie for key: " . $key);    
+        }
+    
+    if(!$valid)
+        {
+        debug("failed share access password for key: " . $key);
+        return false;    
+        }
+        
+    if($cookie == "")
+        {
+        // Set a cookie for this session so password won't be required again
+        $sharecookie = hash('sha256',  date("Ymd") . $key . $sharehash . $scramble_key); 
+        rs_setcookie("share_access",$sharecookie, 0, "", "", substr($baseurl,0,5)=="https", true);
+        }
+    
+    return true;   
     }

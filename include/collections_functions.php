@@ -206,7 +206,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 				# Insert a new access key entry for this resource/collection.
 				global $userref;
 				
-				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup) values ('$resource','" . escape_check($keys[$n]["access_key"]) . "','$userref','$collection',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ")");
+				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('$resource','" . escape_check($keys[$n]["access_key"]) . "','$userref','$collection',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
 				
 				#log this
 				collection_log($collection,"s",$resource, $keys[$n]["access_key"]);
@@ -1094,7 +1094,7 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null)
     }
 
 if (!function_exists("email_collection")){
-function email_collection($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$themeshare=false,$themename="",$themeurlsuffix="",$list_recipients=false, $add_internal_access=false,$group="")
+function email_collection($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$themeshare=false,$themename="",$themeurlsuffix="",$list_recipients=false, $add_internal_access=false,$group="",$sharepwd="")
 	{
 	# Attempt to resolve all users in the string $userlist to user references.
 	# Add $collection to these user's 'My Collections' page
@@ -1243,7 +1243,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 				# Do we need to add an external access key for this user (e-mail specified rather than username)?
 				if ($key_required[$nx1])
 					{
-					$k=generate_collection_access_key($reflist[$nx2],$feedback,$emails[$nx1],$access,$expires,$group);
+					$k=generate_collection_access_key($reflist[$nx2],$feedback,$emails[$nx1],$access,$expires,$group,$sharepwd);
 					$key="&k=". $k;
 					$emailcollectionmessageexternal=true;
 					}
@@ -1317,10 +1317,10 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 }	
 
 
-function generate_collection_access_key($collection,$feedback=0,$email="",$access=-1,$expires="",$group="")
+function generate_collection_access_key($collection,$feedback=0,$email="",$access=-1,$expires="",$group="", $sharepwd="")
 	{
 	# For each resource in the collection, create an access key so an external user can access each resource.
-	global $userref,$usergroup;
+	global $userref,$usergroup,$scramble_key;
 	if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
 	$k=substr(md5($collection . "," . time()),0,10);
 	$r=get_collection_resources($collection);
@@ -1329,11 +1329,11 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
 		# Add the key to each resource in the collection
 		if(can_share_resource($r[$m]))
 			{
-			sql_query("insert into external_access_keys(resource,access_key,collection,user,usergroup,request_feedback,email,date,access,expires) values ('" . $r[$m] . "','$k','$collection','$userref','$group','$feedback','" . escape_check($email) . "',now(),$access," . (($expires=="")?"null":"'" . $expires . "'"). ");");
+			sql_query("insert into external_access_keys(resource,access_key,collection,user,usergroup,request_feedback,email,date,access,expires, password_hash) values ('" . $r[$m] . "','$k','$collection','$userref','$group','$feedback','" . escape_check($email) . "',now(),$access," . (($expires=="")?"null":"'" . $expires . "'"). "," . (($sharepwd != "" && $sharepwd != "(unchanged)") ? "'" . hash('sha256', $k . $sharepwd . $scramble_key) . "'": "null") . ");");
 			}
 		}
 	
-	hook("generate_collection_access_key","",array($collection,$k,$userref,$feedback,$email,$access,$expires,$group));
+	hook("generate_collection_access_key","",array($collection,$k,$userref,$feedback,$email,$access,$expires,$group,$sharepwd));
 	return $k;
 	}
 	
@@ -1914,7 +1914,7 @@ function get_collection_external_access($collection)
 	{
 	# Return all external access given to a collection.
 	# Users, emails and dates could be multiple for a given access key, an in this case they are returned comma-separated.
-	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,usergroup from external_access_keys where collection='$collection' group by access_key order by date");
+	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,usergroup,password_hash from external_access_keys where collection='$collection' group by access_key order by date");
 	}
 }
 function delete_collection_access_key($collection,$access_key)
@@ -2089,14 +2089,14 @@ function is_collection_approved($collection)
 		return array_unique($collectionstates);
 		}
 
-function edit_collection_external_access($key,$access=-1,$expires="",$group="")
+function edit_collection_external_access($key,$access=-1,$expires="",$group="",$sharepwd="")
 	{
-	global $userref,$usergroup;
+	global $userref,$usergroup, $scramble_key;
 	if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
 	if ($key==""){return false;}
 	# Update the expiration and acccess
-	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group' where access_key='$key'");
-	hook("edit_collection_external_access","",array($key,$access,$expires,$group));
+	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "" && $sharepwd != "(unchanged)") ? ", password_hash='" . hash('sha256', $key . $sharepwd . $scramble_key) . "'": "") . " where access_key='$key'");
+	hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd));
 	return true;
 	}
 	

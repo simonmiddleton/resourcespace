@@ -3676,13 +3676,13 @@ function get_custom_access_user($resource,$user)
 	return sql_value("select access value from resource_custom_access where resource='$resource' and user='$user' and (user_expires is null or user_expires>now())",false);
 	}
 
-function edit_resource_external_access($key,$access=-1,$expires="",$group="")
+function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sharepwd="")
 	{
-	global $userref,$usergroup;
+	global $userref,$usergroup, $scramble_key;
 	if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
 	if ($key==""){return false;}
 	# Update the expiration and acccess
-	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group' where access_key='$key'");
+	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "" && $sharepwd != "(unchanged)") ? ", password_hash='" . hash('sha256', $key . $sharepwd . $scramble_key) . "'": "") . " where access_key='$key'");
 	hook('edit_resource_external_access','',array($key,$access,$expires,$group));
 	return true;
 	}
@@ -4687,7 +4687,7 @@ function generate_resource_access_key($resource,$userref,$access,$expires,$email
         global $userref,$usergroup, $scramble_key;
 		if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
         $k=substr(md5(time()),0,10);
-		sql_query("insert into external_access_keys(resource,access_key,user,access,expires,email,date,usergroup) values ('$resource','$k','$userref','$access'," . (($expires=="")?"null":"'" . $expires . "'"). ",'" . escape_check($email) . "',now(),'$group'," . ($sharepwd != "" ? "'" . hash('sha256', $k . $sharepwd . $scramble_key) . "'": "null") . ");");
+		sql_query("insert into external_access_keys(resource,access_key,user,access,expires,email,date,usergroup,password_hash) values ('$resource','$k','$userref','$access'," . (($expires=="")?"null":"'" . $expires . "'"). ",'" . escape_check($email) . "',now(),'$group'," . (($sharepwd != "" && $sharepwd != "(unchanged)") ? "'" . hash('sha256', $k . $sharepwd . $scramble_key) . "'": "null") . ");");
 		hook("generate_resource_access_key","",array($resource,$k,$userref,$email,$access,$expires,$group));
         return $k;
         }
@@ -4697,7 +4697,7 @@ function get_resource_external_access($resource)
 	{
 	# Return all external access given to a resource 
 	# Users, emails and dates could be multiple for a given access key, an in this case they are returned comma-separated.
-	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup from external_access_keys where resource='$resource' group by access_key,access,expires,collection,usergroup order by maxdate");
+	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup, password_hash from external_access_keys where resource='$resource' group by access_key,access,expires,collection,usergroup order by maxdate");
 	}
 }
         
