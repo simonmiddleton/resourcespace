@@ -1525,5 +1525,9 @@ a.Enabled, a:visited.Enabled {
 }
 
 #previewimage {
-    max-height: 600px;
+    max-height: 650px;
+}
+
+#ResourceToolsDiv {
+    margin-top: -46px;
 }

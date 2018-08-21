@@ -1102,7 +1102,7 @@ hook("renderbeforerecorddownload");
 	hook("beforeresourcetoolsheader");
 	if (!hook('replaceresourcetoolsheader')) {
 ?>
-<h2 id="resourcetools"><?php echo $lang["resourcetools"]?></h2>
+<h2 id="resourcetools"><?php echo $lang["columnheader-resource_downloads"]?></h2>
 <?php
 	}
 
@@ -1500,6 +1500,7 @@ if (!$videojs && $use_mp3_player && file_exists($mp3realpath) && $access==0)
 hook("additionalresourcetools3");
  } 
 if(!hook("replaceactionslistopen")){?>
+<div id="ResourceToolsDiv">
 <ul id="ResourceToolsContainer">
 <?php
 } # end hook("replaceactionslistopen")
@@ -1510,6 +1511,7 @@ if(!hook("replaceactionslistopen")){?>
 hook ("resourceactions") ?>
 <?php if ($k=="" || $internal_share_access) { ?>
 <?php if (!hook("replaceresourceactions")) {
+    echo "<h2>" . $lang["resourcetools"] . "</h2>";
 	hook("resourceactionstitle");
 	 if ($resource_contact_link)	
 	 	{ ?>
@@ -1636,6 +1638,7 @@ hook("resourceactions_anonymous");
 if(!hook('replaceactionslistclose')){
 ?>
 </ul>
+</div>
 <?php } # end hook('replaceactionslistclose') ?>
 <div class="clearerleft"> </div>
 
