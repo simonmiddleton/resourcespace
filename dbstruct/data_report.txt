@@ -306,6 +306,16 @@ select
 (select count(*) from collection_resource) as 'Collection resource relationships',
 (select count(*) from user) as 'Total users';
 "
-17,"Mail Log","select ref, date, mail_to, mail_from, subject from mail_log ml
-where
-date>=date('[from-y]-[from-m]-[from-d]') and date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)"
+17,"Mail Log","
+SELECT 
+  ml.ref, 
+  date, 
+  mail_to 'TO', 
+  IFNULL(u.username, 'SYSTEM') 'FROM', 
+  subject 
+FROM mail_log ml
+LEFT JOIN user u ON u.ref=ml.mail_from 
+WHERE
+  date>=date('[from-y]-[from-m]-[from-d]') and 
+  date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
+"
