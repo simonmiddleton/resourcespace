@@ -1128,7 +1128,7 @@ if($simpleview && $themes_show_background_image)
     {
     $slideshow_files = get_slideshow_files_data();
 
-    foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
+    foreach($slideshow_files as $slideshow_file_info)
         {
         if(isset($background_image_url) || !file_exists($slideshow_file_info['file_path']))
             {
@@ -1137,7 +1137,7 @@ if($simpleview && $themes_show_background_image)
 
         // Set first image found when refreshing. Otherwise, the system picks up the last image that dash background
         // changed to when navigating using CentralSpaceLoad.
-        $background_image_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_image}";
+        $background_image_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info['ref']}";
         }
         
     if(!$featured_collection_static_bg)
