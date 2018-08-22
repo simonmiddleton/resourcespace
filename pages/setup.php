@@ -117,14 +117,28 @@ function url_exists($url)
     $host = @$parsed_url['host'];
     $path = @$parsed_url['path'];
     $port = @$parsed_url['port'];
-    if (empty($path)) $path = "/";
-    if (!isset($port)) {$port=0;}
-    if ($port==0) {$port=80;}
+    $scheme = @$parsed_url['scheme'];
+    if (empty($path))
+        {
+        $path = "/";
+        }
+
+    $hostprefix = "";
+    if($scheme=="https")
+        {
+        $port=443;
+        $hostprefix = "ssl://";
+        }
+    elseif (!isset($port) || $port==0)
+        {
+        $port=80;
+        }
+
     // Build HTTP 1.1 request header.
     $headers =  "GET $path HTTP/1.1\r\n" .
                 "Host: $host\r\n" .
                 "User-Agent: RS-Installation/1.0\r\n\r\n";
-    $fp = fsockopen($host, $port, $errno, $errmsg, 5); //5 second timeout.  Assume that if we can't open the socket connection quickly the host or port are probably wrong.
+    $fp = fsockopen($hostprefix . $host, $port, $errno, $errmsg, 5); //5 second timeout.  Assume that if we can't open the socket connection quickly the host or port are probably wrong.
     if (!$fp) {
         return false;
     }
@@ -449,10 +463,17 @@ h2#dbaseconfig{  min-height: 32px;}
 			$storagedir = dirname(__FILE__)."/../filestore";
 			$lang = set_language($defaultlanguage); # Updates $lang with $storagedir which is used in some strings.
 			}
-		if (isset($_SERVER['HTTP_HOST']))
-			$baseurl = 'http://'.$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'],0,strlen($_SERVER['PHP_SELF'])-16);
-		else
-			$baseurl = 'http://'.php_uname('n'); //Set the baseurl to the machine hostname. 
+        if (isset($_SERVER['HTTP_HOST']))
+            {
+            # Set HTTPS URL if necessary
+            $urlprefix = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+            $port = (isset($_SERVER["SERVER_PORT"]) && !in_array($_SERVER["SERVER_PORT"],array(80,443))) ? (":" . $_SERVER["SERVER_PORT"]) : "";
+            $baseurl = $urlprefix . "://" . $_SERVER['HTTP_HOST'] . substr($_SERVER['PHP_SELF'],0,strlen($_SERVER['PHP_SELF'])-16) . $port;
+            }
+        else
+            {
+            $baseurl = 'http://'.php_uname('n'); //Set the baseurl to the machine hostname.
+            }
 
                 // Setup search paths (Currently only Linux/Mac OS X)
 		$os=php_uname('s');
@@ -755,7 +776,7 @@ h2#dbaseconfig{  min-height: 32px;}
 ?>
 <?php //Output Section
 
-if ((isset($_REQUEST['submit'])) && (!isset($errors)))
+if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
 	{
 	//Form submission was a success.  Output the config file and refrain from redisplaying the form.
 	$fhandle = fopen($outputfile, 'w') or die ("Error opening output file.  (This should never happen, we should have caught this before we got here)");
@@ -1347,8 +1368,6 @@ else
 					</div>
 				</div>
 			</div>
-
-		
 		<input type="submit" id="submit" name="submit" value="<?php echo $lang["setup-begin_installation"];?>"/>
 	</div>
 </form>
