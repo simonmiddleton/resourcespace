@@ -55,7 +55,7 @@ input[readonly] {color: #000000;}
 #ThemeBoxPanel, #SearchBoxPanel, #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge
 	{
 	border-radius:4px;
-    overflow: auto;
+  overflow: hidden;
 	}
 .ResourcePanel
 	{
