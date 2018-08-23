@@ -32,9 +32,9 @@ function Hookyt2rsViewrenderinnerresourcepreview()
 		}
 	  else
 		{
-		$youtube_url_emb = "http://www.youtube.com/embed/" . "$ytid";
+		$youtube_url_emb = "https://www.youtube.com/embed/" . "$ytid";
 ?>
-	<div id="previewimagewrapper"><a style="position:relative;>
+	<div id="previewimagewrapper">
        <div class="Picture" id="videoContainer" style="width:<?php
 		echo $width
 ?>px;height:<?php
