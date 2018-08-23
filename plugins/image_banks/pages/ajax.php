@@ -31,7 +31,14 @@ if(!\ImageBanks\validFileSource($original_file_url, $image_banks_loaded_provider
 
 if($original_file_url != "")
     {
-    $new_resource_ref = create_resource($default_resource_type, 999, $userref);
+    // Clear the user template and then copy resource from user template. This should deal with archive state permissions
+    // and put the resource in active state if user has access to it
+    clear_resource_data(0 - $userref);
+    $new_resource_ref = copy_resource(0 - $userref, $default_resource_type);
+    if($new_resource_ref === false)
+        {
+        $new_resource_ref = create_resource($default_resource_type, 999, $userref);
+        }
 
     if(!$new_resource_ref)
         {
