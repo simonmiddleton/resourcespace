@@ -146,7 +146,7 @@ foreach($results as $result)
             {
             ?>
             <a href="<?php echo $result->getOriginalFileUrl(); ?>"
-               class="fa fa-file"
+               class="fa fa-files-o"
                aria-hidden="true"
                title="<?php echo htmlspecialchars($lang["image_banks_create_new_resource"]); ?>"
                onclick="createNewResource(this);"></a>
