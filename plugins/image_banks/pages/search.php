@@ -192,10 +192,9 @@ function createNewResource(element)
         },
         dataType: "json"
         }).done(function(response, textStatus, jqXHR) {
-            var message = "<?php echo str_replace("%RESOURCE", "<a href=\\\"{$baseurl_short}?r=%RESOURCE\\\">%RESOURCE</a>", $lang["image_banks_created_resource"]); ?>";
-            message = message.replace(/\%RESOURCE/g, response.data.new_resource_ref);
-
-            styledalert("<?php echo htmlspecialchars($lang["image_banks_create_new_resource"]); ?>", message);
+            var view_page_anchor = document.createElement("a");
+            view_page_anchor.setAttribute("href", baseurl_short + "?r=" + response.data.new_resource_ref);
+            CentralSpaceLoad(view_page_anchor, true, false);
         }).fail(function(data, textStatus, jqXHR) {
             if(data.status == 500)
                 {

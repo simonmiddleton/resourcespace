@@ -5,7 +5,6 @@ $lang["image_banks_search_image_banks_info_text"] = "Please specify which Image 
 $lang["image_banks_pixabay_api_key"] = "API key";
 $lang["image_banks_image_bank"] = "Image Bank";
 $lang["image_banks_create_new_resource"] = "Create new resource";
-$lang["image_banks_created_resource"] = "Created resource #%RESOURCE";
 
 // Errors
 $lang["image_banks_provider_unmet_dependencies"] = "Provider '%PROVIDER' has unmet dependencies!";
