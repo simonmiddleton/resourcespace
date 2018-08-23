@@ -124,7 +124,7 @@ foreach($results as $result)
 
     $title_link_text = highlightkeywords(tidy_trim(tidylist(strip_tags_and_attributes($title)), $search_results_title_trim), $search);
     ?>
-    <div class="ResourcePanel" style="height: 214px;">
+    <div class="ResourcePanel ImageBanksResourcePanel">
         <a href="<?php echo $result->getProviderUrl(); ?>" target="_blank" class="ImageWrapper" title="<?php echo htmlspecialchars($title); ?>">
             <?php render_resource_image($image_data, $result->getPreviewUrl(), "thumbs"); ?>
         </a>
