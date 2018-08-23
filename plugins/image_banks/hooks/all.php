@@ -17,11 +17,6 @@ function HookImage_banksAllSearchfiltertop()
     <div id="SearchImageBanksItem" class="SearchItem" title="">
         <label>
             <span><?php echo $search_image_banks_text; ?></span>
-            <a href="#"
-               onclick="styledalert('<?php echo $search_image_banks_text; ?>','<?php echo $search_image_banks_info_text; ?>');"
-               title="<?php echo $search_image_banks_info_text; ?>">
-               <i class="fa fa-info-circle"></i>
-           </a>
         </label>
         <select id="SearchImageBanks" class="SearchWidth" name="image_bank_provider_id" onchange="toggleUnwantedElementsFromSimpleSearch(jQuery(this));">
             <option value=""></option>
