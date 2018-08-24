@@ -1,7 +1,7 @@
 <?php 
 if (!hook("renderresultthumb")) 
     {
-    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 350 : 196) + (28 * count($thumbs_display_fields));
+    $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 350 : 202) + (28 * count($thumbs_display_fields));
     if($annotate_enabled)
         {
         $thumbs_displayed_fields_height += 28;
