@@ -1093,7 +1093,14 @@ function save_resource_data_multi($collection)
                     $value_changed  = false;  
                     $resource_data  = get_resource_data($ref, true);
 
-                    if($fields[$n]["resource_type"] != 0 && $resource_data["resource_type"] != $fields[$n]["resource_type"])
+                    if(
+                        (
+                            // Not applicable for global fields or archive only fields
+                            !in_array($fields[$n]["resource_type"], array(0, 999))
+                            && $resource_data["resource_type"] != $fields[$n]["resource_type"]
+                        )
+                        || ($fields[$n]["resource_type"] == 999 && $resource_data["archive"] != 2)
+                    )
                         {
                         continue;
                         }
