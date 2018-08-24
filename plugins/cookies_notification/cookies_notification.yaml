@@ -5,3 +5,4 @@ desc: Adds the ability to notify users of how ResourceSpace may use cookies to t
 config_url: /plugins/cookies_notification/pages/setup.php
 default_priority: 100
 category: asset processing
+disable_group_select: 1
