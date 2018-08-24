@@ -108,21 +108,19 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			{
 			global $resource_types;
 			?>
-			<div class="tickset">
-			  <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
-				<option value="0"<?php if ($currentvalue == "0" || $currentvalue == "") { echo " selected"; } ?>><?php echo $lang["resourcetype-global_field"]; ?></option>
-				
-				<?php
-				  for($n=0;$n<count($resource_types);$n++){
-				?>
-				<option value="<?php echo $resource_types[$n]["ref"]; ?>"<?php if ($currentvalue == $resource_types[$n]["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($resource_types[$n]["name"]); ?></option>
-				<?php
-				  }
-				?>
-				
-				<option value="999"<?php if ($currentvalue == "999") { echo " selected"; } ?>><?php echo $lang["resourcetype-archive_only"]; ?></option>
-				</select>
-            </div>
+            <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
+            <option value="0"<?php if ($currentvalue == "0" || $currentvalue == "") { echo " selected"; } ?>><?php echo $lang["resourcetype-global_field"]; ?></option>
+
+            <?php
+              for($n=0;$n<count($resource_types);$n++){
+            ?>
+            <option value="<?php echo $resource_types[$n]["ref"]; ?>"<?php if ($currentvalue == $resource_types[$n]["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($resource_types[$n]["name"]); ?></option>
+            <?php
+              }
+            ?>
+
+            <option value="999"<?php if ($currentvalue == "999") { echo " selected"; } ?>><?php echo $lang["resourcetype-archive_only"]; ?></option>
+            </select>
 			<?php
 			}
 		elseif($propertyname=="type")
@@ -132,7 +130,6 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			//natsort($field_types);
 			?>
-            <div class="tickset">
                 <select id="<?php echo $propertyname ?>"
                         name="<?php echo $propertyname ?>"
                         class="stdwidth"
@@ -175,7 +172,6 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 					}
 				?>
 				</select>
-			</div>
             <?php
             if (in_array($currentvalue, $FIXED_LIST_FIELD_TYPES))
                 {
@@ -228,7 +224,6 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			// Sort  so that the display order makes some sense
 			
 			?>
-			<div class="tickset">
 			  <select id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>" class="stdwidth">
 				<option value="" <?php if ($currentvalue == "") { echo " selected"; } ?>><?php echo $lang["select"]; ?></option>
 				<?php
@@ -242,7 +237,6 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 					}
 				?>				
 				</select>
-			  </div>
 			<?php
 			}
 		elseif($type==1)
@@ -254,7 +248,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 		elseif($type==2)
 			{
 			?>
-			<textarea class="stdwidth" rows="8" id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>"><?php echo htmlspecialchars($currentvalue)?></textarea>
+			<textarea class="stdwidth" rows="5" id="<?php echo $propertyname ?>" name="<?php echo $propertyname ?>"><?php echo htmlspecialchars($currentvalue)?></textarea>
 			<?php
 			}
 		else

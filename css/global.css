@@ -411,7 +411,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .Lineup {margin: 3px 0px;}
 .Question .stdwidth,.stdwidth{width: 420px;font-size: 1em;margin: 3px 0px;}
 .Question select {margin: 3px 0px;}
-.Question .medwidth,.medwidth{width: 250px;font-size: 1em;margin: 3px 0px;}
+.Question .medwidth,.medwidth{width: 285px;font-size: 1em;margin: 3px 0px;}
 .Question .shrtwidth,.shrtwidth{width: 145px;font-size: 1em;margin: 0px;}
 .Question .vshrtwidth{width: 93px;font-size: 0.9em;margin: 3px 0px;}
 .Question .medcomplementwidth{width: 105px;font-size: 1em;margin: 3px 0px 0px 2px;}
@@ -432,8 +432,8 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .FormWide .Question .Inline label { width: auto; }
 .FormWide .Question .stdwidth, .FormWide .Question .tickset{width: 70%}
 .FormWide .Question .tickset .stdwidth{width: 99%}
-.FormWide .Question .FormHelp {margin: 0px 10px 10px 20%;}
-.FormWide .Question .FormHelp .FormHelpInner {width: 99%}
+.FormWide .Question .FormHelp {margin: 0px 10px 4px 20%;}
+.FormWide .Question .FormHelp .FormHelpInner {width: 87.2%; margin-left: 10px;}
 
 .Question .Fixed {    width: 300px;float: left;margin-top: 0.4em;font-weight: bold;} 
 .FormError{font-weight: bold;font-size: 1.1em;margin: 0px 0px 10px 190px;padding: 10px 0px 0px;}
@@ -1522,7 +1522,7 @@ a.Enabled, a:visited.Enabled {
 }
 
 #previewimage {
-    max-height: 650px;
+    max-height: 600px;
 }
 
 #ResourceToolsDiv {
