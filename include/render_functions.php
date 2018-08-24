@@ -1632,7 +1632,16 @@ function display_field($n, $field, $newtab=false,$modal=false)
       } 
     # Define some Javascript for help actions (applies to all fields)
     # Help actions for CKEditor fields are set in pages/edit_fields/8.php
-     $help_js="onBlur=\"HideHelp(" . $field["ref"] . ");return false;\" onFocus=\"ShowHelp(" . $field["ref"] . ");return false;\"";
+     if ($ref<0)
+       {
+       # In upload mode helptext remains at all times
+       $help_js="";
+       }
+     else
+       {
+       # Other modes toggle helptext depending on loss or gain of focus
+       $help_js="onBlur=\"HideHelp(" . $field["ref"] . ");return false;\" onFocus=\"ShowHelp(" . $field["ref"] . ");return false;\"";
+       }
 
     #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
      $modified_field_type="";
@@ -1721,8 +1730,9 @@ function display_field($n, $field, $newtab=false,$modal=false)
      {
         # Show inline help for this field.
         # For certain field types that have no obvious focus, the help always appears.
+        # In upload mode the help always appears
        ?>
-       <div class="FormHelp" style="padding:0;<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?> display:none;<?php } else { ?> clear:left;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"],false)))?></div></div>
+       <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,4,6,7,10)) || ($ref<0) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"],false)))?></div></div>
        <?php
      }
 
