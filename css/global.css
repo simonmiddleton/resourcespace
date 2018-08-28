@@ -178,7 +178,7 @@ input:focus, textarea:focus, select:focus, .RecordPanel .RecordDownloadSpace .Do
 #HeaderNav1 {float:right;}
 #HeaderNav2 {padding-left: 30px;}
 #HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0em;}
-.HeaderImgLink{float:left;height:100%;width: auto;margin-right: 10px;}
+.HeaderImgLink{float:left;height:100%;width: auto;margin-right: 20px;}
 #HeaderImg{margin:0;max-height: 40px; }
 .HorizontalNav li,  .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
 .HorizontalNav li a, .HorizontalNav li a{display: inline-block;zoom: 1;*display: inline;}

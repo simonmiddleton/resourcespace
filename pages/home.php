@@ -49,7 +49,6 @@ if (!hook("replaceslideshow"))
         ?>
         <script>
         var SlideshowImages = new Array();
-        var SlideshowLinks = new Array();
         var SlideshowCurrent = -1;
         var SlideshowTimer = 0;
         <?php
@@ -77,7 +76,8 @@ if (!hook("replaceslideshow"))
         ?>
         jQuery( document ).ready(function() 
             {
-            window.clearTimeout(SlideshowTimer);
+            /* Clear all old timers */
+            ClearTimers();       
             ActivateSlideshow();
             });
         </script>
