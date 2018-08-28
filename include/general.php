@@ -2815,7 +2815,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
     
     global $email_from;
-    if ($from=="") {$from=$email_from;}
+    if ($from=="")
+        {
+        $from=$email_from;
+        $from_system=true;
+        }
     if ($reply_to=="") {$reply_to=$email_from;}
     global $applicationname;
     if ($from_name==""){$from_name=$applicationname;}
@@ -2981,16 +2985,25 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     }
     $reply_tos=explode(",",$reply_to);
 
-    // only one from address is possible, so only use the first one:
-    if (strstr($reply_tos[0],"<")){
-        $rtparts=explode("<",$reply_tos[0]);
-        $mail->From = str_replace(">","",$rtparts[1]);
-        $mail->FromName = $rtparts[0];
-    }
-    else {
-        $mail->From = $reply_tos[0];
+    if (!$from_system)
+        {
+        // only one from address is possible, so only use the first one:
+        if (strstr($reply_tos[0],"<"))
+            {
+            $rtparts=explode("<",$reply_tos[0]);
+            $mail->From = str_replace(">","",$rtparts[1]);
+            $mail->FromName = $rtparts[0];
+            }
+        else {
+            $mail->From = $reply_tos[0];
+            $mail->FromName = $from_name;
+            }
+        }
+    else
+        {
+        $mail->From = $from;
         $mail->FromName = $from_name;
-    }
+        }
     
     // if there are multiple addresses, that's what replyto handles.
     for ($n=0;$n<count($reply_tos);$n++){
