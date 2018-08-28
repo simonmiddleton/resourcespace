@@ -438,7 +438,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question .Fixed {    width: 300px;float: left;margin-top: 0.4em;font-weight: bold;} 
 .FormError{font-weight: bold;font-size: 1.1em;margin: 0px 0px 10px 190px;padding: 10px 0px 0px;}
 .FormIncorrect {font-weight: bold;font-size: 1.1em;margin: 0px 0px 25px;text-align: center;padding: 3px 3px 6px;}
-.PageInformal, .PageInfoMessage{font-weight: bold;font-size: 1.1em;margin: 0px 0px 25px;text-align: center;padding: 3px 3px 6px;}
+.PageInformal, .PageInfoMessage{font-weight: bold;font-size: 1.1em;margin: 0px 0px 10px;text-align: center;padding: 3px;border-radius:4px;}
 .AutoSaveStatus {font-weight: bold;float:right;padding:6px 0 0;min-width:100px;}
 .PurgeUsersMonths {width:4em;}
 /*Record Panel layout*/
