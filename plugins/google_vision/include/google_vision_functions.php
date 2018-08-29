@@ -113,8 +113,11 @@ function google_visionProcess($resource,$verbose=false)
         $landmarks=array();
         foreach ($result["responses"][0]["landmarkAnnotations"] as $label)
             {
-            $landmarks[]=$label["description"];
-            $title=$label["description"]; # Title is always the landmark, if a landmark is visible.
+            if(isset($label["description"]))
+                {
+                $landmarks[]=$label["description"];
+                $title=$label["description"]; # Title is always the landmark, if a landmark is visible.
+                }
             }
         update_field($resource,$google_vision_landmarks_field,join(", ",$landmarks));
         }  
