@@ -83,7 +83,7 @@ if (getval("save","")!="")
 		# E-mail already exists
 		$error=$lang["accountemailalreadyexists"];$error_extra="<br/><a href=\"".$baseurl_short."pages/user_password.php?email=" . urlencode($user_email) . "\">" . $lang["forgottenpassword"] . "</a>";
 		}
-    else if(getval("login_opt_in", "") != "yes")
+    else if(getval("login_opt_in", "") != "yes" && $user_registration_opt_in)
         {
         $error = $lang["error_user_registration_opt_in"];
         }
