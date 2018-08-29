@@ -191,7 +191,7 @@ if(getval("submit","") != "")
         if(!$dryrun)
 			{
 			sql_query("delete from resource_data where resource_type_field='" . $migrate_field . "'");
-			sql_query("delete from resource_keyword where where resource_type_field='" . $migrate_field . "'");
+			sql_query("delete from resource_keyword where resource_type_field='" . $migrate_field . "'");
 			}
 		}
         
