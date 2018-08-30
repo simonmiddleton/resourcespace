@@ -46,8 +46,6 @@ function update_resource_type_order($neworder)
 */
 function reorder_slideshow_images($from, $to)
     {
-    // global $baseurl, $homeanim_folder;
-
     $slideshow_files = get_slideshow_files_data();
 
     if(!file_exists($slideshow_files[$from]['file_path']))

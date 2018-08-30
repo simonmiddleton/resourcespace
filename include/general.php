@@ -6238,20 +6238,23 @@ if(!function_exists("array_column"))
 * The format of the returned array should be: 
 * Array
 * (
-*   [1] => Array
+*   [0] => Array
 *         (
+*             [ref] => 3
 *             [file_path] => /var/www/include/../gfx/homeanim/gfx/1.jpg
 *             [checksum] => 1450107521
 *             [link] => http://localhost/pages/view.php?ref=6019
 *             [link_file_path] => /var/www/include/../gfx/homeanim/gfx/1.txt
 *         )
-*   [2] => Array
+*   [1] => Array
 *        (
+*            [ref] => 4
 *            [file_path] => /var/www/include/../gfx/homeanim/gfx/2.jpg
 *            [checksum] => 2900215034
 *        )
-*   [3] => Array
+*   [2] => Array
 *        (
+*            [ref] => 5
 *            [file_path] => /var/www/include/../gfx/homeanim/gfx/3.jpg
 *            [checksum] => 4350322559
 *        )

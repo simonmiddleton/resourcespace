@@ -1821,6 +1821,8 @@ $lang["error-method-not_allowed"] = "Method Not Allowed.";
 $lang["error-405-method-not_allowed"] = "405 Method Not Allowed.";
 $lang["error-403-forbidden"] = "403 Forbidden.";
 $lang["error-plugin-not-activated"] = "Plugin not activated";
+$lang["error-failed-to-delete"] = "Failed to delete";
+$lang["error-failed-to-move"] = "Failed to move";
 
 
 $lang["no-options-available"]="No options available";
@@ -2535,6 +2537,7 @@ $lang["manage_slideshow"] = "Manage slideshow";
 $lang["action-add-new"] = "Add new";
 $lang["action-submit-button-label"] = "Submit";
 $lang["slideshow_use_static_image"] = "Use a single random image from the set (image will not change unless page is reloaded)";
+$lang["slideshow-image"] = "slideshow image";
 
 $lang["emailcollectionrequest"] = "[img_gfx/titles/title.gif]<br />The following user has made a request:<br />Username: [username]<br />User email: [useremail]<br /><br />Reason for request: [requestreason]<br /><br />Click the link below to view the request.<br /><a href='[requesturl]'>[requesturl]</a>";
 $lang["emailusercollectionrequest"] = "[img_gfx/titles/title.gif]<br />Your resource request has been submitted for approval and will be looked at shortly.:<br /><br />Reason for request: [requestreason]<br /><br />Click the link below to view the requested resources.<br /><a href='[url]'>[url]</a>";
