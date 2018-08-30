@@ -31,13 +31,20 @@ function HookSimplesamlAllPreheaderoutput()
         exit();
         }
         
-	// If normal user is logged in and allowing standard logins do nothing and return. If user is invalid they will be taken to login page as usual and cookie wiped
-	if ($simplesaml_allow_standard_login && isset($_COOKIE["user"]))
+    // If normal user is logged in and allowing standard logins do nothing and return
+    if ($simplesaml_allow_standard_login && isset($_COOKIE["user"]))
         {
+        $session_hash = escape_check($_COOKIE["user"]);
+        if (validate_user("u.session='{$session_hash}'", false) === false)
+            {
+            debug("simplesaml: standard user login - invalid user session");
+            rs_setcookie('user', '', 0);
+            }
+
         debug("simplesaml: standard user login - no action required");
         return true;
         }
-        
+
     if(!$simplesaml_allow_standard_login)
         {
         global $show_anonymous_login_panel;
