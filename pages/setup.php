@@ -541,7 +541,12 @@ h2#dbaseconfig{  min-height: 32px;}
 		$mysqli_connection = mysqli_connect($mysql_server, $mysql_username, $mysql_password);
 		if ($mysqli_connection){
 			$mysqlversion=mysqli_get_server_info($mysqli_connection);
-			if ($mysqlversion<'5') 
+      
+			// Convert major and minor parts of mysql version to numeric for checking purposes
+			$mysqlversion_parts=explode(".",$mysqlversion);
+			$mysqlversion_majorminor=floatval($mysqlversion_parts[0].".".$mysqlversion_parts[1]);
+      
+			if ($mysqlversion_majorminor < 5) 
 				{
 				$errors['databaseversion'] = true;
 				}
