@@ -25,37 +25,56 @@ if(
     && enforcePostRequest($ajax)
 )
     {
-    $response['sibling']           = null;
-    $response['is_first_sibling']  = false;
-    $response['is_last_sibling'] = false;
+    $response['sibling']          = null;
+    $response['is_first_sibling'] = false;
+    $response['is_last_sibling']  = false;
 
     $allow_reorder = false;
 
+    $slideshow_id_index = array_search($slideshow_id, array_column($slideshow_files, 'ref'));
+    if($slideshow_id_index === false)
+        {
+        http_response_code(500);
+        $response['error']   = "{$lang["error-failed-to-move"]} {$lang['slideshow-image']} #{$slideshow_id}";
+        $response['success'] = false;
+
+        echo json_encode($response);
+        exit();
+        }
+
+    reset($slideshow_files);
+    while (current($slideshow_files) !== $slideshow_files[$slideshow_id_index])
+        {
+        next($slideshow_files);
+        }
+
     // Based on current pointer and direction of movement we can find the "to" element
-    switch($action)
+    switch ($action)
         {
         case 'moveup':
-            if($slideshow_id > 0)
-                {
-                $to = $slideshow_id - 1;
-                $response['is_first_sibling'] = $slideshow_id == 1;
-                $allow_reorder = true;   
-                }
+            prev($slideshow_files);
+            $to = key($slideshow_files);
+
+            reset($slideshow_files);
+            $response['is_first_sibling'] = ($slideshow_files[$to] == current($slideshow_files));
+
+            $allow_reorder = true;   
             break;
+
         case 'movedown':
-            if($slideshow_id < count($slideshow_files) + 1)
-                {
-                $response['is_last_sibling'] = $slideshow_id >= count($slideshow_files);
-                $to = $slideshow_id + 1;
-                $allow_reorder = true;   
-                }
+            next($slideshow_files);
+            $to = key($slideshow_files);
+
+            $response['is_last_sibling'] = ($slideshow_files[$to] === end($slideshow_files));
+
+            $allow_reorder = true;
             break;
         }
 
     if($allow_reorder)
         {
-        reorder_slideshow_images($slideshow_id, $to);
-        $response['sibling'] = $to;
+        reorder_slideshow_images($slideshow_id_index, $to);
+        $response['sibling'] = $slideshow_files[$to]["ref"];
         }
     
 
@@ -69,15 +88,31 @@ if('true' === $ajax && 'delete' === $action && !is_null($slideshow_id) && enforc
     $response['error']   = '';
     $response['success'] = true;
 
-    if(file_exists($slideshow_files[$slideshow_id]['file_path']) && unlink($slideshow_files[$slideshow_id]['file_path']) === false)
+    $slideshow_id_index = array_search($slideshow_id, array_column($slideshow_files, 'ref'));
+    if($slideshow_id_index !== false)
         {
-        $response['error']   = 'Failed to delete "' . $slideshow_files[$slideshow_id]['file_path']. '"';
+        $slideshow_file_info = $slideshow_files[$slideshow_id_index];
+        }
+    else
+        {
+        $slideshow_file_info = array();
+
+        http_response_code(500);
+        $response['error']   = "{$lang['error-failed-to-delete']} {$lang['slideshow-image']} #{$slideshow_id}";
         $response['success'] = false;
         }
 
-    if(isset($slideshow_files[$slideshow_id]['link_file_path']) && file_exists($slideshow_files[$slideshow_id]['link_file_path']) && unlink($slideshow_files[$slideshow_id]['link_file_path']) === false)
+    if(!empty($slideshow_file_info) && file_exists($slideshow_file_info['file_path']) && unlink($slideshow_file_info['file_path']) === false)
         {
-        $response['error']   = 'Failed to delete "' . $slideshow_files[$slideshow_id]['link_file_path']. '"';
+        http_response_code(500);
+        $response['error']   = "{$lang['error-failed-to-delete']} '{$slideshow_file_info['file_path']}'";
+        $response['success'] = false;
+        }
+
+    if(!empty($slideshow_file_info) && isset($slideshow_file_info['link_file_path']) && file_exists($slideshow_file_info['link_file_path']) && unlink($slideshow_file_info['link_file_path']) === false)
+        {
+        http_response_code(500);
+        $response['error']   = "{$lang['error-failed-to-delete']} '{$slideshow_file_info['link_file_path']}'";
         $response['success'] = false;
         }
 
@@ -107,7 +142,7 @@ include '../../include/header.php';
 
 <?php
 $i = 0;
-foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
+foreach($slideshow_files as $slideshow_file_info)
     {
     if(file_exists($slideshow_file_info['file_path']))
         {
@@ -116,25 +151,25 @@ foreach($slideshow_files as $slideshow_image => $slideshow_file_info)
         ++$i;
         $slideshow_image_src = $baseurl_short . "pages/download.php?slideshow=" . $slideshow_file_info["ref"] . "&nc=" . time();
         ?>
-    <div id="slideshow_<?php echo $slideshow_image; ?>" class="Question">
+    <div id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>" class="Question">
         <label>
-            <img id="slideshow_img_<?php echo $slideshow_image; ?>" <?php if($login_image){echo "class=\"highlighted\"";} ?> src="<?php echo $slideshow_image_src; ?>" alt="Slideshow Image <?php echo $slideshow_image; ?>" width="150" height="80">
+            <img id="slideshow_img_<?php echo $slideshow_file_info["ref"]; ?>" <?php if($login_image){echo "class=\"highlighted\"";} ?> src="<?php echo $slideshow_image_src; ?>" alt="Slideshow Image <?php echo $slideshow_file_info["ref"]; ?>" width="150" height="80">
         </label>
 		<?php if($login_image){echo $lang["login_slideshow_image_notes"] . "<br /><br />";} ?>
         <div class="AutoSaveStatus">
-            <span id="AutoSaveStatus-<?php echo $slideshow_image; ?>" style="display:none;"></span>
+            <span id="AutoSaveStatus-<?php echo $slideshow_file_info["ref"]; ?>" style="display:none;"></span>
         </div>
         <span class="stdwidth">
-            <button id="slideshow_<?php echo $slideshow_image; ?>_moveup"
+            <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_moveup"
                     type="submit"
-                    onclick="ReorderSlideshowImage(<?php echo $slideshow_image; ?>, 'moveup');"
+                    onclick="ReorderSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>, 'moveup');"
                     <?php if(1 === $i) { echo 'disabled'; } ?>><?php echo $lang['action-move-up']; ?></button>
-            <button id="slideshow_<?php echo $slideshow_image; ?>_movedown"
+            <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_movedown"
                     type="submit"
-                    onclick="ReorderSlideshowImage(<?php echo $slideshow_image; ?>, 'movedown');"
+                    onclick="ReorderSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>, 'movedown');"
                     <?php if(count($slideshow_files) === $i) { echo 'disabled'; } ?>><?php echo $lang['action-move-down']; ?></button>
             <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_file_info["ref"])); ?>
-            <button id="slideshow_<?php echo $slideshow_image; ?>_delete"
+            <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_delete"
                     type="submit" onclick="DeleteSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>);"<?php if(count($slideshow_files)==1) { echo 'disabled'; } ?>><?php echo $lang['action-delete']; ?></button>
             <?php hook('render_replace_slideshow_form_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_files)); ?>
         </span>
@@ -172,7 +207,6 @@ function ReorderSlideshowImage(id, direction)
 
     jQuery.post(post_url, post_data, function(response)
         {
-        console.log(response.sibling);
         if(response.sibling !== false)
             {
             var from_img_elem = jQuery('#slideshow_img_' + id);
@@ -200,7 +234,9 @@ function ReorderSlideshowImage(id, direction)
                 jQuery('#slideshow_' + response.sibling + '_movedown').prop('disabled', true);
                 }
             }
-        }, 'json');
+        }, 'json').fail(function(data, textStatus, jqXHR) {
+        styledalert(data.statusText, data.responseJSON.error);
+    });
 
     return false;
     }
@@ -232,7 +268,9 @@ function DeleteSlideshowImage(id)
                 }
 
             }
-        }, 'json');
+        }, 'json').fail(function(data, textStatus, jqXHR) {
+        styledalert(data.statusText, data.responseJSON.error);
+    });
 
     return false;
     }
