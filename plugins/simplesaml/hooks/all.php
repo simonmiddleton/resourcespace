@@ -526,3 +526,30 @@ function HookSimplesamlResource_emailReplaceresourceemailredirect()
     
   redirect($baseurl_short . "pages/done.php?text=resource_email&resource=" . urlencode($ref) . "&search=" . urlencode($search) . "&offset=" . urlencode($offset) . "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&user=" . urlencode($userref));
     }
+
+function HookSimplesamlAllCheck_access_key()
+    {
+    global $external_share_view_as_internal, $simplesaml_login;
+
+    /*
+    Handle "$external_share_view_as_internal = true;" case. This require us to set the user up as authenticate.php is not called
+    at this stage on search.php page so we need to validate user and set it up in order to set $internal_share_access.
+    */
+    if($external_share_view_as_internal && $simplesaml_login && simplesaml_is_authenticated())
+        {
+        global $is_authenticated, $user_select_sql;
+
+        HookSimplesamlAllProvideusercredentials();
+
+        $validate_user = validate_user($user_select_sql);
+
+        if(is_array($validate_user[0]) && !empty($validate_user[0]))
+            {
+            setup_user($validate_user[0]);
+            $is_authenticated = true;
+            }
+        }
+
+    // return false because check_access_key() returns true without doing any checks on the key if hook returns TRUE
+    return false;
+    }
