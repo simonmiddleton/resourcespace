@@ -478,7 +478,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {font-size: 1em;margin: 0px;padding: 0px;text-transform: uppercase; font-size: 0.875rem; color: #999;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0px;padding: 0px;}
 .RecordPanel .RecordDownload {float: none;width: 100%;margin: 0px 0px 10px;}
-.RecordPanel .RecordDownload table {width: 66%;margin: 0px;padding: 0px;float: left;margin-right: 4%;}
+.RecordPanel .RecordDownload table {width: 66%;margin: 0px;padding: 0px;float: left;margin-right: 4%; clear:left;}
 .RecordPanel .RecordDownload td {padding: 5px;margin: 0;}
 .RecordPanel .RecordDownload .DownloadDBlend td {margin: 0;vertical-align: middle;}
 .RecordPanel .RecordDownloadSpace {padding: 6px 1rem;}
@@ -1525,10 +1525,28 @@ a.Enabled, a:visited.Enabled {
     max-height: 600px;
 }
 
-#ResourceToolsDiv {
-    margin-top: -46px;
+#resourcetools {
+    float: left;
 }
 
 #preview {
     box-shadow: 0 2px 6px rgba(0,0,0,0.2)
+}
+
+/* Configuration options */
+select.MultiSelect {
+    padding: 0;
+    height: auto;
+    background-image: none;
+    box-shadow: none;
+}
+select.MultiSelect:before {
+    content: unset;
+}
+.MultiRTypeSelect {
+    background-color: #fff;
+    width: 292px;
+    padding: 3px;
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 4px;
 }

@@ -723,7 +723,7 @@ function config_multi_select($name, $label, $current, $choices, $usekeys=true, $
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" multiple="multiple" <?php if(count($choices) > 7) echo ' size="7"'?> style="width:<?php echo $width ?>px">
+    <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" <?php if(count($choices) > 7) echo ' size="7"'?> style="width:<?php echo $width ?>px">
 <?php
     foreach($choices as $key => $choice)
         {
@@ -1043,7 +1043,7 @@ function config_multi_rtype_select($name, $label, $current, $width=300)
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
-    <fieldset id="<?php echo $name?>" style="width:<?php echo $width ?>px">
+    <fieldset id="<?php echo $name?>" class="MultiRTypeSelect">
 <?php
     foreach($rtypes as $rtype)
         {
