@@ -581,20 +581,34 @@ function get_managed_dash()
         }
     else
         {
-        $tiles = sql_query("SELECT dash_tile.ref AS 'tile', dash_tile.title, dash_tile.url, dash_tile.reload_interval_secs, dash_tile.link, dash_tile.default_order_by as 'order_by'
-                              FROM dash_tile
-                             WHERE dash_tile.all_users = 1
-                               AND (dash_tile.ref IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup_dash_tile.usergroup = '{$usergroup}')
-								OR dash_tile.ref NOT IN (SELECT distinct dash_tile FROM usergroup_dash_tile))
-                               AND (
-                                    dash_tile.allow_delete = 1
-                                    OR (
-                                        dash_tile.allow_delete = 0
-                                        AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile)
-                                       )
-                                   )
-                            ORDER BY default_order_by"
-                            );
+        $usergroup_escaped = escape_check($usergroup);
+
+        $tiles = sql_query("
+            SELECT dash_tile.ref AS 'tile',
+                   dash_tile.title,
+                   dash_tile.url,
+                   dash_tile.reload_interval_secs,
+                   dash_tile.link,
+                   dash_tile.default_order_by,
+                   (
+                        SELECT ugdt.default_order_by
+                          FROM usergroup_dash_tile AS ugdt
+                         WHERE ugdt.dash_tile = dash_tile.ref
+                           AND ugdt.usergroup = '{$usergroup_escaped}'
+                   ) AS 'usergroup_default_order_by'
+              FROM dash_tile
+             WHERE dash_tile.all_users = 1
+               AND (dash_tile.ref IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup_dash_tile.usergroup = '{$usergroup_escaped}')
+                OR dash_tile.ref NOT IN (SELECT distinct dash_tile FROM usergroup_dash_tile))
+               AND (
+                    dash_tile.allow_delete = 1
+                    OR (
+                        dash_tile.allow_delete = 0
+                        AND dash_tile.ref IN (SELECT DISTINCT user_dash_tile.dash_tile FROM user_dash_tile)
+                       )
+                   )
+            ORDER BY usergroup_default_order_by ASC, default_order_by ASC
+        ");
         }
     
     foreach($tiles as $tile)
