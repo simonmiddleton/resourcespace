@@ -122,17 +122,46 @@ $page_def[] = config_add_html('</div>');
 
 // Search section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['searchcapability'] . '</h3><div id="SystemConfigSearchSection" class="CollapsibleSection">');
+
+$sort_order_fields = array('relevance' => $lang['relevance']);
+if($random_sort)
+    {
+    $sort_order_fields['random'] = $lang['random'];
+    }
+
+if($popularity_sort)
+    {
+    $sort_order_fields['popularity'] = $lang['popularity'];
+    }
+
+if($orderbyrating)
+    {
+    $sort_order_fields['rating'] = $lang['rating'];
+    }
+
+if($date_column)
+    {
+    $sort_order_fields['date'] = $lang['date'];
+    }
+
+if($colour_sort)
+    {
+    $sort_order_fields['colour'] = $lang['colour'];
+    }
+
+if($order_by_resource_id)
+    {
+    $sort_order_fields['resourceid'] = $lang['resourceid'];
+    }
+
+if($order_by_resource_type)
+    {
+    $sort_order_fields['resourcetype'] = $lang['type'];
+    }
 $page_def[] = config_add_single_select(
     'default_sort',
     $lang['userpreference_default_sort_label'],
-    array(
-        'relevance'  => $lang['relevance'],
-        'resourceid' => $lang['resourceid'],
-        'popularity' => $lang['popularity'],
-        'rating'     => $lang['rating'],
-        'date'       => $lang['date'],
-        'colour'     => $lang['colour'],
-    ),
+    $sort_order_fields,
     true,
     420,
     '',
