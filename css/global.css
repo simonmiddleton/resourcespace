@@ -1212,7 +1212,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     padding: 10px 15px 0px 15px;
     border-radius: 5px;
     position: absolute;
-    top: -150px;
 }
 
 /* Manage External Shares */
