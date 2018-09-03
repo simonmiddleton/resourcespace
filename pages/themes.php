@@ -956,7 +956,7 @@ if ($header=="" && !isset($themes[0]))
 						$s=$headers[$n]["name"] . ":" . $themes[$m]["name"];
                         $theme_image_path = '';
                         $theme_images = get_theme_image(array($themes[$m]), '', true);
-                        if(is_array($theme_images) && count($theme_images)>0)
+                        if($themes_simple_images && is_array($theme_images) && count($theme_images)>0)
                             {
                             foreach($theme_images as $theme_image)
                                 {
