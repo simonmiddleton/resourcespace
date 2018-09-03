@@ -7027,6 +7027,16 @@ function findDuplicates(array $data, $search)
     return $duplicates;
     }
 
+
+/**
+* Check if user has view access to metadata field
+* 
+* @uses checkperm()
+* 
+* @param integer $field Field ref
+* 
+* @return boolean
+*/
 function metadata_field_view_access($field)
     {
     return ((PHP_SAPI == 'cli' && !defined("RS_TEST_MODE")) || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
