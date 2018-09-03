@@ -30,7 +30,7 @@ $offset=getvalescaped("offset",0,true);
 $restypes=getvalescaped("restypes","");
 $starsearch=getvalescaped("starsearch","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive",0,true);
+$archive=getvalescaped("archive","");
 $per_page=getvalescaped("per_page",0,true);
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
