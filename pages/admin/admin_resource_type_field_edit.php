@@ -147,6 +147,11 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 									else
 										{
 										jQuery('#migrate_data').val('');
+										}								
+									if(jQuery.inArray(newval,fixed_list_fields) > -1)
+										{
+										<?php $update_index_sql="update resource_type_field set keywords_index = 1 WHERE ref = '{$ref}'";
+										sql_query($update_index_sql); ?>
 										}
 									}
 								else
