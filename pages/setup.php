@@ -408,8 +408,9 @@ $('#mysqlserver').keyup();
 
 p.iteminfo{ background: #e3fefa; width: 60%; color: #000; padding: 4px; margin: 10px; clear:both; }
 strong { padding:0 5px; color: #F00; font-weight: bold; }
-a.iflink { color: #F00; padding: 2px; border: 1px solid #444; margin-left: 4px; } 
-#defaultlanguage{font-size: 1em;padding: 1px;}
+a.iflink { color: #FFF; padding: 4px; margin-left: 4px; border-radius: 4px; background-color: #2E99E6;} 
+#defaultlanguage{font-size: 1em;}
+#baseurl, #admin_email, #emailfrom {border: 1px solid rgba(0,0,0,0.25);}
 
 input.warn { border: 2px solid #f00; }
 input.ok{ border:2px solid #0f0; }
