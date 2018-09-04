@@ -472,7 +472,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .Col {float: left;width: 352px;margin-bottom: 10px;}
 .RecordPanel .ColNarrow {float: left;width: 171px;margin-bottom: 10px;}
 .RecordPanel .buffer {margin-right: 10px;}
-.RecordPanel .itemNarrow {word-wrap: break-word; float: left;width: 170px;margin-right: 5px;position:relative;} 
+.RecordPanel .itemNarrow {word-wrap: break-word; float: left;width: 170px;margin-right: 5px;position:relative; padding-top: 10px;padding-left: 10px;} 
 .RecordPanel .SearchSimilar {float: left;width: 120px;margin: 0px 10px 2px 0px;padding: 0px;}
 .RecordPanel .item {word-wrap: break-word; float: left;margin-bottom: 10px;width: 100%;position:relative;}
 .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {font-size: 1em;margin: 0px;padding: 0px;text-transform: uppercase; font-size: 0.875rem; color: #999;}
@@ -483,7 +483,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .RecordDownload .DownloadDBlend td {margin: 0;vertical-align: middle;}
 .RecordPanel .RecordDownloadSpace {padding: 6px 1rem;}
 .RecordPanel .RecordDownloadSpace ul {padding:0.2em 0;margin:0;margin-top: 10px;list-style:none; display: table-cell;}
-.RecordPanel .RecordDownloadSpace li {padding:0;margin:0 12px 5px 0;float:left;min-width:208px;clear: both;}
+.RecordPanel .RecordDownloadSpace li {padding:0;margin:0 12px 3px 0;float:left;min-width:208px;clear: both;}
 .RecordPanel .RecordDownloadSpace li a:hover {text-decoration:none;}
 
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {text-align: center;font-weight: bold;}
@@ -493,7 +493,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordStory {padding: 8px 0;}
 .RecordStory h1{font-size:1.25em; padding:0.5em 0 0.5em 0; margin:0;}
 
-.RecordPanel h2{font-size:1.25em; padding:0; margin:0.4em 0 0.2em 0;font-weight:normal;}
+.RecordPanel h2{font-size:1.25em; padding:0; margin:0.2em 0 0.2em 0;font-weight:normal;}
 .RecordPanel p{padding:0; margin:0.5em 0 0.5em 0;}
 
 
@@ -527,11 +527,17 @@ a.HomePanel {text-decoration:none;}
 a.HomePanel {cursor:pointer;}
 
 
-.TabBar {padding:10px 0 0 0;margin-bottom: -1px;}
+.TabBar {padding:8px 0 0 0;margin-bottom: -1px; background-color: #ededed;}
 .Tab a {margin:0 5px 0 0;padding:5px 1rem;display:inline-block; border-top-right-radius:5px;border-top-left-radius:5px;}
 .Tab a:hover {text-decoration: none;}
 .Tab {display:inline;}
-.StyledTabbedPanel {padding:12px 1rem 8px 1rem;clear:left;border-bottom-right-radius:10px;border-bottom-left-radius:10px; border-top-right-radius:10px;}
+.StyledTabbedPanel {
+    padding:12px 1rem 8px 1rem;
+    clear:left;
+    border-bottom-right-radius:10px;
+    border-bottom-left-radius:10px;
+    border-top-right-radius:10px;
+}
 .TabSelected {margin-right: 5px;}
 .TabSelected a { margin: 0;}
 
@@ -869,7 +875,7 @@ margin-bottom:10px;
 }
 .ViewPanelTitles {
     clear: left;
-    padding:0.1em 0 0.5em;margin:0 0 10px;
+    margin-bottom: 8px;
 }
 .ViewPanelTitles .Title {
     border-bottom: 0;
@@ -877,7 +883,6 @@ margin-bottom:10px;
     margin: 0;
     padding: 0;
     margin-right: 36px;
-    padding-bottom: 5px;
     opacity: 0.4;
     cursor: pointer;
 }
@@ -1070,6 +1075,10 @@ div.video-js {margin:auto;}
 #modal .RecordHeader
     {
     margin:-20px -20px 0 -20px;padding:14px 20px 0 20px;
+    }
+#modal .RecordHeader h1
+    {
+    padding: 0.1em 0 0.25em;
     }
 #modal .BasicsBox h1
     {
@@ -1445,6 +1454,12 @@ a.Enabled, a:visited.Enabled {
 
 .ResourcePanelResourceID {float:left;}
 
+#Metadata {
+    background-color: #FFF;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding-bottom: 8PX;
+}
 
 .ReportSheet {padding:10px;}
 .ReportSummary td {padding:10px;}

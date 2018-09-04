@@ -1,6 +1,3 @@
-
-
-
 .rse_workflow_link{
 	cursor: pointer;
 	cursor: hand;
@@ -14,4 +11,8 @@
 #ResourceWorkflowActions input {
 	width: 100%;
 	
+}
+
+#ResourceWorkflowTable {
+    width: 100%;
 }
