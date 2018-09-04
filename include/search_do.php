@@ -238,11 +238,11 @@ function do_search(
 
     # add 'joins' to select (only add fields if not returning the refs only)
     $joins=$return_refs_only===false ? get_resource_table_joins() : array();
-    foreach( $joins as $datajoin)
+    foreach($joins as $datajoin)
         {
-        if(metadata_field_view_access($datajoin))
+        if(metadata_field_view_access($datajoin) || $datajoin == $GLOBALS["view_title_field"])
             {
-            $select.=",r.field".$datajoin." ";
+            $select .= ", r.field{$datajoin} ";
             }
         }
 
