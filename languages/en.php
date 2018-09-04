@@ -535,6 +535,7 @@ $lang["fileupload"]="File upload";
 $lang["clickbrowsetolocate"]="Click browse to locate a file";
 $lang["resourcetools"]="Resource tools";
 $lang["fileinformation"]="File information";
+$lang["filedimensions"]="File dimensions";
 $lang["options"]="Options";
 $lang["previousresult"]="Previous result";
 $lang["viewallresults"]="View all results";

@@ -478,7 +478,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {font-size: 1em;margin: 0px;padding: 0px;text-transform: uppercase; font-size: 0.875rem; color: #999;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0px;padding: 0px;}
 .RecordPanel .RecordDownload {float: none;width: 100%;margin: 0px 0px 10px;}
-.RecordPanel .RecordDownload table {width: 66%;margin: 0px;padding: 0px;float: left;margin-right: 4%; clear:left;}
+.RecordPanel .RecordDownload table {width: 70%;margin: 0px;padding: 0px;float: left;margin-right: 3%; clear:left;}
 .RecordPanel .RecordDownload td {padding: 5px;margin: 0;}
 .RecordPanel .RecordDownload .DownloadDBlend td {margin: 0;vertical-align: middle;}
 .RecordPanel .RecordDownloadSpace {padding: 6px 1rem;}
@@ -489,10 +489,11 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {text-align: center;font-weight: bold;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend h2 {margin:0;padding:0;font-size: 1em;    text-align: left;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {margin:0;padding:0;    text-align: left;}
+.RecordPanel .RecordDownloadSpace .DownloadButton {min-width: 130px;}
 .RecordStory {padding: 8px 0;}
 .RecordStory h1{font-size:1.25em; padding:0.5em 0 0.5em 0; margin:0;}
 
-.RecordPanel h2{font-size:1.25em; padding:0; margin:0.4em 0 0.5em 0;font-weight:normal;}
+.RecordPanel h2{font-size:1.25em; padding:0; margin:0.4em 0 0.2em 0;font-weight:normal;}
 .RecordPanel p{padding:0; margin:0.5em 0 0.5em 0;}
 
 

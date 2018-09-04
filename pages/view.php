@@ -1336,6 +1336,7 @@ if ($resource["has_image"]==1 && $download_multisize)
 		if(!hook("replacedownloadspacetableheaders")){
 			if ($table_headers_drawn==false) { ?>
 				<td><?php echo $lang["fileinformation"]?></td>
+                <td><?php echo $lang["filedimensions"]?></td>
 				<td><?php echo $lang["filesize"]?></td>
 				<?php if ($showprice) { ?><td><?php echo $lang["price"] ?></td><?php } ?>
 				<td class="textcenter"><?php echo $lang["options"]?></td>
@@ -1345,7 +1346,8 @@ if ($resource["has_image"]==1 && $download_multisize)
 			} 
 		} # end hook("replacedownloadspacetableheaders")?>
 		<tr class="DownloadDBlend" id="DownloadBox<?php echo $n?>">
-		<td class="DownloadFileName"><h2><?php echo $headline?></h2><?php
+		<td class="DownloadFileName"><h2><?php echo $headline?></h2></td>
+        <td class="DownloadFileDimensions"><?php
 		if (is_numeric($sizes[$n]["width"]))
 			{
 			echo get_size_info($sizes[$n]);
@@ -1367,7 +1369,7 @@ if ($resource["has_image"]==1 && $download_multisize)
 				{ 
 				# Add an extra line for previewing
 				?> 
-				<tr class="DownloadDBlend"><td class="DownloadFileName"><h2><?php echo $lang["preview"]?></h2><p><?php echo $lang["fullscreenpreview"]?></p></td><td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
+				<tr class="DownloadDBlend"><td class="DownloadFileName"><h2><?php echo $lang["preview"]?></h2></td><td class="DownloadFileDimensions"><p><?php echo $lang["fullscreenpreview"]?></p></td><td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
 				<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
 				?>
 				<td class="DownloadButton">
