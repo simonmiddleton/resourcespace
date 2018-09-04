@@ -458,7 +458,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
 .RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 100%;}
-#previewimagewrapper {float:none;margin: 0px 20px 15px 0px; position: relative;width: 100%;}
+#previewimagewrapper {float:none;margin: 0px 20px 15px 0px; position: relative;width: 100%; display: flex; justify-content: center;}
 
 .RecordPanel .PictureDoc {float: left;margin: 50px 130px;}
 
