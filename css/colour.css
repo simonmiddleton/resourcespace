@@ -368,6 +368,7 @@ li.plupload_droptext {color:#999;}
     height: 22px;
     line-height: 1.4rem;
     padding-left: 4px;
+    min-height: 20px;
   }
 
 /* Messaging */
