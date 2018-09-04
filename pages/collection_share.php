@@ -123,7 +123,7 @@ include "../include/header.php";
 		# Share as a dash tile.
 		global $home_dash,$anonymous_login,$username;
 
-		if($home_dash && checkPermission_dashcreate())
+		if($home_dash && checkPermission_dashcreate() && !hook('replace_share_dash_create'))
 			{?>
 			<li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short;?>pages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=!collection<?php echo $ref?>&order_by=relevance&sort=DESC"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["createnewdashtile"];?></a></li>
 			<?php
