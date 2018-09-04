@@ -1660,14 +1660,8 @@ if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/us
 <?php } /* End of renderinnerresourceview hook */
 
 
-if ($download_summary) {include "../include/download_summary.php";}
-
-?>
-
-<?php hook("renderbeforeresourcedetails"); ?>
 
 
-<?php
 /* ---------------  Display metadata ----------------- */
 if (!hook('replacemetadata')) {
 ?>
@@ -1678,7 +1672,10 @@ if (!hook('replacemetadata')) {
 </div>
 <?php include "view_metadata.php";
 } /* End of replacemetadata hook */ ?>
-</div></div>
+</div>
+<?php if ($download_summary) {include "../include/download_summary.php";}
+hook("renderbeforeresourcedetails");?>
+</div>
 
 </div>
 
@@ -1707,7 +1704,6 @@ function RenderPushedMetadata($resource)
         <div class="Title"><?php echo $resource["resource_type_name"] . " : " . $resource["field" . $view_title_field] ?></div>
         <?php include "view_metadata.php"; ?>
         </div>
-        
         </div>
 	<?php
 	}
@@ -1716,9 +1712,6 @@ End of pushed metadata support
 ------------------------------------------
 */ 
 ?>
-
-
-
 
 <?php if ($view_panels) { ?>
 <div class="RecordBox">

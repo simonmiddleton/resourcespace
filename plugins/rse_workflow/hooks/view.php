@@ -233,7 +233,7 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
 
         }
         </script>
-        <table cellpadding="0" cellspacing="0">
+        <table cellpadding="0" cellspacing="0" id="ResourceWorkflowTable">
             <tbody>
             <?php
             
