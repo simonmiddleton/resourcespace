@@ -62,7 +62,7 @@ function HookImage_banksAllSearchfiltertop()
         <div class="clearerleft"></div>
     </div>
     <?php
-    $clear_function .= 'jQuery("#SearchImageBanks").val([\'\']);';
+    $clear_function .= 'jQuery("#SearchImageBanks").val([\'\']); toggleUnwantedElementsFromSimpleSearch(jQuery("#SearchImageBanks"));';
 
     return;
     }
