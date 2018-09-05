@@ -1440,7 +1440,7 @@ if($replace_resource != '' || $replace != '' || $upload_then_edit)
             }
         }
     } // End of upload options
-    
+hook('plupload_before_status');
 if ($status!="") { ?><?php echo $status?><?php } ?>
 </form>
 </div><!-- End of UploadOptionsSection -->
