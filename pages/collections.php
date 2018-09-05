@@ -108,7 +108,7 @@ if ($collection!="")
 		# Log this
 		daily_stat("New collection",$userref);
 		}
-	elseif(!isset($usercollection) || $collection!=$usercollection)
+	elseif((!isset($usercollection) || $collection!=$usercollection) && $collection!='false')
 		{
                 $validcollection=sql_value("select ref value from collection where ref='$collection'",0);
                 # Switch the existing collection
