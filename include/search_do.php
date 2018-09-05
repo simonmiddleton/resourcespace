@@ -77,16 +77,25 @@ function do_search(
         $sort='asc';
         }
 
-    # resolve $order_by to something meaningful in sql
     $orig_order=$order_by;
     global $date_field;
+
+    $order_by_date_sql_comma = ",";
+    $order_by_date = "r.ref $sort";
+    if(metadata_field_view_access($date_field))
+        {
+        $order_by_date_sql = "field{$date_field} {$sort}";
+        $order_by_date_sql_comma = ", {$order_by_date_sql}, ";
+        $order_by_date = "{$order_by_date_sql}, r.ref {$sort}";
+        }
+
     $order = array(
         "collection"      => "c.sortorder $sort,c.date_added $sort,r.ref $sort",
-        "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort, field$date_field $sort,r.ref $sort",
-        "popularity"      => "user_rating $sort,total_hit_count $sort,field$date_field $sort,r.ref $sort",
+        "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
+        "popularity"      => "user_rating $sort,total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
         "rating"          => "r.rating $sort, user_rating $sort, score $sort,r.ref $sort",
-        "date"            => "field$date_field $sort,r.ref $sort",
-        "colour"          => "has_image $sort,image_blue $sort,image_green $sort,image_red $sort,field$date_field $sort,r.ref $sort",
+        "date"            => $order_by_date,
+        "colour"          => "has_image $sort,image_blue $sort,image_green $sort,image_red $sort {$order_by_date_sql_comma} r.ref $sort",
         "country"         => "country $sort,r.ref $sort",
         "title"           => "title $sort,r.ref $sort",
         "file_path"       => "file_path $sort,r.ref $sort",
