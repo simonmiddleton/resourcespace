@@ -17,7 +17,7 @@ include_once "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
 
 $suppress_headers=true;
-
+define ("RS_TEST_MODE",1);
 $argv=preg_replace('/^(-|--|\/)/','',$argv);    // remove leading /, -- or -
 
 if(array_search('?',$argv)!==false || array_search('help',$argv)!==false)
