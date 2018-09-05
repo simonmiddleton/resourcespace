@@ -739,7 +739,7 @@ function reorder_usergroup_dash($usergroup)
 
 function update_usergroup_dash_tile_order($usergroup, $tile, $default_order_by)
     {
-    sql_query("UPDATE usergroup_dash_tile SET default_order_by = '{$default_order_by}' WHERE usergroup = '{$usergroup}' AND ref = '{$tile}'");
+    sql_query("UPDATE usergroup_dash_tile SET default_order_by = '{$default_order_by}' WHERE usergroup = '{$usergroup}' AND dash_tile = '{$tile}'");
     }
 
 	
