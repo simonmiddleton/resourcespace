@@ -1061,9 +1061,9 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
     if(!is_array($nodes) && (string)(int)$nodes != $nodes)
 		{return false;}
              
-    if($checkperms)
+    if($checkperms && (PHP_SAPI != 'cli' || defined("RS_TEST_MODE")))
         {
-        // Need to check user has permissions to add nodes
+        // Need to check user has permissions to add nodes (unless running from any CLI script other than unit tests)
         $resourcedata = get_resource_data($resourceid);
         $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
         if(!$access)
