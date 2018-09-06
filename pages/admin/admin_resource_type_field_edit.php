@@ -511,7 +511,7 @@ var current_type      = <?php echo ('' != $fielddata['type'] ? $fielddata['type'
 
 <?php
 if (isset($error_text)) { ?><div class="PageInformal"><?php echo $error_text?></div><?php }
-if (isset($saved_text)) { ?><div class="PageInformal"><?php echo $saved_text?></div> <?php }
+if (isset($saved_text)) { ?><div class="PageInformal"><span class="fa fa-fw fa-check"></span>&nbsp;<?php echo $saved_text?></div> <?php }
 
 
 if($confirm_delete)

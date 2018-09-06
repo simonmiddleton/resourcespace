@@ -33,7 +33,7 @@ input[readonly] {color: #000000;}
 
 .FormError {color: #FF0000;}
 .FormIncorrect {color: #FF0000;border: 1px solid #BBBBBB;background: #FFFFFF;}
-.PageInformal {color: #FF0000;border: 1px solid #BBBBBB;background: #FFFFFF;}
+.PageInformal {border: 1px solid #c0c0c0;background: #FFFFFF;}
 .HorizontalWhiteNav a:link, 
 .HorizontalWhiteNav a:visited, 
 .HorizontalWhiteNav a:active, 
