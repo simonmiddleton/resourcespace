@@ -404,7 +404,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .SearchSpace a:link, .SearchSpace a:visited {text-decoration:none;}
 .SearchSpace a:hover, .SearchSpace a:active {text-decoration:underline;}
 
-.ListDropdown {width: 115px;margin:0px;padding: 0px;height:18px;}
+.ListDropdown {width: 115px;margin:0px;padding-left: 8px;height:18px;}
 
 /*Forms*/
 #CentralSpaceLogin form {margin:0;padding:0;}
@@ -1571,4 +1571,7 @@ select.MultiSelect:before {
     padding: 3px;
     border: 1px solid rgba(0,0,0,0.25);
     border-radius: 4px;
+}
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink {
+    min-height: unset;
 }
