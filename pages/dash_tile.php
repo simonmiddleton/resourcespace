@@ -375,7 +375,6 @@ else if($edit)
 	$url=$tile["url"];
 	$link=$tile["link"];
 	$title=$tile["title"];
-	$freetext = empty($tile["txt"])? "true" : $tile["txt"];
 	$resource_count=$tile["resource_count"];
     $current_specific_user_groups = get_tile_user_groups($edit);
 	
@@ -399,6 +398,16 @@ else if($edit)
 		$tile_type="";
 		$tile_nostyle = true;
 		}
+
+	#Only show freetext field if tile style is not analytics
+	if ($tile_style != 'analytics') 
+    	{
+    	$freetext = empty($tile["txt"])? "true" : $tile["txt"];
+    	}
+    else 
+    	{
+    	$freetext = false;
+    	}
 	
 	$promoted_resource=isset($buildstring["promimg"])? $buildstring["promimg"] : FALSE;
 
