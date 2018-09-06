@@ -933,7 +933,7 @@ function EditNav() # Create a function so this can be repeated at the end of the
   
 function SaveAndClearButtons($extraclass="")
     {
-    global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $noupload;
+    global $lang, $multiple, $ref, $clearbutton_on_edit, $upload_review_mode, $resource, $noupload, $edit_autosave;
 
     $save_btn_value = ($ref > 0 ? ($upload_review_mode ? $lang["saveandnext"] : $lang["save"]) : $lang["next"]);
     if($ref < 0 && $noupload)
@@ -943,11 +943,9 @@ function SaveAndClearButtons($extraclass="")
     ?>
     <div class="QuestionSubmit <?php echo $extraclass ?>">
     <?php
-    if($clearbutton_on_edit)
-        { 
-        ?>
-        <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;
-        <?php
+    if($ref < 0 || $upload_review_mode)
+        {
+        echo "<input name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
         }
         ?>
         <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $lang["confirmeditall"]?>');"<?php } ?>
@@ -1224,26 +1222,9 @@ if(!$is_template && $show_required_field_label)
     }
 
 # Upload template: Show the save / clear buttons at the top too, to avoid unnecessary scrolling.
-?>
-<div class="QuestionSubmit">
-   <?php
-   global $clearbutton_on_upload;
-   if(($clearbutton_on_upload && $ref<0 && !$multiple) || ($ref>0 && $clearbutton_on_edit)) 
-        { ?>
-        <input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" />&nbsp;&nbsp;<?php
-        }
 
-    $save_btn_value = $lang['next'];
-    if($ref < 0 && $noupload)
-        {
-        $save_btn_value = $lang['create'];
-        }
-        ?>
-<input name="save" class="editsave" type="submit" value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" /><br />
-<div class="clearerleft"> </div>
-</div>
-
-<?php } ?>
+SaveAndClearButtons("NoPaddingSaveClear");
+  } ?>
 
 <?php hook("editbefresmetadata"); ?>
 <?php if (!hook("replaceedittype")) { ?>
@@ -2188,12 +2169,11 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
   {
   ?>
   <script>
+  preventautoscroll = true;
   // Find the first field that triggered the error:
   var error_fields;
-
   error_fields = document.getElementsByClassName('FieldSaveError');
-  window.location.hash = error_fields[0].id;
-
+  error_fields[0].scrollIntoView();
   styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
   </script>
   <?php 
