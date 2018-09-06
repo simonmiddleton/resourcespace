@@ -3801,7 +3801,7 @@ function get_simple_search_fields()
 */
 function check_display_condition($n, array $field, array $fields, $render_js)
     {
-    global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
+    global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES, $resource;
 
     if(trim($field['display_condition']) == "")
         {
@@ -3812,46 +3812,55 @@ function check_display_condition($n, array $field, array $fields, $render_js)
     $s                = explode(';', $field['display_condition']);
     $condref          = 0;
     $scriptconditions = array();
+    
+    
+    // Need all field data to check display conditions
+    global $display_check_data;
+    if(!is_array($display_check_data))
+        {
+        $display_check_data = get_resource_field_data($ref,false,false);
+        }
 
-    // On upload, you want to check against the posted nodes as save_resource_data() saves nodes after going through all the fields
+    // On upload, check against the posted nodes as save_resource_data() saves nodes after going through all the fields
     $user_set_values = getval('nodes', array());
 
     foreach ($s as $condition) # Check each condition
         {
         $displayconditioncheck = false;
         $s                     = explode('=', $condition);
+        $fieldfound = false;
 
-        for ($cf=0;$cf<count($fields);$cf++) # Check each field to see if needs to be checked
+        for ($cf=0;$cf<count($display_check_data);$cf++) # Check each field to see if needs to be checked
             {
             // Work out nodes submitted by user, if any
             $ui_selected_node_values = array();
             if(
-                isset($user_set_values[$fields[$cf]['ref']])
-                && !is_array($user_set_values[$fields[$cf]['ref']])
-                && $user_set_values[$fields[$cf]['ref']] != ''
-                && is_numeric($user_set_values[$fields[$cf]['ref']])
+                isset($user_set_values[$display_check_data[$cf]['ref']])
+                && !is_array($user_set_values[$display_check_data[$cf]['ref']])
+                && $user_set_values[$display_check_data[$cf]['ref']] != ''
+                && is_numeric($user_set_values[$display_check_data[$cf]['ref']])
             )
                 {
-                $ui_selected_node_values[] = $user_set_values[$fields[$cf]['ref']];
+                $ui_selected_node_values[] = $user_set_values[$display_check_data[$cf]['ref']];
                 }
-            else if(isset($user_set_values[$fields[$cf]['ref']]) && is_array($user_set_values[$fields[$cf]['ref']]))
+            else if(isset($user_set_values[$display_check_data[$cf]['ref']]) && is_array($user_set_values[$display_check_data[$cf]['ref']]))
                 {
-                $ui_selected_node_values = $user_set_values[$fields[$cf]['ref']];
+                $ui_selected_node_values = $user_set_values[$display_check_data[$cf]['ref']];
                 }
 
-            if($s[0] == $fields[$cf]['name']) # this field needs to be checked
+            if($s[0] == $display_check_data[$cf]['name']) # this field needs to be checked
                 {
-                $fields[$cf]['nodes'] = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
+                $display_check_data[$cf]['nodes'] = get_nodes($display_check_data[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'] ? true : false));
 
-                $node_options = extract_node_options($fields[$cf]['nodes']);
+                $node_options = extract_node_options($display_check_data[$cf]['nodes']);
 
-                $scriptconditions[$condref]['field'] = $fields[$cf]['ref'];
-                $scriptconditions[$condref]['type']  = $fields[$cf]['type'];
+                $scriptconditions[$condref]['field'] = $display_check_data[$cf]['ref'];
+                $scriptconditions[$condref]['type']  = $display_check_data[$cf]['type'];
 
                 $checkvalues=$s[1];
                 $validvalues=explode("|",mb_strtoupper($checkvalues));
                 $scriptconditions[$condref]['valid'] = array();
-                $v = trim_array(get_resource_nodes($ref, $fields[$cf]['ref']));
+                $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
 
                 if(count($ui_selected_node_values) > 0)
                     {
@@ -3866,7 +3875,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
                 foreach($validvalues as $validvalue)
                     {
-                    $found_validvalue = get_node_by_name($fields[$cf]['nodes'], $validvalue);
+                    $found_validvalue = get_node_by_name($display_check_data[$cf]['nodes'], $validvalue);
 
                     if(0 != count($found_validvalue))
                         {
@@ -3886,16 +3895,17 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     }
 
                 // Skip rendering the JS calls to checkDisplayCondition functions
-                if(!$render_js)
+                // Skip if user does not have access to the master (parent) field 
+                if(!$render_js || !in_array($display_check_data[$cf]['ref'], array_column($fields,"ref")))
                     {
                     continue;
                     }
 
                 // Check display conditions
                 // Certain fixed list types allow for multiple nodes to be passed at the same time
-                if(in_array($fields[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
+                if(in_array($display_check_data[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
                     {
-                    if(FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'])
+                    if(FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'])
                         {
                         ?>
                         <script>
@@ -3913,7 +3923,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         // Move on to the next field now
                         continue;
                         }
-                    else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $fields[$cf]['type'])
+                    else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $display_check_data[$cf]['type'])
                         {
                         ?>
                         <script>
@@ -3932,18 +3942,18 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         continue;
                         }
 
-                    $checkname = "nodes[{$fields[$cf]['ref']}][]";
+                    $checkname = "nodes[{$display_check_data[$cf]['ref']}][]";
 
-                    if(FIELD_TYPE_RADIO_BUTTONS == $fields[$cf]['type'])
+                    if(FIELD_TYPE_RADIO_BUTTONS == $display_check_data[$cf]['type'])
                         {
-                        $checkname = "nodes[{$fields[$cf]['ref']}]";
+                        $checkname = "nodes[{$display_check_data[$cf]['ref']}]";
                         }
 
                     $jquery_selector = "input[name=\"{$checkname}\"]";
 
-                    if(FIELD_TYPE_DROP_DOWN_LIST == $fields[$cf]['type'])
+                    if(FIELD_TYPE_DROP_DOWN_LIST == $display_check_data[$cf]['type'])
                         {
-                        $checkname       = "nodes[{$fields[$cf]['ref']}]";
+                        $checkname       = "nodes[{$display_check_data[$cf]['ref']}]";
                         $jquery_selector = "select[name=\"{$checkname}\"]";
                         }
                     ?>
@@ -3966,7 +3976,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     jQuery(document).ready(function()
                         {
                         checkDisplayCondition<?php echo $field['ref']; ?>();
-                        jQuery('#field_<?php echo $fields[$cf]["ref"]; ?>').change(function ()
+                        jQuery('#field_<?php echo $display_check_data[$cf]["ref"]; ?>').change(function ()
                             {
                             checkDisplayCondition<?php echo $field['ref']; ?>();
                             });
@@ -3977,7 +3987,6 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 }
 
         } # see if next field needs to be checked
-
     $condref++;
 
     } # check next condition

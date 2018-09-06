@@ -1445,7 +1445,6 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
 
 <div class="clearerleft"> </div>
 </div>
-
 <?php   
 }
 
@@ -1520,14 +1519,13 @@ $fieldcount=0;
 $tabname="";
 $tabcount=0;
 for ($n=0;$n<count($fields);$n++)
-    {
-
-    if (is_field_displayed($fields[$n]))
-        {
-        $display_any_fields=true;
-        break;
-        }
+  {
+   if (is_field_displayed($fields[$n]))
+     {
+     $display_any_fields=true;
+     break;
     }
+}
  
 # "copy data from" feature
 if ($display_any_fields && $enable_copy_data_from && !$upload_review_mode)
@@ -1551,32 +1549,31 @@ hook('editbeforesectionhead');
 
 global $collapsible_sections;
 if($collapsible_sections)
-    {
-    ?>
-    <div id="CollapsibleSections">
-    <?php
-    }
+{
+  ?>
+  <div id="CollapsibleSections">
+     <?php
+  }
 
-if ($display_any_fields)
-    {
-    ?>
-    <?php 
-    if (!$upload_review_mode) 
-        { 
-        ?>
-        <br /><br /><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
-        } 
 
-    ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
-    }
+ if ($display_any_fields)
+ {
+ ?>
+
+<?php if (!$upload_review_mode) { ?>
+<br /><br /><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
+ } 
+
+?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
+}
 
 if($tabs_on_edit)
-  {
-  #  -----------------------------  Draw tabs ---------------------------
+{
+    #  -----------------------------  Draw tabs ---------------------------
   $tabname="";
   $tabcount=0;
   if (count($fields)>0 && $fields[0]["tab_name"]!="")
-    { 
+  { 
     ?>
 
     <?php
@@ -1588,107 +1585,93 @@ if($tabs_on_edit)
     {   
       $value=$fields[$n]["value"];
 
-      # draw new tab?
+            # draw new tab?
       if ($tabname!=$fields[$n]["tab_name"] && is_field_displayed($fields[$n]))
-        {
+      {
         if($tabcount==0){$tabtophtml.="<div class=\"BasicsBox\" id=\"BasicsBoxTabs\"><div class=\"TabBar\">";}
         $tabtophtml.="<div id=\"tabswitch" . $tabcount . "\" class=\"Tab";
         if($tabcount==0){$tabtophtml.=" TabSelected ";}
         $tabtophtml.="\"><a href=\"#\" onclick=\"SelectTab(" . $tabcount . ");return false;\">" .  i18n_get_translated($fields[$n]["tab_name"]) . "</a></div>";
         $tabcount++;
         $tabname=$fields[$n]["tab_name"];
-        }
-    }
-
-    if ($tabcount>1)
-        {
-        echo $tabtophtml;
-        echo "</div><!-- end of TabBar -->";
-        }
-
-    if ($tabcount>1)
-        { 
-        ?>
-        <script type="text/javascript">
-        function SelectTab(tab)
-            {
-            // Deselect all tabs
-            <?php for ($n=0;$n<$tabcount;$n++) { ?>
-             document.getElementById("tab<?php echo $n?>").style.display="none";
-             document.getElementById("tabswitch<?php echo $n?>").className="Tab";
-             <?php } ?>
-             document.getElementById("tab" + tab).style.display="block";
-             document.getElementById("tabswitch" + tab).className="Tab TabSelected";
-            }
-        </script>
-        <?php
-        }
-    }
-
-  if ($tabcount>1)
-    {
-    ?>
-    <div id="tab0" class="TabbedPanel<?php if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
-    <div class="clearerleft"> </div>
-    <div class="TabPanelInner">
-    <?php
-    }
-  # ----- End of draw tabs
+     }
   }
 
-  $tabname="";
-  $tabcount=0;    
-  for ($n=0;$n<count($fields);$n++)
-    {
+  if ($tabcount>1)
+  {
+   echo $tabtophtml;
+   echo "</div><!-- end of TabBar -->";
+}
 
-    $display_the_field = is_field_displayed($fields[$n]);   
-    # If this field has any dependent fields then it must be rendered in order to support them
-    $field_has_dependencies = does_field_have_dependencies($fields[$n],$fields);   
-
-    
-    if (!$display_the_field && $field_has_dependencies)
-        {
-        # Do not skip if its in hide_resource_types
-        # Do not draw new tab panel
-        # Do not save the tab name or increment fieldcount because its for displayed fields only    
-        $newtab=false;  
-        node_field_options_override($fields[$n]);
-        display_field($n, $fields[$n], $newtab, $modal, $display_the_field, $field_has_dependencies);
+if ($tabcount>1)
+   {?>
+<script type="text/javascript">
+function SelectTab(tab)
+{
+                // Deselect all tabs
+                <?php for ($n=0;$n<$tabcount;$n++) { ?>
+                 document.getElementById("tab<?php echo $n?>").style.display="none";
+                 document.getElementById("tabswitch<?php echo $n?>").className="Tab";
+                 <?php } ?>
+                 document.getElementById("tab" + tab).style.display="block";
+                 document.getElementById("tabswitch" + tab).className="Tab TabSelected";
+              }
+              </script>
+              <?php
+           }
         }
 
 
+        if ($tabcount>1)
+        {
+          ?>
+          <div id="tab0" class="TabbedPanel<?php if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>">
+             <div class="clearerleft"> </div>
+             <div class="TabPanelInner">
+
+                <?php
+             }
+          }
+
+
+          $tabname="";
+          $tabcount=0;    
+          for ($n=0;$n<count($fields);$n++)
+          {
     # Should this field be displayed?
-    if ($display_the_field)
-        {
-        if(in_array($fields[$n]['resource_type'], $hide_resource_types)) { continue; }
-        $newtab=false;  
-        if($n==0 && $tabs_on_edit){$newtab=true;}
+           if (is_field_displayed($fields[$n]))
+           {
+            if(in_array($fields[$n]['resource_type'], $hide_resource_types)) { continue; }
+            $newtab=false;  
+            if($n==0 && $tabs_on_edit){$newtab=true;}
         # draw new tab panel?
-        if ($tabs_on_edit && ($tabname!=$fields[$n]["tab_name"]) && ($fieldcount>0))
+            if ($tabs_on_edit && ($tabname!=$fields[$n]["tab_name"]) && ($fieldcount>0))
             {
-            $tabcount++;
+               $tabcount++;
             # Also display the custom formatted data $extra at the bottom of this tab panel.
-            ?><div class="clearerleft"> </div><?php if(isset($extra)){echo $extra;} ?></div><!-- end of TabPanelInner --></div><!-- end of TabbedPanel --><div class="TabbedPanel StyledTabbedPanel" style="display:none;" id="tab<?php echo $tabcount?>"><div class="TabPanelInner"><?php  
-            $extra="";
-            $newtab=true;
+               ?><div class="clearerleft"> </div><?php if(isset($extra)){echo $extra;} ?></div><!-- end of TabPanelInner --></div><!-- end of TabbedPanel --><div class="TabbedPanel StyledTabbedPanel" style="display:none;" id="tab<?php echo $tabcount?>"><div class="TabPanelInner"><?php  
+               $extra="";
+               $newtab=true;
             }
-        $tabname=$fields[$n]["tab_name"];
-        $fieldcount++;
-    
-        node_field_options_override($fields[$n]);
-        display_field($n, $fields[$n], $newtab, $modal, $display_the_field, $field_has_dependencies);
-        }
-    }
+            $tabname=$fields[$n]["tab_name"];
+            $fieldcount++;
+            
+			node_field_options_override($fields[$n]);
+            display_field($n, $fields[$n], $newtab, $modal);
+         }
+      }
 
-  if ($tabs_on_edit && $tabcount>0)
-    {
-    ?>
-       <div class="clearerleft"> </div>
+
+
+      if ($tabs_on_edit && $tabcount>0)
+      {
+        ?>
+        <div class="clearerleft"> </div>
      </div><!-- end of TabPanelInner -->
   </div><!-- end of TabbedPanel -->
 </div><!-- end of Tabs BasicsBox -->
-    <?php
-    }
+<?php
+}
 
 
 # Add required_fields_exempt so it is submitted with POST

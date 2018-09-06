@@ -1367,39 +1367,6 @@ function is_field_displayed($field)
         || hook('edithidefield2', '', array('field' => $field)));
     }
 
-# Determine whether this field is referenced by a condition check in any of the other fields
-function does_field_have_dependencies($field, $fields)
-    {
-    # Check whether any entry in the $fields array references the given $field
-    foreach ($fields as $fieldinarray) 
-        {
-        # Only process fields other than the $field being checked
-        if ($fieldinarray !== $field)
-            {
-            # Only process if the field has condition(s) specified
-            if(trim($fieldinarray['display_condition']) !== "")
-                {
-                # Build array of conditions specified on the field
-                $conditions = explode(';', $fieldinarray['display_condition']);
-                # Process each condition specified on the field
-                foreach ($conditions as $condition) 
-                    {
-                    # Split the condition into the field and value pair
-                    $conditionpart = explode('=', $condition);
-                    # Check for a dependency, if so return true
-                    if ($field['name'] === $conditionpart[0])
-                        {
-                            return true; // dependency found, no need to check any more    
-                        }
-                    }
-                } 
-            }
-
-        }
-    # No more fields to check
-    return false;
-    }
-
 # Allows language alternatives to be entered for free text metadata fields.
 function display_multilingual_text_field($n, $field, $translations)
   {
@@ -1439,7 +1406,7 @@ function display_multilingual_text_field($n, $field, $translations)
   ?></table><?php
   }
 
-function display_field($n, $field, $newtab=false,$modal=false, $display_the_field, $field_has_dependencies)
+function display_field($n, $field, $newtab=false,$modal=false)
   {
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
@@ -1460,9 +1427,9 @@ function display_field($n, $field, $newtab=false,$modal=false, $display_the_fiel
         $copyfrom = getval('copyfrom', '');
         }
 
-    $name="field_" . $field["ref"];
-    $value=$field["value"];
-    $value=trim($value);
+  $name="field_" . $field["ref"];
+  $value=$field["value"];
+  $value=trim($value);
     if ($use != $ref && ($field["omit_when_copying"]))
         {
         debug("display_field: reverting copied value for field " . $field["ref"] . " as omit_when_copying is enabled");
@@ -1603,15 +1570,15 @@ function display_field($n, $field, $newtab=false,$modal=false, $display_the_fiel
       }
       ?>
 
-      <div class="Question <?php if($upload_review_mode && in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n?>"<?php
-      if ( ($multiple && !$field_save_error) || !$displaycondition || $newtab || (!$display_the_field && $field_has_dependencies) ) 
+      <div class="Question <?php if($upload_review_mode && in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n?>" <?php
+      if (($multiple && !$field_save_error) || !$displaycondition || $newtab)
         {?>style="border-top:none;<?php 
-        if ( ($multiple && $value=="") || !$displaycondition || (!$display_the_field && $field_has_dependencies) ) # Hide this
-            {
-            ?>
-            display:none;
-            <?php
-            }
+        if (($multiple && $value=="") || !$displaycondition) # Hide this
+        {
+        ?>
+        display:none;
+        <?php
+        }
         ?>"<?php
         }
      ?>>
