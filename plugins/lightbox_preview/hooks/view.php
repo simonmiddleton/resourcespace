@@ -74,7 +74,7 @@ function HookLightbox_previewViewRenderaltthumb()
 
 	# Replace the link to add the 'altlink' ID
 	?>
-	<a id="altlink_<?php echo $n; ?>" href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php
+	<a id="altlink_<?php echo $n; ?>" class="AltThumbLink" href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php
 			echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]['ref']?>&k=<?php
 			echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo
 			urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo
