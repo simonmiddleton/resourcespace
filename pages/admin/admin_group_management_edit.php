@@ -247,7 +247,7 @@ include "../../include/header.php";
 				<textarea name="permissions" class="stdwidth" rows="5" cols="50"><?php echo $record['permissions']; ?></textarea>
 				<div class="clearerleft"></div>
 				<label></label>
-				<div><a href="../../documentation/permissions.txt" target="_blank"><?php echo $lang["documentation-permissions"]; ?></div>
+				<div><?php echo $lang["documentation-permissions"]; ?></div>
 				<div class="clearerleft"></div>
 			</div> <!-- End of permissions_area -->
 		</div>
