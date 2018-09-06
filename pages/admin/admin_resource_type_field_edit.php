@@ -139,20 +139,18 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 								newval=parseInt(this.value);
 								if((jQuery.inArray(newval,fixed_list_fields) > -1) && (jQuery.inArray(current_type,text_fields) > -1))
 									{
+                                    jQuery('input[name=\'keywords_index\']')[0].checked = true;
+
 									if(confirm('<?php echo $lang["admin_resource_type_field_migrate_data_prompt"] ?>'))
 										{
 										jQuery('#migrate_data').val('yes');
-										this.form.submit();
 										}
 									else
 										{
 										jQuery('#migrate_data').val('');
-										}								
-									if(jQuery.inArray(newval,fixed_list_fields) > -1)
-										{
-										<?php $update_index_sql="update resource_type_field set keywords_index = 1 WHERE ref = '{$ref}'";
-										sql_query($update_index_sql); ?>
 										}
+
+                                    this.form.submit();
 									}
 								else
 									{
