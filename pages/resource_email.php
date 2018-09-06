@@ -23,10 +23,10 @@ $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getvalescaped("sort",$default_sort_direction);
 
-$useraccess=get_resource_access($ref);
+$minaccess=get_resource_access($ref);
 
 // Check if sharing permitted
-if (!can_share_resource($ref,$useraccess)) {exit($lang["error-permissiondenied"]);}
+if (!can_share_resource($ref,$minaccess)) {exit($lang["error-permissiondenied"]);}
 
 $user_select_internal=checkperm("noex");
 
@@ -91,7 +91,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	else
 		{
 		// Email single resource
-		$errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$useraccess,$group, $sharepwd);
+		$errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$minaccess,$group, $sharepwd);
 		if ($errors=="")
 			{
 			// Log this			
