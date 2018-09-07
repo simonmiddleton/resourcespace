@@ -3801,7 +3801,7 @@ function get_simple_search_fields()
 */
 function check_display_condition($n, array $field, array $fields, $render_js)
     {
-    global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES, $resource;
+    global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
 
     if(trim($field['display_condition']) == "")
         {
@@ -3818,7 +3818,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
     global $display_check_data;
     if(!is_array($display_check_data))
         {
-        $display_check_data = get_resource_field_data($ref,false,false);
+        $display_check_data = get_resource_field_data($use,false,false);
         }
 
     // On upload, check against the posted nodes as save_resource_data() saves nodes after going through all the fields
@@ -3828,7 +3828,6 @@ function check_display_condition($n, array $field, array $fields, $render_js)
         {
         $displayconditioncheck = false;
         $s                     = explode('=', $condition);
-        $fieldfound = false;
 
         for ($cf=0;$cf<count($display_check_data);$cf++) # Check each field to see if needs to be checked
             {
