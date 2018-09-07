@@ -2815,6 +2815,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
     
     global $email_from;
+    $from_system = false;
     if ($from=="")
         {
         $from=$email_from;
