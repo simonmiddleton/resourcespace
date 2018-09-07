@@ -14,7 +14,7 @@ function HookAction_datesCronCron()
 	if(in_array($action_dates_restrictfield, $allowable_fields))
 		{
         echo "action_dates: Checking field " . $action_dates_restrictfield . PHP_EOL;
-        $restrict_resources=sql_query("select rd.resource, rd.value from resource_data rd left join resource r on r.ref=rd.resource where r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
+        $restrict_resources=sql_query("select rd.resource, rd.value from resource_data rd left join resource r on r.ref=rd.resource where r.ref > 0 and r.access=0 and rd.resource_type_field = '$action_dates_restrictfield' and rd.value <>'' and rd.value is not null");
 		$emailrefs=array();
 		foreach ($restrict_resources as $resource)
 			{
@@ -91,7 +91,7 @@ function HookAction_datesCronCron()
         echo "action_dates: Checking dates in field " . $fieldinfo["title"] . PHP_EOL;
         if($action_dates_reallydelete)
             {
-            $delete_resources = sql_query("SELECT resource, value FROM resource_data WHERE resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND value IS NOT NULL");
+            $delete_resources = sql_query("SELECT resource, value FROM resource_data WHERE resource > 0 AND resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND value IS NOT NULL");
             }
         else
             {
@@ -109,7 +109,7 @@ function HookAction_datesCronCron()
                 $change_archive_state    = true;
                 }
 
-            $delete_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource AND r.archive != '{$resource_deletion_state}' WHERE rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
+            $delete_resources = sql_query("SELECT rd.resource, rd.value FROM resource r LEFT JOIN resource_data rd ON r.ref = rd.resource AND r.archive != '{$resource_deletion_state}' WHERE r.ref > 0 AND rd.resource_type_field = '{$action_dates_deletefield}' AND value <> '' AND rd.value IS NOT NULL");
             }
 
         foreach($delete_resources as $resource)
@@ -160,7 +160,7 @@ function HookAction_datesCronCron()
         if(in_array($datefield['type'],$DATE_FIELD_TYPES))
             {
             echo "action_dates: Checking dates for field " . $datefield["title"] . PHP_EOL;
-            $additional_resources=sql_query("SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource WHERE rd.resource_type_field = '$field' AND rd.value <>'' AND rd.value IS NOT null AND r.archive<>'$resource_deletion_state' AND r.archive<>'$newstatus'");
+            $additional_resources=sql_query("SELECT rd.resource, rd.value FROM resource_data rd LEFT JOIN resource r ON r.ref=rd.resource WHERE r.ref > 0 AND rd.resource_type_field = '$field' AND rd.value <>'' AND rd.value IS NOT null AND r.archive<>'$resource_deletion_state' AND r.archive<>'$newstatus'");
             
             foreach ($additional_resources as $resource)
                 {
