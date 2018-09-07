@@ -290,7 +290,7 @@ function check_view_display_condition($fields,$n)
 function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	{
 		
-	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES,$range_separator;
+	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $range_separator, $force_display_template_orderby;
 	$value=$field["value"];
 
     if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
@@ -451,8 +451,14 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 				<h3><?php echo $title?></h3><p><?php echo $value; ?></p></div><?php
 				}
 			}
+			
+			if($force_display_template_orderby)
+                {
+                echo $extra;
+                $extra='';
+                }
+            }
 		}
-	}
 	
 //Check if we want to use a specified field as a caption below the preview
 if(isset($display_field_below_preview) && is_int($display_field_below_preview))
