@@ -517,14 +517,14 @@ function HookSimplesamlCollection_emailReplacecollectionemailredirect()
     {
     global $baseurl_short, $userref;
     
-    redirect($baseurl_short . "pages/done.php?text=collection_email&user=" . urlencode($userref));
+    redirect($baseurl_short . "pages/done.php?text=collection_email");
     }
 
 function HookSimplesamlResource_emailReplaceresourceemailredirect()
     {
     global $baseurl_short, $userref, $ref, $search, $offset, $order_by, $sort, $archive;
     
-  redirect($baseurl_short . "pages/done.php?text=resource_email&resource=" . urlencode($ref) . "&search=" . urlencode($search) . "&offset=" . urlencode($offset) . "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive) . "&user=" . urlencode($userref));
+  redirect($baseurl_short . "pages/done.php?text=resource_email&resource=" . urlencode($ref) . "&search=" . urlencode($search) . "&offset=" . urlencode($offset) . "&order_by=" . urlencode($order_by) . "&sort=" . urlencode($sort) . "&archive=" . urlencode($archive));
     }
 
 function HookSimplesamlAllCheck_access_key()
