@@ -122,7 +122,7 @@ else if ($saved)
 		}
 	else
 		{?>
-		<input class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($workflowstate["name"]);  ?>" />
+		<input type="text" class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($workflowstate["name"]);  ?>" />
 		<?php
 		}
 		?>
