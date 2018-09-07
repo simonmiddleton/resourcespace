@@ -67,12 +67,12 @@ if(!empty($index) && isset($tile) && !isset($usertile) && '' != $selected_user_g
         $index -= 5;
         }
 
-    update_usergroup_dash_tile_order($selected_user_group, $usergroup_tile['ref'], $index);
+    update_usergroup_dash_tile_order($selected_user_group, $usergroup_tile['dash_tile'], $index);
     reorder_usergroup_dash($selected_user_group);
 
-    log_activity($lang['dashtile'], LOG_CODE_REORDERED, $index, 'usergroup_dash_tile', 'default_order_by', $usergroup_tile['ref']);
+    log_activity($lang['dashtile'], LOG_CODE_REORDERED, $index, 'usergroup_dash_tile', 'default_order_by', $usergroup_tile['dash_tile']);
 
-    exit("Tile {$usergroup_tile['ref']} at index: {$index}");
+    exit("Tile {$usergroup_tile['dash_tile']} at index: {$index}");
 	}
 
 // Re-order default dash tiles
