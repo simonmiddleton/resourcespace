@@ -7,7 +7,10 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 	// echo "Override:" . $override . "<br>";
 	// if($processcsv){echo "Processing CSV file<br>";}
 
-    global $FIXED_LIST_FIELD_TYPES;
+  // Ensure /r line endings (such as those created in MS Excel) are handled correctly
+	$save_auto_detect_line_endings = ini_set("auto_detect_line_endings", "1");  
+
+  global $FIXED_LIST_FIELD_TYPES;
 
 	$file=fopen($filename,'r');
 	$line_count=0;
@@ -16,6 +19,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 		{
 		array_push($messages, "No header found");
 		fclose($file);
+		ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
 		return false;		
 		}			
 		
@@ -77,6 +81,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 		{
 		array_push($messages, "Error: override resource_type {$resource_type_filter}({$resource_types[$resource_type_filter]}) not found or headers are incomplete");
 		fclose($file);
+		ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
 		return false;
 		}
 	else if ($override!="")
@@ -92,6 +97,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 		{
 		array_push($messages,"Error: duplicate header fields found");
 		fclose($file);
+		ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
 		return false;		
 		}
 	
@@ -343,10 +349,12 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 			{
 			array_push($messages,"Warning: Showing first {$max_error_count} data validation errors only - more may exist");
 			}
+		ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
 		return false;		
 		}
 	
 	array_push($messages,"Info: data successfully validated");
 		
+	ini_set("auto_detect_line_endings", $save_auto_detect_line_endings);
 	return true;
 }
