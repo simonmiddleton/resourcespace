@@ -25,7 +25,7 @@ if($selected_user_group == 0)
 if(getvalescaped("quicksave",FALSE))
 	{
 	$tile = getvalescaped("tile","");
-	$revokeallusers = getvalescaped("revokeallusers",false);
+	$revokeallusers = getvalescaped("revokeallusers","false") != "false";
 
 	#If a valid tile value supplied
 	if(!empty($tile) && is_numeric($tile))
