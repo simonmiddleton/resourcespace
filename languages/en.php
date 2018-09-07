@@ -2626,7 +2626,7 @@ $lang["collection_restype_blocked"]="The following resource types cannot be adde
 $lang["retina_mode"]="Retina mode";
 
 $lang["private-api-key"]="Private API key";
-$lang["can_edit_resource_type"] = "Edit access to resource type: ";
+$lang["can_edit_resource_type"] = "Force edit access to resource type: ";
 
 $lang["userpreference_headersize"]="Header size";
 $lang["headersmall"]="Small";

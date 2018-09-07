@@ -45,7 +45,7 @@ e?	Can edit resources in specific archive state, e.g. e0, e1, e2 (includes delet
 		e-2: User contributed, awaiting user submission
 		e-1: User contributed, awaiting team review
 		
-ert? Can edit resources of the specified resource type in any archive state, can be used if the user does not have access to the admin area for delegation of publishing control
+ert? Can always edit resources of the specified resource type in any archive state, can be used if the user does not have access to the admin area for delegation of publishing control
 i	Can manage archive resources
 n	Can tag resources using 'Speed Tagging' (must be enabled in config).
 
