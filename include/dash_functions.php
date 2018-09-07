@@ -727,12 +727,12 @@ function append_usergroup_position($usergroup)
 
 function reorder_usergroup_dash($usergroup)
     {
-    $usergroup_tiles = sql_query("SELECT usergroup_dash_tile.ref FROM usergroup_dash_tile LEFT JOIN dash_tile ON usergroup_dash_tile.dash_tile = dash_tile.ref WHERE usergroup_dash_tile.usergroup = '{$usergroup}' ORDER BY usergroup_dash_tile.default_order_by");
+    $usergroup_tiles = sql_query("SELECT usergroup_dash_tile.dash_tile FROM usergroup_dash_tile LEFT JOIN dash_tile ON usergroup_dash_tile.dash_tile = dash_tile.ref WHERE usergroup_dash_tile.usergroup = '{$usergroup}' ORDER BY usergroup_dash_tile.default_order_by");
     $order_by        = 10 * count($usergroup_tiles);
 
     for($i = count($usergroup_tiles) - 1; $i >= 0; $i--)
         {
-        update_usergroup_dash_tile_order($usergroup, $usergroup_tiles[$i]['ref'], $order_by);
+        update_usergroup_dash_tile_order($usergroup, $usergroup_tiles[$i]['dash_tile'], $order_by);
         $order_by -= 10;
         }
     }
