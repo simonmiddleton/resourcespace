@@ -1,5 +1,5 @@
 <?php /* -------- Text Box (large multi-line) ----- */ ?>
-<textarea class="stdwidth"
+<textarea class="stdwidth MultiLine"
           rows=20 
           cols=80 
           name="<?php echo $name; ?>"
