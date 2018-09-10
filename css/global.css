@@ -500,7 +500,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .RecordDownloadSpace .DownloadDBlend h2 {margin:0;padding:0;font-size: 1em;    text-align: left;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {margin:0;padding:0;    text-align: left;}
 .RecordPanel .RecordDownloadSpace .DownloadButton {min-width: 130px;}
-.RecordStory {padding: 8px 0;}
+.RecordStory {padding: 8px;}
 .RecordStory h1{font-size:1.25em; padding:0.5em 0 0.5em 0; margin:0;}
 
 .RecordPanel h2{font-size:1.25em; padding:0; margin:0.2em 0 0.2em 0;font-weight:normal;}
