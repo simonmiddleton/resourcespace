@@ -47,7 +47,6 @@ input, textarea, button, select, .RecordPanel .RecordDownloadSpace .DownloadDBle
 }
 
 input[type="text"], input[type=submit], input[type=button], input[type="password"], input[type="url"],input[type="email"], textarea, button, select {
-    line-height: 1.8rem;
     padding: 0 0.5rem;
     vertical-align: middle;
     min-height: 30px;
@@ -1581,4 +1580,8 @@ select.MultiSelect:before {
 
 #ResourceToolsContainer h2 {
     margin-bottom: 6px;
+}
+
+.MultiLine {
+    padding-top: 5px;
 }
