@@ -856,11 +856,11 @@ elseif (($k != "" && !$internal_share_access) || $collection_download_only)
 		if ($found==false)
 			{
 			# Add this one at the end, it can't be found
-			$notfound=$cinfo;
-			if ($notfound!==false)
+			$notfound = $cinfo;
+			if ($notfound !== false)
 				{
 				?>
-				<option selected><?php echo i18n_get_collection_name($notfound) ?></option>
+				<option value="<?php echo htmlspecialchars($notfound['ref']); ?>" selected><?php echo i18n_get_collection_name($notfound) ?></option>
 				<?php
 				}
                         elseif($validcollection==0)
