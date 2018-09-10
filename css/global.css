@@ -484,7 +484,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .buffer {margin-right: 10px;}
 .RecordPanel .itemNarrow {word-wrap: break-word; float: left;width: 170px;margin-right: 5px;position:relative; padding-top: 10px;padding-left: 10px;} 
 .RecordPanel .SearchSimilar {float: left;width: 120px;margin: 0px 10px 2px 0px;padding: 0px;}
-.RecordPanel .item {word-wrap: break-word; float: left;margin-bottom: 10px;width: 100%;position:relative;}
+.RecordPanel .item {word-wrap: break-word; float: left;margin: 10px;width: 100%;position:relative;}
 .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {font-size: 1em;margin: 0px;padding: 0px;text-transform: uppercase; font-size: 0.875rem; color: #999;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0px;padding: 0px;}
 .RecordPanel .RecordDownload {float: none;width: 100%;margin: 0px 0px 10px;}
@@ -542,7 +542,6 @@ a.HomePanel {cursor:pointer;}
 .Tab a:hover {text-decoration: none;}
 .Tab {display:inline;}
 .StyledTabbedPanel {
-    padding:12px 1rem 8px 1rem;
     clear:left;
     border-bottom-right-radius:10px;
     border-bottom-left-radius:10px;
@@ -1578,4 +1577,8 @@ select.MultiSelect:before {
 }
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink {
     min-height: unset;
+}
+
+#ResourceToolsContainer h2 {
+    margin-bottom: 6px;
 }
