@@ -91,7 +91,7 @@ for ($n=0;$n<count($keywords);$n++)
             
         // Nodes search
         else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
-            {                
+            {
             $nodes = resolve_nodes_from_string($keywords[$n]);
             foreach($nodes as $node)
                 {
@@ -101,31 +101,38 @@ for ($n=0;$n<count($keywords);$n++)
             $searched_nodes = array_unique($searched_nodes);
             $simpletext_count = count($simple);
             $initial_tag_count = count($initial_tags);
-            foreach($searched_nodes as $searched_node)
+            foreach($searched_nodes as $searched_node_index => $searched_node)
                 {
                 $node = array();
+
                 if(!get_node($searched_node, $node))
                     {
                     continue;
                     }
+
                 $field_index = array_search($node['resource_type_field'], array_column($fields, 'ref'));
 
                 if(false === $field_index) // Node is not from a simple search field
-                    {                        
+                    {
                     $fieldsearchterm = rebuild_specific_field_search_from_node($node);
+                    
 					if(strpos(" ",$fieldsearchterm)!==false)
-						{ $fieldsearchterm = "\"" . $fieldsearchterm . "\"";}
+						{
+                        $fieldsearchterm = "\"" . $fieldsearchterm . "\"";
+                        }
+
                     if(!isset($all_fields))
                         {
                         $all_fields=get_resource_type_fields();
                         }
-            
+
                     $all_fields_index = array_search($node['resource_type_field'], array_column($all_fields, 'ref'));                        
                     $field_name = $all_fields[$all_fields_index]["name"];
                     if(isset($last_field_name) && $last_field_name == $field_name && (($all_fields[$all_fields_index]["type"] == FIELD_TYPE_CHECK_BOX_LIST && !$checkbox_and) ||  ($all_fields[$all_fields_index]["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$dynamic_keyword_and)))
                         {
                         // Append in order to construct the field:value1;value2 syntax used for an OR search in the same field
                         $fieldsearchterm = substr($fieldsearchterm,strpos($fieldsearchterm,":")+1);
+
                         if(!isset($simple[$simpletext_count]))
                             {
                             $simple[$simpletext_count] = "";
@@ -135,12 +142,17 @@ for ($n=0;$n<count($keywords);$n++)
                             {
                             $initial_tags[$initial_tag_count] = "";  
                             }
-                        $initial_tags[$initial_tag_count] .= ";" . $fieldsearchterm;                          
+                        $initial_tags[$initial_tag_count] .= ";" . $fieldsearchterm;
+
+                        unset($searched_nodes[$searched_node_index]);                      
                         }
 					else
                         {
+
                         $simple[$simpletext_count] = $fieldsearchterm;
                         $initial_tags[] = $fieldsearchterm;
+
+                        unset($searched_nodes[$searched_node_index]);
                         }
                     
                     // Store the field name so we can check for ORs on same field 
@@ -165,7 +177,7 @@ for ($n=0;$n<count($keywords);$n++)
 			}
 		}
 	}
-    
+
 # Set the text search box to the stripped value.
 $simple=array_unique($simple);
 $initial_tags=array_unique($initial_tags);
