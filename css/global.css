@@ -46,7 +46,7 @@ input, textarea, button, select, .RecordPanel .RecordDownloadSpace .DownloadDBle
     border-radius: 4px; 
 }
 
-input[type="text"], input[type=submit], input[type=button], input[type="password"], input[type="url"],input[type="email"], textarea, button, select, .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
+input[type="text"], input[type=submit], input[type=button], input[type="password"], input[type="url"],input[type="email"], textarea, button, select {
     line-height: 1.8rem;
     padding: 0 0.5rem;
     vertical-align: middle;
@@ -76,7 +76,11 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 }
 
 .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
+    line-height: 1.8rem;
+    padding: 0 0.5rem;
+    vertical-align: middle;
     display: block;
+    min-height: unset;
 }
 
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
