@@ -772,7 +772,7 @@ else if(1 == $resource['has_image'])
 		}
 	
 	# Fall back to preview, then thumbnail if scr doesn't exist	
-    if(!file_exists($imagepath))
+    if(!file_exists($imagepath) || $resource_view_use_pre)
         {
 		$use_size="pre";
 		}

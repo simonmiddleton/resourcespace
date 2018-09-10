@@ -3113,6 +3113,9 @@ $modal_default=false;
 # Show the resource edit in a modal when accessed from resource view modal.
 $resource_edit_modal_from_view_modal=false;
 
+# Use the "preview" size on the resource view page
+$resource_view_use_pre = false;
+
 # Show geographical search results in a modal
 $geo_search_modal_results = true;
 
