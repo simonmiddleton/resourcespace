@@ -3533,3 +3533,8 @@ $use_pdfjs_viewer = false;
 // Ask users to opt-in registering to access the system. This can address requirements data protection laws (e.g. GDPR) may have
 $user_registration_opt_in = true;
 
+// Purge users - option to disable rather than delete inactive users
+$user_purge_disable = false;
+
+// Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
+$inactive_user_disable_days = 0;

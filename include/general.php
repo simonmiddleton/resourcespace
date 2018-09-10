@@ -1576,6 +1576,7 @@ function save_user($ref)
         $comments               = trim(getvalescaped('comments', ''));
         $suggest                = getval('suggest', '');
         $emailresetlink         = getval('emailresetlink', '');
+        $approved               = getval('approved', 0, true);
 
         # Username or e-mail address already exists?
         $c = sql_value("SELECT count(*) value FROM user WHERE ref <> '$ref' AND (username = '" . $username . "' OR email = '" . $email . "')", 0);
@@ -1644,7 +1645,7 @@ function save_user($ref)
         log_activity(null, LOG_CODE_EDITED, $search_filter_override, 'user', 'search_filter_override', $ref, null, '');
         log_activity(null, LOG_CODE_EDITED, $expires, 'user', 'account_expires', $ref);
         log_activity(null, LOG_CODE_EDITED, $comments, 'user', 'comments', $ref);
-        log_activity(null, LOG_CODE_EDITED, ((getval('approved', '') == '') ? '0' : '1'), 'user', 'approved', $ref);
+        log_activity(null, LOG_CODE_EDITED, $approved, 'user', 'approved', $ref);
 
         sql_query("update user set
         username='" . $username . "'" . $passsql . ",
@@ -1655,7 +1656,7 @@ function save_user($ref)
         ip_restrict='" . $ip_restrict . "',
         search_filter_override='" . $search_filter_override . "',
         comments='" . $comments . "',
-        approved='" . ((getval('approved', '') == "") ? '0' : '1') . "' $additional_sql where ref='$ref'");
+        approved='" . $approved . "' " . $additional_sql . " where ref='$ref'");
         }
 
         // Add user group dash tiles as soon as we've changed the user group
@@ -5702,7 +5703,7 @@ if(!function_exists('resolve_user_emails'))
                 }
 
             // Skip internal, not approved accounts
-            if(0 == $email_details[0]['approved'])
+            if($email_details[0]['approved'] != 1)
                 {
                 debug('EMAIL: ' . __FUNCTION__ . '() skipping e-mail "' . $email_details[0]['email'] . '" because it belongs to user account which is not approved');
 

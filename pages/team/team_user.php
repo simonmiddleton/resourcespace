@@ -14,6 +14,7 @@ $offset=getvalescaped("offset",0);
 $find=getvalescaped("find","");
 $order_by=getvalescaped("order_by","u.username");
 $group=getvalescaped("group",0);
+$approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2 => $lang["disabled"]);
 
 # Pager
 $per_page=getvalescaped("per_page_list",$default_perpage_list);rs_setcookie('per_page_list', $per_page);
@@ -169,7 +170,7 @@ function addColumnHeader($orderName, $labelKey)
 	if (!hook("replaceemailheader"))
 		addColumnHeader('email', 'email');
 	addColumnHeader('created', 'created');
-	addColumnHeader('approved', 'approved');
+	addColumnHeader('approved', 'status');
 	addColumnHeader('last_active', 'lastactive');
 	hook("additional_user_column_header");
 ?>
@@ -201,7 +202,7 @@ for ($n=$offset;(($n<count($users)) && ($n<($offset+$per_page)));$n++)
 	<td><?php echo htmlentities($users[$n]["email"])?></td>
 	<?php } ?>
 	<td><?php echo nicedate($users[$n]["created"]) ?></td>
-	<td><?php echo $users[$n]["approved"]?$lang["yes"]:$lang["no"] ?></td>
+	<td><?php echo $approval_state_text[$users[$n]["approved"]] ?></td>
 	<td><?php echo nicedate($users[$n]["last_active"],true) ?></td>
 	<?php hook("additional_user_column");?>
 	<td><?php if (($usergroup==3) || ($users[$n]["usergroup"]!=3)) { ?><div class="ListTools">

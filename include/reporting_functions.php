@@ -316,7 +316,7 @@ function send_periodic_report_emails($echo_out = true)
 
         # Send to all other active users, if configured.
         # Send the report to all active users.
-        $users = get_users();
+        $users = get_users(0,"","u.username",false,-1,1);
 
         // Send e-mail reports to users belonging to the specific user groups
         if(!empty($report['user_groups']))
@@ -329,7 +329,7 @@ function send_periodic_report_emails($echo_out = true)
             $email = $user['email'];
 
             # Do not send to original report user, as they receive the mail with the unsubscribe link above.
-            if(($user['approved'] && $email == $report['email']) || !$user['approved'] || !filter_var($email, FILTER_VALIDATE_EMAIL))
+            if(($email == $report['email']) || !filter_var($email, FILTER_VALIDATE_EMAIL))
                 {
                 continue;
                 }

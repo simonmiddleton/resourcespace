@@ -1,4 +1,3 @@
-
 <?php
 // Clean up old temp files. These can be left on the system as a result of cancelled or failed downloads/uploads
 if($purge_temp_folder_age==0)

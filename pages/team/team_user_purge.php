@@ -15,15 +15,22 @@ if ($months!="")
 	if (!is_numeric($months) || $months<0) {$error=$lang["pleaseenteravalidnumber"];}
 	else
 		{
-		$condition="(created is null or created<date_sub(now(), interval $months month)) and 
-						  (last_active is null or last_active<date_sub(now(), interval $months month))";
-		$count=sql_value("select count(*) value from user where $condition",0);
+		$condition="(created IS NULL OR created<date_sub(now(), interval $months month)) AND 
+						  (last_active IS NULL OR last_active<date_sub(now(), interval $months month))";
+		$count=sql_value("SELECT count(*) value FROM user WHERE $condition",0);
 		}
 	}
 	
 if (isset($condition) && getval("purge2","")!="" && enforcePostRequest(false))
 	{
-	sql_query("delete from user where $condition");
+    if($user_purge_disable)
+        {
+        sql_query("UPDATE user SET approved=2 WHERE $condition AND approved=1");    
+        }
+    else
+        {
+        sql_query("DELETE FROM user WHERE $condition");
+        }
 	redirect("pages/team/team_user.php");
 	}
 

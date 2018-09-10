@@ -1305,10 +1305,11 @@ $lang["never"]="Never";
 
 $lang["approved"]="Approved";
 $lang["notapproved"]="Not approved";
+$lang["disabled"]="Disabled";
 
 $lang["userrequestnotification3"]="If this is a valid request, click the link to review the details and approve the user account.";
 
-$lang["ticktoapproveuser"]="You must tick the box to approve this user if you wish to enable this account";
+$lang["ticktoapproveuser"]="You must set the status to approved if you wish to enable this account";
 
 $lang["managerequestsorders"]="Manage requests / orders";
 $lang["editrequestorder"]="Edit request / order";

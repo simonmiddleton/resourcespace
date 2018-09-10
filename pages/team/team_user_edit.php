@@ -16,6 +16,7 @@ $url=$baseurl_short."pages/team/team_user_edit.php?ref=" .getvalescaped("ref",""
 if (!checkperm("u")) {redirect($baseurl_short ."login.php?error=error-permissions-login&url=".urlencode($url));}
 
 $ref=getvalescaped("ref","",true);
+$approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2 => $lang["disabled"]);
 
 
 if (getval("unlock","")!="" && enforcePostRequest(getval("ajax", false)))
@@ -246,8 +247,16 @@ if(!hook('ticktoemailpassword'))
     }
     ?> 
 
-<div class="Question"><label><?php echo $lang["approved"]?></label><input name="approved" type="checkbox"  value="yes" <?php if ($user["approved"]==1) { ?>checked<?php } ?>>
-<?php if ($user["approved"]==0) { ?><div class="FormError">!! <?php echo $lang["ticktoapproveuser"]?> !!</div><?php } ?>
+<div class="Question"><label><?php echo $lang["status"]?></label>
+<select name="approved" >
+    <?php
+    for($n=0;$n<=2;$n++)
+        {
+        echo "<option value=" . $n . " " . ($user["approved"] == $n ? " selected" : "") . " >" . $approval_state_text[$n] . "</option>";
+        }
+    ?>
+</select>
+<?php if ($user["approved"]!=1) { ?><div class="FormError">!! <?php echo $lang["ticktoapproveuser"]?> !!</div><?php } ?>
 <div class="clearerleft"> </div></div>
 
 <?php 
