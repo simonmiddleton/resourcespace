@@ -80,5 +80,8 @@
 
 <?php hook("toptoolbaradder"); ?>
 		</ul>
+<script>
+headerLinksDropdown();
+</script>
 <?php } /* end replaceheadernav1 */ ?>
 		
