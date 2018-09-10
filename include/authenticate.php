@@ -188,7 +188,7 @@ if (!$valid && !isset($system_login))
 	$_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'] . (( isset($_SERVER
 	['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '')));
     $path=$_SERVER["REQUEST_URI"];
-    $path=str_replace("ajax","ajax_disabled",$path);# Disable forwarding of the AJAX parameter if this was an AJAX load, otherwise the redirected page will be missing the header/footer.
+    $path=str_replace("ajax=","ajax_disabled=",$path);# Disable forwarding of the AJAX parameter if this was an AJAX load, otherwise the redirected page will be missing the header/footer.
 	?>
 	<script type="text/javascript">
 	<?php 
