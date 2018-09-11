@@ -1657,7 +1657,7 @@ function SelectTab(tab)
             $fieldcount++;
             
 			node_field_options_override($fields[$n]);
-            display_field($n, $fields[$n], $newtab, $modal);
+            display_field($n, $fields[$n], $newtab, $modal, $multiple);
          }
       }
 
