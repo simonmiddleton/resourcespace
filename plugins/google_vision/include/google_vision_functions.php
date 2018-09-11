@@ -2,8 +2,13 @@
 
 function google_visionProcess($resource,$verbose=false)
     {
-    global $google_vision_api_key,$google_vision_label_field,$google_vision_landmarks_field,$google_vision_text_field,$google_vision_restypes,$baseurl,$google_vision_features;
+    global $google_vision_api_key,$google_vision_label_field,$google_vision_landmarks_field,$google_vision_text_field,$google_vision_restypes;
+    global $baseurl,$google_vision_features, $google_vision_face_detect_field, $google_vision_face_detect_fullface, $google_vision_face_detect_verbose;
     
+    if($google_vision_face_detect_field > 0)
+        {
+        $google_vision_features[] = "FACE_DETECTION";
+        }
     $resource_data=get_resource_data($resource); # Load resource data (cached).
     if ($resource_data===false || !in_array($resource_data["resource_type"],$google_vision_restypes)) {return false;} # Valid resources only.
     
@@ -55,6 +60,7 @@ function google_visionProcess($resource,$verbose=false)
     $result = file_get_contents($url, false, $context);
     
     if ($verbose) echo $result;
+    
 
     /*
      * Alternative CURL code if preferred or required at some future stage....
@@ -78,11 +84,7 @@ function google_visionProcess($resource,$verbose=false)
     	debug('google vision error: ' . $result['error']['code'] . ': ' . $result['error']['message']);
     	return false;
     	}
-    
-    # echo "<pre>";
-    # print_r($result);
-    # echo "</pre>";
-    
+        
     $nodes=array();
     $title="";
     
@@ -96,12 +98,10 @@ function google_visionProcess($resource,$verbose=false)
             {
             # Create new or fetch existing node
             $nodes[]=set_node(null, $google_vision_label_field, ucfirst($label["description"]), null, 9999,true);  #set_node($ref, $resource_type_field, $name, $parent, $order_by,$returnexisting=false)
-            #echo $label["description"] . "/";
-            if ($title=="") {$title=$label["description"];}
+           if ($title=="") {$title=$label["description"];}
             }
                 
         add_resource_nodes($resource,$nodes);
-        #print_r($nodes);
         }
   
     #--------------------------------------------------------
@@ -135,7 +135,104 @@ function google_visionProcess($resource,$verbose=false)
             break; # Stop here because the first one seems to be the most useful, being a sensible grouping of all available text in aproximate reading order.
             }
         update_field($resource,$google_vision_text_field,join(", ",$text));
-        }   
+        }
+        
+    #--------------------------------------------------------
+    # Process facial recognition data
+    #--------------------------------------------------------
+    if ($google_vision_face_detect_field > 0 && isset($result["responses"][0]["faceAnnotations"]))
+        {
+        # Keywords found. Loop through them and resolve node IDs for each, or add new nodes if no matching node exists.
+        $faces=array();
+        if($google_vision_face_detect_verbose)
+            {
+            $faces[0] = "Full face (boundingPoly),Face (fdboundingPoly),Landmarks,Other";
+            }
+            
+        $f=1;
+        foreach ($result["responses"][0]["faceAnnotations"] as $face)
+            {
+            $faces[$f] = "";
+            
+            // Full boundingPoly
+            if(isset($face["boundingPoly"]) && ($google_vision_face_detect_fullface || $google_vision_face_detect_verbose))
+                {
+                $faces[$f] .= "\"";
+                foreach($face["boundingPoly"] as $bply)
+                    {
+                    foreach($bply as $bpv)
+                        {
+                        $faces[$f] .= "{x:" . $bpv["x"] . ",y:" . $bpv["y"] . "}";
+                        }
+                    }
+                $faces[$f] .= "\"";                
+                if($google_vision_face_detect_verbose)
+                    {
+                    $faces[$f] .= ",";
+                    }
+                    
+                unset($face["boundingPoly"]);
+                }
+            elseif($google_vision_face_detect_verbose)
+                {
+                $faces[$f] .= ",";
+                }
+            
+            // fdBoundingPoly (visible skin)
+            if(isset($face["fdBoundingPoly"]) && (!$google_vision_face_detect_fullface || $google_vision_face_detect_verbose))
+                {
+                $faces[$f] .= "\"";
+                foreach($face["fdBoundingPoly"] as $fdbply)
+                    {
+                    foreach($fdbply as $fdbpv)
+                        {
+                        $faces[$f] .= "{x:" . $fdbpv["x"] . ",y:" . $fdbpv["y"] . "}";
+                        }
+                    }
+                $faces[$f] .= "\"";                
+                if($google_vision_face_detect_verbose)
+                    {
+                    $faces[$f] .= ",";
+                    }
+                    
+                unset($face["fdBoundingPoly"]);
+                }
+            elseif($google_vision_face_detect_verbose)
+                {
+                $faces[$f] .= ",";
+                }
+            
+            // Facial features (Landmarks)
+            if(isset($face["landmarks"]) && $google_vision_face_detect_verbose)
+                {
+                $faces[$f] .= "\"[";
+                foreach($face["landmarks"] as $lndmk)
+                    {
+                    $faces[$f] .= "{type:" . $lndmk["type"] . ",x:" . $lndmk["position"]["x"] . ",y:" . $lndmk["position"]["y"] . ",z:" . $lndmk["position"]["z"] . "}";
+                    }
+                $faces[$f] .= "]\",";
+                unset($face["landmarks"]);
+                }
+            elseif($google_vision_face_detect_verbose)
+                {
+                $faces[$f] .= ",";
+                }
+             
+            if($google_vision_face_detect_verbose)
+                {
+                // Add in remaining data e.g. angle, emotion
+                foreach($face as $facedata=>$value)
+                    {
+                    $faces[$f] .= "{" . $facedata . ":" . $value . "}";
+                    }
+                }
+            
+            $f++;
+            }
+        
+        $allfaces = implode("\r\n",$faces);
+        update_field($resource,$google_vision_face_detect_field,$allfaces);
+        }  
         
     # Automatically set the title to the best keyword (highest ranked label, or landmark if set)
     global $google_vision_autotitle,$view_title_field;

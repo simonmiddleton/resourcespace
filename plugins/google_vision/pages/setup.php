@@ -25,6 +25,11 @@ $page_def[] = config_add_multi_select("google_vision_features", $lang["google_vi
 
 $page_def[] = config_add_boolean_select("google_vision_autotitle", $lang["google_vision_autotitle"],'',300);
 
+$page_def[] = config_add_section_header($lang["google_vision_face_detect"]);
+$page_def[]= config_add_single_ftype_select("google_vision_face_detect_field", $lang["google_vision_face_detect_field"],300,false,array(FIELD_TYPE_TEXT_BOX_MULTI_LINE,FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE)); 
+$page_def[] = config_add_boolean_select("google_vision_face_detect_fullface", $lang["google_vision_face_detect_fullface"],'',300); 
+$page_def[] = config_add_boolean_select("google_vision_face_detect_verbose", $lang["google_vision_face_detect_verbose"],'',300);
+
 
 // Do the page generation ritual
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
