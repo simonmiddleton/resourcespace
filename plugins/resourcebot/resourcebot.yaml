@@ -1,0 +1,6 @@
+name: resourcebot
+author: Montala Ltd.
+version: 1.0
+desc: In-application chat bot for tutorials and assistance
+category: User Interface
+disable_group_select: 0
