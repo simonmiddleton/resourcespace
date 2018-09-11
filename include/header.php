@@ -572,7 +572,7 @@ $activate_header_link = "{$scheme}://{$host}{$port}" . urlencode($_SERVER["REQUE
 jQuery(document).ready(function()
     {
     ActivateHeaderLink(<?php echo json_encode($activate_header_link); ?>);
-    ReloadLinks();
+
     jQuery(document).mouseup(function(e) 
         {
         var linksContainer = jQuery("#DropdownCaret");
