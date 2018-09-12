@@ -616,6 +616,8 @@ div.autocomplete ul li {
 /* user ratings */
 .RatingCount {font-size:0.8em;}
 .RatingStars {text-align:center;margin-bottom:5px;margin-top:5px;}
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .RatingStarsContainer a {line-height: unset; display: unset; background-color: unset; padding: 0; box-shadow: none;}
+#RatingCount {display: inline-block;}
 
 /* CSS for the lightbox (for resource feedback) */
 #lightbox{  position: absolute; left: 0; width: 100%; z-index: 100; text-align: center; line-height: 0;}

@@ -132,8 +132,6 @@ input[readonly] {color: #000000;}
 .IconUserRatingStar	{	background: url(../gfx/interface/RatingStarRed.gif) no-repeat;}
 .IconUserRatingSpace	{	background: url(../gfx/interface/RatingStarBlank.gif) no-repeat;}
 .StarSelect {background: transparent url(../gfx/interface/RatingStarRed.gif) no-repeat;}
-.StarEmpty {background: transparent url('../gfx/interface/RatingStarMedGrey.gif') no-repeat;}
-.StarCurrent {background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 
 .NavUnderline,.Question,.QuestionSubmit {border-bottom: 1px solid #ebebeb;}
 
@@ -204,14 +202,14 @@ div.autocomplete ul li {color: #000;}
 .CategoryTree {border-top:1px solid #737373;border-left:1px solid #999999;border-bottom:1px solid #999999;border-right:1px solid #999999;background-color:white;color: black;font-weight: normal;}
 
 /* Star Ratings */
-.StarSelect {background: transparent url('../gfx/interface/RatingStarRed.gif') no-repeat;}
+.StarSelect {background: transparent url('../gfx/interface/RatingStarYellow.gif') no-repeat;}
 .StarWhite {background: transparent url('../gfx/interface/RatingStarWhite.gif') no-repeat;}
 .StarGrey {background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 .RatingStars a:hover {text-decoration:none;}
 .Listview .ListViewSubTable,.Listview .ListViewSubTable td,.Listview .ListViewSubTable tr {background-image: none;}
 .Listview {background-color: white;border-radius:6px;}
 .StarEmpty {  background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
-.StarCurrent { background: transparent url('../gfx/interface/RatingStarWhite.gif') no-repeat;}
+.StarCurrent { background: transparent url('../gfx/interface/RatingStarRed.gif') no-repeat;}
 .highlight {color: #000;background-color: #ff0;}
 .Tab a {color: #aaaaaa; padding: 8px 1rem;}
 .StyledTabbedPanel 
