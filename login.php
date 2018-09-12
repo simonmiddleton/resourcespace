@@ -275,7 +275,7 @@ else
     jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
     }
 
-if(!is_touch_device() && jQuery(window).width() <= 1300)
+if(!is_touch_device() && jQuery(window).width() <= 1280)
     {
     if(document.createStyleSheet)
         {

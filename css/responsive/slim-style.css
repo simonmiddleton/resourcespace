@@ -74,16 +74,14 @@ body {
         font-size:1em;
         border-radius:5px;
     }
-    .QuestionSubmit label {
-        width:auto;
-    }
     input[type=checkbox] {
-      -ms-transform: scale(1.5); /* IE */
-      -moz-transform: scale(1.5); /* FF */
-      -webkit-transform: scale(1.5); /* Safari and Chrome */
-      -o-transform: scale(1.5); /* Opera */
-      margin: 5px;
-      height:auto;
+        -ms-transform: scale(1.5); /* IE */
+        -moz-transform: scale(1.5); /* FF */
+        -webkit-transform: scale(1.5); /* Safari and Chrome */
+        -o-transform: scale(1.5); /* Opera */
+        margin-left: 4px;
+        margin-top: 10px;
+        height:auto;
     }
     input[type="radio"] {
         height:auto;
@@ -142,6 +140,14 @@ body {
     .Question {
         overflow: scroll;
     }
+    .FormWide .Question .FormHelp {
+        margin:0 0 10px 0px;
+    }
+    .FormWide .Question .FormHelp .FormHelpInner {
+        width: 100%;
+        box-sizing: border-box;
+        margin-left: 0;
+    }
 }
 @media(max-width:525px) {
     .Question .stdwidth, .stdwidth {
@@ -172,15 +178,6 @@ body {
     #AntiSpamImage {
         margin-left: 0 !important;
     }
-}
-/* Glyphs */
-.glyph {
-    height: 20px;
-    width: 20px;
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom:5px;
-    margin-left: 4px;
 }
 
 /* Header */
@@ -242,6 +239,7 @@ body {
         display: inline-block;
         padding:0;
         border:0;
+        float: left;
     }
     #Header .HorizontalNav ul li a, 
     .SlimHeader #Header.slimheader_darken .HorizontalNav ul li a:link,
@@ -304,9 +302,6 @@ body {
     .ResponsiveHeaderButton {
         width: 50px;
     }
-    .ResponsiveHeaderButton .glyph {
-        margin-left:0;
-    }
     #HeaderImg {
         max-width:200px;
         height:auto;
@@ -314,6 +309,9 @@ body {
     }
 }
 @media(max-width:515px) {
+    #Header {
+        padding:5px 5px;
+    }
     #HeaderButtons {
         margin:0;
     }
@@ -322,7 +320,7 @@ body {
     }
     #HeaderNav1 li a,
     #HeaderNav2 li a {
-        width: 90vw;
+        width: 96vw;
         padding:0 !important;
         text-align: center;
     }
@@ -330,11 +328,11 @@ body {
     #HeaderNav2 ul {
         text-align: center;
     }
+    .HeaderMid #HeaderImg, .HeaderSmall #HeaderImg, .HeaderLarge #HeaderImg  {
+        margin-left: 10px;
+    }
 }
 @media(max-width:380px) {
-    #Header {
-        padding:5px 5px;
-    }
     #HeaderImg {
         max-width: 160px;
         margin-top: 5px;
@@ -458,7 +456,7 @@ body {
     /* Metadata fields */
     .SearchItem .SearchWidth, .SearchItem .SearchWidthHalf {
         float: right;
-        margin-left: 4px;
+        margin: 0px 8px 4px 0px;
     }
     #searchspace .SearchItem {
         clear: right;
@@ -630,7 +628,7 @@ body {
         text-align: center;
     }
  }
- @media(max-width:1300px) {
+ @media(max-width:1280px) {
     .TopInpageNavLeft {
         padding: 0;
         margin: 10px 0;
@@ -645,10 +643,11 @@ body {
     }
     #ResponsiveResultCount {
         width: 95px;
-        display:inline-block;
+        display:block;
         box-shadow: none;
         font-size: 1em;
-        margin-left: 10px;
+        margin-left: 6px;
+        margin-bottom: 4px;
     }
     #SearchResultFound {
         display:none;
@@ -736,11 +735,14 @@ body {
 }
 @media(max-width:600px) {
     #searchspace #ssearchbox {
-        margin-top:5px;
+        margin-top:10px;
         display:block;
     }
     #Rssearchexpand {
         margin-right:0;
+    }
+    #Responsive_ResultDisplayOptions {
+        width: 100%;
     }
 }
 @media(max-width:400px) {
@@ -756,9 +758,6 @@ body {
     }
     .ResourceAlign {
         height:auto;
-    }
-    #Responsive_ResultDisplayOptions {
-        margin-bottom:0;
     }
     .TopInpageNavRight {
         margin-top:10px;
