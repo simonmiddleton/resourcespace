@@ -528,6 +528,7 @@ if (getval("ajax","") == "")
 		function toggleResultOptions()
 			{
 			jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock").slideToggle(100);
+			jQuery("#ResponsiveResultCount").toggle();
 			jQuery("#SearchResultFound").hide();
 			jQuery("#CentralSpace .TopInpageNavLeft .InpageNavLeftBlock.icondisplay").css('display', 'inline-block');
 			}
@@ -542,7 +543,7 @@ if (getval("ajax","") == "")
 			jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
 			}
 		
-		if(!is_touch_device() && jQuery(window).width() <= 1300)
+		if(!is_touch_device() && jQuery(window).width() <= 1280)
 			{
 			if(document.createStyleSheet)
 				{

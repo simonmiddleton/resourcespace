@@ -378,11 +378,11 @@ if($responsive_ui)
         <div id="HeaderButtons" style="display:none;">
             <a href="#" id="HeaderNav1Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
                 <span class="rbText"><?php echo $allow_password_change == false ? htmlspecialchars(($userfullname=="" ? $username : $userfullname)) : $lang["responsive_settings_menu"]; ?></span>
-                <span class="glyph glyph_user"></span>
+                <span class="fa fa-fw fa-lg fa-user"></span>
             </a>
             <a href="#" id="HeaderNav2Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
                 <span class="rbText"><?php echo $lang["responsive_main_menu"]; ?></span>
-                <span class="glyph glyph_menu"></span>
+                <span class="fa fa-fw fa-lg fa-bars"></span>
             </a>
         </div>
         <?php

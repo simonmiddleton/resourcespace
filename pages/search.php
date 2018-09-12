@@ -893,7 +893,7 @@ if($responsive_ui)
     ?>
     <div class="ResponsiveResultDisplayControls">
         <a href="#" id="Responsive_ResultDisplayOptions" class="ResourcePanel ResponsiveButton" style="display:none;"><?php echo $lang['responsive_result_settings']; ?></a>
-        <div id="ResponsiveResultCount">
+        <div id="ResponsiveResultCount" style="display:none;">
             <span class="Selected">
         <?php
         if(isset($collections)) 
@@ -934,7 +934,7 @@ if($responsive_ui)
     if(!hook('replacedisplayselector','',array($search,(isset($collections)?$collections:""))))
         {
         ?>
-        <div class="InpageNavLeftBlock <?php if($iconthumbs) {echo 'icondisplay';} ?>"<?php if($xlthumbs) {echo 'style="width: 110px;"';} ?>>
+        <div class="InpageNavLeftBlock <?php if($iconthumbs) {echo 'icondisplay';} ?>">
         <?php   
         if($display_selector_dropdowns)
             {
