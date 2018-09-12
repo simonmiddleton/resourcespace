@@ -1,5 +1,7 @@
 <?php
 
+include_once dirname(__FILE__) . "/../include/utility.php";
+
 function HookLightbox_previewAllAdditionalheaderjs()
 	{
 	global $baseurl_short, $css_reload_key;
@@ -28,6 +30,32 @@ function HookLightbox_previewAllAdditionalheaderjs()
         });
 	</script>
 	<?php
+	}
+
+function HookLightbox_previewAllReplacefullscreenpreviewicon()
+	{
+	global $baseurl_short, $ref, $result, $n, $k, $search, $offset, $sort, $order_by, $archive,
+			$lang, $showkeypreview, $value, $view_title_field;
+
+	$url = getPreviewURL($result[$n]);
+	if ($url === false)
+		return false;
+
+	$showkeypreview = true;
+
+	# Replace the link to add the 'previewlink' ID
+	?>
+		<span class="IconPreview"><a aria-hidden="true" class="fa fa-expand" id= "previewlink<?php echo $order_by . $ref?>" href="<?php
+			echo $baseurl_short?>pages/preview.php?from=search&ref=<?php
+			echo urlencode($ref)?>&ext=<?php echo $result[$n]["preview_extension"]?>&search=<?php
+			echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php
+			echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php
+			echo urlencode($archive)?>&k=<?php echo urlencode($k)?>" title="<?php
+			echo $lang["fullscreenpreview"]?>"></a></span>
+			
+	<?php
+	addLightBox('#previewlink' . $order_by . $ref, $url, $result[$n]["field".$view_title_field], $order_by);
+	return true;
 	}
 
 ?>

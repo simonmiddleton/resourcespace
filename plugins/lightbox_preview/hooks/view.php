@@ -1,6 +1,6 @@
 <?php
 
-include dirname(__FILE__) . "/../include/utility.php";
+include_once dirname(__FILE__) . "/../include/utility.php";
 
 function HookLightbox_previewViewRenderbeforerecorddownload()
 	{
