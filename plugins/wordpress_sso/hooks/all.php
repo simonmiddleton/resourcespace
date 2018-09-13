@@ -7,7 +7,8 @@ function HookWordpress_ssoAllProvideusercredentials()
 		#use standard authentication if available
 		if (isset($_COOKIE["user"]) && $_COOKIE["user"]!="|") {return true;}
 		
-        global $username,$hashsql,$session_hash,$baseurl,$lang,$wordpress_sso_url, $wordpress_sso_secret, $wordpress_sso_auto_create, $wordpress_sso_auto_approve, $wordpress_sso_auto_create_group,$global_cookies,$user_select_sql;
+        global $username,$hashsql,$session_hash,$baseurl,$lang,$wordpress_sso_url, $wordpress_sso_secret, $wordpress_sso_auto_create;
+        global $wordpress_sso_auto_approve, $wordpress_sso_auto_create_group,$global_cookies,$user_select_sql,$session_autologout;
 		
 		$session_hash="";
         @$_COOKIE["user"]="|";
@@ -77,6 +78,8 @@ function HookWordpress_ssoAllProvideusercredentials()
 					setcookie("wordpress_sso",$username . "|" . $hash,0,"/");
 					$hashsql="";
 					$user_select_sql="and u.username='$username'";
+                    $allow_password_change = false;
+                    $session_autologout = false;
 					return true;
 					}
 				else // Invalid response from WordPress
