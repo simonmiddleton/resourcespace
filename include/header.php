@@ -569,6 +569,11 @@ $port   = (isset($parsed_url['port']) ? ":{$parsed_url['port']}" : "");
 $activate_header_link = "{$scheme}://{$host}{$port}" . urlencode($_SERVER["REQUEST_URI"]);
 ?>
 <script>
+ 
+<?php
+echo "linkreload = " . (($k != "" || $internal_share_access) ? "false" : "true") . ";";
+?>
+
 jQuery(document).ready(function()
     {
     ActivateHeaderLink(<?php echo json_encode($activate_header_link); ?>);
