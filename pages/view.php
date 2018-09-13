@@ -1507,8 +1507,6 @@ if(!hook("replaceactionslistopen")){?>
 <?php
 } # end hook("replaceactionslistopen")
 
-
-
 # ----------------------------- Resource Actions -------------------------------------
 hook ("resourceactions") ?>
 <?php if ($k=="" || $internal_share_access) { ?>
