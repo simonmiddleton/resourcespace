@@ -34,7 +34,7 @@ if (getval("c","")!="")
 	$c=getvalescaped("c","");
 
 	// Now redirect to the terms page with appropriate parameters
-	$topurl="pages/terms.php?k=" . $k . "&url=pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;
+	$topurl="pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;
 
 	if ($k!="")
 		{
@@ -52,7 +52,7 @@ if (getval("c","")!="")
 			else
 				{
             	// Now redirect to the terms page with appropriate parameters
-   	            $topurl="pages/terms.php?k=" . $k . "&url=pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;
+   	            $topurl="pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;
 				}
 			}
 		}

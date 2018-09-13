@@ -1513,7 +1513,7 @@ if(!hook("replaceactionslistopen")){?>
 <?php
 } # end hook("replaceactionslistopen")
 
-
+hook("renderbeforeresourcedetails");
 
 # ----------------------------- Resource Actions -------------------------------------
 hook ("resourceactions") ?>
@@ -1679,8 +1679,7 @@ if (!hook('replacemetadata')) {
 <?php include "view_metadata.php";
 } /* End of replacemetadata hook */ ?>
 </div>
-<?php if ($download_summary) {include "../include/download_summary.php";}
-hook("renderbeforeresourcedetails");?>
+<?php if ($download_summary) {include "../include/download_summary.php";}?>
 </div>
 
 </div>
