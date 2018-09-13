@@ -738,7 +738,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	# Update XML metadata dump file
 	update_xml_metadump($ref);		
 	
-    hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove));
+    hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field));
 
 	if (count($errors)==0) {return true;} else {return $errors;}
 	}
