@@ -1406,7 +1406,7 @@ function display_multilingual_text_field($n, $field, $translations)
   ?></table><?php
   }
 
-function display_field($n, $field, $newtab=false,$modal=false, $batch_edit_mode = false)
+function display_field($n, $field, $newtab=false,$modal=false)
   {
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastrt,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
@@ -1456,12 +1456,12 @@ function display_field($n, $field, $newtab=false,$modal=false, $batch_edit_mode 
         $selected_nodes = $all_selected_nodes;
         }
     
-    $displaycondition=true;
-    if ($field["display_condition"] != "" && !$batch_edit_mode)
-        {
-        #Check if field has a display condition set and render the client side check display condition functions
-        $displaycondition = check_display_condition($n, $field, $fields, true);
-        }
+  $displaycondition=true;
+  if ($field["display_condition"]!="")
+    {
+    #Check if field has a display condition set and render the client side check display condition functions
+    $displaycondition = check_display_condition($n, $field, $fields, true);
+    }
 
   if ($multilingual_text_fields)
     {
