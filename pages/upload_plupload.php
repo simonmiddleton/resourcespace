@@ -918,7 +918,7 @@ var pluploadconfig = {
                                         uploaderrormessage = uploadresponse.error.code + " " + uploadresponse.error.message;
                                         if(uploadresponse.error.code==108)
                                             {
-                                            styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadError.error.duplicates);   
+                                            styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadresponse.error.duplicates);   
                                             }
                                         else
                                             {
