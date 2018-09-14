@@ -31,8 +31,7 @@ class Pixabay extends Provider
 
     static function checkDependencies()
         {
-        // This provider doesn't require any third party API clients
-        return true;
+        return function_exists('curl_version');
         }
 
     public function buildConfigPageDefinition(array $page_def)

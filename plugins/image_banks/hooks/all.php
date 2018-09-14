@@ -5,6 +5,14 @@ function HookImage_banksAllSearchfiltertop()
 
     $providers = \ImageBanks\getProviders($image_banks_loaded_providers);
 
+    foreach($providers as $provider_id => $provider)
+        {
+        if(!$provider->checkDependencies())
+            {
+            unset($providers[$provider_id]);
+            }
+        }
+
     if(count($providers) == 0)
         {
         return;
