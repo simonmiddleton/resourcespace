@@ -1551,7 +1551,7 @@ function display_field($n, $field, $newtab=false,$modal=false, $batch_edit_mode 
       if(in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))))
         {
         # Remove applies to text boxes, checkboxes, dropdowns, category trees and dynamic keywords only. 
-        ?>
+        ?> 
         <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo $lang["removetext"]?></option>
         <?php
         }
@@ -1632,15 +1632,23 @@ function display_field($n, $field, $newtab=false,$modal=false, $batch_edit_mode 
       } 
     # Define some Javascript for help actions (applies to all fields)
     # Help actions for CKEditor fields are set in pages/edit_fields/8.php
-     if ($ref<0)
+     if (trim($field["help_text"]=="")) 
        {
-       # In upload mode helptext remains at all times
-       $help_js="";
+        # No helptext; so no javascript for toggling required
+        $help_js="";
        }
      else
        {
-       # Other modes toggle helptext depending on loss or gain of focus
-       $help_js="onBlur=\"HideHelp(" . $field["ref"] . ");return false;\" onFocus=\"ShowHelp(" . $field["ref"] . ");return false;\"";
+       if ( in_array($field["type"],array(2,3,4,6,7,10)) )
+         {
+         # For the selected field types the helptext is always shown
+         $help_js="";
+         }
+       else
+         {
+         # For all other field types setup javascript to toggle helptext depending on loss or gain of focus
+         $help_js="onBlur=\"HideHelp(" . $field["ref"] . ");return false;\" onFocus=\"ShowHelp(" . $field["ref"] . ");return false;\"";
+         }
        }
 
     #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
@@ -1730,9 +1738,8 @@ function display_field($n, $field, $newtab=false,$modal=false, $batch_edit_mode 
      {
         # Show inline help for this field.
         # For certain field types that have no obvious focus, the help always appears.
-        # In upload mode the help always appears
        ?>
-       <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,3,4,6,7,10)) || ($ref<0) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"],false)))?></div></div>
+       <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,3,4,6,7,10)) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"],false)))?></div></div>
        <?php
      }
 
