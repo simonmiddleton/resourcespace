@@ -1514,10 +1514,20 @@ function display_field($n, $field, $newtab=false,$modal=false)
       {
       # Multiple items, a toggle checkbox appears which activates the question
       ?>
-      <div class="Question edit_multi_checkbox"><input name="editthis_<?php echo htmlspecialchars($name) ?>" id="editthis_<?php echo $n?>" type="checkbox" value="yes"<?php if($field_save_error){?> checked<?php }?> onClick="var q=document.getElementById('question_<?php echo $n?>');var m=document.getElementById('modeselect_<?php echo $n?>');var f=document.getElementById('findreplace_<?php echo $n?>');if (this.checked) {q.style.display='block';m.style.display='block';} else {q.style.display='none';m.style.display='none';f.style.display='none';document.getElementById('modeselectinput_<?php echo $n?>').selectedIndex=0;}" <?php if(getval("copyfrom","")!="" && $value!=""){echo " checked" ;} ?>>&nbsp;<label for="editthis<?php echo $n?>"><?php echo htmlspecialchars($field["title"]) ?></label></div><div class="clearerleft"> </div><!-- End of edit_multi_checkbox -->
+      <div class="Question edit_multi_checkbox">
+        <input name="editthis_<?php echo htmlspecialchars($name) ?>"
+               id="editthis_<?php echo $n?>"
+               type="checkbox"
+               value="yes"
+               <?php if($field_save_error){?> checked<?php } ?>
+               onClick="batch_edit_toggle_edit_multi_checkbox_question(<?php echo (int) $n; ?>);" <?php if(getval("copyfrom","")!="" && $value!=""){echo " checked" ;} ?>>&nbsp;
+            <label for="editthis<?php echo $n?>"><?php echo htmlspecialchars($field["title"]) ?></label>
+            <div class="clearerleft"></div>
+        </div>
+        <!-- End of edit_multi_checkbox -->
       <?php
       }
-      
+
   if ($multiple && !hook("replace_edit_all_mode_select","",array($field["ref"])))
       {
       # When editing multiple, give option to select Replace All Text or Find and Replace
