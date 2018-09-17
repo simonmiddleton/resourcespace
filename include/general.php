@@ -3961,7 +3961,14 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     <script type="text/javascript">
                     jQuery(document).ready(function()
                         {
-                        checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                        <?php
+                        if($GLOBALS["multiple"] === false)
+                            {
+                            ?>
+                            checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                            <?php
+                            }
+                        ?>
                         jQuery('<?php echo $jquery_selector; ?>').change(function ()
                             {
                             checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
@@ -4074,6 +4081,19 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
                     jQuery('#question_<?php echo $n ?>').slideToggle();
+
+                <?php
+                // Batch edit mode
+                if($GLOBALS["multiple"] === true)
+                    {
+                    ?>
+                    var batch_edit_editthis = jQuery("#<?php echo "editthis_{$n}"; ?>");
+                    batch_edit_editthis.prop("checked", !batch_edit_editthis.prop("checked"));
+                    batch_edit_toggle_edit_multi_checkbox_question(<?php echo (int) $n; ?>);
+                    <?php
+                    }
+                    ?>
+
                     if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
                         {
                         jQuery('#question_<?php echo $n ?>').css('border-top', '');
