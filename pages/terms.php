@@ -1,9 +1,23 @@
 <?php
 include_once "../include/db.php";
 include_once "../include/general.php";
+include_once "../include/collections_functions.php";
+
 # External access support (authenticate only if no key provided)
-# No need to check access key for this page as it merely redirects to other pages
-$k=getvalescaped("k","");if ($k=="") {include "../include/authenticate.php";}
+$k=getvalescaped("k","");
+
+$k_shares_collection=getvalescaped("collection","");
+$k_shares_ref=getvalescaped("ref","");
+
+# Check access key because we need to honor terms requirement at user group override level
+if ($k_shares_collection != "") 
+	{
+	if (($k=="") || (!check_access_key_collection(getvalescaped("collection","",true),$k))) {include "../include/authenticate.php";}
+	}
+elseif ($k_shares_ref != "") 
+	{
+	if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include "../include/authenticate.php";}
+	}
 
 $url=getvalescaped("url","pages/home.php?login=true");
 
