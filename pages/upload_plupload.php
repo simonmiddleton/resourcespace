@@ -525,9 +525,7 @@ if ($_FILES)
                                     }
 							
                             hook('after_alt_upload','',array($alternative,array("ref"=>$aref,"file_size"=>$file_size,"extension"=>$extension,"name"=>$plfilename,"altdescription"=>"","path"=>$path,"basefilename"=>str_ireplace("." . $extension, '', $plfilename))));
-							
-                            die('{"jsonrpc" : "2.0", "message" : "' . $lang["alternative_file_created"] . '", "id" : "' . htmlspecialchars($alternative) . '"}');
-                                   
+
 							// Check to see if we need to notify users of this change							
 							if($notify_on_resource_change_days!=0)
 								{								
@@ -542,11 +540,20 @@ if ($_FILES)
                                 unlink($plupload_processed_filepath);
                                 }
 			    	
-			    # Update disk usage
-			    update_disk_usage($alternative);
+                            # Update disk usage
+                            update_disk_usage($alternative);
 	
-                            exit();
+                            die(
+                                json_encode(
+                                    array(
+                                        'jsonrpc' => '2.0',
+                                        'message' => htmlspecialchars($lang["alternative_file_created"]),
+                                        'id'      => htmlspecialchars($alternative)
+                                    )
+                                )
+                            );
                             }
+
                     if ($replace=="" && $replace_resource=="")
                             {
                             # Standard upload of a new resource
