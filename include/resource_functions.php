@@ -1406,7 +1406,7 @@ function save_resource_data_multi($collection)
 		update_xml_metadump($list[$m]);
 		}
 	
-    hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove));
+    hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, $autosave_field=''));
 
     if (count($errors)==0) {return true;} else {return $errors;}
     
