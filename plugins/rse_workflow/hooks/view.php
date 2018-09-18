@@ -51,10 +51,6 @@ function HookRse_workflowViewPageevaluation()
                        )
                     )
                     {
-                    sql_query("update resource set archive='" . $workflowaction["statusto"] . "' where ref='$ref'");
-                    hook("rse_wf_archivechange","",array($ref,$resource["archive"],$workflowaction["statusto"]));
-                    resource_log($ref,"s",0,"",$resource["archive"],$workflowaction["statusto"]);
-
                     $validstates=explode(",",$workflowaction["statusfrom"]);
                     $edit_access=get_edit_access($ref,$resource["archive"],"",$resource);
                     if ($k != "") 
@@ -72,70 +68,9 @@ function HookRse_workflowViewPageevaluation()
                         {
                         if (in_array($resource["archive"],$validstates) && $edit_access && (checkperm("wf" . $workflowaction["ref"]) || (checkperm("e" . $workflowaction["statusto"]))))
                             {
-                            update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);;
+                            update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);
                             hook("rse_wf_archivechange","",array($ref,$resource["archive"],$workflowaction["statusto"]));
-                                                        
-                            global $user_resources_approved_email;
-                            if ($user_resources_approved_email && ($resource["archive"]==-2 || $resource["archive"]==-1) && $workflowaction["statusto"]==0) # Notify the  users that their resources have been approved	
-                                {
-                                notify_user_resources_approved($ref);
-                                }				
-                            if ($resource["archive"]==-2 && $workflowaction["statusto"]==-1) # Notify the resources team ($email_notify) if moving from pending submission->pending review
-                                {
-                                notify_user_contributed_submitted($ref);
-                                }				
-                            if ($resource["archive"]==-1 && $workflowaction["statusto"]==-2) # Notify the admin users of any submitted resources.
-                                {
-                                notify_user_contributed_unsubmitted($ref);
-                                }
-                    
-                            $rse_workflow_from="";
-                            if (isset($workflowaction["email_from"]) && $workflowaction["email_from"]!="")
-                                {
-                                $rse_workflow_from=$workflowaction["email_from"];
-                                }
-
-                            /***** NOTIFY GROUP SUPPORT *****/
-                            if(isset($workflowaction['notify_group']) && $workflowaction['notify_group'] != '')
-                            {
-                                $mailing_list = sql_array("
-                                    SELECT DISTINCT email AS `value`
-                                      FROM user
-                                     WHERE approved = 1
-                                       AND usergroup = '" . escape_check($workflowaction['notify_group']) . "'
-                                ");
-
-                                foreach($mailing_list as $email)
-                                    {
-                                    $message  = $lang["rse_workflow_state_notify_message"] . $lang["status" . $workflowaction["statusto"]] . "\n\n" . $baseurl . "/?r=" . $ref;
-                                    $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction['ref'], '');
-
-                                    send_mail(
-                                        $email,
-                                        $applicationname . ": " . $lang["status" . $workflowaction["statusto"]],
-                                        $message,
-                                        $rse_workflow_from,
-                                        $rse_workflow_from);
-                                    }
-                            }
-                            /***** END OF NOTIFY GROUP SUPPORT *****/
-
-                            /*****NOTIFY CONTRIBUTOR*****/
-                            if($workflowaction['notify_user_flag'] == 1)
-                                {
-                                $email = sql_value('SELECT email as value FROM user WHERE ref = ' . $resource['created_by'] . ';', '');
-            
-                                $message = $lang["rse_workflow_state_notify_message"] . $lang["status" . $workflowaction["statusto"]] . "\n\n".  $baseurl . "/?r=" . $ref;
-                                $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction['ref'], '');
-                                if($workflowaction["bcc_admin"]==1)
-                                    {
-                                    global $email_notify;
-                                    send_mail($email_notify, $applicationname . ': ' . $lang['status' . $workflowaction['statusto']], $message, $rse_workflow_from,$rse_workflow_from);
-                                    }					
-                                send_mail($email, $applicationname . ': ' . $lang['status' . $workflowaction['statusto']], $message, $rse_workflow_from,$rse_workflow_from);
-                                }
-                            /*****END OF NOTIFY CONTRIBUTOR*****/
-                    
+                            
                             if (checkperm("z" . $workflowaction["statusto"]))
                                 {
                                 ?>

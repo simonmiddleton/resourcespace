@@ -654,38 +654,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 }
             else
                 {
-                $resource_update_sql[] = "archive = '" . escape_check($setarchivestate) . "'";
                 if($setarchivestate != $oldarchive && 0 < $ref)
                     {
-                    $resource_update_log_sql[] = array(
-                        'ref'   => $ref,
-                        'type'  => 's',
-                        'field' => 0,
-                        'notes' => '',
-                        'from'  => $oldarchive,
-                        'to'    => $setarchivestate);
-                    }
-    
-                # Clear any outstanding notifications relating to submission of this resource
-                message_remove_related(SUBMITTED_RESOURCE,$ref);
-                
-                // Send notifications if moving from pending submission -> review.
-                if ($oldarchive==-2 && $setarchivestate==-1 && $ref>0)
-                        {	
-                        notify_user_contributed_submitted(array($ref));
-                        }
-                if ($oldarchive==-1 && $setarchivestate==-2 && $ref>0)
-                        {
-                        notify_user_contributed_unsubmitted(array($ref));
-                        }
-                if($user_resources_approved_email)
-                    {	
-                    if (($oldarchive==-2 || $oldarchive==-1) && $ref>0 && $setarchivestate==0)
-                            {
-                            notify_user_resources_approved(array($ref));
-                            }	
-                    }
-                
+                    update_archive_status($ref,$setarchivestate,array($oldarchive));
+                    }                
 				$new_checksums["status"] = $setarchivestate;
                 }
 			}
@@ -1309,65 +1281,24 @@ function save_resource_data_multi($collection)
 			{
 			$ref=$list[$m];                        
                         
-                        if (!hook('forbidsavearchive', '', array($errors)))
-                            {
-                            # Also update archive status                            
-                            
-                            $oldarchive=sql_value("select archive value from resource where ref='$ref'","");
-                            $setarchivestate=getvalescaped("status",$oldarchive,true); // We used to get the 'archive' value but this conflicts with the archiveused for searching                                
-                            if($setarchivestate!=$oldarchive && !checkperm("e" . $setarchivestate)) // don't allow change if user has no permission to change archive state
-                                {
-                                $setarchivestate=$oldarchive;
-                                }
-                                
-                            if ($setarchivestate!=$oldarchive) // Only if changed
-                                {
-                                sql_query("update resource set archive='" . $setarchivestate . "' where ref='$ref'");  
-                                if ($setarchivestate!=$oldarchive && $ref>0)
-                                    {
-                                    resource_log($ref,"s",0,"",$oldarchive,$setarchivestate);
-                                    }
-                                                                
-                                # Check states to see if notifications are necessary
-                                if (
-									($oldarchive==-2 && $setarchivestate==-1) ||
-									($oldarchive==-1 && $setarchivestate==-2) || 
-									($user_resources_approved_email && ($oldarchive==-2 || $oldarchive==-1) && $setarchivestate==0)
-									)
-										{	
-										$notifyrefs[]=$ref;
-										} 
-                                }
-                            }                                                			
+            if (!hook('forbidsavearchive', '', array($errors)))
+                {
+                # Also update archive status   
+                $oldarchive=sql_value("select archive value from resource where ref='$ref'","");
+                $setarchivestate=getvalescaped("status",$oldarchive,true); // We used to get the 'archive' value but this conflicts with the archiveused for searching                                
+                if($setarchivestate!=$oldarchive && !checkperm("e" . $setarchivestate)) // don't allow change if user has no permission to change archive state
+                    {
+                    $setarchivestate=$oldarchive;
+                    }
+                    
+                if ($setarchivestate!=$oldarchive) // Only if changed
+                    {
+                    update_archive_status($ref,$setarchivestate,array($oldarchive));
+                    }
+                }                                                			
 			}
+        }
         
-		if (($oldarchive==-2 || $oldarchive==-1) && $setarchivestate==0) # Clear any outstanding notifications relating to submission of this collection/resource
-			{
-			message_remove_related(SUBMITTED_COLLECTION,$collection);
-			message_remove_related(SUBMITTED_RESOURCE,$notifyrefs);
-			}		
-		if (count($notifyrefs)>0)
-			{
-			if ($user_resources_approved_email && ($oldarchive==-2 || $oldarchive==-1) && $setarchivestate==0) # Notify the  users that their resources have been approved	
-				{
-				debug("Emailing approval notification for submitted resources to users");
-				notify_user_resources_approved($notifyrefs);			
-				}
-			
-			if ($oldarchive==-2 && $setarchivestate==-1) # Send notifications if moving from pending submission->pending review
-				{
-				debug("Sending notifications of submitted resources");
-				notify_user_contributed_submitted($notifyrefs, $collection);
-				}
-			
-			if ($oldarchive==-1 && $setarchivestate==-2) # Send notifications for unsubmitted resources.
-				{
-				debug("Sending notification of unsubmitted resources");
-				notify_user_contributed_unsubmitted($notifyrefs, $collection);
-				}	
-			}	
-		}
-	
 	# Expiry field(s) edited? Reset the notification flag so that warnings are sent again when the date is reached.
 	if ($expiry_field_edited)
 		{
@@ -3131,17 +3062,21 @@ function user_rating_save($userref,$ref,$rating)
 
 function process_notify_user_contributed_submitted($ref,$htmlbreak)
 	{
-	global $use_phpmailer,$baseurl;
+	global $use_phpmailer,$baseurl, $lang;
 	$url="";
 	$url=$baseurl . "/?r=" . $ref;
 	
-	if ($use_phpmailer){$url="<a href=\"$url\">$url</a>";}
+	if ($use_phpmailer){$url="<a href'$url'>$url</a>";}
 	
 	// Get the user (or username) of the contributor:
 	$query = "SELECT user.username, user.fullname FROM resource INNER JOIN user ON user.ref = resource.created_by WHERE resource.ref ='".$ref."'";
 	$result = sql_query($query);
 	$user = '';
-	if(trim($result[0]['fullname']) != '') 
+	if(count($result) == 0)
+        {
+        $user = $lang["notavailableshort"];
+        }
+    elseif(trim($result[0]['fullname']) != '') 
 		{
 		$user = $result[0]['fullname'];
 		} 
@@ -3175,10 +3110,21 @@ function notify_user_contributed_submitted($refs,$collection=0)
 		
 	$list.=$htmlbreak;	
 	
-	$templatevars['url']=$baseurl . "/pages/search.php?search=!userpending";	
+    if($collection != 0) 
+        {
+        $templatevars['url'] = $baseurl . "/pages/search.php?search=!collection" . $collection;
+        }
+    elseif(is_array($refs) && count($refs) < 200)
+        {
+        $templatevars['url'] = $baseurl . "/pages/search.php?search=!list" . implode(":",$refs);
+        }
+    else
+        {
+        $linkurl = $baseurl . "/pages/search.php?search=!contributions" . $userref . "&archive=-1";
+        }
+	
 	$templatevars['list']=$list;
-		
-	$message=$lang["userresourcessubmitted"] . "\n\n". $templatevars['list'] . "\n\n" . $lang["viewalluserpending"] . "\n\n" . $templatevars['url'];
+	$message=$lang["userresourcessubmitted"] . "\n\n". $templatevars['list'] . "\n\n" . $lang["viewall"] . "\n\n" . $templatevars['url'];
 	$notificationmessage=$lang["userresourcessubmittednotification"];
 	$notify_users=get_notification_users(array("e-1","e0")); 
 	$message_users=array();
@@ -3202,17 +3148,17 @@ function notify_user_contributed_submitted($refs,$collection=0)
 		global $userref;
 		if($collection!=0)
 			{
-			message_add($message_users,$notificationmessage,$baseurl . "/pages/search.php?search=!collection" . $collection,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_COLLECTION,$collection);
+			message_add($message_users,$notificationmessage,$templatevars['url'],$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_COLLECTION,$collection);
 			}
 		else
 			{
-			message_add($message_users,$notificationmessage,$baseurl . "/pages/search.php?search=!contributions" . $userref . "&archive=-1",$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_RESOURCE,(is_array($refs)?$refs[0]:$refs));
+			message_add($message_users,$notificationmessage,$templatevars['url'],$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,SUBMITTED_RESOURCE,(is_array($refs)?$refs[0]:$refs));
 			}
 		}
 	}
 function notify_user_contributed_unsubmitted($refs,$collection=0)
 	{
-	// Send notifications when resources are moved from "User Contributed - Pending Submission" to "User Contributed - Pending Review"	
+	// Send notifications when resources are moved from "User Contributed - Pending Review"	to "User Contributed - Pending Submission"
 	global $notify_user_contributed_unsubmitted,$applicationname,$email_notify,$baseurl,$lang,$use_phpmailer;
 	if (!$notify_user_contributed_unsubmitted) {return false;} # Only if configured.
 	
@@ -3241,13 +3187,24 @@ function notify_user_contributed_unsubmitted($refs,$collection=0)
 		}
 	
 	$list.=$htmlbreak;		
-
-	$templatevars['url']=$baseurl . "/pages/search.php?search=!userpending";	
 	$templatevars['list']=$list;
-		
-	$message=$lang["userresourcesunsubmitted"]."\n\n". $templatevars['list'] . $lang["viewalluserpending"] . "\n\n" . $templatevars['url'];
+	
+	if($collection != 0) 
+        {
+        $templatevars['url'] = $baseurl . "/pages/search.php?search=!collection" . $collection;
+        }
+    elseif(is_array($refs) && count($refs) < 200)
+        {
+        $templatevars['url'] = $baseurl . "/pages/search.php?search=!list" . implode(":",$refs);
+        }
+    else
+        {
+        $templatevars['url'] = $baseurl . "/pages/search.php?search=!contributions" . $userref . "&archive=-2";
+        }
+        
+	$message=$lang["userresourcesunsubmitted"]."\n\n". $templatevars['list'] . $lang["viewall"] . "\n\n" . $templatevars['url'];
 
-	$notificationmessage=$lang["userresourcessubmittednotification"];
+	$notificationmessage=$lang["userresourcesunsubmittednotification"];
 	$notify_users=get_notification_users(array("e-1","e0")); 
 	$message_users=array();
 	foreach($notify_users as $notify_user)
@@ -3268,7 +3225,7 @@ function notify_user_contributed_unsubmitted($refs,$collection=0)
 	if (count($message_users)>0)
 		{
 		global $userref;
-        message_add($message_users,$notificationmessage,$baseurl . "/pages/search.php?search=!contributions" . $userref . "&archive=-2");
+        message_add($message_users,$notificationmessage,$templatevars['url']);
 		}
 	
 	# Clear any outstanding notifications relating to submission of these resources
@@ -4780,7 +4737,7 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
         }
 
     sql_query("UPDATE resource SET archive = '" . escape_check($archive) .  "' WHERE ref IN ('" . implode("', '", $resource) . "')");
-    hook('after_update_archive_status', '', array($resource));
+    hook('after_update_archive_status', '', array($resource, $archive,$existingstates));
     // Send notifications
     debug("update_archive_status - resources=(" . implode(",",$resource) . "), archive: " . $archive . ", existingstates:(" . implode(",",$existingstates) . "), collection: " . $collection);
     switch ($archive)
@@ -4789,6 +4746,12 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
             if (isset($existingstates[0]) && $existingstates[0] == -1 && $user_resources_approved_email)
                 {
                 notify_user_resources_approved($resource);
+                # Clear any outstanding notifications relating to submission of these resources
+                message_remove_related(SUBMITTED_RESOURCE,$resource);
+                if($collection != 0)
+                    {
+                    message_remove_related(SUBMITTED_COLLECTION,$collection);
+                    }
                 }
             break;
         
@@ -4802,6 +4765,12 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
             if (isset($existingstates[0]) && $existingstates[0] == -1)
                 {
                 notify_user_contributed_unsubmitted($resource);
+                }
+            # Clear any outstanding notifications relating to submission of these resources
+            message_remove_related(SUBMITTED_RESOURCE,$resource);
+            if($collection != 0)
+                {
+                message_remove_related(SUBMITTED_COLLECTION,$collection);
                 }
             break;
         }

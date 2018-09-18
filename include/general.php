@@ -5729,7 +5729,13 @@ if(!function_exists('resolve_user_emails'))
 
                 continue;
                 }
-
+               
+            if(!filter_var($email_details[0]['email'], FILTER_VALIDATE_EMAIL))
+                {
+                debug("Skipping invalid e-mail address: " . $email_details[0]['email']);
+                continue;                    
+                }
+                
             // Internal, approved user account - add e-mail address from user account
             $emails_key_required['unames'][]       = $user;
             $emails_key_required['emails'][]       = $email_details[0]['email'];

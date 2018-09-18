@@ -1587,3 +1587,9 @@ select.MultiSelect:before {
 .MultiLine {
     padding-top: 5px;
 }
+
+.searchcrumbs{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
