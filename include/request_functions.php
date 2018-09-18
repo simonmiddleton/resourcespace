@@ -52,7 +52,7 @@ function save_request($request)
             sql_query("update request set assigned_to='$assigned_to' where ref='$request'");
             $message=$lang["requestassignedtoyoumail"] . "\n\n$baseurl/?q=" . $request . "\n";
             
-            get_config_option($assigned_to,'user_pref_resource_access_notifications', $send_message, true);		  
+            get_config_option($assigned_to,'user_pref_resource_access_notifications', $send_message, true);       
             if($send_message)
                 {
                 get_config_option($assigned_to,'email_user_notifications', $send_email);
@@ -67,7 +67,7 @@ function save_request($request)
                     }
                 }
             
-            get_config_option($currentrequest["user"],'user_pref_resource_access_notifications', $send_message, $admin_resource_access_notifications);		  
+            get_config_option($currentrequest["user"],'user_pref_resource_access_notifications', $send_message, $admin_resource_access_notifications);        
             if($send_message)
                 {
                 $userconfirmmessage=str_replace("%",$assigned_to_user["fullname"] . " (" . $assigned_to_user["email"] . ")" ,$lang["requestassignedtouser"]);
@@ -107,7 +107,7 @@ function save_request($request)
         get_config_option($currentrequest["user"],'email_user_notifications', $send_email);
         if($send_email && filter_var($currentrequest["email"], FILTER_VALIDATE_EMAIL))
             {
-			$templatevars['url'] = $baseurl."/?c=" . $currentrequest["collection"]; 
+            $templatevars['url'] = $baseurl."/?c=" . $currentrequest["collection"]; 
             send_mail($currentrequest["email"],$applicationname . ": " . $lang["requestcollection"] . " - " . $lang["resourcerequeststatus1"],$message);
             }
         else
@@ -121,10 +121,10 @@ function save_request($request)
             {
             open_access_to_user($currentrequest["user"],$resource,$expires);
             }
-			
-		# Clear any outstanding notifications about this request that may have been sent to other admins
-	    message_remove_related(MANAGED_REQUEST,$request);
-		}
+            
+        # Clear any outstanding notifications about this request that may have been sent to other admins
+        message_remove_related(MANAGED_REQUEST,$request);
+        }
 
     if ($oldstatus!=$status && $status==2)  
         {
@@ -149,9 +149,9 @@ function save_request($request)
             {
             remove_access_to_user($currentrequest["user"],$resource);
             }
-			
-		# Clear any outstanding notifications about this request that may have been sent to other admins
-	    message_remove_related(MANAGED_REQUEST,$request);
+            
+        # Clear any outstanding notifications about this request that may have been sent to other admins
+        message_remove_related(MANAGED_REQUEST,$request);
         }
 
     if ($oldstatus!=$status && $status==0)
@@ -175,11 +175,11 @@ function save_request($request)
         {
         # Delete the request - this is done AFTER any e-mails have been sent out so this can be used on approval.
         sql_query("delete from request where ref='$request'");
-		
-		# Clear any outstanding notifications about this request that may have been sent to other admins
-	    message_remove_related(MANAGED_REQUEST,$request);
         
-		return true;        
+        # Clear any outstanding notifications about this request that may have been sent to other admins
+        message_remove_related(MANAGED_REQUEST,$request);
+        
+        return true;        
         }
 
     }
@@ -206,8 +206,8 @@ function email_collection_request($ref,$details)
     # E-mails a collection request (posted) to the team
     global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,$resource_request_reason_required,$admin_resource_access_notifications, $always_email_from_user,$collection_empty_on_submit;
     
-	if (trim($details)=="" && $resource_request_reason_required) {return false;}
-	
+    if (trim($details)=="" && $resource_request_reason_required) {return false;}
+    
     $message="";
     #if (isset($username) && trim($username)!="") {$message.=$lang["username"] . ": " . $username . "\n";}
     
@@ -314,31 +314,31 @@ function email_collection_request($ref,$details)
         {
         $notify_users=get_notification_users("RESOURCE_ACCESS");
         foreach($notify_users as $notify_user)
-			{
-			get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message, $admin_resource_access_notifications);		  
-            if($send_message==false){continue;}		
-			
-			get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && $notify_user["email"]!="")
-				{
-                $admin_notify_emails[] = $notify_user['email'];				
-				}        
-			else
-				{
-				$admin_notify_users[]=$notify_user["ref"];
-				}
-			}
+            {
+            get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message, $admin_resource_access_notifications);        
+            if($send_message==false){continue;}     
+            
+            get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
+            if($send_email && $notify_user["email"]!="")
+                {
+                $admin_notify_emails[] = $notify_user['email'];             
+                }        
+            else
+                {
+                $admin_notify_users[]=$notify_user["ref"];
+                }
+            }
         }
     foreach($admin_notify_emails as $admin_notify_email)
-		{
+        {
         send_mail($admin_notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$message,($always_email_from_user)?$useremail:$email_from,($always_email_from_user)?$useremail:$email_from,"emailcollectionrequest",$templatevars);
-    	}
-	
-	if (count($admin_notify_users)>0)
-		{
-		global $userref;
+        }
+    
+    if (count($admin_notify_users)>0)
+        {
+        global $userref;
         message_add($admin_notify_users,$notification_message,$templatevars["requesturl"],$userref, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,COLLECTION_REQUEST, $ref);
-		}
+        }
               
     if ($request_senduserupdates)
         {
@@ -362,14 +362,14 @@ function email_collection_request($ref,$details)
     }
 
 function managed_collection_request($ref,$details,$ref_is_resource=false)
-    {	
+    {   
     # Request mode 1
     # Managed via the administrative interface
     
     # An e-mail is still sent.
     global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails, $resource_type_request_emails_and_email_notify, $manage_request_admin, $resource_request_reason_required, $admin_resource_access_notifications, $always_email_from_user, $collection_empty_on_submit;
 
-	if (trim($details)=="" && $resource_request_reason_required) {return false;}
+    if (trim($details)=="" && $resource_request_reason_required) {return false;}
 
     # Has a resource reference (instead of a collection reference) been passed?
     # Manage requests only work with collections. Create a collection containing only this resource.
@@ -491,17 +491,17 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             
     global $notify_manage_request_admin, $assigned_to_user, $admin_resource_access_notifications;
     $notify_manage_request_admin = false;
-	$notification_sent = false;
+    $notification_sent = false;
     
     // Manage individual requests of resources:
     hook('autoassign_individual_requests', '', array($userref, $ref, $message, isset($collectiondata)));
     if(isset($manage_request_admin) && $ref_is_resource)
-		{
-		$request_resource_type = $resourcedata["resource_type"];
-		if(array_key_exists($request_resource_type, $manage_request_admin)) 
-			{
-			$admin_notify_user=$manage_request_admin[$request_resource_type];
-			$request_query = sprintf("
+        {
+        $request_resource_type = $resourcedata["resource_type"];
+        if(array_key_exists($request_resource_type, $manage_request_admin)) 
+            {
+            $admin_notify_user=$manage_request_admin[$request_resource_type];
+            $request_query = sprintf("
                     INSERT INTO request(
                                             user,
                                             collection,
@@ -526,15 +526,15 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 escape_check($message),
                 $admin_notify_user
             );
-			$notify_manage_request_admin = true;
-			}
-		}   
+            $notify_manage_request_admin = true;
+            }
+        }   
     
     // Manage collection requests:
     hook('autoassign_collection_requests', '', array($userref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
     
     if(isset($manage_request_admin) && count($manage_request_admin) > 0 && isset($collectiondata)) 
-		{
+        {
         $all_r_types = get_resource_types();
 
         $resources = get_collection_resources($collectiondata['ref']);
@@ -542,35 +542,42 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         // Get distinct resource types found in this collection:
         $collection_resources_by_type = array();
         foreach ($resources as $resource_id) 
-			{
+            {
             $resource_data = get_resource_data($resource_id);
             // Create a list of resource IDs based on type to separate them into different collections:
             $collection_resources_by_type[$resource_data['resource_type']][] = $resource_id;
-			}
+            }
 
         // Split into collections based on resource type:
         foreach ($collection_resources_by_type as $collection_type => $collection_resources)
-			{
+            {
             // Store all resources of unmanaged type in one collection which will be sent to the system administrator:
             if(!isset($manage_request_admin[$collection_type]))
-				{
+                {
                 $collections['not_managed'] = create_collection($userref, $collectiondata['name'] . " " . date("ymdHis"));
                 foreach ($collection_resources as $collection_resource_id) 
-					{
+                    {
                     add_resource_to_collection($collection_resource_id, $collections['not_managed']);
-					}
+                    }
                 continue;
-				}            
-            $collections[$collection_type] = create_collection($userref, $collectiondata['name'] . ' : ' . $all_r_types[$collection_type]["name"] . " " . date("ymdHis"));
+                }
+                
+            $r_type_index = array_search($collection_type, array_column($all_r_types, 'ref'));
+            if ($r_type_index===false)
+                {
+                continue;
+                }
+
+            $collections[$collection_type] = create_collection($userref, $collectiondata['name'] . ' : ' . $all_r_types[$r_type_index]["name"] . " " . date("ymdHis"));
             foreach ($collection_resources as $collection_resource_id)
-				{
+                {
                 add_resource_to_collection($collection_resource_id, $collections[$collection_type]);
-				}
-			}
+                }
+            }
         if(isset($collections) && count($collections) > 0)
             { 
             foreach ($collections as $request_resource_type => $collection_id)
-				{
+                {
                 $assigned_to = '';
                 $assigned_to_users=array();
                 $assigned_to_user_emails=array();
@@ -684,13 +691,13 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                     }
                 if (count($assigned_to_notify_users) > 0)
                     {
-					message_add($assigned_to_notify_users,$lang['requestassignedtoyou'],$baseurl . "/?q=" . $request,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,MANAGED_REQUEST, $request);
+                    message_add($assigned_to_notify_users,$lang['requestassignedtoyou'],$baseurl . "/?q=" . $request,$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,MANAGED_REQUEST, $request);
                     }    
                 unset($email_message);
-				}
+                }
 
             $notify_manage_request_admin = false;
-			$notification_sent = true;
+            $notification_sent = true;
             $send_default_notifications = false;
             }
         else
@@ -698,7 +705,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $ref = implode('', $collections);
             }
 
-		}
+        }
 
         elseif(hook('bypass_end_managed_collection_request', '', array(!isset($collectiondata), $ref, $request_query, $message, $templatevars, $assigned_to_user, $admin_mail_template, $user_mail_template)))
             {
@@ -736,7 +743,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 }
             $notification_sent = true;
             }
-		    
+            
         $admin_notify_emails=array();    
         $admin_notify_users=array();
         # Check if alternative request email notification address is set, only valid if collection contains resources of the same type
@@ -756,13 +763,13 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $notify_users=get_notification_users("RESOURCE_ACCESS");
             foreach($notify_users as $notify_user)
                 {
-                get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message, $admin_resource_access_notifications);		  
-                if($send_message==false){continue;}		
+                get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message, $admin_resource_access_notifications);        
+                if($send_message==false){continue;}     
                 
                 get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
                 if($send_email && filter_var($notify_user["email"], FILTER_VALIDATE_EMAIL))
                     {
-                    $admin_notify_emails[] = $notify_user['email'];	
+                    $admin_notify_emails[] = $notify_user['email']; 
                     }        
                 else
                     {
@@ -781,26 +788,26 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             }
         if (count($admin_notify_users)>0)
             {
-            global $userref;		
+            global $userref;        
             message_add($admin_notify_users,$notification_message,$templatevars["requesturl"],$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,MANAGED_REQUEST,$request);
             }
         }
     
-	if ($request_senduserupdates)
-		{
-		$userconfirm_notification = $lang["requestsenttext"] . "<br /><br />" . $message;
-		$userconfirmmessage = $userconfirm_notification . "<br /><br />" . $lang["clicktoviewresource"] . "<br />$baseurl/?c=$ref";
-		get_config_option($userref,'email_user_notifications', $send_email);    
+    if ($request_senduserupdates)
+        {
+        $userconfirm_notification = $lang["requestsenttext"] . "<br /><br />" . $message;
+        $userconfirmmessage = $userconfirm_notification . "<br /><br />" . $lang["clicktoviewresource"] . "<br />$baseurl/?c=$ref";
+        get_config_option($userref,'email_user_notifications', $send_email);    
         if($send_email && filter_var($useremail, FILTER_VALIDATE_EMAIL))
             {
-			send_mail($useremail,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,"",$user_mail_template,$templatevars,$applicationname);
+            send_mail($useremail,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,"",$user_mail_template,$templatevars,$applicationname);
             }        
         else
             {  
             global $userref;
             message_add($userref,$userconfirm_notification, $templatevars['url']);
             }
-		}    
+        }    
     
     # Increment the request counter
     sql_query("update resource set request_count=request_count+1 where ref='$ref'");
@@ -882,14 +889,14 @@ function email_resource_request($ref,$details)
     $message=$lang["user_made_request"] . "<br /><br />";
     $message.= isset($username)? $lang["username"] . ": " . $username . " (" . $useremail . ")<br />":"";
     $message.= (!empty($templatevars["formemail"]))? $lang["email"].":".$templatevars["formemail"]."<br />":"";
-	$notification_message = $message . $adddetails . $c ; 
+    $notification_message = $message . $adddetails . $c ; 
     $message.= $adddetails. $c . "<br /><br />" . $lang["clicktoviewresource"] . "<br />". $templatevars['url'];
-	
+    
 
     $admin_notify_emails=array();    
     $admin_notify_users=array();
     # Check if alternative request email notification address is set
-	if(isset($resource_type_request_emails))
+    if(isset($resource_type_request_emails))
         {
         if(isset($resource_type_request_emails[$resourcedata["resource_type"]]))
             {
@@ -898,60 +905,60 @@ function email_resource_request($ref,$details)
         } 
     else
         {
-		$admin_notify_emails[]=$email_notify;
+        $admin_notify_emails[]=$email_notify;
         $notify_users=get_notification_users("RESOURCE_ACCESS");
         foreach($notify_users as $notify_user)
-			{
-			get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message, $admin_resource_access_notifications);		  
-            if($send_message==false){continue;}		
-			
-			get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
-			if($send_email && filter_var($notify_user["email"], FILTER_VALIDATE_EMAIL))
-				{
-                $admin_notify_emails[] = $notify_user['email'];				
-				}        
-			else
-				{
-				$admin_notify_users[]=$notify_user["ref"];
-				}
-			}
+            {
+            get_config_option($notify_user['ref'],'user_pref_resource_access_notifications', $send_message, $admin_resource_access_notifications);        
+            if($send_message==false){continue;}     
+            
+            get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
+            if($send_email && filter_var($notify_user["email"], FILTER_VALIDATE_EMAIL))
+                {
+                $admin_notify_emails[] = $notify_user['email'];             
+                }        
+            else
+                {
+                $admin_notify_users[]=$notify_user["ref"];
+                }
+            }
         }
-		
+        
     foreach($admin_notify_emails as $admin_notify_email)
-		{
-		send_mail($admin_notify_email,$applicationname . ": " . $lang["requestresource"] . " - $ref",$message,$useremail,$useremail,"emailresourcerequest",$templatevars);
-		}
-	
-	if (count($admin_notify_users)>0)
-		{
-		global $userref;
+        {
+        send_mail($admin_notify_email,$applicationname . ": " . $lang["requestresource"] . " - $ref",$message,$useremail,$useremail,"emailresourcerequest",$templatevars);
+        }
+    
+    if (count($admin_notify_users)>0)
+        {
+        global $userref;
         message_add($admin_notify_users,$notification_message,$templatevars["requesturl"]);
-		}
+        }
               
     if ($request_senduserupdates)
         { 
-		$k=(getval("k","")!="")? "&k=".getval("k",""):"";
-		$userconfirmmessage = $lang["requestsenttext"] . "<br /><br />" . $lang["requestreason"] . ": " . $templatevars['details'] . $c . "<br /><br />" . $lang["clicktoviewresource"] . "\n$baseurl/?r=$ref".$k;
-		if(isset($userref))
-			{
-	        get_config_option($userref,'email_user_notifications', $send_email);    
-			if($send_email && filter_var($useremail, FILTER_VALIDATE_EMAIL))
-				{
-				send_mail($useremail,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailusercollectionrequest",$templatevars);
-				}        
-			else
-				{               
-				message_add($userref,$userconfirmmessage, $templatevars['url']);
-				}
-			}
-		else
-			{
-			$sender =  (!empty($useremail))? $useremail : (!empty($templatevars["formemail"]))? $templatevars["formemail"] :"";
-			
-			if($sender!="" && filter_var($sender, FILTER_VALIDATE_EMAIL)){send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailuserresourcerequest",$templatevars);}  
-			}
+        $k=(getval("k","")!="")? "&k=".getval("k",""):"";
+        $userconfirmmessage = $lang["requestsenttext"] . "<br /><br />" . $lang["requestreason"] . ": " . $templatevars['details'] . $c . "<br /><br />" . $lang["clicktoviewresource"] . "\n$baseurl/?r=$ref".$k;
+        if(isset($userref))
+            {
+            get_config_option($userref,'email_user_notifications', $send_email);    
+            if($send_email && filter_var($useremail, FILTER_VALIDATE_EMAIL))
+                {
+                send_mail($useremail,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailusercollectionrequest",$templatevars);
+                }        
+            else
+                {               
+                message_add($userref,$userconfirmmessage, $templatevars['url']);
+                }
+            }
+        else
+            {
+            $sender =  (!empty($useremail))? $useremail : (!empty($templatevars["formemail"]))? $templatevars["formemail"] :"";
+            
+            if($sender!="" && filter_var($sender, FILTER_VALIDATE_EMAIL)){send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,$email_notify,"emailuserresourcerequest",$templatevars);}  
+            }
         }
-	
+    
     # Increment the request counter
     sql_query("update resource set request_count=request_count+1 where ref='$ref'");
     }
