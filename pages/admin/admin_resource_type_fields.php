@@ -246,7 +246,7 @@ for ($n=0;$n<count($fields);$n++)
                                 if(response.deleted)
                                     {
                                     var redirect_link = document.createElement("a");
-                                    redirect_link.href = "<?php echo $baseurl; ?>/pages/admin/admin_resource_type_fields.php?deleted=" + response.deleted;
+                                    redirect_link.href = "<?php echo $baseurl; ?>/pages/admin/admin_resource_type_fields.php?deleted=" + response.deleted + "&restypefilter=<?php echo urlencode($restypefilter)?>&field_order_by=<?php echo urlencode($field_order_by)?>&field_sort=<?php echo urlencode($field_sort)?>&find=<?php echo urlencode($find)?>";
                                     CentralSpaceLoad(redirect_link, true);
                                     }
                             }, "json"); 
