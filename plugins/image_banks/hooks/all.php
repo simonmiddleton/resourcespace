@@ -100,3 +100,10 @@ function HookImage_banksAllAdd_folders_to_delete_from_temp(array $folders_scan_l
 
     return $folders_scan_list;
     }
+
+function HookImage_banksAllClearsearchcookies()
+    {
+    global $clear_function;
+    $clear_function .= "SetCookie('image_bank_provider_id','');";
+    return true;
+    }

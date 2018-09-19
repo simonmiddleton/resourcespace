@@ -9,7 +9,7 @@ function HookImage_banksSearchSearchaftersearchcookie()
     $offset = getval("offset", $saved_offset, true);
     $posting = filter_var(getval("posting", false), FILTER_VALIDATE_BOOLEAN);
 
-    rs_setcookie("image_bank_provider_id", $image_bank_provider_id);
+    rs_setcookie("image_bank_provider_id", $image_bank_provider_id,0,"","",false,false);
 
     // Allow pixabay search using saved params using the Search results link that appears in the header links
     // This is not passing anything in the params other than ajax argument
