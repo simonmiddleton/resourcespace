@@ -5652,7 +5652,7 @@ function get_executable_path($path, $executable, &$checked_path, $check_exe = fa
 
         if(file_exists($checked_path))
             {
-            return escapeshellarg($checked_path);
+            return escapeshellarg($checked_path) . hook('executable_add', '', array($path, $executable, $checked_path, $check_exe));
             }
 
         // Also check the path with a suffixed ".exe"
@@ -5663,7 +5663,7 @@ function get_executable_path($path, $executable, &$checked_path, $check_exe = fa
 
             if(file_exists($checked_path))
                 {
-                return escapeshellarg($checked_path);
+                return escapeshellarg($checked_path) . hook('executable_add', '', array($path, $executable, $checked_path, $check_exe));
                 }
 
             // Return the checked path without the suffixed ".exe"
@@ -5676,7 +5676,7 @@ function get_executable_path($path, $executable, &$checked_path, $check_exe = fa
 
         if(file_exists($checked_path))
             {
-            return escapeshellarg($checked_path);
+            return escapeshellarg($checked_path) . hook('executable_add', '', array($path, $executable, $checked_path, $check_exe));
             }
         }
 
