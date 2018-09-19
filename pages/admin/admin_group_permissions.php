@@ -44,27 +44,19 @@ if (getval("save","")!="" && enforcePostRequest(false))
 		}		
 	if (getval("other","")!="")
 		{
-		$perms[]=getvalescaped("other","");
+		$otherperms=explode(",", getvalescaped("other",""));
+		$perms = array_merge($perms, $otherperms);
 		}
 
+	$perms = array_unique($perms);
 	log_activity(null,LOG_CODE_EDITED,join(",",$perms),'usergroup','permissions',$ref,null,null,null,true);
 	sql_query("update usergroup set permissions='" . escape_check(join(",",$perms)) . "' where ref='$ref'");
-	remove_duplicate_permissions($ref);
 	}
 
 $group=get_usergroup($ref);
 if(in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
 $permissions=trim_array(explode(",",$group["permissions"]));
 $permissions_done=array();
-
-function remove_duplicate_permissions($ref)
-	{
-		$permissions_check = sql_value("SELECT permissions AS value FROM usergroup WHERE ref='$ref'",'');
-		$permissions_check_array = explode(',', $permissions_check);
-		$permissions_check_array = array_unique($permissions_check_array);
-		$permissions_check = implode(',', $permissions_check_array);
-		sql_query("UPDATE usergroup SET permissions='$permissions_check' WHERE ref='$ref'");
-	}
 
 function DrawOption($permission,$description,$reverse=false,$reload=false)
 	{
