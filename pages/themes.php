@@ -1109,7 +1109,7 @@ if ($header=="" && !isset($themes[0]))
 		} // end of for ($n=0;$n<count($headers);$n++)
 	} // end of if ($header=="" && !isset($themes[0]))
 
-if($simpleview && !$smart_theme)
+if($simpleview && !$smart_theme && checkperm('h'))
        {
        renderCallToActionTile(
            generateURL(
