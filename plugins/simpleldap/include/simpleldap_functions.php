@@ -215,7 +215,7 @@ function simpleldap_authenticate($username,$password){
 			}
 		else
 			{
-			$email = $username . '@' . $simpleldap['emailsuffix'];;
+			$email = $username . '@' . $simpleldap['emailsuffix'];
 			}
 			
 		//Extract phone info
