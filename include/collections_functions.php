@@ -2596,6 +2596,12 @@ function new_featured_collection_form(array $themearray = array())
     {
     global $lang;
 
+    if(!checkperm('h'))
+        {
+        http_response_code(401);
+        exit($lang['error-permissiondenied']);
+        }
+
     $themes_count = count($themearray);
     ?>
     <div class="BasicsBox">
