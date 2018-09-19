@@ -1050,9 +1050,10 @@ else
             <?php
             }
          }
+    
       global $custompermshowfile;
       hook('custompermshowfile');
-      if((!$is_template && !checkperm('F*')) || $custompermshowfile)
+      if(((!$is_template && !checkperm('F*')) || $custompermshowfile) && !hook('replaceeditpreview'))
          { ?>
          <div class="Question" id="question_file">
             <label><?php echo $lang["file"]?></label>
@@ -2115,6 +2116,7 @@ if($collapsible_sections)
 </div><!-- end of collapsible section -->
 <?php
 }
+hook('aftereditcollapsiblesection');
 ?>
 </div><!-- end of BasicsBox -->
 </form>
