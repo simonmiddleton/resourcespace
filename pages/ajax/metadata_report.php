@@ -104,7 +104,11 @@ else
 	echo "<table class=\"InfoTable\">";
 	echo "<tr><td colspan=\"5\">".$lang['resourcetype'].": ".$type_name."</td></tr>";
 	echo "<tr><td colspan=\"5\">".$lang['existing_tags']."</td></tr>";
-	echo "<tr><td width=\"150\">".$applicationname."</td><td width=\"50\">".$lang['group']."</td><td width=\"150\">".$lang['exiftooltag']."</td><td>".$lang['embeddedvalue']."</td><td>$write_status</td></tr>";
+	echo "<tr><td width=\"150\">".$applicationname."</td><td width=\"50\">".$lang['group']."</td><td width=\"150\">".$lang['exiftooltag']."</td><td>".$lang['embeddedvalue']."</td><td>$write_status</td>";
+	
+	hook('more_metadata_report_headings');
+	
+	echo "</tr>";
 
     # Process the report of the original file.
     $fields = explode("\n", $report_original);
@@ -120,6 +124,8 @@ else
             $tagprops = "";
             if((in_array($tag, $writable_tags_array) && $file_writability)) {$tagprops.= "w";}
             if ($tagprops!="") {$tagprops = "($tagprops)";}
+            $RS_field_ref='';
+            $RS_field_name='';
 
             # Check if the tag is mapped to an RS resource field.
 			if(isset($resourcefields[$tag]['ref']) || isset($resourcefields[$group.":".$tag]['ref']))
@@ -183,6 +189,8 @@ else
                 # The tag is removed in the simulated download.
                 echo "<td>- " . $value . "</td><td>+</td>";
 				}
+				
+			hook('more_metadata_report_cells');
 				
 			echo "</tr>";
 			}
