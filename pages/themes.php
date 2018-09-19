@@ -27,6 +27,12 @@ foreach ($_GET as $key => $value)
 
 if(getval("create","") != "" && enforcePostRequest(getval("ajax", false)))
 	{
+    if(!checkperm('h'))
+        {
+        http_response_code(401);
+        exit($lang['error-permissiondenied']);
+        }
+
 	// Create the collection and reload the page
 	$collectionname = getvalescaped("collectionname","");
 	$newcategory = getvalescaped("category_name","");
