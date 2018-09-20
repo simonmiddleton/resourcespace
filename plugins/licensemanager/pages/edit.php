@@ -42,7 +42,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 	}
 
 # Fetch license data
-if ($ref=="new" && enforcePostRequest(false))
+if ($ref=="new")
 	{
 	# Set default values for the creation of a new record.
 	$license=array(
