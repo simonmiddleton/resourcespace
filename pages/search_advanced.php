@@ -311,7 +311,7 @@ jQuery(document).ready(function()
 			}
 			else if (id=="Collections") {
 				//Uncheck All checkboxes
-                jQuery('.SearchTypeCheckbox').removeAttr('checked');				
+                jQuery('.SearchTypeCheckbox').prop('checked',false);		
 
                 //Check Collections
 				selectedtypes=["Collections"];
@@ -331,8 +331,8 @@ jQuery(document).ready(function()
 				jQuery('.ResTypeSectionHead').hide();
 				jQuery('.ResTypeSection').hide();
 				
-                jQuery('#SearchGlobal').removeAttr('checked');
-				jQuery('#SearchCollectionsCheckbox').removeAttr('checked');				
+                jQuery('#SearchGlobal').prop('checked',false);
+				jQuery('#SearchCollectionsCheckbox').prop('checked',false);		
 				// Show global and media search sections	
                 jQuery("#AdvancedSearchTypeSpecificSectionGlobalHead").show();
                 if (getCookie('AdvancedSearchTypeSpecificSectionGlobal')!="collapsed"){jQuery("#AdvancedSearchTypeSpecificSectionGlobal").show();}
@@ -348,8 +348,8 @@ jQuery(document).ready(function()
         }
         else {// Box has been unchecked
 			if (id=="Global") {		
-				selectedtypes=[];			
-	     		jQuery('.SearchTypeItemCheckbox').removeAttr('checked');
+				selectedtypes=[];	
+	     		jQuery('.SearchTypeItemCheckbox').prop('checked',false);
 			}
 			else if (id=="Collections") {
 				selectedtypes=[];
@@ -358,7 +358,7 @@ jQuery(document).ready(function()
 				jQuery('#AdvancedSearchTypeSpecificSectionCollectionsHead').hide();
             }
 			else {								
-                jQuery('#SearchGlobal').removeAttr('checked');
+                jQuery('#SearchGlobal').prop('checked',false);
 				
 				//Hide specific resource type areas
 				jQuery('.ResTypeSectionHead').hide();
@@ -445,7 +445,7 @@ jQuery(document).ready(function(){
 	    jQuery('#advancedform').submit(function() {
             if (jQuery('#AdvancedSearchTypeSpecificSectionCollections').is(":hidden") && (document.getElementById("countonly").value!="yes")) 
                 {
-                    jQuery('.tickboxcoll').removeAttr('checked');
+                    jQuery('.tickboxcoll').prop('checked',false);
                 }
 	       var inputs = jQuery('#advancedform :input');
 	       var hiddenfields = Array();
