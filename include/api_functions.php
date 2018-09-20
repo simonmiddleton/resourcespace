@@ -40,38 +40,43 @@ function check_api_key($username,$querystring,$sign)
 function execute_api_call($query)
     {
     // Execute the specified API function.
-    $params=array();parse_str($query,$params);        
+    $params=array();parse_str($query,$params);
     if (!array_key_exists("function",$params)) {return false;}
     $function=$params["function"];
     if (!function_exists("api_" . $function)) {return false;}
     
-    $eval="return api_" . $function . "(";
-    $n=1;
+    // Construct an array of the real params, setting default values as necessary
+    $setparams = array();
+    $n = 0;    
     $fct = new ReflectionFunction("api_" . $function);
     foreach ($fct->getParameters() as $fparam)
         {
-        if ($n>1) {$eval.=",";}
-        
-        if (array_key_exists("param" . $n,$params))
+        $paramkey = $n + 1;
+        debug ("API Checking for parameter " . $fparam->getName() . " (param" . $paramkey . ")");
+        if (array_key_exists("param" . $paramkey,$params))
             {
-            $paramval = $params["param" . $n];
+            debug ("API " . $fparam->getName() . " -   value has been passed : '" . $params["param" . $paramkey] . "'");
+            $setparams[$n] = $params["param" . $paramkey];
             }
         
-        if ($fparam->isOptional() && $paramval == '')
+        elseif ($fparam->isOptional())
             {
             // Set default value if nothing passed e.g. from API test tool
-            $paramval = $fparam->getDefaultValue();
+            debug ("API " . $fparam->getName() . " -  setting default value = '" . $fparam->getDefaultValue() . "'");
+            $setparams[$n] = $fparam->getDefaultValue();
             }
-        
-        # Add to the eval, removing backslash (to avoid escaping out of the quote - PHP 5 bug) and the quote itself, again to avoid exiting the string and executing arbirtrary code.
-        $eval.="\"" . str_replace(array("\\","\""),"\\\"",$paramval) . "\"";
+        else
+            {
+             // Set as empty
+            debug ("API " . $fparam->getName() . " -  setting null value = '" . $fparam->getDefaultValue() . "'");
+            $setparams[$n] = "";    
+            }
         $n++;
         }
-        
-    $eval.=");";
     
-    debug("API: \$eval = {$eval}");
-    return json_encode(eval($eval),(defined('JSON_PRETTY_PRINT')?JSON_PRETTY_PRINT:0));
+    debug("API - calling api_" . $function);
+    $result = call_user_func_array("api_" . $function, $setparams);
+    return json_encode($result,(defined('JSON_PRETTY_PRINT')?JSON_PRETTY_PRINT:0));
     }
     
 /**
