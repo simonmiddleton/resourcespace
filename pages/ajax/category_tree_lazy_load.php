@@ -47,6 +47,10 @@ foreach($nodes as $node)
             'id'     => $node['ref'],
             'parent' => ('' == $node['parent'] ? '#' : $node['parent']),
             'text'   => i18n_get_translated($node['name']),
+            'li_attr'=> array(
+                'title' => i18n_get_translated($node['name']),
+                'class' => 'show_tooltip'
+            ),
             'state'  => array(
                 'opened'   => $node_opened,
                 'selected' => in_array($node['ref'], $selected_nodes)
