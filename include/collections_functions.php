@@ -2095,7 +2095,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
 	if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
 	if ($key==""){return false;}
 	# Update the expiration and acccess
-	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "" && $sharepwd != "(unchanged)") ? ", password_hash='" . hash('sha256', $key . $sharepwd . $scramble_key) . "'": "") . " where access_key='$key'");
+	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "(unchanged)") ? ", password_hash='" . (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key)) . "'" : "") . " where access_key='$key'");
 	hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd));
 	return true;
 	}
