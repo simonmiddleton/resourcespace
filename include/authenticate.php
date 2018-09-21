@@ -187,7 +187,21 @@ if (!$valid && !isset($system_login))
 	$_SERVER['REQUEST_URI'] = ( isset($_SERVER['REQUEST_URI']) ?
 	$_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'] . (( isset($_SERVER
 	['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '')));
-    $path=$_SERVER["REQUEST_URI"];
+    $path = $_SERVER["REQUEST_URI"];
+    
+    if(strpos($path,"/ajax") !== false)
+        {
+        // This is a call to a page intended to be loaded via ajax - probably now failed due to auto logout
+        if(isset($_SERVER['HTTP_REFERER']))
+            {
+            $path = str_replace($baseurl,$baseurl_short,$_SERVER['HTTP_REFERER']);
+            }
+        else
+            {
+            $path = $baseurl_short;
+            }
+        }
+    
     $path=str_replace("ajax=","ajax_disabled=",$path);# Disable forwarding of the AJAX parameter if this was an AJAX load, otherwise the redirected page will be missing the header/footer.
 	?>
 	<script type="text/javascript">
