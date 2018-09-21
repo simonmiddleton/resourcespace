@@ -492,7 +492,11 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 && !$is_template
             )
                 {
-                $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
+                # Register an error only if the required field was actually displayed
+                if (is_field_displayed($fields[$n]))
+                   {
+                   $errors[$fields[$n]['ref']] = i18n_get_translated($fields[$n]['title']) . ": {$lang['requiredfield']}";
+                   }
                 continue;
                 }
 
