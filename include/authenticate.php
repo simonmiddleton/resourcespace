@@ -192,7 +192,7 @@ if (!$valid && !isset($system_login))
     if(strpos($path,"/ajax") !== false)
         {
         // This is a call to a page intended to be loaded via ajax - probably now failed due to auto logout
-        if(isset($_SERVER['HTTP_REFERER']))
+        if(isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],"login.php") === false)
             {
             $path = str_replace($baseurl,$baseurl_short,$_SERVER['HTTP_REFERER']);
             }
