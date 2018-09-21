@@ -2574,6 +2574,7 @@ $lang["replace_resource_original_description"]= "Original %EXTENSION file"; // %
 $lang['replace_resource_original_alt_filename'] = 'Alternative filename';
 $lang['jq_create_previews_success_text'] = 'Previews created for resource #%RESOURCE successfully';
 $lang['jq_create_previews_failure_text'] = 'Failed to create previews for resource #%RESOURCE';
+$lang['jq_notify_user_preparing_archive'] = 'Preparing archive for collection download! You will receive a notification once the archive is ready for download.';
 
 /* Manage external shares */
 $lang['permission_manage_external_shares'] = 'Can manage external shares with expiry set to "Never"';
@@ -2719,3 +2720,8 @@ $lang["property-include_in_csv_export"]="Include in CSV export";
 $lang["share-set-password"] = "Share password (optional)";
 $lang["share-enter-password"] = "Please enter the access password to continue";
 $lang["share-invalid"] = "Invalid access key or password";
+
+/* Offline jobs */
+$lang["oj-collection-download-success-text"] = "Collection ready for download";
+$lang["oj-collection-download-failure-text"] = "Unable to prepare collection archive for download";
+/* End of offline jobs */

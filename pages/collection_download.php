@@ -49,14 +49,6 @@ $usagecomment = getvalescaped('usagecomment', '');
 // set the time limit to unlimited, default 300 is not sufficient here.
 set_time_limit(0);
 
-function update_zip_progress_file($note){
-	global $progress_file;
-	$fp = fopen($progress_file, 'w');		
-	$filedata=$note;
-	fwrite($fp, $filedata);
-	fclose($fp);
-}
-
 $archiver_fullpath = get_utility_path("archiver");
 
 if (!isset($zipcommand) && !$use_zip_extension)
@@ -218,19 +210,7 @@ if ($submitted != "")
 	# Define the archive file.
 	if(!$collection_download_tar)
 		{
-		if ($use_zip_extension){
-			$zipfile = $usertempdir . "/zip.zip";
-			$zip = new ZipArchive();
-			$zip->open($zipfile, ZIPARCHIVE::CREATE);
-		}
-		else if ($archiver)
-			{
-			$zipfile = $usertempdir . "/".$lang["collectionidprefix"] . $collection . "-" . $size . "." . $collection_download_settings[$settings_id]["extension"];
-		   }
-		else
-			{
-			$zipfile = $usertempdir . "/".$lang["collectionidprefix"] . $collection . "-" . $size . ".zip";
-		   }
+		collection_download_get_archive_file($archiver, $settings_id, $usertempdir, $collection, $size, $zip, $zipfile);
 		}
 
 	$path="";
@@ -238,6 +218,33 @@ if ($submitted != "")
 	// set up an array to store the filenames as they are found (to analyze dupes)
 	$filenames=array();	
 	
+    if(!$collection_download_tar && $offline_job_queue)
+        {
+        $collection_download_job_data = array(
+            'k'                     => $k,
+            'collection'            => $collection,
+            'result'                => $result,
+            'size'                  => $size,
+            'exiftool_write_option' => $exiftool_write_option,
+            'usertempdir'           => $usertempdir,
+            'useoriginal'           => $useoriginal,
+            'archiver'              => $archiver,
+            'id'                    => $id,
+            'includetext'           => $includetext,
+            'progress_file'         => $progress_file,
+            'count_data_only_types' => $count_data_only_types,
+            'usage'                 => $usage,
+            'usagecomment'          => $usagecomment,
+            'available_sizes'       => $available_sizes,
+            'settings_id'           => $settings_id,
+        );
+        job_queue_add('collection_download', $collection_download_job_data, '', '', $lang["oj-collection-download-success-text"], $lang["oj-collection-download-failure-text"]);
+
+        $url = isset($collection) ? "{$baseurl}/?c={$collection}": '';
+        message_add($userref, $lang['jq_notify_user_preparing_archive'], $url, 0);
+        exit();
+        }
+
 	# Build a list of files to download
 	for ($n=0;$n<count($result);$n++)
 		{
@@ -310,120 +317,13 @@ if ($submitted != "")
 					# Retrieve the original file name		
 					$filename=get_data_by_field($ref,$filename_field);	
 
-					if (!empty($filename))
-						{
-						# Only perform the copy if an original filename is set.
-
-						# now you've got original filename, but it may have an extension in a different letter case. 
-						# The system needs to replace the extension to change it to jpg if necessary, but if the original file
-						# is being downloaded, and it originally used a different case, then it should not come from the file_extension, 
-						# but rather from the original filename itself.
-						
-						# do an extra check to see if the original filename might have uppercase extension that can be preserved.	
-						# also, set extension to "" if the original filename didn't have an extension (exiftool identification of filetypes)
-						$pathparts = pathinfo($filename);
-                        if(isset($pathparts['extension']))
-                            {
-                            if(strtolower($pathparts['extension']) == $pextension)
-                                {
-                                $pextension = $pathparts['extension'];
-                                }
-                            }
-
-						if ($usesize!=""&&!$subbed_original){$append="-".$usesize;}else {$append="";}
-						$basename_minus_extension=remove_extension($pathparts['basename']);
-						$filename=$basename_minus_extension.$append.".".$pextension;
-
-						if ($prefix_resource_id_to_filename) {$filename=$prefix_filename_string . $ref . "_" . $filename;}
-
-						$fs=explode("/",$filename);$filename=$fs[count($fs)-1];
-
-                        # Convert $filename to the charset used on the server.
-                        if (!isset($server_charset)) {$to_charset = 'UTF-8';}
-                        else
-                            {
-                            if ($server_charset!="") {$to_charset = $server_charset;}
-                            else {$to_charset = 'UTF-8';}
-                            }
-                        $filename = mb_convert_encoding($filename, $to_charset, 'UTF-8');
-						
-						// check if a file has already been processed with this name
-						if(in_array($filename, $filenames))
-                            {
-                            $path_parts = pathinfo($filename);
-                            if(isset($path_parts['extension']) && isset($path_parts['filename']))
-                                {
-                                $filename_ext = $path_parts['extension'];
-                                $filename_wo  = $path_parts['filename'];
-
-                                // Run through function to guarantee unique filename
-                                $filename = makeFilenameUnique($filenames, $filename_wo, $lang["_dupe"], $filename_ext);
-                                }
-                            }
-                        
-                        // Add the filename to the array so it can be checked in the next loop
-                        $filenames[] = $filename;
-
-                        # Copy to tmp (if exiftool failed) or rename this file
-                        # this is for extra efficiency to reduce copying and disk usage
-                        
-                        if(!($collection_download_tar || $use_zip_extension))
-                            {
-                            // the copy or rename to the filename is not necessary using the zip extension since the archived filename can be specified.
-                            $newpath = get_temp_dir(false,$id) . '/' . $filename;
-
-                            if(!$copy && $exiftool_write_option)
-                                {
-                                rename($p, $newpath);
-                                }
-                            else
-                                {
-                                copy($p,$newpath);
-                                }
-
-                            # Add the temporary file to the post-archiving deletion list.
-                            $deletion_array[] = $newpath;
-
-                            # Set p so now we are working with this new file
-                            $p = $newpath;
-                            }
-						}
+					collection_download_use_original_filenames_when_downloading($filename, $ref, $collection_download_tar, $filenames);
 					}
-				if (empty($filename))
-					{
-					$filename=$prefix_filename_string . $ref . "_" . $size . "." . $pextension;
-					}
+
                 if (hook("downloadfilenamealt")) $filename=hook("downloadfilenamealt");
-				#Add resource data/collection_resource data to text file
-				if (($zipped_collection_textfile==true)&&($includetext=="true"))
-					{ 
-					if ($size==""){$sizetext="";}else{$sizetext="-".$size;}
-					if ($subbed_original) { $sizetext = '(' . $lang['substituted_original'] . ')'; }
-					if($k === '')
-						{
-						$fields = get_resource_field_data($ref);
-						}
-					else
-						{
-						// External shares should take into account fields that are not meant to show in that case
-						$fields = get_resource_field_data($ref, false, true, -1, true);
-						}
-					$commentdata=get_collection_resource_comment($ref,$collection);
-					if (count($fields)>0)
-						{ 
-						$text.= ($sizetext=="" ? "" : $sizetext) ." ". $filename. "\r\n-----------------------------------------------------------------\r\n";
-						$text.= $lang["resourceid"] . ": " . $ref . "\r\n";
-							for ($i=0;$i<count($fields);$i++){
-								$value=$fields[$i]["value"];
-								$title=str_replace("Keywords - ","",$fields[$i]["title"]);
-								if ((trim($value)!="")&&(trim($value)!=",")){$text.= wordwrap("* " . $title . ": " . i18n_get_translated($value) . "\r\n", 65);}
-							}
-						if(trim($commentdata['comment'])!=""){$text.= wordwrap($lang["comment"] . ": " . $commentdata['comment'] . "\r\n", 65);}	
-						if(trim($commentdata['rating'])!=""){$text.= wordwrap($lang["rating"] . ": " . $commentdata['rating'] . "\r\n", 65);}	
-						$text.= "-----------------------------------------------------------------\r\n\r\n";	
-						}
-					}
-				
+
+                collection_download_process_text_file($ref, $collection, $filename);
+
 				hook('modifydownloadfile');
 								
 				$path.=$p . "\r\n";	
@@ -465,19 +365,8 @@ if ($submitted != "")
 					{
 					update_zip_progress_file("file ".$n);
 					}
-				# build an array of paths so we can clean up any exiftool-modified files.
-				
-				if($tmpfile!==false && file_exists($tmpfile)){$deletion_array[]=$tmpfile;}
-				daily_stat("Resource download",$ref);
-				resource_log($ref,'d',0,$usagecomment,"","",$usage,$size);
-				
-				# update hit count if tracking downloads only
-				if ($resource_hit_count_on_downloads)
-					{ 
-					# greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
-					sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='$ref'");
-					} 
-				
+
+                collection_download_log_resource_ready($tmpfile, $deletion_array, $ref);
 				}
 			}
 
@@ -485,168 +374,39 @@ if ($submitted != "")
     // Collection contains data_only resource types
     if(0 < $count_data_only_types)
         {
-        for($n = 0; $n < count($result); $n++)
-            {
-            // Data-only type of resources should be generated and added in the archive
-            if(in_array($result[$n]['resource_type'], $data_only_resource_types))
-                {
-                $template_path = get_pdf_template_path($result[$n]['resource_type']);
-                $pdf_filename = 'RS_' . $result[$n]['ref'] . '_data_only.pdf';
-                $pdf_file_path = get_temp_dir(false, $id) . '/' . $pdf_filename;
-
-                // Go through fields and decide which ones we add to the template
-                $placeholders = array(
-                    'resource_type_name' => get_resource_type_name($result[$n]['resource_type'])
-                );
-
-                $metadata = get_resource_field_data($result[$n]['ref'], false, true, -1, '' != getval('k', ''));
-
-                foreach($metadata as $metadata_field)
-                    {
-                    $metadata_field_value = trim(tidylist(i18n_get_translated($metadata_field['value'])));
-
-                    // Skip if empty
-                    if('' == $metadata_field_value)
-                        {
-                        continue;
-                        }
-
-                    $placeholders['metadatafield-' . $metadata_field['ref'] . ':title'] = $metadata_field['title'];
-                    $placeholders['metadatafield-' . $metadata_field['ref'] . ':value'] = $metadata_field_value;
-                    }
-                generate_pdf($template_path, $pdf_file_path, $placeholders, true);
-
-                // Go and add file to archive
-               if($collection_download_tar)
-                    {
-                    // Add a link to pdf 
-					symlink($pdf_file_path, $usertempdir . DIRECTORY_SEPARATOR  . $pdf_filename); 
-					}
-                elseif($use_zip_extension)
-                    {
-                    $zip->addFile($pdf_file_path, $pdf_filename);
-                    }
-                else
-                    {
-                    $path .= $pdf_file_path . "\r\n";
-                    }
-                $deletion_array[] = $pdf_file_path;
-
-                continue;
-                }
-
-            daily_stat('Resource download', $result[$n]['ref']);
-            resource_log($result[$n]['ref'], 'd', 0, $usagecomment, '', '', $usage);
-
-            if($resource_hit_count_on_downloads)
-                { 
-                /*greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero
-                to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).*/
-                sql_query("UPDATE resource SET new_hit_count = greatest(hit_count, new_hit_count) + 1 WHERE ref = '{$result[$n]['ref']}'");
-                }
-            }
+        collection_download_process_data_only_types($result, $id, $collection_download_tar, $usertempdir, $zip, $path, $deletion_array);
         }
     else if('' == $path)
         {
         exit($lang['nothing_to_download']);
         }
 
-    # Append summary notes about the completeness of the package, write the text file, add to archive, and schedule for deletion
-    if (($zipped_collection_textfile==true)&&($includetext=="true")){
-        $qty_sizes = count($available_sizes[$size]);
-        $qty_total = count($result);
-        $text.= $lang["status-note"] . ": " . $qty_sizes . " " . $lang["of"] . " " . $qty_total . " ";
-        switch ($qty_total) {
-        case 0:
-            $text.= $lang["resource-0"] . " ";
-            break;
-        case 1:
-            $text.= $lang["resource-1"] . " ";
-            break;
-        default:
-            $text.= $lang["resource-2"] . " ";
-            break;
-        }
+    collection_download_process_summary_notes(
+        $result,
+        $available_sizes,
+        $text,
+        $subbed_original_resources,
+        $used_resources,
+        $id,
+        $collection,
+        $collectiondata,
+        $collection_download_tar,
+        $usertempdir,
+        $filename,
+        $path,
+        $deletion_array);
 
-        switch ($qty_sizes) {
-        case 0:
-            $text.= $lang["were_available-0"] . " ";
-            break;
-        case 1:
-            $text.= $lang["were_available-1"] . " ";
-            break;
-        default:
-            $text.= $lang["were_available-2"] . " ";
-            break;
-        }
-        $text.= $lang["forthispackage"] . ".\r\n\r\n";
-    
-        foreach ($result as $resource) {
-	    if (in_array($resource['ref'],$subbed_original_resources)){
-		$text.= $lang["didnotinclude"] . ": " . $resource['ref'];
-		$text.= " (".$lang["substituted_original"] . ")";
-		$text.= "\r\n";
-	    } elseif (!in_array($resource['ref'],$used_resources)) {
-                $text.= $lang["didnotinclude"] . ": " . $resource['ref'];
-		$text.= "\r\n";
-            }
-        }
+    collection_download_process_csv_metadata_file(
+        $result,
+        $id,
+        $collection,
+        $collection_download_tar,
+        $use_zip_extension,
+        $zip,
+        $path,
+        $deletion_array);
 
-        $textfile = get_temp_dir(false,$id) . "/". $collection . "-" . safe_file_name(i18n_get_collection_name($collectiondata)) . $sizetext . ".txt";
-        $fh = fopen($textfile, 'w') or die("can't open file");
-        fwrite($fh, $text);
-        fclose($fh);
-		if($collection_download_tar)
-			{
-			debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
-			@symlink($textfile, $usertempdir . DIRECTORY_SEPARATOR . $collection . "-" . safe_file_name(i18n_get_collection_name($collectiondata)) . $sizetext . '.txt');
-			}
-		elseif ($use_zip_extension){
-			$zip->addFile($textfile,$collection . "-" . safe_file_name(i18n_get_collection_name($collectiondata)) . $sizetext . ".txt");
-        } else {
-			$path.=$textfile . "\r\n";	
-        }
-        $deletion_array[]=$textfile;	
-    }
-
-    // Include the CSV file with the metadata of the resources found in this collection
-	if(getvalescaped('include_csv_file', '') == 'yes')
-		{
-		$csv_file    = get_temp_dir(false, $id) . '/Col-' . $collection . '-metadata-export.csv';
-		$csv_fh      = fopen($csv_file, 'w') OR die("can't open file");
-		$csv_content = generateResourcesMetadataCSV($result);
-		fwrite($csv_fh, $csv_content);
-		fclose($csv_fh);
-
-		// Add link to file for use by tar to prevent full paths being included.
-		if($collection_download_tar)
-			{
-			debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
-			@symlink($csv_file, $usertempdir . DIRECTORY_SEPARATOR . 'Col-' . $collection . '-metadata-export.csv');
-			}
-		elseif($use_zip_extension)
-			{
-			$zip->addFile($csv_file, 'Col-' . $collection . '-metadata-export.csv');
-			}
-		else
-			{
-			$path .= $csv_file . "\r\n";
-			}
-		$deletion_array[] = $csv_file;
-		}
-
-	# Write command parameters to file.
-	//update_progress_file("writing zip command");	
-	if (!$use_zip_extension && !$collection_download_tar)
-		{
-		$cmdfile = get_temp_dir(false,$id) . "/zipcmd" . $collection . "-" . $size . ".txt";
-		$fh = fopen($cmdfile, 'w') or die("can't open file");
-		# Remove Windows line endings - fixes an issue with using tar command - somehow the file has got Windows line breaks
-		if(!$config_windows) 
-			{$path=preg_replace('/\r\n/', "\n", $path);}
-		fwrite($fh, $path);
-		fclose($fh);
-		}
+	collection_download_process_command_to_file($use_zip_extension, $collection_download_tar, $id, $collection, $size, $path);
 
 	if($collection_download_tar)
 		{$suffix = '.tar';}
@@ -655,71 +415,11 @@ if ($submitted != "")
 	else
 		$suffix = '.zip';
 
-	$filename = hook('changecollectiondownloadname', null, array($collection, $size, $suffix));
-	if (empty($filename))
-		{
-		if ($use_collection_name_in_zip_name)
-			{
-			# Use collection name (if configured)
-			$filename = $lang["collectionidprefix"] . $collection . "-"
-					. safe_file_name(i18n_get_collection_name($collectiondata)) . "-" . $size
-					. $suffix;
-			}
-		else
-			{
-			# Do not include the collection name in the filename (default)
-			$filename = $lang["collectionidprefix"] . $collection . "-" . $size . $suffix;
-			}
-		}
+	collection_download_process_collection_download_name($filename, $collection, $size, $suffix, $collectiondata);
 		
-    # Execute the archiver command.
-    # If $collection_download is true the $collection_download_settings are used if defined, else the legacy $zipcommand is used.
-    if ($use_zip_extension && !$collection_download_tar)
-		{
-		update_zip_progress_file("zipping");
-		$wait=$zip->close();
-		update_zip_progress_file("complete");
-		sleep(1);
-		}
-	 else if ($collection_download_tar)
-        {
-		header("Content-type: application/tar");
-		header("Content-disposition: attachment; filename=" . $filename );
-		debug("collection_download tar command: tar -cv -C " . $usertempdir . " . ");
-		passthru("find " . $usertempdir . ' -printf "%P\n" | tar -cv --no-recursion --dereference -C ' . $usertempdir . " -T -");
-		exit();
-        }
-    else if ($archiver)
-        {
-		update_zip_progress_file("zipping");
-        $wait=run_command($archiver_fullpath . " " . $collection_download_settings[$settings_id]["arguments"] . " " . escapeshellarg($zipfile) . " " . $archiver_listfile_argument . escapeshellarg($cmdfile));
-        update_zip_progress_file("complete");
-        }
-    else if (!$use_zip_extension)
-        {
-		update_zip_progress_file("zipping");	
-        if ($config_windows)
-            # Add the command file, containing the filenames, as an argument.
-            {
-            $wait=exec("$zipcommand " . escapeshellarg($zipfile) . " @" . escapeshellarg($cmdfile));
-            }
-        else
-            {
-            # Pipe the command file, containing the filenames, to the executable.
-            $wait=exec("$zipcommand " . escapeshellarg($zipfile) . " -@ < " . escapeshellarg($cmdfile));
-            }
-            update_zip_progress_file("complete");
-        }
+    collection_download_process_archive_command($collection_download_tar, $zip, $filename, $usertempdir, $archiver, $settings_id, $zipfile);
 
-    # Archive created, schedule the command file for deletion.
-	if (!$use_zip_extension){
-		$deletion_array[]=$cmdfile;
-	}
-	
-	# Remove temporary files.
-	foreach($deletion_array as $tmpfile) {
-		delete_exif_tmpfile($tmpfile);
-	}
+    collection_download_clean_temp_files($deletion_array);
 
     # Get the file size of the archive.
     $filesize = @filesize_unlimited($zipfile);
@@ -774,16 +474,21 @@ if ($intro!="") { ?><p><?php echo $intro ?></p><?php }
 ?>
 <script>
 
-function ajax_download()
-	{	
+function ajax_download(download_offline)
+	{
+    var ifrm = document.getElementById('downloadiframe');
+    ifrm.src = "<?php echo $baseurl_short?>pages/collection_download.php?submitted=true&"+jQuery('#myform').serialize();
+
+    if(download_offline)
+        {
+        document.getElementById('downloadbuttondiv').style.display='none';
+        return false;
+        }
+
 	document.getElementById('downloadbuttondiv').style.display='none';	
 	document.getElementById('progress').innerHTML='<br /><br /><?php echo $lang["collectiondownloadinprogress"];?>';
 	document.getElementById('progress3').style.display='none';
 	document.getElementById('progressdiv').style.display='block';
-
-	var ifrm = document.getElementById('downloadiframe');
-	
-	ifrm.src = "<?php echo $baseurl_short?>pages/collection_download.php?submitted=true&"+jQuery('#myform').serialize();
 
 	// Disable form controls -- this needs to happen after serializing the form or else they are ignored
 	jQuery('#downloadsize').prop('disabled', true);
@@ -1017,7 +722,15 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 	<label for="download"> </label>
 	<script>var ajax_on=<?php echo ($collection_download_tar)?"true":"false"; ?>;</script>
-	<input type="submit" onclick="if(ajax_on){ajax_download();return false;}" value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
+	<input type="submit"
+           onclick="
+            if(ajax_on)
+                {
+                ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>);
+                return false;
+                }
+           "
+           value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
 	
 	<div class="clearerleft"> </div>
 </div>
