@@ -20,6 +20,7 @@ function HookSimplesamlAllPreheaderoutput()
         global $allow_password_change, $delete_requires_password;
         $delete_requires_password=false;
         $allow_password_change=false;
+        $session_autologout = false;
         return true;
         }
         
