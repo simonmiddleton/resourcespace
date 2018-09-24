@@ -148,11 +148,13 @@ function message_purge()
 
 function message_send_unread_emails()
 	{
-	global $lang, $applicationname,$actions_enable,$baseurl,$list_search_results_title_trim, $user_pref_daily_digest,$applicationname,$actions_on;
+	global $lang, $applicationname,$actions_enable,$baseurl,$list_search_results_title_trim;
+    global $user_pref_daily_digest,$applicationname,$actions_on, $inactive_message_auto_digest_period;
 	$lastrun = sql_value("select value from sysvars where name='daily_digest'",'');
-	
+	$sendall = array();
+    
 	# Exit if already sent in last 24 hours;
-	if ($lastrun!="" && time()-strtotime($lastrun)<(60*60*24)) {return false;}
+	//if ($lastrun!="" && time()-strtotime($lastrun)<(60*60*24)) {return false;}
 	
 	// Get all the users who have chosen to receive the digest email (or the ones that have opted out if set globally)
 	if($user_pref_daily_digest)
@@ -165,20 +167,62 @@ function message_send_unread_emails()
 		{
 		$digestusers=get_config_option_users('user_pref_daily_digest',1);
 		}
-		
-	# Get all unread notifications. 
-	$unreadmessages=sql_query("select u.ref as userref, u.email, m.ref as messageref, m.message, m.created, m.url from user_message um join user u on u.ref=um.user join message m on m.ref=um.message where um.seen=0 and u.ref in ('" . implode("','",$digestusers) . "') AND u.email<>'' and m.created>'" . $lastrun . "' order by m.created desc");
+    
+    if($inactive_message_auto_digest_period > 0 && is_numeric($inactive_message_auto_digest_period))
+        {
+        // Add any users who have not logged on to the array
+        $allusers = get_users(0,"","u.ref",false,-1,1,false,"u.ref, u.username, u.last_active");
+        foreach($allusers as $user)
+            {
+            if(!in_array($user["ref"],$digestusers) && strtotime($user["last_active"]) < date(time() - $inactive_message_auto_digest_period *  60 * 60 *24))
+                {
+                debug("message_send_unread_emails: Processing unread messages for inactive user: " . $user["username"]);
+                $digestusers[] = $user["ref"];
+                $sendall[] = $user["ref"];
+                }
+            }
+        }
+        
+	# Get all unread notifications created since last run, or all mesages sent to inactive users. 
+	$unreadmessages=sql_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url FROM user_message um JOIN user u ON u.ref=um.user JOIN message m ON m.ref=um.message WHERE um.seen=0 AND u.ref IN ('" . implode("','",$digestusers) . "') AND u.email<>'' AND (m.created>'" . $lastrun . "'" . (count($sendall) > 0 ? " OR u.ref IN ('" . implode("','",$sendall) . "')" : "") . ") ORDER BY m.created DESC");
 	
+    $inactive_message_auto_digest_period_saved = $inactive_message_auto_digest_period;
 	foreach($digestusers as $digestuser)
 		{
+        // Reset config before setting up user so that any user groups processed later are not affected by the override
+        $inactive_message_auto_digest_period = $inactive_message_auto_digest_period_saved;
+        $messageuser=get_user($digestuser);
+        
+		setup_user($messageuser);
+        get_config_option($digestuser,'user_pref_inactive_digest', $user_auto_digest_option);
+        
+        if($inactive_message_auto_digest_period == 0 || !$user_auto_digest_option) // This may be set differently as a group configuration overerride or disabled by user
+            {
+            debug("Skipping email digest for user ref " . $digestuser . " as user or group preference disabled");
+            continue;
+            }
+        
+        $usermail = $messageuser["email"];
+        if(!filter_var($usermail, FILTER_VALIDATE_EMAIL))
+            {
+            debug("Skipping email digest for user ref " . $digestuser . " due to invalid email:  " . $usermail);
+            continue;
+            }
+         
 		$messageflag=false;
 		$actionflag=false;
-		
 		// Set up an array of message to delete for this user if they have chosen to purge the messages
 		$messagerefs=array();
 		
 		// Start the new email
-		$message = $lang['email_daily_digest_text'] . "<br /><br />";
+        if(in_array($digestuser,$sendall))
+            {
+            $message = $lang['email_auto_digest_inactive'] . "<br /><br />";
+            }
+        else
+            {
+            $message = $lang['email_daily_digest_text'] . "<br /><br />";
+            }
 		$message .= "<style>.InfoTable td {padding:5px; margin: 0px;border: 1px solid #000;}</style><table class='InfoTable'>";
 		$message .= "<tr><th>" . $lang["columnheader-date_and_time"] . "</th><th>" . $lang["message"] . "</th><th></th></tr>";
 		
@@ -195,16 +239,13 @@ function message_send_unread_emails()
 			}
 		if($actions_on)
 			{
-			echo "Checking actions for user " . $unreadmessage["userref"] . "\r\n";
-			$messageuser=get_user($digestuser);
-			$usermail = $messageuser["email"];
-			setup_user($messageuser);
+			debug("Checking actions for user " . $unreadmessage["userref"]);
             if(!$actions_on){break;}
 			$user_actions = get_user_actions(false);
-			if (count($user_actions)>0)		
+			if (count($user_actions) > 0)		
 				{
 				$actionflag=true;
-				echo "Adding actions to message for user " . $usermail . "\r\n";
+				debug("Adding actions to message for user " . $usermail);
 				if($messageflag)
 					{
 					$message .= "</table><br /><br />";
@@ -263,9 +304,12 @@ function message_send_unread_emails()
 			}
 			
 		// Send the email			
-		echo "Sending summary\r\n";
+		debug("Sending summary to user ref " . $digestuser . ", email " . $usermail);
 		$message .= "</table>";
-		
+        
+        $userprefurl = $baseurl . "/pages/user/user_preferences.php#UserPreferenceEmailSection";
+        $message .= "<br /><br />" . $lang["email_digest_disable"] . "<br /><a href='" . $userprefurl  . "'>" . $userprefurl . "</a>";
+        
 		if($messageflag || $actionflag)
 			{
 			// Send mail

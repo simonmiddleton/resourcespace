@@ -2725,3 +2725,7 @@ $lang["share-invalid"] = "Invalid access key or password";
 $lang["oj-collection-download-success-text"] = "Collection ready for download";
 $lang["oj-collection-download-failure-text"] = "Unable to prepare collection archive for download";
 /* End of offline jobs */
+
+$lang["email_auto_digest_inactive"] = "This is a summary of your unread messages";
+$lang["email_digest_disable"]       = "You can disable these notifications by logging in and adjusting your user preferences at the link below:-";
+$lang["user_pref_inactive_digest"]  = "Send me a daily email with all unread notifications if not logged on for than %%DAYS%% days?";

@@ -1357,7 +1357,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
     if (strlen($find)>1)
       {
       if ($sql=="") {$sql = "where ";} else {$sql.= " and ";}
-      $sql .= "(LOWER(username) like '%$find%' or LOWER(fullname) like '%$find%' or LOWER(email) like '%$find%' or LOWER(comments) like '%$find%')";
+      $sql .= "(LOWER(username) like '%$find%' or LOWER(fullname) like '%$find%' or LOWER(email) like '%$find%' or LOWER(comments) like '%$find%')";      
       }
     if (strlen($find)==1)
       {
@@ -1393,10 +1393,11 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
     $r = sql_query($query, false, $fetchrows);
 
     # Translates group names in the newly created array.
-    for ($n = 0;$n<count($r);$n++) {
-        if (!is_array($r[$n])) {break;} # The padded rows can't be and don't need to be translated.
+    for ($n = 0;$n<count($r);$n++)
+        {
+        if (strpos($select,"groupname") === false || !is_array($r[$n])) {break;} # The padded rows can't be and don't need to be translated.
         $r[$n]["groupname"] = lang_or_i18n_get_translated($r[$n]["groupname"], "usergroup-");
-    }
+        }
 
     return $r;
 
