@@ -2191,6 +2191,7 @@ $lang['property-pad_to_size'] = "Pad to size";
 $lang['admin_field_deleted'] = "Deleted field";
 $lang['action-move-up'] = 'Move up';
 $lang['action-move-down'] = 'Move down';
+$lang['action-move-to'] = 'Move to';
 $lang['delete_user_group_checkbox_alert_message'] = 'Please note this action will also delete all content text that was relevant to this user group. There are %%RECORDSCOUNT%% records found in Manage Content.';
 
 

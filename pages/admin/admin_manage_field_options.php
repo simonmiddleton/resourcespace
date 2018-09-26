@@ -45,9 +45,12 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
     {
     $option_name     = trim(getvalescaped('option_name', ''));
     $option_parent   = getvalescaped('option_parent', '');
-    $option_order_by = getvalescaped('option_order_by', '');
+    $option_new_index = getvalescaped('node_order_by', '', true);
+    if ($option_new_index != "")
+        {
+        $option_new_index -= 1;
+        }
     $node_action     = getvalescaped('node_action', '');
-
     // [Save Option]
     if('save' === $node_action && enforcePostRequest($ajax))
         {
@@ -68,7 +71,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
         }
 
     // [Move Option]
-    if(('movedown' === $node_action || 'moveup' === $node_action) && enforcePostRequest($ajax))
+    if(('movedown' === $node_action || 'moveup' === $node_action || 'moveto' === $node_action) && enforcePostRequest($ajax))
         {
         $response['error']   = null;
         $response['sibling'] = null;
@@ -86,6 +89,12 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
 
         $pre_sibling      = 0;
         $post_sibling     = 0;
+        if ($option_new_index > count($siblings))
+            {
+            $option_new_index = count($siblings);
+            }
+
+
         $allow_reordering = false;
         $new_nodes_order  = array();
 
@@ -103,6 +112,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
                 $post_sibling = $siblings[$current_node_siblings_index + 1]['ref'];
                 }
             }
+
 
         // Create the new order for nodes based on direction
         switch($node_action)
@@ -128,7 +138,29 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
                     $allow_reordering = true;
                     }
                 break;
+            case 'moveto':
+                
+                move_array_element($siblings,$current_node_siblings_index, $option_new_index); # issue here
+
+                // This node is already in this position
+                if($current_node_siblings_index != $option_new_index)
+                    {
+                    $allow_reordering = true;
+                    $response['refresh_page']=true;
+                    $per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
+                    $move_to_page_offset = floor($option_new_index/$per_page)*$per_page;
+                    $move_to_page_url = generateURL("{$baseurl_short}pages/admin/admin_manage_field_options.php",
+                        array(
+                            'field'          => $field,
+                            'filter_by_name' => $filter_by_name,
+                            'offset'         => $move_to_page_offset
+                        )
+                    );
+                    $response['url']=$move_to_page_url;
+                    }
+                break;
             }
+
 
         // Create the new array of nodes order
         foreach($siblings as $sibling)
@@ -189,17 +221,60 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
                 <td>
                     <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $new_record_ref; ?>" value="<?php echo htmlspecialchars($new_option_name); ?>" onblur="this.value=this.value.trim()" >
                 </td>
-                <td align="right">0</td>
-                <td>
+                <td align="left">0</td>
+                
                     <div class="ListTools">
                         <form id="option_<?php echo $new_record_ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
-                            <input type="hidden" name="node_ref" value="<?php echo $new_record_ref; ?>">
-                            <input type="hidden" name="option_<?php echo $new_record_ref; ?>_order_by" value="<?php echo $new_option_order_by; ?>">
-
+                            <td>
+                                <input type="hidden" name="node_ref" value="<?php echo $new_record_ref; ?>">
+                                <input 
+                                    type="number" 
+                                    name="node_order_by" 
+                                    value="<?php echo $new_option_order_by; ?>" 
+                                    id="option_<?php echo $new_record_ref; ?>_order_by" 
+                                    readonly='true'
+                                    min='1'
+                                >
+                            </td>
+                        <?php
+                        // Show order by tools if not filtering or using automatic ordering
+                        if('' == $filter_by_name && !$field_data['automatic_nodes_ordering'])
+                            {
+                                ?>
+                            
+                            <td> <!-- Buttons for changing order -->
+                                <button 
+                                    type="button"
+                                    id="option_<?php echo $new_record_ref; ?>_move_to"
+                                    onclick="
+                                        EnableMoveTo(<?php echo $new_record_ref; ?>);
+                                        return false;
+                                    ">
+                                    <?php echo $lang['action-move-to']; ?>
+                                </button>
+                                <button 
+                                    type="submit"
+                                    id="option_<?php echo $new_record_ref; ?>_order_by_apply"
+                                    onclick="
+                                        ApplyMoveTo(<?php echo $new_record_ref; ?>);
+                                        return false;
+                                    "
+                                    style="display: none;"
+                                >
+                                <?php echo $lang['action-title_apply']; ?>
+                                </button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>
+                            </td>
+                            <?php
+                            }
+                            ?>
+                        <td> <!-- Action buttons -->
                             <button type="submit" onclick="SaveNode(<?php echo $new_record_ref; ?>); return false;"><?php echo $lang['save']; ?></button>
-                            <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
-                            <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>
                             <button type="submit" onclick="DeleteNode(<?php echo $new_record_ref; ?>); return false;"><?php echo $lang['action-delete']; ?></button>
+                        </td>
+                            
+                        <?php generateFormToken("option_{$new_record_ref}"); ?>
                         </form>
                     </div>
                 </td>
@@ -417,6 +492,10 @@ if($ajax)
                 <tr class="ListviewTitleStyle">
                     <td><?php echo $lang['name']; ?></td>
                     <td><?php echo $lang['resources']; ?></td>
+                    
+                    <td><?php echo $lang['property-order_by']; ?></td>
+                    <td><?php echo $lang['actions']; ?></td>
+                    <td> </td>
                     <td> </td>
                 </tr>
             </thead>
@@ -439,41 +518,78 @@ if($ajax)
             $nodes = reorder_nodes($nodes);
             }
 
+        $node_index=getvalescaped('offset',0,true);
         foreach($nodes as $node)
             {
             check_node_indexed($node, $field_data['partial_index']);
+            $node_index +=1;
             ?>
             <tr id="node_<?php echo $node['ref']; ?>">
                 <td>
                     <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $node['ref']; ?>" value="<?php echo htmlspecialchars($node['name']); ?>" onblur="this.value=this.value.trim()" >
                 </td>
-                <td align="right">
-                    
-                    <?php echo $node['use_count'] ?></td>
-                
-                <td>
-                    
-                    <div class="ListTools">
-                        <form id="option_<?php echo $node['ref']; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
-                            <input type="hidden" name="node_ref" value="<?php echo $node['ref']; ?>">
-                            <input type="hidden" name="option_<?php echo $node['ref']; ?>_order_by" value="<?php echo $node['order_by']; ?>">
-                            <?php generateFormToken("option_{$node['ref']}"); ?>
+                <td align="left">
+                    <?php echo $node['use_count'] ?>
+                </td>
 
-                            <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo $lang['save']; ?></button>
+                    <div class="ListTools">
+                        <form id="option_<?php echo $node['ref']; ?>" method="post" action="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
+                            <td>
+                                <input type="hidden" name="node_ref" value="<?php echo $node['ref']; ?>">
+                                <input 
+                                    type="number"
+                                    name="node_order_by" 
+                                    value="<?php echo $node_index; ?>" 
+                                    id="option_<?php echo $node['ref']; ?>_order_by" 
+                                    readonly='true'
+                                    min='1'
+                                >
+                            </td>
                         <?php
+                        // Show order by tools if not filtering or using automatic ordering
                         if('' == $filter_by_name && !$field_data['automatic_nodes_ordering'])
                             {
-                            ?>
-                            <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
-                            <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>
+                                ?>
+                            
+                            <td> <!-- Buttons for changing order -->
+                                <button 
+                                    type="button"
+                                    id="option_<?php echo $node['ref']; ?>_move_to"
+                                    onclick="
+                                        EnableMoveTo(<?php echo $node['ref']; ?>);
+                                        
+                                        return false;
+                                    ">
+                                    <?php echo $lang['action-move-to']; ?>
+                                </button>
+                                <button 
+                                    type="submit"
+                                    id="option_<?php echo $node['ref']; ?>_order_by_apply"
+                                    onclick="
+                                        ApplyMoveTo(<?php echo $node['ref']; ?>);
+                                        return false;
+                                    "
+                                    style="display: none;"
+                                >
+                                <?php echo $lang['action-title_apply']; ?>
+                                </button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>
+                            </td>
                             <?php
                             }
                             ?>
+                        <td> <!-- Action buttons -->
+                            <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo $lang['save']; ?></button>
                             <button type="submit" onclick="DeleteNode(<?php echo $node['ref']; ?>); return false;"><?php echo $lang['action-delete']; ?></button>
+                        </td>
+                            
+                        <?php generateFormToken("option_{$node['ref']}"); ?>
                         </form>
                     </div>
                 </td>
             </tr>
+            
             <?php
             }
         render_new_node_record($new_node_record_form_action, FALSE);
@@ -680,7 +796,7 @@ function DeleteNode(ref)
     return true;
     }
 
-function ReorderNode(ref, direction)
+function ReorderNode(ref, direction, move_to)
     {
     var node          = jQuery('#node_' + ref);
     var node_children = jQuery('#node_' + ref + '_children');
@@ -692,11 +808,17 @@ function ReorderNode(ref, direction)
         field: <?php echo $field; ?>,
         node_ref: ref,
         node_action: direction,
+        node_order_by: move_to,
         <?php echo generateAjaxToken("ReorderNode"); ?>
         };
 
     jQuery.post(post_url, post_data, function(response)
         {
+        if(response.refresh_page=true)
+            {
+            CentralSpaceLoad(response.url,true);
+            }
+            
         if(direction == 'moveup' && response.sibling && response.sibling.length > 0)
             {
             node.insertBefore('#node_' + response.sibling);
@@ -763,18 +885,35 @@ function ToggleTreeNode(ref, field_ref)
     return true;
     }
 
+function EnableMoveTo(ref)
+    {
+    // Set order by field to be writeable, show apply button and hide move to button
+    document.getElementById('option_' + ref + '_order_by').readOnly = false;
+    document.getElementById('option_' + ref + '_order_by_apply').style.display='inline';
+    document.getElementById('option_' + ref + '_move_to').style.display='none';
+    }
 
-    function ClearFilterForm(filter_form_id)
+function ApplyMoveTo(ref)
+    {
+    // Use the value in the order by field to move this node to that position.
+    var moveto = document.getElementById('option_' + ref + '_order_by').value;
+    ReorderNode(ref, 'moveto', moveto);
+    document.getElementById('option_' + ref + '_order_by').readOnly = true;
+    document.getElementById('option_' + ref + '_move_to').style.display='inline';
+    document.getElementById('option_' + ref + '_order_by_apply').style.display='none';
+    }
+
+function ClearFilterForm(filter_form_id)
+    {
+    var input_elements = jQuery("#" + filter_form_id + " input[type=text]");
+
+    for(var index = input_elements.length - 1; index >= 0; index--)
         {
-        var input_elements = jQuery("#" + filter_form_id + " input[type=text]");
-
-        for(var index = input_elements.length - 1; index >= 0; index--)
-            {
-            input_elements[index].value = '';
-            }
-
-        document.getElementById(filter_form_id).submit();
+        input_elements[index].value = '';
         }
+
+    document.getElementById(filter_form_id).submit();
+    }
 
 jQuery('.node_parent_chosen_selector').chosen({});
 
