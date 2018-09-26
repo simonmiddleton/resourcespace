@@ -214,6 +214,11 @@ function sql_connect()
 			    }
 			}
 		}
+	
+	# Group concat limit increased to support option based metadata with more realistic limit for option entries
+	# Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)	
+	sql_query("SET SESSION group_concat_max_len = 32767"); 
+	
     # Set MySQL Strict Mode (if configured)    
     if ($mysql_force_strict_mode)    
         {
