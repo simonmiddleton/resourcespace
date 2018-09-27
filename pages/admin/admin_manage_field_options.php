@@ -897,6 +897,10 @@ function ApplyMoveTo(ref)
     {
     // Use the value in the order by field to move this node to that position.
     var moveto = document.getElementById('option_' + ref + '_order_by').value;
+    if (moveto < 1)
+    {
+        moveto = 1;
+    }
     ReorderNode(ref, 'moveto', moveto);
     document.getElementById('option_' + ref + '_order_by').readOnly = true;
     document.getElementById('option_' + ref + '_move_to').style.display='inline';
