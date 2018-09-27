@@ -1771,6 +1771,7 @@ $lang["purgeuserstitle"]="Purge users";
 $lang["purgeusers"]="Purge users";
 $lang["purgeuserscommand"]="Delete user accounts that have been inactive for the last % months and were created prior to this period.";
 $lang["purgeusersconfirm"]="This will delete % user accounts. Are you sure?";
+$lang["purgeusersconfirmdisable"]="This will disable % user accounts. Are you sure?";
 $lang["pleaseenteravalidnumber"]="Please enter a valid number";
 $lang["purgeusersnousers"]="There are no users to purge.";
 

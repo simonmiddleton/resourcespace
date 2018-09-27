@@ -52,7 +52,7 @@ if(isset($count) && $count==0)
 
 <?php } elseif (isset($count)) { ?>
 
-<p><?php echo str_replace("%",$count,$lang["purgeusersconfirm"]) ?>
+<p><?php echo str_replace("%",$count,($user_purge_disable ? $lang["purgeusersconfirmdisable"] : $lang["purgeusersconfirm"] )) ?>
 <br /><br />
 <input type="hidden" name="months" value="<?php echo $months ?>">
 <input name="purge2" type="submit" value="&nbsp;&nbsp;<?php echo $lang["purgeusers"]?>&nbsp;&nbsp;" />
