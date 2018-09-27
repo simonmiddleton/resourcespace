@@ -154,7 +154,7 @@ function message_send_unread_emails()
 	$sendall = array();
     
 	# Exit if already sent in last 24 hours;
-	//if ($lastrun!="" && time()-strtotime($lastrun)<(60*60*24)) {return false;}
+	if ($lastrun!="" && time()-strtotime($lastrun)<(60*60*24)) {return false;}
 	
 	// Get all the users who have chosen to receive the digest email (or the ones that have opted out if set globally)
 	if($user_pref_daily_digest)
