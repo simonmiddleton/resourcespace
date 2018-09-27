@@ -1404,16 +1404,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		if (file_exists($scr_wm_path) && !$previewbased) {unlink($scr_wm_path);}
 		
 		$prefix = '';
-		$requires_prefix=false;
 		# Camera RAW images need prefix
 		if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext)) { $prefix = $rawext[0] .':'; }
-		elseif (strpos($file, ':')!==false)
-		    {
-		    $prefix = $extension .':';
-		    $requires_prefix=true;
-		    }
-		
-		
 
 		# Locate imagemagick.
         $identify_fullpath = get_utility_path("im-identify");
@@ -1548,7 +1540,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			
 			if(!$imagemagick_mpr)
 				{
-            	$command = $convert_fullpath . ' '. escapeshellarg(($requires_prefix ? $prefix : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
+            	$command = $convert_fullpath . ' '. escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
             	}
 
 			# fetch target width and height
