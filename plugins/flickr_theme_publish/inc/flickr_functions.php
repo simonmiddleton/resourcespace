@@ -255,7 +255,7 @@ function flickr_get_photoset()
         if($photoset["title"] == $photoset_name)
             {
             # Name already exists. Just use this photoset ID.
-            $photosetid=$photosets["id"];    
+            $photosetid=$photoset["id"];    
             }
         }
         
