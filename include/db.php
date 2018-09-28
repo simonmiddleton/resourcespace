@@ -2373,7 +2373,39 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     return $html;
     }
 
+/**
+* Generate the LIMIT statement for a SQL query
+* 
+* @param  integer  $offset  Specifies the offset of the first row to return
+* @param  integer  $rows    Specifies the maximum number of rows to return
+* 
+* @return string
+*/
+function sql_limit($offset = NULL, $rows = NULL)
+    {
+    $offset_true = !is_null($offset) && is_int($offset) && $offset > 0;
+    $rows_true   = !is_null($rows) && is_int($rows) && $rows > 0;
 
+    $limit = ($offset_true || $rows_true ? 'LIMIT ' : '');
+
+    if($offset_true && !$rows_true)
+        {
+        return '';
+        }
+
+    if($offset_true)
+        {
+        $limit .= abs($offset);
+        }
+
+    if($rows_true)
+        {
+        $rows = abs($rows);
+        $limit .= ($offset_true ? ",{$rows}" : $rows);
+        }
+
+    return $limit;
+    }
 
 // IMPORTANT: make sure the upgrade.php is the last line in this file
 include_once __DIR__ . '/../upgrade/upgrade.php';
