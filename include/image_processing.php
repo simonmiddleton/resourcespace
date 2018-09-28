@@ -1580,7 +1580,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
 			# Find the target path
 			if ($extension=="png" || $extension=="gif"){$target_ext=$extension;} else {$target_ext="jpg";}
-			$path=get_resource_path($ref,true,$ps[$n]["id"],false,$target_ext,-1,1,false,"",$alternative);
+			$path=get_resource_path($ref,true,$ps[$n]["id"],($imagemagick_mpr ? true : false),$target_ext,-1,1,false,"",$alternative);
 			
 			if($imagemagick_mpr)
 				{
