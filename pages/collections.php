@@ -648,11 +648,11 @@ hook("processusercommand");
 $searches=get_saved_searches($usercollection);
 
 // Do an initial count of how many resources there are in the collection (only returning ref and archive)
-$results_all  = do_search("!collection{$usercollection}", '', $default_collection_sort, 0, -1, "DESC", false, 0, false, false, '', false, true, true);
+$results_all  = do_search("!collection{$usercollection}", '', $default_collection_sort, 0, -1, "ASC", false, 0, false, false, '', false, true, true);
 $count_result = count($results_all);
 
 // Then do another pass getting all data for the maximum allowed collection thumbs
-$result = do_search("!collection{$usercollection}", '', $default_collection_sort, 0, $max_collection_thumbs, "DESC");
+$result = do_search("!collection{$usercollection}", '', $default_collection_sort, 0, $max_collection_thumbs, "ASC");
 
 $hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
 $feedback=$cinfo["request_feedback"];
