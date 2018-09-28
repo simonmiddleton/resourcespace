@@ -44,6 +44,8 @@ $results_error = $results->getError();
 $results_warning = $results->getWarning();
 
 $totalpages  = ceil($results->total / $per_page);
+
+include_once "{$rs_root}/include/header.php";
 ?>
 <div class="BasicsBox">
     <div class="TopInpageNav">
@@ -208,3 +210,5 @@ function createNewResource(element)
         });
     }
 </script>
+<?php
+include_once "{$rs_root}/include/footer.php";
