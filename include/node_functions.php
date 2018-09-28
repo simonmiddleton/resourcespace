@@ -23,10 +23,10 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by,$returne
         $name = trim($name);
         }
 
-	if (is_null($resource_type_field) || '' == $resource_type_field || is_null($name) || '' == $name)
-		{
-		return false;
-		}
+    if (is_null($resource_type_field) || '' == $resource_type_field || is_null($name) || '' == $name)
+        {
+        return false;
+        }
 
     if(is_null($ref) && '' == $order_by)
         {
@@ -88,37 +88,37 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by,$returne
         add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
         }
 
-		
-	if($returnexisting)
-		{
-		// Check for an existing match
-		$existingnode=sql_value("SELECT ref value FROM node WHERE resource_type_field ='" . escape_check($resource_type_field) . "' AND name ='" . escape_check($name) . "'",0);
-		if($existingnode > 0)
-			{return $existingnode;}
-		}
-		
+        
+    if($returnexisting)
+        {
+        // Check for an existing match
+        $existingnode=sql_value("SELECT ref value FROM node WHERE resource_type_field ='" . escape_check($resource_type_field) . "' AND name ='" . escape_check($name) . "'",0);
+        if($existingnode > 0)
+            {return $existingnode;}
+        }
+        
     sql_query($query);
-	$new_ref = sql_insert_id();
-	if ($new_ref == 0 || $new_ref === false)
-		{
-		if ($ref == null)
-			{
-			return sql_value("SELECT `ref` AS 'value' FROM `node` WHERE `resource_type_field`='" . escape_check($resource_type_field) . "' AND `name`='" . escape_check($name) . "'",0);
-			}
-		else
-			{
-			return $ref;
-			}
-		}
-	else
-		{
+    $new_ref = sql_insert_id();
+    if ($new_ref == 0 || $new_ref === false)
+        {
+        if ($ref == null)
+            {
+            return sql_value("SELECT `ref` AS 'value' FROM `node` WHERE `resource_type_field`='" . escape_check($resource_type_field) . "' AND `name`='" . escape_check($name) . "'",0);
+            }
+        else
+            {
+            return $ref;
+            }
+        }
+    else
+        {
         log_activity("Set metadata field option for field {$resource_type_field}", LOG_CODE_CREATED, $name, 'node', 'name');
 
         // Handle node indexing for new nodes
         add_node_keyword_mappings(array('ref' => $new_ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
 
-		return $new_ref;
-		}
+        return $new_ref;
+        }
 
     }
 
@@ -216,8 +216,8 @@ function get_node($ref, array &$returned_node)
 function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', $use_count = false)
     {
     $return_nodes = array();
-	
-	// Check if limiting is required
+    
+    // Check if limiting is required
     $limit = '';
  
     if(!is_null($offset) && is_int($offset))
@@ -229,7 +229,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         {
         $limit .= ",{$rows}";
         }
-		
+
     // Filter by name if required
     $filter_by_name = '';
     if('' != $name)
@@ -618,7 +618,7 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
 *
 * @return boolean
 */
-function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order_by, $last_node = false, $use_count = 0)
+function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order_by, $last_node = false, $use_count = 0,$node_index)
     {
     global $baseurl_short, $lang;
 
@@ -694,17 +694,46 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                     <div class="ListTools">
                         <form id="option_<?php echo $ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $resource_type_field; ?>">
                             <input type="hidden" name="option_order_by" value="<?php echo $order_by; ?>">
-                            <?php generateFormToken("option_{$ref}"); ?>
+                            <input 
+                                    type="number"
+                                    name="node_order_by" 
+                                    value="<?php echo $node_index; ?>" 
+                                    id="option_<?php echo $ref; ?>_order_by" 
+                                    readonly='true'
+                                    min='1'
+                                >
+                            </td>
+                            <td> <!-- Buttons for changing order -->
+                                <button 
+                                    type="button"
+                                    id="option_<?php echo $ref; ?>_move_to"
+                                    onclick="
+                                        EnableMoveTo(<?php echo $ref; ?>);
+                                        
+                                        return false;
+                                    ">
+                                    <?php echo $lang['action-move-to']; ?>
+                                </button>
+                                <button 
+                                    type="submit"
+                                    id="option_<?php echo $ref; ?>_order_by_apply"
+                                    onclick="
+                                        ApplyMoveTo(<?php echo $ref; ?>);
+                                        return false;
+                                    "
+                                    style="display: none;"
+                                >
+                                <?php echo $lang['action-title_apply']; ?>
+                                </button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>
+                            </td>
+                        <td> <!-- Action buttons -->
                             <button type="submit" onclick="SaveNode(<?php echo $ref; ?>); return false;"><?php echo $lang['save']; ?></button>
-                            <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
-                            <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>
-							<?php 
-							if(!is_parent_node ($ref))
-								{?>
-								<button type="submit" onclick="DeleteNode(<?php echo $ref; ?>); return false;"><?php echo $lang['action-delete']; ?></button>
-								<?php
-								}
-							?>
+                            <button type="submit" onclick="DeleteNode(<?php echo $ref; ?>); return false;"><?php echo $lang['action-delete']; ?></button>
+                        </td>
+                            
+                        <?php generateFormToken("option_{$ref}"); ?>
                         </form>
                     </div>
                 </td>
@@ -1057,9 +1086,9 @@ function remove_node_keyword_mappings(array $node, $partial_index = false)
 * @return boolean
 */        
 function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
-	{
+    {
     if(!is_array($nodes) && (string)(int)$nodes != $nodes)
-		{return false;}
+        {return false;}
              
     if($checkperms && (PHP_SAPI != 'cli' || defined("RS_TEST_MODE")))
         {
@@ -1069,8 +1098,8 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
         if(!$access)
             {return false;}
         }
-	if(!is_array($nodes))
-		{$nodes=array($nodes);}
+    if(!is_array($nodes))
+        {$nodes=array($nodes);}
      
     sql_query("insert into resource_node (resource, node) values ('" . $resourceid . "','" . implode("'),('" . $resourceid . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
     return true;
@@ -1086,9 +1115,9 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
 * @return boolean
 */  
 function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms = true)
-	{
+    {
     if((!is_array($resources) && (string)(int)$resources != $resources) || (!is_array($nodes) && (string)(int)$nodes != $nodes))
-		{return false;}
+        {return false;}
     
     if($checkperms)
         {
@@ -1102,8 +1131,8 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
             }
         }
     
-	if(!is_array($nodes))
-		{$nodes=array($nodes);}
+    if(!is_array($nodes))
+        {$nodes=array($nodes);}
         
     $sql = "insert into resource_node (resource, node) values ";
     $nodesql = "";
@@ -1152,26 +1181,26 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
 
 
 function delete_resource_nodes($resourceid,$nodes=array())
-	{
-	if(!is_array($nodes))
-		{$nodes=array($nodes);}
-	sql_query("DELETE FROM resource_node WHERE resource ='$resourceid' AND node in ('" . implode("','",$nodes) . "')");	
-	}
+    {
+    if(!is_array($nodes))
+        {$nodes=array($nodes);}
+    sql_query("DELETE FROM resource_node WHERE resource ='$resourceid' AND node in ('" . implode("','",$nodes) . "')"); 
+    }
     
     
 function delete_resource_nodes_multi($resources=array(),$nodes=array())
-	{
-	if(!is_array($nodes))
-		{$nodes=array($nodes);}
+    {
+    if(!is_array($nodes))
+        {$nodes=array($nodes);}
         
     $sql = "DELETE FROM resource_node WHERE resource in ('" . implode("','",$resources) . "') AND node in ('" . implode("','",$nodes) . "')";
     sql_query($sql);
     }
 
 function delete_all_resource_nodes($resourceid)
-	{
-	sql_query("DELETE FROM resource_node WHERE resource ='$resourceid';");	
-	}
+    {
+    sql_query("DELETE FROM resource_node WHERE resource ='$resourceid';");  
+    }
 
 
 /**
@@ -1214,16 +1243,16 @@ function copy_resource_nodes($resourcefrom, $resourceto)
     }
     
 function get_nodes_from_keywords($keywords=array())
-	{
+    {
     if(!is_array($keywords)){$keywords=array($keywords);}
-	return sql_array("select node value FROM node_keyword WHERE keyword in (" . implode(",",$keywords) . ");");	
-	}
+    return sql_array("select node value FROM node_keyword WHERE keyword in (" . implode(",",$keywords) . ");"); 
+    }
     
 function update_resource_node_hitcount($resource,$nodes)
-	{
-	# For the specified $resource, increment the hitcount for each node in array
+    {
+    # For the specified $resource, increment the hitcount for each node in array
     if(!is_array($nodes)){$nodes=array($nodes);}
-	if (count($nodes)>0) {sql_query("update resource_node set new_hit_count=new_hit_count+1 WHERE resource='$resource' AND node in (" . implode(",",$nodes) . ")",false,-1,true,0);}
+    if (count($nodes)>0) {sql_query("update resource_node set new_hit_count=new_hit_count+1 WHERE resource='$resource' AND node in (" . implode(",",$nodes) . ")",false,-1,true,0);}
     }
 
 
@@ -1286,7 +1315,7 @@ function copy_resource_type_field_nodes($from, $to)
 
     return true;
     }
-	
+    
 function get_parent_nodes($noderef)
     {
     $parent_nodes=array();    

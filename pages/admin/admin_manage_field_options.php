@@ -64,7 +64,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
 
         // Option order_by is not being sent because that can be asynchronously changed and we might not know about it,
         // thus this will be checked upon saving the data. If order_by is null / empty string, then we will use the current value
-        set_node($node_ref, $field, $option_name, $option_parent, $option_order_by);
+        set_node($node_ref, $field, $option_name, $option_parent, $option_new_index);
 
         echo json_encode($response);
         exit();
@@ -147,15 +147,21 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
                     {
                     $allow_reordering = true;
                     $response['refresh_page']=true;
-                    $per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
-                    $move_to_page_offset = floor($option_new_index/$per_page)*$per_page;
-                    $move_to_page_url = generateURL("{$baseurl_short}pages/admin/admin_manage_field_options.php",
-                        array(
-                            'field'          => $field,
-                            'filter_by_name' => $filter_by_name,
-                            'offset'         => $move_to_page_offset
-                        )
+
+                    // Create redirect URL
+                    $url_parameters = array(
+                        'field'          => $field,
+                        'filter_by_name' => $filter_by_name
                     );
+                    
+                    if($field_data['type'] != 7) // Not a category tree
+                        {
+                        $per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
+                        $move_to_page_offset = floor($option_new_index/$per_page)*$per_page;
+                        $url_parameters['offset'] = $move_to_page_url;
+                        }
+
+                    $move_to_page_url = generateURL("{$baseurl_short}pages/admin/admin_manage_field_options.php",$url_parameters);
                     $response['url']=$move_to_page_url;
                     }
                 break;
@@ -190,14 +196,16 @@ if('true' === $ajax && 'true' === getval('draw_tree_node_table', '') && 7 == $fi
     $nodes         = get_nodes($field, $node_ref, FALSE, NULL, NULL, '', true);
     $nodes_counter = count($nodes);
     $i             = 0;
+    $node_index    = 0;
     foreach($nodes as $node)
         {
         $last_node = false;
+        $node_index ++;
         if(++$i === $nodes_counter)
             {
             $last_node = true;
             }
-        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node, $node['use_count']);
+        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node, $node['use_count'], $node_index);
         }
     exit();
     }
@@ -626,10 +634,12 @@ if($field_data['type'] == 7 && !($tree_nodes==""))
     {
     $nodes_counter = count($tree_nodes);
     $i             = 0;
+    $node_index    = 0;
 
     foreach($tree_nodes as $node)
         {
         check_node_indexed($node, $field_data['partial_index']);
+        $node_index++;
 
         $last_node = false;
         if(++$i === $nodes_counter)
@@ -637,7 +647,7 @@ if($field_data['type'] == 7 && !($tree_nodes==""))
             $last_node = true;
             }
 
-        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node, $node['use_count']);
+        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node, $node['use_count'],$node_index);
         }
     }
 
