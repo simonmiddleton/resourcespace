@@ -2817,7 +2817,7 @@ function extract_icc_profile($ref, $extension, $alternative = -1)
 	
 
 function extract_icc($infile) {
-   global $config_windows;
+   global $config_windows, $syncdir;
 
    # Locate imagemagick, or fail this if it isn't installed
    $convert_fullpath = get_utility_path("im-convert");
@@ -2829,14 +2829,23 @@ function extract_icc($infile) {
    //new, more flexible approach: we will just create a file for anything the caller hands to us.
    //this makes things work with alternatives, the deepzoom plugin, etc.
    $path_parts = pathinfo($infile);
-   $outfile = $path_parts['dirname'] . '/' . $path_parts['filename'] .'.'. $path_parts['extension'] .'.icc';
+   
+   if(strpos($infile, $syncdir)===false)
+        {
+        $outfile = $path_parts['dirname'] . '/' . $path_parts['filename'] .'.'. $path_parts['extension'] .'.icc';
+        }
+    else
+        {
+        global $ref;
+        $outfile = get_resource_path($ref,true,'',false,'icc',-1);
+        }
   
    if (file_exists($outfile)){
       // extracted profile already existed. We'll remove it and start over
       unlink($outfile);
    }
 
-    $cmd = $convert_fullpath . " \"" . $infile . "[0]\" \"" . $outfile . "\" " .  $stderrclause;
+    $cmd = $convert_fullpath . " \"" . (!$config_windows && strpos($infile, ':')!==false ? strtolower($path_parts['extension']) . ':' : '') . $infile . "[0]\" \"" . $outfile . "\" " .  $stderrclause;
     $cmdout = run_command($cmd);
 
    if ( preg_match("/no color profile is available/",$cmdout) || !file_exists($outfile) ||filesize_unlimited($outfile) == 0){
