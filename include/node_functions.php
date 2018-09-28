@@ -209,7 +209,7 @@ function get_node($ref, array &$returned_node)
 * @param  integer  $offset                 Specifies the offset of the first row to return
 * @param  integer  $rows                   Specifies the maximum number of rows to return
 * @param  string   $name                   Filter by name of node
-* @param  boolean  $use_count              Show how many resources use a particular node in the node properties?
+* @param  boolean  $use_count              Show how many resources use a particular node in the node properties
 * 
 * @return array
 */

@@ -126,6 +126,149 @@ function logScript($message, $file = null)
     return $results;
     }
  
- 
- 
- 
+/**
+* Get activity log entries from log tables (e.g activity_log, resource_log and collection_log)
+* 
+* @uses sql_query()
+* 
+* @param  string  $search  Search text to filter down results using fuzzy searching
+* @param  integer $offset  Specifies the offset of the first row to return
+* @param  integer $rows  Specifies the maximum number of rows to return
+* @param  array   $where_statements  Where statements for log tables
+* 
+* @return array
+*/
+function get_activity_log($search, $offset, $rows, array $where_statements)
+    {
+    foreach($where_statements as $table => $where_statement)
+        {
+        $where_var = "where_{$table}_statement";
+
+        $$where_var = $where_statement;
+        }
+
+    $log_codes = array_values(LOG_CODE_get_all());
+    $when_statements  = "";
+    foreach($log_codes as $log_code)
+        {
+        $log_code_escaped = escape_check($log_code);
+        $log_code_description = "";
+
+        if(!isset($GLOBALS['lang']["log_code_{$log_code}"]))
+            {
+            if(!isset($GLOBALS['lang']["collectionlog-{$log_code}"]))
+                {
+                continue;
+                }
+
+            $log_code_description = escape_check($GLOBALS['lang']["collectionlog-{$log_code}"]);
+
+            $when_statements .= " WHEN ASCII('{log_code_escaped}') THEN '{$log_code_description}'";
+
+            continue;
+            }
+
+        $log_code_description = escape_check($GLOBALS['lang']["log_code_{$log_code}"]);
+
+        $when_statements .= " WHEN ASCII('{log_code_escaped}') THEN '{$log_code_description}'";
+        }
+
+    $limit = sql_limit($offset, $rows);
+
+    $sql_query = "
+                 SELECT
+                        `activity_log`.`logged` AS 'datetime',
+                        `user`.`username` AS 'user',
+                        CASE ASCII(`activity_log`.`log_code`) {$when_statements} ELSE `activity_log`.`log_code` END AS 'operation',
+                        `activity_log`.`note` AS 'notes',
+                        NULL AS 'resource_field',
+                        `activity_log`.`value_old` AS 'old_value',
+                        `activity_log`.`value_new` AS 'new_value',
+                        if(`activity_log`.`value_diff`='','',concat('<pre>',`activity_log`.`value_diff`,'</pre>')) AS 'difference',
+                        `activity_log`.`remote_table`AS 'table',
+                        `activity_log`.`remote_column` AS 'column',
+                        `activity_log`.`remote_ref` AS 'table_reference'
+                   FROM `activity_log`
+        LEFT OUTER JOIN `user` ON `activity_log`.`user`=`user`.`ref`
+                  WHERE
+                        {$where_activity_log_statement}
+                        (
+                            `activity_log`.`ref` LIKE '%{$search}%'
+                            OR `activity_log`.`logged` LIKE '%{$search}%'
+                            OR `user`.`username` LIKE '%{$search}%'
+                            OR `activity_log`.`note` LIKE '%{$search}%'
+                            OR `activity_log`.`value_old` LIKE '%{$search}%'
+                            OR `activity_log`.`value_new` LIKE '%{$search}%'
+                            OR `activity_log`.`value_diff` LIKE '%{$search}%'
+                            OR `activity_log`.`remote_table` LIKE '%{$search}%'
+                            OR `activity_log`.`remote_column` LIKE '%{$search}%'
+                            OR `activity_log`.`remote_ref` LIKE '%{$search}%'
+                            OR (CASE ASCII(`activity_log`.`log_code`) {$when_statements} ELSE `activity_log`.`log_code` END) LIKE '%{$search}%'
+                        )
+
+                  UNION
+
+                 SELECT
+                        `resource_log`.`date` AS 'datetime',
+                        `user`.`username` AS 'user',
+                        CASE ASCII(`resource_log`.`type`) {$when_statements} ELSE `resource_log`.`type` END AS 'operation',
+                        `resource_log`.`notes` AS 'notes',
+                        `resource_type_field`.`title` AS 'resource_field',
+                        `resource_log`.`previous_value` AS 'old_value',
+                        '' AS 'new_value',
+                        if(`resource_log`.`diff`='','',concat('<pre>',`resource_log`.`diff`,'</pre>')) AS 'difference',
+                        'resource' AS 'table',
+                        'ref' AS 'column',
+                        `resource_log`.`resource` AS 'table_reference'
+                   FROM `resource_log`
+        LEFT OUTER JOIN `user` ON `resource_log`.`user`=`user`.`ref`
+        LEFT OUTER JOIN `resource_type_field` ON `resource_log`.`resource_type_field`=`resource_type_field`.`ref`
+                  WHERE
+                        {$where_resource_log_statement}
+                        (
+                            `resource_log`.`ref` LIKE '%{$search}%'
+                            OR `resource_log`.`date` LIKE '%{$search}%'
+                            OR `user`.`username` LIKE '%{$search}%'
+                            OR `resource_log`.`notes` LIKE '%{$search}%'
+                            OR `resource_log`.`previous_value` LIKE '%{$search}%'
+                            OR 'resource' LIKE '%{$search}%'
+                            OR 'ref' LIKE '%{$search}%'
+                            OR `resource_log`.`resource` LIKE '%{$search}%'
+                            OR (CASE ASCII(`resource_log`.`type`) {$when_statements} ELSE `resource_log`.`type` END) LIKE '%{$search}%'
+                        )
+
+                  UNION
+
+                 SELECT
+                        `collection_log`.`date` AS 'datetime',
+                        `user`.`username` AS 'user',
+                        CASE ASCII(`collection_log`.`type`) $when_statements ELSE `collection_log`.`type` END AS 'operation',
+                        `collection_log`.`notes` AS 'notes',
+                        NULL AS 'resource_field',
+                        '' AS 'old_value',
+                        '' AS 'new_value',
+                        '' AS 'difference',
+                        if(`collection_log`.`resource` IS NULL,'collection','resource') AS 'table',
+                        'ref' AS 'column',
+                        if(`collection_log`.`resource` IS NULL,`collection_log`.`collection`,`collection_log`.`resource`) AS 'table_reference'
+                   FROM `collection_log`
+        LEFT OUTER JOIN `user` ON `collection_log`.`user`=`user`.`ref`
+        LEFT OUTER JOIN `collection` ON `collection_log`.`collection`=`collection`.`ref`
+                  WHERE
+                        {$where_collection_log_statement}
+                        (
+                            `collection_log`.`collection` LIKE '%{$search}%'
+                            OR `collection_log`.`date` LIKE '%{$search}%'
+                            OR `collection_log`.`notes` LIKE '%{$search}%'
+                            OR `collection_log`.`resource` LIKE '%{$search}%'
+                            OR `collection`.`name` LIKE '%{$search}%'
+                            OR `user`.`username` LIKE '%{$search}%'
+                            OR (CASE ASCII(`collection_log`.`type`) {$when_statements} ELSE `collection_log`.`type` END) LIKE '%{$search}%'
+                        )
+
+        ORDER BY `datetime` DESC
+        {$limit}
+    ";
+
+    return sql_query($sql_query);
+    }

@@ -1011,7 +1011,7 @@ a.HomePanel:hover {
 .plugin-category-container .CollapsiblePluginList {margin-top:10px; margin-left: 30px;}
 .plugin-category-container{margin-bottom:10px;}
 .plugin-upload{margin-top:20px;}
-#SearchPlugins {
+#SearchPlugins, .ResultsFilterTopRight {
     float: right;
     font-size: 0.7em;
 }

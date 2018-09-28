@@ -32,7 +32,7 @@ if ($callback == "")
 		{
 		include "../../include/header.php";
 		}
-	foreach (array("debuglog","memorycpu","database","sqllogtransactions","activitylog") as $section)
+	foreach (array("debuglog","memorycpu","database","sqllogtransactions") as $section)
 	{
 		?><script>
 			var timeOutControl<?php echo $section; ?> = null;
@@ -384,142 +384,7 @@ switch ($callback)
 			}
 
 		break;
-
-	case "activitylog":
-		{
-
-		// decode using the enumerated
-		$when_statements  = "";
-		foreach (array_values(LOG_CODE_get_all()) as $value)
-			{
-			if (!isset($lang['log_code_' . $value]))
-				{
-				if (!isset($lang['collectionlog-' . $value]))
-					{
-					continue;
-					}
-				$when_statements .= " WHEN ASCII('" . escape_check($value) . "') THEN '" . escape_check($lang['collectionlog-' . $value]) . "'";
-				continue;
-				}
-			$when_statements .= " WHEN ASCII('" . escape_check($value) . "') THEN '" . escape_check($lang['log_code_' . $value]) . "'";
-			}
-
-		$results = sql_query("
-
-		 SELECT
-			`activity_log`.`logged` AS '{$lang['fieldtype-date_and_time']}',
-			`user`.`username` AS '{$lang['user']}',
-			CASE ASCII(`activity_log`.`log_code`) $when_statements ELSE `activity_log`.`log_code` END AS '{$lang['property-operation']}',
-			`activity_log`.`note` AS '{$lang['fieldtitle-notes']}',
-			null AS '{$lang['property-resource-field']}',
-			`activity_log`.`value_old` AS '{$lang['property-old_value']}',
-			`activity_log`.`value_new` AS '{$lang['property-new_value']}',
-			if(`activity_log`.`value_diff`='','',concat('<pre>',`activity_log`.`value_diff`,'</pre>')) AS '{$lang['difference']}',
-			`activity_log`.`remote_table`AS '{$lang['property-table']}',
-			`activity_log`.`remote_column` AS '{$lang['property-column']}',
-			`activity_log`.`remote_ref` AS '{$lang['property-table_reference']}'
-		FROM
-			`activity_log`
-		LEFT OUTER JOIN `user`
-		ON `activity_log`.`user`=`user`.`ref`
-		WHERE
-			" . ($actasuser == "" ? "" : "`activity_log`.`user`='{$actasuser}' AND " ) . "
-			(`activity_log`.`ref` LIKE '%{$filter}%' OR
-			`activity_log`.`logged` LIKE '%{$filter}%' OR
-			`user`.`username` LIKE '%{$filter}%' OR
-			`activity_log`.`note` LIKE '%{$filter}%' OR
-			`activity_log`.`value_old` LIKE '%{$filter}%' OR
-			`activity_log`.`value_new` LIKE '%{$filter}%' OR
-			`activity_log`.`value_diff` LIKE '%{$filter}%' OR
-			`activity_log`.`remote_table` LIKE '%{$filter}%' OR
-			`activity_log`.`remote_column` LIKE '%{$filter}%' OR
-			`activity_log`.`remote_ref` LIKE '%{$filter}%' OR
-			(CASE ASCII(`activity_log`.`log_code`) $when_statements ELSE `activity_log`.`log_code` END) LIKE '%{$filter}%')
-
-		UNION
-
-		SELECT
-			`resource_log`.`date` AS '{$lang['fieldtype-date_and_time']}',
-			`user`.`username` AS '{$lang['user']}',
-			CASE ASCII(`resource_log`.`type`) $when_statements ELSE `resource_log`.`type` END AS '{$lang['property-operation']}',
-			`resource_log`.`notes` AS '{$lang['fieldtitle-notes']}',
-			`resource_type_field`.`title` AS '{$lang['property-resource-field']}',
-			`resource_log`.`previous_value` AS '{$lang['property-old_value']}',
-			'' AS '{$lang['property-new_value']}',
-			if(`resource_log`.`diff`='','',concat('<pre>',`resource_log`.`diff`,'</pre>')) AS '{$lang['difference']}',
-			'resource' AS '{$lang['property-table']}',
-			'ref' AS '{$lang['property-column']}',
-			`resource_log`.`resource` AS '{$lang['property-table_reference']}'
-		FROM
-			`resource_log`
-		LEFT OUTER JOIN `user`
-			ON `resource_log`.`user`=`user`.`ref`
-		LEFT OUTER JOIN `resource_type_field`
-			ON `resource_log`.`resource_type_field`=`resource_type_field`.`ref`
-
-		WHERE
-			" . ($actasuser == "" ? "" : "`resource_log`.`user`='{$actasuser}' AND " ) . "
-			(`resource_log`.`ref` LIKE '%{$filter}%' OR
-			`resource_log`.`date` LIKE '%{$filter}%' OR
-			`user`.`username` LIKE '%{$filter}%' OR
-			`resource_log`.`notes` LIKE '%{$filter}%' OR
-			`resource_log`.`previous_value` LIKE '%{$filter}%' OR
-			'resource' LIKE '%{$filter}%' OR
-			'ref' LIKE '%{$filter}%' OR
-			`resource_log`.`resource` LIKE '%{$filter}%' OR
-			(CASE ASCII(`resource_log`.`type`)
-				$when_statements
-				ELSE `resource_log`.`type`
-			END) LIKE '%{$filter}%')
-
-		UNION
-
-		SELECT
-			`collection_log`.`date` AS '{$lang['fieldtype-date_and_time']}',
-			`user`.`username` AS '{$lang['user']}',
-			CASE ASCII(`collection_log`.`type`) $when_statements ELSE `collection_log`.`type` END AS '{$lang['property-operation']}',
-			`collection_log`.`notes` AS '{$lang['fieldtitle-notes']}',
-			'' AS '{$lang['property-resource-field']}',
-			'' AS '{$lang['property-old_value']}',
-			'' AS '{$lang['property-new_value']}',
-			'' AS '{$lang['difference']}',
-			if(`collection_log`.`resource` IS NULL,'collection','resource') AS '{$lang['property-table']}',
-			'ref' AS '{$lang['property-column']}',
-			if(`collection_log`.`resource` IS NULL,`collection_log`.`collection`,`collection_log`.`resource`) AS '{$lang['property-table_reference']}'
-		FROM
-			`collection_log`
-		LEFT OUTER JOIN `user`
-			ON `collection_log`.`user`=`user`.`ref`
-		LEFT OUTER JOIN `collection`
-			ON `collection_log`.`collection`=`collection`.`ref`
-
-		WHERE
-			" . ($actasuser == "" ? "" : "`collection_log`.`user`='{$actasuser}' AND " ) . "
-			(`collection_log`.`collection` LIKE '%{$filter}%' OR
-			`collection_log`.`date` LIKE '%{$filter}%' OR
-			`collection_log`.`notes` LIKE '%{$filter}%' OR
-			`collection_log`.`resource` LIKE '%{$filter}%' OR
-			`collection`.`name` LIKE '%{$filter}%' OR
-			`user`.`username` LIKE '%{$filter}%' OR
-			(CASE ASCII(`collection_log`.`type`)
-				$when_statements
-				ELSE `collection_log`.`type`
-			END) LIKE '%{$filter}%')
-			
-			
-		ORDER BY 1 DESC
-
-
-
-			LIMIT 40
-			OFFSET " . ($offset * $results_per_page)
-
-		);
-		break;
-
-		}
-
-	}		// end of callback switch
+	} // end of callback switch
 
 	if($same_page_callback)	// do not display any filters if page being directly included
 		{
@@ -584,16 +449,8 @@ if (!$sorted && $sortby)
 	<?php
 	if ($same_page_callback)
 		{
-	?><strong><?php
-		if ($callback=='activitylog' && count($results) > $results_per_page)
-			{
-			echo $lang['lastmatching'] . ': ' . $results_per_page;
-			}
-		else
-			{
-			echo $lang['total'] . ': ' . count($results);
-			}
-		?></strong><?php
+	?><strong><?php echo $lang['total'] . ': ' . count($results); ?></strong>
+        <?php
 		}
 	?>
 	<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">

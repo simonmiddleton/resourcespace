@@ -2381,7 +2381,7 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
 * 
 * @return string
 */
-function sql_limit($offset = NULL, $rows = NULL)
+function sql_limit($offset, $rows)
     {
     $offset_true = !is_null($offset) && is_int($offset) && $offset > 0;
     $rows_true   = !is_null($rows) && is_int($rows) && $rows > 0;
