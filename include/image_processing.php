@@ -1404,17 +1404,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		if (file_exists($scr_wm_path) && !$previewbased) {unlink($scr_wm_path);}
 		
 		$prefix = '';
-		$colon_prefix='';
 		# Camera RAW images need prefix
 		if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext))
 		    {
 		    $prefix = $rawext[0] .':';
-		    $original_raw=true;
 		    }
-		if (!$config_windows && strpos($file, ':')!==false)
+		elseif (!$config_windows && strpos($file, ':')!==false)
             {
-            $prefix = ($prefix=='' ? $extension .':' : $prefix);
-            $colon_prefix=$extension .':';
+            $prefix = $extension .':';
             }
 
 		# Locate imagemagick.
@@ -1523,17 +1520,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 				if(file_exists($hpr_path))
 				    {
 				    $file=$hpr_path;
-				    $colon_prefix='';
 				    }
 				if(file_exists($lpr_path))
 				    {
 				    $file=$lpr_path;
-				    $colon_prefix='';
 				    }
 				if(file_exists($scr_path))
 				    {
 				    $file=$scr_path;
-				    $colon_prefix='';
 				    }
 				
 				# Check that source image dimensions are sufficient to create the required size. Unusually wide/tall images can
@@ -1562,7 +1556,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			
 			if(!$imagemagick_mpr)
 				{
-            	$command = $convert_fullpath . ' '. escapeshellarg($colon_prefix . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
+            	$command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
             	}
 
 			# fetch target width and height
@@ -1868,7 +1862,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 					}
 				}
 			// time to build the command
-			$command=$convert_fullpath . ' ' . escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
+			$command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
 			if(!$unique_flatten)
 				{
 			 	$command.=($command_parts[0]['flatten'] ? " -flatten " : "");
