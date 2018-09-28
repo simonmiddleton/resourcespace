@@ -730,7 +730,13 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                             </td>
                         <td> <!-- Action buttons -->
                             <button type="submit" onclick="SaveNode(<?php echo $ref; ?>); return false;"><?php echo $lang['save']; ?></button>
+                            <?php
+                            if(!is_parent_node($ref))
+                                {?>
                             <button type="submit" onclick="DeleteNode(<?php echo $ref; ?>); return false;"><?php echo $lang['action-delete']; ?></button>
+                                <?php 
+                                }
+                            ?>
                         </td>
                             
                         <?php generateFormToken("option_{$ref}"); ?>
