@@ -1347,7 +1347,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 
 function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false)
 	{
-	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles;
+	global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
 
 	$icc_transform_complete=false;
     debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested)",RESOURCE_LOG_APPEND_PREVIOUS);
@@ -1404,13 +1404,23 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 		if (file_exists($scr_wm_path) && !$previewbased) {unlink($scr_wm_path);}
 		
 		$prefix = '';
+		$colon_prefix='';
 		# Camera RAW images need prefix
-		if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext)) { $prefix = $rawext[0] .':'; }
+		if (preg_match('/^(dng|nef|x3f|cr2|crw|mrw|orf|raf|dcr)$/i', $extension, $rawext))
+		    {
+		    $prefix = $rawext[0] .':';
+		    $original_raw=true;
+		    }
+		if (!$config_windows && strpos($file, ':')!==false)
+            {
+            $prefix = ($prefix=='' ? $extension .':' : $prefix);
+            $colon_prefix=$extension .':';
+            }
 
 		# Locate imagemagick.
         $identify_fullpath = get_utility_path("im-identify");
         if ($identify_fullpath==false) {debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'.",RESOURCE_LOG_APPEND_PREVIOUS); return false;}
-
+    
 		# Get image's dimensions.
 		$identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
 		$identoutput=run_command($identcommand);
@@ -1510,9 +1520,21 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			# As we start with the large and move to the small, this will speed things up.
 			if ($extension!="png" && $extension!="gif")
 				{
-				if(file_exists($hpr_path)){$file=$hpr_path;}
-				if(file_exists($lpr_path)){$file=$lpr_path;}
-				if(file_exists($scr_path)){$file=$scr_path;}
+				if(file_exists($hpr_path))
+				    {
+				    $file=$hpr_path;
+				    $colon_prefix='';
+				    }
+				if(file_exists($lpr_path))
+				    {
+				    $file=$lpr_path;
+				    $colon_prefix='';
+				    }
+				if(file_exists($scr_path))
+				    {
+				    $file=$scr_path;
+				    $colon_prefix='';
+				    }
 				
 				# Check that source image dimensions are sufficient to create the required size. Unusually wide/tall images can
 				# mean that the height/width of the larger sizes is less than the required target height/width
@@ -1540,7 +1562,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 			
 			if(!$imagemagick_mpr)
 				{
-            	$command = $convert_fullpath . ' '. escapeshellarg($file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
+            	$command = $convert_fullpath . ' '. escapeshellarg($colon_prefix . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
             	}
 
 			# fetch target width and height
