@@ -8,12 +8,6 @@
 include_once "../include/db.php";
 include_once "../include/general.php";
 
-$k=getvalescaped("k","");
-if ($k=="")
-    {
-    include "../include/authenticate.php";
-    }
-
 header("Content-type: text/css");
 
 global $header_colour_style_override, $header_link_style_override, $home_colour_style_override, $collection_bar_background_override,
