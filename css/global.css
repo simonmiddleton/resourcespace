@@ -80,6 +80,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     vertical-align: middle;
     display: block;
     min-height: unset;
+    margin-right: 5px;
 }
 
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
