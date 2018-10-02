@@ -957,7 +957,7 @@ var pluploadconfig = {
                                     {
                                     ?>
                                     var alternative_suffix   = '<?php echo trim($upload_alternatives_suffix); ?>';
-                                    var uploaded_resource_id = info.response.replace(/^\D+/g, '');
+                                    var uploaded_resource_id = JSON.parse(info.response)['id'];
                                     var filename             = file.name;
                                     var filename_ext         = getFilePathExtension(filename);
 
