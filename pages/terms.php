@@ -10,13 +10,20 @@ $k_shares_collection=getvalescaped("collection","");
 $k_shares_ref=getvalescaped("ref","");
 
 # Check access key because we need to honor terms requirement at user group override level
-if ($k_shares_collection != "") 
+if ($k!="") 
 	{
-	if (($k=="") || (!check_access_key_collection(getvalescaped("collection","",true),$k))) {include "../include/authenticate.php";}
+	if ($k_shares_collection != "") 
+		{
+		if (!check_access_key_collection(getvalescaped("collection","",true),$k)) {include "../include/authenticate.php";}
+		}
+	elseif ($k_shares_ref != "") 
+		{
+		if (!check_access_key(getvalescaped("ref",""),$k)) {include "../include/authenticate.php";}
+		}
 	}
-elseif ($k_shares_ref != "") 
+else
 	{
-	if (($k=="") || (!check_access_key(getvalescaped("ref",""),$k))) {include "../include/authenticate.php";}
+	include "../include/authenticate.php";
 	}
 
 $url=getvalescaped("url","pages/home.php?login=true");
