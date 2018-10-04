@@ -162,7 +162,7 @@ function ProcessFolder($folder)
            $staticsync_deleted_state, $staticsync_alternative_file_text, $staticsync_filepath_to_field, 
            $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
            $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field,
-           $staticsync_whitelist_folders,$staticsync_ingest_force,$errors;
+           $staticsync_whitelist_folders,$staticsync_ingest_force,$errors, $category_tree_add_parents;
     
     $collection = 0;
     $treeprocessed=false;
@@ -401,23 +401,32 @@ function ProcessFolder($folder)
                                         $field_info=get_resource_type_field($field);
                                         if(in_array($field_info['type'], $FIXED_LIST_FIELD_TYPES))
                                             {
-                                            $fieldnodes=get_nodes($field);
+                                            $fieldnodes = get_nodes($field, NULL, $field_info['type'] == FIELD_TYPE_CATEGORY_TREE);
+
                                             if(in_array($value, array_column($fieldnodes,"name")) || ($field_info['type']==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field)))
                                                 {
                                                 // Add this to array of nodes to add
                                                 $newnode = set_node(null, $field, trim($value), null, null, true);
                                                 echo "Adding node" . trim($value) . "\n";
                                                 
+                                                $newnodes = array($newnode);
+                                                if($field_info['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 
+                                                    {
+                                                    // We also need to add all parent nodes for category trees
+                                                    $parent_nodes = get_parent_nodes($newnode);
+                                                    $newnodes = array_merge($newnodes,array_keys($parent_nodes));
+                                                    }
+
                                                 if($staticsync_extension_mapping_append_values && !in_array($field_info['type'],array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)) && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
                                                     {
                                                     // The $staticsync_extension_mapping_append_values variable actually refers to folder->metadata mapping, not the file extension
-                                                    $field_nodes[$field][]   = $newnode;
+                                                    $field_nodes[$field]   = array_merge($field_nodes,$newnodes);
                                                     }
                                                 else
                                                     {
                                                     // We have got a new value for this field and we are not appending values,
                                                     // replace any existing value the array 
-                                                    $field_nodes[$field]   = array($newnode);
+                                                    $field_nodes[$field]   = $newnodes;
                                                     }
                                                 }                                            
                                             }
