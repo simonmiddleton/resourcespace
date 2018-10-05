@@ -77,6 +77,10 @@ function do_search(
         $sort='asc';
         }
 
+
+    // Used for collection sort order as sortorder is ASC, date is DESC
+    $revsort = (strtolower($sort) == 'desc') ? "asc" : " desc";
+
     $orig_order=$order_by;
     global $date_field;
 
@@ -90,7 +94,7 @@ function do_search(
         }
 
     $order = array(
-        "collection"      => "c.sortorder $sort,c.date_added $sort,r.ref $sort",
+        "collection"      => "c.sortorder $sort,c.date_added $revsort,r.ref $sort",
         "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
         "popularity"      => "user_rating $sort,total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
         "rating"          => "r.rating $sort, user_rating $sort, score $sort,r.ref $sort",

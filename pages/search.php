@@ -398,6 +398,10 @@ if ($order_by=="field{$date_field}")
     {
     $default_sort_direction="DESC";
     }
+elseif ($order_by=="collection")
+    {
+    $default_sort_direction="ASC";
+    }
 $sort=getvalescaped("sort",$default_sort_direction);rs_setcookie('saved_sort', $sort,0,"","",false,false);
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 
@@ -662,7 +666,7 @@ if(!$collectionsearch)
     <?php
     }
     
-if ($allow_reorder && $display!="list") {
+if ($allow_reorder && $display!="list" && $order_by == "collection" && $sort == "ASC") {
     global $usersession;
 ?>
     <script type="text/javascript">
@@ -772,6 +776,7 @@ if ($allow_reorder && $display!="list") {
 <?php }
     elseif (!hook("noreorderjs")) { ?>
     <script type="text/javascript">
+        var allow_reorder = false;
         jQuery(document).ready(function () {
             jQuery('#CentralSpaceResources .ui-sortable').sortable('disable');
             jQuery('.ResourcePanelShell').enableSelection();
