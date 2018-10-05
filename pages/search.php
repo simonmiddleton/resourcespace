@@ -666,7 +666,7 @@ if(!$collectionsearch)
     <?php
     }
     
-if ($allow_reorder && $display!="list" && $order_by == "collection" && $sort == "ASC") {
+if ($allow_reorder && $display!="list" && $order_by == "collection") {
     global $usersession;
 ?>
     <script type="text/javascript">
@@ -704,7 +704,7 @@ if ($allow_reorder && $display!="list" && $order_by == "collection" && $sort == 
             helper: function(event, ui)
                 {
                 //Hack to append the element to the body (visible above others divs), 
-                //but still bellonging to the scrollable container
+                //but still belonging to the scrollable container
                 jQuery('#CentralSpaceResources').append('<div id="CentralSpaceResourceClone" class="ui-state-default">' + ui[0].outerHTML + '</div>');   
                 jQuery('#CentralSpaceResourceClone').hide();
                 setTimeout(function() {
@@ -745,8 +745,19 @@ if ($allow_reorder && $display!="list" && $order_by == "collection" && $sort == 
                     }
 
                 InfoBoxEnabled=true;
-                var idsInOrder = jQuery('#CentralSpaceResources').sortable("toArray");
-                ReorderResources(idsInOrder);
+
+                <?php if ($sort == "ASC")
+                    {?>
+                    var idsInOrder = jQuery('#CentralSpaceResources').sortable("toArray");
+                    ReorderResources(idsInOrder);
+                    <?php
+                    }
+                else
+                    {?>
+                   return false;
+                    <?php
+                    }?>
+                    
                 if(is_special_search('!collection', 11))
                     {
                     jQuery('#trash_bin').hide();
