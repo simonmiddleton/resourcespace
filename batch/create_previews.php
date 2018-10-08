@@ -196,7 +196,7 @@ foreach($resources as $resource) // For each resources
             }
         else
             {
-            mysql_connect($mysql_server,$mysql_username,$mysql_password);
+            mysql_connect($mysql_server,$mysql_username,$mysql_password,TRUE);
             mysql_select_db($mysql_db);
             }
 
