@@ -2818,7 +2818,7 @@ $site_text_use_ckeditor=false;
 $preview_all_default_orientation="h";
 
 # Allow sorting by resource_type on thumbnail views
-$order_by_resource_type=false;
+$order_by_resource_type=true;
 
 # Upload Options at top of Edit page (Collection, import metadata checkbox) at top of edit page, rather than the bottom (default).
 $edit_upload_options_at_top=false;
