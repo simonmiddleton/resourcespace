@@ -2144,7 +2144,16 @@ function setup_user($userdata)
 			}
 		}
 
-        $usersearchfilter=isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='' ? $userdata["search_filter_override"] : $userdata["search_filter"];
+        global $search_filter_nodes;
+        if ($search_filter_nodes && isset($userdata["search_filter_id"]) && is_numeric($userdata["search_filter_id"]))
+            {
+            $usersearchfilter = $userdata["search_filter_id"];
+            }
+        else
+            {
+            $usersearchfilter=isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='' ? $userdata["search_filter_override"] : $userdata["search_filter"];
+            }
+            
         $usereditfilter=$userdata["edit_filter"];
         $userderestrictfilter=$userdata["derestrict_filter"];
         $hidden_collections=explode(",",$userdata["hidden_collections"]);
@@ -2240,7 +2249,9 @@ function validate_user($user_select_sql, $getuserdata=true)
                        g.derestrict_filter,
                        u.hidden_collections,
                        u.accepted_terms,
-                       u.session
+                       u.session,
+                       g.search_filter_id,
+                       g.edit_filter_id
                   FROM user AS u
              LEFT JOIN usergroup AS g on u.usergroup = g.ref
 			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref

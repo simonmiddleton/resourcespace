@@ -170,6 +170,13 @@ define('FACIAL_RECOGNITION_CROP_SIZE_PREFIX', '_facial_recognition_crop_');
 define('FACIAL_RECOGNITION_PREPARED_IMAGE_EXT', 'pgm');
 // --------------------------------------------------------------------------------
 
+
+// ------------------------- FILTER (SEARCH, EDIT) LOGICAL OPERATORS -------------------------
+define ('RS_FILTER_OR', 		1);
+define ('RS_FILTER_AND',		2);
+define ('RS_FILTER_NOT',		3);
+
+
 // used internally within this file
 
 function definitions_get_by_prefix($prefix)

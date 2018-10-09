@@ -7121,3 +7121,27 @@ function check_share_password($key,$password,$cookie)
     
     return true;   
     }
+
+    
+function get_filter($filterid)
+    {
+    
+    // 1 = OR
+    // 2 = AND
+    // 3 = NOT
+    
+    $filternodes = sql_query("SELECT r.ref,rn.logical_operator,rn.node FROM filter_rule r LEFT JOIN filter_rule_node rn ON r.ref=rn.filter_rule WHERE r.filter='" . escape_check($filterid) . "' ORDER BY logical_operator"); 
+    if(count($filternodes) > 0)
+        {
+        $filter_info = array();
+        $n=0;
+        foreach($filternodes as $filternode)
+            {
+            $filter_info[$filternode['ref']][$n]['node'] = $filternode['node'] ;
+            $filter_info[$filternode['ref']][$n]['logical_operator'] = $filternode['logical_operator'] ;
+            $n++;
+            }
+        return $filter_info;
+        }
+    return false;
+    }
