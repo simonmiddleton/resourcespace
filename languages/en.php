@@ -2733,5 +2733,13 @@ $lang["email_digest_disable"]       = "You can disable these notifications by lo
 $lang["user_pref_inactive_digest"]  = "Send me a daily email with all unread notifications if not logged on for than %%DAYS%% days?";
 
 // Filter rules 
-$lang["filters_manage"] = "Manage filters";
-$lang["filter_rules_edit"] = "Edit filter rules";
+$lang["filter_manage"]          = "Manage filters";
+$lang["filter_edit"]            = "Edit filter";
+$lang["filter_edit_text"]       = "Set the conditions that must be met for resources to match the filter";
+$lang["filter_name"]            = "Filter name";
+$lang["filter_criteria_label"]      = "Criteria";
+$lang["filter_criteria_all"]    = "ALL of these conditions must be met";
+$lang["filter_criteria_none"]   = "NONE of these conditions must be met";
+$lang["filter_criteria_any"]    = "ANY of these conditons must be met";
+
+

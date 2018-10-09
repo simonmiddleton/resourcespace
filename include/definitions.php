@@ -172,10 +172,9 @@ define('FACIAL_RECOGNITION_PREPARED_IMAGE_EXT', 'pgm');
 
 
 // ------------------------- FILTER (SEARCH, EDIT) LOGICAL OPERATORS -------------------------
-define ('RS_FILTER_OR', 		1);
-define ('RS_FILTER_AND',		2);
-define ('RS_FILTER_NOT',		3);
-
+define ('RS_FILTER_ALL', 		1);
+define ('RS_FILTER_NONE',		2);
+define ('RS_FILTER_ANY',		3);
 
 // used internally within this file
 

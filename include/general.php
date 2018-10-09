@@ -7123,22 +7123,54 @@ function check_share_password($key,$password,$cookie)
     }
 
     
+function get_filters($order = "ref", $sort = "ASC", $find = "")
+    {
+    $validorder = array("ref","name");
+    if(!in_array($order,$validorder))
+        {
+        $order = "ref";
+        }
+        
+    if($sort != "ASC")
+        {
+        $sort = "DESC";
+        }
+        
+    $condition = "";
+    $join = "";
+    
+    if(trim($find) != "")
+        {
+        $join = " LEFT JOIN filter_node fn ON fn.filter=f.ref LEFT JOIN node n ON n.ref = fn.node LEFT JOIN resource_type_field rtf ON rtf.ref=n.resource_type_field";
+        $condition = " WHERE f.name LIKE '%" . escape_check($find) . "%' OR n.name LIKE '%" . escape_check($find) . "%' OR rtf.name LIKE '" . escape_check($find) . "' OR rtf.title LIKE '" . escape_check($find) . "'";
+        }
+        
+    $sql = "SELECT f.ref, f.name FROM filter f {$join}{$condition} GROUP BY f.ref ORDER BY f.{$order} {$sort}";
+    $filters = sql_query($sql);
+    return $filters;
+    }
+
 function get_filter($filterid)
     {
+    // Codes for filter 'condition' column
+    // 1 = ALL must apply
+    // 2 = NONE must apply
+    // 3 = ANY can apply
+        
+    // Codes for filter_node 'node_condition' column
+    // 1 = EQUAL TO
+    // 2 = NOT EQUAL TO
     
-    // 1 = OR
-    // 2 = AND
-    // 3 = NOT
-    
-    $filternodes = sql_query("SELECT r.ref,rn.logical_operator,rn.node FROM filter_rule r LEFT JOIN filter_rule_node rn ON r.ref=rn.filter_rule WHERE r.filter='" . escape_check($filterid) . "' ORDER BY logical_operator"); 
+    $filternodes = sql_query("SELECT f.ref,f.filter_condition,fn.node_condition,fn.node FROM filter f LEFT JOIN filter_node fn ON fn.filter=f.ref WHERE f.ref='" . escape_check($filterid) . "'"); 
     if(count($filternodes) > 0)
         {
         $filter_info = array();
+        $filter_info["filter_condition"] = $filternodes[0]['filter_condition'];
         $n=0;
         foreach($filternodes as $filternode)
             {
-            $filter_info[$filternode['ref']][$n]['node'] = $filternode['node'] ;
-            $filter_info[$filternode['ref']][$n]['logical_operator'] = $filternode['logical_operator'] ;
+            $filter_info["nodes"][$n]["node"] = $filternode['node'] ;
+            $filter_info["nodes"][$n]['node_condition'] = $filternode['node_condition'] ;
             $n++;
             }
         return $filter_info;

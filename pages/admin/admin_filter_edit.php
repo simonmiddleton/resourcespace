@@ -12,47 +12,28 @@ include "../../include/header.php";
 ?>
 
 
-<div id="CentralSpaceContainer"><div id="CentralSpace">
-
-
-<div class="BasicsBox">
-  <h1><?php echo $lang["filter_rules_edit"] ?></h1>
-
-  
-  <form id="form1" name="form1" method="post" action="">
-
+<div id="CentralSpaceContainer">
+    <div id="CentralSpace">
+        <div class="BasicsBox">
+            <h1><?php echo $lang["filter_edit"] ?></h1>
+            <h2><?php echo $lang["filter_edit_text"] ?></h2>
+            <form id="filter_edit_form" name="filter_edit_form" method="post" action="">
+            
+                <div class="Question" id="filter_question_name">
+                    <label for="field_96"><?php echo $lang["filter_name"] ?></label>
+                    <input class="stdwidth" type="text" name="field_96" id="field_96" value="Happy OR Australia" onblur="HideHelp(96);return false;" onfocus="ShowHelp(96);return false;" onchange="AutoSave('96');">
+                    <div class="clearerleft"> </div>
+                </div>
     
-<div class="Question">
-<br><h2>Configure the conditions required for the rule to be met</h2>
-  </div>
-<div class="clearerleft"></div>
-
-  
-<div class="Question " id="question_0">
-<label for="field_96">Filter name </label>
-
-<input class="stdwidth" type="text" name="field_96" id="field_96" value="Happy OR Australia" onblur="HideHelp(96);return false;" onfocus="ShowHelp(96);return false;" onchange="AutoSave('96');">
-
-<div class="clearerleft"> </div>
-</div>
-    
-<div class="Question" id="question_2" title="" style="height: 50px;">
-<label>Criteria</label>
-<select>
-    <option value=1>
-    ALL of these conditions must be met
-    </option>
-    
-    <option value=2>
-    NONE of these conditions are met
-    </option>
-    
-    <option value=3>
-    ANY ONE of these conditions are met
-    </option>
-</select>  
-<div class="clearerleft"> </div>
-</div>
+                <div class="Question" id="filter_question_criteria" title="" style="height: 50px;">
+                    <label><?php echo $lang["filter_criteria_label"] ?></label>
+                    <select>
+                        <option value=<?php echo RS_FILTER_ALL; ?> ><?php echo $lang["filter_criteria_all"] ?></option>
+                        <option value=<?php echo RS_FILTER_NONE; ?> ><?php echo $lang["filter_criteria_none"] ?></option>
+                        <option value=<?php echo RS_FILTER_ANY; ?> ><?php echo $lang["filter_criteria_any"] ?></option>
+                    </select>  
+                    <div class="clearerleft"> </div>
+                </div>
 
 
 <div class="Question">

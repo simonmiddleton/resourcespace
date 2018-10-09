@@ -1047,88 +1047,54 @@ function do_search(
         $modfilterrules=hook("modifysearchfilterrules");
         if ($modfilterrules)
             {
-            $filterrules=$modfilterrules;
+            $filterrules = $modfilterrules;
             }
             
         //exit(print_r($filterrules));
-        $nf = 1;
-        foreach($filterrules as $filterrule)
+        //$nf = 1;
+        $filtercondition = $filterrules["filter_condition"];
+        $filters = array();
+            
+        foreach($filterrules["nodes"] as $filternode)
             {
-            $rule_filters = array();
-            $rule_filter_ors = array();
-            # Option for custom access to override search filters.
-            # For this resource, if custom access has been granted for the user or group, nullify the search filter for this particular resource effectively selecting "true".
+            // Set NOT condition to added if necessary
+            // a) If this is an ALL or ANY filter and node absence being checked
+            // b) If this is a NONE filter and node presence is being checked 
+            $notnode = ((($filtercondition == RS_FILTER_ALL || $filtercondition == RS_FILTER_ANY) && $filternode["node_condition"] == 0)
+                || 
+                ($filtercondition == RS_FILTER_NONE && $filternode["node_condition"] == 1));
+            
+            $filters[] = " (r.ref " . ($notnode ? " NOT " : "") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node = '" . $filternode["node"] . "')) ";
+            }
+                
+        if (count($filters) > 0)
+            {   
+            if($filtercondition == RS_FILTER_ALL || $filtercondition == RS_FILTER_NONE)
+                {
+                $glue = " AND ";
+                }
+            else 
+                {
+                // This is an OR filter
+                $glue = " OR ";
+                }
+            
+            $filter_add =  implode($glue, $filters);
+            
+            # If custom access has been granted for the user or group, nullify the search filter, effectively selecting "true".
             if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
                 {
-                $rule_filter_ors[] = " ((rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2))";
+                $filter_add = "((" . $filter_add . ") OR (rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2))";
                 }
-
-            // Rules are ordered by ORs first, ANDs second and NOTs last            
-            $rule_filter_or = false; // If we have an OR we need to add subsequent nodes as a condition for the join instead of as a join
-            foreach($filterrule as $rule_node)
+            
+            if ($sql_filter!="")
                 {
-                // Check for logical condition of each
-                if($rule_node["logical_operator"] == RS_FILTER_OR)
-                    {
-                    //$rule_filter_joins[] = " JOIN resource_node nfilt" . $nf . " ON r.ref=nfilt" . $nf . ".resource AND (nfilt" . $nf . ".node = '" . $rule_node["node"] . "' )";
-                    if($rule_filter_or)
-                        {
-                        $rule_filter_ors[$nf] = " (r.ref IN (SELECT rn.resource FROM resource_node rn WHERE rn.node = '" . $rule_node["node"] . "')) ";
-                        }
-                    else
-                        {
-                        $rule_filters[$nf] = " (r.ref IN (SELECT rn.resource FROM resource_node rn WHERE rn.node = '" . $rule_node["node"] . "') %%OR_CONDITION%% ) ";
-                        //$rule_filters[$nf] = " JOIN resource_node nfilt" . $nf . " ON r.ref=nfilt" . $nf . ".resource AND (nfilt" . $nf . ".node = '" . $rule_node["node"] . "' )";
-                        $rule_filter_or = true;
-                        }
-                    }
-                elseif($rule_node["logical_operator"] == RS_FILTER_AND)
-                    {
-                    if($rule_filter_or)
-                        {
-                        $rule_filter_ors[$nf] = " (r.ref IN (SELECT rn.resource FROM resource_node rn WHERE rn.node = '" . $rule_node["node"] . "')) ";
-                        }
-                    else
-                        {
-                        $rule_filters[$nf] = " (r.ref IN (SELECT rn.resource FROM resource_node rn WHERE rn.node = '" . $rule_node["node"] . "') %%OR_CONDITION%% ) ";
-                        //$rule_filters[$nf] = " JOIN resource_node nfilt" . $nf . " ON r.ref=nfilt" . $nf . ".resource AND (nfilt" . $nf . ".node = '" . $rule_node["node"] . "' )";
-                        }
-                    }
-                 elseif($rule_node["logical_operator"] == RS_FILTER_NOT)
-                    {
-                    if($rule_filter_or)
-                        {
-                        $rule_filter_ors[$nf] = " (r.ref NOT IN (SELECT rn.resource FROM resource_node rn WHERE rn.node = '" . $rule_node["node"] . "')) ";
-                        }
-                    else
-                        {
-                        $rule_filters[$nf] = " (r.ref NOT IN (SELECT rn.resource FROM resource_node rn WHERE rn.node = '" . $rule_node["node"] . "')) ";
-                        }
-                    }
-                $nf++;
+                $sql_filter.=" AND ";
                 }
                 
-            if (count($rule_filters) > 0)
-                {
-                if ($sql_filter!="")
-                    {
-                    $sql_filter.=" AND ";
-                    }
-                $sql_filter_append = implode(" AND ", $rule_filters);
-                
-                if (count($rule_filter_ors) > 0)
-                    {
-                    $sql_filter .= str_replace("%%OR_CONDITION%%", "OR " . implode(" OR ", $rule_filter_ors),$sql_filter_append);
-                    }
-                else
-                    {
-                    $sql_filter .= str_replace("%%OR_CONDITION%%", " ", $sql_filter_append);
-                    }
-                }
+            $sql_filter .=  $filter_add;
             }
-        
         //exit(print_r($sql_filter));
-        
         }
     elseif (strlen($usersearchfilter)>0)
         {
