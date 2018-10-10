@@ -907,7 +907,7 @@ function config_multi_group_select($name, $label, $current=array(), $width=300)
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" multiple="multiple" size="7" style="width:<?php echo $width ?>px">
+    <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="7" style="width:<?php echo $width ?>px">
 <?php
     $usergroups=get_usergroups();
     foreach ($usergroups as $usergroup)
@@ -958,7 +958,7 @@ function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" multiple="multiple" size="<?php echo $size?>" style="width:<?php echo $width ?>px">
+    <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="<?php echo $size?>" style="width:<?php echo $width ?>px">
 <?php
     foreach($fields as $field)
         {

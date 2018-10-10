@@ -1587,3 +1587,7 @@ select.MultiSelect:before {
 .MultiLine {
     padding-top: 5px;
 }
+
+#previewimage.NoPreview {
+    box-shadow: none;
+}
