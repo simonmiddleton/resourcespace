@@ -64,6 +64,32 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 				array_push($missing_fields, $meta[$resource_type][$field_name]['nicename']);
 				}
 			}
+
+        $field_not_exist=array();
+        foreach ($header as $field_name)
+            {
+            if (!isset($meta[$resource_type][$field_name])) // field name not found (and is not required for this type) so skip to the next one
+                {
+                if(isset($meta[0][$field_name])) // This maps to a global field, not a resource type specific one
+                    {
+                    $field_resource_type=0;
+                    }
+                else
+                    {
+                    //echo "Field not found : " . $field_name . "<br>";
+                    continue;
+                    }
+                }
+            else
+                {
+                $field_resource_type=$resource_type;
+                }
+
+            if(!isset($meta[$field_resource_type][$field_name]['type']))
+                {
+                array_push($field_not_exist, $field_name);
+                }
+            }
 			
 			//if (count($missing_fields)==0 || $override==0 || ($override=="" || ($override==0 && $resource_type==$resource_type_filter)))
 			if ($override==0 || (count($missing_fields)==0 && ($override=="" || $resource_type==$resource_type_filter)))
@@ -88,6 +114,15 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 		{
 		array_push ($messages, "Info: Override resource_type {$resource_type_filter}({$resource_types[$resource_type_filter]}) is valid");
 		}
+
+    if (count($field_not_exist)>0)
+        {
+        foreach ($field_not_exist as $field_name)
+            {
+            array_push($messages, "Error: Column name \"{$field_name}\" found in file does not exist as a ResourceSpace metadata field");
+            }
+        return false;
+        }
 	
 	if (count($header)==count(array_unique($header)))
 		{
