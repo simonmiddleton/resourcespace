@@ -1075,7 +1075,7 @@ else
     {
     ?>
     <div id="previewimagewrapper">
-        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture" style="border:none;" id="previewimage" />
+        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture NoPreview" style="border:none;" id="previewimage" />
     <?php
     hook('aftersearchimg', '', array($ref));
     if(isset($previewcaption))

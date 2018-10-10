@@ -1594,3 +1594,7 @@ select.MultiSelect:before {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
+#previewimage.NoPreview {
+    box-shadow: none;
+}
