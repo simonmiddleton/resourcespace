@@ -150,16 +150,10 @@ function HookSimplesamlAllProvideusercredentials()
             return true;
             }
 		
-		// Redirect to login page if not already authenticated and local login option is preferred
+		// Return false if not already authenticated and local login option is preferred
 		if(!simplesaml_is_authenticated() && $simplesaml_allow_standard_login  && $simplesaml_prefer_standard_login && getval("usesso","")=="" )
 			{
-            debug("simplesaml: redirecting to standard login page");
-			?>
-			<script>
-			top.location.href="<?php echo $baseurl?>/login.php?url=<?php echo urlencode($path)?>";
-			</script>	
-			<?php
-			exit;
+            return false;
 			}
                            
         if(!simplesaml_is_authenticated())
