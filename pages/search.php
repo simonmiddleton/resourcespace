@@ -1363,7 +1363,14 @@ if($responsive_ui)
             {
             if ($n==0 || ((isset($result[$n-1])) && $result[$n]["resource_type"]!=$result[$n-1]["resource_type"]))
                 {
-                echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . htmlspecialchars($rtypes[$result[$n]["resource_type"]]) .  "</h1>";
+                if($result[$n]["resource_type"]!="")
+                    {
+                    echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . htmlspecialchars($rtypes[$result[$n]["resource_type"]]) .  "</h1>";
+                    }
+                else
+                    {
+                    echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . $lang['unknown'] .  "</h1>";
+                    }
                 }
             }
             
