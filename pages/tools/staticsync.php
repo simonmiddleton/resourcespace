@@ -420,7 +420,8 @@ function ProcessFolder($folder)
                                                 if($staticsync_extension_mapping_append_values && !in_array($field_info['type'],array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)) && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
                                                     {
                                                     // The $staticsync_extension_mapping_append_values variable actually refers to folder->metadata mapping, not the file extension
-                                                    $field_nodes[$field]   = array_merge($field_nodes,$newnodes);
+                                                    $curnodes = get_resource_nodes($r,$field);
+                                                    $field_nodes[$field]   = array_merge($curnodes,$newnodes);
                                                     }
                                                 else
                                                     {
