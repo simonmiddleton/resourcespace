@@ -18,7 +18,7 @@ $simpleldap['email_attribute']       = getvalescaped('email_attribute', '');
 $simpleldap['phone_attribute']       = getvalescaped('phone_attribute', '');
 $simpleldap['LDAPTLS_REQCERT_never'] = getvalescaped('LDAPTLS_REQCERT_never', false);
 
-$escaped_ldapuser=ldap_escape($simpleldap['ldapuser'], '', LDAP_ESCAPE_DN);
+$escaped_ldapuser = (function_exists('ldap_escape')) ? ldap_escape($simpleldap['ldapuser'], '', LDAP_ESCAPE_DN) : $simpleldap['ldapuser'];
 
 // Test we can connect to domain
 $bindsuccess=false;	
