@@ -10,7 +10,7 @@ global $baseurl, $baseurl_short,$view_title_field, $youtube_publish_url_field, $
 
 
 $deletetokens=getvalescaped("deletetokens",false);
-if ($deletetokens && enforcePostRequest(false))
+if ($deletetokens)
 	{
 	sql_query("update user set youtube_access_token='', youtube_refresh_token='', youtube_username='' where ref='$userref'");
 	}
