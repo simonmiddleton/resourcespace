@@ -439,3 +439,7 @@ input:checked + .customFieldLabel, .keywordselected
 #Header #ssearchbox:focus {
   background-color: #fff;
 }
+
+.ui-button .ui-icon {
+    background-image: none;
+}

@@ -845,6 +845,34 @@ function uploaderReference ()
     } 
 plup = new uploaderReference
 
+
+// Tap into class changes so that errant plupload view state button styling can be corrected
+var originalAddClassMethod = jQuery.fn.addClass;
+var lastPluploadView="";
+var nextPluploadView="";
+
+// Override the addClass method
+jQuery.fn.addClass = function(){
+    // Execute the original method.
+    var result = originalAddClassMethod.apply( this, arguments );
+
+    nextPluploadView = arguments[0];
+    if(nextPluploadView=="plupload_view_list" || nextPluploadView=="plupload_view_thumbs") {
+        if(nextPluploadView != lastPluploadView) {
+            lastPluploadView = nextPluploadView;
+            if(nextPluploadView=="plupload_view_list") {
+                jQuery("#pluploader_container").trigger("Selected_View_List")
+            }
+            if(nextPluploadView=="plupload_view_thumbs") {
+                jQuery("#pluploader_container").trigger("Selected_View_Thumbs")
+            }
+        }
+    }
+    // return the original result
+    return result;
+}
+
+
 var pluploadconfig = {
         // General settings
         runtimes : '<?php echo $plupload_runtimes ?>',
@@ -889,8 +917,14 @@ var pluploadconfig = {
         dragdrop: true,        
         
         preinit: {
+
+                Init: function(up, info) {
+                    jQuery("#pluploader_view_list").attr('checked', true);
+                    jQuery("#pluploader_view_thumbs").attr('checked', false);
+                },
+
                 PostInit: function(uploader) {
-                
+
                     plup.object = uploader;                    
                     <?php hook('upload_uploader_defined'); ?>
         
@@ -1260,6 +1294,23 @@ if($attach_alternatives_found_to_resources)
 jQuery(document).ready(function () {            
     registerCollapsibleSections();
     jQuery("#pluploader").plupload<?php if(!$plupload_widget) { ?>Queue<?php } ?>(pluploadconfig);
+
+    // React to view button class changes
+    jQuery("#pluploader_container" ).on("Selected_View_List", function() {
+       // console.log("Trapped viewlist");
+       jQuery("#pluploader_view_thumbs").attr('checked', false);
+       jQuery("label[data-view='thumbs']").removeClass("ui-state-active ui-checkboxradio-checked");
+       jQuery("#pluploader_view_list").attr('checked', true);
+       jQuery("label[data-view='list']").addClass("ui-state-active ui-checkboxradio-checked");
+    });
+    jQuery("#pluploader_container" ).on("Selected_View_Thumbs", function() {
+       // console.log("Trapped viewthumbs");
+       jQuery("#pluploader_view_list").attr('checked', false);
+       jQuery("label[data-view='list']").removeClass("ui-state-active ui-checkboxradio-checked");
+       jQuery("#pluploader_view_thumbs").attr('checked', true);
+       jQuery("label[data-view='thumbs']").addClass("ui-state-active ui-checkboxradio-checked");
+    });
+
 });
 
 <?php
