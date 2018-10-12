@@ -48,7 +48,11 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
 	
 	if($fieldsitem["ref"]==$tms_link_object_id_field)
 		{
-		$tms_form_post_id=getval("field_" . $tms_link_object_id_field ,"",true);
+		$tms_form_post_id=getval("field_" . $tms_link_object_id_field ,0,true);
+		if($tms_form_post_id == 0)
+			{
+			return false;
+			}
 		$tms_object_id=intval($tms_form_post_id);
 		
 		
@@ -61,7 +65,7 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
 		update_field($ref,$tms_link_object_id_field,escape_check(getvalescaped("field_" . $tms_link_object_id_field ,"")));
 				
 		if(!is_array($tmsdata) && $ref<0)
-			{			
+			{		
 			// We can't get any data from TMS for this new resource. Need to show warning if user has not already accepted this
 			if(getval("tms_confirm_upload","")=="")
 				{
