@@ -6530,6 +6530,13 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
     if($type==""){return false;}
     if($user==""){global $userref;$user=isset($userref)?$userref:0;}
     $job_data_json=json_encode($job_data,JSON_UNESCAPED_SLASHES); // JSON_UNESCAPED_SLASHES is needed so we can effectively compare jobs
+    
+    if($job_code == "")
+        {
+        // Generate a code based on job data to avoid incorrect duplicate job detection
+        $job_code = $type . "_" . substr(md5(serialize($job_data)),10);
+        }
+
     // Check for existing job matching
     $existing_user_jobs=job_queue_get_jobs($type,STATUS_ACTIVE,"",$job_code);
     if(count($existing_user_jobs)>0)
