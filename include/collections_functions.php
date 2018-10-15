@@ -359,6 +359,7 @@ if (!function_exists("create_collection")){
 function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false,$categories=array())
 	{
 	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
+	debug("create_collection(\$userid = {$userid}, \$name = {$name}, \$ref = {$ref})");
 	if($username==$anonymous_login && $anonymous_user_session_collection)
 		{		
 		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
