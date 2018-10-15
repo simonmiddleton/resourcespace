@@ -1430,12 +1430,14 @@ function display_field($n, $field, $newtab=false,$modal=false)
   $name="field_" . $field["ref"];
   $value=$field["value"];
   $value=trim($value);
+  $use_copyfrom=true;
     if ($use != $ref && ($field["omit_when_copying"]))
         {
         debug("display_field: reverting copied value for field " . $field["ref"] . " as omit_when_copying is enabled");
         # Return this field value back to the original value, instead of using the value from the copied resource/metadata template
         # This is triggered if field has the 'omit_when_copying' flag set
         reset($original_fields);
+        $use_copyfrom=false;
         foreach ($original_fields as $original_field)
             {
             if ($original_field["ref"]==$field["ref"])
@@ -1520,7 +1522,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                type="checkbox"
                value="yes"
                <?php if($field_save_error){?> checked<?php } ?>
-               onClick="batch_edit_toggle_edit_multi_checkbox_question(<?php echo (int) $n; ?>);" <?php if(getval("copyfrom","")!="" && $value!=""){echo " checked" ;} ?>>&nbsp;
+               onClick="batch_edit_toggle_edit_multi_checkbox_question(<?php echo (int) $n; ?>);" <?php if(getval("copyfrom","")!="" && $use_copyfrom && $value!=""){echo " checked" ;} ?>>&nbsp;
             <label for="editthis<?php echo $n?>"><?php echo htmlspecialchars($field["title"]) ?></label>
             <div class="clearerleft"></div>
         </div>
