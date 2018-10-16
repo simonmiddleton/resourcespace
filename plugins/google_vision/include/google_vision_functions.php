@@ -44,8 +44,7 @@ function google_visionProcess($resource,$verbose=false)
       ]
     }';
     
-    #echo $request;
-    #exit();
+    debug("google_vision: \$request = {$request}");
     
     # Build a HTTP request, and fetch results.
     $opts = array('http' =>
@@ -58,7 +57,9 @@ function google_visionProcess($resource,$verbose=false)
     );
     $context  = stream_context_create($opts);
     $result = file_get_contents($url, false, $context);
-    
+
+    debug("google_vision: \$result = " . print_r($result, true));
+
     if ($verbose) echo $result;
     
 
