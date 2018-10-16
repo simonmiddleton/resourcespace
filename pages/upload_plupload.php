@@ -25,6 +25,11 @@ $replace_resource                       = getvalescaped('replace_resource', '');
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
 $single                                 = getval("single","") != "" || getval("forcesingle","") != "";
 
+$chunk       = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
+$chunks      = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
+$plfilename  = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
+$queue_index = isset($_REQUEST['queue_index']) ? intval($_REQUEST['queue_index']) : 0;
+
 // When uploading, if there are any files in the queue that have similar names plus a suffix to distinguish between original
 // and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
 $attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '');
@@ -55,7 +60,7 @@ if($resource_type == "")
 resource_type_config_override($resource_type);
 
 # Create a new collection?
-if ($collection_add=="new")
+if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chunk == 0)))
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
@@ -297,12 +302,6 @@ if ($_FILES)
 
 	// Uncomment this one to fake upload time
 	// usleep(5000);
-
-	// Get parameters
-	$chunk       = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
-	$chunks      = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
-	$plfilename  = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-    $queue_index = isset($_REQUEST['queue_index']) ? intval($_REQUEST['queue_index']) : 0;
         
         debug("PLUPLOAD - receiving file from user " . $username . ",  filename " . $plfilename . ", chunk " . $chunk . " of " . $chunks);
         
