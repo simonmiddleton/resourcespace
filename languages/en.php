@@ -582,6 +582,7 @@ $lang["resource_custom_access"] = "Resource custom access";
 $lang['remove_custom_access_users_groups'] = 'Users and groups with custom access';
 $lang['remove_custom_access_no_users_found'] = 'No users or groups with custom access found.';
 $lang['action-generate_pdf'] = 'Generate PDF';
+$lang['lock-tooltip']='Lock field to be copied to next resource';
 
 # Resource log - actions
 $lang["resourcelog"]="Resource log";

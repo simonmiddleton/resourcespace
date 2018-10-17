@@ -2261,8 +2261,9 @@ function renderSocialMediaShareLinksForUrl($url)
 */
 function renderLockButton($name, $locked_fields=array())
     {
+    global $lang;
     ?>
-    <button type="submit" class="lock_icon" id="lock_icon_<?php echo htmlspecialchars($name) ; ?>" onClick="toggleFieldLock('<?php echo htmlspecialchars($name) ; ?>');return false;">
+    <button type="submit" class="lock_icon" id="lock_icon_<?php echo htmlspecialchars($name) ; ?>" onClick="toggleFieldLock('<?php echo htmlspecialchars($name) ; ?>');return false;" title="<?php echo $lang['lock-tooltip']; ?>">
         <i aria-hidden="true" class="fa <?php if(in_array($name,$locked_fields)){echo "fa-lock";} else {echo "fa-unlock";} ?> fa-fw"></i>
     </button>
     <?php    
