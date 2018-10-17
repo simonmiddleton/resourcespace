@@ -615,6 +615,7 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
 * @param  integer  $order_by              Value of the order in the list (e.g. 10)
 * @param  boolean  $last_node             Set to true to allow to insert new records after last node in each level
 * @param  integer  $use_count             Counter of how many resources use a particular node
+* @param  integer  $node_index            Starting value for table index
 *
 * @return boolean
 */
