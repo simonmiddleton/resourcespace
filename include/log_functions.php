@@ -163,14 +163,14 @@ function get_activity_log($search, $offset, $rows, array $where_statements)
 
             $log_code_description = escape_check($GLOBALS['lang']["collectionlog-{$log_code}"]);
 
-            $when_statements .= " WHEN ASCII('{log_code_escaped}') THEN '{$log_code_description}'";
+            $when_statements .= " WHEN ASCII('{$log_code_escaped}') THEN '{$log_code_description}'";
 
             continue;
             }
 
         $log_code_description = escape_check($GLOBALS['lang']["log_code_{$log_code}"]);
 
-        $when_statements .= " WHEN ASCII('{log_code_escaped}') THEN '{$log_code_description}'";
+        $when_statements .= " WHEN ASCII('{$log_code_escaped}') THEN '{$log_code_description}'";
         }
 
     $limit = sql_limit($offset, $rows);
