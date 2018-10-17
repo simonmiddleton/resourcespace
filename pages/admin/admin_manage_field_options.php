@@ -154,6 +154,8 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
                         'filter_by_name' => $filter_by_name
                     );
                     
+                    $move_to_page_url = generateURL("{$baseurl_short}pages/admin/admin_manage_field_options.php",$url_parameters);
+                    
                     if($field_data['type'] != 7) // Not a category tree
                         {
                         $per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
@@ -161,7 +163,6 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
                         $url_parameters['offset'] = $move_to_page_url;
                         }
 
-                    $move_to_page_url = generateURL("{$baseurl_short}pages/admin/admin_manage_field_options.php",$url_parameters);
                     $response['url']=$move_to_page_url;
                     }
                 break;
