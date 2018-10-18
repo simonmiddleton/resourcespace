@@ -2172,6 +2172,7 @@ $lang["fieldtitle-add_to_config_override"]="Add to config override";
 $lang["fieldtitle-advanced_options"]="Advanced options";
 $lang["fieldtitle-derestrict_filter"]="Derestrict filter";
 $lang["fieldtitle-group_logo"]="Group specific logo";
+$lang["fieldtitle-group_logo_replace"]="Replace group specific logo";
 $lang["fieldtitle-tick_to_delete_group"]="Tick to delete this group";
 $lang["property-contains"]="Contains";
 $lang["property-groups"]="Groups";

@@ -394,7 +394,17 @@ include "../../include/header.php";
 <?php
 	if ($record['group_specific_logo'])
 		{
+		$linkedheaderimgsrc = (isset($storageurl)? $storageurl : $baseurl."/filestore"). "/admin/groupheaderimg/group".$record['ref'].".".$record["group_specific_logo"];
 		?>
+		<div class="Question">
+			<label for="grouplogocurrent"><?php echo $lang["fieldtitle-group_logo"]; ?></label>
+				<img src="<?php echo $linkedheaderimgsrc;?>" alt="Group logo" height='126'>
+		</div>
+		<div class="Question">
+			<label for="grouplogo"><?php echo $lang["fieldtitle-group_logo_replace"]; ?></label>
+			<input name="grouplogo" type="file">
+			<div class="clearerleft"></div>
+		</div>
 		<div class="Question">
 			<label for="removelogo"><?php echo $lang["action-title_remove_user_group_logo"]; ?></label>
 			<input name="removelogo" type="checkbox" value="1">
@@ -402,11 +412,16 @@ include "../../include/header.php";
 		</div>
 <?php
 		}
+	else
+		{
 ?>		<div class="Question">
 			<label for="grouplogo"><?php echo $lang["fieldtitle-group_logo"]; ?></label>
 			<input name="grouplogo" type="file">
 			<div class="clearerleft"></div>
 		</div>
+<?php
+		}
+?>
 
 	</div>		<!-- end of advanced options -->
 
