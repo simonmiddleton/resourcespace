@@ -90,7 +90,7 @@ function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
     
     // Run query to check that we have some results            
     $tmscountsql = "SELECT Count(*) FROM " . $tms_link_table_name . $conditionsql . " ;";
-    $tmscountset = odbc_exec($connection,$tmscountsql);
+    $tmscountset = odbc_exec($conn,$tmscountsql);
     $tmscount_arr = odbc_fetch_array($tmscountset);
     $resultcount = end($tmscount_arr);
     if($resultcount==0){global $lang;return $lang["tms_link_no_tms_data"];}
@@ -451,7 +451,7 @@ function tms_get_mediapathid($path,$create=true)
    
   // Run query to check that we have some results            
   $tmscountsql = "SELECT Count(*) FROM MediaPaths where PhysicalPath = '" . $path . "'";
-  $tmscountset = odbc_exec($connection,$tmscountsql);
+  $tmscountset = odbc_exec($conn,$tmscountsql);
   $tmscount_arr = odbc_fetch_array($tmscountset);
   $resultcount = end($tmscount_arr);
    
@@ -641,7 +641,7 @@ function tms_show_data($table,$columns,$utf16_columns,$conditionsql,$limit=10)
   
   // Run query to check that we have some results            
   $tmscountsql = "SELECT Count(*) FROM TMS.dbo.". $table . " " . $conditionsql;
-  $tmscountset = odbc_exec($connection,$tmscountsql);
+  $tmscountset = odbc_exec($conn,$tmscountsql);
   $tmscount_arr = odbc_fetch_array($tmscountset);
   $resultcount = end($tmscount_arr);
   
