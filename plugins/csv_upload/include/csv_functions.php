@@ -66,6 +66,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 			}
 
         $field_not_exist=array();
+        $field_not_exist_exemption=array("RESOURCE_TYPE","ACCESS");
         foreach ($header as $field_name)
             {
             if (!isset($meta[$resource_type][$field_name])) // field name not found (and is not required for this type) so skip to the next one
@@ -84,8 +85,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
                 {
                 $field_resource_type=$resource_type;
                 }
-
-            if(!isset($meta[$field_resource_type][$field_name]['type']))
+            if(!isset($meta[$field_resource_type][$field_name]['type']) && array_search($field_name, $field_not_exist_exemption)===false)
                 {
                 array_push($field_not_exist, $field_name);
                 }
