@@ -2432,10 +2432,13 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		$o++;
         }
         
-    // View all
+    // View all resources
     if(($k=="" || $internal_share_access) && (isset($collection_data["c"]) && $collection_data["c"]>0) || (is_array($result) && count($result) > 0))
         {
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/search.php",$urlparams);
+		// Force ascending order
+		$tempurlparams = array();
+		$tempurlparams['sort']="ASC";
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/search.php",$urlparams,$tempurlparams);
         $options[$o]['value']='view_all_resources_in_collection';
 		$options[$o]['label']=$lang['view_all_resources'];
 		$options[$o]['data_attr']=$data_attribute;
