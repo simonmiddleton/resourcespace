@@ -87,14 +87,18 @@ function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
       {
       $columnsql.=", CAST (" . $tms_link_text_column . " AS VARBINARY(MAX)) " . $tms_link_text_column;
       }
-        
-    $tmssql = "SELECT " . $columnsql . " FROM " . $tms_link_table_name . $conditionsql . " ;";
-        
+    
+    // Run query to check that we have some results            
+    $tmscountsql = "SELECT Count(*) FROM " . $tms_link_table_name . $conditionsql . " ;";
+    $tmscountset = odbc_exec($connection,$tmscountsql);
+    $tmscount_arr = odbc_fetch_array($tmscountset);
+    $resultcount = end($tmscount_arr);
+    if($resultcount==0){global $lang;return $lang["tms_link_no_tms_data"];}
+    
     // Execute the query to get the data from TMS
+    $tmssql = "SELECT " . $columnsql . " FROM " . $tms_link_table_name . $conditionsql . " ;";
     $tmsresultset = odbc_exec($conn,$tmssql);
     
-    $resultcount=odbc_num_rows ($tmsresultset);
-    if($resultcount==0){global $lang;return $lang["tms_link_no_tms_data"];}
     
     $convertedtmsdata=array();
     for ($r=1;$r<=$resultcount;$r++)
@@ -444,7 +448,13 @@ function tms_get_mediapathid($path,$create=true)
     debug("tms_link: ERROR = " . $errormessage); 
     return false;
     }
-   $resultcount=odbc_num_rows ($mediapathresult);
+   
+  // Run query to check that we have some results            
+  $tmscountsql = "SELECT Count(*) FROM MediaPaths where PhysicalPath = '" . $path . "'";
+  $tmscountset = odbc_exec($connection,$tmscountsql);
+  $tmscount_arr = odbc_fetch_array($tmscountset);
+  $resultcount = end($tmscount_arr);
+   
   if($resultcount>0)
     {
     $mediapathids = odbc_fetch_array($mediapathresult);
@@ -629,8 +639,12 @@ function tms_show_data($table,$columns,$utf16_columns,$conditionsql,$limit=10)
     exit($error);
     }
   
-  $resultcount=odbc_num_rows ($tmsresultset);
-
+  // Run query to check that we have some results            
+  $tmscountsql = "SELECT Count(*) FROM TMS.dbo.". $table . " " . $conditionsql;
+  $tmscountset = odbc_exec($connection,$tmscountsql);
+  $tmscount_arr = odbc_fetch_array($tmscountset);
+  $resultcount = end($tmscount_arr);
+  
   echo "<h2>TMS OUTPUT</h2>";
   echo "<p>QUERY: " . $tmssql . "</p>";
   echo "FOUND " . $resultcount . " rows";
