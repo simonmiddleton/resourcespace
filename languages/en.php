@@ -855,6 +855,7 @@ $lang['single'] = 'Single';
 $lang['double'] = 'Double';
 $lang['single_width'] = 'Single width';
 $lang['double_width'] = 'Double width';
+$lang['filter_by_table'] = 'Filter by table...';
 
 # Pager
 $lang["next"]="Next";

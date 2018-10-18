@@ -135,14 +135,22 @@ function logScript($message, $file = null)
 * @param  integer $offset  Specifies the offset of the first row to return
 * @param  integer $rows  Specifies the maximum number of rows to return
 * @param  array   $where_statements  Where statements for log tables
+*                                    Example of where statements:
+*                                    $where_statements = array(
+*                                        'activity_log' => "`activity_log`.`user`='{$actasuser}' AND ",
+*                                        'resource_log' => "`resource_log`.`user`='{$actasuser}' AND ",
+*                                        'collection_log' => "`collection_log`.`user`='{$actasuser}' AND ",
+*                                    );
+* @param  string $table  Table name (e.g resource_type_field, user, resource)
+* @param  integer $table_reference  ID of the record in the referred table
 * 
 * @return array
 */
-function get_activity_log($search, $offset, $rows, array $where_statements)
+function get_activity_log($search, $offset, $rows, array $where_statements, $table, $table_reference)
     {
-    foreach($where_statements as $table => $where_statement)
+    foreach($where_statements as $ws_table => $where_statement)
         {
-        $where_var = "where_{$table}_statement";
+        $where_var = "where_{$ws_table}_statement";
 
         $$where_var = $where_statement;
         }
@@ -172,8 +180,6 @@ function get_activity_log($search, $offset, $rows, array $where_statements)
 
         $when_statements .= " WHEN ASCII('{$log_code_escaped}') THEN '{$log_code_description}'";
         }
-
-    $limit = sql_limit($offset, $rows);
 
     $sql_query = "
                  SELECT
@@ -267,8 +273,22 @@ function get_activity_log($search, $offset, $rows, array $where_statements)
                         )
 
         ORDER BY `datetime` DESC
-        {$limit}
     ";
 
-    return sql_query($sql_query);
+    if(trim($table) !== '')
+        {
+        $table = escape_check($table);
+        $outer_sql_query = "SELECT * FROM ({$sql_query}) AS `logs` WHERE `logs`.`table` = '{$table}' ";
+
+        if(is_numeric($table_reference) && $table_reference > 0)
+            {
+            $outer_sql_query .= "AND `logs`.`table_reference` = '{$table_reference}'";
+            }
+
+        $sql_query = $outer_sql_query;
+        }
+
+    $limit = sql_limit($offset, $rows);
+
+    return sql_query("{$sql_query} {$limit}");
     }
