@@ -628,6 +628,8 @@ $lang["log_code_u"]=$lang["log-u"];
 $lang["log_code_U"]="Unspecified";
 $lang["log_code_v"]="Viewed";
 $lang["log_code_x"]="Deleted";
+$lang["log_code_+"] = "Enabled";
+$lang["log_code_-"] = "Disabled";
 
 $lang['user_created_by']='Created by';
 $lang['user_autocreated']='Automatically created';

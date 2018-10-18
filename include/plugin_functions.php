@@ -55,6 +55,9 @@ function activate_plugin($name)
                   "update_url='{$plugin_yaml_esc['update_url']}', info_url='{$plugin_yaml_esc['info_url']}', " .
                   "disable_group_select='{$plugin_yaml_esc['disable_group_select']}' " .
                   "WHERE name='{$plugin_yaml_esc['name']}'");
+
+        log_activity(null, LOG_CODE_ENABLED, $plugin_yaml_esc['version'], 'plugins', 'inst_version', $plugin_yaml_esc['name'], 'name', '', null, true);
+
         hook("after_activate_plugin","",array($name));
         return true;
         }
@@ -76,14 +79,19 @@ function activate_plugin($name)
  */
 function deactivate_plugin($name)
     {
-    $inst_version = sql_value("SELECT inst_version as value FROM plugins WHERE name='$name'",'');
-    if ($inst_version>=0)
+    $name = escape_check($name);
+
+    $inst_version = sql_value("SELECT inst_version AS value FROM plugins WHERE name = '{$name}'", '');
+  
+    if($inst_version >= 0)
         {
         # Remove the version field. Leaving the rest of the plugin information.  This allows for a config column to remain (future).
-        sql_query("UPDATE plugins set inst_version=NULL WHERE name='$name'");
+        sql_query("UPDATE plugins SET inst_version = NULL WHERE name = '{$name}'");
 
+        log_activity(null, LOG_CODE_DISABLED, '', 'plugins', 'inst_version', $name, 'name', $inst_version, null, true);
         }
     }
+
 /**
  * Purge configuration of a plugin.
  *
@@ -331,7 +339,13 @@ function set_plugin_config($plugin_name, $config)
         {
         $config_ser_json = mysql_real_escape_string($config_ser_json);
         }
+
+    // We record the activity before running the query because log_activity() is trying to be clever and figure out the old value
+    // which will make the new value also show up (incorrectly) as the old value.
+    log_activity(null, LOG_CODE_EDITED, $config_ser_json, 'plugins', 'config_json', $plugin_name, 'name', null, null, true);
+
     sql_query("UPDATE plugins SET config='$config_ser_bin', config_json='$config_ser_json' WHERE name='$plugin_name'");
+
     return true;
     }
 
