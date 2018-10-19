@@ -1109,6 +1109,10 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
         {$nodes=array($nodes);}
      
     sql_query("insert into resource_node (resource, node) values ('" . $resourceid . "','" . implode("'),('" . $resourceid . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
+
+    $node = array();
+    get_node($nodes[0], $node);
+    resource_log($resourceid,"e",$node["resource_type_field"],"","",$node["name"]);
     return true;
     }
 
