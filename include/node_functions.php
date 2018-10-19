@@ -1109,9 +1109,19 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
 
     sql_query("insert into resource_node (resource, node) values ('" . $resourceid . "','" . implode("'),('" . $resourceid . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
 
-    $node = array();
-    get_node($nodes[0], $node);
-    resource_log($resourceid,"e",$node["resource_type_field"],"","",$node["name"]);
+    $field_nodes_arr = array();
+    foreach ($nodes as $node)
+        {
+        $nodedata = array();
+        get_node($node, $nodedata);
+        $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+        }
+
+    foreach ($field_nodes_arr as $key => $value)
+        {
+        resource_log($resourceid,"e",$key,"","","," . implode(",",$value));
+        }
+
     return true;
     }
 
