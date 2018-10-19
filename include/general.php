@@ -7141,7 +7141,7 @@ function get_filters($order = "ref", $sort = "ASC", $find = "")
     
     if(trim($find) != "")
         {
-        $join = " LEFT JOIN filter_node fn ON fn.filter=f.ref LEFT JOIN node n ON n.ref = fn.node LEFT JOIN resource_type_field rtf ON rtf.ref=n.resource_type_field";
+        $join = " LEFT JOIN filter_rule_node fn ON fn.filter=f.ref LEFT JOIN node n ON n.ref = fn.node LEFT JOIN resource_type_field rtf ON rtf.ref=n.resource_type_field";
         $condition = " WHERE f.name LIKE '%" . escape_check($find) . "%' OR n.name LIKE '%" . escape_check($find) . "%' OR rtf.name LIKE '" . escape_check($find) . "' OR rtf.title LIKE '" . escape_check($find) . "'";
         }
         
@@ -7157,23 +7157,63 @@ function get_filter($filterid)
     // 2 = NONE must apply
     // 3 = ANY can apply
         
-    // Codes for filter_node 'node_condition' column
-    // 1 = EQUAL TO
-    // 2 = NOT EQUAL TO
+    $filter  = sql_query("SELECT f.ref, f.name, f.filter_condition FROM filter f"); 
     
-    $filternodes = sql_query("SELECT f.ref,f.filter_condition,fn.node_condition,fn.node FROM filter f LEFT JOIN filter_node fn ON fn.filter=f.ref WHERE f.ref='" . escape_check($filterid) . "'"); 
-    if(count($filternodes) > 0)
+    if(count($filter) > 0)
         {
-        $filter_info = array();
-        $filter_info["filter_condition"] = $filternodes[0]['filter_condition'];
-        $n=0;
-        foreach($filternodes as $filternode)
-            {
-            $filter_info["nodes"][$n]["node"] = $filternode['node'] ;
-            $filter_info["nodes"][$n]['node_condition'] = $filternode['node_condition'] ;
-            $n++;
-            }
-        return $filter_info;
+        return $filter[0];
+        }
+        
+    return false;
+    }
+    
+function get_filter_rules($filterid)
+    {
+    // Codes for filter_rule_node 'condition' column
+    // 0 = Node is not present
+    // 1 = Node is present
+    
+    $filterrules  = sql_query("SELECT fr.ref, fr.rule_condition, group_concat(frn.node) AS nodes FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.filter='" . escape_check($filterid) . "' GROUP BY filter_rule"); 
+    
+    //exit(print_r($filterrules));
+    if(count($filterrules) > 0)
+        {
+        return $filterrules;
         }
     return false;
+    }
+    
+function get_filter_rule($ruleid)
+    {    
+    $rule_data = sql_query("SELECT fr.ref, fr.rule_condition, group_concat(frn.node) AS nodes FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.ref='" . escape_check($ruleid) . "'"); 
+    if(count($rule_data) > 0)
+        {
+        return $rule_data[0];
+        }
+    return false;
+    }
+
+function save_filter_rule($filter_rule,$filterid,$nodes, $condition)
+    {
+    if($condition != 0 ){$condition = 1;}
+    if($filter_rule !="new")
+        {    
+        if(!is_numeric($filter_rule))
+            {
+            return false;    
+            }
+        sql_query("UPDATE filter_rule SET condition = '{$condition}' WHERE ref = '{$filter_rule}'");
+        sql_query("DELETE FROM filter_rule_node WHERE filter_rule = '{$filter_rule}'");
+        }
+    else
+        {
+        sql_query("INSERT INTO filter_rule (filter,rule_condition) VALUES ('{$filterid}','{$condition}')");
+        $filter_rule = sql_insert_id();
+        }    
+    
+    $nodevals = "('" . $filter_rule . "','" . (implode("'),('" . $filter_rule . "','",$nodes)) . "')";
+    $sql = "INSERT INTO filter_rule_node (filter_rule,node) VALUES " . $nodevals;
+    //exit($sql);
+    sql_query($sql);
+    return true;
     }

@@ -70,8 +70,8 @@ include "../../include/header.php";
                 </td>
                 <td>
                     <div class="ListTools">
-                        <a href="<?php echo generateURL($filter_edit_url,$params, array("ref" => "new","copyfrom" => $filters[$n]["ref"])); ?>" onClick="CentralSpaceLoad(this,true)" ><?php echo LINK_CARET ?><?php echo $lang["copy"] ?></a>
-                        <a href="<?php echo generateURL($filter_edit_url,$params, array("ref" => $filters[$n]["ref"])); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
+                        <a href="<?php echo generateURL($filter_edit_url,$params, array("filter" => "new","copyfrom" => $filters[$n]["ref"])); ?>" onClick="CentralSpaceLoad(this,true)" ><?php echo LINK_CARET ?><?php echo $lang["copy"] ?></a>
+                        <a href="<?php echo generateURL($filter_edit_url,$params, array("filter" => $filters[$n]["ref"])); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
                         <a href="#"
                            onClick='
                                 event.preventDefault();

@@ -1043,7 +1043,7 @@ function do_search(
     if ($search_filter_nodes && is_numeric($usersearchfilter) && $usersearchfilter > 0)
         {
         $filterrules = get_filter($usersearchfilter);
-        
+        exit(print_r($filterrules));
         $modfilterrules=hook("modifysearchfilterrules");
         if ($modfilterrules)
             {
@@ -1051,9 +1051,9 @@ function do_search(
             }
             
         //exit(print_r($filterrules));
-        //$nf = 1;
         $filtercondition = $filterrules["filter_condition"];
         $filters = array();
+        $filter_ors = array();
             
         foreach($filterrules["nodes"] as $filternode)
             {
@@ -1064,9 +1064,23 @@ function do_search(
                 || 
                 ($filtercondition == RS_FILTER_NONE && $filternode["node_condition"] == 1));
             
-            $filters[] = " (r.ref " . ($notnode ? " NOT " : "") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node = '" . $filternode["node"] . "')) ";
+            if($filternode["node_condition"] == 2)
+                {
+                // These nodes must be ORd
+                $filter_ors[] = $filternode["node"]; 
+                }
+            else
+                {
+                $filters[] = " (r.ref " . ($notnode ? " NOT " : "") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node = '" . $filternode["node"] . "')) ";
+                }
             }
-                
+        
+        if (count($filter_ors) > 0)
+            {
+            // Add the ORs as a separate filter condition
+            $filters[] = " (r.ref " . (($filtercondition == RS_FILTER_NONE) ? " NOT " : "") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node IN ('" . implode("','",$filter_ors) . "') ";
+            }
+
         if (count($filters) > 0)
             {   
             if($filtercondition == RS_FILTER_ALL || $filtercondition == RS_FILTER_NONE)
@@ -1094,9 +1108,9 @@ function do_search(
                 
             $sql_filter .=  $filter_add;
             }
-        //exit(print_r($sql_filter));
+    exit(print_r($sql_filter));
         }
-    elseif (strlen($usersearchfilter)>0)
+    elseif (strlen($usersearchfilter)>0 && !is_numeric($usersearchfilter))
         {
         $sf=explode(";",$usersearchfilter);
         for ($n=0;$n<count($sf);$n++)

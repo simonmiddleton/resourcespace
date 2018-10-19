@@ -2735,11 +2735,19 @@ $lang["user_pref_inactive_digest"]  = "Send me a daily email with all unread not
 // Filter rules 
 $lang["filter_manage"]          = "Manage filters";
 $lang["filter_edit"]            = "Edit filter";
-$lang["filter_edit_text"]       = "Set the conditions that must be met for resources to match the filter";
+$lang["filter_edit_text"]       = "Set the rules that must be met for resources to match the filter";
 $lang["filter_name"]            = "Filter name";
-$lang["filter_criteria_label"]      = "Criteria";
-$lang["filter_criteria_all"]    = "ALL of these conditions must be met";
-$lang["filter_criteria_none"]   = "NONE of these conditions must be met";
-$lang["filter_criteria_any"]    = "ANY of these conditons must be met";
-
-
+$lang["filter_rules"]           = "Filter rules";
+$lang["filter_rules_none"]      = "There are no rules for this filter";
+$lang["filter_rule_edit"]       = "Edit filter rule";
+$lang["filter_rule_add"]        = "Add filter rule";
+$lang["filter_rule_edit_text"]  = "Select conditions that can satisfy this filter rule (these are OR'd)";
+$lang["filter_rule_name"]       = "Filter rule name";
+$lang["filter_criteria_label"]  = "Criteria";
+$lang["filter_criteria_all"]    = "ALL of the rules must be met";
+$lang["filter_criteria_none"]   = "NONE of the rules must be met";
+$lang["filter_criteria_any"]    = "ANY of the rules must be met";
+$lang["filter_is_in"]           = "IS ";
+$lang["filter_is_not_in"]       = "IS NOT";
+$lang["filter_or"]              = "OR";
+$lang["filter_and"]             = "AND";

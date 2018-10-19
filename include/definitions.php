@@ -176,6 +176,10 @@ define ('RS_FILTER_ALL', 		1);
 define ('RS_FILTER_NONE',		2);
 define ('RS_FILTER_ANY',		3);
 
+// Related node operators
+define ('RS_FILTER_NODE_NOT_IN',   0);
+define ('RS_FILTER_NODE_IN',       1);
+
 // used internally within this file
 
 function definitions_get_by_prefix($prefix)
