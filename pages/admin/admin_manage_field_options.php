@@ -75,6 +75,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
         {
         $response['error']   = null;
         $response['sibling'] = null;
+        $response['refresh_page']=false;
 
         $current_node     = array();
         if(!get_node($node_ref, $current_node))
@@ -94,9 +95,9 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
             $option_new_index = count($siblings);
             }
 
-
         $allow_reordering = false;
         $new_nodes_order  = array();
+        $url_parameters = array('field' => $field, 'filter_by_name' => $filter_by_name);
 
         // Get pre & post siblings of current node
         // Note: these can be 0 if current node is either first/ last in the list
@@ -112,7 +113,6 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
                 $post_sibling = $siblings[$current_node_siblings_index + 1]['ref'];
                 }
             }
-
 
         // Create the new order for nodes based on direction
         switch($node_action)
@@ -148,27 +148,18 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
                     $allow_reordering = true;
                     $response['refresh_page']=true;
 
-                    // Create redirect URL
-                    $url_parameters = array(
-                        'field'          => $field,
-                        'filter_by_name' => $filter_by_name
-                    );
-                    
-                    $move_to_page_url = generateURL("{$baseurl_short}pages/admin/admin_manage_field_options.php",$url_parameters);
-                    
                     if($field_data['type'] != 7) // Not a category tree
                         {
                         $per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
                         $move_to_page_offset = floor($option_new_index/$per_page)*$per_page;
                         $url_parameters['offset'] = $move_to_page_url;
                         }
-
-                    $response['url']=$move_to_page_url;
                     }
                 break;
             }
 
-
+            $move_to_page_url = generateURL("{$baseurl_short}pages/admin/admin_manage_field_options.php",$url_parameters);
+            $response['url']=$move_to_page_url;
         // Create the new array of nodes order
         foreach($siblings as $sibling)
             {
@@ -206,7 +197,7 @@ if('true' === $ajax && 'true' === getval('draw_tree_node_table', '') && 7 == $fi
             {
             $last_node = true;
             }
-        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node, $node['use_count'], $node_index);
+        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node, $node['use_count']);
         }
     exit();
     }
@@ -218,6 +209,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
     $new_option_name     = trim(getval('new_option_name', ''));
     $new_option_parent   = getvalescaped('new_option_parent', '');
     $new_option_order_by = get_node_order_by($field, 7 == $field_data['type'], $new_option_parent);
+    $new_node_index      = $new_option_order_by/10;
 
     $new_record_ref = set_node(NULL, $field, $new_option_name, $new_option_parent, $new_option_order_by);
 
@@ -239,7 +231,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
                                 <input 
                                     type="number" 
                                     name="node_order_by" 
-                                    value="<?php echo $new_option_order_by; ?>" 
+                                    value="<?php echo $new_node_index; ?>" 
                                     id="option_<?php echo $new_record_ref; ?>_order_by" 
                                     readonly='true'
                                     min='1'
@@ -313,12 +305,12 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
         }
 
     $uploaded_tmp_filename   = $_FILES['import_nodes']['tmp_name'];
-    
+
     // Get each line from file into an array
     $file_handle  = fopen($uploaded_tmp_filename, 'rb');
     if ($file_handle)
         {
-        $import_nodes = array();        
+        $import_nodes = array();
         while (($line = fgets($file_handle)) !== false)
             {
             if(trim($line) != "" &&  mb_check_encoding($line,'UTF-8'))
@@ -334,27 +326,27 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
         $error = true;
         $onload_message= array("title" => $lang["error"],"text" => $lang["invalidextension_mustbe"] . " .txt");
         } 
-    
+
     if(count($import_nodes) > 0 && !$error)
         {
         // Setup needed vars for this process
         $import_options = getval('import_options', '');
         $existing_nodes = get_nodes($field, $import_export_parent);
-    
+
         // Phase 1 - add new nodes, without creating duplicates
         foreach($import_nodes as $import_node_name)
             {
             $existing_node_key = array_search($import_node_name, array_column($existing_nodes, 'name'));
-    
+
             // Node doesn't exist so we can create it now.
             if(false === $existing_node_key)
                 {
                 set_node(null, $field, $import_node_name, $import_export_parent, '');
-    
+
                 log_activity("{$lang['import']} metadata field options - field {$field}", LOG_CODE_CREATED, $import_node_name, 'node', 'name');
                 }
             }
-    
+
         // Phase 2 - Remove any nodes that don't exist in the imported file
         // Note: only for "Replace options" option
         $reorder_required = false;
@@ -364,29 +356,29 @@ if('' !== getval('upload_import_nodes', '') && isset($_FILES['import_nodes']['tm
                 {
                 break;
                 }
-    
+
             if(!in_array($existing_node['name'], $import_nodes))
                 {
                 delete_node($existing_node['ref']);
-    
+
                 log_activity("{$lang['import']} metadata field options - field {$field}", LOG_CODE_DELETED, null, 'node', 'name', $existing_node['ref'], null, $existing_node['name']);
-    
+
                 $reorder_required = true;
                 }
             }
-    
+
         if($reorder_required)
             {
             $new_nodes_order = array();
-    
+
             foreach(get_nodes($field, $import_export_parent) as $node)
                 {
                 $new_nodes_order[] = $node['ref'];
                 }
-    
+
             reorder_node($new_nodes_order);
-            }   
-        }    
+            }
+        }
     }
 
 // [Export nodes]
@@ -648,7 +640,7 @@ if($field_data['type'] == 7 && !($tree_nodes==""))
             $last_node = true;
             }
 
-        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node, $node['use_count'],$node_index);
+        draw_tree_node_table($node['ref'], $node['resource_type_field'], $node['name'], $node['parent'], $node['order_by'], $last_node, $node['use_count']);
         }
     }
 
@@ -825,21 +817,25 @@ function ReorderNode(ref, direction, move_to)
 
     jQuery.post(post_url, post_data, function(response)
         {
-        if(response.refresh_page=true)
-            {
-            CentralSpaceLoad(response.url,true);
-            }
-            
         if(direction == 'moveup' && response.sibling && response.sibling.length > 0)
             {
             node.insertBefore('#node_' + response.sibling);
             node_children.insertBefore('#node_' + response.sibling);
+            document.getElementById('option_' + ref + '_order_by').value --;
+            document.getElementById('option_' + response.sibling + '_order_by').value ++;
             }
 
-        if(direction == 'movedown' && response.sibling && response.sibling.length > 0)
+        else if(direction == 'movedown' && response.sibling && response.sibling.length > 0)
             {
             node.insertAfter('#node_' + response.sibling);
             node_children.insertAfter('#node_' + response.sibling);
+            document.getElementById('option_' + ref + '_order_by').value ++;
+            document.getElementById('option_' + response.sibling + '_order_by').value --;
+            }
+
+        else if(response.refresh_page=true)
+            {
+            CentralSpaceLoad(response.url,true);
             }
         }, 'json');
     }
