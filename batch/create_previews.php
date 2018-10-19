@@ -53,9 +53,6 @@ if (function_exists("pcntl_signal")) {$multiprocess=true;} else {$multiprocess=f
 // We store the start date.
 $global_start_time = microtime(true);
 
-// We define the number of threads.
-$max_forks = 3;
-
 $lock_directory = '.';
 
 // We create an array to store children pids.
