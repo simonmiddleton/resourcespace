@@ -316,7 +316,7 @@ if (isset($ffmpeg_alternatives))
 		if (isset($ffmpeg_alternatives[$n]["lines_min"]))
 			{
 			# If this alternative size is larger than the source, do not generate.
-			if ($ffmpeg_alternatives[$n]["lines_min"]>$sourceheight)
+			if ($ffmpeg_alternatives[$n]["lines_min"]>=$sourceheight)
 				{
 				$generate=false;
 				}
@@ -382,6 +382,17 @@ if (isset($ffmpeg_alternatives))
 					$ffmpeg_alt_previews[]=basename($apath);
 					}
 				}
+            else 
+                {
+                # Remove the alternative file entries with this name as ffmpeg has failed to create file.
+                # SQL Connection may have hit a timeout
+                sql_connect();
+                $existing=sql_query("select ref from resource_alt_files where resource='$ref' and name='" . escape_check($ffmpeg_alternatives[$n]["name"]) . "'");
+                for ($m=0;$m<count($existing);$m++)
+                    {
+                    delete_alternative_file($ref,$existing[$m]["ref"]);
+                    }
+                }
 
 				if(!file_exists($apath) && file_exists($targetfile) && RUNNING_ASYNC) {
 					error_log('FFmpeg alternative failed: ' . $shell_exec_cmd);
