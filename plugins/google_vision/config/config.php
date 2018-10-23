@@ -10,3 +10,4 @@ $google_vision_autotitle=false;
 $google_vision_face_detect_field=0;
 $google_vision_face_detect_verbose=false;
 $google_vision_face_detect_fullface=true;
+$google_vision_face_dependent_field=0;
