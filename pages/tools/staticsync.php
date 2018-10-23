@@ -508,15 +508,19 @@ function ProcessFolder($folder)
 					elseif(isset($staticsync_alternative_file_text))
 						{
 						$basefilename=str_ireplace(".$extension", '', $file);
-						$altfilematch = $folder . "/" . $basefilename . $staticsync_alternative_file_text . "*.*";
+                        $altfilematch = "/{$basefilename}{$staticsync_alternative_file_text}(.*)\.(.*)/";
+
 						echo "Searching for alternative files for base file: " . $basefilename , PHP_EOL; 
 						echo "checking " . $altfilematch . PHP_EOL;
-						$altfiles = glob($altfilematch);
-						foreach ($altfiles as $altfile)
-							{
-                            staticsync_process_alt($altfile,$r);
-							echo "Processed alternative: " . $shortpath . PHP_EOL;
+
+                        $folder_files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($folder));
+                        $altfiles = new RegexIterator($folder_files, $altfilematch, RecursiveRegexIterator::MATCH);
+                        foreach($altfiles as $altfile)
+                            {
+                            staticsync_process_alt($altfile->getPathname(), $r);
+                            echo "Processed alternative: " . $shortpath . PHP_EOL;
                             }
+
 						continue;
 						}
 
