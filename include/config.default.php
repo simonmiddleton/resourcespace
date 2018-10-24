@@ -2349,7 +2349,9 @@ $use_phpmailer=false;
 # Allow to disable thumbnail generation during batch resource upload from FTP or local folder.
 # In addition to this option, a multi-thread thumbnail generation script is available in the batch
 # folder (create_previews.php). You can use it as a cron job, or manually.
-# Note: this also works for normal uploads (through web browser)
+# Notes:-
+#  - This also works for normal uploads (through web browser)
+#  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
 $enable_thumbnail_creation_on_upload = true;
 
 # Create XML metadata dump files in the resource folder?
@@ -3286,6 +3288,7 @@ $watermark_single_image = array(
 
 # $offline_job_queue. Enable the job_queue functionality that runs resource heavy tasks to be run offline and send notifications once complete. Initially used by video_tracks plugin 
 # If set to true a frequent cron job or scheduled task should be added to run pages/tools/offline_jobs.php 
+# NOTE: This setting may be overridden in certain cirumstances  - e.g. if previews are required at upload time because Google Vision facial recognition is configured with a dependent metadata field
 $offline_job_queue=false;
 # Delete completed jobs from the queue?
 $offline_job_delete_completed=false;

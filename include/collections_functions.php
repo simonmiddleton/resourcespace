@@ -2658,7 +2658,7 @@ function new_featured_collection_form(array $themearray = array())
         <?php
         for($n = 0; $n < $themes_count; $n++)
             {
-            echo "<input type='hidden' name='theme" . ($n > 0 ? $n + 1 : "") . "' value='" . $themearray[$n] . "'></input>";
+            echo "<input type='hidden' name='theme" . ($n > 0 ? $n + 1 : "") . "' value='" . htmlspecialchars($themearray[$n], ENT_QUOTES) . "'></input>";
             }
 
         // Root level does not allow collections so the only option for the user is to just create a featured collection
