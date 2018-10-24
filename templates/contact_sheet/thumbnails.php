@@ -81,6 +81,8 @@ if(isset($contact_sheet_footer))
 <table>
 <tbody>
 <?php
+global $contact_sheet_field_name, $contact_sheet_field_name_bold;
+
 $row    = 1;
 $column = 0;
 
@@ -133,9 +135,19 @@ foreach($resources as $resource_ref => $resource)
     	{
 		foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
 			{
-			?>
-			<span><?php echo htmlspecialchars($contact_sheet_field); ?></span><br>
-			<?php
+			if($contact_sheet_field_name && $contact_sheet_field_name_bold)
+                {
+                $contact_sheet_field=explode(': ', $contact_sheet_field);
+                ?>
+                <span><b><?php echo htmlspecialchars($contact_sheet_field[0]); ?></b>: <?php echo htmlspecialchars($contact_sheet_field[1]); ?></span><br>
+                <?php
+                }
+            else
+                {
+                ?>
+                <span><?php echo htmlspecialchars($contact_sheet_field); ?></span><br>
+                <?php
+                }
 			}
 		}
         ?>
