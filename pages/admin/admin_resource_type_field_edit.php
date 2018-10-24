@@ -100,6 +100,12 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 			return;
 			}
 		}
+		
+	$alt_helptext=hook('rtfieldedithelptext', 'admin_resource_type_field_edit', array($propertyname));
+	if($alt_helptext!==false){
+	    $helptext=$alt_helptext;
+	}
+	
 	?>
 	<div class="Question" >
 		<label><?php echo ($propertytitle!="")?$propertytitle:$propertyname ?></label>
@@ -410,6 +416,8 @@ if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false)
 		$syncsql.=" where ref='$sync_field' or sync_field='$ref'";
 		sql_query($syncsql);
 		}
+	
+	hook('afterresourcetypefieldeditsave');
 	
 	$saved_text=$lang["saved"];
 	//redirect($backurl);
