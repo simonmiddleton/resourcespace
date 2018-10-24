@@ -3,7 +3,6 @@
 include_once 'definitions.php';
 include_once 'language_functions.php';
 include_once 'message_functions.php';
-include_once 'resource_functions.php';
 include_once 'node_functions.php';
 include_once 'encryption_functions.php';
 
