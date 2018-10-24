@@ -262,6 +262,7 @@ if ($submitted != "")
 			$usesize = ($size == 'original') ? "" : $usesize=$size;
 			$p=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
 
+			# Determine whether target exists
 			$subbed_original = false;
 			$target_exists = file_exists($p);
 			$replaced_file = false;
@@ -285,7 +286,7 @@ if ($submitted != "")
 				$target_exists = file_exists($p);
 				}
 
-			# Check file exists and, if restricted access, that the user has access to the requested size.
+			# Process the file if it exists, and (if restricted access) that the user has access to the requested size
 			if ((($target_exists && $access==0) ||
 				($target_exists && $access==1 &&
 					(image_size_restricted_access($size) || ($usesize='' && $restricted_full_download))) 

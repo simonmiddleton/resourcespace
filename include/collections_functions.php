@@ -2769,7 +2769,7 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
         }
 
     global $pextension, $usesize, $subbed_original, $prefix_resource_id_to_filename, $prefix_filename_string, $server_charset,
-    $deletion_array, $use_zip_extension, $copy, $exiftool_write_option, $p, $size;
+           $download_filename_id_only, $deletion_array, $use_zip_extension, $copy, $exiftool_write_option, $p, $size;
 
     # Only perform the copy if an original filename is set.
 
@@ -2790,10 +2790,25 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
         }
 
     if ($usesize!=""&&!$subbed_original){$append="-".$usesize;}else {$append="";}
-    $basename_minus_extension=remove_extension($pathparts['basename']);
-    $filename=$basename_minus_extension.$append.".".$pextension;
-
-    if ($prefix_resource_id_to_filename) {$filename=$prefix_filename_string . $ref . "_" . $filename;}
+	$basename_minus_extension=remove_extension($pathparts['basename']);
+	
+	if ($download_filename_id_only) 
+	    {
+		# Id only means ignore settings $original_filenames_when_download and $prefix_resource_id_to_filename
+		$filename = $prefix_filename_string . $ref . "." . $pextension;
+		}	
+	else 
+		{  
+		# Otherwise use settings $original_filenames_when_download and $prefix_resource_id_to_filename
+		if ($prefix_resource_id_to_filename) 
+			{
+			$filename = $prefix_filename_string . $ref . "_" . $basename_minus_extension.$append.".".$pextension;
+			}
+		else 
+			{
+			$filename = $prefix_filename_string . $basename_minus_extension.$append.".".$pextension;
+			}
+    	}
 
     $fs=explode("/",$filename);$filename=$fs[count($fs)-1];
 
