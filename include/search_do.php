@@ -245,7 +245,7 @@ function do_search(
         {
         if($join == $GLOBALS["view_title_field"])
             {
-            $select .= ", r.field{$join} ";
+            $select .= ", (SELECT `value` FROM resource_data WHERE resource = r.ref AND resource_type_field = {$join}) AS field{$join} ";
             continue;
             }
 
