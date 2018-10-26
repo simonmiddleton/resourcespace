@@ -332,7 +332,7 @@ if (in_array($extension,$unoconv_extensions) && isset($unoconv_path) && !isset($
             exit("Unoconv's OpenOffice Python executable not found at '$unoconv_python_path'");
             }
        }
-    $cmd=($config_windows ? $cmd_uno_python_path . ' ' : '') . $unocommand . " --format=pdf " . escapeshellarg($file);
+    $cmd=($config_windows ? escapeshellarg($cmd_uno_python_path) . ' ' : '') . escapeshellarg($unocommand) . " --format=pdf " . escapeshellarg($file);
     $output=run_command($cmd);
 
     $path_parts=pathinfo($file);
