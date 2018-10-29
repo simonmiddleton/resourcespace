@@ -313,6 +313,7 @@ $fieldcolumns = array(
     'hide_when_restricted'     => array($lang['property-hide_when_restricted'],'',1,1),
     'help_text'                => array($lang['property-help_text'],'',2,1),
     'tooltip_text'             => array($lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1),
+    'tab_name'                 => array($lang['property-tab_name'],'',0,1),
 
     'partial_index'            => array($lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1),
     'iptc_equiv'               => array($lang['property-iptc_equiv'],'',0,1),					
@@ -320,7 +321,6 @@ $fieldcolumns = array(
     'display_condition'        => array($lang['property-display_condition'],$lang['information-display_condition'],2,1),
     'value_filter'             => array($lang['property-value_filter'],'',2,1),
     'regexp_filter'            => array($lang['property-regexp_filter'],$lang['information-regexp_filter'],2,1),
-    'tab_name'                 => array($lang['property-tab_name'],'',0,1),
     'smart_theme_name'         => array($lang['property-smart_theme_name'],'',0,1),
     'exiftool_filter'          => array($lang['property-exiftool_filter'],'',2,1),
     'display_as_dropdown'      => array($lang['property-display_as_dropdown'],$lang['information-display_as_dropdown'],1,1),
