@@ -929,6 +929,7 @@ var pluploadconfig = {
                                         else
                                             {
                                             styledalert('<?php echo $lang["error"]?> ' + uploadresponse.error.code, uploadresponse.error.message);
+                                            jQuery("#upload_log").append("\r\n" + uploadresponse.error.message + " " + uploadresponse.error.code);
                                             }    
                                         }
                                     else
