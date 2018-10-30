@@ -1533,23 +1533,29 @@ function display_field($n, $field, $newtab=false,$modal=false)
   if ($multiple && !hook("replace_edit_all_mode_select","",array($field["ref"])))
       {
       # When editing multiple, give option to select Replace All Text or Find and Replace
+      $onchangejs = "var fr=document.getElementById('findreplace_" . $n . "');";
+      $onchangejs .= "var q=document.getElementById('question_" . $n . "');";
+      if ($field["type"] == FIELD_TYPE_CATEGORY_TREE)
+        {
+        $onchangejs .= "if (this.value=='RM'){branch_limit_field['field_" . $field["ref"] . "']=1;}else{branch_limit_field['field_" . $field["ref"] . "']=0;}";
+        }
+      elseif (in_array($field["type"], $TEXT_FIELD_TYPES ))
+        {
+        $onchangejs .= "var cf=document.getElementById('copy_from_field_" . $field["ref"] . "');";
+        $onchangejs .= "if (this.value=='CF') {cf.style.display='block';q.style.display='none';} else {cf.style.display='none';q.style.display='block';}";
+        } 
       ?>
       <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
       <label for="modeselectinput"><?php echo $lang["editmode"]?></label>
-      <select id="modeselectinput_<?php echo $n?>" name="modeselect_<?php echo $field["ref"]?>" class="stdwidth" onChange="var fr=document.getElementById('findreplace_<?php echo $n?>');var q=document.getElementById('question_<?php echo $n?>');<?php if ($field["type"]==7){?>if (this.value=='RM'){branch_limit_field['field_<?php echo $field["ref"]?>']=1;}else{branch_limit_field['field_<?php echo $field["ref"]?>']=0;}<?php } ?>if (this.value=='FR') {fr.style.display='block';q.style.display='none';} else {fr.style.display='none';q.style.display='block';}<?php hook ("edit_all_mode_js"); ?>">
+      <select id="modeselectinput_<?php echo $n?>" name="modeselect_<?php echo $field["ref"]?>" class="stdwidth" onChange="<?php echo $onchangejs;hook ("edit_all_mode_js"); ?>">
       <option value="RT"><?php echo $lang["replacealltext"]?></option>
       <?php
       if (in_array($field["type"], $TEXT_FIELD_TYPES ))
         {
-        # Find and replace applies to text boxes only.
+        # 'Find and replace', prepend and 'copy from field' options apply to text boxes only.
         ?>
-        <option value="FR" <?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo $lang["findandreplace"]?></option>
-        <?php
-        }
-      if (in_array($field["type"], $TEXT_FIELD_TYPES))
-        {
-        # Prepend applies to text boxes only.
-        ?>
+        <option value="FR"<?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo $lang["findandreplace"]?></option>
+        <option value="CF"<?php if(getval("modeselect_" . $field["ref"],"")=="CF"){?> selected<?php } ?>><?php echo $lang["edit_copy_from_field"]?></option>
         <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
         <?php
         }
@@ -1571,6 +1577,13 @@ function display_field($n, $field, $newtab=false,$modal=false)
         ?>
         </select>
       </div><!-- End of modeselect_<?php echo $n?> -->
+
+      <?php
+      if (in_array($field["type"], $TEXT_FIELD_TYPES))
+        {
+        render_field_selector_question("","copy_from_field_" . $field["ref"], array(), "stdwidth", true);
+        }
+        ?>
 
       <div class="Question" id="findreplace_<?php echo $n?>" style="display:none;border-top:none;">
         <label>&nbsp;</label>
@@ -2438,4 +2451,39 @@ function render_share_options($collectionshare=true, $ref, $emailing=false)
         hook("additionalresourceshare");
         ?>
     <?php        
+    }
+    
+/**
+* Renders a metadata field selector
+* 
+* @param string     $label      label for the field
+* @param string     $name       name of form select
+* @param array      $ftypes     array of field types to include
+* @param string     $class      array CSS class to apply
+* @param boolean    $hidden     optionally hide the question usng CSS display:none
+* 
+* @return void
+*/
+function render_field_selector_question($label, $name, $ftypes,$class="stdwidth",$hidden=false)
+    {
+    global $lang;
+    $fieldtypefilter = "";
+	if(count($ftypes)>0)
+		{
+		$fieldtypefilter = " WHERE type IN ('" . implode("','", $ftypes) . "')";
+		}
+        
+    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name");
+    
+    echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
+    echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";
+    echo "<select name='" . htmlspecialchars($name) . "' id='" . htmlspecialchars($name) . "' class='" . $class . "'>";
+    echo "<option value='' selected >" . $lang["select"] . "</option>";
+    foreach($fields as $field)
+        {
+        echo "<option value='" . $field['ref'] . "' >" . lang_or_i18n_get_translated($field['title'],'fieldtitle-') . "</option>";
+        }
+    echo "</select>";
+    echo "<div class='clearerleft'></div>";
+    echo "</div>";
     }

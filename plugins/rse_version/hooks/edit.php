@@ -16,7 +16,7 @@ function HookRse_versionEditEdit_all_mode_js()
     {
     # Add to the JS executed when a mode selector is changed on 'edit all'
     global $n;
-    ?>var r=document.getElementById('revert_<?php echo $n?>');if (this.value=='Revert') {r.style.display='block';q.style.display='none';} else {r.style.display='none';if (this.value!='FR') {q.style.display='block';}}
+    ?>var r=document.getElementById('revert_<?php echo $n?>');if (this.value=='Revert') {r.style.display='block';q.style.display='none';} else {r.style.display='none';if (this.value!='FR' && this.value!='CF') {q.style.display='block';}}
     <?php
     }
     

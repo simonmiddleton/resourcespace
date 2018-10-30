@@ -776,7 +776,7 @@ if (!function_exists("save_resource_data_multi")){
 function save_resource_data_multi($collection)
     {
     global $auto_order_checkbox,$auto_order_checkbox_case_insensitive,  $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,
-    $range_separator, $edit_contributed_by;
+    $range_separator, $edit_contributed_by, $TEXT_FIELD_TYPES;
 
     # Save all submitted data for collection $collection, this is for the 'edit multiple resources' feature
     # Loop through the field data and save (if necessary)
@@ -1120,7 +1120,7 @@ function save_resource_data_multi($collection)
                         
                     
                     # Append text/option(s) mode?
-                    if (getval("modeselect_" . $fields[$n]["ref"],"")=="AP")
+                    elseif (getval("modeselect_" . $fields[$n]["ref"],"")=="AP")
                         {
                         $val=append_field_value($fields[$n],$origval,$existing);
                         }                        
@@ -1152,6 +1152,29 @@ function save_resource_data_multi($collection)
                             $errors[$fields[$n]["ref"]] .=  $ref;
                             if($m<count($list)-1){$errors[$fields[$n]["ref"]] .= ",";}
                             
+                            }
+                        }
+                    elseif (getval("modeselect_" . $fields[$n]["ref"],"")=="CF")
+                        {
+                        # Copy text from another text field
+                        $copyfrom = getval("copy_from_field_" . $fields[$n]["ref"],0,true);
+                        $copyfromfield = get_resource_type_field($copyfrom);
+                        if(!in_array($fields[$n]["type"],$TEXT_FIELD_TYPES))
+                            {
+                            // Not a valid option for this field
+                            debug("Copy data from field " . $copyfrom . " to field " . $fields[$n]["ref"] . " requires target field to be of a text type");
+                            continue;    
+                            }
+                        $val = get_data_by_field($ref,$copyfrom);
+                        if($fields[$n]["required"] && strip_leading_comma($val)=="")
+                            {
+                            // Required field and  no value now set, revert to existing and add to array of failed edits
+                            global $lang;
+                            $val=$existing;
+                            if(!isset($errors[$fields[$n]["ref"]]))
+                                {$errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;}
+                            $errors[$fields[$n]["ref"]] .=  $ref;
+                            if($m<count($list)-1){$errors[$fields[$n]["ref"]] .= ",";}                            
                             }
                         }
     
