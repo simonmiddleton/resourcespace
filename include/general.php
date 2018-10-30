@@ -7083,7 +7083,9 @@ function findDuplicates(array $data, $search)
 */
 function metadata_field_view_access($field)
     {
-    return ((PHP_SAPI == 'cli' && !defined("RS_TEST_MODE")) || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
+    return (
+        (PHP_SAPI == 'cli' && !defined("RS_TEST_MODE"))
+        || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
     }
 
 
