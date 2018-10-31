@@ -2736,3 +2736,4 @@ $lang["oj-collection-download-failure-text"] = "Unable to prepare collection arc
 $lang["email_auto_digest_inactive"] = "This is a summary of your unread messages";
 $lang["email_digest_disable"]       = "You can disable these notifications by logging in and adjusting your user preferences at the link below:-";
 $lang["user_pref_inactive_digest"]  = "Send me a daily email with all unread notifications if not logged on for than %%DAYS%% days?";
+$lang["edit_copy_from_field"]       = "Copy data from field";

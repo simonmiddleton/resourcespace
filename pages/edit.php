@@ -1924,7 +1924,7 @@ else
 	  $autocomplete_user_scope = "created_by";
       $single_user_select_field_value = $resource["created_by"];
       if ($edit_autosave) {$single_user_select_field_onchange = "AutoSave('created_by');"; }
-      if ($multiple) { ?><div><input name="editthis_created_by" id="editthis_created_by" value="yes" type="checkbox" onClick="var q=document.getElementById('question_created_by');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_created_by>"><?php echo $lang["contributedby"] ?></label></div><?php } ?>
+      if ($multiple) { ?><div class="Question"><input name="editthis_created_by" id="editthis_created_by" value="yes" type="checkbox" onClick="var q=document.getElementById('question_created_by');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_created_by>"><?php echo $lang["contributedby"] ?></label></div><?php } ?>
       <div class="Question" id="question_created_by" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
         <label><?php echo $lang["contributedby"] ?></label><?php include __DIR__ . "/../include/user_select.php"; ?>
         <div class="clearerleft"> </div>
