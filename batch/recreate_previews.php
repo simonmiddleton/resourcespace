@@ -16,10 +16,10 @@ $sapi_type = php_sapi_name();
 if (substr($sapi_type, 0, 3) != 'cli')
         {
         exit("Command line execution only.");
-		}
+        }
 if(isset($argv[1]) && strtolower($argv[1]) == "collection" && isset($argv[2]) && is_numeric($argv[2]))
     {
-    $collectionid = $argv[2];	
+    $collectionid = $argv[2];   
     }
 elseif(isset($argv[1]) && strtolower($argv[1]) == "resource" && isset($argv[2]) && is_numeric($argv[2]))
     {
@@ -53,21 +53,21 @@ $previewbased = in_array("-previewbased",$argv);
 $videoupdate = in_array("-videoupdate",$argv);
 
 function update_preview($ref, $previewbased)
-	{
+    {
     $resourceinfo=sql_query("select * from resource where ref='$ref'");
     if (count($resourceinfo)>0 && !hook("replaceupdatepreview", '', array($ref, $resourceinfo[0])))
-		{
-    	if(!empty($resourceinfo[0]['file_path'])){$ingested=false;}
-    	else{$ingested=true;}
+        {
+        if(!empty($resourceinfo[0]['file_path'])){$ingested=false;}
+        else{$ingested=true;}
         create_previews($ref, false,($previewbased?"jpg":$resourceinfo[0]["file_extension"]),false, $previewbased,-1,true,$ingested);
         hook("afterupdatepreview","",array($ref));
         return true;
-		}
+        }
     return false;
-	}
-	
+    }
+    
 if (!isset($collectionid))
-	{
+    {
     $conditions = array();
     if (isset($max))
         {
@@ -115,7 +115,7 @@ if(is_array($resources) && count($resources) > 0)
         ob_flush(); 
         if (update_preview($resource, $previewbased))
             {
-            echo "....completed\n";	
+            echo "....completed\n"; 
             }
         else
             {
