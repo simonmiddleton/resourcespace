@@ -970,7 +970,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     {
     # Process special searches. These return early with results.
     global $FIXED_LIST_FIELD_TYPES;
-    
+
+    $joins = ($return_refs_only === false ? get_resource_table_joins() : array());
+
     # View Last
     if (substr($search,0,5)=="!last") 
         {
@@ -1146,6 +1148,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         else
             {
+            $searchsql = resource_table_joins_sql($joins, $searchsql);
             $result = sql_query($searchsql,false,$fetchrows);
             }
 
@@ -1166,7 +1169,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         select distinct r.hit_count score, rt.name resource_type_name, $select from resource r join resource_type rt on r.resource_type=rt.ref and rt.push_metadata=1 join resource_related t on (t.resource=r.ref and t.related='" . $resource . "') $sql_join  where 1=1 and $sql_filter group by r.ref 
         order by $order_by" . $sql_suffix;
         
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
         
     # View Related
@@ -1186,7 +1189,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         UNION
         select distinct r.hit_count score, $select from resource r join resource_related t on (t.resource=r.ref and t.related='" . $resource . "') $sql_join  where 1=1 and $sql_filter group by r.ref 
         order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
         
 
@@ -1206,7 +1210,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                           
          and $sql_filter group by r.ref order by $order_by";
         $searchsql=$sql_prefix . $sql . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
+
+        return $returnsql ? $searchsql : sql_query(resource_table_joins_sql($joins, $searchsql), false, $fetchrows);
         }
 
     # Colour search
@@ -1222,8 +1227,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
          and $sql_filter group by r.ref order by $order_by";
         
         $searchsql=$sql_prefix . $sql . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
-        }       
+
+        return $returnsql ? $searchsql : sql_query(resource_table_joins_sql($joins, $searchsql), false, $fetchrows);
+        }
         
     # Similar to a colour
     if (substr($search,0,4)=="!rgb")
@@ -1231,15 +1237,17 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $rgb=explode(":",$search);$rgb=explode(",",$rgb[1]);
         
         $searchsql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where has_image=1 and $sql_filter group by r.ref order by (abs(image_red-" . $rgb[0] . ")+abs(image_green-" . $rgb[1] . ")+abs(image_blue-" . $rgb[2] . ")) asc limit 500" . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
+
+        return $returnsql ? $searchsql : sql_query(resource_table_joins_sql($joins, $searchsql), false, $fetchrows);
         }
         
     # Has no preview image
     if (substr($search,0,10)=="!nopreview")
         {
         $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where has_image=0 and $sql_filter group by r.ref" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
-        }       
+
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+        }
         
     # Similar to a colour by key
     if (substr($search,0,10)=="!colourkey")
@@ -1248,7 +1256,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $colourkey=explode(" ",$search);$colourkey=str_replace("!colourkey","",$colourkey[0]);
         
         $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where has_image=1 and left(colour_key,4)='" . $colourkey . "' and $sql_filter group by r.ref" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
     
     global $config_search_for_number;
@@ -1257,21 +1265,22 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $theref = escape_check($search);
         $theref = preg_replace("/[^0-9]/","",$theref);
         $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where r.ref='$theref' and $sql_filter group by r.ref" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
 
     # Searching for pending archive
     if (substr($search,0,15)=="!archivepending")
         {
         $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where archive=1 and ref>0 group by r.ref order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
     
     if (substr($search,0,12)=="!userpending")
         {
         if ($orig_order=="rating") {$order_by="request_count desc," . $order_by;}
         $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where archive=-1 and ref>0 group by r.ref order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
         
     # View Contributions
@@ -1288,21 +1297,21 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         $select=str_replace(",rca.access group_access,rca2.access user_access ",",null group_access, null user_access ",$select);
         $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where created_by='" . $cuser . "' and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
     
     # Search for resources with images
     if ($search=="!images") 
         {
         $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where has_image=1 group by r.ref order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
 
     # Search for resources not used in Collections
     if (substr($search,0,7)=="!unused") 
         {
         $sql=$sql_prefix . "SELECT distinct $select FROM resource r $sql_join  where r.ref>0 and r.ref not in (select c.resource from collection_resource c) and $sql_filter" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }   
     
     # Search for a list of resources
@@ -1330,7 +1339,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
     
         $sql=$sql_prefix . "SELECT distinct r.hit_count score, $select FROM resource r $sql_join $resources and $sql_filter order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }   
 
     # View resources that have data in the specified field reference - useful if deleting unused fields
@@ -1343,14 +1352,14 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {   
             $sql_join.=" RIGHT JOIN resource_node rn ON r.ref=rn.resource JOIN node n ON n.ref=rn.node where  n.resource_type_field='" . $fieldref . "'";
             $sql = $sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
-            return $returnsql?$sql:sql_query($sql,false,$fetchrows);        
+            return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);        
             
             }
         else
             {
             $sql_join.=" join resource_data on r.ref=resource_data.resource and resource_data.resource_type_field=$fieldref and resource_data.value<>'' ";
             $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
-            return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+            return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
             }
         }
         
@@ -1417,7 +1426,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
             
         $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
 
     # Within this hook implementation, set the value of the global $sql variable:
@@ -1430,7 +1439,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         debug("Addspecialsearch hook returned useful results.");
         $searchsql=$sql_prefix . $sql . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
+
+        return $returnsql ? $searchsql : sql_query(resource_table_joins_sql($joins, $searchsql), false, $fetchrows);
         }
 
      # Arrived here? There were no special searches. Return false.

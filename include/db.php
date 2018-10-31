@@ -2358,5 +2358,63 @@ function sql_limit($offset, $rows)
     return $limit;
     }
 
+function resource_table_joins_sql(array $joins, $sql)
+    {
+    if(empty($joins))
+        {
+        return $sql;
+        }
+
+    $resource_table_joins_sql = "SELECT ss.*";
+
+    foreach($joins as $join)
+        {
+        if($join == $GLOBALS["view_title_field"])
+            {
+            $resource_table_joins_sql .= ",
+                (
+                    SELECT `value`
+                       FROM resource_data
+                      WHERE resource = ss.ref
+                        AND resource_type_field = {$join}
+                ) AS field{$join} ";
+
+            continue;
+            }
+
+        if(!metadata_field_view_access($join))
+            {
+            continue;
+            }
+
+        $resource_table_join_rtf = get_resource_type_field($join);
+        if(in_array($resource_table_join_rtf['type'], $GLOBALS['FIXED_LIST_FIELD_TYPES']))
+            {
+            $resource_table_joins_sql .= ",
+            (
+                    SELECT GROUP_CONCAT(n.`name` SEPARATOR ', ') AS `value`
+                      FROM resource_node AS rn
+                INNER JOIN node AS n ON n.ref = rn.node
+                     WHERE rn.resource = ss.ref AND n.resource_type_field = {$join}
+                  GROUP BY rn.resource
+            ) AS field{$join} ";
+
+            continue;
+            }
+
+        $resource_table_joins_sql .= ",
+            (
+                SELECT `value`
+                  FROM resource_data
+                 WHERE resource = ss.ref
+                   AND resource_type_field = {$join}
+            ) AS field{$join} ";
+        }
+
+    $resource_table_joins_sql .= "FROM ({$sql}) AS ss";
+
+    return $resource_table_joins_sql;
+    }
+
 // IMPORTANT: make sure the upgrade.php is the last line in this file
 include_once __DIR__ . '/../upgrade/upgrade.php';
