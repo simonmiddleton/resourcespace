@@ -92,7 +92,7 @@ if(is_array($resources) && count($resources) > 0)
     {
     foreach ($resources as $resource)
         {
-        if(isset($videoupdate))
+        if($videoupdate)
             {
             $checkflvpreview = get_resource_path($resource, true, 'pre', false, 'flv', true, 1, false, '');
             if($video_preview_player_hls != 0)
