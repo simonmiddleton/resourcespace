@@ -997,7 +997,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $order_by=str_replace("r.rating","rating",$order_by);
         
         $sql=$sql_prefix . "select distinct *,r2.total_hit_count score from (select $select from resource r $sql_join where $sql_filter order by ref desc limit $last ) r2 order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
     
      # Collections containing resources
@@ -1033,7 +1034,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         # Formulate SQL
         $sql="select distinct c.*, sum(r.hit_count) score, sum(r.hit_count) total_hit_count from collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref and cr.collection=c.ref where $sql_filter and $collection_filter group by c.ref order by $order_by ";#echo $search . " " . $sql;
-        return $returnsql?$sql:sql_query($sql);
+        
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql));
         }
     
     # View Resources With No Downloads
@@ -1041,7 +1043,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         if ($orig_order=="relevance") {$order_by="ref desc";}
         $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where $sql_filter and ref not in (select distinct object_ref from daily_stat where activity_type='Resource download') order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
     
     # Duplicate Resources (based on file_checksum)
@@ -1059,7 +1062,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $sql="select distinct r.hit_count score, $select from resource r $sql_join  where $sql_filter and file_checksum= (select file_checksum from (select file_checksum from resource where archive = 0 and ref=$ref and file_checksum is not null)r2) order by file_checksum, ref";    
             if($returnsql) {return $sql;}
-            $results=sql_query($sql,false,$fetchrows);
+
+            $results = sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+
             $count=count($results);
             if ($count>1) 
                 {
@@ -1073,7 +1078,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         else
             {
             $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where $sql_filter and file_checksum in (select file_checksum from (select file_checksum from resource where archive = 0 and file_checksum <> '' and file_checksum is not null group by file_checksum having count(file_checksum)>1)r2) order by file_checksum, ref" . $sql_suffix;
-            return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+            
+            return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
             }
         }
     
