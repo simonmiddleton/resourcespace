@@ -240,38 +240,6 @@ function do_search(
         $select.=",null group_access, null user_access ";
         }
 
-    $joins = ($return_refs_only === false ? get_resource_table_joins() : array());
-    foreach($joins as $join)
-        {
-        if($join == $GLOBALS["view_title_field"])
-            {
-            $select .= ", (SELECT `value` FROM resource_data WHERE resource = r.ref AND resource_type_field = {$join}) AS field{$join} ";
-            continue;
-            }
-
-        if(!metadata_field_view_access($join))
-            {
-            continue;
-            }
-
-        $resource_table_join_rtf = get_resource_type_field($join);
-        if(in_array($resource_table_join_rtf['type'], $FIXED_LIST_FIELD_TYPES))
-            {
-            $select .= ",
-            (
-                    SELECT GROUP_CONCAT(n.`name` SEPARATOR ', ') AS `value` 
-                      FROM resource_node AS rn 
-                INNER JOIN node AS n ON n.ref = rn.node 
-                     WHERE rn.resource = r.ref AND n.resource_type_field = {$join}
-                  GROUP BY rn.resource
-            ) AS field{$join} ";
-
-            continue;
-            }
-
-        $select .= ", (SELECT `value` FROM resource_data WHERE resource = r.ref AND resource_type_field = {$join}) AS field{$join} ";
-        }
-
     # Prepare SQL to add join table for all provided keywords
 
     $suggested=$keywords; # a suggested search
@@ -1434,6 +1402,60 @@ function do_search(
         $max_results=$fetchrows;
         }
     $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref ORDER BY $order_by limit $max_results" . $sql_suffix;
+
+    $joins = ($return_refs_only === false ? get_resource_table_joins() : array());
+    if(!empty($joins))
+        {
+        $resource_table_joins_sql = "SELECT ss.*";
+
+        foreach($joins as $join)
+            {
+            if($join == $GLOBALS["view_title_field"])
+                {
+                $resource_table_joins_sql .= ",
+                    (
+                        SELECT `value`
+                           FROM resource_data
+                          WHERE resource = ss.ref
+                            AND resource_type_field = {$join}
+                    ) AS field{$join} ";
+
+                continue;
+                }
+
+            if(!metadata_field_view_access($join))
+                {
+                continue;
+                }
+
+            $resource_table_join_rtf = get_resource_type_field($join);
+            if(in_array($resource_table_join_rtf['type'], $FIXED_LIST_FIELD_TYPES))
+                {
+                $resource_table_joins_sql .= ",
+                (
+                        SELECT GROUP_CONCAT(n.`name` SEPARATOR ', ') AS `value`
+                          FROM resource_node AS rn
+                    INNER JOIN node AS n ON n.ref = rn.node
+                         WHERE rn.resource = ss.ref AND n.resource_type_field = {$join}
+                      GROUP BY rn.resource
+                ) AS field{$join} ";
+
+                continue;
+                }
+
+            $resource_table_joins_sql .= ",
+                (
+                    SELECT `value`
+                      FROM resource_data
+                     WHERE resource = ss.ref
+                       AND resource_type_field = {$join}
+                ) AS field{$join} ";
+            }
+
+        $resource_table_joins_sql .= "FROM ({$results_sql}) AS ss";
+
+        $results_sql = $resource_table_joins_sql;
+        }
 
     # Debug
     debug('$results_sql=' . $results_sql);
