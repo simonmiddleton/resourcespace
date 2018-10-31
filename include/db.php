@@ -2358,7 +2358,19 @@ function sql_limit($offset, $rows)
     return $limit;
     }
 
-function resource_table_joins_sql(array $joins, $sql)
+/**
+* Generates a SQL query around an existing query in order to retrieve the resource table joins (ie. fieldX columns)
+* 
+* @uses metadata_field_view_access()
+* @uses get_resource_type_field()
+* 
+* @param array  $joins    All the joins fields as returned by get_resource_table_joins()
+* @param string $sql      The original SQL query
+* @param string $order_by The order by that was intended for the original SQL query
+* 
+* @return string
+*/
+function resource_table_joins_sql(array $joins, $sql, $order_by = '')
     {
     if(empty($joins))
         {
@@ -2411,7 +2423,12 @@ function resource_table_joins_sql(array $joins, $sql)
             ) AS field{$join} ";
         }
 
-    $resource_table_joins_sql .= "FROM ({$sql}) AS ss";
+    $resource_table_joins_sql .= "FROM ({$sql}) AS ss ";
+
+    if($order_by !== '')
+        {
+        $resource_table_joins_sql .= "ORDER BY {$order_by}";
+        }
 
     return $resource_table_joins_sql;
     }

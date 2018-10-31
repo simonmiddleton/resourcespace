@@ -1175,7 +1175,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         select distinct r.hit_count score, rt.name resource_type_name, $select from resource r join resource_type rt on r.resource_type=rt.ref and rt.push_metadata=1 join resource_related t on (t.resource=r.ref and t.related='" . $resource . "') $sql_join  where 1=1 and $sql_filter group by r.ref 
         order by $order_by" . $sql_suffix;
         
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, str_replace("order by {$order_by}", '', $sql), $order_by), false, $fetchrows);
         }
         
     # View Related
@@ -1196,7 +1196,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         select distinct r.hit_count score, $select from resource r join resource_related t on (t.resource=r.ref and t.related='" . $resource . "') $sql_join  where 1=1 and $sql_filter group by r.ref 
         order by $order_by" . $sql_suffix;
 
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, str_replace("order by {$order_by}", '', $sql), $order_by), false, $fetchrows);
         }
         
 
