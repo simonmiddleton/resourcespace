@@ -711,8 +711,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	# For access level 3 (custom) - also save custom permissions
 	if (getvalescaped("access",0)==3) {save_resource_custom_access($ref);}
 
-	# Update XML metadata dump file
-	update_xml_metadump($ref);		
 	
     hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field));
 
@@ -1426,12 +1424,6 @@ function save_resource_data_multi($collection)
 		}
 
 	hook("saveextraresourcedata","",array($list));
-		
-	# Update XML metadata dump file for all edited resources.
-	for ($m=0;$m<count($list);$m++)
-		{
-		update_xml_metadump($list[$m]);
-		}
 	
     hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, $autosave_field=''));
 
@@ -2042,12 +2034,10 @@ function delete_resource($ref)
 		}
 
 	
-	// remove metadump file, and attempt to remove directory
-	$metadump_path = get_resource_path($ref, true, "pre", true, 'xml');
-	if (file_exists($metadump_path)){
-		unlink($metadump_path);
-	}
-	$dirpath = dirname($metadump_path);
+	//attempt to remove directory
+	$resource_path = get_resource_path($ref, true, "pre", true);
+
+	$dirpath = dirname($resource_path);
 	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
     
 	# Log the deletion of this resource for any collection it was in. 
@@ -3939,62 +3929,7 @@ function log_diff($fromvalue, $tovalue)
     return $return;
     }
 	
-function update_xml_metadump($resource)
-	{
-	# Updates the XML metadata dump file when the resource has been altered.
-	global $xml_metadump,$xml_metadump_dc_map;
-	if (!$xml_metadump || $resource < 0) {return true;} # Only execute when configured and when not a template
-	
-	$path=get_resource_path($resource,true,"pre",true, 'xml');
-	hook("before_update_xml_metadump");
-	if (file_exists($path)){$wait=unlink($path);}
-	
-	$ext = htmlspecialchars(sql_value("select file_extension value from resource where ref = '$resource'",''),ENT_QUOTES);
-	
-	if ($result = sql_query("select resource_type, name from resource left join resource_type on resource.resource_type = resource_type.ref where resource.ref = '$resource'",false)){
-		$rtype = $result[0]['resource_type'];
-		$rtypename = htmlspecialchars($result[0]['name'],ENT_QUOTES);
-	} else {
-		$rtype = '';
-		$rtypename = '';
-	}
 
-	$f=fopen($path,"w");
-	fwrite($f,"<?xml version=\"1.0\"?>\n");
-	fwrite($f,"<record xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" resourcespace:resourceid=\"$resource\"");
-	fwrite($f," resourcespace:extension=\"$ext\" resourcespace:resourcetype=\"$rtypename\" resourcespace:resourcetypeid=\"$rtype\" ");
-	fwrite($f,">\n\n");
-  
-  	$data=get_resource_field_data($resource,false,false); # Get field data ignoring permissions
-  	for ($n=0;$n<count($data);$n++)
-	  	{
-	  	if (array_key_exists($data[$n]["name"],$xml_metadump_dc_map))
-	  		{
-	  		# Dublin Core field
-	  		fwrite($f,"<dc:" . $xml_metadump_dc_map[$data[$n]["name"]] . " ");
-	  		$endtag="</dc:" . $xml_metadump_dc_map[$data[$n]["name"]] . ">";
-	  		}
-	  	else
-	  		{
-	  		# No Dublin Core mapping. RS specific field format.
-	  		fwrite($f,"<resourcespace:field ");
-	  		$endtag="</resourcespace:field>";
-	  		}
-	  		
-	  	# Value processing
-	  	$value=$data[$n]["value"];
-	  	if (substr($value,0,1)==",") {$value=substr($value,1);} # Checkbox lists / dropdowns; remove initial comma
-	  	
-	  	# Write metadata
-	  	fwrite($f,"rsfieldtitle=\"" . htmlspecialchars($data[$n]["title"]) . "\" rsembeddedequiv=\"" . htmlspecialchars($data[$n]["exiftool_field"]) . "\" rsfieldref=\"" . htmlspecialchars($data[$n]["resource_type_field"]) . "\" rsfieldtype=\"" . htmlspecialchars($data[$n]["type"]) . "\">" . htmlspecialchars($value) . $endtag . "\n\n");
-	  	}
-
-	fwrite($f,"</record>\n");
-	fclose($f);
-	hook("after_update_xml_metadump");
-	//chmod($path,0777); // fixme - temporarily make world readable/writable until we have better solution for file permissions
-
-	}
 
 function get_metadata_templates()
 	{
@@ -4246,13 +4181,6 @@ function get_resource_files($ref,$includeorphan=false){
 	}
     }
 
-
-    // check for metadump
-    $thefile="$rootpath/metadump.xml";
-    if (file_exists($thefile)){
-        array_push($filearray,$thefile);
-        unset($file_checklist[$thefile]);
-    }
 
     // check for ffmpeg previews
     global $ffmpeg_preview_extension;
