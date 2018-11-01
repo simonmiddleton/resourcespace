@@ -110,8 +110,9 @@ for ($n=0;$n<count($result);$n++)
 	foreach ($sizes as $sizeinfo)
 		{
 		$size_id=$sizeinfo['id'];
-		$p=get_resource_path($ref,true,$size_id,false,$pextension);
-
+		$size_extension = get_extension($result[$n], $size_id);
+		$p=get_resource_path($ref,true,$size_id,false,$size_extension);
+		
 		if (resource_download_allowed($ref,$size_id,$result[$n]['resource_type']))
 			{
 			if (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
