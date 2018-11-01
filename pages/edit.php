@@ -179,27 +179,49 @@ if ($go!="")
         }
    }
 
-$collection=getvalescaped("collection","",true);
-if ($collection!="") 
+$collection=getvalescaped("collection",0,true);
+$editsearch = getval("editsearchresults","") != "";
+if ($collection != 0 || $editsearch) 
     {
     # If editing multiple items, use the first resource as the template
-     $multiple=true;
+    $multiple=true;
     $edit_autosave=false; # Do not allow auto saving for batch editing.
-    $items=get_collection_resources($collection);
-    $last_resource_edit = get_last_resource_edit($collection);
-	if (count($items)==0) {
-       $error=$lang['error-cannoteditemptycollection'];
-       error_alert($error);
-       exit();
-    }
-    
-    # check editability
-    if (!allow_multi_edit($collection)){
-       $error=$lang['error-permissiondenied'];
-       error_alert($error);
-       exit();
-    }
-    $ref=$items[0];
+    if ($collection != 0)
+        {
+        $items=get_collection_resources($collection);  
+        if (count($items)==0) 
+            {
+           $error=$lang['error-cannoteditemptycollection'];
+           error_alert($error);
+           exit();
+            }
+        
+        // Check all resources are editable
+        if (!allow_multi_edit($collection))
+            {
+            $error=$lang['error-permissiondenied'];
+            error_alert($error);
+            exit();
+            }
+            
+        $last_resource_edit = get_last_resource_edit($collection); 
+        }
+    else
+        {
+        // Check all resources are editable
+        $searchitems    = do_search($search,$restypes,'resourceid',$archive,-1,$sort,false,0,false,false,'',false,false, true, false);
+        $edititems      = do_search($search,$restypes,'resourceid',$archive,-1,$sort,false,0,false,false,'',false,false, true, true);
+        $items          = array_column($edititems,"ref");
+        if (count($searchitems) != count($edititems))
+            {
+            $error=$lang['error-permissiondenied'];
+            error_alert($error);
+            exit();
+            }
+        $last_resource_edit = get_last_resource_edit_array($items);  
+        }
+        
+    $ref = $items[0];
     }
 else
     {
@@ -346,7 +368,8 @@ $urlparams= array(
     'sort'				=> $sort,
     'uploader'          => $uploader,
     'single'            => ($single ? "true" : ""),
-    'collection'        => $collection
+    'collection'        => $collection,
+    'editsearchresults' => ($editsearch ? "true" : "")
 );
 
 hook("editbeforeheader");
@@ -601,7 +624,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 		// Save multiple resources
         // Check if any of the resources have been edited since between the form being loaded and submitted				
         $form_lastedit = getval("last_resource_edit",date("Y-m-d H:i:s"));
-        if(!$last_resource_edit || ($form_lastedit < $last_resource_edit["time"] && getval("ignoreconflict","") == ""))
+        if($last_resource_edit !== false && ($form_lastedit < $last_resource_edit["time"] && getval("ignoreconflict","") == ""))
             {
             $cfmsg = htmlspecialchars(str_replace("%%USERNAME%%", $last_resource_edit["user"] , $lang["save-conflict-multiple"]));
             $cfmsg .= "<br /><br /><a href='" .$baseurl_short . "?r=" . $last_resource_edit["ref"] . "' target='_blank' onClick='return ModalLoad(this);'>" . htmlspecialchars($lang["action-view"]) . "</a>";
@@ -634,11 +657,27 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             {
             enforcePostRequest($ajax);
 
-            $save_errors=save_resource_data_multi($collection);
-            if(!is_array($save_errors) && !hook("redirectaftermultisave"))
+            if($editsearch)
                 {
-                redirect(generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));
-                }  
+                $editsearch = array();
+                $editsearch["search"]   = $search;
+                $editsearch["restypes"] = $restypes;
+                $editsearch["archive"]  = $archive;
+                $save_errors=save_resource_data_multi(0,$editsearch);
+                if(!is_array($save_errors) && !hook("redirectaftermultisave"))
+                    {
+                    redirect(generateURL($baseurl_short . "pages/search.php",$urlparams));
+                    }
+                }
+            else
+                {
+                $save_errors=save_resource_data_multi($collection);
+                if(!is_array($save_errors) && !hook("redirectaftermultisave"))
+                    {
+                    redirect(generateURL($baseurl_short . "pages/search.php",$urlparams,array("refreshcollectionframe"=>"true","search"=>"!collection" . $collection)));
+                    }
+                }
+                
             }
 		$show_error=true;
 		}

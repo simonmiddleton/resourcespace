@@ -2705,13 +2705,13 @@ function get_last_resource_edit($collection)
         }
     $plugin_last_resource_edit=hook('override_last_resource_edit');
     if($plugin_last_resource_edit===true){
-    	return true;
+    	return false;
     }
     $lastmodified  = sql_query("SELECT r.ref, r.modified FROM collection_resource cr LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection='" . $collection . "' ORDER BY r.modified DESC");
     $lastuserdetails = sql_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource ='" . $lastmodified[0]["ref"] . "' AND rl.type='e'");
     if(count($lastuserdetails) == 0)
         {
-        return true;
+        return false;
         }
         
     $timestamp = max($lastuserdetails[0]["date"],$lastmodified[0]["modified"]);

@@ -523,32 +523,34 @@ function compile_search_actions($top_actions)
 
     global $baseurl,$baseurl_short, $lang, $k, $search, $restypes, $order_by, $archive, $sort, $daylimit, $home_dash, $url,
            $allow_smart_collections, $resources_count, $show_searchitemsdiskusage, $offset, $allow_save_search,
-           $collection, $usercollection, $internal_share_access;
+           $collection, $usercollection, $internal_share_access, $show_edit_all_link;
 
     if(!isset($internal_share_access)){$internal_share_access=false;}
     
 
     // globals that could also be passed as a reference
     global $starsearch;
-
+    $urlparams = array(
+        "search"        =>  $search,
+        "collection"    =>  $collection,
+        "restypes"      =>  $restypes,
+        "starsearch"    =>  $starsearch,
+        "order_by"      =>  $order_by,
+        "archive"       =>  $archive,
+        "sort"          =>  $sort,
+        "daylimit"      =>  $daylimit,
+        "offset"        =>  $offset,
+        "k"             =>  $k
+        );
+                   
     if(!checkperm('b') && ($k == '' || $internal_share_access)) 
         {
         if($top_actions && $allow_save_search && $usercollection != $collection)
             {
-            $extra_tag_attributes = sprintf('
-                    data-url="%spages/collections.php?addsearch=%s&restypes=%s&archive=%s&daylimit=%s"
-                ',
-                $baseurl_short,
-                urlencode($search),
-                urlencode($restypes),
-                urlencode($archive),
-                urlencode($daylimit)
-            );
-
             $options[$o]['value']='save_search_to_collection';
             $options[$o]['label']=$lang['savethissearchtocollection'];
-            $options[$o]['data_attr']=array();
-            $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/collections.php", $urlparams, array("addsearch" => $search));
+            $options[$o]['data_attr']=$data_attribute;
             $o++;
             }
 
@@ -556,29 +558,31 @@ function compile_search_actions($top_actions)
         if($top_actions && $home_dash && checkPermission_dashcreate())
             {
             $option_name = 'save_search_to_dash';
+            $extraparams = array();
+            $extraparams["create"] = "true";
+            $extraparams["tltype"] = "srch";
+            $extraparams["freetext"] = "true";
+            
             $data_attribute = array(
-                'url'  => $baseurl_short . 'pages/dash_tile.php?create=true&tltype=srch&freetext=true',
+                'url'  => generateURL($baseurl_short . "pages/dash_tile.php", $urlparams, $extraparams),
                 'link' => str_replace($baseurl,'',$url)
             );
 
             if(substr($search, 0, 11) == '!collection')
                 {
                 $option_name = 'save_collection_to_dash';
-                $data_attribute['url'] = sprintf('
-                    %spages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=!collection%s&order_by=%s&sort=%s
-                    ',
-                    $baseurl_short,
-                    urlencode($collection),
-                    urlencode($order_by),
-                    urlencode($sort)
-                );
+                $extraparams["promoted_resource"] = "true";
+                $extraparams["all_users"] = "1";
+                $extraparams["link"] = $baseurl_short . "pages/search.php?search=!collection" . $collection;
+                $data_attribute['url'] = generateURL($baseurl_short . "pages/dash_tile.php", $urlparams, $extraparams);
                 }
 
-            $options[$o]['value']=$option_name;
-            $options[$o]['label']=$lang['savethissearchtodash'];
-            $options[$o]['data_attr']=$data_attribute;
+            $options[$o]['value'] = $option_name;
+            $options[$o]['label'] = $lang['savethissearchtodash'];
+            $options[$o]['data_attr'] = $data_attribute;
             $o++;
             }
+            
         // Save search as Smart Collections
         if($top_actions && $allow_smart_collections && substr($search, 0, 11) != '!collection')
             {
@@ -671,6 +675,22 @@ function compile_search_actions($top_actions)
             }
         }
 
+    // Edit all
+    # If this collection is (fully) editable, then display an edit all link
+    if($top_actions && $show_edit_all_link)
+        {
+        $editable_resources = do_search($search,$restypes,'resourceid',$archive,-1,'',false,0,false,false,$daylimit,false,false, true, true);
+        
+        if (is_array($editable_resources) && $resources_count == count($editable_resources))
+            {
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
+            $options[$o]['value']='editsearchresults';
+            $options[$o]['label']=$lang['edit_all_resources'];
+            $options[$o]['data_attr']=$data_attribute;
+            $o++;
+            }
+        }
+        
     if($top_actions && ($k == '' || $internal_share_access))
         {
         $options[$o]['value']            = 'csv_export_results_metadata';

@@ -771,14 +771,24 @@ function set_resource_defaults($ref, array $specific_fields = array())
 
 
 if (!function_exists("save_resource_data_multi")){
-function save_resource_data_multi($collection)
+function save_resource_data_multi($collection,$editsearch = array())
     {
     global $auto_order_checkbox,$auto_order_checkbox_case_insensitive,  $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,
     $range_separator, $edit_contributed_by, $TEXT_FIELD_TYPES;
 
-    # Save all submitted data for collection $collection, this is for the 'edit multiple resources' feature
-    # Loop through the field data and save (if necessary)
-    $list   = get_collection_resources($collection);
+    # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
+    if($collection == 0 && isset($editsearch["search"]))
+        {
+        // Editing a result set, not a collection
+        $edititems  = do_search($editsearch["search"],$editsearch["restypes"],'resourceid',$editsearch["archive"],-1,'ASC',false,0,false,false,'',false,false, true, true);
+        $list       = array_column($edititems,"ref");
+        }
+    else
+        {
+        # Save all submitted data for collection $collection, 
+        $list   = get_collection_resources($collection);
+        }
+
     $errors = array();
     $tmp    = hook("altercollist", "", array("save_resource_data_multi", $list));
     if(is_array($tmp))
@@ -5318,4 +5328,39 @@ function get_extension(array $resource, $size)
         }
 
     return $pextension;
+    }
+
+
+   
+/**
+* Obtain details of the last resource edited in the given array of resource ids
+*
+* @param array $resources   Array of resource IDs
+*
+* @return array | false     Array containing details of last edit (resource ID, timestamp and username of user who performed edit)
+*/    
+function get_last_resource_edit_array($resources = array())
+    {
+    if(count($resources) == 0)
+        {
+        return false;
+        }
+
+    $plugin_last_resource_edit = hook('override_last_resource_edit_array');
+    if($plugin_last_resource_edit === true)
+        {
+    	return false;
+        }
+        
+    $lastmodified  = sql_query("SELECT r.ref, r.modified FROM resource r WHERE r.ref IN ('" . implode("','",$resources). "') ORDER BY r.modified DESC");
+    $lastuserdetails = sql_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource ='" . $lastmodified[0]["ref"] . "' AND rl.type='e'");
+    if(count($lastuserdetails) == 0)
+        {
+        return false;
+        }
+        
+    $timestamp = max($lastuserdetails[0]["date"],$lastmodified[0]["modified"]);
+        
+    $lastusername = (trim($lastuserdetails[0]["fullname"]) != "") ? $lastuserdetails[0]["fullname"] : $lastuserdetails[0]["username"];
+    return array("ref" => $lastmodified[0]["ref"],"time" => $timestamp, "user" => $lastusername);
     }
