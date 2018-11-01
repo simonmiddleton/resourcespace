@@ -1405,7 +1405,8 @@ function do_search(
 
     $results_sql = resource_table_joins_sql(
         ($return_refs_only === false ? get_resource_table_joins() : array()),
-        $results_sql);
+        str_replace("ORDER BY {$order_by}", '', $results_sql),
+        str_replace('r.', 'ss.', $order_by));
 
     # Debug
     debug('$results_sql=' . $results_sql);
