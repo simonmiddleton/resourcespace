@@ -53,7 +53,7 @@ function get_resource_path(
         {
         $extension = 'jpg';
         }
-    if($extension=='xml' || $extension=='icc')
+    if($extension=='icc')
         {
         # use the preview path
         $size='pre';
@@ -260,11 +260,7 @@ function get_resource_path(
         
         $folder=$surl . $path_suffix . $folder;
         }
-    if ($extension=='xml')
-        {
-        $file=$folder . 'metadump.xml';
-        }
-    elseif ($scramble && isset($skey))
+    if ($scramble && isset($skey))
         {
         $file_old=$filefolder . $ref . $size . $p . $a . "." . $extension;
         $file_new=$filefolder . $ref . $size . $p . $a . "_" . substr(md5($ref . $size . $p . $a . $skey),0,15) . "." . $extension;

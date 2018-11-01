@@ -2354,19 +2354,7 @@ $use_phpmailer=false;
 #  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
 $enable_thumbnail_creation_on_upload = true;
 
-# Create XML metadata dump files in the resource folder?
-# This ensures that your metadata is kept in a readable format next to each resource file and may help
-# to avoid data obsolescence / future migration. Also, potentially a useful additional backup.
-$xml_metadump=true;
 
-# Configures mapping between metadata and Dublin Core fields, which are used in the XML metadata dump instead if a match is found.
-$xml_metadump_dc_map=array
-	(
-	"title" => "title",
-	"caption" => "description",
-	"date" => "date"
-	);
-	
 # Use Plugins Manager
 $use_plugins_manager = true;
 

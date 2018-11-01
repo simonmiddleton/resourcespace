@@ -1028,8 +1028,6 @@ function extract_exif_comment($ref,$extension="")
     // Extract FITS metadata and overwrite any existing metadata (e.g from Exiftool, IPTC etc.)
     extractFitsMetadata($image, $ref);
 
-    # Update the XML metadata dump file.
-    update_xml_metadump($ref);
 
     // Autocomplete any blank fields without overwriting any existing metadata
     autocomplete_blank_fields($ref, true);
@@ -2503,7 +2501,6 @@ function upload_preview($ref)
 * @uses run_command()
 * @uses hook()
 * @uses update_field()
-* @uses update_xml_metadump()
 * 
 * @param integer $ref        Resource ref
 * @param string  $extension  File extension
@@ -2630,9 +2627,6 @@ function extract_text($ref,$extension,$path="")
         
         # Save text
         update_field($ref,$extracted_text_field,$text);
-        
-        # Update XML metadata dump file.
-        update_xml_metadump($ref);
         }
     
     }
