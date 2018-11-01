@@ -1,14 +1,10 @@
 <?php
-#
-# tms_link setup page
-#
-
 include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include_once '../../../include/general.php';
 
 
-$tms_link_field_mappings=unserialize(base64_decode($tms_link_field_mappings_saved));
+$tms_link_field_mappings = unserialize(base64_decode($tms_link_field_mappings_saved));
 
 // Save column/field mappings here as we can't do it using standard plugin functions
 if (getval("submit","")!="" || getval("save","")!="")
@@ -158,15 +154,84 @@ $tmsmaphtml.="</select>
 $page_def[] = config_add_html($tmsmaphtml);
 
 $page_def[] = config_add_section_header($lang['tms_link_column_type_required']);
-
 $page_def[] = config_add_text_list_input('tms_link_text_columns', $lang["tms_link_text_columns"]);
 $page_def[] = config_add_text_list_input('tms_link_numeric_columns', $lang["tms_link_numeric_columns"]);
 
-$page_def[] =config_add_hidden("tms_link_field_mappings_saved");
+$page_def[] = config_add_hidden("tms_link_field_mappings_saved");
 		
 
 // End of mappings section
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+$page_def[] = config_add_section_header($lang['tms_link_modules_mappings']);
+
+// TODO: we might have a default one so we don't need this bit of code
+// $tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_mappings));
+// if(empty($tms_link_modules_mappings))
+//     {
+//     $tms_modules_mappings_html = "No entries!";
+//     }
+
+
+$tms_modules_mappings_html = "
+    <div class=\"Question\">
+        <table id=\"tmsModulesMappingTable\">
+            <tr>
+                <th><strong>{$lang['tms_link_module']}</strong></th>
+                <th><strong>{$lang['tms_link_tms_uid_field']}</strong></th>
+                <th><strong>{$lang['tms_link_rs_uid_field']}</strong></th>
+                <th><strong>{$lang['tms_link_applicable_rt']}</strong></th>
+                <th><strong>{$lang['tms_link_modules_mappings_tools']}</strong></th>
+            </tr>";
+// TODO: once array is built, replace hardcoded entry
+$tms_modules_mappings_html .= "
+            <tr>
+                <td>
+                    <input type=\"text\" class=\"medwidth\" value=\"TMS.exhibition_data\" disabled>
+                </td>
+                <td>
+                    <input type=\"text\" class=\"medwidth\" value=\"ExhibitionID\" disabled>
+                </td>
+                <td>
+                    <input type=\"text\" class=\"medwidth\" value=\"RS ExhibitionID\" disabled>
+                </td>
+                <td>
+                    <input type=\"text\" class=\"medwidth\" value=\"Gallery Shots\" disabled>
+                </td>
+                <td>
+                    <button type=\"button\" id=\"edit_tms_module_1\" onclick=\"edit_tms_module_mapping(1);\">{$lang['action-edit']}</button>
+                    <button type=\"button\" id=\"delete_tms_module_1\" onclick=\"delete_tms_module_mapping(1);\">{$lang['action-delete']}</button>
+                </td>
+            </tr>";
+$tms_modules_mappings_html .= "
+        </table>
+        <script>
+        function edit_tms_module_mapping(id)
+            {
+            // TODO: implement POST request to page (once it is created)
+            }
+
+        function delete_tms_module_mapping(id)
+            {
+            // TODO: implement POST request to page (once it is created)
+            }
+        </script>
+        <a href=\"{$baseurl}/plugins/tms_link/pages/tms_module_config.php\" onclick=\"return CentralSpaceLoad(this, true);\">{$lang['tms_link_add_new_tms_module']}</a>
+    </div>";
+$page_def[] = config_add_html($tms_modules_mappings_html);
+
+
+
+
+
+
+
 
 // Do the page generation ritual -- don't change this section.
 $upload_status = config_gen_setup_post($page_def, $plugin_name);

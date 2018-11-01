@@ -74,3 +74,5 @@ $tms_link_mediatypeid=1;
 $tms_link_formatid=2;
 $tms_link_colordepthid=0;
 $tms_link_media_path="\\\\SERVERNAME\\filestore\\";
+
+$tms_link_modules_saved_mappings = base64_encode(serialize(array()));
