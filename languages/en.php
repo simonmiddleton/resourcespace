@@ -1903,7 +1903,7 @@ $lang["matchingresourceslabel"]="Matching resources";
 # CSV Export of Search results
 $lang['csvExportResultsMetadata'] = 'CSV Export - metadata';
 $lang['csvExportResultsMetadataPersonal'] = 'Only include data from fields expected to contain personal data';
-$lang['csvExportResultsMetadataAll'] = 'Include data from all accessible fields e.g. contain technical metadata and detailed file information';
+$lang['csvExportResultsMetadataAll'] = 'Include data from all accessible fields e.g. technical metadata and detailed file information';
 $lang['csvAddMetadataCSVToArchive'] = 'Include metadata CSV file to the archive?';
 
 $lang["saving"]="Saving...";

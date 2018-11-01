@@ -1543,6 +1543,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         {
         $onchangejs .= "var cf=document.getElementById('copy_from_field_" . $field["ref"] . "');";
         $onchangejs .= "if (this.value=='CF') {cf.style.display='block';q.style.display='none';} else {cf.style.display='none';q.style.display='block';}";
+        $onchangejs .= "if (this.value=='FR') {fr.style.display='block';q.style.display='none';} else {fr.style.display='none';q.style.display='block';}";
         } 
       ?>
       <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
