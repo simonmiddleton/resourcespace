@@ -675,8 +675,7 @@ function compile_search_actions($top_actions)
             }
         }
 
-    // Edit all
-    # If this collection is (fully) editable, then display an edit all link
+    // If all resoruces are editable, display an edit all link
     if($top_actions && $show_edit_all_link)
         {
         $editable_resources = do_search($search,$restypes,'resourceid',$archive,-1,'',false,0,false,false,$daylimit,false,false, true, true);
