@@ -1,13 +1,13 @@
 <?php
 # Search functions
 # Functions to perform searches (read only)
-#  - For resource indexing / keyword creation, see resource_functions.php
+# - For resource indexing / keyword creation, see resource_functions.php
 
 include_once 'node_functions.php';
 
 if (!function_exists("do_search"))
     {
-    include_once 'search_do.php';       // be consistent with filename
+    include_once 'search_do.php'; // be consistent with filename
     }
 
 function resolve_soundex($keyword)
@@ -15,11 +15,11 @@ function resolve_soundex($keyword)
     # returns the most commonly used keyword that sounds like $keyword, or failing a soundex match,
     # the most commonly used keyword that starts with the same few letters.
     global $soundex_suggest_limit;
-    $soundex=sql_value("select keyword value from keyword where soundex='".soundex($keyword)."' and keyword not like '% %' and hit_count>'" . $soundex_suggest_limit . "' order by hit_count desc limit 1",false);
+    $soundex=sql_value("SELECT keyword value FROM keyword WHERE soundex='".soundex($keyword)."' AND keyword NOT LIKE '% %' AND hit_count>'" . $soundex_suggest_limit . "' ORDER BY hit_count DESC LIMIT 1",false);
     if (($soundex===false) && (strlen($keyword)>=4))
         {
         # No soundex match, suggest words that start with the same first few letters.
-        return sql_value("select keyword value from keyword where keyword like '" . substr($keyword,0,4) . "%' and keyword not like '% %' order by hit_count desc limit 1",false);
+        return sql_value("SELECT keyword value FROM keyword WHERE keyword LIKE '" . substr($keyword,0,4) . "%' AND keyword NOT LIKE '% %' ORDER BY hit_count DESC LIMIT 1",false);
         }
     return $soundex;
     }
@@ -32,7 +32,7 @@ function suggest_refinement($refs,$search)
     $in=join(",",$refs);
     $suggest=array();
     # find common keywords
-    $refine=sql_query("select k.keyword,count(*) c from resource_keyword r join keyword k on r.keyword=k.ref and r.resource in ($in) and length(k.keyword)>=3 and length(k.keyword)<=15 and k.keyword not like '%0%' and k.keyword not like '%1%' and k.keyword not like '%2%' and k.keyword not like '%3%' and k.keyword not like '%4%' and k.keyword not like '%5%' and k.keyword not like '%6%' and k.keyword not like '%7%' and k.keyword not like '%8%' and k.keyword not like '%9%' group by k.keyword order by c desc limit 5");
+    $refine=sql_query("SELECT k.keyword,count(*) c FROM resource_keyword r join keyword k on r.keyword=k.ref AND r.resource IN ($in) AND length(k.keyword)>=3 AND length(k.keyword)<=15 AND k.keyword NOT LIKE '%0%' AND k.keyword NOT LIKE '%1%' AND k.keyword NOT LIKE '%2%' AND k.keyword NOT LIKE '%3%' AND k.keyword NOT LIKE '%4%' AND k.keyword NOT LIKE '%5%' AND k.keyword NOT LIKE '%6%' AND k.keyword NOT LIKE '%7%' AND k.keyword NOT LIKE '%8%' AND k.keyword NOT LIKE '%9%' GROUP BY k.keyword ORDER BY c DESC LIMIT 5");
     for ($n=0;$n<count($refine);$n++)
         {
         if (strpos($search,$refine[$n]["keyword"])===false)
@@ -52,7 +52,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields=sql_query("select *, ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint from resource_type_field where advanced_search=1 and ((keywords_index=1 and length(name)>0) or type in (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " order by resource_type,order_by");
+    $fields=sql_query("SELECT *, ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint FROM resource_type_field WHERE advanced_search=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by");
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {
@@ -68,7 +68,7 @@ function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
     {
     # Returns a list of fields suitable for advanced searching. 
     $return=array();
-   
+
     $hiddenfields=explode(",",$hiddenfields);
 
     $fields[]=Array ("ref" => "collection_title", "name" => "collectiontitle", "display_condition" => "", "tooltip_text" => "", "title"=>"Title", "type" => 0);
@@ -77,11 +77,11 @@ function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {
-    
+
         if (!in_array($fields[$n]["ref"], $hiddenfields))
         {$return[]=$fields[$n];}
         }
-    
+
     return $return;
     }
 
@@ -98,7 +98,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     if (getval("basicyear","")!="")
         {
         if ($search!="") {$search.=", ";}
-        $search.="basicyear:" . getval("basicyear","");   
+        $search.="basicyear:" . getval("basicyear",""); 
         }
     if (getval("basicmonth","")!="")
         {
@@ -113,7 +113,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     if (getval("startdate","")!="")
         {
         if ($search!="") {$search.=", ";}
-        $search.="startdate:" . getval("startdate","");         
+        $search.="startdate:" . getval("startdate","");
         }
     if (getval("enddate","")!="")
         {
@@ -221,7 +221,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 {
                 # Process checkbox list
                 //$options=trim_array(explode(",",$fields[$n]["options"]));
-                $options=array();                
+                $options=array();
                 node_field_options_override($options,$fields[$n]['ref']);
                 $p="";
                 $c=0;
@@ -236,7 +236,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                         $p.=mb_strtolower(i18n_get_translated($options[$m]), 'UTF-8');
                         }
                     }
-                
+
                 if (($c==count($options) && !$checkbox_and) && (count($options)>1))
                     {
                     # all options ticked - omit from the search (unless using AND matching, or there is only one option intended as a boolean selection)
@@ -247,7 +247,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     if ($search!="") {$search.=", ";}
                     if($checkbox_and)
                         {
-                        $p=str_replace(";",", {$fields[$n]["name"]}:",$p);  // this will force each and condition into a separate union in do_search (which will AND)
+                        $p=str_replace(";",", {$fields[$n]["name"]}:",$p); // this will force each and condition into a separate union in do_search (which will AND)
                         if ($search!="") {$search.=", ";}
                         }
                     $search.=$fields[$n]["name"] . ":" . $p;
@@ -284,7 +284,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     $search.=$fields[$n]["name"] . ":" . $value;
                     }
                 }
-                
+
             if(($date_edtf=getvalescaped("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
                 {
                 // We have been passed the range in EDTF format, check it is in the correct format
@@ -295,14 +295,14 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     continue;
                     }
                 $rangedates = explode("/",$date_edtf);
-                $rangestart=str_pad($rangedates[0],  10, "-00");
+                $rangestart=str_pad($rangedates[0], 10, "-00");
                 $rangeendparts=explode("-",$rangedates[1]);
                 $rangeend=$rangeendparts[0] . "-" . (isset($rangeendparts[1])?$rangeendparts[1]:"12") . "-" . (isset($rangeendparts[2])?$rangeendparts[2]:"99");
                 $datepart = "start" . $rangestart . "end" . $rangeend;
                 }
             else
                 {
-                #Date range search -  start date
+                #Date range search - start date
                 if (getval($name . "_start_year","")!="")
                     {
                     $datepart.= "start" . getval($name . "_start_year","");
@@ -322,9 +322,9 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                         {
                         $datepart.="";
                         }
-                    }           
+                    }
                     
-                #Date range search -  end date  
+                #Date range search - end date
                 if (getval($name . "_end_year","")!="")
                     {
                     $datepart.= "end" . getval($name . "_end_year","");
@@ -347,14 +347,14 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                     }   
                 }
             if ($datepart!="")
-                {               
+                {
                 if ($search!="") {$search.=", ";}
                 $search.=$fields[$n]["name"] . ":range" . $datepart;
                 }
 
             break;
    
-            case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes  
+            case FIELD_TYPE_TEXT_BOX_SINGLE_LINE: # -------- Text boxes 
             default: 
                 $value=getvalescaped('field_'.$fields[$n]["ref"],'');
                 if ($value!="")
@@ -423,7 +423,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             }
         else
             {
-            // Allow a single special search to be prepended to the search string.  For example, !contributions<user id>
+            // Allow a single special search to be prepended to the search string. For example, !contributions<user id>
             foreach ($_POST as $key=>$value)
                 {
                 if ($key[0]=='!' && strlen($value) > 0)
@@ -455,7 +455,7 @@ function refine_searchstring($search)
     $keywords=split_keywords($search, false, false, false, false, true);
 
     $orfields=get_OR_fields(); // leave checkbox type fields alone
-    $dynamic_keyword_fields=sql_array("select name value from resource_type_field where type=9");
+    $dynamic_keyword_fields=sql_array("SELECT name value FROM resource_type_field where type=9");
     
     $fixedkeywords=array();
     foreach ($keywords as $keyword)
@@ -671,11 +671,11 @@ function compile_search_actions($top_actions)
                 $options[$o]['data_attr']=array();
                 $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
                 $o++;
-                }                
+                }
             }
         }
 
-    // If all resoruces are editable, display an edit all link
+    // If all resources are editable, display an edit all link
     if($top_actions && $show_edit_all_link)
         {
         $editable_resources = do_search($search,$restypes,'resourceid',$archive,-1,'',false,0,false,false,$daylimit,false,false, true, true);
@@ -721,44 +721,45 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     {
     global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
     $heightmax,$widthmin,$widthmax,$filesizemin,$filesizemax,$fileextension,$haspreviewimage,$geo_search_restrict,$pending_review_visible_to_all,
-    $search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
-    
+    $search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard,
+    $open_access_for_contributor;
+
     # Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
     if(!is_array($archive)){$archive=explode(",",$archive);}
     # Start with an empty string = an open query.
     $sql_filter="";
-        
+
     # Apply resource types
     if (($restypes!="")&&(substr($restypes,0,6)!="Global") && substr($search, 0, 11) != '!collection')
         {
-        if ($sql_filter!="") {$sql_filter.=" and ";}
+        if ($sql_filter!="") {$sql_filter.=" AND ";}
         $restypes_x=explode(",",$restypes);
-        $sql_filter.="resource_type in ('" . join("','",$restypes_x) . "')";
+        $sql_filter.="resource_type IN ('" . join("','",$restypes_x) . "')";
         }
-    
+
     # Apply star search
     if ($starsearch!="" && $starsearch!=0 && $starsearch!=-1)
         {
-        if ($sql_filter!="") {$sql_filter.=" and ";}
+        if ($sql_filter!="") {$sql_filter.=" AND ";}
         $sql_filter.="user_rating >= '$starsearch'";
         }   
     if ($starsearch==-1)
         {
-        if ($sql_filter!="") {$sql_filter.=" and ";}
+        if ($sql_filter!="") {$sql_filter.=" AND ";}
         $sql_filter.="user_rating = '-1'";
         }
-    
+
     # Apply day limit
     if('' != $recent_search_daylimit && is_numeric($recent_search_daylimit))
         {
         if('' != $sql_filter)
             {
-            $sql_filter .= ' and ';
+            $sql_filter .= ' AND ';
             }
 
         $sql_filter.= "creation_date > (curdate() - interval '" . escape_check($recent_search_daylimit) . "' DAY)";
         }
-    
+
     # The ability to restrict access by the user that created the resource.
     if (isset($resource_created_by_filter) && count($resource_created_by_filter)>0)
         {
@@ -766,30 +767,30 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         foreach ($resource_created_by_filter as $filter_user)
         {
         if ($filter_user==-1) {$filter_user=$userref;} # '-1' can be used as an alias to the current user. I.e. they can only see their own resources in search results.
-        if ($created_filter!="") {$created_filter.=" or ";} 
+        if ($created_filter!="") {$created_filter.=" OR ";} 
         $created_filter.= "created_by = '" . $filter_user . "'";
-        }    
+        }
         if ($created_filter!="")
         {
-        if ($sql_filter!="") {$sql_filter.=" and ";}            
+        if ($sql_filter!="") {$sql_filter.=" AND ";}
         $sql_filter.="(" . $created_filter . ")";
         }
         }
-    
-    
+
+
     # Geo zone exclusion
     # A list of upper/lower long/lat bounds, defining areas that will be excluded from geo search results.
     # Areas are defined as southwest lat, southwest long, northeast lat, northeast long
     if (count($geo_search_restrict)>0 && substr($search,0,4)=="!geo")
         {
-        foreach ($geo_search_restrict   as $zone)
+        foreach ($geo_search_restrict as $zone)
         {
-        if ($sql_filter!="") {$sql_filter.=" and ";}
-        $sql_filter.= "(geo_lat is null or geo_long is null or not(geo_lat >= '" . $zone[0] . "' and geo_lat<= '" . $zone[2] . "'";
-        $sql_filter.= "and geo_long >= '" . $zone[1] . "' and geo_long<= '" . $zone[3] . "'))";
+        if ($sql_filter!="") {$sql_filter.=" AND ";}
+        $sql_filter.= "(geo_lat IS null OR geo_long IS null OR not(geo_lat >= '" . $zone[0] . "' AND geo_lat<= '" . $zone[2] . "'";
+        $sql_filter.= " AND geo_long >= '" . $zone[1] . "' AND geo_long<= '" . $zone[3] . "'))";
         }
         }
-    
+
     # append resource type restrictions based on 'T' permission 
     # look for all 'T' permissions and append to the SQL filter.
     $rtfilter=array();
@@ -803,16 +804,16 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         }
     if (count($rtfilter)>0)
         {
-        if ($sql_filter!="") {$sql_filter.=" and ";}
-        $sql_filter.="resource_type not in (" . join(",",$rtfilter) . ")";
+        if ($sql_filter!="") {$sql_filter.=" AND ";}
+        $sql_filter.="resource_type NOT IN (" . join(",",$rtfilter) . ")";
         }
-    
+
     # append "use" access rights, do not show confidential resources unless admin
     if (!checkperm("v")&&!$access_override)
         {
-        if ($sql_filter!="") {$sql_filter.=" and ";}
+        if ($sql_filter!="") {$sql_filter.=" AND ";}
         # Check both the resource access, but if confidential is returned, also look at the joined user-specific or group-specific custom access for rows.
-        $sql_filter.="(r.access<>'2' or (r.access=2 and ((rca.access is not null and rca.access<>2) or (rca2.access is not null and rca2.access<>2))))";
+        $sql_filter.="(r.access<>'2' OR (r.access=2 AND ((rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2))))";
         }
         
     # append archive searching. Updated Jan 2016 to apply to collections as resources in a pending state that are in a shared collection could bypass approval process
@@ -823,7 +824,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             # Resources in a collection or list may be in any archive state
             if(substr($search,0,11)=="!collection" && $collections_omit_archived && !checkperm("e2"))
                 {
-                $sql_filter.= (($sql_filter!="")?" and ":"") . "archive<>2";
+                $sql_filter.= (($sql_filter!="")?" AND ":"") . "archive<>2";
                 }           
             }
         elseif ($search_all_workflow_states || substr($search,0,8)=="!related")
@@ -832,7 +833,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             {
             # If resources pending review are visible to all, when performing a default search with no archive specified 
             # that normally returns only active resources, include pending review (-1) resources too.
-            if ($sql_filter!="") {$sql_filter.=" and ";}
+            if ($sql_filter!="") {$sql_filter.=" AND ";}
             $sql_filter.="archive in('0','-1')";
             } 
         else
@@ -840,7 +841,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             # Append normal filtering - extended as advanced search now allows searching by archive state
             if($sql_filter!="")
                 {
-                $sql_filter.=" and ";
+                $sql_filter.=" AND ";
                 }
 
             if('' == implode(',', $archive))
@@ -848,13 +849,13 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 $archive = array(0);
                 }
 
-            $sql_filter.="archive in (" . implode(",",$archive) . ")";
+            $sql_filter.="archive IN (" . implode(",",$archive) . ")";
             }
         if (!checkperm("v") && !(substr($search,0,11)=="!collection" && $k!='' && $collection_allow_not_approved_share)) 
             {
             # Append standard filtering to hide resources in a pending state, whatever the search
-            if (!$pending_submission_searchable_to_all) {$sql_filter.= (($sql_filter!="")?" and ":"") . "(r.archive<>-2 or r.created_by='" . $userref . "')";}
-            if (!$pending_review_visible_to_all){$sql_filter.=(($sql_filter!="")?" and ":"") . "(r.archive<>-1 or r.created_by='" . $userref . "')";}
+            if (!$pending_submission_searchable_to_all) {$sql_filter.= (($sql_filter!="")?" AND ":"") . "(r.archive<>-2 OR r.created_by='" . $userref . "')";}
+            if (!$pending_review_visible_to_all){$sql_filter.=(($sql_filter!="")?" AND ":"") . "(r.archive<>-1 OR r.created_by='" . $userref . "')";}
             }
         }
         
@@ -863,12 +864,12 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     for ($n=-2;$n<=3;$n++)
         {
         if(checkperm("z" . $n) && !$access_override)
-            {           
+            {
             if ($filterblockstates!="") {$filterblockstates.="','";}
             $filterblockstates .= $n;
             }
         }
-    
+
     foreach ($additional_archive_states as $additional_archive_state)
         {
         if(checkperm("z" . $additional_archive_state))
@@ -881,27 +882,26 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         {
         if ($uploader_view_override)
             {
-            if ($sql_filter!="") {$sql_filter.=" and ";}
-            $sql_filter.="(archive not in ('$filterblockstates') or created_by='" . $userref . "')";
+            if ($sql_filter!="") {$sql_filter.=" AND ";}
+            $sql_filter.="(archive NOT IN ('$filterblockstates') OR created_by='" . $userref . "')";
             }
         else
             {
-            if ($sql_filter!="") {$sql_filter.=" and ";}
-            $sql_filter.="archive not in ('$filterblockstates')";
+            if ($sql_filter!="") {$sql_filter.=" AND ";}
+            $sql_filter.="archive NOT IN ('$filterblockstates')";
             }
         }
     
     # Append media restrictions
     
     if ($heightmin!='')
-        {       
-        if ($sql_filter!="") {$sql_filter.=" and ";}
+        {
+        if ($sql_filter!="") {$sql_filter.=" AND ";}
         $sql_filter.= "dim.height>='$heightmin'";
         }
-        
-        
+
     # append ref filter - never return the batch upload template (negative refs)
-    if ($sql_filter!="") {$sql_filter.=" and ";}
+    if ($sql_filter!="") {$sql_filter.=" AND ";}
     $sql_filter.="r.ref>0";
     
     
@@ -926,7 +926,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         for ($n=-2;$n<=3;$n++)
             {
             if(!checkperm("e" . $n))
-                {           
+                {
                 $blockeditstates[] = $n;
                 }
             }
@@ -942,14 +942,14 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         // Add code to hide resources in archive<0 unless has 't' permission, resource has been contributed by user or has ert permission
         if(!checkperm("t"))
             {
-            $editable_filter.="(archive not in (-2,-1) or (created_by='" . $userref . "' ";
+            $editable_filter.="(archive NOT IN (-2,-1) OR (created_by='" . $userref . "' ";
             if(count($rtexclusions)>0)
                 {
-                $editable_filter .= " or resource_type in (" . implode(",",$rtexclusions) . ")";                
+                $editable_filter .= " OR resource_type IN (" . implode(",",$rtexclusions) . ")";
                 }
             $editable_filter .= "))";
-            }   
-                
+            }
+
         if (count($blockeditstates) > 0)
             {
             $blockeditoverride="";
@@ -960,19 +960,19 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
                 }
             if(count($rtexclusions)>0)
                 {
-                if ($blockeditoverride!="") {$blockeditoverride.=" and ";}
-                $blockeditoverride .= " resource_type in (" . implode(",",$rtexclusions) . ")";             
+                if ($blockeditoverride!="") {$blockeditoverride.=" AND ";}
+                $blockeditoverride .= " resource_type IN (" . implode(",",$rtexclusions) . ")";
                 }
-            if ($editable_filter!="") {$editable_filter.=" and ";}
-            $editable_filter.="(archive not in ('" . implode("','",$blockeditstates) . "')" . (($blockeditoverride!="")?" or " . $blockeditoverride:"") . ")";
+            if ($editable_filter!="") {$editable_filter.=" AND ";}
+            $editable_filter.="(archive NOT IN ('" . implode("','",$blockeditstates) . "')" . (($blockeditoverride!="")?" OR " . $blockeditoverride:"") . ")";
             }
-            
+
         $updated_editable_filter = hook("modifysearcheditable","",array($editable_filter,$userref));
         if($updated_editable_filter !== false)
             {
             $editable_filter = $updated_editable_filter;
-            }       
-        
+            }
+
          if($editable_filter != "")
             {
             if ($sql_filter != "")
@@ -982,6 +982,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             $sql_filter .= $editable_filter;
             }
         }
+
     return $sql_filter;
     }
 
@@ -1010,11 +1011,10 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         if (!is_numeric($last)) {$last=1000;$search="!last1000";} # 'Last' must be a number. SQL injection filter.
         
-        # Fix the order by for this query (special case due to inner query)
+        # Fix the ORDER BY for this query (special case due to inner query)
         $order_by=str_replace("r.rating","rating",$order_by);
-        
-        $sql=$sql_prefix . "select distinct *,r2.total_hit_count score from (select $select from resource r $sql_join where $sql_filter order by ref desc limit $last ) r2 order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        $sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
+        return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }
     
      # Collections containing resources
@@ -1030,34 +1030,34 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection_filter="(";
         if (strpos($flags,"T")!==false) # Include themes
             {
-            if ($collection_filter!="(") {$collection_filter.=" or ";}
-            $collection_filter.=" (c.public=1 and (length(c.theme)>0))";
+            if ($collection_filter!="(") {$collection_filter.=" OR ";}
+            $collection_filter.=" (c.public=1 AND (length(c.theme)>0))";
             }
     
      if (strpos($flags,"P")!==false) # Include public collections
             {
-            if ($collection_filter!="(") {$collection_filter.=" or ";}
-            $collection_filter.=" (c.public=1 and (length(c.theme)=0 or c.theme is null))";
+            if ($collection_filter!="(") {$collection_filter.=" OR ";}
+            $collection_filter.=" (c.public=1 AND (length(c.theme)=0 OR c.theme IS null))";
             }
         
         if (strpos($flags,"U")!==false) # Include the user's own collections
             {
-            if ($collection_filter!="(") {$collection_filter.=" or ";}
+            if ($collection_filter!="(") {$collection_filter.=" OR ";}
             global $userref;
-            $collection_filter.=" (c.public=0 and c.user='$userref')";
+            $collection_filter.=" (c.public=0 AND c.user='$userref')";
             }
         $collection_filter.=")";
         
         # Formulate SQL
-        $sql="select distinct c.*, sum(r.hit_count) score, sum(r.hit_count) total_hit_count from collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref and cr.collection=c.ref where $sql_filter and $collection_filter group by c.ref order by $order_by ";#echo $search . " " . $sql;
-        return $returnsql?$sql:sql_query($sql);
+        $sql="SELECT DISTINCT c.*, sum(r.hit_count) score, sum(r.hit_count) total_hit_count FROM collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref AND cr.collection=c.ref WHERE $sql_filter AND $collection_filter GROUP BY c.ref ORDER BY $order_by ";
+        return $returnsql ? $sql : sql_query($sql);
         }
     
     # View Resources With No Downloads
     if (substr($search,0,12)=="!nodownloads") 
         {
-        if ($orig_order=="relevance") {$order_by="ref desc";}
-        $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where $sql_filter and ref not in (select distinct object_ref from daily_stat where activity_type='Resource download') order by $order_by" . $sql_suffix;
+        if ($orig_order=="relevance") {$order_by="ref DESC";}
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') ORDER BY $order_by" . $sql_suffix;
         return $returnsql?$sql:sql_query($sql,false,$fetchrows);
         }
     
@@ -1074,7 +1074,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         if ($ref!="") 
             {
-            $sql="select distinct r.hit_count score, $select from resource r $sql_join  where $sql_filter and file_checksum= (select file_checksum from (select file_checksum from resource where archive = 0 and ref=$ref and file_checksum is not null)r2) order by file_checksum, ref";    
+            $sql="SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum= (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE archive = 0 AND ref=$ref AND file_checksum IS NOT null)r2) ORDER BY file_checksum, ref";    
             if($returnsql) {return $sql;}
             $results=sql_query($sql,false,$fetchrows);
             $count=count($results);
@@ -1089,7 +1089,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         else
             {
-            $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where $sql_filter and file_checksum in (select file_checksum from (select file_checksum from resource where archive = 0 and file_checksum <> '' and file_checksum is not null group by file_checksum having count(file_checksum)>1)r2) order by file_checksum, ref" . $sql_suffix;
+            $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum IN (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE archive = 0 AND file_checksum <> '' AND file_checksum IS NOT null GROUP BY file_checksum having count(file_checksum)>1)r2) ORDER BY file_checksum, ref" . $sql_suffix;
             return $returnsql?$sql:sql_query($sql,false,$fetchrows);
             }
         }
@@ -1098,7 +1098,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search, 0, 11) == '!collection')
         {
 
-        $colcustperm   = $sql_join;
+        $colcustperm = $sql_join;
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
         
               
@@ -1148,7 +1148,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     }
                 }   
             }   
-        $searchsql = $sql_prefix . "select distinct c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select from resource r  join collection_resource c on r.ref=c.resource $colcustperm  where c.collection='" . $collection . "' and $colcustfilter group by r.ref order by $order_by" . $sql_suffix;
+        $searchsql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource $colcustperm  WHERE c.collection='" . $collection . "' AND $colcustfilter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $collectionsearchsql=hook('modifycollectionsearchsql','',array($searchsql));
 
         if($collectionsearchsql)
@@ -1178,12 +1178,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         # Extract the resource number
         $resource=explode(" ",$search);$resource=str_replace("!relatedpushed","",$resource[0]);
-        $order_by=str_replace("r.","",$order_by); # UNION below doesn't like table aliases in the order by.
+        $order_by=str_replace("r.","",$order_by); # UNION below doesn't like table aliases in the ORDER BY.
         
-        $sql=$sql_prefix . "select distinct r.hit_count score,rt.name resource_type_name, $select from resource r join resource_type rt on r.resource_type=rt.ref and rt.push_metadata=1 join resource_related t on (t.related=r.ref and t.resource='" . $resource . "') $sql_join  where 1=1 and $sql_filter group by r.ref 
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score,rt.name resource_type_name, $select FROM resource r join resource_type rt on r.resource_type=rt.ref AND rt.push_metadata=1 join resource_related t on (t.related=r.ref AND t.resource='" . $resource . "') $sql_join  WHERE 1=1 AND $sql_filter GROUP BY r.ref 
         UNION
-        select distinct r.hit_count score, rt.name resource_type_name, $select from resource r join resource_type rt on r.resource_type=rt.ref and rt.push_metadata=1 join resource_related t on (t.resource=r.ref and t.related='" . $resource . "') $sql_join  where 1=1 and $sql_filter group by r.ref 
-        order by $order_by" . $sql_suffix;
+        SELECT DISTINCT r.hit_count score, rt.name resource_type_name, $select FROM resource r join resource_type rt on r.resource_type=rt.ref AND rt.push_metadata=1 join resource_related t on (t.resource=r.ref AND t.related='" . $resource . "') $sql_join  WHERE 1=1 AND $sql_filter GROUP BY r.ref 
+        ORDER BY $order_by" . $sql_suffix;
         
         return $returnsql?$sql:sql_query($sql,false,$fetchrows);
         }
@@ -1193,39 +1193,39 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         # Extract the resource number
         $resource=explode(" ",$search);$resource=str_replace("!related","",$resource[0]);
-        $order_by=str_replace("r.","",$order_by); # UNION below doesn't like table aliases in the order by.
+        $order_by=str_replace("r.","",$order_by); # UNION below doesn't like table aliases in the ORDER BY.
         
         global $pagename, $related_search_show_self;
         $sql_self = '';
         if ($related_search_show_self && $pagename == 'search') 
             {
-            $sql_self = " select distinct r.hit_count score, $select from resource r $sql_join where r.ref=$resource and $sql_filter group by r.ref UNION ";
+            $sql_self = " SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE r.ref=$resource AND $sql_filter GROUP BY r.ref UNION ";
             }
-        $sql=$sql_prefix . $sql_self . "select distinct r.hit_count score, $select from resource r join resource_related t on (t.related=r.ref and t.resource='" . $resource . "') $sql_join  where 1=1 and $sql_filter group by r.ref 
+        $sql=$sql_prefix . $sql_self . "SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.related=r.ref AND t.resource='" . $resource . "') $sql_join  WHERE $sql_filter GROUP BY r.ref 
         UNION
-        select distinct r.hit_count score, $select from resource r join resource_related t on (t.resource=r.ref and t.related='" . $resource . "') $sql_join  where 1=1 and $sql_filter group by r.ref 
-        order by $order_by" . $sql_suffix;
+        SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.resource=r.ref AND t.related='" . $resource . "') $sql_join WHERE $sql_filter GROUP BY r.ref 
+        ORDER BY $order_by" . $sql_suffix;
         return $returnsql?$sql:sql_query($sql,false,$fetchrows);
         }
-        
 
-        
+
+
     # Geographic search
     if (substr($search,0,4)=="!geo")
         {
         $geo=explode("t",str_replace(array("m","p"),array("-","."),substr($search,4))); # Specially encoded string to avoid keyword splitting
         $bl=explode("b",$geo[0]);
-        $tr=explode("b",$geo[1]);   
-        $sql="select r.hit_count score, $select from resource r $sql_join where 
+        $tr=explode("b",$geo[1]);
+        $sql="SELECT r.hit_count score, $select FROM resource r $sql_join WHERE 
 
-                    geo_lat > '" . escape_check($bl[0]) . "'
-              and   geo_lat < '" . escape_check($tr[0]) . "'        
-              and   geo_long > '" . escape_check($bl[1]) . "'       
-              and   geo_long < '" . escape_check($tr[1]) . "'       
-                          
-         and $sql_filter group by r.ref order by $order_by";
+                   geo_lat > '" . escape_check($bl[0]) . "'
+              AND geo_lat < '" . escape_check($tr[0]) . "'
+              AND geo_long > '" . escape_check($bl[1]) . "'
+              AND geo_long < '" . escape_check($tr[1]) . "'
+
+         AND $sql_filter GROUP BY r.ref ORDER BY $order_by";
         $searchsql=$sql_prefix . $sql . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
+        return $returnsql ? $searchsql : sql_query($searchsql,false,$fetchrows);
         }
 
     # Colour search
@@ -1233,31 +1233,31 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         $colour=explode(" ",$search);$colour=str_replace("!colour","",$colour[0]);
 
-        $sql="select r.hit_count score, $select from resource r $sql_join
-                where 
-                    colour_key like '" . escape_check($colour) . "%'
-                or  colour_key like '_" . escape_check($colour) . "%'
-                          
-         and $sql_filter group by r.ref order by $order_by";
+        $sql="SELECT r.hit_count score, $select FROM resource r $sql_join
+                WHERE 
+                    colour_key LIKE '" . escape_check($colour) . "%'
+                OR  colour_key LIKE '_" . escape_check($colour) . "%'
+
+         AND $sql_filter GROUP BY r.ref ORDER BY $order_by";
         
         $searchsql=$sql_prefix . $sql . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
-        }       
+        return $returnsql ? $searchsql : sql_query($searchsql,false,$fetchrows);
+        }
         
     # Similar to a colour
     if (substr($search,0,4)=="!rgb")
         {
         $rgb=explode(":",$search);$rgb=explode(",",$rgb[1]);
         
-        $searchsql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where has_image=1 and $sql_filter group by r.ref order by (abs(image_red-" . $rgb[0] . ")+abs(image_green-" . $rgb[1] . ")+abs(image_blue-" . $rgb[2] . ")) asc limit 500" . $sql_suffix;
-        return $returnsql?$searchsql:sql_query($searchsql,false,$fetchrows);
+        $searchsql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE has_image=1 AND $sql_filter GROUP BY r.ref ORDER BY (abs(image_red-" . $rgb[0] . ")+abs(image_green-" . $rgb[1] . ")+abs(image_blue-" . $rgb[2] . ")) ASC LIMIT 500" . $sql_suffix;
+        return $returnsql ? $searchsql : sql_query($searchsql,false,$fetchrows);
         }
         
     # Has no preview image
     if (substr($search,0,10)=="!nopreview")
         {
-        $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where has_image=0 and $sql_filter group by r.ref" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE has_image=0 AND $sql_filter GROUP BY r.ref" . $sql_suffix;
+        return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }       
         
     # Similar to a colour by key
@@ -1266,7 +1266,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         # Extract the colour key
         $colourkey=explode(" ",$search);$colourkey=str_replace("!colourkey","",$colourkey[0]);
         
-        $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where has_image=1 and left(colour_key,4)='" . $colourkey . "' and $sql_filter group by r.ref" . $sql_suffix;
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE has_image=1 AND left(colour_key,4)='" . $colourkey . "' and $sql_filter GROUP BY r.ref" . $sql_suffix;
         return $returnsql?$sql:sql_query($sql,false,$fetchrows);
         }
     
@@ -1275,22 +1275,22 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         $theref = escape_check($search);
         $theref = preg_replace("/[^0-9]/","",$theref);
-        $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where r.ref='$theref' and $sql_filter group by r.ref" . $sql_suffix;
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE r.ref='$theref' AND $sql_filter GROUP BY r.ref" . $sql_suffix;
         return $returnsql?$sql:sql_query($sql,false,$fetchrows);
         }
 
     # Searching for pending archive
     if (substr($search,0,15)=="!archivepending")
         {
-        $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where archive=1 and ref>0 group by r.ref order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE archive=1 AND ref>0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }
     
     if (substr($search,0,12)=="!userpending")
         {
-        if ($orig_order=="rating") {$order_by="request_count desc," . $order_by;}
-        $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where archive=-1 and ref>0 group by r.ref order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        if ($orig_order=="rating") {$order_by="request_count DESC," . $order_by;}
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE archive=-1 AND ref>0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }
         
     # View Contributions
@@ -1303,25 +1303,29 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         // Don't filter if user is searching for their own resources and $open_access_for_contributor=true;
         global $open_access_for_contributor;
-        if($open_access_for_contributor && $userref==$cuser){$sql_filter="archive in(" . implode(",",$archive) . ")";$sql_join="";}
+        if($open_access_for_contributor && $userref == $cuser)
+            {
+            $sql_filter="archive IN (" . implode(",",$archive) . ")";
+            $sql_join="";
+            }
         
         $select=str_replace(",rca.access group_access,rca2.access user_access ",",null group_access, null user_access ",$select);
-        $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where created_by='" . $cuser . "' and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE created_by='" . $cuser . "' AND r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }
     
     # Search for resources with images
     if ($search=="!images") 
         {
-        $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where has_image=1 group by r.ref order by $order_by" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE has_image=1 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }
 
     # Search for resources not used in Collections
     if (substr($search,0,7)=="!unused") 
         {
-        $sql=$sql_prefix . "SELECT distinct $select FROM resource r $sql_join  where r.ref>0 and r.ref not in (select c.resource from collection_resource c) and $sql_filter" . $sql_suffix;
-        return $returnsql?$sql:sql_query($sql,false,$fetchrows);
+        $sql=$sql_prefix . "SELECT DISTINCT $select FROM resource r $sql_join WHERE r.ref>0 AND r.ref NOT IN (select c.resource FROM collection_resource c) AND $sql_filter" . $sql_suffix;
+        return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }   
     
     # Search for a list of resources
@@ -1344,31 +1348,31 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $resources="where r.ref IS NULL";
             }
         else 
-            {  
+            {
             $resources="where (r.ref='".str_replace(":","' OR r.ref='",$resources) . "')";
             }
     
-        $sql=$sql_prefix . "SELECT distinct r.hit_count score, $select FROM resource r $sql_join $resources and $sql_filter order by $order_by" . $sql_suffix;
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join $resources AND $sql_filter ORDER BY $order_by" . $sql_suffix;
         return $returnsql?$sql:sql_query($sql,false,$fetchrows);
-        }   
+        }
 
     # View resources that have data in the specified field reference - useful if deleting unused fields
     if (substr($search,0,8)=="!hasdata") 
-        {       
+        {
         $fieldref=intval(trim(substr($search,8)));
-        $hasdatafieldtype = sql_value("SELECT  `type` value FROM resource_type_field WHERE ref = '{$fieldref}'", 0);    
-                                        
+        $hasdatafieldtype = sql_value("SELECT `type` value FROM resource_type_field WHERE ref = '{$fieldref}'", 0);
+
         if(in_array($hasdatafieldtype,$FIXED_LIST_FIELD_TYPES))
             {   
-            $sql_join.=" RIGHT JOIN resource_node rn ON r.ref=rn.resource JOIN node n ON n.ref=rn.node where  n.resource_type_field='" . $fieldref . "'";
-            $sql = $sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
-            return $returnsql?$sql:sql_query($sql,false,$fetchrows);        
+            $sql_join.=" RIGHT JOIN resource_node rn ON r.ref=rn.resource JOIN node n ON n.ref=rn.node WHERE n.resource_type_field='" . $fieldref . "'";
+            $sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join AND r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+            return $returnsql?$sql:sql_query($sql,false,$fetchrows);
             
             }
         else
             {
-            $sql_join.=" join resource_data on r.ref=resource_data.resource and resource_data.resource_type_field=$fieldref and resource_data.value<>'' ";
-            $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join and r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
+            $sql_join.=" join resource_data on r.ref=resource_data.resource AND resource_data.resource_type_field=$fieldref AND resource_data.value<>'' ";
+            $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join AND r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
             return $returnsql?$sql:sql_query($sql,false,$fetchrows);
             }
         }
@@ -1379,7 +1383,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         // Note: in order to combine special searches with normal searches, these are separated by space (" ")
         $searches_array = explode(' ', $search);
         $properties     = explode(';', substr($searches_array[0], 11));
-        $sql_join.=" left join resource_dimensions rdim on r.ref=rdim.resource";
+        $sql_join.=" LEFT JOIN resource_dimensions rdim on r.ref=rdim.resource";
         
         foreach ($properties as $property)
             {
@@ -1388,28 +1392,28 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 {
                 $propertyname=$propertycheck[0];
                 $propertyval=escape_check($propertycheck[1]);
-                if($sql_filter==""){$sql_filter .= " where ";}else{$sql_filter .= " and ";}
+                if($sql_filter==""){$sql_filter .= " WHERE ";}else{$sql_filter .= " AND ";}
                 switch($propertyname)
                     {
                     case "hmin":
-                        $sql_filter.=" rdim.height>='".  intval($propertyval) . "'";
+                        $sql_filter.=" rdim.height>='" . intval($propertyval) . "'";
                     break;
                     case "hmax":
-                        $sql_filter.=" rdim.height<='".  intval($propertyval) . "'";
+                        $sql_filter.=" rdim.height<='" . intval($propertyval) . "'";
                     break;
                     case "wmin":
-                        $sql_filter.=" rdim.width>='".  intval($propertyval) . "'";
+                        $sql_filter.=" rdim.width>='" . intval($propertyval) . "'";
                     break;
                     case "wmax":
-                        $sql_filter.=" rdim.width<='".  intval($propertyval) . "'";
+                        $sql_filter.=" rdim.width<='" . intval($propertyval) . "'";
                     break;
                     case "fmin":
                         // Need to convert MB value to bytes
-                        $sql_filter.=" r.file_size>='".  (floatval($propertyval) * 1024 * 1024) . "'";
+                        $sql_filter.=" r.file_size>='" . (floatval($propertyval) * 1024 * 1024) . "'";
                     break;
                     case "fmax":
                         // Need to convert MB value to bytes
-                        $sql_filter.=" r.file_size<='". (floatval($propertyval) * 1024 * 1024) . "'";
+                        $sql_filter.=" r.file_size<='" . (floatval($propertyval) * 1024 * 1024) . "'";
                     break;
                     case "fext":
                         $propertyval=str_replace("*","%",$propertyval);
@@ -1417,31 +1421,31 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                         if(substr($propertyval,0,1)=="-")
                             {
                             $propertyval = substr($propertyval,1);
-                            $sql_filter.=" not ";                            
+                            $sql_filter.=" NOT ";
                             }
                         if(substr($propertyval,0,1)==".")
                             {
                             $propertyval = substr($propertyval,1);
                             }
-                        $sql_filter.=" like '". escape_check($propertyval) . "'";
+                        $sql_filter.=" LIKE '". escape_check($propertyval) . "'";
                     break;
                     case "pi":
-                        $sql_filter.=" r.has_image='".  intval($propertyval) . "'";
+                        $sql_filter.=" r.has_image='". intval($propertyval) . "'";
                     break;
                     case "cu":
-                        $sql_filter.=" r.created_by='".  intval($propertyval) . "'";
+                        $sql_filter.=" r.created_by='". intval($propertyval) . "'";
                     break;
                     }
                 }
             }
             
-        $sql=$sql_prefix . "select distinct r.hit_count score, $select from resource r $sql_join  where r.ref > 0 and $sql_filter group by r.ref order by $order_by" . $sql_suffix;
+        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         return $returnsql?$sql:sql_query($sql,false,$fetchrows);
         }
 
     # Within this hook implementation, set the value of the global $sql variable:
     # Since there will only be one special search executed at a time, only one of the
-    # hook implementations will set the value.  So, you know that the value set
+    # hook implementations will set the value. So, you know that the value set
     # will always be the correct one (unless two plugins use the same !<type> value).
     $sql=hook("addspecialsearch", "", array($search));
     
@@ -1509,15 +1513,15 @@ function rebuild_specific_field_search_from_node(array $node)
         return '';
         }
 
-    $field_shortname = sql_value("SELECT name AS `value` FROM resource_type_field where ref = '{$node['resource_type_field']}'", "field{$node['resource_type_field']}");
+    $field_shortname = sql_value("SELECT name AS `value` FROM resource_type_field WHERE ref = '{$node['resource_type_field']}'", "field{$node['resource_type_field']}");
 
     // Note: at the moment there is no need to return a specific field search by multiple options
     // Example: country:keyword1;keyword2
     return ((strpos($node['name']," ")===false)?$field_shortname . ":" . i18n_get_translated($node['name']):"\"" . $field_shortname . ":" . i18n_get_translated($node['name']) . "\"");
     }
 
-    
-function search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$access_override=false,$starsearch=0,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false, $editable_only=false,$returnsql=false,$getsizes=array(),$previewextension="jpg")
+
+function search_get_previews($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="DESC",$access_override=false,$starsearch=0,$ignore_filters=false,$return_disk_usage=false,$recent_search_daylimit="", $go=false, $stats_logging=true, $return_refs_only=false, $editable_only=false,$returnsql=false,$getsizes=array(),$previewextension="jpg")
    {
    # Search capability.
    # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
@@ -1531,7 +1535,7 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
             global $access;
             $access=get_resource_access($results[$n]);
             $use_watermark=check_use_watermark();
-            
+
             if($results[$n]["access"]==2){continue;} // No images for confidential resources
             $available=get_all_image_sizes(true,($access==1));
             foreach ($getsizes as $getsize)
@@ -1542,7 +1546,7 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
                     {
                     $results[$n]["url_" . $getsize]=get_resource_path($results[$n]["ref"],false,$getsize,false,$previewextension,-1,1,$use_watermark);
                     }
-                }       
+                }
 
             }
         }
