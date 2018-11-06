@@ -5,6 +5,7 @@ include_once '../../../include/general.php';
 
 
 $tms_link_field_mappings = unserialize(base64_decode($tms_link_field_mappings_saved));
+$tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_mappings));
 
 // Save column/field mappings here as we can't do it using standard plugin functions
 if (getval("submit","")!="" || getval("save","")!="")
@@ -30,7 +31,7 @@ if (getval("submit","")!="" || getval("save","")!="")
 		}
 	// Re-encode the mappings variable so we can post it with the form
 	$tms_link_field_mappings = $tms_link_field_mappings_new;
-	$tms_link_field_mappings_saved=base64_encode(serialize($tms_link_field_mappings_new));
+    $tms_link_field_mappings_saved=base64_encode(serialize($tms_link_field_mappings_new));
 	}
 
 $scriptlastran=sql_value("select value from sysvars where name='last_tms_import'","");
@@ -164,21 +165,7 @@ $page_def[] = config_add_hidden("tms_link_field_mappings_saved");
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
 $page_def[] = config_add_section_header($lang['tms_link_modules_mappings']);
-
-// TODO: we might have a default one so we don't need this bit of code
-// $tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_mappings));
-// if(empty($tms_link_modules_mappings))
-//     {
-//     $tms_modules_mappings_html = "No entries!";
-//     }
-
-
 $tms_modules_mappings_html = "
     <div class=\"Question\">
         <table id=\"tmsModulesMappingTable\">
@@ -189,48 +176,81 @@ $tms_modules_mappings_html = "
                 <th><strong>{$lang['tms_link_applicable_rt']}</strong></th>
                 <th><strong>{$lang['tms_link_modules_mappings_tools']}</strong></th>
             </tr>";
-// TODO: once array is built, replace hardcoded entry
-$tms_modules_mappings_html .= "
+
+foreach($tms_link_modules_mappings as $tms_link_module_index => $tms_link_module)
+    {
+    $tms_link_module_name = htmlspecialchars($tms_link_module['module_name']);
+    $tms_link_tms_uid_field = htmlspecialchars($tms_link_module['tms_uid_field']);
+
+    $tms_link_rs_uid_field = get_resource_type_field($tms_link_module['rs_uid_field']);
+    if(false !== $tms_link_rs_uid_field)
+        {
+        $tms_link_rs_uid_field = htmlspecialchars($tms_link_rs_uid_field['title']);
+        }
+
+    $tms_link_applicable_resource_types = get_resource_types(implode(',', $tms_link_module['applicable_resource_types']));
+    $tms_link_applicable_resource_types = array_column($tms_link_applicable_resource_types, 'name');
+    $tms_link_applicable_resource_types = htmlspecialchars(implode(', ', $tms_link_applicable_resource_types));
+
+    $tms_modules_mappings_html .= "
             <tr>
                 <td>
-                    <input type=\"text\" class=\"medwidth\" value=\"TMS.exhibition_data\" disabled>
+                    <input type=\"text\" class=\"medwidth\" value=\"{$tms_link_module_name}\" disabled>
                 </td>
                 <td>
-                    <input type=\"text\" class=\"medwidth\" value=\"ExhibitionID\" disabled>
+                    <input type=\"text\" class=\"medwidth\" value=\"{$tms_link_tms_uid_field}\" disabled>
                 </td>
                 <td>
-                    <input type=\"text\" class=\"medwidth\" value=\"RS ExhibitionID\" disabled>
+                    <input type=\"text\" class=\"medwidth\" value=\"{$tms_link_rs_uid_field}\" disabled>
                 </td>
                 <td>
-                    <input type=\"text\" class=\"medwidth\" value=\"Gallery Shots\" disabled>
+                    <input type=\"text\" class=\"medwidth\" value=\"{$tms_link_applicable_resource_types}\" disabled>
                 </td>
                 <td>
-                    <button type=\"button\" id=\"edit_tms_module_1\" onclick=\"edit_tms_module_mapping(1);\">{$lang['action-edit']}</button>
-                    <button type=\"button\" id=\"delete_tms_module_1\" onclick=\"delete_tms_module_mapping(1);\">{$lang['action-delete']}</button>
+                    <button type=\"button\" id=\"edit_tms_module_{$tms_link_module_index}\" onclick=\"edit_tms_module_mapping('{$tms_link_module_index}');\">{$lang['action-edit']}</button>
+                    <button type=\"button\" id=\"delete_tms_module_{$tms_link_module_index}\" onclick=\"delete_tms_module_mapping(this, '{$tms_link_module_index}');\">{$lang['action-delete']}</button>
                 </td>
             </tr>";
+    }
 $tms_modules_mappings_html .= "
         </table>
         <script>
         function edit_tms_module_mapping(id)
             {
-            // TODO: implement POST request to page (once it is created)
+            var edit_tms_module_link = '{$baseurl}/plugins/tms_link/pages/tms_module_config.php?id=' + id;
+            window.location.href = encodeURI(edit_tms_module_link);
             }
 
-        function delete_tms_module_mapping(id)
+        function delete_tms_module_mapping(element, id)
             {
-            // TODO: implement POST request to page (once it is created)
+            CentralSpaceShowLoading();
+
+            jQuery.ajax(
+                {
+                type: 'POST',
+                url: '{$baseurl}/plugins/tms_link/pages/tms_module_config.php',
+                data: {
+                    id: id,
+                    action: 'delete',
+                    " . generateAjaxToken('TmsModuleConfigForm') . "
+                }
+                }).done(function(response, textStatus, jqXHR) {
+                    var button = jQuery(element);
+                    var record = jQuery(button).closest('tr');
+                    record.remove();
+                }).fail(function(data, textStatus, jqXHR) {
+                    styledalert('{$lang["tms_link_not_found_error_title"]}', '{$lang["tms_link_not_deleted_error_detail"]}');
+                }).always(function() {
+                    CentralSpaceHideLoading();
+                });
+
+            return;
             }
         </script>
         <a href=\"{$baseurl}/plugins/tms_link/pages/tms_module_config.php\" onclick=\"return CentralSpaceLoad(this, true);\">{$lang['tms_link_add_new_tms_module']}</a>
     </div>";
 $page_def[] = config_add_html($tms_modules_mappings_html);
-
-
-
-
-
-
+$page_def[] = config_add_hidden("tms_link_modules_saved_mappings");
 
 
 // Do the page generation ritual -- don't change this section.

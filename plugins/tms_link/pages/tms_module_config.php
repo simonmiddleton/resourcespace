@@ -10,56 +10,54 @@ if(!checkperm('a'))
 include_once '../../../include/render_functions.php';
 
 
-$id = getval('id', '');
 
+$id = getval('id', '');
+$action = getval('action', '');
 
 $tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_mappings));
-
-// TODO: remove once save functionality works
-$tms_link_modules_mappings['5be059413088d'] = array(
-    'module_name'   => 'exhibition_data',
-    'tms_uid_field' => 'ExhibitionID',
-    'rs_uid_field'  => 'RS ExhibitionID',
-    'applicable_resource_types' => array(1),
-    'tms_rs_mappings' => array(
-        array(
-            'tms_column' => 'ObjectID',
-            'rs_field' => 73,
-            'encoding' => 'UTF-8'
-        ),
-        array(
-            'tms_column' => 'ObjectNumber',
-            'rs_field' => 75,
-            'encoding' => 'UTF-8'
-        ),
-        array(
-            'tms_column' => 'Department',
-            'rs_field' => 74,
-            'encoding' => 'UTF-16'
-        ),
-    ),
-);
-
-// for posted data this will come from getval() otherwise it should come from existing plugin config OR default to these values
+$tms_link_module_name = getval('tms_link_module_name', '');
+$tms_link_tms_uid_field = getval('tms_link_tms_uid_field', '');
 $tms_link_rs_uid_field = getval('tms_link_rs_uid_field', 0, true);
 $tms_link_applicable_resource_types = getval('tms_link_applicable_resource_types', array());
 $tms_link_tms_rs_mappings = getval('tms_rs_mappings', array());
-// echo "<pre>";print_r($tms_link_tms_rs_mappings);echo "</pre>";die("You died in file " . __FILE__ . " at line " . __LINE__);
-
-$tms_link_config = get_plugin_config('tms_link');
-if(!is_null($tms_link_config))
-    {
-    // TODO: Look up information needed to display page
-    }
 
 if(getval('save', '') !== '' && enforcePostRequest(false))
     {
-    // TODO: process form and save to plugin config
-    // generate a UID using uniqid()
-    // set_plugin_config($plugin_name, $config);
+    if($id === '')
+        {
+        do
+            {
+            $new_id = uniqid();
+            }
+        while (array_key_exists($new_id, $tms_link_modules_mappings));
+
+        $id = $new_id;
+        }
+
+    $tms_link_modules_mappings[$id] = array(
+        'module_name'   => $tms_link_module_name,
+        'tms_uid_field' => $tms_link_tms_uid_field,
+        'rs_uid_field'  => $tms_link_rs_uid_field,
+        'applicable_resource_types' => $tms_link_applicable_resource_types,
+        'tms_rs_mappings' => $tms_link_tms_rs_mappings,
+    );
+
+    tms_link_save_module_mappings_config($tms_link_modules_mappings);
     }
 
-// Existing record
+if($action == 'delete' && $id !== '' && enforcePostRequest(false))
+    {
+    if(!array_key_exists($id, $tms_link_modules_mappings))
+        {
+        http_response_code(400);
+        exit();
+        }
+
+    unset($tms_link_modules_mappings[$id]);
+    tms_link_save_module_mappings_config($tms_link_modules_mappings);
+    exit();
+    }
+
 if($id !== '' && array_key_exists($id, $tms_link_modules_mappings))
     {
     $record = $tms_link_modules_mappings[$id];
@@ -80,8 +78,14 @@ include '../../../include/header.php';
         {
         echo "<div class=\"PageInformal\">{$error}</div>";
         }
+
+    $form_action = generateURL(
+        "{$baseurl}/plugins/tms_link/pages/tms_module_config.php",
+        array(
+            'id' => $id,
+        ));
     ?>
-    <form id="TmsModuleConfigForm" method="post" action="#TODO:ChangeToRealAction">
+    <form id="TmsModuleConfigForm" method="post" action="<?php echo $form_action; ?>">
         <?php generateFormToken("tms_module_config"); ?>
         <div class="Question">
             <label><?php echo $lang["tms_link_tms_module_name"]; ?></label>
@@ -168,7 +172,7 @@ include '../../../include/header.php';
             function add_new_tms_field_mapping(element)
                 {
                 var button = jQuery(element);
-                var row_index = document.getElementById('tmsModulesMappingTable').rows.length;
+                var row_index = document.getElementById('tmsModulesMappingTable').rows.length - 2;
                 var new_row_html = '';
 
                 new_row_html += '<tr>';

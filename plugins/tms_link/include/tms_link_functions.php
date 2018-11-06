@@ -704,3 +704,27 @@ function tms_link_check_preview($ref, $alternative=-1)
 	// Push condition has matched, add the preview image to TMS
 	tms_link_create_tms_thumbnail($ref, $alternative);
 	}
+
+/**
+* Save plugins' module saved mappings configuration on an ad-hoc basis
+* 
+* @uses get_plugin_config()
+* @uses set_plugin_config()
+* 
+* @param mixed $value Configuration option new value
+* 
+* @return void
+*/
+function tms_link_save_module_mappings_config($value)
+    {
+    $tms_link_config = get_plugin_config('tms_link');
+    if(is_null($tms_link_config))
+        {
+        $tms_link_config = array();
+        }
+    $tms_link_config['tms_link_modules_saved_mappings'] = base64_encode(serialize($value));
+
+    set_plugin_config('tms_link', $tms_link_config);
+
+    return;
+    }
