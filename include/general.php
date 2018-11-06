@@ -7156,8 +7156,13 @@ function get_filter($filterid)
     // 1 = ALL must apply
     // 2 = NONE must apply
     // 3 = ANY can apply
-        
-    $filter  = sql_query("SELECT f.ref, f.name, f.filter_condition FROM filter f"); 
+    
+    if(!is_numeric($filterid) || $filterid < 1)
+            {
+            return false;    
+            }
+            
+    $filter  = sql_query("SELECT ref, name, filter_condition FROM filter f WHERE ref={$filterid}"); 
     
     if(count($filter) > 0)
         {
@@ -7173,14 +7178,30 @@ function get_filter_rules($filterid)
     // 0 = Node is not present
     // 1 = Node is present
     
-    $filterrules  = sql_query("SELECT fr.ref, fr.rule_condition, group_concat(frn.node) AS nodes FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.filter='" . escape_check($filterid) . "' GROUP BY filter_rule"); 
-    
-    //exit(print_r($filterrules));
-    if(count($filterrules) > 0)
+    $filter_rule_nodes  = sql_query("SELECT fr.ref as rule, frn.node_condition, frn.node FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.filter='" . escape_check($filterid) . "'"); 
+        
+    // Convert results into useful array    
+    $rules = array();
+    foreach($filter_rule_nodes as $filter_rule_node)
         {
-        return $filterrules;
+        $rule = $filter_rule_node["rule"];
+        if(!isset($rules[$filter_rule_node["rule"]]))
+            {
+            $rules[$rule] = array();
+            $rules[$rule]["nodes_on"] = array();
+            $rules[$rule]["nodes_off"] = array();
+            }
+        if($filter_rule_node["node_condition"] == 1)
+            {
+            $rules[$rule]["nodes_on"][] = $filter_rule_node["node"];
+            }
+        else
+            {
+            $rules[$rule]["nodes_off"][] = $filter_rule_node["node"];
+            }
         }
-    return false;
+        
+    return $rules;
     }
     
 function get_filter_rule($ruleid)
@@ -7193,27 +7214,83 @@ function get_filter_rule($ruleid)
     return false;
     }
 
-function save_filter_rule($filter_rule,$filterid,$nodes, $condition)
+    
+// return boolean | integer
+function save_filter($filter,$filter_name,$filter_condition)
     {
-    if($condition != 0 ){$condition = 1;}
+    if(!in_array($filter_condition, array(RS_FILTER_ALL,RS_FILTER_NONE,RS_FILTER_ANY)))
+        {
+        return false;
+        }
+        
+    if($filter != 0)
+        {    
+        if(!is_numeric($filter))
+            {
+            return false;    
+            }
+        sql_query("UPDATE filter SET name='" . escape_check($filter_name). "', filter_condition='{$filter_condition}' WHERE ref = '" . escape_check($filter)  . "'");
+        }
+    else
+        {
+        $newfilter = sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($filter_name). "','{$filter_condition}')");
+        $newfilter = sql_insert_id();
+        return $newfilter;
+        }
+    return true;
+    }
+
+function save_filter_rule($filter_rule, $filterid, $ruledatajson)
+    {
+    $rule_data = json_decode($ruledatajson);
+    
+    //print_r($rule_data);
+    
     if($filter_rule !="new")
         {    
         if(!is_numeric($filter_rule))
             {
             return false;    
             }
-        sql_query("UPDATE filter_rule SET condition = '{$condition}' WHERE ref = '{$filter_rule}'");
+        //sql_query("UPDATE filter_rule SET condition = '{$condition}' WHERE ref = '{$filter_rule}'");
         sql_query("DELETE FROM filter_rule_node WHERE filter_rule = '{$filter_rule}'");
         }
     else
         {
-        sql_query("INSERT INTO filter_rule (filter,rule_condition) VALUES ('{$filterid}','{$condition}')");
+        sql_query("INSERT INTO filter_rule (filter) VALUES ('{$filterid}')");
         $filter_rule = sql_insert_id();
         }    
+    if(count($rule_data) > 0)
+        {
+        $nodeinsert = array();
+        for($n=0;$n<count($rule_data);$n++)
+            {
+            $condition = $rule_data[$n][0];
+            echo "nodecond = " . $condition;
+            for($rd=0;$rd<count($rule_data[$n][1]);$rd++)
+                {
+                $nodeid = $rule_data[$n][1][$rd];
+            echo "nodeid = " . $nodeid;
+                $nodeinsert[] = "('" . $filter_rule . "','" . $nodeid . "','" . $condition . "')";
+                }
+            }
+        //$nodevals = "('" . $filter_rule . "','" . (implode("'),('" . $filter_rule . "','",$nodes)) . "', )";
+        $sql = "INSERT INTO filter_rule_node (filter_rule,node,node_condition) VALUES " . implode(',',$nodeinsert);
+        //exit($sql);
+        sql_query($sql);
+        }
+    return true;
+    }
     
-    $nodevals = "('" . $filter_rule . "','" . (implode("'),('" . $filter_rule . "','",$nodes)) . "')";
-    $sql = "INSERT INTO filter_rule_node (filter_rule,node) VALUES " . $nodevals;
-    //exit($sql);
-    sql_query($sql);
+function delete_filter_rule($filter_rule)
+    {
+    if(!is_numeric($filter_rule))
+            {
+            return false;    
+            }
+            
+    sql_query("DELETE FROM filter_rule_node WHERE filter_rule='$filter_rule'");
+    sql_query("DELETE FROM filter_rule WHERE ref='$filter_rule'");  
+        
     return true;
     }

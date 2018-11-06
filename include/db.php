@@ -725,6 +725,16 @@ function db_end_transaction()
 		}
 	}
 
+# Tell the database to rollback the current transaction.
+function db_rollback_transaction()
+	{
+	global $db,$use_mysqli;
+	if ($use_mysqli && function_exists('mysqli_rollback'))
+		{
+		mysqli_rollback($db);
+		}
+	}        
+
 function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     # sql_query(sql) - execute a query and return the results as an array.

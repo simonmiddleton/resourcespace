@@ -1,4 +1,2 @@
 ref,int(11),NO,PRI,,auto_increment
-name,varchar(200),NO,,NULL,
 filter,int(11),NO,PRI,,
-rule_condition,int(11),NO,,NULL,

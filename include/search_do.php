@@ -1042,8 +1042,9 @@ function do_search(
 
     if ($search_filter_nodes && is_numeric($usersearchfilter) && $usersearchfilter > 0)
         {
-        $filterrules = get_filter($usersearchfilter);
-        exit(print_r($filterrules));
+        $filter         = get_filter($usersearchfilter);
+        $filterrules    = get_filter_rules($usersearchfilter);
+        //exit(print_r($filterrules));
         $modfilterrules=hook("modifysearchfilterrules");
         if ($modfilterrules)
             {
@@ -1051,36 +1052,28 @@ function do_search(
             }
             
         //exit(print_r($filterrules));
-        $filtercondition = $filterrules["filter_condition"];
+        $filtercondition = $filter["filter_condition"];
         $filters = array();
         $filter_ors = array();
             
-        foreach($filterrules["nodes"] as $filternode)
+        //foreach($filterrules["nodes"] as $filternode)
+        foreach($filterrules as $filterrule)
             {
-            // Set NOT condition to added if necessary
-            // a) If this is an ALL or ANY filter and node absence being checked
-            // b) If this is a NONE filter and node presence is being checked 
-            $notnode = ((($filtercondition == RS_FILTER_ALL || $filtercondition == RS_FILTER_ANY) && $filternode["node_condition"] == 0)
-                || 
-                ($filtercondition == RS_FILTER_NONE && $filternode["node_condition"] == 1));
-            
-            if($filternode["node_condition"] == 2)
+            $filtersql = "";
+            if(count($filterrule["nodes_on"]) > 0)
                 {
-                // These nodes must be ORd
-                $filter_ors[] = $filternode["node"]; 
+                $filtersql .= "r.ref " . ($filtercondition == RS_FILTER_NONE ? " NOT " : "") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node IN ('" . implode("','",$filterrule["nodes_on"]) . "')) ";
                 }
-            else
+            if(count($filterrule["nodes_off"]) > 0)
                 {
-                $filters[] = " (r.ref " . ($notnode ? " NOT " : "") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node = '" . $filternode["node"] . "')) ";
+                if($filtersql != "") {$filtersql .= " OR ";}
+                $filtersql .= "r.ref " . ($filtercondition == RS_FILTER_NONE ? "" : " NOT") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node IN ('" . implode("','",$filterrule["nodes_off"]) . "')) ";
                 }
+                
+            $filters[] = "(" . $filtersql . ")";
+            //echo $filtersql . "<br />";
             }
         
-        if (count($filter_ors) > 0)
-            {
-            // Add the ORs as a separate filter condition
-            $filters[] = " (r.ref " . (($filtercondition == RS_FILTER_NONE) ? " NOT " : "") . " IN (SELECT rn.resource FROM resource_node rn WHERE rn.node IN ('" . implode("','",$filter_ors) . "') ";
-            }
-
         if (count($filters) > 0)
             {   
             if($filtercondition == RS_FILTER_ALL || $filtercondition == RS_FILTER_NONE)
@@ -1101,14 +1094,11 @@ function do_search(
                 $filter_add = "((" . $filter_add . ") OR (rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2))";
                 }
             
-            if ($sql_filter!="")
-                {
-                $sql_filter.=" AND ";
-                }
+            if ($sql_filter != ""){$sql_filter .= " AND ";}
                 
             $sql_filter .=  $filter_add;
             }
-    exit(print_r($sql_filter));
+    //exit(print_r($sql_filter));
         }
     elseif (strlen($usersearchfilter)>0 && !is_numeric($usersearchfilter))
         {

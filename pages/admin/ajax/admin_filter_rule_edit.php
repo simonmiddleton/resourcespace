@@ -36,15 +36,17 @@ $saveurl = generateURL($baseurl . "pages/admin/admin_filter_rule.php",$saveparam
 <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
 
 <div class="BasicsBox">
-    <h1><?php echo $lang["filter_rule_edit"] ?></h1>
+    <h1><?php echo $lang["filter_rule_add"] ?></h1>
     <h2><?php echo $lang["filter_rule_edit_text"] ?></h2>
-    <form id="filter_edit_form" name="filter_edit_form" method="post" action="">
+    <form id="filter_edit_form" name="filter_edit_form" method="post" action="" onSubmit="processFilterRules();return CentralSpacePost('<?php echo $saveurl; ?>');">
     <input type="hidden" name="filter_rule" value="<?php echo $ruleid; ?>" />
     <input type="hidden" name="filter" value="<?php echo $filterid; ?>" />
+    <input type="hidden" name="filter_rule_data" id="filter_rule_data" value="" />
     <?php generateFormToken("filter_rule_edit"); ?>
 
-    <div class="Question">
-        <select name="filter_rule_field" id="filter_rule_field" style="width:300px" onChange="updateFieldOptions();">
+    <div class="Question filter_rule_question">
+        <select name="filter_rule_field" id="filter_rule_field" style="width:300px" onChange="updateFieldOptions(jQuery(this).parent());">
+            <option value='0' ><?php echo $lang["select"] ?></option>
             <?php
             foreach($allfields as $field)
                 {
@@ -56,12 +58,13 @@ $saveurl = generateURL($baseurl . "pages/admin/admin_filter_rule.php",$saveparam
             ?>
         </select>
 
-        <select name="filter_rule_condition" id="filter_rule_condition" style="width:150px">
+        <select name="filter_rule_node_condition[]" class="filter_rule_node_condition" id="filter_rule_node_condition" style="width:150px">
             <option value="0" selected ><?php echo $lang["filter_is_not_in"]; ?></option>
             <option value="1" ><?php echo $lang["filter_is_in"]; ?></option>
         </select>
         
-        <select name='filter_rule_nodes[]' id='filter_rule_nodes' class='filter_rule_select' multiple='multiple' size='7' style='width:420px'>
+        <select name='filter_rule_nodes[]' class='filter_rule_nodes' multiple='multiple' size='7' style='width:420px'>
+            <option value='0' ><?php echo $lang["select"] ?></option>
         </select>
         
     </div>
@@ -75,7 +78,7 @@ $saveurl = generateURL($baseurl . "pages/admin/admin_filter_rule.php",$saveparam
 
     <div class="Question">
         <label for="ruleadd"></label>
-        <input name="ruleadd" type="submit" onclick="return CentralSpacePost('<?php echo $saveurl; ?>');" value="&nbsp;&nbsp;<?php echo $lang["filter_rule_add"]; ?>&nbsp;&nbsp;">
+        <input name="ruleadd" type="submit" value="&nbsp;&nbsp;<?php echo $lang["filter_rule_add"]; ?>&nbsp;&nbsp;">
     <div class="clearerleft"></div>
     </div>
 
@@ -88,16 +91,47 @@ $saveurl = generateURL($baseurl . "pages/admin/admin_filter_rule.php",$saveparam
 
 function addFilterRuleItem()
     {
-    jQuery()
+    jQuery('.filter_rule_nodes').chosen('destroy');
+    lastrow = jQuery('.filter_rule_question').last();
+    newq = lastrow.clone();
+    console.log(lastrow.attr('row'));
+    lastrow.after(newq);
+    jQuery('.filter_rule_nodes').chosen('');
+    //console.log(jQuery(this).parent().attr('row'));
+    }
+    
+function processFilterRules()
+    {
+    //rule_elements = jQuery('.filter_rule_question');
+    rule_elements = new Array();
+    jQuery('.filter_rule_question').each(function () {
+        rule_nodes = jQuery(this).children('.filter_rule_nodes').val();
+        rule_condition = jQuery(this).children('.filter_rule_node_condition').val();
+        console.log('Adding rule element. Condition=' + rule_condition + ', values=' + rule_nodes);
+        rule_element = [rule_condition,rule_nodes];
+        rule_elements.push(rule_element);
+        });
+        
+        
+   jQuery ('#filter_rule_data').val(JSON.stringify(rule_elements));
+    //saveurl
+    //jQuery('.filter_rule_question').each();
+    //console.log(lastrow.attr('row'));
+    //lastrow.after(lastrow.clone());
+    //console.log(jQuery(this).parent().attr('row'));
     }
 
-function updateFieldOptions()
+function updateFieldOptions(question)
     {
-    jQuery('#filter_rule_nodes').html("");
-    jQuery('#filter_rule_nodes').chosen('destroy')
-
-    selectedField = jQuery('#filter_rule_field').val();
-    console.log('field' + selectedField + ' selected');
+    //console.log(row);
+    //jQuery('#' + row + ' > .filter_rule_nodes').html("");
+    //jQuery('#' + row + ' > .filter_rule_nodes').chosen('destroy');
+    
+    jQuery(question).children('.filter_rule_nodes').html('');
+    jQuery('.filter_rule_nodes').chosen('destroy');
+    //console.log((question));
+    selectedField =  jQuery(question).children('#filter_rule_field').val();
+    //console.log('field' + selectedField + ' selected');
 
      var post_data = {
         ajax: true,
@@ -110,16 +144,19 @@ function updateFieldOptions()
             if(response.success === true)
                 {
                 nodeoptions = response.options;
-                var nodeselect = document.getElementById("filter_rule_nodes");
-                // jQuery('#filter_rule_nodes');
-                for(var i in nodeoptions) {
-                    console.log('Adding option ' + nodeoptions[i]);
-                    nodeselect.add(new Option(nodeoptions[i],i));
-                    }
+                nodeselect =  jQuery(question).children('.filter_rule_nodes');
                 
-                jQuery("#filter_rule_nodes").chosen();
+                // jQuery('#filter_rule_nodes');
+                jQuery.each(nodeoptions, function (i, item) {
+                    //console.log('Adding option: ' + item);
+                    nodeselect.append(jQuery('<option>', { 
+                        value: i,
+                        text : item 
+                    }));
+                });
+                //console.log('Enabling chosen for div');
+                jQuery('.filter_rule_nodes').chosen();
 
-                //console.log(nodeoptions);
                 }
         }, 'json');
 
@@ -129,6 +166,8 @@ function updateFieldOptions()
 
     }
 
-//jQuery("#field_options_").chosen();
+jQuery(document).ready(function(){
+        jQuery('.filter_rule_nodes').chosen();
+});
 
 </script>

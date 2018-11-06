@@ -65,12 +65,12 @@ include "../../include/header.php";
                 </td>   
                 <td>
                     <div class="ListTitle">
-                          <a href="<?php echo generateURL($filter_edit_url,$params, array("ref"=>$filters[$n]["ref"])); ?>" onclick="return CentralSpaceLoad(this);"><?php echo str_highlight(i18n_get_translated($filters[$n]["name"]),$filterfind,STR_HIGHLIGHT_SIMPLE); ?></a>
+                          <a href="<?php echo generateURL($filter_edit_url,$params, array("filter"=>$filters[$n]["ref"])); ?>" onclick="return CentralSpaceLoad(this);"><?php echo str_highlight(i18n_get_translated($filters[$n]["name"]),$filterfind,STR_HIGHLIGHT_SIMPLE); ?></a>
                     </div>
                 </td>
                 <td>
                     <div class="ListTools">
-                        <a href="<?php echo generateURL($filter_edit_url,$params, array("filter" => "new","copyfrom" => $filters[$n]["ref"])); ?>" onClick="CentralSpaceLoad(this,true)" ><?php echo LINK_CARET ?><?php echo $lang["copy"] ?></a>
+                        <a href="<?php echo generateURL($filter_edit_url,$params, array("filter" => "0","copyfrom" => $filters[$n]["ref"])); ?>" onClick="CentralSpaceLoad(this,true)" ><?php echo LINK_CARET ?><?php echo $lang["copy"] ?></a>
                         <a href="<?php echo generateURL($filter_edit_url,$params, array("filter" => $filters[$n]["ref"])); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?> </a>
                         <a href="#"
                            onClick='
