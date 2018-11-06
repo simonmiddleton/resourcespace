@@ -1,14 +1,117 @@
 <?php
 # A script to set the geo coordinates based on a country field (if available) for resources with no geolocation information set.
 
-# Find country field
-$country_field=sql_value("select ref value from resource_type_field where name='country'","");
-if ($country_field=="") {echo "Country field not found. Must have a field with shorthand name set to 'country'.";} 
+$coords=build_coords();
+$codes=build_codes();
 
-else
+# Find country field
+$country_field=sql_query("select ref,type from resource_type_field where name='country'");
+if ($country_field[0]["ref"]=="") 
 	{
-	
-$coords=explode("\n","AD,42.5000,1.5000
+	echo "Country field not found. Must have a field with shorthand name set to 'country'.";
+	} 
+else
+    {
+    $country_ref = $country_field[0]["ref"];
+    $country_type = $country_field[0]["type"];
+    # Build array of resource+country combinations where the resource has missing latitude or longitude coordinates
+    if (in_array($country_type, $FIXED_LIST_FIELD_TYPES))
+        {
+        # Build array for country metadata which is node based
+        $resource_countries=sql_query("select distinct rn.resource, upper(n.name) name from resource_node rn "
+                                    ."join node n on n.ref=rn.node "
+                                    ."join resource r on r.ref=rn.resource "
+                                    ."where n.resource_type_field='$country_ref' "
+                                    ."  and (r.geo_lat is null or r.geo_lat is null)");
+        }
+    else 
+        {
+        # Build array for country metadata which is text based
+        $resource_countries=sql_query("select distinct rd.resource, upper(trim(rd.value)) name from resource_data rd "
+									."join resource r on r.ref=rd.resource "
+									."where rd.resource_type_field='$country_ref' "
+									."  and (r.geo_lat is null or r.geo_lat is null)");
+        }
+
+    # Convert two dimension results array to single dimension for sorting 
+    $rc_array=array();
+    foreach($resource_countries as $resource_country) 
+        {
+        $rc_array[$resource_country["resource"]]=$resource_country["name"];
+        }
+
+    # Sort the resource countries into country (value) sequence and then apply the latlong coordinates on change
+    asort($rc_array);
+    $last_country="";
+    $refs=array();
+    foreach($rc_array as $rckey => $rcvalue) 
+        {
+        if($rcvalue != $last_country) 
+            {
+            if($last_country !="") 
+                {
+                $coord_latlong = fetch_country_coords($last_country,$codes,$coords);    
+                echo "<p>Country=" . $last_country . "; Refs=" . join(",",$refs).";</p>";
+                update_country_coords($refs,$coord_latlong);  
+                }
+            $last_country = $rcvalue;
+            unset($refs);
+        }
+        $refs[]=$rckey;
+    }
+    if($last_country !="") 
+        {
+        $coord_latlong = fetch_country_coords($last_country,$codes,$coords);  
+        echo "<p>Country=" . $last_country . "; Refs=" . join(",",$refs).";</p>";
+        update_country_coords($refs,$coord_latlong);  
+        }
+    }
+        
+function update_country_coords($refs,$latlong) 
+{
+sql_query("update resource set geo_lat='" . $latlong[0] . "', geo_long='" . $latlong[1] . "' " . 
+"where ref in('" . join("','",$refs) . "')");
+// echo "update resource set geo_lat='" . $latlong[0] . "', geo_long='" . $latlong[1] . "' " . 
+//      "where ref in('" . join("','",$refs) . "')";
+}
+
+function fetch_country_coords($country_name,$codes,$coords)
+{
+# Resolve the country code for the given country name
+$latlong=array();
+$found=false;
+reset($codes);
+foreach ($codes as $code)
+    {
+    $s=explode(",",$code);
+    if (count($s)==2 && strtoupper($s[0])==$country_name) 
+        {
+        $found=true;
+        $code=$s[1];
+        break;
+        }
+    }
+if ($found)
+    {
+    # Resolve the coordinates for the country code
+    reset($coords);
+    foreach ($coords as $coord) # Each coord is country code, latitude, longitude
+        {
+        $s=explode(",",$coord); 
+        if ($s[0]==trim($code))	
+            {
+            $latlong[0] = $s[1];
+            $latlong[1] = $s[2];
+            break;
+            }
+        }
+    }
+return $latlong;
+}
+
+function build_coords() 
+{
+return explode("\n","AD,42.5000,1.5000
 AE,24.0000,54.0000
 AF,33.0000,65.0000
 AG,17.0500,-61.8000
@@ -248,9 +351,12 @@ YE,15.0000,48.0000
 YT,-12.8300,45.1700
 ZA,-29.0000,24.0000
 ZM,-13.3000,27.9000
-ZW,-18.7000,29.9000");
+ZW,-18.7000,29.9000"); // $coords
+}
 
-$codes=explode("\n","
+function build_codes() 
+{
+return explode("\n","
 AFGHANISTAN,AF
 ALAND ISLANDS,AX
 ALBANIA,AL
@@ -533,99 +639,7 @@ WALLIS AND FUTUNA,WF
 WESTERN SAHARA,EH
 YEMEN,YE
 ZAMBIA,ZM
-ZIMBABWE,ZW");
-
-# Find selected countries
-$countries_all=sql_query("select distinct k.ref,k.keyword from keyword k join resource_keyword rk on k.ref=rk.keyword where rk.resource_type_field='$country_field'");
-$countries=array();
-$countries_keyrefs=array();
-foreach ($countries_all as $country)
-	{
-	$countries[]=$country["keyword"];
-	$countries_keyrefs[$country["keyword"]]=$country["ref"];
-	}
-
-echo "<ul>";
-foreach ($countries as $country)
-	{
-	# Find the country in the codes list
-	$found=false;
-
-	reset($codes);
-	foreach ($codes as $code)
-		{
-		$s=explode(",",$code);
-		if (count($s)==2 && strtolower($s[0])==$country) {$found=true;$code=$s[1];break;}
-		}
-	if ($found)
-		{
-		echo "<li>Country $country: code found: $code. ";
-		
-		# Now find coordinates.
-		reset($coords);
-		foreach ($coords as $coord)
-			{
-			$s=explode(",",$coord);
-			if ($s[0]==trim($code))	
-				{
-				echo "Coords found: " . $s[1] . "/" . $s[2] . " for keyref " . $countries_keyrefs[$country] . "<br />";
-				$refs=sql_array("select resource value from resource_keyword where resource_type_field='$country_field' and keyword='" . $countries_keyrefs[$country] . "'");
-				sql_query("update resource set geo_lat='" . $s[1] . "',geo_long='" . $s[2] . "' where geo_lat is null and ref in ('" . join("','",$refs) . "')");
-				}
-			}
-		echo "</li>";
-		
-		}
-	else
-		{
-		echo "<li>Country code <strong>not found</strong> for $country.</li>";
-		}
-	
-	
-	}
-echo "</ul>";
+ZIMBABWE,ZW");  // $codes
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+?>
