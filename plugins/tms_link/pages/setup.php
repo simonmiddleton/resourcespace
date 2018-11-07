@@ -45,10 +45,10 @@ $plugin_page_heading = $lang['tms_link_configuration'];
 $page_def[] = config_add_section_header($lang['tms_link_database_setup']);
 
 $page_def[] = config_add_text_input('tms_link_dsn_name',$lang['tms_link_dsn_name']);
-$page_def[] = config_add_text_input('tms_link_table_name',$lang['tms_link_table_name']);
+// $page_def[] = config_add_text_input('tms_link_table_name',$lang['tms_link_table_name']); # MOVED TO $tms_link_modules_saved_mappings
 $page_def[] = config_add_text_input('tms_link_user',$lang['tms_link_user']);
 $page_def[] = config_add_text_input('tms_link_password',$lang['tms_link_password'],true);
-$page_def[] = config_add_multi_rtype_select("tms_link_resource_types",$lang['tms_link_resource_types']);
+// $page_def[] = config_add_multi_rtype_select("tms_link_resource_types",$lang['tms_link_resource_types']); # MOVED TO $tms_link_modules_saved_mappings
 $page_def[] = config_add_text_input('tms_link_email_notify',$lang['tms_link_email_notify']);
 
 $page_def[] = config_add_section_header($lang['tms_link_enable_update_script_info']);
@@ -69,9 +69,9 @@ $page_def[] = config_add_text_input('tms_link_test_count',$lang['tms_link_test_c
 $page_def[] = config_add_text_input('tms_link_log_directory',$lang['tms_link_log_directory']);
 $page_def[] = config_add_text_input('tms_link_log_expiry',$lang['tms_link_log_expiry']);
 
-$page_def[] = config_add_section_header($lang['tms_link_metadata_setup']);
-$page_def[] = config_add_single_ftype_select('tms_link_checksum_field',$lang["tms_link_checksum_field"]);
-$page_def[] = config_add_single_ftype_select('tms_link_object_id_field',$lang["tms_link_object_id_field"]);
+// $page_def[] = config_add_section_header($lang['tms_link_metadata_setup']);
+// $page_def[] = config_add_single_ftype_select('tms_link_checksum_field',$lang["tms_link_checksum_field"]); # MOVED TO $tms_link_modules_saved_mappings
+// $page_def[] = config_add_single_ftype_select('tms_link_object_id_field',$lang["tms_link_object_id_field"]); # MOVED TO $tms_link_modules_saved_mappings
 
 $page_def[] = config_add_section_header($lang['tms_link_bidirectional_options']);
 $page_def[] = config_add_boolean_select('tms_link_push_image', $lang['tms_link_push_image']);
@@ -88,7 +88,7 @@ $page_def[] = config_add_text_input('tms_link_media_path',$lang['tms_link_media_
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Now we need to  add all the mappings
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-$tmsmaphtml="<div class='Question'>
+/*$tmsmaphtml="<div class='Question'>
 <h3>" .  $lang['tms_link_field_mappings'] . "</h3>
 <table id='tmsmappingtable'>
 <tr><th>
@@ -159,8 +159,7 @@ $page_def[] = config_add_text_list_input('tms_link_text_columns', $lang["tms_lin
 $page_def[] = config_add_text_list_input('tms_link_numeric_columns', $lang["tms_link_numeric_columns"]);
 
 $page_def[] = config_add_hidden("tms_link_field_mappings_saved");
-		
-
+*/		
 // End of mappings section
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -188,9 +187,13 @@ foreach($tms_link_modules_mappings as $tms_link_module_index => $tms_link_module
         $tms_link_rs_uid_field = htmlspecialchars($tms_link_rs_uid_field['title']);
         }
 
-    $tms_link_applicable_resource_types = get_resource_types(implode(',', $tms_link_module['applicable_resource_types']));
-    $tms_link_applicable_resource_types = array_column($tms_link_applicable_resource_types, 'name');
-    $tms_link_applicable_resource_types = htmlspecialchars(implode(', ', $tms_link_applicable_resource_types));
+    $tms_link_applicable_resource_types = '';
+    if(!empty($tms_link_module['applicable_resource_types']))
+        {
+        $tms_link_applicable_resource_types = get_resource_types(implode(',', $tms_link_module['applicable_resource_types']));
+        $tms_link_applicable_resource_types = array_column($tms_link_applicable_resource_types, 'name');
+        $tms_link_applicable_resource_types = htmlspecialchars(implode(', ', $tms_link_applicable_resource_types));
+        }
 
     $tms_modules_mappings_html .= "
             <tr>

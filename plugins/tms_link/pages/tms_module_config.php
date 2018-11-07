@@ -18,6 +18,7 @@ $tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_m
 $tms_link_module_name = getval('tms_link_module_name', '');
 $tms_link_tms_uid_field = getval('tms_link_tms_uid_field', '');
 $tms_link_rs_uid_field = getval('tms_link_rs_uid_field', 0, true);
+$tms_link_checksum_field = getval('tms_link_checksum_field', 0, true);
 $tms_link_applicable_resource_types = getval('tms_link_applicable_resource_types', array());
 $tms_link_tms_rs_mappings = getval('tms_rs_mappings', array());
 
@@ -38,6 +39,7 @@ if(getval('save', '') !== '' && enforcePostRequest(false))
         'module_name'   => $tms_link_module_name,
         'tms_uid_field' => $tms_link_tms_uid_field,
         'rs_uid_field'  => $tms_link_rs_uid_field,
+        'checksum_field'  => $tms_link_checksum_field,
         'applicable_resource_types' => $tms_link_applicable_resource_types,
         'tms_rs_mappings' => $tms_link_tms_rs_mappings,
     );
@@ -65,6 +67,7 @@ if($id !== '' && array_key_exists($id, $tms_link_modules_mappings))
     $tms_link_module_name = $record['module_name'];
     $tms_link_tms_uid_field = $record['tms_uid_field'];
     $tms_link_rs_uid_field = $record['rs_uid_field'];
+    $tms_link_checksum_field = $record['checksum_field'];
     $tms_link_applicable_resource_types = $record['applicable_resource_types'];
     $tms_link_tms_rs_mappings = $record['tms_rs_mappings'];
     }
@@ -105,6 +108,13 @@ include '../../../include/header.php';
             "stdwidth",
             false,
             $tms_link_rs_uid_field);
+        render_field_selector_question(
+            $lang["tms_link_checksum_field"],
+            "tms_link_checksum_field",
+            array(),
+            "stdwidth",
+            false,
+            $tms_link_checksum_field);
         config_multi_rtype_select(
             "tms_link_applicable_resource_types",
             $lang["tms_link_applicable_rt"],
