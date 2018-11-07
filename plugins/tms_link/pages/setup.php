@@ -4,7 +4,7 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 include_once '../../../include/general.php';
 
 
-$tms_link_field_mappings = unserialize(base64_decode($tms_link_field_mappings_saved));
+// $tms_link_field_mappings = unserialize(base64_decode($tms_link_field_mappings_saved)); # MOVED TO $tms_link_modules_saved_mappings
 $tms_link_modules_mappings = unserialize(base64_decode($tms_link_modules_saved_mappings));
 
 // Save column/field mappings here as we can't do it using standard plugin functions
