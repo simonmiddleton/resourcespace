@@ -58,10 +58,14 @@ function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
   {
   global $tms_link_dsn_name,$tms_link_user,$tms_link_password, $tms_link_checksum_field, $tms_link_table_name,$tms_link_object_id_field, $tms_link_text_columns, $tms_link_numeric_columns;
   
-  $conn=odbc_connect($tms_link_dsn_name, $tms_link_user, $tms_link_password);
-  
-  if($conn)
-    {
+  $conn = odbc_connect($tms_link_dsn_name, $tms_link_user, $tms_link_password);
+
+    if(!$conn)
+        {
+        $error = odbc_errormsg();
+        return $error;
+        }
+
     // Get checksum if if we haven't been passed it
     if($resourcechecksum==""){$resourcechecksum=get_data_by_field($resource, $tms_link_checksum_field);}
     
@@ -122,13 +126,6 @@ function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
       }
       //exit(print_r($convertedtmsdata));
       return $convertedtmsdata;
-    }
-  else
-    {    
-    $error=odbc_errormsg();
-    return $error;
-    }
-    
   }
 
 function tms_link_get_tms_resources()
