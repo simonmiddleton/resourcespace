@@ -725,3 +725,15 @@ function tms_link_save_module_mappings_config($value)
 
     return;
     }
+
+
+function tms_link_get_modules_mappings()
+    {
+    return unserialize(base64_decode($GLOBALS['tms_link_modules_saved_mappings']));
+    }
+
+
+function tms_link_encode_modules_mappings()
+    {
+    return base64_encode(serialize($GLOBALS['tms_link_modules_saved_mappings']));
+    }
