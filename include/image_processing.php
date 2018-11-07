@@ -108,7 +108,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 }
             elseif ($file_path!="")
                 {
-                $filename=basename($file_path); # The file path was provided
+                $filename=basename(urldecode($file_path)); # The file path was provided
                 }
             else
                 {
