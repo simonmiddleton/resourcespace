@@ -56,7 +56,8 @@ function tms_convert_value($value, $key)
 
 function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
   {
-  global $tms_link_dsn_name,$tms_link_user,$tms_link_password, $tms_link_checksum_field, $tms_link_table_name,$tms_link_object_id_field, $tms_link_text_columns, $tms_link_numeric_columns;
+  global $lang, $tms_link_dsn_name,$tms_link_user,$tms_link_password, $tms_link_checksum_field, $tms_link_table_name,
+         $tms_link_object_id_field, $tms_link_text_columns, $tms_link_numeric_columns, $tms_link_modules_saved_mappings;
   
   $conn = odbc_connect($tms_link_dsn_name, $tms_link_user, $tms_link_password);
 
@@ -65,6 +66,66 @@ function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
         $error = odbc_errormsg();
         return $error;
         }
+
+    $modules_mappings = tms_link_get_modules_mappings();
+
+    foreach($modules_mappings as $module)
+        {
+        // Get TMS UID value we have for this resource
+        if($tms_object_id == "")
+            {
+            $tms_object_id = get_data_by_field($resource, $module['rs_uid_field']);
+            }
+
+        if($tms_object_id == "" || empty($module['tms_rs_mappings']))
+            {
+            continue;
+            }
+
+        if(is_array($tms_object_id))
+            {
+            $conditionsql = " WHERE {$module['tms_uid_field']} IN ('" . implode("','", $tms_object_id) . "')";
+            }    
+        else
+            {
+            $conditionsql = " WHERE {$module['tms_uid_field']} ='" . $tms_object_id . "'";
+            }
+
+        $tmscountsql = "SELECT Count(*) FROM {$module['module_name']} {$conditionsql};";
+        $tmscountset = odbc_exec($conn, $tmscountsql);
+        $tmscount_arr = odbc_fetch_array($tmscountset);
+        $resultcount = end($tmscount_arr);
+        if($resultcount == 0)
+            {
+            return $lang["tms_link_no_tms_data"];
+            }
+
+        /*
+        // Add normal value fields
+        $columnsql = implode(", ", $tms_link_numeric_columns);
+
+        // Add SQL to get back text fields as VARBINARY(MAX) so we can sort out encoding later
+        foreach ($tms_link_text_columns as $tms_link_text_column)
+            {
+            $columnsql.=", CAST (" . $tms_link_text_column . " AS VARBINARY(MAX)) " . $tms_link_text_column;
+            }
+        */
+        foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
+            {
+            echo "<pre>";print_r($tms_rs_mapping);echo "</pre>";
+            }
+        //$tmssql = "SELECT {$columnsql} FROM {$module['module_name']} {$conditionsql};";
+        //$tmsresultset = odbc_exec($conn,$tmssql);
+
+
+        //echo "<pre>";print_r($resultcount);echo "</pre>";
+        //echo "<pre>";print_r($module);echo "</pre>";
+        die("You died in file " . __FILE__ . " at line " . __LINE__);
+        }
+
+    #################################################################
+    ####### OLD WAY #######
+    ####################################
 
     // Get checksum if if we haven't been passed it
     if($resourcechecksum==""){$resourcechecksum=get_data_by_field($resource, $tms_link_checksum_field);}
