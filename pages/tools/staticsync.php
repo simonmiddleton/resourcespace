@@ -178,8 +178,14 @@ function ProcessFolder($folder)
             continue;
             }
 
-        $filetype        = filetype($folder . '/' . $file);
-        $fullpath        = $folder . '/' . $file;
+        $fullpath = "{$folder}/{$file}";
+        if(!is_readable($fullpath))
+            {
+            echo "Warning: File '{$fullpath}' is unreadable!" . PHP_EOL;
+            continue;
+            }
+
+        $filetype        = filetype($fullpath);
         $shortpath       = str_replace($syncdir . '/', '', $fullpath);
         $shortpath_parts = explode('/', $shortpath);
         
@@ -644,7 +650,8 @@ function ProcessFolder($folder)
                     }
                 }
             }   
-        }   
+        }
+        closedir($dh);
     }
     
 function staticsync_process_alt($alternativefile, $ref="", $alternative="")
