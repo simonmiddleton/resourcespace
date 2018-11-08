@@ -2788,7 +2788,7 @@ function extract_icc_profile($ref, $extension, $alternative = -1)
     // path of the file. extract_icc() is where the real work will happen.
     $infile = get_resource_path($ref, true, '', true, $extension, true, 1, false, '', $alternative);
 
-    if(extract_icc($infile))
+    if(extract_icc($infile, $ref))
         {
         return true;
         }
@@ -2797,7 +2797,7 @@ function extract_icc_profile($ref, $extension, $alternative = -1)
     }
     
 
-function extract_icc($infile) {
+function extract_icc($infile, $ref='') {
    global $config_windows, $syncdir;
 
    # Locate imagemagick, or fail this if it isn't installed
@@ -2817,7 +2817,6 @@ function extract_icc($infile) {
         }
     else
         {
-        global $ref;
         $outfile = get_resource_path($ref,true,'',false,'icc',-1);
         }
   
