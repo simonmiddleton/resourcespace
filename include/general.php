@@ -1512,7 +1512,7 @@ function get_usergroup($ref)
 {
     # Returns the user group corresponding to the $ref. A standard user group name is translated using $lang. A custom user group name is i18n translated.
     
-    $return = sql_query("SELECT ref,name,permissions,parent,search_filter,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags" . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref='$ref'");
+    $return = sql_query("SELECT ref,name,permissions,parent,search_filter,search_filter_id,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags" . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref='$ref'");
     if (count($return)==0) {return false;}
     else {
         $return[0]["name"] = lang_or_i18n_get_translated($return[0]["name"], "usergroup-");
@@ -7237,7 +7237,8 @@ function save_filter($filter,$filter_name,$filter_condition)
         $newfilter = sql_insert_id();
         return $newfilter;
         }
-    return true;
+
+    return $filter;
     }
 
 function save_filter_rule($filter_rule, $filterid, $ruledatajson)
@@ -7252,7 +7253,6 @@ function save_filter_rule($filter_rule, $filterid, $ruledatajson)
             {
             return false;    
             }
-        //sql_query("UPDATE filter_rule SET condition = '{$condition}' WHERE ref = '{$filter_rule}'");
         sql_query("DELETE FROM filter_rule_node WHERE filter_rule = '{$filter_rule}'");
         }
     else
@@ -7266,22 +7266,34 @@ function save_filter_rule($filter_rule, $filterid, $ruledatajson)
         for($n=0;$n<count($rule_data);$n++)
             {
             $condition = $rule_data[$n][0];
-            echo "nodecond = " . $condition;
             for($rd=0;$rd<count($rule_data[$n][1]);$rd++)
                 {
                 $nodeid = $rule_data[$n][1][$rd];
-            echo "nodeid = " . $nodeid;
                 $nodeinsert[] = "('" . $filter_rule . "','" . $nodeid . "','" . $condition . "')";
                 }
             }
-        //$nodevals = "('" . $filter_rule . "','" . (implode("'),('" . $filter_rule . "','",$nodes)) . "', )";
         $sql = "INSERT INTO filter_rule_node (filter_rule,node,node_condition) VALUES " . implode(',',$nodeinsert);
-        //exit($sql);
         sql_query($sql);
         }
     return true;
     }
     
+function delete_filter($filter)
+    {
+    if(!is_numeric($filter))
+            {
+            return false;    
+            }
+    
+    // Delete and cleanup any unused 
+    sql_query("DELETE FROM filter WHERE ref='$filter'"); 
+    sql_query("DELETE FROM filter_rule WHERE filter NOT IN (SELECT ref FROM filter)");
+    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+        
+    return true;
+    }
+
 function delete_filter_rule($filter_rule)
     {
     if(!is_numeric($filter_rule))
@@ -7289,8 +7301,25 @@ function delete_filter_rule($filter_rule)
             return false;    
             }
             
-    sql_query("DELETE FROM filter_rule_node WHERE filter_rule='$filter_rule'");
+    // Delete and cleanup any unused nodes
     sql_query("DELETE FROM filter_rule WHERE ref='$filter_rule'");  
+    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
         
     return true;
+    }
+
+function copy_filter($filterid, $filter_copy_from)
+    {
+    sql_query("INSERT INTO filter (name, filter_condition) SELECT name, filter_condition FROM filter WHERE ref={$filter_copy_from}"); 
+    $newfilter = sql_insert_id();
+    $rules = sql_array("SELECT ref value from filter_rule  WHERE filter={$filter_copy_from}"); 
+    foreach($rules as $rule)
+        {
+        sql_query("INSERT INTO filter_rule (filter) VALUES ({$newfilter})");
+        $newrule = sql_insert_id();
+        sql_query("INSERT INTO filter_rule_node (filter_rule, node_condition, node) SELECT '{$newrule}', node_condition, node FROM filter_rule_node WHERE filter_rule='{$rule}'");
+        }
+
+    return $newfilter;
     }

@@ -58,7 +58,8 @@ function do_search(
     # globals needed for hooks
      global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
            $search_sql_double_pass_mode, $usergroup, $search_filter_strict, $default_sort, 
-           $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming;
+           $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming,
+           $open_access_for_contributor;
 		   
     $alternativeresults = hook("alternativeresults", "", array($go));
     if ($alternativeresults)
@@ -1044,19 +1045,17 @@ function do_search(
         {
         $filter         = get_filter($usersearchfilter);
         $filterrules    = get_filter_rules($usersearchfilter);
-        //exit(print_r($filterrules));
+
         $modfilterrules=hook("modifysearchfilterrules");
         if ($modfilterrules)
             {
             $filterrules = $modfilterrules;
             }
             
-        //exit(print_r($filterrules));
         $filtercondition = $filter["filter_condition"];
         $filters = array();
-        $filter_ors = array();
+        $filter_ors = array(); // Allow filters to be overridden in certain cases
             
-        //foreach($filterrules["nodes"] as $filternode)
         foreach($filterrules as $filterrule)
             {
             $filtersql = "";
@@ -1071,7 +1070,6 @@ function do_search(
                 }
                 
             $filters[] = "(" . $filtersql . ")";
-            //echo $filtersql . "<br />";
             }
         
         if (count($filters) > 0)
@@ -1091,14 +1089,23 @@ function do_search(
             # If custom access has been granted for the user or group, nullify the search filter, effectively selecting "true".
             if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
                 {
-                $filter_add = "((" . $filter_add . ") OR (rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2))";
+                $filter_ors[] = "(rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2)";
+                }
+
+            if($open_access_for_contributor)
+                {
+                $filter_ors[] = "(r.created_by='$userref')";
                 }
             
+            if(count($filter_ors) > 0)
+                {
+                $filter_add = "((" . $filter_add . ") OR (" . implode(") OR (",$filter_ors) . "))";
+                }
+
             if ($sql_filter != ""){$sql_filter .= " AND ";}
-                
             $sql_filter .=  $filter_add;
             }
-    //exit(print_r($sql_filter));
+        //exit(print_r($sql_filter));
         }
     elseif (strlen($usersearchfilter)>0 && !is_numeric($usersearchfilter))
         {

@@ -113,7 +113,7 @@ if (getval("save",false) && enforcePostRequest(false))
 			log_activity(null,null,null,'usergroup','group_specific_logo',$ref);
 			}
 
-	foreach (array("name","permissions","parent","search_filter","edit_filter","derestrict_filter",
+	foreach (array("name","permissions","parent","search_filter","search_filter_id","edit_filter","derestrict_filter",
 					"resource_defaults","config_options","welcome_message","ip_restrict","request_mode","allow_registration_selection","inherit_flags") as $column)		
 		
 		{
@@ -281,11 +281,35 @@ include "../../include/header.php";
 		<p><?php echo $lang["action-title_see_wiki_for_advanced_options"]; ?></p>
 
 
-		<div class="Question">
-			<label for="search_filter"><?php echo $lang["property-search_filter"]; ?></label>
-			<textarea name="search_filter" class="stdwidth" rows="3" cols="50"><?php echo $record['search_filter']; ?></textarea>
-			<div class="clearerleft"></div>
-		</div>
+		<?php
+		if ($search_filter_nodes)
+			{
+			$search_filters = get_filters($order = "name", $sort = "ASC");
+			?>
+			<div class="Question">
+				<label for="search_filter_id"><?php echo $lang["property-search_filter"]; ?></label>
+				<select name="search_filter_id" class="stdwidth">
+					<?php
+					echo "<option value='0' >" . ($record['search_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
+					foreach	($search_filters as $search_filter)
+						{
+						echo "<option value='" . $search_filter['ref'] . "' " . ($record['search_filter_id'] == $search_filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($search_filter['name']) . "</option>";
+						}?>
+				</select>
+				<div class="clearerleft"></div>
+			</div>
+			<?php	
+			}
+		else
+			{
+			?>
+			<div class="Question">
+				<label for="search_filter"><?php echo $lang["property-search_filter"]; ?></label>
+				<textarea name="search_filter" class="stdwidth" rows="3" cols="50"><?php echo $record['search_filter']; ?></textarea>
+				<div class="clearerleft"></div>
+			</div>
+			<?php
+			}?>
 
 		<div class="Question">
 			<label for="edit_filter"><?php echo $lang["property-edit_filter"]; ?></label>

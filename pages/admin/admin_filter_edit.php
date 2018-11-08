@@ -9,12 +9,57 @@ if (!checkperm("a"))
 	exit ("Permission denied.");
 	}
 
+$backurl = getval("backurl","");
+if($backurl == "")
+    {
+    $filterorder    = getval("filterorder","ref");
+    $filtersort     = getval("filtersort", "ASC");
+    $revsort        = ($filtersort == "ASC") ? "DESC" : "ASC";
+    $filterfind     = getval("filterfind","");
+    $filter_manage_url  = $baseurl . "/pages/admin/admin_filter_manage.php";
+
+    $params = array(
+        "filterfind"    => $filterfind,
+        "filtersort"    => $filtersort, 
+        "filterorder"   => $filterorder
+        );
+
+    $backurl = generateURL($filter_manage_url, $params);
+    }
+else
+    {
+    $backurl = urlencode($backurl);
+    }
+
+  
+$delete_filter = getvalescaped('delete_filter', '');
 $delete_filter_rule = getvalescaped('delete_filter_rule', '');
 $filter_rule = getval("filter_rule","");
-$filter_copy_from = getval("copyfrom",0,true);
+$filter_copy_from = getval("copy_from",0,true);
 
 // Process ajax requests
-if($delete_filter_rule != '' && enforcePostRequest("delete_filter_rule"))
+if($delete_filter != "" && enforcePostRequest("admin_filter_edit"))
+    {
+    $result     = delete_filter($delete_filter);
+    if($result)
+        {
+        if(getval("filter_manage_page","") != "")
+            {
+            $response   = array('deleted' => $result);
+            exit(json_encode($response));
+            }
+        else
+            {
+            ?>
+            <script>
+            CentralSpaceLoad('<?php echo $backurl; ?>',true);
+            </script>
+            <?php
+            exit();    
+            }
+        }
+    }
+if($delete_filter_rule != "" && enforcePostRequest("delete_filter_rule"))
     {
     $result     = delete_filter_rule($delete_filter_rule);
     $response   = array('success' => $result);
@@ -31,43 +76,38 @@ elseif($filterid != "" && getval("save","") != "" && enforcePostRequest("admin_f
     // Save the filter
     $filter_name = getval("filter_name","");
     $filter_condition = getval("filter_condition",RS_FILTER_ALL, true);
-    save_filter($filterid,$filter_name,$filter_condition);
+
+    if ($filterid == 0 && $filter_copy_from != 0)
+        {
+        // Copy rules to new filter
+        $newfilterid = copy_filter($filterid, $filter_copy_from);
+        $filterid = $newfilterid;
+        }
+    else
+        {
+        save_filter($filterid,$filter_name,$filter_condition);
+        
+        if(getval("filter_manage_page","") == "")
+            {
+            redirect($backurl);    
+            } 
+        }
     }
 
 // Get all fields so we can resolve node field names
 $allfields = get_resource_type_fields();
     
-if ($filterid == 0 && $filter_copy_from != 0)
-    {
-    $filter = get_filter($filter_copy_from);
-    $filter_rules = get_filter_rules($filter_copy_from);
-    }
-else
-    {
-    $filter = get_filter($filterid);
-    $filter_rules = get_filter_rules($filterid);
-    }
+$filter = get_filter($filterid);
+$filter_rules = get_filter_rules($filterid);
 
+$filter_edit_url = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",array("filter"=>$filterid));  
 $rule_add_url = generateURL($baseurl . "/pages/admin/ajax/admin_filter_rule_edit.php",array("ref"=>"new","filter"=>$filterid));
-//print_r($filter);
-//exit(print_r($filter_rules));
 
 // Convert filter so we can display it in a user friendly way
-
-//$n=0;
-
-//exit(print_r($filter_rules));
+$rules=array();
 
 foreach($filter_rules as $fr_id => $frule)
-    {
-    //$rules[$n]["ref"]= $filter_rule["ref"];
-    //$rules[$n]["node_condition"] = $filter_rule["rule_condition"];
-    
-    //$rules[$n]["fields"] = array();
-    
-    //$nodes = explode(",",$filter_rule["nodes"]);
-    
-    
+    {     
     foreach($frule["nodes_on"] as $rulenode)
         {  
         $nodeinfo = array();
@@ -82,10 +122,8 @@ foreach($filter_rules as $fr_id => $frule)
         $field_index = array_search($nodeinfo["resource_type_field"], array_column($allfields, 'ref'));
         if($field_index !== false)
             {            
-            //echo "filter - node field found: " . $allfields[$field_index]["name"];
             if(!isset($rules[$fr_id]["fields"][$allfields[$field_index]["ref"]]))
                 {
-                //echo "filter - adding field " . $allfields[$field_index]["ref"] . " to array";
                 $rules[$fr_id]["fields"][$allfields[$field_index]["ref"]]["fieldname"] = i18n_get_translated($allfields[$field_index]["name"]);
                 $rules[$fr_id]["fields"][$allfields[$field_index]["ref"]]["values_on"] = array();
                 }
@@ -111,10 +149,8 @@ foreach($filter_rules as $fr_id => $frule)
         $field_index = array_search($nodeinfo["resource_type_field"], array_column($allfields, 'ref'));
         if($field_index !== false)
             {            
-            //echo "filter - node field found: " . $allfields[$field_index]["name"];
             if(!isset($rules[$fr_id]["fields"][$allfields[$field_index]["ref"]]))
                 {
-                //echo "filter - adding field " . $allfields[$field_index]["ref"] . " to array";
                 $rules[$fr_id]["fields"][$allfields[$field_index]["ref"]]["fieldname"] = i18n_get_translated($allfields[$field_index]["name"]);
                 $rules[$fr_id]["fields"][$allfields[$field_index]["ref"]]["values_off"] = array();
                 }
@@ -125,7 +161,6 @@ foreach($filter_rules as $fr_id => $frule)
             echo "filter - node field " . $nodeinfo["resource_type_field"] . " for node:" . $rulenode . " not found ";
             }
         }
-    //$n++;
     }
 
 
@@ -139,11 +174,11 @@ include "../../include/header.php";
     <div id="CentralSpace">
         <div class="BasicsBox">
         
-             <p><a href="<?php echo $baseurl . "/pages/admin/admin_filter_manage.php"; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["filter_manage"]; ?></a></p>
+            <p><a href="<?php echo $backurl; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["filter_manage"]; ?></a></p>
              
             <h1><?php echo ($filterid == 0 ? $lang["filter_new"] : $lang["filter_edit"]) ?></h1>
             <h2><?php echo $lang["filter_edit_text"] ?></h2>
-            <form id="filter_edit_form" name="filter_edit_form" method="post" class="FormWide" action="">
+            <form id="filter_edit_form" name="filter_edit_form" method="post" class="FormWide" action="<?php echo $filter_edit_url; ?>">
                 <input type="hidden" name="filter" value="<?php echo htmlspecialchars($filterid); ?>" />
                 <input type="hidden" name="save" value="true" />
                 <?php generateFormToken("admin_filter_edit"); ?>
@@ -171,27 +206,32 @@ include "../../include/header.php";
                     <div id="fr_list" class="stdwidth">
                         <table class="OptionTable">
                         <?php
-                        
-                        // TODO - show message - $lang["filter_rules_none"] if no filter rules
-                        foreach($rules as $ruleid => $ruleinfo)
+                        if(count($rules) == 0)
                             {
-                            $ruletext = array();
-                            foreach($ruleinfo["fields"] as $rulefield)
+                            echo  $lang["filter_rules_none"];
+                            }
+                        else
+                            {
+                            foreach($rules as $ruleid => $ruleinfo)
                                 {
-                                //print_r($rulefield);
-                                if(isset($rulefield["values_on"]) && count($rulefield["values_on"]) > 0)
+                                $ruletext = array();
+                                foreach($ruleinfo["fields"] as $rulefield)
                                     {
-                                    $ruletext[] = $rulefield["fieldname"] . " " . $lang["filter_is_in"] . " ('" . implode("'&nbsp;" . $lang["filter_or"] . "&nbsp;'", $rulefield["values_on"]) . "')";
+                                    //print_r($rulefield);
+                                    if(isset($rulefield["values_on"]) && count($rulefield["values_on"]) > 0)
+                                        {
+                                        $ruletext[] = $rulefield["fieldname"] . " " . $lang["filter_is_in"] . " ('" . implode("'&nbsp;" . $lang["filter_or"] . "&nbsp;'", $rulefield["values_on"]) . "')";
+                                        }
+                                    if(isset($rulefield["values_off"]) && count($rulefield["values_off"]) > 0)
+                                        {
+                                        $ruletext[] = $rulefield["fieldname"] . " " . $lang["filter_is_not_in"] . " ('" . implode("'&nbsp;" . $lang["filter_or"] . "&nbsp;'", $rulefield["values_off"]) . "')";
+                                        }
                                     }
-                                if(isset($rulefield["values_off"]) && count($rulefield["values_off"]) > 0)
-                                    {
-                                    $ruletext[] = $rulefield["fieldname"] . " " . $lang["filter_is_not_in"] . " ('" . implode("'&nbsp;" . $lang["filter_or"] . "&nbsp;'", $rulefield["values_off"]) . "')";
-                                    }
+                                    
+                                //exit(print_r($ruleinfo));
+                            
+                                echo "<tr><td><div class='keywordselected tag_inline' id='filter_rule_" . $ruleid . "'>" . implode("&nbsp;" . $lang["filter_or"] . "&nbsp;",$ruletext) . "<a href='#' onclick ='deleteFilterRule(" . $ruleid . ");return false;'>[<i class='fa fa-remove'></i>]</a></div></td></tr>";
                                 }
-                                
-                            //exit(print_r($ruleinfo));
-                           
-                            echo "<tr><td><div class='keywordselected tag_inline' id='filter_rule_" . $ruleid . "'>" . implode("&nbsp;" . $lang["filter_or"] . "&nbsp;",$ruletext) . "<a href='#' onclick ='deleteFilterRule(" . $ruleid . ");return false;'>[<i class='fa fa-remove'></i>]</a></div></td></tr>";
                             }
                             ?>
                         </table>
@@ -208,13 +248,13 @@ include "../../include/header.php";
 
                 <div class="Question">
                     <label><?php echo $lang["action-delete"]?></label>
-                    <input id="delete_filter" name="delete_filter" type="checkbox" value="yes" >
+                    <input id="delete_filter" name="delete_filter" type="checkbox" value="<?php echo htmlspecialchars($filterid); ?>" >
                     <div class="clearerleft"></div>
                 </div>
                         
                 <div class="QuestionSubmit">
-                    <label for="buttonsave"></label>
-                    <input name="buttonsave" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;">
+                    <label for="save"></label>
+                    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" onClick="return CentralSpacePost(this.form,true);">
                 </div>
 
 
@@ -229,10 +269,6 @@ function addFilterRule()
     {
     ModalLoad('<?php echo $rule_add_url; ?>',true,true,'left');
     ModalCentre();
-    /*
-    rule_edit_html = jQuery('#filter_rule_edit').html();
-    jQuery('#modal').html(rule_edit_html);
-    */
     return true;
     } 
     
