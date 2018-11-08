@@ -514,6 +514,7 @@ function config_gen_setup_post($page_def,$plugin_name)
                 }
             else 
                 {
+                $config_global=(isset($GLOBALS[$def[1]]) ? $GLOBALS[$def[1]] :false);
                 switch ($def[0])
                     {
                     case 'html':
@@ -532,6 +533,9 @@ function config_gen_setup_post($page_def,$plugin_name)
                         $GLOBALS[$def[1]] = getval($def[1], is_array($GLOBALS[$def[1]])?array():'');
                         break;
                     }
+                
+                hook('custom_config_post', '', array($def, $config, $omit, $config_global));
+                
                 }
             if (!$omit)
                 {
@@ -592,6 +596,9 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
             $array=preg_replace("/\[[\"|']?\w+[\"|']?\]/","",$def[1]);
             preg_match("/[\"|']?\w+[\"|']?/",$array_offset[0],$array_offset);
             }
+        
+        hook ("custom_config_def", '', array($def)); //this comes first so overriding the below is possible
+        
         switch ($def[0])
             {
             case 'section_header':
@@ -960,7 +967,7 @@ function config_add_multi_group_select($config_var, $label, $width=300)
  * @param integer array $current the current value of the config variable being set
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$ftype) 
+function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$ftype=false) 
     {
     global $lang;
     if($ftype===false){
