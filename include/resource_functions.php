@@ -2677,7 +2677,11 @@ function write_metadata($path, $ref, $uniqid="")
                     # Date / Expiry Date: write datetype fields in exiftool preferred format
                     if($writevalue!='')
                         {
-                        $writevalue = date("Y:m:d H:i:sP", strtotime($writevalue));
+                        $writevalue_to_time=strtotime($writevalue);
+                        if($writevalue_to_time!='')
+                            {
+                            $writevalue = date("Y:m:d H:i:sP", strtotime($writevalue));
+                            }
                         }				
                     break;
                     # Other types, already set
