@@ -503,27 +503,13 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         }
     if($upload_then_process && !$after_upload_processing)
         {
-        /*# add this file to the queue
-        sql_query("INSERT into upload_processing_queue (resource, extract, autorotate) values ({$ref}," . ($no_exif ? 1 : 0) ."," . ($autorotate ? 1 : 0) . ")");
-        global $upload_then_process_holding_state;
-        if(isset($upload_then_process_holding_state))
-            {
-            $cur_archive=sql_value("SELECT archive value from resource where ref={$ref}", "");
-            update_archive_status($ref, $upload_then_process_holding_state);
-            sql_query("UPDATE upload_processing_queue set archive={$cur_archive} where resource={$ref}");
-            }
-        if(!is_process_lock("upload_processing"))
-            {
-            # trigger the queue
-            process_uploads();
-            }
-            */
         # Add this to the job queue for offline processing
         global $userref;
         
         $job_data=array();
         $job_data["resource"]=$ref;
         $job_data["extract"]=($no_exif);
+        $job_data["revert"]=$revert;
         $job_data["autorotate"]=$autorotate;
         
         global $upload_then_process_holding_state;
