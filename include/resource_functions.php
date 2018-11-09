@@ -3733,7 +3733,7 @@ if (!function_exists("resource_download_allowed")){
 function resource_download_allowed($resource,$size,$resource_type,$alternative=-1)
 	{
 	
-	# For the given resource and size, can the curent user download it?
+	# For the given resource and size, can the current user download it?
 	# resource type and access may already be available in the case of search, so pass them along to get_resource_access to avoid extra queries
 	# $resource can be a resource-specific search result array.
 	$access=get_resource_access($resource);
