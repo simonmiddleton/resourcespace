@@ -1,7 +1,7 @@
 <?php
 
 function getPreviewURLForType($resource, $type, $alternative = -1, $page = 1)
-	{
+    {
     global $use_watermark;
 
     $path = get_resource_path(
@@ -33,23 +33,23 @@ function getPreviewURLForType($resource, $type, $alternative = -1, $page = 1)
         $use_watermark,
         '',
         $alternative);
-	}
+    }
 
 function getPreviewURL($resource, $alternative = -1, $page = 1)
-	{
-	if ($resource['has_image'] != 1)
-		return false;
+    {
+    if ($resource['has_image'] != 1)
+        return false;
 
-	// Try 'scr' first
-	$url = getPreviewURLForType($resource, 'scr', $alternative, $page);
-	if ($url == false || !resource_download_allowed($resource,'scr',$resource['resource_type'],$alternative))
-		{
-		// and then 'pre'
-		$url = getPreviewURLForType($resource, 'pre', $alternative, $page);
-		}
+    // Try 'scr' first
+    $url = getPreviewURLForType($resource, 'scr', $alternative, $page);
+    if ($url == false || !resource_download_allowed($resource,'scr',$resource['resource_type'],$alternative))
+        {
+        // and then 'pre'
+        $url = getPreviewURLForType($resource, 'pre', $alternative, $page);
+        }
 
-	return $url;
-	}
+    return $url;
+    }
 
 function addLightBox($selector, $url = "", $title = "", $set = "")
     {
