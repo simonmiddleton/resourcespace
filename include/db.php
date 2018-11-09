@@ -2389,6 +2389,7 @@ function resource_table_joins_sql(array $joins, $sql, $order_by = '')
                        FROM resource_data
                       WHERE resource = ss.ref
                         AND resource_type_field = {$join}
+                      LIMIT 1
                 ) AS field{$join} ";
 
             continue;
@@ -2420,6 +2421,7 @@ function resource_table_joins_sql(array $joins, $sql, $order_by = '')
                   FROM resource_data
                  WHERE resource = ss.ref
                    AND resource_type_field = {$join}
+                 LIMIT 1
             ) AS field{$join} ";
         }
 
