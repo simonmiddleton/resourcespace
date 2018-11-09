@@ -586,6 +586,12 @@ function ProcessFolder($folder)
                     || (isset($resource_deletion_state) && $done[$shortpath]["archive"]!=$resource_deletion_state) // or if resource is not in system deleted state,
                     || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state)) // or resource is currently in staticsync deleted state and needs to be reinstated
                 {
+                if(!file_exists($fullpath))
+                    {
+                    echo "Warning: File '{$fullpath}' does not exist anymore!";
+                    continue;
+                    }
+
                 $filemod = filemtime($fullpath);
                 if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"]) || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state))
                     {
@@ -742,6 +748,13 @@ foreach($alternativefiles as $alternativefile)
     $shortpath = str_replace($syncdir . "/", '', $alternativefile);
     echo "Processing alternative file " . $shortpath . PHP_EOL;
     debug("Staticsync -  Processing altfile " . $shortpath);
+
+    if(!file_exists($alternativefile))
+        {
+        echo "Warning: File '{$alternativefile}' does not exist anymore!";
+        continue;
+        }
+
     if (!isset($done[$shortpath]))
         {
         staticsync_process_alt($alternativefile);        
