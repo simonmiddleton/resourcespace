@@ -42,7 +42,7 @@ function getPreviewURL($resource, $alternative = -1, $page = 1)
 
 	// Try 'scr' first
 	$url = getPreviewURLForType($resource, 'scr', $alternative, $page);
-	if ($url == false)
+	if ($url == false || !resource_download_allowed($resource,'scr',$resource['resource_type'],$alternative))
 		{
 		// and then 'pre'
 		$url = getPreviewURLForType($resource, 'pre', $alternative, $page);
