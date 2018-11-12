@@ -13,7 +13,6 @@ function HookTms_linkEditEditbeforesectionhead()
 			<div class="clearerleft"> </div>
 		</div>
 		<?php
-		
 		if(isset($tms_confirm_upload) && $tms_confirm_upload)
 			{
 			?>
@@ -31,11 +30,30 @@ function HookTms_linkEditEditbeforesectionhead()
 function HookTMS_linkEditEdithidefield($field)
 	{
 	global $tms_link_object_id_field,$ref,$resource,$tms_link_resource_types;
-	if ($field["ref"]==$tms_link_object_id_field && $ref<0 && in_array($resource["resource_type"],$tms_link_resource_types))
-		{
-		return true;
-		}
-	return false;
+
+    $field_ref_ok = false;
+    $resource_type_allowed = false;
+
+    if(tms_link_is_rs_uid_field($field['ref']) && $ref < 0)
+        {
+        $field_ref_ok = true;
+        }
+
+    foreach(tms_link_get_modules_mappings() as $module)
+        {
+        if(in_array($resource['resource_type'], $module['applicable_resource_types']))
+            {
+            $resource_type_allowed = true;
+            break;
+            }
+        }
+
+    if($field_ref_ok && $resource_type_allowed)
+        {
+        return true;
+        }
+
+    return false;
 	}
 
 
