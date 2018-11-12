@@ -108,7 +108,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 }
             elseif ($file_path!="")
                 {
-                $filename=basename($file_path); # The file path was provided
+                $filename=basename(urldecode($file_path)); # The file path was provided
                 }
             else
                 {
@@ -503,27 +503,13 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         }
     if($upload_then_process && !$after_upload_processing)
         {
-        /*# add this file to the queue
-        sql_query("INSERT into upload_processing_queue (resource, extract, autorotate) values ({$ref}," . ($no_exif ? 1 : 0) ."," . ($autorotate ? 1 : 0) . ")");
-        global $upload_then_process_holding_state;
-        if(isset($upload_then_process_holding_state))
-            {
-            $cur_archive=sql_value("SELECT archive value from resource where ref={$ref}", "");
-            update_archive_status($ref, $upload_then_process_holding_state);
-            sql_query("UPDATE upload_processing_queue set archive={$cur_archive} where resource={$ref}");
-            }
-        if(!is_process_lock("upload_processing"))
-            {
-            # trigger the queue
-            process_uploads();
-            }
-            */
         # Add this to the job queue for offline processing
         global $userref;
         
         $job_data=array();
         $job_data["resource"]=$ref;
         $job_data["extract"]=($no_exif);
+        $job_data["revert"]=$revert;
         $job_data["autorotate"]=$autorotate;
         
         global $upload_then_process_holding_state;
@@ -2802,7 +2788,7 @@ function extract_icc_profile($ref, $extension, $alternative = -1)
     // path of the file. extract_icc() is where the real work will happen.
     $infile = get_resource_path($ref, true, '', true, $extension, true, 1, false, '', $alternative);
 
-    if(extract_icc($infile))
+    if(extract_icc($infile, $ref))
         {
         return true;
         }
@@ -2811,7 +2797,7 @@ function extract_icc_profile($ref, $extension, $alternative = -1)
     }
     
 
-function extract_icc($infile) {
+function extract_icc($infile, $ref='') {
    global $config_windows, $syncdir;
 
    # Locate imagemagick, or fail this if it isn't installed
@@ -2831,7 +2817,6 @@ function extract_icc($infile) {
         }
     else
         {
-        global $ref;
         $outfile = get_resource_path($ref,true,'',false,'icc',-1);
         }
   

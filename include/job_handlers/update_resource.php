@@ -1,18 +1,18 @@
 <?php
 include_once __DIR__ . '/../image_processing.php';
 include_once __DIR__ .  "/../resource_functions.php";
-# $job_data["resource"]
-# $job_data["extract"]
-# $job_data["revert"]
-# $job_data["autorotate"]
+
+# $job_data["r"]
+# $job_data["title"]
+# $job_data["ingest"]
+# $job_data["createPreviews"]
 # $job_data["archive"] -> optional based on $upload_then_process_holding_state
 
-$resource=get_resource_data($job_data["resource"]);
-$status=false;
+$resource=get_resource_data($job_data["r"]);
 
 if($resource!==false)
 	{
-	$status=upload_file($job_data["resource"], $job_data["extract"], $job_data["revert"], $job_data["autorotate"] ,"", true);
+	$status=update_resource($job_data["r"], $resource['file_path'], $resource['resource_type'], $job_data["title"], $job_data["ingest"], $job_data["createPreviews"], $resource['file_extension'], true);
 	
 	# update the archive status
 	if(isset($job_data['archive']) && $job_data['archive'] !== '')
@@ -23,7 +23,7 @@ if($resource!==false)
 
 global $baseurl, $offline_job_delete_completed;
 
-$url = isset($job_data['resource']) ? $baseurl . "/?r=" . $job_data['resource']: '';
+$url = isset($job_data['r']) ? $baseurl . "/?r=" . $job_data['r']: '';
 
 if($status===false)
     {
@@ -34,9 +34,6 @@ if($status===false)
     }
 else
     {
-    # success
-    message_add($job['user'], $job_success_text, $url, 0);
-    
     # only delete the job if completed successfully;
     if($offline_job_delete_completed)
         {
@@ -44,6 +41,7 @@ else
         }
     else
         {
-        job_queue_update($jobref,$job_data,STATUS_COMPLETE);
+        job_queue_update($jobref, $job_data, STATUS_COMPLETE);
         }
     }
+

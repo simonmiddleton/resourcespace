@@ -8,6 +8,7 @@ include "../include/image_processing.php";
 include "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
 
+
 $overquota                              = overquota();
 $status                                 = '';
 $resource_type                          = getvalescaped('resource_type', '');
@@ -40,6 +41,11 @@ if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirectur
 if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_readonly($replace_resource)))
     {
     $replace_resource = false;
+    }
+
+if($upload_then_edit && $resource_type_force_selection && getval('posting', '') != '')
+    {
+    update_resource_type(0 - $userref, $resource_type);
     }
 
 if($resource_type == "")
@@ -159,7 +165,6 @@ if($replace_resource_preserve_option && '' != $replace_resource)
     }
 
 $uploadurl=generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams) . hook('addtopluploadurl');
-
 
 
 $default_sort_direction="DESC";
@@ -556,7 +561,6 @@ if ($_FILES)
                     if ($replace=="" && $replace_resource=="")
                             {
                             # Standard upload of a new resource
-                            
                             # create ref via copy_resource() or other method
                             $modified_ref=hook("modifyuploadref");
                             if ($modified_ref!="")
@@ -596,7 +600,7 @@ if ($_FILES)
                             // For upload_then_edit mode ONLY, we decide the resource type based on the extension. User
                             // can later change this at the edit stage
                             // IMPORTANT: we change resource type only if user has access to it
-                            if($upload_then_edit)
+                            if($upload_then_edit && !$resource_type_force_selection)
                                 {
                                 $resource_type_from_extension = get_resource_type_from_extension(
                                     pathinfo($plupload_upload_location, PATHINFO_EXTENSION),
@@ -1378,7 +1382,7 @@ if($replace_resource != '' || $replace != '' || $upload_then_edit)
     ?>
     <h2 class="CollapsibleSectionHead collapsed" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
-    <form class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
+    <form id="UploadPluploadForm" class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
     <?php
     generateFormToken("upload_plupload");
     
