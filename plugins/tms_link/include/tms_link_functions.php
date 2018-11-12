@@ -59,7 +59,7 @@ function tms_convert_value($value, $key, array $module)
     }
 
 
-function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
+function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum = "")
   {
   global $lang, $tms_link_dsn_name,$tms_link_user,$tms_link_password, $tms_link_checksum_field, $tms_link_table_name,
          $tms_link_object_id_field, $tms_link_text_columns, $tms_link_numeric_columns, $tms_link_modules_saved_mappings;
@@ -73,6 +73,7 @@ function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
         }
 
     $modules_mappings = tms_link_get_modules_mappings();
+    $convertedtmsdata = array();
 
     foreach($modules_mappings as $module)
         {
@@ -118,7 +119,6 @@ function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
         $tmssql = "SELECT {$columnsql} FROM {$module['module_name']} {$conditionsql};";
         $tmsresultset = odbc_exec($conn, $tmssql);
 
-        $convertedtmsdata = array();
         for($r = 1; $r <= $resultcount; $r++)
             {    
             $tmsdata = odbc_fetch_array($tmsresultset, $r);
@@ -127,14 +127,14 @@ function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
                 {
                 foreach($tmsdata as $key => $value)
                     {
-                    $convertedtmsdata[$r][$key] = tms_convert_value($value, $key, $module);
+                    $convertedtmsdata[$module['module_name']][$r][$key] = tms_convert_value($value, $key, $module);
                     }
                 }
             else
                 {
                 foreach($tmsdata as $key => $value)
                     {
-                    $convertedtmsdata[$key] = tms_convert_value($value, $key, $module);
+                    $convertedtmsdata[$module['module_name']][$key] = tms_convert_value($value, $key, $module);
                     }
                 }        
             }

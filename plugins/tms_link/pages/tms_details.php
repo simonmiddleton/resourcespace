@@ -31,14 +31,20 @@ if(!is_array($tmsdata))
 <div class="Listview">
     <table style="border=1;">
 <?php
-foreach($tmsdata as $key=>$value)
+foreach($tmsdata as $module_name => $module_tms_data)
 	{
     ?>
-	<tr> 
-	   <td><strong><?php echo htmlspecialchars($key); ?></strong></td>
-	   <td><?php echo htmlspecialchars($value); ?></td>
-	</tr>
+    <tr colspan="2"><strong><?php echo htmlspecialchars($module_name); ?></strong></tr>
     <?php
+    foreach($module_tms_data as $tms_column => $tms_value)
+        {
+        ?>
+        <tr> 
+           <td><strong><?php echo htmlspecialchars($tms_column); ?></strong></td>
+           <td><?php echo htmlspecialchars($tms_value); ?></td>
+        </tr>
+        <?php
+        }
 	}
     ?>
     </table>
