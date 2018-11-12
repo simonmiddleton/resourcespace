@@ -6,7 +6,7 @@ $codes=build_codes();
 
 # Find country field
 $country_field=sql_query("select ref,type from resource_type_field where name='country'");
-if ($country_field[0]["ref"]=="") 
+if (count($country_field) == 0 || $country_field[0]["ref"] == "") 
 	{
 	echo "Country field not found. Must have a field with shorthand name set to 'country'.";
 	} 
