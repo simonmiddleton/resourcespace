@@ -763,3 +763,15 @@ function tms_link_encode_modules_mappings()
     {
     return base64_encode(serialize($GLOBALS['tms_link_modules_saved_mappings']));
     }
+    
+function tms_link_is_rs_uid_field($field_ref)
+    {
+    $tms_rs_uid_field_index = array_search($field_ref, array_column(tms_link_get_modules_mappings(), 'rs_uid_field'));
+
+    if($tms_rs_uid_field_index === false)
+        {
+        return false;
+        }
+    
+    return true;
+    }
