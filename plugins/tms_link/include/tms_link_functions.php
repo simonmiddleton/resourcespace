@@ -38,14 +38,19 @@ function getEncodingOrder()
    return $ary;
    }
 
-function tms_convert_value($value, $key)
+function tms_convert_value($value, $key, array $module)
     {
-    global $tms_link_numeric_columns, $tms_link_text_columns;
+    $tms_rs_mapping_index = array_search($key, array_column($module['tms_rs_mappings'], 'tms_column'));
+    if($tms_rs_mapping_index !== false)
+        {
+        return mb_convert_encoding($value, 'UTF-8', $module['tms_rs_mappings'][$tms_rs_mapping_index]['encoding']);
+        }
 
+    // Default to the old way of detecting the encoding if we can't figure out the expected encoding of the tms column data.
     $encoding = mb_detect_encoding($value, getEncodingOrder(), true);
 
     // Check if field is defined as UTF-16 or it's not an UTF-8 field
-    if(in_array($key, $tms_link_text_columns) || !in_array($key, $tms_link_numeric_columns))
+    if(in_array($key, $GLOBALS['tms_link_text_columns']) || !in_array($key, $GLOBALS['tms_link_numeric_columns']))
         {
         return mb_convert_encoding($value, 'UTF-8', 'UCS-2LE');
         }
@@ -100,94 +105,43 @@ function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
             return $lang["tms_link_no_tms_data"];
             }
 
-        /*
-        // Add normal value fields
-        $columnsql = implode(", ", $tms_link_numeric_columns);
-
-        // Add SQL to get back text fields as VARBINARY(MAX) so we can sort out encoding later
-        foreach ($tms_link_text_columns as $tms_link_text_column)
-            {
-            $columnsql.=", CAST (" . $tms_link_text_column . " AS VARBINARY(MAX)) " . $tms_link_text_column;
-            }
-        */
+        $columnsql = '';
         foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
             {
-            echo "<pre>";print_r($tms_rs_mapping);echo "</pre>";
+            $columnsql .= (trim($columnsql) == '' ? $tms_rs_mapping['tms_column'] : ", {$tms_rs_mapping['tms_column']}");
+
+            if(in_array($tms_rs_mapping['tms_column'], $tms_link_text_columns))
+                {
+                $columnsql .= ", CAST ({$tms_rs_mapping['tms_column']} AS VARBINARY(MAX)) {$tms_rs_mapping['tms_column']}";
+                }
             }
-        //$tmssql = "SELECT {$columnsql} FROM {$module['module_name']} {$conditionsql};";
-        //$tmsresultset = odbc_exec($conn,$tmssql);
+        $tmssql = "SELECT {$columnsql} FROM {$module['module_name']} {$conditionsql};";
+        $tmsresultset = odbc_exec($conn, $tmssql);
 
+        $convertedtmsdata = array();
+        for($r = 1; $r <= $resultcount; $r++)
+            {    
+            $tmsdata = odbc_fetch_array($tmsresultset, $r);
 
-        //echo "<pre>";print_r($resultcount);echo "</pre>";
-        //echo "<pre>";print_r($module);echo "</pre>";
-        die("You died in file " . __FILE__ . " at line " . __LINE__);
+            if(is_array($tms_object_id))
+                {
+                foreach($tmsdata as $key => $value)
+                    {
+                    $convertedtmsdata[$r][$key] = tms_convert_value($value, $key, $module);
+                    }
+                }
+            else
+                {
+                foreach($tmsdata as $key => $value)
+                    {
+                    $convertedtmsdata[$key] = tms_convert_value($value, $key, $module);
+                    }
+                }        
+            }
         }
 
-    #################################################################
-    ####### OLD WAY #######
-    ####################################
-
-    // Get checksum if if we haven't been passed it
-    if($resourcechecksum==""){$resourcechecksum=get_data_by_field($resource, $tms_link_checksum_field);}
-    
-    // Get TMS if if we haven't been passed it
-    if($tms_object_id==""){$tms_object_id=get_data_by_field($resource, $tms_link_object_id_field);}  
-    
-    if($tms_object_id==""){return false;} // We don't have any ID to get data for
-    
-    if(is_array($tms_object_id))
-      {
-      $conditionsql = " where ObjectID in ('" . implode("','", $tms_object_id) . "')";
-      }    
-    else
-      {
-      $conditionsql = " where ObjectID ='" . $tms_object_id . "'";
-      }
-        
-    // Add normal value fields
-    $columnsql = implode(", ", $tms_link_numeric_columns);
-    
-    // Add SQL to get back text fields as VARBINARY(MAX) so we can sort out encoding later
-    foreach ($tms_link_text_columns as $tms_link_text_column)
-      {
-      $columnsql.=", CAST (" . $tms_link_text_column . " AS VARBINARY(MAX)) " . $tms_link_text_column;
-      }
-    
-    // Run query to check that we have some results            
-    $tmscountsql = "SELECT Count(*) FROM " . $tms_link_table_name . $conditionsql . " ;";
-    $tmscountset = odbc_exec($conn,$tmscountsql);
-    $tmscount_arr = odbc_fetch_array($tmscountset);
-    $resultcount = end($tmscount_arr);
-    if($resultcount==0){global $lang;return $lang["tms_link_no_tms_data"];}
-    
-    // Execute the query to get the data from TMS
-    $tmssql = "SELECT " . $columnsql . " FROM " . $tms_link_table_name . $conditionsql . " ;";
-    $tmsresultset = odbc_exec($conn,$tmssql);
-    
-    
-    $convertedtmsdata=array();
-    for ($r=1;$r<=$resultcount;$r++)
-      {    
-      $tmsdata=odbc_fetch_array ($tmsresultset,$r);
-      
-      if(is_array($tms_object_id))
-        {
-        foreach($tmsdata as $key=>$value)
-          {
-          $convertedtmsdata[$r][$key]=tms_convert_value($value, $key);
-          }
-        }
-      else
-        {
-        foreach($tmsdata as $key=>$value)
-          {
-          $convertedtmsdata[$key]=tms_convert_value($value, $key);
-          }
-        }        
-      }
-      //exit(print_r($convertedtmsdata));
-      return $convertedtmsdata;
-  }
+    return $convertedtmsdata;
+    }
 
 function tms_link_get_tms_resources()
   {
