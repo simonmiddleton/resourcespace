@@ -35,7 +35,7 @@ foreach($tmsdata as $key=>$value)
     ?>
 	<tr> 
 	<td><strong><?php echo htmlspecialchars($key); ?></strong></td>
-	<td><?php echo htmlspecialchars(mb_convert_encoding($value, 'UTF-8')); ?></td>
+	<td><?php echo htmlspecialchars($value); ?></td>
 	</tr>
     <?php
 	}
