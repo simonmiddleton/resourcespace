@@ -80,3 +80,14 @@ if ((isset($collection_bar_foreground_override) && $collection_bar_foreground_ov
         }
     <?php
     }
+
+if ($browse_bar)
+    {
+    ?>
+    #CentralSpaceContainer
+        {
+        padding-left: 30px;
+        }   
+
+    <?php
+    }

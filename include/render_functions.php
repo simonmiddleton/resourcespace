@@ -2488,3 +2488,45 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
     echo "<div class='clearerleft'></div>";
     echo "</div>";
     }
+
+/**
+* Renders the trash bin. This is used to delete dash tiles and remove resources from collections
+* 
+* @param string $type   type of trash_bin
+* 
+* @return void
+*/ 
+
+function render_trash($type, $deletetext,$forjs=false)
+    {
+    $trash_html = '<div id="' . $type . '_bin" class="trash_bin"><span class="trash_bin_text"><i class="fa fa-trash" aria-hidden="true"></i></span></div>
+    <div id="trash_bin_delete_dialog" style="display:none;"></div>
+    <div id="delete_permanent_dialog" style="display:none;text-align:left;">'  . $deletetext . '</div>
+';
+    if($forjs)
+        {
+        return str_replace(array("\r","\n"),"",$trash_html);
+        }
+    else
+        {
+        echo $trash_html;
+        }
+    }
+
+/**
+* Renders the browse bar
+*  
+* @return void
+*/ 
+
+function render_browse_bar()
+    {
+    global $lang;
+    
+    $barclass = getval("rsbrowse","") != "show" ? "BrowseBarHidden" : "BrowseBarVisible";
+    $bb_html = '<div id="BrowseBar" class="' . $barclass . '" onclick="ToggleBrowseBar();" class="BrowseBar"><span class="BrowseBarText">' . $lang['browse_bar_text'] . '</span></div>
+    ';
+    echo $bb_html;
+    }
+
+    

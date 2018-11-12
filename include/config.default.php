@@ -3537,3 +3537,5 @@ $user_purge_disable = false;
 
 // Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
 $inactive_user_disable_days = 0;
+
+$browse_bar = true;

@@ -1,4 +1,6 @@
 <?php 
+include_once("render_functions.php");
+
 hook ("preheaderoutput");
  
 $k=getvalescaped("k","");
@@ -178,14 +180,9 @@ var global_cookies = "<?php echo $global_cookies?>";
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
 <?php
 if (!hook("replacetrashbin", "", array("js" => true)))
-	{
-?>
-    global_trash_html += '<div id="trash_bin">';
-    global_trash_html += '<span class="trash_bin_text"><?php echo $lang["trash_bin_title"]; ?></span>';
-    global_trash_html += '</div>';
-    global_trash_html += '<div id="trash_bin_delete_dialog" style="display: none;"></div>';
-<?php
-	}
+    {
+    echo "global_trash_html += '" . render_trash("trash","", true) . "';\n";
+    }
 ?>
 oktext="<?php echo $lang["ok"] ?>";
 var scrolltopElementCentral='.ui-layout-center';
@@ -502,6 +499,7 @@ include (dirname(__FILE__) . "/header_links.php");
 <div class="clearer"></div><?php if ($pagename!="preview" && $pagename!="preview_all") { ?></div><?php } #end of header ?>
 
 <?php
+
 if (!$header_search)
     {
     # Include simple search sidebar?
@@ -537,15 +535,31 @@ if (!$header_search)
 <?php
 # Determine which content holder div to use
 if (($pagename=="login") || ($pagename=="user_password") || ($pagename=="user_request")) {$div="CentralSpaceLogin";}
-else {$div="CentralSpace";}
+else
+    {
+    $div="CentralSpace";
+    }
 ?>
 <!--Main Part of the page-->
-        <?php if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="user_request")) { ?><div id="CentralSpaceContainer"<?php
+<?php
+if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="user_request"))
+    {
+    // Set classes for CentralSpaceContainer
+    $csc_classes = array();
+    if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && ('' == $k || $internal_share_access) && $browse_bar) 
+        {
+        render_browse_bar();
+        if (getval("rsbrowse","") == "show")
+            {
+            $csc_classes[] = "BrowseMode";
+            }
         if($header_search)
             {
-            ?> class="NoSearchBar"<?php
+            $csc_classes[] = "NoSearchBar";
             }
-        ?>><?php }
+        }
+    echo '<div id="CentralSpaceContainer" ' . (count($csc_classes) > 0 ? 'class="' . implode(' ', $csc_classes) . '"' : '' ) . '>';
+    }
 
 hook("aftercentralspacecontainer");
 ?>

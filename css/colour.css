@@ -115,7 +115,7 @@ input[readonly] {color: #000000;}
 	{color:#FFF;}
 .HomePanel h2{color:#FFF;}
 
-#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree {
+#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBar{
 	background: rgba(0, 0, 0, 0.6);
 	color:#FFF;
 }
@@ -324,7 +324,7 @@ li.plupload_droptext {color:#999;}
 	color: #d7d7d7;
 }
 #trash_bin.ui-state-active, .ui-state-active {border: 1px solid #d0d0d0;background: rgba(114, 22, 37, 0.51);}
-#trash_bin {border-top-right-radius: 10% 150px;border-bottom-right-radius: 10% 150px;}
+#trash_bin {border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;}
 .trash_bin_text {color: #fff;}
 .ui-draggable-dragging {border: 2px solid;}
 
@@ -443,3 +443,11 @@ input:checked + .customFieldLabel, .keywordselected
 .ui-button .ui-icon {
     background-image: none;
 }
+
+/* Browse bar */
+#BrowseBar
+    {
+  color: #d7d7d7;
+  }
+
+.BrowseBarText {color: #fff;}
