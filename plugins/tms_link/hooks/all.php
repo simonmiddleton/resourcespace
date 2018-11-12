@@ -61,31 +61,50 @@ function HookTms_linkAllInitialise()
     }
 
 
-function HookTms_linkAllUpdate_field($resource,$field,$value,$existing)
+function HookTms_linkAllUpdate_field($resource, $field, $value, $existing)
+    {
+    global $tms_link_object_id_field,$tms_link_resource_types,$lang,$tms_link_field_mappings_saved;
+
+    $resdata = get_resource_data($resource);
+    if(!in_array($resdata["resource_type"], $tms_link_resource_types))
         {
-	global $tms_link_object_id_field,$tms_link_resource_types,$lang,$tms_link_field_mappings_saved;
-        $resdata=get_resource_data($resource);
-        if(!in_array($resdata["resource_type"],$tms_link_resource_types)){return false;}
-	
-	if($resource<0 || $field!=$tms_link_object_id_field){return false;}
-
-        $tms_object_id=intval($value);
-        $tmsdata=tms_link_get_tms_data($resource,$tms_object_id);
-
-        // Update resource with TMS data
-        $tms_link_field_mappings=unserialize(base64_decode($tms_link_field_mappings_saved));
-        debug("tms_link: updating resource id #" . $resource);
-        foreach($tms_link_field_mappings as $tms_link_column_name=>$tms_link_field_id)
-                {
-                if($tms_link_field_id!="" && $tms_link_field_id!=0 && isset($tmsdata[$tms_link_column_name]) && ($tms_link_field_id!=$tms_link_object_id_field))
-                        {
-                        debug("tms_link: updating field " . $field  . " with data from column " . $tms_link_column_name  . " for resource id #" . $resource);
-                        update_field($resource,$tms_link_field_id,escape_check($tmsdata[$tms_link_column_name]));
-                        }
-                }
-		tms_link_check_preview($resource);
-        return true;
+        return false;
         }
+	
+	if($resource < 0 || !tms_link_is_rs_uid_field($field))
+        {
+        return false;
+        }
+
+    $tms_object_id = intval($value);
+    $tmsdata = tms_link_get_tms_data($resource, $tms_object_id);
+
+    debug("tms_link: updating resource id #" . $resource);
+
+    foreach(tms_link_get_modules_mappings() as $module)
+        {
+        $module_name = $module['module_name'];
+
+        if(!array_key_exists($module_name, $tmsdata))
+            {
+            continue;
+            }
+
+        foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
+            {
+            if($tms_rs_mapping['rs_field'] > 0 && $module['rs_uid_field'] != $tms_rs_mapping['rs_field'] && isset($tmsdata[$module_name][$tms_rs_mapping['tms_column']]))
+                {
+                debug("tms_link: updating field '{$field}' with data from column '{$tms_rs_mapping['tms_column']}' for resource id #{$resource}");
+
+                update_field($resource, $tms_rs_mapping['rs_field'], escape_check($tmsdata[$module_name][$tms_rs_mapping['tms_column']]));
+                }
+            }
+        }
+
+    tms_link_check_preview($resource);
+
+    return true;
+    }
 
 
 function HookTms_linkAllAfterpreviewcreation($ref, $alternative=-1)
