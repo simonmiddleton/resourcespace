@@ -68,5 +68,5 @@ $lang["tms_link_tms_module_name"] = "TMS module name";
 $lang["tms_link_encoding"] = "encoding";
 $lang["tms_link_not_found_error_title"] = "Not found";
 $lang["tms_link_not_deleted_error_detail"] = "Unable to delete the requested module configuration.";
-$lang["tms_link_"] = "";
+$lang["tms_link_uid_field"] = "TMS %module_name %tms_uid_field";
 $lang["tms_link_"] = "";
