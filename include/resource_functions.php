@@ -749,14 +749,24 @@ function set_resource_defaults($ref, array $specific_fields = array())
 
 
 if (!function_exists("save_resource_data_multi")){
-function save_resource_data_multi($collection)
+function save_resource_data_multi($collection,$editsearch = array())
     {
     global $auto_order_checkbox,$auto_order_checkbox_case_insensitive,  $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,
     $range_separator, $edit_contributed_by, $TEXT_FIELD_TYPES;
 
-    # Save all submitted data for collection $collection, this is for the 'edit multiple resources' feature
-    # Loop through the field data and save (if necessary)
-    $list   = get_collection_resources($collection);
+    # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
+    if($collection == 0 && isset($editsearch["search"]))
+        {
+        // Editing a result set, not a collection
+        $edititems  = do_search($editsearch["search"],$editsearch["restypes"],'resourceid',$editsearch["archive"],-1,'ASC',false,0,false,false,'',false,false, true, true);
+        $list       = array_column($edititems,"ref");
+        }
+    else
+        {
+        # Save all submitted data for collection $collection, 
+        $list   = get_collection_resources($collection);
+        }
+
     $errors = array();
     $tmp    = hook("altercollist", "", array("save_resource_data_multi", $list));
     if(is_array($tmp))
@@ -2552,7 +2562,14 @@ function write_metadata($path, $ref, $uniqid="")
                 case 6:
                 case 10:
                     # Date / Expiry Date: write datetype fields in exiftool preferred format
-                    $writevalue = date("Y:m:d H:i:sP", strtotime($writevalue));					
+                    if($writevalue!='')
+                        {
+                        $writevalue_to_time=strtotime($writevalue);
+                        if($writevalue_to_time!='')
+                            {
+                            $writevalue = date("Y:m:d H:i:sP", strtotime($writevalue));
+                            }
+                        }				
                     break;
                     # Other types, already set
                 }
@@ -2650,16 +2667,18 @@ function delete_exif_tmpfile($tmpfile)
 	if(file_exists($tmpfile)){unlink ($tmpfile);}
 }
 
-function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=true, $extension='')
+function update_resource($r, $path, $type, $title, $ingest=false, $createPreviews=true, $extension='',$after_upload_processing=false)
 	{
 	# Update the resource with the file at the given path
 	# Note that the file will be used at it's present location and will not be copied.
-	global $syncdir,$staticsync_prefer_embedded_title,$view_title_field,$filename_field;
+	global $syncdir, $staticsync_prefer_embedded_title, $view_title_field, $filename_field, $upload_then_process, $offline_job_queue;
 
-	update_resource_type($r, $type);
+    if($upload_then_process && !$offline_job_queue)
+        {
+        $upload_then_process=false;
+        }
 
 	# Work out extension based on path
-	
 	if($extension=='')
 		{
 		$extension=pathinfo($path, PATHINFO_EXTENSION);
@@ -2670,126 +2689,159 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
     	$extension=trim(strtolower($extension));
 		}
 
-	# file_path should only really be set to indicate a staticsync location. Otherwise, it should just be left blank.
-	if ($ingest){$file_path="";} else {$file_path=escape_check($path);}
+    if(!$upload_then_process || !$after_upload_processing)
+        {
+        update_resource_type($r, $type);
 
-	# Store extension/data in the database
-	sql_query("update resource set archive=0,file_path='".$file_path."',file_extension='$extension',preview_extension='$extension',file_modified=now() where ref='$r'");
+        # file_path should only really be set to indicate a staticsync location. Otherwise, it should just be left blank.
+        if ($ingest){$file_path="";} else {$file_path=escape_check($path);}
 
-	# Store original filename in field, if set
-	if (!$ingest)
-		{
-		# This file remains in situ; store the full path in file_path to indicate that the file is stored remotely.
-		global $filename_field;
-		if (isset($filename_field))
-			{
+        # Store extension/data in the database
+        sql_query("update resource set archive=0,file_path='".$file_path."',file_extension='$extension',preview_extension='$extension',file_modified=now() where ref='$r'");
 
-			$s=explode("/",$path);
-			$filename=end($s);
-
-			update_field($r,$filename_field,$filename);
-			}
-		}
-	else
-		{
-		# This file is being ingested. Store only the filename.
-		$s=explode("/",$path);
-		$filename=end($s);
-
-		global $filename_field;
-		if (isset($filename_field))
-			{
-			update_field($r,$filename_field,$filename);
-			}
-
-		# Move the file
-		if(!hook('update_resource_replace_ingest','',array($r, $path, $extension)))
-			{
-			global $syncdir;
-			$destination=get_resource_path($r,true,"",true,$extension);
-			$result=rename($syncdir . "/" . $path,$destination);
-			if ($result===false)
-				{
-				# The rename failed. The file is possibly still being copied or uploaded and must be ignored on this pass.
-				# Delete the resouce just created and return false.
-				delete_resource($r);
-				return false;
-				}
-			chmod($destination,0777);
-			}
-		}
-
-	# generate title and extract embedded metadata
-	# order depends on which title should be the default (embedded or generated)
-	if ($staticsync_prefer_embedded_title)
-		{
-		if ($view_title_field!==$filename_field)
-			{
-			update_field($r,$view_title_field,$title);
-			}
-		extract_exif_comment($r,$extension);
-		}
-	else
-		{
-		extract_exif_comment($r,$extension);
-		if ($view_title_field!==$filename_field)
-			{
-			update_field($r,$view_title_field,$title);
-			}
-		}
-		
-	# Extract text from documents (e.g. PDF, DOC)
-	global $extracted_text_field;
-	if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
-		{
-        global $offline_job_queue, $offline_job_in_progress;
-        if($offline_job_queue && !$offline_job_in_progress)
+        # Store original filename in field, if set
+        if (!$ingest)
             {
-            $extract_text_job_data = array(
-                'ref'       => $r,
-                'extension' => $extension,
-            );
+            # This file remains in situ; store the full path in file_path to indicate that the file is stored remotely.
+            global $filename_field;
+            if (isset($filename_field))
+                {
 
-            job_queue_add('extract_text', $extract_text_job_data);
+                $s=explode("/",$path);
+                $filename=end($s);
+
+                update_field($r,$filename_field,$filename);
+                }
             }
         else
             {
-            extract_text($r, $extension);
+            # This file is being ingested. Store only the filename.
+            $s=explode("/",$path);
+            $filename=end($s);
+
+            global $filename_field;
+            if (isset($filename_field))
+                {
+                update_field($r,$filename_field,$filename);
+                }
+
+            # Move the file
+            if(!hook('update_resource_replace_ingest','',array($r, $path, $extension)))
+                {
+                global $syncdir;
+                $destination=get_resource_path($r,true,"",true,$extension);
+                $result=rename($syncdir . "/" . $path,$destination);
+                if ($result===false)
+                    {
+                    # The rename failed. The file is possibly still being copied or uploaded and must be ignored on this pass.
+                    # Delete the resouce just created and return false.
+                    delete_resource($r);
+                    return false;
+                    }
+                chmod($destination,0777);
+                }
             }
-		}
+        }
+
+    if(!$upload_then_process || $after_upload_processing)
+        {
+	    # generate title and extract embedded metadata
+	    # order depends on which title should be the default (embedded or generated)
+	    if ($staticsync_prefer_embedded_title)
+		    {
+            if ($view_title_field!==$filename_field)
+                {
+                update_field($r,$view_title_field,$title);
+                }
+            extract_exif_comment($r,$extension);
+            }
+        else
+            {
+            extract_exif_comment($r,$extension);
+            if ($view_title_field!==$filename_field)
+                {
+                update_field($r,$view_title_field,$title);
+                }
+            }
 		
-	# Ensure folder is created, then create previews.
-	get_resource_path($r,false,"pre",true,$extension);
-
-	if ($createPreviews)
-		{
-		# Attempt autorotation
-		global $autorotate_ingest;
-		if($ingest && $autorotate_ingest){AutoRotateImage($destination);}
-		# Generate previews/thumbnails (if configured i.e if not completed by offline process 'create_previews.php')
-		global $enable_thumbnail_creation_on_upload;
-		if($enable_thumbnail_creation_on_upload)
+        # Extract text from documents (e.g. PDF, DOC)
+        global $extracted_text_field;
+        if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
             {
-            create_previews($r, false, $extension, false, false, -1, false, $ingest);
-            }
-        else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
-            {
-            $create_previews_job_data = array(
-                'resource' => $r,
-                'thumbonly' => false,
-                'extension' => $extension,
-                'previewonly' => false,
-                'previewbased' => false,
-                'alternative' => -1,
-                'ignoremaxsize' => false,
-                'ingested' => $ingest
-            );
-            $create_previews_job_success_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_success_text']);
-            $create_previews_job_failure_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_failure_text']);
+            global $offline_job_queue, $offline_job_in_progress;
+            if($offline_job_queue && !$offline_job_in_progress)
+                {
+                $extract_text_job_data = array(
+                    'ref'       => $r,
+                    'extension' => $extension,
+                );
 
-            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+                job_queue_add('extract_text', $extract_text_job_data);
+                }
+            else
+                {
+                extract_text($r, $extension);
+                }
             }
-		}
+		
+        # Ensure folder is created, then create previews.
+        get_resource_path($r,false,"pre",true,$extension);
+
+        if ($createPreviews)
+            {
+            # Attempt autorotation
+            global $autorotate_ingest;
+            if($ingest && $autorotate_ingest){AutoRotateImage($destination);}
+            # Generate previews/thumbnails (if configured i.e if not completed by offline process 'create_previews.php')
+            global $enable_thumbnail_creation_on_upload;
+            if($enable_thumbnail_creation_on_upload)
+                {
+                create_previews($r, false, $extension, false, false, -1, false, $ingest);
+                }
+            else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
+                {
+                $create_previews_job_data = array(
+                    'resource' => $r,
+                    'thumbonly' => false,
+                    'extension' => $extension,
+                    'previewonly' => false,
+                    'previewbased' => false,
+                    'alternative' => -1,
+                    'ignoremaxsize' => false,
+                    'ingested' => $ingest
+                );
+                $create_previews_job_success_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_success_text']);
+                $create_previews_job_failure_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_failure_text']);
+
+                job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+                }
+            }
+        }
+        
+        if($upload_then_process && !$after_upload_processing)
+            {
+            # Add this to the job queue for offline processing
+            global $userref, $lang;
+            
+            $job_data=array();
+            $job_data["r"]=$r;
+            $job_data["title"]=$title;
+            $job_data["ingest"]=$ingest;
+            $job_data["createPreviews"]=$createPreviews;
+        
+            global $upload_then_process_holding_state;
+            if(isset($upload_then_process_holding_state))
+                {
+                $job_data["archive"]=sql_value("SELECT archive value from resource where ref={$ref}", "");
+                update_archive_status($ref, $upload_then_process_holding_state);
+                }
+        
+            $job_code=$r . md5($job_data["r"] . strtotime('now'));
+            $job_success_lang="update_resource success " . str_replace(array('%ref', '%title'), array($r, $filename), $lang["ref-title"]);
+            $job_failure_lang="update_resource fail " . ": " . str_replace(array('%ref', '%title'), array($r, $filename), $lang["ref-title"]);
+            $jobadded=job_queue_add("update_resource", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);             
+            }
+        
 	hook('after_update_resource', '', array("resourceId" => $r ));
 	# Pass back the newly created resource ID.
 	return $r;
@@ -3568,7 +3620,7 @@ if (!function_exists("resource_download_allowed")){
 function resource_download_allowed($resource,$size,$resource_type,$alternative=-1)
 	{
 	
-	# For the given resource and size, can the curent user download it?
+	# For the given resource and size, can the current user download it?
 	# resource type and access may already be available in the case of search, so pass them along to get_resource_access to avoid extra queries
 	# $resource can be a resource-specific search result array.
 	$access=get_resource_access($resource);
@@ -5190,4 +5242,39 @@ function get_extension(array $resource, $size)
         }
 
     return $pextension;
+    }
+
+
+   
+/**
+* Obtain details of the last resource edited in the given array of resource ids
+*
+* @param array $resources   Array of resource IDs
+*
+* @return array | false     Array containing details of last edit (resource ID, timestamp and username of user who performed edit)
+*/    
+function get_last_resource_edit_array($resources = array())
+    {
+    if(count($resources) == 0)
+        {
+        return false;
+        }
+
+    $plugin_last_resource_edit = hook('override_last_resource_edit_array');
+    if($plugin_last_resource_edit === true)
+        {
+    	return false;
+        }
+        
+    $lastmodified  = sql_query("SELECT r.ref, r.modified FROM resource r WHERE r.ref IN ('" . implode("','",$resources). "') ORDER BY r.modified DESC");
+    $lastuserdetails = sql_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource ='" . $lastmodified[0]["ref"] . "' AND rl.type='e'");
+    if(count($lastuserdetails) == 0)
+        {
+        return false;
+        }
+        
+    $timestamp = max($lastuserdetails[0]["date"],$lastmodified[0]["modified"]);
+        
+    $lastusername = (trim($lastuserdetails[0]["fullname"]) != "") ? $lastuserdetails[0]["fullname"] : $lastuserdetails[0]["username"];
+    return array("ref" => $lastmodified[0]["ref"],"time" => $timestamp, "user" => $lastusername);
     }

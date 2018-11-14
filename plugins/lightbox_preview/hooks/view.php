@@ -3,12 +3,12 @@
 include_once dirname(__FILE__) . "/../include/utility.php";
 
 function HookLightbox_previewViewRenderbeforerecorddownload()
-	{
-	if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false)
-		{
-		return false;	
-		}
-	
+    {
+    if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false)
+        {
+        return false;
+        }
+    
     ?>
     <script type="text/javascript">
         // Simulate clicking of preview button when clicking View
@@ -20,7 +20,7 @@ function HookLightbox_previewViewRenderbeforerecorddownload()
     </script>
     <?php
 
-	global $resource, $title_field;
+    global $resource, $title_field;
 
     $url = getPreviewURL($resource);
     
@@ -60,51 +60,51 @@ function HookLightbox_previewViewRenderbeforerecorddownload()
     }
 
 function HookLightbox_previewViewRenderaltthumb()
-	{
-	if(strpos($_SERVER['HTTP_USER_AGENT'],"TRIDENT") !== false || strpos($_SERVER['HTTP_USER_AGENT'],"MSIE") !== false)
-		{
-		return false;	
-		}
-	global $baseurl_short, $ref, $resource, $alt_thm, $altfiles, $n, $k, $search,
-			$offset, $sort, $order_by, $archive;
+    {
+    if(strpos($_SERVER['HTTP_USER_AGENT'],"TRIDENT") !== false || strpos($_SERVER['HTTP_USER_AGENT'],"MSIE") !== false)
+        {
+        return false;
+        }
+    global $baseurl_short, $ref, $resource, $alt_thm, $altfiles, $n, $k, $search,
+            $offset, $sort, $order_by, $archive;
 
-	$url = getPreviewURL($resource, $altfiles[$n]['ref']);
-	if ($url === false)
-		return false;
+    $url = getPreviewURL($resource, $altfiles[$n]['ref']);
+    if ($url === false)
+        return false;
 
-	# Replace the link to add the 'altlink' ID
-	?>
-	<a id="altlink_<?php echo $n; ?>" class="AltThumbLink" href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php
-			echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]['ref']?>&k=<?php
-			echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo
-			urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo
-			urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php
-			echo hook("previewextraurl") ?>">
-		<img src="<?php echo $alt_thm; ?>" class="AltThumb">
-	</a>
-	<?php
-	addLightBox('#altlink_' . $n, $url, $altfiles[$n]['name'], "alt");
+    # Replace the link to add the 'altlink' ID
+    ?>
+    <a id="altlink_<?php echo $n; ?>" class="AltThumbLink" href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php
+            echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]['ref']?>&k=<?php
+            echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo
+            urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo
+            urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php
+            echo hook("previewextraurl") ?>">
+        <img src="<?php echo $alt_thm; ?>" class="AltThumb">
+    </a>
+    <?php
+    addLightBox('#altlink_' . $n, $url, $altfiles[$n]['name'], "alt");
 
-	return true;
-	}
+    return true;
+    }
 
 function HookLightbox_previewViewAftersearchimg()
-	{
-	if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false)
-		{
-		return false;	
-		}
-	// Prevent loading of Central Space when clicking preview image
-	?>
+    {
+    if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false)
+        {
+        return false;
+        }
+    // Prevent loading of Central Space when clicking preview image
+    ?>
 
-	<script type="text/javascript">
-		jQuery(document).ready(function() {
-			jQuery('#previewimagelink').removeAttr('onclick');
-		});
-	</script>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery('#previewimagelink').removeAttr('onclick');
+        });
+    </script>
 
-	<?php
-	}
+    <?php
+    }
 
 ?>
 

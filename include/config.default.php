@@ -1709,7 +1709,7 @@ $hide_access_column_public = false;
 #collection_manage.php - hide 'access' column
 $hide_access_column = false;
 
-# Enable the 'edit all' function in both the collection bar and My Collections
+# Enable the 'edit all' function in the collection and search actions dropdowns
 $show_edit_all_link = true;
 
 #Bypass share.php and go straight to e-mail

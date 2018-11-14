@@ -18,6 +18,21 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
 
     foreach($resources as $resource)
         {
+        $resdata = get_resource_data($resource['ref']);
+
+        // Add resource type
+        $restype = get_resource_type_name($resdata["resource_type"]);
+        $csv_field_headers["resource_type"] = $lang["resourcetype"];
+        $resources_fields_data[$resource['ref']]["resource_type"] = $restype;
+        
+        // Add contributor
+        $udata=get_user($resdata["created_by"]);
+        if ($udata!==false)
+            {
+            $csv_field_headers["created_by"] = $lang["contributedby"];
+            $resources_fields_data[$resource['ref']]["created_by"] = (trim($udata["fullname"]) != "" ? $udata["fullname"] :  $udata["username"]);
+            }
+
         foreach(get_resource_field_data($resource['ref'], false, true, -1, '' != getval('k', '')) as $field_data)
             {
             // If $personal=true, return personal_data fields only.

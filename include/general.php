@@ -3449,7 +3449,7 @@ function resolve_userlist_groups($userlist)
             # Search for corresponding $lang indices.
             $default_group = false;
             $langindices = array_keys($lang, $translated_groupname);
-            if (count($langindices)>0);
+            if (count($langindices)>0)
                 {
                 foreach ($langindices as $langindex)
                     {
@@ -6938,6 +6938,7 @@ function isValidCSRFToken($token_data, $session_id)
 
     if($token_data === "")
         {
+        debug("CSRF: INVALID - no token data");
         return false;
         }
 
@@ -6945,6 +6946,7 @@ function isValidCSRFToken($token_data, $session_id)
 
     if($plaintext === false)
         {
+        debug("CSRF: INVALID - unable to decrypt token data");
         return false;
         }
 
@@ -6954,6 +6956,8 @@ function isValidCSRFToken($token_data, $session_id)
         {
         return true;
         }
+
+    debug("CSRF: INVALID - session ID did not match: {$csrf_data['session']} vs {$session_id}");
 
     return false;
     }
