@@ -20,6 +20,7 @@ $lang["tms_link_tms_resources"]="TMS Resources";
 
 $lang["tms_link_no_tms_resources"]="No TMS Resources found. Please check you have configured the plugin correctly and mapped the correct ObjectID metadata and checksum fields";
 $lang["tms_link_no_resource"]="No resource specified";
+$lang["tms_link_resource_id"] = "Resource ID";
 $lang["tms_link_object_id"]="Object ID";
 $lang["tms_link_checksum"]="Checksum";
 $lang["tms_link_no_tms_data"]="No data returned from TMS";
