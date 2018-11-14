@@ -482,7 +482,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $message=$amendedmessage;
         }
         
-    # Create the request
+    # Setup the create request SQL
     global $request_query;
     $request_query = "insert into request(user,collection,created,request_mode,status,comments) values ('$userref','$ref',now(),1,0,'" . escape_check($message) . "')";
     
@@ -490,17 +490,28 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     $send_default_notifications = true;
             
     global $notify_manage_request_admin, $assigned_to_user, $admin_resource_access_notifications;
+    
     $notify_manage_request_admin = false;
     $notification_sent = false;
     
     // Manage individual requests of resources:
     hook('autoassign_individual_requests', '', array($userref, $ref, $message, isset($collectiondata)));
+
+    // Hook Processing
+    // If assigned admin is absent and default manager (manage_request_admin) is present then request SQL is not established by above hook
+    // If however the request SQL has been established, then default manager will be initialised
+
+    // Regular Processing
+    // If the resource level request SQL is yet to be established and a default manager is present for the resource type
+    // then the following will establish the resource level request SQL assigned to the default manager
     if(isset($manage_request_admin) && $ref_is_resource)
         {
+        $admin_notify_user = 0;
         $request_resource_type = $resourcedata["resource_type"];
         if(array_key_exists($request_resource_type, $manage_request_admin)) 
             {
             $admin_notify_user=$manage_request_admin[$request_resource_type];
+
             $request_query = sprintf("
                     INSERT INTO request(
                                             user,
@@ -526,13 +537,25 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 escape_check($message),
                 $admin_notify_user
             );
-            $notify_manage_request_admin = true;
+
+            // Setup assigned to user for bypass hook later on    
+            if($admin_notify_user !== 0) 
+                {
+                $assigned_to_user = get_user($admin_notify_user);
+                $notify_manage_request_admin = true;
+                }
             }
         }   
     
     // Manage collection requests:
     hook('autoassign_collection_requests', '', array($userref, isset($collectiondata) ? $collectiondata : array(), $message, isset($collectiondata)));
+
+    // Hook Processing
+    // If collectiondata is absent then request(s) not created by above hook
+    // If however request(s) have been created, then default manager will be initialised
     
+    // Regular Processing
+    // Runs if default manager present and hook absent or hook present but did not create any request(s)
     if(isset($manage_request_admin) && count($manage_request_admin) > 0 && isset($collectiondata)) 
         {
         $all_r_types = get_resource_types();
@@ -705,19 +728,22 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $ref = implode('', $collections);
             }
 
-        }
-
-        elseif(hook('bypass_end_managed_collection_request', '', array(!isset($collectiondata), $ref, $request_query, $message, $templatevars, $assigned_to_user, $admin_mail_template, $user_mail_template)))
+        } // End of default manager (regular processing)
+    else
+        {
+        if(hook('bypass_end_managed_collection_request', '', array(!isset($collectiondata), $ref, $request_query, $message, $templatevars, $assigned_to_user, $admin_mail_template, $user_mail_template)))
+            // This hook is called if the autoassign_collection_requests hook was called
             {
             return true;
             }
-    
         else
+            // Back to regular processing
             {
             sql_query($request_query);
             $request=sql_insert_id();
             }
-        
+        }
+
     hook("afterrequestcreate", "", array($request));
 
     if($send_default_notifications)
