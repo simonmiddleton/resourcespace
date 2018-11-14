@@ -1057,55 +1057,6 @@ function CheckDBStruct($path,$verbose=false)
 				
 				# Load existing table definition
 				$existing=sql_query("describe $table",false,-1,false);
-
-				##########
-				# Copy needed resource_data into resource for search displays
-				if ($table=="resource")
-                    {
-					$joins=get_resource_table_joins();
-					for ($m=0;$m<count($joins);$m++)
-                        {
-						# Look for this column in the existing columns.	
-						$found=false;
-
-						for ($n=0;$n<count($existing);$n++)
-							{
-							if ("field".$joins[$m]==$existing[$n]["Field"]) {$found=true;}
-							}
-
-						if (!$found)
-							{
-							# Add this column.
-							$sql="alter table $table add column ";
-							$sql.="field".$joins[$m] . " VARCHAR(" . $resource_field_column_limit . ")";
-							sql_query($sql,false,-1,false);
-
-                            $resources = sql_array("SELECT ref AS `value` FROM resource WHERE ref > 0");
-                            foreach($resources as $resource)
-                                {
-                                // Do not use permissions here as we want to sync all fields
-                                $resource_field_data       = get_resource_field_data($resource, false, false);
-                                $resource_field_data_index = array_search($joins[$m], array_column($resource_field_data, 'ref'));
-
-                                if(
-                                    $resource_field_data_index !== false
-                                    && trim($resource_field_data[$resource_field_data_index]["value"]) != ""
-                                )
-                                    {
-                                    $new_joins_field_value = $resource_field_data[$resource_field_data_index]["value"];
-                                    $truncated_value = truncate_join_field_value($new_joins_field_value);
-                                    $truncated_value_escaped = escape_check($truncated_value);
-
-                                    sql_query("
-                                        UPDATE resource
-                                           SET field{$joins[$m]} = '{$truncated_value_escaped}'
-                                         WHERE ref = '{$resource}'");
-                                    }
-                                }
-                            }
-                        }
-                    }
-				##########
 				
 				##########
 				## RS-specific mod:
@@ -2405,6 +2356,83 @@ function sql_limit($offset, $rows)
         }
 
     return $limit;
+    }
+
+/**
+* Generates a SQL query around an existing query in order to retrieve the resource table joins (ie. fieldX columns)
+* 
+* @uses metadata_field_view_access()
+* @uses get_resource_type_field()
+* 
+* @param array  $joins    All the joins fields as returned by get_resource_table_joins()
+* @param string $sql      The original SQL query
+* @param string $order_by The order by that was intended for the original SQL query
+* 
+* @return string
+*/
+function resource_table_joins_sql(array $joins, $sql, $order_by = '')
+    {
+    if(empty($joins))
+        {
+        return $sql;
+        }
+
+    $resource_table_joins_sql = "SELECT ss.*";
+
+    foreach($joins as $join)
+        {
+        if($join == $GLOBALS["view_title_field"])
+            {
+            $resource_table_joins_sql .= ",
+                (
+                    SELECT `value`
+                       FROM resource_data
+                      WHERE resource = ss.ref
+                        AND resource_type_field = {$join}
+                      LIMIT 1
+                ) AS field{$join} ";
+
+            continue;
+            }
+
+        if(!metadata_field_view_access($join))
+            {
+            continue;
+            }
+
+        $resource_table_join_rtf = get_resource_type_field($join);
+        if(in_array($resource_table_join_rtf['type'], $GLOBALS['FIXED_LIST_FIELD_TYPES']))
+            {
+            $resource_table_joins_sql .= ",
+            (
+                    SELECT GROUP_CONCAT(n.`name` SEPARATOR ', ') AS `value`
+                      FROM resource_node AS rn
+                INNER JOIN node AS n ON n.ref = rn.node
+                     WHERE rn.resource = ss.ref AND n.resource_type_field = {$join}
+                  GROUP BY rn.resource
+            ) AS field{$join} ";
+
+            continue;
+            }
+
+        $resource_table_joins_sql .= ",
+            (
+                SELECT `value`
+                  FROM resource_data
+                 WHERE resource = ss.ref
+                   AND resource_type_field = {$join}
+                 LIMIT 1
+            ) AS field{$join} ";
+        }
+
+    $resource_table_joins_sql .= "FROM ({$sql}) AS ss ";
+
+    if($order_by !== '')
+        {
+        $resource_table_joins_sql .= "ORDER BY {$order_by}";
+        }
+
+    return $resource_table_joins_sql;
     }
 
 // IMPORTANT: make sure the upgrade.php is the last line in this file

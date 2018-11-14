@@ -111,30 +111,6 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
                     }
                 }
 
-            # If this is a 'joined' field we need to add it to the resource column
-            $joins = get_resource_table_joins();
-            if(in_array($field, $joins))
-                {
-                // Get all options selected for this resource and field
-                $resource_field_data       = get_resource_field_data($resource);
-                $resource_field_data_index = array_search($field, array_column($resource_field_data, 'ref'));
-
-                $truncated_value = "NULL";
-                if(
-                    $resource_field_data_index !== false
-                    && trim($resource_field_data[$resource_field_data_index]["value"]) != ""
-                )
-                    {
-                    $new_joined_field_value = $resource_field_data[$resource_field_data_index]["value"];
-                    $truncated_value = truncate_join_field_value($new_joined_field_value);
-                    $truncated_value = "'" . escape_check($truncated_value) . "'";
-                    }
-
-                // $truncated_value is escaped and between single quotes above. This is done so if we don't have a
-                // value we can set field to NULL (not string NULL)
-                sql_query("UPDATE resource SET field{$field} = {$truncated_value} WHERE ref = '{$resource}'");
-                }
-
             if($log_entry!='')
                 {
                 resource_log($resource,LOG_CODE_NODE_REVERT,$field,$lang["revert_log_note"],'',$log_entry);

@@ -241,16 +241,6 @@ function do_search(
         $select.=",null group_access, null user_access ";
         }
 
-    # add 'joins' to select (only add fields if not returning the refs only)
-    $joins=$return_refs_only===false ? get_resource_table_joins() : array();
-    foreach($joins as $datajoin)
-        {
-        if(metadata_field_view_access($datajoin) || $datajoin == $GLOBALS["view_title_field"])
-            {
-            $select .= ", r.field{$datajoin} ";
-            }
-        }
-
     # Prepare SQL to add join table for all provided keywords
 
     $suggested=$keywords; # a suggested search
@@ -1430,6 +1420,11 @@ function do_search(
         $max_results=$fetchrows;
         }
     $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref ORDER BY $order_by limit $max_results" . $sql_suffix;
+
+    $results_sql = resource_table_joins_sql(
+        ($return_refs_only === false ? get_resource_table_joins() : array()),
+        str_replace("ORDER BY {$order_by}", '', $results_sql),
+        str_replace('r.', 'ss.', $order_by));
 
     # Debug
     debug('$results_sql=' . $results_sql);

@@ -204,13 +204,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $existing_nodes_value, $new_nodes_val);
                     
                     $val = $new_nodes_val;
-                    # If this is a 'joined' field it still needs to add it to the resource column
-                    $joins=get_resource_table_joins();
-                    if (in_array($fields[$n]["ref"],$joins))
-                        {
-                        if(substr($val,0,1)==","){$val=substr($val,1);}
-                        sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($new_nodes_val,1)))."' where ref='$ref'");
-                         }
 					}
 
                 // Required fields that didn't change get the current value
@@ -321,13 +314,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 							resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $fields[$n]["value"], $newval);
 							
 							$val = $newval;
-							# If this is a 'joined' field it still needs to add it to the resource column
-							$joins=get_resource_table_joins();
-							if (in_array($fields[$n]["ref"],$joins))
-								{
-								if(substr($val,0,1)==","){$val=substr($val,1);}
-								sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
-								 }
 							}
 					
 					$new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
@@ -550,15 +536,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     // Remove all entries from resource_keyword for this field, useful if setting is changed and changed back leaving stale data
                     remove_all_keyword_mappings_for_field($ref,$fields[$n]["ref"]);
                     }
-				
-                # If this is a 'joined' field we need to add it to the resource column
-                $joins=get_resource_table_joins();
-                if (in_array($fields[$n]["ref"],$joins))
-                    {
-                    if(substr($val,0,1)==","){$val=substr($val,1);}
-                    sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
-                    }
-                                        
+
 				# Add any onchange code
 				if($fields[$n]["onchange_macro"]!="")
 					{
@@ -908,18 +886,6 @@ function save_resource_data_multi($collection,$editsearch = array())
                         resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $existing_nodes_value, $new_nodes_val);
 
                         $val = $new_nodes_val;
-
-                        // If this is a 'joined' field it still needs to add it to the resource column
-                        $joins = get_resource_table_joins();
-                        if(in_array($fields[$n]['ref'], $joins))
-                            {
-                            if(',' == substr($val, 0, 1))
-                                {
-                                $val = substr($val, 1);
-                                }
-
-                            sql_query("UPDATE resource SET field{$fields[$n]['ref']} = '" . escape_check(truncate_join_field_value(substr($new_nodes_val, 1)))."' WHERE ref = '{$ref}'");
-                            }
 						}
                     }
                 } // End of fixed list field section
@@ -1010,14 +976,8 @@ function save_resource_data_multi($collection,$editsearch = array())
 							resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $fields[$n]["value"], $newval);
 							
 							$val = $newval;
-							# If this is a 'joined' field it still needs to add it to the resource column
-							$joins=get_resource_table_joins();
-							if (in_array($fields[$n]["ref"],$joins))
-								{
-								if(substr($val,0,1)==","){$val=substr($val,1);}
-								sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
-								 }
 							}
+
 						$all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);                
 						$all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
                     }
@@ -1202,12 +1162,6 @@ function save_resource_data_multi($collection,$editsearch = array())
             
                         # Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
                         if ($fields[$n]["type"]==6) {$expiry_field_edited=true;}
-                    
-                        # If this is a 'joined' field we need to add it to the resource column
-                        $joins=get_resource_table_joins();
-                        if (in_array($fields[$n]["ref"],$joins)){
-                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
-                        }		
                             
                         # Purge existing data and keyword mappings, decrease keyword hitcounts.
                         sql_query("delete from resource_data where resource='$ref' and resource_type_field='" . $fields[$n]["ref"] . "'");
@@ -1237,18 +1191,6 @@ function save_resource_data_multi($collection,$editsearch = array())
     
                             remove_keyword_mappings($ref,i18n_get_indexable($oldval),$fields[$n]["ref"],$fields[$n]["partial_index"],$is_date,'','',$is_html);
                             add_keyword_mappings($ref,i18n_get_indexable($newval),$fields[$n]["ref"],$fields[$n]["partial_index"],$is_date,'','',$is_html);
-                            }
-
-                        // If this is a 'joined' field we need to add it to the resource column
-                        $joins = get_resource_table_joins();
-                        if(in_array($fields[$n]['ref'], $joins))
-                            {
-                            if(',' == substr($val, 0, 1))
-                                {
-                                $val = substr($val, 1);
-                                }
-
-                            sql_query("UPDATE resource SET field{$fields[$n]['ref']} = '" . escape_check(truncate_join_field_value($val)) . "' WHERE ref = '{$ref}'");
                             }
 
                         # Add any onchange code
@@ -1797,28 +1739,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
         }
 
-    # If this is a 'joined' field we need to add it to the resource column
-    $joins = get_resource_table_joins();
-
-   if(in_array($fieldinfo['ref'],$joins))
-		{
-		if ($value!="null")
-			{
-			global $resource_field_column_limit;
-			$truncated_value = truncate_join_field_value($value);
-            // Remove backslashes from the end of the truncated value
-            if(substr($truncated_value, -1) === '\\')
-                {
-                $truncated_value = substr($truncated_value, 0, strlen($truncated_value) - 1);
-				}
-			}
-		else
-			{
-			$truncated_value="null";
-			}		
-		sql_query("update resource set field".$field."=" . (($value=="")?"NULL":"'" . $truncated_value . "'") ." where ref='$resource'");
-		}			
-	
     # Add any onchange code
     if($fieldinfo["onchange_macro"]!="")
         {
@@ -2088,20 +2008,8 @@ function clear_resource_data($resource)
 	sql_query("delete from resource_dimensions where resource='$resource'");
 	sql_query("delete from resource_keyword where resource='$resource'");
 	sql_query("delete from resource_related where resource='$resource' or related='$resource'");
-    delete_all_resource_nodes($resource); 
-    
-    // Clear all 'joined' fields
-    $joins=get_resource_table_joins();
-    if(count($joins) > 0)
-        {
-        $joins_sql = "";
-        foreach ($joins as $join)
-            {
-            $joins_sql .= (($joins_sql!="")?",":"") . "field" . escape_check($join) . "=NULL";
-            }
-        sql_query("UPDATE resource SET $joins_sql WHERE ref='$resource'");
-        }
-        
+    delete_all_resource_nodes($resource);
+
     return true;
     }
 
@@ -2130,27 +2038,6 @@ function copy_resource($from,$resource_type=-1)
 	# Check that the resource exists
 	if (sql_value("select count(*) value from resource where ref='$from'",0)==0) {return false;}
 	
-	# copy joined fields to the resource column
-	$joins=get_resource_table_joins();
-
-	// Filter the joined columns so we only have the ones relevant to this resource type
-	$query = sprintf('
-			    SELECT rtf.ref AS value
-			      FROM resource_type_field AS rtf
-			INNER JOIN resource AS r ON (rtf.resource_type != r.resource_type AND rtf.resource_type != 0)
-			     WHERE r.ref = "%s";
-		',
-		$from
-	);
-	$irrelevant_rtype_fields = sql_array($query);
-	$irrelevant_rtype_fields = array_values(array_intersect($joins, $irrelevant_rtype_fields));
-	$filtered_joins = array_values(array_diff($joins, $irrelevant_rtype_fields));
-
-	$joins_sql="";
-	foreach ($filtered_joins as $join){
-		$joins_sql.=",field$join ";
-	}
-	
 	$add="";
 	$archive=sql_value("select archive value from resource where ref='$from'",0);
 	
@@ -2170,7 +2057,7 @@ function copy_resource($from,$resource_type=-1)
 		}
         
 	# First copy the resources row
-	sql_query("insert into resource($add resource_type,creation_date,rating,archive,access,created_by $joins_sql) select $add" . (($resource_type==-1)?"resource_type":("'" . $resource_type . "'")) . ",now(),rating,'" . $archive . "',access,created_by $joins_sql from resource where ref='$from';");
+	sql_query("insert into resource($add resource_type,creation_date,rating,archive,access,created_by) select $add" . (($resource_type==-1)?"resource_type":("'" . $resource_type . "'")) . ",now(),rating,'" . $archive . "',access,created_by from resource where ref='$from';");
 	$to=sql_insert_id();
 	
 	# Set that this resource was created by this user. 
@@ -5007,22 +4894,7 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
         
     copyResourceDataValues($from, $to);
     copy_resource_nodes($from, $to);
-    
-    # Update 'joined' fields in resource table 
-    $joins=get_resource_table_joins();
-    $joinsql = "UPDATE resource AS target LEFT JOIN resource AS source ON source.ref='{$from}' SET ";
-    $joinfields = "";
-    foreach($joins as $joinfield)
-        {
-        if($joinfields != "")
-            {
-            $joinfields .= ",";
-            }
-        $joinfields .= "target.field{$joinfield} = source.field{$joinfield}";
-        
-        }
-    $joinsql = $joinsql . $joinfields . " WHERE target.ref='{$to}'";
-    sql_query($joinsql);
+
     return true;
     }
 
