@@ -40,3 +40,5 @@ $collection_download=true;
 $ffmpeg_preview_force = true;
 $ffmpeg_preview_extension = 'mp4';
 $ffmpeg_preview_options = '-f mp4 -b:v 1200k -b:a 64k -ac 1 -c:v h264 -c:a aac -strict -2';
+
+$daterange_search = true;
