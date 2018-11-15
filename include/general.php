@@ -4367,18 +4367,67 @@ $strName = substr($strName, 0, -strlen($ext));
 return $strName;
 }
 
+/**
+* Returns a list of fields with refs matching the supplied field refs.
+* 
+* @param array $field_refs Array of field refs
+* 
+* @return array
+*/
 function get_fields($field_refs)
     {
-    # Returns a list of fields with refs matching the supplied field refs.
-    if (!is_array($field_refs)) {print_r($field_refs);exit(" passed to get_fields() is not an array. ");}
-    $return=array();
-    $fields=sql_query("select *, ref, name, title, type, order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, display_as_dropdown,tooltip_text,display_condition, onchange_macro from resource_type_field where  ref in ('" . join("','",$field_refs) . "') order by order_by");
-    # Apply field permissions
-    for ($n=0;$n<count($fields);$n++)
+    if(!is_array($field_refs))
         {
-        if (metadata_field_view_access($fields[$n]["ref"]))
-            {$return[]=$fields[$n];}
+        trigger_error("\$field_refs passed to get_fields() is not an array.");
         }
+
+    $fields=sql_query("
+        SELECT *,
+               ref,
+               name,
+               title,
+               type,
+               order_by,
+               keywords_index,
+               partial_index,
+               resource_type,
+               resource_column,
+               display_field,
+               use_for_similar,
+               iptc_equiv,
+               display_template,
+               tab_name,
+               required,
+               smart_theme_name,
+               exiftool_field,
+               advanced_search,
+               simple_search,
+               help_text,
+               display_as_dropdown,
+               tooltip_text,
+               display_condition,
+               onchange_macro
+          FROM resource_type_field
+         WHERE ref IN ('" . join("','",$field_refs) . "')
+      ORDER BY order_by");
+
+    $return = array();
+    foreach($fields as $field)
+        {
+        if(metadata_field_view_access($field['ref']))
+            {
+            $return[] = $field;
+            }
+        }
+
+    /*for($n = 0; $n < count($fields); $n++)
+        {
+        if(metadata_field_view_access($fields[$n]["ref"]))
+            {
+            $return[]=$fields[$n];
+            }
+        }*/
+
     return $return;
     }
 
