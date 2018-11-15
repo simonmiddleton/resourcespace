@@ -97,7 +97,7 @@ if ($collection!="")
 	hook("prechangecollection");
 	#change current collection
 	
-	if (($k=="" || $internal_share_access) && $collection=="new" && !$upload_then_edit)
+	if (($k=="" || $internal_share_access) && $collection=="new")
 		{
 		# Create new collection
 		if ($entername!=""){ $name=$entername;} 
