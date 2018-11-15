@@ -269,6 +269,14 @@ body {
     #Header.slimheader_darken a:link, #Header.slimheader_darken a:visited, #Header.slimheader_darken a:active {
         color: #565656;
     }
+    
+    #BrowseBar, #BrowseBarTab{
+	display: none !important;
+    }
+    
+    #CentralSpaceContainer{
+        padding-left: 0px;
+        }   
 
 }
 @media(max-width: 1100px) {

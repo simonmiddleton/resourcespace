@@ -182,7 +182,6 @@ select::-ms-expand
 
 
 .ui-layout-container{min-width:1100px;overflow:scroll;}
-#CentralSpaceContainer {margin: 20px 25px 20px;padding: 0 282px 0 0;text-align: left;}
 #Header {margin: 0;padding: 5px 25px 5px 25px;background-image:none;}
 #HeaderNav1, #HeaderNav2 {padding:0;}
 #HeaderNav1 {float:right;}
@@ -251,9 +250,6 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
     margin:0px 25px 20px;
     padding:0 282px 0 0;
     text-align:left;
-    -webkit-transition: all 0.2s ease;
-    -moz-transition: all 0.2s ease;
-    -o-transition: all 0.2s ease;
     transition: all 0.5s ease;
     }
 #CentralSpaceContainerRestrict {margin:0px 15px 20px 25px;padding:0;text-align:left;}
@@ -1588,40 +1584,95 @@ select.MultiSelect:before {
     box-shadow: none;
 }
 
-#BrowseBar {
+#BrowseBar{
     position: absolute;
-    width: 1000px;
     max-width:30%;
     height: 700px;
     max-height:80%;
     margin-top: -20px;
-    -webkit-transition: all 0.2s ease;
-    -moz-transition: all 0.2s ease;
-    -o-transition: all 0.2s ease;
-    transition: all 0.5s ease;
-    height: 100%
+    transition: all 0.6s ease;
+    text-align: left;
 }
 
-#BrowseBar.BrowseBarHidden {
+#BrowseBar.BrowseBarHidden{
     margin-left: -530px;
 }
 
-#BrowseBar.BrowseBarVisible {
+#BrowseBar.BrowseBarVisible{
+    width: 1000px;
     margin-left: 0;
 }
 
-.BrowseBarText {
+#BrowseBarContents{
+    margin-left: 10px;
+    float: left;
+}
+
+#BrowseBarClose{
+    float: right;
+    margin-right: 5px;
+}
+
+.BrowseBar .a{
+    display: table-cell;
+    }
+
+.BrowseBarItem{
+    display: table;
+}
+
+.BrowseBarRow{
+    display: table-row;
+}
+
+.BrowseBarStructure{
+    display: table-cell;
+    width: 18px;
+    font-family: courier;
+    font-size: 14px;
+}
+
+#BrowseBar .backline {
+    background-position: 7px 0px;
+}
+
+#BrowseBarTab {
     position: absolute;
-    margin-left: 240px;
-    margin-top: 150px;
+    top: 130px;
+    width:0px;
+    height: 130px;
+    left: -500px;
+    /*margin-left: -530px;
+    display: none;*/
+}
+
+#BrowseBarTab.BrowseBarHidden {
+    display: block;
+    margin-left: 0px;
+    left: 0px;
+    width: 35px;
+}
+
+
+.BrowseBarTabText {
+    margin-bottom: 10px;
+    margin-top: 80px;
     text-transform: capitalize;
     text-align: center;
     transform: rotate(-90deg);
-    transform-origin: left top 0;
     font-size: 30px;
+    display: none;
 }
 
-#CentralSpaceContainer.BrowseMode, #Footer.BrowseMode
-        {
+#BrowseBarTab a:hover{
+    text-decoration: none;
+}
+
+#BrowseBarTab.BrowseBarHidden  .BrowseBarTabText{
+    display: block;
+}
+
+
+#CentralSpaceContainer.BrowseMode{
     padding-left: 30%;
     }

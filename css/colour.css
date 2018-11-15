@@ -97,7 +97,7 @@ input[readonly] {color: #000000;}
 .CollectBack {color:#E0E0E0;background: #2b2b2b;}
 
 #CollectionMinRightNav li {border-left:1px solid #E0E0E0;}
-.CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2 {color:#E0E0E0;}
+.CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2,.BrowseBar a:link,.BrowseBar a:hover, .BrowseBar a:visited, .BrowseBar a:active,.BrowseBar h2 {color:#E0E0E0;}
 .CollectBack a:hover{color:#FFF;}
 .CollectBack h2 a:link, .CollectBack h2 a:visited, .CollectBack h2 a:active, .CollectBack h2 a:hover {color:white;}
 /* Use different icons for the collections bar */
@@ -115,7 +115,7 @@ input[readonly] {color: #000000;}
 	{color:#FFF;}
 .HomePanel h2{color:#FFF;}
 
-#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBar{
+#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab{
 	background: rgba(0, 0, 0, 0.6);
 	color:#FFF;
 }
@@ -445,9 +445,9 @@ input:checked + .customFieldLabel, .keywordselected
 }
 
 /* Browse bar */
-#BrowseBar
+#BrowseBar a, #BrowseBarTab
     {
-  color: #d7d7d7;
+  color: #fff;
   }
 
 .BrowseBarText {color: #fff;}

@@ -88,6 +88,10 @@ if ($browse_bar)
         {
         padding-left: 30px;
         }   
+    #Footer
+        {
+        clear: both;
+        } 
 
     <?php
     }

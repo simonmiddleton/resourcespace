@@ -2522,11 +2522,169 @@ function render_trash($type, $deletetext,$forjs=false)
 function render_browse_bar()
     {
     global $lang;
-    
-    $barclass = getval("rsbrowse","") != "show" ? "BrowseBarHidden" : "BrowseBarVisible";
-    $bb_html = '<div id="BrowseBar" class="' . $barclass . '" onclick="ToggleBrowseBar();" class="BrowseBar"><span class="BrowseBarText">' . $lang['browse_bar_text'] . '</span></div>
+    $bbshow = getval("rsbrowse","") == "show";
+        
+    $bb_html = '<div id="BrowseBar" class="BrowseBar ' . ($bbshow ? "BrowseBarVisible" : "BrowseBarHidden"). '" >';
+    $bb_html .= '<div id="BrowseBarContents" >'; 
+
+    // Browse by tag
+    $bb_html .= generate_browse_bar_item(0, "tags", "tags", "Browse by tag", "test", "test", $classes=array());
+    //$bb_html .= generate_browse_bar_item(1, "restype", 1, "Photo", "test", "test", $classes=array());
+    //$bb_html .= generate_browse_bar_item(2, "field", 1, "Subject", "test", "test", $classes=array());
+    //$bb_html .= generate_browse_bar_item(3, "search", 23, "Mr A", "test", "", $classes=array());
+    //$bb_html .= generate_browse_bar_item(3, "search", 24, "Mr B", "test", "", $classes=array());
+    //$bb_html .= generate_browse_bar_item(3, "search", 25, "Mr C", "test", "", $classes=array());
+    //$bb_html .= generate_browse_bar_item(1, "restype", 2, "Documents", "test", "test", $classes=array());
+    //$bb_html .= generate_browse_bar_item(1, "restype", 3, "Video", "test", "test", $classes=array());
+    $bb_html .= generate_browse_bar_item(0, "featured", "featured", "Featured collections", "test", "test", $classes=array());
+    $bb_html .= generate_browse_bar_item(0, "collections", "collections",  "My collections", "test", "test", $classes=array());
+    $bb_html .= generate_browse_bar_item(0, "workflow", "workflow", "Workflow", "test", "test", $classes=array());
+    $bb_html .= '</div><!-- End of BrowseBarContents -->';
+    $bb_html .= '<div id="BrowseBarClose" class="backtoresults"><a href="#"  class="closeLink fa fa-times" onClick="ToggleBrowseBar();"></a></div>';
+    $bb_html .= '</div>';
+    $bb_html .= '<div id="BrowseBarTab" ' . ($bbshow ? '' : 'class="BrowseBar BrowseBarHidden" ' ) . '" ><a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div class="BrowseBarTabText">' . $lang['browse_bar_text'] . '</div></a></div>
     ';
     echo $bb_html;
+    
+    $browsejsvar = $bbshow ? 'show' : 'hide';
+    echo '<script>
+        var rsbrowse = "' . $browsejsvar . '";
+        SetCookie("rsbrowse", "' . $browsejsvar . '");
+        
+        function LoadBrowseElements(type, id, csrfidentifier, token)
+            {
+            curel = jQuery("#BrowseBarItem_" + type + "_"  + id);
+            curlevel =curel.attr("browselevel");
+            
+            openclose = curel.find("a.browseexpand");
+            opencloseicon = openclose.find("i");
+            if(curel.attr("open")=="open")
+                {
+                alert("OPEN");
+                alert(curel.next[level=curlevel+1]));
+                curel.next()[level=curlevel+1].slideUp();
+                
+                opencloseicon.removeClass("fa fa-minus-square");
+                opencloseicon.addClass("fa fa-plus-square");
+                openclose.attr("open")=="closed";
+                return true;
+                }
+                
+            //alert(type + " " + id);
+            //alert("element: " + curel);
+            //alert("curlevel : " + curlevel);
+            
+            opencloseicon.removeClass("fa fa-plus-square");
+            opencloseicon.addClass("fa fa-minus-square");
+            curel.attr("open","open");
+            
+            url = baseurl_short+"pages/ajax/load_browsebar.php";
+            
+            
+            var post_data = {
+                            type: type,
+                            id: id,
+                            level: curlevel 
+                            };
+                            
+            post_data[csrfidentifier] = token;
+            
+            jQuery.ajax({
+                    type:"POST",
+                    url: url,
+                    data: post_data,
+                    async:false            
+                    }).done(function(response, status, xhr)
+                        {
+                        if (status=="error")
+                            {				
+                            alert(errorpageload  + xhr.status + " " + xhr.statusText + "<br>" + response);		
+                            }
+                        else
+                            {
+                            // Load completed	
+                            curel.after(response);
+                          }
+                        CentralSpaceHideLoading();
+                        });
+
+            
+            return true;          
+            }
+        </script>';
     }
 
+/*
+Tag - child is resource_type expand, show restypes, no link
+ - get resource types
+
+resource_type - child is metadata field
+
+metadata field - child is node
+
+node - if cat tree - child is node, expand else none
+
+featured- child is first cat
+
+collection - child is collection name/ref
+
+workflow - child is archive states
+
+archive states -  child is metadata field
+- if archive, has extra fields
+*/
+
+
+/**
+* Generates a CSS table row element for the browse bar
+*  
+* @return void
+*/    
+function generate_browse_bar_item($level, $type, $id, $text, $link, $expandlink="", $classes=array())
+	{
+	global $browse_bar_elements, $usersession, $CSRF_token_identifier;
+    $html = '<div id="BrowseBarItem_' . $type . '_' . $id . '" class="BrowseBarItem BrowseBarClosed ' . implode($classes) . '" browselevel="' . (int)$level . '" >';
+    $html .= '<div class="BrowseBarRow">';
+
+    //Add the lines for each indent
+    $level_indent = '<div class="BrowseBarStructure backline"></div>';
     
+    $html .= str_repeat($level_indent, ((int)$level));
+	
+	
+    $html .= '<div class="BrowseBarStructure">';
+    if($expandlink != "")
+        {
+        $html .= '<a href="' . urlencode($expandlink) .'" class="browseexpand" onclick="LoadBrowseElements(\'' .htmlspecialchars($type) .  '\',\'' . htmlspecialchars($id)  .'\',\'' . $CSRF_token_identifier . '\',\'' . generateCSRFToken($usersession,'browse_load') . '\');return false;" ><i aria-hidden="true" class="fa fa-plus-square"></i></a>';
+        }
+    else
+        {
+        $html .=  $level_indent; 
+        }
+	
+    $html .= '</div><!-- End of BrowseBarStructure -->';	
+    
+    // Add the icon
+    //$html .= '<div class="BrowseBarTree">';
+    $html .= '<div class="BrowseBarStructure">';
+	$html .= '<i aria-hidden="true" class="fa ' . ( isset($browse_bar_elements[$type]["icon"]) ? $browse_bar_elements[$type]["icon"] : "")  . '"></i>';
+    $html .= '</div><!-- End of BrowseBarStructure -->';	
+    
+    //$html .= '</div><!-- End of BrowseBarTree -->';	
+    
+	if($link != "")
+		{
+		$html .= '&nbsp;<a href="' . urlencode($expandlink) .'" onclick="" >' . $text . '</a>';
+		}
+	
+    $html .= '</div><!-- End of BrowseBarRow -->';
+	$html .= "</div>";
+	return $html;
+	}
+	
+	
+	
+	
+	
+	
+	

@@ -3538,4 +3538,25 @@ $user_purge_disable = false;
 // Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
 $inactive_user_disable_days = 0;
 
+// Browse bar 
 $browse_bar = true;
+
+$browse_bar_types = array();
+$browse_bar_types["folder"] 	= array();
+$browse_bar_types["resource"] 	= array("icon" => "far fa-file-text-o");
+
+// Array to navigate via JS
+// Tags -> Restype -> Node
+// Featured-> Name (hash) -> name2 (hash)
+// Colletions -> collection ref
+//
+
+$browse_bar_elements = array();
+$browse_bar_elements["tags"]        = array("icon" => "far fa-folder");
+$browse_bar_elements["featured"]    = array("icon" => "far fa-folder");
+$browse_bar_elements["collections"] = array("icon" => "far fa-folder");
+$browse_bar_elements["workflow"]    = array("icon" => "far fa-folder");
+$browse_bar_elements["search"]      = array("icon" => "far fa-file-text-o");
+$browse_bar_elements["restype"]     = array("icon" => "far fa-file-text-o");
+$browse_bar_elements["node"]        = array("icon" => "far fa-file-text-o");
+$browse_bar_elements["field"]       = array("icon" => "fas fa-tags");
