@@ -1170,6 +1170,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         if($return_refs_only)
             {
             // note that we actually include archive and created_by columns too as often used to work out permission to edit collection
+            $searchsql = resource_table_joins_sql($joins, str_replace("ORDER BY {$order_by}", '', $searchsql));
             $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','archive','created_by'));
             }
         else
