@@ -1175,7 +1175,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         else
             {
-            $searchsql = resource_table_joins_sql($joins, $searchsql);
+            $searchsql = resource_table_joins_sql($joins, str_replace("ORDER BY {$order_by}", '', $searchsql));
             $result = sql_query($searchsql,false,$fetchrows);
             }
 
