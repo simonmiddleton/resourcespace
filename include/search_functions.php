@@ -46,7 +46,7 @@ function suggest_refinement($refs,$search)
 if (!function_exists("get_advanced_search_fields")) {
 function get_advanced_search_fields($archive=false, $hiddenfields="")
     {
-    global $FIXED_LIST_FIELD_TYPES;
+    global $FIXED_LIST_FIELD_TYPES, $date_field, $daterange_search;
     # Returns a list of fields suitable for advanced searching. 
     $return=array();
 
@@ -58,6 +58,12 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         {
         if (metadata_field_view_access($fields[$n]["ref"]) && !checkperm("T" . $fields[$n]["resource_type"]) && !in_array($fields[$n]["ref"], $hiddenfields))
             {$return[]=$fields[$n];}
+        }
+
+    if(!in_array($date_field,$return) && $daterange_search && metadata_field_view_access($date_field) && !in_array($date_field, $hiddenfields))
+        {
+        $date_field_data = get_resource_type_field($date_field);
+        array_unshift($return,$date_field_data);
         }
 
     return $return;
