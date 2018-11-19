@@ -36,15 +36,15 @@ foreach(tms_link_get_modules_mappings() as $module)
         ?>
         <tr>
             <td>
-                <a href="<?php echo "$baseurl/?r={$tms_resources["resource"]}"; ?>"
-                   onClick="CentralSpaceload(this, true); return false;"><?php echo $tms_resources["resource"]; ?></a>
+                <a href="<?php echo "$baseurl/?r={$tms_resource["resource"]}"; ?>"
+                   onClick="CentralSpaceload(this, true); return false;"><?php echo $tms_resource["resource"]; ?></a>
             </td>
             <td><?php echo $module['module_name']; ?></td>
             <td>
-                <a href="<?php echo "$baseurl/plugins/tms_link/pages/test.php?ref={$tms_resources["resource"]}"; ?>"
-                   onClick="CentralSpaceload(this, true); return false;"><?php echo $tms_resources["objectid"]; ?></a>
+                <a href="<?php echo "$baseurl/plugins/tms_link/pages/test.php?ref={$tms_resource["resource"]}"; ?>"
+                   onClick="CentralSpaceload(this, true); return false;"><?php echo $tms_resource["objectid"]; ?></a>
             </td>
-            <td><?php echo $tms_resources["checksum"]; ?></td>
+            <td><?php echo $tms_resource["checksum"]; ?></td>
         </tr>
         <?php
         }
