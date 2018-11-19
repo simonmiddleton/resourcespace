@@ -110,11 +110,6 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
         foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
             {
             $columnsql .= (trim($columnsql) == '' ? $tms_rs_mapping['tms_column'] : ", {$tms_rs_mapping['tms_column']}");
-
-            if(in_array($tms_rs_mapping['tms_column'], $tms_link_text_columns))
-                {
-                $columnsql .= ", CAST ({$tms_rs_mapping['tms_column']} AS VARBINARY(MAX)) {$tms_rs_mapping['tms_column']}";
-                }
             }
         $tmssql = "SELECT {$columnsql} FROM {$module['module_name']} {$conditionsql};";
         $tmsresultset = odbc_exec($conn, $tmssql);
