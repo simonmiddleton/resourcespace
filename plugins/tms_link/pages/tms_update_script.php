@@ -109,8 +109,6 @@ if($tms_log)
     fwrite($logfile, $logmessage);
     }
 
-################################################################################
-################################################################################
 $tmscount = 0;
 $tms_updated_array = array();
 $tmserrors = array();
@@ -286,9 +284,6 @@ foreach(tms_link_get_modules_mappings() as $module)
 
 $logtext  = "";
 $logtext .= PHP_EOL . sprintf("TMS Script completed in %01.2f seconds.\n", microtime(true) - $tms_script_start_time) . PHP_EOL;
-################################################################################
-################################################################################
-
 
 if($tmscount==0)
 	{
