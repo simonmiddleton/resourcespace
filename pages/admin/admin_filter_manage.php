@@ -1,7 +1,6 @@
 <?php
 include "../../include/db.php";
 include_once "../../include/general.php";
-//include_once "../../include/render_functions.php";
 include "../../include/authenticate.php";
 
 if (!checkperm("a"))
@@ -16,9 +15,6 @@ $revsort        = ($filtersort == "ASC") ? "DESC" : "ASC";
 $filterfind     = getval("filterfind","");
 
 $filters = get_filters($filterorder,$filtersort,$filterfind);
-
-//exit(print_r($filters));
-
 
 $filter_edit_url    = $baseurl . "/pages/admin/admin_filter_edit.php";
 $filter_manage_url  = $baseurl . "/pages/admin/admin_filter_manage.php";
@@ -92,6 +88,17 @@ include "../../include/header.php";
                                                 var redirect_link = document.createElement("a");
                                                 redirect_link.href = "<?php echo generateURL($filter_manage_url,$params, array("deleted"=>$filters[$n]["ref"])); ?>";
                                                 CentralSpaceLoad(redirect_link, true);
+                                                }
+                                            else
+                                                {
+                                                errors = "";
+                                                console.log(response.errors);
+                                                for (var i in response.errors) 
+                                                    {
+                                                    errors += response.errors[i] + "<br />";
+                                                    }
+                                                 
+                                                styledalert("<?php echo urlencode($lang["error"]) ?>",errors);
                                                 }
                                         }, "json"); 
             

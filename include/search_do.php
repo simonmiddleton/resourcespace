@@ -1038,9 +1038,48 @@ function do_search(
     global $search_filter_nodes;
     
     # Option for custom access to override search filters.
-    # For this resource, if custom access has been granted for the user or group, nullify the search filter for this particular resource effectively selecting "true".
     global $custom_access_overrides_search_filter;
-
+    
+    if($search_filter_nodes && strlen($usersearchfilter) > 0 && intval($usersearchfilter) == 0)
+        {
+        // Migrate unless marked not to due to failure (flag will be reset if group is edited)
+        $migrateresult = migrate_search_filter($usersearchfilter);
+        $notification_users = get_notification_users();
+        global $userdata, $lang, $baseurl;
+        if(is_numeric($migrateresult))
+            {
+            message_add(array_column($notification_users,"ref"), $lang["filter_search_success"] . ": '" . $usersearchfilter . "'",generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+            
+            // Successfully migrated - now use the new filter
+            if(isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='')
+                {
+                // This was a user override filter - update the user record
+                sql_query("UPDATE user SET search_filter_o_id='" . $migrateresult . "' WHERE ref='" . $userref . "'");
+                }
+            else
+                {
+                sql_query("UPDATE usergroup SET search_filter_id='" . $migrateresult . "' WHERE ref='" . $usergroup . "'");
+                }
+            $usersearchfilter = $migrateresult;
+            debug("FILTER MIGRATION: Migrated filter - new filter id#" . $usersearchfilter);
+            }
+        elseif(is_array($migrateresult))
+            {
+            debug("FILTER MIGRATION: Error migrating filter: '" . $usersearchfilter . "' - " . implode('\n' ,$migrateresult));
+            // Error - set flag so as not to reattempt migration and notify admins of failure
+            if(isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='')
+                {
+                sql_query("UPDATE user SET search_filter_o_id='-1' WHERE ref='" . $userref . "'");
+                }
+            else
+                {
+                sql_query("UPDATE usergroup SET search_filter_id='-1' WHERE ref='" . $usergroup . "'");
+                }
+                
+            message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_search_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$usergroup)));
+            }
+        }
+        
     if ($search_filter_nodes && is_numeric($usersearchfilter) && $usersearchfilter > 0)
         {
         $filter         = get_filter($usersearchfilter);
@@ -1105,7 +1144,6 @@ function do_search(
             if ($sql_filter != ""){$sql_filter .= " AND ";}
             $sql_filter .=  $filter_add;
             }
-        //exit(print_r($sql_filter));
         }
     elseif (strlen($usersearchfilter)>0 && !is_numeric($usersearchfilter))
         {

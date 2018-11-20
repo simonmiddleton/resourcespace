@@ -2155,12 +2155,26 @@ function setup_user($userdata)
 		}
 
         global $search_filter_nodes;
-        if ($search_filter_nodes && isset($userdata["search_filter_id"]) && is_numeric($userdata["search_filter_id"]))
+        $newfilter = false;
+        if ($search_filter_nodes)
             {
-            $usersearchfilter = $userdata["search_filter_id"];
+            if(isset($userdata["search_filter_o_id"]) && is_numeric($userdata["search_filter_o_id"]) && $userdata['search_filter_o_id'] > 0)
+                {
+                // User search filter override
+                $usersearchfilter = $userdata["search_filter_o_id"];
+                $newfilter = true;
+                }
+            elseif(isset($userdata["search_filter_id"]) && is_numeric($userdata["search_filter_id"]) && $userdata['search_filter_id'] > 0)
+                {
+                // Group search filter
+                $usersearchfilter = $userdata["search_filter_id"];
+                $newfilter = true;
+                }
             }
-        else
+        
+        if(!$newfilter)
             {
+            // Old style search filter that hasn't been migrated
             $usersearchfilter=isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='' ? $userdata["search_filter_override"] : $userdata["search_filter"];
             }
             
@@ -2252,6 +2266,7 @@ function validate_user($user_select_sql, $getuserdata=true)
                        g.name groupname,
                        u.ip_restrict ip_restrict_user,
                        u.search_filter_override,
+                       u.search_filter_o_id,
                        g.resource_defaults,
                        u.password_last_change,
                        if(find_in_set('config_options',g.inherit_flags) AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,

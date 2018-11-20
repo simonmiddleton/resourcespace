@@ -3544,4 +3544,6 @@ $user_purge_disable = false;
 // Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
 $inactive_user_disable_days = 0;
 
+// Enable updated search filter functionality? Allows for simpler setup of more advanced search filters
+// Once enabled the filters will gradually be updated as users search. To update all the filter immediately run upgrade/scripts/003_migrate_search_filters.php
 $search_filter_nodes = false;

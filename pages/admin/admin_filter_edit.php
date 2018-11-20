@@ -41,7 +41,7 @@ $filter_copy_from = getval("copy_from",0,true);
 if($delete_filter != "" && enforcePostRequest("admin_filter_edit"))
     {
     $result     = delete_filter($delete_filter);
-    if($result)
+    if($result === true)
         {
         if(getval("filter_manage_page","") != "")
             {
@@ -57,6 +57,23 @@ if($delete_filter != "" && enforcePostRequest("admin_filter_edit"))
             <?php
             exit();    
             }
+        }
+    else
+        {
+        $response   = array('deleted' => false);
+        $response["errors"] = array();
+        $response["errors"][] = $lang["filter_search_delete_error"] . ":- ";
+        foreach($result["groups"] as $group)
+            {
+            $response["errors"][] = $lang["group"] . ": <a href='" . $baseurl_short . "/pages/admin/admin_group_management_edit.php?ref=" . $group . "' target='_blank' >" . $group . "</a>";
+            }
+           
+        foreach($result["users"] as $user)
+            {
+            $response["errors"][] = $lang["user"] . ": <a href='" . $baseurl_short . "?u=" . $user . "' target='_blank' >" . $user . "</a>";
+            }
+        
+        exit(json_encode($response));
         }
     }
 if($delete_filter_rule != "" && enforcePostRequest("delete_filter_rule"))
@@ -80,7 +97,7 @@ elseif($filterid != "" && getval("save","") != "" && enforcePostRequest("admin_f
     if ($filterid == 0 && $filter_copy_from != 0)
         {
         // Copy rules to new filter
-        $newfilterid = copy_filter($filterid, $filter_copy_from);
+        $newfilterid = copy_filter($filter_copy_from);
         $filterid = $newfilterid;
         }
     else

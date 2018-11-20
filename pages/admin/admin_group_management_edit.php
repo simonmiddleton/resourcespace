@@ -124,7 +124,6 @@ if (getval("save",false) && enforcePostRequest(false))
 		
 		elseif($column=="inherit_flags" && getvalescaped($column,'')!="")
 			{
-			//exit(print_r(getval($column,'')));
 			$val=implode(",",getvalescaped($column,''));
 			}			
 		elseif($column=="parent")
@@ -155,6 +154,11 @@ if (getval("save",false) && enforcePostRequest(false))
 		}
 	$sql.=" where ref='{$ref}'";
 	sql_query($sql);
+    
+    if($search_filter_nodes && getval("search_filter_id",0,true) == 0 && trim(getval("search_filter","")) != "")
+        {
+        migrate_usergroup_filter();
+        }
 	
 	hook("usergroup_edit_add_form_save","",array($ref));
 	if(!$error)
@@ -282,8 +286,9 @@ include "../../include/header.php";
 
 
 		<?php
-		if ($search_filter_nodes)
+		if ($search_filter_nodes && (strlen($record['search_filter']) == "" || (is_numeric($record['search_filter_id']) && $record['search_filter_id'] > -1)))
 			{
+            // Show filter selector if already migrated or no filter has been set
 			$search_filters = get_filters($order = "name", $sort = "ASC");
 			?>
 			<div class="Question">
@@ -302,7 +307,9 @@ include "../../include/header.php";
 			}
 		else
 			{
+            // Show old style text filter input
 			?>
+            <input type="hidden" name="search_filter_id" value="0" />
 			<div class="Question">
 				<label for="search_filter"><?php echo $lang["property-search_filter"]; ?></label>
 				<textarea name="search_filter" class="stdwidth" rows="3" cols="50"><?php echo $record['search_filter']; ?></textarea>
