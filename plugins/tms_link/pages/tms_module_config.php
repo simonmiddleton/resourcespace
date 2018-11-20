@@ -72,9 +72,18 @@ if($id !== '' && array_key_exists($id, $tms_link_modules_mappings))
     $tms_link_tms_rs_mappings = $record['tms_rs_mappings'];
     }
 
+// Generate back to setup page of tms plugin link
+$plugin_yaml_path = get_plugin_path('tms_link') . "/tms_link.yaml";
+$plugin_yaml = get_plugin_yaml($plugin_yaml_path, false);
+$back_to_url = $baseurl . $plugin_yaml['config_url'];
+$back_to_link_name = LINK_CARET_BACK . str_replace('%area', $lang['tms_link_configuration'], $lang["back_to"]);
+
 include '../../../include/header.php';
 ?>
 <div class="BasicsBox">
+    <p>
+        <a href="<?php echo $back_to_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $back_to_link_name; ?></a>
+    </p>
     <h1><?php echo $lang["tms_link_tms_module_configuration"]; ?></h1>
     <?php
     if(isset($error))
