@@ -14,3 +14,5 @@ $lang["google_vision_face_detect"] = "Facial detection";
 $lang["google_vision_face_detect_field"]="Field to store face detection data in (optional)";
 $lang["google_vision_face_detect_fullface"] = "If storing face data, detect full faces and not just skin area. See <a href='https://cloud.google.com/vision/docs/reference/rest/v1/images/annotate#FaceAnnotation' target='_blank'>this link</a> for more information";
 $lang["google_vision_face_detect_verbose"] = "Store verbose face detection data (includes all face data, locations of facial features and emotion detection information)";
+$lang["google_vision_face_dependent_field"] = "Select a metadata field that will be hidden when facial recognition data field is empty (optional)";
+

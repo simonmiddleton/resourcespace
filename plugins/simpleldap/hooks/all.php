@@ -15,7 +15,9 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 	if ($uname != "" && $pword != "")
 		{
 		$userinfo = simpleldap_authenticate($uname, $pword);
-		//print_r($userinfo);
+
+        debug("LDAP: \$userinfo = " . print_r($userinfo, true));
+
 		if ($userinfo) { $auth = true; }
 		} 
 

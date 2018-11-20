@@ -1709,7 +1709,7 @@ $hide_access_column_public = false;
 #collection_manage.php - hide 'access' column
 $hide_access_column = false;
 
-# Enable the 'edit all' function in both the collection bar and My Collections
+# Enable the 'edit all' function in the collection and search actions dropdowns
 $show_edit_all_link = true;
 
 #Bypass share.php and go straight to e-mail
@@ -1839,6 +1839,9 @@ $delete_requires_password=false;
 
 # Offline processes (e.g. staticsync and create_previews.php) - for process locking, how old does a lock have to be before it is ignored?
 $process_locks_max_seconds=60*60*4; # 4 hours default.
+
+// The number of threads to be used for create_previews.php
+$max_forks = 3;
 
 # Zip files - the contents of the zip file can be imported to a text field on upload.
 # Requires 'unzip' on the command path.
@@ -2346,22 +2349,12 @@ $use_phpmailer=false;
 # Allow to disable thumbnail generation during batch resource upload from FTP or local folder.
 # In addition to this option, a multi-thread thumbnail generation script is available in the batch
 # folder (create_previews.php). You can use it as a cron job, or manually.
-# Note: this also works for normal uploads (through web browser)
+# Notes:-
+#  - This also works for normal uploads (through web browser)
+#  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
 $enable_thumbnail_creation_on_upload = true;
 
-# Create XML metadata dump files in the resource folder?
-# This ensures that your metadata is kept in a readable format next to each resource file and may help
-# to avoid data obsolescence / future migration. Also, potentially a useful additional backup.
-$xml_metadump=true;
 
-# Configures mapping between metadata and Dublin Core fields, which are used in the XML metadata dump instead if a match is found.
-$xml_metadump_dc_map=array
-	(
-	"title" => "title",
-	"caption" => "description",
-	"date" => "date"
-	);
-	
 # Use Plugins Manager
 $use_plugins_manager = true;
 
@@ -3283,6 +3276,7 @@ $watermark_single_image = array(
 
 # $offline_job_queue. Enable the job_queue functionality that runs resource heavy tasks to be run offline and send notifications once complete. Initially used by video_tracks plugin 
 # If set to true a frequent cron job or scheduled task should be added to run pages/tools/offline_jobs.php 
+# NOTE: This setting may be overridden in certain cirumstances  - e.g. if previews are required at upload time because Google Vision facial recognition is configured with a dependent metadata field
 $offline_job_queue=false;
 # Delete completed jobs from the queue?
 $offline_job_delete_completed=false;

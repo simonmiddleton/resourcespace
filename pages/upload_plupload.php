@@ -8,6 +8,7 @@ include "../include/image_processing.php";
 include "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
 
+
 $overquota                              = overquota();
 $status                                 = '';
 $resource_type                          = getvalescaped('resource_type', '');
@@ -25,6 +26,11 @@ $replace_resource                       = getvalescaped('replace_resource', '');
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
 $single                                 = getval("single","") != "" || getval("forcesingle","") != "";
 
+$chunk       = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
+$chunks      = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
+$plfilename  = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
+$queue_index = isset($_REQUEST['queue_index']) ? intval($_REQUEST['queue_index']) : 0;
+
 // When uploading, if there are any files in the queue that have similar names plus a suffix to distinguish between original
 // and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
 $attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '');
@@ -35,6 +41,11 @@ if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirectur
 if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_readonly($replace_resource)))
     {
     $replace_resource = false;
+    }
+
+if($upload_then_edit && $resource_type_force_selection && getval('posting', '') != '')
+    {
+    update_resource_type(0 - $userref, $resource_type);
     }
 
 if($resource_type == "")
@@ -55,7 +66,7 @@ if($resource_type == "")
 resource_type_config_override($resource_type);
 
 # Create a new collection?
-if ($collection_add=="new")
+if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chunk == 0)))
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
@@ -154,7 +165,6 @@ if($replace_resource_preserve_option && '' != $replace_resource)
     }
 
 $uploadurl=generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams) . hook('addtopluploadurl');
-
 
 
 $default_sort_direction="DESC";
@@ -297,12 +307,6 @@ if ($_FILES)
 
 	// Uncomment this one to fake upload time
 	// usleep(5000);
-
-	// Get parameters
-	$chunk       = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
-	$chunks      = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
-	$plfilename  = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-    $queue_index = isset($_REQUEST['queue_index']) ? intval($_REQUEST['queue_index']) : 0;
         
         debug("PLUPLOAD - receiving file from user " . $username . ",  filename " . $plfilename . ", chunk " . $chunk . " of " . $chunks);
         
@@ -557,7 +561,6 @@ if ($_FILES)
                     if ($replace=="" && $replace_resource=="")
                             {
                             # Standard upload of a new resource
-                            
                             # create ref via copy_resource() or other method
                             $modified_ref=hook("modifyuploadref");
                             if ($modified_ref!="")
@@ -597,7 +600,7 @@ if ($_FILES)
                             // For upload_then_edit mode ONLY, we decide the resource type based on the extension. User
                             // can later change this at the edit stage
                             // IMPORTANT: we change resource type only if user has access to it
-                            if($upload_then_edit)
+                            if($upload_then_edit && !$resource_type_force_selection)
                                 {
                                 $resource_type_from_extension = get_resource_type_from_extension(
                                     pathinfo($plupload_upload_location, PATHINFO_EXTENSION),
@@ -890,7 +893,7 @@ var pluploadconfig = {
         
         preinit: {
                 PostInit: function(uploader) {
-                
+
                     plup.object = uploader;                    
                     <?php hook('upload_uploader_defined'); ?>
         
@@ -930,6 +933,7 @@ var pluploadconfig = {
                                         else
                                             {
                                             styledalert('<?php echo $lang["error"]?> ' + uploadresponse.error.code, uploadresponse.error.message);
+                                            jQuery("#upload_log").append("\r\n" + uploadresponse.error.message + " " + uploadresponse.error.code);
                                             }    
                                         }
                                     else
@@ -1378,7 +1382,7 @@ if($replace_resource != '' || $replace != '' || $upload_then_edit)
     ?>
     <h2 class="CollapsibleSectionHead collapsed" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
-    <form class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
+    <form id="UploadPluploadForm" class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
     <?php
     generateFormToken("upload_plupload");
     

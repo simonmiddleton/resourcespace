@@ -582,6 +582,7 @@ $lang["resource_custom_access"] = "Resource custom access";
 $lang['remove_custom_access_users_groups'] = 'Users and groups with custom access';
 $lang['remove_custom_access_no_users_found'] = 'No users or groups with custom access found.';
 $lang['action-generate_pdf'] = 'Generate PDF';
+$lang['lock-tooltip']='Lock field to be copied to next resource';
 
 # Resource log - actions
 $lang["resourcelog"]="Resource log";
@@ -627,6 +628,8 @@ $lang["log_code_u"]=$lang["log-u"];
 $lang["log_code_U"]="Unspecified";
 $lang["log_code_v"]="Viewed";
 $lang["log_code_x"]="Deleted";
+$lang["log_code_+"] = "Enabled";
+$lang["log_code_-"] = "Disabled";
 
 $lang['user_created_by']='Created by';
 $lang['user_autocreated']='Automatically created';
@@ -854,6 +857,7 @@ $lang['single'] = 'Single';
 $lang['double'] = 'Double';
 $lang['single_width'] = 'Single width';
 $lang['double_width'] = 'Double width';
+$lang['filter_by_table'] = 'Filter by table...';
 
 # Pager
 $lang["next"]="Next";
@@ -1899,7 +1903,7 @@ $lang["matchingresourceslabel"]="Matching resources";
 # CSV Export of Search results
 $lang['csvExportResultsMetadata'] = 'CSV Export - metadata';
 $lang['csvExportResultsMetadataPersonal'] = 'Only include data from fields expected to contain personal data';
-$lang['csvExportResultsMetadataAll'] = 'Include data from all accessible fields e.g. contain technical metadata and detailed file information';
+$lang['csvExportResultsMetadataAll'] = 'Include data from all accessible fields e.g. technical metadata and detailed file information';
 $lang['csvAddMetadataCSVToArchive'] = 'Include metadata CSV file to the archive?';
 
 $lang["saving"]="Saving...";
@@ -2170,6 +2174,7 @@ $lang["fieldtitle-add_to_config_override"]="Add to config override";
 $lang["fieldtitle-advanced_options"]="Advanced options";
 $lang["fieldtitle-derestrict_filter"]="Derestrict filter";
 $lang["fieldtitle-group_logo"]="Group specific logo";
+$lang["fieldtitle-group_logo_replace"]="Replace group specific logo";
 $lang["fieldtitle-tick_to_delete_group"]="Tick to delete this group";
 $lang["property-contains"]="Contains";
 $lang["property-groups"]="Groups";
@@ -2692,6 +2697,8 @@ $lang["byte_prefix_mode_decimal"]="Use decimal for file sizes (1000 multiples, K
 $lang['error_upload_resource_alternatives_batch'] = 'When using this feature (see $upload_alternatives_suffix) your original file MUST be the first one in the queue!';
 $lang['error_upload_resource_not_found'] = 'A resource ID could not be found!';
 $lang['error_user_registration_opt_in'] = 'Please check the box to indicate your consent';
+$lang['error_resource_id_non_numeric'] = 'ERROR - Resource IDs should be numeric please check your submission';
+$lang['error_resource_not_image_extention'] = 'ERROR - Selected resource is not an image type file extention';
 
 $lang['image_quality_100'] = "Maximum";
 $lang['image_quality_92'] = "Print";
@@ -2731,7 +2738,7 @@ $lang["oj-collection-download-failure-text"] = "Unable to prepare collection arc
 $lang["email_auto_digest_inactive"] = "This is a summary of your unread messages";
 $lang["email_digest_disable"]       = "You can disable these notifications by logging in and adjusting your user preferences at the link below:-";
 $lang["user_pref_inactive_digest"]  = "Send me a daily email with all unread notifications if not logged on for than %%DAYS%% days?";
-
+$lang["edit_copy_from_field"]       = "Copy data from field";
 // Filter rules 
 $lang["filter_migration"]           = "Filter migration";
 $lang["filter_search_success"]      = "Search filter has been successfully migrated.";

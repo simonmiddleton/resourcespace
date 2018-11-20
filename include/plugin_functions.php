@@ -55,6 +55,9 @@ function activate_plugin($name)
                   "update_url='{$plugin_yaml_esc['update_url']}', info_url='{$plugin_yaml_esc['info_url']}', " .
                   "disable_group_select='{$plugin_yaml_esc['disable_group_select']}' " .
                   "WHERE name='{$plugin_yaml_esc['name']}'");
+
+        log_activity(null, LOG_CODE_ENABLED, $plugin_yaml_esc['version'], 'plugins', 'inst_version', $plugin_yaml_esc['name'], 'name', '', null, true);
+
         hook("after_activate_plugin","",array($name));
         return true;
         }
@@ -76,14 +79,19 @@ function activate_plugin($name)
  */
 function deactivate_plugin($name)
     {
-    $inst_version = sql_value("SELECT inst_version as value FROM plugins WHERE name='$name'",'');
-    if ($inst_version>=0)
+    $name = escape_check($name);
+
+    $inst_version = sql_value("SELECT inst_version AS value FROM plugins WHERE name = '{$name}'", '');
+  
+    if($inst_version >= 0)
         {
         # Remove the version field. Leaving the rest of the plugin information.  This allows for a config column to remain (future).
-        sql_query("UPDATE plugins set inst_version=NULL WHERE name='$name'");
+        sql_query("UPDATE plugins SET inst_version = NULL WHERE name = '{$name}'");
 
+        log_activity(null, LOG_CODE_DISABLED, '', 'plugins', 'inst_version', $name, 'name', $inst_version, null, true);
         }
     }
+
 /**
  * Purge configuration of a plugin.
  *
@@ -331,7 +339,13 @@ function set_plugin_config($plugin_name, $config)
         {
         $config_ser_json = mysql_real_escape_string($config_ser_json);
         }
+
+    // We record the activity before running the query because log_activity() is trying to be clever and figure out the old value
+    // which will make the new value also show up (incorrectly) as the old value.
+    log_activity(null, LOG_CODE_EDITED, $config_ser_json, 'plugins', 'config_json', $plugin_name, 'name', null, null, true);
+
     sql_query("UPDATE plugins SET config='$config_ser_bin', config_json='$config_ser_json' WHERE name='$plugin_name'");
+
     return true;
     }
 
@@ -500,6 +514,7 @@ function config_gen_setup_post($page_def,$plugin_name)
                 }
             else 
                 {
+                $config_global=(isset($GLOBALS[$def[1]]) ? $GLOBALS[$def[1]] :false);
                 switch ($def[0])
                     {
                     case 'html':
@@ -518,6 +533,9 @@ function config_gen_setup_post($page_def,$plugin_name)
                         $GLOBALS[$def[1]] = getval($def[1], is_array($GLOBALS[$def[1]])?array():'');
                         break;
                     }
+                
+                hook('custom_config_post', '', array($def, $config, $omit, $config_global));
+                
                 }
             if (!$omit)
                 {
@@ -578,6 +596,9 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
             $array=preg_replace("/\[[\"|']?\w+[\"|']?\]/","",$def[1]);
             preg_match("/[\"|']?\w+[\"|']?/",$array_offset[0],$array_offset);
             }
+        
+        hook ("custom_config_def", '', array($def)); //this comes first so overriding the below is possible
+        
         switch ($def[0])
             {
             case 'section_header':
@@ -907,7 +928,7 @@ function config_multi_group_select($name, $label, $current=array(), $width=300)
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" multiple="multiple" size="7" style="width:<?php echo $width ?>px">
+    <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="7" style="width:<?php echo $width ?>px">
 <?php
     $usergroups=get_usergroups();
     foreach ($usergroups as $usergroup)
@@ -946,7 +967,7 @@ function config_add_multi_group_select($config_var, $label, $width=300)
  * @param integer array $current the current value of the config variable being set
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
-function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$ftype) 
+function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$ftype=false) 
     {
     global $lang;
     if($ftype===false){
@@ -958,7 +979,7 @@ function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" multiple="multiple" size="<?php echo $size?>" style="width:<?php echo $width ?>px">
+    <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="<?php echo $size?>" style="width:<?php echo $width ?>px">
 <?php
     foreach($fields as $field)
         {

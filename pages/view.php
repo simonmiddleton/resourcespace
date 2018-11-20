@@ -770,9 +770,11 @@ else if(1 == $resource['has_image'])
 		$imagepath_retina     = get_resource_path($ref, true, 'scr', false, $resource['preview_extension'], true, 1, $use_watermark);
 		if (file_exists($imagepath_retina)) {$imagepath=$imagepath_retina;$use_size="scr";}
 		}
-	
-	# Fall back to preview, then thumbnail if scr doesn't exist	
-    if(!file_exists($imagepath) || $resource_view_use_pre)
+
+    if(
+        !file_exists($imagepath)
+        || ($hide_real_filepath && !resource_download_allowed($ref, $use_size, $resource['resource_type']))
+        || $resource_view_use_pre)
         {
 		$use_size="pre";
 		}
@@ -925,7 +927,10 @@ else if(1 == $resource['has_image'])
                             annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                             nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
                             resource            : <?php echo (int) $ref; ?>,
-                            read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>
+                            read_only           : <?php echo ($annotate_read_only ? 'true' : 'false'); ?>,
+                            // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
+                            csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
+                            <?php echo generateAjaxToken('RSTagging'); ?>
                             });
 
                 <?php
@@ -1075,7 +1080,7 @@ else
     {
     ?>
     <div id="previewimagewrapper">
-        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture" style="border:none;" id="previewimage" />
+        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>" alt="" class="Picture NoPreview" style="border:none;" id="previewimage" />
     <?php
     hook('aftersearchimg', '', array($ref));
     if(isset($previewcaption))

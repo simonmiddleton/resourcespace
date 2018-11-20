@@ -202,19 +202,19 @@ function do_search(
 
     # ------ Advanced 'custom' permissions, need to join to access table.
     $sql_join="";
-    if ((!checkperm("v")) &&!$access_override)
+    if ((!checkperm("v")) && !$access_override)
         {
         global $usergroup;global $userref;
         # one extra join (rca2) is required for user specific permissions (enabling more intelligent watermarks in search view)
         # the original join is used to gather group access into the search query as well.
-        $sql_join=" LEFT OUTER JOIN resource_custom_access rca2 ON r.ref=rca2.resource AND rca2.user='$userref'  AND (rca2.user_expires IS null or rca2.user_expires>now()) AND rca2.access<>2  ";
-        $sql_join.=" LEFT OUTER JOIN resource_custom_access rca ON r.ref=rca.resource AND rca.usergroup='$usergroup' AND rca.access<>2 ";
+        $sql_join   = " LEFT OUTER JOIN resource_custom_access rca2 ON r.ref=rca2.resource AND rca2.user='$userref' AND (rca2.user_expires IS null or rca2.user_expires>now()) AND rca2.access<>2  ";
+        $sql_join  .= " LEFT OUTER JOIN resource_custom_access rca ON r.ref=rca.resource AND rca.usergroup='$usergroup' AND rca.access<>2 ";
 
         if ($sql_filter!="") {$sql_filter.=" AND ";}
         # If rca.resource is null, then no matching custom access record was found
         # If r.access is also 3 (custom) then the user is not allowed access to this resource.
         # Note that it's normal for null to be returned if this is a resource with non custom permissions (r.access<>3).
-        $sql_filter.=" not(rca.resource IS null AND r.access=3)";
+        $sql_filter.=" NOT (rca.resource IS null AND r.access=3)";
         }
 
     # Join thumbs_display_fields to resource table
@@ -239,16 +239,6 @@ function do_search(
     else
         {
         $select.=",null group_access, null user_access ";
-        }
-
-    # add 'joins' to select (only add fields if not returning the refs only)
-    $joins=$return_refs_only===false ? get_resource_table_joins() : array();
-    foreach($joins as $datajoin)
-        {
-        if(metadata_field_view_access($datajoin) || $datajoin == $GLOBALS["view_title_field"])
-            {
-            $select .= ", r.field{$datajoin} ";
-            }
         }
 
     # Prepare SQL to add join table for all provided keywords
@@ -1206,8 +1196,14 @@ function do_search(
 
 					if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
 						{
-						$sql_join.="or ((rca.access IS NOT null AND rca.access<>2) or (rca2.access IS NOT null AND rca2.access<>2))";
-						}
+						$sql_join.=" OR  ((rca.access IS NOT null AND rca.access<>2) or (rca2.access IS NOT null AND rca2.access<>2))";
+                        }
+
+                    if($open_access_for_contributor)
+                        {
+                        $sql_join .= " OR (r.created_by='$userref')";
+                        }
+
 					$sql_join.=")";
 					if ($search_filter_strict > 1)
 						{
@@ -1220,7 +1216,13 @@ function do_search(
 					if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
 						{
 						$sql_join.="or ((rca.access IS NOT null AND rca.access<>2) or (rca2.access IS NOT null AND rca2.access<>2))";
-						}
+                        }
+
+                    if($open_access_for_contributor)
+                        {
+                        $sql_join .= " OR (r.created_by='$userref')";
+                        }
+
 					$sql_join.=")";
 					}
                 }
@@ -1249,7 +1251,12 @@ function do_search(
                 global $custom_access_overrides_search_filter;
                 if (!checkperm("v") && !$access_override && $custom_access_overrides_search_filter) # only for those without 'v' (which grants access to all resources)
                     {
-                    $sql_filter.="or ((rca.access IS NOT null AND rca.access<>2) or (rca2.access IS NOT null AND rca2.access<>2))";
+                    $sql_filter.= " OR ((rca.access IS NOT null AND rca.access<>2) or (rca2.access IS NOT null AND rca2.access<>2))";
+                    }
+
+                if($open_access_for_contributor)
+                    {
+                    $sql_filter.= " OR (r.created_by='$userref')";
                     }
 
                 $sql_filter.=")";
@@ -1521,6 +1528,11 @@ function do_search(
         $max_results=$fetchrows;
         }
     $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref ORDER BY $order_by limit $max_results" . $sql_suffix;
+
+    $results_sql = resource_table_joins_sql(
+        ($return_refs_only === false ? get_resource_table_joins() : array()),
+        str_replace("ORDER BY {$order_by}", '', $results_sql),
+        str_replace('r.', 'ss.', $order_by));
 
     # Debug
     debug('$results_sql=' . $results_sql);

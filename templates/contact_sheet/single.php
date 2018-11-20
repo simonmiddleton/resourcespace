@@ -20,6 +20,7 @@ if(isset($titlefontsize))
 .contactsheet_textbold {font-weight: bold;}
 </style>
 <?php
+global $contact_sheet_field_name, $contact_sheet_field_name_bold;
 foreach($resources as $resource_ref => $resource)
     {
     ?>
@@ -114,9 +115,19 @@ if(isset($contact_sheet_footer))
 
     foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
         {
-        ?>
-        <p><?php echo htmlspecialchars($contact_sheet_field); ?></p>
-        <?php
+        if($contact_sheet_field_name && $contact_sheet_field_name_bold)
+            {
+            $contact_sheet_field=explode(': ', $contact_sheet_field);
+            ?>
+            <p><b><?php echo htmlspecialchars($contact_sheet_field[0]); ?></b>: <?php echo htmlspecialchars($contact_sheet_field[1]); ?></p>
+            <?php
+            }
+        else
+            {
+            ?>
+            <p><?php echo htmlspecialchars($contact_sheet_field); ?></p>
+            <?php
+            }
         }
         ?>
 </page>

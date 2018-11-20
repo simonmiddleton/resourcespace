@@ -15,6 +15,8 @@ function rsEncrypt($data, $key)
     {
     global $scramble_key;
 
+    debug("rsCrypt: rsEncrypt( {$data}, {$key} )");
+
     /*
     Encrypt-then-MAC (EtM)
     ======================
@@ -84,6 +86,8 @@ function rsDecrypt($data, $key)
     $siv = substr(hash_hmac("sha256", "{$nonce}{$scramble_key}{$key}", $mac_key, true), 0, 16);
 
     $plaintext = openssl_decrypt($cyphertext, $method, $enc_key, $options, $siv);
+
+    debug("rsCrypt: rsDecrypt( {$plaintext}, {$key} )");
 
     return $plaintext;
     }

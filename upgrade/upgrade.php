@@ -8,13 +8,13 @@ define('SYSVAR_CURRENT_UPGRADE_LEVEL','upgrade_system_level');
 $cli=PHP_SAPI=='cli';
 
 // if running from the command line or called somewhere within RS check to see if we need to include db.php
-if ($cli || count(preg_grep('/db\.php/', get_included_files()))==0)
+if ($cli || !in_array(realpath(__DIR__ . '/../include/db.php'), get_included_files()))
     {
     include_once __DIR__ . '/../include/db.php';
     }
 
 // need to perform a get_included_files() again to guard against db.php bringing in general.php in the future
-if ($cli || count(preg_grep('/general\.php/', get_included_files()))==0)
+if ($cli || !in_array(realpath(__DIR__ . '/../include/general.php'), get_included_files()))
     {
     include_once __DIR__ . '/../include/general.php';
     }

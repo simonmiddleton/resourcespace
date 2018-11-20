@@ -21,7 +21,7 @@ function simpleldap_authenticate($username,$password){
     // associative array of displayname, username, e-mail, group if valid
     global $simpleldap;
     // ldap escape username
-    $ldap_username = ldap_escape($username, '', LDAP_ESCAPE_DN);
+    $ldap_username = (function_exists('ldap_escape')) ? ldap_escape($username, '', LDAP_ESCAPE_DN) : $username;
 	
 	debug("LDAP - Connecting to LDAP server: " . $simpleldap['ldapserver'] . " on port " . $simpleldap['port']);
 	if($simpleldap['port']==636)
@@ -180,13 +180,16 @@ function simpleldap_authenticate($username,$password){
 			$usermemberofgroups=$entries[0][$ldapgroupfield];
 			
 			$deptresult = sql_query('select ldapgroup, rsgroup from simpleldap_groupmap order by priority asc');
+
 			// Go through each configured ldap->RS group mapping, adding each to the array of groups that user is a member of. Update $department with each match so we end up with the highest priority dept
 			foreach ($deptresult as $thedeptresult)
 				{
 				$deptname=$thedeptresult['ldapgroup'];
                 $deptmap=$thedeptresult['rsgroup'];
-                $knowndept[$deptname] = $deptmap;
-                if ((isset($deptmap) && !empty($deptmap)) && in_array($deptname,$usermemberofgroups))
+                $knowndept[strtolower($deptname)] = $deptmap;
+                if (
+                    (isset($deptmap) && !empty($deptmap))
+                    && in_array(strtolower($deptname), array_map('strtolower', $usermemberofgroups)))
 					{
 					$department=$deptname;
 					$usermemberof[]=$deptname;
@@ -195,7 +198,7 @@ function simpleldap_authenticate($username,$password){
 			// Go through all mappings and add any unknown groups to the list of mappings so that it can be easily used (LDAP group names can be hard to remember)
 			foreach ($usermemberofgroups as $usermemberofgroup)
 				{
-				if(!isset($knowndept[$usermemberofgroup])) // This group is not in the current list
+				if(!isset($knowndept[strtolower($usermemberofgroup)])) // This group is not in the current list
 					{
 					if (!is_numeric($usermemberofgroup))
 						{

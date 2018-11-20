@@ -239,7 +239,7 @@ function message_send_unread_emails()
 			}
 		if($actions_on)
 			{
-			debug("Checking actions for user " . $unreadmessage["userref"]);
+			//debug("Checking actions for user " . $unreadmessage["userref"]);
             if(!$actions_on){break;}
 			$user_actions = get_user_actions(false);
 			if (count($user_actions) > 0)		

@@ -25,17 +25,25 @@ $modal=(getval("modal","")=="true");
 $errors=array(); # The results of the save operation (e.g. required field messages)
 $editaccess=get_edit_access($ref);
 
-
-if(!$propose_changes_always_allow)
-	{
-	# Check user has permission.
-	$proposeallowed=sql_value("select r.ref value from resource r left join collection_resource cr on r.ref='$ref' and cr.resource=r.ref left join user_collection uc on uc.user='$userref' and uc.collection=cr.collection left join collection c on c.ref=uc.collection where c.propose_changes=1","");
-        if($proposeallowed=="" && $propose_changes_allow_open)
-            {
-			include_once '../../../include/search_do.php';
-            $proposeallowed=(get_resource_access($ref)==0)?$ref:"";
-            }
-	}
+if(isset($propose_changes_always_allow))
+    {
+    if(!$propose_changes_always_allow)
+        {
+        # Check user has permission.
+        $proposeallowed=sql_value("select r.ref value from resource r left join collection_resource cr on r.ref='$ref' and cr.resource=r.ref left join user_collection uc on uc.user='$userref' and uc.collection=cr.collection left join collection c on c.ref=uc.collection where c.propose_changes=1","");
+            if($proposeallowed=="" && $propose_changes_allow_open)
+                {
+                include_once '../../../include/search_do.php';
+                $proposeallowed=(get_resource_access($ref)==0)?$ref:"";
+                }
+        }
+    }
+else
+    {
+    $error=$lang["error-plugin-not-activated"];
+    error_alert($error);
+    exit();
+    }
 	
 if(!$propose_changes_always_allow && $proposeallowed=="" && !$editaccess)
     {

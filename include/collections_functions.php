@@ -359,6 +359,7 @@ if (!function_exists("create_collection")){
 function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false,$categories=array())
 	{
 	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
+	debug("create_collection(\$userid = {$userid}, \$name = {$name}, \$ref = {$ref})");
 	if($username==$anonymous_login && $anonymous_user_session_collection)
 		{		
 		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
@@ -1940,10 +1941,29 @@ function collection_log($collection,$type,$resource,$notes = "")
 	sql_query("insert into collection_log(date,user,collection,type,resource, notes) values (now()," . (($userref!="")?"'$userref'":"null") . ",'$collection','$type'," . (($resource!="")?"'$resource'":"null") . ", '$notes')");
 	}
     
-function get_collection_log($collection, $fetchrows=-1)
+function get_collection_log($collection, $fetchrows = -1)
 	{
-	global $view_title_field;	
-	return sql_query("select c.date,u.username,u.fullname,c.type,r.field".$view_title_field." title,c.resource, c.notes from collection_log c left outer join user u on u.ref=c.user left outer join resource r on r.ref=c.resource where collection='$collection' order by c.date desc",false,$fetchrows);
+    $sql = "
+                 SELECT c.date,
+                        u.username,
+                        u.fullname,
+                        c.type,
+                        (
+                            SELECT `value`
+                               FROM resource_data
+                              WHERE resource = r.ref
+                                AND resource_type_field = {$GLOBALS["view_title_field"]}
+                              LIMIT 1
+                        ) AS title,
+                        c.resource,
+                        c.notes
+                   FROM collection_log AS c
+        LEFT OUTER JOIN user AS u on u.ref = c.user
+        LEFT OUTER JOIN resource AS r on r.ref = c.resource
+                  WHERE collection = '$collection'
+               ORDER BY c.date DESC";
+
+	return sql_query($sql, false, $fetchrows);
 	}
 	
 function get_collection_videocount($ref)
@@ -2329,8 +2349,15 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Request all
     if($count_result > 0 && ($k == '' || $internal_share_access))
         {
-        # Ability to request a whole collection (only if user has restricted access to any of these resources)
-        $min_access = collection_min_access($result);
+		# Ability to request a whole collection (only if user has restricted access to any of these resources)
+		if($pagename == 'collection_manage') 
+			{
+			$min_access = collection_min_access($collection_data['ref']);
+			}
+		else
+		    {
+			$min_access = collection_min_access($result);
+			}
         if($min_access != 0)
             {                
             $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_request.php",$urlparams);
@@ -2431,10 +2458,13 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		$o++;
         }
         
-    // View all
+    // View all resources
     if(($k=="" || $internal_share_access) && (isset($collection_data["c"]) && $collection_data["c"]>0) || (is_array($result) && count($result) > 0))
         {
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/search.php",$urlparams);
+		// Force ascending order
+		$tempurlparams = array();
+		$tempurlparams['sort']="ASC";
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/search.php",$urlparams,$tempurlparams);
         $options[$o]['value']='view_all_resources_in_collection';
 		$options[$o]['label']=$lang['view_all_resources'];
 		$options[$o]['data_attr']=$data_attribute;
@@ -2654,7 +2684,7 @@ function new_featured_collection_form(array $themearray = array())
         <?php
         for($n = 0; $n < $themes_count; $n++)
             {
-            echo "<input type='hidden' name='theme" . ($n > 0 ? $n + 1 : "") . "' value='" . $themearray[$n] . "'></input>";
+            echo "<input type='hidden' name='theme" . ($n > 0 ? $n + 1 : "") . "' value='" . htmlspecialchars($themearray[$n], ENT_QUOTES) . "'></input>";
             }
 
         // Root level does not allow collections so the only option for the user is to just create a featured collection
@@ -2694,13 +2724,13 @@ function get_last_resource_edit($collection)
         }
     $plugin_last_resource_edit=hook('override_last_resource_edit');
     if($plugin_last_resource_edit===true){
-    	return true;
+    	return false;
     }
     $lastmodified  = sql_query("SELECT r.ref, r.modified FROM collection_resource cr LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection='" . $collection . "' ORDER BY r.modified DESC");
     $lastuserdetails = sql_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource ='" . $lastmodified[0]["ref"] . "' AND rl.type='e'");
     if(count($lastuserdetails) == 0)
         {
-        return true;
+        return false;
         }
         
     $timestamp = max($lastuserdetails[0]["date"],$lastmodified[0]["modified"]);
@@ -2765,7 +2795,7 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
         }
 
     global $pextension, $usesize, $subbed_original, $prefix_resource_id_to_filename, $prefix_filename_string, $server_charset,
-    $deletion_array, $use_zip_extension, $copy, $exiftool_write_option, $p, $size;
+           $download_filename_id_only, $deletion_array, $use_zip_extension, $copy, $exiftool_write_option, $p, $size;
 
     # Only perform the copy if an original filename is set.
 
@@ -2786,10 +2816,25 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
         }
 
     if ($usesize!=""&&!$subbed_original){$append="-".$usesize;}else {$append="";}
-    $basename_minus_extension=remove_extension($pathparts['basename']);
-    $filename=$basename_minus_extension.$append.".".$pextension;
-
-    if ($prefix_resource_id_to_filename) {$filename=$prefix_filename_string . $ref . "_" . $filename;}
+	$basename_minus_extension=remove_extension($pathparts['basename']);
+	
+	if ($download_filename_id_only) 
+	    {
+		# Id only means ignore settings $original_filenames_when_download and $prefix_resource_id_to_filename
+		$filename = $prefix_filename_string . $ref . "." . $pextension;
+		}	
+	else 
+		{  
+		# Otherwise use settings $original_filenames_when_download and $prefix_resource_id_to_filename
+		if ($prefix_resource_id_to_filename) 
+			{
+			$filename = $prefix_filename_string . $ref . "_" . $basename_minus_extension.$append.".".$pextension;
+			}
+		else 
+			{
+			$filename = $prefix_filename_string . $basename_minus_extension.$append.".".$pextension;
+			}
+    	}
 
     $fs=explode("/",$filename);$filename=$fs[count($fs)-1];
 

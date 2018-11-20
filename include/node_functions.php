@@ -30,7 +30,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by,$returne
 
     if(is_null($ref) && '' == $order_by)
         {
-        $order_by = get_node_order_by($resource_type_field, (is_null($parent) || '' == $parent), $parent);            
+        $order_by = get_node_order_by($resource_type_field, (is_null($parent) || '' == $parent), $parent);
         }
 
     $query = sprintf("INSERT INTO `node` (`resource_type_field`, `name`, `parent`, `order_by`) VALUES ('%s', '%s', %s, '%s')",
@@ -88,7 +88,6 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by,$returne
         add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
         }
 
-        
     if($returnexisting)
         {
         // Check for an existing match
@@ -96,7 +95,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by,$returne
         if($existingnode > 0)
             {return $existingnode;}
         }
-        
+
     sql_query($query);
     $new_ref = sql_insert_id();
     if ($new_ref == 0 || $new_ref === false)
@@ -216,15 +215,15 @@ function get_node($ref, array &$returned_node)
 function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', $use_count = false)
     {
     $return_nodes = array();
-    
+
     // Check if limiting is required
     $limit = '';
- 
+
     if(!is_null($offset) && is_int($offset))
         {
         $limit = "LIMIT {$offset}";
         }
- 
+
     if('' != $limit && !is_null($rows) && is_int($rows))
         {
         $limit .= ",{$rows}";
@@ -357,7 +356,7 @@ function get_root_node_by_leaf($ref, $level)
         }
 
     $query = "SELECT n0.ref AS `value` FROM node AS n{$level}";
-    
+
     $from_level = $level;
     $level--;
 
@@ -618,7 +617,7 @@ function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NUL
 *
 * @return boolean
 */
-function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order_by, $last_node = false, $use_count = 0,$node_index)
+function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order_by, $last_node = false, $use_count = 0)
     {
     global $baseurl_short, $lang;
 
@@ -630,6 +629,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     $toggle_node_mode = '';
     $spacer_filename  = 'sp.gif';
     $onClick          = '';
+    $node_index = $order_by / 10;
 
     if(is_parent_node($ref))
         {
@@ -865,7 +865,7 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
             debug("add_node_keyword - adding unstemmed: " . $unstemmed);
             add_node_keyword($node, $unstemmed, $position, $normalize,false);
             }
-        }       
+        }
         
         
     // $keyword should not be indexed if it can be found in the $noadd array, no need to continue
@@ -1095,7 +1095,7 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
     {
     if(!is_array($nodes) && (string)(int)$nodes != $nodes)
         {return false;}
-             
+
     if($checkperms && (PHP_SAPI != 'cli' || defined("RS_TEST_MODE")))
         {
         // Need to check user has permissions to add nodes (unless running from any CLI script other than unit tests)
@@ -1106,8 +1106,22 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
         }
     if(!is_array($nodes))
         {$nodes=array($nodes);}
-     
+
     sql_query("insert into resource_node (resource, node) values ('" . $resourceid . "','" . implode("'),('" . $resourceid . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
+
+    $field_nodes_arr = array();
+    foreach ($nodes as $node)
+        {
+        $nodedata = array();
+        get_node($node, $nodedata);
+        $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+        }
+
+    foreach ($field_nodes_arr as $key => $value)
+        {
+        resource_log($resourceid,"e",$key,"","","," . implode(",",$value));
+        }
+
     return true;
     }
 
@@ -1116,10 +1130,10 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
 *
 * @param  array        $resources           Array of resource IDs to add nodes to
 * @param  array        $nodes               Array of node IDs to add
-* @param  boolean      $checkperms          Check permissions before adding? 
-*  
+* @param  boolean      $checkperms          Check permissions before adding?
+* 
 * @return boolean
-*/  
+*/
 function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms = true)
     {
     if((!is_array($resources) && (string)(int)$resources != $resources) || (!is_array($nodes) && (string)(int)$nodes != $nodes))
@@ -1136,7 +1150,7 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
                 {return false;}
             }
         }
-    
+
     if(!is_array($nodes))
         {$nodes=array($nodes);}
         
@@ -1145,7 +1159,7 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
     foreach($resources as $resource)
         {
         if($nodesql!=""){$nodesql .= ",";}
-        $nodesql .= " ('" . $resource . "','" . implode("'),('" . $resource . "','",$nodes) . "') ";    
+        $nodesql .= " ('" . $resource . "','" . implode("'),('" . $resource . "','",$nodes) . "') ";
         }
     $sql = "insert into resource_node (resource, node) values " . $nodesql . "  ON DUPLICATE KEY UPDATE hit_count=hit_count";
     sql_query($sql);
@@ -1192,8 +1206,8 @@ function delete_resource_nodes($resourceid,$nodes=array())
         {$nodes=array($nodes);}
     sql_query("DELETE FROM resource_node WHERE resource ='$resourceid' AND node in ('" . implode("','",$nodes) . "')"); 
     }
-    
-    
+
+
 function delete_resource_nodes_multi($resources=array(),$nodes=array())
     {
     if(!is_array($nodes))
@@ -1223,7 +1237,7 @@ function delete_all_resource_nodes($resourceid)
 */
 function copy_resource_nodes($resourcefrom, $resourceto)
     {
-    $resourcefrom    = escape_check($resourcefrom);    
+    $resourcefrom    = escape_check($resourcefrom);
     $resourceto      = escape_check($resourceto);
     $omit_fields_sql = '';
 
@@ -1247,13 +1261,13 @@ function copy_resource_nodes($resourcefrom, $resourceto)
 
     return;
     }
-    
+
 function get_nodes_from_keywords($keywords=array())
     {
     if(!is_array($keywords)){$keywords=array($keywords);}
     return sql_array("select node value FROM node_keyword WHERE keyword in (" . implode(",",$keywords) . ");"); 
     }
-    
+
 function update_resource_node_hitcount($resource,$nodes)
     {
     # For the specified $resource, increment the hitcount for each node in array
@@ -1321,26 +1335,25 @@ function copy_resource_type_field_nodes($from, $to)
 
     return true;
     }
-    
+
 function get_parent_nodes($noderef)
     {
-    $parent_nodes=array();    
+    $parent_nodes=array();
     $topnode=false;
     do
         {
         $node=sql_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref='" . $noderef . "' ");
         if(empty($node[0]["parent"]))
-            {  
+            {
             $topnode=true;
             }
         else
             {
             $parent_nodes[$node[0]["parent"]]=$node[0]["name"];
             $noderef=$node[0]["parent"];
-            }  
+            }
         }
     while (!$topnode);
-    
     return $parent_nodes;
     }
 
@@ -1360,7 +1373,7 @@ function get_nodes_count($resource_type_field, $name = '')
         {
         $filter_by_name = " AND `name` LIKE '%" . escape_check($name) . "%'";
         }
- 
+
     return (int) sql_value("SELECT count(ref) AS `value` FROM node WHERE resource_type_field = '{$resource_type_field}'{$filter_by_name}", 0);
     }
 
@@ -1444,4 +1457,4 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
         }
 
     return array();
-    }    
+    }

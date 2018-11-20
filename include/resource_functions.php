@@ -204,13 +204,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 					resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $existing_nodes_value, $new_nodes_val);
                     
                     $val = $new_nodes_val;
-                    # If this is a 'joined' field it still needs to add it to the resource column
-                    $joins=get_resource_table_joins();
-                    if (in_array($fields[$n]["ref"],$joins))
-                        {
-                        if(substr($val,0,1)==","){$val=substr($val,1);}
-                        sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($new_nodes_val,1)))."' where ref='$ref'");
-                         }
 					}
 
                 // Required fields that didn't change get the current value
@@ -321,13 +314,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 							resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $fields[$n]["value"], $newval);
 							
 							$val = $newval;
-							# If this is a 'joined' field it still needs to add it to the resource column
-							$joins=get_resource_table_joins();
-							if (in_array($fields[$n]["ref"],$joins))
-								{
-								if(substr($val,0,1)==","){$val=substr($val,1);}
-								sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
-								 }
 							}
 					
 					$new_checksums[$fields[$n]['ref']] = md5(implode(",",$daterangenodes));
@@ -550,15 +536,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     // Remove all entries from resource_keyword for this field, useful if setting is changed and changed back leaving stale data
                     remove_all_keyword_mappings_for_field($ref,$fields[$n]["ref"]);
                     }
-				
-                # If this is a 'joined' field we need to add it to the resource column
-                $joins=get_resource_table_joins();
-                if (in_array($fields[$n]["ref"],$joins))
-                    {
-                    if(substr($val,0,1)==","){$val=substr($val,1);}
-                    sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
-                    }
-                                        
+
 				# Add any onchange code
 				if($fields[$n]["onchange_macro"]!="")
 					{
@@ -711,8 +689,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
 	# For access level 3 (custom) - also save custom permissions
 	if (getvalescaped("access",0)==3) {save_resource_custom_access($ref);}
 
-	# Update XML metadata dump file
-	update_xml_metadump($ref);		
 	
     hook('aftersaveresourcedata', '', array($ref, $nodes_to_add, $nodes_to_remove, $autosave_field));
 
@@ -773,14 +749,24 @@ function set_resource_defaults($ref, array $specific_fields = array())
 
 
 if (!function_exists("save_resource_data_multi")){
-function save_resource_data_multi($collection)
+function save_resource_data_multi($collection,$editsearch = array())
     {
     global $auto_order_checkbox,$auto_order_checkbox_case_insensitive,  $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,
-    $range_separator, $edit_contributed_by;
+    $range_separator, $edit_contributed_by, $TEXT_FIELD_TYPES;
 
-    # Save all submitted data for collection $collection, this is for the 'edit multiple resources' feature
-    # Loop through the field data and save (if necessary)
-    $list   = get_collection_resources($collection);
+    # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
+    if($collection == 0 && isset($editsearch["search"]))
+        {
+        // Editing a result set, not a collection
+        $edititems  = do_search($editsearch["search"],$editsearch["restypes"],'resourceid',$editsearch["archive"],-1,'ASC',false,0,false,false,'',false,false, true, true);
+        $list       = array_column($edititems,"ref");
+        }
+    else
+        {
+        # Save all submitted data for collection $collection, 
+        $list   = get_collection_resources($collection);
+        }
+
     $errors = array();
     $tmp    = hook("altercollist", "", array("save_resource_data_multi", $list));
     if(is_array($tmp))
@@ -900,18 +886,6 @@ function save_resource_data_multi($collection)
                         resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $existing_nodes_value, $new_nodes_val);
 
                         $val = $new_nodes_val;
-
-                        // If this is a 'joined' field it still needs to add it to the resource column
-                        $joins = get_resource_table_joins();
-                        if(in_array($fields[$n]['ref'], $joins))
-                            {
-                            if(',' == substr($val, 0, 1))
-                                {
-                                $val = substr($val, 1);
-                                }
-
-                            sql_query("UPDATE resource SET field{$fields[$n]['ref']} = '" . escape_check(truncate_join_field_value(substr($new_nodes_val, 1)))."' WHERE ref = '{$ref}'");
-                            }
 						}
                     }
                 } // End of fixed list field section
@@ -1002,14 +976,8 @@ function save_resource_data_multi($collection)
 							resource_log($ref, LOG_CODE_EDITED, $fields[$n]["ref"], '', $fields[$n]["value"], $newval);
 							
 							$val = $newval;
-							# If this is a 'joined' field it still needs to add it to the resource column
-							$joins=get_resource_table_joins();
-							if (in_array($fields[$n]["ref"],$joins))
-								{
-								if(substr($val,0,1)==","){$val=substr($val,1);}
-								sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($newval,1)))."' where ref='$ref'");
-								 }
 							}
+
 						$all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);                
 						$all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
                     }
@@ -1120,7 +1088,7 @@ function save_resource_data_multi($collection)
                         
                     
                     # Append text/option(s) mode?
-                    if (getval("modeselect_" . $fields[$n]["ref"],"")=="AP")
+                    elseif (getval("modeselect_" . $fields[$n]["ref"],"")=="AP")
                         {
                         $val=append_field_value($fields[$n],$origval,$existing);
                         }                        
@@ -1154,6 +1122,29 @@ function save_resource_data_multi($collection)
                             
                             }
                         }
+                    elseif (getval("modeselect_" . $fields[$n]["ref"],"")=="CF")
+                        {
+                        # Copy text from another text field
+                        $copyfrom = getval("copy_from_field_" . $fields[$n]["ref"],0,true);
+                        $copyfromfield = get_resource_type_field($copyfrom);
+                        if(!in_array($fields[$n]["type"],$TEXT_FIELD_TYPES))
+                            {
+                            // Not a valid option for this field
+                            debug("Copy data from field " . $copyfrom . " to field " . $fields[$n]["ref"] . " requires target field to be of a text type");
+                            continue;    
+                            }
+                        $val = get_data_by_field($ref,$copyfrom);
+                        if($fields[$n]["required"] && strip_leading_comma($val)=="")
+                            {
+                            // Required field and  no value now set, revert to existing and add to array of failed edits
+                            global $lang;
+                            $val=$existing;
+                            if(!isset($errors[$fields[$n]["ref"]]))
+                                {$errors[$fields[$n]["ref"]]=$lang["requiredfield"] . ". " . $lang["error_batch_edit_resources"] . ": " ;}
+                            $errors[$fields[$n]["ref"]] .=  $ref;
+                            if($m<count($list)-1){$errors[$fields[$n]["ref"]] .= ",";}                            
+                            }
+                        }
     
                     # Possibility to hook in and alter the value - additional mode support
                     $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n]));
@@ -1171,12 +1162,6 @@ function save_resource_data_multi($collection)
             
                         # Expiry field? Set that expiry date(s) have changed so the expiry notification flag will be reset later in this function.
                         if ($fields[$n]["type"]==6) {$expiry_field_edited=true;}
-                    
-                        # If this is a 'joined' field we need to add it to the resource column
-                        $joins=get_resource_table_joins();
-                        if (in_array($fields[$n]["ref"],$joins)){
-                            sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
-                        }		
                             
                         # Purge existing data and keyword mappings, decrease keyword hitcounts.
                         sql_query("delete from resource_data where resource='$ref' and resource_type_field='" . $fields[$n]["ref"] . "'");
@@ -1206,18 +1191,6 @@ function save_resource_data_multi($collection)
     
                             remove_keyword_mappings($ref,i18n_get_indexable($oldval),$fields[$n]["ref"],$fields[$n]["partial_index"],$is_date,'','',$is_html);
                             add_keyword_mappings($ref,i18n_get_indexable($newval),$fields[$n]["ref"],$fields[$n]["partial_index"],$is_date,'','',$is_html);
-                            }
-
-                        // If this is a 'joined' field we need to add it to the resource column
-                        $joins = get_resource_table_joins();
-                        if(in_array($fields[$n]['ref'], $joins))
-                            {
-                            if(',' == substr($val, 0, 1))
-                                {
-                                $val = substr($val, 1);
-                                }
-
-                            sql_query("UPDATE resource SET field{$fields[$n]['ref']} = '" . escape_check(truncate_join_field_value($val)) . "' WHERE ref = '{$ref}'");
                             }
 
                         # Add any onchange code
@@ -1403,12 +1376,6 @@ function save_resource_data_multi($collection)
 		}
 
 	hook("saveextraresourcedata","",array($list));
-		
-	# Update XML metadata dump file for all edited resources.
-	for ($m=0;$m<count($list);$m++)
-		{
-		update_xml_metadump($list[$m]);
-		}
 	
     hook('aftersaveresourcedata', '', array($list, $all_nodes_to_add, $all_nodes_to_remove, $autosave_field=''));
 
@@ -1772,28 +1739,6 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         sql_query("insert into resource_data(resource,resource_type_field,value) values ('$resource','$field','$value')");
         }
 
-    # If this is a 'joined' field we need to add it to the resource column
-    $joins = get_resource_table_joins();
-
-   if(in_array($fieldinfo['ref'],$joins))
-		{
-		if ($value!="null")
-			{
-			global $resource_field_column_limit;
-			$truncated_value = truncate_join_field_value($value);
-            // Remove backslashes from the end of the truncated value
-            if(substr($truncated_value, -1) === '\\')
-                {
-                $truncated_value = substr($truncated_value, 0, strlen($truncated_value) - 1);
-				}
-			}
-		else
-			{
-			$truncated_value="null";
-			}		
-		sql_query("update resource set field".$field."=" . (($value=="")?"NULL":"'" . $truncated_value . "'") ." where ref='$resource'");
-		}			
-	
     # Add any onchange code
     if($fieldinfo["onchange_macro"]!="")
         {
@@ -2019,12 +1964,10 @@ function delete_resource($ref)
 		}
 
 	
-	// remove metadump file, and attempt to remove directory
-	$metadump_path = get_resource_path($ref, true, "pre", true, 'xml');
-	if (file_exists($metadump_path)){
-		unlink($metadump_path);
-	}
-	$dirpath = dirname($metadump_path);
+	//attempt to remove directory
+	$resource_path = get_resource_path($ref, true, "pre", true);
+
+	$dirpath = dirname($resource_path);
 	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
     
 	# Log the deletion of this resource for any collection it was in. 
@@ -2065,20 +2008,8 @@ function clear_resource_data($resource)
 	sql_query("delete from resource_dimensions where resource='$resource'");
 	sql_query("delete from resource_keyword where resource='$resource'");
 	sql_query("delete from resource_related where resource='$resource' or related='$resource'");
-    delete_all_resource_nodes($resource); 
-    
-    // Clear all 'joined' fields
-    $joins=get_resource_table_joins();
-    if(count($joins) > 0)
-        {
-        $joins_sql = "";
-        foreach ($joins as $join)
-            {
-            $joins_sql .= (($joins_sql!="")?",":"") . "field" . escape_check($join) . "=NULL";
-            }
-        sql_query("UPDATE resource SET $joins_sql WHERE ref='$resource'");
-        }
-        
+    delete_all_resource_nodes($resource);
+
     return true;
     }
 
@@ -2107,27 +2038,6 @@ function copy_resource($from,$resource_type=-1)
 	# Check that the resource exists
 	if (sql_value("select count(*) value from resource where ref='$from'",0)==0) {return false;}
 	
-	# copy joined fields to the resource column
-	$joins=get_resource_table_joins();
-
-	// Filter the joined columns so we only have the ones relevant to this resource type
-	$query = sprintf('
-			    SELECT rtf.ref AS value
-			      FROM resource_type_field AS rtf
-			INNER JOIN resource AS r ON (rtf.resource_type != r.resource_type AND rtf.resource_type != 0)
-			     WHERE r.ref = "%s";
-		',
-		$from
-	);
-	$irrelevant_rtype_fields = sql_array($query);
-	$irrelevant_rtype_fields = array_values(array_intersect($joins, $irrelevant_rtype_fields));
-	$filtered_joins = array_values(array_diff($joins, $irrelevant_rtype_fields));
-
-	$joins_sql="";
-	foreach ($filtered_joins as $join){
-		$joins_sql.=",field$join ";
-	}
-	
 	$add="";
 	$archive=sql_value("select archive value from resource where ref='$from'",0);
 	
@@ -2147,7 +2057,7 @@ function copy_resource($from,$resource_type=-1)
 		}
         
 	# First copy the resources row
-	sql_query("insert into resource($add resource_type,creation_date,rating,archive,access,created_by $joins_sql) select $add" . (($resource_type==-1)?"resource_type":("'" . $resource_type . "'")) . ",now(),rating,'" . $archive . "',access,created_by $joins_sql from resource where ref='$from';");
+	sql_query("insert into resource($add resource_type,creation_date,rating,archive,access,created_by) select $add" . (($resource_type==-1)?"resource_type":("'" . $resource_type . "'")) . ",now(),rating,'" . $archive . "',access,created_by from resource where ref='$from';");
 	$to=sql_insert_id();
 	
 	# Set that this resource was created by this user. 
@@ -2652,7 +2562,14 @@ function write_metadata($path, $ref, $uniqid="")
                 case 6:
                 case 10:
                     # Date / Expiry Date: write datetype fields in exiftool preferred format
-                    $writevalue = date("Y:m:d H:i:sP", strtotime($writevalue));					
+                    if($writevalue!='')
+                        {
+                        $writevalue_to_time=strtotime($writevalue);
+                        if($writevalue_to_time!='')
+                            {
+                            $writevalue = date("Y:m:d H:i:sP", strtotime($writevalue));
+                            }
+                        }				
                     break;
                     # Other types, already set
                 }
@@ -2750,16 +2667,18 @@ function delete_exif_tmpfile($tmpfile)
 	if(file_exists($tmpfile)){unlink ($tmpfile);}
 }
 
-function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=true, $extension='')
+function update_resource($r, $path, $type, $title, $ingest=false, $createPreviews=true, $extension='',$after_upload_processing=false)
 	{
 	# Update the resource with the file at the given path
 	# Note that the file will be used at it's present location and will not be copied.
-	global $syncdir,$staticsync_prefer_embedded_title,$view_title_field,$filename_field;
+	global $syncdir, $staticsync_prefer_embedded_title, $view_title_field, $filename_field, $upload_then_process, $offline_job_queue;
 
-	update_resource_type($r, $type);
+    if($upload_then_process && !$offline_job_queue)
+        {
+        $upload_then_process=false;
+        }
 
 	# Work out extension based on path
-	
 	if($extension=='')
 		{
 		$extension=pathinfo($path, PATHINFO_EXTENSION);
@@ -2770,126 +2689,159 @@ function update_resource($r,$path,$type,$title,$ingest=false,$createPreviews=tru
     	$extension=trim(strtolower($extension));
 		}
 
-	# file_path should only really be set to indicate a staticsync location. Otherwise, it should just be left blank.
-	if ($ingest){$file_path="";} else {$file_path=escape_check($path);}
+    if(!$upload_then_process || !$after_upload_processing)
+        {
+        update_resource_type($r, $type);
 
-	# Store extension/data in the database
-	sql_query("update resource set archive=0,file_path='".$file_path."',file_extension='$extension',preview_extension='$extension',file_modified=now() where ref='$r'");
+        # file_path should only really be set to indicate a staticsync location. Otherwise, it should just be left blank.
+        if ($ingest){$file_path="";} else {$file_path=escape_check($path);}
 
-	# Store original filename in field, if set
-	if (!$ingest)
-		{
-		# This file remains in situ; store the full path in file_path to indicate that the file is stored remotely.
-		global $filename_field;
-		if (isset($filename_field))
-			{
+        # Store extension/data in the database
+        sql_query("update resource set archive=0,file_path='".$file_path."',file_extension='$extension',preview_extension='$extension',file_modified=now() where ref='$r'");
 
-			$s=explode("/",$path);
-			$filename=end($s);
-
-			update_field($r,$filename_field,$filename);
-			}
-		}
-	else
-		{
-		# This file is being ingested. Store only the filename.
-		$s=explode("/",$path);
-		$filename=end($s);
-
-		global $filename_field;
-		if (isset($filename_field))
-			{
-			update_field($r,$filename_field,$filename);
-			}
-
-		# Move the file
-		if(!hook('update_resource_replace_ingest','',array($r, $path, $extension)))
-			{
-			global $syncdir;
-			$destination=get_resource_path($r,true,"",true,$extension);
-			$result=rename($syncdir . "/" . $path,$destination);
-			if ($result===false)
-				{
-				# The rename failed. The file is possibly still being copied or uploaded and must be ignored on this pass.
-				# Delete the resouce just created and return false.
-				delete_resource($r);
-				return false;
-				}
-			chmod($destination,0777);
-			}
-		}
-
-	# generate title and extract embedded metadata
-	# order depends on which title should be the default (embedded or generated)
-	if ($staticsync_prefer_embedded_title)
-		{
-		if ($view_title_field!==$filename_field)
-			{
-			update_field($r,$view_title_field,$title);
-			}
-		extract_exif_comment($r,$extension);
-		}
-	else
-		{
-		extract_exif_comment($r,$extension);
-		if ($view_title_field!==$filename_field)
-			{
-			update_field($r,$view_title_field,$title);
-			}
-		}
-		
-	# Extract text from documents (e.g. PDF, DOC)
-	global $extracted_text_field;
-	if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
-		{
-        global $offline_job_queue, $offline_job_in_progress;
-        if($offline_job_queue && !$offline_job_in_progress)
+        # Store original filename in field, if set
+        if (!$ingest)
             {
-            $extract_text_job_data = array(
-                'ref'       => $r,
-                'extension' => $extension,
-            );
+            # This file remains in situ; store the full path in file_path to indicate that the file is stored remotely.
+            global $filename_field;
+            if (isset($filename_field))
+                {
 
-            job_queue_add('extract_text', $extract_text_job_data);
+                $s=explode("/",$path);
+                $filename=end($s);
+
+                update_field($r,$filename_field,$filename);
+                }
             }
         else
             {
-            extract_text($r, $extension);
+            # This file is being ingested. Store only the filename.
+            $s=explode("/",$path);
+            $filename=end($s);
+
+            global $filename_field;
+            if (isset($filename_field))
+                {
+                update_field($r,$filename_field,$filename);
+                }
+
+            # Move the file
+            if(!hook('update_resource_replace_ingest','',array($r, $path, $extension)))
+                {
+                global $syncdir;
+                $destination=get_resource_path($r,true,"",true,$extension);
+                $result=rename($syncdir . "/" . $path,$destination);
+                if ($result===false)
+                    {
+                    # The rename failed. The file is possibly still being copied or uploaded and must be ignored on this pass.
+                    # Delete the resouce just created and return false.
+                    delete_resource($r);
+                    return false;
+                    }
+                chmod($destination,0777);
+                }
             }
-		}
+        }
+
+    if(!$upload_then_process || $after_upload_processing)
+        {
+	    # generate title and extract embedded metadata
+	    # order depends on which title should be the default (embedded or generated)
+	    if ($staticsync_prefer_embedded_title)
+		    {
+            if ($view_title_field!==$filename_field)
+                {
+                update_field($r,$view_title_field,$title);
+                }
+            extract_exif_comment($r,$extension);
+            }
+        else
+            {
+            extract_exif_comment($r,$extension);
+            if ($view_title_field!==$filename_field)
+                {
+                update_field($r,$view_title_field,$title);
+                }
+            }
 		
-	# Ensure folder is created, then create previews.
-	get_resource_path($r,false,"pre",true,$extension);
-
-	if ($createPreviews)
-		{
-		# Attempt autorotation
-		global $autorotate_ingest;
-		if($ingest && $autorotate_ingest){AutoRotateImage($destination);}
-		# Generate previews/thumbnails (if configured i.e if not completed by offline process 'create_previews.php')
-		global $enable_thumbnail_creation_on_upload;
-		if($enable_thumbnail_creation_on_upload)
+        # Extract text from documents (e.g. PDF, DOC)
+        global $extracted_text_field;
+        if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions))) 
             {
-            create_previews($r, false, $extension, false, false, -1, false, $ingest);
-            }
-        else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
-            {
-            $create_previews_job_data = array(
-                'resource' => $r,
-                'thumbonly' => false,
-                'extension' => $extension,
-                'previewonly' => false,
-                'previewbased' => false,
-                'alternative' => -1,
-                'ignoremaxsize' => false,
-                'ingested' => $ingest
-            );
-            $create_previews_job_success_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_success_text']);
-            $create_previews_job_failure_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_failure_text']);
+            global $offline_job_queue, $offline_job_in_progress;
+            if($offline_job_queue && !$offline_job_in_progress)
+                {
+                $extract_text_job_data = array(
+                    'ref'       => $r,
+                    'extension' => $extension,
+                );
 
-            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+                job_queue_add('extract_text', $extract_text_job_data);
+                }
+            else
+                {
+                extract_text($r, $extension);
+                }
             }
-		}
+		
+        # Ensure folder is created, then create previews.
+        get_resource_path($r,false,"pre",true,$extension);
+
+        if ($createPreviews)
+            {
+            # Attempt autorotation
+            global $autorotate_ingest;
+            if($ingest && $autorotate_ingest){AutoRotateImage($destination);}
+            # Generate previews/thumbnails (if configured i.e if not completed by offline process 'create_previews.php')
+            global $enable_thumbnail_creation_on_upload;
+            if($enable_thumbnail_creation_on_upload)
+                {
+                create_previews($r, false, $extension, false, false, -1, false, $ingest);
+                }
+            else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
+                {
+                $create_previews_job_data = array(
+                    'resource' => $r,
+                    'thumbonly' => false,
+                    'extension' => $extension,
+                    'previewonly' => false,
+                    'previewbased' => false,
+                    'alternative' => -1,
+                    'ignoremaxsize' => false,
+                    'ingested' => $ingest
+                );
+                $create_previews_job_success_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_success_text']);
+                $create_previews_job_failure_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_failure_text']);
+
+                job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+                }
+            }
+        }
+        
+        if($upload_then_process && !$after_upload_processing)
+            {
+            # Add this to the job queue for offline processing
+            global $userref, $lang;
+            
+            $job_data=array();
+            $job_data["r"]=$r;
+            $job_data["title"]=$title;
+            $job_data["ingest"]=$ingest;
+            $job_data["createPreviews"]=$createPreviews;
+        
+            global $upload_then_process_holding_state;
+            if(isset($upload_then_process_holding_state))
+                {
+                $job_data["archive"]=sql_value("SELECT archive value from resource where ref={$ref}", "");
+                update_archive_status($ref, $upload_then_process_holding_state);
+                }
+        
+            $job_code=$r . md5($job_data["r"] . strtotime('now'));
+            $job_success_lang="update_resource success " . str_replace(array('%ref', '%title'), array($r, $filename), $lang["ref-title"]);
+            $job_failure_lang="update_resource fail " . ": " . str_replace(array('%ref', '%title'), array($r, $filename), $lang["ref-title"]);
+            $jobadded=job_queue_add("update_resource", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);             
+            }
+        
 	hook('after_update_resource', '', array("resourceId" => $r ));
 	# Pass back the newly created resource ID.
 	return $r;
@@ -3668,7 +3620,7 @@ if (!function_exists("resource_download_allowed")){
 function resource_download_allowed($resource,$size,$resource_type,$alternative=-1)
 	{
 	
-	# For the given resource and size, can the curent user download it?
+	# For the given resource and size, can the current user download it?
 	# resource type and access may already be available in the case of search, so pass them along to get_resource_access to avoid extra queries
 	# $resource can be a resource-specific search result array.
 	$access=get_resource_access($resource);
@@ -3916,62 +3868,7 @@ function log_diff($fromvalue, $tovalue)
     return $return;
     }
 	
-function update_xml_metadump($resource)
-	{
-	# Updates the XML metadata dump file when the resource has been altered.
-	global $xml_metadump,$xml_metadump_dc_map;
-	if (!$xml_metadump || $resource < 0) {return true;} # Only execute when configured and when not a template
-	
-	$path=get_resource_path($resource,true,"pre",true, 'xml');
-	hook("before_update_xml_metadump");
-	if (file_exists($path)){$wait=unlink($path);}
-	
-	$ext = htmlspecialchars(sql_value("select file_extension value from resource where ref = '$resource'",''),ENT_QUOTES);
-	
-	if ($result = sql_query("select resource_type, name from resource left join resource_type on resource.resource_type = resource_type.ref where resource.ref = '$resource'",false)){
-		$rtype = $result[0]['resource_type'];
-		$rtypename = htmlspecialchars($result[0]['name'],ENT_QUOTES);
-	} else {
-		$rtype = '';
-		$rtypename = '';
-	}
 
-	$f=fopen($path,"w");
-	fwrite($f,"<?xml version=\"1.0\"?>\n");
-	fwrite($f,"<record xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" resourcespace:resourceid=\"$resource\"");
-	fwrite($f," resourcespace:extension=\"$ext\" resourcespace:resourcetype=\"$rtypename\" resourcespace:resourcetypeid=\"$rtype\" ");
-	fwrite($f,">\n\n");
-  
-  	$data=get_resource_field_data($resource,false,false); # Get field data ignoring permissions
-  	for ($n=0;$n<count($data);$n++)
-	  	{
-	  	if (array_key_exists($data[$n]["name"],$xml_metadump_dc_map))
-	  		{
-	  		# Dublin Core field
-	  		fwrite($f,"<dc:" . $xml_metadump_dc_map[$data[$n]["name"]] . " ");
-	  		$endtag="</dc:" . $xml_metadump_dc_map[$data[$n]["name"]] . ">";
-	  		}
-	  	else
-	  		{
-	  		# No Dublin Core mapping. RS specific field format.
-	  		fwrite($f,"<resourcespace:field ");
-	  		$endtag="</resourcespace:field>";
-	  		}
-	  		
-	  	# Value processing
-	  	$value=$data[$n]["value"];
-	  	if (substr($value,0,1)==",") {$value=substr($value,1);} # Checkbox lists / dropdowns; remove initial comma
-	  	
-	  	# Write metadata
-	  	fwrite($f,"rsfieldtitle=\"" . htmlspecialchars($data[$n]["title"]) . "\" rsembeddedequiv=\"" . htmlspecialchars($data[$n]["exiftool_field"]) . "\" rsfieldref=\"" . htmlspecialchars($data[$n]["resource_type_field"]) . "\" rsfieldtype=\"" . htmlspecialchars($data[$n]["type"]) . "\">" . htmlspecialchars($value) . $endtag . "\n\n");
-	  	}
-
-	fwrite($f,"</record>\n");
-	fclose($f);
-	hook("after_update_xml_metadump");
-	//chmod($path,0777); // fixme - temporarily make world readable/writable until we have better solution for file permissions
-
-	}
 
 function get_metadata_templates()
 	{
@@ -4223,13 +4120,6 @@ function get_resource_files($ref,$includeorphan=false){
 	}
     }
 
-
-    // check for metadump
-    $thefile="$rootpath/metadump.xml";
-    if (file_exists($thefile)){
-        array_push($filearray,$thefile);
-        unset($file_checklist[$thefile]);
-    }
 
     // check for ffmpeg previews
     global $ffmpeg_preview_extension;
@@ -5004,22 +4894,7 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
         
     copyResourceDataValues($from, $to);
     copy_resource_nodes($from, $to);
-    
-    # Update 'joined' fields in resource table 
-    $joins=get_resource_table_joins();
-    $joinsql = "UPDATE resource AS target LEFT JOIN resource AS source ON source.ref='{$from}' SET ";
-    $joinfields = "";
-    foreach($joins as $joinfield)
-        {
-        if($joinfields != "")
-            {
-            $joinfields .= ",";
-            }
-        $joinfields .= "target.field{$joinfield} = source.field{$joinfield}";
-        
-        }
-    $joinsql = $joinsql . $joinfields . " WHERE target.ref='{$to}'";
-    sql_query($joinsql);
+
     return true;
     }
 
@@ -5367,4 +5242,39 @@ function get_extension(array $resource, $size)
         }
 
     return $pextension;
+    }
+
+
+   
+/**
+* Obtain details of the last resource edited in the given array of resource ids
+*
+* @param array $resources   Array of resource IDs
+*
+* @return array | false     Array containing details of last edit (resource ID, timestamp and username of user who performed edit)
+*/    
+function get_last_resource_edit_array($resources = array())
+    {
+    if(count($resources) == 0)
+        {
+        return false;
+        }
+
+    $plugin_last_resource_edit = hook('override_last_resource_edit_array');
+    if($plugin_last_resource_edit === true)
+        {
+    	return false;
+        }
+        
+    $lastmodified  = sql_query("SELECT r.ref, r.modified FROM resource r WHERE r.ref IN ('" . implode("','",$resources). "') ORDER BY r.modified DESC");
+    $lastuserdetails = sql_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource ='" . $lastmodified[0]["ref"] . "' AND rl.type='e'");
+    if(count($lastuserdetails) == 0)
+        {
+        return false;
+        }
+        
+    $timestamp = max($lastuserdetails[0]["date"],$lastmodified[0]["modified"]);
+        
+    $lastusername = (trim($lastuserdetails[0]["fullname"]) != "") ? $lastuserdetails[0]["fullname"] : $lastuserdetails[0]["username"];
+    return array("ref" => $lastmodified[0]["ref"],"time" => $timestamp, "user" => $lastusername);
     }

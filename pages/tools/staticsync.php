@@ -178,8 +178,14 @@ function ProcessFolder($folder)
             continue;
             }
 
-        $filetype        = filetype($folder . '/' . $file);
-        $fullpath        = $folder . '/' . $file;
+        $fullpath = "{$folder}/{$file}";
+        if(!is_readable($fullpath))
+            {
+            echo "Warning: File '{$fullpath}' is unreadable!" . PHP_EOL;
+            continue;
+            }
+
+        $filetype        = filetype($fullpath);
         $shortpath       = str_replace($syncdir . '/', '', $fullpath);
         $shortpath_parts = explode('/', $shortpath);
         
@@ -420,7 +426,8 @@ function ProcessFolder($folder)
                                                 if($staticsync_extension_mapping_append_values && !in_array($field_info['type'],array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)) && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
                                                     {
                                                     // The $staticsync_extension_mapping_append_values variable actually refers to folder->metadata mapping, not the file extension
-                                                    $field_nodes[$field]   = array_merge($field_nodes,$newnodes);
+                                                    $curnodes = get_resource_nodes($r,$field);
+                                                    $field_nodes[$field]   = array_merge($curnodes,$newnodes);
                                                     }
                                                 else
                                                     {
@@ -448,7 +455,8 @@ function ProcessFolder($folder)
                                                 $value=$given_value;
                                                 }
                                             }
-                                        echo " - Extracted metadata from path: $value" . PHP_EOL;
+                                        
+                                        echo " - Extracted metadata from path: $value for field id # " . $field_info['ref'] . PHP_EOL;
                                         }
                                     }
                                 }
@@ -499,15 +507,19 @@ function ProcessFolder($folder)
 					elseif(isset($staticsync_alternative_file_text))
 						{
 						$basefilename=str_ireplace(".$extension", '', $file);
-						$altfilematch = $folder . "/" . $basefilename . $staticsync_alternative_file_text . "*.*";
+                        $altfilematch = "/{$basefilename}{$staticsync_alternative_file_text}(.*)\.(.*)/";
+
 						echo "Searching for alternative files for base file: " . $basefilename , PHP_EOL; 
 						echo "checking " . $altfilematch . PHP_EOL;
-						$altfiles = glob($altfilematch);
-						foreach ($altfiles as $altfile)
-							{
-                            staticsync_process_alt($altfile,$r);
-							echo "Processed alternative: " . $shortpath . PHP_EOL;
+
+                        $folder_files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($folder));
+                        $altfiles = new RegexIterator($folder_files, $altfilematch, RecursiveRegexIterator::MATCH);
+                        foreach($altfiles as $altfile)
+                            {
+                            staticsync_process_alt($altfile->getPathname(), $r);
+                            echo "Processed alternative: " . $shortpath . PHP_EOL;
                             }
+
 						continue;
 						}
 
@@ -567,6 +579,12 @@ function ProcessFolder($folder)
                     || (isset($resource_deletion_state) && $done[$shortpath]["archive"]!=$resource_deletion_state) // or if resource is not in system deleted state,
                     || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state)) // or resource is currently in staticsync deleted state and needs to be reinstated
                 {
+                if(!file_exists($fullpath))
+                    {
+                    echo "Warning: File '{$fullpath}' does not exist anymore!";
+                    continue;
+                    }
+
                 $filemod = filemtime($fullpath);
                 if (isset($done[$shortpath]["modified"]) && $filemod > strtotime($done[$shortpath]["modified"]) || (isset($staticsync_revive_state) && $done[$shortpath]["archive"]==$staticsync_deleted_state))
                     {
@@ -631,7 +649,8 @@ function ProcessFolder($folder)
                     }
                 }
             }   
-        }   
+        }
+        closedir($dh);
     }
     
 function staticsync_process_alt($alternativefile, $ref="", $alternative="")
@@ -722,6 +741,13 @@ foreach($alternativefiles as $alternativefile)
     $shortpath = str_replace($syncdir . "/", '', $alternativefile);
     echo "Processing alternative file " . $shortpath . PHP_EOL;
     debug("Staticsync -  Processing altfile " . $shortpath);
+
+    if(!file_exists($alternativefile))
+        {
+        echo "Warning: File '{$alternativefile}' does not exist anymore!";
+        continue;
+        }
+
     if (!isset($done[$shortpath]))
         {
         staticsync_process_alt($alternativefile);        

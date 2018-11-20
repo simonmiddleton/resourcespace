@@ -151,7 +151,7 @@ foreach($results as $result)
                class="fa fa-files-o"
                aria-hidden="true"
                title="<?php echo htmlspecialchars($lang["image_banks_create_new_resource"]); ?>"
-               onclick="createNewResource(this);"></a>
+               onclick="createNewResource(event, this);"></a>
             <?php
             }
             ?>
@@ -177,7 +177,7 @@ function downloadImageBankFile(element)
     form.appendTo('body').submit().remove();
     }
 
-function createNewResource(element)
+function createNewResource(event, element)
     {
     event.preventDefault();
 
