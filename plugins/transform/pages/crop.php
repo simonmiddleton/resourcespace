@@ -11,8 +11,15 @@ include_once "../../../include/image_processing.php";
 include_once "../include/transform_functions.php";
 
 $ref = getval("ref",true,0);
+if(is_numeric($ref)==false) {exit($lang['error_resource_id_non_numeric']);}
 $resource=get_resource_data($ref);
 if ($resource===false || $ref < 0) {exit($lang['resourcenotfound']);}
+
+$allowed_extentions = ['tif','tiff','gif','jpeg','jpg','png'];
+if (in_array($resource['file_extension'], $allowed_extentions)==false) 
+    {
+    exit($lang['error_resource_not_image_extention'] . ' (' . strtoupper(implode(', ', $allowed_extentions)) . ')');
+    }
 
 # Load edit access level
 $edit_access=get_edit_access($ref);
