@@ -24,7 +24,7 @@ if(count($results) != 2 || !isset($results[0]['ref']) || !isset($results[1]['ref
     !match_values(array_column($results,'ref'),array($resourcea, $resourceb))
 	)
 	{
-    echo "ERROR - SUBTEST B\n";
+    echo "SUBTEST A - ";
     return false;
     }
 
@@ -42,7 +42,7 @@ if(count($results) != 2 || !isset($results[0]['ref']) || !isset($results[1]['ref
     !match_values(array_column($results,'ref'),array($resourceb, $resourcec))
 	)
 	{
-    echo "ERROR - SUBTEST B\n";
+    echo "SUBTEST B - ";
     return false;
     }
 

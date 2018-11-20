@@ -1067,9 +1067,26 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # View Resources With No Downloads
     if (substr($search,0,12)=="!nodownloads") 
         {
-        if ($orig_order=="relevance") {$order_by="ref DESC";}
-        $sql=$sql_prefix . "SELECT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY ref ORDER BY $order_by" . $sql_suffix;
-        
+        if($orig_order == "relevance")
+            {
+            $order_by = "ref DESC";
+            }
+
+        $sql = $sql_prefix
+            . "
+                    SELECT r.hit_count score, $select 
+                      FROM resource r 
+                 $sql_join 
+                     WHERE $sql_filter
+                       AND r.ref NOT IN (
+                                SELECT DISTINCT object_ref
+                                  FROM daily_stat
+                                 WHERE activity_type = 'Resource download'
+                           )
+                  GROUP BY r.ref 
+                  ORDER BY $order_by"
+            . $sql_suffix;
+
         return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
         }
     

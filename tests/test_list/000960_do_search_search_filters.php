@@ -96,6 +96,9 @@ if(
 	||
 	!in_array($resourcec,$resultrefs)
 	) return false;
-    
+
+
+// clean up after test
+$usersearchfilter = '';
 
 return true;
