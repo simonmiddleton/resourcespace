@@ -70,4 +70,4 @@ $lang["tms_link_encoding"] = "encoding";
 $lang["tms_link_not_found_error_title"] = "Not found";
 $lang["tms_link_not_deleted_error_detail"] = "Unable to delete the requested module configuration.";
 $lang["tms_link_uid_field"] = "TMS %module_name %tms_uid_field";
-$lang["tms_link_"] = "";
+$lang["tms_link_confirm_delete_module_config"] = "Are you sure you would like to delete this module configuration? This action cannot be undone!";

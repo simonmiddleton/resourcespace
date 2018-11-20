@@ -108,6 +108,11 @@ $tms_modules_mappings_html .= "
 
         function delete_tms_module_mapping(element, id)
             {
+            if(confirm('{$lang["tms_link_confirm_delete_module_config"]}') == false)
+                {
+                return;
+                }
+
             CentralSpaceShowLoading();
 
             jQuery.ajax(
