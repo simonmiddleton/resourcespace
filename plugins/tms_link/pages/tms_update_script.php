@@ -162,12 +162,14 @@ foreach(tms_link_get_modules_mappings() as $module)
 
         $tmsresults = tms_link_get_tms_data("", $tms_query_ids);
 
-        if(!is_array($tmsresults) || count($tmsresults) == 0)
+        if(!is_array($tmsresults) || count($tmsresults) == 0 || !array_key_exists($module['module_name'], $tmsresults))
             {
             echo "No TMS data received, continuing" . PHP_EOL;
             $tmspointer = $tmspointer + $tms_link_query_chunk_size;
             continue;
             }
+
+        $tmsresults = $tmsresults[$module['module_name']];
 
         // Go through this set of resources and update db/show data/do something else
         for($ri = $tmspointer; $ri < ($tmspointer + $tms_link_query_chunk_size) && (($tmspointer + $ri) < $tms_link_test_count) && $ri < $tmscount; $ri++)
