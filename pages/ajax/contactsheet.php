@@ -264,6 +264,12 @@ foreach($results as $result_data)
     unset($img_path);
     }
 
+if (!headers_sent())
+    {
+    // If CSRF is enabled it will break the download function unless the vary header is removed.
+    header_remove('Vary');
+    }
+
 try
     {
     $html2pdf = new Html2Pdf($pdf_properties['orientation'], $pdf_properties['format'], $pdf_properties['language'], true, 'UTF-8', $pdf_properties['margins']);
