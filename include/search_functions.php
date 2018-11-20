@@ -1181,24 +1181,34 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 }   
             }   
         $searchsql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource $colcustperm  WHERE c.collection='" . $collection . "' AND $colcustfilter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
-        $collectionsearchsql=hook('modifycollectionsearchsql','',array($searchsql));
 
+
+        if($return_disk_usage)
+            {
+            $searchsql = str_replace(", field{$GLOBALS['date_field']} desc", '', $searchsql);
+            $searchsql = str_replace(", field{$GLOBALS['date_field']} asc", '', $searchsql);
+            }
+
+        $collectionsearchsql=hook('modifycollectionsearchsql','',array($searchsql));
         if($collectionsearchsql)
             {
             $searchsql=$collectionsearchsql;
             }
-        
+
+        if(!$return_disk_usage)
+            {
+            $searchsql = resource_table_joins_sql($joins, str_replace("ORDER BY {$order_by}", '', $searchsql));
+            }
+
         if($returnsql){return $searchsql;}
         
         if($return_refs_only)
             {
             // note that we actually include archive and created_by columns too as often used to work out permission to edit collection
-            $searchsql = resource_table_joins_sql($joins, str_replace("ORDER BY {$order_by}", '', $searchsql));
             $result = sql_query($searchsql,false,$fetchrows,true,2,true,array('ref','archive','created_by'));
             }
         else
             {
-            $searchsql = resource_table_joins_sql($joins, str_replace("ORDER BY {$order_by}", '', $searchsql));
             $result = sql_query($searchsql,false,$fetchrows);
             }
 
