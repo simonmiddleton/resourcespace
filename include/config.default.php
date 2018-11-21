@@ -3537,3 +3537,24 @@ $user_purge_disable = false;
 
 // Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
 $inactive_user_disable_days = 0;
+
+/*
+Ability to generate an automated title using a specific format. Allows to generate a title using a combination between the 
+resource title, its ID and file extension.
+
+Supported placeholders:
+ - %title -> replaced with the value of the title field of the resource. This allows 
+ - %resource -> replaced with the resource ID
+ - %extension -> replaces the actual file extension
+
+Example:
+    $auto_generated_resource_title_format = '%title-%resource.%extension';
+    $auto_generated_resource_title_format = '2018-2019P - %resource.%extension';
+    $auto_generated_resource_title_format = 'Photos - %resource.%extension';
+
+To get the title as the filename on download, the following settings should be set:
+$download_filename_field = 8; # Set this to the $view_title_field value
+$prefix_filename_string = "";
+$prefix_resource_id_to_filename = false;
+*/
+$auto_generated_resource_title_format = '';
