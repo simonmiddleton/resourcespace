@@ -204,7 +204,9 @@ collection_download_process_summary_notes(
     $usertempdir,
     $filename,
     $path,
-    $deletion_array);
+    $deletion_array,
+    $size,
+    $zip);
 
 collection_download_process_csv_metadata_file(
     $collection_resources,

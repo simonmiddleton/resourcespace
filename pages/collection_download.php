@@ -396,7 +396,9 @@ if ($submitted != "")
         $usertempdir,
         $filename,
         $path,
-        $deletion_array);
+        $deletion_array,
+        $size,
+        $zip);
 
     collection_download_process_csv_metadata_file(
         $result,

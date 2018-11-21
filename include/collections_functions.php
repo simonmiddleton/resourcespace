@@ -3042,7 +3042,9 @@ function collection_download_process_summary_notes(
     $usertempdir,
     $filename,
     &$path,
-    array &$deletion_array)
+    array &$deletion_array,
+    $size,
+    &$zip)
     {
     global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension;
     # Append summary notes about the completeness of the package, write the text file, add to archive, and schedule for deletion
