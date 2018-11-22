@@ -4,11 +4,12 @@ include_once "../include/general.php";
 include "../include/authenticate.php";
 include_once "../include/collections_functions.php";
 
-$offset=getvalescaped("offset",0);
+$offset=getvalescaped("offset", 0, true);
 $ref=getvalescaped("ref","",true);
 
 # Check access
 if (!collection_readable($ref)) {exit($lang["no_access_to_collection"]);}
+if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 
 # pager
 $per_page=getvalescaped("per_page_list_log",15);rs_setcookie('per_page_list_log', $per_page);
