@@ -252,7 +252,11 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
             // check for nef -otherimage failure
             if ($extension=="nef"&&!filesize_unlimited($target)>0)
                 {
-                unlink($target);    
+                if(file_exists($target))
+                    {
+                    unlink($target);
+                    }
+
                 $bin_tag=" -previewimage ";
                 //2nd attempt
                 $cmd=$exiftool_fullpath.' -b '.$bin_tag.' '.escapeshellarg($file).' -w %d%f.jpg';
