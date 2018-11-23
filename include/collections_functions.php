@@ -1573,6 +1573,7 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 	# Returns an array of resource references that can be used as theme category images.
 	global $theme_images_number;
 	global $theme_category_levels;
+	global $userpermissions;
 	# Resources that have been specifically chosen using the option on the collection comments page will be returned first based on order by.
 	
 	# have this hook return an empty array if a plugin needs to return a false value from function
@@ -1605,8 +1606,20 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 			{
 			$sqlselect="select r.ref, cr.use_as_theme_thumbnail, theme2, r.hit_count from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
             
-            // Add search sql so we honour permissions
+			// Add search sql so we honour permissions
+
+			// We are going to temporarily insert the "J" permission to limit the scope of the search for performance
+			// Save the permissions prior to insertion
+			$saved_userpermissions = $userpermissions;
+			// Insert the "J" permission if it is not already there
+			if (!checkperm("J"))
+				{
+				$userpermissions[]="J";
+				}
             $searchsql = do_search("",'','',0,-1,'desc',false,0,false,false,'',false,false,true,false,true);
+			// Restore saved permissions
+			$userpermissions = $saved_userpermissions;
+
 			$orderby=" order by ti.use_as_theme_thumbnail desc";
 			$orderby_theme='';
 			for ($n=2;$n<=count($themes)+1;$n++)
