@@ -9,6 +9,7 @@ if(!checkperm('a'))
     }
 include '../../include/admin_functions.php';
 include '../../include/resource_functions.php';
+include '../../include/slideshow_functions.php';
 
 $slideshow_files = get_slideshow_files_data();
 
@@ -71,12 +72,10 @@ if(
             break;
         }
 
-    if($allow_reorder)
+    if($allow_reorder && reorder_slideshow_images($slideshow_files[$slideshow_id_index], $slideshow_files[$to]))
         {
-        reorder_slideshow_images($slideshow_id_index, $to);
         $response['sibling'] = $slideshow_files[$to]["ref"];
         }
-    
 
     echo json_encode($response);
     exit();
@@ -106,13 +105,6 @@ if('true' === $ajax && 'delete' === $action && !is_null($slideshow_id) && enforc
         {
         http_response_code(500);
         $response['error']   = "{$lang['error-failed-to-delete']} '{$slideshow_file_info['file_path']}'";
-        $response['success'] = false;
-        }
-
-    if(!empty($slideshow_file_info) && isset($slideshow_file_info['link_file_path']) && file_exists($slideshow_file_info['link_file_path']) && unlink($slideshow_file_info['link_file_path']) === false)
-        {
-        http_response_code(500);
-        $response['error']   = "{$lang['error-failed-to-delete']} '{$slideshow_file_info['link_file_path']}'";
         $response['success'] = false;
         }
 
