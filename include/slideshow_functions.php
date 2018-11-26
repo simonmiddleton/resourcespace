@@ -96,15 +96,21 @@ function update_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featu
 *
 * @param integer $ref ID of the slideshow
 *
-* @return void
+* @return boolean
 */
 function delete_slideshow($ref)
     {
+    $file_path = get_slideshow_image_file_path($ref);
+    if($file_path != '' && unlink($file_path) === false)
+        {
+        return false;
+        }
+
     $ref = escape_check($ref);
     $query = "DELETE FROM slideshow WHERE ref = '{$ref}'";
     sql_query($query);
 
-    return;
+    return true;
     }
 
 /**
@@ -158,4 +164,24 @@ function reorder_slideshow_images(array $from, array $to)
         }
 
     return false;
+    }
+
+/**
+* Get the full path for the slideshow image file
+* 
+* @param integer $ref ID of the slideshow image
+* 
+* @return string The full path to the slideshow image
+*/
+function get_slideshow_image_file_path($ref)
+    {
+    $homeanim_folder_path = dirname(__DIR__) . "/{$GLOBALS['homeanim_folder']}";
+    $image_file_path = "{$homeanim_folder_path}/{$ref}.jpg";
+
+    if(!file_exists($image_file_path) || !is_readable($image_file_path))
+        {
+        return '';
+        }
+
+    return $image_file_path;
     }

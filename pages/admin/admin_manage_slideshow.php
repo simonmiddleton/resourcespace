@@ -101,7 +101,7 @@ if('true' === $ajax && 'delete' === $action && !is_null($slideshow_id) && enforc
         $response['success'] = false;
         }
 
-    if(!empty($slideshow_file_info) && file_exists($slideshow_file_info['file_path']) && unlink($slideshow_file_info['file_path']) === false)
+    if(!empty($slideshow_file_info) && !delete_slideshow($slideshow_file_info['ref']))
         {
         http_response_code(500);
         $response['error']   = "{$lang['error-failed-to-delete']} '{$slideshow_file_info['file_path']}'";
