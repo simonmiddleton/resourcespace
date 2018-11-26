@@ -52,7 +52,7 @@ function set_slideshow($resource_ref = NULL, $homepage_show = 1, $featured_colle
 /**
 * Update record of an existing slideshow image
 * 
-* @param integer $ref                       ID of the slideshow image
+* @param integer $ref                       ID of the slideshow image. Use NULL to create a new record
 * @param integer $resource_ref              ID of the resource this slideshow is related to. Use NULL if no link is required
 * @param integer $homepage_show             Set to 1 if slideshow image should appear on the home page
 * @param integer $featured_collections_show Set to 1 if slideshow image should appear on the featured collections page
@@ -62,7 +62,7 @@ function set_slideshow($resource_ref = NULL, $homepage_show = 1, $featured_colle
 function update_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured_collections_show = 1, $login_show = 0)
     {
     if(
-        !is_numeric($ref)
+        (!is_null($ref) && !is_numeric($ref))
         || (!(is_null($resource_ref) || trim($resource_ref) == '') && !is_numeric($resource_ref))
         || !is_numeric($homepage_show)
         || !is_numeric($featured_collections_show)
@@ -71,24 +71,38 @@ function update_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featu
         return false;
         }
 
-    $ref = escape_check($ref);
+    $ref_escaped = ((int) $ref > 0 ? "'" . escape_check($ref) . "'" : 'NULL');
     $resource_ref = ((int) $resource_ref > 0 ? "'" . escape_check($resource_ref) . "'" : 'NULL');
     $homepage_show = escape_check($homepage_show);
     $featured_collections_show = escape_check($featured_collections_show);
     $login_show = escape_check($login_show);
 
     $query = "
-        UPDATE slideshow
-           SET 
-               resource_ref = {$resource_ref},
-               homepage_show = '{$homepage_show}',
-               featured_collections_show = '{$featured_collections_show}',
-               login_show = '{$login_show}'
-         WHERE ref = '{$ref}'";
+        INSERT INTO slideshow (ref, resource_ref, homepage_show, featured_collections_show, login_show)
+             VALUES ({$ref_escaped}, {$resource_ref}, '{$homepage_show}', '{$featured_collections_show}', '{$login_show}')
+                 ON DUPLICATE KEY
+             UPDATE resource_ref = {$resource_ref},
+                    homepage_show = '{$homepage_show}',
+                    featured_collections_show = '{$featured_collections_show}',
+                    login_show = '{$login_show}'";
 
     sql_query($query);
 
-    return;
+    $new_ref = sql_insert_id();
+    if(is_null($ref) && $new_ref != 0)
+        {
+        log_activity("Added new slideshow image", LOG_CODE_CREATED, null, 'slideshow', 'ref', $new_ref);
+
+        return $new_ref;
+        }
+    else if(!is_null($ref) && $new_ref != 0 && $ref == $new_ref)
+        {
+        log_activity("Updated slideshow image", LOG_CODE_EDITED, null, 'slideshow', 'ref', $ref);
+
+        return $new_ref;
+        }
+
+    return false;
     }
 
 /**
