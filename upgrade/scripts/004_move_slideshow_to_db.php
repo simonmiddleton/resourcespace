@@ -36,15 +36,18 @@ foreach($found_files as $index => $file)
     $resource_ref = NULL;
     $filename = pathinfo($file, PATHINFO_FILENAME);
     $txt_file = "{$filename}.txt";
+    $txt_file_path = "{$homeanim_folder_path}/{$txt_file}";
 
     if($file === $txt_file)
         {
+        unlink($txt_file_path);
+
         continue;
         }
 
     if(in_array($txt_file, $found_files))
         {
-        $txt_file_content = file_get_contents("{$homeanim_folder_path}/{$txt_file}");
+        $txt_file_content = file_get_contents($txt_file_path);
         if($txt_file_content !== false)
             {
             $resource_ref = $txt_file_content;
