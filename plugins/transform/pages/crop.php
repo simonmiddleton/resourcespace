@@ -520,7 +520,7 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
         }
 
 	copy($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
-    update_slideshow($sequence, (getval('linkslideshow', '') == 1 ? $ref : NULL));
+    set_slideshow($sequence, (getval('linkslideshow', '') == 1 ? $ref : NULL));
 
 	unlink($newpath);
 	unlink($crop_pre_file);

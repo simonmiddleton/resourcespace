@@ -54,7 +54,7 @@ foreach($found_files as $index => $file)
             }
         }
 
-    $new_slideshow_image = set_slideshow($resource_ref, 1, 0, $login_show);
+    $new_slideshow_image = set_slideshow($filename, $resource_ref, 1, 0, $login_show);
     if(!$new_slideshow_image)
         {
         $log = PHP_EOL . "Warning - could not create a new slideshow record for {$file}" . PHP_EOL;

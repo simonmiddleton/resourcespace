@@ -1,65 +1,16 @@
 <?php
 /**
-* Create a new slideshow image record
-* 
-* @param integer $resource_ref              ID of the resource this slideshow is related to. Use NULL if no link is required
-* @param integer $homepage_show             Set to 1 if slideshow image should appear on the home page
-* @param integer $featured_collections_show Set to 1 if slideshow image should appear on the featured collections page
-* @param integer $login_show                Set to 1 if slideshow image should appear on the login page
-* 
-* @return boolean|integer Returns ID of the new slideshow record or FALSE
-*/
-function set_slideshow($resource_ref = NULL, $homepage_show = 1, $featured_collections_show = 1, $login_show = 0)
-    {
-    if(
-        (!is_null($resource_ref) && !is_numeric($resource_ref))
-        || !is_numeric($homepage_show)
-        || !is_numeric($featured_collections_show)
-        || !is_numeric($login_show))
-        {
-        return false;
-        }
-
-    if(is_null($resource_ref))
-        {
-        $resource_ref = 'NULL';
-        }
-    else
-        {
-        $resource_ref = "'" . escape_check($resource_ref) . "'";
-        }
-
-    $homepage_show = escape_check($homepage_show);
-    $featured_collections_show = escape_check($featured_collections_show);
-    $login_show = escape_check($login_show);
-
-    $query = "INSERT INTO slideshow (resource_ref, homepage_show, featured_collections_show, login_show)
-                 VALUES ({$resource_ref}, '{$homepage_show}', '{$featured_collections_show}', '{$login_show}')";
-
-    sql_query($query);
-
-    $new_ref = sql_insert_id();
-    if($new_ref != 0)
-        {
-        log_activity("Added new slideshow image", LOG_CODE_CREATED, null, 'slideshow', 'ref', $new_ref);
-
-        return $new_ref;
-        }
-
-    return false;
-    }
-
-/**
-* Update record of an existing slideshow image
+* Create/ Update a slideshow image record. Use NULL for $ref to create new records.
 * 
 * @param integer $ref                       ID of the slideshow image. Use NULL to create a new record
 * @param integer $resource_ref              ID of the resource this slideshow is related to. Use NULL if no link is required
 * @param integer $homepage_show             Set to 1 if slideshow image should appear on the home page
 * @param integer $featured_collections_show Set to 1 if slideshow image should appear on the featured collections page
 * @param integer $login_show                Set to 1 if slideshow image should appear on the login page
-* @return
+*
+* @return boolean|integer  Returns ID of the slideshow image(new/ updated), FALSE otherwise
 */
-function update_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured_collections_show = 1, $login_show = 0)
+function set_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured_collections_show = 1, $login_show = 0)
     {
     if(
         (!is_null($ref) && !is_numeric($ref))
@@ -160,14 +111,14 @@ function reorder_slideshow_images(array $from, array $to)
 
     if(rename($to_file, $from_file) && rename($temp_file, $to_file))
         {
-        update_slideshow(
+        set_slideshow(
             $from['ref'],
             $to['resource_ref'],
             $to['homepage_show'],
             $to['featured_collections_show'],
             $to['login_show']);
 
-        update_slideshow(
+        set_slideshow(
             $to['ref'],
             $from['resource_ref'],
             $from['homepage_show'],
