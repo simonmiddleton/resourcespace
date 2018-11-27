@@ -14,11 +14,11 @@ foreach(get_slideshow_files_data() as $slideshow_file_info)
         continue;
         }
 
-    $image_donwload_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info['ref']}";
+    $image_download_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info['ref']}";
     $image_resource = isset($slideshow_file_info['link']) ? $slideshow_file_info['link'] : '';
     ?>
 
-    RegisterSlideshowImage('<?php echo $image_donwload_url; ?>', '<?php echo $image_resource; ?>');
+    RegisterSlideshowImage('<?php echo $image_download_url; ?>', '<?php echo $image_resource; ?>');
     <?php
     }
     ?>
