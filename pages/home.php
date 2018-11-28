@@ -38,12 +38,18 @@ if (!hook("replaceslideshow"))
 	{
 	global $slideshow_photo_delay;
     $slideshow_files = get_slideshow_files_data();
-	if($login_background)
-		{
-		array_shift($slideshow_files);
-		}
-		
-    $homeimages = count($slideshow_files);
+
+    $homeimages = 0;
+    foreach($slideshow_files as $slideshow_file)
+        {
+        if((bool) $slideshow_file['homepage_show'] === false)
+            {
+            continue;
+            }
+
+        $homeimages++;
+        }
+
     if($slideshow_big && $homeimages > 0)
         {
         ?>
@@ -67,8 +73,12 @@ if (!hook("replaceslideshow"))
             var big_slideshow_timer = <?php echo $slideshow_photo_delay;?>;
             <?php
             foreach($slideshow_files as $slideshow_file_info)
-                {		
-                ?>
+                {
+                if((bool) $slideshow_file_info['homepage_show'] === false)
+                    {
+                    continue;
+                    }
+                    ?>
                 RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info["ref"]}"; ?>','<?php echo (isset($slideshow_file_info["link"])) ? $slideshow_file_info["link"] : "" ?>');
                 <?php
                 }
@@ -87,15 +97,19 @@ if (!hook("replaceslideshow"))
         { # Only add Javascript if more than one image.
         ?>
         <script>
-    
         var num_photos=<?php echo $homeimages ?>;  // <---- number of photos (/images/slideshow?.jpg)
         var photo_delay= <?php echo $slideshow_photo_delay;?>;
         var link = new Array();
 		var images = new Array();
-    
+
         <?php
         foreach($slideshow_files as $slideshow_file_info)
             {
+            if((bool) $slideshow_file_info['homepage_show'] === false)
+                {
+                continue;
+                }
+
             echo "link.push(\"" .  (isset($slideshow_file_info["link"]) ? $slideshow_file_info["link"] : "#") . "\");\n";
             echo "images.push(" .  $slideshow_file_info["ref"] . ");\n";
             }
