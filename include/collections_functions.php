@@ -1950,8 +1950,16 @@ function collection_log($collection,$type,$resource,$notes = "")
 	
 	$modifiedcollognotes=hook("modifycollognotes","",array($type,$resource,$notes));
 	if ($modifiedcollognotes) {$notes=$modifiedcollognotes;}
-	
-	sql_query("insert into collection_log(date,user,collection,type,resource, notes) values (now()," . (($userref!="")?"'$userref'":"null") . ",'$collection','$type'," . (($resource!="")?"'$resource'":"null") . ", '$notes')");
+
+    $user = ($userref != "" ? "'" . escape_check($userref) . "'" : "NULL");
+    $collection = escape_check($collection);
+    $type = escape_check($type);
+    $resource = $resource != "" ? "'" . escape_check($resource) . "'" : "NULL";
+    $notes = escape_check($notes);
+
+	sql_query("
+        INSERT INTO collection_log (date, user, collection, type, resource, notes)
+             VALUES (now(), {$user}, '{$collection}', '{$type}', {$resource}, '{$notes}')");
 	}
     
 function get_collection_log($collection, $fetchrows = -1)
