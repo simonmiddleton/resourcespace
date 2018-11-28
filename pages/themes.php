@@ -588,7 +588,7 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 					?>		
 					
 					<div id="FeaturedSimpleTile_<?php echo md5($headers[$n]);?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile <?php if($themes_simple_images){echo " TileContentShadow ";}
-						echo strip_tags_and_attributes(trim(htmlspecialchars(str_replace(" ","",$headers[$n]))));
+						echo htmlspecialchars(str_replace(" ", "", $headers[$n]));
 						if($theme_image_path!="")
 							{	
 							echo " FeaturedSimpleTileImage\" style=\"background: url(" . $theme_image_path . ");background-size: cover;";
