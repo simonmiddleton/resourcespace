@@ -6369,8 +6369,14 @@ function get_slideshow_files_data()
             continue;
             }
 
-        $slideshow_file['file_path'] = $image_file_path;
         $slideshow_file['checksum'] = filemtime($image_file_path);
+        $slideshow_file['file_path'] = $image_file_path;
+        $slideshow_file['file_url'] = generateURL(
+            "{$baseurl}/pages/download.php",
+            array(
+                'slideshow' => $slideshow['ref'],
+                'nc' => $slideshow_file['checksum'],
+            ));
 
         if((int) $slideshow['resource_ref'] > 0)
             {
