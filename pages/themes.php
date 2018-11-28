@@ -1188,14 +1188,6 @@ if(!$featured_collection_static_bg && isset($background_image_url) && $backgroun
         ClearTimers();
         ActivateSlideshow();
         });
-
-    jQuery('#CentralSpace').on('CentralSpaceLoaded', function (event, data)
-        {
-        // TODO: fix the jump between images
-        DeactivateSlideshow(); // this did not help
-        ClearTimers();
-        ActivateSlideshow();
-        });
     </script>
     <?php
     } /* End of show background image in simpleview mode*/
