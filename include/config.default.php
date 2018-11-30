@@ -188,6 +188,9 @@ $header_link=true;
 # Header size class. Options are HeaderSmall, HeaderMid, HeaderLarge.
 $header_size="HeaderMid";
 
+# Header includes username to right of user menu icon
+$header_include_username=false;
+
 # Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
 
 # Set this to true in order for the top bar to remain present when scrolling down the page

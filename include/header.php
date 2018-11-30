@@ -451,7 +451,21 @@ else
         ?>
         <li>
             <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
+            <?php
+			if (isset($header_include_username) && $header_include_username)
+                {
+                ?>
+                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars($username) ?>
+                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                <?php
+                }
+            else
+                {
+                ?>
                 <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i><span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                <?php
+                }
+            ?> 
             </a>
             <div id="MessageContainer" style="position:absolute; "></div>
         <?php
