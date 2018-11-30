@@ -1592,6 +1592,11 @@ select.MultiSelect:before {
     margin-top: -20px;
     transition: all 0.6s ease;
     text-align: left;
+    overflow: scroll;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
 }
 
 #BrowseBar.BrowseBarHidden{
@@ -1614,26 +1619,36 @@ select.MultiSelect:before {
 }
 
 .BrowseBar .a{
-    display: table-cell;
+    /*display: table-cell;*/
     }
 
 .BrowseBarItem{
-    display: table;
+    /*
+    display: inline-block;
+    clear:left;
+    */
 }
 
 .BrowseBarRow{
-    display: table-row;
+    display: inline-block;
+    clear:left;
 }
 
 .BrowseBarStructure{
-    display: table-cell;
-    width: 18px;
+    float:left;
+    width: 14px;
     font-family: courier;
     font-size: 14px;
+    padding-left: 3px;
+}
+
+.BrowseBarLink{
+    /*padding-left: 5px;*/
 }
 
 #BrowseBar .backline {
-    background-position: 7px 0px;
+    background-position: 9px 0px;
+    height: 21px;
 }
 
 #BrowseBarTab {
@@ -1676,3 +1691,13 @@ select.MultiSelect:before {
 #CentralSpaceContainer.BrowseMode{
     padding-left: 30%;
     }
+
+.browse_closed:after {
+    content: "\f0fe";
+    font-family: FontAwesome;
+    }   
+
+.browse_expanded:after {
+    content: "\f146";
+    font-family: FontAwesome;
+    } 

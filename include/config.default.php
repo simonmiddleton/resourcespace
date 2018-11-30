@@ -3548,15 +3548,17 @@ $browse_bar_types["resource"] 	= array("icon" => "far fa-file-text-o");
 // Array to navigate via JS
 // Tags -> Restype -> Node
 // Featured-> Name (hash) -> name2 (hash)
-// Colletions -> collection ref
+// Collections -> collection ref
 //
 
+// TODO - Replace with CSS after syntax
 $browse_bar_elements = array();
-$browse_bar_elements["tags"]        = array("icon" => "far fa-folder");
-$browse_bar_elements["featured"]    = array("icon" => "far fa-folder");
-$browse_bar_elements["collections"] = array("icon" => "far fa-folder");
-$browse_bar_elements["workflow"]    = array("icon" => "far fa-folder");
-$browse_bar_elements["search"]      = array("icon" => "far fa-file-text-o");
-$browse_bar_elements["restype"]     = array("icon" => "far fa-file-text-o");
-$browse_bar_elements["node"]        = array("icon" => "far fa-file-text-o");
-$browse_bar_elements["field"]       = array("icon" => "fas fa-tags");
+$browse_bar_elements["R"]        = array("icon" => "far fa-folder");
+$browse_bar_elements["FC"]    = array("icon" => "far fa-folder");
+$browse_bar_elements["C"] = array("icon" => "far fa-folder");
+$browse_bar_elements["WF"]    = array("icon" => "far fa-folder");
+$browse_bar_elements["S"]      = array("icon" => "far fa-file-text-o");
+$browse_bar_elements["RT"]     = array("icon" => "far fa-file-text-o");
+$browse_bar_elements["N"]        = array("icon" => "far fa-file-text-o");
+$browse_bar_elements["F"]       = array("icon" => "fas fa-tags");
+
