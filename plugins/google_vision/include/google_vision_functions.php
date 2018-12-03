@@ -1,6 +1,5 @@
 <?php
-
-function google_visionProcess($resource,$verbose=false)
+function google_visionProcess($resource, $verbose = false, $ignore_resource_type_constraint = false)
     {
     global $google_vision_api_key,$google_vision_label_field,$google_vision_landmarks_field,$google_vision_text_field,$google_vision_restypes;
     global $baseurl,$google_vision_features, $google_vision_face_detect_field, $google_vision_face_detect_fullface, $google_vision_face_detect_verbose;
@@ -10,7 +9,13 @@ function google_visionProcess($resource,$verbose=false)
         $google_vision_features[] = "FACE_DETECTION";
         }
     $resource_data=get_resource_data($resource); # Load resource data (cached).
-    if ($resource_data===false || !in_array($resource_data["resource_type"],$google_vision_restypes)) {return false;} # Valid resources only.
+
+    if(
+        $resource_data === false
+        || (!in_array($resource_data["resource_type"], $google_vision_restypes) && !$ignore_resource_type_constraint))
+        {
+        return false;
+        }
     
     # API URL
     if (substr($google_vision_api_key,0,4)=="http")
