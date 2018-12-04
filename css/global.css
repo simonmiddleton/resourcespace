@@ -1618,16 +1618,6 @@ select.MultiSelect:before {
     margin-right: 5px;
 }
 
-.BrowseBar .a{
-    /*display: table-cell;*/
-    }
-
-.BrowseBarItem{
-    /*
-    display: inline-block;
-    clear:left;
-    */
-}
 
 .BrowseBarRow{
     display: inline-block;
@@ -1644,6 +1634,7 @@ select.MultiSelect:before {
 
 .BrowseBarLink{
     /*padding-left: 5px;*/
+    display: inline;
 }
 
 #BrowseBar .backline {

@@ -1669,24 +1669,6 @@ $lang["stars"]="Stars";
 
 $lang["noupload"]="No upload";
 
-# System Setup
-# System Setup Tree Nodes (for the default setup tree)
-$lang["treenode-root"]="Root";
-$lang["treenode-group_management"]="Group management";
-$lang["treenode-new_group"]="New group";
-$lang["treenode-new_subgroup"]="New subgroup";
-$lang["treenode-resource_types_and_fields"]="Manage resource types";
-$lang["treenode-new_resource_type"]="New resource type";
-$lang["treenode-new_field"]="New field";
-$lang["treenode-reports"]="Reports";
-$lang["treenode-new_report"]="New report";
-$lang["treenode-downloads_and_preview_sizes"]="Downloads / preview sizes";
-$lang["treenode-new_download_and_preview_size"]="New download / preview size";
-$lang["treenode-database_statistics"]="Database statistics";
-$lang["treenode-permissions_search"]="Permissions search";
-$lang["treenode-no_name"]="(no name)";
-
-$lang["treeobjecttype-preview_size"]="Preview size";
 
 $lang["permissions"]="Permissions";
 
@@ -2138,6 +2120,11 @@ $lang['action-title_create_size_with_id'] = "Create size with " . $lang['propert
 $lang['page-title_size_management_edit'] = "Edit size";
 $lang['page-subtitle_size_management_edit'] = "Use this section to modify size details.";
 $lang["fieldtitle-tick_to_delete_size"] = "Tick to delete this size";
+
+# Resource type management
+$lang["resource_types_manage"]      = "Manage resource types";
+$lang["resource_type_new"]          = "New resource type";
+$lang["resource_type_field_new"]    = "New metadata field";
 
 ##########################################################################################
 # Non page-specific items that need to be merged above when system admin project completed
@@ -2740,4 +2727,5 @@ $lang["edit_copy_from_field"]       = "Copy data from field";
 
 
 /* Browse bar */
-$lang['browse_bar_text'] = "Browse";
+$lang['browse_bar_text']            = "Browse";
+$lang['field_show_in_browse_bar']   = "Show in Browse Bar";

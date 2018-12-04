@@ -445,7 +445,7 @@ input:checked + .customFieldLabel, .keywordselected
 }
 
 /* Browse bar */
-#BrowseBar a, #BrowseBarTab
+#BrowseBar a, #BrowseBarTab, #BrowseBarTab a:hover
     {
   color: #fff;
   }

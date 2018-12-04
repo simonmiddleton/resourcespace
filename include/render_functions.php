@@ -2528,7 +2528,7 @@ function render_browse_bar()
     $bb_html .= '<div id="BrowseBarContents" >'; 
     
     //Browse row template
-    // script wil replace %BROWSE_TYPE%, %BROWSE_EXPAND_CLASS%, %BROWSE_CLASS% %BROWSE_LEVEL%, %BROWSE_EXPAND%, %BROWSE_NAME%, %BROWSE_LINK%, %BROWSE_ID%
+    // script will replace %BROWSE_TYPE%, %BROWSE_EXPAND_CLASS%, %BROWSE_CLASS% %BROWSE_LEVEL%, %BROWSE_EXPAND%, %BROWSE_NAME%, %BROWSE_TEXT%, %BROWSE_ID%
     $bb_html .= "
             <div id='BrowseBarTemplate' style='display: none;'>
             <div class='BrowseBarItem BrowseRowOuter' data-browse-id='%BROWSE_ID%' data-browse-parent='%BROWSE_PARENT%'  data-browse-loaded='0' data-browse-status='closed' data-browse-level='%BROWSE_LEVEL%' style='display: none;'>
@@ -2536,12 +2536,16 @@ function render_browse_bar()
                     %BROWSE_INDENT%
                     %BROWSE_EXPAND%
                     <div class='BrowseBarStructure %BROWSE_CLASS%'></div>
-                    <a class='BrowseBarLink' href='%BROWSE_LINK%' onclick='return CentralSpaceLoad(this,false);'>&nbsp;%BROWSE_NAME%</a>
+                    %BROWSE_TEXT%
                 </div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->
             </div><!-- End of BrowseBarTemplate -->
             ";
 
+            
+    //TODO Add new Resource Type Field
+    //TODO Show tree in correct view
+    //TODO Check CSS footer and responsive
     // Add root elements TODO - language strings
     $bb_html .= generate_browse_bar_item("R", "Browse by tag");
     $bb_html .= generate_browse_bar_item("FC", "Featured collections");
@@ -2584,7 +2588,7 @@ archive states -  child is metadata field
 
 
 /**
-* Generates a CSS table row element for the browse bar
+* Generates a root row item for the browse bar
 *  
 * @return void
 */    
@@ -2601,7 +2605,7 @@ function generate_browse_bar_item($id, $text)
 	
     $html .= "</div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->";
-            
+    //TODO Check for expanded subnodes of this from cookie - add load to document ready function
 	return $html;
 	}
 	
