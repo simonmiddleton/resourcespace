@@ -2487,3 +2487,85 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
     echo "<div class='clearerleft'></div>";
     echo "</div>";
     }
+
+
+/**
+* Render a filter bar button
+* 
+* @param string $text Button text
+* @param string $text The onclick attribute for the button
+* 
+* @return void
+*/
+function render_filter_bar_button($text, $on_click)
+    {
+    ?>
+    <div class="InpageNavLeftBlock">
+        <button type="button" onclick="<?php echo $on_click; ?>"><?php echo UPLOAD_ICON . htmlspecialchars($text); ?></button>
+    </div>
+    <?php
+    return;
+    }
+
+
+/**
+* Render "Upload here" button.
+*
+* This applies to search results that do not relate to a collection, but consist of purely the following:
+* - Nodes
+* - Resource type
+* - Workflow (archive) state
+* 
+* For free text searches this SHOULD NOT work!
+* 
+* @param array $search_params
+* 
+* @return void
+*/
+function render_upload_here_button(array $search_params)
+    {
+    if(!isset($search_params['search']) || !isset($search_params['restypes']) || !isset($search_params['archive']))
+        {
+        return;
+        }
+
+    // For free text searches this option will not appear
+    if(isset($search_params['search']) && empty(resolve_nodes_from_string($search_params['search'])))
+        {
+        return;
+        }
+
+    $upload_here_params = array();
+
+    $upload_endpoint = 'pages/upload_plupload.php';
+    if(!$GLOBALS['upload_then_edit'])
+        {
+        $upload_endpoint = 'pages/edit.php';
+        $upload_here_params['ref'] = 0 - $GLOBALS['userref'];
+        $upload_here_params['uploader'] = $GLOBALS['top_nav_upload_type'];
+        }
+
+    $upload_here_params['upload_here'] = true;
+    $upload_here_params['search'] = $search_params['search'];
+
+    // If resource types is a list then always select the first resource type the user has access to
+    $resource_types = explode(',', $search_params['restypes']);
+    foreach($resource_types as $resource_type)
+        {
+        if(!checkperm("XU{$resource_type}"))
+            {
+            $upload_here_params['resource_type'] = $resource_type;
+            break;
+            }
+        }
+
+    // TODO: similar logic to resource_type should be applied for archive state
+    $upload_here_params['archive'] = $search_params['archive'];
+
+    $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
+    $upload_here_on_click = "CentralSpaceLoad('{$upload_here_url}');";
+
+    render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click);
+
+    return;
+    }

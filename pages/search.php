@@ -1148,6 +1148,8 @@ if($responsive_ui)
         render_actions($collectiondata,true,false);
 
         hook("search_header_after_actions");
+
+        render_upload_here_button($searchparams);
         
         if (!$display_selector_dropdowns && !$perpage_dropdown){?>
         <div class="InpageNavLeftBlock">
