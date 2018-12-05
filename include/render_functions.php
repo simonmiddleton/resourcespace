@@ -1694,7 +1694,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
-        global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
+        global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search,
+               $upload_here;
 
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
@@ -2565,7 +2566,7 @@ function render_upload_here_button(array $search_params)
     // Check access to Active state
     if(in_array(0, $search_archive) && checkperm("e0"))
         {
-        $upload_here_params['archive'] = 0;
+        $upload_here_params['status'] = 0;
         $search_archive = array();
         }
     // Check remaining states
@@ -2578,12 +2579,12 @@ function render_upload_here_button(array $search_params)
 
         if(checkperm("e{$archive}"))
             {
-            $upload_here_params['archive'] = $archive;
+            $upload_here_params['status'] = $archive;
             break;
             }
         }
     // Last attempt to set the archive state
-    if(!isset($upload_here_params['archive']))
+    if(!isset($upload_here_params['status']))
         {
         $editable_archives = get_editable_states($GLOBALS['userref']);
 
@@ -2592,7 +2593,7 @@ function render_upload_here_button(array $search_params)
             trigger_error("Unable to determine the correct archive state!");
             }
 
-        $upload_here_params['archive'] = $editable_archives[0]['id'];
+        $upload_here_params['status'] = $editable_archives[0]['id'];
         }
 
     $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
