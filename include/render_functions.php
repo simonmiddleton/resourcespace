@@ -2559,13 +2559,44 @@ function render_upload_here_button(array $search_params)
             }
         }
 
-    // TODO: similar logic to resource_type should be applied for archive state
-    $upload_here_params['archive'] = $search_params['archive'];
+    // Archive can be a list (e.g from advanced search) so always select the first archive state user access to, 
+    // favouring the Active one
+    $search_archive = explode(',', $search_params['archive']);
+    // Check access to Active state
+    if(in_array(0, $search_archive) && checkperm("e0"))
+        {
+        $upload_here_params['archive'] = 0;
+        $search_archive = array();
+        }
+    // Check remaining states
+    foreach($search_archive as $archive)
+        {
+        if($archive == '' || !is_numeric($archive))
+            {
+            continue;
+            }
+
+        if(checkperm("e{$archive}"))
+            {
+            $upload_here_params['archive'] = $archive;
+            break;
+            }
+        }
+    // Last attempt to set the archive state
+    if(!isset($upload_here_params['archive']))
+        {
+        $editable_archives = get_editable_states($GLOBALS['userref']);
+
+        if($editable_archives === false || empty($editable_archives))
+            {
+            trigger_error("Unable to determine the correct archive state!");
+            }
+
+        $upload_here_params['archive'] = $editable_archives[0]['id'];
+        }
 
     $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
     $upload_here_on_click = "CentralSpaceLoad('{$upload_here_url}');";
 
-    render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click);
-
-    return;
+    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click);
     }
