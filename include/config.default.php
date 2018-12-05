@@ -1843,9 +1843,6 @@ $delete_requires_password=false;
 # Offline processes (e.g. staticsync and create_previews.php) - for process locking, how old does a lock have to be before it is ignored?
 $process_locks_max_seconds=60*60*4; # 4 hours default.
 
-// The number of threads to be used for create_previews.php
-$max_forks = 3;
-
 # Zip files - the contents of the zip file can be imported to a text field on upload.
 # Requires 'unzip' on the command path.
 # If the below is not set, but unzip is available, the archive contents will be written to $extracted_text_field
