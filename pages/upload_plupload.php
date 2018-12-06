@@ -600,7 +600,10 @@ if ($_FILES)
 
                             if($upload_then_edit && $upload_here)
                                 {
-                                update_archive_status($ref, $setarchivestate);
+                                if(checkperm("e{$setarchivestate}"))
+                                    {
+                                    update_archive_status($ref, $setarchivestate);
+                                    }
 
                                 add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
                                 }
