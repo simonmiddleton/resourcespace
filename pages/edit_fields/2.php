@@ -94,13 +94,6 @@ if(!hook('customchkboxes', '', array($field)))
                                     <?php
                                     }
 
-                                if($upload_here)
-                                    {
-                                    ?>
-                                    onchange="validate_upload_here_mode(this, <?php echo $node['ref']; ?>);"
-                                    <?php
-                                    }
-
                                 if($edit_autosave)
                                     {
                                     ?>

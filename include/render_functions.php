@@ -1694,8 +1694,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
     if(!hook('replacefield', '', array($field['type'], $field['ref'], $n)))
         {
-        global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search,
-               $upload_here;
+        global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $FIXED_LIST_FIELD_TYPES, $is_search;
 
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {

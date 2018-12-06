@@ -1832,9 +1832,6 @@ $lang["error-plugin-not-activated"] = "Plugin not activated";
 $lang["error-failed-to-delete"] = "Failed to delete";
 $lang["error-failed-to-move"] = "Failed to move";
 
-/* WARNINGS */
-$lang['warning-upload_here_invalid'] = "Removing this option means this will no longer be using the \"{$lang['upload_here']}\" feature. You can still continue but the resource will no longer appear in the expected location.";
-
 
 $lang["no-options-available"]="No options available";
 $lang["header-upload-subtitle"] = "Step %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources

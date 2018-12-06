@@ -1526,8 +1526,7 @@ $all_selected_nodes = get_resource_nodes($use);
 
 if($upload_here)
     {
-    $upload_here_nodes = get_upload_here_selected_nodes($search, $all_selected_nodes);
-    $all_selected_nodes = $upload_here_nodes;
+    $all_selected_nodes = get_upload_here_selected_nodes($search, $all_selected_nodes);
     }
 
 if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
@@ -2208,32 +2207,6 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
   </script>
   <?php
   }
-
-if($upload_here)
-    {
-    ?>
-    <script>
-    function validate_upload_here_mode(element, node_ref)
-        {
-        var required_nodes = <?php echo json_encode($upload_here_nodes, JSON_NUMERIC_CHECK); ?>;
-        
-        var removed_node = -1;
-        if(typeof node_ref !== 'undefined')
-            {
-            removed_node = node_ref;
-            }
-
-        // TODO: only trigger this if node in question was removed (note: removing means different things depending on type of field)
-        console.log(element);
-
-        if(required_nodes.indexOf(removed_node) != -1)
-            {
-            styledalert('<?php echo $lang["status-warning"]; ?>', '<?php echo $lang["warning-upload_here_invalid"]; ?>', 450);
-            }
-        }
-    </script>
-    <?php
-    }
 
 hook("autolivejs");
 
