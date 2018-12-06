@@ -2524,12 +2524,16 @@ function render_filter_bar_button($text, $on_click)
 */
 function render_upload_here_button(array $search_params)
     {
+    if(!(checkperm('c') || checkperm('d')))
+        {
+        return;
+        }
+
     if(!isset($search_params['search']) || !isset($search_params['restypes']) || !isset($search_params['archive']))
         {
         return;
         }
 
-    // For free text searches this option will not appear
     if(isset($search_params['search']) && empty(resolve_nodes_from_string($search_params['search'])))
         {
         return;
