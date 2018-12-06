@@ -66,7 +66,7 @@ if($resource_type == "")
 resource_type_config_override($resource_type);
 
 # Create a new collection?
-if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chunk == 0)))
+if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chunk == $chunks-1)))
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
