@@ -1071,8 +1071,10 @@ function get_user_available_tiles($user,$tile="null")
 function get_user_dash($user)
 	{
 	global $baseurl,$baseurl_short,$lang,$dash_tile_shadows,$help_modal, $dash_tile_colour, $dash_tile_colour_options;
+
 	#Build User Dash and recalculate order numbers on display
 	$user_tiles = sql_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.all_users,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,user_dash_tile.ref AS 'user_tile',user_dash_tile.order_by FROM user_dash_tile JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user='".$user."' ORDER BY user_dash_tile.order_by");
+
 	$order=10;
 	foreach($user_tiles as $tile)
 		{
@@ -1591,4 +1593,38 @@ function allowPromotedResources($tile_type)
     $allowed_types = array('srch', 'fcthm');
 
     return in_array($tile_type, $allowed_types);
+    }
+
+/**
+* Render "Upgrade available" tile for Administrators and Super Admins. This tile cannot be deleted or removed unless 
+* ResourceSpace version is up to date
+* 
+* @param integer $user User ID, normally this is the $userref
+* 
+* @return void
+*/
+function render_upgrade_available_tile($user)
+    {
+    if(!checkperm("t") || !checkperm("a"))
+        {
+        return;
+        }
+
+    if(!is_resourcespace_upgrade_available())
+        {
+        return;
+        }
+    ?>
+    <a href="https://www.resourcespace.com/versions"
+       target="_blank"
+       class="HomePanel DashTile"
+       id="upgrade_available_tile">
+        <div id="contents_user_tile_upgrade_available" class="HomePanelIN HomePanelDynamicDash">
+            <h2><?php echo htmlspecialchars($GLOBALS['lang']['upgrade_available_title']); ?></h2>
+            <p><?php echo htmlspecialchars($GLOBALS['lang']['upgrade_available_text']); ?></p>
+        </div>
+    </a>
+    <?php
+
+    return;
     }

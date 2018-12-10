@@ -592,6 +592,7 @@ if (!hook("replaceslideshow"))
 
 	if($home_dash && checkPermission_dashmanage())
 		{
+        render_upgrade_available_tile($userref);
 		get_user_dash($userref);	
 		}
 	else if($home_dash && !checkPermission_dashmanage())
