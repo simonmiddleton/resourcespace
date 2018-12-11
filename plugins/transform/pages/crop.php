@@ -7,6 +7,7 @@ include_once "../../../include/search_functions.php";
 include_once "../../../include/resource_functions.php";
 include_once "../../../include/search_functions.php";
 include_once "../../../include/image_processing.php";
+include_once "../../../include/slideshow_functions.php";
 
 include_once "../include/transform_functions.php";
 
@@ -504,7 +505,8 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
 } elseif (getval("slideshow","")!="" && !$cropperestricted)
 	{
 	# Produce slideshow.
-	$sequence=getval("sequence","");
+	$sequence = getval("sequence", "");
+
 	if (!is_numeric($sequence)) {exit("Invalid sequence number. Please enter a numeric value.");}
 
     if(!checkperm('t'))
@@ -519,17 +521,8 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
         }
 
 	copy($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
-	$sslinkfile = dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".txt";
-	if (getval("linkslideshow","")==1)
-		{
-		#Create/overwrite text file with link to resource view page
-		file_put_contents($sslinkfile,$ref);
-		}
-	else
-		#delete the existing link text file if it exists
-		{
-		if (file_exists($sslinkfile)){unlink($sslinkfile);}
-		}
+    set_slideshow($sequence, (getval('linkslideshow', '') == 1 ? $ref : NULL));
+
 	unlink($newpath);
 	unlink($crop_pre_file);
 	}

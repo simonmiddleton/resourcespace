@@ -9,13 +9,14 @@ if(!checkperm('a'))
     }
 include '../../include/admin_functions.php';
 include '../../include/resource_functions.php';
+include '../../include/slideshow_functions.php';
 
 $slideshow_files = get_slideshow_files_data();
 
 $ajax         = getvalescaped('ajax', '');
 $action       = getvalescaped('action', '');
 $slideshow_id = getvalescaped('slideshow_id', null, true);
-$manageurl = $baseurl . "/pages/admin/admin_manage_slideshow.php";
+$manageurl = "{$baseurl}/pages/admin/admin_manage_slideshow.php";
 
 /* Re-order */
 if(
@@ -71,12 +72,10 @@ if(
             break;
         }
 
-    if($allow_reorder)
+    if($allow_reorder && reorder_slideshow_images($slideshow_files[$slideshow_id_index], $slideshow_files[$to]))
         {
-        reorder_slideshow_images($slideshow_id_index, $to);
         $response['sibling'] = $slideshow_files[$to]["ref"];
         }
-    
 
     echo json_encode($response);
     exit();
@@ -102,21 +101,56 @@ if('true' === $ajax && 'delete' === $action && !is_null($slideshow_id) && enforc
         $response['success'] = false;
         }
 
-    if(!empty($slideshow_file_info) && file_exists($slideshow_file_info['file_path']) && unlink($slideshow_file_info['file_path']) === false)
+    if(!empty($slideshow_file_info) && !delete_slideshow($slideshow_file_info['ref']))
         {
         http_response_code(500);
         $response['error']   = "{$lang['error-failed-to-delete']} '{$slideshow_file_info['file_path']}'";
         $response['success'] = false;
         }
 
-    if(!empty($slideshow_file_info) && isset($slideshow_file_info['link_file_path']) && file_exists($slideshow_file_info['link_file_path']) && unlink($slideshow_file_info['link_file_path']) === false)
+    echo json_encode($response);
+    exit();
+    }
+
+/* 
+Set slideshow flags
+===================
+Available options:
+ - homepage_show
+ - featured_collections_show
+ - login_show
+*/
+if($ajax === 'true' && $action == 'set_flag' && enforcePostRequest($ajax))
+    {
+    $slideshow_id_index = array_search($slideshow_id, array_column($slideshow_files, 'ref'));
+    if($slideshow_id_index !== false)
         {
-        http_response_code(500);
-        $response['error']   = "{$lang['error-failed-to-delete']} '{$slideshow_file_info['link_file_path']}'";
-        $response['success'] = false;
+        $slideshow = $slideshow_files[$slideshow_id_index];
         }
 
-    echo json_encode($response);
+    $update_status = false;
+    $flag = getval('flag', '');
+    $value = getval('value', false, true);
+
+    if($value !== false && $flag != '')
+        {
+        $slideshow[$flag] = $value;
+
+        $update_status = set_slideshow(
+            $slideshow_id,
+            $slideshow['resource_ref'],
+            $slideshow['homepage_show'],
+            $slideshow['featured_collections_show'],
+            $slideshow['login_show']);
+        }
+
+    if($update_status !== false)
+        {
+        http_response_code(200);
+        exit();
+        }
+
+    http_response_code(400);
     exit();
     }
 
@@ -139,61 +173,165 @@ include '../../include/header.php';
         <a href="<?php echo $baseurl_short; ?>pages/admin/admin_home.php" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a>
     </p>
     <h1><?php echo $lang['manage_slideshow']; ?></h1>
+    <div class="Listview">
+        <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="0">
+            <tbody>
+                <tr class="ListviewTitleStyle">
+                    <td><?php echo $lang["preview"]; ?></td>
+                    <td><?php echo $lang["home_page"]; ?></td>
+                    <td><?php echo $lang["theme"]; ?></td>
+                    <td><?php echo $lang["login_word"]; ?></td>
+                    <td><?php echo $lang["tools"]; ?></td>
+                </tr>
+            <?php
+            foreach($slideshow_files as $slideshow_index => $slideshow_file_info)
+                {
+                $moveup_disabled = '';
+                if($slideshow_index == 0)
+                    {
+                    $moveup_disabled = ' disabled';
+                    }
 
-<?php
-$i = 0;
-foreach($slideshow_files as $slideshow_file_info)
-    {
-    if(file_exists($slideshow_file_info['file_path']))
-        {
-		$login_image=false;
-		if($login_background && $i==0){$login_image=true;}
-        ++$i;
-        $slideshow_image_src = $baseurl_short . "pages/download.php?slideshow=" . $slideshow_file_info["ref"] . "&nc=" . time();
-        ?>
-    <div id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>" class="Question">
-        <label>
-            <img id="slideshow_img_<?php echo $slideshow_file_info["ref"]; ?>" <?php if($login_image){echo "class=\"highlighted\"";} ?> src="<?php echo $slideshow_image_src; ?>" alt="Slideshow Image <?php echo $slideshow_file_info["ref"]; ?>" width="150" height="80">
-        </label>
-		<?php if($login_image){echo $lang["login_slideshow_image_notes"] . "<br /><br />";} ?>
-        <div class="AutoSaveStatus">
-            <span id="AutoSaveStatus-<?php echo $slideshow_file_info["ref"]; ?>" style="display:none;"></span>
-        </div>
-        <span class="stdwidth">
-            <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_moveup"
-                    type="submit"
-                    onclick="ReorderSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>, 'moveup');"
-                    <?php if(1 === $i) { echo 'disabled'; } ?>><?php echo $lang['action-move-up']; ?></button>
-            <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_movedown"
-                    type="submit"
-                    onclick="ReorderSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>, 'movedown');"
-                    <?php if(count($slideshow_files) === $i) { echo 'disabled'; } ?>><?php echo $lang['action-move-down']; ?></button>
-            <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_file_info["ref"])); ?>
-            <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_delete"
-                    type="submit" onclick="DeleteSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>);"<?php if(count($slideshow_files)==1) { echo 'disabled'; } ?>><?php echo $lang['action-delete']; ?></button>
-            <?php hook('render_replace_slideshow_form_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_files)); ?>
-        </span>
-		<div class="clearerleft"></div>
+                $movedown_disabled = '';
+                if(($slideshow_index - 1) == count($slideshow_files))
+                    {
+                    $movedown_disabled = ' disabled';
+                    }
+
+                $delete_btn_disabled = '';
+                if(count($slideshow_files) == 1)
+                    {
+                    $delete_btn_disabled = ' disabled';
+                    }
+
+                $homepage_show = ($slideshow_file_info['homepage_show'] == 1 ? 'checked' : '');
+                $featured_collections_show = ($slideshow_file_info['featured_collections_show'] == 1 ? 'checked' : '');
+                $login_show = ($slideshow_file_info['login_show'] == 1 ? 'checked' : '');
+                ?>
+                <tr id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>">
+                    <td>
+                    <?php
+                    if(isset($slideshow_file_info['link']))
+                        {
+                        ?>
+                        <a href="<?php echo $slideshow_file_info['link']; ?>" onclick="return ModalLoad(this, true);">
+                            <img id="slideshow_img_<?php echo $slideshow_file_info["ref"]; ?>"
+                                 src="<?php echo $slideshow_file_info['file_url']; ?>"
+                                 alt="Slideshow Image <?php echo $slideshow_file_info["ref"]; ?>"
+                                 width="150"
+                                 height="80">
+                         </a>
+                        <?php
+                        }
+                    else
+                        {
+                        ?>
+                        <img id="slideshow_img_<?php echo $slideshow_file_info["ref"]; ?>"
+                             src="<?php echo $slideshow_file_info['file_url']; ?>"
+                             alt="Slideshow Image <?php echo $slideshow_file_info["ref"]; ?>"
+                             width="150"
+                             height="80">
+                        <?php
+                        }
+                    ?>
+                    </td>
+                    <td>
+                        <input type="checkbox"
+                               name="homepage_show"
+                               value="1"
+                               onclick="SetSlideshowFlag(this, <?php echo $slideshow_file_info["ref"]; ?>);"
+                               <?php echo $homepage_show; ?>>
+                    </td>
+                    <td>
+                        <input type="checkbox"
+                               name="featured_collections_show"
+                               value="1"
+                               onclick="SetSlideshowFlag(this, <?php echo $slideshow_file_info["ref"]; ?>);"
+                               <?php echo $featured_collections_show; ?>>
+                    </td>
+                    <td>
+                        <input type="checkbox"
+                               name="login_show"
+                               value="1"
+                               onclick="SetSlideshowFlag(this, <?php echo $slideshow_file_info["ref"]; ?>);"
+                               <?php echo $login_show; ?>>
+                    </td>
+                    <td>
+                        <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_moveup"
+                                type="submit"
+                                onclick="ReorderSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>, 'moveup');"
+                                <?php echo $moveup_disabled; ?>><?php echo $lang['action-move-up']; ?></button>
+                        <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_movedown"
+                                type="submit"
+                                onclick="ReorderSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>, 'movedown');"
+                                <?php echo $movedown_disabled; ?>><?php echo $lang['action-move-down']; ?></button>
+                        <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_file_info["ref"])); ?>
+                        <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_delete"
+                                type="submit" onclick="DeleteSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>);"
+                                <?php echo $delete_btn_disabled; ?>><?php echo $lang['action-delete']; ?></button>
+                        <?php hook('render_replace_slideshow_form_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_files)); ?>
+                    </td>
+                </tr>
+                <?php
+                }
+                ?>
+            </tbody>
+        </table>
     </div>
-        <?php
-        }
+<?php
+if($slideshow_big)
+    {?>
+    <div id="slideshow_static_image" class="Question">
+        <label>
+        <?php echo $lang["slideshow_use_static_image"]; ?>    
+        </label>
+        <input type="checkbox" name="slideshow_static_image" id="slideshow_static_image_checkbox" <?php if($static_slideshow_image){echo "checked";} ?> onchange="if(this.checked){jQuery.get('<?php echo $manageurl ?>?ajax=true&static=true');}else{jQuery.get('<?php echo $manageurl ?>?ajax=true&static=false');}"></input>
+    <div class="clearerleft"></div>
+    </div>
+    <?php
     }
-    
-    if($slideshow_big)
-        {?>
-        <div id="slideshow_static_image" class="Question">
-            <label>
-            <?php echo $lang["slideshow_use_static_image"]; ?>    
-            </label>
-            <input type="checkbox" name="slideshow_static_image" id="slideshow_static_image_checkbox" <?php if($static_slideshow_image){echo "checked";} ?> onchange="if(this.checked){jQuery.get('<?php echo $manageurl ?>?ajax=true&static=true');}else{jQuery.get('<?php echo $manageurl ?>?ajax=true&static=false');}"></input>
-        <div class="clearerleft"></div>
-        </div>
-        <?php
-        }
-    hook('render_new_element_for_manage_slideshow', '', array($slideshow_files));
+
+hook('render_new_element_for_manage_slideshow', '', array($slideshow_files));
 ?>
 </div>
 <script>
+function SetSlideshowFlag(element, id)
+    {
+    var input = jQuery(element);
+
+    var flag_value = 0;
+    if(element.checked)
+        {
+        flag_value = 1;
+        }
+
+    var post_url  = '<?php echo $manageurl; ?>';
+    var post_data =
+        {
+        ajax: true,
+        action: 'set_flag',
+        slideshow_id: id,
+        flag: input.attr('name'),
+        value: flag_value,
+        <?php echo generateAjaxToken("SetSlideshowFlag"); ?>
+        };
+
+    CentralSpaceShowLoading();
+
+    jQuery.ajax(
+        {
+        type: 'POST',
+        url: post_url,
+        data: post_data,
+        }).fail(function(data, textStatus, jqXHR) {
+            styledalert(data.status, data.statusText);
+        }).always(function() {
+            CentralSpaceHideLoading();
+        });
+
+    return false;
+    }
+
 function ReorderSlideshowImage(id, direction)
     {
     var post_url  = '<?php echo $manageurl ?>';

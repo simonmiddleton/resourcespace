@@ -6320,26 +6320,29 @@ if(!function_exists("array_column"))
 * The format of the returned array should be: 
 * Array
 * (
-*   [0] => Array
+*     [0] => Array
 *         (
-*             [ref] => 3
-*             [file_path] => /var/www/include/../gfx/homeanim/gfx/1.jpg
-*             [checksum] => 1450107521
-*             [link] => http://localhost/pages/view.php?ref=6019
-*             [link_file_path] => /var/www/include/../gfx/homeanim/gfx/1.txt
+*             [ref] => 1
+*             [resource_ref] => 
+*             [homepage_show] => 1
+*             [featured_collections_show] => 0
+*             [login_show] => 1
+*             [file_path] => /var/www/filestore/system/slideshow_1bf4796ac6f051a/1.jpg
+*             [checksum] => 1539875502
 *         )
-*   [1] => Array
-*        (
-*            [ref] => 4
-*            [file_path] => /var/www/include/../gfx/homeanim/gfx/2.jpg
-*            [checksum] => 2900215034
-*        )
-*   [2] => Array
-*        (
-*            [ref] => 5
-*            [file_path] => /var/www/include/../gfx/homeanim/gfx/3.jpg
-*            [checksum] => 4350322559
-*        )
+* 
+*     [1] => Array
+*         (
+*             [ref] => 4
+*             [resource_ref] => 19
+*             [homepage_show] => 1
+*             [featured_collections_show] => 0
+*             [login_show] => 0
+*             [file_path] => /var/www/filestore/system/slideshow_1bf4796ac6f051a/4.jpg
+*             [checksum] => 1542818794
+*             [link] => http://localhost/?r=19
+*         )
+* 
 * )
 * 
 * @return array
@@ -6348,42 +6351,39 @@ function get_slideshow_files_data()
     {
     global $baseurl, $homeanim_folder;
 
-    $dir = dirname(__FILE__) . '/../' . $homeanim_folder;
-    $d   = scandir($dir);
-    sort($d, SORT_NUMERIC);
+    $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $filecount       = 0;
-    $checksum        = 0;
+    $query = "SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow";
+    $slideshow_records = sql_query($query);
+
     $slideshow_files = array();
 
-    foreach($d as $file)
+    foreach($slideshow_records as $slideshow)
         {
-        if(preg_match("/[0-9]+\.(jpg)$/", $file))
+        $slideshow_file = $slideshow;
+
+        $image_file_path = "{$homeanim_folder_path}/{$slideshow['ref']}.jpg";
+
+        if(!file_exists($image_file_path) || !is_readable($image_file_path))
             {
-            $slideshow_file_id = substr($file, 0, -4);
-            $checksum += filemtime($dir . '/' . $file);
-
-            $slideshow_files[$filecount]["ref"] = $slideshow_file_id;
-            $slideshow_files[$filecount]['file_path'] = $dir . '/' . $file;
-            $slideshow_files[$filecount]['checksum']  = $checksum;
-
-            $linkref        = '';
-            $linkfile       = substr($file, 0, (strlen($file) - 4)) . '.txt';
-            $link_file_path = $dir . '/' . $linkfile;
-
-            if(file_exists($link_file_path))
-                {
-                $linkref    = file_get_contents($link_file_path);
-                $linkaccess = get_resource_access($linkref);
-                if('' !== $linkaccess && (0 == $linkaccess || 1 == $linkaccess))
-                    {
-                    $slideshow_files[$filecount]['link'] = $baseurl . "/pages/view.php?ref=" . $linkref;
-                    $slideshow_files[$filecount]['link_file_path'] = $link_file_path;
-                    }
-                }
-            
-            $filecount++;
+            continue;
             }
+
+        $slideshow_file['checksum'] = filemtime($image_file_path);
+        $slideshow_file['file_path'] = $image_file_path;
+        $slideshow_file['file_url'] = generateURL(
+            "{$baseurl}/pages/download.php",
+            array(
+                'slideshow' => $slideshow['ref'],
+                'nc' => $slideshow_file['checksum'],
+            ));
+
+        if((int) $slideshow['resource_ref'] > 0)
+            {
+            $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
+            }
+
+        $slideshow_files[] = $slideshow_file;
         }
 
     return $slideshow_files;
