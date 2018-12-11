@@ -2549,6 +2549,7 @@ $lang["action-add-new"] = "Add new";
 $lang["action-submit-button-label"] = "Submit";
 $lang["slideshow_use_static_image"] = "Use a single random image from the set (image will not change unless page is reloaded)";
 $lang["slideshow-image"] = "slideshow image";
+$lang["manage-slideshow-instructions"] = "A slideshow image can be shown in multiple areas on the system. To select other locations, please tick the check boxes below. You can also click on the preview of an image and see details of the resource it is linked to (if any).";
 
 $lang["emailcollectionrequest"] = "[img_gfx/titles/title.gif]<br />The following user has made a request:<br />Username: [username]<br />User email: [useremail]<br /><br />Reason for request: [requestreason]<br /><br />Click the link below to view the request.<br /><a href='[requesturl]'>[requesturl]</a>";
 $lang["emailusercollectionrequest"] = "[img_gfx/titles/title.gif]<br />Your resource request has been submitted for approval and will be looked at shortly.:<br /><br />Reason for request: [requestreason]<br /><br />Click the link below to view the requested resources.<br /><a href='[url]'>[url]</a>";

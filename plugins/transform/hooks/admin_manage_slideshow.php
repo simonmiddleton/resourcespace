@@ -40,12 +40,28 @@ function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slides
     }
 
 
-function HookTransformAdmin_manage_slideshowRender_replace_button_for_manage_slideshow($slideshow_image)
+function HookTransformAdmin_manage_slideshowRender_replace_button_for_manage_slideshow($slideshow_image, array $slideshow_file_info)
     {
-    global $lang;
+    global $lang, $baseurl;
     ?>
     <button type="submit" onclick="jQuery('#replace_slideshow_image_form_<?php echo $slideshow_image; ?>').fadeIn(); return false;"><?php echo $lang['action-replace']; ?></button>
     <?php
+    if($slideshow_file_info['resource_ref'] > 0)
+        {
+        ?>
+        <button type="submit" form="RecropSlideshowImage_<?php echo $slideshow_image; ?>"><?php echo $lang['transform-recrop']; ?></button>
+        <form id="RecropSlideshowImage_<?php echo $slideshow_image; ?>"
+              method="POST"
+              action="<?php echo $baseurl; ?>/plugins/transform/pages/crop.php"
+              onsubmit="return CentralSpacePost(this);">
+            <?php generateFormToken("RecropSlideshowImage_{$slideshow_image}"); ?>
+            <input name="ref" type="text" value="<?php echo $slideshow_file_info['resource_ref']; ?>">
+            <input name="manage_slideshow_action" type="hidden" value="replace">
+            <input name="manage_slideshow_id" type="hidden" value="<?php echo $slideshow_image; ?>">
+            <input name="return_to_url" type="hidden" value="<?php echo $baseurl; ?>/pages/admin/admin_manage_slideshow.php">
+        </form>
+        <?php
+        }
     }
 
 

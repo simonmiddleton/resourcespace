@@ -173,6 +173,7 @@ include '../../include/header.php';
         <a href="<?php echo $baseurl_short; ?>pages/admin/admin_home.php" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a>
     </p>
     <h1><?php echo $lang['manage_slideshow']; ?></h1>
+    <p><?php echo $lang['manage-slideshow-instructions']; ?></p>
     <div class="Listview">
         <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="0">
             <tbody>
@@ -265,7 +266,7 @@ include '../../include/header.php';
                                 type="submit"
                                 onclick="ReorderSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>, 'movedown');"
                                 <?php echo $movedown_disabled; ?>><?php echo $lang['action-move-down']; ?></button>
-                        <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_file_info["ref"])); ?>
+                        <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_file_info)); ?>
                         <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_delete"
                                 type="submit" onclick="DeleteSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>);"
                                 <?php echo $delete_btn_disabled; ?>><?php echo $lang['action-delete']; ?></button>
