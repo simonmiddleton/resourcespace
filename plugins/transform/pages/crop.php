@@ -18,9 +18,9 @@ if(is_numeric($ref)==false) {exit($lang['error_resource_id_non_numeric']);}
 $resource=get_resource_data($ref);
 if ($resource===false || $ref < 0) {exit($lang['resourcenotfound']);}
 
-if (in_array($resource['file_extension'], $cropper_allowed_extensions)==false) 
+if (in_array(strtoupper($resource['file_extension']), $cropper_allowed_extensions)==false) 
     {
-    exit($lang['error_resource_not_image_extension'] . ' (' . strtoupper(implode(', ', $cropper_allowed_extensions)) . ')');
+    exit($lang['error_resource_not_image_extension'] . ' (' . implode(', ', $cropper_allowed_extensions) . ')');
     }
 
 # Load edit access level
