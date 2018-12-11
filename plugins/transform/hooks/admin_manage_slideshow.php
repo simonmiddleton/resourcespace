@@ -20,6 +20,7 @@ function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slides
                 onsubmit="return CentralSpacePost(this);"
             >
                 <?php generateFormToken("add_new_slideshow"); ?>
+                <label></label>
                 <input 
                     name="ref"
                     type="text"
