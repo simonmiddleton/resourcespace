@@ -188,6 +188,9 @@ $header_link=true;
 # Header size class. Options are HeaderSmall, HeaderMid, HeaderLarge.
 $header_size="HeaderMid";
 
+# Header includes username to right of user menu icon
+$header_include_username=false;
+
 # Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
 
 # Set this to true in order for the top bar to remain present when scrolling down the page
@@ -1839,9 +1842,6 @@ $delete_requires_password=false;
 
 # Offline processes (e.g. staticsync and create_previews.php) - for process locking, how old does a lock have to be before it is ignored?
 $process_locks_max_seconds=60*60*4; # 4 hours default.
-
-// The number of threads to be used for create_previews.php
-$max_forks = 3;
 
 # Zip files - the contents of the zip file can be imported to a text field on upload.
 # Requires 'unzip' on the command path.

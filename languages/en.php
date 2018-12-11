@@ -2357,6 +2357,8 @@ $lang["manageowndashinto"]="Manage dash tiles available for your dash. You can a
 $lang['manage_all_user_dash_tiles_note'] = 'Note: Tiles shown with a red border are hidden to the users. Admins see them as there are other tiles available but hidden from these users';
 $lang['manage_dash_tiles'] = 'Manage dash tiles';
 $lang['view_tiles'] = 'View tiles';
+$lang['upgrade_available_title'] = 'Upgrade available';
+$lang['upgrade_available_text'] = 'Click for more information about the new version';
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
@@ -2698,7 +2700,7 @@ $lang['error_upload_resource_alternatives_batch'] = 'When using this feature (se
 $lang['error_upload_resource_not_found'] = 'A resource ID could not be found!';
 $lang['error_user_registration_opt_in'] = 'Please check the box to indicate your consent';
 $lang['error_resource_id_non_numeric'] = 'ERROR - Resource IDs should be numeric please check your submission';
-$lang['error_resource_not_image_extention'] = 'ERROR - Selected resource is not an image type file extention';
+$lang['error_resource_not_image_extension'] = 'ERROR - Selected resource is not an image type file extension';
 
 $lang['image_quality_100'] = "Maximum";
 $lang['image_quality_92'] = "Print";

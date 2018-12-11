@@ -2362,8 +2362,7 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
 */
 function render_share_options($collectionshare=true, $ref, $emailing=false)
     {
-    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url;
-    global $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string;   
+    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
     
     if(!hook('replaceemailaccessselector')): ?>
         <div class="Question" id="question_access">

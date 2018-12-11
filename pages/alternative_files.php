@@ -76,9 +76,11 @@ if($alternative_file_resource_preview)
         } 
     }
 
-if($alternative_file_resource_title && isset($resource['field'.$view_title_field]))
+if($alternative_file_resource_title)
     {
-    echo "<h2>" . htmlspecialchars(i18n_get_translated($resource['field'.$view_title_field])) . "</h2><br/>";
+    $resource_title = get_data_by_field($ref, $view_title_field);
+
+    echo "<h2>" . htmlspecialchars(i18n_get_translated($resource_title)) . "</h2><br/>";
     }
     ?>
 <h1><?php echo $lang["managealternativefilestitle"]?></h1>

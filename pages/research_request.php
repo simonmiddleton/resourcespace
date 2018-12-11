@@ -55,7 +55,7 @@ include "../include/header.php";
 
         <div class="Question">
             <label for="name"><?php echo $lang["nameofproject"]?> *</label>
-            <input id="name" name="name" class="stdwidth" value="<?php echo htmlspecialchars($name) ?>">
+            <input id="name" name="name" class="stdwidth" type="text" value="<?php echo htmlspecialchars($name) ?>">
             <div class="clearerleft"></div>
             <?php if (isset($error_name)) { ?><div class="FormError"><?php echo $lang["noprojectname"]?></div><?php } ?>
         </div>
@@ -96,7 +96,7 @@ include "../include/header.php";
             ?>
             <div class="Question" id="email">
                 <label for="email"><?php echo $lang["email"]?></label>
-                <input id="email" name="email" class="stdwidth" value="<?php echo htmlspecialchars($email) ?>">
+                <input id="email" name="email" class="stdwidth" type="text" value="<?php echo htmlspecialchars($email) ?>">
                 <div class="clearerleft"> </div>
                 <?php if (isset($error_email)) { ?><div class="FormError"><?php echo $lang["setup-emailerr"]?></div><?php } ?>
             </div>
@@ -104,7 +104,7 @@ include "../include/header.php";
 
         <div class="Question" id="contacttelephone">
             <label for="contact"><?php echo $lang["contacttelephone"]?></label>
-            <input id="contact" name="contact" class="stdwidth" value="<?php echo htmlspecialchars(getval("contact","")) ?>">
+            <input id="contact" name="contact" class="stdwidth" type="text" value="<?php echo htmlspecialchars(getval("contact","")) ?>">
             <div class="clearerleft"></div>
         </div>
 
@@ -113,7 +113,7 @@ include "../include/header.php";
                 <?php echo $lang["finaluse"]?><br/>
                 <span class="OxColourPale"><?php echo $lang["finaluseeg"]?></span>
             </label>
-            <input id="finaluse" name="finaluse" class="stdwidth" value="<?php echo htmlspecialchars(getval("finaluse","")) ?>">
+            <input id="finaluse" name="finaluse" class="stdwidth" type="text" value="<?php echo htmlspecialchars(getval("finaluse","")) ?>">
             <div class="clearerleft"></div>
         </div>
 
@@ -135,7 +135,7 @@ include "../include/header.php";
 
         <div class="Question" id="noresourcesrequired">
             <label for="noresources"><?php echo $lang["noresourcesrequired"]?></label>
-            <input id="noresources" name="noresources" class="shrtwidth" value="<?php echo htmlspecialchars(getval("noresources",""))?>">
+            <input id="noresources" name="noresources" class="shrtwidth" type="text" value="<?php echo htmlspecialchars(getval("noresources",""))?>">
             <div class="clearerleft"></div>
         </div>
 

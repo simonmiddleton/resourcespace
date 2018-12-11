@@ -235,7 +235,8 @@ $extrafooterhtml="";
 <!-- Override stylesheet -->
 <link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo $k; ?>&css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!--- FontAwesome for icons-->
-<link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
+<link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
 <!-- Load specified font CSS -->
 <link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" />
 
@@ -450,7 +451,21 @@ else
         ?>
         <li>
             <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
+            <?php
+			if (isset($header_include_username) && $header_include_username)
+                {
+                ?>
+                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars($userfullname=="" ? $username : $userfullname) ?>
+                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                <?php
+                }
+            else
+                {
+                ?>
                 <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i><span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                <?php
+                }
+            ?> 
             </a>
             <div id="MessageContainer" style="position:absolute; "></div>
         <?php

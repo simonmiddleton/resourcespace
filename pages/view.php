@@ -1103,7 +1103,7 @@ else
 
 
 
-hook("renderbeforerecorddownload");
+if(!($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access === 0)) {hook("renderbeforerecorddownload");}
 
 ?>
 <?php if (!hook("renderresourcedownloadspace")) { ?>

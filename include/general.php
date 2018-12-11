@@ -7179,3 +7179,114 @@ function check_share_password($key,$password,$cookie)
     
     return true;   
     }
+
+
+/**
+* Ability to get a list of users based on their permissions. See get_notification_users() for more information.
+* 
+* IMPORTANT: the lookup is done on an "all or nothing" basis.
+* 
+* @uses get_notification_users()
+* 
+* @param string|array $condition A specific user type (e.g SYSTEM_ADMIN) OR an array of permissions
+* 
+* @return array
+*/
+function get_users_from_permission_lookup($condition)
+    {
+    return get_notification_users($condition);
+    }
+
+
+/**
+* Check if ResourceSpace is up to date or an upgrade is available
+* 
+* @uses get_sysvar()
+* @uses set_sysvar()
+* 
+* @return boolean
+*/
+function is_resourcespace_upgrade_available()
+    {
+    $cvn_cache = get_sysvar('centralised_version_number');
+    $last_cvn_update = get_sysvar('last_cvn_update');
+
+    $centralised_version_number = $cvn_cache;
+
+    if($last_cvn_update !== false)
+        {
+        $cvn_cache_interval = DateTime::createFromFormat('Y-m-d H:i:s', $last_cvn_update)->diff(new DateTime());
+
+        if($cvn_cache_interval->days >= 1)
+            {
+            $centralised_version_number = false;
+            }
+        }
+
+    if($centralised_version_number === false)
+        {
+        $centralised_version_number = file_get_contents('https://www.resourcespace.com/current_release.txt');
+
+        if($centralised_version_number === false)
+            {
+            return false; 
+            }
+
+        set_sysvar('centralised_version_number', $centralised_version_number);
+        set_sysvar('last_cvn_update', date('Y-m-d H:i:s'));
+        }
+
+    $get_version_details = function($version)
+        {
+        $version_data = explode('.', $version);
+
+        if(empty($version_data))
+            {
+            return array();
+            }
+
+        $return = array(
+            'major' => isset($version_data[0]) ? (int) $version_data[0] : 0,
+            'minor' => isset($version_data[1]) ? (int) $version_data[1] : 0,
+            'revision' => isset($version_data[2]) ? (int) $version_data[2] : 0,
+        );
+
+        if($return['major'] == 0)
+            {
+            return array();
+            }
+
+        return $return;
+        };
+
+    $product_version = trim(str_replace('SVN', '', $GLOBALS['productversion']));
+    $product_version_data = $get_version_details($product_version);
+
+    $cvn_data = $get_version_details($centralised_version_number);
+
+    if(empty($product_version_data) || empty($cvn_data))
+        {
+        return false;
+        }
+
+    if($product_version_data['major'] != $cvn_data['major'] && $product_version_data['major'] < $cvn_data['major'])
+        {
+        return true;
+        }
+    else if(
+        $product_version_data['major'] == $cvn_data['major']
+        && $product_version_data['minor'] != $cvn_data['minor']
+        && $product_version_data['minor'] < $cvn_data['minor'])
+        {
+        return true;
+        }
+    else if(
+        $product_version_data['major'] < $cvn_data['major']
+        && $product_version_data['minor'] != $cvn_data['minor']
+        && $product_version_data['minor'] < $cvn_data['minor'])
+        {
+        return true;
+        }
+
+    return false;
+    }
