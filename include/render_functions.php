@@ -2521,7 +2521,7 @@ function render_trash($type, $deletetext,$forjs=false)
 
 function render_browse_bar()
     {
-    global $lang;
+    global $lang, $browse_bar_workflow;
     $bbshow = getval("rsbrowse","") == "show";
         
     $bb_html = '<div id="BrowseBar" class="BrowseBar ' . ($bbshow ? "BrowseBarVisible" : "BrowseBarHidden"). '" >';
@@ -2543,14 +2543,15 @@ function render_browse_bar()
             ";
 
             
-    //TODO Add new Resource Type Field
-    //TODO Show tree in correct view
     //TODO Check CSS footer and responsive
     // Add root elements TODO - language strings
     $bb_html .= generate_browse_bar_item("R", "Browse by tag");
     $bb_html .= generate_browse_bar_item("FC", "Featured collections");
     $bb_html .= generate_browse_bar_item("C", "My collections");
-    $bb_html .= generate_browse_bar_item("WF", "Workflow");
+    if($browse_bar_workflow)
+        {
+        $bb_html .= generate_browse_bar_item("WF", "Workflow");
+        }
 
     $bb_html .= '</div><!-- End of BrowseBarContents -->
                 <div id="BrowseBarClose" class="backtoresults"><a href="#"  class="closeLink fa fa-times" onClick="ToggleBrowseBar();"></a></div>
@@ -2563,6 +2564,11 @@ function render_browse_bar()
     echo '<script>
         var rsbrowse = "' . $browsejsvar . '";
         SetCookie("rsbrowse", "' . $browsejsvar . '");
+        // Expand tree to previous state based on stored cookie
+        jQuery(document).ready(function()
+            {
+            ReloadBrowseBar();
+            });
         </script>';
     }
 
@@ -2605,7 +2611,6 @@ function generate_browse_bar_item($id, $text)
 	
     $html .= "</div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->";
-    //TODO Check for expanded subnodes of this from cookie - add load to document ready function
 	return $html;
 	}
 	

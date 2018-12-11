@@ -320,8 +320,9 @@ li.plupload_droptext {color:#999;}
 #trash_bin.ui-state-hover {
 	border: #2f2f2f 1px solid;
 	background: #000;
-	background: rgba(0, 0, 0, 0.55);
-	color: #d7d7d7;
+	background: rgba(0, 0, 0, 0.8);
+	/*color: #d7d7d7;*/
+	color: #fff;
 }
 #trash_bin.ui-state-active, .ui-state-active {border: 1px solid #d0d0d0;background: rgba(114, 22, 37, 0.51);}
 #trash_bin {border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;}

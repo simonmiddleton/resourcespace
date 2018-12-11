@@ -3540,6 +3540,7 @@ $inactive_user_disable_days = 0;
 
 // Browse bar 
 $browse_bar = true;
+$browse_bar_workflow=true;
 
 $browse_bar_types = array();
 $browse_bar_types["folder"] 	= array();

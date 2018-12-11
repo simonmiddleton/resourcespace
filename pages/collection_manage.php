@@ -38,12 +38,11 @@ if('' != $name && $collection_allow_creation && enforcePostRequest(false))
         }
 
     set_user_collection($userref, $new);
-    refresh_collection_frame();
 
     // Log this
     daily_stat('New collection', $userref);
 
-    redirect("pages/collection_edit.php?ref={$new}");
+    redirect("pages/collection_edit.php?ref={$new}&reload=true");
     }
 
 $delete=getvalescaped("delete","");

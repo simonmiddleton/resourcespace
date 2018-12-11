@@ -1019,7 +1019,7 @@ a.HomePanel:hover {
     display: none;
     position: fixed;
     top: 0px;
-    left: 90%;
+    left: 45%;
 }
 .trash_bin_text {
     min-width: 100%;
@@ -1609,7 +1609,8 @@ select.MultiSelect:before {
 }
 
 #BrowseBarContents{
-    margin-left: 10px;
+    margin-left: 20px;
+    margin-top: 20px;
     float: left;
 }
 
@@ -1646,8 +1647,10 @@ select.MultiSelect:before {
     position: absolute;
     top: 130px;
     width:0px;
-    height: 130px;
+    height: 140px;
     left: -500px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     /*margin-left: -530px;
     display: none;*/
 }
@@ -1662,11 +1665,11 @@ select.MultiSelect:before {
 
 .BrowseBarTabText {
     margin-bottom: 10px;
-    margin-top: 80px;
+    margin-top: 85px;
     text-transform: capitalize;
     text-align: center;
     transform: rotate(-90deg);
-    font-size: 30px;
+    font-size: 28px;
     display: none;
 }
 

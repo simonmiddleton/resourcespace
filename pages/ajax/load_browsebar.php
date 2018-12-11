@@ -15,7 +15,7 @@ include_once "../../include/resource_functions.php";
 // Expand link?
 
 $id = getvalescaped('id', '');
-$newlevel=getvalescaped('level', 0,true) + 1;
+//$newlevel=getvalescaped('level', 0,true) + 1;
 //$parent=getvalescaped('parent','');
 
 // Use id to work out search string for link and path to data requested e.g. to get field id for node expansion
@@ -76,13 +76,11 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-RT:new";
             $return_items[$n]["name"] = $lang["resource_type_new"];
-            $return_items[$n]["level"] = $newlevel;
             $return_items[$n]["class"] = "fa far fa-plus-circle";
             $return_items[$n]["expandable"] = "false";
             $tgtparams = array();
             $tgtparams["type"]  = "resource_type";
             $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
-            //$tgturl = generateURL($baseurl_short . "pages/admin/admin_resource_type_edit.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = true;
             $n++;
@@ -90,16 +88,11 @@ switch ($returntype)
 
         foreach($restypes as $restype)
             {
-            //exit("level: " . $newlevel);
             // Create link based on parent and current restype
             $return_items[$n] = array();
-            //$return_items[$n]["type"] = "RT";
             $return_items[$n]["id"] = $id . "-RT:" . $restype["ref"];
-            //$return_items[$n]["parent"] = $parent;
             $return_items[$n]["name"] = i18n_get_translated($restype["name"]);
-            $return_items[$n]["level"] = $newlevel;
             $return_items[$n]["class"] = "fa far fa-folder";
-            //$return_items[$n]["expandaction"] = "fa far fa-folder";
             $return_items[$n]["expandable"] = "true";            
             $tgtparams = array();
             $tgtparams["restypes"]  = $restype["ref"];
@@ -122,7 +115,6 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-F:new";
             $return_items[$n]["name"] = $lang["resource_type_field_new"];
-            $return_items[$n]["level"] = $newlevel;
             $return_items[$n]["class"] = "fa far fa-plus-circle";
             $return_items[$n]["expandable"] = "false";
             $tgtparams = array();
@@ -143,21 +135,15 @@ switch ($returntype)
                 {
                 continue;
                 }
-            //exit("level: " . $newlevel);
             // Create link based on parent and current restype
             $return_items[$n] = array();
-            //$return_items[$n]["type"] = "F";
             $return_items[$n]["id"] = $id . "-F:" . $field["ref"];
-            //$return_items[$n]["parent"] = $parent;
             $return_items[$n]["name"] = i18n_get_translated($field["title"]);
-            $return_items[$n]["level"] = $newlevel;
             $return_items[$n]["class"] = "fa far fa-folder";
-            //$return_items[$n]["expandaction"] = "fa far fa-folder";
             $return_items[$n]["expandable"] = "true";
             $return_items[$n]["link"] = "";
             $return_items[$n]["modal"] = false;
 
-            //$bb_html .= generate_browse_bar_item($newlevel, "restype", $restype["ref"], $restype["name"], $tgturl, "test", $classes=array());
             $n++;
             }
        
@@ -175,6 +161,26 @@ switch ($returntype)
             {
             $parent = NULL;
             }
+
+
+        $fielddata = get_resource_type_field($returnid);
+        if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
+            {
+            // Add 'create new' option
+            $return_items[$n] = array();
+            $return_items[$n]["id"] = $id . "-RT:new";
+            $return_items[$n]["name"] = $lang["add"];
+            $return_items[$n]["class"] = "fa far fa-plus-circle";
+            $return_items[$n]["expandable"] = "false";
+            $tgtparams = array();
+            $tgtparams["type"]  = "node";
+            $tgtparams["field"]  = $returnid;
+            $tgtparams["parent"]  = $parent;
+            $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
+            $return_items[$n]["link"] = $tgturl;
+            $return_items[$n]["modal"] = true;
+            $n++;
+            }
             
         $nodes = get_nodes($returnid, $parent, false);
         
@@ -184,7 +190,6 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
             $return_items[$n]["name"] = i18n_get_translated($node["name"]);
-            $return_items[$n]["level"] = $newlevel;
             $return_items[$n]["class"] = "fa far fa-tag";
             $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";
             
@@ -195,7 +200,6 @@ switch ($returntype)
             $return_items[$n]["modal"] = false;
             $n++;
             }
-        //echo  $bb_html;
 
         $return_data["success"] = TRUE;
         $return_data["items"] = $return_items;
@@ -208,6 +212,9 @@ switch ($returntype)
             // No field was found in browse_id
             exit("ERROR");
             }
+        
+        // TODO Add node
+        
         $nodes = get_nodes($browse_field, $returnid, false);
         
         foreach($nodes as $node)
@@ -215,9 +222,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
             $return_items[$n]["name"] = i18n_get_translated($node["name"]);
-            $return_items[$n]["level"] = $newlevel;
-            $return_items[$n]["class"] = "fa far fa-tag";
-            //$return_items[$n]["expandaction"] = "fa far fa-tag";            
+            $return_items[$n]["class"] = "fa far fa-tag";           
             $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";            
             $tgtparams = array();
             $tgtparams["search"]  = NODE_TOKEN_PREFIX . $node["ref"];
@@ -226,7 +231,6 @@ switch ($returntype)
             $return_items[$n]["modal"] = false;
             $n++;
             }
-        //echo  $bb_html;
 
         $return_data["success"] = TRUE;
         $return_data["items"] = $return_items;
@@ -234,6 +238,7 @@ switch ($returntype)
     
     case "FC":
         // Featured collection
+        
         $ftcol_subcats = get_theme_headers($ftcolcats);
         //exit(print_r($fcol_cats));
         $tgtparams = array();
@@ -242,61 +247,57 @@ switch ($returntype)
             $fclevel = ($x==0) ? "" : $x+1;
             $tgtparams["theme" . $fclevel] = $ftcolcats[$x];
             }
+            
+         if($collection_allow_creation && checkperm("h"))
+            {
+            // Add 'create new' option
+            $return_items[$n] = array();
+            $return_items[$n]["id"] = $id . "-FC:new";
+            $return_items[$n]["name"] = $lang["create"];
+            $return_items[$n]["class"] = "fa far fa-plus-circle";
+            $return_items[$n]["expandable"] = "false";
+            $newtgtparams = $tgtparams;
+            $newtgtparams["new"]  = "true";            
+            
+            $tgturl = generateURL($baseurl_short . "pages/themes.php", $newtgtparams);
+            $return_items[$n]["link"] = $tgturl;
+            $return_items[$n]["modal"] = true;
+            $n++;
+            }
                 
-//exit('<pre>' . print_r($ftcolcats) . '</pre>');
         foreach($ftcol_subcats as $subcat)
             {
-            //exit("level: " . $newlevel);
             // Create link based on parent 
             $return_items[$n] = array();
-            //$fc_id = convert_uuencode(json_encode(array_merge($fcol_arr, $fcol)));
-            //$fcoltgt = array_merge($ftcolcats,array($subcat));
             $return_items[$n]["id"] = $id . "-FC:" . base64_encode($subcat);
-            //$return_items[$n]["parent"] = $parent;
             $return_items[$n]["name"] = i18n_get_translated($subcat);
-            $return_items[$n]["level"] = $newlevel;
             $return_items[$n]["class"] = "fa far fa-folder";
-            //$return_items[$n]["expandaction"] = "fa far fa-folder";
-            $return_items[$n]["expandable"] = "true";
-                            
-            //$tgtparams["theme" . $fclevel] = $ftcolcats[$x];
+            $return_items[$n]["expandable"] = "true";                            
             $tgturl = generateURL($baseurl_short . "pages/themes.php", $tgtparams, array("theme" . ($x+1) => $subcat));
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;
-
-            //$bb_html .= generate_browse_bar_item($newlevel, "restype", $restype["ref"], $restype["name"], $tgturl, "test", $classes=array());
             $n++;
             }
-        //echo  $bb_html;
         
-        //print_r($ftcolcats);
         if(count($ftcolcats) > 0)
             {
             $fcols = get_themes($ftcolcats);
             foreach($fcols as $fcol)
                 {
-                //exit("level: " . $newlevel);
                 // Create link based on parent 
                 $return_items[$n] = array();
                 $return_items[$n]["id"] = $id . "-  C:" . $fcol["ref"];
-                //$return_items[$n]["parent"] = $parent;
                 $return_items[$n]["name"] = i18n_get_translated($fcol["name"]);
-                $return_items[$n]["level"] = $newlevel;
                 $return_items[$n]["class"] = "fa fa-th-large";
-                //$return_items[$n]["expandaction"] = "fa fa-th-large";
-                $return_items[$n]["expandable"] = "false";
-                
+                $return_items[$n]["expandable"] = "false";                
                 $tgtparams = array();
                 $tgtparams["search"] = "!collection" . $fcol["ref"];                            
                 $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
                 $return_items[$n]["link"] = $tgturl;
                 $return_items[$n]["modal"] = false;
-
-                //$bb_html .= generate_browse_bar_item($newlevel, "restype", $restype["ref"], $restype["name"], $tgturl, "test", $classes=array());
                 $n++;
                 }
-            }
-        
+            }        
 
         $return_data["success"] = TRUE;
         $return_data["items"] = $return_items;
@@ -304,20 +305,31 @@ switch ($returntype)
     
     case "C":
         // My collections
+        
+        if($collection_allow_creation && !checkperm("b"))
+            {
+            // Add 'create new' option
+            $return_items[$n] = array();
+            $return_items[$n]["id"] = $id . "-C:new";
+            $return_items[$n]["name"] = $lang["createnewcollection"];
+            $return_items[$n]["class"] = "fa far fa-plus-circle";
+            $return_items[$n]["expandable"] = "false";
+            $tgtparams = array();
+            $tgtparams["type"]  = "collection";
+            $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
+            $return_items[$n]["link"] = $tgturl;
+            $return_items[$n]["modal"] = true;
+            $n++;
+            }
+            
         $mycols = get_user_collections($userref);
-        //exit(print_r($fcol_cats));
-        $tgtparams = array();
         foreach($mycols as $mycol)
             {
-            //exit("level: " . $newlevel);
             // Create link based on parent 
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-C:" . $mycol["ref"];
-            //$return_items[$n]["parent"] = $parent;
             $return_items[$n]["name"] = i18n_get_translated($mycol["name"]);
-            $return_items[$n]["level"] = $newlevel;
             $return_items[$n]["class"] = "fa fa-th-large";
-            //$return_items[$n]["expandaction"] = "fa fa-th-large";
             $return_items[$n]["expandable"] = "false";
             
             $tgtparams = array();
@@ -325,15 +337,53 @@ switch ($returntype)
             $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;
-
-            //$bb_html .= generate_browse_bar_item($newlevel, "restype", $restype["ref"], $restype["name"], $tgturl, "test", $classes=array());
             $n++;
             }
         
 
         $return_data["success"] = TRUE;
         $return_data["items"] = $return_items;
-        // TODO Add dew collection
+    break;
+    
+    case "WF":
+        // Workflow states
+        $showstates = array();
+        for ($s=-2;$s<=3;$s++)
+            {
+            if(!checkperm("z" . $s))
+                {
+                $showstates[] = $s;
+                }
+            }
+
+        foreach ($additional_archive_states as $additional_archive_state)
+            {
+            if(!checkperm("z" . $additional_archive_state))
+                {
+                $showstates[] = $additional_archive_state;
+                }
+            }
+            
+        foreach($showstates as $showstate)
+            {
+            // Create link based on parent 
+            $return_items[$n] = array();
+            $return_items[$n]["id"] = $id . "-A:" . $showstate;
+            $return_items[$n]["name"] = isset($lang["status" . $showstate]) ? $lang["status" . $showstate] : $showstate;
+            $return_items[$n]["class"] = "fa far fa-folder";
+            $return_items[$n]["expandable"] = "false";
+            
+            $tgtparams = array();
+            $tgtparams["search"] = "";  
+            $tgtparams["archive"] = $showstate;                           
+            $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
+            $return_items[$n]["link"] = $tgturl;
+            $return_items[$n]["modal"] = false;
+            $n++;
+            }
+
+        $return_data["success"] = TRUE;
+        $return_data["items"] = $return_items;
     break;
     
     default:

@@ -14,6 +14,7 @@ if($newtype == "")
     exit($lang['error-permissiondenied']);
     }
 
+$extraparams = array();
 switch ($newtype)
     {
     case "resource_type":
@@ -29,6 +30,31 @@ switch ($newtype)
         $newtext = $lang["admin_resource_type_field_create"];
         $csrf_code = "admin_resource_type_fields";
     break;
+    
+    case "collection":
+        $targeturl = $baseurl_short . "pages/collection_manage.php";
+        $newparam = "name";
+        $newtext = $lang["createnewcollection"];
+        $csrf_code = "newcollection";
+    break;
+    
+    case "node":
+        $field = getval("field",0, true);
+        if($field < 1)
+            {
+            http_response_code(401);
+            exit($lang['error-permissiondenied']);
+            }            
+        $parent = getval("parent","");
+        $targeturl = $baseurl_short . "pages/admin/admin_manage_field_options.php";
+        $extraparams["submit_new_option"] = "add_new";
+        $extraparams["new_option_parent"] = $parent;
+        $extraparams["reload"] = "true";
+        $extraparams["field"] = $field;
+        $newparam = "new_option_name";
+        $newtext = $lang["add"];
+        $csrf_code = "newcollection";
+    break;
     }  
     
 ?>
@@ -37,7 +63,12 @@ switch ($newtype)
     <form action="<?php echo $targeturl; ?>" onsubmit="return CentralSpacePost(this,true);">
 	<div class="Question">
 		<label><?php echo $newtext; ?></label>
-        <?php generateFormToken($csrf_code); ?>
+        <?php generateFormToken($csrf_code); 
+        foreach($extraparams as $extraparam => $extravalue)
+            {
+            echo "<input type=hidden name='" . $extraparam  .  "' value='" . $extravalue . "'>";
+            }
+        ?>
 		<input type="text" class="medwidth" name="<?php echo $newparam ?>" id="<?php echo $newparam ?>" value="">
 		<div class="clearerleft"> </div>
 	</div>

@@ -650,6 +650,7 @@ if(!$collectionsearch)
             zIndex: 99000,
             helper: 'clone',
             revert: false,
+            scroll: false,
             start: function(event, ui)
                 {
                 InfoBoxEnabled = false;
@@ -701,6 +702,7 @@ if ($allow_reorder && $display!="list" && $order_by == "collection") {
             connectWith: '#CollectionSpace',
             appendTo: 'body',
             zIndex: 99000,
+            scroll: false,
             helper: function(event, ui)
                 {
                 //Hack to append the element to the body (visible above others divs), 
