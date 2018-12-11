@@ -45,12 +45,14 @@ switch ($newtype)
             http_response_code(401);
             exit($lang['error-permissiondenied']);
             }            
-        $parent = getval("parent","");
-        $targeturl = $baseurl_short . "pages/admin/admin_manage_field_options.php";
+        $parent_nodes = getval("parent_nodes","");
+        $targeturl = generateURL($baseurl_short . "pages/admin/admin_manage_field_options.php", array("field"=> $field));
         $extraparams["submit_new_option"] = "add_new";
+        $parents = explode(",",$parent_nodes);
+        $parent = end($parents);
         $extraparams["new_option_parent"] = $parent;
+        $extraparams["expand_nodes"] = $parent_nodes;
         $extraparams["reload"] = "true";
-        $extraparams["field"] = $field;
         $newparam = "new_option_name";
         $newtext = $lang["add"];
         $csrf_code = "newcollection";

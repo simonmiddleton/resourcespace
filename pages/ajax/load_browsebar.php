@@ -21,6 +21,7 @@ $id = getvalescaped('id', '');
 // Use id to work out search string for link and path to data requested e.g. to get field id for node expansion
 $target_search = array();
 $ftcolcats = array();
+$parent_nodes = array();
 $browse_field = 0;
 
 $browse_elements = explode("-", $id);
@@ -39,6 +40,10 @@ for($n=0;$n<$bcount;$n++)
         
         case "F":
             $browse_field = $browseid;
+        break;
+        
+        case "N":
+            $parent_nodes[] = $browseid;
         break;
                    
         case "FC":
@@ -162,13 +167,12 @@ switch ($returntype)
             $parent = NULL;
             }
 
-
         $fielddata = get_resource_type_field($returnid);
         if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
             {
             // Add 'create new' option
             $return_items[$n] = array();
-            $return_items[$n]["id"] = $id . "-RT:new";
+            $return_items[$n]["id"] = $id . "-N:new";
             $return_items[$n]["name"] = $lang["add"];
             $return_items[$n]["class"] = "fa far fa-plus-circle";
             $return_items[$n]["expandable"] = "false";
@@ -214,6 +218,24 @@ switch ($returntype)
             }
         
         // TODO Add node
+        $fielddata = get_resource_type_field($browse_field);
+        if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
+            {
+            // Add 'create new' option
+            $return_items[$n] = array();
+            $return_items[$n]["id"] = $id . "-N:new";
+            $return_items[$n]["name"] = $lang["add"];
+            $return_items[$n]["class"] = "fa far fa-plus-circle";
+            $return_items[$n]["expandable"] = "false";
+            $tgtparams = array();
+            $tgtparams["type"]  = "node";
+            $tgtparams["field"]  = $browse_field;
+            $tgtparams["parent_nodes"]  = implode(",",$parent_nodes);
+            $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
+            $return_items[$n]["link"] = $tgturl;
+            $return_items[$n]["modal"] = true;
+            $n++;
+            }
         
         $nodes = get_nodes($browse_field, $returnid, false);
         
@@ -371,6 +393,7 @@ switch ($returntype)
             $return_items[$n]["id"] = $id . "-A:" . $showstate;
             $return_items[$n]["name"] = isset($lang["status" . $showstate]) ? $lang["status" . $showstate] : $showstate;
             $return_items[$n]["class"] = "fa far fa-folder";
+            // TODO Add custom icon for each archive state
             $return_items[$n]["expandable"] = "false";
             
             $tgtparams = array();

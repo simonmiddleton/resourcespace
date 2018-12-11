@@ -24,6 +24,9 @@ $field_data = get_field($field);
 $node_ref   = getvalescaped('node_ref', '');
 $nodes      = array();
 
+// Array of nodes to expand immediately upon page load
+$expand_nodes = getval("expand_nodes","");
+
 $import_export_parent = getvalescaped('import_export_parent', null);
 
 $filter_by_name = unescape(getvalescaped('filter_by_name', ''));
@@ -973,6 +976,18 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
         jQuery('.node_parent_chosen_selector').trigger("chosen:updated");
         });
     <?php
+    
+    if($expand_nodes != "")
+        {
+        echo "jQuery(document).ready(function(){";
+        $toexpand = explode(",",$expand_nodes);
+        foreach($toexpand as $node)
+            {
+            echo "ToggleTreeNode('" . (int)$node . "','" . (int)$field . "');";
+            }
+        echo "});";
+        }
+    //
     }
     ?>
 </script>
