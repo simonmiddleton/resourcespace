@@ -33,7 +33,7 @@ $queue_index = isset($_REQUEST['queue_index']) ? intval($_REQUEST['queue_index']
 
 // When uploading, if there are any files in the queue that have similar names plus a suffix to distinguish between original
 // and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
-$attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '');
+$attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '') && (trim($alternative) == '');
 
 $redirecturl = getval("redirecturl","");
 if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
