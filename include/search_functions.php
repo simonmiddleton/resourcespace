@@ -1269,9 +1269,18 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
               AND geo_long < '" . escape_check($tr[1]) . "'
 
          AND $sql_filter GROUP BY r.ref ORDER BY $order_by";
+
         $searchsql=$sql_prefix . $sql . $sql_suffix;
 
-        return $returnsql ? $searchsql : sql_query(resource_table_joins_sql($joins, $searchsql), false, $fetchrows);
+        if($returnsql)
+            {
+            return $searchsql;
+            }
+
+        $searchsql = str_replace("ORDER BY {$order_by}", '', $searchsql);
+        $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
+
+        return sql_query(resource_table_joins_sql($joins, $searchsql, $resource_table_joins_order_by), false, $fetchrows);
         }
 
     # Colour search
