@@ -1023,8 +1023,16 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $order_by=str_replace("r.rating","rating",$order_by);
         
         $sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
+
+        if ($returnsql)
+            {
+            return $sql;    
+            }
         
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+        $sql = str_replace("ORDER BY {$order_by}", '', $sql);
+        $resource_table_joins_order_by = str_replace('r2.ref', 'ss.ref', $order_by);
+     
+        return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
         }
     
      # Collections containing resources
