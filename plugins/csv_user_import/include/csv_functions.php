@@ -76,7 +76,6 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
 
         $sql_update_col_val_pair = "`usergroup` = '" . escape_check($user_group_id) . "'";
         $cell_count = -1;
-        $email_required = false;
         $user_creation_data = array();
 
         foreach($headers as $header)
@@ -111,56 +110,60 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
                     }
                 }
 
-            // Create new user if we can process it and don't have any errors
-            if($processcsv && 0 === $error_count && 'username' === $header)
+            if('password' === $header && '' != $cell_value)
                 {
-                $new_user_id = new_user($cell_value);
-                if(isset($new_user_id))
+                $password_message = check_password($cell_value);
+                if($password_message !== true)
                     {
-                    array_push($messages, 'Info: Created new user "' . $cell_value . '" with ID "' . $new_user_id . '"');
+                    array_push($messages, 'Line ' . ($line_count + 1) . ': ' . $password_message);    
+                    $error_count++;
+
+                    continue;
                     }
-
-                continue;
-                }
-
-            $sql_update_col_val_pair .= ", `" . escape_check($header) . "` = ";
-            if('' === $cell_value && array_key_exists($header, $default_columns_values))
-                {
-                $sql_update_col_val_pair .= "'" . escape_check($default_columns_values[$header]) . "'";
-                }
-            else if('' === $cell_value)
-                {
-                $sql_update_col_val_pair .= 'NULL';
-                }
-            else
-                {
-                $sql_update_col_val_pair .= "'" . escape_check($cell_value) . "'";
                 }
             $user_creation_data[$header] = $cell_value;
             }
 
-        if($processcsv && 0 === $error_count && isset($new_user_id))
+        if($processcsv && 0 === $error_count)
             {
-            // Update record
-            if(isset($user_creation_data['password']) && $user_creation_data['password'] === '')
-                {
-                $sql_update_col_val_pair .= ", password = '" . make_password() . "'";
-                $email_required = true;
-                }
-            else if(!isset($user_creation_data['password']))
-                {
-                $sql_update_col_val_pair .= ", password = '" . make_password() . "'";
-                $email_required = true;
-                }
-            $sql_query = "UPDATE `user` SET {$sql_update_col_val_pair} WHERE `ref` = '{$new_user_id}'";
-            sql_query($sql_query);
+            // Create new user if we can process it and don't have any errors
+            $new_user_id = new_user($user_creation_data['username']);
+            array_push($messages, 'Info: Created new user "' . $user_creation_data['username'] . '" with ID "' . $new_user_id . '"');
 
-            if($email_required === true)
-                {
-                email_reset_link($user_creation_data['email']);
-                }
+            foreach ($user_creation_data as $key => $value) 
+            {
+                $sql_update_col_val_pair .= ", `" . escape_check($key) . "` = ";
+                if($value === '' && array_key_exists($key, $default_columns_values))
+                    {
+                    $sql_update_col_val_pair .= "'" . escape_check($default_columns_values[$key]) . "'";
+                    }
+                elseif($key === 'password' && $value != '')
+                    {
+                    $sql_update_col_val_pair .= "'" . hash('sha256', md5('RS' . $user_creation_data['username'] . $value)) . "'";
+                    }
+                elseif($value === '')
+                    {
+                    $sql_update_col_val_pair .= 'NULL';
+                    }
+                else
+                    {
+                    $sql_update_col_val_pair .= "'" . escape_check($value) . "'";
+                    }
             }
 
+            $reset_password_email_required = false;
+            if(!isset($user_creation_data['password']) || $user_creation_data['password'] === '')
+                {
+                $sql_update_col_val_pair .= ", password = '" . hash('sha256', md5('RS' . $user_creation_data['username'] . make_password())) . "'";
+                email_reset_link($user_creation_data['email']);
+                $reset_password_email_required = true;
+                }
+
+            // Update record
+            $sql_query = "UPDATE `user` SET {$sql_update_col_val_pair} WHERE `ref` = '{$new_user_id}'";
+            sql_query($sql_query);
+            if($reset_password_email_required === true){email_reset_link($user_creation_data['email']);}
+            }
         } /* end of reading each line found */
 
     fclose($file);
