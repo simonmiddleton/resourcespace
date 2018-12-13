@@ -3558,3 +3558,12 @@ $prefix_filename_string = "";
 $prefix_resource_id_to_filename = false;
 */
 $auto_generated_resource_title_format = '';
+
+// List of extensions for which ResourceSpace should generate the internal preview sizes.
+$non_image_types = array();
+
+// List of extensions supported by ghostscript
+$ghostscript_extensions = array('ps', 'pdf');
+
+// Generate only the internal preview sizes for any of the extensions found in $non_image_types list
+$non_image_types_generate_preview_only = true;
