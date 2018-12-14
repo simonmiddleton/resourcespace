@@ -16,7 +16,14 @@ if not os.path.isfile(IMAGE_PATH):
     print >> sys.stderr, "No test data file at '{}'".format(IMAGE_PATH)
     sys.exit(1)
 
-model = cv2.createLBPHFaceRecognizer()
+(major, minor, _) = cv2.__version__.split(".")
+
+if (major<3 and minor<7) or minor<3:
+    model = cv2.createLBPHFaceRecognizer()
+else:
+    cv2.face
+    model = cv2.face.createLBPHFaceRecognizer()
+
 model.load(LBPH_MODEL_PATH)
 
 testImage = cv2.imread(IMAGE_PATH, 0)
