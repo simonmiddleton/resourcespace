@@ -2064,7 +2064,7 @@ function new_user($newuser, $usergroup = 0)
     {
     global $lang,$home_dash;
     # Username already exists?
-    $c=sql_value("select count(*) value from user where username='$newuser'",0);
+    $c=sql_value("select count(*) value from user where username='" . escape_check($newuser) . "'",0);
     if ($c>0) {return false;}
     
     $cols = array("username");
