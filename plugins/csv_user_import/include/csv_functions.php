@@ -155,14 +155,13 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
             if(!isset($user_creation_data['password']) || $user_creation_data['password'] === '')
                 {
                 $sql_update_col_val_pair .= ", password = '" . hash('sha256', md5('RS' . $user_creation_data['username'] . make_password())) . "'";
-                email_reset_link($user_creation_data['email']);
                 $reset_password_email_required = true;
                 }
 
             // Update record
             $sql_query = "UPDATE `user` SET {$sql_update_col_val_pair} WHERE `ref` = '{$new_user_id}'";
             sql_query($sql_query);
-            if($reset_password_email_required === true){email_reset_link($user_creation_data['email']);}
+            if($reset_password_email_required === true){email_reset_link($user_creation_data['email'],true));}
             }
         } /* end of reading each line found */
 
