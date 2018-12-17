@@ -161,7 +161,7 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
             // Update record
             $sql_query = "UPDATE `user` SET {$sql_update_col_val_pair} WHERE `ref` = '{$new_user_id}'";
             sql_query($sql_query);
-            if($reset_password_email_required === true){email_reset_link($user_creation_data['email'],true));}
+            if($reset_password_email_required === true){email_reset_link($user_creation_data['email'],true);}
             }
         } /* end of reading each line found */
 
