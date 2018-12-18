@@ -6967,7 +6967,7 @@ function generateCSRFToken($session_id, $form_id)
         "form_id"   => $form_id
     ));
 
-    return rsEncrypt($data, $session_id);
+    return urlencode(rsEncrypt($data, $session_id));
     }
 
 /**
@@ -6992,7 +6992,7 @@ function isValidCSRFToken($token_data, $session_id)
         return false;
         }
 
-    $plaintext = rsDecrypt($token_data, $session_id);
+    $plaintext = rsDecrypt(urldecode($token_data), $session_id);
 
     if($plaintext === false)
         {
