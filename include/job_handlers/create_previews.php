@@ -24,7 +24,7 @@ $extension         = 'jpg';
 $previewonly       = false;
 $previewbased      = false;
 $alternative       = -1;
-$ignoremaxsize     = false;
+$ignoremaxsize     = true;
 $ingested          = false;
 $checksum_required = true;
 
