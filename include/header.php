@@ -166,6 +166,12 @@ if ($chosen_dropdowns || $chosen_dropdowns_collection)
         <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
         <?php
         }
+if($browse_bar)
+    {
+    ?>
+    <script src="<?php echo $baseurl_short ?>lib/js/browsebar_js.php" type="text/javascript"></script>
+    <?php
+    }
 ?>
 
 <script type="text/javascript">

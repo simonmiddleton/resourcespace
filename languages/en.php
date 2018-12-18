@@ -2727,5 +2727,7 @@ $lang["edit_copy_from_field"]       = "Copy data from field";
 
 
 /* Browse bar */
-$lang['browse_bar_text']            = "Browse";
-$lang['field_show_in_browse_bar']   = "Show in Browse Bar";
+$lang['browse_bar_text']                = "Browse";
+$lang['field_show_in_browse_bar']       = "Show in Browse Bar";
+$lang['error-sessionexpired']           = "Your session has expired or is otherwise invalid";
+$lang['error-invalid_resource_type']    = "Invalid resource type";

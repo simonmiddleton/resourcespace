@@ -2531,12 +2531,13 @@ function render_browse_bar()
     // script will replace %BROWSE_TYPE%, %BROWSE_EXPAND_CLASS%, %BROWSE_CLASS% %BROWSE_LEVEL%, %BROWSE_EXPAND%, %BROWSE_NAME%, %BROWSE_TEXT%, %BROWSE_ID%
     $bb_html .= "
             <div id='BrowseBarTemplate' style='display: none;'>
-            <div class='BrowseBarItem BrowseRowOuter' data-browse-id='%BROWSE_ID%' data-browse-parent='%BROWSE_PARENT%'  data-browse-loaded='0' data-browse-status='closed' data-browse-level='%BROWSE_LEVEL%' style='display: none;'>
-                <div class='BrowseBarItem BrowseRowInner' >
+            <div class='BrowseBarItem BrowseRowOuter %BROWSE_DROP%' data-browse-id='%BROWSE_ID%' data-browse-parent='%BROWSE_PARENT%'  data-browse-loaded='0' data-browse-status='closed' data-browse-level='%BROWSE_LEVEL%' style='display: none;'>
+                <div class='BrowseRowInner' >
                     %BROWSE_INDENT%
                     %BROWSE_EXPAND%
                     <div class='BrowseBarStructure %BROWSE_CLASS%'></div>
                     %BROWSE_TEXT%
+                    %BROWSE_REFRESH%
                 </div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->
             </div><!-- End of BrowseBarTemplate -->
@@ -2568,6 +2569,7 @@ function render_browse_bar()
         jQuery(document).ready(function()
             {
             ReloadBrowseBar();
+            BrowseBarDropInit();
             });
         </script>';
     }
@@ -2605,10 +2607,12 @@ function generate_browse_bar_item($id, $text)
     $html .= '<div class="BrowseRowInner" >';
 	
     $html .= '<div class="BrowseBarStructure">
-            <a href="#" class="browse_expand browse_closed" onclick="LoadBrowseElements(\'' . $id . '\');return false;" ></a>
+            <a href="#" class="browse_expand browse_closed" onclick="return LoadBrowseElements(\'' . $id . '\');" ></a>
             </div><!-- End of BrowseBarStructure -->';	
-	$html .= '&nbsp;' . $text;
-	
+    $html .= '&nbsp;' . $text;
+    
+    $html .= '<a href="#" class="browse_refresh" onclick="return LoadBrowseElements(\'' . $id . '\',true);" ><i class="fa fa-refresh reloadicon"></i></a>';	
+    
     $html .= "</div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->";
 	return $html;

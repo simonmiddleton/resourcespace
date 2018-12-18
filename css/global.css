@@ -1032,10 +1032,10 @@ a.HomePanel:hover {
     font-size: 100px;
 }
 
-.ui-state-active, .ui-state-hover{
-opacity: 0.5 !important;
-
+.ui-state-active, .ui-state-hover {
+    opacity: 0.5 !important;
 }
+
 div.video-js {margin:auto;}
 .video-thumbs .vjs-control-bar {font-size:7px;}
 .video-thumbs .vjs-control-bar .vjs-live-controls {display:none;}
@@ -1147,6 +1147,7 @@ div.video-js {margin:auto;}
 /* Drag & Drop */
 #CentralSpaceResourceClone, #CollectionSpaceClone {
     text-align: left;
+    opacity: 0.5 !important;
 }
 
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
@@ -1590,7 +1591,7 @@ select.MultiSelect:before {
     height: 700px;
     max-height:80%;
     margin-top: -20px;
-    transition: all 0.6s ease;
+    transition: all 0.3s ease;
     text-align: left;
     overflow: scroll;
 }
@@ -1620,9 +1621,12 @@ select.MultiSelect:before {
 }
 
 
-.BrowseBarRow{
+.BrowseBarItem.ui-droppable-hover a.BrowseBarLink{
+    border: 2px solid #FFF;
+}
+
+.BrowseBarInner{
     display: inline-block;
-    clear:left;
 }
 
 .BrowseBarStructure{
@@ -1694,4 +1698,14 @@ select.MultiSelect:before {
 .browse_expanded:after {
     content: "\f146";
     font-family: FontAwesome;
-    } 
+    }
+
+a.browse_refresh{
+    margin-left: 3px;
+    display:none;
+    float:left;
+    }
+
+.BrowseOpen .browse_refresh{
+    display:block;
+    }

@@ -202,6 +202,7 @@ switch ($returntype)
             $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams, $target_search);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;
+            $return_items[$n]["drop"] = true;
             $n++;
             }
 
@@ -251,6 +252,7 @@ switch ($returntype)
             $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams, $target_search);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;
+            $return_items[$n]["drop"] = true;
             $n++;
             }
 
@@ -308,7 +310,7 @@ switch ($returntype)
                 {
                 // Create link based on parent 
                 $return_items[$n] = array();
-                $return_items[$n]["id"] = $id . "-  C:" . $fcol["ref"];
+                $return_items[$n]["id"] = $id . "-C:" . $fcol["ref"];
                 $return_items[$n]["name"] = i18n_get_translated($fcol["name"]);
                 $return_items[$n]["class"] = "fa fa-th-large";
                 $return_items[$n]["expandable"] = "false";                
@@ -317,6 +319,7 @@ switch ($returntype)
                 $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
                 $return_items[$n]["link"] = $tgturl;
                 $return_items[$n]["modal"] = false;
+                $return_items[$n]["drop"] = true;
                 $n++;
                 }
             }        
@@ -359,6 +362,7 @@ switch ($returntype)
             $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;
+            $return_items[$n]["drop"] = true;
             $n++;
             }
         
