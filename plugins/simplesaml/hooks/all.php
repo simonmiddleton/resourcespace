@@ -244,8 +244,16 @@ function HookSimplesamlAllProvideusercredentials()
 		$displayname=trim($displayname);
 		debug("simplesaml: constructed fullname : "  . $displayname);
 
-		if(isset($attributes[$simplesaml_email_attribute][0])){$email=$attributes[$simplesaml_email_attribute][0];}
-		$groups=$attributes[$simplesaml_group_attribute];
+		if(isset($attributes[$simplesaml_email_attribute][0]))
+            {
+            $email = $attributes[$simplesaml_email_attribute][0];
+            }
+
+        $groups = array();
+        if(trim($simplesaml_group_attribute) != '' && isset($attributes[$simplesaml_group_attribute]))
+            {
+            $groups = $attributes[$simplesaml_group_attribute];
+            }
 
 		$password_hash= md5("RSSAML" . $scramble_key . $username);
 
