@@ -3067,7 +3067,7 @@ function collection_download_process_summary_notes(
     $size,
     &$zip)
     {
-    global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension;
+    global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension, $p;
     # Append summary notes about the completeness of the package, write the text file, add to archive, and schedule for deletion
     if($zipped_collection_textfile == true && $includetext == "true")
         {
@@ -3142,6 +3142,7 @@ function collection_download_process_csv_metadata_file(array $result, $id, $coll
     // Add link to file for use by tar to prevent full paths being included.
     if($collection_download_tar)
         {
+        global $p, $usertempdir, $filename;
         debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
         @symlink($csv_file, $usertempdir . DIRECTORY_SEPARATOR . 'Col-' . $collection . '-metadata-export.csv');
         }
