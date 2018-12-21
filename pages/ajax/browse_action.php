@@ -20,10 +20,31 @@ if(enforcePostRequest("browse_action"))
             $node       = getval("node",0,true);
             $nodeinfo = array();
             get_node($node,$nodeinfo);
-            // TODO Check field access
-            // TODO CHeck resource edit access
-            add_resource_nodes($resource,$nodes=array($node));
-            $return['status'] = 200;
+            $field = get_resource_type_field($nodeinfo["resource_type_field"]);
+
+            if(!get_edit_access($resource) || !metadata_field_edit_access($field) || !in_array($field["type"],$FIXED_LIST_FIELD_TYPES) 
+                {
+                $return['status'] = 400;
+                $return['message'] = $lang["error-permissiondenied"];
+                break;
+                }
+
+            // Check valid change
+            $curnodes = get_resource_nodes($resource, $field);
+            $multifields = array(FIELD_TYPE_CATEGORY_TREE,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,FIELD_TYPE_TEXT_BOX_MULTI_LINE);
+            $valid = count($curnodes) == 0 || in_array($field["type"],$multifields);
+
+            if($valid)
+                {
+                add_resource_nodes($resource,$nodes=array($node));
+                $return['status'] = 200;
+                }
+            else
+                {
+                $return['status'] = 400;
+                $return['message'] = $lang['error-invalid_browse_action'];
+                }
+
             break;
             
         case 'collection_add':

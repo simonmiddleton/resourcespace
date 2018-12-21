@@ -46,21 +46,21 @@ function renderBrowseItem(node, parent)
         //console.log("level " + node.level);
         //console.log("expandable " + node.expandable);
         //console.log("link " + node.link);
-    parentid = parent.attr('data-browse-id');
+    var parentid = parent.attr('data-browse-id');
     //curel = jQuery("[data-browse-id='" + browse_id + "']");
-    newlevel = parent.attr("data-browse-level");
+    var newlevel = parent.attr("data-browse-level");
     newlevel++;
 
         //console.log("parent: " + parentid);
    
-    indent = "<div class='BrowseBarStructure backline'>&nbsp;</div>";
+    var indent = "<div class='BrowseBarStructure backline'>&nbsp;</div>";
     var refreshel = "<a href='#' class='browse_refresh' onclick='LoadBrowseElements(\"%BROWSE_ID%\",true);return false;' ><i class='fa fa-refresh reloadicon'></i></a>";
     var refreshel = refreshel.replace("%BROWSE_ID%",node.id);
     //console.log("refreshel " + refreshel);
     if(node.expandable != "false")
         {
         //console.log('expandable');
-        expand = "<div class='BrowseBarStructure'><a href='#' class='browse_expand browse_closed' onclick='LoadBrowseElements(\"%BROWSE_ID%\");return false;'></a></div>";
+        var expand = "<div class='BrowseBarStructure'><a href='#' class='browse_expand browse_closed' onclick='LoadBrowseElements(\"%BROWSE_ID%\");return false;'></a></div>";
         //expand = expand.replace("%BROWSE_TYPE%",node.type);
         expand = expand.replace("%BROWSE_ID%",node.id);
         }
@@ -70,7 +70,7 @@ function renderBrowseItem(node, parent)
         expand = indent;    
         }
     
-    rowindent = "";
+    var rowindent = "";
     for (i = 0; i < newlevel; i++)
         { 
         rowindent += indent;
@@ -79,7 +79,7 @@ function renderBrowseItem(node, parent)
     //console.log("rowindent " + rowindent);
     //console.log("expand " + expand);
 
-    brwstmplt = jQuery('#BrowseBarTemplate').html();
+    var brwstmplt = jQuery('#BrowseBarTemplate').html();
     //brwstmplt = brwstmplt.replace("%BROWSE_TYPE%",node.type);
     brwstmplt = brwstmplt.replace("%BROWSE_DROP%", node.drop ? "BrowseBarDroppable" : "");
     brwstmplt = brwstmplt.replace("%BROWSE_NAME%",node.name);
@@ -101,7 +101,7 @@ function renderBrowseItem(node, parent)
         }
     else
         {
-        text = "<div class='BrowseBarLink' >&nbsp;%BROWSE_NAME%</div>";
+        var text = "<div class='BrowseBarLink' >&nbsp;%BROWSE_NAME%</div>";
         text = text.replace("%BROWSE_NAME%",node.name);  
         brwstmplt = brwstmplt.replace("%BROWSE_TEXT%",text);
         }
@@ -117,32 +117,59 @@ function renderBrowseItem(node, parent)
 
 function LoadBrowseElements(browse_id, reload)
     {
-	if (typeof reload=='undefined') {reload=false;}
+	if (typeof reload === 'undefined') {reload=false;}
+    
+    if(typeof b_loading === 'undefined')
+        {
+        b_loading = new Array();
+        }
+    
+    var loadindex = b_loading.indexOf(browse_id);
+    if (loadindex > -1)
+        {
+        // Already in progress
+        console.log("Already loading " + browse_id);
+        return true;
+        }
+    
+    if(typeof browse_toload === 'undefined')
+        {
+        browse_toload = new Array();
+        }
+
     console.log("LoadBrowseElements(" + browse_id +")");
-    curel = jQuery("[data-browse-id='" + browse_id + "']");
+    var curel = jQuery("[data-browse-id='" + browse_id + "']");
     
     if(!curel.length)
         {
         // Node not present, load parent first
         //console.log("item not present. Searching for parent");
-        item_elements = browse_id.split('-');
+        var item_elements = browse_id.split('-');
         item_elements.pop();
-        console.log("elements " + item_elements);
         if (item_elements.length  < 1)
             {            
             // This is the root node and is not present, give up
             return false;
             }
             
-        parentitem = item_elements.join('-');
+        var parentitem = item_elements.join('-');
         console.log("Loading parent item: " + parentitem);
+        
+        //Add this id so that it is loaded after the parent has completed
+        if(typeof browsepostload[parentitem] === "undefined")
+            {
+            browsepostload[parentitem] = new Array();
+            }
+
+        console.log("Adding " + browse_id + " to load after parent item: " + parentitem);
+        browsepostload[parentitem].push(browse_id);
         LoadBrowseElements(parentitem, true);
+        return true
         }
             
-    //curlevel =curel.attr("data-browse-level");
-    loaded =curel.attr("data-browse-loaded");
-    openclose = curel.find("a.browse_expand");
-    refreshicon = curel.find("a.browse_refresh i");
+    var loaded =curel.attr("data-browse-loaded");
+    var openclose = curel.find("a.browse_expand");
+    var refreshicon = curel.find("a.browse_refresh i");
 
     if(typeof browseopen === 'undefined')
         {
@@ -157,9 +184,9 @@ function LoadBrowseElements(browse_id, reload)
     //console.log("browse_id: " + browse_id);
     //console.log("loaded: " + loaded);
 
-    curstatus = curel.attr("data-browse-status");
+    var curstatus = curel.attr("data-browse-status");
     
-    if(curstatus=="open" && !reload)
+    if(curstatus == "open" && !reload)
         {
         // Hide the children and close
         jQuery("[data-browse-parent='" + browse_id + "']").slideUp();
@@ -179,7 +206,7 @@ function LoadBrowseElements(browse_id, reload)
         return true;
         }
         
-    if(loaded==1 && !reload)
+    if(loaded == 1 && !reload)
         {
         // Show the child items
         jQuery("[data-browse-parent='" + browse_id + "']").slideDown();
@@ -190,15 +217,20 @@ function LoadBrowseElements(browse_id, reload)
         return true;
         }
     
-
-    //console.log('"Adding spin to ' + refreshicon);
-    refreshicon.addClass('fa-spin');
-
+    b_loading.push(browse_id);
+    
+    if(typeof browsepostload === "undefined")
+        {
+        browsepostload = new Array();
+        }
+    if(typeof browsepostload[browse_id] === "undefined")
+        {
+        browsepostload[browse_id] = new Array();
+        }
 
     // Remove any child items before load/reload
     jQuery("[data-browse-parent|='" + browse_id + "']").remove();
     
-    //CentralSpaceShowLoading();
     //console.log("element: " + curel);
                     
     url = baseurl_short+"pages/ajax/load_browsebar.php";
@@ -210,68 +242,93 @@ function LoadBrowseElements(browse_id, reload)
                     };
     
     jQuery.ajax({
-            type:"GET",
-            url: url,
-            data: post_data,
-            dataType: "json",
-            async:false            
-            }).done(function(response, status, xhr)
+        type:"GET",
+        url: url,
+        data: post_data,
+        dataType: "json"     
+        }).done(function(response, status, xhr)
+            {
+            //console.log(status);
+            if (status=="401")
+                {				
+                alert(errorpageload  + xhr.status + " " + xhr.statusText + "<br>" + response);		
+                }
+            else
                 {
-                //console.log(status);
-                if (status=="401")
-                    {				
-                    alert(errorpageload  + xhr.status + " " + xhr.statusText + "<br>" + response);		
-                    }
-                else
-                    {
-                    // Load completed	
-                    // Parse response items
-                    //console.log(response);
-                    // Reverse so each can be appended in turn and still appear in correct order 
-                    response.items.reverse();
-                    response.items.forEach(function (item) {
-                        renderBrowseItem(item, curel);
-                    });
-                    
-                    // Show all immediate children
-                    jQuery("[data-browse-parent='" + browse_id + "']").slideDown();
-                    //console.log("loaded");
-                    }
-                
-                curel.attr("data-browse-status","open");
-                curel.attr("data-browse-loaded","1");
-
-                if (browseopen.indexOf(browse_id)==-1)
-                    {
-                    //console.log('Adding to browseopen: ' + browse_id);
-                    browseopen.push(browse_id);
-                    SetCookie('browseopen',browseopen);
-                    }
-
-                CentralSpaceHideLoading();
-
-                openclose.removeClass("browse_closed");
-                openclose.addClass("browse_expanded");
-                curel.addClass("BrowseOpen");
-                //console.log("removing spin from " + refreshicon);
-                refreshicon.removeClass("fa-spin");
+                // Load completed	
+                // Parse response items
+                //console.log(response);
+                // Reverse so each can be appended in turn and still appear in correct order 
+                response.items.reverse();
+                response.items.forEach(function (item) {
+                    renderBrowseItem(item, curel);
                 });
+                
+                // Show all immediate children
+                jQuery("[data-browse-parent='" + browse_id + "']").slideDown();
+                //console.log("loaded");
+                }
+            
+            curel.attr("data-browse-status","open");
+            curel.attr("data-browse-loaded","1");
 
-    BrowseBarDropInit();
+            if (browseopen.indexOf(browse_id)==-1)
+                {
+                //console.log('Adding to browseopen: ' + browse_id);
+                browseopen.push(browse_id);
+                SetCookie('browseopen',browseopen);
+                }
+
+            openclose.removeClass("browse_closed");
+            openclose.addClass("browse_expanded");
+            curel.addClass("BrowseOpen");
+            console.log("Finished loading " + browse_id);
+            refreshicon.removeClass("fa-spin");
+
+            var loadindex = b_loading.indexOf(browse_id);
+            if (loadindex > -1)
+                {
+                b_loading.splice(loadindex, 1);
+                }
+
+            var toloadindex = browse_toload.indexOf(browse_id);
+            if (toloadindex > -1)
+                {
+                browse_toload.splice(toloadindex, 1);
+                }
+
+            browsepostload[browse_id].forEach(function (childitem)
+                {
+                console.log('Finished loading ' + browse_id + ', loading child item ' + childitem);
+                LoadBrowseElements(childitem, true);
+                });
+                
+            if(browse_toload.length == 0)
+                {
+                console.log("Finished browse_bar reload, initialising drop"); 
+                BrowseBarDropInit();
+                }
+            else
+                {
+                    console.log("browse_toload length " + browse_toload.length);
+                console.log("Still to load: " + browse_toload);    
+                }
+
+            });
+
     return true;          
     }
     
 function ReloadBrowseBar()
     {
     //console.log(" reloading - " + browseopen);
-    browseopen = jQuery.cookie("browseopen") ? jQuery.cookie("browseopen").split(/,/) : new Array();
-    browseopen.sort();
-    browseopen.forEach(function (item)
+    var allopen = jQuery.cookie("browseopen") ? jQuery.cookie("browseopen").split(/,/) : new Array();
+    browse_toload = allopen;
+    allopen.forEach(function (item)
         {
         console.log("Reloading browse node = " + item);
         LoadBrowseElements(item, true);
         });
-    BrowseBarDropInit();
     }
 
 function BrowseBarDropInit()

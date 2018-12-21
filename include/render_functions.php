@@ -2564,12 +2564,11 @@ function render_browse_bar()
     echo '<script>
         var rsbrowse = "' . $browsejsvar . '";
         SetCookie("rsbrowse", "' . $browsejsvar . '");
-        var bloading = new Array();
+        b_loading = new Array();
         // Expand tree to previous state based on stored cookie
         jQuery(document).ready(function()
             {
             ReloadBrowseBar();
-            BrowseBarDropInit();
             });
         </script>';
     }

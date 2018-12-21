@@ -396,7 +396,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-A:" . $showstate;
             $return_items[$n]["name"] = isset($lang["status" . $showstate]) ? $lang["status" . $showstate] : $showstate;
-            $return_items[$n]["class"] = "fa far fa-folder";
+            $return_items[$n]["class"] = "fas fa-folder";
             // TODO Add custom icon for each archive state
             $return_items[$n]["expandable"] = "false";
             
