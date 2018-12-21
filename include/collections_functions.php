@@ -1573,6 +1573,7 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 	# Returns an array of resource references that can be used as theme category images.
 	global $theme_images_number;
 	global $theme_category_levels;
+	global $userpermissions;
 	# Resources that have been specifically chosen using the option on the collection comments page will be returned first based on order by.
 	
 	# have this hook return an empty array if a plugin needs to return a false value from function
@@ -1605,8 +1606,20 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 			{
 			$sqlselect="select r.ref, cr.use_as_theme_thumbnail, theme2, r.hit_count from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
             
-            // Add search sql so we honour permissions
+			// Add search sql so we honour permissions
+
+			// We are going to temporarily insert the "J" permission to limit the scope of the search for performance
+			// Save the permissions prior to insertion
+			$saved_userpermissions = $userpermissions;
+			// Insert the "J" permission if it is not already there
+			if (!checkperm("J"))
+				{
+				$userpermissions[]="J";
+				}
             $searchsql = do_search("",'','',0,-1,'desc',false,0,false,false,'',false,false,true,false,true);
+			// Restore saved permissions
+			$userpermissions = $saved_userpermissions;
+
 			$orderby=" order by ti.use_as_theme_thumbnail desc";
 			$orderby_theme='';
 			for ($n=2;$n<=count($themes)+1;$n++)
@@ -1937,14 +1950,41 @@ function collection_log($collection,$type,$resource,$notes = "")
 	
 	$modifiedcollognotes=hook("modifycollognotes","",array($type,$resource,$notes));
 	if ($modifiedcollognotes) {$notes=$modifiedcollognotes;}
-	
-	sql_query("insert into collection_log(date,user,collection,type,resource, notes) values (now()," . (($userref!="")?"'$userref'":"null") . ",'$collection','$type'," . (($resource!="")?"'$resource'":"null") . ", '$notes')");
+
+    $user = ($userref != "" ? "'" . escape_check($userref) . "'" : "NULL");
+    $collection = escape_check($collection);
+    $type = escape_check($type);
+    $resource = $resource != "" ? "'" . escape_check($resource) . "'" : "NULL";
+    $notes = escape_check($notes);
+
+	sql_query("
+        INSERT INTO collection_log (date, user, collection, type, resource, notes)
+             VALUES (now(), {$user}, '{$collection}', '{$type}', {$resource}, '{$notes}')");
 	}
     
-function get_collection_log($collection, $fetchrows=-1)
+function get_collection_log($collection, $fetchrows = -1)
 	{
-	global $view_title_field;	
-	return sql_query("select c.date,u.username,u.fullname,c.type,r.field".$view_title_field." title,c.resource, c.notes from collection_log c left outer join user u on u.ref=c.user left outer join resource r on r.ref=c.resource where collection='$collection' order by c.date desc",false,$fetchrows);
+    $sql = "
+                 SELECT c.date,
+                        u.username,
+                        u.fullname,
+                        c.type,
+                        (
+                            SELECT `value`
+                               FROM resource_data
+                              WHERE resource = r.ref
+                                AND resource_type_field = {$GLOBALS["view_title_field"]}
+                              LIMIT 1
+                        ) AS title,
+                        c.resource,
+                        c.notes
+                   FROM collection_log AS c
+        LEFT OUTER JOIN user AS u on u.ref = c.user
+        LEFT OUTER JOIN resource AS r on r.ref = c.resource
+                  WHERE collection = '$collection'
+               ORDER BY c.date DESC";
+
+	return sql_query($sql, false, $fetchrows);
 	}
 	
 function get_collection_videocount($ref)
@@ -3023,7 +3063,9 @@ function collection_download_process_summary_notes(
     $usertempdir,
     $filename,
     &$path,
-    array &$deletion_array)
+    array &$deletion_array,
+    $size,
+    &$zip)
     {
     global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension;
     # Append summary notes about the completeness of the package, write the text file, add to archive, and schedule for deletion

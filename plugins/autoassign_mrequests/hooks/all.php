@@ -15,10 +15,17 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
     $mapped_fields          = get_mapped_fields();
     $assigned_administrator = 0;
 
+    // Process each metadata field value pair for the resource being requested, looking for an assignee
     foreach ($resource_data as $r_data) {
+        // Is the metadata field the subject of a mapping
         if(in_array($r_data['ref'], $mapped_fields)) {
+            // Return the assignee for the mapping if one exists for the field value pair 
             $assigned_administrator = get_mapped_user_by_field($r_data['ref'], $r_data['value']);
-            break;
+            // If an assignee was found then terminate loop otherwise move on to next field value pair
+            If($assigned_administrator !== 0) 
+                {
+                break;
+                } 
         }
     }
 
@@ -26,6 +33,10 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
     if($assigned_administrator === 0 && isset($manage_request_admin)) {
         return false;
     }
+
+    // We get here if assigned admin is present and fallback is absent 
+    //             or assigned admin is present and fallback is present
+    //             or assigned admin is absent and fallback is absent
 
     $request_query = sprintf("
             INSERT INTO request(
@@ -61,7 +72,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
         }
 
     // If we've got this far, make sure auto assigning managed requests based on resource types won't overwrite this
-    unset($manage_request_admin);
+    $manage_request_admin=array();  // Initialise the global array instead of attempting to unset it which does not work
 
     return true;
 }
@@ -198,7 +209,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
     }
 
     // If we've got this far, make sure auto assigning managed requests based on resource types won't overwrite this
-    unset($manage_request_admin);
+    $manage_request_admin=array();  // Initialise the global array instead of attempting to unset it which does not work
 
     return true;
 }
@@ -208,12 +219,13 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     global $applicationname, $baseurl, $email_from, $email_notify, $lang, $username, $useremail, 
            $manage_request_admin, $notify_manage_request_admin, $resource_type_request_emails, $request_senduserupdates;
 
-    // Collection requests have already sent e-mails so skip this step
+    // Collection level requests have already been created and e-mails sent so skip this step
     if(!$manage_individual_requests) {
         // Because we are bypassing the end of managed_collection_request function we need to return true
         return true;
     }
 
+    // Create resource level request using SQL which was setup earlier in resource level hook or regular processing
     sql_query($request_query);
     $request = sql_insert_id();
 

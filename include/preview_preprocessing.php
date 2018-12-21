@@ -252,7 +252,11 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
             // check for nef -otherimage failure
             if ($extension=="nef"&&!filesize_unlimited($target)>0)
                 {
-                unlink($target);    
+                if(file_exists($target))
+                    {
+                    unlink($target);
+                    }
+
                 $bin_tag=" -previewimage ";
                 //2nd attempt
                 $cmd=$exiftool_fullpath.' -b '.$bin_tag.' '.escapeshellarg($file).' -w %d%f.jpg';
@@ -983,7 +987,24 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 # If a file has been created, generate previews just as if a JPG was uploaded.
 if (isset($newfile))
     {
-    create_previews($ref,false,"jpg",$previewonly,false,$alternative);  
-    }
+    if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension, $GLOBALS['non_image_types']))
+        {
+        $file_used_for_previewonly = get_resource_path($ref, true, "tmp", false, "jpg");
 
-?>
+        if(copy($newfile, $file_used_for_previewonly))
+            {
+            $previewonly = true;
+            debug("preview_preprocessing: changing previewonly = true for non-image file");
+            }
+        }
+
+    create_previews($ref,false,"jpg",$previewonly,false,$alternative);
+
+    if(
+        $GLOBALS['non_image_types_generate_preview_only']
+        && in_array($extension, $GLOBALS['non_image_types'])
+        && file_exists($file_used_for_previewonly))
+        {
+        unlink($file_used_for_previewonly);
+        }
+    }

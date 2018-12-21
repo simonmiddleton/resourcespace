@@ -318,4 +318,5 @@ LEFT JOIN user u ON u.ref=ml.mail_from
 WHERE
   date>=date('[from-y]-[from-m]-[from-d]') and 
   date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
+ORDER BY ml.ref DESC
 "

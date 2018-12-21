@@ -16,6 +16,48 @@ if ($on_upload || $ref<0)
 		<div class="CollapsibleSection" id="UploadOptionsSection">
 		<?php
 		}
+
+
+    if($on_upload && $upload_then_edit && $resource_type_force_selection)
+        {
+        ?>
+        <div id="question_resourcetype" class="Question">
+            <label for="resourcetype"><?php echo "{$lang["resourcetype"]}"; ?></label>
+            <select id="resourcetype"
+                    class="stdwidth"
+                    name="resource_type"
+                    onchange="CentralSpacePost(document.getElementById('UploadPluploadForm'), true);">
+                <option value='' selected><?php echo $lang["select"]; ?></option>
+            <?php
+            $types                = get_resource_types();
+            $shown_resource_types = array();
+
+            for($n = 0; $n < count($types); $n++)
+                {
+                // skip showing a resource type that we do not to have permission to change to (unless it is currently set to that). Applies to upload only
+                if((checkperm("XU{$types[$n]['ref']}") || in_array($types[$n]['ref'], $hide_resource_types)))
+                    {
+                    continue;
+                    }
+
+                $shown_resource_types[] = $types[$n]['ref'];
+                
+                $selected = '';
+                if(isset($resource_type) && $resource_type == $types[$n]['ref'])
+                    {
+                    $selected = 'selected';
+                    }
+                ?>
+                <option value="<?php echo $types[$n]['ref']; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($types[$n]["name"]); ?></option>
+                <?php
+                }
+            ?>
+            </select>
+            <div class="clearerleft"></div>
+        </div>
+        <?php
+        }
+
 	if($on_upload || !$embedded_data_user_select)
 	    {
 	    if ($metadata_read)

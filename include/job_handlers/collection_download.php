@@ -168,11 +168,6 @@ for($n = 0; $n < count($collection_resources); $n++)
     if($GLOBALS['use_zip_extension'])
         {
         $zip->addFile($p,$filename);
-        update_zip_progress_file("file ".$zip->numFiles);
-        }
-    else
-        {
-        update_zip_progress_file("file ".$n);
         }
 
     collection_download_log_resource_ready($tmpfile, $deletion_array, $ref);
@@ -204,7 +199,9 @@ collection_download_process_summary_notes(
     $usertempdir,
     $filename,
     $path,
-    $deletion_array);
+    $deletion_array,
+    $size,
+    $zip);
 
 collection_download_process_csv_metadata_file(
     $collection_resources,

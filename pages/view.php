@@ -1101,9 +1101,8 @@ else
 <?php } /* End of replacerenderinnerresourcepreview hook */ ?>
 <?php
 
-
-
-hook("renderbeforerecorddownload");
+$disable_flag = (hook('disable_flag_for_renderbeforerecorddownload') || ($use_pdfjs_viewer && $resource['file_extension'] == 'pdf') );
+hook("renderbeforerecorddownload", '', array($disable_flag));
 
 ?>
 <?php if (!hook("renderresourcedownloadspace")) { ?>

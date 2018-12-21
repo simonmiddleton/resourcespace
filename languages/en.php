@@ -2344,6 +2344,8 @@ $lang["manageowndashinto"]="Manage dash tiles available for your dash. You can a
 $lang['manage_all_user_dash_tiles_note'] = 'Note: Tiles shown with a red border are hidden to the users. Admins see them as there are other tiles available but hidden from these users';
 $lang['manage_dash_tiles'] = 'Manage dash tiles';
 $lang['view_tiles'] = 'View tiles';
+$lang['upgrade_available_title'] = 'Upgrade available';
+$lang['upgrade_available_text'] = 'Click for more information about the new version';
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
@@ -2534,6 +2536,7 @@ $lang["action-add-new"] = "Add new";
 $lang["action-submit-button-label"] = "Submit";
 $lang["slideshow_use_static_image"] = "Use a single random image from the set (image will not change unless page is reloaded)";
 $lang["slideshow-image"] = "slideshow image";
+$lang["manage-slideshow-instructions"] = "A slideshow image can be shown in multiple areas on the system. To select other locations, please tick the check boxes below. You can also click on the preview of an image and see details of the resource it is linked to (if any).";
 
 $lang["emailcollectionrequest"] = "[img_gfx/titles/title.gif]<br />The following user has made a request:<br />Username: [username]<br />User email: [useremail]<br /><br />Reason for request: [requestreason]<br /><br />Click the link below to view the request.<br /><a href='[requesturl]'>[requesturl]</a>";
 $lang["emailusercollectionrequest"] = "[img_gfx/titles/title.gif]<br />Your resource request has been submitted for approval and will be looked at shortly.:<br /><br />Reason for request: [requestreason]<br /><br />Click the link below to view the requested resources.<br /><a href='[url]'>[url]</a>";
@@ -2684,6 +2687,8 @@ $lang["byte_prefix_mode_decimal"]="Use decimal for file sizes (1000 multiples, K
 $lang['error_upload_resource_alternatives_batch'] = 'When using this feature (see $upload_alternatives_suffix) your original file MUST be the first one in the queue!';
 $lang['error_upload_resource_not_found'] = 'A resource ID could not be found!';
 $lang['error_user_registration_opt_in'] = 'Please check the box to indicate your consent';
+$lang['error_resource_id_non_numeric'] = 'ERROR - Resource IDs should be numeric please check your submission';
+$lang['error_resource_not_image_extension'] = 'ERROR - Selected resource is not an image type file extension';
 
 $lang['image_quality_100'] = "Maximum";
 $lang['image_quality_92'] = "Print";
@@ -2724,6 +2729,9 @@ $lang["email_auto_digest_inactive"] = "This is a summary of your unread messages
 $lang["email_digest_disable"]       = "You can disable these notifications by logging in and adjusting your user preferences at the link below:-";
 $lang["user_pref_inactive_digest"]  = "Send me a daily email with all unread notifications if not logged on for than %%DAYS%% days?";
 $lang["edit_copy_from_field"]       = "Copy data from field";
+
+$lang['home_page'] = "Home page";
+$lang['login_word'] = "Login";$lang["edit_copy_from_field"]       = "Copy data from field";
 
 
 /* Browse bar */

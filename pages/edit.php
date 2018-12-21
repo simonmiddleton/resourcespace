@@ -399,7 +399,6 @@ if(($embedded_data_user_select && getval("exif_option","")=="custom") || isset($
 if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted","")!="" && !$resetform && getval("copyfrom","")==""))
     {
     hook("editbeforesave"); 
-    
 	if(!$multiple)
         {
         if(($ref < 0 || $upload_review_mode) && !$is_template && $metadata_template_mandatory && $metadatatemplate == 0)

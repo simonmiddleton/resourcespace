@@ -2,7 +2,7 @@
 
 function HookVideo_spliceViewAfterresourceactions()
 	{
-	global $videosplice_resourcetype,$resource,$lang,$config_windows,$resourcetoolsGT;
+	global $videosplice_resourcetype,$resource,$lang,$config_windows,$resourcetoolsGT,$baseurl,$ref;
 	
 	if ($resource["resource_type"]!=$videosplice_resourcetype) {return false;} # Not the right type.
 
@@ -53,9 +53,11 @@ function HookVideo_spliceViewAfterresourceactions()
 			
 			# Establish FFMPEG location.
 			$ffmpeg_fullpath = get_utility_path("ffmpeg");
+			$use_avconv = false;
+			if(strpos($ffmpeg_fullpath, 'avconv') == true){$use_avconv = true;}
 
 			# Work out source/destination
-			global $ffmpeg_preview_extension,$ref;
+			global $ffmpeg_preview_extension;
 			if (file_exists(get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension)))
 				{
 				$source=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",-1,false);
@@ -98,14 +100,14 @@ function HookVideo_spliceViewAfterresourceactions()
 				$source_temp = get_temp_dir() . "/vs_s" . $ref . $source_ext;
 				$source_temp = str_replace("/", "\\", $source_temp);
 				copy($source, $source_temp);
-				$shell_exec_cmd = $ffmpeg_fullpath . " -y -i " . escapeshellarg($source_temp) . " -ss $ss -t $t " . escapeshellarg($target_temp);
+				$shell_exec_cmd = $ffmpeg_fullpath . " -y -i " . escapeshellarg($source_temp) . " -ss $ss -t $t " . ($use_avconv ? '-strict experimental -acodec copy ' : '') . escapeshellarg($target_temp);
 				$output = exec($shell_exec_cmd);
 				rename($target_temp, $target);
 				unlink($source_temp);
 				}
 			else
 				{
-				$shell_exec_cmd = $ffmpeg_fullpath . " -y -i " . escapeshellarg($source) . " -ss $ss -t $t " . escapeshellarg($target);
+				$shell_exec_cmd = $ffmpeg_fullpath . " -y -i " . escapeshellarg($source) . " -ss $ss -t $t " . ($use_avconv ? '-strict experimental -acodec copy ' : '') . escapeshellarg($target);
 				$output = exec($shell_exec_cmd);
 				}
 			#echo "<p>" . $shell_exec_cmd . "</p>";
@@ -130,9 +132,8 @@ function HookVideo_spliceViewAfterresourceactions()
 		}
 
 ?>
-<li><a href="#" onClick="
-if (document.getElementById('videocut').style.display=='block') {document.getElementById('videocut').style.display='none';} else {document.getElementById('videocut').style.display='block';} return false;"><?php echo "<i class='fa fa-scissors'></i>&nbsp;" . $lang["action-cut"]?></a></li>
-<form id="videocut" style="<?php if (!(isset($preview) && $preview)) { ?>display:none;<?php } ?>padding:10px 0 3px 0;" method="post">
+<li><a href="#" onClick="if (document.getElementById('videocut').style.display=='block') {document.getElementById('videocut').style.display='none';} else {document.getElementById('videocut').style.display='block';} return false;"><?php echo "<i class='fa fa-scissors'></i>&nbsp;" . $lang["action-cut"]?></a></li>
+<form id="videocut" style="<?php if (!(isset($preview) && $preview)) { ?>display:none;<?php } ?>padding:10px 0 3px 0;" action="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo urlencode($ref) ?>" method="post">
 <?php generateFormToken("videocut"); ?>
 <table>
 <tr>

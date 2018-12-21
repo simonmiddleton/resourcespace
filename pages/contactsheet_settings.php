@@ -368,7 +368,7 @@ if($contactsheet_use_field_templates)
 		else
 			{
 			?>
-        	<select id="selected_contact_sheet_fields" class="shrtwidth" name="selected_contact_sheet_fields[]" multiple>
+        	<select id="selected_contact_sheet_fields" class="shrtwidth MultiSelect" name="selected_contact_sheet_fields[]" multiple>
 				<?php
 				foreach($available_contact_sheet_fields as $contact_sheet_field)
 					{

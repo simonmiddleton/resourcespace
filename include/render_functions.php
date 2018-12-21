@@ -2216,7 +2216,7 @@ function renderCallToActionTile($link)
         <a href="<?php echo $link; ?>" onclick="return ModalLoad(this, true, true);" class="">
             <div class="FeaturedSimpleTileContents">
                 <div class="FeaturedSimpleTileText">
-                    <h2><span class='fa fa-plus-circle fa-2x'></span></h2>
+                    <h2><span class='fas fa-plus-circle'></span></h2>
                 </div>
             </div>
         </a>
@@ -2362,8 +2362,7 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
 */
 function render_share_options($collectionshare=true, $ref, $emailing=false)
     {
-    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url;
-    global $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string;   
+    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
     
     if(!hook('replaceemailaccessselector')): ?>
         <div class="Question" id="question_access">
@@ -2565,6 +2564,7 @@ function render_browse_bar()
     echo '<script>
         var rsbrowse = "' . $browsejsvar . '";
         SetCookie("rsbrowse", "' . $browsejsvar . '");
+        var bloading = new Array();
         // Expand tree to previous state based on stored cookie
         jQuery(document).ready(function()
             {
@@ -2602,7 +2602,7 @@ archive states -  child is metadata field
 */    
 function generate_browse_bar_item($id, $text)
 	{
-	global $browse_bar_elements;
+	//global $browse_bar_elements;
     $html = '<div class="BrowseBarItem BrowseRowOuter" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
     $html .= '<div class="BrowseRowInner" >';
 	
@@ -2611,7 +2611,7 @@ function generate_browse_bar_item($id, $text)
             </div><!-- End of BrowseBarStructure -->';	
     $html .= '&nbsp;' . $text;
     
-    $html .= '<a href="#" class="browse_refresh" onclick="return LoadBrowseElements(\'' . $id . '\',true);" ><i class="fa fa-refresh reloadicon"></i></a>';	
+    $html .= '<a href="#" class="browse_refresh" onclick="return LoadBrowseElements(\'' . $id . '\',true);" ><i class="fas fa-sync reloadicon"></i></a>';	
     
     $html .= "</div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->";

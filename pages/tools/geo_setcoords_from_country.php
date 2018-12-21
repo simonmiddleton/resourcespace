@@ -6,7 +6,7 @@ $codes=build_codes();
 
 # Find country field
 $country_field=sql_query("select ref,type from resource_type_field where name='country'");
-if ($country_field[0]["ref"]=="") 
+if (count($country_field) == 0 || $country_field[0]["ref"] == "") 
 	{
 	echo "Country field not found. Must have a field with shorthand name set to 'country'.";
 	} 
@@ -69,10 +69,11 @@ else
         
 function update_country_coords($refs,$latlong) 
 {
-sql_query("update resource set geo_lat='" . $latlong[0] . "', geo_long='" . $latlong[1] . "' " . 
-"where ref in('" . join("','",$refs) . "')");
-// echo "update resource set geo_lat='" . $latlong[0] . "', geo_long='" . $latlong[1] . "' " . 
-//      "where ref in('" . join("','",$refs) . "')";
+if(count($latlong)==2)
+    {
+    sql_query("update resource set geo_lat='" . $latlong[0] . "', geo_long='" . $latlong[1] . "' " . 
+    "where ref in('" . join("','",$refs) . "')");
+    }
 }
 
 function fetch_country_coords($country_name,$codes,$coords)

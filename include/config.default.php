@@ -188,6 +188,9 @@ $header_link=true;
 # Header size class. Options are HeaderSmall, HeaderMid, HeaderLarge.
 $header_size="HeaderMid";
 
+# Header includes username to right of user menu icon
+$header_include_username=false;
+
 # Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
 
 # Set this to true in order for the top bar to remain present when scrolling down the page
@@ -1839,9 +1842,6 @@ $delete_requires_password=false;
 
 # Offline processes (e.g. staticsync and create_previews.php) - for process locking, how old does a lock have to be before it is ignored?
 $process_locks_max_seconds=60*60*4; # 4 hours default.
-
-// The number of threads to be used for create_previews.php
-$max_forks = 3;
 
 # Zip files - the contents of the zip file can be imported to a text field on upload.
 # Requires 'unzip' on the command path.
@@ -3538,28 +3538,48 @@ $user_purge_disable = false;
 // Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
 $inactive_user_disable_days = 0;
 
+/*
+Ability to generate an automated title using a specific format. Allows to generate a title using a combination between the 
+resource title, its ID and file extension.
+
+Supported placeholders:
+ - %title -> replaced with the value of the title field of the resource. This allows 
+ - %resource -> replaced with the resource ID
+ - %extension -> replaces the actual file extension
+
+Example:
+    $auto_generated_resource_title_format = '%title-%resource.%extension';
+    $auto_generated_resource_title_format = '2018-2019P - %resource.%extension';
+    $auto_generated_resource_title_format = 'Photos - %resource.%extension';
+
+To get the title as the filename on download, the following settings should be set:
+$download_filename_field = 8; # Set this to the $view_title_field value
+$prefix_filename_string = "";
+$prefix_resource_id_to_filename = false;
+*/
+$auto_generated_resource_title_format = '';
+
+// List of extensions for which ResourceSpace should generate the internal preview sizes.
+$non_image_types = array();
+
+// List of extensions supported by ghostscript
+$ghostscript_extensions = array('ps', 'pdf');
+
+// Generate only the internal preview sizes for any of the extensions found in $non_image_types list
+$non_image_types_generate_preview_only = true;
+
 // Browse bar 
 $browse_bar = true;
 $browse_bar_workflow=true;
 
-$browse_bar_types = array();
-$browse_bar_types["folder"] 	= array();
-$browse_bar_types["resource"] 	= array("icon" => "far fa-file-text-o");
-
-// Array to navigate via JS
-// Tags -> Restype -> Node
-// Featured-> Name (hash) -> name2 (hash)
-// Collections -> collection ref
-//
-
 // TODO - Replace with CSS after syntax
-$browse_bar_elements = array();
-$browse_bar_elements["R"]        = array("icon" => "far fa-folder");
-$browse_bar_elements["FC"]    = array("icon" => "far fa-folder");
-$browse_bar_elements["C"] = array("icon" => "far fa-folder");
-$browse_bar_elements["WF"]    = array("icon" => "far fa-folder");
-$browse_bar_elements["S"]      = array("icon" => "far fa-file-text-o");
-$browse_bar_elements["RT"]     = array("icon" => "far fa-file-text-o");
-$browse_bar_elements["N"]        = array("icon" => "far fa-file-text-o");
-$browse_bar_elements["F"]       = array("icon" => "fas fa-tags");
+/* $browse_bar_elements = array();
+$browse_bar_elements["R"]   = array("icon" => "far fa-folder");
+$browse_bar_elements["FC"]  = array("icon" => "far fa-folder");
+$browse_bar_elements["C"]   = array("icon" => "far fa-folder");
+$browse_bar_elements["WF"]  = array("icon" => "far fa-folder");
+$browse_bar_elements["S"]   = array("icon" => "far fa-file-text-o");
+$browse_bar_elements["RT"]  = array("icon" => "far fa-file-text-o");
+$browse_bar_elements["N"]   = array("icon" => "far fa-file-text-o");
+$browse_bar_elements["F"]   = array("icon" => "fas fa-tags"); */
 

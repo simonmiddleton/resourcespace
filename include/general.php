@@ -2065,7 +2065,7 @@ function new_user($newuser, $usergroup = 0)
     {
     global $lang,$home_dash;
     # Username already exists?
-    $c=sql_value("select count(*) value from user where username='$newuser'",0);
+    $c=sql_value("select count(*) value from user where username='" . escape_check($newuser) . "'",0);
     if ($c>0) {return false;}
     
     $cols = array("username");
@@ -3640,6 +3640,7 @@ function check_password($password)
     # Returns true if it does, or a descriptive string if it doesn't.
     global $lang, $password_min_length, $password_min_alpha, $password_min_uppercase, $password_min_numeric, $password_min_special;
 
+    trim($password);
     if (strlen($password)<$password_min_length) {return str_replace("?",$password_min_length,$lang["password_not_min_length"]);}
 
     $uppercase="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -4368,18 +4369,67 @@ $strName = substr($strName, 0, -strlen($ext));
 return $strName;
 }
 
+/**
+* Returns a list of fields with refs matching the supplied field refs.
+* 
+* @param array $field_refs Array of field refs
+* 
+* @return array
+*/
 function get_fields($field_refs)
     {
-    # Returns a list of fields with refs matching the supplied field refs.
-    if (!is_array($field_refs)) {print_r($field_refs);exit(" passed to get_fields() is not an array. ");}
-    $return=array();
-    $fields=sql_query("select *, ref, name, title, type, order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, display_as_dropdown,tooltip_text,display_condition, onchange_macro from resource_type_field where  ref in ('" . join("','",$field_refs) . "') order by order_by");
-    # Apply field permissions
-    for ($n=0;$n<count($fields);$n++)
+    if(!is_array($field_refs))
         {
-        if (metadata_field_view_access($fields[$n]["ref"]))
-            {$return[]=$fields[$n];}
+        trigger_error("\$field_refs passed to get_fields() is not an array.");
         }
+
+    $fields=sql_query("
+        SELECT *,
+               ref,
+               name,
+               title,
+               type,
+               order_by,
+               keywords_index,
+               partial_index,
+               resource_type,
+               resource_column,
+               display_field,
+               use_for_similar,
+               iptc_equiv,
+               display_template,
+               tab_name,
+               required,
+               smart_theme_name,
+               exiftool_field,
+               advanced_search,
+               simple_search,
+               help_text,
+               display_as_dropdown,
+               tooltip_text,
+               display_condition,
+               onchange_macro
+          FROM resource_type_field
+         WHERE ref IN ('" . join("','",$field_refs) . "')
+      ORDER BY order_by");
+
+    $return = array();
+    foreach($fields as $field)
+        {
+        if(metadata_field_view_access($field['ref']))
+            {
+            $return[] = $field;
+            }
+        }
+
+    /*for($n = 0; $n < count($fields); $n++)
+        {
+        if(metadata_field_view_access($fields[$n]["ref"]))
+            {
+            $return[]=$fields[$n];
+            }
+        }*/
+
     return $return;
     }
 
@@ -6273,26 +6323,29 @@ if(!function_exists("array_column"))
 * The format of the returned array should be: 
 * Array
 * (
-*   [0] => Array
+*     [0] => Array
 *         (
-*             [ref] => 3
-*             [file_path] => /var/www/include/../gfx/homeanim/gfx/1.jpg
-*             [checksum] => 1450107521
-*             [link] => http://localhost/pages/view.php?ref=6019
-*             [link_file_path] => /var/www/include/../gfx/homeanim/gfx/1.txt
+*             [ref] => 1
+*             [resource_ref] => 
+*             [homepage_show] => 1
+*             [featured_collections_show] => 0
+*             [login_show] => 1
+*             [file_path] => /var/www/filestore/system/slideshow_1bf4796ac6f051a/1.jpg
+*             [checksum] => 1539875502
 *         )
-*   [1] => Array
-*        (
-*            [ref] => 4
-*            [file_path] => /var/www/include/../gfx/homeanim/gfx/2.jpg
-*            [checksum] => 2900215034
-*        )
-*   [2] => Array
-*        (
-*            [ref] => 5
-*            [file_path] => /var/www/include/../gfx/homeanim/gfx/3.jpg
-*            [checksum] => 4350322559
-*        )
+* 
+*     [1] => Array
+*         (
+*             [ref] => 4
+*             [resource_ref] => 19
+*             [homepage_show] => 1
+*             [featured_collections_show] => 0
+*             [login_show] => 0
+*             [file_path] => /var/www/filestore/system/slideshow_1bf4796ac6f051a/4.jpg
+*             [checksum] => 1542818794
+*             [link] => http://localhost/?r=19
+*         )
+* 
 * )
 * 
 * @return array
@@ -6301,42 +6354,39 @@ function get_slideshow_files_data()
     {
     global $baseurl, $homeanim_folder;
 
-    $dir = dirname(__FILE__) . '/../' . $homeanim_folder;
-    $d   = scandir($dir);
-    sort($d, SORT_NUMERIC);
+    $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $filecount       = 0;
-    $checksum        = 0;
+    $query = "SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow";
+    $slideshow_records = sql_query($query);
+
     $slideshow_files = array();
 
-    foreach($d as $file)
+    foreach($slideshow_records as $slideshow)
         {
-        if(preg_match("/[0-9]+\.(jpg)$/", $file))
+        $slideshow_file = $slideshow;
+
+        $image_file_path = "{$homeanim_folder_path}/{$slideshow['ref']}.jpg";
+
+        if(!file_exists($image_file_path) || !is_readable($image_file_path))
             {
-            $slideshow_file_id = substr($file, 0, -4);
-            $checksum += filemtime($dir . '/' . $file);
-
-            $slideshow_files[$filecount]["ref"] = $slideshow_file_id;
-            $slideshow_files[$filecount]['file_path'] = $dir . '/' . $file;
-            $slideshow_files[$filecount]['checksum']  = $checksum;
-
-            $linkref        = '';
-            $linkfile       = substr($file, 0, (strlen($file) - 4)) . '.txt';
-            $link_file_path = $dir . '/' . $linkfile;
-
-            if(file_exists($link_file_path))
-                {
-                $linkref    = file_get_contents($link_file_path);
-                $linkaccess = get_resource_access($linkref);
-                if('' !== $linkaccess && (0 == $linkaccess || 1 == $linkaccess))
-                    {
-                    $slideshow_files[$filecount]['link'] = $baseurl . "/pages/view.php?ref=" . $linkref;
-                    $slideshow_files[$filecount]['link_file_path'] = $link_file_path;
-                    }
-                }
-            
-            $filecount++;
+            continue;
             }
+
+        $slideshow_file['checksum'] = filemtime($image_file_path);
+        $slideshow_file['file_path'] = $image_file_path;
+        $slideshow_file['file_url'] = generateURL(
+            "{$baseurl}/pages/download.php",
+            array(
+                'slideshow' => $slideshow['ref'],
+                'nc' => $slideshow_file['checksum'],
+            ));
+
+        if((int) $slideshow['resource_ref'] > 0)
+            {
+            $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
+            }
+
+        $slideshow_files[] = $slideshow_file;
         }
 
     return $slideshow_files;
@@ -6919,7 +6969,7 @@ function generateCSRFToken($session_id, $form_id)
         "form_id"   => $form_id
     ));
 
-    return rsEncrypt($data, $session_id);
+    return urlencode(rsEncrypt($data, $session_id));
     }
 
 /**
@@ -6940,13 +6990,15 @@ function isValidCSRFToken($token_data, $session_id)
 
     if($token_data === "")
         {
+        debug("CSRF: INVALID - no token data");
         return false;
         }
 
-    $plaintext = rsDecrypt($token_data, $session_id);
+    $plaintext = rsDecrypt(urldecode($token_data), $session_id);
 
     if($plaintext === false)
         {
+        debug("CSRF: INVALID - unable to decrypt token data");
         return false;
         }
 
@@ -6956,6 +7008,8 @@ function isValidCSRFToken($token_data, $session_id)
         {
         return true;
         }
+
+    debug("CSRF: INVALID - session ID did not match: {$csrf_data['session']} vs {$session_id}");
 
     return false;
     }
@@ -7081,7 +7135,9 @@ function findDuplicates(array $data, $search)
 */
 function metadata_field_view_access($field)
     {
-    return ((PHP_SAPI == 'cli' && !defined("RS_TEST_MODE")) || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
+    return (
+        (PHP_SAPI == 'cli' && !defined("RS_TEST_MODE"))
+        || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
     }
 
 
@@ -7125,4 +7181,115 @@ function check_share_password($key,$password,$cookie)
         }
     
     return true;   
+    }
+
+
+/**
+* Ability to get a list of users based on their permissions. See get_notification_users() for more information.
+* 
+* IMPORTANT: the lookup is done on an "all or nothing" basis.
+* 
+* @uses get_notification_users()
+* 
+* @param string|array $condition A specific user type (e.g SYSTEM_ADMIN) OR an array of permissions
+* 
+* @return array
+*/
+function get_users_from_permission_lookup($condition)
+    {
+    return get_notification_users($condition);
+    }
+
+
+/**
+* Check if ResourceSpace is up to date or an upgrade is available
+* 
+* @uses get_sysvar()
+* @uses set_sysvar()
+* 
+* @return boolean
+*/
+function is_resourcespace_upgrade_available()
+    {
+    $cvn_cache = get_sysvar('centralised_version_number');
+    $last_cvn_update = get_sysvar('last_cvn_update');
+
+    $centralised_version_number = $cvn_cache;
+
+    if($last_cvn_update !== false)
+        {
+        $cvn_cache_interval = DateTime::createFromFormat('Y-m-d H:i:s', $last_cvn_update)->diff(new DateTime());
+
+        if($cvn_cache_interval->days >= 1)
+            {
+            $centralised_version_number = false;
+            }
+        }
+
+    if($centralised_version_number === false)
+        {
+        $centralised_version_number = file_get_contents('https://www.resourcespace.com/current_release.txt');
+
+        if($centralised_version_number === false)
+            {
+            return false; 
+            }
+
+        set_sysvar('centralised_version_number', $centralised_version_number);
+        set_sysvar('last_cvn_update', date('Y-m-d H:i:s'));
+        }
+
+    $get_version_details = function($version)
+        {
+        $version_data = explode('.', $version);
+
+        if(empty($version_data))
+            {
+            return array();
+            }
+
+        $return = array(
+            'major' => isset($version_data[0]) ? (int) $version_data[0] : 0,
+            'minor' => isset($version_data[1]) ? (int) $version_data[1] : 0,
+            'revision' => isset($version_data[2]) ? (int) $version_data[2] : 0,
+        );
+
+        if($return['major'] == 0)
+            {
+            return array();
+            }
+
+        return $return;
+        };
+
+    $product_version = trim(str_replace('SVN', '', $GLOBALS['productversion']));
+    $product_version_data = $get_version_details($product_version);
+
+    $cvn_data = $get_version_details($centralised_version_number);
+
+    if(empty($product_version_data) || empty($cvn_data))
+        {
+        return false;
+        }
+
+    if($product_version_data['major'] != $cvn_data['major'] && $product_version_data['major'] < $cvn_data['major'])
+        {
+        return true;
+        }
+    else if(
+        $product_version_data['major'] == $cvn_data['major']
+        && $product_version_data['minor'] != $cvn_data['minor']
+        && $product_version_data['minor'] < $cvn_data['minor'])
+        {
+        return true;
+        }
+    else if(
+        $product_version_data['major'] < $cvn_data['major']
+        && $product_version_data['minor'] != $cvn_data['minor']
+        && $product_version_data['minor'] < $cvn_data['minor'])
+        {
+        return true;
+        }
+
+    return false;
     }

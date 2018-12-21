@@ -14,6 +14,7 @@ include __DIR__ . "/../include/google_vision_functions.php";
 logScript("Google Vision plugin - processing_existing.php script...");
 
 $collections = array();
+$ignore_resource_type_constraint = false;
 
 $cli_short_options = 'c:';
 $cli_long_options  = array('collection:');
@@ -48,6 +49,9 @@ if(empty($collections))
     }
 else
     {
+    $ignore_resource_type_constraint = true;
+    $resources = array();
+
     foreach($collections as $collection)
         {
         if(!is_numeric($collection))
@@ -56,12 +60,16 @@ else
             continue;
             }
 
-        $resources = get_collection_resources($collection);
+        $collection_resources = get_collection_resources($collection);
+        $resources = array_merge($resources, $collection_resources);
         }
+
+    $resources = array_unique($resources);
     }
 
-foreach ($resources as $resource)
+foreach($resources as $resource)
     {
     logScript("Processing resource #{$resource}");
-    google_visionProcess($resource, true);
+
+    google_visionProcess($resource, true, $ignore_resource_type_constraint);
     }
