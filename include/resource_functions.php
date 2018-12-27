@@ -4200,14 +4200,18 @@ function get_page_count($resource,$alternative=-1)
     # also handle alternative file multipage previews by switching $resource array if necessary
     # $alternative specifies an actual alternative file
     $ref=$resource['ref'];
+
+    $ref_escaped = escape_check($ref);
+    $alternative_escaped = escape_check($alternative);
+
     if ($alternative!=-1)
         {
-        $pagecount=sql_value("select page_count value from resource_alt_files where ref=$alternative","");
+        $pagecount=sql_value("select page_count value from resource_alt_files where ref='{$alternative_escaped}'","");
         $resource=get_alternative_file($ref,$alternative);
         }
     else
         {
-        $pagecount=sql_value("select page_count value from resource_dimensions where resource=$ref","");
+        $pagecount=sql_value("select page_count value from resource_dimensions where resource='{$ref_escaped}'","");
         }
     if (!empty($pagecount)) { return $pagecount; }
     # or, populate this column with exiftool or image magick (for installations with many pdfs already
@@ -4220,7 +4224,7 @@ function get_page_count($resource,$alternative=-1)
 	else if ($alternative==-1)
 		{
 		# some unoconv files are not pdfs but this needs to use the auto-alt file
-		$alt_ref=sql_value("select ref value from resource_alt_files where resource=$ref and unoconv=1","");
+		$alt_ref=sql_value("select ref value from resource_alt_files where resource='{$ref_escaped}' and unoconv=1","");
 		$file=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alt_ref);
 		}
 	else
@@ -4251,11 +4255,11 @@ function get_page_count($resource,$alternative=-1)
 
 	if ($alternative!=-1)
 		{
-		sql_query("update resource_alt_files set page_count='$pages' where ref=$alternative");
+		sql_query("update resource_alt_files set page_count='$pages' where ref='{$alternative_escaped}'");
 		}
 	else
 		{
-		sql_query("update resource_dimensions set page_count='$pages' where resource=$ref");
+		sql_query("update resource_dimensions set page_count='$pages' where resource='{$ref_escaped}'");
 		}
 	return $pages;
 	}
