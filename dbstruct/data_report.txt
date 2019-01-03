@@ -50,7 +50,7 @@ group by k.ref order by Searches desc
 "
 3,"Resource download summary","
 select r.ref 'Resource ID',
-( SELECT rd.value FROM resource_data rd WHERE rd.resource = r.ref AND rd.resource_type_field = 8 LIMIT 1 ) AS 'Title', 
+view_title_field_subselect AS 'Title', 
 count(*) Downloads 
 from resource_log rl
 join resource r on rl.resource=r.ref
@@ -60,7 +60,7 @@ group by r.ref order by 'Downloads' desc
 "
 4,"Resource views","
 select r.ref 'Resource ID',
-( SELECT rd.value FROM resource_data rd WHERE rd.resource = r.ref AND rd.resource_type_field = 8 LIMIT 1 ) AS 'Title', 
+view_title_field_subselect AS 'Title', 
 sum(count) Views 
 from resource r,daily_stat d 
 where r.ref=d.object_ref 
@@ -88,7 +88,7 @@ group by r.ref order by Views desc;
 "
 5,"Resources sent via e-mail","
 select r.ref 'Resource ID',
-( SELECT rd.value FROM resource_data rd WHERE rd.resource = r.ref AND rd.resource_type_field = 8 LIMIT 1 ) AS 'Title', 
+view_title_field_subselect AS 'Title', 
 sum(count) Sent from resource r,daily_stat d 
 where r.ref=d.object_ref and d.activity_type='E-mailed resource'
 # --- date ranges
@@ -114,7 +114,7 @@ group by r.ref order by Sent desc;
 "
 6,"Resources added to collection","
 select r.ref 'Resource ID',
-( SELECT rd.value FROM resource_data rd WHERE rd.resource = r.ref AND rd.resource_type_field = 8 LIMIT 1 ) AS 'Title', 
+view_title_field_subselect AS 'Title', 
 sum(count) Added 
 from resource r,daily_stat d 
 where r.ref=d.object_ref and d.activity_type='Add resource to collection'
@@ -144,7 +144,7 @@ select rl.date 'Date / Time',
 concat(u.username,' (',u.fullname,' )') 'Created By User',
 g.name 'User Group',
 r.ref 'Resource ID',
-( SELECT rd.value FROM resource_data rd WHERE rd.resource = rl.resource AND rd.resource_type_field = 8 LIMIT 1 ) AS 'Title'
+view_title_field_subselect AS 'Title' 
 from resource_log rl
 join resource r on r.ref=rl.resource
 left outer join user u on rl.user=u.ref
@@ -155,7 +155,7 @@ order by rl.date;
 "
 8,"Resources with zero downloads","
 select r.ref 'Resource ID',
-( SELECT rd.value FROM resource_data rd WHERE rd.resource = r.ref AND rd.resource_type_field = 8 LIMIT 1 ) AS 'Title'
+view_title_field_subselect AS 'Title', 
 from resource r where r.ref not in 
 (
 select object_ref from daily_stat
@@ -184,7 +184,7 @@ AND r.ref>0;
 "
 9,"Resources with zero views","
 select r.ref 'Resource ID',
-( SELECT rd.value FROM resource_data rd WHERE rd.resource = r.ref AND rd.resource_type_field = 8 LIMIT 1 ) AS 'Title'
+view_title_field_subselect AS 'Title' 
 from resource r where r.ref not in 
 (
 SELECT object_ref FROM daily_stat d
@@ -229,7 +229,7 @@ select rl.date 'Date / Time',
 concat(u.username,' (',u.fullname,' )') 'Downloaded By User',
 g.name 'User Group',
 r.ref 'Resource ID',
-( SELECT rd.value FROM resource_data rd WHERE rd.resource = rl.resource AND rd.resource_type_field = 8 LIMIT 1 ) AS 'Title',
+view_title_field_subselect AS 'Title', 
 rt.name 'Resource Type'
 from resource_log rl
 join resource r on r.ref=rl.resource
@@ -254,7 +254,7 @@ order by username;
 "
 13,"Expired Resources","
 select distinct r.ref 'Resource ID',
-( SELECT rd.value FROM resource_data rd WHERE rd.resource = r.ref AND rd.resource_type_field = 8 LIMIT 1 ) AS 'Title',
+view_title_field_subselect AS 'Title', 
 resource_data.value 'Expires' 
 from resource r
 join resource_data on r.ref=resource_data.resource 
@@ -272,7 +272,7 @@ rl.date 'Date / Time',
 concat(u.username,' (',u.fullname,' )') 'Created By User',
 g.name 'User Group',
 r.ref 'Resource ID',
-( SELECT rd.value FROM resource_data rd WHERE rd.resource = r.ref AND rd.resource_type_field = 8 LIMIT 1 ) AS 'Title'
+view_title_field_subselect AS 'Title' 
 
 from resource_log rl
 join resource r on r.ref=rl.resource
