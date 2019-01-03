@@ -217,6 +217,8 @@ function LoadBrowseElements(browse_id, reload)
         return true;
         }
     
+
+    refreshicon.addClass("fa-spin");
     b_loading.push(browse_id);
     
     if(typeof browsepostload === "undefined")
@@ -368,7 +370,7 @@ function BrowseBarDropInit()
                         }
                     else
                         {
-                        //styledalert('<?php echo $lang['error-invalid_resource_type']; ?>');
+                        styledalert('<?php echo $lang['error-invalid_resource_type']; ?>');
                         browse_err = document.createElement( "div" ),
                         jQuery(browse_err).html('<?php echo $lang["save-error"] ?>');
                         jQuery(browsetarget).append(browse_err);
@@ -393,27 +395,33 @@ function BrowseAction(post_data)
     { 
     //var post_data = data;
     console.log(post_data);
-    CentralSpaceShowLoading();
+    //CentralSpaceShowLoading();
     url = baseurl_short+"pages/ajax/browse_action.php";
     jQuery.ajax({
             type:'POST',
             url: url,
             data: post_data,
-            async:false            
+            dataType: "json", 
+            async:true            
 			}).done(function(response, status, xhr)
                 {
-                if (status=="error")
-                    {				
-                    actionspace.html(errorpageload  + xhr.status + " " + xhr.statusText + "<br>" + response);		
-                    }
-                else
-                    {
-                    // Load completed	
-                    console.log('OK');
-                  }
-                CentralSpaceHideLoading();
+                // Load completed	
+                console.log('OK');
                 return true;
-                });
-	return false; 
+                }).fail(
+                    function(xhr, textStatus, errorThrown)
+                    {		
+                    console.log(xhr);
+                    if(xhr.status===400)
+                        {    
+                        //message = xhr.responseJSON.message;	
+                        styledalert('<?php echo $lang["error"]?>',xhr.responseJSON.message);
+                        }
+                    else
+                        {
+                        styledalert('<?php echo $lang["error"]?>',statusText);
+                        }
+            	    return false; 	
+                    });
     //console.log("Dropped resource #" + resource_id  + " on " +  browsetarget);
     }

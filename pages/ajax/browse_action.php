@@ -22,7 +22,7 @@ if(enforcePostRequest("browse_action"))
             get_node($node,$nodeinfo);
             $field = get_resource_type_field($nodeinfo["resource_type_field"]);
 
-            if(!get_edit_access($resource) || !metadata_field_edit_access($field) || !in_array($field["type"],$FIXED_LIST_FIELD_TYPES) 
+            if(!get_edit_access($resource) || !metadata_field_edit_access($nodeinfo["resource_type_field"]) || !in_array($field["type"],$FIXED_LIST_FIELD_TYPES))
                 {
                 $return['status'] = 400;
                 $return['message'] = $lang["error-permissiondenied"];
@@ -30,7 +30,7 @@ if(enforcePostRequest("browse_action"))
                 }
 
             // Check valid change
-            $curnodes = get_resource_nodes($resource, $field);
+            $curnodes = get_resource_nodes($resource, $nodeinfo["resource_type_field"]);
             $multifields = array(FIELD_TYPE_CATEGORY_TREE,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,FIELD_TYPE_TEXT_BOX_MULTI_LINE);
             $valid = count($curnodes) == 0 || in_array($field["type"],$multifields);
 

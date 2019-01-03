@@ -2739,4 +2739,4 @@ $lang['browse_bar_text']                = "Browse";
 $lang['field_show_in_browse_bar']       = "Show in Browse Bar";
 $lang['error-sessionexpired']           = "Your session has expired or is otherwise invalid";
 $lang['error-invalid_resource_type']    = "Invalid resource type";
-$lang['error-invalid_browse_action']    = "Invalid action. Please check existign resource data";
+$lang['error-invalid_browse_action']    = "Invalid action. Please check existing resource data";
