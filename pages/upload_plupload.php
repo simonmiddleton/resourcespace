@@ -757,8 +757,8 @@ if ($_FILES)
 							$filename_field=getvalescaped("filename_field","",true);
 							if($filename_field!="")
 								{
-								$target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename'","");
-								if(count($target_resource)==1 && !resource_file_readonly($target_resource))
+								$target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename' AND resource>'$fstemplate_alt_threshold'","");
+								if(count($target_resource)==1 && !resource_file_readonly($target_resource[0]))
 									{
 									// A single resource has been found with the same filename
 									daily_stat("Resource upload",$target_resource[0]);
