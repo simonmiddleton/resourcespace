@@ -73,7 +73,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
                         {
                         $statename=$lang['status' . $additional_archive_state];
                         }
-                    sql_query("insert into archive_states set code='$additional_archive_state', name='$statename'");
+                    sql_query("insert into archive_states set code='" . escape_check($additional_archive_state) . "', name='" . escape_check($statename) . "'");
                     $states[$additional_archive_state]['name']=$lang['status' . $additional_archive_state];
                     $states[$additional_archive_state]['fixed']=true;
                     }
@@ -85,7 +85,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
 		$statename=$lang['status' . $a];
 		if (!isset($states[$a]))
 		   {
-		   sql_query("insert into archive_states set code='$a', name='" . escape_check($statename) . "'");  
+		   sql_query("insert into archive_states set code='" . escape_check($a) . "', name='" . escape_check($statename) . "'");  
 		   } 
 		$states[$a]['name']=$lang['status' . $a];
 		$states[$a]['fixed']=true;		                   
@@ -97,8 +97,8 @@ if (!function_exists("rse_workflow_get_archive_states")){
 if (!function_exists("rse_workflow_delete_state")){
     function rse_workflow_delete_state($state,$newstate)
         {		
-        sql_query("update resource set archive='$newstate' where archive='$state'");
-        sql_query("delete from archive_states where code='$state'");
+        sql_query("update resource set archive='" . escape_check($newstate) . "' where archive='" . escape_check($state) . "'");
+        sql_query("delete from archive_states where code='" . escape_check($state) . "'");
         return true;  
         }
     } 
