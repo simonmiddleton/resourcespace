@@ -999,6 +999,29 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
     $joins = ($return_refs_only === false ? get_resource_table_joins() : array());
 
+    $fetchrows_sql_limit = '';
+    if(is_array($fetchrows))
+        {
+        $fetchrows_offset = 0;
+        $fetchrows_rows   = (int) $GLOBALS['default_perpage'];
+
+        if(isset($fetchrows['offset']))
+            {
+            $fetchrows_offset = (int) $fetchrows['offset'];
+            }
+
+        if(isset($fetchrows['rows']))
+            {
+            $fetchrows_rows = (int) $fetchrows['rows'];
+            }
+
+        $fetchrows_sql_limit = sql_limit($fetchrows_offset, $fetchrows_rows);
+        }
+    else if(is_numeric($fetchrows) && $fetchrows != -1)
+        {
+        $fetchrows_sql_limit = sql_limit(0, (int) $fetchrows);
+        }
+
     # View Last
     if (substr($search,0,5)=="!last") 
         {
@@ -1022,7 +1045,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         # Fix the ORDER BY for this query (special case due to inner query)
         $order_by=str_replace("r.rating","rating",$order_by);
         
-        $sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
+        $sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 {$fetchrows_sql_limit} ORDER BY $order_by" . $sql_suffix;
 
         if ($returnsql)
             {
@@ -1031,7 +1054,14 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         $sql = str_replace("ORDER BY {$order_by}", '', $sql);
         $resource_table_joins_order_by = str_replace('r2.ref', 'ss.ref', $order_by);
-     
+
+        $found_rows_sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
+        sql_calc_found_rows(
+            sql_query(
+                resource_table_joins_sql($joins, $found_rows_sql, $resource_table_joins_order_by),
+                false,
+                $fetchrows));
+
         return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
         }
     
