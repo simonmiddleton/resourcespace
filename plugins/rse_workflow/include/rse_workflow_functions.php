@@ -85,7 +85,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
 		$statename=$lang['status' . $a];
 		if (!isset($states[$a]))
 		   {
-		   sql_query("insert into archive_states set code='$a', name='$statename'");  
+		   sql_query("insert into archive_states set code='$a', name='" . escape_check($statename) . "'");  
 		   } 
 		$states[$a]['name']=$lang['status' . $a];
 		$states[$a]['fixed']=true;		                   
