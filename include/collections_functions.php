@@ -928,10 +928,10 @@ function get_theme_headers($themes=array())
 			$selecting="theme".($x+2);
 		}	
 		if (isset($themes[$x]) && $themes[$x]!="" && $x==0) {
-			$sql.=" and (theme LIKE '%:" . escape_check($themes[$x]) . "' or theme='" . escape_check($themes[$x]) . "')";
+			$sql.=" and theme LIKE '%" . escape_check($themes[$x]) . "'";
 		}
 		else if (isset($themes[$x])&& $themes[$x]!=""&& $x!=0) {
-			$sql.=" and (theme".($x+1)." LIKE '%:" . escape_check($themes[$x]) . "' or theme='" . escape_check($themes[$x]) . "')";
+			$sql.=" and theme".($x+1)." LIKE '%" . escape_check($themes[$x]) . "'";
 		}
 	}	
 	$return=array();
