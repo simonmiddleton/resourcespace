@@ -1218,8 +1218,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     }
                 }   
             }   
-        $searchsql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource $colcustperm  WHERE c.collection='" . $collection . "' AND $colcustfilter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
-
+        $searchsql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource $colcustperm  WHERE c.collection='" . $collection . "' AND $colcustfilter GROUP BY r.ref ORDER BY $order_by {$fetchrows_sql_limit}" . $sql_suffix;
 
         if($return_disk_usage)
             {
@@ -1249,6 +1248,18 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $result = sql_query($searchsql,false,$fetchrows);
             }
+
+        $searchsql_found_rows = 
+            $sql_prefix
+            . "
+                  SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, {$select}
+                    FROM resource r
+                    JOIN collection_resource c ON r.ref = c.resource {$colcustperm}
+                   WHERE c.collection = '{$collection}'
+                     AND {$colcustfilter}
+                GROUP BY r.ref "
+            . $sql_suffix;
+        sql_calc_found_rows(sql_query($searchsql_found_rows));
 
         hook('beforereturnresults', '', array($result, $archive));
 
