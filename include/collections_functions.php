@@ -928,13 +928,14 @@ function get_theme_headers($themes=array())
 			$selecting="theme".($x+2);
 		}	
 		if (isset($themes[$x]) && $themes[$x]!="" && $x==0) {
-			$sql.=" and theme LIKE '%" . escape_check($themes[$x]) . "'";
+			$sql.=" and (theme LIKE '%:" . escape_check($themes[$x]) . "' or theme='" . escape_check($themes[$x]) . "')";
 		}
 		else if (isset($themes[$x])&& $themes[$x]!=""&& $x!=0) {
-			$sql.=" and theme".($x+1)." LIKE '%" . escape_check($themes[$x]) . "'";
+			$sql.=" and (theme".($x+1)." LIKE '%:" . escape_check($themes[$x]) . "' or theme='" . escape_check($themes[$x]) . "')";
 		}
 	}	
 	$return=array();
+	
 	$themes=sql_query("select * from collection where public=1 and $selecting is not null and length($selecting)>0 $sql");
 	for ($n=0;$n<count($themes);$n++)
 		{		

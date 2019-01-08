@@ -322,7 +322,7 @@ if ( (($extension=="pages") || ($extension=="numbers") || (!isset($unoconv_path)
    ----------------------------------------
 */
 global $unoconv_extensions;
-if (in_array($extension,$unoconv_extensions) && isset($unoconv_path) && !isset($newfile))
+if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoconv_path) && !isset($newfile))
     {
     global $config_windows;
     $unocommand=$unoconv_path . "/unoconv";
