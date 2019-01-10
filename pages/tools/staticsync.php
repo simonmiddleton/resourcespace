@@ -246,7 +246,7 @@ function ProcessFolder($folder)
 			if ($modified_extension !== false) { $extension = $modified_extension; }
 			
             /* Below Code Adapted  from CMay's bug report */
-            global $banned_extensions;
+            global $banned_extensions, $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
             # Check to see if extension is banned, do not add if it is banned
             if(array_search($extension, $banned_extensions)){continue;}
             /* Above Code Adapted from CMay's bug report */
@@ -263,6 +263,28 @@ function ProcessFolder($folder)
                     $done[$shortpath]["processed"]=true;
                     $done[$shortpath]["modified"]=date('Y-m-d H:i:s',time());
                     continue;
+                    }
+                # Check for duplicate files
+                if($file_upload_block_duplicates)
+                    {
+                    # Generate the ID
+                    if ($file_checksums_50k)
+                        {
+                        # Fetch the string used to generate the unique ID
+                        $use=filesize_unlimited($fullpath) . "_" . file_get_contents($fullpath,null,null,0,50000);
+                        $checksum=md5($use);
+                        }
+                    else
+                        {
+                        $checksum=md5_file($fullpath);
+                        }  
+                    $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
+                    if(count($duplicates)>0)
+                        {
+                        debug("STATICSYNC ERROR- duplicate file matches resource " . implode(",",$duplicates));
+                        $errors[] = "Duplicate file matches resource " . implode(",",$duplicates);
+                        continue;                
+                        }
                     }
                 $count++;
                 echo "Processing file: $fullpath" . PHP_EOL;
@@ -879,15 +901,15 @@ if (!$staticsync_ingest)
     # Remove any themes that are now empty as a result of deleted files.
     sql_query("DELETE FROM collection WHERE theme IS NOT NULL AND LENGTH(theme) > 0 AND 
                 (SELECT count(*) FROM collection_resource cr WHERE cr.collection=collection.ref) = 0;");
-
-    if(count($errors) > 0)
-        {
-        echo PHP_EOL . "ERRORS: -" . PHP_EOL;
-        echo implode(PHP_EOL,$errors);
-        }
-        
-    echo "...Complete" . PHP_EOL;
     }
+
+if(count($errors) > 0)
+    {
+    echo PHP_EOL . "ERRORS: -" . PHP_EOL;
+    echo implode(PHP_EOL,$errors) . PHP_EOL;
+    }
+        
+echo "...Complete" . PHP_EOL;
 
 sql_query("UPDATE sysvars SET value=now() WHERE name='lastsync'");
 
