@@ -41,6 +41,7 @@ else
   {
   $no_exif=getval("no_exif","");
   }
+$upload_here = (getval('upload_here', '') != '' ? true : false);
 
 $uploadparams = array();
 $uploadparams["relateto"] = getval("relateto","");
@@ -1523,6 +1524,11 @@ if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type) 
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
 $all_selected_nodes = get_resource_nodes($use);
 
+if($upload_here)
+    {
+    $all_selected_nodes = get_upload_here_selected_nodes($search, $all_selected_nodes);
+    }
+
 if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
         {
         // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
@@ -2199,7 +2205,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
   error_fields[0].scrollIntoView();
   styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
   </script>
-  <?php 
+  <?php
   }
 
 hook("autolivejs");

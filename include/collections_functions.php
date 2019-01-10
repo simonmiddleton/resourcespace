@@ -2229,18 +2229,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	}
         
     $urlparams = array(
-                      "search"      =>  (isset($collection_data['ref']) ? "!collection" . $collection_data['ref'] : $search),
-                      "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
-                      "ref"         =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
-                      "restypes"    =>  isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "",
-                      "starsearch"  =>  $starsearch,
-                      "order_by"    =>  $order_by,
-                      "col_order_by"=>  $col_order_by,
-                      "sort"        =>  $sort,
-                      "offset"      =>  $offset,
-                      "find"        =>  $find,
-                      "k"           =>  $k
-                       );
+        "search"      =>  (isset($collection_data['ref']) ? "!collection" . $collection_data['ref'] : $search),
+        "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
+        "ref"         =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
+        "restypes"    =>  isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "",
+        "starsearch"  =>  $starsearch,
+        "order_by"    =>  $order_by,
+        "col_order_by"=>  $col_order_by,
+        "sort"        =>  $sort,
+        "offset"      =>  $offset,
+        "find"        =>  $find,
+        "k"           =>  $k);
     
     $options = array();
 	$o=0;
@@ -2323,7 +2322,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Upload to collection
-    if(((checkperm('c') || checkperm('d')) && $collection_data['savedsearch'] == 0 && ($userref == $collection_data['user'] || $collection_data['allow_changes'] == 1 || checkperm('h'))) && ($k == '' || $internal_share_access))
+    if(
+        (
+            (checkperm('c') || checkperm('d'))
+            && $collection_data['savedsearch'] == 0
+            && (
+                    $userref == $collection_data['user']
+                    || $collection_data['allow_changes'] == 1
+                    || checkperm('h')
+                )
+        )
+        && ($k == '' || $internal_share_access))
         {
         if($upload_then_edit)
             {
@@ -2333,9 +2342,23 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             {
             $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",array(),array("uploader"=>$top_nav_upload_type,"ref"=>-$userref, "collection_add"=>$collection_data['ref']));
             }
+
         $options[$o]['value']='upload_collection';
 		$options[$o]['label']=$lang['action-upload-to-collection'];
 		$options[$o]['data_attr']=$data_attribute;
+
+        // Upload here functionality
+        if($top_actions)
+            {
+            $options[$o]['label'] = $lang['upload_here'];
+
+            $upload_here_option = $options[$o];
+
+            unset($options[$o]);
+
+            array_unshift($options, $upload_here_option);
+            }
+
 		$o++;
         }
 

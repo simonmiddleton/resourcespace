@@ -2499,3 +2499,120 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
     echo "<div class='clearerleft'></div>";
     echo "</div>";
     }
+
+
+/**
+* Render a filter bar button
+* 
+* @param string $text Button text
+* @param string $text The onclick attribute for the button
+* 
+* @return void
+*/
+function render_filter_bar_button($text, $on_click)
+    {
+    ?>
+    <div class="InpageNavLeftBlock">
+        <button type="button" onclick="<?php echo $on_click; ?>"><?php echo UPLOAD_ICON . htmlspecialchars($text); ?></button>
+    </div>
+    <?php
+    return;
+    }
+
+
+/**
+* Render "Upload here" button.
+*
+* This applies to search results that do not relate to a collection, but consist of purely the following:
+* - Nodes
+* - Resource type
+* - Workflow (archive) state
+* 
+* For free text searches this SHOULD NOT work!
+* 
+* @param array $search_params
+* 
+* @return void
+*/
+function render_upload_here_button(array $search_params)
+    {
+    if(!(checkperm('c') || checkperm('d')))
+        {
+        return;
+        }
+
+    if(!isset($search_params['search']) || !isset($search_params['restypes']) || !isset($search_params['archive']))
+        {
+        return;
+        }
+
+    if(isset($search_params['search']) && empty(resolve_nodes_from_string($search_params['search'])))
+        {
+        return;
+        }
+
+    $upload_here_params = array();
+
+    $upload_endpoint = 'pages/upload_plupload.php';
+    if(!$GLOBALS['upload_then_edit'])
+        {
+        $upload_endpoint = 'pages/edit.php';
+        $upload_here_params['ref'] = 0 - $GLOBALS['userref'];
+        $upload_here_params['uploader'] = $GLOBALS['top_nav_upload_type'];
+        }
+
+    $upload_here_params['upload_here'] = true;
+    $upload_here_params['search'] = $search_params['search'];
+
+    // If resource types is a list then always select the first resource type the user has access to
+    $resource_types = explode(',', $search_params['restypes']);
+    foreach($resource_types as $resource_type)
+        {
+        if(!checkperm("XU{$resource_type}"))
+            {
+            $upload_here_params['resource_type'] = $resource_type;
+            break;
+            }
+        }
+
+    // Archive can be a list (e.g from advanced search) so always select the first archive state user access to, 
+    // favouring the Active one
+    $search_archive = explode(',', $search_params['archive']);
+    // Check access to Active state
+    if(in_array(0, $search_archive) && checkperm("e0"))
+        {
+        $upload_here_params['status'] = 0;
+        $search_archive = array();
+        }
+    // Check remaining states
+    foreach($search_archive as $archive)
+        {
+        if($archive == '' || !is_numeric($archive))
+            {
+            continue;
+            }
+
+        if(checkperm("e{$archive}"))
+            {
+            $upload_here_params['status'] = $archive;
+            break;
+            }
+        }
+    // Last attempt to set the archive state
+    if(!isset($upload_here_params['status']))
+        {
+        $editable_archives = get_editable_states($GLOBALS['userref']);
+
+        if($editable_archives === false || empty($editable_archives))
+            {
+            trigger_error("Unable to determine the correct archive state!");
+            }
+
+        $upload_here_params['status'] = $editable_archives[0]['id'];
+        }
+
+    $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
+    $upload_here_on_click = "CentralSpaceLoad('{$upload_here_url}');";
+
+    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click);
+    }
