@@ -35,7 +35,7 @@ if (getval("submitting","")!="" && $api_function!="")
         }
     $output.="Query: " . $query . "\n\n";
     $output.="Response:\n";
-    $output.=execute_api_call($query);
+    $output.=execute_api_call($query,true);
     
     }
 

@@ -37,7 +37,7 @@ function check_api_key($username,$querystring,$sign)
     return $expected==$sign;
     }
 
-function execute_api_call($query)
+function execute_api_call($query,$pretty=false)
     {
     // Execute the specified API function.
     $params=array();parse_str($query,$params);
@@ -76,7 +76,14 @@ function execute_api_call($query)
     
     debug("API - calling api_" . $function);
     $result = call_user_func_array("api_" . $function, $setparams);
-    return json_encode($result,(defined('JSON_PRETTY_PRINT')?JSON_PRETTY_PRINT:0));
+    if($pretty)
+        {
+            return json_encode($result,(defined('JSON_PRETTY_PRINT')?JSON_PRETTY_PRINT:0));
+        }
+    else
+        {
+            return json_encode($result);
+        }
     }
     
 /**
