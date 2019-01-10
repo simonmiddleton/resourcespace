@@ -2226,8 +2226,7 @@ function validate_user($user_select_sql, $getuserdata=true)
                        u.hidden_collections,
                        u.accepted_terms,
                        u.session,
-                       g.search_filter_id,
-                       g.edit_filter_id
+                       g.search_filter_id
                   FROM user AS u
              LEFT JOIN usergroup AS g on u.usergroup = g.ref
 			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref

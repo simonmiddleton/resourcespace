@@ -263,3 +263,5 @@ function migrate_search_filter($filtertext)
     
     return $filterid;
     }
+    
+    

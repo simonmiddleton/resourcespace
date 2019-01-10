@@ -7356,15 +7356,18 @@ function save_filter($filter,$filter_name,$filter_condition)
 * 
 * @param int $filter_rule       - ID of filter_rule
 * @param int $filterid          - ID of associated filter 
-* @param string $ruledatajson   - Details of associated rule nodes submitted from rule edit page
+* @param array|string $ruledata   - Details of associated rule nodes  (as JSON if submitted from rule edit page)
 * 
 * @return boolean | integer     - false, or ID of filter_rule
 */     
-function save_filter_rule($filter_rule, $filterid, $ruledatajson)
+function save_filter_rule($filter_rule, $filterid, $rule_data)
     {
-    $rule_data = json_decode($ruledatajson);
+    if(!is_array($rule_data))
+        {
+        $rule_data = json_decode($rule_data);
+        }
         
-    if($filter_rule !="new")
+    if($filter_rule != "new")
         {    
         if(!is_numeric($filter_rule))
             {

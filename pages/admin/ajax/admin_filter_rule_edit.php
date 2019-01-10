@@ -97,43 +97,28 @@ function addFilterRuleItem()
     console.log(lastrow.attr('row'));
     lastrow.after(newq);
     jQuery('.filter_rule_nodes').chosen('');
-    //console.log(jQuery(this).parent().attr('row'));
     }
     
 function processFilterRules()
     {
-    //rule_elements = jQuery('.filter_rule_question');
     rule_elements = new Array();
     jQuery('.filter_rule_question').each(function () {
         rule_nodes = jQuery(this).children('.filter_rule_nodes').val();
         rule_condition = jQuery(this).children('.filter_rule_node_condition').val();
-        //console.log('Adding rule element. Condition=' + rule_condition + ', values=' + rule_nodes);
         rule_element = [rule_condition,rule_nodes];
         rule_elements.push(rule_element);
-        });
+        });        
         
-        
-   jQuery ('#filter_rule_data').val(JSON.stringify(rule_elements));
-    //saveurl
-    //jQuery('.filter_rule_question').each();
-    //console.log(lastrow.attr('row'));
-    //lastrow.after(lastrow.clone());
-    //console.log(jQuery(this).parent().attr('row'));
+    jQuery ('#filter_rule_data').val(JSON.stringify(rule_elements));
     }
 
 function updateFieldOptions(question)
     {
-    //console.log(row);
-    //jQuery('#' + row + ' > .filter_rule_nodes').html("");
-    //jQuery('#' + row + ' > .filter_rule_nodes').chosen('destroy');
-    
     jQuery(question).children('.filter_rule_nodes').html('');
     jQuery('.filter_rule_nodes').chosen('destroy');
-    //console.log((question));
     selectedField =  jQuery(question).children('#filter_rule_field').val();
-    //console.log('field' + selectedField + ' selected');
 
-     var post_data = {
+    var post_data = {
         ajax: true,
         field: selectedField,
         <?php echo generateAjaxToken("filter_rule_field"); ?>
@@ -146,24 +131,16 @@ function updateFieldOptions(question)
                 nodeoptions = response.options;
                 nodeselect =  jQuery(question).children('.filter_rule_nodes');
                 
-                // jQuery('#filter_rule_nodes');
                 jQuery.each(nodeoptions, function (i, item) {
-                    //console.log('Adding option: ' + item);
                     nodeselect.append(jQuery('<option>', { 
                         value: i,
                         text : item 
                     }));
                 });
-                //console.log('Enabling chosen for div');
                 jQuery('.filter_rule_nodes').chosen();
 
                 }
         }, 'json');
-
-
-    //jQuery('#filter_rule_nodes').
-
-
     }
 
 jQuery(document).ready(function(){
