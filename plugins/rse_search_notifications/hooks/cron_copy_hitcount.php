@@ -12,8 +12,13 @@ function HookRse_search_notificationsCron_copy_hitcountAddplugincronjob()
     foreach($users as $user)
         {
         $user = $user["owner"];
-
-        setup_user(get_user($user));
+        $userdata = get_user($user);
+        if(!$userdata)
+            {
+            debug("rse_search_notifications: no user found for search owner id: " . $user);
+            continue;    
+            }
+        setup_user($userdata);
         search_notification_process($user);
         }
 

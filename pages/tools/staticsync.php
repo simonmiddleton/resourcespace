@@ -246,7 +246,7 @@ function ProcessFolder($folder)
 			if ($modified_extension !== false) { $extension = $modified_extension; }
 			
             /* Below Code Adapted  from CMay's bug report */
-            global $banned_extensions;
+            global $banned_extensions, $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
             # Check to see if extension is banned, do not add if it is banned
             if(array_search($extension, $banned_extensions)){continue;}
             /* Above Code Adapted from CMay's bug report */
@@ -263,6 +263,28 @@ function ProcessFolder($folder)
                     $done[$shortpath]["processed"]=true;
                     $done[$shortpath]["modified"]=date('Y-m-d H:i:s',time());
                     continue;
+                    }
+                # Check for duplicate files
+                if($file_upload_block_duplicates)
+                    {
+                    # Generate the ID
+                    if ($file_checksums_50k)
+                        {
+                        # Fetch the string used to generate the unique ID
+                        $use=filesize_unlimited($fullpath) . "_" . file_get_contents($fullpath,null,null,0,50000);
+                        $checksum=md5($use);
+                        }
+                    else
+                        {
+                        $checksum=md5_file($fullpath);
+                        }  
+                    $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
+                    if(count($duplicates)>0)
+                        {
+                        debug("STATICSYNC ERROR- duplicate file matches resource " . implode(",",$duplicates));
+                        $errors[] = "Duplicate file matches resource " . implode(",",$duplicates);
+                        continue;                
+                        }
                     }
                 $count++;
                 echo "Processing file: $fullpath" . PHP_EOL;
@@ -656,7 +678,7 @@ function ProcessFolder($folder)
 function staticsync_process_alt($alternativefile, $ref="", $alternative="")
     {
     // Process an alternative file
-    global $staticsync_alternative_file_text, $syncdir, $lang, $staticsync_ingest, $alternative_file_previews, $done;
+    global $staticsync_alternative_file_text, $syncdir, $lang, $staticsync_ingest, $alternative_file_previews, $done, $filename_field, $view_title_field, $staticsync_title_includes_path;
 	
     $shortpath = str_replace($syncdir . '/', '', $alternativefile);
 	if(!isset($done[$shortpath]))
@@ -676,14 +698,55 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
 					$ref= $synceddetails["ref"];
 					break;
 					}
-				}        
+				}
 			}
         
-         if($ref=="")
+        if($ref=="")
             {
-            echo "No primary resource found for " . $alternativefile . ". Skipping file" . PHP_EOL;
-            debug("staticsync - No primary resource found for " . $alternativefile . ". Skipping file");
-            return false;
+            //Primary resource file may have been ingested on a previous run
+            $ingested = sql_array("SELECT resource value FROM resource_data WHERE resource_type_field=" . $filename_field . " AND value LIKE '" . $altbasename . "%'");
+            
+            if(count($ingested) < 1)
+                {
+                echo "No primary resource found for " . $alternativefile . ". Skipping file" . PHP_EOL;
+                debug("staticsync - No primary resource found for " . $alternativefile . ". Skipping file");
+                return false;
+                }
+            
+            if(count($ingested) == 1)
+                {
+        echo "Found matching resource: " . $ingested[0] . PHP_EOL;
+                $ref = $ingested[0];
+                return false;
+                }
+            else
+                {
+                if($staticsync_title_includes_path)
+                    {
+            $title_find = array('/',   '_');
+                        $title_repl = array(' - ', ' ');
+                        $parentpath = ucfirst(str_ireplace($title_find, $title_repl, $shortpath));
+
+                    echo "This file has path: " . $parentpath . PHP_EOL;
+                    foreach($ingested as $ingestedref)
+                        {
+                        $ingestedpath = get_data_by_field($ingestedref, $view_title_field);
+                        echo "Found resource with same name. Path: " . $ingestedpath . PHP_EOL;
+           if(strpos($parentpath,$ingestedpath) !== false)
+                            {
+               echo "Found matching resource: " . $ingestedref . PHP_EOL;
+               $ref = $ingestedref;
+                            break;
+                            }
+                        }
+                    }
+       if($ref=="")
+            {
+                   echo "Multiple possible primary resources found for " . $alternativefile . ". (Resource IDs: " . implode(",",$ingested) . "). Skipping file" . PHP_EOL;
+                   debug("staticsync - Multiple possible primary resources found for " . $alternativefile . ". (Resource IDs: " . implode(",",$ingested) . "). Skipping file");
+                   return false;
+            }
+                }
             }
          
         echo "Processing alternative file - '" . $alternativefile . "' for resource #" . $ref . PHP_EOL;
@@ -838,15 +901,15 @@ if (!$staticsync_ingest)
     # Remove any themes that are now empty as a result of deleted files.
     sql_query("DELETE FROM collection WHERE theme IS NOT NULL AND LENGTH(theme) > 0 AND 
                 (SELECT count(*) FROM collection_resource cr WHERE cr.collection=collection.ref) = 0;");
-
-    if(count($errors) > 0)
-        {
-        echo PHP_EOL . "ERRORS: -" . PHP_EOL;
-        echo implode(PHP_EOL,$errors);
-        }
-        
-    echo "...Complete" . PHP_EOL;
     }
+
+if(count($errors) > 0)
+    {
+    echo PHP_EOL . "ERRORS: -" . PHP_EOL;
+    echo implode(PHP_EOL,$errors) . PHP_EOL;
+    }
+        
+echo "...Complete" . PHP_EOL;
 
 sql_query("UPDATE sysvars SET value=now() WHERE name='lastsync'");
 

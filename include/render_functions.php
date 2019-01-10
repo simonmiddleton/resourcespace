@@ -1533,18 +1533,30 @@ function display_field($n, $field, $newtab=false,$modal=false)
   if ($multiple && !hook("replace_edit_all_mode_select","",array($field["ref"])))
       {
       # When editing multiple, give option to select Replace All Text or Find and Replace
-      $onchangejs = "var fr=document.getElementById('findreplace_" . $n . "');";
-      $onchangejs .= "var q=document.getElementById('question_" . $n . "');";
+      $onchangejs = "var fr=document.getElementById('findreplace_" . $n . "');\n";
+      $onchangejs .= "var q=document.getElementById('question_" . $n . "');\n";
       if ($field["type"] == FIELD_TYPE_CATEGORY_TREE)
         {
         $onchangejs .= "if (this.value=='RM'){branch_limit_field['field_" . $field["ref"] . "']=1;}else{branch_limit_field['field_" . $field["ref"] . "']=0;}";
         }
       elseif (in_array($field["type"], $TEXT_FIELD_TYPES ))
         {
-        $onchangejs .= "var cf=document.getElementById('copy_from_field_" . $field["ref"] . "');";
-        $onchangejs .= "if (this.value=='CF') {cf.style.display='block';q.style.display='none';} else {cf.style.display='none';q.style.display='block';}";
-        $onchangejs .= "if (this.value=='FR') {fr.style.display='block';q.style.display='none';} else {fr.style.display='none';q.style.display='block';}";
-        } 
+        $onchangejs .= "
+        var cf=document.getElementById('copy_from_field_" . $field["ref"] . "');
+            if (this.value=='CF')
+                {
+                cf.style.display='block';q.style.display='none';fr.style.display='none';
+                }
+            else if (this.value=='FR')
+                {
+                fr.style.display='block';q.style.display='none';cf.style.display='none';
+                }
+            else
+                {
+                fr.style.display='none';cf.style.display='none';q.style.display='block';
+                }";
+        }
+        //if($field["ref"] == 85){exit($onchangejs);}
       ?>
       <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
       <label for="modeselectinput"><?php echo $lang["editmode"]?></label>

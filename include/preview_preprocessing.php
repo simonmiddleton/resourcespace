@@ -322,7 +322,7 @@ if ( (($extension=="pages") || ($extension=="numbers") || (!isset($unoconv_path)
    ----------------------------------------
 */
 global $unoconv_extensions;
-if (in_array($extension,$unoconv_extensions) && isset($unoconv_path) && !isset($newfile))
+if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoconv_path) && !isset($newfile))
     {
     global $config_windows;
     $unocommand=$unoconv_path . "/unoconv";
@@ -987,7 +987,24 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 # If a file has been created, generate previews just as if a JPG was uploaded.
 if (isset($newfile))
     {
-    create_previews($ref,false,"jpg",$previewonly,false,$alternative);  
-    }
+    if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension, $GLOBALS['non_image_types']))
+        {
+        $file_used_for_previewonly = get_resource_path($ref, true, "tmp", false, "jpg");
 
-?>
+        if(copy($newfile, $file_used_for_previewonly))
+            {
+            $previewonly = true;
+            debug("preview_preprocessing: changing previewonly = true for non-image file");
+            }
+        }
+
+    create_previews($ref,false,"jpg",$previewonly,false,$alternative);
+
+    if(
+        $GLOBALS['non_image_types_generate_preview_only']
+        && in_array($extension, $GLOBALS['non_image_types'])
+        && file_exists($file_used_for_previewonly))
+        {
+        unlink($file_used_for_previewonly);
+        }
+    }

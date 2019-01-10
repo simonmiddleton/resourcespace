@@ -1134,18 +1134,6 @@ if($simpleview && $themes_show_background_image)
     {
     $slideshow_files = get_slideshow_files_data();
 
-    foreach($slideshow_files as $slideshow_file_info)
-        {
-        if(isset($background_image_url) || !file_exists($slideshow_file_info['file_path']))
-            {
-            continue;
-            }
-
-        // Set first image found when refreshing. Otherwise, the system picks up the last image that dash background
-        // changed to when navigating using CentralSpaceLoad.
-        $background_image_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info['ref']}";
-        }
-        
     if(!$featured_collection_static_bg)
         {
         // Overwrite background_image_url with theme specific ones
@@ -1158,50 +1146,47 @@ if($simpleview && $themes_show_background_image)
                 if(file_exists(get_resource_path($background_theme_image, true, 'scr', false)))
                     {
                     $background_image_url = get_resource_path($background_theme_image, false, 'scr', false);
+
+                    // Reset slideshow files as we want to use the featured collection image
+                    $slideshow_files = array();
                     break;
                     }
                 }
             }
-        }?>
-        
+        }
+        ?>
     <script>
-    jQuery(document).ready(function ()
+    var SlideshowImages = new Array();
+    var SlideshowCurrent = -1;
+    var SlideshowTimer = 0;
+    var big_slideshow_timer = <?php echo $slideshow_photo_delay; ?>;
+
+<?php
+foreach($slideshow_files as $slideshow_file_info)
+    {
+    if((bool) $slideshow_file_info['featured_collections_show'] === false)
         {
-        jQuery('#UICenter').css('background-image','url(<?php echo $background_image_url; ?>)');
-        jQuery('#Footer').hide();
-        });
+        continue;
+        }
 
-    jQuery('#CentralSpace').on('CentralSpaceLoaded', function (event, data)
+    $image_download_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info['ref']}";
+    $image_resource = isset($slideshow_file_info['link']) ? $slideshow_file_info['link'] : '';
+    ?>
+    RegisterSlideshowImage('<?php echo $image_download_url; ?>', '<?php echo $image_resource; ?>');
+    <?php
+    }
+
+if(!$featured_collection_static_bg && isset($background_image_url) && $background_image_url != '')
+    {
+    ?>
+    RegisterSlideshowImage('<?php echo $background_image_url; ?>', '', true);
+    <?php
+    }
+    ?>
+    jQuery(document).ready(function() 
         {
-		
-        if('themes.php' == basename(data.url).substr(0, 10))
-            {
-			if (typeof SlideshowImages !== 'undefined')
-				{
-				var background_image_url = SlideshowImages[SlideshowCurrent];
-				}
-	
-			jQuery('#Footer').show();
-
-            // Set the background_image_url if one was set based on the featured collection category
-            <?php
-            if(isset($background_image_url))
-                {
-                ?>
-                background_image_url = '<?php echo $background_image_url; ?>';
-                <?php
-                }
-                ?>
-            jQuery('#UICenter').css('background-image', 'url(' + background_image_url + ')');
-            jQuery('#UICenter').css('transition', 'none');
-            jQuery('#Footer').hide();
-            }
-
-        // Home page is not showing footer either so make sure we honour this
-        if('home.php' == basename(data.url).substr(0, 8))
-            {
-            jQuery('#Footer').hide();
-            }
+        ClearTimers();
+        ActivateSlideshow();
         });
     </script>
     <?php

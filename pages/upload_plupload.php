@@ -35,7 +35,7 @@ $queue_index = isset($_REQUEST['queue_index']) ? intval($_REQUEST['queue_index']
 
 // When uploading, if there are any files in the queue that have similar names plus a suffix to distinguish between original
 // and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
-$attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '');
+$attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '') && (trim($alternative) == '');
 
 $redirecturl = getval("redirecturl","");
 if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
@@ -68,7 +68,7 @@ if($resource_type == "")
 resource_type_config_override($resource_type);
 
 # Create a new collection?
-if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chunk == 0)))
+if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chunk == $chunks-1)))
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
@@ -786,8 +786,8 @@ if ($_FILES)
 							$filename_field=getvalescaped("filename_field","",true);
 							if($filename_field!="")
 								{
-								$target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename'","");
-								if(count($target_resource)==1 && !resource_file_readonly($target_resource))
+								$target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename' AND resource>'$fstemplate_alt_threshold'","");
+								if(count($target_resource)==1 && !resource_file_readonly($target_resource[0]))
 									{
 									// A single resource has been found with the same filename
 									daily_stat("Resource upload",$target_resource[0]);
@@ -1391,9 +1391,13 @@ if ($collection_add!="false" && count(get_collection_external_access($collection
 		$imgpath=get_resource_path($resource['ref'],true,"col",false);
 		if (file_exists($imgpath)){ ?><img src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/><?php }
 	}
-	if ($alternative_file_resource_title){ 
-		echo "<h2>".$resource['field'.$view_title_field]."</h2><br/>";
-	}
+
+    if ($alternative_file_resource_title)
+        {
+        $resource_title = get_data_by_field($resource['ref'], $view_title_field);
+
+        echo "<h2>{$resource_title}</h2><br/>";
+        }
 }
 
 # Define the titles:

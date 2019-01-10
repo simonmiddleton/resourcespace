@@ -455,7 +455,7 @@ else
 			if (isset($header_include_username) && $header_include_username)
                 {
                 ?>
-                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars($username) ?>
+                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars($userfullname=="" ? $username : $userfullname) ?>
                 <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                 <?php
                 }
