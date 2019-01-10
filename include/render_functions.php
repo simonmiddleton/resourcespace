@@ -2506,14 +2506,15 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
 * 
 * @param string $text Button text
 * @param string $text The onclick attribute for the button
+* @param string $icon HTML for icon element (e.g "<i aria-hidden="true" class="fa fa-fw fa-upload"></i>")
 * 
 * @return void
 */
-function render_filter_bar_button($text, $on_click)
+function render_filter_bar_button($text, $on_click, $icon)
     {
     ?>
     <div class="InpageNavLeftBlock">
-        <button type="button" onclick="<?php echo $on_click; ?>"><?php echo UPLOAD_ICON . htmlspecialchars($text); ?></button>
+        <button type="button" onclick="<?php echo $on_click; ?>"><?php echo $icon . htmlspecialchars($text); ?></button>
     </div>
     <?php
     return;
@@ -2614,5 +2615,5 @@ function render_upload_here_button(array $search_params)
     $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
     $upload_here_on_click = "CentralSpaceLoad('{$upload_here_url}');";
 
-    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click);
+    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click, UPLOAD_ICON);
     }
