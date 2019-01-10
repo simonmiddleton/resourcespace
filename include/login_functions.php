@@ -15,7 +15,7 @@ if (!function_exists('hash'))
 function perform_login()
 	{
     global $scramble_key, $lang, $max_login_attempts_wait_minutes, $max_login_attempts_per_ip, $max_login_attempts_per_username,
-    $global_cookies, $username, $password, $password_hash, $session_hash;
+    $global_cookies, $username, $password, $password_hash, $session_hash, $usergroup;
 
     if ((strlen($password)==32 || strlen($password)==64) && getval("userkey","")!=md5($username . $scramble_key))
 		{
