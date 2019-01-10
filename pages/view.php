@@ -939,8 +939,10 @@ else if(1 == $resource['has_image'])
                     ?>
                         anno.addPlugin('RSFaceRecognition',
                             {
+                            annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                             facial_recognition_endpoint: '<?php echo $baseurl; ?>/pages/ajax/facial_recognition.php',
-                            resource                   : <?php echo (int) $ref; ?>,
+                            resource: <?php echo (int) $ref; ?>,
+                            facial_recognition_tag_field: <?php echo $facial_recognition_tag_field; ?>,
                             // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                             fr_csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
                             <?php echo generateAjaxToken('RSFaceRecognition'); ?>
