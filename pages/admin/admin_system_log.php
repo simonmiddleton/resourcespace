@@ -31,6 +31,14 @@ $tables_data = array(
     ),
 );
 
+// TODO: over time, these can be put under tables_data once we can use the referenced information (ie. if there is a function to do so - see examples above)
+$no_reference_data_tables = sql_array('
+        SELECT DISTINCT remote_table AS "value"
+          FROM activity_log
+         WHERE remote_table IS NOT NULL AND remote_table <> ""
+    ',
+    array());
+
 $log_tables_where_statements = array(
     'activity_log' => "`activity_log`.`user`='{$actasuser}' AND ",
     'resource_log' => "`resource_log`.`user`='{$actasuser}' AND ",
@@ -118,6 +126,13 @@ if($table == '' && $table_reference == 0)
                 {
                 ?>
                 <option value="<?php echo $select_table; ?>"><?php echo $select_table; ?></option>
+                <?php
+                }
+
+            foreach($no_reference_data_tables as $no_reference_data_table)
+                {
+                ?>
+                <option value="<?php echo $no_reference_data_table; ?>"><?php echo $no_reference_data_table; ?></option>
                 <?php
                 }
                 ?>

@@ -1,7 +1,6 @@
-.Question span form {
+.Listview tr td form, #new_slideshow_form {
     display: none;
     margin-top: 10px;
-    margin-left: 300px;
 }
 
 #new_slideshow_img_resource {

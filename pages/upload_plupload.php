@@ -7,6 +7,8 @@ if (! (checkperm("c") || checkperm("d")))
 include "../include/image_processing.php";
 include "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
+include_once "../include/search_functions.php";
+
 
 $overquota                              = overquota();
 $status                                 = '';
@@ -24,6 +26,7 @@ $replace                                = getvalescaped('replace', ''); # Replac
 $replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
 $single                                 = getval("single","") != "" || getval("forcesingle","") != "";
+$upload_here                            = (getval('upload_here', '') != '' ? true : false);
 
 $chunk       = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
 $chunks      = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
@@ -32,7 +35,7 @@ $queue_index = isset($_REQUEST['queue_index']) ? intval($_REQUEST['queue_index']
 
 // When uploading, if there are any files in the queue that have similar names plus a suffix to distinguish between original
 // and alternatives (see $upload_alternatives_suffix) then, attach the matching alternatives to the resource they belong to
-$attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '');
+$attach_alternatives_found_to_resources = (trim($upload_alternatives_suffix) != '') && (trim($alternative) == '');
 
 $redirecturl = getval("redirecturl","");
 if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirecturl="";}
@@ -40,6 +43,11 @@ if(strpos($redirecturl, $baseurl)!==0 && !hook("modifyredirecturl")){$redirectur
 if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_readonly($replace_resource)))
     {
     $replace_resource = false;
+    }
+
+if($upload_then_edit && $resource_type_force_selection && getval('posting', '') != '')
+    {
+    update_resource_type(0 - $userref, $resource_type);
     }
 
 if($resource_type == "")
@@ -60,7 +68,7 @@ if($resource_type == "")
 resource_type_config_override($resource_type);
 
 # Create a new collection?
-if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chunk == 0)))
+if($collection_add == "new" && (!$upload_then_edit || ($queue_index == 0 && $chunk == $chunks-1)))
 	{
 	# The user has chosen Create New Collection from the dropdown.
 	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
@@ -81,10 +89,17 @@ if ($upload_then_edit && $replace == "" && $replace_resource == "")
 	$upload_review_col = 0-$userref;
 	$ci=get_collection($upload_review_col);
 	if ($ci===false) {create_collection($userref,"New uploads",1,1,0-$userref);}
-	
+
+    $redirecturl_extra_params = array();
+
 	# Set the redirect after upload to the start of the edit process
-	$redirecturl=$baseurl . "/pages/edit.php?upload_review_mode=true";
-	
+    $redirecturl = generateURL(
+        "{$baseurl}/pages/edit.php",
+        array(
+            'upload_review_mode' => true,
+        ),
+        $redirecturl_extra_params);
+
 	# Clear the user template
 	clear_resource_data(0-$userref);
 	}
@@ -110,7 +125,6 @@ $uploadparams= array(
     'replace_resource_original_alt_filename' => $replace_resource_original_alt_filename,
     'single'                                 => ($single ? "true" : "false")
 );
-
 
 global $merge_filename_with_title;
 if($merge_filename_with_title) {
@@ -158,8 +172,18 @@ if($replace_resource_preserve_option && '' != $replace_resource)
     $uploadparams['replace_resource_original_alt_filename'] = $default_replace_resource_original_alt_filename;
     }
 
-$uploadurl=generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams) . hook('addtopluploadurl');
+$uploadurl_extra_params = array();
 
+if($upload_here)
+    {
+    $uploadurl_extra_params = array(
+        'upload_here' => $upload_here,
+        'search' => $search,
+        'resource_type' => $resource_type,
+        'status' => $setarchivestate,
+    );
+    }
+$uploadurl = generateURL("{$baseurl}/pages/upload_plupload.php", $uploadparams, $uploadurl_extra_params) . hook('addtopluploadurl');
 
 
 $default_sort_direction="DESC";
@@ -556,7 +580,6 @@ if ($_FILES)
                     if ($replace=="" && $replace_resource=="")
                             {
                             # Standard upload of a new resource
-                            
                             # create ref via copy_resource() or other method
                             $modified_ref=hook("modifyuploadref");
                             if ($modified_ref!="")
@@ -573,6 +596,16 @@ if ($_FILES)
                             if(false === $ref)
                                 {
                                 $ref = create_resource($resource_type);
+                                }
+
+                            if($upload_then_edit && $upload_here)
+                                {
+                                if(checkperm("e{$setarchivestate}"))
+                                    {
+                                    update_archive_status($ref, $setarchivestate);
+                                    }
+
+                                add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
                                 }
 
                             # Add to collection?
@@ -596,7 +629,7 @@ if ($_FILES)
                             // For upload_then_edit mode ONLY, we decide the resource type based on the extension. User
                             // can later change this at the edit stage
                             // IMPORTANT: we change resource type only if user has access to it
-                            if($upload_then_edit)
+                            if($upload_then_edit && !$resource_type_force_selection)
                                 {
                                 $resource_type_from_extension = get_resource_type_from_extension(
                                     pathinfo($plupload_upload_location, PATHINFO_EXTENSION),
@@ -614,6 +647,54 @@ if ($_FILES)
                             daily_stat("Resource upload",$ref);
                             
                             $status=upload_file($ref,(getval("no_exif","")=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!=''),$plupload_upload_location);
+
+                            if($status && $auto_generated_resource_title_format != '' && !$upload_then_edit)
+                                {
+                                $new_auto_generated_title = '';
+                                $ref_escaped = escape_check($ref);
+
+                                if(strpos($auto_generated_resource_title_format, '%title') !== false)
+                                    {
+                                    $view_title_field_escaped = escape_check($view_title_field);
+
+                                    $resource_detail = sql_query ("
+                                                 SELECT r.ref, r.file_extension, rd.value
+                                                   FROM resource r
+                                        LEFT OUTER JOIN resource_data AS rd ON r.ref = rd.resource
+                                                  WHERE r.ref = '{$ref_escaped}'
+                                                    AND rd.resource_type_field = '{$view_title_field_escaped}'");
+
+                                    $new_auto_generated_title = str_replace(
+                                        array('%title', '%resource', '%extension'),
+                                        array(
+                                            $resource_detail[0]['value'],
+                                            $resource_detail[0]['ref'],
+                                            $resource_detail[0]['file_extension']
+                                        ),
+                                        $auto_generated_resource_title_format);
+                                    }
+                                else
+                                    {
+                                    $resource_detail = sql_query ("
+                                         SELECT r.ref, r.file_extension
+                                           FROM resource r
+                                          WHERE r.ref = '{$ref_escaped}'");
+
+                                    $new_auto_generated_title = str_replace(
+                                        array('%resource', '%extension'),
+                                        array(
+                                            $resource_detail[0]['ref'],
+                                            $resource_detail[0]['file_extension']
+                                        ),
+                                        $auto_generated_resource_title_format);
+                                    }
+
+                                if($new_auto_generated_title != '')
+                                    {
+                                    update_field($ref, $view_title_field, $new_auto_generated_title);
+                                    }
+                                }
+
                             if(file_exists($plupload_processed_filepath))
                                 {
                                 unlink($plupload_processed_filepath);
@@ -705,8 +786,8 @@ if ($_FILES)
 							$filename_field=getvalescaped("filename_field","",true);
 							if($filename_field!="")
 								{
-								$target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename'","");
-								if(count($target_resource)==1 && !resource_file_readonly($target_resource))
+								$target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename' AND resource>'$fstemplate_alt_threshold'","");
+								if(count($target_resource)==1 && !resource_file_readonly($target_resource[0]))
 									{
 									// A single resource has been found with the same filename
 									daily_stat("Resource upload",$target_resource[0]);
@@ -929,6 +1010,7 @@ var pluploadconfig = {
                                         else
                                             {
                                             styledalert('<?php echo $lang["error"]?> ' + uploadresponse.error.code, uploadresponse.error.message);
+                                            jQuery("#upload_log").append("\r\n" + uploadresponse.error.message + " " + uploadresponse.error.code);
                                             }    
                                         }
                                     else
@@ -1309,9 +1391,13 @@ if ($collection_add!="false" && count(get_collection_external_access($collection
 		$imgpath=get_resource_path($resource['ref'],true,"col",false);
 		if (file_exists($imgpath)){ ?><img src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/><?php }
 	}
-	if ($alternative_file_resource_title){ 
-		echo "<h2>".$resource['field'.$view_title_field]."</h2><br/>";
-	}
+
+    if ($alternative_file_resource_title)
+        {
+        $resource_title = get_data_by_field($resource['ref'], $view_title_field);
+
+        echo "<h2>{$resource_title}</h2><br/>";
+        }
 }
 
 # Define the titles:
@@ -1377,7 +1463,7 @@ if($replace_resource != '' || $replace != '' || $upload_then_edit)
     ?>
     <h2 class="CollapsibleSectionHead collapsed" id="UploadOptionsSectionHead"><?php echo $lang["upload-options"]; ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
-    <form class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
+    <form id="UploadPluploadForm" class="pluploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_plupload.php">
     <?php
     generateFormToken("upload_plupload");
     

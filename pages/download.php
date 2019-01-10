@@ -33,7 +33,7 @@ $internal_share_access = ('' != $k && $external_share_view_as_internal && isset(
 
 $ref            = getvalescaped('ref', '', true);
 $size           = getvalescaped('size', '');
-$alternative    = getvalescaped('alternative', -1);
+$alternative    = getvalescaped('alternative', -1, true);
 $page           = getvalescaped('page', 1);
 $usage          = getvalescaped('usage', '-1');
 $usagecomment   = getvalescaped('usagecomment', '');
@@ -90,9 +90,12 @@ else
         {
         // Permissions check
         $allowed = resource_download_allowed($ref, $size, $resource_data['resource_type'], $alternative);
+        debug("PAGES/DOWNLOAD.PHP: \$allowed = " . ($allowed == true ? 'TRUE' : 'FALSE'));
         }
+
     if(!$allowed || $ref <= 0)
         {
+        debug("PAGES/DOWNLOAD.PHP: Permission denied!");
         # This download is not allowed. How did the user get here?
         exit('Permission denied');
         }

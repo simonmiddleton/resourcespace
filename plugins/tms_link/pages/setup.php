@@ -51,6 +51,10 @@ $page_def[] = config_add_text_input('tms_link_dsn_name',$lang['tms_link_dsn_name
 $page_def[] = config_add_text_input('tms_link_table_name',$lang['tms_link_table_name']);
 $page_def[] = config_add_text_input('tms_link_user',$lang['tms_link_user']);
 $page_def[] = config_add_text_input('tms_link_password',$lang['tms_link_password'],true);
+
+$testhtml = "<input type='submit' name='testConn' onclick='tmsTest();return false;' value='" . $lang['tms_link_test_link'] ."' />";
+$page_def[] = config_add_html($testhtml);
+
 $page_def[] = config_add_multi_rtype_select("tms_link_resource_types",$lang['tms_link_resource_types']);
 $page_def[] = config_add_text_input('tms_link_email_notify',$lang['tms_link_email_notify']);
 
@@ -143,14 +147,39 @@ $tmsmaphtml.="</select>
 </div>
 
 <script>
- function addTMSMappingRow() {
- 
-            var table = document.getElementById('tmsmappingtable');
- 
-            var rowCount = table.rows.length;
-            var row = table.insertRow(rowCount);
- 
-            row.innerHTML = document.getElementById('newrow').innerHTML;
+ function addTMSMappingRow()
+    {
+    var table = document.getElementById('tmsmappingtable');
+
+    var rowCount = table.rows.length;
+    var row = table.insertRow(rowCount);
+
+    row.innerHTML = document.getElementById('newrow').innerHTML;
+    }
+
+
+    function tmsTest()
+        {
+        var post_url  = 'ajax_test.php';
+        var post_data = {
+            ajax: true,
+            dsn:    jQuery('#tms_link_dsn_name').val(),
+            tmsuser : jQuery('#tms_link_user').val(),
+            tmspass: jQuery('#tms_link_password').val(),
+            " . generateAjaxToken("tms_test") . "
+
+        };
+        jQuery.ajax({
+            type:'POST',
+            url: post_url,
+            data: post_data,
+            dataType: 'json',          
+			}).done(function(response, status, xhr)
+                {
+                styledalert(response.result,response.message);
+                return true;
+                });
+
         }
 </script>
 ";

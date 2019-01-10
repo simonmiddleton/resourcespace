@@ -1533,23 +1533,42 @@ function display_field($n, $field, $newtab=false,$modal=false)
   if ($multiple && !hook("replace_edit_all_mode_select","",array($field["ref"])))
       {
       # When editing multiple, give option to select Replace All Text or Find and Replace
+      $onchangejs = "var fr=document.getElementById('findreplace_" . $n . "');\n";
+      $onchangejs .= "var q=document.getElementById('question_" . $n . "');\n";
+      if ($field["type"] == FIELD_TYPE_CATEGORY_TREE)
+        {
+        $onchangejs .= "if (this.value=='RM'){branch_limit_field['field_" . $field["ref"] . "']=1;}else{branch_limit_field['field_" . $field["ref"] . "']=0;}";
+        }
+      elseif (in_array($field["type"], $TEXT_FIELD_TYPES ))
+        {
+        $onchangejs .= "
+        var cf=document.getElementById('copy_from_field_" . $field["ref"] . "');
+            if (this.value=='CF')
+                {
+                cf.style.display='block';q.style.display='none';fr.style.display='none';
+                }
+            else if (this.value=='FR')
+                {
+                fr.style.display='block';q.style.display='none';cf.style.display='none';
+                }
+            else
+                {
+                fr.style.display='none';cf.style.display='none';q.style.display='block';
+                }";
+        }
+        //if($field["ref"] == 85){exit($onchangejs);}
       ?>
       <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
       <label for="modeselectinput"><?php echo $lang["editmode"]?></label>
-      <select id="modeselectinput_<?php echo $n?>" name="modeselect_<?php echo $field["ref"]?>" class="stdwidth" onChange="var fr=document.getElementById('findreplace_<?php echo $n?>');var q=document.getElementById('question_<?php echo $n?>');<?php if ($field["type"]==7){?>if (this.value=='RM'){branch_limit_field['field_<?php echo $field["ref"]?>']=1;}else{branch_limit_field['field_<?php echo $field["ref"]?>']=0;}<?php } ?>if (this.value=='FR') {fr.style.display='block';q.style.display='none';} else {fr.style.display='none';q.style.display='block';}<?php hook ("edit_all_mode_js"); ?>">
+      <select id="modeselectinput_<?php echo $n?>" name="modeselect_<?php echo $field["ref"]?>" class="stdwidth" onChange="<?php echo $onchangejs;hook ("edit_all_mode_js"); ?>">
       <option value="RT"><?php echo $lang["replacealltext"]?></option>
       <?php
       if (in_array($field["type"], $TEXT_FIELD_TYPES ))
         {
-        # Find and replace applies to text boxes only.
+        # 'Find and replace', prepend and 'copy from field' options apply to text boxes only.
         ?>
-        <option value="FR" <?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo $lang["findandreplace"]?></option>
-        <?php
-        }
-      if (in_array($field["type"], $TEXT_FIELD_TYPES))
-        {
-        # Prepend applies to text boxes only.
-        ?>
+        <option value="FR"<?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo $lang["findandreplace"]?></option>
+        <option value="CF"<?php if(getval("modeselect_" . $field["ref"],"")=="CF"){?> selected<?php } ?>><?php echo $lang["edit_copy_from_field"]?></option>
         <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo $lang["prependtext"]?></option>
         <?php
         }
@@ -1571,6 +1590,13 @@ function display_field($n, $field, $newtab=false,$modal=false)
         ?>
         </select>
       </div><!-- End of modeselect_<?php echo $n?> -->
+
+      <?php
+      if (in_array($field["type"], $TEXT_FIELD_TYPES))
+        {
+        render_field_selector_question("","copy_from_field_" . $field["ref"], array(), "stdwidth", true);
+        }
+        ?>
 
       <div class="Question" id="findreplace_<?php echo $n?>" style="display:none;border-top:none;">
         <label>&nbsp;</label>
@@ -2348,8 +2374,7 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
 */
 function render_share_options($collectionshare=true, $ref, $emailing=false)
     {
-    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url;
-    global $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string;   
+    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
     
     if(!hook('replaceemailaccessselector')): ?>
         <div class="Question" id="question_access">
@@ -2438,4 +2463,157 @@ function render_share_options($collectionshare=true, $ref, $emailing=false)
         hook("additionalresourceshare");
         ?>
     <?php        
+    }
+    
+/**
+* Renders a metadata field selector
+* 
+* @param string     $label      label for the field
+* @param string     $name       name of form select
+* @param array      $ftypes     array of field types to include
+* @param string     $class      array CSS class to apply
+* @param boolean    $hidden     optionally hide the question usng CSS display:none
+* 
+* @return void
+*/
+function render_field_selector_question($label, $name, $ftypes,$class="stdwidth",$hidden=false)
+    {
+    global $lang;
+    $fieldtypefilter = "";
+	if(count($ftypes)>0)
+		{
+		$fieldtypefilter = " WHERE type IN ('" . implode("','", $ftypes) . "')";
+		}
+        
+    $fields=sql_query("SELECT * from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name");
+    
+    echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
+    echo "<label for='" . htmlspecialchars($name) . "' >" . htmlspecialchars($label) . "</label>";
+    echo "<select name='" . htmlspecialchars($name) . "' id='" . htmlspecialchars($name) . "' class='" . $class . "'>";
+    echo "<option value='' selected >" . $lang["select"] . "</option>";
+    foreach($fields as $field)
+        {
+        echo "<option value='" . $field['ref'] . "' >" . lang_or_i18n_get_translated($field['title'],'fieldtitle-') . "</option>";
+        }
+    echo "</select>";
+    echo "<div class='clearerleft'></div>";
+    echo "</div>";
+    }
+
+
+/**
+* Render a filter bar button
+* 
+* @param string $text Button text
+* @param string $text The onclick attribute for the button
+* @param string $icon HTML for icon element (e.g "<i aria-hidden="true" class="fa fa-fw fa-upload"></i>")
+* 
+* @return void
+*/
+function render_filter_bar_button($text, $on_click, $icon)
+    {
+    ?>
+    <div class="InpageNavLeftBlock">
+        <button type="button" onclick="<?php echo $on_click; ?>"><?php echo $icon . htmlspecialchars($text); ?></button>
+    </div>
+    <?php
+    return;
+    }
+
+
+/**
+* Render "Upload here" button.
+*
+* This applies to search results that do not relate to a collection, but consist of purely the following:
+* - Nodes
+* - Resource type
+* - Workflow (archive) state
+* 
+* For free text searches this SHOULD NOT work!
+* 
+* @param array $search_params
+* 
+* @return void
+*/
+function render_upload_here_button(array $search_params)
+    {
+    if(!(checkperm('c') || checkperm('d')))
+        {
+        return;
+        }
+
+    if(!isset($search_params['search']) || !isset($search_params['restypes']) || !isset($search_params['archive']))
+        {
+        return;
+        }
+
+    if(isset($search_params['search']) && empty(resolve_nodes_from_string($search_params['search'])))
+        {
+        return;
+        }
+
+    $upload_here_params = array();
+
+    $upload_endpoint = 'pages/upload_plupload.php';
+    if(!$GLOBALS['upload_then_edit'])
+        {
+        $upload_endpoint = 'pages/edit.php';
+        $upload_here_params['ref'] = 0 - $GLOBALS['userref'];
+        $upload_here_params['uploader'] = $GLOBALS['top_nav_upload_type'];
+        }
+
+    $upload_here_params['upload_here'] = true;
+    $upload_here_params['search'] = $search_params['search'];
+
+    // If resource types is a list then always select the first resource type the user has access to
+    $resource_types = explode(',', $search_params['restypes']);
+    foreach($resource_types as $resource_type)
+        {
+        if(!checkperm("XU{$resource_type}"))
+            {
+            $upload_here_params['resource_type'] = $resource_type;
+            break;
+            }
+        }
+
+    // Archive can be a list (e.g from advanced search) so always select the first archive state user access to, 
+    // favouring the Active one
+    $search_archive = explode(',', $search_params['archive']);
+    // Check access to Active state
+    if(in_array(0, $search_archive) && checkperm("e0"))
+        {
+        $upload_here_params['status'] = 0;
+        $search_archive = array();
+        }
+    // Check remaining states
+    foreach($search_archive as $archive)
+        {
+        if($archive == '' || !is_numeric($archive))
+            {
+            continue;
+            }
+
+        if(checkperm("e{$archive}"))
+            {
+            $upload_here_params['status'] = $archive;
+            break;
+            }
+        }
+    // Last attempt to set the archive state
+    if(!isset($upload_here_params['status']))
+        {
+        $editable_archives = get_editable_states($GLOBALS['userref']);
+
+        if($editable_archives === false || empty($editable_archives))
+            {
+            trigger_error("Unable to determine the correct archive state!");
+            }
+
+        $upload_here_params['status'] = $editable_archives[0]['id'];
+        }
+
+    $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
+    $upload_here_on_click = "CentralSpaceLoad('{$upload_here_url}');";
+
+    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click, UPLOAD_ICON);
     }

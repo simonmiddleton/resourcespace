@@ -120,7 +120,8 @@ select:before {
     content: "\f078";
     color: #2e99e6;
     display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
+    font: normal normal normal 14px/1 "Font Awesome 5 Free";
+    font-weight: 600;
     outline: 1px solid red;
     text-rendering: auto;   
     position: absolute;
@@ -1342,8 +1343,8 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
     }
 
 /* Collapsible sections - using FontAwesome */
-.collapsed:before {content: "\f054";    font: normal normal normal 14px FontAwesome;padding-right:12px; display: inline-block; width:0.6em;}
-.expanded:before {content: "\f078";    font: normal normal normal 14px FontAwesome;padding-right:12px; display: inline-block; width:0.6em;/*! margin-right: 6px; */}
+.collapsed:before {content: "\f054";    font: normal normal normal 14px "Font Awesome 5 Free";font-weight: 600;padding-right:12px; display: inline-block; width:0.6em;}
+.expanded:before {content: "\f078";    font: normal normal normal 14px "Font Awesome 5 Free";font-weight: 600;padding-right:12px; display: inline-block; width:0.6em;/*! margin-right: 6px; */}
 
 /* Subtext */
 .sub {font-size:0.8em;}

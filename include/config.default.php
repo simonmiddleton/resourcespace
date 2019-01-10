@@ -188,6 +188,9 @@ $header_link=true;
 # Header size class. Options are HeaderSmall, HeaderMid, HeaderLarge.
 $header_size="HeaderMid";
 
+# Header includes username to right of user menu icon
+$header_include_username=false;
+
 # Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
 
 # Set this to true in order for the top bar to remain present when scrolling down the page
@@ -1709,7 +1712,7 @@ $hide_access_column_public = false;
 #collection_manage.php - hide 'access' column
 $hide_access_column = false;
 
-# Enable the 'edit all' function in both the collection bar and My Collections
+# Enable the 'edit all' function in the collection and search actions dropdowns
 $show_edit_all_link = true;
 
 #Bypass share.php and go straight to e-mail
@@ -1839,9 +1842,6 @@ $delete_requires_password=false;
 
 # Offline processes (e.g. staticsync and create_previews.php) - for process locking, how old does a lock have to be before it is ignored?
 $process_locks_max_seconds=60*60*4; # 4 hours default.
-
-// The number of threads to be used for create_previews.php
-$max_forks = 3;
 
 # Zip files - the contents of the zip file can be imported to a text field on upload.
 # Requires 'unzip' on the command path.
@@ -2354,19 +2354,7 @@ $use_phpmailer=false;
 #  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
 $enable_thumbnail_creation_on_upload = true;
 
-# Create XML metadata dump files in the resource folder?
-# This ensures that your metadata is kept in a readable format next to each resource file and may help
-# to avoid data obsolescence / future migration. Also, potentially a useful additional backup.
-$xml_metadump=true;
 
-# Configures mapping between metadata and Dublin Core fields, which are used in the XML metadata dump instead if a match is found.
-$xml_metadump_dc_map=array
-	(
-	"title" => "title",
-	"caption" => "description",
-	"date" => "date"
-	);
-	
 # Use Plugins Manager
 $use_plugins_manager = true;
 
@@ -3549,3 +3537,33 @@ $user_purge_disable = false;
 
 // Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
 $inactive_user_disable_days = 0;
+
+/*
+Ability to generate an automated title using a specific format. Allows to generate a title using a combination between the 
+resource title, its ID and file extension.
+
+Supported placeholders:
+ - %title -> replaced with the value of the title field of the resource. This allows 
+ - %resource -> replaced with the resource ID
+ - %extension -> replaces the actual file extension
+
+Example:
+    $auto_generated_resource_title_format = '%title-%resource.%extension';
+    $auto_generated_resource_title_format = '2018-2019P - %resource.%extension';
+    $auto_generated_resource_title_format = 'Photos - %resource.%extension';
+
+To get the title as the filename on download, the following settings should be set:
+$download_filename_field = 8; # Set this to the $view_title_field value
+$prefix_filename_string = "";
+$prefix_resource_id_to_filename = false;
+*/
+$auto_generated_resource_title_format = '';
+
+// List of extensions for which ResourceSpace should generate the internal preview sizes.
+$non_image_types = array();
+
+// List of extensions supported by ghostscript
+$ghostscript_extensions = array('ps', 'pdf');
+
+// Generate only the internal preview sizes for any of the extensions found in $non_image_types list
+$non_image_types_generate_preview_only = true;

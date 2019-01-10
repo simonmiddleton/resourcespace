@@ -152,7 +152,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
                         {
                         $per_page    = (int) getvalescaped('per_page_list', $default_perpage_list, true);
                         $move_to_page_offset = floor($option_new_index/$per_page)*$per_page;
-                        $url_parameters['offset'] = $move_to_page_url;
+                        $url_parameters['offset'] = $move_to_page_offset;
                         }
                     }
                 break;

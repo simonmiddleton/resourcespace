@@ -51,6 +51,8 @@ foreach($fielddata['nodes'] as $node)
         }
     }
 
+$keyword=stripslashes($keyword);
+
 if(!$exactmatch && !$readonly)
     {
     $results[] = array(

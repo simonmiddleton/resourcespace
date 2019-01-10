@@ -935,6 +935,7 @@ function get_theme_headers($themes=array())
 		}
 	}	
 	$return=array();
+	
 	$themes=sql_query("select * from collection where public=1 and $selecting is not null and length($selecting)>0 $sql");
 	for ($n=0;$n<count($themes);$n++)
 		{		
@@ -1573,6 +1574,7 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 	# Returns an array of resource references that can be used as theme category images.
 	global $theme_images_number;
 	global $theme_category_levels;
+	global $userpermissions;
 	# Resources that have been specifically chosen using the option on the collection comments page will be returned first based on order by.
 	
 	# have this hook return an empty array if a plugin needs to return a false value from function
@@ -1605,8 +1607,20 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 			{
 			$sqlselect="select r.ref, cr.use_as_theme_thumbnail, theme2, r.hit_count from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
             
-            // Add search sql so we honour permissions
+			// Add search sql so we honour permissions
+
+			// We are going to temporarily insert the "J" permission to limit the scope of the search for performance
+			// Save the permissions prior to insertion
+			$saved_userpermissions = $userpermissions;
+			// Insert the "J" permission if it is not already there
+			if (!checkperm("J"))
+				{
+				$userpermissions[]="J";
+				}
             $searchsql = do_search("",'','',0,-1,'desc',false,0,false,false,'',false,false,true,false,true);
+			// Restore saved permissions
+			$userpermissions = $saved_userpermissions;
+
 			$orderby=" order by ti.use_as_theme_thumbnail desc";
 			$orderby_theme='';
 			for ($n=2;$n<=count($themes)+1;$n++)
@@ -1937,14 +1951,41 @@ function collection_log($collection,$type,$resource,$notes = "")
 	
 	$modifiedcollognotes=hook("modifycollognotes","",array($type,$resource,$notes));
 	if ($modifiedcollognotes) {$notes=$modifiedcollognotes;}
-	
-	sql_query("insert into collection_log(date,user,collection,type,resource, notes) values (now()," . (($userref!="")?"'$userref'":"null") . ",'$collection','$type'," . (($resource!="")?"'$resource'":"null") . ", '$notes')");
+
+    $user = ($userref != "" ? "'" . escape_check($userref) . "'" : "NULL");
+    $collection = escape_check($collection);
+    $type = escape_check($type);
+    $resource = $resource != "" ? "'" . escape_check($resource) . "'" : "NULL";
+    $notes = escape_check($notes);
+
+	sql_query("
+        INSERT INTO collection_log (date, user, collection, type, resource, notes)
+             VALUES (now(), {$user}, '{$collection}', '{$type}', {$resource}, '{$notes}')");
 	}
     
-function get_collection_log($collection, $fetchrows=-1)
+function get_collection_log($collection, $fetchrows = -1)
 	{
-	global $view_title_field;	
-	return sql_query("select c.date,u.username,u.fullname,c.type,r.field".$view_title_field." title,c.resource, c.notes from collection_log c left outer join user u on u.ref=c.user left outer join resource r on r.ref=c.resource where collection='$collection' order by c.date desc",false,$fetchrows);
+    $sql = "
+                 SELECT c.date,
+                        u.username,
+                        u.fullname,
+                        c.type,
+                        (
+                            SELECT `value`
+                               FROM resource_data
+                              WHERE resource = r.ref
+                                AND resource_type_field = {$GLOBALS["view_title_field"]}
+                              LIMIT 1
+                        ) AS title,
+                        c.resource,
+                        c.notes
+                   FROM collection_log AS c
+        LEFT OUTER JOIN user AS u on u.ref = c.user
+        LEFT OUTER JOIN resource AS r on r.ref = c.resource
+                  WHERE collection = '$collection'
+               ORDER BY c.date DESC";
+
+	return sql_query($sql, false, $fetchrows);
 	}
 	
 function get_collection_videocount($ref)
@@ -2188,18 +2229,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	}
         
     $urlparams = array(
-                      "search"      =>  (isset($collection_data['ref']) ? "!collection" . $collection_data['ref'] : $search),
-                      "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
-                      "ref"         =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
-                      "restypes"    =>  isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "",
-                      "starsearch"  =>  $starsearch,
-                      "order_by"    =>  $order_by,
-                      "col_order_by"=>  $col_order_by,
-                      "sort"        =>  $sort,
-                      "offset"      =>  $offset,
-                      "find"        =>  $find,
-                      "k"           =>  $k
-                       );
+        "search"      =>  (isset($collection_data['ref']) ? "!collection" . $collection_data['ref'] : $search),
+        "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
+        "ref"         =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
+        "restypes"    =>  isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "",
+        "starsearch"  =>  $starsearch,
+        "order_by"    =>  $order_by,
+        "col_order_by"=>  $col_order_by,
+        "sort"        =>  $sort,
+        "offset"      =>  $offset,
+        "find"        =>  $find,
+        "k"           =>  $k);
     
     $options = array();
 	$o=0;
@@ -2282,7 +2322,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Upload to collection
-    if(((checkperm('c') || checkperm('d')) && $collection_data['savedsearch'] == 0 && ($userref == $collection_data['user'] || $collection_data['allow_changes'] == 1 || checkperm('h'))) && ($k == '' || $internal_share_access))
+    if(
+        (
+            (checkperm('c') || checkperm('d'))
+            && $collection_data['savedsearch'] == 0
+            && (
+                    $userref == $collection_data['user']
+                    || $collection_data['allow_changes'] == 1
+                    || checkperm('h')
+                )
+        )
+        && ($k == '' || $internal_share_access))
         {
         if($upload_then_edit)
             {
@@ -2292,9 +2342,23 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             {
             $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",array(),array("uploader"=>$top_nav_upload_type,"ref"=>-$userref, "collection_add"=>$collection_data['ref']));
             }
+
         $options[$o]['value']='upload_collection';
 		$options[$o]['label']=$lang['action-upload-to-collection'];
 		$options[$o]['data_attr']=$data_attribute;
+
+        // Upload here functionality
+        if($top_actions)
+            {
+            $options[$o]['label'] = $lang['upload_here'];
+
+            $upload_here_option = $options[$o];
+
+            unset($options[$o]);
+
+            array_unshift($options, $upload_here_option);
+            }
+
 		$o++;
         }
 
@@ -2330,8 +2394,15 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     // Request all
     if($count_result > 0 && ($k == '' || $internal_share_access))
         {
-        # Ability to request a whole collection (only if user has restricted access to any of these resources)
-        $min_access = collection_min_access($result);
+		# Ability to request a whole collection (only if user has restricted access to any of these resources)
+		if($pagename == 'collection_manage') 
+			{
+			$min_access = collection_min_access($collection_data['ref']);
+			}
+		else
+		    {
+			$min_access = collection_min_access($result);
+			}
         if($min_access != 0)
             {                
             $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_request.php",$urlparams);
@@ -2698,13 +2769,13 @@ function get_last_resource_edit($collection)
         }
     $plugin_last_resource_edit=hook('override_last_resource_edit');
     if($plugin_last_resource_edit===true){
-    	return true;
+    	return false;
     }
     $lastmodified  = sql_query("SELECT r.ref, r.modified FROM collection_resource cr LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection='" . $collection . "' ORDER BY r.modified DESC");
     $lastuserdetails = sql_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource ='" . $lastmodified[0]["ref"] . "' AND rl.type='e'");
     if(count($lastuserdetails) == 0)
         {
-        return true;
+        return false;
         }
         
     $timestamp = max($lastuserdetails[0]["date"],$lastmodified[0]["modified"]);
@@ -2769,7 +2840,7 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
         }
 
     global $pextension, $usesize, $subbed_original, $prefix_resource_id_to_filename, $prefix_filename_string, $server_charset,
-    $deletion_array, $use_zip_extension, $copy, $exiftool_write_option, $p, $size;
+           $download_filename_id_only, $deletion_array, $use_zip_extension, $copy, $exiftool_write_option, $p, $size;
 
     # Only perform the copy if an original filename is set.
 
@@ -2790,10 +2861,25 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
         }
 
     if ($usesize!=""&&!$subbed_original){$append="-".$usesize;}else {$append="";}
-    $basename_minus_extension=remove_extension($pathparts['basename']);
-    $filename=$basename_minus_extension.$append.".".$pextension;
-
-    if ($prefix_resource_id_to_filename) {$filename=$prefix_filename_string . $ref . "_" . $filename;}
+	$basename_minus_extension=remove_extension($pathparts['basename']);
+	
+	if ($download_filename_id_only) 
+	    {
+		# Id only means ignore settings $original_filenames_when_download and $prefix_resource_id_to_filename
+		$filename = $prefix_filename_string . $ref . "." . $pextension;
+		}	
+	else 
+		{  
+		# Otherwise use settings $original_filenames_when_download and $prefix_resource_id_to_filename
+		if ($prefix_resource_id_to_filename) 
+			{
+			$filename = $prefix_filename_string . $ref . "_" . $basename_minus_extension.$append.".".$pextension;
+			}
+		else 
+			{
+			$filename = $prefix_filename_string . $basename_minus_extension.$append.".".$pextension;
+			}
+    	}
 
     $fs=explode("/",$filename);$filename=$fs[count($fs)-1];
 
@@ -3001,9 +3087,11 @@ function collection_download_process_summary_notes(
     $usertempdir,
     $filename,
     &$path,
-    array &$deletion_array)
+    array &$deletion_array,
+    $size,
+    &$zip)
     {
-    global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension;
+    global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension, $p;
     # Append summary notes about the completeness of the package, write the text file, add to archive, and schedule for deletion
     if($zipped_collection_textfile == true && $includetext == "true")
         {
@@ -3078,6 +3166,7 @@ function collection_download_process_csv_metadata_file(array $result, $id, $coll
     // Add link to file for use by tar to prevent full paths being included.
     if($collection_download_tar)
         {
+        global $p, $usertempdir, $filename;
         debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
         @symlink($csv_file, $usertempdir . DIRECTORY_SEPARATOR . 'Col-' . $collection . '-metadata-export.csv');
         }

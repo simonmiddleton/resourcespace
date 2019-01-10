@@ -99,7 +99,13 @@ if($videojs || $pagename=="search")
 			var videojs_<?php echo $context ?>_<?php echo $display ?>_introaudio<?php echo $ref ?> = jQuery('#<?php echo $context ?>_<?php echo $display ?>_introaudio<?php echo $ref ?>');
 			</script>
 	<?php } ?>
-		
+
+	<!-- START DISABLE VIDEOJS RIGHT CONTEXT MENU -->
+	<script>
+		jQuery('.video-js').bind('contextmenu',function() { return false; });
+	</script>
+	<!-- END DISABLE VIDEOJS RIGHT CONTEXT MENU -->
+
 	<!-- END VIDEOJS -->
 	<?php
 	}

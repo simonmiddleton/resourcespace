@@ -770,9 +770,11 @@ else if(1 == $resource['has_image'])
 		$imagepath_retina     = get_resource_path($ref, true, 'scr', false, $resource['preview_extension'], true, 1, $use_watermark);
 		if (file_exists($imagepath_retina)) {$imagepath=$imagepath_retina;$use_size="scr";}
 		}
-	
-	# Fall back to preview, then thumbnail if scr doesn't exist	
-    if(!file_exists($imagepath) || $resource_view_use_pre)
+
+    if(
+        !file_exists($imagepath)
+        || ($hide_real_filepath && !resource_download_allowed($ref, $use_size, $resource['resource_type']))
+        || $resource_view_use_pre)
         {
 		$use_size="pre";
 		}
@@ -1101,9 +1103,8 @@ else
 <?php } /* End of replacerenderinnerresourcepreview hook */ ?>
 <?php
 
-
-
-hook("renderbeforerecorddownload");
+$disable_flag = (hook('disable_flag_for_renderbeforerecorddownload') || ($use_pdfjs_viewer && $resource['file_extension'] == 'pdf') );
+hook("renderbeforerecorddownload", '', array($disable_flag));
 
 ?>
 <?php if (!hook("renderresourcedownloadspace")) { ?>

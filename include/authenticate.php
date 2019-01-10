@@ -357,6 +357,15 @@ foreach($plugins as $plugin)
 // Load user config options
 process_config_options($userref);
 
+$non_image_types = array_unique(
+    array_map(
+        'strtolower',
+        array_merge(
+            $non_image_types,
+            $ffmpeg_supported_extensions,
+            $unoconv_extensions,
+            $ghostscript_extensions)));
+
 hook('handleuserref','',array($userref));
 
 $is_authenticated=true;
