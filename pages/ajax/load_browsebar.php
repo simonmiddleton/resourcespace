@@ -36,6 +36,7 @@ for($n=0;$n<$bcount;$n++)
         {
         case "RT":
             $target_search["restypes"] =  $browseid;
+            $target_search["archive"] =  "";
         break;
         
         case "F":
@@ -101,6 +102,7 @@ switch ($returntype)
             $return_items[$n]["expandable"] = "true";            
             $tgtparams = array();
             $tgtparams["restypes"]  = $restype["ref"];
+            $tgtparams["search"]  = "";
             $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;
@@ -402,6 +404,7 @@ switch ($returntype)
             
             $tgtparams = array();
             $tgtparams["search"] = "";  
+            $tgtparams["restypes"] = "";  
             $tgtparams["archive"] = $showstate;                           
             $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
