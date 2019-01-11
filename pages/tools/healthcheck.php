@@ -96,7 +96,7 @@ if (isset($disksize))
 	$avail=$disksize*(1000*1000*1000); # Get quota in bytes
 	$used=get_total_disk_usage();      # Total usage in bytes
     $percent=ceil(($used/$avail)*100);
-	if ($percent>=90) {echo " WARNING " . $percent . "% of quota";}
+	if ($percent>=95) {echo " WARNING " . $percent . "% of quota";}
 	}
 
 
