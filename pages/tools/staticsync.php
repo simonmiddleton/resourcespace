@@ -4,10 +4,33 @@ include_once dirname(__FILE__) . "/../../include/general.php";
 include dirname(__FILE__) . "/../../include/resource_functions.php";
 include dirname(__FILE__) . "/../../include/image_processing.php";
 
+$cli_short_options = 'h';
+$cli_long_options  = array(
+    'help',
+    'send-notifications'
+);
+
 $sapi_type = php_sapi_name();
 if (substr($sapi_type, 0, 3) != 'cli')
     {
     exit("Command line execution only.");
+    }
+
+$send_notification = false;
+
+// CLI options check
+foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option_value)
+    {
+    if(in_array($option_name, array('h', 'help')))
+        {
+        echo 'If you have the configs [$file_checksums=true; $file_upload_block_duplicates=true;] set and would like to have duplicate resource information sent as a notifiaction please run php staticsync.php --send-notifications' . PHP_EOL;
+        exit(1);
+        }
+
+    if('send-notifications' == $option_name)
+        {
+        $send_notification = true;
+        }
     }
 
 if(isset($staticsync_userref))
@@ -281,8 +304,8 @@ function ProcessFolder($folder)
                     $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
                     if(count($duplicates)>0)
                         {
-                        debug("STATICSYNC ERROR- duplicate file matches resource " . implode(",",$duplicates));
-                        $errors[] = "Duplicate file matches resource " . implode(",",$duplicates);
+                        debug("STATICSYNC ERROR- Duplicate found: resource(s) " . implode(",",$duplicates) . " matches file " . $fullpath);
+                        $errors[] = "Duplicate found: resource(s) " . implode(",",$duplicates) . " matches file " . $fullpath;
                         continue;                
                         }
                     }
@@ -907,6 +930,16 @@ if(count($errors) > 0)
     {
     echo PHP_EOL . "ERRORS: -" . PHP_EOL;
     echo implode(PHP_EOL,$errors) . PHP_EOL;
+    if ($send_notification)
+        {
+        $notify_users = get_notification_users("SYSTEM_ADMIN");
+        foreach($notify_users as $notify_user)
+            {
+            $admin_notify_users[]=$notify_user["ref"];
+            }
+        $message = "STATICSYNC ERRORS FOUND: - " . PHP_EOL . implode(PHP_EOL,$errors);
+        message_add($admin_notify_users,$message);
+        }
     }
         
 echo "...Complete" . PHP_EOL;
