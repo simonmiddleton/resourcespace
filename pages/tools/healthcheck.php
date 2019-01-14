@@ -25,7 +25,7 @@ if ($check!==$hash) {exit("FAIL - test write to disk returned a different string
 # Check free disk space is sufficient.
 $avail=disk_total_space($storagedir);
 $free=disk_free_space($storagedir);
-if (($free/$avail)<0.1) {exit("FAIL - less than 10% disk space free.");} 
+if (($free/$avail)<0.05) {exit("FAIL - less than 5% disk space free.");} 
 
 
 // Check write access to sql_log
@@ -96,7 +96,8 @@ if (isset($disksize))
 	$avail=$disksize*(1000*1000*1000); # Get quota in bytes
 	$used=get_total_disk_usage();      # Total usage in bytes
     $percent=ceil(($used/$avail)*100);
-	if ($percent>=95) {echo " WARNING " . $percent . "% of quota";}
+    echo " " . $percent . "% used";
+	if ($percent>=95) {echo " WARNING nearly full";}
 	}
 
 
