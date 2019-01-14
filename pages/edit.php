@@ -1100,7 +1100,7 @@ else
          <?php
          if ($resource["has_image"]==1)
             { ?>
-            <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; width: 40vw;"/>
+            <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; max-width: 40vw;"/>
             <?php // check for watermarked version and show it if it exists
             if (checkperm("w"))
                {
