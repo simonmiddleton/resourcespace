@@ -2482,6 +2482,9 @@ $lang['systemconfig_themes_category_split_pages'] = 'Display Featured Collection
 $lang['systemconfig_theme_category_levels'] = 'How many levels of theme category to show?';
 $lang['systemconfig_enable_themes'] = 'Enable Featured Collections';
 $lang["systemconfig_modal_default"] = "Enable modals for standard pages where configured? User preferences may override this.";
+$lang['systemconfig_browse_bar_section'] = 'Browse Bar';
+$lang['systemconfig_browse_bar_enable'] = 'Enable Browse Bar';
+$lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse Bar';
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
