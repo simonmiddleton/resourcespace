@@ -31,7 +31,7 @@ if(enforcePostRequest("browse_action"))
 
             // Check valid change
             $curnodes = get_resource_nodes($resource, $nodeinfo["resource_type_field"]);
-            $multifields = array(FIELD_TYPE_CATEGORY_TREE,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,FIELD_TYPE_TEXT_BOX_MULTI_LINE);
+            $multifields = array(FIELD_TYPE_CATEGORY_TREE,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,FIELD_TYPE_CHECK_BOX_LIST);
             $valid = count($curnodes) == 0 || in_array($field["type"],$multifields);
 
             if($valid)

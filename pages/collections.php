@@ -962,7 +962,7 @@ if ($count_result>0)
 		?>
 <?php if (!hook("resourceview")) { ?>
 		<!--Resource Panel-->
-		<div class="CollectionPanelShell" id="ResourceShell<?php echo urlencode($ref) ?>"
+		<div class="CollectionPanelShell ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
         <?php if ($add==$ref) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
         
 		<?php if (!hook("rendercollectionthumb")){?>

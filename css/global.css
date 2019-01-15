@@ -1626,16 +1626,13 @@ select.MultiSelect:before {
     border: 2px solid #FFF;
 }
 
-.BrowseBarInner{
-    display: inline-block;
-}
-
 .BrowseBarStructure{
-    float:left;
-    width: 14px;
-    font-family: courier;
+    display: inline-block;
+    width: 1em;
     font-size: 14px;
     padding-left: 3px;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 600;
 }
 
 .BrowseBarLink{
@@ -1678,14 +1675,18 @@ select.MultiSelect:before {
     display: none;
 }
 
-#BrowseBarTab a:hover{
+.BrowseBarLink{
+    opacity: 0.7;
+}
+
+#BrowseBarTab a:hover, a.BrowseBarLink:hover{
     text-decoration: none;
+    opacity: 1;
 }
 
 #BrowseBarTab.BrowseBarHidden  .BrowseBarTabText{
     display: block;
 }
-
 
 #CentralSpaceContainer.BrowseMode{
     padding-left: 30%;
@@ -1693,20 +1694,38 @@ select.MultiSelect:before {
 
 .browse_closed:after {
     content: "\f0fe";
-    font-family: "Font Awesome 5 Free";
     }   
 
 .browse_expanded:after {
     content: "\f146";
-    font-family: "Font Awesome 5 Free";
     }
+
+.BrowseTypeRestype:after, .BrowseTypeField:after, .BrowseTypeFeatured:after{
+    content: "\f07b";
+    }  
+
+.BrowseOpen .BrowseTypeRestype:after, .BrowseOpen .BrowseTypeField:after, .BrowseOpen .BrowseTypeFeatured:after{
+    content: "\f07c";
+    }      
+
+.BrowseTypeNode:after {
+    content: "\f02b";
+    }
+
+    
+.BrowseTypeCol:after {
+    content: "\f009";
+    } 
+    
+.BrowseTypeNew:after {
+    content: "\f055";
+    }  
 
 a.browse_refresh{
     margin-left: 3px;
     display:none;
-    float:left;
     }
 
 .BrowseOpen .browse_refresh{
-    display:block;
+    display:inline-block;
     }

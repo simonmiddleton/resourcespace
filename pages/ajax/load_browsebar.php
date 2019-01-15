@@ -82,7 +82,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-RT:new";
             $return_items[$n]["name"] = $lang["resource_type_new"];
-            $return_items[$n]["class"] = "fa far fa-plus-circle";
+            $return_items[$n]["class"] = "New";
             $return_items[$n]["expandable"] = "false";
             $tgtparams = array();
             $tgtparams["type"]  = "resource_type";
@@ -98,7 +98,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-RT:" . $restype["ref"];
             $return_items[$n]["name"] = i18n_get_translated($restype["name"]);
-            $return_items[$n]["class"] = "fa far fa-folder";
+            $return_items[$n]["class"] = "Restype";
             $return_items[$n]["expandable"] = "true";            
             $tgtparams = array();
             $tgtparams["restypes"]  = $restype["ref"];
@@ -122,7 +122,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-F:new";
             $return_items[$n]["name"] = $lang["resource_type_field_new"];
-            $return_items[$n]["class"] = "fa far fa-plus-circle";
+            $return_items[$n]["class"] = "New";
             $return_items[$n]["expandable"] = "false";
             $tgtparams = array();
             $tgtparams["restypes"]  = "new";
@@ -146,7 +146,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-F:" . $field["ref"];
             $return_items[$n]["name"] = i18n_get_translated($field["title"]);
-            $return_items[$n]["class"] = "fa far fa-folder";
+            $return_items[$n]["class"] = "Field";
             $return_items[$n]["expandable"] = "true";
             $return_items[$n]["link"] = "";
             $return_items[$n]["modal"] = false;
@@ -176,7 +176,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-N:new";
             $return_items[$n]["name"] = $lang["add"];
-            $return_items[$n]["class"] = "fa far fa-plus-circle";
+            $return_items[$n]["class"] = "New";
             $return_items[$n]["expandable"] = "false";
             $tgtparams = array();
             $tgtparams["type"]  = "node";
@@ -196,7 +196,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
             $return_items[$n]["name"] = i18n_get_translated($node["name"]);
-            $return_items[$n]["class"] = "fa far fa-tag";
+            $return_items[$n]["class"] = "Node";
             $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";
             
             $tgtparams = array();
@@ -228,7 +228,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-N:new";
             $return_items[$n]["name"] = $lang["add"];
-            $return_items[$n]["class"] = "fa far fa-plus-circle";
+            $return_items[$n]["class"] = "New";
             $return_items[$n]["expandable"] = "false";
             $tgtparams = array();
             $tgtparams["type"]  = "node";
@@ -247,7 +247,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
             $return_items[$n]["name"] = i18n_get_translated($node["name"]);
-            $return_items[$n]["class"] = "fa far fa-tag";           
+            $return_items[$n]["class"] = "Node";           
             $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";            
             $tgtparams = array();
             $tgtparams["search"]  = NODE_TOKEN_PREFIX . $node["ref"];
@@ -280,7 +280,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-FC:new";
             $return_items[$n]["name"] = $lang["create"];
-            $return_items[$n]["class"] = "fa far fa-plus-circle";
+            $return_items[$n]["class"] = "New";
             $return_items[$n]["expandable"] = "false";
             $newtgtparams = $tgtparams;
             $newtgtparams["new"]  = "true";            
@@ -297,7 +297,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-FC:" . base64_encode($subcat);
             $return_items[$n]["name"] = i18n_get_translated($subcat);
-            $return_items[$n]["class"] = "fa far fa-folder";
+            $return_items[$n]["class"] = "Featured";
             $return_items[$n]["expandable"] = "true";                            
             $tgturl = generateURL($baseurl_short . "pages/themes.php", $tgtparams, array("theme" . ($x+1) => $subcat));
             $return_items[$n]["link"] = $tgturl;
@@ -314,7 +314,7 @@ switch ($returntype)
                 $return_items[$n] = array();
                 $return_items[$n]["id"] = $id . "-C:" . $fcol["ref"];
                 $return_items[$n]["name"] = i18n_get_translated($fcol["name"]);
-                $return_items[$n]["class"] = "fa fa-th-large";
+                $return_items[$n]["class"] = "Col";
                 $return_items[$n]["expandable"] = "false";                
                 $tgtparams = array();
                 $tgtparams["search"] = "!collection" . $fcol["ref"];                            
@@ -339,7 +339,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-C:new";
             $return_items[$n]["name"] = $lang["createnewcollection"];
-            $return_items[$n]["class"] = "fa far fa-plus-circle";
+            $return_items[$n]["class"] = "New";
             $return_items[$n]["expandable"] = "false";
             $tgtparams = array();
             $tgtparams["type"]  = "collection";
@@ -356,7 +356,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-C:" . $mycol["ref"];
             $return_items[$n]["name"] = i18n_get_translated($mycol["name"]);
-            $return_items[$n]["class"] = "fa fa-th-large";
+            $return_items[$n]["class"] = "Col";
             $return_items[$n]["expandable"] = "false";
             
             $tgtparams = array();
@@ -398,7 +398,7 @@ switch ($returntype)
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-A:" . $showstate;
             $return_items[$n]["name"] = isset($lang["status" . $showstate]) ? $lang["status" . $showstate] : $showstate;
-            $return_items[$n]["class"] = "fas fa-folder";
+            $return_items[$n]["class"] = "State";
             // TODO Add custom icon for each archive state
             $return_items[$n]["expandable"] = "false";
             

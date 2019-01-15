@@ -54,7 +54,7 @@ function renderBrowseItem(node, parent)
         }
     else
         {
-        expand = indent;    
+        expand = "";      
         }
     
     var rowindent = "";
@@ -285,7 +285,7 @@ function toggleBrowseElements(browse_id, reload)
             if(browse_toload.length == 0)
                 {
                 //console.log("Finished browse_bar reload, initialising drop"); 
-                BrowseBarDropInit();
+                BrowseBarInit();
                 }
             else
                 {
@@ -309,8 +309,14 @@ function ReloadBrowseBar()
         });
     }
 
-function BrowseBarDropInit()
+function BrowseBarInit()
     {
+    if(!jQuery('#BrowseBar'))
+        {
+		jQuery('#CentralSpaceContainer').removeClass('BrowseMode');
+		jQuery('#Footer').removeClass('BrowseMode');
+        }
+        
     jQuery(".BrowseBarDroppable").droppable({
         accept: ".ResourcePanel, .CollectionPanelShell",
 
@@ -341,11 +347,7 @@ function BrowseBarDropInit()
                             <?php echo generateAjaxToken('browse_action'); ?>
                             };
                         
-                        success = BrowseAction(post_data);
-                        if(success)
-                            {
-                            jQuery(this).find("a.BrowseBarLink").fadeTo(100, 0.3, function() {jQuery(this).fadeTo(500, 1.0); });
-                            }
+                        BrowseAction(post_data,jQuery(this).find("a.BrowseBarLink"));
                         }
                     else
                         {
@@ -371,7 +373,7 @@ function BrowseBarDropInit()
         });
     }
 
-function BrowseAction(post_data)
+function BrowseAction(post_data,browselink)
     {
     //console.log(post_data);
     url = baseurl_short+"pages/ajax/browse_action.php";
@@ -381,11 +383,10 @@ function BrowseAction(post_data)
             data: post_data,
             dataType: "json", 
             async:true            
-			}).done(function(response, status, xhr)
+               }).done(function(response, status, xhr)
                 {
                 // Load completed	
-                //console.log('OK');
-                return true;
+                browselink.fadeTo(300, 0.3, function() {jQuery(this).fadeTo(1000, 1.0); });
                 }).fail(
                     function(xhr, textStatus, errorThrown)
                         {		
@@ -398,6 +399,5 @@ function BrowseAction(post_data)
                             {
                             styledalert('<?php echo $lang["error"]?>',statusText);
                             }
-                        return false; 	
                         });
     }
