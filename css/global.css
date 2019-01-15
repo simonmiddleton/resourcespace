@@ -1700,11 +1700,11 @@ select.MultiSelect:before {
     content: "\f146";
     }
 
-.BrowseTypeRestype:after, .BrowseTypeField:after, .BrowseTypeFeatured:after{
+.BrowseTypeRestype:after, .BrowseTypeField:after, .BrowseTypeFeatured:after, .BrowseTypeState:after{
     content: "\f07b";
     }  
 
-.BrowseOpen .BrowseTypeRestype:after, .BrowseOpen .BrowseTypeField:after, .BrowseOpen .BrowseTypeFeatured:after{
+.BrowseOpen .BrowseTypeRestype:after, .BrowseOpen .BrowseTypeField:after, .BrowseOpen .BrowseTypeFeatured:after, .BrowseOpen.BrowseTypeState:after{
     content: "\f07c";
     }      
 
