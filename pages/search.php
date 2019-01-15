@@ -545,6 +545,10 @@ if ($search_includes_resources || substr($search,0,1)==="!")
             $editable_only);
 
         $search_results_count = sql_found_rows();
+        if(isset($GLOBALS['is_special_search_result_set']) && $GLOBALS['is_special_search_result_set'] === true)
+            {
+            $search_results_count = is_array($result) ? count($result) : 0;
+            }
         }
     }
 else
@@ -1376,7 +1380,13 @@ if($responsive_ui)
         $showkeycomment = false;
 
         # loop and display the results
-        for ($n = 0; ($n < count($result) && $n < $per_page); $n++)
+        // Standard searches should implement proper sql limits
+        if(!isset($GLOBALS['is_special_search_result_set']))
+            {
+            $offset = 0;
+            }
+
+        for ($n = $offset; ($n < count($result) && $n < ($per_page + $offset)); $n++)
             {
         # Allow alternative configuration settings for this resource type.
         resource_type_config_override($result[$n]["resource_type"]);
