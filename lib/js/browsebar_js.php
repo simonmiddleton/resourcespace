@@ -54,7 +54,7 @@ function renderBrowseItem(node, parent)
         }
     else
         {
-        expand = "";      
+        expand = "";    
         }
     
     var rowindent = "";
@@ -210,8 +210,9 @@ function toggleBrowseElements(browse_id, reload)
         browsepostload[browse_id] = new Array();
         }
 
-    // Remove any child items before load/reload
-    jQuery("[data-browse-parent|='" + browse_id + "']").remove();
+    // Remove any current child items before load/reload
+    jQuery("[data-browse-parent|='" + browse_id + "']").fadeOut();
+    jQuery("[data-browse-parent|='" + browse_id + "']").addClass("browse_delete");
     
     //console.log("element: " + curel);
                     
@@ -247,6 +248,9 @@ function toggleBrowseElements(browse_id, reload)
                 
                 // Show all immediate children
                 jQuery("[data-browse-parent='" + browse_id + "']").slideDown();
+                
+                // Remove any old items hidden earlier
+                jQuery(".browse_delete").slideUp();;
                 }
             
             curel.attr("data-browse-status","open");
