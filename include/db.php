@@ -2436,56 +2436,6 @@ function resource_table_joins_sql(array $joins, $sql, $order_by = '')
     }
 
 
-/**
-* Set the found rows for this sql
-* 
-* IMPORTANT: use the built-in SQL function "FOUND_ROWS()" and option "SQL_CALC_FOUND_ROWS" when possible!
-* 
-* @uses GLOBAL $sql_found_rows
-* 
-* @param array $sql_result  The sql_query() result as is
-* 
-* @return void
-*/
-function sql_calc_found_rows($sql_result)
-    {
-    global $sql_found_rows;
-
-    if(!is_array($sql_result))
-        {
-        $sql_found_rows = 0;
-
-        return;
-        }
-
-    $sql_found_rows = count($sql_result);
-
-    return;
-    }
-
-
-/**
-* Return the found rows of the last query that called sql_calc_found_rows()
-* 
-* IMPORTANT: use the built-in SQL function "FOUND_ROWS()" and option "SQL_CALC_FOUND_ROWS" when possible!
-* 
-* @uses GLOBAL $sql_found_rows
-* 
-* @return integer
-*/
-function sql_found_rows()
-    {
-    global $sql_found_rows;
-
-    if(is_null($sql_found_rows))
-        {
-        $sql_found_rows = 0;
-        }
-
-    return $sql_found_rows;
-    }
-
-
 
 
 

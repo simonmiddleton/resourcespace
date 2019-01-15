@@ -1496,7 +1496,22 @@ function do_search(
             }
 
         $result = sql_query($results_sql, false, $fetchrows);
-        sql_calc_found_rows(sql_query("SELECT DISTINCT r.ref FROM resource r {$t} WHERE {$t2} {$sql}"));
+
+        // Calculate the found rows without the SQL limit clause (and a more simplistic SQL query)
+        $sql_calc_found_rows = sql_value("SELECT count(DISTINCT r.ref) AS `value` FROM resource r {$t} WHERE {$t2} {$sql}", 0);
+        if(is_array($fetchrows))
+            {
+            // Pad to the left (to offset - if needed)
+            $padded_result = array_pad($result, abs($fetchrows_offset + $fetchrows_rows) * -1, 0);
+            // Pad to the right (remainder required to make up the total count correctly)
+            $padded_result = array_pad($padded_result, $sql_calc_found_rows, 0);
+
+            $result = $padded_result;
+            }
+        else
+            {
+            $result = array_pad($result, $sql_calc_found_rows, 0);
+            }
         }
 
     debug("Search found " . count($result) . " results");

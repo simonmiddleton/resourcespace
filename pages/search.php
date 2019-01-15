@@ -522,7 +522,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
         {
-        $limit = array(
+        $fetchrows = array(
             'offset' => $offset,
             'rows'   => $per_page,
         );
@@ -532,7 +532,7 @@ if ($search_includes_resources || substr($search,0,1)==="!")
             $restypes,
             $order_by,
             $archive,
-            $limit,
+            $fetchrows,
             $sort,
             false,
             $starsearch,
@@ -543,12 +543,6 @@ if ($search_includes_resources || substr($search,0,1)==="!")
             true,
             false,
             $editable_only);
-
-        $search_results_count = sql_found_rows();
-        if(isset($GLOBALS['is_special_search_result_set']) && $GLOBALS['is_special_search_result_set'] === true)
-            {
-            $search_results_count = is_array($result) ? count($result) : 0;
-            }
         }
     }
 else
@@ -562,7 +556,7 @@ if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
 if ($hook_result!==false) {$result=$hook_result;}
 
-$count_result = $search_results_count;
+$count_result = is_array($result) ? count($result) : 0;
 
 if ($collectionsearch)
     {
@@ -919,7 +913,7 @@ if($enable_themes && $enable_theme_breadcrumbs && !$search_titles && isset($them
 
 if (!hook("replacesearchheader")) # Always show search header now.
     {
-    $resources_count = $search_results_count;
+    $resources_count = is_array($result) ? count($result) : 0;
     if (isset($collections)) 
         {
         $results_count=count($collections)+$resources_count;
@@ -1198,7 +1192,7 @@ if($responsive_ui)
     <?php
 
         
-    $results = $search_results_count;
+    $results = is_array($result) ? count($result) : 0;
     $totalpages=ceil($results/$per_page);
     if ($offset>$results) {$offset=0;}
     $curpage=floor($offset/$per_page)+1;
@@ -1375,18 +1369,12 @@ if($responsive_ui)
         $showkeycollect = false;
         $showkeycollectout = false;
         $showkeyemail = false;
-    $showkeyedit = false;
+        $showkeyedit = false;
         $showkeystar = false;
         $showkeycomment = false;
 
         # loop and display the results
-        // Standard searches should implement proper sql limits
-        if(!isset($GLOBALS['is_special_search_result_set']))
-            {
-            $offset = 0;
-            }
-
-        for ($n = $offset; ($n < count($result) && $n < ($per_page + $offset)); $n++)
+        for ($n = $offset; ($n < count($result) && $n < ($offset + $per_page)); $n++)
             {
         # Allow alternative configuration settings for this resource type.
         resource_type_config_override($result[$n]["resource_type"]);

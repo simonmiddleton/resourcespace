@@ -37,16 +37,9 @@ $fetchrows = 0 + $per_page;
 
 // Use case: getting total number of resources matching search
 $resources_000922 = do_search('Resource #000922', 1, 'resourceid', '0', $fetchrows, 'asc');
-if(20 != sql_found_rows())
+if(20 != count($resources_000922))
     {
     echo "[Legacy format] total number of resources - ";
-    return false;
-    }
-
-// Use case: getting 3 resources per page
-if(count($resources_000922) != 3)
-    {
-    echo "[Legacy format] resources per page - ";
     return false;
     }
 
@@ -65,21 +58,18 @@ if(
 $fetchrows = 3 + $per_page;
 
 $page2_resources_000922 = do_search('Resource #000922', 1, 'resourceid', '0', $fetchrows, 'asc');
-if(20 != sql_found_rows())
+if(20 != count($page2_resources_000922))
     {
     echo "[Legacy format][page 2] total number of resources - ";
     return false;
     }
 
-if(count($page2_resources_000922) != 6)
-    {
-    echo "[Legacy format][page 2] resources per page - ";
-    return false;
-    }
-
 // Use case: getting the next 3 resources on the second page
 if(
-    $page2_resources_000922[3]['ref'] != $resources[3]['ref']
+    $resources_000922[0]['ref'] != $resources[0]['ref']
+    || $resources_000922[1]['ref'] != $resources[1]['ref']
+    || $resources_000922[2]['ref'] != $resources[2]['ref']
+    || $page2_resources_000922[3]['ref'] != $resources[3]['ref']
     || $page2_resources_000922[4]['ref'] != $resources[4]['ref']
     || $page2_resources_000922[5]['ref'] != $resources[5]['ref']
 )
@@ -99,18 +89,14 @@ $fetchrows = array(
 
 // Use case: getting total number of resources matching search
 $resources_000922 = do_search('Resource #000922', 1, 'resourceid', '0', $fetchrows, 'asc');
-if(20 != sql_found_rows())
+if(20 != count($resources_000922))
     {
     echo "[SQL Limit format] total number of resources - ";
     return false;
     }
 
-// Use case: getting 3 resources per page
-if(count($resources_000922) != 3)
-    {
-    echo "[SQL Limit format][page 2] resources per page - ";
-    return false;
-    }
+// Extract the first page resources
+$resources_000922 = array_slice($resources_000922, 0, $per_page);
 
 // Use case: getting the first 3 resources on the first page
 if(
@@ -130,17 +116,14 @@ $fetchrows = array(
 );
 
 $page2_resources_000922 = do_search('Resource #000922', 1, 'resourceid', '0', $fetchrows, 'asc');
-if(20 != sql_found_rows())
+if(20 != count($page2_resources_000922))
     {
     echo "[SQL Limit format][page 2] total number of resources - ";
     return false;
     }
 
-if(count($page2_resources_000922) != 3)
-    {
-    echo "[SQL Limit format][page 2] resources per page - ";
-    return false;
-    }
+// Extract the second page resources
+$page2_resources_000922 = array_slice($page2_resources_000922, 3, $per_page);
 
 // Use case: getting the next 3 resources on the second page
 if(
