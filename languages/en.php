@@ -1722,6 +1722,7 @@ $lang["custompermissions"]="Custom permissions";
 $lang["searchcapability"]="Search capability";
 $lang["access_to_restricted_and_confidential_resources"]="Can download restricted resources and view confidential resources<br>(normally admin only)";
 $lang["restrict_access_to_all_available_resources"]="Restrict access to all available resources";
+$lang["restrict_access_to_workflow_state"] = "Restrict access to resources in workflow %workflow_state_name"; # %workflow_state_name is placeholder
 $lang["can_make_resource_requests"]="Can make resource requests";
 $lang["show_watermarked_previews_and_thumbnails"]="Show watermarked previews/thumbnails";
 $lang["can_see_all_fields"]="Can see all fields";
