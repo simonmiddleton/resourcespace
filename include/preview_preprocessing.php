@@ -393,7 +393,7 @@ if (in_array($extension,$calibre_extensions) && isset($calibre_path) && !isset($
     $basename_minus_extension=remove_extension($path_parts['basename']);
     $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
 
-    $cmd="xvfb-run ". $calibrecommand . " " . escapeshellarg($file) . " " .$pdffile." ";
+    $cmd="xvfb-run ". $calibrecommand . " " . escapeshellarg($file) . " " . escapeshellarg($pdffile) ." ";
     $wait=run_command($cmd);
 
     if (file_exists($pdffile))
