@@ -28,13 +28,7 @@ include "../include/header.php";
 <?php
 foreach(get_workflow_states() as $workflow_state)
     {
-    $bypass_e_permission_check = false;
-    if($show_user_contributed_resources && $workflow_state == 0)
-        {
-        $bypass_e_permission_check = true;
-        }
-
-    if((!$bypass_e_permission_check && !checkperm("e{$workflow_state}")) || checkperm("z{$workflow_state}"))
+    if(($show_user_contributed_resources && $workflow_state != 0) && checkperm("z{$workflow_state}"))
         {
         continue;
         }
