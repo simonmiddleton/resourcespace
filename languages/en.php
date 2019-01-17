@@ -349,6 +349,7 @@ $lang["uselocalupload"]="OR: Use local 'upload' folder instead of remote FTP ser
 
 # User contributions
 $lang["contributenewresource"]="Contribute new resource";
+$lang["view_my_contributions_ws"]="View my contributions - %workflow_state_name"; # %workflow_state_name is a placeholder
 $lang["viewcontributedps"]="View my contributions - pending submission";
 $lang["viewcontributedpr"]="View my contributions - pending review";
 $lang["viewcontributedsubittedl"]="View my contributions - active";
