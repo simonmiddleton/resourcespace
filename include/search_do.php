@@ -1499,7 +1499,11 @@ function do_search(
 
         // Calculate the found rows without the SQL limit clause (and a more simplistic SQL query)
         $sql_calc_found_rows = sql_value("SELECT count(DISTINCT r.ref) AS `value` FROM resource r {$t} WHERE {$t2} {$sql}", 0);
-        if(is_array($fetchrows))
+        if(
+            is_array($result)
+            && count($result) > 0
+            && is_array($fetchrows)
+            && $sql_calc_found_rows > ($fetchrows_offset + $fetchrows_rows))
             {
             // Pad to the left (to offset - if needed)
             $padded_result = array_pad($result, abs($fetchrows_offset + $fetchrows_rows) * -1, 0);
