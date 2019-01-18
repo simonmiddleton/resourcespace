@@ -171,4 +171,30 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
         }
     /*****END OF NOTIFY CONTRIBUTOR*****/    
     }
-    
+
+
+function HookRse_workflowAllSearchfiltertop()
+    {
+    $workflow_states = rse_workflow_get_archive_states();
+
+    $simple_search_states = array();
+    foreach($workflow_states as $workflow_state_ref => $workflow_state_detail)
+        {
+        if($workflow_state_detail['simple_search_flag'] == 0)
+            {
+            continue;
+            }
+
+        $simple_search_states[] = $workflow_state_ref;
+        }
+
+    if(count($simple_search_states) == 0)
+        {
+        return;
+        }
+        ?>
+    <input type="hidden" name="search_using_allowed_workflow_states" value="1">
+    <?php
+
+    return;
+    }
