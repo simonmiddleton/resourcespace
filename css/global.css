@@ -1590,7 +1590,6 @@ select.MultiSelect:before {
     position: absolute;
     max-width:30%;
     height: 700px;
-    max-height:80%;
     margin-top: -20px;
     transition: all 0.3s ease;
     text-align: left;
@@ -1694,7 +1693,7 @@ select.MultiSelect:before {
 
 .browse_closed:after {
     content: "\f0fe";
-    }   
+    }
 
 .browse_expanded:after {
     content: "\f146";
@@ -1729,3 +1728,7 @@ a.browse_refresh{
 .BrowseOpen .browse_refresh{
     display:inline-block;
     }
+
+.BrowseRowOuter{
+    height:21px;
+}

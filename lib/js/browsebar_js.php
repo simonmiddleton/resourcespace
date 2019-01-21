@@ -104,12 +104,11 @@ function toggleBrowseElements(browse_id, reload)
         {
         b_loading = new Array();
         }
-    
+
     var loadindex = b_loading.indexOf(browse_id);
     if (loadindex > -1)
         {
         // Already in progress
-        console.log("Already loading " + browse_id);
         return true;
         }
     
@@ -164,6 +163,7 @@ function toggleBrowseElements(browse_id, reload)
     
     if(curstatus == "open" && !reload)
         {
+            console.log("hiding");
         // Hide the children and close, close all child items also
         
         jQuery("[data-browse-parent='" + browse_id + "']").slideUp();
@@ -211,10 +211,7 @@ function toggleBrowseElements(browse_id, reload)
         }
 
     // Remove any current child items before load/reload
-    jQuery("[data-browse-parent|='" + browse_id + "']").fadeOut();
-    jQuery("[data-browse-parent|='" + browse_id + "']").addClass("browse_delete");
-    
-    //console.log("element: " + curel);
+    jQuery("[data-browse-parent|='" + browse_id + "']").remove();
                     
     url = baseurl_short+"pages/ajax/load_browsebar.php";
     
@@ -247,10 +244,10 @@ function toggleBrowseElements(browse_id, reload)
                     });
                 
                 // Show all immediate children
-                jQuery("[data-browse-parent='" + browse_id + "']").slideDown();
+                jQuery("[data-browse-parent='" + browse_id + "']").show();
                 
                 // Remove any old items hidden earlier
-                jQuery(".browse_delete").slideUp();;
+                //jQuery(".browse_delete").slideUp();;
                 }
             
             curel.attr("data-browse-status","open");
