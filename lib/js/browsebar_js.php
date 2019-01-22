@@ -44,13 +44,13 @@ function renderBrowseItem(node, parent)
     newlevel++;
    
     var indent = "<div class='BrowseBarStructure backline'>&nbsp;</div>";
-    var refreshel = "<a href='#' class='browse_refresh' onclick='toggleBrowseElements(\"%BROWSE_ID%\",true);return false;' ><i class='fa fa-refresh reloadicon'></i></a>";
+    var refreshel = "<a href='#' class='browse_refresh' onclick='toggleBrowseElements(\"%BROWSE_ID%\",true);return false;' ><i class='fas fa-sync reloadicon'></i></a>";
     var refreshel = refreshel.replace("%BROWSE_ID%",node.id);
    
     if(node.expandable != "false")
         {
-        var expand = "<div class='BrowseBarStructure'><a href='#' class='browse_expand browse_closed' onclick='toggleBrowseElements(\"%BROWSE_ID%\");return false;'></a></div>";
-       expand = expand.replace("%BROWSE_ID%",node.id);
+        var expand = "<div class='BrowseBarStructure BrowseBarExpand'><a href='#' class='browse_expand browse_closed' onclick='toggleBrowseElements(\"%BROWSE_ID%\");return false;'></a></div>";
+        expand = expand.replace("%BROWSE_ID%",node.id);
         }
     else
         {
@@ -72,7 +72,7 @@ function renderBrowseItem(node, parent)
     brwstmplt = brwstmplt.replace("%BROWSE_EXPAND%",expand);
     if(node.link != "")
         {
-        link = "<a class='BrowseBarLink' href='%BROWSE_LINK%' onclick='return CentralSpaceLoad(this,false);'>&nbsp;%BROWSE_NAME%</a>";
+        link = "<div class='BrowseBarLink' ><a href='%BROWSE_LINK%' onclick='return CentralSpaceLoad(this,false);'>%BROWSE_NAME%</a></div>";
         link = link.replace("%BROWSE_LINK%",node.link);  
         link = link.replace("%BROWSE_NAME%",node.name);  
         if(node.modal)
@@ -84,7 +84,7 @@ function renderBrowseItem(node, parent)
         }
     else
         {
-        var text = "<div class='BrowseBarLink' >&nbsp;%BROWSE_NAME%</div>";
+        var text = "<div class='BrowseBarLink' >%BROWSE_NAME%</div>";
         text = text.replace("%BROWSE_NAME%",node.name);  
         brwstmplt = brwstmplt.replace("%BROWSE_TEXT%",text);
         }
@@ -275,6 +275,11 @@ function toggleBrowseElements(browse_id, reload)
             if (toloadindex > -1)
                 {
                 browse_toload.splice(toloadindex, 1);
+                }
+                
+            if(typeof browsepostload[parentitem] === "undefined")
+                {
+                browsepostload[parentitem] = new Array();
                 }
 
             browsepostload[browse_id].forEach(function (childitem)

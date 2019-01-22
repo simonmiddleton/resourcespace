@@ -1589,16 +1589,13 @@ select.MultiSelect:before {
 #BrowseBar{
     position: absolute;
     max-width:30%;
-    height: 700px;
+    height: 500px;
     margin-top: -20px;
     transition: all 0.3s ease;
     text-align: left;
     overflow: scroll;
 }
 
-::-webkit-scrollbar { 
-    display: none; 
-}
 
 #BrowseBar.BrowseBarHidden{
     margin-left: -530px;
@@ -1627,22 +1624,29 @@ select.MultiSelect:before {
 
 .BrowseBarStructure{
     display: inline-block;
-    width: 1em;
-    font-size: 14px;
-    padding-left: 3px;
+    width: 1em;    
+    max-width: 1em;    
     font-family: "Font Awesome 5 Free";
     font-weight: 600;
 }
 
 .BrowseBarLink{
-    /*padding-left: 5px;*/
-    display: inline;
+    display: inline-block;
+}
+
+.BrowseBarRoot a.browse_refresh{
+    margin-left: 5px;
 }
 
 #BrowseBar .backline {
-    background-position: 9px 0px;
+    background-position: 11px 0px;
     height: 21px;
 }
+
+.BrowseBarRoot, .backline + .BrowseBarStructure{
+    margin-left:3px;
+}
+
 
 #BrowseBarTab {
     position: absolute;
@@ -1666,20 +1670,19 @@ select.MultiSelect:before {
 
 .BrowseBarTabText {
     margin-bottom: 10px;
-    margin-top: 85px;
+    margin-top: 75px;
     text-transform: capitalize;
     text-align: center;
     transform: rotate(-90deg);
-    font-size: 28px;
+    font-size: 1.2em;
     display: none;
 }
 
-.BrowseBarLink{
-    opacity: 0.7;
-}
 
-#BrowseBarTab a:hover, a.BrowseBarLink:hover{
+
+#BrowseBarTab a:hover, .BrowseBarLink a:hover, #BrowseBarTab a:visited, .BrowseBarLink a:visited{
     text-decoration: none;
+    cursor: pointer;
     opacity: 1;
 }
 
@@ -1719,14 +1722,14 @@ select.MultiSelect:before {
 .BrowseTypeNew:after {
     content: "\f055";
     }  
-
+    
 a.browse_refresh{
-    margin-left: 3px;
     display:none;
     }
 
 .BrowseOpen .browse_refresh{
     display:inline-block;
+    font-size: 0.8em;
     }
 
 .BrowseRowOuter{

@@ -36,7 +36,18 @@ if(enforcePostRequest("browse_action"))
 
             if($valid)
                 {
-                add_resource_nodes($resource,$nodes=array($node));
+                $nodestoadd=array($node);
+                // We need to add all parent nodes for category trees
+                if($field['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 
+                    {
+                    $parent_nodes=get_parent_nodes($node);
+                    foreach($parent_nodes as $parent_node_ref=>$parent_node_name)
+                        {
+                        $nodestoadd[]=$parent_node_ref;
+                        }
+                    }
+                    
+                add_resource_nodes($resource,$nodestoadd);
                 $return['status'] = 200;
                 }
             else

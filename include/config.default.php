@@ -3572,14 +3572,4 @@ $non_image_types_generate_preview_only = true;
 $browse_bar = true;
 $browse_bar_workflow=true;
 
-// TODO - Replace with CSS after syntax
-/* $browse_bar_elements = array();
-$browse_bar_elements["R"]   = array("icon" => "far fa-folder");
-$browse_bar_elements["FC"]  = array("icon" => "far fa-folder");
-$browse_bar_elements["C"]   = array("icon" => "far fa-folder");
-$browse_bar_elements["WF"]  = array("icon" => "far fa-folder");
-$browse_bar_elements["S"]   = array("icon" => "far fa-file-text-o");
-$browse_bar_elements["RT"]  = array("icon" => "far fa-file-text-o");
-$browse_bar_elements["N"]   = array("icon" => "far fa-file-text-o");
-$browse_bar_elements["F"]   = array("icon" => "fas fa-tags"); */
 

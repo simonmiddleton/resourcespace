@@ -2544,13 +2544,13 @@ function render_browse_bar()
 
             
     //TODO Check CSS footer and responsive
-    // Add root elements TODO - language strings
-    $bb_html .= generate_browse_bar_item("R", "Browse by tag");
-    $bb_html .= generate_browse_bar_item("FC", "Featured collections");
-    $bb_html .= generate_browse_bar_item("C", "My collections");
+    // Add root elements
+    $bb_html .= generate_browse_bar_item("R", $lang['browse_by_tag']);
+    $bb_html .= generate_browse_bar_item("FC", $lang["themes"]);
+    $bb_html .= generate_browse_bar_item("C", $lang["mycollections"]);
     if($browse_bar_workflow)
         {
-        $bb_html .= generate_browse_bar_item("WF", "Workflow");
+        $bb_html .= generate_browse_bar_item("WF", $lang['browse_by_workflow_state']);
         }
 
     $bb_html .= '</div><!-- End of BrowseBarContents -->
@@ -2602,15 +2602,15 @@ archive states -  child is metadata field
 function generate_browse_bar_item($id, $text)
 	{
 	//global $browse_bar_elements;
-    $html = '<div class="BrowseBarItem BrowseRowOuter" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
+    $html = '<div class="BrowseBarItem BrowseRowOuter BrowseBarRoot" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
     $html .= '<div class="BrowseRowInner" >';
 	
     $html .= '<div class="BrowseBarStructure">
             <a href="#" class="browse_expand browse_closed" onclick="return toggleBrowseElements(\'' . $id . '\');" ></a>
             </div><!-- End of BrowseBarStructure -->';	
-    $html .= '&nbsp;' . $text;
+    $html .= '<div class="BrowseBarLink" >' . $text . '</div>';
     
-    $html .= '<a href="#" class="browse_refresh" onclick="return toggleBrowseElements(\'' . $id . '\',true);" ><i class="fas fa-sync reloadicon"></i></a>';	
+    $html .= '<a href="#" class="browse_refresh " onclick="return toggleBrowseElements(\'' . $id . '\',true);" ><i class="fas fa-sync reloadicon"></i></a>';	
     
     $html .= "</div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->";
