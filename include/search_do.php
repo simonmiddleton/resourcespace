@@ -782,7 +782,7 @@ function do_search(
      
                                          $union = " SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_node rn[union_index]" .
                                             " LEFT OUTER JOIN `node_keyword` nk[union_index] ON rn[union_index].node=nk[union_index].node LEFT OUTER JOIN `node` n[union_index] ON rn[union_index].node=n[union_index].ref " .
-                                            " WHERE (nk[union_index].keyword={$keyref} " . str_replace("[keyword_match_table]","nk[union_index]", $relatedsql) . " {$union_restriction_clause_node})"
+                                            " WHERE ((nk[union_index].keyword={$keyref} " . str_replace("[keyword_match_table]","nk[union_index]", $relatedsql) . ") {$union_restriction_clause_node})"
                                             . (($alternative_keywords_sql != "") ? (str_replace("[keyword_match_table]", "nk[union_index]", $alternative_keywords_sql) . $union_restriction_clause_node) : "" )
                                             . " GROUP BY resource,resource_type_field ";					    
                      
@@ -791,10 +791,10 @@ function do_search(
                                          // TODO: deprecate this once all field values are nodes  START
                                          
                                           $union .= " UNION SELECT resource, [bit_or_condition] SUM(hit_count) AS score FROM resource_keyword k[union_index]
-                                          WHERE (k[union_index].keyword={$keyref} "
+                                          WHERE ((k[union_index].keyword={$keyref} "
                                             . str_replace("[keyword_match_table]","k" . "[union_index]", $relatedsql)
                                             . str_replace("[keyword_match_table]", "k[union_index]", $alternative_keywords_sql)
-                                            . " {$union_restriction_clause})" .
+                                            . ") {$union_restriction_clause})" .
                                              " GROUP BY resource, resource_type_field";
                                                                                                              
                                          // TODO: deprecate this once all field values are nodes  END
