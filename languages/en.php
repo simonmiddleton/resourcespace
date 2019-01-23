@@ -349,6 +349,7 @@ $lang["uselocalupload"]="OR: Use local 'upload' folder instead of remote FTP ser
 
 # User contributions
 $lang["contributenewresource"]="Contribute new resource";
+$lang["view_my_contributions_ws"]="View my contributions - %workflow_state_name"; # %workflow_state_name is a placeholder
 $lang["viewcontributedps"]="View my contributions - pending submission";
 $lang["viewcontributedpr"]="View my contributions - pending review";
 $lang["viewcontributedsubittedl"]="View my contributions - active";
@@ -858,6 +859,7 @@ $lang['double'] = 'Double';
 $lang['single_width'] = 'Single width';
 $lang['double_width'] = 'Double width';
 $lang['filter_by_table'] = 'Filter by table...';
+$lang['upload_here'] = "Upload here";
 
 # Pager
 $lang["next"]="Next";
@@ -1721,6 +1723,7 @@ $lang["custompermissions"]="Custom permissions";
 $lang["searchcapability"]="Search capability";
 $lang["access_to_restricted_and_confidential_resources"]="Can download restricted resources and view confidential resources<br>(normally admin only)";
 $lang["restrict_access_to_all_available_resources"]="Restrict access to all available resources";
+$lang["restrict_access_to_workflow_state"] = "Restrict access to resources in workflow %workflow_state_name"; # %workflow_state_name is placeholder
 $lang["can_make_resource_requests"]="Can make resource requests";
 $lang["show_watermarked_previews_and_thumbnails"]="Show watermarked previews/thumbnails";
 $lang["can_see_all_fields"]="Can see all fields";

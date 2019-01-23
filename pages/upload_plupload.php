@@ -7,6 +7,7 @@ if (! (checkperm("c") || checkperm("d")))
 include "../include/image_processing.php";
 include "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
+include_once "../include/search_functions.php";
 
 
 $overquota                              = overquota();
@@ -25,6 +26,7 @@ $replace                                = getvalescaped('replace', ''); # Replac
 $replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
 $single                                 = getval("single","") != "" || getval("forcesingle","") != "";
+$upload_here                            = (getval('upload_here', '') != '' ? true : false);
 
 $chunk       = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
 $chunks      = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
@@ -87,10 +89,17 @@ if ($upload_then_edit && $replace == "" && $replace_resource == "")
 	$upload_review_col = 0-$userref;
 	$ci=get_collection($upload_review_col);
 	if ($ci===false) {create_collection($userref,"New uploads",1,1,0-$userref);}
-	
+
+    $redirecturl_extra_params = array();
+
 	# Set the redirect after upload to the start of the edit process
-	$redirecturl=$baseurl . "/pages/edit.php?upload_review_mode=true";
-	
+    $redirecturl = generateURL(
+        "{$baseurl}/pages/edit.php",
+        array(
+            'upload_review_mode' => true,
+        ),
+        $redirecturl_extra_params);
+
 	# Clear the user template
 	clear_resource_data(0-$userref);
 	}
@@ -116,7 +125,6 @@ $uploadparams= array(
     'replace_resource_original_alt_filename' => $replace_resource_original_alt_filename,
     'single'                                 => ($single ? "true" : "false")
 );
-
 
 global $merge_filename_with_title;
 if($merge_filename_with_title) {
@@ -164,7 +172,18 @@ if($replace_resource_preserve_option && '' != $replace_resource)
     $uploadparams['replace_resource_original_alt_filename'] = $default_replace_resource_original_alt_filename;
     }
 
-$uploadurl=generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams) . hook('addtopluploadurl');
+$uploadurl_extra_params = array();
+
+if($upload_here)
+    {
+    $uploadurl_extra_params = array(
+        'upload_here' => $upload_here,
+        'search' => $search,
+        'resource_type' => $resource_type,
+        'status' => $setarchivestate,
+    );
+    }
+$uploadurl = generateURL("{$baseurl}/pages/upload_plupload.php", $uploadparams, $uploadurl_extra_params) . hook('addtopluploadurl');
 
 
 $default_sort_direction="DESC";
@@ -577,6 +596,16 @@ if ($_FILES)
                             if(false === $ref)
                                 {
                                 $ref = create_resource($resource_type);
+                                }
+
+                            if($upload_then_edit && $upload_here)
+                                {
+                                if(checkperm("e{$setarchivestate}"))
+                                    {
+                                    update_archive_status($ref, $setarchivestate);
+                                    }
+
+                                add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
                                 }
 
                             # Add to collection?

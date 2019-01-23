@@ -322,7 +322,7 @@ if ( (($extension=="pages") || ($extension=="numbers") || (!isset($unoconv_path)
    ----------------------------------------
 */
 global $unoconv_extensions;
-if (in_array($extension,$unoconv_extensions) && isset($unoconv_path) && !isset($newfile))
+if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoconv_path) && !isset($newfile))
     {
     global $config_windows;
     $unocommand=$unoconv_path . "/unoconv";
@@ -393,7 +393,7 @@ if (in_array($extension,$calibre_extensions) && isset($calibre_path) && !isset($
     $basename_minus_extension=remove_extension($path_parts['basename']);
     $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
 
-    $cmd="xvfb-run ". $calibrecommand . " " . escapeshellarg($file) . " " .$pdffile." ";
+    $cmd="xvfb-run ". $calibrecommand . " " . escapeshellarg($file) . " " . escapeshellarg($pdffile) ." ";
     $wait=run_command($cmd);
 
     if (file_exists($pdffile))

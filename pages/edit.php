@@ -41,6 +41,7 @@ else
   {
   $no_exif=getval("no_exif","");
   }
+$upload_here = (getval('upload_here', '') != '' ? true : false);
 
 $uploadparams = array();
 $uploadparams["relateto"] = getval("relateto","");
@@ -1099,7 +1100,7 @@ else
          <?php
          if ($resource["has_image"]==1)
             { ?>
-            <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; width: 40vw;"/>
+            <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; max-width: 40vw;"/>
             <?php // check for watermarked version and show it if it exists
             if (checkperm("w"))
                {
@@ -1522,6 +1523,11 @@ if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type) 
 # Load resource data
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
 $all_selected_nodes = get_resource_nodes($use);
+
+if($upload_here)
+    {
+    $all_selected_nodes = get_upload_here_selected_nodes($search, $all_selected_nodes);
+    }
 
 if ($lockable_fields && count($locked_fields) > 0 && $lastedited > 0)
         {
@@ -2199,7 +2205,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
   error_fields[0].scrollIntoView();
   styledalert('<?php echo $lang["error"]?>','<?php echo implode("<br />",$save_errors); ?>',450);
   </script>
-  <?php 
+  <?php
   }
 
 hook("autolivejs");

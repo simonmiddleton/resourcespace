@@ -51,7 +51,7 @@ if (getval("method","")!="" && enforcePostRequest(false))
 			
 		# Extract this one page to a new resource.
         $ghostscript_fullpath = get_utility_path("ghostscript");
-        $gscommand = $ghostscript_fullpath . " -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=" . escapeshellarg($copy_path) . "  -dFirstPage=" . $from . " -dLastPage=" . $to . " " . escapeshellarg($file);
+        $gscommand = $ghostscript_fullpath . " -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=" . escapeshellarg($copy_path) . "  -dFirstPage=" . escapeshellarg($from) . " -dLastPage=" . escapeshellarg($to) . " " . escapeshellarg($file);
         $output = run_command($gscommand);
 
 

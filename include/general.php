@@ -7291,3 +7291,22 @@ function is_resourcespace_upgrade_available()
 
     return false;
     }
+
+/**
+* Utility to get all workflow states available in the system.
+* 
+* IMPORTANT: No permissions are being honoured on purpose! If you need to honour permissions @see get_editable_states()
+* 
+* @uses global additional_archive_states
+* 
+* @return array
+*/
+function get_workflow_states()
+    {
+    global $additional_archive_states;
+
+    $default_workflow_states = range(-2, 3);
+    $workflow_states = array_merge($default_workflow_states, $additional_archive_states);
+
+    return $workflow_states;
+    }

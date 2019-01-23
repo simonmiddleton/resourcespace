@@ -3558,13 +3558,21 @@ function get_resource_access($resource)
                 $search_all_workflow_states = $search_all_workflow_states_cache;
                 if (count($results)==0) {return 2;} # Not found in results, so deny
                 }
-		
-	if ($access==0 && !checkperm("g") && !$customgroupaccess && !$customuseraccess)
-		{
-		# User does not have the 'g' permission. Return restricted for active resources unless group has been granted overide access.
-		$access=1; 
-		}
-	
+
+    /*
+    Restricted access to all available resources
+    OR Restricted access to resources in a particular workflow state
+    UNLESS user/ group has been granted custom (override) access
+    */
+    if (
+        $access == 0
+        && (!checkperm("g") || checkperm("rws{$resourcedata['archive']}"))
+        && !$customgroupaccess
+        && !$customuseraccess)
+        {
+        $access = 1; 
+        }
+
 	if ($access==0 && checkperm('X'.$resource_type)){
 		// this resource type is always restricted for this user group
 		$access=1;

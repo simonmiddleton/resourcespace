@@ -24,7 +24,7 @@ $sort              = getvalescaped('sort', 'asc');
 $orientation       = getvalescaped('orientation', '');
 $sheetstyle        = getvalescaped('sheetstyle', 'thumbnails');
 $preview           = ('true' == getvalescaped('preview', '') ? true : false);
-$previewpage       = getvalescaped('previewpage', 1);
+$previewpage       = getvalescaped('previewpage', 1, true);
 $includeheader     = getvalescaped('includeheader', '');
 $addlink           = getvalescaped('addlink', '');
 $addlogo           = getvalescaped('addlogo', '');
@@ -359,7 +359,8 @@ if ($preview && isset($imagemagick_path))
         exit("Could not find ImageMagick 'convert' utility at location '{$imagemagick_path}'");
         }
 
-    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage={$previewpage} -o -r100 -dLastPage={$previewpage} -sOutputFile=" . escapeshellarg($contact_sheet_rip) . ' ' . escapeshellarg($PDF_filename) . (($config_windows) ? '':' 2>&1');
+    $previewpage_escaped = escapeshellarg($previewpage);
+    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage={$previewpage_escaped} -o -r100 -dLastPage={$previewpage_escaped} -sOutputFile=" . escapeshellarg($contact_sheet_rip) . ' ' . escapeshellarg($PDF_filename) . (($config_windows) ? '':' 2>&1');
     run_command($command);
 
     $command = "{$convert_fullpath} -resize {$contact_sheet_preview_size} -quality 90 -colorspace {$imagemagick_colorspace} \"{$contact_sheet_rip}\" \"$contact_sheet_preview_img\"" . (($config_windows) ? '' : ' 2>&1');

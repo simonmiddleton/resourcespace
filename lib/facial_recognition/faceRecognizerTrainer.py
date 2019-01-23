@@ -33,7 +33,15 @@ if(0 == len(images)):
 
 # Create an LBPH model for face recognition and train it
 # with the images and labels read from the given CSV file
-model = cv2.createLBPHFaceRecognizer(2, 10, 10, 10)
+(major, minor, _) = cv2.__version__.split(".")
+if (major<3 and minor<7) or minor<3:
+    model = cv2.createLBPHFaceRecognizer(2, 10, 10, 10)
+else:
+    cv2.face
+    model = cv2.face.createLBPHFaceRecognizer(2, 10, 10, 10)
+
+
+#model = cv2.createLBPHFaceRecognizer(2, 10, 10, 10)
 model.train(images, np.array(labels))
 model.save("{}/lbph_model.xml".format(os.path.dirname(PREPARED_DATA_PATH)))
 

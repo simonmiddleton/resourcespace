@@ -1638,3 +1638,16 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
         }
    return $results;
    }
+
+
+function get_upload_here_selected_nodes($search, array $nodes)
+    {
+    $upload_here_nodes = resolve_nodes_from_string($search);
+
+    if(empty($upload_here_nodes))
+        {
+        return $nodes;
+        }
+
+    return array_merge($nodes, $upload_here_nodes);
+    }

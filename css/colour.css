@@ -132,6 +132,7 @@ input[readonly] {color: #000000;}
 .IconUserRatingStar	{	background: url(../gfx/interface/RatingStarRed.gif) no-repeat;}
 .IconUserRatingSpace	{	background: url(../gfx/interface/RatingStarBlank.gif) no-repeat;}
 .StarSelect {background: transparent url(../gfx/interface/RatingStarRed.gif) no-repeat;}
+#RatingStarLink0 {color: #888;}
 
 .NavUnderline,.Question,.QuestionSubmit {border-bottom: 1px solid #ebebeb;}
 
