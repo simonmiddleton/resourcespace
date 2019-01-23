@@ -3241,7 +3241,8 @@ function collection_download_process_archive_command($collection_download_tar, &
         header("Content-type: application/tar");
         header("Content-disposition: attachment; filename=" . $filename );
         debug("collection_download tar command: tar -cv -C " . $usertempdir . " . ");
-        passthru("find " . $usertempdir . ' -printf "%P\n" | tar -cv --no-recursion --dereference -C ' . $usertempdir . " -T -");
+        $cmdtempdir = escapeshellarg($usertempdir);
+        passthru("find " . $cmdtempdir . ' -printf "%P\n" | tar -cv --no-recursion --dereference -C ' . $cmdtempdir . " -T -");
         exit();
         }
     else if ($archiver)

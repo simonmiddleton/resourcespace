@@ -41,7 +41,7 @@ else
 	}
 	
 $settings_id=(isset($collection_download_settings) && count($collection_download_settings)>1)?getvalescaped("settings",""):0;
-$uniqid=getval("id",uniqid("Col".$collection."-"));
+$uniqid=getval("id",uniqid("Col" . $collection));
 
 $usage = getvalescaped('usage', '-1');
 $usagecomment = getvalescaped('usagecomment', '');
@@ -174,7 +174,8 @@ if ($submitted != "")
 		exit();
 		}
 	
-	$id=getvalescaped("id","");
+    $id=getvalescaped("id","");
+    if(!ctype_alnum($id)){exit($lang["error"]);}
 	// Get a temporary directory for this download - $id should be unique
 	$usertempdir=get_temp_dir(false,"rs_" . $userref . "_" . $id);
 	
