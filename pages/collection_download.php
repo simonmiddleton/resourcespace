@@ -41,7 +41,7 @@ else
 	}
 	
 $settings_id=(isset($collection_download_settings) && count($collection_download_settings)>1)?getvalescaped("settings",""):0;
-$uniqid=getval("id",uniqid("Col".$collection."-"));
+$uniqid=getval("id",uniqid("Col".$collection));
 
 $usage = getvalescaped('usage', '-1');
 $usagecomment = getvalescaped('usagecomment', '');
@@ -183,6 +183,7 @@ if ($submitted != "")
 		}
 	
 	$id=getvalescaped("id","");
+    if(!ctype_alnum($id)){exit($lang["error"]);}
 	// Get a temporary directory for this download - $id should be unique
 	$usertempdir=get_temp_dir(false,"rs_" . $userref . "_" . $id);
 	
@@ -686,8 +687,9 @@ if ($submitted != "")
         {
 		header("Content-type: application/tar");
 		header("Content-disposition: attachment; filename=" . $filename );
-		debug("collection_download tar command: tar -cv -C " . $usertempdir . " . ");
-		passthru("find " . $usertempdir . ' -printf "%P\n" | tar -cv --no-recursion --dereference -C ' . $usertempdir . " -T -");
+        debug("collection_download tar command: tar -cv -C " . $usertempdir . " . ");
+		$cmdtempdir = escapeshellarg($usertempdir);        
+		passthru("find " . $cmdtempdir . ' -printf "%P\n" | tar -cv --no-recursion --dereference -C ' . $cmdtempdir . " -T -");
 		exit();
         }
     else if ($archiver)
