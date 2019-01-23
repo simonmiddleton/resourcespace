@@ -2435,5 +2435,9 @@ function resource_table_joins_sql(array $joins, $sql, $order_by = '')
     return $resource_table_joins_sql;
     }
 
+
+
+
+
 // IMPORTANT: make sure the upgrade.php is the last line in this file
 include_once __DIR__ . '/../upgrade/upgrade.php';

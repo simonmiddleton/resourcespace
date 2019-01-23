@@ -13,24 +13,30 @@
 * @uses search_filter()
 * @uses search_special()
 * 
-* @param string      $search                  Search string
-* @param string      $restypes                Optionally used to specify which resource types to search for
-* @param string      $order_by
-* @param string      $archive                 Allows searching in more than one archive state
-* @param integer     $fetchrows               Fetch "$fetchrows" rows but pad the array to the full result set size with
-*                                             empty values (@see sql_query())
-* @param string      $sort
-* @param boolean     $access_override         Used by smart collections, so that all all applicable resources can be judged
-*                                             regardless of the final access-based results
-* @param integer     $starsearch
-* @param boolean     $ignore_filters
-* @param boolean     $return_disk_usage
-* @param string      $recent_search_daylimit
-* @param string|bool $go                      Paging direction (prev|next)
-* @param boolean     $stats_logging           Log keyword usage
-* @param boolean     $return_refs_only
-* @param boolean     $editable_only
-* @param boolean     $returnsql
+* @param string        $search                  Search string
+* @param string        $restypes                Optionally used to specify which resource types to search for
+* @param string        $order_by
+* @param string        $archive                 Allows searching in more than one archive state
+* @param integer|array $fetchrows               Fetch "$fetchrows" rows but pad the array to the full result set size with
+*                                               empty values (@see sql_query()).
+*                                               When used as an array, it will be to set the SQL limit (@see sql_limit()) 
+*                                               clause, for example:
+*                                               array (
+*                                                   'offset' => 0,
+*                                                   'rows' => 48
+*                                               )
+* @param string        $sort
+* @param boolean       $access_override         Used by smart collections, so that all all applicable resources can be judged
+*                                               regardless of the final access-based results
+* @param integer       $starsearch
+* @param boolean       $ignore_filters
+* @param boolean       $return_disk_usage
+* @param string        $recent_search_daylimit
+* @param string|bool   $go                      Paging direction (prev|next)
+* @param boolean       $stats_logging           Log keyword usage
+* @param boolean       $return_refs_only
+* @param boolean       $editable_only
+* @param boolean       $returnsql
 * 
 * @return null|string|array
 */
@@ -53,11 +59,14 @@ function do_search(
     $returnsql = false
 )
     {
-    debug("search=$search $go $fetchrows restypes=$restypes archive=$archive daylimit=$recent_search_daylimit editable_only=" . ($editable_only?"true":"false"));
+    debug("search=$search $go "
+        .  "fetchrows=" . (!is_array($fetchrows) ? $fetchrows : print_r($fetchrows, true))
+        . " restypes=$restypes archive=$archive daylimit=$recent_search_daylimit editable_only="
+        . ($editable_only?"true":"false"));
         
     # globals needed for hooks
      global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
-           $search_sql_double_pass_mode, $usergroup, $search_filter_strict, $default_sort, 
+           $usergroup, $search_filter_strict, $default_sort, 
            $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming,
            $open_access_for_contributor, $userref;
 		   
@@ -71,6 +80,29 @@ function do_search(
     if ($modifyfetchrows)
         {
         $fetchrows=$modifyfetchrows;
+        }
+
+    $fetchrows_sql_limit = '';
+    if(is_array($fetchrows))
+        {
+        $fetchrows_offset = 0;
+        $fetchrows_rows   = (int) $GLOBALS['default_perpage'];
+
+        if(isset($fetchrows['offset']))
+            {
+            $fetchrows_offset = (int) $fetchrows['offset'];
+            }
+
+        if(isset($fetchrows['rows']))
+            {
+            $fetchrows_rows = (int) $fetchrows['rows'];
+            }
+
+        $fetchrows_sql_limit = sql_limit($fetchrows_offset, $fetchrows_rows);
+        }
+    else if(is_numeric($fetchrows) && $fetchrows != -1)
+        {
+        $fetchrows_sql_limit = sql_limit(0, (int) $fetchrows);
         }
 
     if(strtolower($sort)!=='desc')      // default to ascending if not a valid "desc"
@@ -1373,10 +1405,30 @@ function do_search(
     # --------------------------------------------------------------------------------
     # Special Searches (start with an exclamation mark)
     # --------------------------------------------------------------------------------
+    $legacy_fetchrows = $fetchrows;
+    if(is_array($fetchrows))
+        {
+        $legacy_fetchrows = $fetchrows_offset + $fetchrows_rows;
+        }
 
-   $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only);
+    $special_results = search_special(
+        $search,
+        $sql_join,
+        $legacy_fetchrows,
+        $sql_prefix,
+        $sql_suffix,
+        $order_by,
+        $orig_order,
+        $select,
+        $sql_filter,
+        $archive,
+        $return_disk_usage,
+        $return_refs_only);
     if ($special_results!==false)
         {
+        // Ability to signal functions that called do_search() that the return was generated by a special search
+        $GLOBALS['is_special_search_result_set'] = true;
+
         return $special_results;
         }
 
@@ -1406,7 +1458,6 @@ function do_search(
         $score=$sql_hitcount_select;
         } # In case score hasn't been set (i.e. empty search)
 
-    global $max_results;
     if (($t2!="") && ($sql!=""))
         {
         $sql=" AND " . $sql;
@@ -1414,12 +1465,7 @@ function do_search(
 
     # Compile final SQL
 
-    # Performance enhancement - set return limit to number of rows required
-    if ($search_sql_double_pass_mode && $fetchrows!=-1)
-        {
-        $max_results=$fetchrows;
-        }
-    $results_sql=$sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref ORDER BY $order_by limit $max_results" . $sql_suffix;
+    $results_sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref ORDER BY $order_by {$fetchrows_sql_limit}" . $sql_suffix;
 
     $results_sql = resource_table_joins_sql(
         ($return_refs_only === false ? get_resource_table_joins() : array()),
@@ -1444,15 +1490,31 @@ function do_search(
     else
         {
         # Execute query as normal
-        if($returnsql){return $results_sql;}
-        $result=sql_query($results_sql,false,$fetchrows);
-
-        # Performance improvement - perform a second count-only query and pad the result array as necessary
-        if($search_sql_double_pass_mode && count($result)>=$max_results)
+        if($returnsql)
             {
-            $count_sql="SELECT count(distinct r.ref) value FROM resource r" . $t . "  WHERE $t2 $sql";
-            $count=sql_value($count_sql,0);
-            $result=array_pad($result,$count,0);
+            return $results_sql;
+            }
+
+        $result = sql_query($results_sql, false, $fetchrows);
+
+        // Calculate the found rows without the SQL limit clause (and a more simplistic SQL query)
+        $sql_calc_found_rows = sql_value("SELECT count(DISTINCT r.ref) AS `value` FROM resource r {$t} WHERE {$t2} {$sql}", 0);
+        if(
+            is_array($result)
+            && count($result) > 0
+            && is_array($fetchrows)
+            && $sql_calc_found_rows > ($fetchrows_offset + $fetchrows_rows))
+            {
+            // Pad to the left (to offset - if needed)
+            $padded_result = array_pad($result, abs($fetchrows_offset + $fetchrows_rows) * -1, 0);
+            // Pad to the right (remainder required to make up the total count correctly)
+            $padded_result = array_pad($padded_result, $sql_calc_found_rows, 0);
+
+            $result = $padded_result;
+            }
+        else
+            {
+            $result = array_pad($result, $sql_calc_found_rows, 0);
             }
         }
 

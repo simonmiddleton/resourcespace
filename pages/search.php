@@ -521,8 +521,28 @@ if ($search_includes_resources || substr($search,0,1)==="!")
     {
     $search_includes_resources=true; // Always enable resource display for special searches.
     if (!hook("replacesearch"))
-        {   
-        $result=do_search($search,$restypes,$order_by,$archive,$per_page+$offset,$sort,false,$starsearch,false,false,$daylimit, getvalescaped("go",""), true, false, $editable_only);
+        {
+        $fetchrows = array(
+            'offset' => $offset,
+            'rows'   => $per_page,
+        );
+
+        $result = do_search(
+            $search,
+            $restypes,
+            $order_by,
+            $archive,
+            $fetchrows,
+            $sort,
+            false,
+            $starsearch,
+            false,
+            false,
+            $daylimit,
+            getvalescaped("go", ""),
+            true,
+            false,
+            $editable_only);
         }
     }
 else
@@ -536,7 +556,7 @@ if(($k=="" || $internal_share_access) && strpos($search,"!")===false && $archive
 $hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
 if ($hook_result!==false) {$result=$hook_result;}
 
-$count_result = (is_array($result) ? count($result) : 0);
+$count_result = is_array($result) ? count($result) : 0;
 
 if ($collectionsearch)
     {
@@ -893,7 +913,7 @@ if($enable_themes && $enable_theme_breadcrumbs && !$search_titles && isset($them
 
 if (!hook("replacesearchheader")) # Always show search header now.
     {
-    $resources_count=is_array($result)?count($result):0;
+    $resources_count = is_array($result) ? count($result) : 0;
     if (isset($collections)) 
         {
         $results_count=count($collections)+$resources_count;
@@ -1174,7 +1194,7 @@ if($responsive_ui)
     <?php
 
         
-    $results=(is_array($result) ? count($result) : 0);
+    $results = is_array($result) ? count($result) : 0;
     $totalpages=ceil($results/$per_page);
     if ($offset>$results) {$offset=0;}
     $curpage=floor($offset/$per_page)+1;
@@ -1351,12 +1371,12 @@ if($responsive_ui)
         $showkeycollect = false;
         $showkeycollectout = false;
         $showkeyemail = false;
-    $showkeyedit = false;
+        $showkeyedit = false;
         $showkeystar = false;
         $showkeycomment = false;
 
         # loop and display the results
-        for ($n=$offset;(($n<count($result)) && ($n<($offset+$per_page)));$n++)
+        for ($n = $offset; ($n < count($result) && $n < ($offset + $per_page)); $n++)
             {
         # Allow alternative configuration settings for this resource type.
         resource_type_config_override($result[$n]["resource_type"]);
