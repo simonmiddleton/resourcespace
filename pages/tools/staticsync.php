@@ -304,8 +304,9 @@ function ProcessFolder($folder)
                     $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
                     if(count($duplicates)>0)
                         {
-                        debug("STATICSYNC ERROR- Duplicate found: resource(s) " . implode(",",$duplicates) . " matches file " . $fullpath);
-                        $errors[] = "Duplicate found: resource(s) " . implode(",",$duplicates) . " matches file " . $fullpath;
+                        $message = str_replace("%resourceref%", implode(",",$duplicates), str_replace("%filename%", $fullpath, $lang['error-duplicatesfound']));
+                        debug("STATICSYNC ERROR- " . $message);
+                        $errors[] = $message;
                         continue;                
                         }
                     }

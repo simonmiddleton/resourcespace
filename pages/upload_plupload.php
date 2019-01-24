@@ -1006,6 +1006,8 @@ var pluploadconfig = {
                                         if(uploadresponse.error.code==108)
                                             {
                                             styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadresponse.error.duplicates);   
+                                            message = '<?php echo $lang['error-duplicatesfound']?>';
+                                            jQuery("#upload_log").append("\r\n" + message.replace('%resourceref%', uploadresponse.error.duplicates).replace('%filename%', file.name));
                                             }
                                         else
                                             {
