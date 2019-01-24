@@ -2750,3 +2750,4 @@ $lang['home_page'] = "Home page";
 $lang['login_word'] = "Login";
 
 $lang['error-duplicatesfound'] = "Duplicate found: resource(s) %resourceref% matches file %filename%"; # %resourceref to be replaced by list of refs that match incoming file and %filename to be replaced by the incoming files name or location
+$lang['see_log'] = "Please refer to the log below for more details on this upload.";

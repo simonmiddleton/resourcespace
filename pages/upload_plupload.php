@@ -1019,9 +1019,10 @@ var pluploadconfig = {
                                         uploaderrormessage = uploadresponse.error.code + " " + uploadresponse.error.message;
                                         if(uploadresponse.error.code==108)
                                             {
-                                            styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadresponse.error.duplicates);   
+                                            styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadresponse.error.duplicates + '\r\n<?php echo $lang['see_log']?>');   
                                             message = '<?php echo $lang['error-duplicatesfound']?>';
                                             jQuery("#upload_log").append("\r\n" + message.replace('%resourceref%', uploadresponse.error.duplicates).replace('%filename%', file.name));
+                                            <?php $duplicates_found=true;?>
                                             }
                                         else
                                             {
@@ -1147,7 +1148,7 @@ var pluploadconfig = {
                                 processed_resource_keys=resource_keys;
                             });                           
 					<?php	  
-				  if ($redirecturl!=""){?>
+				  if ($redirecturl!="" && !$duplicates_found){?>
                                   //remove the completed files once complete
                                   uploader.bind('UploadComplete', function(up, files) {
                                   CentralSpaceLoad('<?php echo $redirecturl ?>',true);
