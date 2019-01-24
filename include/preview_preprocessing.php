@@ -90,7 +90,6 @@ if (isset($qlpreview_path) && !in_array($extension, $qlpreview_exclude_extension
     if (file_exists($target)){$newfile = $target;debug("qlpreview success!");}
     }
 
-
 /* ----------------------------------------
     Try InDesign - for CS5 (page previews)
    ----------------------------------------
@@ -106,9 +105,9 @@ if ($exiftool_fullpath!=false)
             
             $n=0;
             foreach ($indd_thumbs as $indd_page){
-                // echo $indd_page;
-                $pagescommand.=" ".$target."_".$n;
-                base64_to_jpeg( str_replace("base64:","",$indd_page), $target."_".$n);
+                $target_pg = str_replace(".jpg","_" . $n . ".jpg", $target);
+                $pagescommand.=" " . $target_pg;
+                base64_to_jpeg( str_replace("base64:","",$indd_page), $target_pg);
                 
                 $n++;
             }
@@ -118,12 +117,15 @@ if ($exiftool_fullpath!=false)
         // process jpgs as a pdf so the existing pdf paging code can be used.   
         if (is_array($indd_thumbs)){
             $file=get_resource_path($ref,true,"",false,"pdf");      
-            $jpg2pdfcommand = $convert_fullpath . " ".$pagescommand." " . $file;
+            $jpg2pdfcommand = $convert_fullpath . " " . $pagescommand . " " . escapeshellarg($file);
+
             $output=run_command($jpg2pdfcommand);
+
             $n=0;
             foreach ($indd_thumbs as $indd_page){
-                if (file_exists($target."_".$n)){   
-                    unlink($target."_".$n);
+                $target_pg = str_replace(".jpg","_" . $n . ".jpg", $target);
+                if (file_exists($target_pg)){   
+                    unlink($target_pg);
                 }
                 $n++;
             }
