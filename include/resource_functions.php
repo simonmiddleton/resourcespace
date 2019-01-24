@@ -4245,7 +4245,7 @@ function get_page_count($resource,$alternative=-1)
     if ($exiftool_fullpath==false)
 		{
 		# Try with ImageMagick instead
-		$command = get_utility_path("im-identify") . ' -format %n ' . $file;
+		$command = get_utility_path("im-identify") . ' -format %n ' . escapeshellarg($file);
 		$pages = trim(run_command($command));
 		}
     else
