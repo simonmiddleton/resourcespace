@@ -44,6 +44,11 @@ else
 	sql_query("UPDATE resource SET is_transcoding = 1 WHERE ref = '".escape_check($ref)."'");
 	}
 
+if(!is_numeric($ref))
+    {
+    trigger_error("Parameter 'ref' must be numeric!");
+    }
+
 # Increase timelimit
 set_time_limit(0);
 
