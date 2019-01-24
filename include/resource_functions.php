@@ -4252,7 +4252,7 @@ function get_page_count($resource,$alternative=-1)
         {
         $command = $exiftool_fullpath;
     	
-        $command=$command." -sss -pagecount $file";
+        $command=$command." -sss -pagecount " . escapeshellarg($file);
         $output=run_command($command);
         $pages=str_replace("Page Count","",$output);
         $pages=str_replace(":","",$pages);
