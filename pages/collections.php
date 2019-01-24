@@ -92,7 +92,7 @@ else
 	}
 
 # ------------ Change the collection, if a collection ID has been provided ----------------
-if ($collection!="")
+if ($collection!="" && $collection!="undefined")
 	{
 	hook("prechangecollection");
 	#change current collection

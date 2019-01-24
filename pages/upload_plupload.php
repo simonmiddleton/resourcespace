@@ -13,7 +13,14 @@ include_once "../include/search_functions.php";
 $overquota                              = overquota();
 $status                                 = '';
 $resource_type                          = getvalescaped('resource_type', '');
-$collection_add                         = $enable_add_collection_on_upload?getvalescaped('collection_add', 'false'):"false";
+
+// The collection_add parameter can have the following values:-
+//  'new'       Add to new collection
+//  'false'     Do not add to collection
+//  'undefined' Not passed in, so replace it with the current user collection
+//  is_numeric  Use this collection  
+$collection_add                         = getvalescaped('collection_add', 'false');
+
 $collectionname                         = getvalescaped('entercolname', '');
 $search                                 = getvalescaped('search', '');
 $offset                                 = getvalescaped('offset', '', true);
@@ -110,6 +117,13 @@ if($modify_redirecturl!==false)
 	$redirecturl=$modify_redirecturl;
 	}
 
+# Fallback to current user collection if nothing was passed in
+if($collection_add=='undefined')
+    {
+    $collection_add=$usercollection;    
+    $uploadparams['collection_add']=$usercollection;
+    }
+
 $uploadparams= array(
     'replace'                                => $replace,
     'alternative'                            => $alternative,
@@ -183,6 +197,7 @@ if($upload_here)
         'status' => $setarchivestate,
     );
     }
+
 $uploadurl = generateURL("{$baseurl}/pages/upload_plupload.php", $uploadparams, $uploadurl_extra_params) . hook('addtopluploadurl');
 
 
@@ -193,8 +208,7 @@ $sort=getval("sort",$default_sort_direction);
 $allowed_extensions="";
 if ($resource_type!="" && !$alternative) {$allowed_extensions=get_allowed_extensions_by_type($resource_type);}
 
-
-if ($collection_add!=="false" && is_numeric($collection_add))
+if (is_numeric($collection_add))
 	{
 	# Switch to the selected collection (existing or newly created) and refresh the frame.
  	set_user_collection($userref,$collection_add);
@@ -609,7 +623,7 @@ if ($_FILES)
                                 }
 
                             # Add to collection?
-                            if ($collection_add!="false" && is_numeric($collection_add))
+                            if (is_numeric($collection_add))
                                     {
                                     add_resource_to_collection($ref,$collection_add,false,"",$resource_type);
                                     }
@@ -885,7 +899,7 @@ elseif ($upload_no_file && getval("createblank","")!="")
 	{
     $ref=copy_resource(0-$userref);    
 	# Add to collection?
-	if ($collection_add!="false" && is_numeric($collection_add))
+	if (is_numeric($collection_add))
 		{
 		add_resource_to_collection($ref,$collection_add);
 		}
@@ -1347,7 +1361,7 @@ jQuery(document).ready(function () {
 
 <?php
 # If adding to a collection that has been externally shared, show a warning.
-if ($collection_add!="false" && count(get_collection_external_access($collection_add))>0)
+if (is_numeric($collection_add) && count(get_collection_external_access($collection_add))>0)
     {
     # Show warning.
     ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php
