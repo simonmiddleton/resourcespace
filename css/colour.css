@@ -327,7 +327,7 @@ li.plupload_droptext {color:#999;}
 #trash_bin.ui-state-active, .ui-state-active {border: 1px solid #d0d0d0;background: rgba(114, 22, 37, 0.51);}
 #trash_bin {border-top-right-radius: 10% 150px;border-bottom-right-radius: 10% 150px;}
 .trash_bin_text {color: #fff;}
-.ui-draggable-dragging {border: 2px solid;}
+.ui-draggable-dragging {border: 2px solid; transition: none;}
 
 /* Modal */
 #modal_overlay {
