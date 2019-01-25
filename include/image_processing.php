@@ -2560,7 +2560,7 @@ function extract_text($ref,$extension,$path="")
         if (!file_exists($command)) {$command=$antiword_path . "\antiword.exe";}
         if (!file_exists($command)) {debug("ERROR: Antiword executable not found at '$antiword_path'"); return false;}
 
-        $cmd=$command . " -m UTF-8 \"" . $path . "\"";
+        $cmd=$command . " -m UTF-8 " . escapeshellarg($path);
         $text=run_command($cmd);
         }
     
