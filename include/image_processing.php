@@ -2512,11 +2512,6 @@ function extract_text($ref,$extension,$path="")
 
     $text="";
     if ($path==""){$path=get_resource_path($ref,true,"",false,$extension);}
-
-    if(!ctype_alnum($path))
-        {
-        trigger_error("Incorrect type for 'path' parameter!");
-        }
     
     # Microsoft Word extraction using AntiWord.
     if ($extension=="doc" && isset($antiword_path))
