@@ -2613,7 +2613,7 @@ function extract_text($ref,$extension,$path="")
         if (!file_exists($command)) {$command=$pdftotext_path . "\pdftotext.exe";}
         if (!file_exists($command)) {debug("ERROR: pdftotext executable not found at '$pdftotext_path'"); return false;}
 
-        $cmd=$command . " -enc UTF-8 \"" . $path . "\" -";
+        $cmd=$command . " -enc UTF-8 " . escapeshellarg($path) . " -";
         $text = run_command($cmd);
 
         }
