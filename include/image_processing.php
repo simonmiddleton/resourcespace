@@ -2512,6 +2512,11 @@ function extract_text($ref,$extension,$path="")
 
     $text="";
     if ($path==""){$path=get_resource_path($ref,true,"",false,$extension);}
+
+    if(!ctype_alnum($path))
+        {
+        trigger_error("Incorrect type for 'path' parameter!");
+        }
     
     # Microsoft Word extraction using AntiWord.
     if ($extension=="doc" && isset($antiword_path))
@@ -2520,7 +2525,7 @@ function extract_text($ref,$extension,$path="")
         if (!file_exists($command)) {$command=$antiword_path . "\antiword.exe";}
         if (!file_exists($command)) {debug("ERROR: Antiword executable not found at '$antiword_path'"); return false;}
 
-        $cmd=$command . " -m UTF-8 \"" . $path . "\"";
+        $cmd=$command . " -m UTF-8 " . escapeshellarg($path);
         $text=run_command($cmd);
         }
     
