@@ -12,7 +12,7 @@ include('../../include/image_processing.php');
 include('../../include/pdf_functions.php');
 require_once '../../lib/html2pdf/html2pdf.class.php';
 
-$collection        = getvalescaped('c', '');
+$collection        = getvalescaped('c', 0,true);
 $size              = getvalescaped('size', '');
 if(strpos($size,"x") !== false)
     {
