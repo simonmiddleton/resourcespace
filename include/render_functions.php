@@ -1556,7 +1556,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 fr.style.display='none';cf.style.display='none';q.style.display='block';
                 }";
         }
-        //if($field["ref"] == 85){exit($onchangejs);}
       ?>
       <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
       <label for="modeselectinput"><?php echo $lang["editmode"]?></label>

@@ -3272,6 +3272,8 @@ $watermark_single_image = array(
 $offline_job_queue=false;
 # Delete completed jobs from the queue?
 $offline_job_delete_completed=false;
+# Array of valid utilities (as used by get_utility_path() function) used to create files used in offline job handlers e.g. create_alt_file. create_download_file. Plugins can extend this
+$offline_job_prefixes = array("ffmpeg","im-convert","im-mogrify","ghostscript","im-composite","archiver"); 
 
 # Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
 $download_file_lifetime=14;

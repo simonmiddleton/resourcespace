@@ -65,9 +65,9 @@ if($generate && enforcePostRequest(false))
 		// Get the chosen ffmpeg command as set in the plugin config
 		$video_track_command=$video_tracks_output_formats[$video_track_format];
 		
-		$shell_exec_cmd = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i '" . $filesource . "'"; 
+		$shell_exec_cmd = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i " . escapeshellarg($filesource); 
 		
-		$probeout = run_command($ffprobe_fullpath . " -i '" . escapeshellarg($filesource), true) . "'";    
+		$probeout = run_command($ffprobe_fullpath . " -i " . escapeshellarg($filesource), true);    
 		if(preg_match("/Duration: (\d+):(\d+):(\d+)\.\d+, start/", $probeout, $match))
 			{
 			$duration = $match[1]*3600+$match[2]*60+$match[3];
@@ -79,7 +79,7 @@ if($generate && enforcePostRequest(false))
             $audio_info=get_alternative_file($ref,$video_audio_file);
 			$audio_path=get_resource_path($ref,true,"",false,$audio_info["file_extension"],-1,1,false,"",$video_audio_file);
            
-			$shell_exec_cmd .= " -i '" . escapeshellarg($audio_path) . "'";
+			$shell_exec_cmd .= " -i " . escapeshellarg($audio_path);
 			$shell_exec_cmd .= " -map 0:v -map 1:a";
 			}
 		
@@ -87,7 +87,7 @@ if($generate && enforcePostRequest(false))
 			{
 			$subtitle_info=get_alternative_file($ref,$video_subtitle_file);
 			$subtitle_path=get_resource_path($ref,true,"",false,$subtitle_info["file_extension"],-1,1,false,"",$video_subtitle_file); 
-			$shell_exec_cmd .= " -vf subtitles='" . escapeshellarg($subtitle_path) . "'";
+			$shell_exec_cmd .= " -vf subtitles=" . escapeshellarg($subtitle_path);
 			}
 
 		$shell_exec_cmd .= " " . $video_track_command["command"] . " %%TARGETFILE%%";
@@ -199,14 +199,15 @@ if($generate && enforcePostRequest(false))
 				}
 			}
 			
-		if(!$offline)
-			{
-			$shell_exec_cmd = str_replace("%%TARGETFILE%%","'" . $targetfile . "'",$shell_exec_cmd);
-			if ($config_windows)
-				{
-				file_put_contents(get_temp_dir() . "/ffmpeg_" . $randstring . ".bat",$shell_exec_cmd);
-				$shell_exec_cmd=get_temp_dir() . "/ffmpeg_" . $randstring . ".bat";
-				}
+        if(!$offline)
+            {
+            $shell_exec_cmd = str_replace("%%TARGETFILE%%",escapeshellarg($targetfile),$shell_exec_cmd);
+            if ($config_windows)
+                {
+                file_put_contents(get_temp_dir() . "/ffmpeg_" . $randstring . ".bat",$shell_exec_cmd);
+                $shell_exec_cmd=get_temp_dir() . "/ffmpeg_" . $randstring . ".bat";
+                $deletebat = true;
+                }
                 
             $output=run_command($shell_exec_cmd);
             if(file_exists($targetfile))
@@ -253,6 +254,10 @@ if($generate && enforcePostRequest(false))
                 {
                 $message=$lang["error"];
                 }
+            if(isset($deletebat) && file_exists($shell_exec_cmd))
+                {
+                unlink($shell_exec_cmd);
+                }	
 			}
 		
 		}
@@ -275,7 +280,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         echo "<div class=\"PageInformal\">" . $message . "</div>";
         }
     ?>
-    <form id="video_tracks_create_form" method="post"> action="<?php echo $baseurl . "/plugins/video_tracks/pages/create_video.php" ;?>">
+    <form id="video_tracks_create_form" method="post" action="<?php echo $baseurl . "/plugins/video_tracks/pages/create_video.php" ;?>">
         <?php generateFormToken("video_tracks_create_form"); ?>
         <input name="ref" type="hidden" value="<?php echo $ref; ?>">
         <input type="hidden" name="generate" value="yes" />
@@ -352,8 +357,8 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                                    name="video_track_save_alt" 
                                    value="yes" 
                                    onClick="
-                                        jQuery('#video_track_download').removeAttr('checked');
-                                        jQuery('#video_track_save_export').removeAttr('checked');
+                                        jQuery('#video_track_download').prop('checked', false);
+                                        jQuery('#video_track_save_export').prop('checked', false);
                                         jQuery('#question_transcode_now_or_notify_me').slideUp();
                                         jQuery('#question_alternative_description').slideDown();
                             ">
@@ -370,8 +375,8 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                                    name="video_track_save_export"
                                    value="yes"
                                    onClick="
-                                        jQuery('#video_track_save_alt').removeAttr('checked');
-                                        jQuery('#video_track_download').removeAttr('checked');
+                                        jQuery('#video_track_save_alt').prop('checked', false);
+                                        jQuery('#video_track_download').prop('checked', false);
                                         jQuery('#question_alternative_description').slideUp();
                                         jQuery('#question_transcode_now_or_notify_me').slideUp();
                             ">
@@ -385,8 +390,8 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                                    name="video_track_download"
                                    value="yes"
                                    onClick="
-                                        jQuery('#video_track_save_export').removeAttr('checked');
-                                        jQuery('#video_track_save_alt').removeAttr('checked');
+                                        jQuery('#video_track_save_export').prop('checked', false);
+                                        jQuery('#video_track_save_alt').prop('checked', false);
                                         jQuery('#question_alternative_description').slideUp();
                                         jQuery('#question_transcode_now_or_notify_me').slideDown();
                             ">
