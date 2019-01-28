@@ -563,6 +563,11 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             {
                             $ref=copy_resource(0-$userref);
                             $urlparams["ref"] = $ref;
+                            // Create new collection if necessary
+                            if($collection_add=="new") 
+                                {
+                                $collection_add = create_collection($userref,$uploadparams["entercolname"]);    
+                                }
                             if(is_numeric($collection_add))
                                 {
                                 add_resource_to_collection($ref, $collection_add,false,"",$resource_type);
