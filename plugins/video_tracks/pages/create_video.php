@@ -79,7 +79,7 @@ if($generate && enforcePostRequest(false))
             $audio_info=get_alternative_file($ref,$video_audio_file);
 			$audio_path=get_resource_path($ref,true,"",false,$audio_info["file_extension"],-1,1,false,"",$video_audio_file);
            
-			$shell_exec_cmd .= " -i '" . $audio_path . "'";
+			$shell_exec_cmd .= " -i '" . escapeshellarg($audio_path) . "'";
 			$shell_exec_cmd .= " -map 0:v -map 1:a";
 			}
 		
@@ -87,7 +87,7 @@ if($generate && enforcePostRequest(false))
 			{
 			$subtitle_info=get_alternative_file($ref,$video_subtitle_file);
 			$subtitle_path=get_resource_path($ref,true,"",false,$subtitle_info["file_extension"],-1,1,false,"",$video_subtitle_file); 
-			$shell_exec_cmd .= " -vf subtitles='" . $subtitle_path . "'";
+			$shell_exec_cmd .= " -vf subtitles='" . escapeshellarg($subtitle_path) . "'";
 			}
 
 		$shell_exec_cmd .= " " . $video_track_command["command"] . " %%TARGETFILE%%";

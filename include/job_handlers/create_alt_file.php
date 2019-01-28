@@ -23,13 +23,14 @@ $randstring=md5(rand() . microtime());
 
 $newaltfile=add_alternative_file($job_data["resource"],$job_data["alt_name"],$job_data["alt_description"],str_replace("." . $resource["file_extension"],"." . $job_data["alt_extension"],$origfilename),$job_data["alt_extension"]);
 $targetfile=get_resource_path($job_data["resource"],true,"",false, $job_data["alt_extension"],-1,1,false,"",$newaltfile);				
-$shell_exec_cmd = str_replace("%%TARGETFILE%%",$targetfile,$job_data["command"]);
+$shell_exec_cmd = str_replace("%%TARGETFILE%%",escapeshellarg($targetfile),$job_data["command"]);
 
 global $config_windows;
 if ($config_windows)
 	{
 	file_put_contents(get_temp_dir() . "/create_alt_" . $randstring . ".bat",$shell_exec_cmd);
-	$shell_exec_cmd=get_temp_dir() . "/create_alt_" . $randstring . ".bat";
+    $shell_exec_cmd=get_temp_dir() . "/create_alt_" . $randstring . ".bat";
+    $deletebat = true;
 	}
 echo "Running command " . $shell_exec_cmd . PHP_EOL;
 $output=run_command($shell_exec_cmd);
@@ -60,4 +61,7 @@ else
     message_add($job["user"],$message,$baseurl . "/?r=" . $job_data["resource"],0);
 	}
 		
-		
+if(isset($deletebat) && file_exists($shell_exec_cmd))
+    {
+    unlink($shell_exec_cmd);
+    }
