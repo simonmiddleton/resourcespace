@@ -285,7 +285,14 @@ function collection_writeable($collection)
 	global $usercollection,$username,$anonymous_login,$anonymous_user_session_collection, $rs_session;
 	debug("collection session : " . $collectiondata["session_id"]);
 	debug("collection user : " . $collectiondata["user"]);
-	debug("anonymous_login : " . $anonymous_login);
+	if (is_array($anonymous_login)) 
+		{		
+		debug("anonymous_login : " . print_r($anonymous_login,true));
+		}
+	else
+		{		
+		debug("anonymous_login : " . $anonymous_login);
+		}
 	debug("userref : " . $userref);
 	debug("username : " . $username);
 	debug("anonymous_user_session_collection : " . (($anonymous_user_session_collection)?"TRUE":"FALSE"));
