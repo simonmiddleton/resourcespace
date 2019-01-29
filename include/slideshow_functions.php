@@ -75,6 +75,8 @@ function delete_slideshow($ref)
     $query = "DELETE FROM slideshow WHERE ref = '{$ref}'";
     sql_query($query);
 
+    log_activity("Deleted slideshow image", LOG_CODE_DELETED, null, 'slideshow', 'ref', $ref);
+
     return true;
     }
 

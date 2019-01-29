@@ -1257,7 +1257,10 @@ function escape_check($text) #only escape a string if we need to, to prevent esc
     $text=str_replace("\\r","{bs}r",$text);
 
 	if (!$GLOBALS['mysql_verbatim_queries'])
+		{
 		$text=str_replace("\\","",$text);
+		}
+		
     $text=str_replace("{bs}'","\\'",$text);            
     $text=str_replace("{bs}n","\\n",$text);            
     $text=str_replace("{bs}r","\\r",$text);  
@@ -2434,6 +2437,10 @@ function resource_table_joins_sql(array $joins, $sql, $order_by = '')
 
     return $resource_table_joins_sql;
     }
+
+
+
+
 
 // IMPORTANT: make sure the upgrade.php is the last line in this file
 include_once __DIR__ . '/../upgrade/upgrade.php';

@@ -7,12 +7,20 @@ if (! (checkperm("c") || checkperm("d")))
 include "../include/image_processing.php";
 include "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
+include_once "../include/search_functions.php";
 
 
 $overquota                              = overquota();
 $status                                 = '';
 $resource_type                          = getvalescaped('resource_type', '');
-$collection_add                         = $enable_add_collection_on_upload?getvalescaped('collection_add', 'false'):"false";
+
+// The collection_add parameter can have the following values:-
+//  'new'       Add to new collection
+//  'false'     Do not add to collection
+//  'undefined' Not passed in, so replace it with the current user collection
+//  is_numeric  Use this collection  
+$collection_add                         = getvalescaped('collection_add', 'false');
+
 $collectionname                         = getvalescaped('entercolname', '');
 $search                                 = getvalescaped('search', '');
 $offset                                 = getvalescaped('offset', '', true);
@@ -25,6 +33,7 @@ $replace                                = getvalescaped('replace', ''); # Replac
 $replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
 $single                                 = getval("single","") != "" || getval("forcesingle","") != "";
+$upload_here                            = (getval('upload_here', '') != '' ? true : false);
 
 $chunk       = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
 $chunks      = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
@@ -87,10 +96,17 @@ if ($upload_then_edit && $replace == "" && $replace_resource == "")
 	$upload_review_col = 0-$userref;
 	$ci=get_collection($upload_review_col);
 	if ($ci===false) {create_collection($userref,"New uploads",1,1,0-$userref);}
-	
+
+    $redirecturl_extra_params = array();
+
 	# Set the redirect after upload to the start of the edit process
-	$redirecturl=$baseurl . "/pages/edit.php?upload_review_mode=true";
-	
+    $redirecturl = generateURL(
+        "{$baseurl}/pages/edit.php",
+        array(
+            'upload_review_mode' => true,
+        ),
+        $redirecturl_extra_params);
+
 	# Clear the user template
 	clear_resource_data(0-$userref);
 	}
@@ -100,6 +116,13 @@ if($modify_redirecturl!==false)
 	{
 	$redirecturl=$modify_redirecturl;
 	}
+
+# Fallback to current user collection if nothing was passed in
+if($collection_add=='undefined')
+    {
+    $collection_add=$usercollection;    
+    $uploadparams['collection_add']=$usercollection;
+    }
 
 $uploadparams= array(
     'replace'                                => $replace,
@@ -116,7 +139,6 @@ $uploadparams= array(
     'replace_resource_original_alt_filename' => $replace_resource_original_alt_filename,
     'single'                                 => ($single ? "true" : "false")
 );
-
 
 global $merge_filename_with_title;
 if($merge_filename_with_title) {
@@ -164,7 +186,19 @@ if($replace_resource_preserve_option && '' != $replace_resource)
     $uploadparams['replace_resource_original_alt_filename'] = $default_replace_resource_original_alt_filename;
     }
 
-$uploadurl=generateURL($baseurl . "/pages/upload_plupload.php",$uploadparams) . hook('addtopluploadurl');
+$uploadurl_extra_params = array();
+
+if($upload_here)
+    {
+    $uploadurl_extra_params = array(
+        'upload_here' => $upload_here,
+        'search' => $search,
+        'resource_type' => $resource_type,
+        'status' => $setarchivestate,
+    );
+    }
+
+$uploadurl = generateURL("{$baseurl}/pages/upload_plupload.php", $uploadparams, $uploadurl_extra_params) . hook('addtopluploadurl');
 
 
 $default_sort_direction="DESC";
@@ -174,8 +208,7 @@ $sort=getval("sort",$default_sort_direction);
 $allowed_extensions="";
 if ($resource_type!="" && !$alternative) {$allowed_extensions=get_allowed_extensions_by_type($resource_type);}
 
-
-if ($collection_add!=="false" && is_numeric($collection_add))
+if (is_numeric($collection_add))
 	{
 	# Switch to the selected collection (existing or newly created) and refresh the frame.
  	set_user_collection($userref,$collection_add);
@@ -579,8 +612,18 @@ if ($_FILES)
                                 $ref = create_resource($resource_type);
                                 }
 
+                            if($upload_then_edit && $upload_here)
+                                {
+                                if(checkperm("e{$setarchivestate}"))
+                                    {
+                                    update_archive_status($ref, $setarchivestate);
+                                    }
+
+                                add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
+                                }
+
                             # Add to collection?
-                            if ($collection_add!="false" && is_numeric($collection_add))
+                            if (is_numeric($collection_add))
                                     {
                                     add_resource_to_collection($ref,$collection_add,false,"",$resource_type);
                                     }
@@ -757,8 +800,8 @@ if ($_FILES)
 							$filename_field=getvalescaped("filename_field","",true);
 							if($filename_field!="")
 								{
-								$target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename'","");
-								if(count($target_resource)==1 && !resource_file_readonly($target_resource))
+								$target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename' AND resource>'$fstemplate_alt_threshold'","");
+								if(count($target_resource)==1 && !resource_file_readonly($target_resource[0]))
 									{
 									// A single resource has been found with the same filename
 									daily_stat("Resource upload",$target_resource[0]);
@@ -856,7 +899,7 @@ elseif ($upload_no_file && getval("createblank","")!="")
 	{
     $ref=copy_resource(0-$userref);    
 	# Add to collection?
-	if ($collection_add!="false" && is_numeric($collection_add))
+	if (is_numeric($collection_add))
 		{
 		add_resource_to_collection($ref,$collection_add);
 		}
@@ -976,7 +1019,10 @@ var pluploadconfig = {
                                         uploaderrormessage = uploadresponse.error.code + " " + uploadresponse.error.message;
                                         if(uploadresponse.error.code==108)
                                             {
-                                            styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadresponse.error.duplicates);   
+                                            styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadresponse.error.duplicates + '\r\n<?php echo $lang['see_log']?>');   
+                                            message = '<?php echo $lang['error-duplicatesfound']?>';
+                                            jQuery("#upload_log").append("\r\n" + message.replace('%resourceref%', uploadresponse.error.duplicates).replace('%filename%', file.name));
+                                            <?php $duplicates_found=true;?>
                                             }
                                         else
                                             {
@@ -1102,7 +1148,7 @@ var pluploadconfig = {
                                 processed_resource_keys=resource_keys;
                             });                           
 					<?php	  
-				  if ($redirecturl!=""){?>
+				  if ($redirecturl!="" && !$duplicates_found){?>
                                   //remove the completed files once complete
                                   uploader.bind('UploadComplete', function(up, files) {
                                   CentralSpaceLoad('<?php echo $redirecturl ?>',true);
@@ -1316,7 +1362,7 @@ jQuery(document).ready(function () {
 
 <?php
 # If adding to a collection that has been externally shared, show a warning.
-if ($collection_add!="false" && count(get_collection_external_access($collection_add))>0)
+if (is_numeric($collection_add) && count(get_collection_external_access($collection_add))>0)
     {
     # Show warning.
     ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php

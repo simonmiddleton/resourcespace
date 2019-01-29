@@ -285,7 +285,14 @@ function collection_writeable($collection)
 	global $usercollection,$username,$anonymous_login,$anonymous_user_session_collection, $rs_session;
 	debug("collection session : " . $collectiondata["session_id"]);
 	debug("collection user : " . $collectiondata["user"]);
-	debug("anonymous_login : " . $anonymous_login);
+	if (is_array($anonymous_login)) 
+		{		
+		debug("anonymous_login : " . print_r($anonymous_login,true));
+		}
+	else
+		{		
+		debug("anonymous_login : " . $anonymous_login);
+		}
 	debug("userref : " . $userref);
 	debug("username : " . $username);
 	debug("anonymous_user_session_collection : " . (($anonymous_user_session_collection)?"TRUE":"FALSE"));
@@ -935,6 +942,7 @@ function get_theme_headers($themes=array())
 		}
 	}	
 	$return=array();
+	
 	$themes=sql_query("select * from collection where public=1 and $selecting is not null and length($selecting)>0 $sql");
 	for ($n=0;$n<count($themes);$n++)
 		{		
@@ -1955,7 +1963,7 @@ function collection_log($collection,$type,$resource,$notes = "")
     $collection = escape_check($collection);
     $type = escape_check($type);
     $resource = $resource != "" ? "'" . escape_check($resource) . "'" : "NULL";
-    $notes = escape_check($notes);
+    $notes = escape_check(mb_strcut($notes, 0, 255));
 
 	sql_query("
         INSERT INTO collection_log (date, user, collection, type, resource, notes)
@@ -2228,18 +2236,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	}
         
     $urlparams = array(
-                      "search"      =>  (isset($collection_data['ref']) ? "!collection" . $collection_data['ref'] : $search),
-                      "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
-                      "ref"         =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
-                      "restypes"    =>  isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "",
-                      "starsearch"  =>  $starsearch,
-                      "order_by"    =>  $order_by,
-                      "col_order_by"=>  $col_order_by,
-                      "sort"        =>  $sort,
-                      "offset"      =>  $offset,
-                      "find"        =>  $find,
-                      "k"           =>  $k
-                       );
+        "search"      =>  (isset($collection_data['ref']) ? "!collection" . $collection_data['ref'] : $search),
+        "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
+        "ref"         =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
+        "restypes"    =>  isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "",
+        "starsearch"  =>  $starsearch,
+        "order_by"    =>  $order_by,
+        "col_order_by"=>  $col_order_by,
+        "sort"        =>  $sort,
+        "offset"      =>  $offset,
+        "find"        =>  $find,
+        "k"           =>  $k);
     
     $options = array();
 	$o=0;
@@ -2322,7 +2329,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Upload to collection
-    if(((checkperm('c') || checkperm('d')) && $collection_data['savedsearch'] == 0 && ($userref == $collection_data['user'] || $collection_data['allow_changes'] == 1 || checkperm('h'))) && ($k == '' || $internal_share_access))
+    if(
+        (
+            (checkperm('c') || checkperm('d'))
+            && $collection_data['savedsearch'] == 0
+            && (
+                    $userref == $collection_data['user']
+                    || $collection_data['allow_changes'] == 1
+                    || checkperm('h')
+                )
+        )
+        && ($k == '' || $internal_share_access))
         {
         if($upload_then_edit)
             {
@@ -2332,9 +2349,23 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             {
             $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",array(),array("uploader"=>$top_nav_upload_type,"ref"=>-$userref, "collection_add"=>$collection_data['ref']));
             }
+
         $options[$o]['value']='upload_collection';
 		$options[$o]['label']=$lang['action-upload-to-collection'];
 		$options[$o]['data_attr']=$data_attribute;
+
+        // Upload here functionality
+        if($top_actions)
+            {
+            $options[$o]['label'] = $lang['upload_here'];
+
+            $upload_here_option = $options[$o];
+
+            unset($options[$o]);
+
+            array_unshift($options, $upload_here_option);
+            }
+
 		$o++;
         }
 
@@ -3067,7 +3098,7 @@ function collection_download_process_summary_notes(
     $size,
     &$zip)
     {
-    global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension;
+    global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension, $p;
     # Append summary notes about the completeness of the package, write the text file, add to archive, and schedule for deletion
     if($zipped_collection_textfile == true && $includetext == "true")
         {
@@ -3142,6 +3173,7 @@ function collection_download_process_csv_metadata_file(array $result, $id, $coll
     // Add link to file for use by tar to prevent full paths being included.
     if($collection_download_tar)
         {
+        global $p, $usertempdir, $filename;
         debug("collection_download adding symlink: " . $p . " - " . $usertempdir . DIRECTORY_SEPARATOR . $filename);
         @symlink($csv_file, $usertempdir . DIRECTORY_SEPARATOR . 'Col-' . $collection . '-metadata-export.csv');
         }
@@ -3216,7 +3248,8 @@ function collection_download_process_archive_command($collection_download_tar, &
         header("Content-type: application/tar");
         header("Content-disposition: attachment; filename=" . $filename );
         debug("collection_download tar command: tar -cv -C " . $usertempdir . " . ");
-        passthru("find " . $usertempdir . ' -printf "%P\n" | tar -cv --no-recursion --dereference -C ' . $usertempdir . " -T -");
+        $cmdtempdir = escapeshellarg($usertempdir);
+        passthru("find " . $cmdtempdir . ' -printf "%P\n" | tar -cv --no-recursion --dereference -C ' . $cmdtempdir . " -T -");
         exit();
         }
     else if ($archiver)

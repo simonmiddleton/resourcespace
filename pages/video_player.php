@@ -300,6 +300,13 @@ if(!hook("swfplayer"))
 		<?php } ?>
 		
 		</div>
+
+		<!-- START DISABLE VIDEOJS RIGHT CONTEXT MENU -->
+		<script>
+			jQuery('.video-js').bind('contextmenu',function() { return false; });
+		</script>
+		<!-- END DISABLE VIDEOJS RIGHT CONTEXT MENU -->
+
 		<!-- END VIDEOJS -->
 		<?php
 		}

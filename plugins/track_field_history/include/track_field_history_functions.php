@@ -9,7 +9,7 @@ if (!function_exists('track_field_history_get_field_log')) {
                           resource_log.diff
                      FROM resource_log
                 LEFT JOIN user ON user.ref = resource_log.user
-                    WHERE type = "e"
+                    WHERE (type = "e" OR type="m")
                       AND resource = %d
                       AND resource_type_field = %d
                  ORDER BY resource_log.date DESC;

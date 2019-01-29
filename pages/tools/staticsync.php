@@ -4,10 +4,33 @@ include_once dirname(__FILE__) . "/../../include/general.php";
 include dirname(__FILE__) . "/../../include/resource_functions.php";
 include dirname(__FILE__) . "/../../include/image_processing.php";
 
+$cli_short_options = 'h';
+$cli_long_options  = array(
+    'help',
+    'send-notifications'
+);
+
 $sapi_type = php_sapi_name();
 if (substr($sapi_type, 0, 3) != 'cli')
     {
     exit("Command line execution only.");
+    }
+
+$send_notification = false;
+
+// CLI options check
+foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option_value)
+    {
+    if(in_array($option_name, array('h', 'help')))
+        {
+        echo 'If you have the configs [$file_checksums=true; $file_upload_block_duplicates=true;] set and would like to have duplicate resource information sent as a notifiaction please run php staticsync.php --send-notifications' . PHP_EOL;
+        exit(1);
+        }
+
+    if('send-notifications' == $option_name)
+        {
+        $send_notification = true;
+        }
     }
 
 if(isset($staticsync_userref))
@@ -246,7 +269,7 @@ function ProcessFolder($folder)
 			if ($modified_extension !== false) { $extension = $modified_extension; }
 			
             /* Below Code Adapted  from CMay's bug report */
-            global $banned_extensions;
+            global $banned_extensions, $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
             # Check to see if extension is banned, do not add if it is banned
             if(array_search($extension, $banned_extensions)){continue;}
             /* Above Code Adapted from CMay's bug report */
@@ -263,6 +286,29 @@ function ProcessFolder($folder)
                     $done[$shortpath]["processed"]=true;
                     $done[$shortpath]["modified"]=date('Y-m-d H:i:s',time());
                     continue;
+                    }
+                # Check for duplicate files
+                if($file_upload_block_duplicates)
+                    {
+                    # Generate the ID
+                    if ($file_checksums_50k)
+                        {
+                        # Fetch the string used to generate the unique ID
+                        $use=filesize_unlimited($fullpath) . "_" . file_get_contents($fullpath,null,null,0,50000);
+                        $checksum=md5($use);
+                        }
+                    else
+                        {
+                        $checksum=md5_file($fullpath);
+                        }  
+                    $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
+                    if(count($duplicates)>0)
+                        {
+                        $message = str_replace("%resourceref%", implode(",",$duplicates), str_replace("%filename%", $fullpath, $lang['error-duplicatesfound']));
+                        debug("STATICSYNC ERROR- " . $message);
+                        $errors[] = $message;
+                        continue;                
+                        }
                     }
                 $count++;
                 echo "Processing file: $fullpath" . PHP_EOL;
@@ -879,15 +925,25 @@ if (!$staticsync_ingest)
     # Remove any themes that are now empty as a result of deleted files.
     sql_query("DELETE FROM collection WHERE theme IS NOT NULL AND LENGTH(theme) > 0 AND 
                 (SELECT count(*) FROM collection_resource cr WHERE cr.collection=collection.ref) = 0;");
-
-    if(count($errors) > 0)
-        {
-        echo PHP_EOL . "ERRORS: -" . PHP_EOL;
-        echo implode(PHP_EOL,$errors);
-        }
-        
-    echo "...Complete" . PHP_EOL;
     }
+
+if(count($errors) > 0)
+    {
+    echo PHP_EOL . "ERRORS: -" . PHP_EOL;
+    echo implode(PHP_EOL,$errors) . PHP_EOL;
+    if ($send_notification)
+        {
+        $notify_users = get_notification_users("SYSTEM_ADMIN");
+        foreach($notify_users as $notify_user)
+            {
+            $admin_notify_users[]=$notify_user["ref"];
+            }
+        $message = "STATICSYNC ERRORS FOUND: - " . PHP_EOL . implode(PHP_EOL,$errors);
+        message_add($admin_notify_users,$message);
+        }
+    }
+        
+echo "...Complete" . PHP_EOL;
 
 sql_query("UPDATE sysvars SET value=now() WHERE name='lastsync'");
 

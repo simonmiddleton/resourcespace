@@ -29,7 +29,7 @@ $archive=getvalescaped("archive","",true);
 $restypes=getvalescaped("restypes","");
 $starsearch=getvalescaped("starsearch","");
 $page=getvalescaped("page",1);
-$alternative=getvalescaped("alternative",-1);
+$alternative=getvalescaped("alternative", -1, true);
 if (strpos($search,"!")!==false) {$restypes="";}
 
 $default_sort_direction="DESC";

@@ -3558,13 +3558,21 @@ function get_resource_access($resource)
                 $search_all_workflow_states = $search_all_workflow_states_cache;
                 if (count($results)==0) {return 2;} # Not found in results, so deny
                 }
-		
-	if ($access==0 && !checkperm("g") && !$customgroupaccess && !$customuseraccess)
-		{
-		# User does not have the 'g' permission. Return restricted for active resources unless group has been granted overide access.
-		$access=1; 
-		}
-	
+
+    /*
+    Restricted access to all available resources
+    OR Restricted access to resources in a particular workflow state
+    UNLESS user/ group has been granted custom (override) access
+    */
+    if (
+        $access == 0
+        && (!checkperm("g") || checkperm("rws{$resourcedata['archive']}"))
+        && !$customgroupaccess
+        && !$customuseraccess)
+        {
+        $access = 1; 
+        }
+
 	if ($access==0 && checkperm('X'.$resource_type)){
 		// this resource type is always restricted for this user group
 		$access=1;
@@ -4200,14 +4208,18 @@ function get_page_count($resource,$alternative=-1)
     # also handle alternative file multipage previews by switching $resource array if necessary
     # $alternative specifies an actual alternative file
     $ref=$resource['ref'];
+
+    $ref_escaped = escape_check($ref);
+    $alternative_escaped = escape_check($alternative);
+
     if ($alternative!=-1)
         {
-        $pagecount=sql_value("select page_count value from resource_alt_files where ref=$alternative","");
+        $pagecount=sql_value("select page_count value from resource_alt_files where ref='{$alternative_escaped}'","");
         $resource=get_alternative_file($ref,$alternative);
         }
     else
         {
-        $pagecount=sql_value("select page_count value from resource_dimensions where resource=$ref","");
+        $pagecount=sql_value("select page_count value from resource_dimensions where resource='{$ref_escaped}'","");
         }
     if (!empty($pagecount)) { return $pagecount; }
     # or, populate this column with exiftool or image magick (for installations with many pdfs already
@@ -4220,7 +4232,7 @@ function get_page_count($resource,$alternative=-1)
 	else if ($alternative==-1)
 		{
 		# some unoconv files are not pdfs but this needs to use the auto-alt file
-		$alt_ref=sql_value("select ref value from resource_alt_files where resource=$ref and unoconv=1","");
+		$alt_ref=sql_value("select ref value from resource_alt_files where resource='{$ref_escaped}' and unoconv=1","");
 		$file=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alt_ref);
 		}
 	else
@@ -4233,14 +4245,14 @@ function get_page_count($resource,$alternative=-1)
     if ($exiftool_fullpath==false)
 		{
 		# Try with ImageMagick instead
-		$command = get_utility_path("im-identify") . ' -format %n ' . $file;
+		$command = get_utility_path("im-identify") . ' -format %n ' . escapeshellarg($file);
 		$pages = trim(run_command($command));
 		}
     else
         {
         $command = $exiftool_fullpath;
     	
-        $command=$command." -sss -pagecount $file";
+        $command=$command." -sss -pagecount " . escapeshellarg($file);
         $output=run_command($command);
         $pages=str_replace("Page Count","",$output);
         $pages=str_replace(":","",$pages);
@@ -4251,11 +4263,11 @@ function get_page_count($resource,$alternative=-1)
 
 	if ($alternative!=-1)
 		{
-		sql_query("update resource_alt_files set page_count='$pages' where ref=$alternative");
+		sql_query("update resource_alt_files set page_count='$pages' where ref='{$alternative_escaped}'");
 		}
 	else
 		{
-		sql_query("update resource_dimensions set page_count='$pages' where resource=$ref");
+		sql_query("update resource_dimensions set page_count='$pages' where resource='{$ref_escaped}'");
 		}
 	return $pages;
 	}

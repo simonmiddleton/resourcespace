@@ -82,8 +82,9 @@ else
 			}
 		}
 	}			
-	
-$response['bindsuccess'] = $bindsuccess ? $lang['status-ok'] : "{$lang['status-fail']} - " . ldap_error($ds) . ' (#' . ldap_errno($ds) . ')';
+
+ldap_get_option($ds, LDAP_OPT_ERROR_STRING, $last_ldap_error);
+$response['bindsuccess'] = $bindsuccess ? $lang['status-ok'] : "{$lang['status-fail']} - " . ldap_error($ds) . " ( {$last_ldap_error} )";
 $response['memberof']    = array();
 
 $userdetails=simpleldap_authenticate($simpleldap['ldapuser'],$simpleldap['ldappassword']);

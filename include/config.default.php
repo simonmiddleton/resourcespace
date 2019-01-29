@@ -281,8 +281,6 @@ $noadd=array_merge($noadd, array("", "a","the","this","then","another","is","wit
 # It is not recommended for large systems.
 $suggest_threshold=-1; 
 
-
-$max_results=200000;
 $minyear=1980; # The year of the earliest resource record, used for the date selector on the search form. Unless you are adding existing resources to the system, probably best to set this to the current year at the time of installation.
 
 # Set folder for home images. Ex: "gfx/homeanim/mine/" 
@@ -2703,12 +2701,6 @@ $tweak_allow_gamma=true;
 $email_errors=false;
 $email_errors_address="";
 
-# Experimental performance enhancement - two pass mode for search results.
-# The first query returns only the necessary number of results for the current search results display
-# The second query is the same but returns only a count of the full result set, which is used to pad the result array to the correct size (so counts display correctly).
-# This means that large volumes of resource data are not passed around unnecessarily, which can significantly improve performance on systems with large data sets.
-$search_sql_double_pass_mode=true;
-
 # Use the new tab ordering system. This will sort the tabs by the order by value set in System Setup
 $use_order_by_tab_view=false;
 
@@ -3280,6 +3272,8 @@ $watermark_single_image = array(
 $offline_job_queue=false;
 # Delete completed jobs from the queue?
 $offline_job_delete_completed=false;
+# Array of valid utilities (as used by get_utility_path() function) used to create files used in offline job handlers e.g. create_alt_file. create_download_file. Plugins can extend this
+$offline_job_prefixes = array("ffmpeg","im-convert","im-mogrify","ghostscript","im-composite","archiver"); 
 
 # Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
 $download_file_lifetime=14;

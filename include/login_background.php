@@ -26,7 +26,7 @@ foreach(get_slideshow_files_data() as $slideshow_file_info)
 jQuery(document).ready(function() 
     {
     ClearTimers();       
-    ActivateSlideshow();
+    ActivateSlideshow(true);
     });
 </script>
 <div id="login_box">

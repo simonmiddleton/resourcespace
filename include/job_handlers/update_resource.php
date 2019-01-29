@@ -9,6 +9,7 @@ include_once __DIR__ .  "/../resource_functions.php";
 # $job_data["archive"] -> optional based on $upload_then_process_holding_state
 
 $resource=get_resource_data($job_data["r"]);
+$status=false;
 
 if($resource!==false)
 	{

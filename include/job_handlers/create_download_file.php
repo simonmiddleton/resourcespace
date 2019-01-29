@@ -20,40 +20,67 @@ If a file is to be created for only a specific user to download you can create a
 
 include_once dirname(__FILE__) . "/../image_processing.php";
 				
-$shell_exec_cmd = str_replace("%%TARGETFILE%%","'" . $job_data["outputfile"] . "'",$job_data["command"]);
-global $config_windows,$baseurl;
-if ($config_windows)
-	{
-	file_put_contents(get_temp_dir() . "/create_alt_" . $randstring . ".bat",$shell_exec_cmd);
-	$shell_exec_cmd=get_temp_dir() . "/create_alt_" . $randstring . ".bat";
-	}
-echo "Running command " . $shell_exec_cmd . PHP_EOL;
-$output=run_command($shell_exec_cmd);
+global $config_windows,$baseurl, $offline_job_prefixes;
+$jobsuccess = false;
+$job_cmd_ok = false;
 
- if(file_exists($job_data["outputfile"]))
-	{
-	global $lang, $baseurl, $download_file_lifetime, $offline_job_delete_completed;
-	$url=(isset($job_data["url"]))?$job_data["url"]:(isset($job_data["resource"])?$baseurl . "/?r=" . $job_data["resource"]:"");
-    $message=$job_success_text!=""?$job_success_text:$lang["download_file_created"]  . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";
-	message_add($job["user"],$message,$url,0);
-	if($offline_job_delete_completed)
-		{
-		job_queue_delete($jobref);
-		}
-	else
-		{
-		job_queue_update($jobref,$job_data,STATUS_COMPLETE);
-		}
-	if(isset($job_data["lifetime"]))
-		{
-		$delete_job_data=array();
-		$delete_job_data["file"]=$job_data["outputfile"];
-		$delete_date = date('Y-m-d H:i:s',time()+(60*60*24*$download_file_lifetime));
-		$job_code=md5($job_data["outputfile"]); 
-		job_queue_add("delete_file",$delete_job_data,"",$delete_date,"","",$job_code);
-		}
-	}
-else
+$shell_exec_cmd = str_replace("%%TARGETFILE%%", escapeshellarg($job_data["outputfile"]),$job_data["command"]);
+
+// Check we are using a whitelisted command path to create file     
+foreach($offline_job_prefixes as $offline_job_prefix)
+    {
+    $cmd_path = get_utility_path($offline_job_prefix);
+    if(substr($shell_exec_cmd,0,strlen($cmd_path)) == $cmd_path)
+        {
+        $job_cmd_ok = true;
+        break;
+        }
+    }
+    
+// Skip if any other unwanted characters in command (|,<,>,!,&,#,; or `)
+if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|;|`)/i", $shell_exec_cmd))
+    {
+    if ($config_windows)
+        {
+        file_put_contents(get_temp_dir() . "/create_alt_" . $randstring . ".bat",$shell_exec_cmd);
+        $shell_exec_cmd=get_temp_dir() . "/create_alt_" . $randstring . ".bat";
+        $deletebat = true;
+        }
+    echo "Running command " . $shell_exec_cmd . PHP_EOL;
+    $output=run_command($shell_exec_cmd);
+    
+     if(file_exists($job_data["outputfile"]))
+        {
+        global $lang, $baseurl, $download_file_lifetime, $offline_job_delete_completed;
+        $url=(isset($job_data["url"]))?$job_data["url"]:(isset($job_data["resource"])?$baseurl . "/?r=" . $job_data["resource"]:"");
+        $message=$job_success_text!=""?$job_success_text:$lang["download_file_created"]  . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";
+        message_add($job["user"],$message,$url,0);
+        if($offline_job_delete_completed)
+            {
+            job_queue_delete($jobref);
+            }
+        else
+            {
+            job_queue_update($jobref,$job_data,STATUS_COMPLETE);
+            }
+        if(isset($job_data["lifetime"]))
+            {
+            $delete_job_data=array();
+            $delete_job_data["file"]=$job_data["outputfile"];
+            $delete_date = date('Y-m-d H:i:s',time()+(60*60*24*$download_file_lifetime));
+            $job_code=md5($job_data["outputfile"]); 
+            job_queue_add("delete_file",$delete_job_data,"",$delete_date,"","",$job_code);
+            }
+        $jobsuccess = true;
+        }
+        
+    if(isset($deletebat) && file_exists($shell_exec_cmd))
+        {
+        unlink($shell_exec_cmd);
+        }		
+    }
+    
+if(!$jobsuccess)
 	{
 	// Job failed, update job queue
 	job_queue_update($jobref,$job_data,STATUS_ERROR);
@@ -61,5 +88,4 @@ else
     $url=$baseurl . "/?r=" . $job_data["resource"];
     message_add($job["user"],$message,$url,0);
 	}
-		
 		

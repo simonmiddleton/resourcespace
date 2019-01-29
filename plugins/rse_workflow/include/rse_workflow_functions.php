@@ -39,7 +39,18 @@ if (!function_exists("rse_workflow_delete_action")){
 if (!function_exists("rse_workflow_get_archive_states")){
     function rse_workflow_get_archive_states()
             {
-            $rawstates=sql_query("select code, name, notify_group, more_notes_flag, notify_user_flag, email_from, bcc_admin from archive_states order by code asc");
+            $rawstates=sql_query("
+                    SELECT code,
+                           name,
+                           notify_group,
+                           more_notes_flag,
+                           notify_user_flag,
+                           email_from,
+                           bcc_admin,
+                           simple_search_flag
+                      FROM archive_states
+                  ORDER BY code ASC");
+
             global $additional_archive_states, $lang;
             $states=array();
             foreach($rawstates as $rawstate)
@@ -51,6 +62,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
                 $states[$rawstate['code']]['notify_user_flag']=$rawstate['notify_user_flag'];
                 $states[$rawstate['code']]['rse_workflow_email_from']=$rawstate['email_from'];
                 $states[$rawstate['code']]['rse_workflow_bcc_admin']=$rawstate['bcc_admin'];
+                $states[$rawstate['code']]['simple_search_flag'] = $rawstate['simple_search_flag'];
                 // Identify states that are set in config.php and cannot be deleted from plugin                
                 if(in_array($rawstate['code'],$additional_archive_states))
                     {
@@ -73,23 +85,32 @@ if (!function_exists("rse_workflow_get_archive_states")){
                         {
                         $statename=$lang['status' . $additional_archive_state];
                         }
-                    sql_query("insert into archive_states set code='$additional_archive_state', name='$statename'");
+                    sql_query("insert into archive_states set code='" . escape_check($additional_archive_state) . "', name='" . escape_check($statename) . "'");
                     $states[$additional_archive_state]['name']=$lang['status' . $additional_archive_state];
                     $states[$additional_archive_state]['fixed']=true;
                     }
                 }
-				
-	    //Add default system states                  
-            for ($a=-2;$a<=3;$a++)
-                {     
-		$statename=$lang['status' . $a];
-		if (!isset($states[$a]))
-		   {
-		   sql_query("insert into archive_states set code='$a', name='$statename'");  
-		   } 
-		$states[$a]['name']=$lang['status' . $a];
-		$states[$a]['fixed']=true;		                   
+
+            // Add default system states
+            for($workflow_state = -2; $workflow_state <= 3; $workflow_state++)
+                {
+                $workflow_state_name = $lang["status{$workflow_state}"];
+
+                if (!isset($states[$workflow_state]))
+                    {
+                    $simple_search_flag = ($workflow_state == 0 ? 1 : 0);
+
+                    sql_query("
+                        INSERT INTO archive_states
+                                SET code = '" . escape_check($workflow_state) . "',
+                                    name = '" . escape_check($workflow_state_name) . "',
+                                    simple_search_flag = '{$simple_search_flag}'");
+                    }
+
+                $states[$workflow_state]['name'] = $workflow_state_name;
+                $states[$workflow_state]['fixed'] = true;
                 }
+
             return $states;
             }
     }
@@ -97,8 +118,8 @@ if (!function_exists("rse_workflow_get_archive_states")){
 if (!function_exists("rse_workflow_delete_state")){
     function rse_workflow_delete_state($state,$newstate)
         {		
-        sql_query("update resource set archive='$newstate' where archive='$state'");
-        sql_query("delete from archive_states where code='$state'");
+        sql_query("update resource set archive='" . escape_check($newstate) . "' where archive='" . escape_check($state) . "'");
+        sql_query("delete from archive_states where code='" . escape_check($state) . "'");
         return true;  
         }
     } 

@@ -246,6 +246,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #FooterNavRightBottom {float:right;text-align:right;margin-top: 10px;clear: right;}
 #FooterNavLeft {float:left;text-align:left;margin-top: 10px;}
 #FooterLanguages{margin-left:15px;}
+#login_box #Footer {margin: 0px 0px 10px 0px;}
 
 #CentralSpaceContainer {
     margin:0px 25px 20px;
@@ -1618,7 +1619,7 @@ select.MultiSelect:before {
 }
 
 
-.BrowseBarItem.ui-droppable-hover a.BrowseBarLink{
+.BrowseBarItem.ui-droppable-hover .BrowseBarLink a{
     border: 2px solid #FFF;
 }
 

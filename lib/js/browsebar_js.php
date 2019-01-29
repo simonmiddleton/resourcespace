@@ -353,7 +353,7 @@ function BrowseBarInit()
                             <?php echo generateAjaxToken('browse_action'); ?>
                             };
                         
-                        BrowseAction(post_data,jQuery(this).find("a.BrowseBarLink"));
+                        BrowseAction(post_data,jQuery(this).find(".BrowseBarLink a"));
                         }
                     else
                         {
@@ -368,7 +368,7 @@ function BrowseBarInit()
                 case 'C':
                     cid = item_elements[item_elements.length - 1].replace('C:','');
                     AddResourceToCollection(event,resource_id,'', cid);
-                    jQuery(this).find("a.BrowseBarLink").fadeTo(100, 0.3, function() { jQuery(this).fadeTo(500, 1.0); });
+                    jQuery(this).find(".BrowseBarLink a").fadeTo(100, 0.3, function() { jQuery(this).fadeTo(500, 1.0); });
                     break;
                 default:
                     

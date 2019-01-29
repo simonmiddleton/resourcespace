@@ -36,7 +36,7 @@ function initFacialRecognition()
         }
 
     $annotate_enabled = true;
-    $annotate_fields  = array($facial_recognition_tag_field);
+    $annotate_fields[] = $facial_recognition_tag_field;
 
     return true;
     }
