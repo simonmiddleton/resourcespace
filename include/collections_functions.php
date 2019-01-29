@@ -1963,7 +1963,7 @@ function collection_log($collection,$type,$resource,$notes = "")
     $collection = escape_check($collection);
     $type = escape_check($type);
     $resource = $resource != "" ? "'" . escape_check($resource) . "'" : "NULL";
-    $notes = escape_check(mb_substr($notes, 0, 255));
+    $notes = escape_check(mb_strcut($notes, 0, 255));
 
 	sql_query("
         INSERT INTO collection_log (date, user, collection, type, resource, notes)
