@@ -379,11 +379,11 @@ div.MessageBox a {
 }
 
 #login_box {
-	background: rgba(30, 30, 30, 0.7);
-	border: 1px solid #B0B0B0;
+	background: rgba(0, 0, 0, 0.6)
 }
 #login_box .Question {background:none;border-bottom:1px solid #666;}
-#login_box .QuestionSubmit {background:none;}
+#login_box .QuestionSubmit {background:none; border: none;}
+#login_box .Question .stdwidth {width: 412px;}
 
 #login_box, #login_box h1,  #login_box a{
 	color: #FFF;

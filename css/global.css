@@ -247,6 +247,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 #FooterNavRightBottom {float:right;text-align:right;margin-top: 10px;clear: right;}
 #FooterNavLeft {float:left;text-align:left;margin-top: 10px;}
 #FooterLanguages{margin-left:15px;}
+#login_box #Footer {margin: 0px 0px 10px 0px;}
 
 #CentralSpaceContainer {margin:0px 25px 20px;padding:0 282px 0 0;text-align:left;}
 #CentralSpaceContainerRestrict {margin:0px 15px 20px 25px;padding:0;text-align:left;}
