@@ -823,8 +823,8 @@ if ($_FILES)
 									{
 									// No resource found with the same filename
 									header('Content-Type: application/json');
+                                    unlink($plfilepath);
 									die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no resource found with filename ' . $origuploadedfilename . '"}, "id" : "id"}');
-									unlink($plfilepath);
 									}
 								else
 									{
@@ -837,15 +837,15 @@ if ($_FILES)
 											{
 											$status = upload_file($replaced, ('yes' == getval('no_exif', '') && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
 											}
+                                        unlink($plfilepath);
                                         die('{"jsonrpc" : "2.0", "message" : "' . $lang["replacefile"] . '", "id" : "' . $resourcelist . '"}');
-										unlink($plfilepath);
 										}
 									else
 										{
 										// Multiple resources found with the same filename
 										header('Content-Type: application/json');
+                                        unlink($plfilepath);
 										die('{"jsonrpc" : "2.0", "error" : {"code": 107, "message": "ERROR - multiple resources found with filename ' . $origuploadedfilename . '. Resource IDs : ' . $resourcelist . '"}, "id" : "id" }');
-										unlink($plfilepath);
 										}
 									}
 								}
@@ -874,10 +874,8 @@ if ($_FILES)
                                             {
                                             // No resource found with the same filename
                                             header('Content-Type: application/json');
-
-                                            die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no ref matching filename ' . $origuploadedfilename . '"}, "id" : "id"}');
-
                                             unlink($plfilepath);
+                                            die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no ref matching filename ' . $origuploadedfilename . '"}, "id" : "id"}');
                                             }
                                         }
 
