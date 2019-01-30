@@ -47,7 +47,7 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
     {
     $username="";
 	// Resolve anonymous login user if it is configured at domain level
-	if(is_array($anonymous_login))
+	if(isset($anonymous_login) && is_array($anonymous_login))
 		{
 		foreach($anonymous_login as $key => $val)
 			{
