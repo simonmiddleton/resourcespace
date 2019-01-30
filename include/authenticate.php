@@ -46,6 +46,15 @@ function ip_matches($ip, $ip_restrict)
 if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset($anonymous_login) || hook('provideusercredentials'))
     {
     $username="";
+	// Resolve anonymous login user if it is configured at domain level
+	if(is_array($anonymous_login))
+		{
+		foreach($anonymous_login as $key => $val)
+			{
+			if($baseurl==$key){$anonymous_login=$val;}
+			}
+		}
+	// Establish session hash
 	if (array_key_exists("user",$_GET))
 		{
 	    $session_hash=escape_check($_GET["user"]);
@@ -56,13 +65,6 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 	  	}
 	elseif (isset($anonymous_login))
 		{
-		if(is_array($anonymous_login))
-			{
-			foreach($anonymous_login as $key => $val)
-				{
-				if($baseurl==$key){$anonymous_login=$val;}
-				}
-			}
 		$username=$anonymous_login;
 		$session_hash="";
 		$rs_session=get_rs_session_id(true);
