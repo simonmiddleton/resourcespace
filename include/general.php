@@ -6082,7 +6082,7 @@ function notify_resource_change($resource)
         }
         
     debug("notify_resource_change - checking for users that have downloaded this resource " . $resource);
-    $download_users=sql_query("select u.ref, u.email from resource_log rl left join user u on rl.user=u.ref where rl.type='d' and rl.resource=$resource and datediff(now(),date)<'$notify_on_resource_change_days'","");
+    $download_users=sql_query("select distinct u.ref, u.email from resource_log rl left join user u on rl.user=u.ref where rl.type='d' and rl.resource=$resource and datediff(now(),date)<'$notify_on_resource_change_days'","");
     $message_users=array();
     if(count($download_users>0))
         {
