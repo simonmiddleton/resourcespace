@@ -1451,14 +1451,29 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $sql_join.=" RIGHT JOIN resource_node rn ON r.ref=rn.resource JOIN node n ON n.ref=rn.node WHERE n.resource_type_field='" . $fieldref . "'";
             $sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join AND r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
-            return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);        
-            
+
+            if($returnsql)
+                {
+                return $sql;
+                }
+            $sql = str_replace("ORDER BY {$order_by}", '', $sql);
+            $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
+
+            return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
             }
         else
             {
             $sql_join.=" join resource_data on r.ref=resource_data.resource AND resource_data.resource_type_field=$fieldref AND resource_data.value<>'' ";
             $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join AND r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
-            return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+
+            if($returnsql)
+                {
+                return $sql;
+                }
+            $sql = str_replace("ORDER BY {$order_by}", '', $sql);
+            $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
+
+            return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
             }
         }
         
