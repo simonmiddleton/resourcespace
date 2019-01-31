@@ -228,7 +228,7 @@ function do_search(
     $sql_prefix="";$sql_suffix="";
     if ($return_disk_usage)
         {
-        $sql_prefix="SELECT sum(disk_usage) total_disk_usage,count(*) total_resources FROM (";
+        $sql_prefix="SELECT sum(disk_usage) total_disk_usage,count(*) total_resources, resourcelist.ref, resourcelist.score, resourcelist.user_rating, resourcelist.total_hit_count FROM (";
         $sql_suffix=") resourcelist";
         }
 
