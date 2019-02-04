@@ -1131,7 +1131,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 function render_user_group_multi_select($name, array $current = array(), $size = 10, $style = '')
     {
     ?>
-    <select id="<?php echo $name; ?>" name="<?php echo $name; ?>[]" multiple="multiple" size="<?php echo $size; ?>" style="<?php echo $style; ?>">
+    <select id="<?php echo $name; ?>" class="MultiSelect" name="<?php echo $name; ?>[]" multiple="multiple" size="<?php echo $size; ?>" style="<?php echo $style; ?>">
     <?php
     foreach(get_usergroups() as $usergroup)
         {

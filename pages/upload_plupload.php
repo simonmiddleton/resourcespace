@@ -783,7 +783,6 @@ if ($_FILES)
                                 unlink($plupload_processed_filepath);
                                 }
 
-                            die('{"jsonrpc" : "2.0", "message" : "' . $lang["replacefile"] . '", "id" : "' . htmlspecialchars($replace_resource) . '"}');
                             
 											
 							// Check to see if we need to notify users of this change							
@@ -793,7 +792,7 @@ if ($_FILES)
 								ob_flush();flush();	
 								notify_resource_change($replace_resource);
 								}							
-                            exit();
+                            die('{"jsonrpc" : "2.0", "message" : "' . $lang["replacefile"] . '", "id" : "' . htmlspecialchars($replace_resource) . '"}');
                             }
                     else
                             {
@@ -810,7 +809,6 @@ if ($_FILES)
                                         {
                                         unlink($plupload_processed_filepath);
                                         }
-                                    die('{"jsonrpc" : "2.0", "message" : "' . $lang["upload_success"] . '", "id" : "' . htmlspecialchars($target_resource[0]) . '"}');
                                     // Check to see if we need to notify users of this change							
 									if($notify_on_resource_change_days!=0)
 										{								
@@ -819,14 +817,14 @@ if ($_FILES)
 										
 										notify_resource_change($target_resource[0]);
 										}
-									exit();
+									die('{"jsonrpc" : "2.0", "message" : "' . $lang["upload_success"] . '", "id" : "' . htmlspecialchars($target_resource[0]) . '"}');
 									}
 								elseif(count($target_resource)==0)
 									{
 									// No resource found with the same filename
 									header('Content-Type: application/json');
+                                    unlink($plfilepath);
 									die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no resource found with filename ' . $origuploadedfilename . '"}, "id" : "id"}');
-									unlink($plfilepath);
 									}
 								else
 									{
@@ -839,15 +837,15 @@ if ($_FILES)
 											{
 											$status = upload_file($replaced, ('yes' == getval('no_exif', '') && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
 											}
+                                        unlink($plfilepath);
                                         die('{"jsonrpc" : "2.0", "message" : "' . $lang["replacefile"] . '", "id" : "' . $resourcelist . '"}');
-										unlink($plfilepath);
 										}
 									else
 										{
 										// Multiple resources found with the same filename
 										header('Content-Type: application/json');
+                                        unlink($plfilepath);
 										die('{"jsonrpc" : "2.0", "error" : {"code": 107, "message": "ERROR - multiple resources found with filename ' . $origuploadedfilename . '. Resource IDs : ' . $resourcelist . '"}, "id" : "id" }');
-										unlink($plfilepath);
 										}
 									}
 								}
@@ -876,10 +874,8 @@ if ($_FILES)
                                             {
                                             // No resource found with the same filename
                                             header('Content-Type: application/json');
-
-                                            die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no ref matching filename ' . $origuploadedfilename . '"}, "id" : "id"}');
-
                                             unlink($plfilepath);
+                                            die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no ref matching filename ' . $origuploadedfilename . '"}, "id" : "id"}');
                                             }
                                         }
 
