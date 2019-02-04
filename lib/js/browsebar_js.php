@@ -72,14 +72,19 @@ function renderBrowseItem(node, parent)
     brwstmplt = brwstmplt.replace("%BROWSE_EXPAND%",expand);
     if(node.link != "")
         {
-        link = "<div class='BrowseBarLink' ><a href='%BROWSE_LINK%' onclick='return CentralSpaceLoad(this,false);'>%BROWSE_NAME%</a></div>";
-        link = link.replace("%BROWSE_LINK%",node.link);  
-        link = link.replace("%BROWSE_NAME%",node.name);  
         if(node.modal)
             {
-            link = link.replace("CentralSpaceLoad(this,false)","ModalLoad(this,false,true)");
+            linkfunction = "browserefresh=\"" + parentid + "\";return ModalLoad(this,false,true);";
             }
-            
+        else
+            {
+            linkfunction = "return CentralSpaceLoad(this,true);";
+            }
+        
+        link = "<div class='BrowseBarLink' ><a href='%BROWSE_LINK%' onclick='" + linkfunction + "'>%BROWSE_NAME%</a></div>";
+        link = link.replace("%BROWSE_LINK%",node.link);  
+        link = link.replace("%BROWSE_NAME%",node.name);
+        
         brwstmplt = brwstmplt.replace("%BROWSE_TEXT%",link);  
         }
     else
@@ -194,6 +199,7 @@ function toggleBrowseElements(browse_id, reload)
         openclose.addClass("browse_expanded");
         curel.attr("data-browse-status","open");
         curel.addClass("BrowseOpen");
+        browseopen.push(browse_id);
         return true;
         }
     
@@ -303,11 +309,20 @@ function toggleBrowseElements(browse_id, reload)
     return true;          
     }
     
-function ReloadBrowseBar()
+function ReloadBrowseBar(browserefresh)
     {
     //console.log(" reloading - " + browseopen);
-    var allopen = jQuery.cookie("browseopen") ? jQuery.cookie("browseopen").split(/,/) : new Array();
-    browse_toload = allopen;
+    if(browserefresh !== undefined)
+        {
+        // Just refresh the node requested
+        var allopen = new Array(browserefresh);
+        }
+    else
+        {
+        var allopen = jQuery.cookie("browseopen") ? jQuery.cookie("browseopen").split(/,/) : new Array();
+        }
+        
+    browse_toload = allopen;   
     allopen.forEach(function (item)
         {
         console.log("Reloading browse node = " + item);
@@ -377,6 +392,12 @@ function BrowseBarInit()
 
         tolerance: "pointer"
         });
+    
+    if(typeof browserefresh !== "undefined")
+        {
+        console.log('scroll to ' + browserefresh);
+        setTimeout(function() {jQuery("[data-browse-id='" + browserefresh + "']")[0].scrollIntoView({ behavior: "smooth",block: "start"});browserefresh = undefined;}, 200);        
+        }
     }
 
 function BrowseAction(post_data,browselink)

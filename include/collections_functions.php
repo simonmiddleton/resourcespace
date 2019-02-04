@@ -2704,7 +2704,7 @@ function new_featured_collection_form(array $themearray = array())
                     <input type="radio"
                            name="location" 
                            value="root" 
-                           onclick="jQuery('#theme_category_name').slideUp();"
+                           onclick="jQuery('#theme_category_name').slideUp();jQuery('#category_name_input').prop('required',false);"
                            checked
                            ><?php echo "&nbsp;" . $lang["create_new_here"]; ?></input>
                 </div>
@@ -2713,7 +2713,7 @@ function new_featured_collection_form(array $themearray = array())
                     <input type="radio"
                            name="location"
                            value="subfolder"
-                           onclick="jQuery('#theme_category_name').slideDown();"
+                           onclick="jQuery('#theme_category_name').slideDown();jQuery('#category_name_input').prop('required',true);"
                            ><?php echo "&nbsp;" . $lang["create_new_below"]; ?></input>
                 </div>
                 <div class="clearleft"></div>
@@ -2723,7 +2723,7 @@ function new_featured_collection_form(array $themearray = array())
             ?>
             <div class="Question" id="theme_category_name" <?php if($themes_count > 0) {?>style="display:none;" <?php }?></div>
                 <label for="category_name" ><?php echo $lang["themecategory"] ?></label>
-                <input type="text" name="category_name"></input>
+                <input type="text" name="category_name" id="category_name_input" <?php if($themes_count == 0) {?>required="true" <?php }?>></input>
                 <div class="clearleft"></div>
             </div>
         <?php
