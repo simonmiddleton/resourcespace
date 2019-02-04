@@ -244,7 +244,7 @@ function toggleBrowseElements(browse_id, reload)
                     });
                 
                 // Show all immediate children
-                jQuery("[data-browse-parent='" + browse_id + "']").show();
+                jQuery("[data-browse-parent='" + browse_id + "']").slideDown();
                 
                 // Remove any old items hidden earlier
                 //jQuery(".browse_delete").slideUp();;
