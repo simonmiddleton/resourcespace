@@ -30,7 +30,7 @@ if (getval("ajax","")=="" && !hook("replace_footer"))
 
 <div class="clearerleft"></div>
 </div><!--End div-CentralSpace-->
-<?php if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="preview_all") && ($pagename!="user_request")) { ?></div><?php } ?><!--End div-CentralSpaceContainer-->
+
 
 <div class="clearer"></div>
 
@@ -109,6 +109,8 @@ if(!hook("replace_footernavrightbottom"))
 <?php } // end ajax ?>
 
 <?php /* always include the below as they are perpage */?>
+
+<?php if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="preview_all") && ($pagename!="user_request")) { ?></div><?php } ?><!--End div-CentralSpaceContainer-->
 
 <?php hook("footerbottom"); ?>
 
@@ -447,14 +449,55 @@ if (getval("ajax","") == "")
 			myLayout=jQuery('body').layout(
 				{
 				//closable:false,
-				resizable:true,
+				south__resizable:true,
 				livePaneResizing:true,
 				triggerEventsDuringLiveResize: false,
-				minSize:40,
-				spacing_open:8,
-				spacing_closed:8,
-				togglerLength_open:"200",
-				togglerTip_open: '<?php echo $lang["toggle"]?>',
+				south__minSize:40,
+				              
+                
+                east__spacing_open:0,
+				east__spacing_closed:8,
+                east_resizable: true,
+                east__size: 300,
+
+                north_resizable: false,
+                north__spacing_closed: 0,
+                north__spacing_open: 0,
+
+                <?php
+                if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && ('' == $k || $internal_share_access) && $browse_bar) 
+                    {
+                    $browsesize = $browse_show ? "335" : "35";
+                    echo "
+                    west__closable:false,
+                    west__minSize:35,
+                    west__spacing_open: 0,
+                    west__size: " . $browsesize . ",
+                    west__onresize: function(pane)
+                        {
+                        if (pane==\"west\")
+                            {
+                            var browsewidth = jQuery('.ui-layout-west').width();
+                            console.log('width ' + browsewidth);
+                            if(browsewidth < 250 && rsbrowse=='show')
+                                {
+                                ToggleBrowseBar('close');
+                                }
+                            else if(browsewidth > 50 && rsbrowse=='hide')
+                                {
+                                ToggleBrowseBar('open',true);
+                                }
+                            }
+                        ModalCentre();
+                        },
+                    ";
+
+                    }?>
+				
+
+                                
+				south__togglerLength_open:"200",
+				south__togglerTip_open: '<?php echo $lang["toggle"]?>',
 				resizerTip: '<?php echo $lang["resize"]?>',
 				south__onclose_start: function(pane)
 					{

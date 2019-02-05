@@ -278,7 +278,6 @@ if(!hook("customloadinggraphic"))
 ?>
 
 <!--Global Header-->
-<div id="UICenter" class="ui-layout-center">
 <?php
 if (($pagename=="terms") && (getval("url","")=="index.php")) {$loginterms=true;} else {$loginterms=false;}
 if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all") { ?>
@@ -304,7 +303,7 @@ if(isset($usergroup))
 
 $linkUrl=isset($header_link_url) ? $header_link_url : $homepage_url;
 ?>
-<div id="Header" class="<?php
+<div id="Header" class="ui-layout-north  <?php
         echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
         echo ((isset($slimheader_fixed_position) && $slimheader_fixed_position) ? ' SlimHeaderFixedPosition' : '');
         echo " " . $header_size;
@@ -542,7 +541,7 @@ if (!$header_search)
     if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") ) 	
         {
         ?>
-        <div id="SearchBarContainer">
+        <div id="SearchBarContainer" class="ui-layout-east" >
         <?php
         include dirname(__FILE__)."/searchbar.php";
         
@@ -569,17 +568,14 @@ if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="user_re
     $csc_classes = array();
     if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && ('' == $k || $internal_share_access) && $browse_bar) 
         {
+        $browse_show = getval("rsbrowse","") == "show";
         render_browse_bar();
-        if (getval("rsbrowse","") == "show")
-            {
-            $csc_classes[] = "BrowseMode";
-            }
         if($header_search)
             {
             $csc_classes[] = "NoSearchBar";
             }
         }
-    echo '<div id="CentralSpaceContainer" ' . (count($csc_classes) > 0 ? 'class="' . implode(' ', $csc_classes) . '"' : '' ) . '>';
+    echo '<div id="CentralSpaceContainer" class="ui-layout-center ' . implode(' ', $csc_classes) . '" >';
     }
 
 hook("aftercentralspacecontainer");

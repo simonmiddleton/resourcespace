@@ -170,7 +170,6 @@ select::-ms-expand
 #custom_access .radiooptions{margin: 5px;}
 
 /*General layout*/
-#UICenter {height:100%;}
 
 #Header {padding:10px 25px;margin:0; margin-bottom:10px;text-align:left;}
 #TextHeader{font-size:25px;float:left;}
@@ -182,7 +181,7 @@ select::-ms-expand
 .TeamCentreAlertIcon { position: relative; top: 3px;}
 
 
-.ui-layout-container{min-width:1100px;overflow:scroll;}
+.ui-layout-container{overflow:auto;}
 #Header {margin: 0;padding: 5px 25px 5px 25px;background-image:none;}
 #HeaderNav1, #HeaderNav2 {padding:0;}
 #HeaderNav1 {float:right;}
@@ -192,7 +191,6 @@ select::-ms-expand
 #HeaderImg{margin:0;max-height: 40px; }
 .HorizontalNav li,  .HorizontalNav li {display: inline-block;zoom: 1;*display: inline;}
 .HorizontalNav li a, .HorizontalNav li a{display: inline-block;zoom: 1;*display: inline;}
-#SearchBarContainer {margin-top: 20px;}
 .RecordBox {margin: 10px 20px 10px 0;}
 h2#CollectionsPanelHeader {display:none;}
 
@@ -239,7 +237,6 @@ div#Header.SlimHeaderFixedPosition { width: 100%; position:fixed; top: 0px; z-in
 div#Header.SlimHeaderFixedPosition #HeaderNav1 { margin-right: 25px; }
 div#Header.SlimHeaderFixedPosition #HeaderNav2 li:last-child { margin-right: 40px; }
 div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
-div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 
 #Footer {clear: both; margin:20px 25px 38px 25px;padding:0;text-align:left;}
 #FooterNavRight {float:right;text-align:right;margin-top: 10px;clear: right;}
@@ -250,7 +247,7 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 
 #CentralSpaceContainer {
     margin:0px 25px 20px;
-    padding:0 282px 0 0;
+    padding:0 0 0 0;
     text-align:left;
     transition: all 0.5s ease;
     }
@@ -345,9 +342,9 @@ div#SearchBox.SlimHeaderFixedPosition { margin-top: 80px; }
 
 
 /*Right Search Box layout*/
-#SearchBox {float: right;width: 282px; margin: 0px 15px 0px 0px; display:inline;text-align:left; /*! border-left: 1px solid #ccc; */ /*! box-sizing: border-box; */}
-#SearchBoxPanel {width: 280px;}
-#ResearchBoxPanel {width: 280px;margin-top: 15px;}
+#SearchBox {float: right;width: 100%; display:inline;text-align:left; /*! border-left: 1px solid #ccc; */ /*! box-sizing: border-box; */}
+#SearchBoxPanel {width: 100%;}
+#ResearchBoxPanel {width: 100%;margin-top: 15px;}
 #SearchBox .PopupCategoryTree {display: none; text-align: left; z-index: 999; padding: 5px; background: none;}
 
 /*Resource Panel layout*/
@@ -716,10 +713,17 @@ li.plupload_droptext {font-size: 1.1em;}
     margin-top:10px;
     }
 
-.ui-layout-pane
+.ui-layout-west
+    {
+    overflow-x: auto;
+    overflow-y: none;
+    }
+    
+.ui-layout-south, .ui-layout-east, .ui-layout-center
     {
     overflow: auto;
     }
+
 
 .InfoBoxResourceTypeIcon
     {
@@ -1526,7 +1530,6 @@ a.Enabled, a:visited.Enabled {
 }
 
 #modal #SearchBox, #modal #SearchBoxPanel {
-    width: 300px;
     margin: 0;
 }
 
@@ -1587,25 +1590,18 @@ select.MultiSelect:before {
     box-shadow: none;
 }
 
+
+#BrowseBarContainer{
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 #BrowseBar{
-    position: absolute;
-    max-width:30%;
-    height: 500px;
-    margin-top: -20px;
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
     text-align: left;
-    overflow: scroll;
+    white-space: nowrap;
 }
 
-
-#BrowseBar.BrowseBarHidden{
-    margin-left: -530px;
-}
-
-#BrowseBar.BrowseBarVisible{
-    width: 1000px;
-    margin-left: 0;
-}
 
 #BrowseBarContents{
     margin-left: 20px;
@@ -1614,8 +1610,10 @@ select.MultiSelect:before {
 }
 
 #BrowseBarClose{
-    float: right;
     margin-right: 5px;
+    margin-top: 20px;
+
+    float: right;
 }
 
 
@@ -1649,34 +1647,39 @@ select.MultiSelect:before {
 }
 
 
-#BrowseBarTab {
-    position: absolute;
-    top: 130px;
-    width:0px;
-    height: 140px;
-    left: -500px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    /*margin-left: -530px;
-    display: none;*/
+#BrowseBarClose {
+    display: inline-block;    
 }
 
-#BrowseBarTab.BrowseBarHidden {
-    display: block;
-    margin-left: 0px;
-    left: 0px;
+
+#BrowseBarTabContainer{
+    position: absolute;
+    display: inline-block;
+    float: right;
+    right: 0px;
+    height: 100%;
+}
+
+#BrowseBarTab {    
+    /*top: 130px;*/
+    width:0px;
+    height: 140px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     width: 35px;
 }
 
 
 .BrowseBarTabText {
     margin-bottom: 10px;
-    margin-top: 75px;
+    margin-top: 100px;
+    margin-left: 28px;
+    padding-top: 71px;
     text-transform: capitalize;
     text-align: center;
     transform: rotate(-90deg);
+    transform-origin: left bottom;
     font-size: 1.2em;
-    display: none;
 }
 
 
@@ -1687,13 +1690,6 @@ select.MultiSelect:before {
     opacity: 1;
 }
 
-#BrowseBarTab.BrowseBarHidden  .BrowseBarTabText{
-    display: block;
-}
-
-#CentralSpaceContainer.BrowseMode{
-    padding-left: 30%;
-    }
 
 .browse_closed:after {
     content: "\f0fe";

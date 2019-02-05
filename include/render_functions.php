@@ -2649,10 +2649,9 @@ function render_trash($type, $deletetext,$forjs=false)
 
 function render_browse_bar()
     {
-    global $lang, $browse_bar_workflow;
-    $bbshow = getval("rsbrowse","") == "show";
-        
-    $bb_html = '<div id="BrowseBar" class="BrowseBar ' . ($bbshow ? "BrowseBarVisible" : "BrowseBarHidden"). '" >';
+    global $lang, $browse_bar_workflow, $browse_show;
+    $bb_html = '<div id="BrowseBarContainer" class="ui-layout-west" >';
+    $bb_html .= '<div id="BrowseBar" class="BrowseBar" >';
     $bb_html .= '<div id="BrowseBarContents" >'; 
     
     //Browse row template
@@ -2683,13 +2682,17 @@ function render_browse_bar()
         }
 
     $bb_html .= '</div><!-- End of BrowseBarContents -->
-                <div id="BrowseBarClose" class="backtoresults"><a href="#"  class="closeLink fa fa-times" onClick="ToggleBrowseBar();"></a></div>
                 </div><!-- End of BrowseBar -->
-                <div id="BrowseBarTab" ' . ($bbshow ? '' : 'class="BrowseBar BrowseBarHidden" ' ) . '" ><a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div class="BrowseBarTabText">' . $lang['browse_bar_text'] . '</div></a></div><!-- End of BrowseBarTab -->
+                <div id="BrowseBarClose" ><a href="#"  class="closeLink fa fa-times" onClick="ToggleBrowseBar();"></a></div>
+                <div id="BrowseBarTabContainer" >
+                    <div id="BrowseBarTab" ><a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div class="BrowseBarTabText">' . $lang['browse_bar_text'] . '</div></a></div><!-- End of BrowseBarTab -->
+                    </div><!-- End of BrowseBarTabContainer -->
+                </div><!-- End of BrowseBarContainer -->
+                
             ';
     echo $bb_html;
     
-    $browsejsvar = $bbshow ? 'show' : 'hide';
+    $browsejsvar = $browse_show ? 'show' : 'hide';
     echo '<script>
         var rsbrowse = "' . $browsejsvar . '";
         SetCookie("rsbrowse", "' . $browsejsvar . '");
@@ -2735,11 +2738,11 @@ function generate_browse_bar_item($id, $text)
     $html .= '<div class="BrowseRowInner" >';
 	
     $html .= '<div class="BrowseBarStructure">
-            <a href="#" class="browse_expand browse_closed" onclick="return toggleBrowseElements(\'' . $id . '\');" ></a>
+            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\');" ></a>
             </div><!-- End of BrowseBarStructure -->';	
     $html .= '<div class="BrowseBarLink" >' . $text . '</div>';
     
-    $html .= '<a href="#" class="browse_refresh " onclick="return toggleBrowseElements(\'' . $id . '\',true);" ><i class="fas fa-sync reloadicon"></i></a>';	
+    $html .= '<a href="#" class="browse_refresh " onclick="toggleBrowseElements(\'' . $id . '\',true);" ><i class="fas fa-sync reloadicon"></i></a>';	
     
     $html .= "</div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->";

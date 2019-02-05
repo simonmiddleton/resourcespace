@@ -52,7 +52,7 @@ input[readonly] {color: #000000;}
 {color:#fff;text-decoration:none;}
 
 #ThemeBoxPanel,  .RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge{background: #eee;}
-#ThemeBoxPanel, #SearchBoxPanel, #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge
+#ThemeBoxPanel, #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge
 	{
 	border-radius:4px;
   overflow: hidden;
@@ -115,10 +115,15 @@ input[readonly] {color: #000000;}
 	{color:#FFF;}
 .HomePanel h2{color:#FFF;}
 
-#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab{
+#SearchBarContainer,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBarContainer, #BrowseBarTab{
 	background: rgba(0, 0, 0, 0.6);
 	color:#FFF;
 }
+
+#BrowseBarTabContainer{
+    background: rgba(255,255,255,1);
+}
+
 #HomeSiteText{padding:10px;}
 #HomeSiteText.dashtext h1{color:#FFF;}
 #SlideshowContainer #HomeSiteText.dashtext h1{color:#373737;}

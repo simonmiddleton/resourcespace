@@ -13,25 +13,36 @@ include_once "../../include/authenticate.php";
 header("Content-type: text/javascript");
 ?>
 
-function ToggleBrowseBar() 
+function ToggleBrowseBar(forcestate, noresize) 
 	{
-	if (typeof rsbrowse === "undefined" || rsbrowse == 'hide')
+    var browseopen = (typeof rsbrowse === "undefined" || rsbrowse == 'hide') || (forcestate !== "undefined" && forcestate == 'open')
+	if (browseopen)
 		{
-		jQuery('#BrowseBarTab').removeClass('BrowseBarHidden');
-		jQuery('#CentralSpaceContainer').addClass('BrowseMode');
-		jQuery('#Footer').addClass('BrowseMode');
-		jQuery('#BrowseBar').removeClass('BrowseBarHidden');
-		jQuery('#BrowseBar').addClass('BrowseBarVisible');
+        console.log('opening');
+        //jQuery('#BrowseBarTab').removeClass('BrowseBarHidden');
+        //jQuery('#BrowseBar').removeClass('BrowseBarHidden');
+        jQuery('#BrowseBar').show();
+        //jQuery('#BrowseBar').addClass('BrowseBarVisible');
+        console.log('Resize: ' + noresize);
+		if(typeof noresize === 'undefined' || noresize == false)
+            {
+            console.log('resizing');
+            myLayout.sizePane("west", "335");
+            }
+		//jQuery('.ui-layout-west').animate({scrollTop:0}, 'fast');
 		rsbrowse = 'show';
 		SetCookie('rsbrowse', 'show');
-		}
+        //ModalCentre();
+        }
 	else
 		{
-		jQuery('#BrowseBar').removeClass('BrowseBarVisible');
-		jQuery('#BrowseBar').addClass('BrowseBarHidden');
-		jQuery('#CentralSpaceContainer').removeClass('BrowseMode');
-		jQuery('#Footer').removeClass('BrowseMode');
-		jQuery('#BrowseBarTab').addClass('BrowseBarHidden');
+        console.log('closing');	
+    	//jQuery('#BrowseBar').removeClass('BrowseBarVisible');
+    	jQuery('#BrowseBar').hide();
+
+		//jQuery('#BrowseBar').addClass('BrowseBarHidden');
+        //jQuery('#BrowseBarTab').addClass('BrowseBarHidden');
+		myLayout.sizePane("west", 35);
 		rsbrowse = 'hide';
 		SetCookie('rsbrowse', 'hide');
 		}
@@ -98,12 +109,16 @@ function renderBrowseItem(node, parent)
     brwstmplt = brwstmplt.replace("%BROWSE_REFRESH%",refreshel);
    
     parent.after(brwstmplt);
+    //myLayout.resizeContent("west");
     }
 
 
 function toggleBrowseElements(browse_id, reload)
     {
-	if (typeof reload === 'undefined') {reload=false;}
+    if (typeof reload === 'undefined') {reload=false;}
+    if (typeof brws_user !== 'undefined' && brws_user) {return false;}
+    brws_user=true;
+    console.log('user action');
     
     if(typeof b_loading === 'undefined')
         {
@@ -134,6 +149,7 @@ function toggleBrowseElements(browse_id, reload)
         if (item_elements.length  < 1)
             {            
             // This is the root node and is not present, give up
+            brws_user = false;
             return false;
             }
             
@@ -149,7 +165,9 @@ function toggleBrowseElements(browse_id, reload)
         //console.log("Adding " + browse_id + " to load after parent item: " + parentitem);
         browsepostload[parentitem].push(browse_id);
         toggleBrowseElements(parentitem, true);
-        return true
+        
+        brws_user = false;
+        return true;
         }
             
     var loaded =curel.attr("data-browse-loaded");
@@ -188,6 +206,8 @@ function toggleBrowseElements(browse_id, reload)
 
         browseopen = remaining;
         SetCookie('browseopen',browseopen);
+
+        brws_user = false;
         return true;
         }
         
@@ -200,6 +220,7 @@ function toggleBrowseElements(browse_id, reload)
         curel.attr("data-browse-status","open");
         curel.addClass("BrowseOpen");
         browseopen.push(browse_id);
+        brws_user = false;
         return true;
         }
     
@@ -251,9 +272,6 @@ function toggleBrowseElements(browse_id, reload)
                 
                 // Show all immediate children
                 jQuery("[data-browse-parent='" + browse_id + "']").slideDown();
-                
-                // Remove any old items hidden earlier
-                //jQuery(".browse_delete").slideUp();;
                 }
             
             curel.attr("data-browse-status","open");
@@ -305,7 +323,8 @@ function toggleBrowseElements(browse_id, reload)
                 }
 
             });
-
+    
+    brws_user = false;
     return true;          
     }
     
