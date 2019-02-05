@@ -1609,11 +1609,12 @@ select.MultiSelect:before {
     float: left;
 }
 
-#BrowseBarClose{
-    margin-right: 5px;
+#BrowseBarClose {
+    position: absolute;
+    display: inline-block;
+    float: right; 
+    right: 50px;
     margin-top: 20px;
-
-    float: right;
 }
 
 
@@ -1645,12 +1646,6 @@ select.MultiSelect:before {
 .BrowseBarRoot, .backline + .BrowseBarStructure{
     margin-left:3px;
 }
-
-
-#BrowseBarClose {
-    display: inline-block;    
-}
-
 
 #BrowseBarTabContainer{
     position: absolute;
