@@ -465,13 +465,15 @@ if (getval("ajax","") == "")
                 north__spacing_open: 0,
 
                 <?php
-                if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && ('' == $k || $internal_share_access) && $browse_bar) 
+                $browse_on  = has_browsebar();
+                if($browse_on) 
                     {
                     $browsesize = $browse_show ? "335" : "35";
                     echo "
                     west__closable:false,
+                    west__resizable:true,
+                    west__spacing_open: 3,
                     west__minSize:35,
-                    west__spacing_open: 0,
                     west__size: " . $browsesize . ",
                     west__onresize: function(pane)
                         {

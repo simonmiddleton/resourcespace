@@ -269,6 +269,12 @@ li.plupload_droptext {color:#999;}
 .plupload_view_list .plupload_file {border-top:0px;border-right:0px;border-left:0px;background: #e6e6e6 url("smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png") 0% 54% repeat-x;}
 .Terms{color:#000;border: 1px solid #ccc;background: #fff;}
 .ui-layout-toggler-open-hover{background-color:rgba(255,255,255,0.3);}
+
+
+.ui-layout-resizer-west {background-color:rgba(255,255,255,0.3);}
+.ui-layout-resizer-west-hover {background-color:rgba(0,0,0,0.3);}
+
+
 .proptitle{color: #FFFFFF;background: rgb(119,119,119);}	
 .propbox{color: #000000;background: #FFFFFF;}
 .propbox a:link {color: rgb(115,115,115); background: none;}
