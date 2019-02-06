@@ -74,7 +74,7 @@ function renderBrowseItem(node, parent)
         {
         if(node.modal)
             {
-            linkfunction = "browserefresh=\"" + parentid + "\";return ModalLoad(this,false,true);";
+            linkfunction = "browsereload=\"" + parentid + "\";return ModalLoad(this,false,true);";
             }
         else
             {
@@ -313,13 +313,12 @@ function toggleBrowseElements(browse_id, reload)
     return true;          
     }
     
-function ReloadBrowseBar(browserefresh)
+function ReloadBrowseBar(element)
     {
-    //console.log(" reloading - " + browseopen);
-    if(browserefresh !== undefined)
+    if(element !== undefined)
         {
         // Just refresh the node requested
-        var allopen = new Array(browserefresh);
+        var allopen = new Array(element);
         }
     else
         {
@@ -397,10 +396,10 @@ function BrowseBarInit()
         tolerance: "pointer"
         });
     
-    if(typeof browserefresh !== "undefined")
+    if(typeof browsereload !== "undefined")
         {
-        console.log('scroll to ' + browserefresh);
-        setTimeout(function() {jQuery("[data-browse-id='" + browserefresh + "']")[0].scrollIntoView({ behavior: "smooth",block: "start"});browserefresh = undefined;}, 200);        
+        console.log('scroll to ' + browsereload);
+        setTimeout(function() {jQuery("[data-browse-id='" + browsereload + "']")[0].scrollIntoView({ behavior: "smooth",block: "start"});browsereload = undefined;}, 200);        
         }
     }
 

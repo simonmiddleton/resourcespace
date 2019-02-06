@@ -166,8 +166,14 @@ if ($chosen_dropdowns || $chosen_dropdowns_collection)
         <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
         <?php
         }
-if($browse_bar)
+        
+$not_authenticated_pages = array('login', 'user_change_password','user_password','user_request');
+
+$browse_on = has_browsebar();
+if($browse_on)
     {
+    $browse_width   = getval("browse_width",$browse_default_width,true);
+    $browse_show    = getval("browse_show","") == "show";
     ?>
     <script src="<?php echo $baseurl_short ?>lib/js/browsebar_js.php" type="text/javascript"></script>
     <?php
@@ -215,6 +221,11 @@ if($chosen_dropdowns_collection)
     var chosenCollectionThreshold='<?php echo $chosen_dropdowns_threshold_collection ?>';
 	<?php
 	}
+
+if($browse_on)
+    {
+    echo "browse_width = '" . $browse_width . "';";     
+    }
 ?>
 </script>
 
@@ -398,9 +409,6 @@ if($responsive_ui)
 hook("headertop");
 
 if (!isset($allow_password_change)) {$allow_password_change=true;}
-
-$not_authenticated_pages = array('login', 'user_change_password');
-
 if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
     {
 	?>
@@ -554,7 +562,10 @@ if (!$header_search)
 
 <?php
 # Determine which content holder div to use
-if (($pagename=="login") || ($pagename=="user_password") || ($pagename=="user_request")) {$div="CentralSpaceLogin";}
+if (($pagename=="login") || ($pagename=="user_password") || ($pagename=="user_request"))
+    {
+    $div="CentralSpaceLogin";
+    }
 else
     {
     $div="CentralSpace";
@@ -563,18 +574,14 @@ else
 <!--Main Part of the page-->
 <?php
 
-$browse_on = has_browsebar();
 if($browse_on)
     {
-    $browse_width   = getval("browse_width",$browse_default_width,true);
-    $browse_show    = getval("browse_show","") == "show";
     render_browse_bar();
     }
         
 echo '<div id="UICenter" class="ui-layout-center">';
     
-$nocscpages = array("login","user_password","user_request");
-if (!in_array($pagename, $nocscpages))
+if (!in_array($pagename, $not_authenticated_pages))
     {
     // Set classes for CentralSpaceContainer
     $csc_classes = array();
@@ -613,11 +620,6 @@ $activate_header_link = "{$scheme}://{$host}{$port}" . urlencode($_SERVER["REQUE
  
 <?php
 echo "linkreload = " . (($k != "" || $internal_share_access) ? "false" : "true") . ";";
-
-if($browse_on)
-    {
-    echo "browse_width = '" . $browse_width . "';";     
-    }
 ?>
 
 jQuery(document).ready(function()
