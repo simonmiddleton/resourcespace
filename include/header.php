@@ -563,9 +563,11 @@ else
 <!--Main Part of the page-->
 <?php
 
-if(has_browsebar())
+$browse_on = has_browsebar();
+if($browse_on)
     {
-    $browse_show = getval("rsbrowse","") == "show";
+    $browse_width   = getval("browse_width",$browse_default_width,true);
+    $browse_show    = getval("browse_show","") == "show";
     render_browse_bar();
     }
         
@@ -611,6 +613,11 @@ $activate_header_link = "{$scheme}://{$host}{$port}" . urlencode($_SERVER["REQUE
  
 <?php
 echo "linkreload = " . (($k != "" || $internal_share_access) ? "false" : "true") . ";";
+
+if($browse_on)
+    {
+    echo "browse_width = '" . $browse_width . "';";     
+    }
 ?>
 
 jQuery(document).ready(function()

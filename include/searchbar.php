@@ -829,15 +829,15 @@ elseif($restypes=='')
     {
     # For anonymous access, display the login panel
     ?>
-    <br /><div id="SearchBoxPanel" class="LoginBoxPanel" >
+    <br /><div id="LoginBoxPanel" class="LoginBoxPanel" >
     <div class="SearchSpace">
 
       <h2><?php echo $lang["login"]?></h2>
 
   
-    <form id="simple_search_form" method="post" action="<?php echo $baseurl?>/login.php">
+    <form id="anonymous_login_form" method="post" action="<?php echo $baseurl?>/login.php">
         <div class="SearchItem"><?php echo $lang["username"]?><br/><input type="text" name="username" id="name" class="SearchWidth" /></div>
-        <div class="SearchItem"><?php echo $lang["password"]?><br/><input type="password" name="password" id="name" class="SearchWidth" /></div>
+        <div class="SearchItem"><?php echo $lang["password"]?><br/><input type="password" name="password" id="password" class="SearchWidth" /></div>
         <div class="SearchItem">
             <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
         </div>

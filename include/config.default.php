@@ -3563,7 +3563,11 @@ $ghostscript_extensions = array('ps', 'pdf');
 $non_image_types_generate_preview_only = true;
 
 // Browse bar 
+// Enable/Disable browse bar - in system config
 $browse_bar = true;
+// Show workflow (archive) states in browse bar?
 $browse_bar_workflow=true;
+// Default browse bar width;
+$browse_default_width = 335;
 
 

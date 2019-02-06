@@ -1596,6 +1596,7 @@ select.MultiSelect:before {
     float: left;
 }
 
+
 .ui-layout-west
     {
     overflow-x: hidden;
@@ -1604,13 +1605,21 @@ select.MultiSelect:before {
 
 #BrowseBarContents{
     height: 100%;
-    margin-left: 20px;
+    margin-left: 10px;
     margin-top: 25px;
     float: left;
     overflow-x: hidden;
     overflow-y: auto;
-    min-width: 150px;
+    min-width: 140px;
     /*display: table;*/
+}
+
+.BrowseRowOuter{
+    display: table-row;
+}
+
+.BrowseRowInner{
+    min-width: 140px;
 }
 
 #BrowseBarClose {
@@ -1628,10 +1637,11 @@ select.MultiSelect:before {
 .BrowseBarStructure{
     display: table-cell;
     width: 1em;    
-    max-width: 1em;    
+    max-width: 1em;
+    min-width: 6px;
     font-family: "Font Awesome 5 Free";
     font-weight: 600;
-    padding-left: 5px;
+    padding-left: 8px;
 }
 
 .BrowseBarLink{
@@ -1641,18 +1651,25 @@ select.MultiSelect:before {
     padding-left: 5px;
 }
 
+.BrowseBarExpand{
+    padding-left: 8px;
+}
+
+
 .BrowseBarRoot a.browse_refresh{
     padding-left: 5px;
     display: table-cell;
 }
 
-#BrowseBar .backline {
-    background-position:11px 0px;
+#BrowseBar .BrowseLine {
+    border-right: 1px solid;
+    width: 7px;
+    /*background-position:11px 0px;*/
 }
 
-.BrowseBarRoot, .backline + .BrowseBarStructure{
-    padding-left: 5px;
-}
+.BrowseBarRoot{
+    /*padding-left: 5px;*/
+    }
 
 #BrowseBarTabContainer{
     position: absolute;
@@ -1730,8 +1747,5 @@ a.browse_refresh{
 .BrowseOpen .browse_refresh{
     display: table-cell;
     padding-left: 5px;
+    padding-right: 50px;
     }
-
-.BrowseRowOuter{
-    display: table-row;
-}

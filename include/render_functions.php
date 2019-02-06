@@ -2650,8 +2650,9 @@ function render_trash($type, $deletetext,$forjs=false)
 function render_browse_bar()
     {
     global $lang, $browse_bar_workflow, $browse_show;
+    //exit($browse_show ? "TRUE" : "FALSE");
     $bb_html = '<div id="BrowseBarContainer" class="ui-layout-west" >';
-    $bb_html .= '<div id="BrowseBar" class="BrowseBar" >';
+    $bb_html .= '<div id="BrowseBar" class="BrowseBar" ' . ($browse_show ?  '' : 'style="display:none;"') . '>';
     $bb_html .= '<div id="BrowseBarContents" >'; 
     
     //Browse row template
@@ -2694,8 +2695,8 @@ function render_browse_bar()
     
     $browsejsvar = $browse_show ? 'show' : 'hide';
     echo '<script>
-        var rsbrowse = "' . $browsejsvar . '";
-        SetCookie("rsbrowse", "' . $browsejsvar . '");
+        var browse_show = "' . $browsejsvar . '";
+        SetCookie("browse_show", "' . $browsejsvar . '");
         b_loading = new Array();
         // Expand tree to previous state based on stored cookie
         jQuery(document).ready(function()

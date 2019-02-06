@@ -8,43 +8,32 @@
 include_once "../../include/db.php";
 include_once "../../include/general.php";
 //include_once "../../include/authenticate.php";
-//include_once "../../include/render_functions.php";
-
 header("Content-type: text/javascript");
 ?>
 
 function ToggleBrowseBar(forcestate, noresize) 
 	{
-    var browseopen = (typeof rsbrowse === "undefined" || rsbrowse == 'hide') || (forcestate !== "undefined" && forcestate == 'open')
+    var browseopen = (typeof browse_show === "undefined" || browse_show == 'hide') || (forcestate !== "undefined" && forcestate == 'open')
 	if (browseopen)
 		{
         console.log('opening');
-        //jQuery('#BrowseBarTab').removeClass('BrowseBarHidden');
-        //jQuery('#BrowseBar').removeClass('BrowseBarHidden');
         jQuery('#BrowseBar').show();
-        //jQuery('#BrowseBar').addClass('BrowseBarVisible');
         console.log('Resize: ' + noresize);
 		if(typeof noresize === 'undefined' || noresize == false)
             {
-            console.log('resizing');
-            myLayout.sizePane("west", "335");
+            myLayout.sizePane("west", browse_width);
             }
-		//jQuery('.ui-layout-west').animate({scrollTop:0}, 'fast');
-		rsbrowse = 'show';
-		SetCookie('rsbrowse', 'show');
-        //ModalCentre();
+		browse_show = 'show';
+		SetCookie('browse_show', 'show');
+        ModalCentre();
         }
 	else
 		{
-        console.log('closing');	
-    	//jQuery('#BrowseBar').removeClass('BrowseBarVisible');
+        //console.log('closing');	
     	jQuery('#BrowseBar').hide();
-
-		//jQuery('#BrowseBar').addClass('BrowseBarHidden');
-        //jQuery('#BrowseBarTab').addClass('BrowseBarHidden');
 		myLayout.sizePane("west", 35);
-		rsbrowse = 'hide';
-		SetCookie('rsbrowse', 'hide');
+		browse_show = 'hide';
+		SetCookie('browse_show', 'hide');
 		}
 	}
 
@@ -54,7 +43,7 @@ function renderBrowseItem(node, parent)
     var newlevel = parent.attr("data-browse-level");
     newlevel++;
    
-    var indent = "<div class='BrowseBarStructure backline'>&nbsp;</div>";
+    var indent = "<div class='BrowseBarStructure BrowseLine'>&nbsp;</div>";
     var refreshel = "<a href='#' class='browse_refresh' onclick='toggleBrowseElements(\"%BROWSE_ID%\",true);return false;' ><i class='fas fa-sync reloadicon'></i></a>";
     var refreshel = refreshel.replace("%BROWSE_ID%",node.id);
    
@@ -109,7 +98,6 @@ function renderBrowseItem(node, parent)
     brwstmplt = brwstmplt.replace("%BROWSE_REFRESH%",refreshel);
    
     parent.after(brwstmplt);
-    //myLayout.resizeContent("west");
     }
 
 
@@ -143,7 +131,6 @@ function toggleBrowseElements(browse_id, reload)
     if(!curel.length)
         {
         // Node not present, load parent first
-        //console.log("item not present. Searching for parent");
         var item_elements = browse_id.split('-');
         item_elements.pop();
         if (item_elements.length  < 1)
@@ -162,7 +149,6 @@ function toggleBrowseElements(browse_id, reload)
             browsepostload[parentitem] = new Array();
             }
 
-        //console.log("Adding " + browse_id + " to load after parent item: " + parentitem);
         browsepostload[parentitem].push(browse_id);
         toggleBrowseElements(parentitem, true);
         
@@ -176,7 +162,6 @@ function toggleBrowseElements(browse_id, reload)
 
     if(typeof browseopen === 'undefined')
         {
-        //console.log('Creating browseopen array for id: ' + browse_id);
         browseopen = new Array();
         }
 

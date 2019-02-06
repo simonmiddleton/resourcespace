@@ -44,7 +44,7 @@ if(!empty($modify_omit_footer_pages))
 	$omit_footer_pages=$modify_omit_footer_pages;
 	}
 
-if(!in_array($pagename,$omit_footer_pages) && ($loginterms==false)) 
+if($pagename == "login") 
 { ?>
 
 <!--Global Footer-->
@@ -455,10 +455,10 @@ if (getval("ajax","") == "")
 				//closable:false,
 				south__resizable:true,
 				livePaneResizing:true,
-				triggerEventsDuringLiveResize: false,
+                triggerEventsDuringLiveResize: false,
 				south__minSize:40,
 				              
-                                east__spacing_open:0,
+                east__spacing_open:0,
 				east__spacing_closed:8,
                 east_resizable: true,
                 east__size: 300,
@@ -469,13 +469,14 @@ if (getval("ajax","") == "")
                 north__spacing_open: 0,
 
                 <?php
-                $browse_on  = has_browsebar();
                 if($browse_on) 
                     {
-                    $browsesize = $browse_show ? "335" : "35";
+                    $browsesize = $browse_show ? $browse_width : "35";
                     echo "
                     west__closable:false,
                     west__resizable:true,
+                    west__liveContentResizing: true,
+                    west__resizeContentWhileDragging: true,
                     west__spacing_open: 3,
                     west__minSize:35,
                     west__size: " . $browsesize . ",
@@ -485,15 +486,21 @@ if (getval("ajax","") == "")
                             {
                             var browsewidth = jQuery('.ui-layout-west').width();
                             console.log('width ' + browsewidth);
-                            if(browsewidth < 100 && rsbrowse=='show')
+                            if(browsewidth < 150 && browse_show=='show')
                                 {
                                 ToggleBrowseBar('close');
                                 }
-                            else if(browsewidth >= 100 && rsbrowse=='hide')
+                            else if(browsewidth >= 100 && browse_show=='hide')
                                 {
                                 ToggleBrowseBar('open',true);
                                 }
-                            jQuery('#BrowseBarContents').width(browsewidth-55);
+                            else if(browsewidth > 1000)
+                                {
+                                myLayout.sizePane('west', 1000);
+                                }
+                            jQuery('#BrowseBarContents').width(browsewidth-45);
+                            browse_width = browsewidth;
+                            SetCookie('browse_width', browse_width);
                             }
                         ModalCentre();
                         },

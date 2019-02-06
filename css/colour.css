@@ -48,7 +48,8 @@ input[readonly] {color: #000000;}
 
 /* Search Bar */
 #SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover,
-#ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active
+#ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active,
+.SearchSpace a:link, .SearchSpace a:visited, .SearchSpace a:hover, .SearchSpace a:active
 {color:#fff;text-decoration:none;}
 
 #ThemeBoxPanel,  .RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge{background: #eee;}
@@ -89,7 +90,7 @@ input[readonly] {color: #000000;}
 	border-radius:5px;
     box-shadow: 4px 5px 5px rgba(0, 0, 0, .5);
 }
-#SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2{color: #fff;}
+#SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2, .SearchSpace h2{color: #fff;}
 
 /* Collection Bar */
 .ui-layout-resizer {background-color: #383838;background: #444444; }
