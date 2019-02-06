@@ -562,20 +562,28 @@ else
 ?>
 <!--Main Part of the page-->
 <?php
-if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="user_request"))
+
+if(has_browsebar())
+    {
+    $browse_show = getval("rsbrowse","") == "show";
+    render_browse_bar();
+    }
+        
+echo '<div id="UICenter" class="ui-layout-center">';
+    
+$nocscpages = array("login","user_password","user_request");
+if (!in_array($pagename, $nocscpages))
     {
     // Set classes for CentralSpaceContainer
     $csc_classes = array();
     if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && ('' == $k || $internal_share_access) && $browse_bar) 
         {
-        $browse_show = getval("rsbrowse","") == "show";
-        render_browse_bar();
         if($header_search)
             {
             $csc_classes[] = "NoSearchBar";
             }
         }
-    echo '<div id="CentralSpaceContainer" class="ui-layout-center ' . implode(' ', $csc_classes) . '" >';
+    echo '<div id="CentralSpaceContainer" ' . (count($csc_classes) > 0 ? 'class="' . implode(' ', $csc_classes) . '"' : '' ) . '>';
     }
 
 hook("aftercentralspacecontainer");

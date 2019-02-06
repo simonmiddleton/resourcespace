@@ -102,21 +102,25 @@ if(!hook("replace_footernavrightbottom"))
 <div class="clearer"></div>
 </div>
 <?php 
-} ?>
+}
 
-<?php echo $extrafooterhtml; ?>
+echo $extrafooterhtml;
 
-<?php } // end ajax ?>
+} // end ajax
 
-<?php /* always include the below as they are perpage */?>
+/* always include the below as they are perpage */
 
-<?php if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="preview_all") && ($pagename!="user_request")) { ?></div><?php } ?><!--End div-CentralSpaceContainer-->
+if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="preview_all") && ($pagename!="user_request"))
+    {
+    echo "</div><!-- End CentralSpaceContainer -->";
+    }
+    
 
-<?php hook("footerbottom"); ?>
+echo "</div><!-- End UICenter -->";
 
-<?php draw_performance_footer();?>
+hook("footerbottom");
+draw_performance_footer();
 
-<?php
 //titlebar modifications
 
 if ($show_resource_title_in_titlebar){
@@ -454,13 +458,13 @@ if (getval("ajax","") == "")
 				triggerEventsDuringLiveResize: false,
 				south__minSize:40,
 				              
-                
-                east__spacing_open:0,
+                                east__spacing_open:0,
 				east__spacing_closed:8,
                 east_resizable: true,
                 east__size: 300,
 
                 north_resizable: false,
+                north__closable:false,
                 north__spacing_closed: 0,
                 north__spacing_open: 0,
 
@@ -481,14 +485,15 @@ if (getval("ajax","") == "")
                             {
                             var browsewidth = jQuery('.ui-layout-west').width();
                             console.log('width ' + browsewidth);
-                            if(browsewidth < 250 && rsbrowse=='show')
+                            if(browsewidth < 100 && rsbrowse=='show')
                                 {
                                 ToggleBrowseBar('close');
                                 }
-                            else if(browsewidth > 50 && rsbrowse=='hide')
+                            else if(browsewidth >= 100 && rsbrowse=='hide')
                                 {
                                 ToggleBrowseBar('open',true);
                                 }
+                            jQuery('#BrowseBarContents').width(browsewidth-55);
                             }
                         ModalCentre();
                         },
@@ -544,7 +549,7 @@ if (getval("ajax","") == "")
 			} // end omit_collectiondiv_load_pages 
 		else
 			{?>
-			<div class="ui-layout-south" ></div><script>myLayout=jQuery('body').layout({south__initHidden: true });	</script><?php
+			<div class="ui-layout-south" ></div><script>myLayout=jQuery('body').layout({south__initHidden: true, north__resizable:false,north__spacing_open: 0 });	</script><?php
 			}
 		}
 	

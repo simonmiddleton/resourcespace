@@ -249,7 +249,6 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
     margin:0px 25px 20px;
     padding:0 0 0 0;
     text-align:left;
-    transition: all 0.5s ease;
     }
 #CentralSpaceContainerRestrict {margin:0px 15px 20px 25px;padding:0;text-align:left;}
 #CentralSpaceLogin {margin: 2em auto 4em;padding:0;width: 760px;text-align:left;}
@@ -1591,9 +1590,10 @@ select.MultiSelect:before {
 }
 
 #BrowseBar{
-    transition: all 0.1s ease;
     text-align: left;
     white-space: nowrap;
+    height: 100%;
+    float: left;
 }
 
 .ui-layout-west
@@ -1603,20 +1603,21 @@ select.MultiSelect:before {
    
 
 #BrowseBarContents{
-    max-height: 1000px;
+    height: 100%;
     margin-left: 20px;
-    margin-top: 20px;
+    margin-top: 25px;
     float: left;
     overflow-x: hidden;
     overflow-y: auto;
+    min-width: 150px;
+    /*display: table;*/
 }
 
 #BrowseBarClose {
     position: absolute;
     display: inline-block;
     float: right; 
-    right: 50px;
-    margin-top: 20px;
+    right: 45px;
 }
 
 
@@ -1625,30 +1626,32 @@ select.MultiSelect:before {
 }
 
 .BrowseBarStructure{
-    display: inline-block;
+    display: table-cell;
     width: 1em;    
     max-width: 1em;    
     font-family: "Font Awesome 5 Free";
     font-weight: 600;
+    padding-left: 5px;
 }
 
 .BrowseBarLink{
-    display: inline-block;
-    /*max-width: 180px;*/
+    display: table-cell;
     vertical-align: top;
-    white-space: wrap;
+    white-space: normal;
+    padding-left: 5px;
 }
 
 .BrowseBarRoot a.browse_refresh{
-    margin-left: 5px;
+    padding-left: 5px;
+    display: table-cell;
 }
 
 #BrowseBar .backline {
-    background-position: 11px 0px;
+    background-position:11px 0px;
 }
 
 .BrowseBarRoot, .backline + .BrowseBarStructure{
-    margin-left:3px;
+    padding-left: 5px;
 }
 
 #BrowseBarTabContainer{
@@ -1724,9 +1727,9 @@ a.browse_refresh{
     }
 
 .BrowseOpen .browse_refresh{
-    display:inline-block;
     font-size: 0.8em;
     }
 
 .BrowseRowOuter{
+    display: table-row;
 }

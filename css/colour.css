@@ -115,14 +115,11 @@ input[readonly] {color: #000000;}
 	{color:#FFF;}
 .HomePanel h2{color:#FFF;}
 
-#SearchBarContainer,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBarContainer, #BrowseBarTab{
+#SearchBarContainer,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab{
 	background: rgba(0, 0, 0, 0.6);
 	color:#FFF;
 }
 
-#BrowseBarTabContainer{
-    background: rgba(255,255,255,1);
-}
 
 #HomeSiteText{padding:10px;}
 #HomeSiteText.dashtext h1{color:#FFF;}
@@ -271,7 +268,7 @@ li.plupload_droptext {color:#999;}
 .ui-layout-toggler-open-hover{background-color:rgba(255,255,255,0.3);}
 
 
-.ui-layout-resizer-west {background-color:rgba(255,255,255,0.3);}
+.ui-layout-resizer-west {background-color: rgba(0,0,0,0)}
 .ui-layout-resizer-west-hover {background-color:rgba(0,0,0,0.3);}
 
 

@@ -28,6 +28,7 @@ switch ($newtype)
         $targeturl = $baseurl_short . "pages/admin/admin_resource_type_fields.php";
         $newparam = "newfield";
         $newtext = $lang["admin_resource_type_field_create"];
+        $extraparams["type"] = 2;
         $csrf_code = "admin_resource_type_fields";
     break;
     

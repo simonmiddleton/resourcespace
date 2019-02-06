@@ -1,4 +1,4 @@
-#UICenter
+.ui-layout-container
     {
     background-repeat: no-repeat;
     background-position: center top;
@@ -8,7 +8,8 @@
     background-size: cover;
     -webkit-transition: background-image 1s linear;
     transition: background-image 1s linear;
-    }    
+    }
+    
 #CentralSpace{min-height:500px;}
 #HomeSiteText
     {
