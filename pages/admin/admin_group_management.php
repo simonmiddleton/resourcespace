@@ -39,7 +39,7 @@ if ($filter_by_permissions != "")
 	}
 
 $offset=getvalescaped("offset",0);
-$order_by=getval("orderby","name");
+$order_by=getvalescaped("orderby","name");
 
 $groups=sql_query("
 	select 

@@ -38,7 +38,7 @@ if ($new_group_name!="" && enforcePostRequest(false))
     exit;
     }
 
-$ref=getval("ref","");
+$ref=getvalescaped("ref","");
 
 if (!sql_value("select ref as value from usergroup where ref='{$ref}'",false))
     {
