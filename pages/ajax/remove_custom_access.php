@@ -18,11 +18,11 @@ if(!get_edit_access($resource, $resource_data['archive'], false, $resource_data)
 if($type=='user')
 	{
 	// Delete the user record from the database
-	$query = sprintf('
+	$query = sprintf("
 			DELETE FROM resource_custom_access 
-				  WHERE resource = "%s"
-					AND user = "%s";
-		',
+				  WHERE resource = '%s'
+					AND user = '%s';
+		",
 		$resource,
 		$ref
 	);
@@ -30,11 +30,11 @@ if($type=='user')
 elseif($type=='usergroup')
 	{
 	// Delete the user record from the database
-	$query = sprintf('
+	$query = sprintf("
 			DELETE FROM resource_custom_access 
-				  WHERE resource = "%s"
-					AND usergroup = "%s";
-		',
+				  WHERE resource = '%s'
+					AND usergroup = '%s';
+		",
 		$resource,
 		$ref
 	);
