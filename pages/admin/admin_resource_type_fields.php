@@ -49,8 +49,9 @@ $url=generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_p
 if (getval("newfield","")!="" && enforcePostRequest(false))
     {
     $newfieldname = getvalescaped("newfield","");
+    $newfieldtype = getval("fieldtype",0,true);    
     $newfieldrestype = getvalescaped("newfieldrestype",0,true);
-    $new = create_resource_type_field($newfieldname,$newfieldrestype);
+    $new = create_resource_type_field($newfieldname,$newfieldrestype, $newfieldtype);
     redirect($baseurl_short . 'pages/admin/admin_resource_type_field_edit.php?ref=' . $new . '&newfield=true');
     }
     
