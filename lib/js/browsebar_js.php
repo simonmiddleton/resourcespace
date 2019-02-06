@@ -21,7 +21,7 @@ function ToggleBrowseBar(forcestate, noresize)
         console.log('Resize: ' + noresize);
 		if(typeof noresize === 'undefined' || noresize == false)
             {
-            myLayout.sizePane("west", browse_width);
+            myLayout.sizePane("west", <?php echo $browse_default_width; ?>);
             }
 		browse_show = 'show';
 		SetCookie('browse_show', 'show');

@@ -486,7 +486,7 @@ if (getval("ajax","") == "")
                             {
                             var browsewidth = jQuery('.ui-layout-west').width();
                             console.log('width ' + browsewidth);
-                            if(browsewidth < 150 && browse_show=='show')
+                            if(browsewidth < 185 && browse_show=='show')
                                 {
                                 ToggleBrowseBar('close');
                                 }
@@ -499,8 +499,13 @@ if (getval("ajax","") == "")
                                 myLayout.sizePane('west', 1000);
                                 }
                             jQuery('#BrowseBarContents').width(browsewidth-45);
-                            browse_width = browsewidth;
-                            SetCookie('browse_width', browse_width);
+                            var newbrowsewidth = jQuery('.ui-layout-west').width();
+                            if(newbrowsewidth != 35)
+                                {
+                                SetCookie('browse_width', newbrowsewidth);
+                                browse_width = newbrowsewidth;    
+                                }
+                            //
                             }
                         ModalCentre();
                         },
