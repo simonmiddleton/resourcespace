@@ -18,7 +18,7 @@ $orderby = getvalescaped("orderby",-1);
 
 if ($callback!="")
 	{
-	$ref = getvalescaped("ref", -1);
+	$ref = getvalescaped("ref", -1,true);
 	$search = getvalescaped("search", "");
 	$restypes = getvalescaped("restypes", "");
 	$archive = getvalescaped("archive", "");
