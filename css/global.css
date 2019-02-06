@@ -1728,6 +1728,8 @@ a.browse_refresh{
 
 .BrowseOpen .browse_refresh{
     font-size: 0.8em;
+    display: table-cell;
+    padding-left: 5px;
     }
 
 .BrowseRowOuter{
