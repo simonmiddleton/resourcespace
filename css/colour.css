@@ -268,11 +268,6 @@ li.plupload_droptext {color:#999;}
 .Terms{color:#000;border: 1px solid #ccc;background: #fff;}
 .ui-layout-toggler-open-hover{background-color:rgba(255,255,255,0.3);}
 
-
-.ui-layout-resizer-west {background-color: rgba(0,0,0,0)}
-.ui-layout-resizer-west-hover {background-color:rgba(0,0,0,0.3);}
-
-
 .proptitle{color: #FFFFFF;background: rgb(119,119,119);}	
 .propbox{color: #000000;background: #FFFFFF;}
 .propbox a:link {color: rgb(115,115,115); background: none;}
@@ -462,3 +457,15 @@ input:checked + .customFieldLabel, .keywordselected
   }
 
 .BrowseBarText {color: #fff;}
+
+.ui-layout-resizer-west {background-color: rgba(0,0,0,0)}
+.ui-layout-resizer-west-hover {background-color:rgba(0,0,0,0.3);}
+.ui-layout-resizer-west-dragging {background-color:#2b2b2b;}
+
+/*
+.ui-layout-resizer-west {background-color: none; }
+.ui-layout-resizer-west-hover {background-color: rgba(0,0,0,0.6)}
+*/
+.BrowseBarItem.ui-droppable-hover .BrowseBarLink a{
+    border: 2px solid #FFF;
+}

@@ -1601,7 +1601,11 @@ select.MultiSelect:before {
     {
     overflow-x: hidden;
     }
-   
+
+.ui-layout-resizer-west
+    {
+    transform: translateX(-37px); 
+} 
 
 #BrowseBarContents{
     height: 100%;
@@ -1618,10 +1622,6 @@ select.MultiSelect:before {
     display: table-row;
 }
 
-.BrowseRowInner{
-    min-width: 140px;
-}
-
 #BrowseBarClose {
     position: absolute;
     display: inline-block;
@@ -1629,20 +1629,22 @@ select.MultiSelect:before {
     right: 45px;
 }
 
-
-.BrowseBarItem.ui-droppable-hover .BrowseBarLink a{
-    border: 2px solid #FFF;
-}
-
 .BrowseBarStructure{
     display: table-cell;
-    width: 1em;    
-    max-width: 1em;
     min-width: 6px;
     font-family: "Font Awesome 5 Free";
     font-weight: 600;
     padding-left: 10px;
 }
+
+.BrowseBarExpand + .BrowseTypeNode, .BrowseBarExpand + .BrowseTypeRestype, .BrowseBarExpand + .BrowseTypeField{
+    padding-left: 4px;
+}
+
+.BrowseLine + .BrowseTypeNode, .BrowseLine + .BrowseTypeRestype, .BrowseLine + .BrowseTypeField, .BrowseLine + .BrowseTypeNew{
+    margin-left: 6px;
+}
+
 
 .BrowseBarLink{
     display: table-cell;
@@ -1651,36 +1653,26 @@ select.MultiSelect:before {
     padding-left: 5px;
 }
 
-.BrowseBarExpand{
-    padding-left: 8px;
-}
-
-
-.BrowseBarRoot a.browse_refresh{
+.BrowseBarRoot a.BrowseRefresh{
     padding-left: 5px;
     display: table-cell;
 }
 
 #BrowseBar .BrowseLine {
     border-right: 1px solid;
-    width: 7px;
-    /*background-position:11px 0px;*/
+    width: 6px;
 }
 
-.BrowseBarRoot{
-    /*padding-left: 5px;*/
-    }
-
 #BrowseBarTabContainer{
-    position: absolute;
     display: inline-block;
-    float: right;
     right: 0px;
     height: 100%;
 }
 
 #BrowseBarTab {    
-    /*top: 130px;*/
+    position: relative;
+    float: right;
+    top: 130px;
     width:0px;
     height: 140px;
     border-top-right-radius: 10px;
@@ -1691,7 +1683,6 @@ select.MultiSelect:before {
 
 .BrowseBarTabText {
     margin-bottom: 10px;
-    margin-top: 100px;
     margin-left: 28px;
     padding-top: 71px;
     text-transform: capitalize;
@@ -1702,13 +1693,11 @@ select.MultiSelect:before {
 }
 
 
-
 #BrowseBarTab a:hover, .BrowseBarLink a:hover, #BrowseBarTab a:visited, .BrowseBarLink a:visited{
     text-decoration: none;
     cursor: pointer;
     opacity: 1;
 }
-
 
 .browse_closed:after {
     content: "\f0fe";
@@ -1717,11 +1706,6 @@ select.MultiSelect:before {
 .browse_expanded:after {
     content: "\f146";
     }
-
-.BrowseTypeRestype, .BrowseTypeField, .BrowseBarExpand + .BrowseTypeNode{
-    padding-left: 4px;
-}
-
 
 .BrowseTypeRestype:after, .BrowseTypeField:after, .BrowseTypeFeatured:after, .BrowseTypeState:after{
     content: "\f07b";
@@ -1744,13 +1728,12 @@ select.MultiSelect:before {
     content: "\f055";
     }  
     
-a.browse_refresh{
+a.BrowseRefresh{
     display:none;
     font-size: 0.8em;
     }
 
-.BrowseOpen .browse_refresh{
+.BrowseOpen .BrowseRefresh{
     display: table-cell;
     padding-left: 5px;
-    padding-right: 50px;
     }

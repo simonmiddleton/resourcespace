@@ -494,9 +494,9 @@ if (getval("ajax","") == "")
                                 {
                                 ToggleBrowseBar('open',true);
                                 }
-                            else if(browsewidth > 1000)
+                            else if(browsewidth > 800)
                                 {
-                                myLayout.sizePane('west', 1000);
+                                myLayout.sizePane('west', 800);
                                 }
                             jQuery('#BrowseBarContents').width(browsewidth-45);
                             var newbrowsewidth = jQuery('.ui-layout-west').width();

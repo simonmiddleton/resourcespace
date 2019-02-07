@@ -2685,9 +2685,7 @@ function render_browse_bar()
     $bb_html .= '</div><!-- End of BrowseBarContents -->
                 <div id="BrowseBarClose" ><a href="#"  class="closeLink fa fa-times" onClick="ToggleBrowseBar();"></a></div>
                 </div><!-- End of BrowseBar -->
-                <div id="BrowseBarTabContainer" >
                     <div id="BrowseBarTab" ><a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div class="BrowseBarTabText">' . $lang['browse_bar_text'] . '</div></a></div><!-- End of BrowseBarTab -->
-                    </div><!-- End of BrowseBarTabContainer -->
                 </div><!-- End of BrowseBarContainer -->
                 
             ';
@@ -2743,7 +2741,7 @@ function generate_browse_bar_item($id, $text)
             </div><!-- End of BrowseBarStructure -->';	
     $html .= '<div class="BrowseBarLink" >' . $text . '</div>';
     
-    $html .= '<a href="#" class="browse_refresh " onclick="toggleBrowseElements(\'' . $id . '\',true);" ><i class="fas fa-sync reloadicon"></i></a>';	
+    $html .= '<a href="#" class="BrowseRefresh " onclick="toggleBrowseElements(\'' . $id . '\',true);" ><i class="fas fa-sync reloadicon"></i></a>';	
     
     $html .= "</div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->";

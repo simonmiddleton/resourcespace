@@ -44,7 +44,7 @@ function renderBrowseItem(node, parent)
     newlevel++;
    
     var indent = "<div class='BrowseBarStructure BrowseLine'>&nbsp;</div>";
-    var refreshel = "<a href='#' class='browse_refresh' onclick='toggleBrowseElements(\"%BROWSE_ID%\",true);return false;' ><i class='fas fa-sync reloadicon'></i></a>";
+    var refreshel = "<a href='#' class='BrowseRefresh' onclick='toggleBrowseElements(\"%BROWSE_ID%\",true);return false;' ><i class='fas fa-sync reloadicon'></i></a>";
     var refreshel = refreshel.replace("%BROWSE_ID%",node.id);
    
     if(node.expandable != "false")
@@ -158,7 +158,7 @@ function toggleBrowseElements(browse_id, reload)
             
     var loaded =curel.attr("data-browse-loaded");
     var openclose = curel.find("a.browse_expand");
-    var refreshicon = curel.find("a.browse_refresh i");
+    var refreshicon = curel.find("a.BrowseRefresh i");
 
     if(typeof browseopen === 'undefined')
         {
