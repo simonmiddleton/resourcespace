@@ -474,10 +474,10 @@ if (getval("ajax","") == "")
                     $browsesize = $browse_show ? $browse_width : "35";
                     echo "
                     west__closable:false,
-                    west__resizable:true,
+                    west__resizable:false,
                     west__liveContentResizing: true,
                     west__resizeContentWhileDragging: true,
-                    west__spacing_open: 3,
+                    west__spacing_open: 0,
                     west__minSize:35,
                     west__size: " . $browsesize . ",
                     west__onresize: function(pane)
@@ -485,7 +485,6 @@ if (getval("ajax","") == "")
                         if (pane==\"west\")
                             {
                             var browsewidth = jQuery('.ui-layout-west').width();
-                            console.log('width ' + browsewidth);
                             if(browsewidth < 185 && browse_show=='show')
                                 {
                                 ToggleBrowseBar('close');

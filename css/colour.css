@@ -458,14 +458,12 @@ input:checked + .customFieldLabel, .keywordselected
 
 .BrowseBarText {color: #fff;}
 
+/*
 .ui-layout-resizer-west {background-color: rgba(0,0,0,0)}
 .ui-layout-resizer-west-hover {background-color:rgba(0,0,0,0.3);}
 .ui-layout-resizer-west-dragging {background-color:#2b2b2b;}
-
-/*
-.ui-layout-resizer-west {background-color: none; }
-.ui-layout-resizer-west-hover {background-color: rgba(0,0,0,0.6)}
 */
+
 .BrowseBarItem.ui-droppable-hover .BrowseBarLink a{
     border: 2px solid #FFF;
 }

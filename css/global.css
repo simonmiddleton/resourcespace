@@ -1629,7 +1629,7 @@ select.MultiSelect:before {
     padding-left: 10px;
 }
 
-.BrowseBarExpand + .BrowseTypeNode, .BrowseBarExpand + .BrowseTypeRestype, .BrowseBarExpand + .BrowseTypeField{
+.BrowseBarExpand + .BrowseTypeNode, .BrowseBarExpand + .BrowseTypeRestype, .BrowseBarExpand + .BrowseTypeField, .BrowseBarExpand + .BrowseTypeFeatured{
     padding-left: 4px;
 }
 
@@ -1643,11 +1643,6 @@ select.MultiSelect:before {
     vertical-align: top;
     white-space: normal;
     padding-left: 5px;
-}
-
-.BrowseBarRoot a.BrowseRefresh{
-    padding-left: 5px;
-    display: table-cell;
 }
 
 #BrowseBar .BrowseLine {

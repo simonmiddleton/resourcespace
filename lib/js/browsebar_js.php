@@ -313,18 +313,10 @@ function toggleBrowseElements(browse_id, reload)
     return true;          
     }
     
-function ReloadBrowseBar(element)
+function ReloadBrowseBar()
     {
-    if(element !== undefined)
-        {
-        // Just refresh the node requested
-        var allopen = new Array(element);
-        }
-    else
-        {
-        var allopen = jQuery.cookie("browseopen") ? jQuery.cookie("browseopen").split(/,/) : new Array();
-        }
-        
+    var allopen = jQuery.cookie("browseopen") ? jQuery.cookie("browseopen").split(/,/) : new Array();
+            
     browse_toload = allopen;   
     allopen.forEach(function (item)
         {
