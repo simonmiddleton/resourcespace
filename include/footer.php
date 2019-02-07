@@ -497,7 +497,7 @@ if (getval("ajax","") == "")
                                 {
                                 myLayout.sizePane('west', 800);
                                 }
-                            jQuery('#BrowseBarContents').width(browsewidth-45);
+                            jQuery('#BrowseBarContent').width(browsewidth-45);
                             var newbrowsewidth = jQuery('.ui-layout-west').width();
                             if(newbrowsewidth != 35)
                                 {

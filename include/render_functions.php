@@ -2650,10 +2650,9 @@ function render_trash($type, $deletetext,$forjs=false)
 function render_browse_bar()
     {
     global $lang, $browse_bar_workflow, $browse_show;
-    //exit($browse_show ? "TRUE" : "FALSE");
     $bb_html = '<div id="BrowseBarContainer" class="ui-layout-west" >';
     $bb_html .= '<div id="BrowseBar" class="BrowseBar" ' . ($browse_show ?  '' : 'style="display:none;"') . '>';
-    $bb_html .= '<div id="BrowseBarContents" >'; 
+    $bb_html .= '<div id="BrowseBarContent" >'; 
     
     //Browse row template
     // script will replace %BROWSE_TYPE%, %BROWSE_EXPAND_CLASS%, %BROWSE_CLASS% %BROWSE_LEVEL%, %BROWSE_EXPAND%, %BROWSE_NAME%, %BROWSE_TEXT%, %BROWSE_ID%
@@ -2682,7 +2681,7 @@ function render_browse_bar()
         $bb_html .= generate_browse_bar_item("WF", $lang['browse_by_workflow_state']);
         }
 
-    $bb_html .= '</div><!-- End of BrowseBarContents -->
+    $bb_html .= '</div><!-- End of BrowseBarContent -->
                 </div><!-- End of BrowseBar -->
                     <div id="BrowseBarTab" ><a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div class="BrowseBarTabText">' . $lang['browse_bar_text'] . '</div></a></div><!-- End of BrowseBarTab -->
                 </div><!-- End of BrowseBarContainer -->

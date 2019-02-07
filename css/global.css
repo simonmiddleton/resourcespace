@@ -1607,7 +1607,7 @@ select.MultiSelect:before {
     transform: translateX(-37px); 
 } 
 
-#BrowseBarContents{
+#BrowseBarContent{
     height: 100%;
     margin-left: 10px;
     float: left;
@@ -1617,7 +1617,7 @@ select.MultiSelect:before {
     padding-top: 10px;
 }
 
-.BrowseRowOuter{
+.BrowseRowInner{
     display: table-row;
 }
 
@@ -1724,3 +1724,4 @@ a.BrowseRefresh{
     display: table-cell;
     padding-left: 5px;
     }
+
