@@ -1641,7 +1641,7 @@ select.MultiSelect:before {
     min-width: 6px;
     font-family: "Font Awesome 5 Free";
     font-weight: 600;
-    padding-left: 8px;
+    padding-left: 10px;
 }
 
 .BrowseBarLink{
@@ -1717,6 +1717,11 @@ select.MultiSelect:before {
 .browse_expanded:after {
     content: "\f146";
     }
+
+.BrowseTypeRestype, .BrowseTypeField, .BrowseBarExpand + .BrowseTypeNode{
+    padding-left: 4px;
+}
+
 
 .BrowseTypeRestype:after, .BrowseTypeField:after, .BrowseTypeFeatured:after, .BrowseTypeState:after{
     content: "\f07b";
