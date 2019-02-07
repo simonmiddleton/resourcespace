@@ -2683,7 +2683,6 @@ function render_browse_bar()
         }
 
     $bb_html .= '</div><!-- End of BrowseBarContents -->
-                <div id="BrowseBarClose" ><a href="#"  class="closeLink fa fa-times" onClick="ToggleBrowseBar();"></a></div>
                 </div><!-- End of BrowseBar -->
                     <div id="BrowseBarTab" ><a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div class="BrowseBarTabText">' . $lang['browse_bar_text'] . '</div></a></div><!-- End of BrowseBarTab -->
                 </div><!-- End of BrowseBarContainer -->
