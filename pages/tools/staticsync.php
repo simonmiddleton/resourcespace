@@ -434,7 +434,7 @@ function ProcessFolder($folder)
                                     else if ($field == 'archive')
 										{
 										# archive level is a special case
-										# first determin if the value matches a defined archive level
+										# first determine if the value matches a defined archive level
 										
 										$value = $mapfolder["archive"];
 										$archive_array=array_merge(array(-2,-1,0,1,2,3),$additional_archive_states);
@@ -450,6 +450,12 @@ function ProcessFolder($folder)
                                         {
                                         # Save the value
                                         $value = $path_parts[$level-1];
+                                        $modifiedval = hook('staticsync_mapvalue','',array($value));
+                                        if($modifiedval)
+                                            {
+                                            $value = $modifiedval;
+                                            }
+
                                         $field_info=get_resource_type_field($field);
                                         if(in_array($field_info['type'], $FIXED_LIST_FIELD_TYPES))
                                             {
