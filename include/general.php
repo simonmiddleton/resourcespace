@@ -7226,7 +7226,7 @@ function is_resourcespace_upgrade_available()
 
     if($centralised_version_number === false)
         {
-        $centralised_version_number = file_get_contents('https://www.resourcespace.com/current_release.txt');
+        $centralised_version_number = @file_get_contents('https://www.resourcespace.com/current_release.txt');
 
         if($centralised_version_number === false)
             {
