@@ -98,10 +98,10 @@ foreach ($resources as $resource)
     $fields=get_nodes_by_tag("COLLECTION",$resource["id"]);		
     foreach ($fields as $field)
         {
-        $collection=get_collection($field["value"]);
+        $collection=get_collection(escape_check($field["value"]));
         $collectionname=$collection["name"];
         echo "<br>collection=" . $collection["name"] . " (" . $field["value"] . ")";
-        add_resource_to_collection($ref,$field["value"]);
+        add_resource_to_collection($ref,escape_check($field["value"]));
         }
 		
 	# Update resource type
