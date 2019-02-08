@@ -8,6 +8,9 @@ if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 $saved_search_filter_nodes = $search_filter_nodes;
 $search_filter_nodes = true;
 
+$allresources = do_search('');
+$pre_count = is_array($allresources) ? count($allresources) : 0;
+
 // create 5 new resources
 $resourcea=create_resource(1,0);
 $resourceb=create_resource(1,0);
@@ -110,7 +113,6 @@ save_filter_rule(0, $newfilter, $rules);
 
 $usersearchfilter = $newfilter;
 $results=do_search('');  // this should return 3 assets:  b, c and d
-print_r($results);
 if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref'])
 	||
     !match_values(array_column($results,'ref'),array($resourceb, $resourcec, $resourced))
@@ -140,12 +142,8 @@ save_filter_rule(0, $newfilter, $rules);
 
 $usersearchfilter = $newfilter;
 $results=do_search('');  // this should return 1 asset:  d
-print_r($results);
-if(count($results) != 1 || !isset($results[0]['ref'])
-	||
-    !match_values(array_column($results,'ref'),array($resourced))
-	)
-	{
+if(count($results) != ($pre_count + 1) || !in_array($resourced,array_column($results,'ref')))
+    {
     echo "SUBTEST C";
     return false;
     }
