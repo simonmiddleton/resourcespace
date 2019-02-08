@@ -250,6 +250,14 @@ g.name 'Group name'
 
 from user u join usergroup g on u.usergroup=g.ref
 
+where 
+# --- date ranges
+# Make sure date is greater than FROM date
+(u.created > CAST('[from-y]-[from-m]-[from-d]' AS DATE))
+and 
+# Make sure date is less than TO date
+(u.created < CAST('[to-y]-[to-m]-[to-d]' AS DATE))
+
 order by username;
 "
 13,"Expired Resources","
