@@ -224,7 +224,8 @@ if($chosen_dropdowns_collection)
 
 if($browse_on)
     {
-    echo "browse_width = '" . $browse_width . "';";     
+    echo "browse_width = '" . $browse_width . "';
+    browse_clicked = false;";     
     }
 ?>
 </script>

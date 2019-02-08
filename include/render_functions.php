@@ -2735,11 +2735,11 @@ function generate_browse_bar_item($id, $text)
     $html .= '<div class="BrowseRowInner" >';
 	
     $html .= '<div class="BrowseBarStructure">
-            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\');" ></a>
+            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" ></a>
             </div><!-- End of BrowseBarStructure -->';	
     $html .= '<div class="BrowseBarLink" >' . $text . '</div>';
     
-    $html .= '<a href="#" class="BrowseRefresh " onclick="toggleBrowseElements(\'' . $id . '\',true);" ><i class="fas fa-sync reloadicon"></i></a>';	
+    $html .= '<a href="#" class="BrowseRefresh " onclick="toggleBrowseElements(\'' . $id . '\',true, true);" ><i class="fas fa-sync reloadicon"></i></a>';	
     
     $html .= "</div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->";

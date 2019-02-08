@@ -44,12 +44,12 @@ function renderBrowseItem(node, parent)
     newlevel++;
    
     var indent = "<div class='BrowseBarStructure BrowseLine'>&nbsp;</div>";
-    var refreshel = "<a href='#' class='BrowseRefresh' onclick='toggleBrowseElements(\"%BROWSE_ID%\",true);return false;' ><i class='fas fa-sync reloadicon'></i></a>";
+    var refreshel = "<a href='#' class='BrowseRefresh' onclick='toggleBrowseElements(\"%BROWSE_ID%\",true, true);return false;' ><i class='fas fa-sync reloadicon'></i></a>";
     var refreshel = refreshel.replace("%BROWSE_ID%",node.id);
    
     if(node.expandable != "false")
         {
-        var expand = "<div class='BrowseBarStructure BrowseBarExpand'><a href='#' class='browse_expand browse_closed' onclick='toggleBrowseElements(\"%BROWSE_ID%\");return false;'></a></div>";
+        var expand = "<div class='BrowseBarStructure BrowseBarExpand'><a href='#' class='browse_expand browse_closed' onclick='toggleBrowseElements(\"%BROWSE_ID%\", false, true);return false;'></a></div>";
         expand = expand.replace("%BROWSE_ID%",node.id);
         }
     else
@@ -96,17 +96,24 @@ function renderBrowseItem(node, parent)
     brwstmplt = brwstmplt.replace("%BROWSE_PARENT%",parentid); 
     brwstmplt = brwstmplt.replace("%BROWSE_ID%",node.id);
     brwstmplt = brwstmplt.replace("%BROWSE_REFRESH%",refreshel);
-   
     parent.after(brwstmplt);
     }
 
 
-function toggleBrowseElements(browse_id, reload)
+function toggleBrowseElements(browse_id, reload, useraction)
     {
-    if (typeof reload === 'undefined') {reload=false;}
-    if (typeof brws_user !== 'undefined' && brws_user) {return false;}
-    brws_user=true;
-    console.log('user action');
+    if (typeof reload === 'undefined') {reload = false;}
+    if (typeof useraction === 'undefined') {useraction = false;}
+
+    if (browse_clicked && useraction)
+        {            
+        return false;
+        }
+
+    if(useraction)
+        {
+        browse_clicked=true;    
+        }
     
     if(typeof b_loading === 'undefined')
         {
@@ -125,9 +132,8 @@ function toggleBrowseElements(browse_id, reload)
         browse_toload = new Array();
         }
 
-    console.log("toggleBrowseElements(" + browse_id +")");
-    var curel = jQuery("[data-browse-id='" + browse_id + "']");
-    
+    var curel = jQuery(".BrowseBarItem[data-browse-id='" + browse_id + "']");
+
     if(!curel.length)
         {
         // Node not present, load parent first
@@ -136,12 +142,12 @@ function toggleBrowseElements(browse_id, reload)
         if (item_elements.length  < 1)
             {            
             // This is the root node and is not present, give up
-            brws_user = false;
+            browse_clicked = false;
+            curel.stop(true, false);
             return false;
             }
             
         var parentitem = item_elements.join('-');
-        console.log("Loading parent item: " + parentitem);
         
         //Add this id so that it is loaded after the parent has completed
         if(typeof browsepostload[parentitem] === "undefined")
@@ -151,11 +157,11 @@ function toggleBrowseElements(browse_id, reload)
 
         browsepostload[parentitem].push(browse_id);
         toggleBrowseElements(parentitem, true);
-        
-        brws_user = false;
+        browse_clicked = false;
         return true;
         }
-            
+    
+   
     var loaded =curel.attr("data-browse-loaded");
     var openclose = curel.find("a.browse_expand");
     var refreshicon = curel.find("a.BrowseRefresh i");
@@ -165,20 +171,19 @@ function toggleBrowseElements(browse_id, reload)
         browseopen = new Array();
         }
 
-    //console.log("curel : " + "[data-browse-id='" + browse_id + "']");
-
     var curstatus = curel.attr("data-browse-status");
     
     if(curstatus == "open" && !reload)
         {
-            console.log("hiding");
         // Hide the children and close, close all child items also
         
-        jQuery("[data-browse-parent='" + browse_id + "']").slideUp();
-        jQuery("[data-browse-parent|='" + browse_id + "']").slideUp();
-        jQuery("[data-browse-parent|='" + browse_id + "']").find("a.browse_expand").removeClass("browse_expanded");
-        jQuery("[data-browse-parent|='" + browse_id + "']").find("a.browse_expand").addClass("browse_closed");
-        jQuery("[data-browse-parent|='" + browse_id + "']").attr("data-browse-status","closed");
+        jQuery(".BrowseBarItem[data-browse-parent|='" + browse_id + "']").find("a.browse_expand").removeClass("browse_expanded").addClass("browse_closed");
+        
+        jQuery(".BrowseBarItem[data-browse-parent|='" + browse_id + "']").removeClass("BrowseOpen").attr("data-browse-status","closed").slideUp("fast",function() {
+            browse_clicked = false;
+            });
+
+        
         openclose.removeClass("browse_expanded");
         openclose.addClass("browse_closed");
         curel.attr("data-browse-status","closed");
@@ -191,21 +196,20 @@ function toggleBrowseElements(browse_id, reload)
 
         browseopen = remaining;
         SetCookie('browseopen',browseopen);
-
-        brws_user = false;
         return true;
         }
         
     if(loaded == 1 && !reload)
         {
         // Show the child items
-        jQuery("[data-browse-parent='" + browse_id + "']").slideDown();
+        jQuery("[data-browse-parent='" + browse_id + "']").slideDown("fast",function() {
+            browse_clicked = false;
+            });
         openclose.removeClass("browse_closed");
         openclose.addClass("browse_expanded");
         curel.attr("data-browse-status","open");
         curel.addClass("BrowseOpen");
         browseopen.push(browse_id);
-        brws_user = false;
         return true;
         }
     
@@ -238,27 +242,20 @@ function toggleBrowseElements(browse_id, reload)
         dataType: "json"     
         }).done(function(response, status, xhr)
             {
-            //console.log(status);
-            if (status=="401")
-                {				
-                alert(errorpageload  + xhr.status + " " + xhr.statusText + "<br>" + response);		
-                }
-            else
+            // Load completed	
+            // Parse response items
+            //console.log(response);
+            // Reverse so each can be appended in turn and still appear in correct order 
+            response.items.reverse();
+            response.items.forEach(function (item)
                 {
-                // Load completed	
-                // Parse response items
-                //console.log(response);
-                // Reverse so each can be appended in turn and still appear in correct order 
-                response.items.reverse();
-                response.items.forEach(function (item)
-                    {
-                    renderBrowseItem(item, curel);
-                    });
-                
-                // Show all immediate children
-                jQuery("[data-browse-parent='" + browse_id + "']").slideDown();
-                }
+                renderBrowseItem(item, curel);
+                });
             
+            // Show all immediate children
+            jQuery("[data-browse-parent='" + browse_id + "']").slideDown();
+
+        
             curel.attr("data-browse-status","open");
             curel.attr("data-browse-loaded","1");
 
@@ -271,7 +268,6 @@ function toggleBrowseElements(browse_id, reload)
             openclose.removeClass("browse_closed");
             openclose.addClass("browse_expanded");
             curel.addClass("BrowseOpen");
-            console.log("Finished loading " + browse_id);
             refreshicon.removeClass("fa-spin");
 
             var loadindex = b_loading.indexOf(browse_id);
@@ -301,15 +297,25 @@ function toggleBrowseElements(browse_id, reload)
                 {
                 //console.log("Finished browse_bar reload, initialising drop"); 
                 BrowseBarInit();
+                browse_clicked = false;
                 }
             else
                 {
                 console.log("Still to load: " + browse_toload);    
                 }
-
+            })
+        .fail(function(xhr, status, error)
+            {
+            if (xhr.status=="403")
+                {				
+                window.location = baseurl_short + "login.php";		
+                }
+            else
+                {			
+                alert(errorpageload  + xhr.status + " " + xhr.statusText + "<br>" + response);		
+                }
             });
     
-    brws_user = false;
     return true;          
     }
     
@@ -346,7 +352,6 @@ function BrowseBarInit()
             browsetarget = jQuery(this).attr("data-browse-id");
             item_elements = browsetarget.split('-'); 
             droptype = item_elements[0];
-            console.log("dropped classes " + dropped.attr("class"));
             switch(droptype)
                 {
                 case 'R':
@@ -400,26 +405,27 @@ function BrowseAction(post_data,browselink)
     //console.log(post_data);
     url = baseurl_short+"pages/ajax/browse_action.php";
     jQuery.ajax({
-            type:'POST',
-            url: url,
-            data: post_data,
-            dataType: "json", 
-            async:true            
-               }).done(function(response, status, xhr)
+        type:'POST',
+        url: url,
+        data: post_data,
+        dataType: "json", 
+        async:true            
+            })
+        .done(function(response, status, xhr)
+            {
+            // Load completed	
+            browselink.fadeTo(300, 0.3, function() {jQuery(this).fadeTo(1000, 1.0); });
+            })
+        .fail(function(xhr, textStatus, errorThrown)
+            {		
+            console.log(xhr);
+            if(xhr.status===400)
+                {	
+                styledalert('<?php echo $lang["error"]?>',xhr.responseJSON.message);
+                }
+            else
                 {
-                // Load completed	
-                browselink.fadeTo(300, 0.3, function() {jQuery(this).fadeTo(1000, 1.0); });
-                }).fail(
-                    function(xhr, textStatus, errorThrown)
-                        {		
-                        console.log(xhr);
-                        if(xhr.status===400)
-                            {	
-                            styledalert('<?php echo $lang["error"]?>',xhr.responseJSON.message);
-                            }
-                        else
-                            {
-                            styledalert('<?php echo $lang["error"]?>',statusText);
-                            }
-                        });
+                styledalert('<?php echo $lang["error"]?>',statusText);
+                }
+            });
     }
