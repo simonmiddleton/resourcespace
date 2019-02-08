@@ -1508,7 +1508,7 @@ function get_usergroup($ref)
 {
     # Returns the user group corresponding to the $ref. A standard user group name is translated using $lang. A custom user group name is i18n translated.
     
-    $return = sql_query("SELECT ref,name,permissions,parent,search_filter,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags" . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref='$ref'");
+    $return = sql_query("SELECT ref,name,permissions,parent,search_filter,search_filter_id,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags" . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref='$ref'");
     if (count($return)==0) {return false;}
     else {
         $return[0]["name"] = lang_or_i18n_get_translated($return[0]["name"], "usergroup-");
@@ -1524,7 +1524,7 @@ function get_user($ref)
         if (isset($udata_cache[$ref])){
           $return=$udata_cache[$ref];
         } else {
-    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
+    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, u.search_filter_o_id, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
     }
     
     # Return a user's credentials.
@@ -1570,6 +1570,7 @@ function save_user($ref)
         $usergroup              = trim(getvalescaped('usergroup', ''));
         $ip_restrict            = trim(getvalescaped('ip_restrict', ''));
         $search_filter_override = trim(getvalescaped('search_filter_override', ''));
+        $search_filter_o_id     = trim(getvalescaped('search_filter_o_id', 0, true));
         $comments               = trim(getvalescaped('comments', ''));
         $suggest                = getval('suggest', '');
         $emailresetlink         = getval('emailresetlink', '');
@@ -1652,6 +1653,7 @@ function save_user($ref)
         account_expires=$expires,
         ip_restrict='" . $ip_restrict . "',
         search_filter_override='" . $search_filter_override . "',
+        search_filter_o_id='" . $search_filter_o_id . "',
         comments='" . $comments . "',
         approved='" . $approved . "' " . $additional_sql . " where ref='$ref'");
         }
@@ -4156,7 +4158,7 @@ function check_access_key($resource,$key)
             exit();
             }
         
-        global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options; 
+        global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options, $search_filter_nodes; 
                 $groupjoin="u.usergroup=g.ref";
                 $permissionselect="g.permissions";
                 if ($keys[0]["usergroup"]!="")
@@ -4165,14 +4167,30 @@ function check_access_key($resource,$key)
                     $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
                     $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
                     }
-        $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
+        $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,u.search_filter_override, u.search_filter_o_id, from user u join usergroup g on $groupjoin where u.ref='$user'");
         if (count($userinfo)>0)
             {
             $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
             $userpermissions=explode(",",$userinfo[0]["permissions"]);
-            $usersearchfilter=$userinfo[0]["search_filter"];
-
-            $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
+            
+            if ($search_filter_nodes)
+                {
+                if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
+                    {
+                    // User search filter override
+                    $usersearchfilter = $userinfo[0]["search_filter_o_id"];
+                    }
+                elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
+                    {
+                    // Group search filter
+                    $usersearchfilter = $userdata["search_filter_id"];
+                    }
+                }
+            else
+                {
+                // Old style search filter that hasn't been migrated
+                $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
+                }
 
             if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
             $userrequestmode=0; # Always use 'email' request mode for external users
@@ -7309,4 +7327,286 @@ function get_workflow_states()
     $workflow_states = array_merge($default_workflow_states, $additional_archive_states);
 
     return $workflow_states;
+    }
+
+/**
+* Get all defined filters (currently only used for search)
+* 
+* @param string $order  column to order by  
+* @param string $sort   sort order ("ASC" or "DESC")
+* @param string $find   text to search for in filter
+* 
+* @return array
+*/        
+function get_filters($order = "ref", $sort = "ASC", $find = "")
+    {
+    $validorder = array("ref","name");
+    if(!in_array($order,$validorder))
+        {
+        $order = "ref";
+        }
+        
+    if($sort != "ASC")
+        {
+        $sort = "DESC";
+        }
+        
+    $condition = "";
+    $join = "";
+    
+    if(trim($find) != "")
+        {
+        $join = " LEFT JOIN filter_rule_node fn ON fn.filter=f.ref LEFT JOIN node n ON n.ref = fn.node LEFT JOIN resource_type_field rtf ON rtf.ref=n.resource_type_field";
+        $condition = " WHERE f.name LIKE '%" . escape_check($find) . "%' OR n.name LIKE '%" . escape_check($find) . "%' OR rtf.name LIKE '" . escape_check($find) . "' OR rtf.title LIKE '" . escape_check($find) . "'";
+        }
+        
+    $sql = "SELECT f.ref, f.name FROM filter f {$join}{$condition} GROUP BY f.ref ORDER BY f.{$order} {$sort}";
+    $filters = sql_query($sql);
+    return $filters;
+    }
+
+
+/**
+* Get filter summary details
+* 
+* @param int $filterid  ID of filter (from usergroup search_filter_id or user search_filter_oid)
+* 
+* @return array
+*/           
+function get_filter($filterid)
+    {
+    // Codes for filter 'condition' column
+    // 1 = ALL must apply
+    // 2 = NONE must apply
+    // 3 = ANY can apply
+    
+    if(!is_numeric($filterid) || $filterid < 1)
+            {
+            return false;    
+            }
+            
+    $filter  = sql_query("SELECT ref, name, filter_condition FROM filter f WHERE ref={$filterid}"); 
+    
+    if(count($filter) > 0)
+        {
+        return $filter[0];
+        }
+        
+    return false;
+    }
+
+/**
+* Get filter rules for use in search
+* 
+* @param int $filterid  ID of filter (from usergroup search_filter_id or user search_filter_oid)
+* 
+* @return array
+*/       
+function get_filter_rules($filterid)
+    {
+    $filter_rule_nodes  = sql_query("SELECT fr.ref as rule, frn.node_condition, frn.node FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.filter='" . escape_check($filterid) . "'"); 
+        
+    // Convert results into useful array    
+    $rules = array();
+    foreach($filter_rule_nodes as $filter_rule_node)
+        {
+        $rule = $filter_rule_node["rule"];
+        if(!isset($rules[$filter_rule_node["rule"]]))
+            {
+            $rules[$rule] = array();
+            $rules[$rule]["nodes_on"] = array();
+            $rules[$rule]["nodes_off"] = array();
+            }
+        if($filter_rule_node["node_condition"] == 1)
+            {
+            $rules[$rule]["nodes_on"][] = $filter_rule_node["node"];
+            }
+        else
+            {
+            $rules[$rule]["nodes_off"][] = $filter_rule_node["node"];
+            }
+        }
+        
+    return $rules;
+    }
+    
+/**
+* Get filter rule
+* 
+* @param int $ruleid  - ID of filter rule
+* 
+* @return array
+*/       
+function get_filter_rule($ruleid)
+    {    
+    $rule_data = sql_query("SELECT fr.ref, fr.rule_condition, group_concat(frn.node) AS nodes FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.ref='" . escape_check($ruleid) . "'"); 
+    if(count($rule_data) > 0)
+        {
+        return $rule_data[0];
+        }
+    return false;
+    }
+
+
+/**
+* Save filter, will return existing filter ID if text matches already migrated
+* 
+* @param int $filter            - ID of filter 
+* @param int $filter_name       - Name of filter 
+* @param int $filter_condition  - One of RS_FILTER_ALL,RS_FILTER_NONE,RS_FILTER_ANY
+* 
+* @return boolean | integer     - false, or ID of filter
+*/        
+function save_filter($filter,$filter_name,$filter_condition)
+    {
+    if(!in_array($filter_condition, array(RS_FILTER_ALL,RS_FILTER_NONE,RS_FILTER_ANY)))
+        {
+        return false;
+        }
+        
+    if($filter != 0)
+        {    
+        if(!is_numeric($filter))
+            {
+            return false;    
+            }
+        sql_query("UPDATE filter SET name='" . escape_check($filter_name). "', filter_condition='{$filter_condition}' WHERE ref = '" . escape_check($filter)  . "'");
+        }
+    else
+        {
+        $newfilter = sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($filter_name). "','{$filter_condition}')");
+        $newfilter = sql_insert_id();
+        return $newfilter;
+        }
+
+    return $filter;
+    }
+    
+/**
+* Save filter rule, will return existing rule ID if text matches already migrated
+* 
+* @param int $filter_rule       - ID of filter_rule
+* @param int $filterid          - ID of associated filter 
+* @param array|string $ruledata   - Details of associated rule nodes  (as JSON if submitted from rule edit page)
+* 
+* @return boolean | integer     - false, or ID of filter_rule
+*/     
+function save_filter_rule($filter_rule, $filterid, $rule_data)
+    {
+    if(!is_array($rule_data))
+        {
+        $rule_data = json_decode($rule_data);
+        }
+        
+    if($filter_rule != "new")
+        {    
+        if(!is_numeric($filter_rule))
+            {
+            return false;    
+            }
+        sql_query("DELETE FROM filter_rule_node WHERE filter_rule = '{$filter_rule}'");
+        }
+    else
+        {
+        sql_query("INSERT INTO filter_rule (filter) VALUES ('{$filterid}')");
+        $filter_rule = sql_insert_id();
+        }    
+        
+    if(count($rule_data) > 0)
+        {
+        $nodeinsert = array();
+        for($n=0;$n<count($rule_data);$n++)
+            {
+            $condition = $rule_data[$n][0];
+            for($rd=0;$rd<count($rule_data[$n][1]);$rd++)
+                {
+                $nodeid = $rule_data[$n][1][$rd];
+                $nodeinsert[] = "('" . $filter_rule . "','" . $nodeid . "','" . $condition . "')";
+                }
+            }
+        $sql = "INSERT INTO filter_rule_node (filter_rule,node,node_condition) VALUES " . implode(',',$nodeinsert);
+        sql_query($sql);
+        }
+    return $filter_rule;
+    }
+
+/**
+* Delete specified filter
+* 
+* @param int $filter       - ID of filter
+* 
+* @return boolean | array of users/groups using filter
+*/       
+function delete_filter($filter)
+    {
+    if(!is_numeric($filter))
+            {
+            return false;    
+            }
+            
+    // Check for existing use of filter
+    $checkgroups = sql_array("SELECT ref value FROM usergroup WHERE search_filter_id='" . $filter . "'","");
+    $checkusers  = sql_array("SELECT ref value FROM user WHERE search_filter_o_id='" . $filter . "'","");
+    
+    if(count($checkgroups)>0 || count($checkusers)>0)
+        {
+        return array("groups"=>$checkgroups, "users"=>$checkusers);
+        }
+    
+    // Delete and cleanup any unused 
+    sql_query("DELETE FROM filter WHERE ref='$filter'"); 
+    sql_query("DELETE FROM filter_rule WHERE filter NOT IN (SELECT ref FROM filter)");
+    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+        
+    return true;
+    }
+
+/**
+* Delete specified filter_rule
+* 
+* @param int $filter       - ID of filter_rule
+* 
+* @return boolean | integer     - false, or ID of filter_rule
+*/  
+function delete_filter_rule($filter_rule)
+    {
+    if(!is_numeric($filter_rule))
+            {
+            return false;    
+            }
+            
+    // Delete and cleanup any unused nodes
+    sql_query("DELETE FROM filter_rule WHERE ref='$filter_rule'");  
+    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+        
+    return true;
+    }
+
+/**
+* Copy specified filter_rule
+* 
+* @param int $filter            - ID of filter_rule to copy
+* 
+* @return boolean | integer     - false, or ID of new filter
+*/ 
+function copy_filter($filter)
+    {
+    if(!is_numeric($filter))
+            {
+            return false;    
+            }
+            
+    sql_query("INSERT INTO filter (name, filter_condition) SELECT name, filter_condition FROM filter WHERE ref={$filter}"); 
+    $newfilter = sql_insert_id();
+    $rules = sql_array("SELECT ref value from filter_rule  WHERE filter={$filter}"); 
+    foreach($rules as $rule)
+        {
+        sql_query("INSERT INTO filter_rule (filter) VALUES ({$newfilter})");
+        $newrule = sql_insert_id();
+        sql_query("INSERT INTO filter_rule_node (filter_rule, node_condition, node) SELECT '{$newrule}', node_condition, node FROM filter_rule_node WHERE filter_rule='{$rule}'");
+        }
+
+    return $newfilter;
     }

@@ -725,6 +725,16 @@ function db_end_transaction()
 		}
 	}
 
+# Tell the database to rollback the current transaction.
+function db_rollback_transaction()
+	{
+	global $db,$use_mysqli;
+	if ($use_mysqli && function_exists('mysqli_rollback'))
+		{
+		mysqli_rollback($db);
+		}
+	}        
+
 function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     # sql_query(sql) - execute a query and return the results as an array.
@@ -2098,7 +2108,30 @@ function setup_user($userdata)
 			}
 		}
 
-        $usersearchfilter=isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='' ? $userdata["search_filter_override"] : $userdata["search_filter"];
+        global $search_filter_nodes;
+        $newfilter = false;
+        if ($search_filter_nodes)
+            {
+            if(isset($userdata["search_filter_o_id"]) && is_numeric($userdata["search_filter_o_id"]) && $userdata['search_filter_o_id'] > 0)
+                {
+                // User search filter override
+                $usersearchfilter = $userdata["search_filter_o_id"];
+                $newfilter = true;
+                }
+            elseif(isset($userdata["search_filter_id"]) && is_numeric($userdata["search_filter_id"]) && $userdata['search_filter_id'] > 0)
+                {
+                // Group search filter
+                $usersearchfilter = $userdata["search_filter_id"];
+                $newfilter = true;
+                }
+            }
+        
+        if(!$newfilter)
+            {
+            // Old style search filter that hasn't been migrated
+            $usersearchfilter=isset($userdata["search_filter_override"]) && $userdata["search_filter_override"]!='' ? $userdata["search_filter_override"] : $userdata["search_filter"];
+            }
+            
         $usereditfilter=$userdata["edit_filter"];
         $userderestrictfilter=$userdata["derestrict_filter"];
         $hidden_collections=explode(",",$userdata["hidden_collections"]);
@@ -2187,6 +2220,7 @@ function validate_user($user_select_sql, $getuserdata=true)
                        g.name groupname,
                        u.ip_restrict ip_restrict_user,
                        u.search_filter_override,
+                       u.search_filter_o_id,
                        g.resource_defaults,
                        u.password_last_change,
                        if(find_in_set('config_options',g.inherit_flags) AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,
@@ -2194,7 +2228,8 @@ function validate_user($user_select_sql, $getuserdata=true)
                        g.derestrict_filter,
                        u.hidden_collections,
                        u.accepted_terms,
-                       u.session
+                       u.session,
+                       g.search_filter_id
                   FROM user AS u
              LEFT JOIN usergroup AS g on u.usergroup = g.ref
 			 LEFT JOIN usergroup AS pg ON g.parent=pg.ref

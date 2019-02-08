@@ -3561,3 +3561,6 @@ $ghostscript_extensions = array('ps', 'pdf');
 
 // Generate only the internal preview sizes for any of the extensions found in $non_image_types list
 $non_image_types_generate_preview_only = true;
+// Enable updated search filter functionality? Allows for simpler setup of more advanced search filters
+// Once enabled the filters will gradually be updated as users search. To update all the filter immediately run upgrade/scripts/005_migrate_search_filters.php
+$search_filter_nodes = false;

@@ -113,56 +113,60 @@ if (getval("save",false) && enforcePostRequest(false))
             log_activity(null,null,null,'usergroup','group_specific_logo',$ref);
             }
 
-    foreach (array("name","permissions","parent","search_filter","edit_filter","derestrict_filter",
-                    "resource_defaults","config_options","welcome_message","ip_restrict","request_mode","allow_registration_selection","inherit_flags") as $column)
-        
-        {
-        if (in_array($column,array("allow_registration_selection")))
-            {
-            $val=getval($column,"0") ? "1" : "0";
-            }
-        
-        elseif($column=="inherit_flags" && getvalescaped($column,'')!="")
-            {
-            //exit(print_r(getval($column,'')));
-            $val=implode(",",getvalescaped($column,''));
-            }
-        elseif($column=="parent")
-            {
-            $val=getval($column,0,true);
-            }           
-        elseif($column=="request_mode")
-            {
-            $val=getval($column, 1, true);
-            }           
-        else
-            {
-            $val=getvalescaped($column,"");
-            }
-            
-        if ($execution_lockout && $column=="config_options") {$val="";} # Do not allow config overrides if $execution_lockout is set.
-        
-        if (isset($sql))
-            {
-            $sql.=",";
-            }
-        else
-            {
-            $sql="update usergroup set ";
-            }       
-        $sql.="{$column}='{$val}'";
-        log_activity(null,LOG_CODE_EDITED,$val,'usergroup',$column,$ref);
-        }
-    $sql.=" where ref='{$ref}'";
-    sql_query($sql);
+	foreach (array("name","permissions","parent","search_filter","search_filter_id","edit_filter","derestrict_filter",
+					"resource_defaults","config_options","welcome_message","ip_restrict","request_mode","allow_registration_selection","inherit_flags") as $column)		
+		
+		{
+		if (in_array($column,array("allow_registration_selection")))
+			{
+			$val=getval($column,"0") ? "1" : "0";
+			}
+		
+		elseif($column=="inherit_flags" && getvalescaped($column,'')!="")
+			{
+			$val=implode(",",getvalescaped($column,''));
+			}			
+		elseif($column=="parent")
+			{
+			$val=getval($column,0,true);
+			}			
+		elseif($column=="request_mode")
+			{
+			$val=getval($column, 1, true);
+			}			
+		else
+			{
+			$val=getvalescaped($column,"");
+			}
+			
+		if ($execution_lockout && $column=="config_options") {$val="";} # Do not allow config overrides if $execution_lockout is set.
+		
+		if (isset($sql))
+			{
+			$sql.=",";
+			}
+		else
+			{
+			$sql="update usergroup set ";
+			}		
+		$sql.="{$column}='{$val}'";
+		log_activity(null,LOG_CODE_EDITED,$val,'usergroup',$column,$ref);
+		}
+	$sql.=" where ref='{$ref}'";
+	sql_query($sql);
     
-    hook("usergroup_edit_add_form_save","",array($ref));
-    if(!$error)
+    if($search_filter_nodes && getval("search_filter_id",0,true) == 0 && trim(getval("search_filter","")) != "")
         {
-        redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");       // return to the user group management page
-        exit;
+        migrate_usergroup_filter();
         }
-    }
+	
+	hook("usergroup_edit_add_form_save","",array($ref));
+	if(!$error)
+		{
+		redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");		// return to the user group management page
+		exit;
+		}
+	}
 
 $record = get_usergroup($ref);
 
@@ -281,11 +285,38 @@ include "../../include/header.php";
         <p><?php echo $lang["action-title_see_wiki_for_advanced_options"]; ?></p>
 
 
-        <div class="Question">
-            <label for="search_filter"><?php echo $lang["property-search_filter"]; ?></label>
-            <textarea name="search_filter" class="stdwidth" rows="3" cols="50"><?php echo $record['search_filter']; ?></textarea>
-            <div class="clearerleft"></div>
-        </div>
+		<?php
+		if ($search_filter_nodes && (strlen($record['search_filter']) == "" || (is_numeric($record['search_filter_id']) && $record['search_filter_id'] > -1)))
+			{
+            // Show filter selector if already migrated or no filter has been set
+			$search_filters = get_filters($order = "name", $sort = "ASC");
+			?>
+			<div class="Question">
+				<label for="search_filter_id"><?php echo $lang["property-search_filter"]; ?></label>
+				<select name="search_filter_id" class="stdwidth">
+					<?php
+					echo "<option value='0' >" . ($record['search_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
+					foreach	($search_filters as $search_filter)
+						{
+						echo "<option value='" . $search_filter['ref'] . "' " . ($record['search_filter_id'] == $search_filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($search_filter['name']) . "</option>";
+						}?>
+				</select>
+				<div class="clearerleft"></div>
+			</div>
+			<?php	
+			}
+		else
+			{
+            // Show old style text filter input
+			?>
+            <input type="hidden" name="search_filter_id" value="0" />
+			<div class="Question">
+				<label for="search_filter"><?php echo $lang["property-search_filter"]; ?></label>
+				<textarea name="search_filter" class="stdwidth" rows="3" cols="50"><?php echo $record['search_filter']; ?></textarea>
+				<div class="clearerleft"></div>
+			</div>
+			<?php
+			}?>
 
         <div class="Question">
             <label for="edit_filter"><?php echo $lang["property-edit_filter"]; ?></label>

@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 4);
+define('SYSTEM_UPGRADE_LEVEL', 5);
 
 // ------------------------- FIELD TYPES -------------------------
 
@@ -173,6 +173,16 @@ define ('TAG_EDITOR_DELIMITER', '~');
 define('FACIAL_RECOGNITION_CROP_SIZE_PREFIX', '_facial_recognition_crop_');
 define('FACIAL_RECOGNITION_PREPARED_IMAGE_EXT', 'pgm');
 // --------------------------------------------------------------------------------
+
+
+// ------------------------- FILTER (SEARCH, EDIT) LOGICAL OPERATORS -------------------------
+define ('RS_FILTER_ALL', 		1);
+define ('RS_FILTER_NONE',		2);
+define ('RS_FILTER_ANY',		3);
+
+// Related node operators
+define ('RS_FILTER_NODE_NOT_IN',   0);
+define ('RS_FILTER_NODE_IN',       1);
 
 // used internally within this file
 

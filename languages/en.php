@@ -2750,4 +2750,30 @@ $lang['home_page'] = "Home page";
 $lang['login_word'] = "Login";
 
 $lang['error-duplicatesfound'] = "Duplicate found: resource(s) %resourceref% matches file %filename%"; # %resourceref to be replaced by list of refs that match incoming file and %filename to be replaced by the incoming files name or location
-$lang['see_log'] = "Please refer to the log below for more details on this upload.";
+$lang['see_log'] = "Please refer to the log below for more details on this upload.";$lang["edit_copy_from_field"]       = "Copy data from field";
+// Filter rules 
+$lang["filter_migration"]           = "Filter migration";
+$lang["filter_search_success"]      = "Search filter has been successfully migrated.";
+$lang["filter_search_error"]        = "An error was encountered migrating a search filter. Please check the search filter.";
+$lang["filter_search_delete_error"] = "Filter is in use by the following users or groups";
+$lang["filter_manage"]              = "Manage filters";
+$lang["filter_edit"]                = "Edit filter";
+$lang["filter_new"]                 = "New filter";
+$lang["filter_none"]                = "No filter";
+$lang["filter_create_name"]         = "Create filter with name...";
+$lang["filter_edit_text"]           = "Set the rules that must be met for resources to match the filter";
+$lang["filter_name"]                = "Filter name";
+$lang["filter_rules"]               = "Filter rules";
+$lang["filter_rules_none"]          = "There are no rules for this filter";
+$lang["filter_rule_edit"]           = "Edit filter rule";
+$lang["filter_rule_add"]            = "Add filter rule";
+$lang["filter_rule_edit_text"]      = "Select the conditions that can satisfy this filter rule. Any one of these can be met to satisfy the rule";
+$lang["filter_rule_name"]           = "Filter rule name";
+$lang["filter_condition_label"]     = "Criteria";
+$lang["filter_criteria_all"]        = "ALL of the rules must be met";
+$lang["filter_criteria_none"]       = "NONE of the rules must be met";
+$lang["filter_criteria_any"]        = "ANY of the rules must be met";
+$lang["filter_is_in"]               = "IS ";
+$lang["filter_is_not_in"]           = "IS NOT ";
+$lang["filter_or"]                  = "OR";
+$lang["filter_and"]                 = "AND";
