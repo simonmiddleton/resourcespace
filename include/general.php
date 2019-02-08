@@ -4167,7 +4167,7 @@ function check_access_key($resource,$key)
                     $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
                     $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
                     }
-        $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,u.search_filter_override, u.search_filter_o_id, from user u join usergroup g on $groupjoin where u.ref='$user'");
+        $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,u.search_filter_override, u.search_filter_o_id from user u join usergroup g on $groupjoin where u.ref='$user'");
         if (count($userinfo)>0)
             {
             $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
