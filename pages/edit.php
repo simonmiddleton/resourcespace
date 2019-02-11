@@ -29,7 +29,7 @@ $uploader = getvalescaped("uploader","");
 $collection = getvalescaped('collection', '', true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
-$archive=getvalescaped("archive",0,true); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
+$archive=getvalescaped("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
 $autorotate = getval("autorotate","");
 $collection_add = getvalescaped('collection_add', '');
 $local = getvalescaped("local","");
