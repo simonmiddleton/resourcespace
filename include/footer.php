@@ -461,7 +461,7 @@ if (getval("ajax","") == "")
                 east__spacing_open:0,
 				east__spacing_closed:8,
                 east_resizable: true,
-                east__size: 300,
+                east__size: 282,
 
                 north_resizable: false,
                 north__closable:false,
@@ -504,9 +504,7 @@ if (getval("ajax","") == "")
                                 SetCookie('browse_width', newbrowsewidth);
                                 browse_width = newbrowsewidth;    
                                 }
-                            //
                             }
-                        ModalCentre();
                         },
                     ";
 
