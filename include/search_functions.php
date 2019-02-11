@@ -549,6 +549,8 @@ function compile_search_actions($top_actions)
         "k"             =>  $k
         );
 
+    $omit_edit_all = false;
+
     #This is to stop duplicate "Edit all resources" caused on a collection search
     if(isset($search) && substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
         { 
