@@ -209,13 +209,13 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
 function create_periodic_email($user, $report, $period, $email_days, $send_all_users, array $user_groups)
     {
     # Delete any matching rows for this report/period.
-    $query = sprintf('
+    $query = sprintf("
             DELETE
               FROM report_periodic_emails
              WHERE user = \'%s\'
                AND report = \'%s\'
                AND period = \'%s\';
-        ',
+        ",
         escape_check($user),
         escape_check($report),
         escape_check($period)
@@ -223,7 +223,7 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
     sql_query($query);
 
     # Insert a new row.
-    $query = sprintf('
+    $query = sprintf("
             INSERT INTO report_periodic_emails (
                                                    user,
                                                    report,
@@ -236,7 +236,7 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
                             \'%s\',  # period
                             \'%s\'   # email_days
                         );
-        ',
+        ",
         escape_check($user),
         escape_check($report),
         escape_check($period),
@@ -250,7 +250,7 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
         {
         if($send_all_users)
             {
-            sql_query('UPDATE report_periodic_emails SET send_all_users = 1 WHERE ref = "' . escape_check($ref) . '";');
+            sql_query("UPDATE report_periodic_emails SET send_all_users = 1 WHERE ref = '" . escape_check($ref) . "';");
             }
 
         if(!empty($user_groups))
@@ -270,7 +270,7 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
                 }
             }
 
-            sql_query('UPDATE report_periodic_emails SET user_groups = "' . $ugstring . '" WHERE ref = "' . escape_check($ref) . '";');
+            sql_query("UPDATE report_periodic_emails SET user_groups = '" . $ugstring . "' WHERE ref = '" . escape_check($ref) . "';");
             }
         }
 
