@@ -548,6 +548,12 @@ function compile_search_actions($top_actions)
         "offset"        =>  $offset,
         "k"             =>  $k
         );
+
+    #This is to stop duplicate "Edit all resources" caused on a collection search
+    if(isset($search) && substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
+        { 
+        $omit_edit_all = true;
+        }
                    
     if(!checkperm('b') && ($k == '' || $internal_share_access)) 
         {
@@ -682,7 +688,7 @@ function compile_search_actions($top_actions)
         }
 
     // If all resources are editable, display an edit all link
-    if($top_actions && $show_edit_all_link)
+    if($top_actions && $show_edit_all_link && !$omit_edit_all)
         {
         $editable_resources = do_search($search,$restypes,'resourceid',$archive,-1,'',false,0,false,false,$daylimit,false,false, true, true);
         
