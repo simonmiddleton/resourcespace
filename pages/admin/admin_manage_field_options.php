@@ -24,6 +24,9 @@ $field_data = get_field($field);
 $node_ref   = getvalescaped('node_ref', '');
 $nodes      = array();
 
+// Array of nodes to expand immediately upon page load
+$expand_nodes = getval("expand_nodes","");
+
 $import_export_parent = getvalescaped('import_export_parent', null);
 
 $filter_by_name = unescape(getvalescaped('filter_by_name', ''));
@@ -213,82 +216,85 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
 
     $new_record_ref = set_node(NULL, $field, $new_option_name, $new_option_parent, $new_option_order_by);
 
-    if(isset($new_record_ref) && !(trim($new_record_ref)==""))
+    if(getval("reload","") == "")
         {
-        if(7 != $field_data['type'] && (trim($new_option_parent)==""))
+        if(isset($new_record_ref) && !(trim($new_record_ref)==""))
             {
-            ?>
-            <tr id="node_<?php echo $new_record_ref; ?>">
-                <td>
-                    <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $new_record_ref; ?>" value="<?php echo htmlspecialchars($new_option_name); ?>" onblur="this.value=this.value.trim()" >
-                </td>
-                <td align="left">0</td>
-                
-                    <div class="ListTools">
-                        <form id="option_<?php echo $new_record_ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
-                            <td>
-                                <input type="hidden" name="node_ref" value="<?php echo $new_record_ref; ?>">
-                                <input 
-                                    type="number" 
-                                    name="node_order_by" 
-                                    value="<?php echo $new_node_index; ?>" 
-                                    id="option_<?php echo $new_record_ref; ?>_order_by" 
-                                    readonly='true'
-                                    min='1'
-                                >
-                            </td>
-                        <?php
-                        // Show order by tools if not filtering or using automatic ordering
-                        if('' == $filter_by_name && !$field_data['automatic_nodes_ordering'])
-                            {
-                                ?>
-                            
-                            <td> <!-- Buttons for changing order -->
-                                <button 
-                                    type="button"
-                                    id="option_<?php echo $new_record_ref; ?>_move_to"
-                                    onclick="
-                                        EnableMoveTo(<?php echo $new_record_ref; ?>);
-                                        return false;
-                                    ">
-                                    <?php echo $lang['action-move-to']; ?>
-                                </button>
-                                <button 
-                                    type="submit"
-                                    id="option_<?php echo $new_record_ref; ?>_order_by_apply"
-                                    onclick="
-                                        ApplyMoveTo(<?php echo $new_record_ref; ?>);
-                                        return false;
-                                    "
-                                    style="display: none;"
-                                >
-                                <?php echo $lang['action-title_apply']; ?>
-                                </button>
-                                <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
-                                <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>
-                            </td>
+            if(7 != $field_data['type'] && (trim($new_option_parent)==""))
+                {
+                ?>
+                <tr id="node_<?php echo $new_record_ref; ?>">
+                    <td>
+                        <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $new_record_ref; ?>" value="<?php echo htmlspecialchars($new_option_name); ?>" onblur="this.value=this.value.trim()" >
+                    </td>
+                    <td align="left">0</td>
+                    
+                        <div class="ListTools">
+                            <form id="option_<?php echo $new_record_ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
+                                <td>
+                                    <input type="hidden" name="node_ref" value="<?php echo $new_record_ref; ?>">
+                                    <input 
+                                        type="number" 
+                                        name="node_order_by" 
+                                        value="<?php echo $new_node_index; ?>" 
+                                        id="option_<?php echo $new_record_ref; ?>_order_by" 
+                                        readonly='true'
+                                        min='1'
+                                    >
+                                </td>
                             <?php
-                            }
-                            ?>
-                        <td> <!-- Action buttons -->
-                            <button type="submit" onclick="SaveNode(<?php echo $new_record_ref; ?>); return false;"><?php echo $lang['save']; ?></button>
-                            <button type="submit" onclick="DeleteNode(<?php echo $new_record_ref; ?>); return false;"><?php echo $lang['action-delete']; ?></button>
-                        </td>
-                            
-                        <?php generateFormToken("option_{$new_record_ref}"); ?>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            <?php
+                            // Show order by tools if not filtering or using automatic ordering
+                            if('' == $filter_by_name && !$field_data['automatic_nodes_ordering'])
+                                {
+                                    ?>
+                                
+                                <td> <!-- Buttons for changing order -->
+                                    <button 
+                                        type="button"
+                                        id="option_<?php echo $new_record_ref; ?>_move_to"
+                                        onclick="
+                                            EnableMoveTo(<?php echo $new_record_ref; ?>);
+                                            return false;
+                                        ">
+                                        <?php echo $lang['action-move-to']; ?>
+                                    </button>
+                                    <button 
+                                        type="submit"
+                                        id="option_<?php echo $new_record_ref; ?>_order_by_apply"
+                                        onclick="
+                                            ApplyMoveTo(<?php echo $new_record_ref; ?>);
+                                            return false;
+                                        "
+                                        style="display: none;"
+                                    >
+                                    <?php echo $lang['action-title_apply']; ?>
+                                    </button>
+                                    <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
+                                    <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>
+                                </td>
+                                <?php
+                                }
+                                ?>
+                            <td> <!-- Action buttons -->
+                                <button type="submit" onclick="SaveNode(<?php echo $new_record_ref; ?>); return false;"><?php echo $lang['save']; ?></button>
+                                <button type="submit" onclick="DeleteNode(<?php echo $new_record_ref; ?>); return false;"><?php echo $lang['action-delete']; ?></button>
+                            </td>
+                                
+                            <?php generateFormToken("option_{$new_record_ref}"); ?>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <?php
 
-            exit();
+                exit();
+                }
+
+            draw_tree_node_table($new_record_ref, $field, $new_option_name, $new_option_parent, $new_option_order_by);
             }
 
-        draw_tree_node_table($new_record_ref, $field, $new_option_name, $new_option_parent, $new_option_order_by);
+        exit();
         }
-
-    exit();
     }
 
 // [Import nodes]
@@ -970,6 +976,18 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
         jQuery('.node_parent_chosen_selector').trigger("chosen:updated");
         });
     <?php
+    
+    if($expand_nodes != "")
+        {
+        echo "jQuery(document).ready(function(){";
+        $toexpand = explode(",",$expand_nodes);
+        foreach($toexpand as $node)
+            {
+            echo "ToggleTreeNode('" . (int)$node . "','" . (int)$field . "');";
+            }
+        echo "});";
+        }
+    //
     }
     ?>
 </script>

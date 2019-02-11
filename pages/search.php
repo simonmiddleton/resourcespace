@@ -666,11 +666,23 @@ if(!$collectionsearch)
             }
         jQuery('.ResourcePanel').draggable({
             distance: 50,
-            connectWith: '#CollectionSpace',
+            connectWith: '#CollectionSpace, .BrowseBarLink',
             appendTo: 'body',
             zIndex: 99000,
             helper: 'clone',
             revert: false,
+            scroll: false,
+            drag: function (event, ui)
+                {
+                //var defaultSize = 108;
+                //var positie = ((ui.position.top)/19);
+                //console.log(ui.position.top);
+                //var correcteSize = defaultSize + positie;
+                jQuery(ui.helper).width(150);
+                jQuery(ui.helper).height(150);
+                jQuery(ui.helper).css('opacity','0.5');
+                },
+            
             start: function(event, ui)
                 {
                 InfoBoxEnabled = false;
@@ -722,6 +734,7 @@ if ($allow_reorder && $display!="list" && $order_by == "collection") {
             connectWith: '#CollectionSpace',
             appendTo: 'body',
             zIndex: 99000,
+            scroll: false,
             helper: function(event, ui)
                 {
                 //Hack to append the element to the body (visible above others divs), 

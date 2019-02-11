@@ -48,11 +48,12 @@ input[readonly] {color: #000000;}
 
 /* Search Bar */
 #SearchBoxPanel a:link, #SearchBoxPanel a:visited, #SearchBoxPanel a:hover,
-#ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active
+#ResearchBoxPanel a:link, #ResearchBoxPanel a:visited, #ResearchBoxPanel a:hover, #ResearchBoxPanel a:active,
+.SearchSpace a:link, .SearchSpace a:visited, .SearchSpace a:hover, .SearchSpace a:active
 {color:#fff;text-decoration:none;}
 
 #ThemeBoxPanel,  .RecordPanel, .ResourcePanelSmall, .ResourcePanelLarge{background: #eee;}
-#ThemeBoxPanel, #SearchBoxPanel, #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge
+#ThemeBoxPanel, #ResearchBoxPanel, .HomePanelIN, .RecordPanel .RecordDownload, .RecordPanel, .ResourcePanelLarge
 	{
 	border-radius:4px;
   overflow: hidden;
@@ -89,7 +90,7 @@ input[readonly] {color: #000000;}
 	border-radius:5px;
     box-shadow: 4px 5px 5px rgba(0, 0, 0, .5);
 }
-#SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2{color: #fff;}
+#SearchBoxPanel h2, #ThemeBoxPanel h2, #ResearchBoxPanel h2, .SearchSpace h2{color: #fff;}
 
 /* Collection Bar */
 .ui-layout-resizer {background-color: #383838;background: #444444; }
@@ -97,7 +98,7 @@ input[readonly] {color: #000000;}
 .CollectBack {color:#E0E0E0;background: #2b2b2b;}
 
 #CollectionMinRightNav li {border-left:1px solid #E0E0E0;}
-.CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2 {color:#E0E0E0;}
+.CollectBack a:link, .CollectBack a:visited, .CollectBack a:active,.CollectBack h2,.BrowseBar a:link,.BrowseBar a:hover, .BrowseBar a:visited, .BrowseBar a:active,.BrowseBar h2 {color:#E0E0E0;}
 .CollectBack a:hover{color:#FFF;}
 .CollectBack h2 a:link, .CollectBack h2 a:visited, .CollectBack h2 a:active, .CollectBack h2 a:hover {color:white;}
 /* Use different icons for the collections bar */
@@ -115,10 +116,12 @@ input[readonly] {color: #000000;}
 	{color:#FFF;}
 .HomePanel h2{color:#FFF;}
 
-#SearchBoxPanel, #ResearchBoxPanel,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree {
+#SearchBarContainer,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab{
 	background: rgba(0, 0, 0, 0.6);
 	color:#FFF;
 }
+
+
 #HomeSiteText{padding:10px;}
 #HomeSiteText.dashtext h1{color:#FFF;}
 #SlideshowContainer #HomeSiteText.dashtext h1{color:#373737;}
@@ -264,6 +267,7 @@ li.plupload_droptext {color:#999;}
 .plupload_view_list .plupload_file {border-top:0px;border-right:0px;border-left:0px;background: #e6e6e6 url("smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png") 0% 54% repeat-x;}
 .Terms{color:#000;border: 1px solid #ccc;background: #fff;}
 .ui-layout-toggler-open-hover{background-color:rgba(255,255,255,0.3);}
+
 .proptitle{color: #FFFFFF;background: rgb(119,119,119);}	
 .propbox{color: #000000;background: #FFFFFF;}
 .propbox a:link {color: rgb(115,115,115); background: none;}
@@ -321,11 +325,12 @@ li.plupload_droptext {color:#999;}
 #trash_bin.ui-state-hover {
 	border: #2f2f2f 1px solid;
 	background: #000;
-	background: rgba(0, 0, 0, 0.55);
-	color: #d7d7d7;
+	background: rgba(0, 0, 0, 0.8);
+	/*color: #d7d7d7;*/
+	color: #fff;
 }
 #trash_bin.ui-state-active, .ui-state-active {border: 1px solid #d0d0d0;background: rgba(114, 22, 37, 0.51);}
-#trash_bin {border-top-right-radius: 10% 150px;border-bottom-right-radius: 10% 150px;}
+#trash_bin {border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;}
 .trash_bin_text {color: #fff;}
 .ui-draggable-dragging {border: 2px solid; transition: none;}
 
@@ -443,4 +448,22 @@ input:checked + .customFieldLabel, .keywordselected
 
 .ui-button .ui-icon {
     background-image: none;
+}
+
+/* Browse bar */
+#BrowseBar a, #BrowseBarTab, #BrowseBarTab a:hover
+    {
+  color: #fff;
+  }
+
+.BrowseBarText {color: #fff;}
+
+/*
+.ui-layout-resizer-west {background-color: rgba(0,0,0,0)}
+.ui-layout-resizer-west-hover {background-color:rgba(0,0,0,0.3);}
+.ui-layout-resizer-west-dragging {background-color:#2b2b2b;}
+*/
+
+.BrowseBarItem.ui-droppable-hover .BrowseBarLink a{
+    border: 2px solid #FFF;
 }

@@ -3697,7 +3697,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 	
 	global $userref,$usereditfilter,$edit_access_for_contributor;
 
-    $plugincustomeditaccess = hook('customediteaccess');
+    $plugincustomeditaccess = hook('customediteaccess','',array($resource,$status,$resourcedata));
 
     if($plugincustomeditaccess)
         {

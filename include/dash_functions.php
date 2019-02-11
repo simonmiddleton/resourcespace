@@ -468,11 +468,9 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
 		</a>
 		<?php
 		}
+		
+		render_trash("dash_tile", $lang['confirmdeleteconfigtile']);
 		?>
-		<div id="dash_tile_bin"><span class="dash_tile_bin_text"><?php echo $lang["tilebin"];?></span></div>
-		<div id="delete_dialog" style="display:none;"></div>
-		<div id="delete_permanent_dialog" style="display:none;text-align:left;"><?php echo $lang['confirmdeleteconfigtile'];?></div>
-	
 		<script>
             function deleteDefaultDashTile(id)
                 {
@@ -1131,10 +1129,9 @@ function get_user_dash($user)
 		}
 	# Check Permissions to Display Deleting Dash Tiles
 	if((checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h")) || !checkperm("dtu"))
-		{ ?>
-		<div id="dash_tile_bin"><span class="dash_tile_bin_text"><?php echo $lang["tilebin"];?></span></div>
-		<div id="delete_dialog" style="display:none;"></div>
-		<div id="delete_permanent_dialog" style="display:none;text-align:left;"><?php echo $lang['confirmdeleteconfigtile'];?></div>
+		{ 
+		render_trash("dash_tile", $lang['confirmdeleteconfigtile']);
+		?>
 		<script>
 			function deleteDashTile(id) {
 				jQuery.post(

@@ -99,9 +99,8 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 		{
 		# No redirect, we stay on this page. Reload the collection info.
 		$collection=get_collection($ref);
-		}
+        }
 	}
-
 	
 include "../include/header.php";
 ?>
@@ -349,6 +348,12 @@ include "../include/header.php";
 </form>
 </div>
 
-<?php		
+<?php
+
+if(getval("reload","") == "true" && getval("ajax","") != "")
+    {
+    refresh_collection_frame();
+    }    
+    
 include "../include/footer.php";
 ?>

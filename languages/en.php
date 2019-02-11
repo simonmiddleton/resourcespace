@@ -1671,24 +1671,6 @@ $lang["stars"]="Stars";
 
 $lang["noupload"]="No upload";
 
-# System Setup
-# System Setup Tree Nodes (for the default setup tree)
-$lang["treenode-root"]="Root";
-$lang["treenode-group_management"]="Group management";
-$lang["treenode-new_group"]="New group";
-$lang["treenode-new_subgroup"]="New subgroup";
-$lang["treenode-resource_types_and_fields"]="Manage resource types";
-$lang["treenode-new_resource_type"]="New resource type";
-$lang["treenode-new_field"]="New field";
-$lang["treenode-reports"]="Reports";
-$lang["treenode-new_report"]="New report";
-$lang["treenode-downloads_and_preview_sizes"]="Downloads / preview sizes";
-$lang["treenode-new_download_and_preview_size"]="New download / preview size";
-$lang["treenode-database_statistics"]="Database statistics";
-$lang["treenode-permissions_search"]="Permissions search";
-$lang["treenode-no_name"]="(no name)";
-
-$lang["treeobjecttype-preview_size"]="Preview size";
 
 $lang["permissions"]="Permissions";
 
@@ -2142,6 +2124,11 @@ $lang['page-title_size_management_edit'] = "Edit size";
 $lang['page-subtitle_size_management_edit'] = "Use this section to modify size details.";
 $lang["fieldtitle-tick_to_delete_size"] = "Tick to delete this size";
 
+# Resource type management
+$lang["resource_types_manage"]      = "Manage resource types";
+$lang["resource_type_new"]          = "New resource type";
+$lang["resource_type_field_new"]    = "New metadata field";
+
 ##########################################################################################
 # Non page-specific items that need to be merged above when system admin project completed
 ##########################################################################################
@@ -2498,6 +2485,9 @@ $lang['systemconfig_themes_category_split_pages'] = 'Display Featured Collection
 $lang['systemconfig_theme_category_levels'] = 'How many levels of theme category to show?';
 $lang['systemconfig_enable_themes'] = 'Enable Featured Collections';
 $lang["systemconfig_modal_default"] = "Enable modals for standard pages where configured? User preferences may override this.";
+$lang['systemconfig_browse_bar_section'] = 'Browse Bar';
+$lang['systemconfig_browse_bar_enable'] = 'Enable Browse Bar';
+$lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse Bar';
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
@@ -2777,3 +2767,14 @@ $lang["filter_is_in"]               = "IS ";
 $lang["filter_is_not_in"]           = "IS NOT ";
 $lang["filter_or"]                  = "OR";
 $lang["filter_and"]                 = "AND";
+$lang['see_log'] = "Please refer to the log below for more details on this upload.";$lang['login_word'] = "Login";$lang["edit_copy_from_field"]       = "Copy data from field";
+
+
+/* Browse bar */
+$lang['browse_bar_text']                = "Browse";
+$lang['field_show_in_browse_bar']       = "Show in Browse Bar";
+$lang['error-sessionexpired']           = "Your session has expired or is otherwise invalid";
+$lang['error-invalid_resource_type']    = "Invalid resource type";
+$lang['error-invalid_browse_action']    = "Invalid action. Please check existing resource data";
+$lang['browse_by_tag']                  = "Browse by tag";
+$lang['browse_by_workflow_state']       = "Workflow";

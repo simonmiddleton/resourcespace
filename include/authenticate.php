@@ -192,7 +192,18 @@ if (!$valid && !isset($system_login))
     $path = $_SERVER["REQUEST_URI"];
     
     if(strpos($path,"/ajax") !== false)
-        {
+        {		
+        if(isset($_COOKIE["user"]))
+            {
+            http_response_code(401);
+            exit($lang['error-sessionexpired']);
+            }
+        else
+            {
+            http_response_code(403);
+            exit($lang['error-permissiondenied']);
+            }
+        
         // This is a call to a page intended to be loaded via ajax - probably now failed due to auto logout
         if(isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],"login.php") === false)
             {

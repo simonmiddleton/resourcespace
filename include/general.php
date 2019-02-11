@@ -430,7 +430,8 @@ function get_resource_type_field($field)
                 automatic_nodes_ordering,
                 fits_field,
                 personal_data,
-                include_in_csv_export" . hook('add_resource_type_field_column') . "
+                include_in_csv_export,
+                browse_bar" . hook('add_resource_type_field_column') . "
            FROM resource_type_field
           WHERE ref = '{$field}'
     ";
@@ -6048,7 +6049,8 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                automatic_nodes_ordering,
                fits_field,
                personal_data,
-               include_in_csv_export
+               include_in_csv_export,
+               browse_bar
           FROM resource_type_field" . $conditionsql . " ORDER BY " . escape_check($field_order_by) . " " . escape_check($field_sort));
 
     return $allfields;
@@ -7609,4 +7611,19 @@ function copy_filter($filter)
         }
 
     return $newfilter;
+    }
+    
+/**
+* Utility to check if browse bar should be rendered
+*  
+* @return boolean
+*/   
+function has_browsebar()
+    {
+    global $username, $pagename,$not_authenticated_pages, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
+    return isset($username)
+    && !in_array($pagename, $not_authenticated_pages)
+    && ('' == $k || $internal_share_access)
+    && $browse_bar;
+    //   && false == $loginterms ?
     }

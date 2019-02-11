@@ -2227,7 +2227,7 @@ function renderCallToActionTile($link)
         <a href="<?php echo $link; ?>" onclick="return ModalLoad(this, true, true);" class="">
             <div class="FeaturedSimpleTileContents">
                 <div class="FeaturedSimpleTileText">
-                    <h2><span class='fa fa-plus-circle fa-2x'></span></h2>
+                    <h2><span class='fas fa-plus-circle'></span></h2>
                 </div>
             </div>
         </a>
@@ -2616,3 +2616,137 @@ function render_upload_here_button(array $search_params)
 
     return render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click, UPLOAD_ICON);
     }
+
+/**
+* Renders the trash bin. This is used to delete dash tiles and remove resources from collections
+* 
+* @param string $type   type of trash_bin
+* 
+* @return void
+*/ 
+
+function render_trash($type, $deletetext,$forjs=false)
+    {
+    $trash_html = '<div id="' . $type . '_bin" class="trash_bin"><span class="trash_bin_text"><i class="fa fa-trash" aria-hidden="true"></i></span></div>
+    <div id="trash_bin_delete_dialog" style="display:none;"></div>
+    <div id="delete_permanent_dialog" style="display:none;text-align:left;">'  . $deletetext . '</div>
+';
+    if($forjs)
+        {
+        return str_replace(array("\r","\n"),"",$trash_html);
+        }
+    else
+        {
+        echo $trash_html;
+        }
+    }
+
+/**
+* Renders the browse bar
+*  
+* @return void
+*/ 
+
+function render_browse_bar()
+    {
+    global $lang, $browse_bar_workflow, $browse_show;
+    $bb_html = '<div id="BrowseBarContainer" class="ui-layout-west" >';
+    $bb_html .= '<div id="BrowseBar" class="BrowseBar" ' . ($browse_show ?  '' : 'style="display:none;"') . '>';
+    $bb_html .= '<div id="BrowseBarContent" >'; 
+    
+    //Browse row template
+    // script will replace %BROWSE_TYPE%, %BROWSE_EXPAND_CLASS%, %BROWSE_CLASS% %BROWSE_LEVEL%, %BROWSE_EXPAND%, %BROWSE_NAME%, %BROWSE_TEXT%, %BROWSE_ID%
+    $bb_html .= "
+            <div id='BrowseBarTemplate' style='display: none;'>
+            <div class='BrowseBarItem BrowseRowOuter %BROWSE_DROP%' data-browse-id='%BROWSE_ID%' data-browse-parent='%BROWSE_PARENT%'  data-browse-loaded='0' data-browse-status='closed' data-browse-level='%BROWSE_LEVEL%' style='display: none;'>
+                <div class='BrowseRowInner' >
+                    %BROWSE_INDENT%
+                    %BROWSE_EXPAND%
+                    <div class='BrowseBarStructure BrowseType%BROWSE_CLASS%'></div>
+                    %BROWSE_TEXT%
+                    %BROWSE_REFRESH%
+                </div><!-- End of BrowseRowInner -->
+            </div><!-- End of BrowseRowOuter -->
+            </div><!-- End of BrowseBarTemplate -->
+            ";
+
+    // Add root elements
+    $bb_html .= generate_browse_bar_item("R", $lang['browse_by_tag']);
+    $bb_html .= generate_browse_bar_item("FC", $lang["themes"]);
+    $bb_html .= generate_browse_bar_item("C", $lang["mycollections"]);
+    if($browse_bar_workflow)
+        {
+        $bb_html .= generate_browse_bar_item("WF", $lang['browse_by_workflow_state']);
+        }
+
+    $bb_html .= '</div><!-- End of BrowseBarContent -->
+                </div><!-- End of BrowseBar -->
+                    <div id="BrowseBarTab" ><a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div class="BrowseBarTabText">' . $lang['browse_bar_text'] . '</div></a></div><!-- End of BrowseBarTab -->
+                </div><!-- End of BrowseBarContainer -->
+                
+            ';
+    echo $bb_html;
+    
+    $browsejsvar = $browse_show ? 'show' : 'hide';
+    echo '<script>
+        var browse_show = "' . $browsejsvar . '";
+        SetCookie("browse_show", "' . $browsejsvar . '");
+        b_loading = new Array();
+        // Expand tree to previous state based on stored cookie
+        jQuery(document).ready(function()
+            {
+            ReloadBrowseBar();
+            });
+        </script>';
+    }
+
+/*
+Tag - child is resource_type expand, show restypes, no link
+ - get resource types
+
+resource_type - child is metadata field
+
+metadata field - child is node
+
+node - if cat tree - child is node, expand else none
+
+featured- child is first cat
+
+collection - child is collection name/ref
+
+workflow - child is archive states
+
+archive states -  child is metadata field
+- if archive, has extra fields
+*/
+
+
+/**
+* Generates a root row item for the browse bar
+*  
+* @return void
+*/    
+function generate_browse_bar_item($id, $text)
+	{
+	//global $browse_bar_elements;
+    $html = '<div class="BrowseBarItem BrowseRowOuter BrowseBarRoot" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
+    $html .= '<div class="BrowseRowInner" >';
+	
+    $html .= '<div class="BrowseBarStructure">
+            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" ></a>
+            </div><!-- End of BrowseBarStructure -->';	
+    $html .= '<div class="BrowseBarLink" >' . $text . '</div>';
+    
+    $html .= '<a href="#" class="BrowseRefresh " onclick="toggleBrowseElements(\'' . $id . '\',true, true);" ><i class="fas fa-sync reloadicon"></i></a>';	
+    
+    $html .= "</div><!-- End of BrowseRowInner -->
+            </div><!-- End of BrowseRowOuter -->";
+	return $html;
+	}
+	
+	
+	
+	
+	
+	
+	
