@@ -1261,7 +1261,7 @@ $lang["more-information"]="More information";
 $lang["setup-structuralplugins"]="System templates";
 $lang["setup-headercolourstyleoverride"]="Custom header background colour";
 $lang["setup-headerlinkstyleoverride"]="Custom header link colour";
-$lang["setup-homecolourstyleoverride"]="Custom intro text, dash tile and simple search colour";
+$lang["setup-homecolourstyleoverride"]="Custom intro text, dash tile, browse bar and simple search colour";
 $lang["setup-collectionbarbackground"]="Custom collection bar primary colour";
 $lang["setup-collectionbarforeground"]="Custom collection bar secondary colour";
 
