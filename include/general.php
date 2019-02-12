@@ -107,7 +107,7 @@ function get_resource_path(
         global $get_resource_path_fpcache;
         truncate_cache_arrays();
 
-        if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=sql_value("select file_path value from resource where ref='$ref'","");}
+        if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=sql_value("select file_path value from resource where ref='" . escape_check($ref) . "'","");}
         $fp=$get_resource_path_fpcache[$ref];
         
         # Test to see if this nosize file is of the extension asked for, else skip the file_path and return a $storagedir path. 
@@ -237,7 +237,7 @@ function get_resource_path(
         {
         $size='';
         $icc=true;
-        $extension=sql_value("select file_extension value from resource where ref={$ref}", 'jpg');
+        $extension=sql_value("select file_extension value from resource where ref=" . escape_check($ref), 'jpg');
         }
             
         
@@ -332,7 +332,7 @@ function get_resource_data($ref,$cache=true)
     global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
     truncate_cache_arrays();
     if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
-    $resource=sql_query("select *,mapzoom from resource where ref='$ref'");
+    $resource=sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
     if (count($resource)==0) 
         {
         if ($ref>0)
@@ -351,8 +351,8 @@ function get_resource_data($ref,$cache=true)
                     $user = $userref;
                     }
                 else {$user = -1;}
-                $wait = sql_query("insert into resource (ref,resource_type,created_by) values ('$ref','$default_resource_type','$user')");
-                $resource = sql_query("select *,mapzoom from resource where ref='$ref'");
+                $wait = sql_query("insert into resource (ref,resource_type,created_by) values ('" . escape_check($ref) . "','$default_resource_type','$user')");
+                $resource = sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
                 }
             }
         }
@@ -462,7 +462,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     # Find the resource type.
     if ($originalref==-1) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
-    $rtype = sql_value("select resource_type value FROM resource WHERE ref='$originalref'",0);
+    $rtype = sql_value("select resource_type value FROM resource WHERE ref='" . escape_check($originalref) . "'",0);
 
     # If using metadata templates, 
     $templatesql = "";
@@ -488,7 +488,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f1.include_in_csv_export
                FROM resource_type_field AS f1
           LEFT JOIN resource_data d
-                 ON d.resource_type_field = f1.ref AND d.resource = '{$ref}'
+                 ON d.resource_type_field = f1.ref AND d.resource = '" . escape_check($ref) . "'
               WHERE (
                             f1.type NOT IN ({$node_fields_list})
                         AND (" . ($multi ? "1 = 1" : "f1.resource_type = 0 OR f1.resource_type = 999 OR f1.resource_type = '{$rtype}'") . ")
@@ -496,7 +496,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
               UNION
 
-             SELECT group_concat(if(rn.resource = '{$ref}', n.name, NULL)) AS `value`,
+             SELECT group_concat(if(rn.resource = '" . escape_check($ref) . "', n.name, NULL)) AS `value`,
                     n.resource_type_field,
                     f2.*,
                     f2.required AS frequired,
@@ -507,7 +507,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f2.include_in_csv_export
                FROM resource_type_field AS f2
           LEFT JOIN node AS n ON n.resource_type_field = f2.ref
-          LEFT JOIN resource_node AS rn ON rn.node = n.ref AND rn.resource = '{$ref}'
+          LEFT JOIN resource_node AS rn ON rn.node = n.ref AND rn.resource = '" . escape_check($ref) . "'
               WHERE (
                             f2.type IN ({$node_fields_list})
                         AND (" . ($multi ? "1 = 1" : "f2.resource_type = 0 OR f2.resource_type = 999 OR f2.resource_type = '{$rtype}'") . ")
@@ -1194,7 +1194,7 @@ function tidy_trim($text,$length)
 function get_related_resources($ref)
     {
     # Return an array of resource references that are related to resource $ref
-    return sql_array("select related value from resource_related where resource='$ref' union select resource value from resource_related where related='$ref'");
+    return sql_array("select related value from resource_related where resource='" . escape_check($ref) . "' union select resource value from resource_related where related='" . escape_check($ref) . "'");
     }
     
 function average_length($array)

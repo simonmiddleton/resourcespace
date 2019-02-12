@@ -1107,7 +1107,7 @@ function add_resource_nodes($resourceid,$nodes=array(), $checkperms = true)
     if(!is_array($nodes))
         {$nodes=array($nodes);}
 
-    sql_query("insert into resource_node (resource, node) values ('" . $resourceid . "','" . implode("'),('" . $resourceid . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
+    sql_query("insert into resource_node (resource, node) values ('" . escape_check($resourceid) . "','" . implode("'),('" . escape_check($resourceid) . "','",$nodes) . "') ON DUPLICATE KEY UPDATE hit_count=hit_count");
 
     $field_nodes_arr = array();
     foreach ($nodes as $node)
@@ -1153,13 +1153,19 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
 
     if(!is_array($nodes))
         {$nodes=array($nodes);}
-        
+
+    $nodes_escaped=[];
+    foreach($nodes as $node)
+        {
+        array_push($nodes_escaped, escape_check($node));
+        }
+
     $sql = "insert into resource_node (resource, node) values ";
     $nodesql = "";
     foreach($resources as $resource)
         {
         if($nodesql!=""){$nodesql .= ",";}
-        $nodesql .= " ('" . $resource . "','" . implode("'),('" . $resource . "','",$nodes) . "') ";
+        $nodesql .= " ('" . escape_check($resource) . "','" . implode("'),('" . escape_check($resource) . "','",$nodes_escaped) . "') ";
         }
     $sql = "insert into resource_node (resource, node) values " . $nodesql . "  ON DUPLICATE KEY UPDATE hit_count=hit_count";
     sql_query($sql);
@@ -1342,7 +1348,7 @@ function get_parent_nodes($noderef)
     $topnode=false;
     do
         {
-        $node=sql_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref='" . $noderef . "' ");
+        $node=sql_query("select n.parent, pn.name from node n join node pn on pn.ref=n.parent where n.ref='" . escape_check($noderef) . "' ");
         if(empty($node[0]["parent"]))
             {
             $topnode=true;

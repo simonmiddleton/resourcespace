@@ -13,12 +13,12 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 	if ($find=="!shared")
 		{
 		# only return shared collections
-		$sql=" where (public='1' or c.ref in (select distinct collection from user_collection where user<>'$user' union select distinct collection from external_access_keys))";				
+		$sql=" where (public='1' or c.ref in (select distinct collection from user_collection where user<>'" . escape_check($user) . "' union select distinct collection from external_access_keys))";				
 		}
 	elseif (strlen($find)==1 && !is_numeric($find))
 		{
 		# A-Z search
-		$sql=" where c.name like '$find%'";
+		$sql=" where c.name like '" . escape_check($find) . "%'";
 		}
 	elseif (strlen($find)>1 || is_numeric($find))
 		{  
@@ -70,11 +70,11 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 	$order_sort="";
 	if ($order_by!="name"){$order_sort=" order by $order_by $sort";}
    
-	$return="select * from (select c.*,u.username,u.fullname,count(r.resource) count from user u join collection c on u.ref=c.user and c.user='$user' left outer join collection_resource r on c.ref=r.collection $sql $extrasql group by c.ref
+	$return="select * from (select c.*,u.username,u.fullname,count(r.resource) count from user u join collection c on u.ref=c.user and c.user='" . escape_check($user) . "' left outer join collection_resource r on c.ref=r.collection $sql $extrasql group by c.ref
 	union
-	select c.*,u.username,u.fullname,count(r.resource) count from user_collection uc join collection c on uc.collection=c.ref and uc.user='$user' and c.user<>'$user' left outer join collection_resource r on c.ref=r.collection left join user u on c.user=u.ref $sql group by c.ref
+	select c.*,u.username,u.fullname,count(r.resource) count from user_collection uc join collection c on uc.collection=c.ref and uc.user='" . escape_check($user) . "' and c.user<>'" . escape_check($user) . "' left outer join collection_resource r on c.ref=r.collection left join user u on c.user=u.ref $sql group by c.ref
 	union
-	select c.*,u.username,u.fullname,count(r.resource) count from usergroup_collection gc join collection c on gc.collection=c.ref and gc.usergroup='$usergroup' and c.user<>'$user' left outer join collection_resource r on c.ref=r.collection left join user u on c.user=u.ref $sql group by c.ref) clist $keysql group by ref $order_sort";
+	select c.*,u.username,u.fullname,count(r.resource) count from usergroup_collection gc join collection c on gc.collection=c.ref and gc.usergroup='$usergroup' and c.user<>'" . escape_check($user) . "' left outer join collection_resource r on c.ref=r.collection left join user u on c.user=u.ref $sql group by c.ref) clist $keysql group by ref $order_sort";
 
 	$return=sql_query($return);
 	
@@ -111,15 +111,15 @@ if (!function_exists("get_collection")){
 function get_collection($ref)
 	{
 	# Returns all data for collection $ref
-	$return=sql_query("select c.*, c.theme2, c.theme3, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image,c.session_id from collection c left outer join user u on u.ref = c.user where c.ref = '$ref'");
+	$return=sql_query("select c.*, c.theme2, c.theme3, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image,c.session_id from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
 	if (count($return)==0) {return false;} else 
 		{
 		$return=$return[0];
-		$return["users"]=join(", ",sql_array("select u.username value from user u,user_collection c where u.ref=c.user and c.collection='$ref' order by u.username"));
+		$return["users"]=join(", ",sql_array("select u.username value from user u,user_collection c where u.ref=c.user and c.collection='" . escape_check($ref) . "' order by u.username"));
 		global $attach_user_smart_groups,$lang;
 		if($attach_user_smart_groups)
 			{
-			$return["groups"]=join(", ",sql_array("select concat('{$lang["groupsmart"]}: ',u.name) value from usergroup u,usergroup_collection c where u.ref=c.usergroup and c.collection='$ref' order by u.name"));
+			$return["groups"]=join(", ",sql_array("select concat('{$lang["groupsmart"]}: ',u.name) value from usergroup u,usergroup_collection c where u.ref=c.usergroup and c.collection='" . escape_check($ref) . "' order by u.name"));
 			}
 			
 		global $userref,$k,$attach_user_smart_groups;
@@ -127,12 +127,12 @@ function get_collection($ref)
 		if ($return["user"]!=$userref)
 			{
 			# If this is not the user's own collection, fetch the user_collection row so that the 'request_feedback' property can be returned.
-			$request_feedback=sql_value("select request_feedback value from user_collection where collection='$ref' and user='$userref'",0);
+			$request_feedback=sql_value("select request_feedback value from user_collection where collection='" . escape_check($ref) . "' and user='$userref'",0);
 			if(!$request_feedback && $attach_user_smart_groups && $k=="")
 				{
 				# try to set via usergroup_collection
 				global $usergroup;
-				$request_feedback=sql_value("select request_feedback value from usergroup_collection where collection='$ref' and usergroup=$usergroup",0);
+				$request_feedback=sql_value("select request_feedback value from usergroup_collection where collection='" . escape_check($ref) . "' and usergroup=$usergroup",0);
 				}
 			}
 		if ($k!="")
@@ -170,7 +170,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 		{
 		if($addtype=="")
 			{
-			$addtype=sql_value("select resource_type value from resource where ref='" . $resource . "'",0);
+			$addtype=sql_value("select resource_type value from resource where ref='" . escape_check($resource) . "'",0);
 			}
 		if(in_array($addtype,$collection_block_restypes))
 			{
@@ -185,7 +185,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 		$keys=get_collection_external_access($collection);
 		if (count($keys)>0)
 			{
-			$archivestatus=sql_value("select archive as value from resource where ref='$resource'","");
+			$archivestatus=sql_value("select archive as value from resource where ref='" . escape_check($resource) . "'","");
 			if ($archivestatus<0 && !$collection_allow_not_approved_share) {global $lang; $lang["cantmodifycollection"]=$lang["notapprovedresources"] . $resource;return false;}
 			
 			// Check if user can share externally and has open access. We shouldn't add this if they can't share externally, have restricted access or only been granted access
@@ -194,7 +194,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 			# Set the flag so a warning appears.
 			global $collection_share_warning;
 			# Check to see if all shares have expired
-			$expiry_dates=sql_array("select distinct expires value from external_access_keys where collection=$collection");
+			$expiry_dates=sql_array("select distinct expires value from external_access_keys where collection=". escape_check($collection));
 			$datetime=time();
 			$collection_share_warning=true;
 			foreach($expiry_dates as $key => $date) {
@@ -206,7 +206,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 				# Insert a new access key entry for this resource/collection.
 				global $userref;
 				
-				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('$resource','" . escape_check($keys[$n]["access_key"]) . "','$userref','$collection',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
+				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
 				
 				#log this
 				collection_log($collection,"s",$resource, $keys[$n]["access_key"]);
@@ -218,8 +218,8 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 		
 		if(!hook("addtocollectionsql", "", array( $resource,$collection, $size)))
 			{
-			sql_query("delete from collection_resource where resource='$resource' and collection='$collection'");
-			sql_query("insert into collection_resource(resource,collection,purchase_size) values ('$resource','$collection','$size')");
+			sql_query("delete from collection_resource where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
+			sql_query("insert into collection_resource(resource,collection,purchase_size) values ('" . escape_check($resource) . "','" . escape_check($collection) . "','$size')");
 			}
 		
 		#log this
@@ -241,8 +241,8 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
 		
 		if(!hook("removefromcollectionsql", "", array( $resource,$collection, $size)))
 			{
-			sql_query("delete from collection_resource where resource='$resource' and collection='$collection'");
-			sql_query("delete from external_access_keys where resource='$resource' and collection='$collection'");
+			sql_query("delete from collection_resource where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
+			sql_query("delete from external_access_keys where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
 			}
 		
 		#log this
@@ -271,8 +271,8 @@ function collection_writeable($collection)
 		}
 	
 	# Load a list of attached users
-	$attached=sql_array("select user value from user_collection where collection='$collection'");
-	$attached_groups=sql_array("select usergroup value from usergroup_collection where collection='$collection'");
+	$attached=sql_array("select user value from user_collection where collection='" . escape_check($collection) . "'");
+	$attached_groups=sql_array("select usergroup value from usergroup_collection where collection='" . escape_check($collection) . "'");
 	
 	// Can edit if 
 	// - The user owns the collection (if we are anonymous user and are using session collections then this must also have the same session id )
@@ -359,7 +359,7 @@ if (!function_exists("create_collection")){
 function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false,$categories=array())
 	{
 	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
-	debug("create_collection(\$userid = {$userid}, \$name = {$name}, \$ref = {$ref})");
+	debug("create_collection(\$userid = {$userid}, \$name = {$name}, \$ref = " . escape_check($ref));
 	if($username==$anonymous_login && $anonymous_user_session_collection)
 		{		
 		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
@@ -383,7 +383,7 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
 			}
 		}
 	# Creates a new collection and returns the reference
-	sql_query("insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")");
+	sql_query("insert into collection (" . (escape_check($ref)!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . (escape_check($ref)!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")");
 	//echo "insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")" . "\n";
 	$ref=sql_insert_id();
 
@@ -454,7 +454,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 	if (strlen($search)==1 && !is_numeric($search)) 
 		{
 		# A-Z search
-		$sql="and c.name like '$search%'";
+		$sql="and c.name like '" . escape_check($search) . "%'";
 		}
 	elseif (substr($search,0,16)=="collectiontitle:")
 	    {
@@ -504,7 +504,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 			}
         
         global $search_public_collections_ref;
-        if ($search_public_collections_ref && is_numeric($search)){$spcr="or c.ref='$search'";} else {$spcr="";}    
+        if ($search_public_collections_ref && is_numeric($search)){$spcr="or c.ref='" . escape_check($search) . "'";} else {$spcr="";}    
 		//$sql.="and (c.name rlike '%$search%' or u.username rlike '%$search%' or u.fullname rlike '%$search%' $spcr )";
 		}
 

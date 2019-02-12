@@ -56,12 +56,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $staticsync_mod="";
                 }
     
-            sql_query("delete from resource_data where resource=$ref $staticsync_mod");
-            sql_query("delete from resource_keyword where resource=$ref $staticsync_mod");
+            sql_query("delete from resource_data where resource=" . escape_check($ref) . " $staticsync_mod");
+            sql_query("delete from resource_keyword where resource=" . escape_check($ref) . " $staticsync_mod");
 
             #also add the ref back into keywords:
             add_keyword_mappings($ref, $ref , -1);
-            $extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
+            $extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'","");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
             }
@@ -165,7 +165,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
             hook("beforeremoveexistingfile", "", array( "resourceId" => $ref ) );
 
-            $old_extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
+            $old_extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'","");
             if ($old_extension!="") 
                 {
                 $old_path=get_resource_path($ref,true,"",true,$old_extension);
@@ -277,12 +277,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         {
         $has_image=",has_image=0";
         }
-    sql_query("update resource set file_extension='$extension',preview_extension='jpg',file_modified=now() $has_image where ref='$ref'");
+    sql_query("update resource set file_extension='$extension',preview_extension='jpg',file_modified=now() $has_image where ref='" . escape_check($ref) . "'");
     
     if(!$upload_then_process || $after_upload_processing)
         {
         # delete existing resource_dimensions
-        sql_query("delete from resource_dimensions where resource='$ref'");
+        sql_query("delete from resource_dimensions where resource='" . escape_check($ref) . "'");
         
         # get file metadata 
         if(!$no_exif) 
@@ -448,7 +448,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             $checksum_required=true;
             if($file_upload_block_duplicates && isset($checksum))
                 {
-                sql_query("update resource set file_checksum='" . escape_check($checksum) . "' where ref='$ref'");
+                sql_query("update resource set file_checksum='" . escape_check($checksum) . "' where ref='" . escape_check($ref) . "'");
                 $checksum_required=false;
                 }
             if ($enable_thumbnail_creation_on_upload)
@@ -471,7 +471,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 {
                 # Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
                 delete_previews($ref);
-                sql_query("update resource set has_image=0 where ref='$ref'");
+                sql_query("update resource set has_image=0 where ref='" . escape_check($ref) . "'");
                 }
             }
     
@@ -492,7 +492,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         global $upload_then_process_holding_state;
         if(isset($upload_then_process_holding_state))
             {
-            $job_data["archive"]=sql_value("SELECT archive value from resource where ref={$ref}", "");
+            $job_data["archive"]=sql_value("SELECT archive value from resource where ref=" . escape_check($ref) . "", "");
             update_archive_status($ref, $upload_then_process_holding_state);
             }
         

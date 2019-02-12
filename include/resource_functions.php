@@ -37,7 +37,7 @@ function create_resource($resource_type,$archive=999,$user=-1)
     else
         {$user=-1;}
         
-	sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'$archive','$user')");
+	sql_query("insert into resource(resource_type,creation_date,archive,created_by) values ('$resource_type',now(),'" . escape_check($archive) . "','$user')");
 	
 	$insert=sql_insert_id();
 	
@@ -2036,10 +2036,10 @@ function copy_resource($from,$resource_type=-1)
 	# rather than simply copied from the $from resource.
 	
 	# Check that the resource exists
-	if (sql_value("select count(*) value from resource where ref='$from'",0)==0) {return false;}
+	if (sql_value("select count(*) value from resource where ref='". escape_check($from) . "'",0)==0) {return false;}
 	
 	$add="";
-	$archive=sql_value("select archive value from resource where ref='$from'",0);
+	$archive=sql_value("select archive value from resource where ref='". escape_check($from) . "'",0);
 	
     if ($archive == "") // Needed if user does not have a user template 
         {
@@ -2057,7 +2057,7 @@ function copy_resource($from,$resource_type=-1)
 		}
         
 	# First copy the resources row
-	sql_query("insert into resource($add resource_type,creation_date,rating,archive,access,created_by) select $add" . (($resource_type==-1)?"resource_type":("'" . $resource_type . "'")) . ",now(),rating,'" . $archive . "',access,created_by from resource where ref='$from';");
+	sql_query("insert into resource($add resource_type,creation_date,rating,archive,access,created_by) select $add" . (($resource_type==-1)?"resource_type":("'" . $resource_type . "'")) . ",now(),rating,'" . $archive . "',access,created_by from resource where ref='" . escape_check($from) . "';");
 	$to=sql_insert_id();
 	
 	# Set that this resource was created by this user. 
@@ -2086,7 +2086,7 @@ function copy_resource($from,$resource_type=-1)
     copyRelatedResources($from, $to);
 
 	# Copy access
-	sql_query("insert into resource_custom_access(resource,usergroup,access) select '$to',usergroup,access from resource_custom_access where resource='$from'");
+	sql_query("insert into resource_custom_access(resource,usergroup,access) select '$to',usergroup,access from resource_custom_access where resource='". escape_check($from) . "'");
 
     // Set any resource defaults
     // Expected behaviour: set resource defaults only on upload and when
@@ -2198,8 +2198,8 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         {
         sql_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `purchase_size`, " .
             "`purchase_price`, `access_key`, `previous_value`) VALUES (now()," .
-            (($userref != "") ? "'$userref'" : "null") . ",'{$resource}','{$type}'," . (($field=="") ? "null" : "'{$field}'") . ",'" . escape_check($notes) . "','" .
-            escape_check($diff) . "','{$usage}','{$purchase_size}','{$purchase_price}'," . ((isset($k) && !$internal_share_access) ? "'{$k}'" : "null") . ",'" . escape_check($fromvalue) . "')");
+            (($userref != "") ? "'" . escape_check($userref) . "'" : "null") . ",'" . escape_check($resource) . "','" . escape_check($type) . "'," . (($field=="") ? "null" : "'" . escape_check($field) . "'") . ",'" . escape_check($notes) . "','" .
+            escape_check($diff) . "','" . escape_check($usage) . "','" . escape_check($purchase_size) . "','" . escape_check($purchase_price) . "'," . ((isset($k) && !$internal_share_access) ? "'{$k}'" : "null") . ",'" . escape_check($fromvalue) . "')");
         $log_ref = sql_insert_id();
         $resource_log_previous_ref = $log_ref;
         return $log_ref;
@@ -2335,7 +2335,7 @@ function get_custom_access($resource,$usergroup,$return_default=true)
 	global $custom_access,$default_customaccess;
 	if ($custom_access==false) {return 0;} # Custom access disabled? Always return 'open' access for resources marked as custom.
 
-	$result=sql_value("select access value from resource_custom_access where resource='$resource' and usergroup='$usergroup'",'');
+	$result=sql_value("select access value from resource_custom_access where resource='" . escape_check($resource) . "' and usergroup='$usergroup'",'');
 	if($result=='' && $return_default)
 		{
 		return $default_customaccess;
@@ -2386,12 +2386,12 @@ function update_resource_type($ref,$type)
         return false;
         }
         
-	sql_query("update resource set resource_type='$type' where ref='$ref'");
+	sql_query("update resource set resource_type='$type' where ref='" . escape_check($ref) . "'");
 	
 	# Clear data that is no longer needed (data/keywords set for other types).
-	sql_query("delete from resource_data where resource='$ref' and resource_type_field not in (select ref from resource_type_field where resource_type='$type' or resource_type=999 or resource_type=0)");
-	sql_query("delete from resource_keyword where resource='$ref' and resource_type_field>0 and resource_type_field not in (select ref from resource_type_field where resource_type='$type' or resource_type=999 or resource_type=0)");
-	sql_query("delete from resource_node where resource='$ref' and node>0 and node not in (select n.ref from node n left join resource_type_field rf on n.resource_type_field=rf.ref where rf.resource_type='$type' or rf.resource_type=999 or resource_type=0)");	
+	sql_query("delete from resource_data where resource='" . escape_check($ref) . "' and resource_type_field not in (select ref from resource_type_field where resource_type='$type' or resource_type=999 or resource_type=0)");
+	sql_query("delete from resource_keyword where resource='" . escape_check($ref) . "' and resource_type_field>0 and resource_type_field not in (select ref from resource_type_field where resource_type='$type' or resource_type=999 or resource_type=0)");
+	sql_query("delete from resource_node where resource='" . escape_check($ref) . "' and node>0 and node not in (select n.ref from node n left join resource_type_field rf on n.resource_type_field=rf.ref where rf.resource_type='$type' or rf.resource_type=999 or resource_type=0)");	
     
     # Also index the resource type name, unless disabled
     global $index_resource_type;
@@ -2872,7 +2872,7 @@ function get_alternative_files($resource,$order_by="",$sort="")
 	
 function add_alternative_file($resource,$name,$description="",$file_name="",$file_extension="",$file_size=0,$alt_type='')
 	{
-	sql_query("insert into resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) values ('$resource','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check($file_size) . "','" . escape_check($alt_type) . "')");
+	sql_query("insert into resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) values ('" . escape_check($resource) . "','" . escape_check($name) . "',now(),'" . escape_check($description) . "','" . escape_check($file_name) . "','" . escape_check($file_extension) . "','" . escape_check($file_size) . "','" . escape_check($alt_type) . "')");
 	return sql_insert_id();
 	}
 	
@@ -2921,7 +2921,7 @@ function delete_alternative_file($resource,$ref)
         }
         
 	# Delete the database row
-	sql_query("delete from resource_alt_files where resource='$resource' and ref='$ref'");
+	sql_query("delete from resource_alt_files where resource='" . escape_check($resource) . "' and ref='" . escape_check($ref) . "'");
 	
 	# Log the deletion
 	resource_log($resource,'y','');
@@ -4277,7 +4277,7 @@ function update_disk_usage($resource)
 	{
 
 	# we're also going to record the size of the primary resource here before we do the entire folder
-	$ext = sql_value("SELECT file_extension value FROM resource where ref = '$resource' AND file_path IS NULL",'jpg');
+	$ext = sql_value("SELECT file_extension value FROM resource where ref = '" . escape_check($resource) . "' AND file_path IS NULL",'jpg');
 	$path = get_resource_path($resource,true,'',false,$ext);
 	if (file_exists($path)){
 		$rsize = filesize_unlimited($path);
@@ -4300,7 +4300,7 @@ function update_disk_usage($resource)
 			}
 		}
 	#echo "<br/>total=" . $total;
-	sql_query("update resource set disk_usage='$total',disk_usage_last_updated=now(),file_size='$rsize' where ref='$resource'");
+	sql_query("update resource set disk_usage='$total',disk_usage_last_updated=now(),file_size='$rsize' where ref='" . escape_check($resource) . "'");
 	return true;
 	}
 
