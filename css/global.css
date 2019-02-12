@@ -1629,8 +1629,8 @@ select.MultiSelect:before {
     padding-left: 10px;
 }
 
-.BrowseBarExpand + .BrowseTypeNode, .BrowseBarExpand + .BrowseTypeRestype, .BrowseBarExpand + .BrowseTypeField, .BrowseBarExpand + .BrowseTypeFeatured{
-    padding-left: 4px;
+.BrowseBarExpand + .BrowseTypeNode, .BrowseBarExpand + a .BrowseTypeRestype, .BrowseBarExpand + .BrowseTypeField, .BrowseBarExpand + a .BrowseTypeFeatured{
+    padding-left: 5px;
 }
 
 .BrowseLine + .BrowseTypeNode, .BrowseLine + .BrowseT
@@ -1643,7 +1643,7 @@ ypeRestype, .BrowseLine + .BrowseTypeField, .BrowseLine + .BrowseTypeNew{
     display: table-cell;
     vertical-align: top;
     white-space: normal;
-    padding-left: 5px;
+    padding-left: 4px;
 }
 
 #BrowseBar .BrowseLine {
