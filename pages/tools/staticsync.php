@@ -450,7 +450,7 @@ function ProcessFolder($folder)
                                         {
                                         # Save the value
                                         $value = $path_parts[$level-1];
-                                        $modifiedval = hook('staticsync_mapvalue','',array($ref, $value));
+                                        $modifiedval = hook('staticsync_mapvalue','',array($r, $value));
                                         if($modifiedval)
                                             {
                                             $value = $modifiedval;
