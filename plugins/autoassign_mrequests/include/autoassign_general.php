@@ -18,6 +18,7 @@ function get_mapped_user_by_field($id, $value)
         $value
     );
 
-    return sql_value($query, 0);
+    $query_escaped = escape_check($query);
+    return sql_value($query_escaped, 0);
 }
 ?>

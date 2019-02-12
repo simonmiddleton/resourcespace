@@ -38,7 +38,8 @@ if(getval('add_new', '') !== '' && enforcePostRequest(false)) {
         $field_new,
         $field_value_new
     );
-    sql_query($query);
+    $query_escaped = escape_check($query);
+    sql_query($query_escaped);
 }
 
 // Get information needed for saving and deleting
@@ -64,7 +65,8 @@ if(getval('save', '') !== '' && enforcePostRequest(false)) {
         $field_value_row,
         $id_row
     );
-    sql_query($save_query);
+    $save_query_escaped = escape_check($save_query);
+    sql_query($save_query_escaped);
 }
 
 // Delete map
@@ -75,7 +77,8 @@ if(getval('delete', '') !== '' && enforcePostRequest(false)) {
         ',
         $id_row
     );
-    sql_query($delete_query);
+    $delete_query_escaped = escape_check($delete_query);
+    sql_query($delete_query_escaped);
 }
 
 
