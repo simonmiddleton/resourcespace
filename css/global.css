@@ -1633,7 +1633,8 @@ select.MultiSelect:before {
     padding-left: 4px;
 }
 
-.BrowseLine + .BrowseTypeNode, .BrowseLine + .BrowseTypeRestype, .BrowseLine + .BrowseTypeField, .BrowseLine + .BrowseTypeNew{
+.BrowseLine + .BrowseTypeNode, .BrowseLine + .BrowseT
+ypeRestype, .BrowseLine + .BrowseTypeField, .BrowseLine + .BrowseTypeNew{
     margin-left: 6px;
 }
 
@@ -1680,7 +1681,7 @@ select.MultiSelect:before {
 }
 
 
-#BrowseBarTab a:hover, .BrowseBarLink a:hover, #BrowseBarTab a:visited, .BrowseBarLink a:visited{
+#BrowseBarTab a:hover, .BrowseBarItem a:hover, #BrowseBarTab a:visited, .BrowseBarItem a:visited{
     text-decoration: none;
     cursor: pointer;
     opacity: 1;

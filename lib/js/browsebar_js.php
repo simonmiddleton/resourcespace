@@ -66,9 +66,11 @@ function renderBrowseItem(node, parent)
     var brwstmplt = jQuery('#BrowseBarTemplate').html();
     brwstmplt = brwstmplt.replace("%BROWSE_DROP%", node.drop ? "BrowseBarDroppable" : "");
     brwstmplt = brwstmplt.replace("%BROWSE_NAME%",node.name);
+                                  
+                                  
     brwstmplt = brwstmplt.replace("%BROWSE_LEVEL%",newlevel);
-    brwstmplt = brwstmplt.replace("%BROWSE_INDENT%",rowindent);        
-    brwstmplt = brwstmplt.replace("%BROWSE_CLASS%",node.class);       
+    brwstmplt = brwstmplt.replace("%BROWSE_INDENT%",rowindent);    
+    
     brwstmplt = brwstmplt.replace("%BROWSE_EXPAND%",expand);
     if(node.link != "")
         {
@@ -81,15 +83,17 @@ function renderBrowseItem(node, parent)
             linkfunction = "return CentralSpaceLoad(this,true);";
             }
         
-        link = "<div class='BrowseBarLink' ><a href='%BROWSE_LINK%' onclick='" + linkfunction + "'>%BROWSE_NAME%</a></div>";
+        link = "<a href='%BROWSE_LINK%' onclick='" + linkfunction + "'><div class='BrowseBarStructure BrowseType%BROWSE_CLASS%'></div><div class='BrowseBarLink' >%BROWSE_NAME%</div></a>";
+        link = link.replace("%BROWSE_CLASS%",node.class);
         link = link.replace("%BROWSE_LINK%",node.link);  
         link = link.replace("%BROWSE_NAME%",node.name);
-        
+        console.log(link);
         brwstmplt = brwstmplt.replace("%BROWSE_TEXT%",link);  
         }
     else
         {
-        var text = "<div class='BrowseBarLink' >%BROWSE_NAME%</div>";
+        var text = "<div class='BrowseBarStructure BrowseType%BROWSE_CLASS%'></div><div class='BrowseBarLink' >%BROWSE_NAME%</div>";
+        text = text.replace("%BROWSE_CLASS%",node.class);
         text = text.replace("%BROWSE_NAME%",node.name);  
         brwstmplt = brwstmplt.replace("%BROWSE_TEXT%",text);
         }
@@ -312,7 +316,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
                 }
             else
                 {			
-                alert(errorpageload  + xhr.status + " " + xhr.statusText + "<br>" + response);		
+                styledalert(errorpageload + xhr.status, xhr.statusText + "<br>" + response);		
                 }
             });
     

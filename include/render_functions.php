@@ -2662,7 +2662,6 @@ function render_browse_bar()
                 <div class='BrowseRowInner' >
                     %BROWSE_INDENT%
                     %BROWSE_EXPAND%
-                    <div class='BrowseBarStructure BrowseType%BROWSE_CLASS%'></div>
                     %BROWSE_TEXT%
                     %BROWSE_REFRESH%
                 </div><!-- End of BrowseRowInner -->
