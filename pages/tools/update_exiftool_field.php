@@ -16,7 +16,7 @@ if (substr($sapi_type, 0, 3) != 'cli')
     header("Content-type: text/plain");
     set_time_limit(0);
     # ex. pages/tools/update_exiftool_field.php?fieldrefs=75,3&blanks=true
-    $fieldrefs = getval("fieldrefs",0);
+    $fieldrefs = getvalescaped("fieldrefs",0);
     if ($fieldrefs==0)
         {
         echo "Please add a list of field IDs to the fieldrefs url parameter, which are the ref numbers of the fields that you would like exiftool to extract from." . PHP_EOL . PHP_EOL;
