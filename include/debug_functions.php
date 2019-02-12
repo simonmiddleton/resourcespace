@@ -36,5 +36,7 @@
 		{
 		sql_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'");
 		$debug_expires += time();
-		sql_query("INSERT INTO sysvars VALUES ('debug_override_user','{$debug_user}'), ('debug_override_expires','{$debug_expires}')");
+		$debug_user_escaped = escape_check($debug_user);
+		$debug_expires_escaped = escape_check($debug_expires);
+		sql_query("INSERT INTO sysvars VALUES ('debug_override_user','{$debug_user_escaped}'), ('debug_override_expires','{$debug_expires_escaped}')");
 		}
