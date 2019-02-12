@@ -1672,7 +1672,7 @@ ypeRestype, .BrowseLine + .BrowseTypeField, .BrowseLine + .BrowseTypeNew{
 .BrowseBarTabText {
     margin-bottom: 10px;
     margin-left: 28px;
-    padding-top: 71px;
+    padding-top: 80px;
     text-transform: capitalize;
     text-align: center;
     transform: rotate(-90deg);
@@ -1681,7 +1681,7 @@ ypeRestype, .BrowseLine + .BrowseTypeField, .BrowseLine + .BrowseTypeNew{
 }
 
 
-#BrowseBarTab a:hover, .BrowseBarItem a:hover, #BrowseBarTab a:visited, .BrowseBarItem a:visited{
+#BrowseBarContainer a:hover, .BrowseBarItem a:hover, #BrowseBarContainer a:visited, .BrowseBarItem a:visited{
     text-decoration: none;
     cursor: pointer;
     opacity: 1;

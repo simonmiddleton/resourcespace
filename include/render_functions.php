@@ -2680,7 +2680,7 @@ function render_browse_bar()
 
     $bb_html .= '</div><!-- End of BrowseBarContent -->
                 </div><!-- End of BrowseBar -->
-                    <div id="BrowseBarTab" ><a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div class="BrowseBarTabText">' . $lang['browse_bar_text'] . '</div></a></div><!-- End of BrowseBarTab -->
+                    <a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div id="BrowseBarTab" ><div class="BrowseBarTabText">' . $lang['browse_bar_text'] . '</div></div><!-- End of BrowseBarTab --></a>
                 </div><!-- End of BrowseBarContainer -->
                 
             ';
