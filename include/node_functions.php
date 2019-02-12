@@ -546,7 +546,7 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
                             $selected = ' selected';
                             }
                         ?>
-                        <option value="<?php echo $node['ref']; ?>"<?php echo $selected; ?>><?php echo $node['name']; ?></option>
+                        <option value="<?php echo $node['ref']; ?>"<?php echo $selected; ?>><?php echo htmlspecialchars($node['name']); ?></option>
                         <?php
                         }
                         ?>
@@ -683,7 +683,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                             $selected = ' selected';
                             }
                         ?>
-                        <option value="<?php echo $node['ref']; ?>"<?php echo $selected; ?>><?php echo $node['name']; ?></option>
+                        <option value="<?php echo $node['ref']; ?>"<?php echo $selected; ?>><?php echo htmlspecialchars($node['name']); ?></option>
                         <?php
                         }
                         ?>

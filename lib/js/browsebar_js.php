@@ -301,7 +301,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
                 }
             else
                 {
-                console.log("Still to load: " + browse_toload);    
+                //console.log("Still to load: " + browse_toload);    
                 }
             })
         .fail(function(xhr, status, error)

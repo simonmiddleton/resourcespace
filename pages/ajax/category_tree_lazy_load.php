@@ -46,9 +46,9 @@ foreach($nodes as $node)
     $js_tree_data[] = array(
             'id'     => $node['ref'],
             'parent' => ('' == $node['parent'] ? '#' : $node['parent']),
-            'text'   => i18n_get_translated($node['name']),
+            'text'   => htmlspecialchars(i18n_get_translated($node['name'])),
             'li_attr'=> array(
-                'title' => i18n_get_translated($node['name']),
+                'title' => htmlspecialchars(i18n_get_translated($node['name'])),
                 'class' => 'show_tooltip'
             ),
             'state'  => array(

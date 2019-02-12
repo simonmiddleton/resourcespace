@@ -86,7 +86,7 @@ switch ($returntype)
             // Create link based on parent and current restype
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-RT:" . $restype["ref"];
-            $return_items[$n]["name"] = i18n_get_translated($restype["name"]);
+            $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($restype["name"]));
             $return_items[$n]["class"] = "Restype";
             $return_items[$n]["expandable"] = "true";            
             $tgtparams = array();
@@ -184,7 +184,7 @@ switch ($returntype)
             // Create link based on parent and current restype
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
-            $return_items[$n]["name"] = i18n_get_translated($node["name"]);
+            $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($node["name"]));
             $return_items[$n]["class"] = "Node";
             $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";
             
@@ -234,7 +234,7 @@ switch ($returntype)
             {
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
-            $return_items[$n]["name"] = i18n_get_translated($node["name"]);
+            $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($node["name"]));
             $return_items[$n]["class"] = "Node";           
             $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";            
             $tgtparams = array();
@@ -283,7 +283,7 @@ switch ($returntype)
             // Create link based on parent 
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-FC:" . base64_encode($subcat);
-            $return_items[$n]["name"] = i18n_get_translated($subcat);
+            $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($subcat));
             $return_items[$n]["class"] = "Featured";
             $return_items[$n]["expandable"] = "true";                            
             $tgturl = generateURL($baseurl_short . "pages/themes.php", $tgtparams, array("theme" . ($x+1) => $subcat));
@@ -300,7 +300,7 @@ switch ($returntype)
                 // Create link based on parent 
                 $return_items[$n] = array();
                 $return_items[$n]["id"] = $id . "-C:" . $fcol["ref"];
-                $return_items[$n]["name"] = i18n_get_translated($fcol["name"]);
+                $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($fcol["name"]));
                 $return_items[$n]["class"] = "Col";
                 $return_items[$n]["expandable"] = "false";                
                 $tgtparams = array();
@@ -342,7 +342,7 @@ switch ($returntype)
             // Create link based on parent 
             $return_items[$n] = array();
             $return_items[$n]["id"] = $id . "-C:" . $mycol["ref"];
-            $return_items[$n]["name"] = i18n_get_translated($mycol["name"]);
+            $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($mycol["name"]));
             $return_items[$n]["class"] = "Col";
             $return_items[$n]["expandable"] = "false";
             
