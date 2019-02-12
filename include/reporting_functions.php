@@ -212,9 +212,9 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
     $query = sprintf("
             DELETE
               FROM report_periodic_emails
-             WHERE user = \'%s\'
-               AND report = \'%s\'
-               AND period = \'%s\';
+             WHERE user = '%s'
+               AND report = '%s'
+               AND period = '%s';
         ",
         escape_check($user),
         escape_check($report),
@@ -231,10 +231,10 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
                                                    email_days
                                                )
                  VALUES (
-                            \'%s\',  # user
-                            \'%s\',  # report
-                            \'%s\',  # period
-                            \'%s\'   # email_days
+                            '%s',  # user
+                            '%s',  # report
+                            '%s',  # period
+                            '%s'   # email_days
                         );
         ",
         escape_check($user),
