@@ -464,6 +464,6 @@ input:checked + .customFieldLabel, .keywordselected
 .ui-layout-resizer-west-dragging {background-color:#2b2b2b;}
 */
 
-.BrowseBarItem.ui-droppable-hover .BrowseBarLink a{
+.BrowseBarItem.ui-droppable-hover a .BrowseBarLink{
     border: 2px solid #FFF;
 }

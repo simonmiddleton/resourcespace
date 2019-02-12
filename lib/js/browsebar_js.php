@@ -16,9 +16,7 @@ function ToggleBrowseBar(forcestate, noresize)
     var browseopen = (typeof browse_show === "undefined" || browse_show == 'hide') || (forcestate !== "undefined" && forcestate == 'open')
 	if (browseopen)
 		{
-        console.log('opening');
         jQuery('#BrowseBar').show();
-        console.log('Resize: ' + noresize);
 		if(typeof noresize === 'undefined' || noresize == false)
             {
             myLayout.sizePane("west", <?php echo $browse_default_width; ?>);
@@ -28,8 +26,7 @@ function ToggleBrowseBar(forcestate, noresize)
         ModalCentre();
         }
 	else
-		{
-        //console.log('closing');	
+		{	
     	jQuery('#BrowseBar').hide();
 		myLayout.sizePane("west", 35);
 		browse_show = 'hide';
@@ -83,11 +80,10 @@ function renderBrowseItem(node, parent)
             linkfunction = "return CentralSpaceLoad(this,true);";
             }
         
-        link = "<a href='%BROWSE_LINK%' onclick='" + linkfunction + "'><div class='BrowseBarStructure BrowseType%BROWSE_CLASS%'></div><div class='BrowseBarLink' >%BROWSE_NAME%</div></a>";
+        link = "<a class='browse_droplink'  href='%BROWSE_LINK%' onclick='" + linkfunction + "'><div class='BrowseBarStructure BrowseType%BROWSE_CLASS%'></div><div class='BrowseBarLink' >%BROWSE_NAME%</div></a>";
         link = link.replace("%BROWSE_CLASS%",node.class);
         link = link.replace("%BROWSE_LINK%",node.link);  
         link = link.replace("%BROWSE_NAME%",node.name);
-        console.log(link);
         brwstmplt = brwstmplt.replace("%BROWSE_TEXT%",link);  
         }
     else
@@ -316,7 +312,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
                 }
             else
                 {			
-                styledalert(errorpageload + xhr.status, xhr.statusText + "<br>" + response);		
+                styledalert(errorpageload + status, response);		
                 }
             });
     
@@ -330,7 +326,6 @@ function ReloadBrowseBar()
     browse_toload = allopen;   
     allopen.forEach(function (item)
         {
-        console.log("Reloading browse node = " + item);
         toggleBrowseElements(item, true);
         });
     }
@@ -360,7 +355,6 @@ function BrowseBarInit()
                 {
                 case 'R':
                     tgt_rt = item_elements[1].replace('RT:','');
-                    console.log("looking for class " + ' ResourceType' + tgt_rt);
                     if(dropped.hasClass('ResourceType' + tgt_rt))
                         {
                         nodeid = item_elements[item_elements.length - 1].replace('N:','');
@@ -372,7 +366,7 @@ function BrowseBarInit()
                             <?php echo generateAjaxToken('browse_action'); ?>
                             };
                         
-                        BrowseAction(post_data,jQuery(this).find(".BrowseBarLink a"));
+                        BrowseAction(post_data,jQuery(this).find("a.browse_droplink"));
                         }
                     else
                         {
@@ -399,14 +393,12 @@ function BrowseBarInit()
     
     if(typeof browsereload !== "undefined")
         {
-        console.log('scroll to ' + browsereload);
         setTimeout(function() {jQuery("[data-browse-id='" + browsereload + "']")[0].scrollIntoView({ behavior: "smooth",block: "start"});browsereload = undefined;}, 200);        
         }
     }
 
 function BrowseAction(post_data,browselink)
     {
-    //console.log(post_data);
     url = baseurl_short+"pages/ajax/browse_action.php";
     jQuery.ajax({
         type:'POST',
@@ -420,16 +412,16 @@ function BrowseAction(post_data,browselink)
             // Load completed	
             browselink.fadeTo(300, 0.3, function() {jQuery(this).fadeTo(1000, 1.0); });
             })
-        .fail(function(xhr, textStatus, errorThrown)
-            {		
-            console.log(xhr);
-            if(xhr.status===400)
-                {	
+        .fail(function(xhr)
+            {
+                //console.log(response);
+            if(typeof xhr.responseJSON.message !== "undefined")
+                {
                 styledalert('<?php echo $lang["error"]?>',xhr.responseJSON.message);
                 }
             else
                 {
-                styledalert('<?php echo $lang["error"]?>',statusText);
+                styledalert('<?php echo $lang["error"]?>', xhr.status + ' ' + xhr.statusText + ' ' + xhr.responseText);
                 }
             });
     }
