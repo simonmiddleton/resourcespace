@@ -204,8 +204,8 @@ function set_config_option($user_id, $param_name, $param_value)
                             \'%s\'  # value
                         );
         ',
-        is_null($user_id) ? 'NULL' : '\'' . $user_id . '\'',
-        $param_name,
+        is_null($user_id) ? 'NULL' : '\'' . escape_check($user_id) . '\'',
+        escape_check($param_name),
         $param_value
     );
     $current_param_value = null;
@@ -223,8 +223,8 @@ function set_config_option($user_id, $param_name, $param_value)
                    AND parameter = \'%s\';
             ',
             $param_value,
-            is_null($user_id) ? 'IS NULL' : '= \'' . $user_id . '\'',
-            $param_name
+            is_null($user_id) ? 'IS NULL' : '= \'' . escape_check($user_id) . '\'',
+            escape_check($param_name)
         );
 
 		if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
@@ -234,8 +234,7 @@ function set_config_option($user_id, $param_name, $param_value)
 
 		}
 
-    $query_escaped = escape_check($query);
-    sql_query($query_escaped);
+    sql_query($query);
 
     return true;
     }
