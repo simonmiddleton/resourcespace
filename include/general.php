@@ -4117,11 +4117,36 @@ function check_access_key($resource,$key)
     # Verify a supplied external access key
     
     # Option to plugin in some extra functionality to check keys
-    if (hook("check_access_key","",array($resource,$key))===true) {return true;}
+    if(hook("check_access_key", "", array($resource, $key)) === true)
+        {
+        return true;
+        }
+
     global $external_share_view_as_internal, $is_authenticated, $baseurl, $baseurl_short;
-        if($external_share_view_as_internal && (isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false) && !(isset($is_authenticated) && $is_authenticated))){return false;} // We want to authenticate the user if not already authenticated so we can show the page as internal
-    
-    $keys=sql_query("select user,usergroup,expires,password_hash from external_access_keys where resource='$resource' and access_key='$key' and (expires is null or expires>now())");
+
+    if(
+        $external_share_view_as_internal
+        && (
+            isset($_COOKIE["user"])
+            && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false)
+            && !(isset($is_authenticated) && $is_authenticated)
+        ))
+            {
+            return false;
+            } // We want to authenticate the user if not already authenticated so we can show the page as internal
+
+    $resource_escaped = escape_check($resource);
+    $key_escaped = escape_check($key);
+
+    $keys = sql_query("
+            SELECT user,
+                   usergroup,
+                   expires,
+                   password_hash
+              FROM external_access_keys
+             WHERE resource = '$resource_escaped'
+               AND access_key = '$key_escaped'
+               AND (expires IS NULL OR expires > now())");
 
     if (count($keys)==0)
         {
@@ -4263,7 +4288,7 @@ function check_access_key($resource,$key)
             }
         
         # Set the 'last used' date for this key
-        sql_query("update external_access_keys set lastused=now() where resource='$resource' and access_key='$key'");
+        sql_query("UPDATE external_access_keys SET lastused = now() WHERE resource = '$resource_escaped' AND access_key = '$key_escaped'");
         
         return true;
         }
