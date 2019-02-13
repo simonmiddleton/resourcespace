@@ -1629,15 +1629,13 @@ select.MultiSelect:before {
     padding-left: 10px;
 }
 
-.BrowseBarExpand + .BrowseTypeNode, .BrowseBarExpand + a .BrowseTypeRestype, .BrowseBarExpand + .BrowseTypeField, .BrowseBarExpand + a .BrowseTypeFeatured{
+.BrowseBarExpand + a .BrowseTypeNode, .BrowseBarExpand + a .BrowseTypeRestype, .BrowseBarExpand + .BrowseTypeField, .BrowseBarExpand + a .BrowseTypeFeatured{
     padding-left: 5px;
 }
 
-.BrowseLine + .BrowseTypeNode, .BrowseLine + .BrowseT
-ypeRestype, .BrowseLine + .BrowseTypeField, .BrowseLine + .BrowseTypeNew{
+.BrowseLine + .BrowseTypeNode, .BrowseLine + .BrowseTypeRestype, .BrowseLine + .BrowseTypeField, .BrowseLine + .BrowseTypeNew{
     margin-left: 6px;
 }
-
 
 .BrowseBarLink{
     display: table-cell;

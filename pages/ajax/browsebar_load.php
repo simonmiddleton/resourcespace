@@ -83,7 +83,8 @@ switch ($returntype)
 
         foreach($restypes as $restype)
             {
-            if(!checkperm("z" . $restype["ref"]))
+
+            if(!in_array($restype['ref'], $hide_resource_types)) 
                 {
                 // Create link based on parent and current restype
                 $return_items[$n] = array();
