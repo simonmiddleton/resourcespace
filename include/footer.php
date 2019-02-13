@@ -461,7 +461,7 @@ if (getval("ajax","") == "")
                 east__spacing_open:0,
 				east__spacing_closed:8,
                 east_resizable: true,
-                east__size: 282,
+                east__size: 295,
 
                 north_resizable: false,
                 north__closable:false,
@@ -471,14 +471,14 @@ if (getval("ajax","") == "")
                 <?php
                 if($browse_on) 
                     {
-                    $browsesize = $browse_show ? $browse_width : "35";
+                    $browsesize = $browse_show ? $browse_width : "30";
                     echo "
                     west__closable:false,
                     west__resizable:false,
                     west__liveContentResizing: true,
                     west__resizeContentWhileDragging: true,
                     west__spacing_open: 0,
-                    west__minSize:35,
+                    west__minSize:30,
                     west__size: " . $browsesize . ",
                     west__onresize: function(pane)
                         {
@@ -497,7 +497,7 @@ if (getval("ajax","") == "")
                                 {
                                 myLayout.sizePane('west', 800);
                                 }
-                            jQuery('#BrowseBarContent').width(browsewidth-45);
+                            jQuery('#BrowseBarContent').width(browsewidth-40);
                             var newbrowsewidth = jQuery('.ui-layout-west').width();
                             if(newbrowsewidth != 35)
                                 {

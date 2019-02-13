@@ -5,7 +5,7 @@
  * Standard structural styling should be placed inside global.css
  * 
  */
-body,html {color:#474747;background: #f4f4f4;}
+body,html {color:#474747;background: #f2f2f2;}
 h2 {color: #000000;}
 h1 {color: #000000;}
 
@@ -116,8 +116,8 @@ input[readonly] {color: #000000;}
 	{color:#FFF;}
 .HomePanel h2{color:#FFF;}
 
-#SearchBarContainer,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab{
-	background: rgba(0, 0, 0, 0.6);
+#SearchBox,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab{
+	background: rgba(0, 0, 0, 0.45);
 	color:#FFF;
 }
 

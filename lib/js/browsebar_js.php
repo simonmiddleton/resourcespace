@@ -28,7 +28,7 @@ function ToggleBrowseBar(forcestate, noresize)
 	else
 		{	
     	jQuery('#BrowseBar').hide();
-		myLayout.sizePane("west", 35);
+		myLayout.sizePane("west", 30);
 		browse_show = 'hide';
 		SetCookie('browse_show', 'hide');
 		}

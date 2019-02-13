@@ -18,7 +18,7 @@ body {width:100%;height:100%; margin:0;padding:0;font-size:15px;text-align: cent
 p, h1, h2, h3, h4, h5 {padding:0; margin:0; vertical-align:top;}
 p {padding:0 0 1em; margin:0; font-size:1em;}
 p.tight {padding:0 0 0.75em;}
-h1 {padding:0.1em 0 0.5em;margin:0;font-weight: normal;font-size: 1.5rem;}
+h1 {padding:0.5em 0;margin:0;font-weight: normal;font-size: 1.5rem;}
 h2 {padding:0.1em 0;margin:0;font-weight: normal;font-size:1.5em;}
 h3 {font-size:1.25em; padding:0.5em 0 0.5em 0; margin:0;font-weight:normal;}
 h4 {font-size:1em; padding:0.5em 0 0.5em; margin:0;font-weight:normal;}
@@ -246,7 +246,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 #login_box #Footer {margin: 0px 0px 10px 0px;}
 
 #CentralSpaceContainer {
-    margin:0px 25px 20px;
+    margin:0px 15px 20px;
     padding:0 0 0 0;
     text-align:left;
     }
@@ -341,7 +341,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 
 
 /*Right Search Box layout*/
-#SearchBox {float: right;width: 100%; display:inline;text-align:left; /*! border-left: 1px solid #ccc; */ /*! box-sizing: border-box; */}
+#SearchBox {float: right; width: 295px;text-align:left; height: inherit; overflow-x: hidden;}
 #SearchBoxPanel {width: 100%;}
 #ResearchBoxPanel {width: 100%;margin-top: 15px;}
 #SearchBox .PopupCategoryTree {display: none; text-align: left; z-index: 999; padding: 5px; background: none;}
@@ -391,7 +391,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Listview {overflow-x:auto; margin: 0 0 25px 0;}
 .ListviewTight {margin: 5px 10px 5px 0;}
 .Listview table{ width:100%;}
-.Listview td {padding:8px;vertical-align: top;}
+.Listview td {padding:6px 8px 6px 8px;vertical-align: top;}
 .ListTools {text-align: right;}
 .ListTitle {font-weight: bold;}
 .Listview .IconStar {width:11px;height:12px;padding: 0;display: block;float:left;}
@@ -510,13 +510,13 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 
 /* Basic page */
-.BasicsBox {margin: 20px 15px 10px 0px;}
+.BasicsBox {margin: 15px 15px 10px 0px;}
 .BasicsBox h1 {padding: 0px 0px 0.5em;}
 .BasicsBox h2 {font-size: 1.2em;margin-bottom: 4px;}
 .BasicsBox .HorizontalNav ul {padding:0.2em 0;margin:0 0 1.5em;list-style:none;}
 .BasicsBox .HorizontalNav li {display:inline;padding:0em 0.9em 0em 0em;margin:0em 0.5em 0em 0em;}
 .BasicsBox .VerticalNav ul {padding:0.2em 0;margin:0 0 1em;list-style:none;}
-.BasicsBox .VerticalNav li {padding:0 0.35em 0 0em;margin:0px 0.5em 1em 0px;}
+.BasicsBox .VerticalNav li {padding:0 0.35em 0 0em;margin:0px 0.5em 0.75em 0px;}
 .nopadding,.nopadding .VerticalNav ul {padding:0px;margin:0px;}
 
 /* Themes */
@@ -932,7 +932,7 @@ margin-bottom:10px;
     padding-top:20px;
 }
 a.HomePanel:hover {
-    border-radius:10px;
+    border-radius:4px;
     box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -1663,13 +1663,13 @@ select.MultiSelect:before {
     height: 140px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    width: 35px;
+    width: 30px;
 }
 
 
 .BrowseBarTabText {
     margin-bottom: 10px;
-    margin-left: 28px;
+    margin-left: 26px;
     padding-top: 80px;
     text-transform: capitalize;
     text-align: center;
