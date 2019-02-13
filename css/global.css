@@ -979,7 +979,7 @@ a.HomePanel:hover {
 }
 
 .tools a{white-space: nowrap;}
-#delete_dialog {display:none !important;}
+#trash_bin_delete_dialog {display:none !important;}
 .no-close .ui-dialog-titlebar-close {display: none;}
 
 /* Plugin Categories Styling */

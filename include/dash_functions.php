@@ -548,7 +548,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
 							    });
 							    return;
 							}
-							jQuery("#delete_dialog").dialog({
+							jQuery("#trash_bin_delete_dialog").dialog({
 						    	title:'<?php echo $lang["dashtiledelete"]; ?>',
 						    	modal: true,
 								resizable: false,
@@ -1223,7 +1223,7 @@ function get_user_dash($user)
 					?>
 			      	if(jQuery(ui.draggable).hasClass("allUsers")) {
 			      		// This tile is set for all users so provide extra options
-				        jQuery("#delete_dialog").dialog({
+				        jQuery("#trash_bin_delete_dialog").dialog({
 				        	title:'<?php echo $lang["dashtiledelete"]; ?>',
 				        	modal: true,
 		    				resizable: false,
@@ -1238,7 +1238,7 @@ function get_user_dash($user)
 		            }
 		            else {
 		            	//This tile belongs to this user only
-				        jQuery("#delete_dialog").dialog({
+				        jQuery("#trash_bin_delete_dialog").dialog({
 				        	title:'<?php echo $lang["dashtiledelete"]; ?>',
 				        	modal: true,
 		    				resizable: false,	    				
@@ -1253,7 +1253,7 @@ function get_user_dash($user)
 	            	}
 	       		else #Only show dialog to delete for this user
 	       			{ ?>
-	       			var dialog = jQuery("#delete_dialog").dialog({
+	       			var dialog = jQuery("#trash_bin_delete_dialog").dialog({
 			        	title:'<?php echo $lang["dashtiledelete"]; ?>',
 			        	modal: true,
 	    				resizable: false,
