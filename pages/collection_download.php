@@ -18,6 +18,7 @@ $includetext=getvalescaped("text","false");
 $useoriginal=getvalescaped("use_original","no");
 $collectiondata=get_collection($collection);
 $tardisabled=getvalescaped("tardownload","")=="off";
+$include_csv_file = getval('include_csv_file', '');
 
 $collection_download_tar=true;
 
@@ -239,6 +240,7 @@ if ($submitted != "")
             'usagecomment'          => $usagecomment,
             'available_sizes'       => $available_sizes,
             'settings_id'           => $settings_id,
+            'include_csv_file'      => $include_csv_file,
         );
         job_queue_add('collection_download', $collection_download_job_data, '', '', $lang["oj-collection-download-success-text"], $lang["oj-collection-download-failure-text"]);
 
@@ -401,15 +403,18 @@ if ($submitted != "")
         $size,
         $zip);
 
-    collection_download_process_csv_metadata_file(
-        $result,
-        $id,
-        $collection,
-        $collection_download_tar,
-        $use_zip_extension,
-        $zip,
-        $path,
-        $deletion_array);
+    if($include_csv_file == 'yes')
+        {
+        collection_download_process_csv_metadata_file(
+            $result,
+            $id,
+            $collection,
+            $collection_download_tar,
+            $use_zip_extension,
+            $zip,
+            $path,
+            $deletion_array);
+        }
 
 	collection_download_process_command_to_file($use_zip_extension, $collection_download_tar, $id, $collection, $size, $path);
 
