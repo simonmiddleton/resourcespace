@@ -149,21 +149,29 @@ function get_collection($ref)
 }
 
 function get_collection_resources($collection)
-	{
-	# Returns all resources in collection
-	# For many cases (e.g. when displaying a collection for a user) a search is used instead so permissions etc. are honoured.
+    {
+    # Returns all resources in collection
+    # For many cases (e.g. when displaying a collection for a user) a search is used instead so permissions etc. are honoured.
+    if((string)(int)$collection != (string)$collection)
+        {
+        return false;
+        }
+    $plugin_collection_resources=hook('replace_get_collection_resources');
+    if(is_array($plugin_collection_resources))
+        {
+        return $plugin_collection_resources;
+        }	
 	
-	$plugin_collection_resources=hook('replace_get_collection_resources');
-	if(is_array($plugin_collection_resources))
-		{
-		return $plugin_collection_resources;
-		}	
-	
-	return sql_array("select resource value from collection_resource where collection='$collection' order by sortorder asc, date_added desc, resource desc"); 
-	}
+    return sql_array("select resource value from collection_resource where collection='$collection' order by sortorder asc, date_added desc, resource desc"); 
+    }
 	
 function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
 	{
+    if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
+        {
+        return false;
+        }
+
 	global $collection_allow_not_approved_share, $collection_block_restypes;	
 	$addpermitted=collection_writeable($collection) || $smartadd;
 	if ($addpermitted && !$smartadd && (count($collection_block_restypes)>0)) // Can't always block adding resource types since this may be a single resource managed request
@@ -178,28 +186,29 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 			}
 		}
 		
-	if ($addpermitted)	
-		{
-		# Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
-		# for this specific resource, and warn the user that this has happened.
-		$keys=get_collection_external_access($collection);
-		if (count($keys)>0)
-			{
-			$archivestatus=sql_value("select archive as value from resource where ref='" . escape_check($resource) . "'","");
-			if ($archivestatus<0 && !$collection_allow_not_approved_share) {global $lang; $lang["cantmodifycollection"]=$lang["notapprovedresources"] . $resource;return false;}
+    if ($addpermitted)	
+        {
+        # Check if this collection has already been shared externally. If it has, we must fail if not permitted or add a further entry
+        # for this specific resource, and warn the user that this has happened.
+        $keys=get_collection_external_access($collection);
+        if (count($keys)>0)
+            {
+            $archivestatus=sql_value("select archive as value from resource where ref='" . escape_check($resource) . "'","");
+            if ($archivestatus<0 && !$collection_allow_not_approved_share) {global $lang; $lang["cantmodifycollection"]=$lang["notapprovedresources"] . $resource;return false;}
+
+            // Check if user can share externally and has open access. We shouldn't add this if they can't share externally, have restricted access or only been granted access
+            if (!can_share_resource($resource)){return false;}
 			
-			// Check if user can share externally and has open access. We shouldn't add this if they can't share externally, have restricted access or only been granted access
-			if (!can_share_resource($resource)){return false;}
-			
-			# Set the flag so a warning appears.
-			global $collection_share_warning;
-			# Check to see if all shares have expired
-			$expiry_dates=sql_array("select distinct expires value from external_access_keys where collection='" . escape_check($collection) . "'");
-			$datetime=time();
-			$collection_share_warning=true;
-			foreach($expiry_dates as $key => $date) {
-				if($date!="" && $date<$datetime){$collection_share_warning=false;}
-			}
+            # Set the flag so a warning appears.
+            global $collection_share_warning;
+            # Check to see if all shares have expired
+            $expiry_dates=sql_array("select distinct expires value from external_access_keys where collection='" . escape_check($collection) . "'");
+            $datetime=time();
+            $collection_share_warning=true;
+            foreach($expiry_dates as $key => $date)
+                {
+                if($date!="" && $date<$datetime){$collection_share_warning=false;}
+                }
 			
 			for ($n=0;$n<count($keys);$n++)
 				{
@@ -234,8 +243,13 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 	}
 
 function remove_resource_from_collection($resource,$collection,$smartadd=false,$size="")
-	{
-	if (collection_writeable($collection)||$smartadd)
+    {
+    if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
+        {
+        return false;
+        }
+
+    if (collection_writeable($collection)||$smartadd)
 		{	
 		hook("Removefromcollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
 		
