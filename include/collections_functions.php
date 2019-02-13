@@ -194,7 +194,7 @@ function add_resource_to_collection($resource,$collection,$smartadd=false,$size=
 			# Set the flag so a warning appears.
 			global $collection_share_warning;
 			# Check to see if all shares have expired
-			$expiry_dates=sql_array("select distinct expires value from external_access_keys where collection=". escape_check($collection));
+			$expiry_dates=sql_array("select distinct expires value from external_access_keys where collection='" . escape_check($collection) . "'");
 			$datetime=time();
 			$collection_share_warning=true;
 			foreach($expiry_dates as $key => $date) {
@@ -359,7 +359,7 @@ if (!function_exists("create_collection")){
 function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$public=false,$categories=array())
 	{
 	global $username,$anonymous_login,$rs_session, $anonymous_user_session_collection;
-	debug("create_collection(\$userid = {$userid}, \$name = {$name}, \$ref = " . escape_check($ref));
+	debug("create_collection(\$userid = {$userid}, \$name = {$name}, \$ref = '" . escape_check($ref) . "'");
 	if($username==$anonymous_login && $anonymous_user_session_collection)
 		{		
 		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
@@ -382,8 +382,9 @@ function create_collection($userid,$name,$allowchanges=0,$cant_delete=0,$ref=0,$
 			$themecount++;
 			}
 		}
+
 	# Creates a new collection and returns the reference
-	sql_query("insert into collection (" . (escape_check($ref)!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . (escape_check($ref)!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")");
+	sql_query("insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . ($ref!=0?"'" . escape_check($ref) . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")");
 	//echo "insert into collection (" . ($ref!=0?"ref,":"") . "name,user,created,allow_changes,cant_delete,session_id,public" . $themecolumns . ") values (" . ($ref!=0?"'" . $ref . "',":"") . "'" . escape_check($name) . "','$userid',now(),'$allowchanges','$cant_delete'," . (($rs_session=="")?"NULL":"'" . $rs_session . "'") . "," . ($public ? "1" : "0" ) . $categorysql . ")" . "\n";
 	$ref=sql_insert_id();
 

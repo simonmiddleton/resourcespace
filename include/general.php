@@ -237,7 +237,7 @@ function get_resource_path(
         {
         $size='';
         $icc=true;
-        $extension=sql_value("select file_extension value from resource where ref=" . escape_check($ref), 'jpg');
+        $extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'", 'jpg');
         }
             
         

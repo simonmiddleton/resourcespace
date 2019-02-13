@@ -56,8 +56,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $staticsync_mod="";
                 }
     
-            sql_query("delete from resource_data where resource=" . escape_check($ref) . " $staticsync_mod");
-            sql_query("delete from resource_keyword where resource=" . escape_check($ref) . " $staticsync_mod");
+            sql_query("delete from resource_data where resource='" . escape_check($ref) . "' $staticsync_mod");
+            sql_query("delete from resource_keyword where resource='" . escape_check($ref) . "' $staticsync_mod");
 
             #also add the ref back into keywords:
             add_keyword_mappings($ref, $ref , -1);
@@ -492,7 +492,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         global $upload_then_process_holding_state;
         if(isset($upload_then_process_holding_state))
             {
-            $job_data["archive"]=sql_value("SELECT archive value from resource where ref=" . escape_check($ref) . "", "");
+            $job_data["archive"]=sql_value("SELECT archive value from resource where ref='" . escape_check($ref) . "'", "");
             update_archive_status($ref, $upload_then_process_holding_state);
             }
         
