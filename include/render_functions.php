@@ -2649,7 +2649,7 @@ function render_trash($type, $deletetext,$forjs=false)
 
 function render_browse_bar()
     {
-    global $lang, $browse_bar_workflow, $browse_show;
+    global $lang, $browse_bar_workflow, $browse_show, $enable_themes;
     $bb_html = '<div id="BrowseBarContainer" class="ui-layout-west" >';
     $bb_html .= '<div id="BrowseBar" class="BrowseBar" ' . ($browse_show ?  '' : 'style="display:none;"') . '>';
     $bb_html .= '<div id="BrowseBarContent" >'; 
@@ -2671,7 +2671,11 @@ function render_browse_bar()
 
     // Add root elements
     $bb_html .= generate_browse_bar_item("R", $lang['browse_by_tag']);
-    $bb_html .= generate_browse_bar_item("FC", $lang["themes"]);
+    if($enable_themes)
+        {
+        $bb_html .= generate_browse_bar_item("FC", $lang["themes"]);
+        }
+
     $bb_html .= generate_browse_bar_item("C", $lang["mycollections"]);
     if($browse_bar_workflow)
         {
