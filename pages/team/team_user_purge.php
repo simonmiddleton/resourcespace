@@ -15,7 +15,7 @@ if ($months!="")
 	if (!is_numeric($months) || $months<0) {$error=$lang["pleaseenteravalidnumber"];}
 	else
 		{
-		$condition="(created IS NULL OR created<date_sub(now(), interval $months month)) AND 
+		$condition="(created IS NULL OR created<date_sub(now(), interval '" . escape_check($months) . "' month)) AND 
 						  (last_active IS NULL OR last_active<date_sub(now(), interval $months month))";
 		$count=sql_value("SELECT count(*) value FROM user WHERE $condition",0);
 		}

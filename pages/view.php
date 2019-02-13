@@ -103,7 +103,7 @@ resource_type_config_override($resource["resource_type"]);
 # get comments count
 $resource_comments=0;
 if($comments_resource_enable && $comments_view_panel_show_marker){
-	$resource_comments=sql_value("select count(*) value from comment where resource_ref=$ref","0");
+    $resource_comments=sql_value("select count(*) value from comment where resource_ref='" . escape_check($ref) . "'","0");
 }
 
 // Set $use_mp3_player switch if appropriate
@@ -1921,7 +1921,7 @@ if (count($result)>0)
 				// Don't show this type again.
 				continue;
 				}
-		$restypename=sql_value("select name as value from resource_type where ref = '$rtype'","");
+        $restypename=sql_value("select name as value from resource_type where ref = '" . escape_check($rtype) . "'","");
 		$restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
 		?><!--Panel for related resources-->
 		<div class="RecordBox">

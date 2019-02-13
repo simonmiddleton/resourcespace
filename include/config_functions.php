@@ -234,7 +234,8 @@ function set_config_option($user_id, $param_name, $param_value)
 
 		}
 
-    sql_query($query);
+    $query_escaped = escape_check($query);
+    sql_query($query_escaped);
 
     return true;
     }

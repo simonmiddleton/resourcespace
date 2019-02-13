@@ -132,7 +132,7 @@ function get_collection($ref)
 				{
 				# try to set via usergroup_collection
 				global $usergroup;
-				$request_feedback=sql_value("select request_feedback value from usergroup_collection where collection='" . escape_check($ref) . "' and usergroup=$usergroup",0);
+				$request_feedback=sql_value("select request_feedback value from usergroup_collection where collection='" . escape_check($ref) . "' and usergroup='$usergroup'",0);
 				}
 			}
 		if ($k!="")
@@ -161,10 +161,10 @@ function get_collection_resources($collection)
         {
         return $plugin_collection_resources;
         }	
-	
-    return sql_array("select resource value from collection_resource where collection='$collection' order by sortorder asc, date_added desc, resource desc"); 
+
+    return sql_array("select resource value from collection_resource where collection='" . escape_check($collection) . "' order by sortorder asc, date_added desc, resource desc"); 
     }
-	
+
 function add_resource_to_collection($resource,$collection,$smartadd=false,$size="",$addtype="")
 	{
     if((string)(int)$collection != (string)$collection || (string)(int)$resource != (string)$resource)
@@ -364,7 +364,7 @@ function set_user_collection($user,$collection)
 	global $usercollection,$username,$anonymous_login,$anonymous_user_session_collection;
 	if(!(isset($anonymous_login) && $username==$anonymous_login) || !$anonymous_user_session_collection)
 		{		
-		sql_query("update user set current_collection='$collection' where ref='$user'");
+		sql_query("update user set current_collection='" . escape_check($collection) . "' where ref='" . escape_check($user) . "'");
 		}
 	$usercollection=$collection;
 	}
@@ -539,9 +539,9 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 		{
 		# Form a list of all applicable groups
 		$groups=array($usergroup); # Start with user's own group
-		$groups=array_merge($groups,sql_array("select ref value from usergroup where parent='$usergroup'")); # Children
-		$groups=array_merge($groups,sql_array("select parent value from usergroup where ref='$usergroup'")); # Parent
-		$groups=array_merge($groups,sql_array("select ref value from usergroup where parent<>0 and parent=(select parent from usergroup where ref='$usergroup')")); # Siblings (same parent)
+		$groups=array_merge($groups,sql_array("select ref value from usergroup where parent='" . escape_check($usergroup) . "'")); # Children
+		$groups=array_merge($groups,sql_array("select parent value from usergroup where ref='" . escape_check($usergroup) . "'")); # Parent
+		$groups=array_merge($groups,sql_array("select ref value from usergroup where parent<>0 and parent=(select parent from usergroup where ref='" . escape_check($usergroup) . "')")); # Siblings (same parent)
 		
 		$sql.=" and u.usergroup in ('" . join ("','",$groups) . "')";
 		}
@@ -552,11 +552,11 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
 	# Run the query
 	if ($include_resources)
 		{    
-        return sql_query("select distinct c.*,u.username,u.fullname, count( DISTINCT cr.resource ) count from collection c left join collection_resource cr on c.ref=cr.collection left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by $order_by $sort");
+        return sql_query("select distinct c.*,u.username,u.fullname, count( DISTINCT cr.resource ) count from collection c left join collection_resource cr on c.ref=cr.collection left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by " . escape_check($order_by) . " " . escape_check($sort));
 		}
 	else
 		{
-		return sql_query("select distinct c.*,u.username,u.fullname from collection c left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by $order_by $sort");
+		return sql_query("select distinct c.*,u.username,u.fullname from collection c left outer join user u on c.user=u.ref left outer join collection_keyword k on c.ref=k.collection $keysql where $sql_public $sql group by c.ref order by " . escape_check($order_by) . " " . escape_check($sort));
 		}
 	}
 }
@@ -632,24 +632,24 @@ function add_collection($user,$collection)
 	# Remove any existing collection first
 	remove_collection($user,$collection);
 	# Insert row
-	sql_query("insert into user_collection(user,collection) values ('$user','$collection')");
+	sql_query("insert into user_collection(user,collection) values ('" . escape_check($user) . "','" . escape_check($collection) . "')");
 	#log this
-	collection_log($collection,"S",0, sql_value ("select username as value from user where ref = '$user'",""));
+	collection_log($collection,"S",0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
 	}
 
 function remove_collection($user,$collection)
 	{
 	# Remove someone else's collection from a user's My Collections
-	sql_query("delete from user_collection where user='$user' and collection='$collection'");
+	sql_query("delete from user_collection where user='" . escape_check($user) . "' and collection='" . escape_check($collection) . "'");
 	#log this
-	collection_log($collection,"T",0, sql_value ("select username as value from user where ref = '$user'",""));
+	collection_log($collection,"T",0, sql_value ("select username as value from user where ref = '" . escape_check($user) . "'",""));
 	}
 
 if (!function_exists("index_collection")){
 function index_collection($ref,$index_string='')
 	{
 	# Update the keywords index for this collection
-	sql_query("delete from collection_keyword where collection='$ref'"); # Remove existing keywords
+	sql_query("delete from collection_keyword where collection='" . escape_check($ref) . "'"); # Remove existing keywords
 	# Define an indexable string from the name, themes and keywords.
 
 	global $index_collection_titles;
@@ -669,7 +669,7 @@ function index_collection($ref,$index_string='')
 	
 	// if an index string wasn't supplied, generate one
 	if (!strlen($index_string) > 0){
-		$indexarray = sql_query("select $indexfields from collection c left join user u on u.ref=c.user where c.ref = '$ref'");
+		$indexarray = sql_query("select $indexfields from collection c left join user u on u.ref=c.user where c.ref = '" . escape_check($ref) . "'");
 		for ($i=0; $i<count($indexarray); $i++){
 			$index_string = "," . implode(',',$indexarray[$i]);
 		} 
@@ -680,7 +680,7 @@ function index_collection($ref,$index_string='')
 		{
 		if(trim($keywords[$n])==""){continue;}
 		$keyref=resolve_keyword($keywords[$n],true);
-		sql_query("insert into collection_keyword values ('$ref','$keyref')");
+		sql_query("insert into collection_keyword values ('" . escape_check($ref) . "','$keyref')");
 		}
 	// return the number of keywords indexed
 	return $n;
@@ -789,10 +789,10 @@ function save_collection($ref, $coldata=array())
   
 	$old_attached_users=sql_array("SELECT user value FROM user_collection WHERE collection='$ref'");
 	$new_attached_users=array();
-	$collection_owner=sql_value("SELECT u.fullname value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=$ref","");
+	$collection_owner=sql_value("SELECT u.fullname value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref='$ref'","");
 	if($collection_owner=='')
 		{
-		$collection_owner=sql_value("SELECT u.username value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref=$ref","");
+		$collection_owner=sql_value("SELECT u.username value FROM collection c LEFT JOIN user u on c.user=u.ref WHERE c.ref='$ref'","");
 		}
 	
 	sql_query("delete from user_collection where collection='$ref'");
@@ -831,13 +831,13 @@ function save_collection($ref, $coldata=array())
 					{ 
 					foreach ($groups as $group)
 						{
-						sql_query("insert into usergroup_collection(collection,usergroup) values ($ref,$group)");
+						sql_query("insert into usergroup_collection(collection,usergroup) values ('$ref','$group')");
 						// get the group name
 						if($groupnames!='')
 							{
 							$groupnames.=", ";
 							}
-						$groupnames.=sql_value("select name value from usergroup where ref={$group}","");
+						$groupnames.=sql_value("select name value from usergroup where ref='{$group}'","");
 						}
 
 					$new_attached_groups=array_diff($groups, $old_attached_groups);
@@ -1346,7 +1346,7 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
 		# Add the key to each resource in the collection
 		if(can_share_resource($r[$m]))
 			{
-			sql_query("insert into external_access_keys(resource,access_key,collection,user,usergroup,request_feedback,email,date,access,expires, password_hash) values ('" . $r[$m] . "','$k','$collection','$userref','$group','$feedback','" . escape_check($email) . "',now(),$access," . (($expires=="")?"null":"'" . $expires . "'"). "," . (($sharepwd != "" && $sharepwd != "(unchanged)") ? "'" . hash('sha256', $k . $sharepwd . $scramble_key) . "'": "null") . ");");
+			sql_query("insert into external_access_keys(resource,access_key,collection,user,usergroup,request_feedback,email,date,access,expires, password_hash) values ('" . $r[$m] . "','$k','$collection','$userref','$group','$feedback','" . escape_check($email) . "',now(),$access," . (($expires=="")?"null":"'" . escape_check($expires) . "'"). "," . (($sharepwd != "" && $sharepwd != "(unchanged)") ? "'" . hash('sha256', $k . $sharepwd . $scramble_key) . "'": "null") . ");");
 			}
 		}
 	
@@ -1356,17 +1356,17 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
 	
 function get_saved_searches($collection)
 	{
-	return sql_query("select * from collection_savedsearch where collection='$collection' order by created");
+	return sql_query("select * from collection_savedsearch where collection='" . escape_check($collection) . "' order by created");
 	}
 
 function add_saved_search($collection)
 	{
-	sql_query("insert into collection_savedsearch(collection,search,restypes,archive) values ('$collection','" . getvalescaped("addsearch","") . "','" . getvalescaped("restypes","") . "','" . getvalescaped("archive","",true) . "')");
+	sql_query("insert into collection_savedsearch(collection,search,restypes,archive) values ('" . escape_check($collection) . "','" . getvalescaped("addsearch","") . "','" . getvalescaped("restypes","") . "','" . getvalescaped("archive","",true) . "')");
 	}
 
 function remove_saved_search($collection,$search)
 	{
-	sql_query("delete from collection_savedsearch where collection='$collection' and ref='$search'");
+	sql_query("delete from collection_savedsearch where collection='" . escape_check($collection) . "' and ref='" . escape_check($search) . "'");
 	}
 
 function add_smart_collection()
@@ -1722,26 +1722,26 @@ function update_collection_order($neworder,$collection,$offset=0)
 	$updatesql= "update collection_resource set sortorder=(case resource ";
 	$counter = 1 + $offset;
 	foreach ($neworder as $colresource){
-		$updatesql.= "when '$colresource' then '$counter' ";
+		$updatesql.= "when '" . escape_check($colresource) . "' then '$counter' ";
 		$counter++;
 	}
-	$updatesql.= "else sortorder END) WHERE collection='$collection'";
+	$updatesql.= "else sortorder END) WHERE collection='" . escape_check($collection) . "'";
 	sql_query($updatesql);
-	$updatesql="update collection_resource set sortorder=99999 WHERE collection='$collection' and sortorder is NULL";
+	$updatesql="update collection_resource set sortorder=99999 WHERE collection='" . escape_check($collection) . "' and sortorder is NULL";
 	sql_query($updatesql);
 	}
 	
 function get_collection_resource_comment($resource,$collection)
 	{
-	$data=sql_query("select *,use_as_theme_thumbnail from collection_resource where collection='$collection' and resource='$resource'","");
+	$data=sql_query("select *,use_as_theme_thumbnail from collection_resource where collection='" . escape_check($collection) . "' and resource='" . escape_check($resource) . "'","");
 	return $data[0];
 	}
 	
 function save_collection_resource_comment($resource,$collection,$comment,$rating)
 	{
 	# get data before update so that changes can be logged.	
-	$data=sql_query("select comment,rating from collection_resource where resource='$resource' and collection='$collection'");
-	sql_query("update collection_resource set comment='" . escape_check($comment) . "',rating=" . (($rating!="")?"'$rating'":"null") . ",use_as_theme_thumbnail='" . (getval("use_as_theme_thumbnail","")==""?0:1) . "' where resource='$resource' and collection='$collection'");
+	$data=sql_query("select comment,rating from collection_resource where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
+	sql_query("update collection_resource set comment='" . escape_check($comment) . "',rating=" . (($rating!="")?"'" . escape_check($rating) . "'":"null") . ",use_as_theme_thumbnail='" . (getval("use_as_theme_thumbnail","")==""?0:1) . "' where resource='" . escape_check($resource) . "' and collection='" . escape_check($collection) . "'");
 	
 	# log changes
 	if ($comment!=$data[0]['comment']){collection_log($collection,"m",$resource);}
@@ -1753,8 +1753,8 @@ function relate_to_collection($ref,$collection)
 	{
 	# Relates every resource in $collection to $ref
 		$colresources = get_collection_resources($collection);
-		sql_query("delete from resource_related where resource='$ref' and related in ('" . join("','",$colresources) . "')");  
-		sql_query("insert into resource_related(resource,related) values ($ref," . join("),(" . $ref . ",",$colresources) . ")");
+		sql_query("delete from resource_related where resource='" . escape_check($ref) . "' and related in ('" . join("','",$colresources) . "')");  
+		sql_query("insert into resource_related(resource,related) values (" . escape_check($ref) . "," . join("),(" . $ref . ",",$colresources) . ")");
 	}	
 	
 function get_mycollection_name($userref)
@@ -1772,7 +1772,7 @@ function get_mycollection_name($userref)
 			{
 			$name = "My Collection " . $n; # Do not translate this string!
 			}
-		$ref=sql_value("select ref value from collection where user='$userref' and name='$name'",0);
+		$ref=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='$name'",0);
 		if ($ref==0)
 			{
 			# No match!
@@ -1785,7 +1785,7 @@ function get_mycollection_name($userref)
 	
 function get_collection_comments($collection)
 	{
-	return sql_query("select * from collection_resource where collection='$collection' and length(comment)>0 order by date_added");
+	return sql_query("select * from collection_resource where collection='" . escape_check($collection) . "' and length(comment)>0 order by date_added");
 	}
 
 function send_collection_feedback($collection,$comment)
@@ -1889,7 +1889,7 @@ function copy_collection($copied,$current,$remove_existing=false)
 	if ($remove_existing)
 		{
 		#delete all existing data in the current collection
-		sql_query("delete from collection_resource where collection='" . $current . "'");
+		sql_query("delete from collection_resource where collection='" . escape_check($current) . "'");
 		collection_log($current,"R",0);
 		}
 	
@@ -1907,7 +1907,7 @@ if (!function_exists("collection_is_research_request")){
 function collection_is_research_request($collection)
 	{
 	# Returns true if a collection is a research request
-	return (sql_value("select count(*) value from research_request where collection='$collection'",0)>0);
+	return (sql_value("select count(*) value from research_request where collection='" . escape_check($collection) . "'",0)>0);
 	}
 }	
 
@@ -1944,15 +1944,15 @@ function get_collection_external_access($collection)
 	{
 	# Return all external access given to a collection.
 	# Users, emails and dates could be multiple for a given access key, an in this case they are returned comma-separated.
-	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,usergroup,password_hash from external_access_keys where collection='$collection' group by access_key order by date");
+	return sql_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,usergroup,password_hash from external_access_keys where collection='" . escape_check($collection) . "' group by access_key order by date");
 	}
 }
 function delete_collection_access_key($collection,$access_key)
 	{
 	# Get details for log
-	$users = sql_value("select group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') value from external_access_keys where collection='$collection' and access_key = '$access_key' group by access_key ", "");
+	$users = sql_value("select group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') value from external_access_keys where collection='" . escape_check($collection) . "' and access_key = '" . escape_check($access_key) . "' group by access_key ", "");
 	# Deletes the given access key.
-	sql_query("delete from external_access_keys where access_key='$access_key' and collection='$collection'");
+	sql_query("delete from external_access_keys where access_key='" . escape_check($access_key) . "' and collection='" . escape_check($collection) . "'");
 	# log changes
 	collection_log($collection,"t","",$users);
 
@@ -1997,7 +1997,7 @@ function get_collection_log($collection, $fetchrows = -1)
                    FROM collection_log AS c
         LEFT OUTER JOIN user AS u on u.ref = c.user
         LEFT OUTER JOIN resource AS r on r.ref = c.resource
-                  WHERE collection = '$collection'
+                  WHERE collection = '" . escape_check($collection) . "'
                ORDER BY c.date DESC";
 
 	return sql_query($sql, false, $fetchrows);
@@ -2096,7 +2096,7 @@ function collection_set_themes ($collection, $categories = array())
 	for($n=0;$n<count($categories);$n++)
 		{	
 		if ($n==0){$categoryindex="";} else {$categoryindex=$n+1;}
-		$sql .= ",theme" . $categoryindex . "='" . $categories[$n]. "'";
+		$sql .= ",theme" . $categoryindex . "='" . escape_check($categories[$n]) . "'";
 		}
 	
 	$sql .= " where ref = '" . $collection . "'";
@@ -2106,7 +2106,7 @@ function collection_set_themes ($collection, $categories = array())
 	
 function remove_all_resources_from_collection($ref){
 	// abstracts it out of save_collection()
-	$removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . $ref . ';');
+	$removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($ref) . ';');
 
 	// First log this for each resource (in case it was done by mistake)
 	foreach($removed_resources as $removed_resource_id)
@@ -2114,7 +2114,7 @@ function remove_all_resources_from_collection($ref){
 		collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
 		}
 
-	sql_query('DELETE FROM collection_resource WHERE collection = ' . $ref);
+	sql_query('DELETE FROM collection_resource WHERE collection = ' . escape_check($ref));
 	collection_log($ref, 'R', 0);
 	}	
 
@@ -2152,7 +2152,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
 	if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
 	if ($key==""){return false;}
 	# Update the expiration and acccess
-	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . $expires . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "(unchanged)") ? ", password_hash='" . (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key)) . "'" : "") . " where access_key='$key'");
+	sql_query("update external_access_keys set access='$access', expires=" . (($expires=="")?"null":"'" . escape_check($expires) . "'") . ",date=now(),usergroup='$group'" . (($sharepwd != "(unchanged)") ? ", password_hash='" . (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key)) . "'" : "") . " where access_key='$key'");
 	hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd));
 	return true;
 	}
@@ -2169,7 +2169,7 @@ function show_hide_collection($colref, $show=true, $user="")
 	else
 		{
 		//Get hidden collections for user
-		$hidden_collections=explode(",",sql_value("select hidden_collections from user where ref='$user'",""));
+		$hidden_collections=explode(",",sql_value("select hidden_collections from user where ref='" . escape_check($user) . "'",""));
 		}
 		
 	if($show)
@@ -2188,7 +2188,7 @@ function show_hide_collection($colref, $show=true, $user="")
 			$hidden_collections[]=$colref;
 			}
 		}
-	sql_query("update user set hidden_collections ='" . implode(",",$hidden_collections) . "' where ref='$user'");
+	sql_query("update user set hidden_collections ='" . implode(",",$hidden_collections) . "' where ref='" . escape_check($user) . "'");
 	}
 	
 function get_session_collections($rs_session,$userref="",$create=false)
@@ -2196,9 +2196,9 @@ function get_session_collections($rs_session,$userref="",$create=false)
 	$extrasql="";
 	if($userref!="")
 		{
-		$extrasql="and user='" . $userref ."'";	
+		$extrasql="and user='" . escape_check($userref) ."'";	
 		}
-	$collectionrefs=sql_array("select ref value from collection where session_id='" . $rs_session . "' " . $extrasql,"");
+	$collectionrefs=sql_array("select ref value from collection where session_id='" . escape_check($rs_session) . "' " . $extrasql,"");
 	if(count($collectionrefs)<1 && $create)
 		{
 		$collectionrefs[0]=create_collection($userref,"My Collection",0,1); # Do not translate this string!	
@@ -2211,7 +2211,7 @@ function update_collection_user($collection,$newuser)
 	if (!collection_writeable($collection))
 		{debug("FAILED TO CHANGE COLLECTION USER " . $collection);return false;}
 		
-	sql_query("UPDATE collection SET user='$newuser' WHERE ref='$collection'");  
+	sql_query("UPDATE collection SET user='" . escape_check($newuser) . "' WHERE ref='" . escape_check($collection) . "'");  
 	return true;	
 	}
 
@@ -2297,7 +2297,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
     else
         {
-        $research = sql_value('SELECT ref value FROM research_request WHERE collection="' . $collection_data['ref'] . '";', 0);
+        $research = sql_value('SELECT ref value FROM research_request WHERE collection="' . escape_check($collection_data['ref']) . '";', 0);
 
         // Manage research requests
         $data_attribute['url'] = generateURL($baseurl_short . "pages/team/team_research.php",$urlparams);
@@ -2619,11 +2619,11 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		$o++;
         
 		// Hide Collection
-		$user_mycollection=sql_value("select ref value from collection where user={$userref} and name='My Collection' order by ref limit 1","");
+		$user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "' and name='My Collection' order by ref limit 1","");
 		// check that this collection is not hidden. use first in alphabetical order otherwise
 		if(in_array($user_mycollection,$hidden_collections)){
 			$hidden_collections_list=implode(",",array_filter($hidden_collections));
-			$user_mycollection=sql_value("select ref value from collection where user={$userref}" . ((trim($hidden_collections_list)!='')?" and ref not in(" . $hidden_collections_list . ")":"") . " order by ref limit 1","");
+			$user_mycollection=sql_value("select ref value from collection where user='" . escape_check($userref) . "'" . ((trim($hidden_collections_list)!='')?" and ref not in(" . $hidden_collections_list . ")":"") . " order by ref limit 1","");
 		}
 		$extra_tag_attributes = sprintf('
                 data-mycol="%s"
@@ -3007,7 +3007,7 @@ function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref
     if ($resource_hit_count_on_downloads)
         { 
         # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
-        sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='$ref'");
+        sql_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref='" . escape_check($ref) . "'");
         }
 
     return;
