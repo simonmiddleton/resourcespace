@@ -83,19 +83,22 @@ switch ($returntype)
 
         foreach($restypes as $restype)
             {
-            // Create link based on parent and current restype
-            $return_items[$n] = array();
-            $return_items[$n]["id"] = $id . "-RT:" . $restype["ref"];
-            $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($restype["name"]));
-            $return_items[$n]["class"] = "Restype";
-            $return_items[$n]["expandable"] = "true";            
-            $tgtparams = array();
-            $tgtparams["restypes"]  = $restype["ref"];
-            $tgtparams["search"]  = "";
-            $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
-            $return_items[$n]["link"] = $tgturl;
-            $return_items[$n]["modal"] = false;
-            $n++;
+            if(!checkperm("z" . $restype["ref"]))
+                {
+                // Create link based on parent and current restype
+                $return_items[$n] = array();
+                $return_items[$n]["id"] = $id . "-RT:" . $restype["ref"];
+                $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($restype["name"]));
+                $return_items[$n]["class"] = "Restype";
+                $return_items[$n]["expandable"] = "true";            
+                $tgtparams = array();
+                $tgtparams["restypes"]  = $restype["ref"];
+                $tgtparams["search"]  = "";
+                $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
+                $return_items[$n]["link"] = $tgturl;
+                $return_items[$n]["modal"] = false;
+                $n++;
+                }
             }
        
         $return_data["success"] = TRUE;
@@ -127,20 +130,19 @@ switch ($returntype)
         
         foreach($allfields as $field)
             {
-            if(!$field["browse_bar"])
+            if($field["browse_bar"] && metadata_field_view_access($field["ref"]))
                 {
-                continue;
-                }
-            // Create link based on parent and current restype
-            $return_items[$n] = array();
-            $return_items[$n]["id"] = $id . "-F:" . $field["ref"];
-            $return_items[$n]["name"] = i18n_get_translated($field["title"]);
-            $return_items[$n]["class"] = "Field";
-            $return_items[$n]["expandable"] = "true";
-            $return_items[$n]["link"] = "";
-            $return_items[$n]["modal"] = false;
+                // Create link based on parent and current restype
+                $return_items[$n] = array();
+                $return_items[$n]["id"] = $id . "-F:" . $field["ref"];
+                $return_items[$n]["name"] = i18n_get_translated($field["title"]);
+                $return_items[$n]["class"] = "Field";
+                $return_items[$n]["expandable"] = "true";
+                $return_items[$n]["link"] = "";
+                $return_items[$n]["modal"] = false;
 
-            $n++;
+                $n++;
+                }
             }
        
         $return_data["success"] = TRUE;
@@ -158,96 +160,96 @@ switch ($returntype)
             $parent = NULL;
             }
 
-        $fielddata = get_resource_type_field($returnid);
-        if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
+        if(metadata_field_view_access($returnid))
             {
-            // Add 'create new' option
-            $return_items[$n] = array();
-            $return_items[$n]["id"] = $id . "-N:new";
-            $return_items[$n]["name"] = $lang["add"];
-            $return_items[$n]["class"] = "New";
-            $return_items[$n]["expandable"] = "false";
-            $tgtparams = array();
-            $tgtparams["type"]  = "node";
-            $tgtparams["field"]  = $returnid;
-            $tgtparams["parent"]  = $parent;
-            $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
-            $return_items[$n]["link"] = $tgturl;
-            $return_items[$n]["modal"] = true;
-            $n++;
-            }
+            $fielddata = get_resource_type_field($returnid);
+            if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
+                {
+                // Add 'create new' option
+                $return_items[$n] = array();
+                $return_items[$n]["id"] = $id . "-N:new";
+                $return_items[$n]["name"] = $lang["add"];
+                $return_items[$n]["class"] = "New";
+                $return_items[$n]["expandable"] = "false";
+                $tgtparams = array();
+                $tgtparams["type"]  = "node";
+                $tgtparams["field"]  = $returnid;
+                $tgtparams["parent"]  = $parent;
+                $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
+                $return_items[$n]["link"] = $tgturl;
+                $return_items[$n]["modal"] = true;
+                $n++;
+                }
             
-        $nodes = get_nodes($returnid, $parent, false);
+            $nodes = get_nodes($returnid, $parent, false);
         
-        foreach($nodes as $node)
-            {
-            // Create link based on parent and current restype
-            $return_items[$n] = array();
-            $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
-            $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($node["name"]));
-            $return_items[$n]["class"] = "Node";
-            $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";
-            
-            $tgtparams = array();
-            $tgtparams["search"]  = NODE_TOKEN_PREFIX . $node["ref"];
-            $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams, $target_search);
-            $return_items[$n]["link"] = $tgturl;
-            $return_items[$n]["modal"] = false;
-            $return_items[$n]["drop"] = true;
-            $n++;
-            }
+            foreach($nodes as $node)
+                {
+                // Create link based on parent and current restype
+                $return_items[$n] = array();
+                $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
+                $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($node["name"]));
+                $return_items[$n]["class"] = "Node";
+                $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";
+                
+                $tgtparams = array();
+                $tgtparams["search"]  = NODE_TOKEN_PREFIX . $node["ref"];
+                $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams, $target_search);
+                $return_items[$n]["link"] = $tgturl;
+                $return_items[$n]["modal"] = false;
+                $return_items[$n]["drop"] = true;
+                $n++;
+                }
 
-        $return_data["success"] = TRUE;
-        $return_data["items"] = $return_items;
+            $return_data["success"] = TRUE;
+            $return_data["items"] = $return_items;
+            }
     break;
     
     case "N":
         // Get subnodes for node
-        if($browse_field == 0)
+        if(metadata_field_view_access($browse_field))
             {
-            // No field was found in browse_id
-            exit("ERROR");
-            }
+            $fielddata = get_resource_type_field($browse_field);
+            if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
+                {
+                // Add 'create new' option
+                $return_items[$n] = array();
+                $return_items[$n]["id"] = $id . "-N:new";
+                $return_items[$n]["name"] = $lang["add"];
+                $return_items[$n]["class"] = "New";
+                $return_items[$n]["expandable"] = "false";
+                $tgtparams = array();
+                $tgtparams["type"]  = "node";
+                $tgtparams["field"]  = $browse_field;
+                $tgtparams["parent_nodes"]  = implode(",",$parent_nodes);
+                $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
+                $return_items[$n]["link"] = $tgturl;
+                $return_items[$n]["modal"] = true;
+                $n++;
+                }
         
-        $fielddata = get_resource_type_field($browse_field);
-        if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
-            {
-            // Add 'create new' option
-            $return_items[$n] = array();
-            $return_items[$n]["id"] = $id . "-N:new";
-            $return_items[$n]["name"] = $lang["add"];
-            $return_items[$n]["class"] = "New";
-            $return_items[$n]["expandable"] = "false";
-            $tgtparams = array();
-            $tgtparams["type"]  = "node";
-            $tgtparams["field"]  = $browse_field;
-            $tgtparams["parent_nodes"]  = implode(",",$parent_nodes);
-            $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
-            $return_items[$n]["link"] = $tgturl;
-            $return_items[$n]["modal"] = true;
-            $n++;
-            }
-        
-        $nodes = get_nodes($browse_field, $returnid, false);
-        
-        foreach($nodes as $node)
-            {
-            $return_items[$n] = array();
-            $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
-            $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($node["name"]));
-            $return_items[$n]["class"] = "Node";           
-            $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";            
-            $tgtparams = array();
-            $tgtparams["search"]  = NODE_TOKEN_PREFIX . $node["ref"];
-            $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams, $target_search);
-            $return_items[$n]["link"] = $tgturl;
-            $return_items[$n]["modal"] = false;
-            $return_items[$n]["drop"] = true;
-            $n++;
-            }
+            $nodes = get_nodes($browse_field, $returnid, false);
+            
+            foreach($nodes as $node)
+                {
+                $return_items[$n] = array();
+                $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
+                $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($node["name"]));
+                $return_items[$n]["class"] = "Node";           
+                $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";            
+                $tgtparams = array();
+                $tgtparams["search"]  = NODE_TOKEN_PREFIX . $node["ref"];
+                $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams, $target_search);
+                $return_items[$n]["link"] = $tgturl;
+                $return_items[$n]["modal"] = false;
+                $return_items[$n]["drop"] = true;
+                $n++;
+                }
 
-        $return_data["success"] = TRUE;
-        $return_data["items"] = $return_items;
+            $return_data["success"] = TRUE;
+            $return_data["items"] = $return_items;
+            }
     break;
     
     case "FC":

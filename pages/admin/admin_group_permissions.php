@@ -265,7 +265,7 @@ if (!in_array("j*",$permissions))	// by default is checked
 		else
 			{
 			$parent = substr ($path, 0, strrpos($path,"|"));
-			$skip =(!$theme_paths[$parent]);		// check if parent theme permission has been set
+			$skip =(!isset($theme_paths[$parent]) || !$theme_paths[$parent]);		// check if parent theme permission has been set
 			$permission = "j-" . $path;
 			if ($skip)
 				{
