@@ -49,8 +49,7 @@ function HookGrant_editEditeditbeforeheader()
 					$inserttext[]=$uref. ",NULL" ;
 					}
 				}
-				
-				if ($collection!="")
+				if ((int)$collection > 0)
 					{
 					global $items;							
 					foreach ($items as $collection_resource)
