@@ -22,7 +22,7 @@ function ToggleBrowseBar(forcestate, noresize)
             myLayout.sizePane("west", <?php echo $browse_default_width; ?>);
             }
 		browse_show = 'show';
-		SetCookie('browse_show', 'show');
+        SetCookie('browse_show', 'show');
         ModalCentre();
         }
 	else
@@ -32,6 +32,7 @@ function ToggleBrowseBar(forcestate, noresize)
 		browse_show = 'hide';
 		SetCookie('browse_show', 'hide');
 		}
+    jQuery(document).trigger("resize");
 	}
 
 function renderBrowseItem(node, parent)

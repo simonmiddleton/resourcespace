@@ -2650,7 +2650,7 @@ function render_trash($type, $deletetext,$forjs=false)
 function render_browse_bar()
     {
     global $lang, $browse_bar_workflow, $browse_show, $enable_themes;
-    $bb_html = '<div id="BrowseBarContainer" class="ui-layout-west" >';
+    $bb_html = '<div id="BrowseBarContainer" class="ui-layout-west" style="display:none;">';
     $bb_html .= '<div id="BrowseBar" class="BrowseBar" ' . ($browse_show ?  '' : 'style="display:none;"') . '>';
     $bb_html .= '<div id="BrowseBarContent" >'; 
     
@@ -2684,7 +2684,7 @@ function render_browse_bar()
 
     $bb_html .= '</div><!-- End of BrowseBarContent -->
                 </div><!-- End of BrowseBar -->
-                    <a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div id="BrowseBarTab" ><div class="BrowseBarTabText">' . $lang['browse_bar_text'] . '</div></div><!-- End of BrowseBarTab --></a>
+                    <a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div id="BrowseBarTab" style="display:none;"><div class="BrowseBarTabText" >' . $lang['browse_bar_text'] . '</div></div><!-- End of BrowseBarTab --></a>
                 </div><!-- End of BrowseBarContainer -->
                 
             ';
