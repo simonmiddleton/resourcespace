@@ -58,8 +58,8 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
                              '%s'   # assigned_to
                         );
         ",
-        $user_ref,
-        $collection_ref,
+        escape_check($user_ref),
+        escape_check($collection_ref),
         escape_check($message),
         $assigned_administrator
     );
@@ -161,7 +161,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
                                      '%s'   # assigned_to
                                 );
                 ",
-                $user_ref,
+                escape_check($user_ref),
                 $collection_id,
                 escape_check($message),
                 $assigned_to
@@ -187,15 +187,14 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
                                          '%s'   # comments
                                     );
                     ",
-                    $user_ref,
+                    escape_check($user_ref),
                     $collection_id,
                     escape_check($message),
                     $assigned_to
                 );
             }
 
-            $request_query_escaped = escape_check($request_query);
-            sql_query($request_query_escaped);
+            sql_query($request_query);
             $request = sql_insert_id();
 
             // Send the mail:
@@ -227,8 +226,7 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     }
 
     // Create resource level request using SQL which was setup earlier in resource level hook or regular processing
-    $request_query_escaped = escape_check($request_query);
-    sql_query($request_query_escaped);
+    sql_query($request_query);
     $request = sql_insert_id();
 
     $templatevars['request_id']    = $request;

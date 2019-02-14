@@ -9,7 +9,7 @@ include '../../../include/authenticate.php'; if(!checkperm('a')) { exit($lang['e
 # Specify the name of this plugin, the heading to display for the page.
 $plugin_name = 'autoassign_mrequests';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}	
+    {plugin_activate_for_setup($plugin_name);}
 $page_heading = "Auto-assign Managed Requests Configuration";
 
 // Add map
@@ -19,6 +19,8 @@ if(getval('add_new', '') !== '' && enforcePostRequest(false)) {
     $field_value_new = getval('field_value_new', '');
     $user_new        = getval('user_new', '');
 
+if($user_group_new != '' && $field_new != '' && $field_value_new != '' && $user_new != '')
+    {
     $query = sprintf('
             INSERT INTO assign_request_map (
                             user_id,
@@ -33,13 +35,14 @@ if(getval('add_new', '') !== '' && enforcePostRequest(false)) {
                             \'%s\' # field_value
                         );
         ',
-        $user_new,
-        $user_group_new,
-        $field_new,
-        $field_value_new
+        escape_check($user_new),
+        escape_check($user_group_new),
+        escape_check($field_new),
+        escape_check($field_value_new)
     );
-    $query_escaped = escape_check($query);
-    sql_query($query_escaped);
+
+    sql_query($query);
+    }
 }
 
 // Get information needed for saving and deleting
@@ -59,14 +62,14 @@ if(getval('save', '') !== '' && enforcePostRequest(false)) {
                    field_value = \'%s\'
              WHERE id = \'%s\';
         ',
-        $user_id_row,
-        $user_group_row,
-        $field_row,
-        $field_value_row,
-        $id_row
+        escape_check($user_id_row),
+        escape_check($user_group_row),
+        escape_check($field_row),
+        escape_check($field_value_row),
+        escape_check($id_row)
     );
-    $save_query_escaped = escape_check($save_query);
-    sql_query($save_query_escaped);
+
+    sql_query($save_query);
 }
 
 // Delete map
@@ -75,10 +78,10 @@ if(getval('delete', '') !== '' && enforcePostRequest(false)) {
             DELETE FROM assign_request_map
                   WHERE id = \'%s\';
         ',
-        $id_row
+        escape_check($id_row)
     );
-    $delete_query_escaped = escape_check($delete_query);
-    sql_query($delete_query_escaped);
+
+    sql_query($delete_query);
 }
 
 
