@@ -1213,7 +1213,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         if(!$return_disk_usage)
             {
-            $searchsql = resource_table_joins_sql($joins, str_replace("ORDER BY {$order_by}", '', $searchsql));
+            $searchsql = resource_table_joins_sql($joins, $searchsql);
             }
 
         if($returnsql){return $searchsql;}
