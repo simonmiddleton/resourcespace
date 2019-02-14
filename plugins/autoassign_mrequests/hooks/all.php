@@ -47,8 +47,8 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
                              '%s'   # assigned_to
                         );
         ",
-        $user_ref,
-        $collection_ref,
+        escape_check($user_ref),
+        escape_check($collection_ref),
         escape_check($message),
         $assigned_administrator
     );
@@ -150,7 +150,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
                                      '%s'   # assigned_to
                                 );
                 ",
-                $user_ref,
+                escape_check($user_ref),
                 $collection_id,
                 escape_check($message),
                 $assigned_to
@@ -176,7 +176,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
                                          '%s'   # comments
                                     );
                     ",
-                    $user_ref,
+                    escape_check($user_ref),
                     $collection_id,
                     escape_check($message),
                     $assigned_to
@@ -234,9 +234,10 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
     
     # Check if alternative request email notification address is set, only valid if collection contains resources of the same type 
     $admin_notify_email = $email_notify;
+    $collection_id_escaped = escape_check($collection_id);
     if(isset($resource_type_request_emails)) {
         $requestrestypes = array_unique(
-            sql_array('SELECT r.resource_type AS value FROM collection_resource cr LEFT JOIN resource r ON cr.resource = r.ref WHERE cr.collection = "' . $collection_id . '"')
+            sql_array('SELECT r.resource_type AS value FROM collection_resource cr LEFT JOIN resource r ON cr.resource = r.ref WHERE cr.collection = "' . $collection_id_escaped . '"')
         );
         
         if(count($requestrestypes) == 1 && isset($resource_type_request_emails[$requestrestypes[0]])) {
