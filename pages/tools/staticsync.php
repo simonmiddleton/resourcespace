@@ -387,7 +387,7 @@ function ProcessFolder($folder)
                 if ($r !== false)
                     {
                     # Add to mapped category tree (if configured)
-                    if (isset($staticsync_mapped_category_tree) && isset($treenodes))
+                    if (isset($staticsync_mapped_category_tree) && isset($treenodes) && count($treenodes) > 0)
                         {
                         // Add path nodes to resource
                         add_resource_nodes($r,$treenodes);
