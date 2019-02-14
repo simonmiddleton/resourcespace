@@ -37,3 +37,4 @@ $ffmpeg_preview_options = '-f mp4 -b:v 1200k -b:a 64k -ac 1 -c:v h264 -c:a aac -
 
 $daterange_search = true;
 $upload_then_edit = true;
+$search_filter_nodes = true;
