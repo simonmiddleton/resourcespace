@@ -148,7 +148,7 @@ for ($n=0;$n<count($uploadfiles);$n++)
 			$file_size = @filesize_unlimited($localpath);
 							
 			# Save alternative file data.
-			sql_query("update resource_alt_files set file_name='" . escape_check($uploadfiles[$n]) . "',file_extension='" . escape_check($extension) . "',file_size='" . $file_size . "',creation_date=now() where resource='$alternative' and ref='$ref'");
+			sql_query("update resource_alt_files set file_name='" . escape_check($uploadfiles[$n]) . "',file_extension='" . escape_check($extension) . "',file_size='" . $file_size . "',creation_date=now() where resource='" . escape_check($alternative) . "' and ref='" . escape_check($ref) . "'");
 							
 			if ($alternative_file_previews_batch)
 				{
@@ -189,7 +189,7 @@ for ($n=0;$n<count($uploadfiles);$n++)
 		# Find and store extension in the database
 		$extension=explode(".",$uploadfiles[$n]);
 		$extension=trim(strtolower($extension[count($extension)-1]));
-		sql_query("update resource set file_extension='$extension',preview_extension='$extension' where ref='$ref'");
+		sql_query("update resource set file_extension='" . escape_check($extension) . "',preview_extension='" . escape_check($extension) . "' where ref='" . escape_check($ref) . "'");
 
 
 		$localpath=get_resource_path($ref,true,"",true,$extension);
