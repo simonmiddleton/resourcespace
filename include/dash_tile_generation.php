@@ -206,23 +206,23 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
 		$count=count($tile_search);
 		}
 	/* Hide if wish to not hide */
-	if(!$found_resources)
-		{ 
-		global $usertile;
-		if(isset($usertile))
-			{
-			?>
-			<style>
-			#user_tile<?php echo htmlspecialchars($usertile["ref"]);?>
-				{
-				display:none;
-				}
-			</style>
-			<?php
-			return;
-			}
-		}
-	?>
+    if(!$found_resources)
+        { 
+        global $usertile;
+
+        $tile_element_id = isset($usertile) ? "user_tile{$usertile['ref']}" : "tile{$tile['ref']}";
+        ?>
+        <style>
+        #<?php echo htmlspecialchars($tile_element_id); ?>
+            {
+            display:none;
+            }
+        </style>
+        <?php
+
+        return;
+        }
+        ?>
 	<span class='collection-icon'></span>
 	<?php
 	if(!empty($tile['title']))
