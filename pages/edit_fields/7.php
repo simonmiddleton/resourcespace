@@ -38,7 +38,7 @@ foreach($field['nodes'] as $node)
     // Show previously searched options on the status box
     if(!(isset($treeonly) && true == $treeonly))
         {
-        $status_box_elements .= "<div class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">{$node['name']}</span><br /></div>";
+        $status_box_elements .= "<div class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" . htmlspecialchars($node['name']) . "</span><br /></div>";
         }
     }
 
