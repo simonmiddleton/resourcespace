@@ -179,7 +179,7 @@ function do_search(
     // Take the current search URL and extract any nodes (putting into buckets) removing terms from $search
     resolve_given_nodes($search,$node_bucket,$node_bucket_not);
 
-    $order_by=isset($order[$order_by]) ? $order[$order_by] : $order['relevance'];       // fail safe by falling back to default if not found
+    $order_by=(isset($order[$order_by]) ? $order[$order_by] : (substr($search, 0, 11) == '!collection' ? $order['collection'] : $order['relevance']));       // fail safe by falling back to default if not found
 
     # Extract search parameters and split to keywords.
     $search_params=$search;
