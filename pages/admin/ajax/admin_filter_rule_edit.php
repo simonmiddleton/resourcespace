@@ -71,7 +71,7 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_rule.php",$savepara
 
     <div class="Question">
         <label for="conditionadd"></label>
-        <a onclick="return addFilterRuleItem();return false;" ><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;Add condition</input></a>
+        <a href="#" onclick="return addFilterRuleItem();return false;" ><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;Add condition</a>
     <div class="clearerleft"></div>
     </div>
 
