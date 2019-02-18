@@ -101,7 +101,7 @@ function prepareFaceImage($image_path, $prepared_image_path, $x, $y, $width, $he
     $cmd .= " {$image_path_escaped} -colorspace gray -depth 8";
     $cmd .= " -crop {$width}x{$height}+{$x}+{$y}";
     $cmd .= " -resize 90x90\>";
-    $cmd .= " +repage {$prepared_image_path_escaped}";
+    $cmd .= " +repage {$prepared_image_pathescapeshellarg()_escaped}";
 
     if('' !== run_command($cmd))
         {
