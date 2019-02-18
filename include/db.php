@@ -746,13 +746,8 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
     # This has been added retroactively to support large result sets, yet a pager can work as if a full
     # result set has been returned as an array (as it was working previously).
 	# $logthis parameter is only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
-    global $db,$config_show_performance_footer,$debug_log,$debug_log_override,$mysql_verbatim_queries,$use_mysqli, $mysql_log_transactions, $mysql_vuln_log;
+    global $db,$config_show_performance_footer,$debug_log,$debug_log_override,$mysql_verbatim_queries,$use_mysqli, $mysql_log_transactions;
     
-	if (isset($mysql_vuln_log) && preg_match("/=(?![[:space:]]*')[0-9]/",$sql))
-		{
-		$f=fopen($mysql_vuln_log,"a");fwrite($f,"Potential unescaped parameter: $sql \n");fclose($f);
-		}
-		
 	if (!isset($debug_log_override))
 		{
 		check_debug_log_override();
@@ -1279,7 +1274,7 @@ function escape_check($text) #only escape a string if we need to, to prevent esc
     $text=str_replace("{bs}'","\\'",$text);            
     $text=str_replace("{bs}n","\\n",$text);            
     $text=str_replace("{bs}r","\\r",$text);  
-    
+                      
     return $text;
     }
 
