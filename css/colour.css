@@ -450,7 +450,8 @@ input:checked + .customFieldLabel, .keywordselected
     {
   color: #fff;
   }
-
+  
+  
 .BrowseBarText {color: #fff;}
 
 /*
@@ -462,3 +463,10 @@ input:checked + .customFieldLabel, .keywordselected
 .BrowseBarItem.ui-droppable-hover a .BrowseBarLink{
     border: 2px solid #FFF;
 }
+
+/* Scrollbar styling */
+::-webkit-scrollbar:vertical {width:12px;}
+::-webkit-scrollbar:horizonal {height:12px;}
+::-webkit-scrollbar,::-webkit-scrollbar-corner {background:none;}
+::-webkit-scrollbar-thumb {background:rgba(0,0,0,0.3);border-radius: 6px;}
+
