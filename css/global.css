@@ -47,7 +47,7 @@ input, textarea, button, select, .RecordPanel .RecordDownloadSpace .DownloadDBle
 }
 
 input[type="text"], input[type=submit], input[type=button], input[type="password"], input[type="url"],input[type="email"], textarea, button, select {
-    padding: 0 0.5rem;
+    padding: 5px 5px 5px 8px;
     vertical-align: middle;
     min-height: 30px;
 }
@@ -578,7 +578,7 @@ behavior: url('../css/iepngfix.htc');
 
 .NewFlag {display:inline;font-size:0.6em;margin-left:5px;padding:1px 3px 1px 3px;}
 .Breadcrumbs {float:left;margin-top:4px;}
-.SearchBreadcrumbs {margin-bottom:10px;}
+.SearchBreadcrumbs {margin-top:15px;}
 
 .CategoryBox {overflow:auto;width:414px;height:80px;padding:2px;font-size:1em;}
 .MiniCategoryBox {overflow:auto;width:auto;height:80px;padding:2px;font-size:1em;}
@@ -1019,6 +1019,8 @@ a.HomePanel:hover {
     position: fixed;
     top: 0px;
     left: 45%;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 .trash_bin_text {
     min-width: 100%;
@@ -1132,7 +1134,7 @@ div.video-js {margin:auto;}
     }
 /* Dropdown Actions */
 #CollectionMenu .ActionsContainer {
-    margin: 10px 0px 0px 0px;
+    margin: 0;
 }
 
 .ListTools .ActionsContainer select {
@@ -1464,7 +1466,9 @@ a.Enabled, a:visited.Enabled {
 
 #modal #CentralSpaceResources {padding:20px;} /* extra spacing needed when results displayed in a modal - e.g. geographical search */
 
-
+.ListTools a, .SingleLine {
+    white-space: nowrap;
+}
 
 
 /* Breadcrumbs */

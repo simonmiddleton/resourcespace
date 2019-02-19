@@ -88,10 +88,10 @@ for ($n=0;$n<count($messages);$n++)
 	$user = get_user($userbyname);
 	?>
 		<tr>
-			<td<?php echo $unread_css; ?>><?php echo nicedate($messages[$n]["created"],true); ?></td>
+			<td class="SingleLine" <?php echo $unread_css; ?>><?php echo nicedate($messages[$n]["created"],true); ?></td>
 			<td<?php echo $unread_css; ?>><?php echo $messages[$n]["owner"]; ?></td>
 			<?php if ($messages_actions_fullname){?>
-				<td<?php echo $unread_css; ?>><?php 
+				<td class="SingleLine" <?php echo $unread_css; ?>><?php 
 				echo strip_tags_and_attributes($user['fullname']); ?></td>
 				<?php } ?>
 			<?php if ($messages_actions_usergroup){?>
@@ -101,7 +101,7 @@ for ($n=0;$n<count($messages);$n++)
 				echo $url_encoded; ?>',<?php echo $messages[$n]["ref"]; ?>,'<?php echo $messages[$n]["owner"] ?>');"><?php
 					echo $message;
 					?></a></td>
-			<td<?php echo $unread_css; ?>><?php echo nicedate($messages[$n]["expires"]); ?></td>
+			<td class="SingleLine" <?php echo $unread_css; ?>><?php echo nicedate($messages[$n]["expires"]); ?></td>
 			<td<?php echo $unread_css; ?>><?php echo ($messages[$n]["seen"]==0 ? $lang['no'] : $lang['yes']); ?></td>
 			<td>
 				<div class="ListTools">

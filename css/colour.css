@@ -63,13 +63,11 @@ input[readonly] {color: #000000;}
 	background-color: white;
     border-radius: 4px;
     transition: all 0.1s ease-in-out;
-    transform: scale(1);
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 	}
 
 .ResourcePanel:hover {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    transform: scale(1.05);
+    box-shadow: 0 1px 10px 0px rgba(0,0,0,0.3);
     z-index: 100;
     }
 
@@ -117,7 +115,7 @@ input[readonly] {color: #000000;}
 .HomePanel h2{color:#FFF;}
 
 #SearchBox,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab{
-	background: rgba(0, 0, 0, 0.45);
+	background: rgba(0, 0, 0, 0.47);
 	color:#FFF;
 }
 
@@ -358,9 +356,8 @@ li.plupload_droptext {color:#999;}
     background-color: #555;
     color:#fff;
     border:none; 
-    height: 22px;
-    line-height: 1.4rem;
-    padding-left: 4px;
+    height: 26px;
+    padding-left: 5px;
     min-height: 20px;
   }
 

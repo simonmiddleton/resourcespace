@@ -457,6 +457,8 @@ if (getval("ajax","") == "")
 				livePaneResizing:true,
                 triggerEventsDuringLiveResize: false,
 				south__minSize:40,
+                south__spacing_open:8,
+                south__spacing_closed:8,
 				              
                 east__spacing_open:0,
 				east__spacing_closed:8,

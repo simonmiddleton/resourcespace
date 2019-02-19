@@ -1,0 +1,11 @@
+#remote_assist #SearchBoxPanel {
+    background-color: rgba(0, 0, 0, 0.45);
+    width: 300px;
+    border-radius: 4px;
+    margin-top: 0 !important;
+}
+
+#remote_assist #HomeSiteText {
+    max-width: unset;
+    margin-left: 5px;
+}

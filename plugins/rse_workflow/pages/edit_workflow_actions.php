@@ -156,8 +156,10 @@ else
 			<td>wf<?php echo $workflowaction["ref"]; ?>
 			</td>
 			<td>
+			<div class="ListTools">
 			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"] ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]  ?>,true);"><?php echo LINK_CARET . $lang["action-delete"]?> </a><br>
 			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"] ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["action-edit"]?> </a>
+			</div>
 			</td>
 		</tr>
 		<?php	

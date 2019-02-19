@@ -3572,6 +3572,6 @@ $browse_bar = true;
 // Show workflow (archive) states in browse bar?
 $browse_bar_workflow=true;
 // Default browse bar width;
-$browse_default_width = 335;
+$browse_default_width = 295;
 
 
