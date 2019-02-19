@@ -38,9 +38,9 @@ if ($delete!="")
 include '../../../include/header.php';
 
 ?>
-<p>
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow.php" onClick="return CentralSpaceLoad(this,true);"><?php echo "&lt;&nbsp;" . $lang["rse_workflow_manage_workflow"] ?>&nbsp;</a>
-</p>
+<div class="BasicsBox">
+<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK . $lang["rse_workflow_manage_workflow"] ?></a>
+</div>
 <?php
 
 if (isset($noticetext))
@@ -156,8 +156,8 @@ else
 			<td>wf<?php echo $workflowaction["ref"]; ?>
 			</td>
 			<td>
-			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"] ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]  ?>,true);">&gt;&nbsp;<?php echo $lang["action-delete"]?> </a>
-			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"] ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?> </a>
+			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"] ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]  ?>,true);"><?php echo LINK_CARET . $lang["action-delete"]?> </a><br>
+			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"] ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["action-edit"]?> </a>
 			</td>
 		</tr>
 		<?php	
@@ -169,7 +169,7 @@ else
 </div>
 
 
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_action.php?ref=new" onclick="event.preventDefault();CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["rse_workflow_action_new"] ?></a>
+<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_action.php?ref=new" onclick="event.preventDefault();CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["rse_workflow_action_new"] ?></a>
 
 
 </div>

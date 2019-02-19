@@ -117,9 +117,9 @@ include '../../../include/header.php';
 
 ?>
 
-<p>
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_states.php" onClick="return CentralSpaceLoad(this,true);"><?php echo "&lt;&nbsp;" . $lang["rse_workflow_manage_states"] ?>&nbsp;</a>
-</p>
+<div class="BasicsBox">
+<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_states.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK . $lang["rse_workflow_manage_states"] ?>&nbsp;</a>
+</div>
 
 <?php
 
