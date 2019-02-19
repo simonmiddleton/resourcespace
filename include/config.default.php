@@ -2422,7 +2422,7 @@ $debug_log=false;
 # Optional extended debugging information from backtrace (records pagename and calling functions)
 # debug_extended_info = true;
 
-# Debug log location. Optional. Used to specify a full path to debug file. Ensure folder permissions allow write access by web service account
+# Debug log location. Optional. Used to specify a full path to debug file. Ensure folder permissions allow write access to both the file and the containing folder by web service account
 #$debug_log_location="d:/logs/resourcespace.log";
 #$debug_log_location="/var/log/resourcespace/resourcespace.log";
 
