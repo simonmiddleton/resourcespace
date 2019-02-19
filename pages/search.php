@@ -1065,7 +1065,7 @@ if($responsive_ui)
             elseif (strpos($search,"!")!==false && substr($search,0,11)!="!properties") 
                 {
                 // As Added is the default sort sequence if viewing recently added resources 
-                $default_sort_order='asadded';
+                $default_sort_order = 'resourceid';
                 $rel=$lang["asadded"];
                 }
             }
