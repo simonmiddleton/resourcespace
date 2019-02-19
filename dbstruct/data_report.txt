@@ -155,7 +155,7 @@ order by rl.date;
 "
 8,"Resources with zero downloads","
 select r.ref 'Resource ID',
-view_title_field_subselect AS 'Title', 
+view_title_field_subselect AS 'Title' 
 from resource r where r.ref not in 
 (
 select object_ref from daily_stat
