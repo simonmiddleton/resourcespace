@@ -550,6 +550,7 @@ if ($addsearch!=-1)
 				?>
 				<script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
 				<?php
+                exit();
 				}
 			}
 		else
