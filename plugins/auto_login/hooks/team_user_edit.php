@@ -40,27 +40,8 @@ function HookAuto_loginTeam_user_editAftersaveuser()
 
         return false;
         }
-    else if(0 == $auto_login_enabled && '' == $auto_login_ip)
-        {
-        sql_query("UPDATE user SET auto_login_enabled = '{$auto_login_enabled}', auto_login_ip = '{$auto_login_ip}' WHERE ref = '{$ref}'");
 
-        return true;
-        }
-
-    if(false !== filter_var($auto_login_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6))
-        {
-        sql_query("UPDATE user SET auto_login_enabled = '{$auto_login_enabled}', auto_login_ip = '{$auto_login_ip}' WHERE ref = '{$ref}'");
-
-        return true;
-        }
-
-    $error = 'Please type a valid IP address for automatic login';
-
-    // Change save value to nothing so we remain on the same page and show an error to the user
-    $_POST['save'] = '';
-    $_GET['save'] = '';
-    $_COOKIE['save'] = '';
-    $_REQUEST['save'] = '';
-
-    return false;
+	// All OK, save the record.
+    sql_query("UPDATE user SET auto_login_enabled = '{$auto_login_enabled}', auto_login_ip = '{$auto_login_ip}' WHERE ref = '{$ref}'");
+	return true;
     }
