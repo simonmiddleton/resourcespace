@@ -541,17 +541,13 @@ if ($addsearch!=-1)
     else
         {
         hook("preaddsearch");
-		if(checkperm("noex"))
+        $externalkeys=get_collection_external_access($usercollection);
+		if(checkperm("noex") && count($externalkeys)>0)
 			{
-			// If collection has been shared externally users with this permission can't add resources
-			$externalkeys=get_collection_external_access($usercollection);
-			if(count($externalkeys)>0)
-				{
-				?>
-				<script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
-				<?php
-                exit();
-				}
+			// If collection has been shared externally users with this permission can't add resources			
+            ?>
+            <script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
+            <?php
 			}
 		else
 			{		
