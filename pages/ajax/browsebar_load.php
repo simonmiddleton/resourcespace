@@ -184,6 +184,11 @@ switch ($returntype)
             
             $nodes = get_nodes($returnid, $parent, false);
         
+            if((bool) $fielddata['automatic_nodes_ordering'])
+                {
+                $nodes = reorder_nodes($nodes);
+                }
+
             foreach($nodes as $node)
                 {
                 // Create link based on parent and current restype
@@ -232,6 +237,11 @@ switch ($returntype)
         
             $nodes = get_nodes($browse_field, $returnid, false);
             
+            if((bool) $fielddata['automatic_nodes_ordering'])
+                {
+                $nodes = reorder_nodes($nodes);
+                }
+
             foreach($nodes as $node)
                 {
                 $return_items[$n] = array();
