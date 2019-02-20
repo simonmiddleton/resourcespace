@@ -542,53 +542,61 @@ if ($addsearch!=-1)
         {
         hook("preaddsearch");
 		if(checkperm("noex"))
+			{
+			// If collection has been shared externally users with this permission can't add resources
+			$externalkeys=get_collection_external_access($usercollection);
+			if(count($externalkeys)>0)
 				{
-				// If collection has been shared externally user can't add resources
 				?>
-				<script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script><?php
+				<script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
+				<?php
 				}
-        if (getval("mode","")=="")
-            {
-            #add saved search
-            add_saved_search($usercollection);
-
-            # Log this
-            daily_stat("Add saved search to collection",0);
-            }
-        else
-            {
-            #add saved search (the items themselves rather than just the query)
-            $resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $starsearch);
-            if (!empty($resourcesnotadded))
-                {
-                $warningtext="";
-                if(isset($resourcesnotadded["blockedtypes"]))
-                    {
-                    // There are resource types blocked due to $collection_block_restypes
-                    $warningtext = $lang["collection_restype_blocked"] . "<br /><br />";
-                    //$restypes=get_resource_types(implode(",",$collection_block_restypes));
-                    $blocked_types=get_resource_types(implode(",",$resourcesnotadded["blockedtypes"]));
-                    foreach($blocked_types as $blocked_type)
-                        {
-                        if($warningtext==""){$warningtext.="<ul>";}
-                        $warningtext.= "<li>" . $blocked_type["name"] . "</li>";
-                        }
-                    $warningtext.="</ul>";
-                    unset($resourcesnotadded["blockedtypes"]);
-                    }
-			
-                if (!empty($resourcesnotadded))	
-                    {
-                    // There are resources blocked from being added due to archive state
-                    if($warningtext==""){$warningtext.="<br /><br />";}
-                    $warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
-                    }
-		
-                ?><script language="Javascript">styledalert("<?php echo $lang["status-warning"]; ?>","<?php echo $warningtext; ?>",600);</script><?php
-                }
-            # Log this
-            daily_stat("Add saved search items to collection",0);
-            }
+			else
+				{
+				if (getval("mode","")=="")
+					{
+					#add saved search
+					add_saved_search($usercollection);
+	
+					# Log this
+					daily_stat("Add saved search to collection",0);
+					}
+				else
+					{
+					#add saved search (the items themselves rather than just the query)
+					$resourcesnotadded=add_saved_search_items($usercollection, $addsearch, $restypes,$archive, $order_by, $sort, $daylimit, $starsearch);
+					if (!empty($resourcesnotadded))
+						{
+						$warningtext="";
+						if(isset($resourcesnotadded["blockedtypes"]))
+							{
+							// There are resource types blocked due to $collection_block_restypes
+							$warningtext = $lang["collection_restype_blocked"] . "<br /><br />";
+							//$restypes=get_resource_types(implode(",",$collection_block_restypes));
+							$blocked_types=get_resource_types(implode(",",$resourcesnotadded["blockedtypes"]));
+							foreach($blocked_types as $blocked_type)
+								{
+								if($warningtext==""){$warningtext.="<ul>";}
+								$warningtext.= "<li>" . $blocked_type["name"] . "</li>";
+								}
+							$warningtext.="</ul>";
+							unset($resourcesnotadded["blockedtypes"]);
+							}
+					
+						if (!empty($resourcesnotadded))	
+							{
+							// There are resources blocked from being added due to archive state
+							if($warningtext==""){$warningtext.="<br /><br />";}
+							$warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
+							}
+				
+						?><script language="Javascript">styledalert("<?php echo $lang["status-warning"]; ?>","<?php echo $warningtext; ?>",600);</script><?php
+						}
+					# Log this
+					daily_stat("Add saved search items to collection",0);
+					}
+				}		
+			}
         hook("postaddsearch");
         }
 	}
