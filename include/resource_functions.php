@@ -1920,7 +1920,7 @@ function delete_resource($ref)
 	if (isset($resource_deletion_state) && $current_state!=$resource_deletion_state) # Really delete if already in the 'deleted' state.
 		{
 		# $resource_deletion_state is set. Do not delete this resource, instead move it to the specified state.
-		sql_query("update resource set archive='" . $resource_deletion_state . "' where ref='" . $ref . "'");
+		update_archive_status($ref, $resource_deletion_state, $current_state);
 
         # log this so that administrator can tell who requested deletion
         resource_log($ref,'x','');

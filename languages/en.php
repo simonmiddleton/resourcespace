@@ -2778,3 +2778,7 @@ $lang['error-invalid_resource_type']    = "Invalid resource type";
 $lang['error-invalid_browse_action']    = "Invalid action. Please check existing resource data";
 $lang['browse_by_tag']                  = "Browse by tag";
 $lang['browse_by_workflow_state']       = "Workflow";
+
+
+# Updates to workflow
+$lang["userresources_status_change"]="Resources that you have contributed have been moved to the state: ";
