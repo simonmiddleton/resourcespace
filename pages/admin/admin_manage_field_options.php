@@ -509,7 +509,7 @@ if($ajax)
             <tbody>
         <?php
         // Render existing nodes
-        $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name, true);
+        $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name, true, (bool)$field_data['automatic_nodes_ordering']);
 
         if(0 == count($nodes))
             {
@@ -518,11 +518,6 @@ if($ajax)
             migrate_resource_type_field_check($fieldinfo);
 
             $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name, true);
-            }
-
-        if((bool) $field_data['automatic_nodes_ordering'])
-            {
-            $nodes = reorder_nodes($nodes);
             }
 
         $node_index=getvalescaped('offset',0,true);

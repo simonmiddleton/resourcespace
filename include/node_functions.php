@@ -201,19 +201,30 @@ function get_node($ref, array &$returned_node)
 * 
 * Use $offset and $rows only when returning a subset.
 * 
-* @param  integer  $resource_type_field    ID of the metadata field
-* @param  integer  $parent                 ID of parent node
-* @param  boolean  $recursive              Set to true to get children nodes as well.
-*                                          IMPORTANT: this should be used only with category trees
-* @param  integer  $offset                 Specifies the offset of the first row to return
-* @param  integer  $rows                   Specifies the maximum number of rows to return
-* @param  string   $name                   Filter by name of node
-* @param  boolean  $use_count              Show how many resources use a particular node in the node properties
+* @param  integer  $resource_type_field         ID of the metadata field
+* @param  integer  $parent                      ID of parent node
+* @param  boolean  $recursive                   Set to true to get children nodes as well.
+*                                               IMPORTANT: this should be used only with category trees
+* @param  integer  $offset                      Specifies the offset of the first row to return
+* @param  integer  $rows                        Specifies the maximum number of rows to return
+* @param  string   $name                        Filter by name of node
+* @param  boolean  $use_count                   Show how many resources use a particular node in the node properties
+* @param  boolean  $order_by_translated_name    Flag to order by translated names rather then the order_by column
 * 
 * @return array
 */
-function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', $use_count = false)
+function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', 
+    $use_count = false, $order_by_translated_name = false)
     {
+    global $language,$defaultlanguage;
+    $asdefaultlanguage=$defaultlanguage;
+
+    if (!isset($asdefaultlanguage))
+        $asdefaultlanguage='en';
+
+    // Use langauge specified if not use default
+    isset($language)?$language_in_use = $language:$language_in_use = $defaultlanguage;
+
     $return_nodes = array();
 
     // Check if limiting is required
@@ -242,14 +253,47 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         {
         $use_count_sql = ",(SELECT count(resource) FROM resource_node WHERE resource_node.resource > 0 AND resource_node.node = node.ref) AS use_count";
         }
+
+    // Order by translated_name or order_by based on flag
+    $order_by = $order_by_translated_name ? "translated_name" : "order_by";
     
-    $query = sprintf('SELECT * %s FROM node WHERE resource_type_field = \'%s\' %s AND %s ORDER BY order_by ASC %s',
-        $use_count_sql,
-        escape_check($resource_type_field),
-        $filter_by_name,
-        (trim($parent)=="") ? 'parent IS NULL' : "parent = '" . escape_check($parent) . "'",
-        $limit
-    );
+    // Get length of language string + 2 (for ~ and :) for usuage in SQL below
+    $language_string_length = (strlen($language_in_use) + 2);
+
+    $parent_sql = (trim($parent)=="") ? "parent IS NULL" : "parent = '" . escape_check($parent) . "'";
+
+    $query = '
+        SELECT 
+            ref,
+            name,
+            resource_type_field,
+            CASE
+                WHEN
+                    POSITION("~' . $language_in_use . '" IN name) > 0
+                THEN
+                    TRIM(SUBSTRING(name,
+                            POSITION("~' . $language_in_use . ':" IN name) + ' . $language_string_length . ',
+                            CASE
+                                WHEN
+                                    POSITION("~" IN SUBSTRING(name,
+                                            POSITION("~' . $language_in_use . ':" IN name) + ' . $language_string_length . ',
+                                            LENGTH(name) - 1)) > 0
+                                THEN
+                                    POSITION("~" IN SUBSTRING(name,
+                                            POSITION("~' . $language_in_use . ':" IN name) + ' . $language_string_length . ',
+                                            LENGTH(name) - 1)) - 1
+                                ELSE LENGTH(name)
+                            END))
+                ELSE TRIM(name)
+            END AS translated_name
+            ' . $use_count_sql . '
+        FROM node 
+        WHERE resource_type_field = ' . escape_check($resource_type_field) . '
+        ' . $filter_by_name . '
+        AND ' . $parent_sql . '
+        ORDER BY ' . $order_by . ' ASC
+        ' . $limit;
+
     $nodes = sql_query($query);
 
     foreach($nodes as $node)
@@ -411,7 +455,6 @@ function reorder_node(array $nodes_new_order)
 
     return;
     }
-
 
 /**
 * Virtually re-order nodes
