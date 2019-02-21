@@ -264,9 +264,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
 
     $query = '
         SELECT 
-            ref,
-            name,
-            resource_type_field,
+            *,
             CASE
                 WHEN
                     POSITION("~' . $language_in_use . '" IN name) > 0
