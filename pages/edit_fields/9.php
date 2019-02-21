@@ -44,7 +44,35 @@ $add_searched_nodes_function_call = '';
                 ?>"
 />
 <?php
-foreach($field['nodes'] as $node)
+
+$nodes_by_name = $field['nodes'];
+
+if(!function_exists("node_name_comparator")) 
+    {
+    function node_name_comparator($n1, $n2)
+        {
+        return strcmp($n1["name"], $n2["name"]);
+        }
+    }
+
+if(!function_exists("node_orderby_comparator")) 
+    {
+    function node_orderby_comparator($n1, $n2)
+        {
+        return $n1["order_by"] - $n2["order_by"];
+        }
+    }
+
+if((bool) $field['automatic_nodes_ordering'])
+    {
+    uasort($nodes_by_name,"node_name_comparator");    
+    }
+else
+    {
+    uasort($nodes_by_name,"node_orderby_comparator");    
+    }
+
+foreach($nodes_by_name as $node)
     {
     // Deal with previously searched nodes
     if(!in_array($node['ref'], $selected_nodes) && !(isset($user_set_values[$field['ref']]) && in_array($node['ref'],$user_set_values[$field['ref']])))
@@ -61,9 +89,9 @@ foreach($field['nodes'] as $node)
 </div>
 <div class="clearerleft"></div>
 <script>
-// Associative array with index being the node ID
-// Example: Keywords_nodes_3 = [232: United Kingdom, 233: United States]
-// or Keywords_nodes_searched_3 = [232: United Kingdom, 233: United States]
+// Associative array with key being node name and index being the node ID
+// Example: Keywords_nodes_3 = ['United Kingdom']=232, ['United States']=233
+// or Keywords_nodes_searched_3 = ['United Kingdom']=232, ['United States']=233
 var Keywords_<?php echo $js_keywords_suffix; ?> = [];
 
 
@@ -73,17 +101,19 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     var hidden_input_elements = '';
     var keyword_count         = 0;
 
-    Keywords_<?php echo $js_keywords_suffix; ?>.forEach(function (item, index)
+    for (var keyword_value in Keywords_<?php echo $js_keywords_suffix; ?>) 
         {
-        hidden_input_elements += '<input id="<?php echo $hidden_input_elements_name; ?>_' + index + '" type="hidden" name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]" value="' + index + '">';
+        var keyword_index = Keywords_<?php echo $js_keywords_suffix; ?>[keyword_value];
+         
+        hidden_input_elements += '<input id="<?php echo $hidden_input_elements_name; ?>_' + keyword_index + '" type="hidden" name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]" value="' + keyword_index + '">';
 
-        html += '<div class="keywordselected">' + Keywords_<?php echo $js_keywords_suffix; ?>[index];
+        html += '<div class="keywordselected">' + keyword_value;
         html += '<a href="#"';
-        html += ' onClick="removeKeyword_<?php echo $js_keywords_suffix; ?>(\'' + escape(index) + '\', true); return false;"';
+        html += ' onClick="removeKeyword_<?php echo $js_keywords_suffix; ?>(\'' + escape(keyword_index) + '\', true); return false;"';
         html += '>x</a></div>';
         
         keyword_count ++;
-        });
+        };
 
     // Update DOM with all our recent changes
     var existing_hiddent_input_elements = document.getElementsByName('<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]');
@@ -130,18 +160,20 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
 
 function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
     {
-    var old_keywords = Keywords_<?php echo $js_keywords_suffix; ?>;
+    // Save existing keywords array    
+    var saved_Keywords = Keywords_<?php echo $js_keywords_suffix; ?>;
 
-
+    // Rebuild keywords array 
     Keywords_<?php echo $js_keywords_suffix; ?> = [];
-
-	old_keywords.forEach(function(item, index)
+    for (var keyword_value in saved_Keywords) 
         {
-        if(index != node_id)
+        var keyword_index = saved_Keywords[keyword_value];
+         
+        if(keyword_index != node_id)
             {
-            Keywords_<?php echo $js_keywords_suffix; ?>[index] = item;
+            Keywords_<?php echo $js_keywords_suffix; ?>[keyword_value] = keyword_index;
             }
-        });
+        };
 
     updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action);
 
@@ -149,12 +181,11 @@ function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
 	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: node_id}]);
     }
 
-
 function addKeyword_<?php echo $js_keywords_suffix; ?>(node_id, keyword)
     {
     removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, false);
 
-    Keywords_<?php echo $js_keywords_suffix; ?>[node_id] = keyword;
+    Keywords_<?php echo $js_keywords_suffix; ?>[keyword] = node_id;
     }
 
 
