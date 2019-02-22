@@ -1,0 +1,7 @@
+﻿name: vm2rs
+author: Tony W, Mariano B. (OMF)
+version: 1.0
+desc: Enables embedding videos from vimeo.
+config_url: /plugins/vm2rs/pages/setup.php
+category: content sharing
+default_priority: 999
