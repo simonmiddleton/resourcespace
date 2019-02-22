@@ -856,7 +856,7 @@ function node_field_options_override(&$field,$resource_type_field=null)
         }
     else        // normal comma separated options used for checkboxes, selects, etc.
         {
-        $nodes = get_nodes($field['ref']);
+        $nodes = get_nodes($field['ref'],null,false,null,null,null,null,(bool)$field['automatic_nodes_ordering']);
         if (count($nodes) > 0)
             {
             foreach ($nodes as $node)
