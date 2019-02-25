@@ -1580,7 +1580,14 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
             
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+        if($returnsql)
+            {
+            return $sql;
+            }
+        $sql = str_replace("ORDER BY {$order_by}", '', $sql);
+        $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
+
+        return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
         }
 
     # Within this hook implementation, set the value of the global $sql variable:
