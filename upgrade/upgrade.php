@@ -149,10 +149,8 @@ foreach($new_system_version_files as $new_system_version=>$files)
         try
             {
             include_once(__DIR__ . '/scripts/' . $file);
-            foreach($notification_users as $notification_user)
-                {
-                message_add($notification_user['ref'], 'version ' . $new_system_version . ' upgrade script: ' . $file . ' completed OK.', '', $notification_user['ref']);
-                }
+            $message = 'version ' . $new_system_version . ' upgrade script: ' . $file . ' completed OK.';
+            log_activity($message, LOG_CODE_SYSTEM, $new_system_version, 'sysvars', 'version', null, null, null, null, false);
             }
         catch (Exception $e)
             {
@@ -162,14 +160,8 @@ foreach($new_system_version_files as $new_system_version=>$files)
                 echo $e->getMessage() . PHP_EOL;
                 }
 
-            foreach($notification_users as $notification_user)
-                {
-                $message='version ' . $new_system_version . ' upgrade script: ' . $file . ' failed.';
-                message_add($notification_user['ref'],$message . PHP_EOL . $e->getMessage(),'', $notification_user['ref']);
-                // email as well as we are dealing with failure
-                send_mail($notification_user['ref'],$message,$e->getMessage());
-                }
-
+            $message = 'version ' . $new_system_version . ' upgrade script: ' . $file . ' failed.';
+            log_activity($message, LOG_CODE_SYSTEM, $current_system_upgrade_level, 'sysvars', 'version', null, null, null, null, false);
             exit;
             }
 
@@ -182,11 +174,9 @@ foreach($new_system_version_files as $new_system_version=>$files)
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_OVERALL,'Completed');
 
-foreach($notification_users as $notification_user)
-    {
-    message_add($notification_user['ref'],'Successfully upgraded to system version: ' . $new_system_version . '.','',$notification_user['ref']);
-    }
-
+$message = 'Successfully upgraded to system version: ' . $new_system_version . '.';
+log_activity($message, LOG_CODE_SYSTEM, $new_system_version, 'sysvars', 'version', null, null, $current_system_upgrade_level, null, false);
+            
 if($cli)
     	{
     	echo "Upgrade complete" . PHP_EOL;
