@@ -2396,37 +2396,43 @@ function sql_limit($offset, $rows)
     return $limit;
     }
 
+
 /**
-* Generates a SQL query around an existing query in order to retrieve the resource table joins (ie. fieldX columns)
+* Build SELECT statement subqueries for retrieving the joined fields (used for search results). This assumes it will 
+* always append to existing SELECT statement
 * 
+* IMPORTANT: do not expose this function to client side in any way. Do not allow user input into the function without whitelists (inside the function)
+* 
+* @uses escape_check()
 * @uses metadata_field_view_access()
 * @uses get_resource_type_field()
 * 
 * @param array  $joins    All the joins fields as returned by get_resource_table_joins()
-* @param string $sql      The original SQL query
-* @param string $order_by The order by that was intended for the original SQL query
+* @param string $ref_table_column_map The table and column referencing the resource ref (e.g "r.ref" OR "collection_resource.resource")
 * 
 * @return string
 */
-function resource_table_joins_sql(array $joins, $sql, $order_by = '')
+function get_data_joins_select_clause(array $joins, $ref_table_column_map)
     {
     if(empty($joins))
         {
-        return $sql;
+        return '';
         }
 
-    $resource_table_joins_sql = "SELECT ss.*";
+    $select_clause_sql = '';
 
     foreach($joins as $join)
         {
+        $join = escape_check($join);
+
         if($join == $GLOBALS["view_title_field"])
             {
-            $resource_table_joins_sql .= ",
+            $select_clause_sql .= ",
                 (
                     SELECT `value`
                        FROM resource_data
-                      WHERE resource = ss.ref
-                        AND resource_type_field = {$join}
+                      WHERE resource = {$ref_table_column_map}
+                        AND resource_type_field = '{$join}'
                       LIMIT 1
                 ) AS field{$join} ";
 
@@ -2441,40 +2447,30 @@ function resource_table_joins_sql(array $joins, $sql, $order_by = '')
         $resource_table_join_rtf = get_resource_type_field($join);
         if(in_array($resource_table_join_rtf['type'], $GLOBALS['FIXED_LIST_FIELD_TYPES']))
             {
-            $resource_table_joins_sql .= ",
+            $select_clause_sql .= ",
             (
                     SELECT GROUP_CONCAT(n.`name` SEPARATOR ', ') AS `value`
                       FROM resource_node AS rn
                 INNER JOIN node AS n ON n.ref = rn.node
-                     WHERE rn.resource = ss.ref AND n.resource_type_field = {$join}
+                     WHERE rn.resource = {$ref_table_column_map} AND n.resource_type_field = '{$join}'
                   GROUP BY rn.resource
             ) AS field{$join} ";
 
             continue;
             }
 
-        $resource_table_joins_sql .= ",
+        $select_clause_sql .= ",
             (
                 SELECT `value`
                   FROM resource_data
-                 WHERE resource = ss.ref
-                   AND resource_type_field = {$join}
+                 WHERE resource = {$ref_table_column_map}
+                   AND resource_type_field = '{$join}'
                  LIMIT 1
             ) AS field{$join} ";
         }
 
-    $resource_table_joins_sql .= "FROM ({$sql}) AS ss ";
-
-    if($order_by !== '')
-        {
-        $resource_table_joins_sql .= "ORDER BY {$order_by}";
-        }
-
-    return $resource_table_joins_sql;
+    return $select_clause_sql;
     }
-
-
-
 
 
 // IMPORTANT: make sure the upgrade.php is the last line in this file
