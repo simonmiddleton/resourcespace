@@ -1573,12 +1573,12 @@ function do_search(
 
     # Compile final SQL
 
-    $results_sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref ORDER BY $order_by {$fetchrows_sql_limit}" . $sql_suffix;
-
-    $results_sql = resource_table_joins_sql(
+    // Adding joined fields to select statement
+    $select .= get_data_joins_select_clause(
         ($return_refs_only === false ? get_resource_table_joins() : array()),
-        str_replace("ORDER BY {$order_by}", '', $results_sql),
-        str_replace('r.', 'ss.', $order_by));
+        'r.ref');
+
+    $results_sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref ORDER BY $order_by {$fetchrows_sql_limit}" . $sql_suffix;
 
     # Debug
     debug('$results_sql=' . $results_sql);

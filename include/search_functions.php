@@ -1029,18 +1029,18 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         # Fix the ORDER BY for this query (special case due to inner query)
         $order_by=str_replace("r.rating","rating",$order_by);
-        
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
 
         if ($returnsql)
             {
             return $sql;    
             }
-        
-        $sql = str_replace("ORDER BY {$order_by}", '', $sql);
-        $resource_table_joins_order_by = str_replace('r2.ref', 'ss.ref', $order_by);
      
-        return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
+        return sql_query($sql, false, $fetchrows);
         }
     
      # Collections containing resources
@@ -1073,11 +1073,14 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $collection_filter.=" (c.public=0 AND c.user='$userref')";
             }
         $collection_filter.=")";
-        
+
+        // Adding joined fields to select statement
+        $select = get_data_joins_select_clause($joins, 'r.ref');
+
         # Formulate SQL
-        $sql="SELECT DISTINCT c.*, sum(r.hit_count) score, sum(r.hit_count) total_hit_count FROM collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref AND cr.collection=c.ref WHERE $sql_filter AND $collection_filter GROUP BY c.ref ORDER BY $order_by ";
+        $sql="SELECT DISTINCT c.*, sum(r.hit_count) score, sum(r.hit_count) total_hit_count {$select} FROM collection c join resource r $sql_join join collection_resource cr on cr.resource=r.ref AND cr.collection=c.ref WHERE $sql_filter AND $collection_filter GROUP BY c.ref ORDER BY $order_by ";
         
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql));
+        return $returnsql ? $sql : sql_query($sql);
         }
     
     # View Resources With No Downloads
@@ -1087,6 +1090,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $order_by = "ref DESC";
             }
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
 
         $sql = $sql_prefix
             . "
@@ -1103,7 +1109,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                   ORDER BY $order_by"
             . $sql_suffix;
 
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+        return $returnsql ? $sql : sql_query($sql, false, $fetchrows);
         }
     
     # Duplicate Resources (based on file_checksum)
@@ -1117,12 +1123,15 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $ref=explode(",",$ref);// just get the number
         $ref=escape_check($ref[0]);
 
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         if ($ref!="") 
             {
             $sql="SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum= (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE archive = 0 AND ref=$ref AND file_checksum IS NOT null)r2) ORDER BY file_checksum, ref";    
             if($returnsql) {return $sql;}
 
-            $results = sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+            $results = sql_query($sql, false, $fetchrows);
 
             $count=count($results);
             if ($count>1) 
@@ -1138,7 +1147,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum IN (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE archive = 0 AND file_checksum <> '' AND file_checksum IS NOT null GROUP BY file_checksum having count(file_checksum)>1)r2) ORDER BY file_checksum, ref" . $sql_suffix;
             
-            return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+            return $returnsql ? $sql : sql_query($sql, false, $fetchrows);
             }
         }
     
@@ -1195,28 +1204,17 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     include (dirname(__FILE__) . '/../pages/ajax/update_smart_collection.php');
                     }
                 }   
-            }   
-        $searchsql = $sql_prefix . "SELECT DISTINCT c.date_added, c.sortorder, c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource $colcustperm  WHERE c.collection='" . $collection . "' AND $colcustfilter GROUP BY r.ref, c.date_added, c.`comment`, c.purchase_size, c.purchase_complete ORDER BY $order_by" . $sql_suffix;
-
-
-        if($return_disk_usage)
-            {
-            $searchsql = str_replace(", field{$GLOBALS['date_field']} desc", '', $searchsql);
-            $searchsql = str_replace(", field{$GLOBALS['date_field']} asc", '', $searchsql);
             }
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
+        $searchsql = $sql_prefix . "SELECT DISTINCT c.date_added, c.sortorder, c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource $colcustperm  WHERE c.collection='" . $collection . "' AND $colcustfilter GROUP BY r.ref, c.date_added, c.`comment`, c.purchase_size, c.purchase_complete ORDER BY $order_by" . $sql_suffix;
 
         $collectionsearchsql=hook('modifycollectionsearchsql','',array($searchsql));
         if($collectionsearchsql)
             {
             $searchsql=$collectionsearchsql;
-            }
-
-        if(!$return_disk_usage)
-            {
-            $searchsql = str_replace("ORDER BY {$order_by}", '', $searchsql);
-            $resource_table_joins_order_by = str_replace(array('c.', 'r.'), '', $order_by);
-            
-            $searchsql = resource_table_joins_sql($joins, $searchsql, $resource_table_joins_order_by);
             }
 
         if($returnsql)
@@ -1245,13 +1243,16 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         # Extract the resource number
         $resource=explode(" ",$search);$resource=str_replace("!relatedpushed","",$resource[0]);
         $order_by=str_replace("r.","",$order_by); # UNION below doesn't like table aliases in the ORDER BY.
-        
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score,rt.name resource_type_name, $select FROM resource r join resource_type rt on r.resource_type=rt.ref AND rt.push_metadata=1 join resource_related t on (t.related=r.ref AND t.resource='" . $resource . "') $sql_join  WHERE 1=1 AND $sql_filter GROUP BY r.ref 
         UNION
         SELECT DISTINCT r.hit_count score, rt.name resource_type_name, $select FROM resource r join resource_type rt on r.resource_type=rt.ref AND rt.push_metadata=1 join resource_related t on (t.resource=r.ref AND t.related='" . $resource . "') $sql_join  WHERE 1=1 AND $sql_filter GROUP BY r.ref 
         ORDER BY $order_by" . $sql_suffix;
         
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, str_replace("ORDER BY {$order_by}", '', $sql), $order_by), false, $fetchrows);
+        return $returnsql ? $sql : sql_query($sql, false, $fetchrows);
         }
         
     # View Related
@@ -1260,7 +1261,10 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         # Extract the resource number
         $resource=explode(" ",$search);$resource=str_replace("!related","",$resource[0]);
         $order_by=str_replace("r.","",$order_by); # UNION below doesn't like table aliases in the ORDER BY.
-        
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         global $pagename, $related_search_show_self;
         $sql_self = '';
         if ($related_search_show_self && $pagename == 'search') 
@@ -1272,7 +1276,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         SELECT DISTINCT r.hit_count score, $select FROM resource r join resource_related t on (t.resource=r.ref AND t.related='" . $resource . "') $sql_join WHERE $sql_filter GROUP BY r.ref 
         ORDER BY $order_by" . $sql_suffix;
 
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, str_replace("ORDER BY {$order_by}", '', $sql), $order_by), false, $fetchrows);
+        return $returnsql ? $sql : sql_query($sql, false, $fetchrows);
         }
 
 
@@ -1283,6 +1287,10 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $geo=explode("t",str_replace(array("m","p"),array("-","."),substr($search,4))); # Specially encoded string to avoid keyword splitting
         $bl=explode("b",$geo[0]);
         $tr=explode("b",$geo[1]);
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql="SELECT r.hit_count score, $select FROM resource r $sql_join WHERE 
 
                    geo_lat > '" . escape_check($bl[0]) . "'
@@ -1299,16 +1307,16 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             return $searchsql;
             }
 
-        $searchsql = str_replace("ORDER BY {$order_by}", '', $searchsql);
-        $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
-
-        return sql_query(resource_table_joins_sql($joins, $searchsql, $resource_table_joins_order_by), false, $fetchrows);
+        return sql_query($searchsql, false, $fetchrows);
         }
 
     # Colour search
     if (substr($search,0,7)=="!colour")
         {
         $colour=explode(" ",$search);$colour=str_replace("!colour","",$colour[0]);
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
 
         $sql="SELECT r.hit_count score, $select FROM resource r $sql_join
                 WHERE 
@@ -1319,25 +1327,31 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         $searchsql=$sql_prefix . $sql . $sql_suffix;
 
-        return $returnsql ? $searchsql : sql_query(resource_table_joins_sql($joins, $searchsql), false, $fetchrows);
+        return $returnsql ? $searchsql : sql_query($searchsql, false, $fetchrows);
         }
         
     # Similar to a colour
     if (substr($search,0,4)=="!rgb")
         {
         $rgb=explode(":",$search);$rgb=explode(",",$rgb[1]);
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
         
         $searchsql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE has_image=1 AND $sql_filter GROUP BY r.ref ORDER BY (abs(image_red-" . $rgb[0] . ")+abs(image_green-" . $rgb[1] . ")+abs(image_blue-" . $rgb[2] . ")) ASC LIMIT 500" . $sql_suffix;
 
-        return $returnsql ? $searchsql : sql_query(resource_table_joins_sql($joins, $searchsql), false, $fetchrows);
+        return $returnsql ? $searchsql : sql_query($searchsql, false, $fetchrows);
         }
         
     # Has no preview image
     if (substr($search,0,10)=="!nopreview")
         {
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE has_image=0 AND $sql_filter GROUP BY r.ref" . $sql_suffix;
 
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+        return $returnsql ? $sql : sql_query($sql, false, $fetchrows);
         }
         
     # Similar to a colour by key
@@ -1345,9 +1359,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         # Extract the colour key
         $colourkey=explode(" ",$search);$colourkey=str_replace("!colourkey","",$colourkey[0]);
-        
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE has_image=1 AND left(colour_key,4)='" . $colourkey . "' and $sql_filter GROUP BY r.ref" . $sql_suffix;
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+        return $returnsql ? $sql : sql_query($sql, false, $fetchrows);
         }
     
     global $config_search_for_number;
@@ -1355,29 +1372,37 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         $theref = escape_check($search);
         $theref = preg_replace("/[^0-9]/","",$theref);
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE r.ref='$theref' AND $sql_filter GROUP BY r.ref" . $sql_suffix;
 
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+        return $returnsql ? $sql : sql_query($sql, false, $fetchrows);
         }
 
     # Searching for pending archive
     if (substr($search,0,15)=="!archivepending")
         {
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE archive=1 AND ref>0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         if($returnsql)
             {
             return $sql;
             }
 
-        $sql = str_replace("ORDER BY {$order_by}", '', $sql);
-        $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
-
-        return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
+        return sql_query($sql, false, $fetchrows);
         }
     
     if (substr($search,0,12)=="!userpending")
         {
         if ($orig_order=="rating") {$order_by="request_count desc," . $order_by;}
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE archive=-1 AND ref>0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         
         if($returnsql)
@@ -1385,10 +1410,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             return $sql;
             }
 
-        $sql = str_replace("ORDER BY {$order_by}", '', $sql);
-        $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
-
-        return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
+        return sql_query($sql, false, $fetchrows);
         }
         
     # View Contributions
@@ -1406,8 +1428,12 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $sql_filter="archive IN (" . implode(",",$archive) . ")";
             $sql_join="";
             }
-        
+
         $select=str_replace(",rca.access group_access,rca2.access user_access ",",null group_access, null user_access ",$select);
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE created_by='" . $cuser . "' AND r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
 
         if($returnsql)
@@ -1415,15 +1441,15 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             return $sql;
             }
 
-        $sql = str_replace("ORDER BY {$order_by}", '', $sql);
-        $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
-
-        return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
+        return sql_query($sql, false, $fetchrows);
         }
     
     # Search for resources with images
     if ($search=="!images") 
         {
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE has_image=1 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
 
         if($returnsql)
@@ -1431,17 +1457,17 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             return $sql;
             }
 
-        $sql = str_replace("ORDER BY {$order_by}", '', $sql);
-        $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
-
-        return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
+        return sql_query($sql, false, $fetchrows);
         }
 
     # Search for resources not used in Collections
     if (substr($search,0,7)=="!unused") 
         {
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT distinct $select FROM resource r $sql_join  where r.ref>0 and r.ref not in (select c.resource from collection_resource c) and $sql_filter" . $sql_suffix;
-        return $returnsql ? $sql : sql_query(resource_table_joins_sql($joins, $sql), false, $fetchrows);
+        return $returnsql ? $sql : sql_query($sql, false, $fetchrows);
         }   
     
     # Search for a list of resources
@@ -1467,7 +1493,10 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             $resources="where (r.ref='".str_replace(":","' OR r.ref='",$resources) . "')";
             }
-    
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join $resources AND $sql_filter ORDER BY $order_by" . $sql_suffix;
 
         if($returnsql)
@@ -1475,10 +1504,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             return $sql;
             }
 
-        $sql = str_replace("ORDER BY {$order_by}", '', $sql);
-        $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
-
-        return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
+        return sql_query($sql, false, $fetchrows);
         }
 
     # View resources that have data in the specified field reference - useful if deleting unused fields
@@ -1486,6 +1512,9 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         $fieldref=intval(trim(substr($search,8)));
         $hasdatafieldtype = sql_value("SELECT `type` value FROM resource_type_field WHERE ref = '{$fieldref}'", 0);
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
 
         if(in_array($hasdatafieldtype,$FIXED_LIST_FIELD_TYPES))
             {
@@ -1496,10 +1525,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 {
                 return $sql;
                 }
-            $sql = str_replace("ORDER BY {$order_by}", '', $sql);
-            $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
 
-            return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
+            return sql_query($sql, false, $fetchrows);
             }
         else
             {
@@ -1510,10 +1537,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 {
                 return $sql;
                 }
-            $sql = str_replace("ORDER BY {$order_by}", '', $sql);
-            $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
 
-            return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
+            return sql_query($sql, false, $fetchrows);
             }
         }
         
@@ -1578,16 +1603,17 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     }
                 }
             }
-            
+
+        // Adding joined fields to select statement
+        $select .= get_data_joins_select_clause($joins, 'r.ref');
+
         $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE r.ref > 0 AND $sql_filter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         if($returnsql)
             {
             return $sql;
             }
-        $sql = str_replace("ORDER BY {$order_by}", '', $sql);
-        $resource_table_joins_order_by = str_replace('r.ref', 'ss.ref', $order_by);
 
-        return sql_query(resource_table_joins_sql($joins, $sql, $resource_table_joins_order_by), false, $fetchrows);
+        return sql_query($sql, false, $fetchrows);
         }
 
     # Within this hook implementation, set the value of the global $sql variable:
@@ -1601,7 +1627,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         debug("Addspecialsearch hook returned useful results.");
         $searchsql=$sql_prefix . $sql . $sql_suffix;
 
-        return $returnsql ? $searchsql : sql_query(resource_table_joins_sql($joins, $searchsql), false, $fetchrows);
+        return $returnsql ? $searchsql : sql_query($searchsql, false, $fetchrows);
         }
 
      # Arrived here? There were no special searches. Return false.
