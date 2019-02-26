@@ -286,24 +286,51 @@ function check_view_display_condition($fields,$n)
 		}
 	return $displaycondition;
 	}
+
+if(!function_exists("node_name_comparator")) 
+	{
+	function node_name_comparator($n1, $n2)
+		{
+		return strcmp($n1["name"], $n2["name"]);
+		}
+	}
+
+if(!function_exists("node_orderby_comparator")) 
+	{
+	function node_orderby_comparator($n1, $n2)
+		{
+		return $n1["order_by"] - $n2["order_by"];
+		}
+	}
 	
 function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	{
 		
 	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $range_separator, $force_display_template_orderby;
+
 	$value=$field["value"];
 
-    if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
-        {
-        $value = array();
+    # Populate field value for node based fields so it conforms to automatic ordering setting
 
-        foreach(get_resource_nodes($ref, $field['ref'], true) as $node)
-            {
-            $value[] = i18n_get_translated($node['name']);
-            }
-
-        $value = implode(', ', $value);
-        }
+	if(in_array($field['type'],$FIXED_LIST_FIELD_TYPES))
+		{    
+		# Get all nodes attached to this resource and this field    
+		$nodes_in_sequence = get_resource_nodes($ref,$field['ref'],true);
+		if((bool) $field['automatic_nodes_ordering'])
+			{
+			uasort($nodes_in_sequence,"node_name_comparator");    
+			}
+		else
+			{
+			uasort($nodes_in_sequence,"node_orderby_comparator");    
+			}
+		$keyword_array=array();
+		foreach($nodes_in_sequence as $node)
+			{
+			$keyword_array[] = i18n_get_translated($node['name']);
+			}
+		$value = implode(',',$keyword_array);
+		}
 
 	$modified_field=hook("beforeviewdisplayfielddata_processing","",array($field));
 	if($modified_field){
