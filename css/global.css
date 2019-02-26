@@ -198,15 +198,18 @@ h2#CollectionsPanelHeader {display:none;}
 .HeaderSmall #HeaderNav1,  .HeaderSmall #HeaderNav2 {margin:2px 0 0 0;line-height: 30px;}
 .HeaderSmall #HeaderImg{max-height:40px;}
 .HeaderSmall #HeaderNav1 {height:30px;}
+.HeaderSmall {min-height: 30px;}
 
 .HeaderMid #HeaderNav1, .HeaderMid #HeaderNav2 {margin:12px 0 0 0;line-height: 35px;}
 .HeaderMid #HeaderImg{max-height:50px; margin-top: 3px;}
 .HeaderMid #HeaderNav1 {height:47px;}
+.HeaderMid {min-height: 47px;}
 
 .HeaderLarge #HeaderNav1, .HeaderLarge #HeaderNav2 {margin:5px 0 0 0;line-height: 20px;}
 .HeaderLarge #HeaderImg{max-height:85px;}
 .HeaderLarge #HeaderNav1 {height:70px;}
 .HeaderLarge #HeaderNav2 {float:right; clear:both; padding-left: 20px;margin-top:0;}
+.HeaderLarge {min-height: 85px;}
 
 #HeaderNav1 .fa-user, #HeaderNav1 .fa-bars
     {

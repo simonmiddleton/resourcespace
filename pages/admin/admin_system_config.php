@@ -59,7 +59,7 @@ $page_def[] = config_add_single_select(
     true,
     420,
     '',
-    true,"jQuery('#Header').removeClass('HeaderSmall');jQuery('#Header').removeClass('HeaderMid');jQuery('#Header').removeClass('HeaderLarge');jQuery('#Header').addClass(this.value);"
+    true,"jQuery('#Header').removeClass('HeaderSmall');jQuery('#Header').removeClass('HeaderMid');jQuery('#Header').removeClass('HeaderLarge');jQuery('#Header').addClass(this.value);myLayout._sizePane('north');"
 );
 $page_def[] = config_add_colouroverride_input(
     'header_colour_style_override',
