@@ -918,7 +918,8 @@ echo "show_upload_log=" . (($show_upload_log)?"true;":"false;");
 var resource_keys=[];
 var processed_resource_keys=[];
 var relate_on_upload = <?php echo ($store_uploadedrefs ||($relate_on_upload && $enable_related_resources && getval("relateonupload","")==="yes")) ? " true" : "false"; ?>;
-
+// Set flag allowing for blocking auto redirect after upload if errors are encountered at upload
+upRedirBlock = false;
 if(typeof newcol != 'undefined')
     {
     delete(newcol);
@@ -1018,13 +1019,13 @@ var pluploadconfig = {
                                             styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadresponse.error.duplicates + '\r\n<?php echo $lang['see_log']?>');   
                                             message = '<?php echo $lang['error-duplicatesfound']?>';
                                             jQuery("#upload_log").append("\r\n" + message.replace('%resourceref%', uploadresponse.error.duplicates).replace('%filename%', file.name));
-                                            <?php $duplicates_found=true;?>
                                             }
                                         else
                                             {
                                             styledalert('<?php echo $lang["error"]?> ' + uploadresponse.error.code, uploadresponse.error.message);
                                             jQuery("#upload_log").append("\r\n" + uploadresponse.error.message + " " + uploadresponse.error.code);
                                             }    
+                                        upRedirBlock = true;
                                         }
                                     else
                                         {
@@ -1040,8 +1041,10 @@ var pluploadconfig = {
                                     }
                                 catch(e)
                                     {
-                                    uploaderrormessage = 'Server side error! Please contact the administrator!';
-                                    styledalert("<?php echo $lang['error']; ?>", uploaderrormessage);
+                                    upRedirBlock = true;
+                                    uploaderrormessage = 'Server side error! Please check the log and contact the system administrator!';
+                                    jQuery("#upload_log").append("\r\n" + jQuery('<html>' + info.response.replace(/\s\s/g," ") + '</html>').text());
+                                    styledalert("<?php echo $lang['error']; ?>", uploaderrormessage );
                                     }             
                                 
                                 // When uploading a batch of files and their alternatives, keep track of the resource ID
@@ -1144,10 +1147,14 @@ var pluploadconfig = {
                                 processed_resource_keys=resource_keys;
                             });                           
 					<?php	  
-				  if ($redirecturl!="" && !$duplicates_found){?>
+				  if ($redirecturl!=""){?>
                                   //remove the completed files once complete
                                   uploader.bind('UploadComplete', function(up, files) {
-                                  CentralSpaceLoad('<?php echo $redirecturl ?>',true);
+                                  if(!upRedirBlock)
+                                      {
+                                      CentralSpaceLoad('<?php echo $redirecturl ?>',true);
+                                      }
+                                  upRedirBlock = false; 
                                   });
                                 
                           <?php }                          
