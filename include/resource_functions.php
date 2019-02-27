@@ -2177,6 +2177,12 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
             }
         }
 
+    // Avoid out of memory errors such as when working with large PDF files
+    if(strlen($diff)>10000)
+        {
+        $diff = mb_substr($diff,10000);
+        }
+
 	$modifiedlogtype=hook("modifylogtype","",array($type));
 	if ($modifiedlogtype)
         {
@@ -3819,9 +3825,9 @@ function log_diff($fromvalue, $tovalue)
     $return = '';
     
     // Trim values as it can cause out of memory errors with class.Diff.php e.g. when saving extracted text or creating previews for large PDF files
-    if(strlen($tovalue)>10000)
+    if(strlen($fromvalue)>10000)
         {
-        $tovalue = mb_substr($tovalue,10000);
+        $fromvalue = mb_substr($fromvalue,10000);
         }    
     if(strlen($tovalue)>10000)
         {

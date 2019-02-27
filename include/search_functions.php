@@ -1039,7 +1039,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             {
             return $sql;    
             }
-     
         return sql_query($sql, false, $fetchrows);
         }
     
