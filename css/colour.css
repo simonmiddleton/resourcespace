@@ -277,8 +277,6 @@ li.plupload_droptext {color:#999;}
 .CodeMirror-wrapping{color: #000000;background: #FFFFFF;}
 
 
-.CommentFlag { background-image: url('../gfx/interface/FlagOff.png'); }
-.CommentEntryInfoCommenterName { color: #3070bf; }
 .CommentBody { color: #000000}
 /* Dash Tiles */
 #dash_tile_bin.ui-state-hover {
