@@ -1268,9 +1268,29 @@ if($responsive_ui)
         }
     hook("beforesearchresults2");
     hook("beforesearchresultsexpandspace");
+    
+    // DRAG AND DROP TO UPLOAD FUNCTIONALITY
+    // Generate a URL for drag drop function - fires same URL as "upload here" when dragging.
+    $drag_upload_params=render_upload_here_button($searchparams,true);
+    $drag_over="";
+    if (is_array($drag_upload_params))
+        {
+        $drag_url=generateURL("{$GLOBALS['baseurl']}/pages/upload_plupload.php", $drag_upload_params);
+        $drag_over=" onDragOver=\"UploadViaDrag('" . $drag_url . "');\" ";
+        }
     ?>
+    <script>
+    var DragUploading=false
+    function UploadViaDrag(url)
+        {
+        if (DragUploading) {return false;}
+        DragUploading=true;CentralSpaceLoad(url);
+        }
+    </script>
+    
+    
     <div class="clearerleft"></div>
-    <div id="CentralSpaceResources" collectionSearchName="<?php echo $collectionsearchname ?>">
+    <div id="CentralSpaceResources" collectionSearchName="<?php echo $collectionsearchname ?>" <?php echo $drag_over ?>>
     <?php
 
     if ((!is_array($result) || count($result)<1) && empty($collections))

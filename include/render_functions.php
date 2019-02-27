@@ -2534,7 +2534,7 @@ function render_filter_bar_button($text, $on_click, $icon)
 * 
 * @return void
 */
-function render_upload_here_button(array $search_params)
+function render_upload_here_button(array $search_params,$return_params_only=false)
     {
     if(!(checkperm('c') || checkperm('d')))
         {
@@ -2611,6 +2611,12 @@ function render_upload_here_button(array $search_params)
         $upload_here_params['status'] = $editable_archives[0]['id'];
         }
 
+    // Option to return out just the upload params
+    if ($return_params_only)
+        {
+        return $upload_here_params;
+        }
+        
     $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
     $upload_here_on_click = "CentralSpaceLoad('{$upload_here_url}');";
 
