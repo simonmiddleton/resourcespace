@@ -11,7 +11,8 @@ if (!checkperm_user_edit($userref))
 
 $log_search = getval("log_search", "");
 $backurl = getval("backurl", "");
-$actasuser = getval('actasuser', $userref, true);
+$requesteduser = getval('actasuser',0, true);
+$actasuser = $requesteduser !== 0 ? $userref : $requesteduser;
 
 // Filter by a particular table and its reference
 $table = getval('table', '');
@@ -39,18 +40,30 @@ $no_reference_data_tables = sql_array('
     ',
     array());
 
-$log_tables_where_statements = array(
-    'activity_log' => "`activity_log`.`user`='{$actasuser}' AND ",
-    'resource_log' => "`resource_log`.`user`='{$actasuser}' AND ",
-    'collection_log' => "`collection_log`.`user`='{$actasuser}' AND ",
-);
-
+if(!checkperm('a') || $requesteduser == $userref)
+    {
+    $log_tables_where_statements = array(
+        'activity_log' => "`activity_log`.`user`='{$actasuser}' AND ",
+        'resource_log' => "`resource_log`.`user`='{$actasuser}' AND ",
+        'collection_log' => "`collection_log`.`user`='{$actasuser}' AND ",
+    );
+    }
+else
+    {
+    // Admins see all user activity by default
+    $log_tables_where_statements = array(
+        'activity_log' => "TRUE AND ",
+        'resource_log' => "TRUE AND ",
+        'collection_log' => "TRUE AND ",
+    );;   
+    }
+    
 // Paging functionality
 $url = generateURL("{$baseurl_short}pages/admin/admin_system_log.php",
     array(
         'log_search' => $log_search,
         'backurl' => $backurl,
-        'actasuser' => $actasuser,
+        'actasuser' => $requesteduser,
         'table' => $table,
         'table_reference' => $table_reference,
     )
@@ -114,7 +127,7 @@ if($table == '' && $table_reference == 0)
         array(
             'log_search' => $log_search,
             'backurl' => $backurl,
-            'actasuser' => $actasuser
+            'actasuser' => $requesteduser
         ));
     ?>
     <form id="TableFilterForm" method="get" action="<?php echo $select_table_url; ?>">
