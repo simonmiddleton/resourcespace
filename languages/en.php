@@ -1998,8 +1998,8 @@ $lang['comments_body-placeholder']="Add a comment...";
 $lang['comments_fullname-placeholder']="Your Name (required)";
 $lang['comments_email-placeholder']="Your E-mail (required)";
 $lang['comments_website-url-placeholder']="Website";
-$lang['comments_flag-this-comment']="Flag this comment";
-$lang['comments_flag-has-been-flagged']="This comment has been flagged";
+$lang['comments_flag-this-comment']="Flag";
+$lang['comments_flag-has-been-flagged']="Comment flagged";
 $lang['comments_flag-reason-placeholder']="Reason to flag comment";
 $lang['comments_validation-fields-failed']="Please ensure all mandatory fields are correctly completed";
 $lang['comments_block_comment_label']="block comment";
@@ -2007,7 +2007,7 @@ $lang['comments_flag-email-default-subject']="Notification of flagged comment";
 $lang['comments_flag-email-default-body']="This comment has been flagged:";
 $lang['comments_flag-email-flagged-by']="Flagged by:";
 $lang['comments_flag-email-flagged-reason']="Reason for flagging:";
-$lang['comments_hide-comment-text-link']="Remove Comment";
+$lang['comments_hide-comment-text-link']="Delete";
 $lang['comments_hide-comment-text-confirm']="Are you sure that you want to remove the text for this comment?";
 
 # testing updated request emails
