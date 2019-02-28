@@ -1622,7 +1622,7 @@ function do_search(
             }
         else
             {
-            $result = array_pad($result, $sql_calc_found_rows, 0);
+            $result = array_pad($result, $sql_calc_found_rows * -1, 0);
             }
         }
 
