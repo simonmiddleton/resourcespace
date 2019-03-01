@@ -286,22 +286,6 @@ function check_view_display_condition($fields,$n)
 		}
 	return $displaycondition;
 	}
-
-if(!function_exists("node_name_comparator")) 
-	{
-	function node_name_comparator($n1, $n2)
-		{
-		return strcmp($n1["name"], $n2["name"]);
-		}
-	}
-
-if(!function_exists("node_orderby_comparator")) 
-	{
-	function node_orderby_comparator($n1, $n2)
-		{
-		return $n1["order_by"] - $n2["order_by"];
-		}
-	}
 	
 function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	{
