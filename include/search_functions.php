@@ -1005,7 +1005,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     # Process special searches. These return early with results.
     global $FIXED_LIST_FIELD_TYPES;
 
-    $joins = ($return_refs_only === false ? get_resource_table_joins() : array());
+    $joins = get_resource_table_joins();
 
     # View Last
     if (substr($search,0,5)=="!last") 
