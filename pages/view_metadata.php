@@ -132,11 +132,14 @@ foreach($fields_tab_names as $tabname)
         {
         $displaycondition = check_view_display_condition($fields, $i);
 
-        if($displaycondition && $tabname == $fields[$i]['tab_name'])
+        if($fields[$i]['resource_type'] == '0' || $fields[$i]['resource_type'] == $resource['resource_type'])
             {
-            if(!hook('renderfield', '', array($fields[$i], $resource)))
+            if($displaycondition && $tabname == $fields[$i]['tab_name'])
                 {
-                display_field_data($fields[$i]);
+                if(!hook('renderfield', '', array($fields[$i], $resource)))
+                    {
+                    display_field_data($fields[$i]);
+                    }
                 }
             }
         }
