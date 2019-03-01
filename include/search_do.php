@@ -1610,19 +1610,28 @@ function do_search(
         if(
             is_array($result)
             && count($result) > 0
-            && is_array($fetchrows)
-            && $sql_calc_found_rows > ($fetchrows_offset + $fetchrows_rows))
+            )
             {
-            // Pad to the left (to offset - if needed)
-            $padded_result = array_pad($result, abs($fetchrows_offset + $fetchrows_rows) * -1, 0);
-            // Pad to the right (remainder required to make up the total count correctly)
-            $padded_result = array_pad($padded_result, $sql_calc_found_rows, 0);
+            if(is_array($fetchrows))
+                {
+                if($sql_calc_found_rows > ($fetchrows_offset + $fetchrows_rows))
+                    {
+                    // Pad to the left (to offset - if needed)
+                    $padded_result = array_pad($result, abs($fetchrows_offset + $fetchrows_rows) * -1, 0);
+                    // Pad to the right (remainder required to make up the total count correctly)
+                    $padded_result = array_pad($padded_result, $sql_calc_found_rows, 0);
 
-            $result = $padded_result;
-            }
-        else
-            {
-            $result = array_pad($result, $sql_calc_found_rows * -1, 0);
+                    $result = $padded_result;
+                    }
+                else
+                    {
+                    $result = array_pad($result, $sql_calc_found_rows * -1, 0);
+                    }
+                }
+            else
+                {
+                $result=array_pad($result,$sql_calc_found_rows,0);    
+                }
             }
         }
 
