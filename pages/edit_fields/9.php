@@ -45,34 +45,18 @@ $add_searched_nodes_function_call = '';
 />
 <?php
 
-$nodes_by_name = $field['nodes'];
-
-if(!function_exists("node_name_comparator")) 
-    {
-    function node_name_comparator($n1, $n2)
-        {
-        return strcmp($n1["name"], $n2["name"]);
-        }
-    }
-
-if(!function_exists("node_orderby_comparator")) 
-    {
-    function node_orderby_comparator($n1, $n2)
-        {
-        return $n1["order_by"] - $n2["order_by"];
-        }
-    }
+$nodes_in_sequence = $field['nodes'];
 
 if((bool) $field['automatic_nodes_ordering'])
     {
-    uasort($nodes_by_name,"node_name_comparator");    
+    uasort($nodes_in_sequence,"node_name_comparator");    
     }
 else
     {
-    uasort($nodes_by_name,"node_orderby_comparator");    
+    uasort($nodes_in_sequence,"node_orderby_comparator");    
     }
 
-foreach($nodes_by_name as $node)
+foreach($nodes_in_sequence as $node)
     {
     // Deal with previously searched nodes
     if(!in_array($node['ref'], $selected_nodes) && !(isset($user_set_values[$field['ref']]) && in_array($node['ref'],$user_set_values[$field['ref']])))
