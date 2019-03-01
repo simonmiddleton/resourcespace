@@ -1574,9 +1574,7 @@ function do_search(
     # Compile final SQL
 
     // Adding joined fields to select statement
-    $select .= get_data_joins_select_clause(
-        ($return_refs_only === false ? get_resource_table_joins() : array()),
-        'r.ref');
+    $select .= get_data_joins_select_clause(get_resource_table_joins(), 'r.ref');
 
     $results_sql = $sql_prefix . "SELECT distinct $score score, $select FROM resource r" . $t . "  WHERE $t2 $sql GROUP BY r.ref ORDER BY $order_by {$fetchrows_sql_limit}" . $sql_suffix;
 
