@@ -18,7 +18,9 @@ include ("../../include/header.php");
 		<?php } ?>
 		<li><i aria-hidden="true" class="fa fa-fw fa-cubes"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_resource_types.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang["resource_types_manage"] ?></a></li>
 		<li><i aria-hidden="true" class="fa fa-fw fa-bars"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_fields.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang["admin_resource_type_fields"] ?></a></li>
+        <?php if ($search_filter_nodes) { ?>
 		<li><i aria-hidden="true" class="fa fa-fw fa-filter"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_filter_manage.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang["filter_manage"] ?></a></li>
+		<?php } ?>
 		<li><i aria-hidden="true" class="fa fa-fw fa-table"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_report_management.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang['page-title_report_management']; ?></a></li>
 		
 		<li><i aria-hidden="true" class="fa fa-fw fa-files-o"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_size_management.php" onclick="return CentralSpaceLoad(this,true);"><?php echo $lang["page-title_size_management"] ?></a></li>
