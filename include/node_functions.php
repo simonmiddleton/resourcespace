@@ -262,35 +262,35 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
 
     $parent_sql = (trim($parent)=="") ? "parent IS NULL" : "parent = '" . escape_check($parent) . "'";
 
-    $query = '
+    $query = "
         SELECT 
             *,
             CASE
                 WHEN
-                    POSITION("~' . $language_in_use . '" IN name) > 0
+                    POSITION('~" . $language_in_use . "' IN name) > 0
                 THEN
                     TRIM(SUBSTRING(name,
-                            POSITION("~' . $language_in_use . ':" IN name) + ' . $language_string_length . ',
+                            POSITION('~" . $language_in_use . ":' IN name) + " . $language_string_length . ",
                             CASE
                                 WHEN
-                                    POSITION("~" IN SUBSTRING(name,
-                                            POSITION("~' . $language_in_use . ':" IN name) + ' . $language_string_length . ',
+                                    POSITION('~' IN SUBSTRING(name,
+                                            POSITION('~" . $language_in_use . ":' IN name) + " . $language_string_length . ",
                                             LENGTH(name) - 1)) > 0
                                 THEN
-                                    POSITION("~" IN SUBSTRING(name,
-                                            POSITION("~' . $language_in_use . ':" IN name) + ' . $language_string_length . ',
+                                    POSITION('~' IN SUBSTRING(name,
+                                            POSITION('~" . $language_in_use . ":' IN name) + " . $language_string_length . ",
                                             LENGTH(name) - 1)) - 1
                                 ELSE LENGTH(name)
                             END))
                 ELSE TRIM(name)
             END AS translated_name
-            ' . $use_count_sql . '
+            " . $use_count_sql . "
         FROM node 
-        WHERE resource_type_field = ' . escape_check($resource_type_field) . '
-        ' . $filter_by_name . '
-        AND ' . $parent_sql . '
-        ORDER BY ' . $order_by . ' ASC
-        ' . $limit;
+        WHERE resource_type_field = " . escape_check($resource_type_field) . "
+        " . $filter_by_name . "
+        AND " . $parent_sql . "
+        ORDER BY " . $order_by . " ASC
+        " . $limit;
 
     $nodes = sql_query($query);
 
