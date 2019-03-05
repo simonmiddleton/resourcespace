@@ -8,6 +8,7 @@ $k=getvalescaped("k","");
 
 $k_shares_collection=getvalescaped("collection","");
 $k_shares_ref=getvalescaped("ref","");
+$ref=getvalescaped("ref","");
 
 # Check access key because we need to honor terms requirement at user group override level
 if ($k!="") 
@@ -34,12 +35,18 @@ if(is_string($newurl))
     $url = $newurl;
     }
 
-if('' != getval('save', '') && enforcePostRequest(false))
+$terms_save=getvalescaped('save', '');
+$terms_url_accepted="";
+if('' != $terms_save && enforcePostRequest(false))
     {
-    if('on' == getvalescaped('iaccept', ''))
+	$terms_iaccept=getvalescaped('iaccept', '');
+    if('on' == $terms_iaccept)
         {
-        sql_query("UPDATE user SET accepted_terms = 1 WHERE ref = '{$userref}'");
+		sql_query("UPDATE user SET accepted_terms = 1 WHERE ref = '{$userref}'");
+		$terms_url_accepted="&iaccept=".$terms_iaccept;
         }
+
+	$url.=$terms_url_accepted;
 
     if(false !== strpos($url, 'http'))
         {
@@ -48,7 +55,8 @@ if('' != getval('save', '') && enforcePostRequest(false))
         }
     else
         {
-        redirect($url);
+		redirect($url);
+		
         }
     }
 
@@ -77,7 +85,8 @@ include "../include/header.php";
 	<div class="clearerleft"> </div>
 	</div>
 	
-	<form method="post" action="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k); ?>" onSubmit="if (!document.getElementById('iaccept').checked) {alert('<?php echo $lang["mustaccept"] ?>');return false;}">
+	<form method="post" action="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k); ?>" 
+		onSubmit="if (!document.getElementById('iaccept').checked) {alert('<?php echo $lang["mustaccept"] ?>');return false;}">
 	<?php generateFormToken("terms"); ?>
     <input type=hidden name="url" value="<?php echo htmlspecialchars($url)?>">
 	
@@ -89,10 +98,22 @@ include "../include/header.php";
 	
 	<div class="QuestionSubmit">
 	<label></label>
-	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["proceed"]?>&nbsp;&nbsp;" />
+	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["proceed"]?>&nbsp;&nbsp;" 
+	<?php if(strpos($url,"crop.php")!==false) 
+			{ 
+			echo "onClick='redirectToHomePage(1000);'"; 
+			}?>/>
 	</div>
 	</form>
-	
+<script>
+function redirectToHomePage(delayTime) 
+	{
+	setTimeout(function()
+		{ 
+		window.location.href = "<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref); ?>";
+		}, delayTime);
+	}
+</script>	
 </div>
 
 <?php
