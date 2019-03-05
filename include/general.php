@@ -4122,6 +4122,8 @@ function check_access_key($resource,$key)
         return true;
         }
 
+    hook("external_share_view_as_internal_override");
+
     global $external_share_view_as_internal, $is_authenticated, $baseurl, $baseurl_short;
 
     if(
@@ -4309,7 +4311,9 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
-    
+
+    hook("external_share_view_as_internal_override");
+
     global $external_share_view_as_internal;
     if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
         {
