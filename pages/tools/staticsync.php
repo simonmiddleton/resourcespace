@@ -507,6 +507,13 @@ function ProcessFolder($folder)
                                                 $value=$given_value;
                                                 }
                                             }
+
+                                            // If this is a 'joined' field add it to the resource column
+                                            $joins = get_resource_table_joins();
+                                            if(in_array($field_info['ref'], $joins))
+                                                {
+                                                sql_query("UPDATE resource SET field{$field_info['ref']} = '" . escape_check(truncate_join_field_value($value)) . "' WHERE ref = '{$r}'");
+                                                }
                                         
                                         echo " - Extracted metadata from path: $value for field id # " . $field_info['ref'] . PHP_EOL;
                                         }
