@@ -1411,13 +1411,9 @@ if (is_numeric($collection_add) && count(get_collection_external_access($collect
 		$imgpath=get_resource_path($resource['ref'],true,"col",false);
 		if (file_exists($imgpath)){ ?><img src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/><?php }
 	}
-
-    if ($alternative_file_resource_title)
-        {
-        $resource_title = get_data_by_field($resource['ref'], $view_title_field);
-
-        echo "<h2>{$resource_title}</h2><br/>";
-        }
+	if ($alternative_file_resource_title){ 
+		echo "<h2>".$resource['field'.$view_title_field]."</h2><br/>";
+	}
 }
 
 # Define the titles:

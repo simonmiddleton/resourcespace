@@ -58,7 +58,30 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     
             sql_query("delete from resource_data where resource='" . escape_check($ref) . "' $staticsync_mod");
             sql_query("delete from resource_keyword where resource='" . escape_check($ref) . "' $staticsync_mod");
-
+            #clear 'joined' display fields which are based on metadata that is being deleted in a revert (original filename is reinserted later)
+            $display_fields=get_resource_table_joins();
+            if ($staticsync_mod!="")
+                {
+                $display_fields_new=array();
+                for($n=0;$n<count($display_fields);$n++)
+                    {
+                    if ($display_fields[$n]!=8)
+                        {
+                        $display_fields_new[]=$display_fields[$n];
+                        }
+                    }
+                $display_fields=$display_fields_new;
+                }
+            $clear_fields="";
+            for ($x=0;$x<count($display_fields);$x++)
+                { 
+                $clear_fields.="field".$display_fields[$x]."=''";
+                if ($x<count($display_fields)-1)
+                    {
+                    $clear_fields.=",";
+                    }
+                }   
+            sql_query("update resource set ".$clear_fields." where ref=$ref");
             #also add the ref back into keywords:
             add_keyword_mappings($ref, $ref , -1);
             $extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'","");

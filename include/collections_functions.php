@@ -1978,29 +1978,10 @@ function collection_log($collection,$type,$resource,$notes = "")
              VALUES (now(), {$user}, '{$collection}', '{$type}', {$resource}, '{$notes}')");
 	}
     
-function get_collection_log($collection, $fetchrows = -1)
+function get_collection_log($collection, $fetchrows=-1)
 	{
-    $sql = "
-                 SELECT c.date,
-                        u.username,
-                        u.fullname,
-                        c.type,
-                        (
-                            SELECT `value`
-                               FROM resource_data
-                              WHERE resource = r.ref
-                                AND resource_type_field = {$GLOBALS["view_title_field"]}
-                              LIMIT 1
-                        ) AS title,
-                        c.resource,
-                        c.notes
-                   FROM collection_log AS c
-        LEFT OUTER JOIN user AS u on u.ref = c.user
-        LEFT OUTER JOIN resource AS r on r.ref = c.resource
-                  WHERE collection = '" . escape_check($collection) . "'
-               ORDER BY c.date DESC";
-
-	return sql_query($sql, false, $fetchrows);
+	global $view_title_field;	
+	return sql_query("select c.date,u.username,u.fullname,c.type,r.field".$view_title_field." title,c.resource, c.notes from collection_log c left outer join user u on u.ref=c.user left outer join resource r on r.ref=c.resource where collection='$collection' order by c.date desc",false,$fetchrows);
 	}
 	
 function get_collection_videocount($ref)
