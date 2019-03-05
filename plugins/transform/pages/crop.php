@@ -105,6 +105,7 @@ $manage_slideshow_id = getvalescaped('manage_slideshow_id', '');
 
 $return_to_url = getvalescaped('return_to_url', '');
 
+$terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
 // if we've been told to do something
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'docrop'){
@@ -214,6 +215,18 @@ if (!$download && !$edit_access){
 	include "../../../include/footer.php";
 	exit;
 }
+
+// Redirect to terms page if necessary
+if ($download && $terms_download){
+    $terms_accepted=getvalescaped('iaccept', '');
+    if('on'!=$terms_accepted)
+        {
+        $crop_url=substr($_SERVER['REQUEST_URI'],1);
+        $redirect_to_terms_url="pages/terms.php?ref=".$ref."&url=".urlencode($crop_url);
+        redirect($redirect_to_terms_url);
+        }
+}
+
 
 if ($cropper_enable_alternative_files && !$download && !$original && getval("slideshow","")=="")
 	{
@@ -538,8 +551,8 @@ else
 	readfile($newpath);
 	unlink($newpath);	
 	unlink($crop_pre_file);
-    //unlink(get_temp_dir() . "/transform_plugin/pre_$ref.jpg");
-	exit();
+
+    exit();
 }
 hook("aftercropfinish");
 
@@ -707,11 +720,11 @@ if(!$cropperestricted)
 		    
 		    }
 		    
-		    function validate_transform(theform){
-		    
+            function validate_transform(theform)
+                {
 			    // make sure that this is a reasonable transformation before we submit the form.
-			    // fixme - could add more sophisticated validation here
-			    <?php
+                // fixme - could add more sophisticated validation here
+                <?php
 				if ($cropper_force_original_format)
 					{
 					// Ignore valid dimension check as user may just want to download a different file format
@@ -728,10 +741,10 @@ if(!$cropperestricted)
 					    alert('<?php echo addslashes($lang['errorspecifiedbiggerthanoriginal']); ?>');
 					    return false;
 				    }
-			    <?php } ?>
-			    return true;
-		    
-		    }
+                <?php } ?>
+                
+                return true;
+		        }
 
     // Function used to set the information needed by the cropper and to display/ hide transform options & actions
     function replace_slideshow_set_information(replace_slideshow_checkbox)
