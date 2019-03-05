@@ -101,7 +101,7 @@ include "../include/header.php";
 	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["proceed"]?>&nbsp;&nbsp;" 
 	<?php if(strpos($url,"crop.php")!==false) 
 			{ 
-			echo "onClick='redirectToHomePage(1000);'"; 
+			echo "onClick='redirectToHomePage(2000);'"; 
 			}?>/>
 	</div>
 	</form>
