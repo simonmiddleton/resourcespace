@@ -90,19 +90,19 @@ if (isset($collectiondata["theme"]) && strlen($collectiondata["theme"])>0)
 		{
 		$colaccessmode = $lang["themes"];
 		$is_theme=true;						
-		$theme_link="<a onClick='return CentralSpaceLoad(this,true);' href='" . $baseurl . "/pages/themes.php'>".$lang['themes']."</a>" . "&nbsp;" . LINK_CARET .  "<a onClick='return CentralSpaceLoad(this,true);' href='".$baseurl . "/pages/themes.php?theme1=" . urlencode($collectiondata["theme"]) . "'>" . str_replace("*","",i18n_get_translated($collectiondata["theme"])) . "</a>";
+		$theme_link="<a onClick='return CentralSpaceLoad(this,true);' href='" . $baseurl . "/pages/themes.php'>".$lang['themes']."</a>" . "&nbsp;" . LINK_CARET .  "<a onClick='return CentralSpaceLoad(this,true);' href='".$baseurl . "/pages/themes.php?theme1=" . urlencode(htmlspecialchars($collectiondata["theme"])) . "'>" . htmlspecialchars(str_replace("*","",i18n_get_translated($collectiondata["theme"]))) . "</a>";
 		
 		global $theme_category_levels;
 		for($x=2;$x<=$theme_category_levels;$x++)
 			{					
 			if(isset($collectiondata['theme' . $x]) && strlen($collectiondata['theme' . $x]) > 0)
 				{
-				$theme_link_url = $baseurl . "/pages/themes.php?lastlevelchange=" . $x . "&theme1=" . urlencode($collectiondata["theme"]);
+				$theme_link_url = $baseurl . "/pages/themes.php?lastlevelchange=" . $x . "&theme1=" . urlencode(htmlspecialchars($collectiondata["theme"]));
 				for($l=2;$l<=$x;$l++)
 					{
-					$theme_link_url .= "&theme" . $l . "=" . urlencode($collectiondata['theme' . $l]);
+					$theme_link_url .= "&theme" . $l . "=" . urlencode(htmlspecialchars($collectiondata['theme' . $l]));
 					}
-				$theme_link .="&nbsp;" .  LINK_CARET . "<a onClick='return CentralSpaceLoad(this, true);' href='" . $theme_link_url . "'>" . str_replace("*","",i18n_get_translated($collectiondata['theme' . $x])) . "</a>";
+				$theme_link .="&nbsp;" .  LINK_CARET . "<a onClick='return CentralSpaceLoad(this, true);' href='" . $theme_link_url . "'>" . htmlspecialchars(str_replace("*","",i18n_get_translated($collectiondata['theme' . $x]))) . "</a>";
 				}
 			}			
 		}
