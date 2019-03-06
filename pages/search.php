@@ -654,13 +654,11 @@ if(!$collectionsearch)
             scroll: false,
             drag: function (event, ui)
                 {
-                //var defaultSize = 108;
-                //var positie = ((ui.position.top)/19);
-                //console.log(ui.position.top);
-                //var correcteSize = defaultSize + positie;
-                jQuery(ui.helper).width(150);
-                jQuery(ui.helper).height(150);
+                jQuery(ui.helper).width(174);
+                jQuery(ui.helper).height(174);
                 jQuery(ui.helper).css('opacity','0.5');
+                jQuery(ui.helper).css('transform','scale(0.8)');
+                jQuery(ui.helper).children('.ResourcePanelIcons').hide();
                 },
             
             start: function(event, ui)
