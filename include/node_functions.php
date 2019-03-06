@@ -243,13 +243,41 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         $use_count_sql = ",(SELECT count(resource) FROM resource_node WHERE resource_node.resource > 0 AND resource_node.node = node.ref) AS use_count";
         }
     
-    $query = sprintf('SELECT * %s FROM node WHERE resource_type_field = \'%s\' %s AND %s ORDER BY order_by ASC %s',
-        $use_count_sql,
-        escape_check($resource_type_field),
-        $filter_by_name,
-        (trim($parent)=="") ? 'parent IS NULL' : "parent = '" . escape_check($parent) . "'",
-        $limit
-    );
+    // Get length of language string + 2 (for ~ and :) for usuage in SQL below
+    $language_string_length = (strlen($language_in_use) + 2);
+
+    $parent_sql = (trim($parent)=="") ? "parent IS NULL" : "parent = '" . escape_check($parent) . "'";
+
+    $query = "
+        SELECT 
+            *,
+            CASE
+                WHEN
+                    POSITION('~" . $language_in_use . "' IN name) > 0
+                THEN
+                    TRIM(SUBSTRING(name,
+                            POSITION('~" . $language_in_use . ":' IN name) + " . $language_string_length . ",
+                            CASE
+                                WHEN
+                                    POSITION('~' IN SUBSTRING(name,
+                                            POSITION('~" . $language_in_use . ":' IN name) + " . $language_string_length . ",
+                                            LENGTH(name) - 1)) > 0
+                                THEN
+                                    POSITION('~' IN SUBSTRING(name,
+                                            POSITION('~" . $language_in_use . ":' IN name) + " . $language_string_length . ",
+                                            LENGTH(name) - 1)) - 1
+                                ELSE LENGTH(name)
+                            END))
+                ELSE TRIM(name)
+            END AS translated_name
+            " . $use_count_sql . "
+        FROM node 
+        WHERE resource_type_field = " . escape_check($resource_type_field) . "
+        " . $filter_by_name . "
+        AND " . $parent_sql . "
+        ORDER BY " . $order_by . " ASC
+        " . $limit;
+
     $nodes = sql_query($query);
 
     foreach($nodes as $node)
