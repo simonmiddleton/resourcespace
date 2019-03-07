@@ -101,19 +101,11 @@ include "../include/header.php";
 	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["proceed"]?>&nbsp;&nbsp;" 
 	<?php if(strpos($url,"crop.php")!==false) 
 			{ 
-			echo "onClick='redirectToHomePage(2000);'"; 
+			$targetPage = $baseurl_short."pages/view.php?ref=".urlencode($ref);
+			echo 'onClick="redirectAfterDelay(\''.$targetPage.'\',2000);"'; 
 			}?>/>
 	</div>
 	</form>
-<script>
-function redirectToHomePage(delayTime) 
-	{
-	setTimeout(function()
-		{ 
-		window.location.href = "<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref); ?>";
-		}, delayTime);
-	}
-</script>	
 </div>
 
 <?php
