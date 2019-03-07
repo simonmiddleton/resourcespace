@@ -566,10 +566,12 @@ if (!$header_search)
 if (($pagename=="login") || ($pagename=="user_password") || ($pagename=="user_request"))
     {
     $div="CentralSpaceLogin";
+    $uicenterclass="NoSearch";
     }
 else
     {
     $div="CentralSpace";
+    $uicenterclass="Search";
     }
 ?>
 <!--Main Part of the page-->
@@ -580,7 +582,7 @@ if($browse_on)
     render_browse_bar();
     }
         
-echo '<div id="UICenter" class="ui-layout-center">';
+echo '<div id="UICenter" class="ui-layout-center ' . $uicenterclass . '">';
     
 if (!in_array($pagename, $not_authenticated_pages))
     {
