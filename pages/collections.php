@@ -532,6 +532,13 @@ if ($remove!="")
 $addsearch=getvalescaped("addsearch",-1);
 if ($addsearch!=-1)
 	{
+    /*
+    When adding search default collection sort should be relevance to address multiple types of searches. If collection
+    is used then it will error if user did a simple search and not a !collection search since there is no collection
+    sortorder
+    */
+    $default_collection_sort = 'relevance';
+
     $order_by = getvalescaped('order_by', getvalescaped('saved_order_by', $default_collection_sort));
 
     if (!collection_writeable($usercollection))
