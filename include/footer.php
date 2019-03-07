@@ -575,19 +575,23 @@ if (getval("ajax","") == "")
 		<!-- Responsive -->
 		<script src="<?php echo $baseurl_short; ?>lib/js/responsive.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 		<script>
-		function toggleSimpleSearch()
-			{
-			if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
-				{
-				jQuery("#searchspace").removeClass("ResponsiveSimpleSearch");
-				jQuery("#Rssearchexpand").val("<?php echo $lang["responsive_more"];?>");
-				}
-			else
-				{
-				jQuery("#searchspace").addClass("ResponsiveSimpleSearch");
-				jQuery("#Rssearchexpand").val(" <?php echo $lang["responsive_less"];?> ");
-				}
-			}
+        function toggleSimpleSearch()
+            {
+            if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
+                {
+                jQuery("#searchspace").removeClass("ResponsiveSimpleSearch");
+                jQuery("#SearchBarContainer").removeClass("FullSearch");
+                jQuery("#Rssearchexpand").val("<?php echo $lang["responsive_more"];?>");
+                jQuery('#UICenter').show(0);
+                }
+            else
+                {
+                jQuery("#searchspace").addClass("ResponsiveSimpleSearch");
+                jQuery("#SearchBarContainer").addClass("FullSearch");
+                jQuery("#Rssearchexpand").val(" <?php echo $lang["responsive_less"];?> ");
+                jQuery('#UICenter').hide(0);
+                }
+            }
 		
 		function toggleResultOptions()
 			{
