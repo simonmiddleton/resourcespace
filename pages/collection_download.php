@@ -242,10 +242,14 @@ if ($submitted != "")
             'settings_id'           => $settings_id,
             'include_csv_file'      => $include_csv_file,
         );
-        job_queue_add('collection_download', $collection_download_job_data, '', '', $lang["oj-collection-download-success-text"], $lang["oj-collection-download-failure-text"]);
+        job_queue_add(
+            'collection_download',
+            $collection_download_job_data,
+            '',
+            '',
+            $lang["oj-collection-download-success-text"],
+            $lang["oj-collection-download-failure-text"]);
 
-        $url = isset($collection) ? "{$baseurl}/?c={$collection}": '';
-        message_add($userref, $lang['jq_notify_user_preparing_archive'], $url, 0);
         exit();
         }
 
@@ -491,6 +495,7 @@ function ajax_download(download_offline)
 
     if(download_offline)
         {
+        styledalert('<?php echo $lang['downloadinprogress']; ?>', '<?php echo $lang['jq_notify_user_preparing_archive']; ?>');
         document.getElementById('downloadbuttondiv').style.display='none';
         return false;
         }
