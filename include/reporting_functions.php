@@ -58,17 +58,43 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
     $sql=str_replace("[to-d]",$to_d,$sql);
 
     global $view_title_field;
+    $view_title_field_subquery = "
+        (
+            SELECT rd.value 
+              FROM resource_data AS rd 
+             WHERE rd.resource = r.ref 
+               AND rd.resource_type_field = {$view_title_field}
+             LIMIT 1
+         )";
+    if(strpos($sql, 'r.') === false)
+        {
+        $view_title_field_subquery = str_replace('r.ref', 'ref', $view_title_field_subquery);
+        }
+
+    #Attempt to cater for user created copies of shipped reports which may still reference r.view_title_field
+    if(strpos($sql, 'view_title_field_subselect') === false)
+        {
+        $sql=str_replace("r.view_title_field", "view_title_field_subselect",$sql);
+        }
+
+    if(strpos($sql, 'view_title_field_subselect') === false)
+        {
+        $sql=str_replace("view_title_field", "view_title_field_subselect",$sql);
+        }
+
     #back compatibility for three default reports, to replace "title" with the view_title_field.
     #all reports should either use r.title or view_title_field when referencing the title column on the resource table.
     if ($ref==7||$ref==8||$ref==9){
-        $sql=str_replace(",title",",field".$view_title_field,$sql);
+        $sql=str_replace(",title",",view_title_field_subselect",$sql);
     }
 
-    $sql=str_replace("view_title_field","field".$view_title_field,$sql);
-    $sql=str_replace("r.title","field".$view_title_field,$sql);
+    #Attempt to cater for user created copies of shipped reports which may still reference r.title
+    $sql=str_replace("r.title","view_title_field_subselect",$sql);
+
+    #Now crystallize the view title subselect reference with the actual subselect necessary to fulfil it 
+    $sql=str_replace("view_title_field_subselect", $view_title_field_subquery, $sql);
 
     $results=sql_query($sql);
-    #echo "\"Number of results: " . count($results) . "\"\n";
     }
 
     if ($download)
@@ -183,21 +209,21 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
 function create_periodic_email($user, $report, $period, $email_days, $send_all_users, array $user_groups)
     {
     # Delete any matching rows for this report/period.
-    $query = sprintf('
+    $query = sprintf("
             DELETE
               FROM report_periodic_emails
-             WHERE user = \'%s\'
-               AND report = \'%s\'
-               AND period = \'%s\';
-        ',
-        $user,
-        $report,
-        $period
+             WHERE user = '%s'
+               AND report = '%s'
+               AND period = '%s';
+        ",
+        escape_check($user),
+        escape_check($report),
+        escape_check($period)
     );
     sql_query($query);
 
     # Insert a new row.
-    $query = sprintf('
+    $query = sprintf("
             INSERT INTO report_periodic_emails (
                                                    user,
                                                    report,
@@ -205,16 +231,16 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
                                                    email_days
                                                )
                  VALUES (
-                            \'%s\',  # user
-                            \'%s\',  # report
-                            \'%s\',  # period
-                            \'%s\'   # email_days
+                            '%s',  # user
+                            '%s',  # report
+                            '%s',  # period
+                            '%s'   # email_days
                         );
-        ',
-        $user,
-        $report,
-        $period,
-        $email_days
+        ",
+        escape_check($user),
+        escape_check($report),
+        escape_check($period),
+        escape_check($email_days)
     );
     sql_query($query);
     $ref = sql_insert_id();
@@ -224,12 +250,27 @@ function create_periodic_email($user, $report, $period, $email_days, $send_all_u
         {
         if($send_all_users)
             {
-            sql_query('UPDATE report_periodic_emails SET send_all_users = 1 WHERE ref = "' . $ref . '";');
+            sql_query("UPDATE report_periodic_emails SET send_all_users = 1 WHERE ref = '" . escape_check($ref) . "';");
             }
 
         if(!empty($user_groups))
             {
-            sql_query('UPDATE report_periodic_emails SET user_groups = "' . implode(',', $user_groups) . '" WHERE ref = "' . $ref . '";');
+
+            // Manually implode usergroups to allow an escape_check()
+            $ugstring="";
+            $ugindex=0;
+            $ugcount=count($user_groups);
+            foreach($user_groups as $ug) {
+                $ugindex+=1;
+                if($ugindex < $ugcount) {
+                    $ugstring = $ugstring . escape_check($ug) . ",";
+                }
+                else {
+                    $ugstring = $ugstring . escape_check($ug);
+                }
+            }
+
+            sql_query("UPDATE report_periodic_emails SET user_groups = '" . $ugstring . "' WHERE ref = '" . escape_check($ref) . "';");
             }
         }
 

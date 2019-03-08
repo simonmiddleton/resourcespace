@@ -16,8 +16,8 @@ function HookFormat_chooserCollection_downloadReplaceuseoriginal()
 		{
 		?><script>
 			var originalDownloadFunction = ajax_download;
-			ajax_download = function() {
-				originalDownloadFunction();
+			ajax_download = function(download_offline) {
+				originalDownloadFunction(download_offline);
 				jQuery('#downloadformat').attr('disabled', 'disabled');
 				jQuery('#profile').attr('disabled', 'disabled');
 			}

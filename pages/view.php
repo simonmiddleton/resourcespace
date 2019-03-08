@@ -103,7 +103,7 @@ resource_type_config_override($resource["resource_type"]);
 # get comments count
 $resource_comments=0;
 if($comments_resource_enable && $comments_view_panel_show_marker){
-	$resource_comments=sql_value("select count(*) value from comment where resource_ref=$ref","0");
+    $resource_comments=sql_value("select count(*) value from comment where resource_ref='" . escape_check($ref) . "'","0");
 }
 
 // Set $use_mp3_player switch if appropriate
@@ -291,19 +291,30 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	{
 		
 	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $range_separator, $force_display_template_orderby;
+
 	$value=$field["value"];
 
-    if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
-        {
-        $value = array();
+    # Populate field value for node based fields so it conforms to automatic ordering setting
 
-        foreach(get_resource_nodes($ref, $field['ref'], true) as $node)
-            {
-            $value[] = i18n_get_translated($node['name']);
-            }
-
-        $value = implode(', ', $value);
-        }
+	if(in_array($field['type'],$FIXED_LIST_FIELD_TYPES))
+		{    
+		# Get all nodes attached to this resource and this field    
+		$nodes_in_sequence = get_resource_nodes($ref,$field['ref'],true);
+		if((bool) $field['automatic_nodes_ordering'])
+			{
+			uasort($nodes_in_sequence,"node_name_comparator");    
+			}
+		else
+			{
+			uasort($nodes_in_sequence,"node_orderby_comparator");    
+			}
+		$keyword_array=array();
+		foreach($nodes_in_sequence as $node)
+			{
+			$keyword_array[] = i18n_get_translated($node['name']);
+			}
+		$value = implode(',',$keyword_array);
+		}
 
 	$modified_field=hook("beforeviewdisplayfielddata_processing","",array($field));
 	if($modified_field){
@@ -833,6 +844,7 @@ else if(1 == $resource['has_image'])
              src="<?php echo $imageurl; ?>" 
              alt="<?php echo $lang['fullscreenpreview']; ?>" 
              GALLERYIMG="no"
+			 style="<?php echo "max-height:{$image_height}px; " ?>"
         <?php
         if($annotate_enabled)
             {
@@ -939,8 +951,10 @@ else if(1 == $resource['has_image'])
                     ?>
                         anno.addPlugin('RSFaceRecognition',
                             {
+                            annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                             facial_recognition_endpoint: '<?php echo $baseurl; ?>/pages/ajax/facial_recognition.php',
-                            resource                   : <?php echo (int) $ref; ?>,
+                            resource: <?php echo (int) $ref; ?>,
+                            facial_recognition_tag_field: <?php echo $facial_recognition_tag_field; ?>,
                             // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                             fr_csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
                             <?php echo generateAjaxToken('RSFaceRecognition'); ?>
@@ -1101,9 +1115,8 @@ else
 <?php } /* End of replacerenderinnerresourcepreview hook */ ?>
 <?php
 
-
-
-hook("renderbeforerecorddownload");
+$disable_flag = (hook('disable_flag_for_renderbeforerecorddownload') || ($use_pdfjs_viewer && $resource['file_extension'] == 'pdf') );
+hook("renderbeforerecorddownload", '', array($disable_flag));
 
 ?>
 <?php if (!hook("renderresourcedownloadspace")) { ?>
@@ -1919,7 +1932,7 @@ if (count($result)>0)
 				// Don't show this type again.
 				continue;
 				}
-		$restypename=sql_value("select name as value from resource_type where ref = '$rtype'","");
+        $restypename=sql_value("select name as value from resource_type where ref = '" . escape_check($rtype) . "'","");
 		$restypename = lang_or_i18n_get_translated($restypename, "resourcetype-", "-2");
 		?><!--Panel for related resources-->
 		<div class="RecordBox">
@@ -2008,7 +2021,7 @@ if (count($result)>0)
         	<!--Resource Panel-->
         	<div class="CollectionPanelShell">
             <table border="0" class="CollectionResourceAlign"><tr><td>
-            <a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,$related_resource_preview_size,false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" class="CollectImageBorder"/><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
+            <a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php if ($result[$n]["has_image"]==1) { ?><img border=0 src="<?php echo get_resource_path($rref,false,$related_resource_preview_size,false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"])?>" /><?php } else { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true)?>"/><?php } ?></a></td>
             </tr></table>
             <div class="CollectionPanelInfo"><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $rref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo tidy_trim(i18n_get_translated($title),$related_resources_title_trim)?></a>&nbsp;</div>
 				<?php hook("relatedresourceaddlink");?>       

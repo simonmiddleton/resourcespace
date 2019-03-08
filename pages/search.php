@@ -92,6 +92,7 @@ foreach($keywords as $keyword)
         continue;
         }
 
+    $field_shortname = escape_check($field_shortname);
     $resource_type_field = sql_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = '{$field_shortname}'", 0);
 
     if(0 == $resource_type_field)
@@ -645,11 +646,21 @@ if(!$collectionsearch)
             }
         jQuery('.ResourcePanel').draggable({
             distance: 50,
-            connectWith: '#CollectionSpace',
+            connectWith: '#CollectionSpace, .BrowseBarLink',
             appendTo: 'body',
             zIndex: 99000,
             helper: 'clone',
             revert: false,
+            scroll: false,
+            drag: function (event, ui)
+                {
+                jQuery(ui.helper).width(174);
+                jQuery(ui.helper).height(174);
+                jQuery(ui.helper).css('opacity','0.5');
+                jQuery(ui.helper).css('transform','scale(0.8)');
+                jQuery(ui.helper).children('.ResourcePanelIcons').hide();
+                },
+            
             start: function(event, ui)
                 {
                 InfoBoxEnabled = false;
@@ -701,6 +712,7 @@ if ($allow_reorder && $display!="list" && $order_by == "collection") {
             connectWith: '#CollectionSpace',
             appendTo: 'body',
             zIndex: 99000,
+            scroll: false,
             helper: function(event, ui)
                 {
                 //Hack to append the element to the body (visible above others divs), 
@@ -1065,7 +1077,7 @@ if($responsive_ui)
             elseif (strpos($search,"!")!==false && substr($search,0,11)!="!properties") 
                 {
                 // As Added is the default sort sequence if viewing recently added resources 
-                $default_sort_order='asadded';
+                $default_sort_order = 'resourceid';
                 $rel=$lang["asadded"];
                 }
             }
@@ -1148,6 +1160,8 @@ if($responsive_ui)
         render_actions($collectiondata,true,false);
 
         hook("search_header_after_actions");
+
+        render_upload_here_button($searchparams);
         
         if (!$display_selector_dropdowns && !$perpage_dropdown){?>
         <div class="InpageNavLeftBlock">
@@ -1232,9 +1246,29 @@ if($responsive_ui)
         }
     hook("beforesearchresults2");
     hook("beforesearchresultsexpandspace");
+    
+    // DRAG AND DROP TO UPLOAD FUNCTIONALITY
+    // Generate a URL for drag drop function - fires same URL as "upload here" when dragging.
+    $drag_upload_params=render_upload_here_button($searchparams,true);
+    $drag_over="";
+    if (is_array($drag_upload_params))
+        {
+        $drag_url=generateURL("{$GLOBALS['baseurl']}/pages/upload_plupload.php", $drag_upload_params);
+        $drag_over=" onDragOver=\"UploadViaDrag('" . $drag_url . "');\" ";
+        }
     ?>
+    <script>
+    var DragUploading=false
+    function UploadViaDrag(url)
+        {
+        if (DragUploading) {return false;}
+        DragUploading=true;CentralSpaceLoad(url);
+        }
+    </script>
+    
+    
     <div class="clearerleft"></div>
-    <div id="CentralSpaceResources" collectionSearchName="<?php echo $collectionsearchname ?>">
+    <div id="CentralSpaceResources" collectionSearchName="<?php echo $collectionsearchname ?>" <?php echo $drag_over ?>>
     <?php
 
     if ((!is_array($result) || count($result)<1) && empty($collections))

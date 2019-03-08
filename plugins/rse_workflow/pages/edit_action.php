@@ -95,9 +95,9 @@ function SaveWorkflowAction(){
 	}
 
 </script>
-<p>
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_actions.php" onClick="return CentralSpaceLoad(this,true);"><?php echo "&lt;&nbsp;" . $lang["rse_workflow_manage_actions"] ?>&nbsp;</a>
-</p>
+<div class="BasicsBox">
+<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_actions.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK . $lang["rse_workflow_manage_actions"] ?></a>
+</div>
 
 <?php
 

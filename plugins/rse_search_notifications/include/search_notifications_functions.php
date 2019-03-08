@@ -11,7 +11,7 @@
 			($user=="" ? "" : " WHERE `owner`='{$user}'") .
 			($enabled_only ? ($user=="" ? " WHERE `enabled`=1" : " AND `enabled`=1" ) : "") .
 			($search=="" ? "" : " AND (title LIKE '%{$search}%' OR u.username LIKE '%{$search}%')") .
-			" ORDER BY {$orderby} {$orderbydirection}"
+			" ORDER BY '{$orderby}' '{$orderbydirection}'"
 		);
 		return count($results) > 0;
 		}
@@ -56,7 +56,7 @@
 
 		sql_query("INSERT INTO search_saved(created,owner,title,search,restypes,archive,enabled) VALUES (
 			NOW(),
-			{$userref},
+			'{$userref}',
 			'\"" . escape_check($rebuilt_search) . '"' . ($restypes_names == "" ? "" : " (" . escape_check(i18n_get_translated($restypes_names)) . ")") . "',
 			'" . escape_check($search) . "',
 			'" . escape_check($restypes) . "',
@@ -70,12 +70,12 @@
 		{
 		if ($force)
 			{
-			sql_query("DELETE FROM search_saved WHERE ref={$ref}");
+			sql_query("DELETE FROM search_saved WHERE ref='{$ref}'");
 			}
 		else
 			{
 			global $userref;
-			sql_query("DELETE FROM search_saved WHERE ref={$ref} AND owner={$userref}");
+			sql_query("DELETE FROM search_saved WHERE ref='{$ref}' AND owner='{$userref}'");
 			}
 		}
 
@@ -83,12 +83,12 @@
 		{
 		if ($force)
 			{
-			sql_query("UPDATE search_saved SET enabled=1 WHERE ref={$ref}");
+			sql_query("UPDATE search_saved SET enabled=1 WHERE ref='{$ref}'");
 			}
 		else
 			{
 			global $userref;
-			sql_query("UPDATE search_saved SET enabled=1 WHERE ref={$ref} AND owner={$userref}");
+			sql_query("UPDATE search_saved SET enabled=1 WHERE ref='{$ref}' AND owner='{$userref}'");
 			}
 		}
 
@@ -96,12 +96,12 @@
 		{
 		if ($force)
 			{
-			sql_query("UPDATE search_saved SET enabled=0 WHERE ref={$ref}");
+			sql_query("UPDATE search_saved SET enabled=0 WHERE ref='{$ref}'");
 			}
 		else
 			{
 			global $userref;
-			sql_query("UPDATE search_saved SET enabled=0 WHERE ref={$ref} AND owner={$userref}");
+			sql_query("UPDATE search_saved SET enabled=0 WHERE ref='{$ref}' AND owner='{$userref}'");
 			}
 		}
 
@@ -114,7 +114,7 @@
 		else
 			{
 			global $userref;
-			sql_query("UPDATE search_saved SET enabled=1 WHERE owner={$userref}");
+			sql_query("UPDATE search_saved SET enabled=1 WHERE owner='{$userref}'");
 			}
 		}
 
@@ -127,7 +127,7 @@
 		else
 			{
 			global $userref;
-			sql_query("UPDATE search_saved SET enabled=0 WHERE owner={$userref}");
+			sql_query("UPDATE search_saved SET enabled=0 WHERE owner='{$userref}'");
 			}
 		}
 
@@ -137,8 +137,8 @@
 		global $lang,$baseurl,$search_notification_max_thumbnails;
 
 		$saved_searches=sql_query("SELECT * FROM search_saved WHERE enabled=1" .
-			($owner==-1 ? "" : " AND owner={$owner}") .
-			($search_saved==-1 ? "" : " AND ref={$search_saved}") .
+			($owner==-1 ? "" : " AND owner='{$owner}'") .
+			($search_saved==-1 ? "" : " AND ref='{$search_saved}'") .
 			" ORDER BY owner"
 		);
 
@@ -217,7 +217,7 @@
 				}
 
 			// finally update with the new checksum, timestamp and resources
-			sql_query("UPDATE search_saved SET checksum='{$checksum}',checksum_matches={$checksum_matches},checksum_when=NOW(),checksum_data='" . escape_check($checksum_data) . "' WHERE ref={$search['ref']}");
+			sql_query("UPDATE search_saved SET checksum='{$checksum}',checksum_matches='{$checksum_matches}',checksum_when=NOW(),checksum_data='" . escape_check($checksum_data) . "' WHERE ref='{$search['ref']}'");
 
 			}		// end for each saved search
 		}

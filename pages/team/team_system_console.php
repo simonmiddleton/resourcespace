@@ -98,7 +98,7 @@ if ($callback == "")
 
 // ----- Callbacks -----
 
-$sortby = getval("sortby","");
+$sortby = getvalescaped("sortby","");
 $sortasc = true;
 $sorted = false;
 

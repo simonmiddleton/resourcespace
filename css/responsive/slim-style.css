@@ -18,9 +18,6 @@
     min-width:0px;
     overflow:hidden;
 }
-#UICenter {
-    width:100% !important;
-}
 
 .ResponsiveViewFullSite {
     text-align: center;
@@ -34,6 +31,36 @@ body {
 }
 
 @media(max-width:1100px) {
+
+    #UICenter{
+        max-height: calc(100% - 320px);
+        min-height: calc(100% - 320px);
+        overflow-y: auto !important;
+    }
+
+    #UICenter.NoSearch{
+        min-height: 100%;
+    }
+    
+    .ui-layout-pane-center
+        {
+        left: 0px !important;
+        }
+
+    body{
+        height: 100% !important;
+    }
+        
+    #CentralSpaceLogin #login_box {
+        width:100%;
+        padding-left: 5px;
+        padding-right: 5px;        
+    }
+    
+    .Question .stdwidth, .stdwidth, #login_box .Question .stdwidth, #login_box {
+        width:100%;
+    }
+    
     #SearchBarContainer {
         margin:0;
         width:94%;
@@ -63,6 +90,8 @@ body {
     div#Header.SlimHeaderFixedPosition #HeaderNav1Click { margin-right: 30px; }
     div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 16px; }
     div#SearchBox.SlimHeaderFixedPosition { margin-top: 46px; }
+
+    .ui-layout-west: display:none;
 }
 /* General Forms */
 @media(max-width:1100px) {   
@@ -131,7 +160,15 @@ body {
     #specific_user_groups {
         padding-left: 0 !important;
     }
-
+    table#ResourceDownloadOptions {
+        font-size: 80%;
+    }
+    .RecordPanel .RecordDownloadSpace .DownloadButton {
+        min-width: 80px;
+    }
+    .RecordPanel .RecordDownloadSpace .DownloadFileSize {
+        font-size: 90%;
+    }
 }
 @media(max-width:700px) {
     .FormHelp {
@@ -150,15 +187,12 @@ body {
     }
 }
 @media(max-width:525px) {
-    .Question .stdwidth, .stdwidth {
-        width:100%;
-    }
+    
     .FormWide .Question label{width: 100%}
     .FormWide .Question .stdwidth, .FormWide .Question .tickset{width: 100%}
     .CategoryBox {
         width:100%;
     }
-    
 }
 /* Login Forms */
 @media(max-width:1100px) { 
@@ -170,7 +204,9 @@ body {
     #CentralSpaceLogin {
         width:94%;
         margin-left:3%;
-        margin-right:3%;
+        margin-right: 3%;
+        margin-top: 3%;
+        margin-bottom: 3%;
         padding:0;
         top:0;
         transform:translateY(0); 
@@ -178,6 +214,29 @@ body {
     #AntiSpamImage {
         margin-left: 0 !important;
     }
+    
+    .RecordPanel {
+    padding: 5px 5px 5px 5px;
+    }
+    
+    #ResourceWorkflowTable {
+        text-align: center;
+    }
+    
+    #ResourceWorkflowTable td {
+        float :left;
+        clear :left;
+        margin-left :0px;
+        margin-right:0px;
+        padding-left: 0px;
+        padding-right: 0px;
+        width: 100%;
+    }
+    
+    #ResourceWorkflowTable input[type="submit"] {
+    padding: 3px 0px; 
+    margin: 0px;
+}
 }
 
 /* Header */
@@ -269,6 +328,14 @@ body {
     #Header.slimheader_darken a:link, #Header.slimheader_darken a:visited, #Header.slimheader_darken a:active {
         color: #565656;
     }
+    
+    #BrowseBar, #BrowseBarTab{
+	display: none !important;
+    }
+        
+    #CentralSpaceContainer{
+        padding-left: 0px;
+        }   
 
 }
 @media(max-width: 1100px) {
@@ -371,10 +438,7 @@ body {
         width: auto;
         text-align: center;
     }
-    #SearchBoxPanel .SearchItem, #SearchBoxPanel .ui-widget {
-        display:inline-block;
-        margin:0;
-    }
+    
     #SearchBoxPanel .ui-widget {
         width: 250px;
         margin-top: 10px;
@@ -447,6 +511,7 @@ body {
     #SearchBoxPanel.LoginBoxPanel input, #SearchBoxPanel.LoginBoxPanel .SearchItem, #SearchBoxPanel.LoginBoxPanel p {
         display:inline-block;
     }
+
     #SearchBoxPanel.LoginBoxPanel input {
         margin-left:15px;
     }
@@ -458,8 +523,21 @@ body {
         float: right;
         margin: 0px 8px 4px 0px;
     }
-    #searchspace .SearchItem {
-        clear: right;
+    #searchspace {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+    
+    #searchspace .SearchItem,  #searchspace input{
+        clear: both;
+        width: 90%;
+        float: left;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5px;
+        margin-bottom: 5px;
     }
 
 }
@@ -502,6 +580,36 @@ body {
     #FooterNavRight {
         text-align: center;
         float: none;
+    }
+
+    #SearchBarContainer {
+        position: relative !important;
+        height: auto !important;
+        width: 94% !important;
+        margin-left: 3% !important;
+        margin-right: 3% !important;
+        margin-top: 5px !important;
+        margin-bottom: 5px !important;
+        margin-top: 5px !important;
+        top:0px !important;        
+    }
+
+    #SearchBarContainer.FullSearch {
+        height: 100% !important;
+    }
+
+    #UICenter {
+        position: relative !important;
+        width: 94% !important;
+        margin-top: 5px !important;
+        top:0px !important;
+        margin-left: 3% !important;
+        margin-right: 3% !important;
+    }
+
+    #Header {
+        position: relative !important;
+        height: auto !important;
     }
 }
 @media(max-width:1100px) {
@@ -959,9 +1067,6 @@ body {
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1); /* 0, 1, 2, or 3 which will rotate the element 0, 90, 180 or 270 degrees respectively */
 }
 @media (max-width:900px) {
-    #UICenter {
-        height: 100% !important;
-    }
     #cover {
         background: rgba(0, 0, 0, 0.6);
         width: 100%;
@@ -970,7 +1075,8 @@ body {
         z-index: 10;
         display: none;
     }
-    .ui-layout-resizer.ui-layout-resizer-south.ui-layout-resizer-open.ui-layout-resizer-south-open {
+    .ui-layout-resizer.ui-layout-resizer-south.ui-layout-resizer-open.ui-layout-resizer-south-open,
+    .ui-layout-resizer.ui-layout-resizer-east.ui-layout-resizer-open.ui-layout-resizer-east-open{
         display: none !important;
     }
     #responsive_collection_toggle {
@@ -1028,6 +1134,7 @@ body {
     #CollectionDiv #toggleThumbsLink {
         display:none;
     }
+   
 }
 
 /* VideoJS */

@@ -12,7 +12,7 @@ include('../../include/image_processing.php');
 include('../../include/pdf_functions.php');
 require_once '../../lib/html2pdf/html2pdf.class.php';
 
-$collection        = getvalescaped('c', '');
+$collection        = getvalescaped('c', 0,true);
 $size              = getvalescaped('size', '');
 if(strpos($size,"x") !== false)
     {
@@ -24,7 +24,7 @@ $sort              = getvalescaped('sort', 'asc');
 $orientation       = getvalescaped('orientation', '');
 $sheetstyle        = getvalescaped('sheetstyle', 'thumbnails');
 $preview           = ('true' == getvalescaped('preview', '') ? true : false);
-$previewpage       = getvalescaped('previewpage', 1);
+$previewpage       = getvalescaped('previewpage', 1, true);
 $includeheader     = getvalescaped('includeheader', '');
 $addlink           = getvalescaped('addlink', '');
 $addlogo           = getvalescaped('addlogo', '');
@@ -264,6 +264,12 @@ foreach($results as $result_data)
     unset($img_path);
     }
 
+if (!headers_sent())
+    {
+    // If CSRF is enabled it will break the download function unless the vary header is removed.
+    header_remove('Vary');
+    }
+
 try
     {
     $html2pdf = new Html2Pdf($pdf_properties['orientation'], $pdf_properties['format'], $pdf_properties['language'], true, 'UTF-8', $pdf_properties['margins']);
@@ -353,7 +359,8 @@ if ($preview && isset($imagemagick_path))
         exit("Could not find ImageMagick 'convert' utility at location '{$imagemagick_path}'");
         }
 
-    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage={$previewpage} -o -r100 -dLastPage={$previewpage} -sOutputFile=" . escapeshellarg($contact_sheet_rip) . ' ' . escapeshellarg($PDF_filename) . (($config_windows) ? '':' 2>&1');
+    $previewpage_escaped = escapeshellarg($previewpage);
+    $command = "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage={$previewpage_escaped} -o -r100 -dLastPage={$previewpage_escaped} -sOutputFile=" . escapeshellarg($contact_sheet_rip) . ' ' . escapeshellarg($PDF_filename) . (($config_windows) ? '':' 2>&1');
     run_command($command);
 
     $command = "{$convert_fullpath} -resize {$contact_sheet_preview_size} -quality 90 -colorspace {$imagemagick_colorspace} \"{$contact_sheet_rip}\" \"$contact_sheet_preview_img\"" . (($config_windows) ? '' : ' 2>&1');

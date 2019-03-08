@@ -1131,7 +1131,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 function render_user_group_multi_select($name, array $current = array(), $size = 10, $style = '')
     {
     ?>
-    <select id="<?php echo $name; ?>" name="<?php echo $name; ?>[]" multiple="multiple" size="<?php echo $size; ?>" style="<?php echo $style; ?>">
+    <select id="<?php echo $name; ?>" class="MultiSelect" name="<?php echo $name; ?>[]" multiple="multiple" size="<?php echo $size; ?>" style="<?php echo $style; ?>">
     <?php
     foreach(get_usergroups() as $usergroup)
         {
@@ -1533,18 +1533,29 @@ function display_field($n, $field, $newtab=false,$modal=false)
   if ($multiple && !hook("replace_edit_all_mode_select","",array($field["ref"])))
       {
       # When editing multiple, give option to select Replace All Text or Find and Replace
-      $onchangejs = "var fr=document.getElementById('findreplace_" . $n . "');";
-      $onchangejs .= "var q=document.getElementById('question_" . $n . "');";
+      $onchangejs = "var fr=document.getElementById('findreplace_" . $n . "');\n";
+      $onchangejs .= "var q=document.getElementById('question_" . $n . "');\n";
       if ($field["type"] == FIELD_TYPE_CATEGORY_TREE)
         {
         $onchangejs .= "if (this.value=='RM'){branch_limit_field['field_" . $field["ref"] . "']=1;}else{branch_limit_field['field_" . $field["ref"] . "']=0;}";
         }
       elseif (in_array($field["type"], $TEXT_FIELD_TYPES ))
         {
-        $onchangejs .= "var cf=document.getElementById('copy_from_field_" . $field["ref"] . "');";
-        $onchangejs .= "if (this.value=='CF') {cf.style.display='block';q.style.display='none';} else {cf.style.display='none';q.style.display='block';}";
-        $onchangejs .= "if (this.value=='FR') {fr.style.display='block';q.style.display='none';} else {fr.style.display='none';q.style.display='block';}";
-        } 
+        $onchangejs .= "
+        var cf=document.getElementById('copy_from_field_" . $field["ref"] . "');
+            if (this.value=='CF')
+                {
+                cf.style.display='block';q.style.display='none';fr.style.display='none';
+                }
+            else if (this.value=='FR')
+                {
+                fr.style.display='block';q.style.display='none';cf.style.display='none';
+                }
+            else
+                {
+                fr.style.display='none';cf.style.display='none';q.style.display='block';
+                }";
+        }
       ?>
       <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
       <label for="modeselectinput"><?php echo $lang["editmode"]?></label>
@@ -2216,7 +2227,7 @@ function renderCallToActionTile($link)
         <a href="<?php echo $link; ?>" onclick="return ModalLoad(this, true, true);" class="">
             <div class="FeaturedSimpleTileContents">
                 <div class="FeaturedSimpleTileText">
-                    <h2><span class='fa fa-plus-circle fa-2x'></span></h2>
+                    <h2><span class='fas fa-plus-circle'></span></h2>
                 </div>
             </div>
         </a>
@@ -2362,8 +2373,7 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
 */
 function render_share_options($collectionshare=true, $ref, $emailing=false)
     {
-    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url;
-    global $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string;   
+    global $baseurl, $lang, $ref, $userref, $usergroup, $internal_share_only, $resource_share_expire_never, $resource_share_expire_days, $hide_resource_share_generate_url, $access, $minaccess, $user_group, $expires, $editing, $editexternalurl, $email_sharing, $generateurl, $query_string, $allowed_external_share_groups;
     
     if(!hook('replaceemailaccessselector')): ?>
         <div class="Question" id="question_access">
@@ -2490,3 +2500,264 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
     echo "<div class='clearerleft'></div>";
     echo "</div>";
     }
+
+
+/**
+* Render a filter bar button
+* 
+* @param string $text Button text
+* @param string $text The onclick attribute for the button
+* @param string $icon HTML for icon element (e.g "<i aria-hidden="true" class="fa fa-fw fa-upload"></i>")
+* 
+* @return void
+*/
+function render_filter_bar_button($text, $on_click, $icon)
+    {
+    ?>
+    <div class="InpageNavLeftBlock">
+        <button type="button" onclick="<?php echo $on_click; ?>"><?php echo $icon . htmlspecialchars($text); ?></button>
+    </div>
+    <?php
+    return;
+    }
+
+
+/**
+* Render "Upload here" button.
+*
+* This applies to search results that do not relate to a collection, but consist of purely the following:
+* - Nodes
+* - Resource type
+* - Workflow (archive) state
+* 
+* For free text searches this SHOULD NOT work!
+* 
+* @param array $search_params
+* 
+* @return void
+*/
+function render_upload_here_button(array $search_params,$return_params_only=false)
+    {
+    if(!(checkperm('c') || checkperm('d')))
+        {
+        return;
+        }
+
+    if(!isset($search_params['search']) || !isset($search_params['restypes']) || !isset($search_params['archive']))
+        {
+        return;
+        }
+
+    if(isset($search_params['search']) && empty(resolve_nodes_from_string($search_params['search'])))
+        {
+        return;
+        }
+
+    $upload_here_params = array();
+
+    $upload_endpoint = 'pages/upload_plupload.php';
+    if(!$GLOBALS['upload_then_edit'])
+        {
+        $upload_endpoint = 'pages/edit.php';
+        $upload_here_params['ref'] = 0 - $GLOBALS['userref'];
+        $upload_here_params['uploader'] = $GLOBALS['top_nav_upload_type'];
+        }
+
+    $upload_here_params['upload_here'] = true;
+    $upload_here_params['search'] = $search_params['search'];
+
+    // If resource types is a list then always select the first resource type the user has access to
+    $resource_types = explode(',', $search_params['restypes']);
+    foreach($resource_types as $resource_type)
+        {
+        if(!checkperm("XU{$resource_type}"))
+            {
+            $upload_here_params['resource_type'] = $resource_type;
+            break;
+            }
+        }
+
+    // Archive can be a list (e.g from advanced search) so always select the first archive state user access to, 
+    // favouring the Active one
+    $search_archive = explode(',', $search_params['archive']);
+    // Check access to Active state
+    if(in_array(0, $search_archive) && checkperm("e0"))
+        {
+        $upload_here_params['status'] = 0;
+        $search_archive = array();
+        }
+    // Check remaining states
+    foreach($search_archive as $archive)
+        {
+        if($archive == '' || !is_numeric($archive))
+            {
+            continue;
+            }
+
+        if(checkperm("e{$archive}"))
+            {
+            $upload_here_params['status'] = $archive;
+            break;
+            }
+        }
+    // Last attempt to set the archive state
+    if(!isset($upload_here_params['status']))
+        {
+        $editable_archives = get_editable_states($GLOBALS['userref']);
+
+        if($editable_archives === false || empty($editable_archives))
+            {
+            trigger_error("Unable to determine the correct archive state!");
+            }
+
+        $upload_here_params['status'] = $editable_archives[0]['id'];
+        }
+
+    // Option to return out just the upload params
+    if ($return_params_only)
+        {
+        return $upload_here_params;
+        }
+        
+    $upload_here_url = generateURL("{$GLOBALS['baseurl']}/{$upload_endpoint}", $upload_here_params);
+    $upload_here_on_click = "CentralSpaceLoad('{$upload_here_url}');";
+
+    return render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click, UPLOAD_ICON);
+    }
+
+/**
+* Renders the trash bin. This is used to delete dash tiles and remove resources from collections
+* 
+* @param string $type   type of trash_bin
+* 
+* @return void
+*/ 
+
+function render_trash($type, $deletetext,$forjs=false)
+    {
+    $trash_html = '<div id="' . $type . '_bin" class="trash_bin"><span class="trash_bin_text"><i class="fa fa-trash" aria-hidden="true"></i></span></div>
+    <div id="trash_bin_delete_dialog" style="display:none;"></div>
+    <div id="delete_permanent_dialog" style="display:none;text-align:left;">'  . $deletetext . '</div>
+';
+    if($forjs)
+        {
+        return str_replace(array("\r","\n"),"",$trash_html);
+        }
+    else
+        {
+        echo $trash_html;
+        }
+    }
+
+/**
+* Renders the browse bar
+*  
+* @return void
+*/ 
+
+function render_browse_bar()
+    {
+    global $lang, $browse_bar_workflow, $browse_show, $enable_themes;
+    $bb_html = '<div id="BrowseBarContainer" class="ui-layout-west" style="display:none;">';
+    $bb_html .= '<div id="BrowseBar" class="BrowseBar" ' . ($browse_show ?  '' : 'style="display:none;"') . '>';
+    $bb_html .= '<div id="BrowseBarContent" >'; 
+    
+    //Browse row template
+    // script will replace %BROWSE_TYPE%, %BROWSE_EXPAND_CLASS%, %BROWSE_CLASS% %BROWSE_LEVEL%, %BROWSE_EXPAND%, %BROWSE_NAME%, %BROWSE_TEXT%, %BROWSE_ID%
+    $bb_html .= "
+            <div id='BrowseBarTemplate' style='display: none;'>
+            <div class='BrowseBarItem BrowseRowOuter %BROWSE_DROP%' data-browse-id='%BROWSE_ID%' data-browse-parent='%BROWSE_PARENT%'  data-browse-loaded='0' data-browse-status='closed' data-browse-level='%BROWSE_LEVEL%' style='display: none;'>
+                <div class='BrowseRowInner' >
+                    %BROWSE_INDENT%
+                    %BROWSE_EXPAND%
+                    %BROWSE_TEXT%
+                    %BROWSE_REFRESH%
+                </div><!-- End of BrowseRowInner -->
+            </div><!-- End of BrowseRowOuter -->
+            </div><!-- End of BrowseBarTemplate -->
+            ";
+
+    // Add root elements
+    $bb_html .= generate_browse_bar_item("R", $lang['browse_by_tag']);
+    if($enable_themes)
+        {
+        $bb_html .= generate_browse_bar_item("FC", $lang["themes"]);
+        }
+
+    $bb_html .= generate_browse_bar_item("C", $lang["mycollections"]);
+    if($browse_bar_workflow)
+        {
+        $bb_html .= generate_browse_bar_item("WF", $lang['browse_by_workflow_state']);
+        }
+
+    $bb_html .= '</div><!-- End of BrowseBarContent -->
+                </div><!-- End of BrowseBar -->
+                    <a href"#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div id="BrowseBarTab" style="display:none;"><div class="BrowseBarTabText" >' . $lang['browse_bar_text'] . '</div></div><!-- End of BrowseBarTab --></a>
+                </div><!-- End of BrowseBarContainer -->
+                
+            ';
+    echo $bb_html;
+    
+    $browsejsvar = $browse_show ? 'show' : 'hide';
+    echo '<script>
+        var browse_show = "' . $browsejsvar . '";
+        SetCookie("browse_show", "' . $browsejsvar . '");
+        b_loading = new Array();
+        // Expand tree to previous state based on stored cookie
+        jQuery(document).ready(function()
+            {
+            ReloadBrowseBar();
+            });
+        </script>';
+    }
+
+/*
+Tag - child is resource_type expand, show restypes, no link
+ - get resource types
+
+resource_type - child is metadata field
+
+metadata field - child is node
+
+node - if cat tree - child is node, expand else none
+
+featured- child is first cat
+
+collection - child is collection name/ref
+
+workflow - child is archive states
+
+archive states -  child is metadata field
+- if archive, has extra fields
+*/
+
+
+/**
+* Generates a root row item for the browse bar
+*  
+* @return void
+*/    
+function generate_browse_bar_item($id, $text)
+	{
+	//global $browse_bar_elements;
+    $html = '<div class="BrowseBarItem BrowseRowOuter BrowseBarRoot" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
+    $html .= '<div class="BrowseRowInner" >';
+	
+    $html .= '<div class="BrowseBarStructure">
+            <a href="#" class="browse_expand browse_closed" onclick="toggleBrowseElements(\'' . $id . '\',false,true);" ></a>
+            </div><!-- End of BrowseBarStructure -->';	
+    $html .= '<div class="BrowseBarLink" >' . $text . '</div>';
+    
+    $html .= '<a href="#" class="BrowseRefresh " onclick="toggleBrowseElements(\'' . $id . '\',true, true);" ><i class="fas fa-sync reloadicon"></i></a>';	
+    
+    $html .= "</div><!-- End of BrowseRowInner -->
+            </div><!-- End of BrowseRowOuter -->";
+	return $html;
+	}
+	
+	
+	
+	
+	
+	
+	

@@ -1,4 +1,4 @@
-#UICenter
+.ui-layout-container
     {
     background-repeat: no-repeat;
     background-position: center top;
@@ -8,7 +8,8 @@
     background-size: cover;
     -webkit-transition: background-image 1s linear;
     transition: background-image 1s linear;
-    }    
+    }
+    
 #CentralSpace{min-height:500px;}
 #HomeSiteText
     {
@@ -19,4 +20,4 @@
 #HomeSiteTextInner{padding:15px;}
 #HomeSiteText h1,#HomeSiteText p {color:#fff;}
 #HomeSiteText p {padding-bottom:8px;}
-#HomePanelContainer {float: left; padding-top: 10px;}
+#HomePanelContainer {float: left; padding-top: 4px;}

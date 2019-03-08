@@ -193,12 +193,44 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 
 <div class="Question"><label><?php echo $lang["ipaddressrestriction"]?><br/><?php echo $lang["wildcardpermittedeg"]?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict") ?>"><div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["searchfilteroverride"]?></label><input name="search_filter_override" type="text" class="stdwidth" value="<?php echo form_value_display($user,"search_filter_override")?>"><div class="clearerleft"> </div></div>
-
-<?php hook("additionaluserfields");?>
-<?php if (!hook("replacecomments")) { ?>
-<div class="Question"><label><?php echo $lang["comments"]?></label><textarea name="comments" class="stdwidth" rows=5 cols=50><?php echo form_value_display($user,"comments")?></textarea><div class="clearerleft"> </div></div>
-<?php } ?>
+<?php
+if ($search_filter_nodes && ($user['search_filter_o_id'] == "" || (is_numeric($user['search_filter_o_id']) && $user['search_filter_o_id'] > 0)))
+			{
+            // Show filter selector if already migrated or no filter has been set
+			$search_filters = get_filters($order = "name", $sort = "ASC");
+			?>
+			<div class="Question">
+				<label for="search_filter_o_id"><?php echo $lang["searchfilteroverride"]; ?></label>
+				<select name="search_filter_o_id" class="stdwidth">
+					<?php
+					echo "<option value='0' >" . $lang["filter_none"] . "</option>";
+					foreach	($search_filters as $search_filter)
+						{
+						echo "<option value='" . $search_filter['ref'] . "' " . ($user['search_filter_o_id'] == $search_filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($search_filter['name']) . "</option>";
+						}?>
+				</select>
+				<div class="clearerleft"></div>
+			</div>
+			<?php	
+			}
+		else
+			{
+			?>
+            <input type="hidden" name="search_filter_o_id" value="0" />
+			<div class="Question">
+				<label for="search_filter"><?php echo $lang["searchfilteroverride"]; ?></label>
+				<input name="search_filter_override" type="text" class="stdwidth" value="<?php echo form_value_display($user,"search_filter_override")?>">
+				<div class="clearerleft"></div>
+			</div>
+			<?php
+			}
+            
+hook("additionaluserfields");
+if (!hook("replacecomments"))
+    { ?>
+    <div class="Question"><label><?php echo $lang["comments"]?></label><textarea name="comments" class="stdwidth" rows=5 cols=50><?php echo form_value_display($user,"comments")?></textarea><div class="clearerleft"> </div></div>
+    <?php
+    } ?>
 <div class="Question"><label><?php echo $lang["created"]?></label>
 <div class="Fixed"><?php echo nicedate($user["created"],true) ?></div>
 <div class="clearerleft"> </div></div>

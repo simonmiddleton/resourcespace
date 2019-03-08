@@ -1,9 +1,14 @@
 <?php
+if('cli' != PHP_SAPI)
+    {
+    header('HTTP/1.1 401 Unauthorized');
+    exit('Command line execution only');
+    }
+
 include "../../include/db.php";
 include_once "../../include/general.php";
 
 # Fetch a list of MySQL processes and kill any that exceed the timeout limit.
-
 
 # Config vars
 $query_timeout=10; # Timeout in seconds.
@@ -51,7 +56,3 @@ for ($s=0;$s<60;$s+=10) # Do this once every 10 seconds for a minute, then this 
 
 	sleep (10);
 	}
-
-
-
-?>

@@ -7,12 +7,21 @@ include_once "../../../include/search_functions.php";
 include_once "../../../include/resource_functions.php";
 include_once "../../../include/search_functions.php";
 include_once "../../../include/image_processing.php";
+include_once "../../../include/slideshow_functions.php";
 
 include_once "../include/transform_functions.php";
 
+global $cropper_allowed_extensions;
+
 $ref = getval("ref",true,0);
+if(is_numeric($ref)==false) {exit($lang['error_resource_id_non_numeric']);}
 $resource=get_resource_data($ref);
 if ($resource===false || $ref < 0) {exit($lang['resourcenotfound']);}
+
+if (in_array(strtoupper($resource['file_extension']), $cropper_allowed_extensions)==false) 
+    {
+    exit($lang['error_resource_not_image_extension'] . ' (' . implode(', ', $cropper_allowed_extensions) . ')');
+    }
 
 # Load edit access level
 $edit_access=get_edit_access($ref);
@@ -96,6 +105,7 @@ $manage_slideshow_id = getvalescaped('manage_slideshow_id', '');
 
 $return_to_url = getvalescaped('return_to_url', '');
 
+$terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
 // if we've been told to do something
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'docrop'){
@@ -205,6 +215,18 @@ if (!$download && !$edit_access){
 	include "../../../include/footer.php";
 	exit;
 }
+
+// Redirect to terms page if necessary
+if ($download && $terms_download){
+    $terms_accepted=getvalescaped('iaccept', '');
+    if('on'!=$terms_accepted)
+        {
+        $crop_url=substr($_SERVER['REQUEST_URI'],1);
+        $redirect_to_terms_url="pages/terms.php?ref=".$ref."&url=".urlencode($crop_url);
+        redirect($redirect_to_terms_url);
+        }
+}
+
 
 if ($cropper_enable_alternative_files && !$download && !$original && getval("slideshow","")=="")
 	{
@@ -496,7 +518,8 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
 } elseif (getval("slideshow","")!="" && !$cropperestricted)
 	{
 	# Produce slideshow.
-	$sequence=getval("sequence","");
+	$sequence = getval("sequence", "");
+
 	if (!is_numeric($sequence)) {exit("Invalid sequence number. Please enter a numeric value.");}
 
     if(!checkperm('t'))
@@ -511,17 +534,8 @@ if ($cropper_enable_alternative_files && !$download && !$original && getval("sli
         }
 
 	copy($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
-	$sslinkfile = dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".txt";
-	if (getval("linkslideshow","")==1)
-		{
-		#Create/overwrite text file with link to resource view page
-		file_put_contents($sslinkfile,$ref);
-		}
-	else
-		#delete the existing link text file if it exists
-		{
-		if (file_exists($sslinkfile)){unlink($sslinkfile);}
-		}
+    set_slideshow($sequence, (getval('linkslideshow', '') == 1 ? $ref : NULL));
+
 	unlink($newpath);
 	unlink($crop_pre_file);
 	}
@@ -537,8 +551,8 @@ else
 	readfile($newpath);
 	unlink($newpath);	
 	unlink($crop_pre_file);
-    //unlink(get_temp_dir() . "/transform_plugin/pre_$ref.jpg");
-	exit();
+
+    exit();
 }
 hook("aftercropfinish");
 
@@ -706,11 +720,11 @@ if(!$cropperestricted)
 		    
 		    }
 		    
-		    function validate_transform(theform){
-		    
+            function validate_transform(theform)
+                {
 			    // make sure that this is a reasonable transformation before we submit the form.
-			    // fixme - could add more sophisticated validation here
-			    <?php
+                // fixme - could add more sophisticated validation here
+                <?php
 				if ($cropper_force_original_format)
 					{
 					// Ignore valid dimension check as user may just want to download a different file format
@@ -727,10 +741,10 @@ if(!$cropperestricted)
 					    alert('<?php echo addslashes($lang['errorspecifiedbiggerthanoriginal']); ?>');
 					    return false;
 				    }
-			    <?php } ?>
-			    return true;
-		    
-		    }
+                <?php } ?>
+                
+                return true;
+		        }
 
     // Function used to set the information needed by the cropper and to display/ hide transform options & actions
     function replace_slideshow_set_information(replace_slideshow_checkbox)

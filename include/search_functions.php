@@ -46,7 +46,7 @@ function suggest_refinement($refs,$search)
 if (!function_exists("get_advanced_search_fields")) {
 function get_advanced_search_fields($archive=false, $hiddenfields="")
     {
-    global $FIXED_LIST_FIELD_TYPES;
+    global $FIXED_LIST_FIELD_TYPES, $date_field, $daterange_search;
     # Returns a list of fields suitable for advanced searching. 
     $return=array();
 
@@ -58,6 +58,12 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         {
         if (metadata_field_view_access($fields[$n]["ref"]) && !checkperm("T" . $fields[$n]["resource_type"]) && !in_array($fields[$n]["ref"], $hiddenfields))
             {$return[]=$fields[$n];}
+        }
+
+    if(!in_array($date_field,$return) && $daterange_search && metadata_field_view_access($date_field) && !in_array($date_field, $hiddenfields))
+        {
+        $date_field_data = get_resource_type_field($date_field);
+        array_unshift($return,$date_field_data);
         }
 
     return $return;
@@ -542,6 +548,14 @@ function compile_search_actions($top_actions)
         "offset"        =>  $offset,
         "k"             =>  $k
         );
+
+    $omit_edit_all = false;
+
+    #This is to stop duplicate "Edit all resources" caused on a collection search
+    if(isset($search) && substr($search, 0, 11) == '!collection' && ($k == '' || $internal_share_access))
+        { 
+        $omit_edit_all = true;
+        }
                    
     if(!checkperm('b') && ($k == '' || $internal_share_access)) 
         {
@@ -676,7 +690,7 @@ function compile_search_actions($top_actions)
         }
 
     // If all resources are editable, display an edit all link
-    if($top_actions && $show_edit_all_link)
+    if($top_actions && $show_edit_all_link && !$omit_edit_all)
         {
         $editable_resources = do_search($search,$restypes,'resourceid',$archive,-1,'',false,0,false,false,$daylimit,false,false, true, true);
         
@@ -1057,7 +1071,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     if (substr($search,0,12)=="!nodownloads") 
         {
         if ($orig_order=="relevance") {$order_by="ref DESC";}
-        $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') ORDER BY $order_by" . $sql_suffix;
+        $sql=$sql_prefix . "SELECT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY ref ORDER BY $order_by" . $sql_suffix;
         return $returnsql?$sql:sql_query($sql,false,$fetchrows);
         }
     
@@ -1552,3 +1566,16 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
         }
    return $results;
    }
+
+
+function get_upload_here_selected_nodes($search, array $nodes)
+    {
+    $upload_here_nodes = resolve_nodes_from_string($search);
+
+    if(empty($upload_here_nodes))
+        {
+        return $nodes;
+        }
+
+    return array_merge($nodes, $upload_here_nodes);
+    }

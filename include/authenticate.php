@@ -46,6 +46,15 @@ function ip_matches($ip, $ip_restrict)
 if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset($anonymous_login) || hook('provideusercredentials'))
     {
     $username="";
+	// Resolve anonymous login user if it is configured at domain level
+	if(isset($anonymous_login) && is_array($anonymous_login))
+		{
+		foreach($anonymous_login as $key => $val)
+			{
+			if($baseurl==$key){$anonymous_login=$val;}
+			}
+		}
+	// Establish session hash
 	if (array_key_exists("user",$_GET))
 		{
 	    $session_hash=escape_check($_GET["user"]);
@@ -56,13 +65,6 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 	  	}
 	elseif (isset($anonymous_login))
 		{
-		if(is_array($anonymous_login))
-			{
-			foreach($anonymous_login as $key => $val)
-				{
-				if($baseurl==$key){$anonymous_login=$val;}
-				}
-			}
 		$username=$anonymous_login;
 		$session_hash="";
 		$rs_session=get_rs_session_id(true);
@@ -190,7 +192,18 @@ if (!$valid && !isset($system_login))
     $path = $_SERVER["REQUEST_URI"];
     
     if(strpos($path,"/ajax") !== false)
-        {
+        {		
+        if(isset($_COOKIE["user"]))
+            {
+            http_response_code(401);
+            exit($lang['error-sessionexpired']);
+            }
+        else
+            {
+            http_response_code(403);
+            exit($lang['error-permissiondenied']);
+            }
+        
         // This is a call to a page intended to be loaded via ajax - probably now failed due to auto logout
         if(isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],"login.php") === false)
             {
@@ -356,6 +369,15 @@ foreach($plugins as $plugin)
 
 // Load user config options
 process_config_options($userref);
+
+$non_image_types = array_unique(
+    array_map(
+        'strtolower',
+        array_merge(
+            $non_image_types,
+            $ffmpeg_supported_extensions,
+            $unoconv_extensions,
+            $ghostscript_extensions)));
 
 hook('handleuserref','',array($userref));
 

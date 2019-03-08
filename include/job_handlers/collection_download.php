@@ -18,6 +18,7 @@ $job_data['usage'] -
 $job_data['usagecomment'] - 
 $job_data['available_sizes'] - 
 $job_data['settings_id'] - 
+$job_data['include_csv_file'] - User input opting to include the CSV file in the downloaded archive
 */
 include_once __DIR__ . '/../search_functions.php';
 include_once __DIR__ . '/../resource_functions.php';
@@ -168,11 +169,6 @@ for($n = 0; $n < count($collection_resources); $n++)
     if($GLOBALS['use_zip_extension'])
         {
         $zip->addFile($p,$filename);
-        update_zip_progress_file("file ".$zip->numFiles);
-        }
-    else
-        {
-        update_zip_progress_file("file ".$n);
         }
 
     collection_download_log_resource_ready($tmpfile, $deletion_array, $ref);
@@ -204,17 +200,22 @@ collection_download_process_summary_notes(
     $usertempdir,
     $filename,
     $path,
-    $deletion_array);
+    $deletion_array,
+    $size,
+    $zip);
 
-collection_download_process_csv_metadata_file(
-    $collection_resources,
-    $id,
-    $collection,
-    false,
-    $GLOBALS['use_zip_extension'],
-    $zip,
-    $path,
-    $deletion_array);
+if($include_csv_file == 'yes')
+    {
+    collection_download_process_csv_metadata_file(
+        $collection_resources,
+        $id,
+        $collection,
+        false,
+        $GLOBALS['use_zip_extension'],
+        $zip,
+        $path,
+        $deletion_array);
+    }
 
 collection_download_process_command_to_file($GLOBALS['use_zip_extension'], false, $id, $collection, $size, $path);
 

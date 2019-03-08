@@ -13,7 +13,7 @@ $lang["tms_link_tms_data"]="Live TMS Data";
 $lang["tms_link_database_setup"]="TMS database connection";
 $lang["tms_link_metadata_setup"]="TMS metadata configuration";
 $lang["tms_link_tms_link_success"]="Connection succeeded";
-$lang["tms_link_tms_link_failure"]="Connection failed. Please chck your details.";
+$lang["tms_link_tms_link_failure"]="Connection failed. Please check your details.";
 
 $lang["tms_link_test_link"]="Test link to TMS";
 $lang["tms_link_tms_resources"]="TMS Resources";

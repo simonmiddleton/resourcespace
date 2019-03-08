@@ -228,7 +228,6 @@ if (!hook("replaceloginform")) {
 			<input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
 		</div>
 	</form>
-  <p>&nbsp;</p>
 
 <?php
 # Javascript to default the focus to the username box

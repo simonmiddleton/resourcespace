@@ -349,6 +349,7 @@ $lang["uselocalupload"]="OR: Use local 'upload' folder instead of remote FTP ser
 
 # User contributions
 $lang["contributenewresource"]="Contribute new resource";
+$lang["view_my_contributions_ws"]="View my contributions - %workflow_state_name"; # %workflow_state_name is a placeholder
 $lang["viewcontributedps"]="View my contributions - pending submission";
 $lang["viewcontributedpr"]="View my contributions - pending review";
 $lang["viewcontributedsubittedl"]="View my contributions - active";
@@ -859,6 +860,7 @@ $lang['double'] = 'Double';
 $lang['single_width'] = 'Single width';
 $lang['double_width'] = 'Double width';
 $lang['filter_by_table'] = 'Filter by table...';
+$lang['upload_here'] = "Upload here";
 
 # Pager
 $lang["next"]="Next";
@@ -1260,7 +1262,7 @@ $lang["more-information"]="More information";
 $lang["setup-structuralplugins"]="System templates";
 $lang["setup-headercolourstyleoverride"]="Custom header background colour";
 $lang["setup-headerlinkstyleoverride"]="Custom header link colour";
-$lang["setup-homecolourstyleoverride"]="Custom intro text, dash tile and simple search colour";
+$lang["setup-homecolourstyleoverride"]="Custom intro text, dash tile, browse bar and simple search colour";
 $lang["setup-collectionbarbackground"]="Custom collection bar primary colour";
 $lang["setup-collectionbarforeground"]="Custom collection bar secondary colour";
 
@@ -1670,24 +1672,6 @@ $lang["stars"]="Stars";
 
 $lang["noupload"]="No upload";
 
-# System Setup
-# System Setup Tree Nodes (for the default setup tree)
-$lang["treenode-root"]="Root";
-$lang["treenode-group_management"]="Group management";
-$lang["treenode-new_group"]="New group";
-$lang["treenode-new_subgroup"]="New subgroup";
-$lang["treenode-resource_types_and_fields"]="Manage resource types";
-$lang["treenode-new_resource_type"]="New resource type";
-$lang["treenode-new_field"]="New field";
-$lang["treenode-reports"]="Reports";
-$lang["treenode-new_report"]="New report";
-$lang["treenode-downloads_and_preview_sizes"]="Downloads / preview sizes";
-$lang["treenode-new_download_and_preview_size"]="New download / preview size";
-$lang["treenode-database_statistics"]="Database statistics";
-$lang["treenode-permissions_search"]="Permissions search";
-$lang["treenode-no_name"]="(no name)";
-
-$lang["treeobjecttype-preview_size"]="Preview size";
 
 $lang["permissions"]="Permissions";
 
@@ -1722,6 +1706,7 @@ $lang["custompermissions"]="Custom permissions";
 $lang["searchcapability"]="Search capability";
 $lang["access_to_restricted_and_confidential_resources"]="Can download restricted resources and view confidential resources<br>(normally admin only)";
 $lang["restrict_access_to_all_available_resources"]="Restrict access to all available resources";
+$lang["restrict_access_to_workflow_state"] = "Restrict access to resources in workflow %workflow_state_name"; # %workflow_state_name is placeholder
 $lang["can_make_resource_requests"]="Can make resource requests";
 $lang["show_watermarked_previews_and_thumbnails"]="Show watermarked previews/thumbnails";
 $lang["can_see_all_fields"]="Can see all fields";
@@ -2014,8 +1999,8 @@ $lang['comments_body-placeholder']="Add a comment...";
 $lang['comments_fullname-placeholder']="Your Name (required)";
 $lang['comments_email-placeholder']="Your E-mail (required)";
 $lang['comments_website-url-placeholder']="Website";
-$lang['comments_flag-this-comment']="Flag this comment";
-$lang['comments_flag-has-been-flagged']="This comment has been flagged";
+$lang['comments_flag-this-comment']="Flag";
+$lang['comments_flag-has-been-flagged']="Comment flagged";
 $lang['comments_flag-reason-placeholder']="Reason to flag comment";
 $lang['comments_validation-fields-failed']="Please ensure all mandatory fields are correctly completed";
 $lang['comments_block_comment_label']="block comment";
@@ -2023,7 +2008,7 @@ $lang['comments_flag-email-default-subject']="Notification of flagged comment";
 $lang['comments_flag-email-default-body']="This comment has been flagged:";
 $lang['comments_flag-email-flagged-by']="Flagged by:";
 $lang['comments_flag-email-flagged-reason']="Reason for flagging:";
-$lang['comments_hide-comment-text-link']="Remove Comment";
+$lang['comments_hide-comment-text-link']="Delete";
 $lang['comments_hide-comment-text-confirm']="Are you sure that you want to remove the text for this comment?";
 
 # testing updated request emails
@@ -2139,6 +2124,11 @@ $lang['action-title_create_size_with_id'] = "Create size with " . $lang['propert
 $lang['page-title_size_management_edit'] = "Edit size";
 $lang['page-subtitle_size_management_edit'] = "Use this section to modify size details.";
 $lang["fieldtitle-tick_to_delete_size"] = "Tick to delete this size";
+
+# Resource type management
+$lang["resource_types_manage"]      = "Manage resource types";
+$lang["resource_type_new"]          = "New resource type";
+$lang["resource_type_field_new"]    = "New metadata field";
 
 ##########################################################################################
 # Non page-specific items that need to be merged above when system admin project completed
@@ -2358,6 +2348,8 @@ $lang["manageowndashinto"]="Manage dash tiles available for your dash. You can a
 $lang['manage_all_user_dash_tiles_note'] = 'Note: Tiles shown with a red border are hidden to the users. Admins see them as there are other tiles available but hidden from these users';
 $lang['manage_dash_tiles'] = 'Manage dash tiles';
 $lang['view_tiles'] = 'View tiles';
+$lang['upgrade_available_title'] = 'Upgrade available';
+$lang['upgrade_available_text'] = 'Click for more information about the new version';
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
@@ -2494,6 +2486,9 @@ $lang['systemconfig_themes_category_split_pages'] = 'Display Featured Collection
 $lang['systemconfig_theme_category_levels'] = 'How many levels of theme category to show?';
 $lang['systemconfig_enable_themes'] = 'Enable Featured Collections';
 $lang["systemconfig_modal_default"] = "Enable modals for standard pages where configured? User preferences may override this.";
+$lang['systemconfig_browse_bar_section'] = 'Browse Bar';
+$lang['systemconfig_browse_bar_enable'] = 'Enable Browse Bar';
+$lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse Bar';
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
@@ -2548,6 +2543,7 @@ $lang["action-add-new"] = "Add new";
 $lang["action-submit-button-label"] = "Submit";
 $lang["slideshow_use_static_image"] = "Use a single random image from the set (image will not change unless page is reloaded)";
 $lang["slideshow-image"] = "slideshow image";
+$lang["manage-slideshow-instructions"] = "A slideshow image can be shown in multiple areas on the system. To select other locations, please tick the check boxes below. You can also click on the preview of an image and see details of the resource it is linked to (if any).";
 
 $lang["emailcollectionrequest"] = "[img_gfx/titles/title.gif]<br />The following user has made a request:<br />Username: [username]<br />User email: [useremail]<br /><br />Reason for request: [requestreason]<br /><br />Click the link below to view the request.<br /><a href='[requesturl]'>[requesturl]</a>";
 $lang["emailusercollectionrequest"] = "[img_gfx/titles/title.gif]<br />Your resource request has been submitted for approval and will be looked at shortly.:<br /><br />Reason for request: [requestreason]<br /><br />Click the link below to view the requested resources.<br /><a href='[url]'>[url]</a>";
@@ -2698,6 +2694,8 @@ $lang["byte_prefix_mode_decimal"]="Use decimal for file sizes (1000 multiples, K
 $lang['error_upload_resource_alternatives_batch'] = 'When using this feature (see $upload_alternatives_suffix) your original file MUST be the first one in the queue!';
 $lang['error_upload_resource_not_found'] = 'A resource ID could not be found!';
 $lang['error_user_registration_opt_in'] = 'Please check the box to indicate your consent';
+$lang['error_resource_id_non_numeric'] = 'ERROR - Resource IDs should be numeric please check your submission';
+$lang['error_resource_not_image_extension'] = 'ERROR - Selected resource is not an image type file extension';
 
 $lang['image_quality_100'] = "Maximum";
 $lang['image_quality_92'] = "Print";
@@ -2738,3 +2736,50 @@ $lang["email_auto_digest_inactive"] = "This is a summary of your unread messages
 $lang["email_digest_disable"]       = "You can disable these notifications by logging in and adjusting your user preferences at the link below:-";
 $lang["user_pref_inactive_digest"]  = "Send me a daily email with all unread notifications if not logged on for than %%DAYS%% days?";
 $lang["edit_copy_from_field"]       = "Copy data from field";
+
+$lang['home_page'] = "Home page";
+$lang['login_word'] = "Login";
+
+$lang['error-duplicatesfound'] = "Duplicate found: resource(s) %resourceref% matches file %filename%"; # %resourceref to be replaced by list of refs that match incoming file and %filename to be replaced by the incoming files name or location
+$lang['see_log'] = "Please refer to the log below for more details on this upload.";$lang["edit_copy_from_field"]       = "Copy data from field";
+// Filter rules 
+$lang["filter_migration"]           = "Filter migration";
+$lang["filter_search_success"]      = "Search filter has been successfully migrated.";
+$lang["filter_search_error"]        = "An error was encountered migrating a search filter. Please check the search filter.";
+$lang["filter_search_delete_error"] = "Filter is in use by the following users or groups";
+$lang["filter_manage"]              = "Manage filters";
+$lang["filter_edit"]                = "Edit filter";
+$lang["filter_new"]                 = "New filter";
+$lang["filter_none"]                = "No filter";
+$lang["filter_create_name"]         = "Create filter with name...";
+$lang["filter_edit_text"]           = "Set the rules that must be met for resources to match the filter";
+$lang["filter_name"]                = "Filter name";
+$lang["filter_rules"]               = "Filter rules";
+$lang["filter_rules_none"]          = "There are no rules for this filter";
+$lang["filter_rule_edit"]           = "Edit filter rule";
+$lang["filter_rule_add"]            = "Add filter rule";
+$lang["filter_rule_edit_text"]      = "Select the conditions that can satisfy this filter rule. Any one of these can be met to satisfy the rule";
+$lang["filter_rule_name"]           = "Filter rule name";
+$lang["filter_condition_label"]     = "Criteria";
+$lang["filter_criteria_all"]        = "ALL of the rules must be met";
+$lang["filter_criteria_none"]       = "NONE of the rules must be met";
+$lang["filter_criteria_any"]        = "ANY of the rules must be met";
+$lang["filter_is_in"]               = "IS ";
+$lang["filter_is_not_in"]           = "IS NOT ";
+$lang["filter_or"]                  = "OR";
+$lang["filter_and"]                 = "AND";
+$lang['see_log'] = "Please refer to the log below for more details on this upload.";$lang['login_word'] = "Login";$lang["edit_copy_from_field"]       = "Copy data from field";
+
+
+/* Browse bar */
+$lang['browse_bar_text']                = "Browse";
+$lang['field_show_in_browse_bar']       = "Show in Browse Bar";
+$lang['error-sessionexpired']           = "Your session has expired or is otherwise invalid";
+$lang['error-invalid_resource_type']    = "Invalid resource type";
+$lang['error-invalid_browse_action']    = "Invalid action. Please check existing resource data";
+$lang['browse_by_tag']                  = "Browse by tag";
+$lang['browse_by_workflow_state']       = "Workflow";
+
+
+# Updates to workflow
+$lang["userresources_status_change"]="Resources that you have contributed have been moved to the state: ";

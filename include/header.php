@@ -1,4 +1,6 @@
 <?php 
+include_once("render_functions.php");
+
 hook ("preheaderoutput");
  
 $k=getvalescaped("k","");
@@ -164,6 +166,18 @@ if ($chosen_dropdowns || $chosen_dropdowns_collection)
         <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
         <?php
         }
+        
+$not_authenticated_pages = array('login', 'user_change_password','user_password','user_request');
+
+$browse_on = has_browsebar();
+if($browse_on)
+    {
+    $browse_width   = getval("browse_width",$browse_default_width,true);
+    $browse_show    = getval("browse_show","") == "show";
+    ?>
+    <script src="<?php echo $baseurl_short ?>lib/js/browsebar_js.php" type="text/javascript"></script>
+    <?php
+    }
 ?>
 
 <script type="text/javascript">
@@ -178,14 +192,9 @@ var global_cookies = "<?php echo $global_cookies?>";
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
 <?php
 if (!hook("replacetrashbin", "", array("js" => true)))
-	{
-?>
-    global_trash_html += '<div id="trash_bin">';
-    global_trash_html += '<span class="trash_bin_text"><?php echo $lang["trash_bin_title"]; ?></span>';
-    global_trash_html += '</div>';
-    global_trash_html += '<div id="trash_bin_delete_dialog" style="display: none;"></div>';
-<?php
-	}
+    {
+    echo "global_trash_html += '" . render_trash("trash","", true) . "';\n";
+    }
 ?>
 oktext="<?php echo $lang["ok"] ?>";
 var scrolltopElementCentral='.ui-layout-center';
@@ -212,6 +221,12 @@ if($chosen_dropdowns_collection)
     var chosenCollectionThreshold='<?php echo $chosen_dropdowns_threshold_collection ?>';
 	<?php
 	}
+
+if($browse_on)
+    {
+    echo "browse_width = '" . $browse_width . "';
+    browse_clicked = false;";     
+    }
 ?>
 </script>
 
@@ -235,7 +250,8 @@ $extrafooterhtml="";
 <!-- Override stylesheet -->
 <link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo $k; ?>&css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!--- FontAwesome for icons-->
-<link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
+<link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
 <!-- Load specified font CSS -->
 <link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" />
 
@@ -274,7 +290,6 @@ if(!hook("customloadinggraphic"))
 ?>
 
 <!--Global Header-->
-<div id="UICenter" class="ui-layout-center">
 <?php
 if (($pagename=="terms") && (getval("url","")=="index.php")) {$loginterms=true;} else {$loginterms=false;}
 if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all") { ?>
@@ -300,7 +315,7 @@ if(isset($usergroup))
 
 $linkUrl=isset($header_link_url) ? $header_link_url : $homepage_url;
 ?>
-<div id="Header" class="<?php
+<div id="Header" class="ui-layout-north  <?php
         echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
         echo ((isset($slimheader_fixed_position) && $slimheader_fixed_position) ? ' SlimHeaderFixedPosition' : '');
         echo " " . $header_size;
@@ -395,9 +410,6 @@ if($responsive_ui)
 hook("headertop");
 
 if (!isset($allow_password_change)) {$allow_password_change=true;}
-
-$not_authenticated_pages = array('login', 'user_change_password');
-
 if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
     {
 	?>
@@ -450,7 +462,21 @@ else
         ?>
         <li>
             <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');">
+            <?php
+			if (isset($header_include_username) && $header_include_username)
+                {
+                ?>
+                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars($userfullname=="" ? $username : $userfullname) ?>
+                <span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                <?php
+                }
+            else
+                {
+                ?>
                 <i aria-hidden="true" class="fa fa-user fa-lg fa-fw"></i><span class="MessageTotalCountPill Pill" style="display: none;"></span>
+                <?php
+                }
+            ?> 
             </a>
             <div id="MessageContainer" style="position:absolute; "></div>
         <?php
@@ -502,6 +528,7 @@ include (dirname(__FILE__) . "/header_links.php");
 <div class="clearer"></div><?php if ($pagename!="preview" && $pagename!="preview_all") { ?></div><?php } #end of header ?>
 
 <?php
+
 if (!$header_search)
     {
     # Include simple search sidebar?
@@ -523,7 +550,7 @@ if (!$header_search)
     if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") ) 	
         {
         ?>
-        <div id="SearchBarContainer">
+        <div id="SearchBarContainer" class="ui-layout-east" >
         <?php
         include dirname(__FILE__)."/searchbar.php";
         
@@ -536,16 +563,40 @@ if (!$header_search)
 
 <?php
 # Determine which content holder div to use
-if (($pagename=="login") || ($pagename=="user_password") || ($pagename=="user_request")) {$div="CentralSpaceLogin";}
-else {$div="CentralSpace";}
+if (($pagename=="login") || ($pagename=="user_password") || ($pagename=="user_request"))
+    {
+    $div="CentralSpaceLogin";
+    $uicenterclass="NoSearch";
+    }
+else
+    {
+    $div="CentralSpace";
+    $uicenterclass="Search";
+    }
 ?>
 <!--Main Part of the page-->
-        <?php if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="user_request")) { ?><div id="CentralSpaceContainer"<?php
+<?php
+
+if($browse_on)
+    {
+    render_browse_bar();
+    }
+        
+echo '<div id="UICenter" class="ui-layout-center ' . $uicenterclass . '">';
+    
+if (!in_array($pagename, $not_authenticated_pages))
+    {
+    // Set classes for CentralSpaceContainer
+    $csc_classes = array();
+    if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && ('' == $k || $internal_share_access) && $browse_bar) 
+        {
         if($header_search)
             {
-            ?> class="NoSearchBar"<?php
+            $csc_classes[] = "NoSearchBar";
             }
-        ?>><?php }
+        }
+    echo '<div id="CentralSpaceContainer" ' . (count($csc_classes) > 0 ? 'class="' . implode(' ', $csc_classes) . '"' : '' ) . '>';
+    }
 
 hook("aftercentralspacecontainer");
 ?>

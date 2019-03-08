@@ -1,6 +1,6 @@
 name    : auto_login
 author  : Axel Dörfler
 version : 1.0
-desc    : [Advanced] Automatic login via IP pattern
+desc    : [Advanced] Automatic login via IP pattern. Set up via user edit page in Manage Users once enabled.
 category: authentication
 disable_group_select: 1

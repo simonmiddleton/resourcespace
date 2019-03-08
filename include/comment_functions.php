@@ -254,31 +254,6 @@ EOT;
 				echo $lang['comments_in-response-to'] . "<br /><a class='.smoothscroll' rel='' href='#${jumpAnchorID}'>${responseToName} " . $lang['comments_in-response-to-on'] . " ${responseToDateTime}</a>";				
 				}						
 			echo "</div>";	// end of CommentEntryInfoDetails		
-			echo "<div class='CommentEntryInfoFlag'>";		
-			if (getval("comment${thisRef}flagged","") || $comment['hide'])
-				{
-					echo "<div class='CommentFlagged'>${lang['comments_flag-has-been-flagged']}</div>";			
-				} else {				
-					echo<<<EOT
-					<div class="CommentFlag">
-						<a href="javascript:void(0)" onclick="jQuery('#CommentFlagContainer${thisRef}').toggle('fast');">${lang['comments_flag-this-comment']}</a>
-					</div>
-EOT;
-
-				}							
-			
-            if(checkPerm("o"))
-                {
-                ?>
-                <form class="comment_removal_form">
-                    <?php generateFormToken("comment_removal_form"); ?>
-                    <input type="hidden" name="comment_to_hide" value="<?php echo htmlspecialchars($thisRef); ?>"></input>                 
-                    <a href="javascript:void(0)" onclick="if (confirm ('<?php echo htmlspecialchars($lang['comments_hide-comment-text-confirm']); ?>')) submitForm(this.parentNode);">&gt; <?php echo htmlspecialchars($lang['comments_hide-comment-text-link']); ?></a>                  
-                </form>
-                <?php
-                }
-			
-			echo "</div>";		// end of CommentEntryInfoFlag
 			echo "</div>";	// end of CommentEntryInfoLine			
 			echo "</div>";	// end CommentEntryInfoContainer
 			
@@ -340,8 +315,34 @@ EOT;
 			echo "<a href='javascript:void(0)' onClick='
 				jQuery(\"#{$respond_div_id}\").replaceWith(jQuery(\"#comment_form\").clone().attr(\"id\",\"${respond_div_id}\")); 
 				jQuery(\"<input>\").attr({type: \"hidden\", name: \"ref_parent\", value: \"$thisRef\"}).appendTo(\"#${respond_div_id} .comment_form\");				
-			'>&gt; " . $lang['comments_respond-to-this-comment'] . "</a>";			
+			'>" . '<i aria-hidden="true" class="fa fa-reply"></i>&nbsp;' . $lang['comments_respond-to-this-comment'] . "</a>";			
 			echo "</div>";		// end respond
+
+			echo "<div class='CommentEntryInfoFlag'>";		
+			if (getval("comment${thisRef}flagged","") || $comment['hide'])
+				{
+					echo "<div class='CommentFlagged'><i aria-hidden='true' class='fa fa-fw fa-flag'>&nbsp;</i>${lang['comments_flag-has-been-flagged']}</div>";			
+				} else {				
+					echo<<<EOT
+					<div class="CommentFlag">
+						<a href="javascript:void(0)" onclick="jQuery('#CommentFlagContainer${thisRef}').toggle('fast');" ><i aria-hidden="true" class="fa fa-fw fa-flag">&nbsp;</i>${lang['comments_flag-this-comment']}</a>
+					</div>
+EOT;
+
+				}							
+			
+            if(checkPerm("o"))
+                {
+                ?>
+                <form class="comment_removal_form">
+                    <?php generateFormToken("comment_removal_form"); ?>
+                    <input type="hidden" name="comment_to_hide" value="<?php echo htmlspecialchars($thisRef); ?>"></input>                 
+                    <a href="javascript:void(0)" onclick="if (confirm ('<?php echo htmlspecialchars($lang['comments_hide-comment-text-confirm']); ?>')) submitForm(this.parentNode);"><?php echo '<i aria-hidden="true" class="fa fa-trash-alt"></i>&nbsp;' . $lang['comments_hide-comment-text-link']; ?></a>
+                </form>
+                <?php
+                }
+			
+			echo "</div>";		// end of CommentEntryInfoFlag
 							
 			echo "</div>";		// end of CommentEntry
 			

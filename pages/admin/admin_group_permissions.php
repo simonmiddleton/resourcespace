@@ -118,6 +118,18 @@ foreach ($additional_archive_states as $additional_archive_state)
 	}
 	
 DrawOption("g", $lang["restrict_access_to_all_available_resources"], true);
+
+// Permission for restricting access to resources per workflow state
+$default_workflow_states = range(-2, 3);
+$workflow_states = array_merge($default_workflow_states, $additional_archive_states);
+foreach($workflow_states as $workflow_state_number)
+    {
+    DrawOption(
+        "rws{$workflow_state_number}",
+        str_replace('%workflow_state_name', "'{$lang["status{$workflow_state_number}"]}'", $lang["restrict_access_to_workflow_state"]),
+        false);
+    }
+
 DrawOption("q", $lang["can_make_resource_requests"], false);
 DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
@@ -253,7 +265,7 @@ if (!in_array("j*",$permissions))	// by default is checked
 		else
 			{
 			$parent = substr ($path, 0, strrpos($path,"|"));
-			$skip =(!$theme_paths[$parent]);		// check if parent theme permission has been set
+			$skip =(!isset($theme_paths[$parent]) || !$theme_paths[$parent]);		// check if parent theme permission has been set
 			$permission = "j-" . $path;
 			if ($skip)
 				{

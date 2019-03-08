@@ -56,8 +56,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $staticsync_mod="";
                 }
     
-            sql_query("delete from resource_data where resource=$ref $staticsync_mod");
-            sql_query("delete from resource_keyword where resource=$ref $staticsync_mod");
+            sql_query("delete from resource_data where resource='" . escape_check($ref) . "' $staticsync_mod");
+            sql_query("delete from resource_keyword where resource='" . escape_check($ref) . "' $staticsync_mod");
             #clear 'joined' display fields which are based on metadata that is being deleted in a revert (original filename is reinserted later)
             $display_fields=get_resource_table_joins();
             if ($staticsync_mod!="")
@@ -84,7 +84,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             sql_query("update resource set ".$clear_fields." where ref=$ref");
             #also add the ref back into keywords:
             add_keyword_mappings($ref, $ref , -1);
-            $extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
+            $extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'","");
             $filename=get_resource_path($ref,true,"",false,$extension);
             $processfile['tmp_name']=$filename;
             }
@@ -188,7 +188,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
             hook("beforeremoveexistingfile", "", array( "resourceId" => $ref ) );
 
-            $old_extension=sql_value("select file_extension value from resource where ref='{$ref}'","");
+            $old_extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'","");
             if ($old_extension!="") 
                 {
                 $old_path=get_resource_path($ref,true,"",true,$old_extension);
@@ -300,12 +300,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         {
         $has_image=",has_image=0";
         }
-    sql_query("update resource set file_extension='$extension',preview_extension='jpg',file_modified=now() $has_image where ref='$ref'");
+    sql_query("update resource set file_extension='$extension',preview_extension='jpg',file_modified=now() $has_image where ref='" . escape_check($ref) . "'");
     
     if(!$upload_then_process || $after_upload_processing)
         {
         # delete existing resource_dimensions
-        sql_query("delete from resource_dimensions where resource='$ref'");
+        sql_query("delete from resource_dimensions where resource='" . escape_check($ref) . "'");
         
         # get file metadata 
         if(!$no_exif) 
@@ -471,7 +471,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             $checksum_required=true;
             if($file_upload_block_duplicates && isset($checksum))
                 {
-                sql_query("update resource set file_checksum='" . escape_check($checksum) . "' where ref='$ref'");
+                sql_query("update resource set file_checksum='" . escape_check($checksum) . "' where ref='" . escape_check($ref) . "'");
                 $checksum_required=false;
                 }
             if ($enable_thumbnail_creation_on_upload)
@@ -494,7 +494,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 {
                 # Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
                 delete_previews($ref);
-                sql_query("update resource set has_image=0 where ref='$ref'");
+                sql_query("update resource set has_image=0 where ref='" . escape_check($ref) . "'");
                 }
             }
     
@@ -515,7 +515,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         global $upload_then_process_holding_state;
         if(isset($upload_then_process_holding_state))
             {
-            $job_data["archive"]=sql_value("SELECT archive value from resource where ref={$ref}", "");
+            $job_data["archive"]=sql_value("SELECT archive value from resource where ref='" . escape_check($ref) . "'", "");
             update_archive_status($ref, $upload_then_process_holding_state);
             }
         
@@ -1069,7 +1069,12 @@ function iptc_return_utf8($text)
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true)
     {
     global $keep_for_hpr,$imagemagick_path, $preview_generate_max_file_size,$autorotate_no_ingest, $previews_allow_enlarge,$lang;
-   
+
+    if(!is_numeric($ref))
+        {
+        trigger_error("Parameter 'ref' must be numeric!");
+        }
+
     // keep_for_hpr will be set to true if necessary in preview_preprocessing.php to indicate that an intermediate jpg can serve as the hpr.
     // otherwise when the file extension is a jpg it's assumed no hpr is needed.
 
@@ -1332,6 +1337,11 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false)
     {
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
+
+    if(!is_numeric($ref))
+        {
+        trigger_error("Parameter 'ref' must be numeric!");
+        }
 
     $icc_transform_complete=false;
     debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested)");
@@ -2533,7 +2543,7 @@ function extract_text($ref,$extension,$path="")
         if (!file_exists($command)) {$command=$antiword_path . "\antiword.exe";}
         if (!file_exists($command)) {debug("ERROR: Antiword executable not found at '$antiword_path'"); return false;}
 
-        $cmd=$command . " -m UTF-8 \"" . $path . "\"";
+        $cmd=$command . " -m UTF-8 " . escapeshellarg($path);
         $text=run_command($cmd);
         }
     
@@ -2586,7 +2596,7 @@ function extract_text($ref,$extension,$path="")
         if (!file_exists($command)) {$command=$pdftotext_path . "\pdftotext.exe";}
         if (!file_exists($command)) {debug("ERROR: pdftotext executable not found at '$pdftotext_path'"); return false;}
 
-        $cmd=$command . " -enc UTF-8 \"" . $path . "\" -";
+        $cmd=$command . " -enc UTF-8 " . escapeshellarg($path) . " -";
         $text = run_command($cmd);
 
         }

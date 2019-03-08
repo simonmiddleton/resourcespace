@@ -92,12 +92,12 @@ else
 	}
 
 # ------------ Change the collection, if a collection ID has been provided ----------------
-if ($collection!="")
+if ($collection!="" && $collection!="undefined")
 	{
 	hook("prechangecollection");
 	#change current collection
 	
-	if (($k=="" || $internal_share_access) && $collection=="new" && !$upload_then_edit)
+	if (($k=="" || $internal_share_access) && $collection=="new")
 		{
 		# Create new collection
 		if ($entername!=""){ $name=$entername;} 
@@ -532,6 +532,13 @@ if ($remove!="")
 $addsearch=getvalescaped("addsearch",-1);
 if ($addsearch!=-1)
 	{
+    /*
+    When adding search default collection sort should be relevance to address multiple types of searches. If collection
+    is used then it will error if user did a simple search and not a !collection search since there is no collection
+    sortorder
+    */
+    $default_collection_sort = 'relevance';
+
     $order_by = getvalescaped('order_by', getvalescaped('saved_order_by', $default_collection_sort));
 
     if (!collection_writeable($usercollection))
@@ -541,16 +548,13 @@ if ($addsearch!=-1)
     else
         {
         hook("preaddsearch");
-		if(checkperm("noex"))
+        $externalkeys=get_collection_external_access($usercollection);
+		if(checkperm("noex") && count($externalkeys)>0)
 			{
-			// If collection has been shared externally users with this permission can't add resources
-			$externalkeys=get_collection_external_access($usercollection);
-			if(count($externalkeys)>0)
-				{
-				?>
-				<script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
-				<?php
-				}
+			// If collection has been shared externally users with this permission can't add resources			
+            ?>
+            <script language="Javascript">alert("<?php echo $lang["sharedcollectionaddblocked"]?>");</script>
+            <?php
 			}
 		else
 			{		
@@ -962,7 +966,7 @@ if ($count_result>0)
 		?>
 <?php if (!hook("resourceview")) { ?>
 		<!--Resource Panel-->
-		<div class="CollectionPanelShell" id="ResourceShell<?php echo urlencode($ref) ?>"
+		<div class="CollectionPanelShell ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
         <?php if ($add==$ref) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
         
 		<?php if (!hook("rendercollectionthumb")){?>

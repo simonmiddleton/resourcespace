@@ -23,16 +23,14 @@ if (getval("ajax","")=="" && !hook("replace_footer"))
 <span role="status" aria-live="assertive" class="ui-helper-hidden-accessible"></span>
 
 <!-- Global Trash Bin -->
-<?php if (!hook("replacetrashbin")) { ?>
-<div id="trash_bin">
-	<span class="trash_bin_text"><?php echo $lang['trash_bin_title']; ?></span>
-</div>
-<div id="trash_bin_delete_dialog" style="display: none;"></div>
-<?php } ?>
+<?php if (!hook("replacetrashbin")) 
+	{
+	render_trash("trash", "");
+	} ?>
 
 <div class="clearerleft"></div>
 </div><!--End div-CentralSpace-->
-<?php if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="preview_all") && ($pagename!="user_request")) { ?></div><?php } ?><!--End div-CentralSpaceContainer-->
+
 
 <div class="clearer"></div>
 
@@ -46,7 +44,7 @@ if(!empty($modify_omit_footer_pages))
 	$omit_footer_pages=$modify_omit_footer_pages;
 	}
 
-if(!in_array($pagename,$omit_footer_pages) && ($loginterms==false)) 
+if($pagename == "login") 
 { ?>
 
 <!--Global Footer-->
@@ -104,19 +102,25 @@ if(!hook("replace_footernavrightbottom"))
 <div class="clearer"></div>
 </div>
 <?php 
-} ?>
+}
 
-<?php echo $extrafooterhtml; ?>
+echo $extrafooterhtml;
 
-<?php } // end ajax ?>
+} // end ajax
 
-<?php /* always include the below as they are perpage */?>
+/* always include the below as they are perpage */
 
-<?php hook("footerbottom"); ?>
+if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="preview_all") && ($pagename!="user_request"))
+    {
+    echo "</div><!-- End CentralSpaceContainer -->";
+    }
+    
 
-<?php draw_performance_footer();?>
+echo "</div><!-- End UICenter -->";
 
-<?php
+hook("footerbottom");
+draw_performance_footer();
+
 //titlebar modifications
 
 if ($show_resource_title_in_titlebar){
@@ -449,14 +453,69 @@ if (getval("ajax","") == "")
 			myLayout=jQuery('body').layout(
 				{
 				//closable:false,
-				resizable:true,
+				south__resizable:true,
 				livePaneResizing:true,
-				triggerEventsDuringLiveResize: false,
-				minSize:40,
-				spacing_open:8,
-				spacing_closed:8,
-				togglerLength_open:"200",
-				togglerTip_open: '<?php echo $lang["toggle"]?>',
+                triggerEventsDuringLiveResize: false,
+				south__minSize:40,
+                south__spacing_open:8,
+                south__spacing_closed:8,
+				              
+                east__spacing_open:0,
+				east__spacing_closed:8,
+                east_resizable: true,
+                east__size: 295,
+
+                north_resizable: false,
+                north__closable:false,
+                north__spacing_closed: 0,
+                north__spacing_open: 0,
+
+                <?php
+                if($browse_on) 
+                    {
+                    $browsesize = $browse_show ? $browse_width : "30";
+                    echo "
+                    west__closable:false,
+                    west__resizable:false,
+                    west__liveContentResizing: true,
+                    west__resizeContentWhileDragging: true,
+                    west__spacing_open: 0,
+                    west__minSize:30,
+                    west__size: " . $browsesize . ",
+                    west__onresize: function(pane)
+                        {
+                        if (pane==\"west\")
+                            {
+                            var browsewidth = jQuery('.ui-layout-west').width();
+                            if(browsewidth < 185 && browse_show=='show')
+                                {
+                                ToggleBrowseBar('close');
+                                }
+                            else if(browsewidth >= 100 && browse_show=='hide')
+                                {
+                                ToggleBrowseBar('open',true);
+                                }
+                            else if(browsewidth > 800)
+                                {
+                                myLayout.sizePane('west', 800);
+                                }
+                            jQuery('#BrowseBarContent').width(browsewidth-40);
+                            var newbrowsewidth = jQuery('.ui-layout-west').width();
+                            if(newbrowsewidth != 35)
+                                {
+                                SetCookie('browse_width', newbrowsewidth);
+                                browse_width = newbrowsewidth;    
+                                }
+                            }
+                        },
+                    ";
+
+                    }?>
+				
+
+                                
+				south__togglerLength_open:"200",
+				south__togglerTip_open: '<?php echo $lang["toggle"]?>',
 				resizerTip: '<?php echo $lang["resize"]?>',
 				south__onclose_start: function(pane)
 					{
@@ -492,16 +551,21 @@ if (getval("ajax","") == "")
 					}
 				});
 			window.onload = function()
-				{
-				CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?thumbs=<?php echo urlencode($thumbs); ?>&collection='+usercollection+'<?php echo (isset($k) ? "&k=".urlencode($k) : ""); ?>&order_by=<?php echo (isset($order_by) ? urlencode($order_by) : ""); ?>&sort=<?php echo (isset($sort) ? urlencode($sort) : ""); ?>&search=<?php echo (isset($search) ? urlencode($search) : ""); ?>&restypes=<?php echo (isset($restypes) ? urlencode($restypes) : "") ?>&archive=<?php echo (isset($archive) ? urlencode($archive) : "" ) ?>&daylimit=<?php echo (isset($daylimit) ? urlencode($daylimit) : "" ) ?>&offset=<?php echo (isset($offset) ? urlencode($offset) : "" );echo (isset($resources_count) ? "&resources_count=$resources_count" :""); ?>');
-				InitThumbs();
-				}
+                {
+                CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?thumbs=<?php echo urlencode($thumbs); ?>&collection='+usercollection+'<?php echo (isset($k) ? "&k=".urlencode($k) : ""); ?>&order_by=<?php echo (isset($order_by) ? urlencode($order_by) : ""); ?>&sort=<?php echo (isset($sort) ? urlencode($sort) : ""); ?>&search=<?php echo (isset($search) ? urlencode($search) : ""); ?>&restypes=<?php echo (isset($restypes) ? urlencode($restypes) : "") ?>&archive=<?php echo (isset($archive) ? urlencode($archive) : "" ) ?>&daylimit=<?php echo (isset($daylimit) ? urlencode($daylimit) : "" ) ?>&offset=<?php echo (isset($offset) ? urlencode($offset) : "" );echo (isset($resources_count) ? "&resources_count=$resources_count" :""); ?>');
+                InitThumbs();
+                if(document.getElementById('BrowseBarContainer'))
+                    {
+                    jQuery('#BrowseBarContainer').show();
+                    jQuery('#BrowseBarTab').show();
+                    }
+                }
 			</script>
 			<?php
 			} // end omit_collectiondiv_load_pages 
 		else
 			{?>
-			<div class="ui-layout-south" ></div><script>myLayout=jQuery('body').layout({south__initHidden: true });	</script><?php
+			<div class="ui-layout-south" ></div><script>myLayout=jQuery('body').layout({south__initHidden: true, north__resizable:false,north__spacing_open: 0 });	</script><?php
 			}
 		}
 	
@@ -511,19 +575,23 @@ if (getval("ajax","") == "")
 		<!-- Responsive -->
 		<script src="<?php echo $baseurl_short; ?>lib/js/responsive.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 		<script>
-		function toggleSimpleSearch()
-			{
-			if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
-				{
-				jQuery("#searchspace").removeClass("ResponsiveSimpleSearch");
-				jQuery("#Rssearchexpand").val("<?php echo $lang["responsive_more"];?>");
-				}
-			else
-				{
-				jQuery("#searchspace").addClass("ResponsiveSimpleSearch");
-				jQuery("#Rssearchexpand").val(" <?php echo $lang["responsive_less"];?> ");
-				}
-			}
+        function toggleSimpleSearch()
+            {
+            if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
+                {
+                jQuery("#searchspace").removeClass("ResponsiveSimpleSearch");
+                jQuery("#SearchBarContainer").removeClass("FullSearch");
+                jQuery("#Rssearchexpand").val("<?php echo $lang["responsive_more"];?>");
+                jQuery('#UICenter').show(0);
+                }
+            else
+                {
+                jQuery("#searchspace").addClass("ResponsiveSimpleSearch");
+                jQuery("#SearchBarContainer").addClass("FullSearch");
+                jQuery("#Rssearchexpand").val(" <?php echo $lang["responsive_less"];?> ");
+                jQuery('#UICenter').hide(0);
+                }
+            }
 		
 		function toggleResultOptions()
 			{

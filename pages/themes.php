@@ -7,6 +7,12 @@ include_once "../include/resource_functions.php";
 include_once "../include/render_functions.php";
 include_once "../include/search_functions.php";
 
+if(!$enable_themes)
+    {
+    header('HTTP/1.1 403 Forbidden');
+    exit($lang['error-permissiondenied']);
+    }
+    
 global $default_perpage_list;
 $themes_order_by=getvalescaped("themes_order_by",getvalescaped("saved_themes_order_by","name"));rs_setcookie('saved_themes_order_by', $themes_order_by);
 $sort=getvalescaped("sort",getvalescaped("saved_themes_sort","ASC"));rs_setcookie('saved_themes_sort', $sort);
@@ -588,7 +594,7 @@ elseif ($themes_category_split_pages && !$theme_direct_jump)
 					?>		
 					
 					<div id="FeaturedSimpleTile_<?php echo md5($headers[$n]);?>" class="FeaturedSimplePanel HomePanel DashTile FeaturedSimpleTile <?php if($themes_simple_images){echo " TileContentShadow ";}
-						echo strip_tags_and_attributes(trim(htmlspecialchars(str_replace(" ","",$headers[$n]))));
+						echo htmlspecialchars(str_replace(" ", "", $headers[$n]));
 						if($theme_image_path!="")
 							{	
 							echo " FeaturedSimpleTileImage\" style=\"background: url(" . $theme_image_path . ");background-size: cover;";
@@ -1134,18 +1140,6 @@ if($simpleview && $themes_show_background_image)
     {
     $slideshow_files = get_slideshow_files_data();
 
-    foreach($slideshow_files as $slideshow_file_info)
-        {
-        if(isset($background_image_url) || !file_exists($slideshow_file_info['file_path']))
-            {
-            continue;
-            }
-
-        // Set first image found when refreshing. Otherwise, the system picks up the last image that dash background
-        // changed to when navigating using CentralSpaceLoad.
-        $background_image_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info['ref']}";
-        }
-        
     if(!$featured_collection_static_bg)
         {
         // Overwrite background_image_url with theme specific ones
@@ -1158,50 +1152,47 @@ if($simpleview && $themes_show_background_image)
                 if(file_exists(get_resource_path($background_theme_image, true, 'scr', false)))
                     {
                     $background_image_url = get_resource_path($background_theme_image, false, 'scr', false);
+
+                    // Reset slideshow files as we want to use the featured collection image
+                    $slideshow_files = array();
                     break;
                     }
                 }
             }
-        }?>
-        
+        }
+        ?>
     <script>
-    jQuery(document).ready(function ()
+    var SlideshowImages = new Array();
+    var SlideshowCurrent = -1;
+    var SlideshowTimer = 0;
+    var big_slideshow_timer = <?php echo $slideshow_photo_delay; ?>;
+
+<?php
+foreach($slideshow_files as $slideshow_file_info)
+    {
+    if((bool) $slideshow_file_info['featured_collections_show'] === false)
         {
-        jQuery('#UICenter').css('background-image','url(<?php echo $background_image_url; ?>)');
-        jQuery('#Footer').hide();
-        });
+        continue;
+        }
 
-    jQuery('#CentralSpace').on('CentralSpaceLoaded', function (event, data)
+    $image_download_url = "{$baseurl_short}pages/download.php?slideshow={$slideshow_file_info['ref']}";
+    $image_resource = isset($slideshow_file_info['link']) ? $slideshow_file_info['link'] : '';
+    ?>
+    RegisterSlideshowImage('<?php echo $image_download_url; ?>', '<?php echo $image_resource; ?>');
+    <?php
+    }
+
+if(!$featured_collection_static_bg && isset($background_image_url) && $background_image_url != '')
+    {
+    ?>
+    RegisterSlideshowImage('<?php echo $background_image_url; ?>', '', true);
+    <?php
+    }
+    ?>
+    jQuery(document).ready(function() 
         {
-		
-        if('themes.php' == basename(data.url).substr(0, 10))
-            {
-			if (typeof SlideshowImages !== 'undefined')
-				{
-				var background_image_url = SlideshowImages[SlideshowCurrent];
-				}
-	
-			jQuery('#Footer').show();
-
-            // Set the background_image_url if one was set based on the featured collection category
-            <?php
-            if(isset($background_image_url))
-                {
-                ?>
-                background_image_url = '<?php echo $background_image_url; ?>';
-                <?php
-                }
-                ?>
-            jQuery('#UICenter').css('background-image', 'url(' + background_image_url + ')');
-            jQuery('#UICenter').css('transition', 'none');
-            jQuery('#Footer').hide();
-            }
-
-        // Home page is not showing footer either so make sure we honour this
-        if('home.php' == basename(data.url).substr(0, 8))
-            {
-            jQuery('#Footer').hide();
-            }
+        ClearTimers();
+        ActivateSlideshow();
         });
     </script>
     <?php

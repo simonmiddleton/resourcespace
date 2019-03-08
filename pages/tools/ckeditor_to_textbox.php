@@ -16,8 +16,8 @@ elseif($encoding=="utf8"){$encoding="utf-8";}
 $flags=(ENT_QUOTES | ENT_HTML401);
 
 # ex. pages/tools/ckeditor_to_textbox.php?fieldrefs=75,3&refs=5342
-$fieldrefs=getval("fieldrefs",0);
-$refs=getval("refs",0);
+$fieldrefs=getvalescaped("fieldrefs",0);
+$refs=getvalescaped("refs",0);
 
 if ($fieldrefs==0){
 	die ("Please add a list of refs to the fieldrefs url parameter, which are the ref numbers of the fields that you would like to convert. <br /><br />For example: pages/tools/ckeditor_to_textbox.php?fieldrefs=75,3");

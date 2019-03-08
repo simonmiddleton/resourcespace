@@ -59,7 +59,7 @@ $page_def[] = config_add_single_select(
     true,
     420,
     '',
-    true,"jQuery('#Header').removeClass('HeaderSmall');jQuery('#Header').removeClass('HeaderMid');jQuery('#Header').removeClass('HeaderLarge');jQuery('#Header').addClass(this.value);"
+    true,"jQuery('#Header').removeClass('HeaderSmall');jQuery('#Header').removeClass('HeaderMid');jQuery('#Header').removeClass('HeaderLarge');jQuery('#Header').addClass(this.value);myLayout._sizePane('north');"
 );
 $page_def[] = config_add_colouroverride_input(
     'header_colour_style_override',
@@ -83,7 +83,7 @@ $page_def[] = config_add_colouroverride_input(
     '',
     null,
     true,
-    "jQuery('#SearchBoxPanel').css('background',value); jQuery('#ResearchBoxPanel').css('background',value); jQuery('#HomeSiteText.dashtext').css('background',value); jQuery('.HomePanelIN').css('background',value);"
+    "jQuery('#SearchBox').css('background',value); jQuery('#HomeSiteText.dashtext').css('background',value); jQuery('.HomePanelIN').css('background',value); jQuery('#BrowseBar').css('background',value); jQuery('#BrowseBarTab').css('background',value);"
 );
 $page_def[] = config_add_colouroverride_input(
     'collection_bar_background_override',
@@ -201,6 +201,11 @@ $page_def[] = config_add_boolean_select('use_theme_as_home', $lang['systemconfig
 $page_def[] = config_add_boolean_select('use_recent_as_home', $lang['systemconfig_use_recent_as_home_label'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
+// Browse Bar section
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_browse_bar_section'] . '</h3><div id="SystemConfigFeaturedCollectionSection" class="CollapsibleSection">');
+$page_def[] = config_add_boolean_select('browse_bar', $lang['systemconfig_browse_bar_enable'], $yes_no_options, 420, '', true);
+$page_def[] = config_add_boolean_select('browse_bar_workflow', $lang['systemconfig_browse_bar_workflow'], $yes_no_options, 420, '', true);
+$page_def[] = config_add_html('</div>');
 
 // Featured Collection section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_featured_collections'] . '</h3><div id="SystemConfigFeaturedCollectionSection" class="CollapsibleSection">');

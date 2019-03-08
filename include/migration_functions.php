@@ -153,3 +153,115 @@ function populate_resource_nodes($startingref=0)
 	sql_query("insert into sysvars (name, value) values ('resource_node_migration_state', 'COMPLETE')");
 	return true;
 	}
+
+function migrate_search_filter($filtertext)
+    {
+    if(trim($filtertext) == "")
+        {
+        return false;
+        }
+        
+    $all_fields=get_resource_type_fields();
+
+    // Don't migrate if already migrated
+    $existingrules = sql_query("SELECT ref, name FROM filter");
+   
+    $logtext = "FILTER MIGRATION: Migrating filter rule. Current filter text: '" . $filtertext . "'\n";
+    
+    // Check for existing rule (will only match if name hasn't been changed)
+    $filterid = array_search($filtertext, array_column($existingrules, 'name'));
+    if($filterid !== false)
+        {
+        $logtext .= "FILTER MIGRATION: - Filter already migrated. ID = " . $existingrules[$filterid]["ref"] . "\n";
+        return $filterid;
+        }
+    else
+        {
+        // Create filter. All migrated filters will have AND rules
+        sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($filtertext) . "','" . RS_FILTER_ALL  . "')");
+        $filterid = sql_insert_id();
+        $logtext .= "FILTER MIGRATION: - Created new filter. ID = " . $filterid . "'\n";
+        }
+            
+    $filter_rules = explode(";",$filtertext);
+    
+    $errors = array();
+    $n = 1;
+    foreach($filter_rules as $filter_rule)
+        {
+        $logtext .= "FILTER MIGRATION: -- Parsing filter rule #" . $n . " : '" . $filter_rule . "'\n";
+        $rule_parts = explode("=",$filter_rule);
+        $rulefields = $rule_parts[0];
+        $rulevalues = explode("|",trim($rule_parts[1]));
+        
+        // Create filter_rule
+        db_begin_transaction();
+        
+        $logtext .=  "FILTER MIGRATION: -- Creating filter_rule for '" . $filter_rule . "'\n";
+        sql_query("INSERT INTO filter_rule (filter) VALUES ('{$filterid}')");
+        $new_filter_rule = sql_insert_id();
+        $logtext .=  "FILTER MIGRATION: -- Created filter_rule # " . $new_filter_rule . "\n";
+        
+        $nodeinsert = array(); // This will contain the SQL value sets to be inserted for this rule
+        
+        $rulenot = substr($rulefields,-1) == "!";
+        $node_condition = RS_FILTER_NODE_IN;
+        if($rulenot)
+            {
+            $rulefields = substr($rulefields,0,-1);
+            $node_condition = RS_FILTER_NODE_NOT_IN;
+            }
+                
+        // If there is an OR between the fields we need to get all the possible options (nodes) into one array    
+        $rulefieldarr = explode("|",$rulefields); 
+        $all_valid_nodes = array();
+        foreach($rulefieldarr as $rulefield)
+            {
+            $all_fields_index = array_search($rulefield, array_column($all_fields, 'name'));
+            $field_ref = $all_fields[$all_fields_index]["ref"];
+            $logtext .= "FILTER MIGRATION: --- filter field name: '" . $rulefield. "' , field id #" . $field_ref . "\n";
+            
+            $field_nodes = get_nodes($field_ref,NULL);
+            $all_valid_nodes = array_merge($all_valid_nodes,$field_nodes);
+            }
+            
+        foreach($rulevalues as $rulevalue)
+            {
+            // Check for value in field options
+            $logtext .=  "FILTER MIGRATION: --- Checking for filter rule value : '" . $rulevalue . "'\n";
+            $nodeidx = array_search(mb_strtolower($rulevalue), array_map("mb_strtolower", array_column($all_valid_nodes, 'name')));
+                    
+            if($nodeidx !== false)
+                {
+                $nodeid = $all_valid_nodes[$nodeidx]["ref"];
+                $logtext .=  "FILTER MIGRATION: --- field option (node) exists, node id #: " . $all_valid_nodes[$nodeidx]["ref"] . "\n";
+                
+                $nodeinsert[] = "('" . $new_filter_rule . "','" . $nodeid . "','" . $node_condition . "')";
+                }
+            else
+                {
+                $errors[] = "Invalid field option '" . $rulevalue . "' specified for rule: '" . $filtertext . "', skipping"; 
+                $logtext .=  "FILTER MIGRATION: --- Invalid field option: '" . $rulevalue . "', skipping\n";
+                }
+            }
+        
+        debug($logtext);                
+        
+        if(count($errors) > 0)
+            {
+            return $errors;
+            }
+            
+        // Insert associated filter_rules
+        $logtext .=  "FILTER MIGRATION: -- Adding nodes to filter_rule\n";
+        $sql = "INSERT INTO filter_rule_node (filter_rule,node,node_condition) VALUES " . implode(',',$nodeinsert);
+        sql_query($sql);
+        db_end_transaction();
+        }
+        
+    debug("FILTER MIGRATION: filter migration completed for '" . $filtertext);
+    
+    return $filterid;
+    }
+    
+    

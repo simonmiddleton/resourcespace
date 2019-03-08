@@ -468,11 +468,9 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
 		</a>
 		<?php
 		}
+		
+		render_trash("dash_tile", $lang['confirmdeleteconfigtile']);
 		?>
-		<div id="dash_tile_bin"><span class="dash_tile_bin_text"><?php echo $lang["tilebin"];?></span></div>
-		<div id="delete_dialog" style="display:none;"></div>
-		<div id="delete_permanent_dialog" style="display:none;text-align:left;"><?php echo $lang['confirmdeleteconfigtile'];?></div>
-	
 		<script>
             function deleteDefaultDashTile(id)
                 {
@@ -550,7 +548,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
 							    });
 							    return;
 							}
-							jQuery("#delete_dialog").dialog({
+							jQuery("#trash_bin_delete_dialog").dialog({
 						    	title:'<?php echo $lang["dashtiledelete"]; ?>',
 						    	modal: true,
 								resizable: false,
@@ -1071,8 +1069,10 @@ function get_user_available_tiles($user,$tile="null")
 function get_user_dash($user)
 	{
 	global $baseurl,$baseurl_short,$lang,$dash_tile_shadows,$help_modal, $dash_tile_colour, $dash_tile_colour_options;
+
 	#Build User Dash and recalculate order numbers on display
 	$user_tiles = sql_query("SELECT dash_tile.ref AS 'tile',dash_tile.title,dash_tile.all_users,dash_tile.url,dash_tile.reload_interval_secs,dash_tile.link,user_dash_tile.ref AS 'user_tile',user_dash_tile.order_by FROM user_dash_tile JOIN dash_tile ON user_dash_tile.dash_tile = dash_tile.ref WHERE user_dash_tile.user='".$user."' ORDER BY user_dash_tile.order_by");
+
 	$order=10;
 	foreach($user_tiles as $tile)
 		{
@@ -1129,10 +1129,9 @@ function get_user_dash($user)
 		}
 	# Check Permissions to Display Deleting Dash Tiles
 	if((checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h")) || !checkperm("dtu"))
-		{ ?>
-		<div id="dash_tile_bin"><span class="dash_tile_bin_text"><?php echo $lang["tilebin"];?></span></div>
-		<div id="delete_dialog" style="display:none;"></div>
-		<div id="delete_permanent_dialog" style="display:none;text-align:left;"><?php echo $lang['confirmdeleteconfigtile'];?></div>
+		{ 
+		render_trash("dash_tile", $lang['confirmdeleteconfigtile']);
+		?>
 		<script>
 			function deleteDashTile(id) {
 				jQuery.post(
@@ -1224,7 +1223,7 @@ function get_user_dash($user)
 					?>
 			      	if(jQuery(ui.draggable).hasClass("allUsers")) {
 			      		// This tile is set for all users so provide extra options
-				        jQuery("#delete_dialog").dialog({
+				        jQuery("#trash_bin_delete_dialog").dialog({
 				        	title:'<?php echo $lang["dashtiledelete"]; ?>',
 				        	modal: true,
 		    				resizable: false,
@@ -1239,7 +1238,7 @@ function get_user_dash($user)
 		            }
 		            else {
 		            	//This tile belongs to this user only
-				        jQuery("#delete_dialog").dialog({
+				        jQuery("#trash_bin_delete_dialog").dialog({
 				        	title:'<?php echo $lang["dashtiledelete"]; ?>',
 				        	modal: true,
 		    				resizable: false,	    				
@@ -1254,7 +1253,7 @@ function get_user_dash($user)
 	            	}
 	       		else #Only show dialog to delete for this user
 	       			{ ?>
-	       			var dialog = jQuery("#delete_dialog").dialog({
+	       			var dialog = jQuery("#trash_bin_delete_dialog").dialog({
 			        	title:'<?php echo $lang["dashtiledelete"]; ?>',
 			        	modal: true,
 	    				resizable: false,
@@ -1591,4 +1590,38 @@ function allowPromotedResources($tile_type)
     $allowed_types = array('srch', 'fcthm');
 
     return in_array($tile_type, $allowed_types);
+    }
+
+/**
+* Render "Upgrade available" tile for Administrators and Super Admins. This tile cannot be deleted or removed unless 
+* ResourceSpace version is up to date
+* 
+* @param integer $user User ID, normally this is the $userref
+* 
+* @return void
+*/
+function render_upgrade_available_tile($user)
+    {
+    if(!checkperm("t") || !checkperm("a"))
+        {
+        return;
+        }
+
+    if(!is_resourcespace_upgrade_available())
+        {
+        return;
+        }
+    ?>
+    <a href="https://www.resourcespace.com/versions"
+       target="_blank"
+       class="HomePanel DashTile"
+       id="upgrade_available_tile">
+        <div id="contents_user_tile_upgrade_available" class="HomePanelIN HomePanelDynamicDash">
+            <h2><?php echo htmlspecialchars($GLOBALS['lang']['upgrade_available_title']); ?></h2>
+            <p><?php echo htmlspecialchars($GLOBALS['lang']['upgrade_available_text']); ?></p>
+        </div>
+    </a>
+    <?php
+
+    return;
     }

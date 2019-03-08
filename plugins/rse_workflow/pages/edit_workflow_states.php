@@ -31,9 +31,9 @@ if ($delete!="" &&  !$saveerror)
 include '../../../include/header.php';
 
 ?>
-<p>
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow.php" onClick="return CentralSpaceLoad(this,true);"><?php echo "&lt;&nbsp;" . $lang["rse_workflow_manage_workflow"] ?>&nbsp;</a>
-</p>
+<div class="BasicsBox">
+<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK . $lang["rse_workflow_manage_workflow"] ?></a>
+</div>
 <?php
 
 if (isset($noticetext))
@@ -132,11 +132,11 @@ foreach ($wfstates as $wfstate=>$wfstateinfo)
 		<td><?php echo $wfstate; ?>
 		</td>					
 		<td>
-		<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_state.php?code=<?php echo $wfstate ?>" onclick="return CentralSpaceLoad(this,true);" >&gt;&nbsp;<?php echo $lang["action-edit"]?> </a>
+		<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_state.php?code=<?php echo $wfstate ?>" onclick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET . $lang["action-edit"]?> </a>
 		<?php
 		if(!in_array($wfstate,$fixed_archive_states))
 			{?>
-			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_states.php?delete=<?php echo $wfstate ?>" class="deletestate" onClick="deletestate(<?php echo $wfstate ?>);">&gt;&nbsp;<?php echo $lang["action-delete"]?> </a>
+			<a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_states.php?delete=<?php echo $wfstate ?>" class="deletestate" onClick="deletestate(<?php echo $wfstate ?>);"><?php echo LINK_CARET . $lang["action-delete"]?> </a>
 			<?php
 			}
 			?>
@@ -150,7 +150,7 @@ foreach ($wfstates as $wfstate=>$wfstateinfo)
 </div>
 
 
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_state.php?code=new" onclick="event.preventDefault();return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["rse_workflow_state_new"] ?></a>
+<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_state.php?code=new" onclick="event.preventDefault();return CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["rse_workflow_state_new"] ?></a>
 
 
 </div>

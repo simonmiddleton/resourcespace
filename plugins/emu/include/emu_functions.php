@@ -71,15 +71,19 @@ function get_emu_resources()
 
     $resource_types_list = '\'' . implode('\', \'', $emu_resource_types) . '\'';
 
+    $emu_created_by_script_field_escaped = escape_check($emu_created_by_script_field);
+    $resource_types_list_escaped         = escape_check($resource_types_list);
+    $emu_irn_field_escaped               = escape_check($emu_irn_field);
+
     $emu_resources = sql_query("
             SELECT rd.resource AS resource,
                    rd.value AS object_irn,
-                   (SELECT `value` FROM resource_data WHERE resource = rd.resource AND resource_type_field = '{$emu_created_by_script_field}') AS created_by_script_flag,
+                   (SELECT `value` FROM resource_data WHERE resource = rd.resource AND resource_type_field = '{$emu_created_by_script_field_escaped}') AS created_by_script_flag,
                    r.file_checksum
               FROM resource_data AS rd
-        RIGHT JOIN resource AS r ON rd.resource = r.ref AND r.resource_type IN ({$resource_types_list})
+        RIGHT JOIN resource AS r ON rd.resource = r.ref AND r.resource_type IN ('{$resource_types_list_escaped}')
              WHERE rd.resource > 0
-               AND rd.resource_type_field = '{$emu_irn_field}'
+               AND rd.resource_type_field = '{$emu_irn_field_escaped}'
           ORDER BY rd.resource;
     ");
 

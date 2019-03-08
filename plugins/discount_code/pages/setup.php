@@ -5,21 +5,22 @@ include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permis
 
 $plugin_name = 'discount_code';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
-	
+    {plugin_activate_for_setup($plugin_name);}
+    
 $delete_code=getval("delete_code","");
 if ($delete_code!="" && enforcePostRequest(false))
-	{
-	# Delete discount code.
-	sql_query("delete from discount_code where code='$delete_code'");
-	}
+    {
+    # Delete discount code.
+    $delete_code_escaped = escape_check($delete_code);
+    sql_query("delete from discount_code where code='$delete_code_escaped'");
+    }
 
 elseif (getval("add","")!="" && enforcePostRequest(false))
-	{
-	# Add discount code.
-	sql_query("delete from discount_code where code='" . getvalescaped("code","") . "'"); # Clear any existing matching code.
-	sql_query("insert into discount_code(code,percent,expires) values ('" . getvalescaped("code","") . "','" . getvalescaped("percent","") . "','" . getvalescaped("expires","") . "');");
-	}
+    {
+    # Add discount code.
+    sql_query("delete from discount_code where code='" . getvalescaped("code","") . "'"); # Clear any existing matching code.
+    sql_query("insert into discount_code(code,percent,expires) values ('" . getvalescaped("code","") . "','" . getvalescaped("percent","") . "','" . getvalescaped("expires","") . "');");
+    }
 
 $discount_codes=sql_query("select code,percent,expires from discount_code order by code");
 
@@ -62,8 +63,8 @@ include "../../../include/header.php";
 <input type="submit" name="add" value="<?php echo $lang["add_code"] ?>">   
 </form>
 
-</div>	
-</div>	
+</div>  
+</div>  
 <?php
 include "../../../include/footer.php";
 ?>

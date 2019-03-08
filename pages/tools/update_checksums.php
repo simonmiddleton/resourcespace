@@ -10,29 +10,46 @@
 $cwd = dirname(__FILE__);
 include "$cwd/../../include/db.php";
 include_once "$cwd/../../include/general.php";
-include "$cwd/../../include/authenticate.php";
-if(!checkperm('a'))
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit($lang['error-permissiondenied']);
-    }
 include "$cwd/../../include/image_processing.php";
 include "$cwd/../../include/resource_functions.php";
 
-$recreate=getvalescaped("recreate","");
+// Allow access from UI (legacy mode) only if authenticated and admin
+if('cli' != PHP_SAPI)
+    {
+    include "$cwd/../../include/authenticate.php";
 
-if ($recreate==true) {
-	$resources=sql_query("select ref,file_extension from resource where length(file_extension)>0 order by ref ASC");
-}
-else {
-	$resources=sql_query("select ref,file_extension from resource where length(file_extension)>0 and (file_checksum is null or file_checksum = '')");
-}
-for ($n=0;$n<count($resources);$n++)
+    if(!checkperm('a'))
+        {
+        http_response_code(401);
+        exit($lang['error-permissiondenied']);
+        }
+    }
+
+$recreate = false;
+$cli_options = ('cli' == PHP_SAPI ? getopt('', array('recreate')) : array());
+if(array_key_exists('recreate', $cli_options))
+    {
+    $recreate = true;
+    }
+
+$recreate = (bool) getvalescaped("recreate", $recreate);
+if($recreate)
+    {
+    $resources=sql_query("select ref,file_extension from resource where length(file_extension)>0 order by ref ASC");
+    }
+else
+    {
+    $resources=sql_query("select ref,file_extension from resource where length(file_extension)>0 and (file_checksum is null or file_checksum = '')");
+    }
+
+for($n = 0; $n < count($resources); $n++)
 	{
-	if (generate_file_checksum($resources[$n]["ref"],$resources[$n]["file_extension"],true)){
-		echo "Key for " . $resources[$n]["ref"] . " generated<br />\n";
-	} else {
-		echo "Key for " . $resources[$n]["ref"] . " NOT generated<br />\n";
-	}
-}
-?>
+	if(generate_file_checksum($resources[$n]["ref"], $resources[$n]["file_extension"], true))
+        {
+        echo "Key for " . $resources[$n]["ref"] . " generated<br />\n";
+        }
+    else
+        {
+        echo "Key for " . $resources[$n]["ref"] . " NOT generated<br />\n";
+        }
+    }

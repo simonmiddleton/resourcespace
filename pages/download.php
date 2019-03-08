@@ -9,6 +9,8 @@ include_once dirname(__FILE__) . '/../include/resource_functions.php';
 include_once dirname(__FILE__) . '/../include/search_functions.php';
 ob_end_clean(); 
 
+$k="";
+
 if($download_no_session_cache_limiter)
     {
     session_cache_limiter(false);
@@ -28,12 +30,13 @@ if(!($direct_download_noauth && $direct))
         }
     }
 
+    
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
 $internal_share_access = ('' != $k && $external_share_view_as_internal && isset($is_authenticated) && $is_authenticated);
 
 $ref            = getvalescaped('ref', '', true);
 $size           = getvalescaped('size', '');
-$alternative    = getvalescaped('alternative', -1);
+$alternative    = getvalescaped('alternative', -1, true);
 $page           = getvalescaped('page', 1);
 $usage          = getvalescaped('usage', '-1');
 $usagecomment   = getvalescaped('usagecomment', '');

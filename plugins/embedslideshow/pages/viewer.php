@@ -34,6 +34,9 @@ $use_watermark=check_use_watermark();
 <html>
 <head>
 <link href="../css/embedslideshow.css?css_reload_key=<?php echo $css_reload_key; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" /> 
+<link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
+<link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
+<link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" />
 <script src="../../..<?php echo $jquery_path ?>?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
 </head>
 <body>
@@ -120,13 +123,13 @@ $maxpages=$page-1;
 <ul class="embedslideshow_controls_standard">	
 
 <?php if ($width>100) { ?>
-<li class="embedslideshow_begn" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(1,false,false);return false;"<span>|<</span></li>
+<li class="embedslideshow_begn" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(1,false,false);return false;"><i class="fas fa-step-backward"></i></li>
 <?php } ?>
 
-<li class="embedslideshow_prev" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_page-1,false,false);return false;"><span><</span></li>
+<li class="embedslideshow_prev" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_page-1,false,false);return false;"><i class="fas fa-backward"></i></li>
 
 <?php if ($width>100) { ?>
-<li class="embedslideshow_auto" id="embedslideshow_auto" Style="cursor: pointer;" onClick="embedslideshow_auto=!embedslideshow_auto;if (embedslideshow_auto) {embedslideshow_ShowPage(embedslideshow_page+1,false,false);$('#embedslideshow_auto').fadeTo(100,1);} else {clearTimeout(timer);$('#embedslideshow_auto').fadeTo(100,0.4);}return false;"<span>||</span></li>
+<li class="embedslideshow_auto" id="embedslideshow_auto" Style="cursor: pointer;" onClick="embedslideshow_auto=!embedslideshow_auto;if (embedslideshow_auto) {embedslideshow_ShowPage(embedslideshow_page+1,false,false);$('#embedslideshow_auto').fadeTo(100,1);} else {clearTimeout(timer);$('#embedslideshow_auto').fadeTo(100,0.4);}return false;"><i class="fas fa-pause"></i></li>
 <?php if ($transition==0) { ?>
 <script type="text/javascript">
 $('#embedslideshow_auto').fadeTo(100,0.4);
@@ -135,10 +138,10 @@ $('#embedslideshow_auto').fadeTo(100,0.4);
 
 <?php } ?>
 
-<li class="embedslideshow_next" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_page+1,false,false);return false;"<span>></span></li>
+<li class="embedslideshow_next" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_page+1,false,false);return false;"><i class="fas fa-forward"></i></li>
 
 <?php if ($width>100) { ?>
-<li class="embedslideshow_end" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_pages.length-1,false,false);return false;"><span>>|</span></li>
+<li class="embedslideshow_end" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(embedslideshow_pages.length-1,false,false);return false;"><i class="fas fa-step-forward"></i></li>
 <?php } ?>
 
 <?php if ($width>200) {

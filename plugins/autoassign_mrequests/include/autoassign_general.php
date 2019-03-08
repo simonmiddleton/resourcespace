@@ -14,9 +14,10 @@ function get_mapped_user_by_field($id, $value)
              WHERE field_id = \'%s\'
                AND field_value = \'%s\';
         ',
-        $id,
-        $value
+        escape_check($id),
+        escape_check($value)
     );
+
 
     return sql_value($query, 0);
 }

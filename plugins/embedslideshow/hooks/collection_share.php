@@ -119,7 +119,7 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
 			document.getElementById('embedslideshow_back_" . $ref . "').style.display='block';	
 			\">" . $lang["embedslideshow_maximise"] . "</a></div>";
 			}
-		$embed.="<iframe id=\"embedslideshow_" . $ref . "\" Style=\"background-color:#fff;cursor: pointer;\" width=\"$width_w_border\" height=\"$height\" src=\"" . $baseurl . "/plugins/embedslideshow/pages/viewer.php?ref=$ref&k=$key&size=" . getval("size","") . "&transition=" . getval("transition","") . "&width=$width&height=$height&showtext=".getval("showtext","0")."\" frameborder=0 scrolling=no>Your browser does not support frames.</iframe>";
+		$embed.="<iframe id=\"embedslideshow_" . $ref . "\" allowtransparency=\"true\" cursor: pointer;\" width=\"$width_w_border\" height=\"$height\" src=\"" . $baseurl . "/plugins/embedslideshow/pages/viewer.php?ref=$ref&k=$key&size=" . getval("size","") . "&transition=" . getval("transition","") . "&width=$width&height=$height&showtext=".getval("showtext","0")."\" frameborder=0 scrolling=no>Your browser does not support frames.</iframe>";
 
 		# Compress embed HTML.
 		$embed=str_replace("\n"," ",$embed);

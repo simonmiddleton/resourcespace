@@ -2,9 +2,9 @@
 
 include_once dirname(__FILE__) . "/../include/utility.php";
 
-function HookLightbox_previewViewRenderbeforerecorddownload()
+function HookLightbox_previewViewRenderbeforerecorddownload($disable_flag)
     {
-    if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false)
+    if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false || $disable_flag === true)
         {
         return false;
         }

@@ -76,7 +76,7 @@ if($alternative_file_resource_preview)
         } 
     }
 
-if($alternative_file_resource_title)
+if($alternative_file_resource_title && isset($resource['field'.$view_title_field]))
     {
     echo "<h2>" . htmlspecialchars(i18n_get_translated($resource['field'.$view_title_field])) . "</h2><br/>";
     }

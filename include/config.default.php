@@ -188,6 +188,9 @@ $header_link=true;
 # Header size class. Options are HeaderSmall, HeaderMid, HeaderLarge.
 $header_size="HeaderMid";
 
+# Header includes username to right of user menu icon
+$header_include_username=false;
+
 # Custom source location for the header image (includes baseurl, requires leading "/"). Will default to the resourcespace logo if left blank. Recommended image size: 350px(X) x 80px(Y)
 
 # Set this to true in order for the top bar to remain present when scrolling down the page
@@ -1840,9 +1843,6 @@ $delete_requires_password=false;
 # Offline processes (e.g. staticsync and create_previews.php) - for process locking, how old does a lock have to be before it is ignored?
 $process_locks_max_seconds=60*60*4; # 4 hours default.
 
-// The number of threads to be used for create_previews.php
-$max_forks = 3;
-
 # Zip files - the contents of the zip file can be imported to a text field on upload.
 # Requires 'unzip' on the command path.
 # If the below is not set, but unzip is available, the archive contents will be written to $extracted_text_field
@@ -2424,7 +2424,7 @@ $debug_log=false;
 # Optional extended debugging information from backtrace (records pagename and calling functions)
 # debug_extended_info = true;
 
-# Debug log location. Optional. Used to specify a full path to debug file. Ensure folder permissions allow write access by web service account
+# Debug log location. Optional. Used to specify a full path to debug file. Ensure folder permissions allow write access to both the file and the containing folder by web service account
 #$debug_log_location="d:/logs/resourcespace.log";
 #$debug_log_location="/var/log/resourcespace/resourcespace.log";
 
@@ -3280,6 +3280,8 @@ $watermark_single_image = array(
 $offline_job_queue=false;
 # Delete completed jobs from the queue?
 $offline_job_delete_completed=false;
+# Array of valid utilities (as used by get_utility_path() function) used to create files used in offline job handlers e.g. create_alt_file. create_download_file. Plugins can extend this
+$offline_job_prefixes = array("ffmpeg","im-convert","im-mogrify","ghostscript","im-composite","archiver"); 
 
 # Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
 $download_file_lifetime=14;
@@ -3537,3 +3539,47 @@ $user_purge_disable = false;
 
 // Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
 $inactive_user_disable_days = 0;
+
+/*
+Ability to generate an automated title using a specific format. Allows to generate a title using a combination between the 
+resource title, its ID and file extension.
+
+Supported placeholders:
+ - %title -> replaced with the value of the title field of the resource. This allows 
+ - %resource -> replaced with the resource ID
+ - %extension -> replaces the actual file extension
+
+Example:
+    $auto_generated_resource_title_format = '%title-%resource.%extension';
+    $auto_generated_resource_title_format = '2018-2019P - %resource.%extension';
+    $auto_generated_resource_title_format = 'Photos - %resource.%extension';
+
+To get the title as the filename on download, the following settings should be set:
+$download_filename_field = 8; # Set this to the $view_title_field value
+$prefix_filename_string = "";
+$prefix_resource_id_to_filename = false;
+*/
+$auto_generated_resource_title_format = '';
+
+// List of extensions for which ResourceSpace should generate the internal preview sizes.
+$non_image_types = array();
+
+// List of extensions supported by ghostscript
+$ghostscript_extensions = array('ps', 'pdf');
+
+// Generate only the internal preview sizes for any of the extensions found in $non_image_types list
+$non_image_types_generate_preview_only = true;
+
+// Enable updated search filter functionality? Allows for simpler setup of more advanced search filters
+// Once enabled the filters will gradually be updated as users search. To update all the filter immediately run upgrade/scripts/005_migrate_search_filters.php
+$search_filter_nodes = false;
+
+// Browse bar 
+// Enable/Disable browse bar - in system config
+$browse_bar = true;
+// Show workflow (archive) states in browse bar?
+$browse_bar_workflow=true;
+// Default browse bar width;
+$browse_default_width = 295;
+
+

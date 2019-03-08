@@ -107,7 +107,7 @@ function get_resource_path(
         global $get_resource_path_fpcache;
         truncate_cache_arrays();
 
-        if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=sql_value("select file_path value from resource where ref='$ref'","");}
+        if (!isset($get_resource_path_fpcache[$ref])) {$get_resource_path_fpcache[$ref]=sql_value("select file_path value from resource where ref='" . escape_check($ref) . "'","");}
         $fp=$get_resource_path_fpcache[$ref];
         
         # Test to see if this nosize file is of the extension asked for, else skip the file_path and return a $storagedir path. 
@@ -121,7 +121,7 @@ function get_resource_path(
             if ($getfilepath)
                 {
                 global $syncdir; 
-                $syncdirmodified=hook("modifysyncdir","all",array($ref, $fp)); if ($syncdirmodified!=""){return $syncdirmodified;}
+                $syncdirmodified=hook("modifysyncdir","all",array($ref, $fp, $alternative)); if ($syncdirmodified!=""){return $syncdirmodified;}
                 if(!($alternative>0))
                     {return $syncdir . "/" . $fp;}
                 elseif(!$generate)
@@ -237,7 +237,7 @@ function get_resource_path(
         {
         $size='';
         $icc=true;
-        $extension=sql_value("select file_extension value from resource where ref={$ref}", 'jpg');
+        $extension=sql_value("select file_extension value from resource where ref='" . escape_check($ref) . "'", 'jpg');
         }
             
         
@@ -332,7 +332,7 @@ function get_resource_data($ref,$cache=true)
     global $default_resource_type, $get_resource_data_cache,$always_record_resource_creator;
     truncate_cache_arrays();
     if ($cache && isset($get_resource_data_cache[$ref])) {return $get_resource_data_cache[$ref];}
-    $resource=sql_query("select *,mapzoom from resource where ref='$ref'");
+    $resource=sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
     if (count($resource)==0) 
         {
         if ($ref>0)
@@ -351,8 +351,8 @@ function get_resource_data($ref,$cache=true)
                     $user = $userref;
                     }
                 else {$user = -1;}
-                $wait = sql_query("insert into resource (ref,resource_type,created_by) values ('$ref','$default_resource_type','$user')");
-                $resource = sql_query("select *,mapzoom from resource where ref='$ref'");
+                $wait = sql_query("insert into resource (ref,resource_type,created_by) values ('" . escape_check($ref) . "','$default_resource_type','$user')");
+                $resource = sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
                 }
             }
         }
@@ -430,7 +430,8 @@ function get_resource_type_field($field)
                 automatic_nodes_ordering,
                 fits_field,
                 personal_data,
-                include_in_csv_export" . hook('add_resource_type_field_column') . "
+                include_in_csv_export,
+                browse_bar" . hook('add_resource_type_field_column') . "
            FROM resource_type_field
           WHERE ref = '{$field}'
     ";
@@ -461,7 +462,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
     # Find the resource type.
     if ($originalref==-1) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
-    $rtype = sql_value("select resource_type value FROM resource WHERE ref='$originalref'",0);
+    $rtype = sql_value("select resource_type value FROM resource WHERE ref='" . escape_check($originalref) . "'",0);
 
     # If using metadata templates, 
     $templatesql = "";
@@ -487,7 +488,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f1.include_in_csv_export
                FROM resource_type_field AS f1
           LEFT JOIN resource_data d
-                 ON d.resource_type_field = f1.ref AND d.resource = '{$ref}'
+                 ON d.resource_type_field = f1.ref AND d.resource = '" . escape_check($ref) . "'
               WHERE (
                             f1.type NOT IN ({$node_fields_list})
                         AND (" . ($multi ? "1 = 1" : "f1.resource_type = 0 OR f1.resource_type = 999 OR f1.resource_type = '{$rtype}'") . ")
@@ -495,7 +496,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
 
               UNION
 
-             SELECT group_concat(if(rn.resource = '{$ref}', n.name, NULL)) AS `value`,
+             SELECT group_concat(if(rn.resource = '" . escape_check($ref) . "', n.name, NULL)) AS `value`,
                     n.resource_type_field,
                     f2.*,
                     f2.required AS frequired,
@@ -506,7 +507,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
                     f2.include_in_csv_export
                FROM resource_type_field AS f2
           LEFT JOIN node AS n ON n.resource_type_field = f2.ref
-          LEFT JOIN resource_node AS rn ON rn.node = n.ref AND rn.resource = '{$ref}'
+          LEFT JOIN resource_node AS rn ON rn.node = n.ref AND rn.resource = '" . escape_check($ref) . "'
               WHERE (
                             f2.type IN ({$node_fields_list})
                         AND (" . ($multi ? "1 = 1" : "f2.resource_type = 0 OR f2.resource_type = 999 OR f2.resource_type = '{$rtype}'") . ")
@@ -1193,7 +1194,7 @@ function tidy_trim($text,$length)
 function get_related_resources($ref)
     {
     # Return an array of resource references that are related to resource $ref
-    return sql_array("select related value from resource_related where resource='$ref' union select resource value from resource_related where related='$ref'");
+    return sql_array("select related value from resource_related where resource='" . escape_check($ref) . "' union select resource value from resource_related where related='" . escape_check($ref) . "'");
     }
     
 function average_length($array)
@@ -1508,7 +1509,7 @@ function get_usergroup($ref)
 {
     # Returns the user group corresponding to the $ref. A standard user group name is translated using $lang. A custom user group name is i18n translated.
     
-    $return = sql_query("SELECT ref,name,permissions,parent,search_filter,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags" . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref='$ref'");
+    $return = sql_query("SELECT ref,name,permissions,parent,search_filter,search_filter_id,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags" . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref='$ref'");
     if (count($return)==0) {return false;}
     else {
         $return[0]["name"] = lang_or_i18n_get_translated($return[0]["name"], "usergroup-");
@@ -1524,7 +1525,7 @@ function get_user($ref)
         if (isset($udata_cache[$ref])){
           $return=$udata_cache[$ref];
         } else {
-    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
+    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, u.search_filter_o_id, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
     }
     
     # Return a user's credentials.
@@ -1570,6 +1571,7 @@ function save_user($ref)
         $usergroup              = trim(getvalescaped('usergroup', ''));
         $ip_restrict            = trim(getvalescaped('ip_restrict', ''));
         $search_filter_override = trim(getvalescaped('search_filter_override', ''));
+        $search_filter_o_id     = trim(getvalescaped('search_filter_o_id', 0, true));
         $comments               = trim(getvalescaped('comments', ''));
         $suggest                = getval('suggest', '');
         $emailresetlink         = getval('emailresetlink', '');
@@ -1652,6 +1654,7 @@ function save_user($ref)
         account_expires=$expires,
         ip_restrict='" . $ip_restrict . "',
         search_filter_override='" . $search_filter_override . "',
+        search_filter_o_id='" . $search_filter_o_id . "',
         comments='" . $comments . "',
         approved='" . $approved . "' " . $additional_sql . " where ref='$ref'");
         }
@@ -2064,7 +2067,7 @@ function new_user($newuser, $usergroup = 0)
     {
     global $lang,$home_dash;
     # Username already exists?
-    $c=sql_value("select count(*) value from user where username='$newuser'",0);
+    $c=sql_value("select count(*) value from user where username='" . escape_check($newuser) . "'",0);
     if ($c>0) {return false;}
     
     $cols = array("username");
@@ -3639,6 +3642,7 @@ function check_password($password)
     # Returns true if it does, or a descriptive string if it doesn't.
     global $lang, $password_min_length, $password_min_alpha, $password_min_uppercase, $password_min_numeric, $password_min_special;
 
+    trim($password);
     if (strlen($password)<$password_min_length) {return str_replace("?",$password_min_length,$lang["password_not_min_length"]);}
 
     $uppercase="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -4113,11 +4117,38 @@ function check_access_key($resource,$key)
     # Verify a supplied external access key
     
     # Option to plugin in some extra functionality to check keys
-    if (hook("check_access_key","",array($resource,$key))===true) {return true;}
+    if(hook("check_access_key", "", array($resource, $key)) === true)
+        {
+        return true;
+        }
+
+    hook("external_share_view_as_internal_override");
+
     global $external_share_view_as_internal, $is_authenticated, $baseurl, $baseurl_short;
-        if($external_share_view_as_internal && (isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false) && !(isset($is_authenticated) && $is_authenticated))){return false;} // We want to authenticate the user if not already authenticated so we can show the page as internal
-    
-    $keys=sql_query("select user,usergroup,expires,password_hash from external_access_keys where resource='$resource' and access_key='$key' and (expires is null or expires>now())");
+
+    if(
+        $external_share_view_as_internal
+        && (
+            isset($_COOKIE["user"])
+            && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false)
+            && !(isset($is_authenticated) && $is_authenticated)
+        ))
+            {
+            return false;
+            } // We want to authenticate the user if not already authenticated so we can show the page as internal
+
+    $resource_escaped = escape_check($resource);
+    $key_escaped = escape_check($key);
+
+    $keys = sql_query("
+            SELECT user,
+                   usergroup,
+                   expires,
+                   password_hash
+              FROM external_access_keys
+             WHERE resource = '$resource_escaped'
+               AND access_key = '$key_escaped'
+               AND (expires IS NULL OR expires > now())");
 
     if (count($keys)==0)
         {
@@ -4155,7 +4186,7 @@ function check_access_key($resource,$key)
             exit();
             }
         
-        global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options; 
+        global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options, $search_filter_nodes; 
                 $groupjoin="u.usergroup=g.ref";
                 $permissionselect="g.permissions";
                 if ($keys[0]["usergroup"]!="")
@@ -4164,14 +4195,30 @@ function check_access_key($resource,$key)
                     $groupjoin="g.ref='" . escape_check($keys[0]["usergroup"]) . "' LEFT JOIN usergroup pg ON g.parent=pg.ref";
                     $permissionselect="if(find_in_set('permissions',g.inherit_flags) AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions";
                     }
-        $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,u.search_filter_override from user u join usergroup g on $groupjoin where u.ref='$user'");
+        $userinfo=sql_query("select g.ref usergroup," . $permissionselect . " ,g.search_filter,g.config_options,g.search_filter_id,u.search_filter_override, u.search_filter_o_id from user u join usergroup g on $groupjoin where u.ref='$user'");
         if (count($userinfo)>0)
             {
             $usergroup=$userinfo[0]["usergroup"]; # Older mode, where no user group was specified, find the user group out from the table.
             $userpermissions=explode(",",$userinfo[0]["permissions"]);
-            $usersearchfilter=$userinfo[0]["search_filter"];
-
-            $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
+            
+            if ($search_filter_nodes)
+                {
+                if(isset($userinfo[0]["search_filter_o_id"]) && is_numeric($userinfo[0]["search_filter_o_id"]) && $userinfo[0]['search_filter_o_id'] > 0)
+                    {
+                    // User search filter override
+                    $usersearchfilter = $userinfo[0]["search_filter_o_id"];
+                    }
+                elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
+                    {
+                    // Group search filter
+                    $usersearchfilter = $userdata["search_filter_id"];
+                    }
+                }
+            else
+                {
+                // Old style search filter that hasn't been migrated
+                $usersearchfilter=isset($userinfo[0]["search_filter_override"]) && $userinfo[0]["search_filter_override"]!='' ? $userinfo[0]["search_filter_override"] : $userinfo[0]["search_filter"];
+                }
 
             if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
             $userrequestmode=0; # Always use 'email' request mode for external users
@@ -4243,7 +4290,7 @@ function check_access_key($resource,$key)
             }
         
         # Set the 'last used' date for this key
-        sql_query("update external_access_keys set lastused=now() where resource='$resource' and access_key='$key'");
+        sql_query("UPDATE external_access_keys SET lastused = now() WHERE resource = '$resource_escaped' AND access_key = '$key_escaped'");
         
         return true;
         }
@@ -4264,7 +4311,9 @@ function check_access_key_collection($collection, $key)
         {
         return false;
         }
-    
+
+    hook("external_share_view_as_internal_override");
+
     global $external_share_view_as_internal;
     if($external_share_view_as_internal && isset($_COOKIE["user"]) && validate_user("session='" . escape_check($_COOKIE["user"]) . "'", false))
         {
@@ -4367,18 +4416,67 @@ $strName = substr($strName, 0, -strlen($ext));
 return $strName;
 }
 
+/**
+* Returns a list of fields with refs matching the supplied field refs.
+* 
+* @param array $field_refs Array of field refs
+* 
+* @return array
+*/
 function get_fields($field_refs)
     {
-    # Returns a list of fields with refs matching the supplied field refs.
-    if (!is_array($field_refs)) {print_r($field_refs);exit(" passed to get_fields() is not an array. ");}
-    $return=array();
-    $fields=sql_query("select *, ref, name, title, type, order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, display_as_dropdown,tooltip_text,display_condition, onchange_macro from resource_type_field where  ref in ('" . join("','",$field_refs) . "') order by order_by");
-    # Apply field permissions
-    for ($n=0;$n<count($fields);$n++)
+    if(!is_array($field_refs))
         {
-        if (metadata_field_view_access($fields[$n]["ref"]))
-            {$return[]=$fields[$n];}
+        trigger_error("\$field_refs passed to get_fields() is not an array.");
         }
+
+    $fields=sql_query("
+        SELECT *,
+               ref,
+               name,
+               title,
+               type,
+               order_by,
+               keywords_index,
+               partial_index,
+               resource_type,
+               resource_column,
+               display_field,
+               use_for_similar,
+               iptc_equiv,
+               display_template,
+               tab_name,
+               required,
+               smart_theme_name,
+               exiftool_field,
+               advanced_search,
+               simple_search,
+               help_text,
+               display_as_dropdown,
+               tooltip_text,
+               display_condition,
+               onchange_macro
+          FROM resource_type_field
+         WHERE ref IN ('" . join("','",$field_refs) . "')
+      ORDER BY order_by");
+
+    $return = array();
+    foreach($fields as $field)
+        {
+        if(metadata_field_view_access($field['ref']))
+            {
+            $return[] = $field;
+            }
+        }
+
+    /*for($n = 0; $n < count($fields); $n++)
+        {
+        if(metadata_field_view_access($fields[$n]["ref"]))
+            {
+            $return[]=$fields[$n];
+            }
+        }*/
+
     return $return;
     }
 
@@ -5980,7 +6078,8 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
                automatic_nodes_ordering,
                fits_field,
                personal_data,
-               include_in_csv_export
+               include_in_csv_export,
+               browse_bar
           FROM resource_type_field" . $conditionsql . " ORDER BY " . escape_check($field_order_by) . " " . escape_check($field_sort));
 
     return $allfields;
@@ -6032,7 +6131,7 @@ function notify_resource_change($resource)
         }
         
     debug("notify_resource_change - checking for users that have downloaded this resource " . $resource);
-    $download_users=sql_query("select u.ref, u.email from resource_log rl left join user u on rl.user=u.ref where rl.type='d' and rl.resource=$resource and datediff(now(),date)<'$notify_on_resource_change_days'","");
+    $download_users=sql_query("select distinct u.ref, u.email from resource_log rl left join user u on rl.user=u.ref where rl.type='d' and rl.resource=$resource and datediff(now(),date)<'$notify_on_resource_change_days'","");
     $message_users=array();
     if(count($download_users>0))
         {
@@ -6271,26 +6370,29 @@ if(!function_exists("array_column"))
 * The format of the returned array should be: 
 * Array
 * (
-*   [0] => Array
+*     [0] => Array
 *         (
-*             [ref] => 3
-*             [file_path] => /var/www/include/../gfx/homeanim/gfx/1.jpg
-*             [checksum] => 1450107521
-*             [link] => http://localhost/pages/view.php?ref=6019
-*             [link_file_path] => /var/www/include/../gfx/homeanim/gfx/1.txt
+*             [ref] => 1
+*             [resource_ref] => 
+*             [homepage_show] => 1
+*             [featured_collections_show] => 0
+*             [login_show] => 1
+*             [file_path] => /var/www/filestore/system/slideshow_1bf4796ac6f051a/1.jpg
+*             [checksum] => 1539875502
 *         )
-*   [1] => Array
-*        (
-*            [ref] => 4
-*            [file_path] => /var/www/include/../gfx/homeanim/gfx/2.jpg
-*            [checksum] => 2900215034
-*        )
-*   [2] => Array
-*        (
-*            [ref] => 5
-*            [file_path] => /var/www/include/../gfx/homeanim/gfx/3.jpg
-*            [checksum] => 4350322559
-*        )
+* 
+*     [1] => Array
+*         (
+*             [ref] => 4
+*             [resource_ref] => 19
+*             [homepage_show] => 1
+*             [featured_collections_show] => 0
+*             [login_show] => 0
+*             [file_path] => /var/www/filestore/system/slideshow_1bf4796ac6f051a/4.jpg
+*             [checksum] => 1542818794
+*             [link] => http://localhost/?r=19
+*         )
+* 
 * )
 * 
 * @return array
@@ -6299,42 +6401,39 @@ function get_slideshow_files_data()
     {
     global $baseurl, $homeanim_folder;
 
-    $dir = dirname(__FILE__) . '/../' . $homeanim_folder;
-    $d   = scandir($dir);
-    sort($d, SORT_NUMERIC);
+    $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $filecount       = 0;
-    $checksum        = 0;
+    $query = "SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow";
+    $slideshow_records = sql_query($query);
+
     $slideshow_files = array();
 
-    foreach($d as $file)
+    foreach($slideshow_records as $slideshow)
         {
-        if(preg_match("/[0-9]+\.(jpg)$/", $file))
+        $slideshow_file = $slideshow;
+
+        $image_file_path = "{$homeanim_folder_path}/{$slideshow['ref']}.jpg";
+
+        if(!file_exists($image_file_path) || !is_readable($image_file_path))
             {
-            $slideshow_file_id = substr($file, 0, -4);
-            $checksum += filemtime($dir . '/' . $file);
-
-            $slideshow_files[$filecount]["ref"] = $slideshow_file_id;
-            $slideshow_files[$filecount]['file_path'] = $dir . '/' . $file;
-            $slideshow_files[$filecount]['checksum']  = $checksum;
-
-            $linkref        = '';
-            $linkfile       = substr($file, 0, (strlen($file) - 4)) . '.txt';
-            $link_file_path = $dir . '/' . $linkfile;
-
-            if(file_exists($link_file_path))
-                {
-                $linkref    = file_get_contents($link_file_path);
-                $linkaccess = get_resource_access($linkref);
-                if('' !== $linkaccess && (0 == $linkaccess || 1 == $linkaccess))
-                    {
-                    $slideshow_files[$filecount]['link'] = $baseurl . "/pages/view.php?ref=" . $linkref;
-                    $slideshow_files[$filecount]['link_file_path'] = $link_file_path;
-                    }
-                }
-            
-            $filecount++;
+            continue;
             }
+
+        $slideshow_file['checksum'] = filemtime($image_file_path);
+        $slideshow_file['file_path'] = $image_file_path;
+        $slideshow_file['file_url'] = generateURL(
+            "{$baseurl}/pages/download.php",
+            array(
+                'slideshow' => $slideshow['ref'],
+                'nc' => $slideshow_file['checksum'],
+            ));
+
+        if((int) $slideshow['resource_ref'] > 0)
+            {
+            $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
+            }
+
+        $slideshow_files[] = $slideshow_file;
         }
 
     return $slideshow_files;
@@ -6917,7 +7016,7 @@ function generateCSRFToken($session_id, $form_id)
         "form_id"   => $form_id
     ));
 
-    return rsEncrypt($data, $session_id);
+    return urlencode(rsEncrypt($data, $session_id));
     }
 
 /**
@@ -6942,7 +7041,7 @@ function isValidCSRFToken($token_data, $session_id)
         return false;
         }
 
-    $plaintext = rsDecrypt($token_data, $session_id);
+    $plaintext = rsDecrypt(urldecode($token_data), $session_id);
 
     if($plaintext === false)
         {
@@ -7083,7 +7182,9 @@ function findDuplicates(array $data, $search)
 */
 function metadata_field_view_access($field)
     {
-    return ((PHP_SAPI == 'cli' && !defined("RS_TEST_MODE")) || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
+    return (
+        (PHP_SAPI == 'cli' && !defined("RS_TEST_MODE"))
+        || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
     }
 
 
@@ -7127,4 +7228,431 @@ function check_share_password($key,$password,$cookie)
         }
     
     return true;   
+    }
+
+
+/**
+* Ability to get a list of users based on their permissions. See get_notification_users() for more information.
+* 
+* IMPORTANT: the lookup is done on an "all or nothing" basis.
+* 
+* @uses get_notification_users()
+* 
+* @param string|array $condition A specific user type (e.g SYSTEM_ADMIN) OR an array of permissions
+* 
+* @return array
+*/
+function get_users_from_permission_lookup($condition)
+    {
+    return get_notification_users($condition);
+    }
+
+
+/**
+* Check if ResourceSpace is up to date or an upgrade is available
+* 
+* @uses get_sysvar()
+* @uses set_sysvar()
+* 
+* @return boolean
+*/
+function is_resourcespace_upgrade_available()
+    {
+    $cvn_cache = get_sysvar('centralised_version_number');
+    $last_cvn_update = get_sysvar('last_cvn_update');
+
+    $centralised_version_number = $cvn_cache;
+
+    if($last_cvn_update !== false)
+        {
+        $cvn_cache_interval = DateTime::createFromFormat('Y-m-d H:i:s', $last_cvn_update)->diff(new DateTime());
+
+        if($cvn_cache_interval->days >= 1)
+            {
+            $centralised_version_number = false;
+            }
+        }
+
+    if($centralised_version_number === false)
+        {
+        $centralised_version_number = @file_get_contents('https://www.resourcespace.com/current_release.txt');
+
+        if($centralised_version_number === false)
+            {
+            return false; 
+            }
+
+        set_sysvar('centralised_version_number', $centralised_version_number);
+        set_sysvar('last_cvn_update', date('Y-m-d H:i:s'));
+        }
+
+    $get_version_details = function($version)
+        {
+        $version_data = explode('.', $version);
+
+        if(empty($version_data))
+            {
+            return array();
+            }
+
+        $return = array(
+            'major' => isset($version_data[0]) ? (int) $version_data[0] : 0,
+            'minor' => isset($version_data[1]) ? (int) $version_data[1] : 0,
+            'revision' => isset($version_data[2]) ? (int) $version_data[2] : 0,
+        );
+
+        if($return['major'] == 0)
+            {
+            return array();
+            }
+
+        return $return;
+        };
+
+    $product_version = trim(str_replace('SVN', '', $GLOBALS['productversion']));
+    $product_version_data = $get_version_details($product_version);
+
+    $cvn_data = $get_version_details($centralised_version_number);
+
+    if(empty($product_version_data) || empty($cvn_data))
+        {
+        return false;
+        }
+
+    if($product_version_data['major'] != $cvn_data['major'] && $product_version_data['major'] < $cvn_data['major'])
+        {
+        return true;
+        }
+    else if(
+        $product_version_data['major'] == $cvn_data['major']
+        && $product_version_data['minor'] != $cvn_data['minor']
+        && $product_version_data['minor'] < $cvn_data['minor'])
+        {
+        return true;
+        }
+    else if(
+        $product_version_data['major'] < $cvn_data['major']
+        && $product_version_data['minor'] != $cvn_data['minor']
+        && $product_version_data['minor'] < $cvn_data['minor'])
+        {
+        return true;
+        }
+
+    return false;
+    }
+
+/**
+* Utility to get all workflow states available in the system.
+* 
+* IMPORTANT: No permissions are being honoured on purpose! If you need to honour permissions @see get_editable_states()
+* 
+* @uses global additional_archive_states
+* 
+* @return array
+*/
+function get_workflow_states()
+    {
+    global $additional_archive_states;
+
+    $default_workflow_states = range(-2, 3);
+    $workflow_states = array_merge($default_workflow_states, $additional_archive_states);
+
+    return $workflow_states;
+    }
+
+/**
+* Get all defined filters (currently only used for search)
+* 
+* @param string $order  column to order by  
+* @param string $sort   sort order ("ASC" or "DESC")
+* @param string $find   text to search for in filter
+* 
+* @return array
+*/        
+function get_filters($order = "ref", $sort = "ASC", $find = "")
+    {
+    $validorder = array("ref","name");
+    if(!in_array($order,$validorder))
+        {
+        $order = "ref";
+        }
+        
+    if($sort != "ASC")
+        {
+        $sort = "DESC";
+        }
+        
+    $condition = "";
+    $join = "";
+    
+    if(trim($find) != "")
+        {
+        $join = " LEFT JOIN filter_rule_node fn ON fn.filter=f.ref LEFT JOIN node n ON n.ref = fn.node LEFT JOIN resource_type_field rtf ON rtf.ref=n.resource_type_field";
+        $condition = " WHERE f.name LIKE '%" . escape_check($find) . "%' OR n.name LIKE '%" . escape_check($find) . "%' OR rtf.name LIKE '" . escape_check($find) . "' OR rtf.title LIKE '" . escape_check($find) . "'";
+        }
+        
+    $sql = "SELECT f.ref, f.name FROM filter f {$join}{$condition} GROUP BY f.ref ORDER BY f.{$order} {$sort}";
+    $filters = sql_query($sql);
+    return $filters;
+    }
+
+
+/**
+* Get filter summary details
+* 
+* @param int $filterid  ID of filter (from usergroup search_filter_id or user search_filter_oid)
+* 
+* @return array
+*/           
+function get_filter($filterid)
+    {
+    // Codes for filter 'condition' column
+    // 1 = ALL must apply
+    // 2 = NONE must apply
+    // 3 = ANY can apply
+    
+    if(!is_numeric($filterid) || $filterid < 1)
+            {
+            return false;    
+            }
+            
+    $filter  = sql_query("SELECT ref, name, filter_condition FROM filter f WHERE ref={$filterid}"); 
+    
+    if(count($filter) > 0)
+        {
+        return $filter[0];
+        }
+        
+    return false;
+    }
+
+/**
+* Get filter rules for use in search
+* 
+* @param int $filterid  ID of filter (from usergroup search_filter_id or user search_filter_oid)
+* 
+* @return array
+*/       
+function get_filter_rules($filterid)
+    {
+    $filter_rule_nodes  = sql_query("SELECT fr.ref as rule, frn.node_condition, frn.node FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.filter='" . escape_check($filterid) . "'"); 
+        
+    // Convert results into useful array    
+    $rules = array();
+    foreach($filter_rule_nodes as $filter_rule_node)
+        {
+        $rule = $filter_rule_node["rule"];
+        if(!isset($rules[$filter_rule_node["rule"]]))
+            {
+            $rules[$rule] = array();
+            $rules[$rule]["nodes_on"] = array();
+            $rules[$rule]["nodes_off"] = array();
+            }
+        if($filter_rule_node["node_condition"] == 1)
+            {
+            $rules[$rule]["nodes_on"][] = $filter_rule_node["node"];
+            }
+        else
+            {
+            $rules[$rule]["nodes_off"][] = $filter_rule_node["node"];
+            }
+        }
+        
+    return $rules;
+    }
+    
+/**
+* Get filter rule
+* 
+* @param int $ruleid  - ID of filter rule
+* 
+* @return array
+*/       
+function get_filter_rule($ruleid)
+    {    
+    $rule_data = sql_query("SELECT fr.ref, fr.rule_condition, group_concat(frn.node) AS nodes FROM filter_rule fr LEFT JOIN filter_rule_node frn ON frn.filter_rule=fr.ref WHERE fr.ref='" . escape_check($ruleid) . "'"); 
+    if(count($rule_data) > 0)
+        {
+        return $rule_data[0];
+        }
+    return false;
+    }
+
+
+/**
+* Save filter, will return existing filter ID if text matches already migrated
+* 
+* @param int $filter            - ID of filter 
+* @param int $filter_name       - Name of filter 
+* @param int $filter_condition  - One of RS_FILTER_ALL,RS_FILTER_NONE,RS_FILTER_ANY
+* 
+* @return boolean | integer     - false, or ID of filter
+*/        
+function save_filter($filter,$filter_name,$filter_condition)
+    {
+    if(!in_array($filter_condition, array(RS_FILTER_ALL,RS_FILTER_NONE,RS_FILTER_ANY)))
+        {
+        return false;
+        }
+        
+    if($filter != 0)
+        {    
+        if(!is_numeric($filter))
+            {
+            return false;    
+            }
+        sql_query("UPDATE filter SET name='" . escape_check($filter_name). "', filter_condition='{$filter_condition}' WHERE ref = '" . escape_check($filter)  . "'");
+        }
+    else
+        {
+        $newfilter = sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($filter_name). "','{$filter_condition}')");
+        $newfilter = sql_insert_id();
+        return $newfilter;
+        }
+
+    return $filter;
+    }
+    
+/**
+* Save filter rule, will return existing rule ID if text matches already migrated
+* 
+* @param int $filter_rule       - ID of filter_rule
+* @param int $filterid          - ID of associated filter 
+* @param array|string $ruledata   - Details of associated rule nodes  (as JSON if submitted from rule edit page)
+* 
+* @return boolean | integer     - false, or ID of filter_rule
+*/     
+function save_filter_rule($filter_rule, $filterid, $rule_data)
+    {
+    if(!is_array($rule_data))
+        {
+        $rule_data = json_decode($rule_data);
+        }
+        
+    if($filter_rule != "new")
+        {    
+        if(!is_numeric($filter_rule))
+            {
+            return false;    
+            }
+        sql_query("DELETE FROM filter_rule_node WHERE filter_rule = '{$filter_rule}'");
+        }
+    else
+        {
+        sql_query("INSERT INTO filter_rule (filter) VALUES ('{$filterid}')");
+        $filter_rule = sql_insert_id();
+        }    
+        
+    if(count($rule_data) > 0)
+        {
+        $nodeinsert = array();
+        for($n=0;$n<count($rule_data);$n++)
+            {
+            $condition = $rule_data[$n][0];
+            for($rd=0;$rd<count($rule_data[$n][1]);$rd++)
+                {
+                $nodeid = $rule_data[$n][1][$rd];
+                $nodeinsert[] = "('" . $filter_rule . "','" . $nodeid . "','" . $condition . "')";
+                }
+            }
+        $sql = "INSERT INTO filter_rule_node (filter_rule,node,node_condition) VALUES " . implode(',',$nodeinsert);
+        sql_query($sql);
+        }
+    return $filter_rule;
+    }
+
+/**
+* Delete specified filter
+* 
+* @param int $filter       - ID of filter
+* 
+* @return boolean | array of users/groups using filter
+*/       
+function delete_filter($filter)
+    {
+    if(!is_numeric($filter))
+            {
+            return false;    
+            }
+            
+    // Check for existing use of filter
+    $checkgroups = sql_array("SELECT ref value FROM usergroup WHERE search_filter_id='" . $filter . "'","");
+    $checkusers  = sql_array("SELECT ref value FROM user WHERE search_filter_o_id='" . $filter . "'","");
+    
+    if(count($checkgroups)>0 || count($checkusers)>0)
+        {
+        return array("groups"=>$checkgroups, "users"=>$checkusers);
+        }
+    
+    // Delete and cleanup any unused 
+    sql_query("DELETE FROM filter WHERE ref='$filter'"); 
+    sql_query("DELETE FROM filter_rule WHERE filter NOT IN (SELECT ref FROM filter)");
+    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+        
+    return true;
+    }
+
+/**
+* Delete specified filter_rule
+* 
+* @param int $filter       - ID of filter_rule
+* 
+* @return boolean | integer     - false, or ID of filter_rule
+*/  
+function delete_filter_rule($filter_rule)
+    {
+    if(!is_numeric($filter_rule))
+            {
+            return false;    
+            }
+            
+    // Delete and cleanup any unused nodes
+    sql_query("DELETE FROM filter_rule WHERE ref='$filter_rule'");  
+    sql_query("DELETE FROM filter_rule_node WHERE filter_rule NOT IN (SELECT ref FROM filter_rule)");
+    sql_query("DELETE FROM filter_rule WHERE ref NOT IN (SELECT DISTINCT filter_rule FROM filter_rule_node)"); 
+        
+    return true;
+    }
+
+/**
+* Copy specified filter_rule
+* 
+* @param int $filter            - ID of filter_rule to copy
+* 
+* @return boolean | integer     - false, or ID of new filter
+*/ 
+function copy_filter($filter)
+    {
+    if(!is_numeric($filter))
+            {
+            return false;    
+            }
+            
+    sql_query("INSERT INTO filter (name, filter_condition) SELECT name, filter_condition FROM filter WHERE ref={$filter}"); 
+    $newfilter = sql_insert_id();
+    $rules = sql_array("SELECT ref value from filter_rule  WHERE filter={$filter}"); 
+    foreach($rules as $rule)
+        {
+        sql_query("INSERT INTO filter_rule (filter) VALUES ({$newfilter})");
+        $newrule = sql_insert_id();
+        sql_query("INSERT INTO filter_rule_node (filter_rule, node_condition, node) SELECT '{$newrule}', node_condition, node FROM filter_rule_node WHERE filter_rule='{$rule}'");
+        }
+
+    return $newfilter;
+    }
+    
+/**
+* Utility to check if browse bar should be rendered
+*  
+* @return boolean
+*/   
+function has_browsebar()
+    {
+    global $username, $pagename,$not_authenticated_pages, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
+    return isset($username)
+    && !in_array($pagename, $not_authenticated_pages)
+    && ('' == $k || $internal_share_access)
+    && $browse_bar;
+    //   && false == $loginterms ?
     }

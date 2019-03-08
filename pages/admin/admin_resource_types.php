@@ -97,7 +97,7 @@ function addColumnHeader($orderName, $labelKey)
 
 <div class="BasicsBox">
    
-  <h1><?php echo $lang["treenode-resource_types_and_fields"]?></h1>
+  <h1><?php echo $lang["resource_types_manage"]?></h1>
   
   <?php
   $introtext=text("introtext");
