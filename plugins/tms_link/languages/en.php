@@ -20,6 +20,7 @@ $lang["tms_link_tms_resources"]="TMS Resources";
 
 $lang["tms_link_no_tms_resources"]="No TMS Resources found. Please check you have configured the plugin correctly and mapped the correct ObjectID metadata and checksum fields";
 $lang["tms_link_no_resource"]="No resource specified";
+$lang["tms_link_resource_id"] = "Resource ID";
 $lang["tms_link_object_id"]="Object ID";
 $lang["tms_link_checksum"]="Checksum";
 $lang["tms_link_no_tms_data"]="No data returned from TMS";
@@ -56,3 +57,17 @@ $lang["tms_link_formatid"]="FormatID  to use for inserted media records";
 $lang["tms_link_colordepthid"]="ColorDepthID   to use for inserted media records";
 $lang["tms_link_media_path"]="Root path to filestore that will be stored in TMS e.g. \\RS_SERVER\filestore\. Make sure the trailing slash is included. The filename stored in TMS will include the relative path from the filestore root.";
 
+$lang["tms_link_modules_mappings"] = "Synchronisation from extra modules (tables/ views)";
+$lang["tms_link_module"] = "Module";
+$lang["tms_link_tms_uid_field"] = "TMS UID field";
+$lang["tms_link_rs_uid_field"] = "ResourceSpace UID field";
+$lang["tms_link_applicable_rt"] = "Applicable resource type(s)";
+$lang["tms_link_modules_mappings_tools"] = "Tools";
+$lang["tms_link_add_new_tms_module"] = "Add new extra TMS module";
+$lang["tms_link_tms_module_configuration"] = "TMS module configuration";
+$lang["tms_link_tms_module_name"] = "TMS module name";
+$lang["tms_link_encoding"] = "encoding";
+$lang["tms_link_not_found_error_title"] = "Not found";
+$lang["tms_link_not_deleted_error_detail"] = "Unable to delete the requested module configuration.";
+$lang["tms_link_uid_field"] = "TMS %module_name %tms_uid_field";
+$lang["tms_link_confirm_delete_module_config"] = "Are you sure you would like to delete this module configuration? This action cannot be undone!";

@@ -2472,10 +2472,11 @@ function render_share_options($collectionshare=true, $ref, $emailing=false)
 * @param array      $ftypes     array of field types to include
 * @param string     $class      array CSS class to apply
 * @param boolean    $hidden     optionally hide the question usng CSS display:none
+* @param array      $current    Current selected value
 * 
 * @return void
 */
-function render_field_selector_question($label, $name, $ftypes,$class="stdwidth",$hidden=false)
+function render_field_selector_question($label, $name, $ftypes,$class="stdwidth",$hidden=false, $current = 0)
     {
     global $lang;
     $fieldtypefilter = "";
@@ -2492,7 +2493,8 @@ function render_field_selector_question($label, $name, $ftypes,$class="stdwidth"
     echo "<option value='' selected >" . $lang["select"] . "</option>";
     foreach($fields as $field)
         {
-        echo "<option value='" . $field['ref'] . "' >" . lang_or_i18n_get_translated($field['title'],'fieldtitle-') . "</option>";
+        $selected = ($field["ref"] == $current ? "selected" : "");
+        echo "<option value='{$field['ref']}' {$selected}>" . lang_or_i18n_get_translated($field['title'],'fieldtitle-') . "</option>";
         }
     echo "</select>";
     echo "<div class='clearerleft'></div>";

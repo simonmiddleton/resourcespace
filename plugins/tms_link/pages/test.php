@@ -1,39 +1,46 @@
 <?php
 include '../../../include/db.php';
-include "../../../include/authenticate.php";
-if(!checkperm("t")){exit ("Access denied"); }
 include_once "../../../include/general.php";
+include "../../../include/authenticate.php";
+if(!checkperm("t"))
+    {
+    exit("Access denied");
+    }
 include_once "../../../include/resource_functions.php";
 include_once "../include/tms_link_functions.php";
 
 
-$ref=getvalescaped("ref","",true);
+$ref = getval("ref", 0, true);
 
-if($ref==""){exit($lang["tms_link_no_resource"]);}
+if($ref == 0)
+    {
+    exit($lang["tms_link_no_resource"]);
+    }
 
-$tmsdata=tms_link_get_tms_data($ref);
-if(!is_array($tmsdata)){echo $tmsdata;}
+$tmsdata = tms_link_get_tms_data($ref);
+
+if(!is_array($tmsdata))
+    {
+    echo $tmsdata;
+    }
 
 include "../../../include/header.php";
-echo "<h2>" . $lang["tms_link_tms_data"] . "</h2>";
-echo "<div class='Listview'>";
-echo "<table style='border=1;'>";
-
-
+?>
+<h2><?php echo $lang["tms_link_tms_data"]; ?></h2>
+<div class='Listview'>
+    <table style="border=1;">
+<?php
 foreach($tmsdata as $key=>$value)
 	{
-	echo "<tr>"; 
-	echo "<td><strong>" . $key . "</strong></td>";
-	echo "<td>" . mb_convert_encoding($value, 'UTF-8') . "</td>";
-	echo "</tr>";
+    ?>
+	<tr> 
+	<td><strong><?php echo htmlspecialchars($key); ?></strong></td>
+	<td><?php echo htmlspecialchars($value); ?></td>
+	</tr>
+    <?php
 	}
-
-	
-
-echo "</table>";
-echo "</div>";	
-
-
-
-	
+    ?>
+    </table>
+</div>
+<?php	
 include "../../../include/footer.php";

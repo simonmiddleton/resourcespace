@@ -1,4 +1,7 @@
 <?php
+define('TMS_LINK_MODULES_MIGRATED', 'tms_link_modules_migrated');
+
+
 $tms_link_test_mode=false;
 $tms_link_email_notify="";
 $tms_link_test_count=500;
@@ -9,58 +12,9 @@ $tms_link_query_chunk_size=50;
 $tms_link_dsn_name='TMS SQL Server';
 $tms_link_user='';
 $tms_link_password='';
-$tms_link_table_name='';
-
-$tms_link_resource_types=array(12);
-
-// Field to use for storing checksum values 
-$tms_link_checksum_field=0;
-
-// Field that is used to store TMS object ID
-$tms_link_object_id_field=0;
 
 $tms_link_enable_update_script=true;
 $tms_link_script_failure_notify_days=3;
-
-/* The names have not been changed for legacy reasons
-* IMPORTANT: $tms_link_text_columns and $tms_link_numeric_columns are now used to distinguish between UTF-16 and UTF-8
-* - UTF-16 => $tms_link_text_columns
-* - UTF-8 => $tms_link_numeric_columns
-*/
-$tms_link_text_columns=array("ObjectStatus","Department","Classification","Curator","Cataloguer","ObjectName","SubjectKeywords","Creators","Titles","StylePeriod","CulturalContext","Medium","Geography","CreditLine","Description","RelatedObjects","Inscription","Provenance","CurrLocDisplay","Copyright","Dimensions","Restrictions","CreditLineRepro","ObjRightsType");
-$tms_link_numeric_columns=array("ObjectID","ObjectNumber","CuratorRevISODate","Dated","RowChecksum");
-
-$tms_link_field_mappings_saved=base64_encode(serialize(array(
-"Dimensions"=>0,
-"ObjectStatus"=>0,
-"Department"=>0,
-"Classification"=>0,
-"Curator"=>0,
-"Cataloguer"=>0,
-"ObjectName"=>0,
-"SubjectKeywords"=>0,
-"Creators"=>0,
-"Titles"=>0,
-"StylePeriod"=>0,
-"CulturalContext"=>0,
-"Medium"=>0,
-"Geography"=>0,
-"CreditLine"=>0,
-"Description"=>0,
-"RelatedObjects"=>0,
-"Inscription"=>0,
-"Provenance"=>0,
-"CurrLocDisplay"=>0,
-"Copyright"=>0,
-"Dimensions"=>0,
-"Restrictions"=>0,
-"CreditLineRepro"=>0,
-"ObjRightsType"=>0,
-"ObjectNumber"=>0,
-"CuratorRevISODate"=>0,
-"Dated"=>0,
-"RowChecksum"=>0
-)));
 
 $tms_link_log_directory="";
 $tms_link_log_expiry=7;
@@ -74,3 +28,170 @@ $tms_link_mediatypeid=1;
 $tms_link_formatid=2;
 $tms_link_colordepthid=0;
 $tms_link_media_path="\\\\SERVERNAME\\filestore\\";
+
+
+// TODO: migrate existing configs to $tms_link_modules_saved_mappings as a new entry
+$tms_link_table_name='';
+$tms_link_resource_types=array(12);
+$tms_link_checksum_field=0; # Field to use for storing checksum values 
+$tms_link_object_id_field=0; # Field that is used to store TMS object ID
+$tms_link_field_mappings_saved=base64_encode(serialize(array()));
+$tms_link_text_columns=array("ObjectStatus","Department","Classification","Curator","Cataloguer","ObjectName","SubjectKeywords","Creators","Titles","StylePeriod","CulturalContext","Medium","Geography","CreditLine","Description","RelatedObjects","Inscription","Provenance","CurrLocDisplay","Copyright","Dimensions","Restrictions","CreditLineRepro","ObjRightsType");
+$tms_link_numeric_columns=array("ObjectID","ObjectNumber","CuratorRevISODate","Dated","RowChecksum");
+
+
+$tms_link_modules_saved_mappings = base64_encode(
+    serialize(
+        array(
+            '5be2e8c2d0616' => array(
+                'module_name' => '',
+                'tms_uid_field' => 'ObjectID',
+                'rs_uid_field' => 0,
+                'checksum_field' => 0,
+                'applicable_resource_types' => array(),
+                'tms_rs_mappings' => array(
+                    array(
+                        'tms_column' => 'Dimensions',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'ObjectStatus',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Department',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Classification',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Curator',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Cataloguer',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'ObjectName',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'SubjectKeywords',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Creators',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Titles',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'StylePeriod',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'CulturalContext',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Medium',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Geography',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'CreditLine',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Description',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'RelatedObjects',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Inscription',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Provenance',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'CurrLocDisplay',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Copyright',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'Restrictions',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'CreditLineRepro',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'ObjRightsType',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-16'
+                    ),
+                    array(
+                        'tms_column' => 'ObjectNumber',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-8'
+                    ),
+                    array(
+                        'tms_column' => 'CuratorRevISODate',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-8'
+                    ),
+                    array(
+                        'tms_column' => 'Dated',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-8'
+                    ),
+                    array(
+                        'tms_column' => 'RowChecksum',
+                        'rs_field' => 0,
+                        'encoding' => 'UTF-8'
+                    ),
+                )
+            ),
+        )
+    )
+);

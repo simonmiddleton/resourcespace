@@ -748,6 +748,7 @@ $lang["treeobjecttype-group"]=$lang["group"]="Group";
 $lang["groupsmart"]="Group (Smart)";
 $lang["confirmaddgroup"]="Are you sure you want to add all the current members in this group?";
 $lang["confirmaddgroupsmart"]="Are you sure you want to dynamically include members in this group?";
+$lang["back_to"] = "Back to %area";
 $lang["backtoteamhome"]="Back to admin home";
 $lang["columnheader-resource_id"]=$lang["resourceid"]="Resource ID";
 $lang["id"]="ID";

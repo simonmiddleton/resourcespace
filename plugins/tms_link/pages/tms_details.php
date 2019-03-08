@@ -1,47 +1,53 @@
 <?php
 include '../../../include/db.php';
+include_once "../../../include/general.php";
 include "../../../include/authenticate.php";
 if(!checkperm("t")){exit ("Access denied"); }
-include_once "../../../include/general.php";
 include_once "../../../include/resource_functions.php";
 include_once "../include/tms_link_functions.php";
 
 
-$ref=getvalescaped("ref","",true);
-$tmsid=getvalescaped("tmsid","",true);
+$ref = getval("ref", 0, true);
+$tmsid = getval("tmsid", 0, true);
 
-if($ref=="" && $tmsid==""){exit($lang["tms_link_no_resource"]);}
+if($ref == 0 && $tmsid == 0)
+    {
+    exit($lang["tms_link_no_resource"]);
+    }
 
-$tmsdata=tms_link_get_tms_data($ref, $tmsid);
+$tmsdata = tms_link_get_tms_data($ref, $tmsid);
 
 include "../../../include/header.php";
-echo "<h2>" . $lang["tms_link_tms_data"] . "</h2>";
+?>
+<h2><?php echo $lang["tms_link_tms_data"]; ?></h2>
+<?php
 if(!is_array($tmsdata))
     {
     echo $tmsdata;
     include "../../../include/footer.php";
     die();
     }
-
-
-echo "<div class='Listview'>";
-echo "<table style='border=1;'>";
-
-
-foreach($tmsdata as $key=>$value)
+?>
+<div class="Listview">
+    <table style="border=1;">
+<?php
+foreach($tmsdata as $module_name => $module_tms_data)
 	{
-	echo "<tr>"; 
-	echo "<td><strong>" . $key . "</strong></td>";
-	echo "<td>" . mb_convert_encoding($value, 'UTF-8') . "</td>";
-	echo "</tr>";
+    ?>
+    <tr colspan="2"><strong><?php echo htmlspecialchars($module_name); ?></strong></tr>
+    <?php
+    foreach($module_tms_data as $tms_column => $tms_value)
+        {
+        ?>
+        <tr> 
+           <td><strong><?php echo htmlspecialchars($tms_column); ?></strong></td>
+           <td><?php echo htmlspecialchars($tms_value); ?></td>
+        </tr>
+        <?php
+        }
 	}
-
-	
-
-echo "</table>";
-echo "</div>";	
-
-
-
-	
+    ?>
+    </table>
+</div>
+<?php
 include "../../../include/footer.php";

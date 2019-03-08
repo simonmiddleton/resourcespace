@@ -488,7 +488,7 @@ function config_gen_setup_post($page_def,$plugin_name)
         {
         return handle_rsc_upload($plugin_name);
         }
-    else if(enforcePostRequest(false) && (getval('submit', '') != '' || getval('save','') != ''))
+    else if((getval('submit', '') != '' || getval('save','') != '') && enforcePostRequest(false))
         {
         $config=array();
         foreach ($page_def as $def)

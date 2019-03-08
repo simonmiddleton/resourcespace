@@ -38,14 +38,19 @@ function getEncodingOrder()
    return $ary;
    }
 
-function tms_convert_value($value, $key)
+function tms_convert_value($value, $key, array $module)
     {
-    global $tms_link_numeric_columns, $tms_link_text_columns;
+    $tms_rs_mapping_index = array_search($key, array_column($module['tms_rs_mappings'], 'tms_column'));
+    if($tms_rs_mapping_index !== false)
+        {
+        return mb_convert_encoding($value, 'UTF-8', $module['tms_rs_mappings'][$tms_rs_mapping_index]['encoding']);
+        }
 
+    // Default to the old way of detecting the encoding if we can't figure out the expected encoding of the tms column data.
     $encoding = mb_detect_encoding($value, getEncodingOrder(), true);
 
     // Check if field is defined as UTF-16 or it's not an UTF-8 field
-    if(in_array($key, $tms_link_text_columns) || !in_array($key, $tms_link_numeric_columns))
+    if(in_array($key, $GLOBALS['tms_link_text_columns']) || !in_array($key, $GLOBALS['tms_link_numeric_columns']))
         {
         return mb_convert_encoding($value, 'UTF-8', 'UCS-2LE');
         }
@@ -54,89 +59,105 @@ function tms_convert_value($value, $key)
     }
 
 
-function tms_link_get_tms_data($resource,$tms_object_id="",$resourcechecksum="")
+function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum = "")
   {
-  global $tms_link_dsn_name,$tms_link_user,$tms_link_password, $tms_link_checksum_field, $tms_link_table_name,$tms_link_object_id_field, $tms_link_text_columns, $tms_link_numeric_columns;
+  global $lang, $tms_link_dsn_name,$tms_link_user,$tms_link_password, $tms_link_checksum_field, $tms_link_table_name,
+         $tms_link_object_id_field, $tms_link_text_columns, $tms_link_numeric_columns, $tms_link_modules_saved_mappings;
   
-  $conn=odbc_connect($tms_link_dsn_name, $tms_link_user, $tms_link_password);
-  
-  if($conn)
-    {
-    // Get checksum if if we haven't been passed it
-    if($resourcechecksum==""){$resourcechecksum=get_data_by_field($resource, $tms_link_checksum_field);}
-    
-    // Get TMS if if we haven't been passed it
-    if($tms_object_id==""){$tms_object_id=get_data_by_field($resource, $tms_link_object_id_field);}  
-    
-    if($tms_object_id==""){return false;} // We don't have any ID to get data for
-    
-    if(is_array($tms_object_id))
-      {
-      $conditionsql = " where ObjectID in ('" . implode("','", $tms_object_id) . "')";
-      }    
-    else
-      {
-      $conditionsql = " where ObjectID ='" . $tms_object_id . "'";
-      }
-        
-    // Add normal value fields
-    $columnsql = implode(", ", $tms_link_numeric_columns);
-    
-    // Add SQL to get back text fields as VARBINARY(MAX) so we can sort out encoding later
-    foreach ($tms_link_text_columns as $tms_link_text_column)
-      {
-      $columnsql.=", CAST (" . $tms_link_text_column . " AS VARBINARY(MAX)) " . $tms_link_text_column;
-      }
-    
-    // Run query to check that we have some results            
-    $tmscountsql = "SELECT Count(*) FROM " . $tms_link_table_name . $conditionsql . " ;";
-    $tmscountset = odbc_exec($conn,$tmscountsql);
-    $tmscount_arr = odbc_fetch_array($tmscountset);
-    $resultcount = end($tmscount_arr);
-    if($resultcount==0){global $lang;return $lang["tms_link_no_tms_data"];}
-    
-    // Execute the query to get the data from TMS
-    $tmssql = "SELECT " . $columnsql . " FROM " . $tms_link_table_name . $conditionsql . " ;";
-    $tmsresultset = odbc_exec($conn,$tmssql);
-    
-    
-    $convertedtmsdata=array();
-    for ($r=1;$r<=$resultcount;$r++)
-      {    
-      $tmsdata=odbc_fetch_array ($tmsresultset,$r);
-      
-      if(is_array($tms_object_id))
-        {
-        foreach($tmsdata as $key=>$value)
-          {
-          $convertedtmsdata[$r][$key]=tms_convert_value($value, $key);
-          }
-        }
-      else
-        {
-        foreach($tmsdata as $key=>$value)
-          {
-          $convertedtmsdata[$key]=tms_convert_value($value, $key);
-          }
-        }        
-      }
-      //exit(print_r($convertedtmsdata));
-      return $convertedtmsdata;
-    }
-  else
-    {    
-    $error=odbc_errormsg();
-    return $error;
-    }
-    
-  }
+  $conn = odbc_connect($tms_link_dsn_name, $tms_link_user, $tms_link_password);
 
-function tms_link_get_tms_resources()
-  {
-  global $tms_link_checksum_field,$tms_link_object_id_field, $tms_test_count, $tms_link_resource_types;  
-  $tms_resources=sql_query("select rd.resource as resource, rd.value as objectid, rd2.value as checksum from resource_data rd left join resource_data rd2 on rd2.resource=rd.resource and rd2.resource_type_field='" . $tms_link_checksum_field . "' WHERE rd.resource>0 and rd.resource_type_field='" . $tms_link_object_id_field . "' AND rd.value <> '' ORDER BY rd.resource");    
-  return $tms_resources;    
-  }
+    if(!$conn)
+        {
+        $error = odbc_errormsg();
+        return $error;
+        }
+
+    $modules_mappings = tms_link_get_modules_mappings();
+    $convertedtmsdata = array();
+
+    foreach($modules_mappings as $module)
+        {
+        // Get TMS UID value we have for this resource
+        if($tms_object_id == "")
+            {
+            $tms_object_id = get_data_by_field($resource, $module['rs_uid_field']);
+            }
+
+        if($tms_object_id == "" || empty($module['tms_rs_mappings']))
+            {
+            continue;
+            }
+
+        if(is_array($tms_object_id))
+            {
+            $conditionsql = " WHERE {$module['tms_uid_field']} IN ('" . implode("','", $tms_object_id) . "')";
+            }    
+        else
+            {
+            $conditionsql = " WHERE {$module['tms_uid_field']} ='" . $tms_object_id . "'";
+            }
+
+        $tmscountsql = "SELECT Count(*) FROM {$module['module_name']} {$conditionsql};";
+        $tmscountset = odbc_exec($conn, $tmscountsql);
+        $tmscount_arr = odbc_fetch_array($tmscountset);
+        $resultcount = end($tmscount_arr);
+        if($resultcount == 0)
+            {
+            return $lang["tms_link_no_tms_data"];
+            }
+
+        $columnsql = '';
+        foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
+            {
+            $columnsql .= (trim($columnsql) == '' ? $tms_rs_mapping['tms_column'] : ", {$tms_rs_mapping['tms_column']}");
+            }
+        $tmssql = "SELECT {$columnsql} FROM {$module['module_name']} {$conditionsql};";
+        $tmsresultset = odbc_exec($conn, $tmssql);
+
+        for($r = 1; $r <= $resultcount; $r++)
+            {    
+            $tmsdata = odbc_fetch_array($tmsresultset, $r);
+
+            if(is_array($tms_object_id))
+                {
+                foreach($tmsdata as $key => $value)
+                    {
+                    $convertedtmsdata[$module['module_name']][$r][$key] = tms_convert_value($value, $key, $module);
+                    }
+                }
+            else
+                {
+                foreach($tmsdata as $key => $value)
+                    {
+                    $convertedtmsdata[$module['module_name']][$key] = tms_convert_value($value, $key, $module);
+                    }
+                }        
+            }
+        }
+
+    return $convertedtmsdata;
+    }
+
+function tms_link_get_tms_resources(array $module)
+    {
+    if($module['rs_uid_field'] == 0)
+        {
+        return array();
+        }
+
+    $tms_resources = sql_query("
+           SELECT rd.resource AS resource,
+                  rd.value AS objectid,
+                  rd2.value AS checksum
+             FROM resource_data AS rd
+        LEFT JOIN resource_data AS rd2 ON rd2.resource = rd.resource AND rd2.resource_type_field = '{$module['checksum_field']}'
+            WHERE rd.resource > 0
+              AND rd.resource_type_field = '{$module['rs_uid_field']}'
+              AND rd.value <> ''
+         ORDER BY rd.resource");
+
+    return $tms_resources;    
+    }
   
   
   
@@ -704,3 +725,51 @@ function tms_link_check_preview($ref, $alternative=-1)
 	// Push condition has matched, add the preview image to TMS
 	tms_link_create_tms_thumbnail($ref, $alternative);
 	}
+
+/**
+* Save plugins' module saved mappings configuration on an ad-hoc basis
+* 
+* @uses get_plugin_config()
+* @uses set_plugin_config()
+* 
+* @param mixed $value Configuration option new value
+* 
+* @return void
+*/
+function tms_link_save_module_mappings_config($value)
+    {
+    $tms_link_config = get_plugin_config('tms_link');
+    if(is_null($tms_link_config))
+        {
+        $tms_link_config = array();
+        }
+    $tms_link_config['tms_link_modules_saved_mappings'] = base64_encode(serialize($value));
+
+    set_plugin_config('tms_link', $tms_link_config);
+
+    return;
+    }
+
+
+function tms_link_get_modules_mappings()
+    {
+    return unserialize(base64_decode($GLOBALS['tms_link_modules_saved_mappings']));
+    }
+
+
+function tms_link_encode_modules_mappings()
+    {
+    return base64_encode(serialize($GLOBALS['tms_link_modules_saved_mappings']));
+    }
+    
+function tms_link_is_rs_uid_field($field_ref)
+    {
+    $tms_rs_uid_field_index = array_search($field_ref, array_column(tms_link_get_modules_mappings(), 'rs_uid_field'));
+
+    if($tms_rs_uid_field_index === false)
+        {
+        return false;
+        }
+    
+    return true;
+    }
