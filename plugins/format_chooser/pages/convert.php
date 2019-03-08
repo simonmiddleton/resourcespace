@@ -16,8 +16,11 @@ $resource = get_resource_data($ref);
 $width = getvalescaped('width', 0, true);
 $height = getvalescaped('height', 0, true);
 
-if('' == $k || !check_access_key($ref, $k) || !isset($anonymous_login)) //Check if available through external share
-    {
+debug("t19359: \$ref = {$ref}");
+debug("t19359: \$k = {$k}");
+
+if('' == $k || !check_access_key($ref, $k)) //Check if available through external share
+    {debug("t19359: auth------");
     include dirname(__FILE__) . '/../../../include/authenticate.php';
     }
 
