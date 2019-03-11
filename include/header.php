@@ -542,6 +542,7 @@ if (!$header_search)
         'login',
         'user_request',
         'user_password',
+        'user_change_password',
         'document_viewer'
     );
     $modified_omit_searchbar_pages=hook("modifyomitsearchbarpages");
@@ -563,7 +564,7 @@ if (!$header_search)
 
 <?php
 # Determine which content holder div to use
-if (($pagename=="login") || ($pagename=="user_password") || ($pagename=="user_request"))
+if (in_array($pagename,$omit_searchbar_pages))
     {
     $div="CentralSpaceLogin";
     $uicenterclass="NoSearch";
@@ -584,6 +585,7 @@ if($browse_on)
         
 echo '<div id="UICenter" class="ui-layout-center ' . $uicenterclass . '">';
     
+
 if (!in_array($pagename, $not_authenticated_pages))
     {
     // Set classes for CentralSpaceContainer
