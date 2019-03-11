@@ -1532,22 +1532,20 @@ if($replace_resource != '' || $replace != '' || $upload_then_edit)
         include '../include/edit_upload_options.php';
         }
         
-    else
+    /* Show the import embedded metadata checkbox when uploading a missing file or replacing a file.
+    In the other upload workflows this checkbox is shown in a previous page. */
+    if (!hook("replacemetadatacheckbox")) 
         {
-        /* Show the import embedded metadata checkbox when uploading a missing file or replacing a file.
-        In the other upload workflows this checkbox is shown in a previous page. */
-        if (!hook("replacemetadatacheckbox")) 
-            {
-            if (getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="")
-                { ?>
-                <div class="Question">
-                    <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if (getval("no_exif","")=="no"){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
-                    <div class="clearerleft"> </div>
-                </div>
-                <?php
-                }
+        if (getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="")
+            { ?>
+            <div class="Question">
+                <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if (getval("no_exif","")=="no"){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
+                <div class="clearerleft"> </div>
+            </div>
+            <?php
             }
         }
+
     } // End of upload options
 hook('plupload_before_status');
 if ($status!="") { ?><?php echo $status?><?php } ?>
