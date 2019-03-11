@@ -885,22 +885,60 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
     // Copy slideshow images under filestore in order to avoid
     // overwriting them when doing svn update
     $homeanim_folder = 'gfx/homeanim';
-    $slideshow_files = get_slideshow_files_data();
 
-    foreach($slideshow_files as $id => $file_info)
+    // Make sure there is a target location
+    $to_folder = "{$storagedir}/system/{$homeanim_folder_name}";
+    if(!(file_exists($to_folder) && is_dir($to_folder)))
         {
-        $to_folder = "{$storagedir}/system/{$homeanim_folder_name}";
-        $to_file   = $to_folder . '/' . basename($file_info['file_path']);
+        mkdir($to_folder, 0777, true);
+        }
 
-        // Make sure there is a target location
-        if(!(file_exists($to_folder) && is_dir($to_folder)))
+    $web_root = dirname(__DIR__);
+    $homeanim_folder_path = "{$web_root}/{$homeanim_folder}";
+
+    include_once "{$web_root}/include/slideshow_functions.php";
+
+    $found_files = array();
+    $files = new \DirectoryIterator($homeanim_folder_path);
+    foreach($files as $file)
+        {
+        if($file->isDot() || !$file->isFile())
             {
-            mkdir($to_folder, 0777, true);
+            continue;
             }
 
-        if(file_exists($file_info['file_path']) && copy($file_info['file_path'], $to_file))
+        $found_files[] = $file->getFilename();
+        }
+
+    // Sort ASC the files before inserting into database
+    natsort($found_files);
+    $found_files = array_values($found_files);
+
+    foreach($found_files as $index => $file)
+        {
+        // New installs have login_background enabled
+        $login_show = 0;
+        if($index == 0)
             {
-            debug("AT SETUP: Copied slideshow image {$id} from \"{$file_info['file_path']}\" to \"{$to_file}\".");
+            $login_show = 1;
+            }
+
+        $filename = pathinfo($file, PATHINFO_FILENAME);
+
+        $new_slideshow_image = set_slideshow($filename, NULL, 1, 0, $login_show);
+        if(!$new_slideshow_image)
+            {
+            trigger_error("Could not create a new slideshow record for '{$file}'");
+
+            continue;
+            }
+
+        $from_file = "{$homeanim_folder_path}/{$file}";
+        $to_file   = "{$to_folder}/{$file}";
+
+        if(!(file_exists($from_file) && copy($from_file, $to_file)))
+            {
+            trigger_error("Unable to copy image from '{$from_file}' to '{$to_file}' for slideshow #{$new_slideshow_image}");
             }
         }
 
