@@ -33,13 +33,14 @@ body {
 @media(max-width:1100px) {
 
     #UICenter{
-        max-height: calc(100% - 320px);
-        min-height: calc(100% - 320px);
+        max-height: calc(100% - 250px);
+        min-height: calc(100% - 250px);
         overflow-y: auto !important;
     }
 
     #UICenter.NoSearch{
-        min-height: 100%;
+        max-height: calc(100% - 60px);
+        min-height: calc(100% - 60px);
     }
     
     .ui-layout-pane-center
@@ -49,6 +50,7 @@ body {
 
     body{
         height: 100% !important;
+        background-image: none !important;
     }
         
     #CentralSpaceLogin #login_box {
