@@ -56,7 +56,7 @@ if ($diff_days>5) {exit("FAIL - cron was executed " . round($diff_days,0) . " da
 
 
 
-// All is OK.
+// All is well.
 
 // Formulate a version number. Start with the one set in version.php, which is already changed on each release branch, and also when building a new release ZIP.
 $version=" " . $productversion;
@@ -88,7 +88,8 @@ elseif (preg_match('/\nRevision: (\d+)/i', $svninfo, $matches)!=0)
     }
 
     
-echo("OK" . $version);
+# Send the message (note the O and K are separate, so that if served as plain text the remote check doesn't erroneously report all well)
+echo("O" . "K" . $version);
 
 // Warning if quota set and nearing quota limit
 if (isset($disksize))
