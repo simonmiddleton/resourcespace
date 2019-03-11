@@ -3203,7 +3203,7 @@ $user_pref_show_notifications=true;
 # User preference - daily digest. Sets the default setting for a daily email digest of unread system notifications.
 $user_pref_daily_digest=false; 
 # Option to set the messages as read once the email is sent
-$user_pref_daily_digest_mark_read=false;
+$user_pref_daily_digest_mark_read=true;
 
 // Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
 $inactive_message_auto_digest_period=7;
