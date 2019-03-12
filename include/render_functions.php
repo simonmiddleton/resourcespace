@@ -525,7 +525,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             $found_day=$s[2];
             }
             ?>      
-            <select name="<?php echo $name?>_year" id="<?php echo $id?>_year" class="SearchWidth" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo $name?>_year" id="<?php echo $id?>_year" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo $lang["anyyear"]?></option>
               <?php
               $y=date("Y");
@@ -538,7 +538,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             
             <?php if ($forsearchbar && $searchbyday) { ?><br /><?php } ?>
             
-            <select name="<?php echo $name?>_month" id="<?php echo $id?>_month" class="SearchWidth" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo $name?>_month" id="<?php echo $id?>_month" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo $lang["anymonth"]?></option>
               <?php
               for ($d=1;$d<=12;$d++)
@@ -552,7 +552,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             <?php if (!$forsearchbar || ($forsearchbar && $searchbyday)) 
             	{ 
             	?>
-				<select name="<?php echo $name?>_day" id="<?php echo $id?>_day" class="SearchWidth" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+				<select name="<?php echo $name?>_day" id="<?php echo $id?>_day" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
 				  <option value=""><?php echo $lang["anyday"]?></option>
 				  <?php
 				  for ($d=1;$d<=31;$d++)

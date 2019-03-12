@@ -65,9 +65,9 @@ body {
     
     #SearchBarContainer {
         margin:0;
-        width:94%;
-        margin-left:3%;
-        margin-right:3%;
+        width:96%;
+        margin-left:2%;
+        margin-right:2%;
         margin-top: 5px;
         margin-bottom: 5px;
     }
@@ -146,6 +146,7 @@ body {
         font-size: 1em;
         border-radius: 5px;
     }
+  
     #custom_access{
         padding:5px;
     }
@@ -523,6 +524,7 @@ body {
     /* Metadata fields */
     .SearchItem .SearchWidth, .SearchItem .SearchWidthHalf {
         float: right;
+        clear: right;
         margin: 0px 8px 4px 0px;
     }
     #searchspace {
@@ -555,14 +557,11 @@ body {
     }
 }
 @media(max-width:370px) {
-    .ResponsiveSimpleSearch #basicyear {
-        clear:left;
-        width: 46%;
+    .ResponsiveSimpleSearch .SearchWidthHalf {
+        clear:right;
+        width: 46% !important;
     }
-    .ResponsiveSimpleSearch #basicmonth {
-        width:46%;
-    }
-    .ResponsiveSimpleSearch #basicdate br {
+    .ResponsiveSimpleSearch .SearchWidthHalf br {
         display:block;
     }
 }
@@ -587,9 +586,9 @@ body {
     #SearchBarContainer {
         position: relative !important;
         height: auto !important;
-        width: 94% !important;
-        margin-left: 3% !important;
-        margin-right: 3% !important;
+        width: 96% !important;
+        margin-left: 2% !important;
+        margin-right: 2% !important;
         margin-top: 5px !important;
         margin-bottom: 5px !important;
         margin-top: 5px !important;
@@ -597,16 +596,17 @@ body {
     }
 
     #SearchBarContainer.FullSearch {
-        height: 100% !important;
+        max-height: calc(100% - 60px);
+        min-height: calc(100% - 60px);
     }
 
     #UICenter {
         position: relative !important;
-        width: 94% !important;
+        width: 98% !important;
         margin-top: 5px !important;
         top:0px !important;
-        margin-left: 3% !important;
-        margin-right: 3% !important;
+        margin-left: 1% !important;
+        margin-right: 1% !important;
     }
 
     #Header {
@@ -690,8 +690,7 @@ body {
         margin-left: auto;
         margin-right: auto;
         float: none;
-        min-height: 145px;
-        height:auto;
+        height: 145px;
         max-width: 250px;
     }
     .HomePanelIN {
@@ -1144,5 +1143,19 @@ body {
     .video-js {
         width: 80vw;
         height: 80vw;
+    }
+}
+/* Advanced search */
+@media (max-width:600px) {
+  #CentralSpace .SearchWidth {
+        width: 100%;
+    }
+    
+    #CentralSpace .SplitSearch {
+        clear: left;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 3px;
+        width: 100%;
     }
 }

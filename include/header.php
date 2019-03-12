@@ -528,11 +528,7 @@ include (dirname(__FILE__) . "/header_links.php");
 <div class="clearer"></div><?php if ($pagename!="preview" && $pagename!="preview_all") { ?></div><?php } #end of header ?>
 
 <?php
-
-if (!$header_search)
-    {
-    # Include simple search sidebar?
-    $omit_searchbar_pages = array(
+ $omit_searchbar_pages = array(
         'terms',
         'index',
         'preview_all',
@@ -545,6 +541,11 @@ if (!$header_search)
         'user_change_password',
         'document_viewer'
     );
+ 
+if (!$header_search)
+    {
+    # Include simple search sidebar?
+   
     $modified_omit_searchbar_pages=hook("modifyomitsearchbarpages");
     if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}
         
@@ -564,7 +565,7 @@ if (!$header_search)
 
 <?php
 # Determine which content holder div to use
-if (in_array($pagename,$omit_searchbar_pages))
+if (($pagename=="login") || ($pagename=="user_password") || ($pagename=="user_request") || ($pagename=="user_change_password"))
     {
     $div="CentralSpaceLogin";
     $uicenterclass="NoSearch";
@@ -572,7 +573,14 @@ if (in_array($pagename,$omit_searchbar_pages))
 else
     {
     $div="CentralSpace";
-    $uicenterclass="Search";
+    if (in_array($pagename,$omit_searchbar_pages))
+        {
+        $uicenterclass="NoSearch";
+        }
+    else
+        {
+        $uicenterclass="Search";
+        }
     }
 ?>
 <!--Main Part of the page-->
