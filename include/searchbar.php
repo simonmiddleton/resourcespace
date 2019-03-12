@@ -732,7 +732,7 @@ elseif($restypes=='')
                     }
               ?>
     
-            </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidth">
+            </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidthHalf">
               <option selected="selected" value=""><?php echo $lang["anyday"]?></option>
               <?php
               for ($n=1;$n<=31;$n++)
@@ -784,20 +784,7 @@ elseif($restypes=='')
         ?>
         }
     </script>
-    
-    <!--                
-    <div class="SearchItem">By Category<br />
-    <select name="Country" class="SearchWidth">
-      <option selected="selected">All</option>
-      <option>Places</option>
-        <option>People</option>
-      <option>Places</option>
-        <option>People</option>
-      <option>Places</option>
-    </select>
-    </div>
-    -->
-    
+        
     <?php } ?>
     
     
