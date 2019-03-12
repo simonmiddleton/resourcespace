@@ -53,8 +53,10 @@ function HookImage_banksAllSearchfiltertop()
 
             if(selected_option == "")
                 {
-                siblings.show();
-
+                if(search_show)
+                    {
+                    siblings.show();
+                    }
                 return;
                 }
 

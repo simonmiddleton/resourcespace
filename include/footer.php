@@ -583,6 +583,7 @@ if (getval("ajax","") == "")
                 jQuery("#SearchBarContainer").removeClass("FullSearch");
                 jQuery("#Rssearchexpand").val("<?php echo $lang["responsive_more"];?>");
                 jQuery('#UICenter').show(0);
+                search_show = false;
                 }
             else
                 {
@@ -590,6 +591,7 @@ if (getval("ajax","") == "")
                 jQuery("#SearchBarContainer").addClass("FullSearch");
                 jQuery("#Rssearchexpand").val(" <?php echo $lang["responsive_less"];?> ");
                 jQuery('#UICenter').hide(0);
+                search_show = true;
                 }
             }
 		
