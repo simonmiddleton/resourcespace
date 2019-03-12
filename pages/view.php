@@ -703,6 +703,9 @@ $flvfile = get_resource_path(
     (1 == $video_preview_hls_support || 2 == $video_preview_hls_support) ? 'm3u8' : $ffmpeg_preview_extension
 );
 
+# Default use_watermark if required by related_resources
+$use_watermark = false;
+
 if(!file_exists($flvfile) && 'flv' != $ffmpeg_preview_extension)
     {
     $flvfile = get_resource_path($ref, true, 'pre', false, 'flv');
