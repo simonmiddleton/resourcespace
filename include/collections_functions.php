@@ -2407,23 +2407,36 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 	
     // Download option
-    if( $download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
+    # Ability to request a whole collection (only if user has restricted access to any of these resources)
+    if($pagename == 'collection_manage') 
         {
-        $download_url = generateURL($baseurl_short . "pages/download_usage.php",$urlparams);
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=>$download_url));
-        $options[$o]['value']='download_collection';
-		$options[$o]['label']=$lang['action-download'];
-		$options[$o]['data_attr']=$data_attribute;
-		$o++;
+        $min_access = collection_min_access($collection_data['ref']);
         }
-    else if( (isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
+    else
         {
-        $download_url = generateURL($baseurl_short . "pages/collection_download.php",$urlparams);
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=>$download_url));
-        $options[$o]['value']='download_collection';
-		$options[$o]['label']=$lang['action-download'];
-		$options[$o]['data_attr']=$data_attribute;
-		$o++;
+        $min_access = collection_min_access($result);
+        }
+
+    if($min_access ==0 )
+        {
+        if( $download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
+            {
+            $download_url = generateURL($baseurl_short . "pages/download_usage.php",$urlparams);
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=>$download_url));
+            $options[$o]['value']='download_collection';
+            $options[$o]['label']=$lang['action-download'];
+            $options[$o]['data_attr']=$data_attribute;
+            $o++;
+            }
+        else if( (isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
+            {
+            $download_url = generateURL($baseurl_short . "pages/collection_download.php",$urlparams);
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=>$download_url));
+            $options[$o]['value']='download_collection';
+            $options[$o]['label']=$lang['action-download'];
+            $options[$o]['data_attr']=$data_attribute;
+            $o++;
+            }
         }
 
     // Contact Sheet
