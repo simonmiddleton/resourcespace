@@ -2343,18 +2343,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		$options[$o]['label']=$lang['action-upload-to-collection'];
 		$options[$o]['data_attr']=$data_attribute;
 
-        // Upload here functionality
-        if($top_actions)
-            {
-            $options[$o]['label'] = $lang['upload_here'];
-
-            $upload_here_option = $options[$o];
-
-            unset($options[$o]);
-
-            array_unshift($options, $upload_here_option);
-            }
-
 		$o++;
         }
 

@@ -2525,7 +2525,7 @@ function render_filter_bar_button($text, $on_click, $icon)
 /**
 * Render "Upload here" button.
 *
-* This applies to search results that do not relate to a collection, but consist of purely the following:
+* This applies to search results that are either a special search "!collection" and/or consist of purely the following:
 * - Nodes
 * - Resource type
 * - Workflow (archive) state
@@ -2549,7 +2549,13 @@ function render_upload_here_button(array $search_params, $return_params_only = f
         return;
         }
 
-    if(isset($search_params['search']) && empty(resolve_nodes_from_string($search_params['search'])))
+    if(
+        isset($search_params['search'])
+        && (
+            mb_substr($search_params['search'], 0, 11) != '!collection'
+            && empty(resolve_nodes_from_string($search_params['search']))
+        )
+    )
         {
         return;
         }
@@ -2566,6 +2572,17 @@ function render_upload_here_button(array $search_params, $return_params_only = f
 
     $upload_here_params['upload_here'] = true;
     $upload_here_params['search'] = $search_params['search'];
+
+    // Special search !collection
+    if(mb_substr($search_params['search'], 0, 11) == '!collection')
+        {
+        $collection = explode(' ', $search_params['search']);
+        $collection = str_replace('!collection', '', $collection[0]);
+        $collection = explode(',', $collection);
+        $collection = (int) $collection[0];
+
+        $upload_here_params['collection_add'] = $collection;
+        }
 
     // If resource types is a list then always select the first resource type the user has access to
     $resource_types = explode(',', $search_params['restypes']);
