@@ -2532,11 +2532,12 @@ function render_filter_bar_button($text, $on_click, $icon)
 * 
 * For free text searches this SHOULD NOT work!
 * 
-* @param array $search_params
+* @param array   $search_params
+* @param boolean $return_params_only Exception to the rule! Rather than render, return the upload here params
 * 
 * @return void
 */
-function render_upload_here_button(array $search_params,$return_params_only=false)
+function render_upload_here_button(array $search_params, $return_params_only = false)
     {
     if(!(checkperm('c') || checkperm('d')))
         {
