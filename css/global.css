@@ -529,7 +529,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .ThemeBox li {padding:0 0.35em 0 0em;margin:0px 0.5em 0.25em 0.25em;}
 
 /*Home styling */
-.HomePanel {margin:0px 15px 15px 0px;width: 250px;float: left;} 
+.HomePanel {margin:15px 15px 0 0;width: 250px;float: left;} 
 .HomePanelIN {padding: 15px;min-height: 150px;}
 .HomePanel h2 {display:block;margin: 5px 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .HomePanel p {margin: 0; padding: 5px 0 4px 0;}
@@ -1412,7 +1412,7 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 .keywordselected a {padding-left:8px;}
 
 #photoholder {  
-    margin: 1px;
+    margin-top: 15px;
 }
 
 
