@@ -847,7 +847,6 @@ else if(1 == $resource['has_image'])
              src="<?php echo $imageurl; ?>" 
              alt="<?php echo $lang['fullscreenpreview']; ?>" 
              GALLERYIMG="no"
-			 style="<?php echo "max-height:{$image_height}px; " ?>"
         <?php
         if($annotate_enabled)
             {
