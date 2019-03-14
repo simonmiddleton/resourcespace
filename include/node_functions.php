@@ -324,10 +324,10 @@ function is_parent_node($ref)
         return false;
         }
 
-    $query = "SELECT count(ref) AS value FROM node WHERE parent = '" . escape_check($ref) . "';";
-    $parent_counter = sql_value($query, 0);
+    $query = "SELECT exists (SELECT ref from node WHERE parent = '" . escape_check($ref) . "') AS value;";
+    $parent_exists = sql_value($query, 0);
 
-    if($parent_counter > 0)
+    if($parent_exists > 0)
         {
         return true;
         }
@@ -662,6 +662,9 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     {
     global $baseurl_short, $lang;
 
+    static $resource_type_field_last = 0;
+    static $all_nodes = array();    
+
     if(is_null($ref) || (trim($ref)==""))
         {
         return false;
@@ -682,7 +685,12 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     // Determine Node depth
     $node_depth_level = get_tree_node_level($ref);
 
-    $all_nodes = get_nodes($resource_type_field, NULL, TRUE, NULL, NULL, '', TRUE);
+    // Fetch all nodes on change of resource type field
+    if($resource_type_field !== $resource_type_field_last)
+        {
+        $all_nodes = get_nodes($resource_type_field, NULL, TRUE, NULL, NULL, '', TRUE);
+        $resource_type_field_last = $resource_type_field;    
+        }
 
     // We remove the current node from the list of parents for it( a node should not add to itself)
     $nodes = $all_nodes;
