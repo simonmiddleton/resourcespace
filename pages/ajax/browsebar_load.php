@@ -131,7 +131,7 @@ switch ($returntype)
         
         foreach($allfields as $field)
             {
-            if($field["browse_bar"] && metadata_field_view_access($field["ref"]))
+            if($field["browse_bar"] && metadata_field_view_access($field["ref"]) && $field["type"] != FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
                 {
                 // Create link based on parent and current restype
                 $return_items[$n] = array();
@@ -164,6 +164,11 @@ switch ($returntype)
         if(metadata_field_view_access($returnid))
             {
             $fielddata = get_resource_type_field($returnid);
+            if(!$fielddata["browse_bar"] || !metadata_field_view_access($returnid) || !in_array($fielddata["type"],$FIXED_LIST_FIELD_TYPES) || $fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
+                {
+                continue;
+                }
+
             if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
                 {
                 // Add 'create new' option
@@ -216,7 +221,12 @@ switch ($returntype)
         // Get subnodes for node
         if(metadata_field_view_access($browse_field))
             {
-            $fielddata = get_resource_type_field($browse_field);
+            $fielddata = get_resource_type_field($browse_field);            
+            if(!$fielddata["browse_bar"] || !metadata_field_view_access($browse_field) || !in_array($fielddata["type"],$FIXED_LIST_FIELD_TYPES) || $fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
+                {
+                continue;
+                }
+
             if(checkperm("k") || checkperm('a') || ($fielddata["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm ("bdk" . $returnid)))
                 {
                 // Add 'create new' option
