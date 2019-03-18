@@ -716,7 +716,6 @@ if (getval("ajax","") == "")
 				}
 			});
 		jQuery("#SearchBarContainer").on("click","#Rssearchexpand",toggleSimpleSearch);
-		jQuery("#SearchBarContainer").on("click","a",toggleSimpleSearch);
 		jQuery("#CentralSpaceContainer").on("click","#Responsive_ResultDisplayOptions",function(event)
 			{
 			if(jQuery(this).hasClass("RSelectedButton"))
