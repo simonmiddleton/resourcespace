@@ -137,7 +137,8 @@ $uploadparams= array(
     'filename_field'                         => getval('filename_field', ''),
 	'keep_original'	                         => $replace_resource_preserve_option && $replace_resource_preserve_default,
     'replace_resource_original_alt_filename' => $replace_resource_original_alt_filename,
-    'single'                                 => ($single ? "true" : "false")
+    'single'                                 => ($single ? "true" : "false"),
+    'status'                                 => $setarchivestate
 );
 
 global $merge_filename_with_title;
@@ -196,11 +197,6 @@ if($upload_here)
         'resource_type' => $resource_type,
         'status' => $setarchivestate,
     );
-    }
-else
-    {
-        // Ensure resolved archive state is passed
-        $uploadparams['status'] = $setarchivestate;
     }
 
 $uploadurl = generateURL("{$baseurl}/pages/upload_plupload.php", $uploadparams, $uploadurl_extra_params) . hook('addtopluploadurl');
