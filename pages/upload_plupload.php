@@ -197,6 +197,11 @@ if($upload_here)
         'status' => $setarchivestate,
     );
     }
+else
+    {
+        // Ensure resolved archive state is passed
+        $uploadparams['status'] = $setarchivestate;
+    }
 
 $uploadurl = generateURL("{$baseurl}/pages/upload_plupload.php", $uploadparams, $uploadurl_extra_params) . hook('addtopluploadurl');
 
@@ -612,13 +617,13 @@ if ($_FILES)
                                 $ref = create_resource($resource_type);
                                 }
 
+                            if(checkperm("e{$setarchivestate}"))
+                                {
+                                update_archive_status($ref, $setarchivestate);
+                                }
+
                             if($upload_then_edit && $upload_here)
                                 {
-                                if(checkperm("e{$setarchivestate}"))
-                                    {
-                                    update_archive_status($ref, $setarchivestate);
-                                    }
-
                                 add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
                                 }
 
