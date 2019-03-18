@@ -53,7 +53,7 @@ function HookImage_banksAllSearchfiltertop()
 
             if(selected_option == "")
                 {
-                if(search_show)
+                if(typeof search_show == 'undefined' || search_show)
                     {
                     siblings.show();
                     }
