@@ -137,8 +137,7 @@ $uploadparams= array(
     'filename_field'                         => getval('filename_field', ''),
 	'keep_original'	                         => $replace_resource_preserve_option && $replace_resource_preserve_default,
     'replace_resource_original_alt_filename' => $replace_resource_original_alt_filename,
-    'single'                                 => ($single ? "true" : "false"),
-    'status'                                 => $setarchivestate
+    'single'                                 => ($single ? "true" : "false")
 );
 
 global $merge_filename_with_title;
@@ -613,13 +612,13 @@ if ($_FILES)
                                 $ref = create_resource($resource_type);
                                 }
 
-                            if(checkperm("e{$setarchivestate}"))
-                                {
-                                update_archive_status($ref, $setarchivestate);
-                                }
-
                             if($upload_then_edit && $upload_here)
                                 {
+                                if(checkperm("e{$setarchivestate}"))
+                                    {
+                                    update_archive_status($ref, $setarchivestate);
+                                    }
+
                                 add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
                                 }
 
