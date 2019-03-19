@@ -3208,7 +3208,7 @@ $user_pref_daily_digest_mark_read=true;
 // Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
 $inactive_message_auto_digest_period=7;
 // Accompanying user preference option
-$user_pref_inactive_digest = true;
+$user_pref_inactive_digest = false;
 
 # login_background. If enabled this uses first slideshow image as a background for the login screen. This image will not then be used in the slideshow. If not using the manage slideshow tool this will look for a file named 1.jpg in the $homeanim_folder.
 $login_background=false;
