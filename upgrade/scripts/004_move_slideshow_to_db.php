@@ -27,7 +27,7 @@ $found_files = array_values($found_files);
 foreach($found_files as $index => $file)
     {
     $login_show = 0;
-    if($login_background && $index == 0)
+    if($index == 0)
         {
         $login_show = 1;
         }

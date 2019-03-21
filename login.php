@@ -167,12 +167,11 @@ if (getval("langupdate","")!="")
 
 include "include/header.php";
 
-if($login_background)
-	{
-    include "include/login_background.php";
-	}
-
+include "include/login_background.php";
 	
+
+
+
 if (!hook("replaceloginform")) {
 ?>
 
@@ -295,9 +294,7 @@ hook('afterlogin');
 
 //include_once "./include/footer.php"; AJAX Check Ignores Footer
 //Closing tags as the footer has not been included
-if($login_background)
-	{
 	?>
 	<div> <!-- end of login_box --><?php
-	}
+
 include "include/footer.php";
