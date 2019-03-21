@@ -2708,8 +2708,11 @@ function render_browse_bar()
         {
         $bb_html .= generate_browse_bar_item("FC", $lang["themes"]);
         }
-
-    $bb_html .= generate_browse_bar_item("C", $lang["mycollections"]);
+    if(!checkperm('b'))
+        {
+        $bb_html .= generate_browse_bar_item("C", $lang["mycollections"]);
+        }
+        
     if($browse_bar_workflow)
         {
         $bb_html .= generate_browse_bar_item("WF", $lang['browse_by_workflow_state']);
