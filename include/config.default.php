@@ -3210,9 +3210,6 @@ $inactive_message_auto_digest_period=7;
 // Accompanying user preference option
 $user_pref_inactive_digest = false;
 
-# login_background. If enabled this uses first slideshow image as a background for the login screen. This image will not then be used in the slideshow. If not using the manage slideshow tool this will look for a file named 1.jpg in the $homeanim_folder.
-$login_background=false;
-
 /*
 Resource types that cannot upload files. They are only being used to store information. Use resource type ID as values for this array.
 By default the preview will default to "No preview" icon. In order to get a resource type specific one, make sure you add it to gfx/no_preview/resource_type/

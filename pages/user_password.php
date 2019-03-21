@@ -16,10 +16,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 	}
 include "../include/header.php";
 
-if($login_background)
-	{
-    include "../include/login_background.php";
-	}
+include "../include/login_background.php";
 ?>
 
     <h1><?php echo $lang["requestnewpassword"]?></h1>
@@ -41,14 +38,7 @@ if($login_background)
 	</div>
 	</form>
 	
-
-<?php
-
-if($login_background)
-	{
-	?>
 	<div> <!-- end of login_box -->
 	<?php
-	}
 include "../include/footer.php";
 ?>

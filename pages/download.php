@@ -22,7 +22,7 @@ if(!($direct_download_noauth && $direct))
     // External access support (authenticate only if no key provided, or if invalid access key provided)
     $k = getvalescaped('k', '');
 
-    if(('' == $k || !check_access_key(getvalescaped('ref', '', true), $k)) && !($login_background && getval("slideshow",0,true) > 0))
+    if(('' == $k || !check_access_key(getvalescaped('ref', '', true), $k)) && !(getval("slideshow",0,true) > 0))
         {
         include dirname(__FILE__) . '/../include/authenticate.php';
         }
