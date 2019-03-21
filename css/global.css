@@ -1734,9 +1734,7 @@ a.BrowseRefresh{
     padding-left: 5px;
     }
 
-/* Workaround for MS Edge */
-@supports (-ms-ime-align: auto) {
-    #Header {
-        overflow: hidden;
-    }
+/* Fix scrollbars on Header */
+#Header {
+    overflow: hidden;
 }
