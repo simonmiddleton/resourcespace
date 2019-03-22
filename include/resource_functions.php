@@ -4761,6 +4761,13 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
         resource_log($resource[$n], 's', 0, '', isset($existingstates[$n]) ? $existingstates[$n] : '', $archive);    
         }
 
+    # Prevent any attempt to update with non-numeric archive state
+    if (!is_numeric($archive))
+        {
+        debug("update_archive_status FAILED - resources=(" . implode(",",$resource) . "), archive: " . $archive . ", existingstates:(" . implode(",",$existingstates) . "), collection: " . $collection);
+        return;
+        }
+
     sql_query("UPDATE resource SET archive = '" . escape_check($archive) .  "' WHERE ref IN ('" . implode("', '", $resource) . "')");
     hook('after_update_archive_status', '', array($resource, $archive,$existingstates));
     // Send notifications
