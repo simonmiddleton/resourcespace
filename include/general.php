@@ -4211,7 +4211,7 @@ function check_access_key($resource,$key)
                 elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
                     {
                     // Group search filter
-                    $usersearchfilter = $userdata["search_filter_id"];
+                    $usersearchfilter = $userinfo[0]["search_filter_id"];
                     }
                 }
             else
