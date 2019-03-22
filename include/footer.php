@@ -567,15 +567,20 @@ if (getval("ajax","") == "")
                 ";
                 }?>
             });
-        window.onload = function()
-            {
-            if(document.getElementById('BrowseBarContainer'))
+        <?php
+        if($browse_on) 
+            {?>
+            window.onload = function()
                 {
-                myLayout.sizePane("west", <?php echo $browsesize ?>);
-                jQuery('#BrowseBarContainer').show();
-                jQuery('#BrowseBarTab').show();
+                if(document.getElementById('BrowseBarContainer'))
+                    {
+                    myLayout.sizePane("west", <?php echo $browsesize ?>);
+                    jQuery('#BrowseBarContainer').show();
+                    jQuery('#BrowseBarTab').show();
+                    }
                 }
-            }
+                <?php
+                }?>
         </script>
         <?php
         }
