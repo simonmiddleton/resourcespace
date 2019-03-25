@@ -192,7 +192,11 @@ function message_send_unread_emails()
         // Reset config before setting up user so that any user groups processed later are not affected by the override
         $inactive_message_auto_digest_period = $inactive_message_auto_digest_period_saved;
         $messageuser=get_user($digestuser);
-        
+        if(!$messageuser)
+            {
+            // Invalid user
+            continue;
+            }
 		setup_user($messageuser);
         get_config_option($digestuser,'user_pref_inactive_digest', $user_auto_digest_option);
         
