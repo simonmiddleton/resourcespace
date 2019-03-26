@@ -60,11 +60,14 @@ group by r.ref order by 'Downloads' desc
 "
 4,"Resource views","
 select r.ref 'Resource ID',
-view_title_field_subselect AS 'Title', 
-sum(count) Views 
-from resource r,daily_stat d 
-where r.ref=d.object_ref 
-  and d.activity_type='Resource view'
+        (
+            SELECT rd.value 
+              FROM resource_data AS rd 
+             WHERE rd.resource = r.ref 
+               AND rd.resource_type_field = [title_field]
+             LIMIT 1
+         ) 'Title',sum(count) Views from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='Resource view'
+
 # --- date ranges
 # Make sure date is greater than FROM date
 and 
@@ -84,13 +87,20 @@ or
 or
 (d.year=[to-y] and d.month=[to-m] and d.day<=[to-d])
 )
+
+
 group by r.ref order by Views desc;
 "
 5,"Resources sent via e-mail","
 select r.ref 'Resource ID',
-view_title_field_subselect AS 'Title', 
-sum(count) Sent from resource r,daily_stat d 
-where r.ref=d.object_ref and d.activity_type='E-mailed resource'
+        (
+            SELECT rd.value 
+              FROM resource_data AS rd 
+             WHERE rd.resource = r.ref 
+               AND rd.resource_type_field = [title_field]
+             LIMIT 1
+         ) 'Title',sum(count) Sent from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='E-mailed resource'
+
 # --- date ranges
 # Make sure date is greater than FROM date
 and 
@@ -110,14 +120,20 @@ or
 or
 (d.year=[to-y] and d.month=[to-m] and d.day<=[to-d])
 )
+
+
 group by r.ref order by Sent desc;
 "
 6,"Resources added to collection","
 select r.ref 'Resource ID',
-view_title_field_subselect AS 'Title', 
-sum(count) Added 
-from resource r,daily_stat d 
-where r.ref=d.object_ref and d.activity_type='Add resource to collection'
+        (
+            SELECT rd.value 
+              FROM resource_data AS rd 
+             WHERE rd.resource = r.ref 
+               AND rd.resource_type_field = [title_field]
+             LIMIT 1
+         ) 'Title',sum(count) Added from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='Add resource to collection'
+
 # --- date ranges
 # Make sure date is greater than FROM date
 and 
@@ -137,26 +153,47 @@ or
 or
 (d.year=[to-y] and d.month=[to-m] and d.day<=[to-d])
 )
+
+
 group by r.ref order by Added desc;
 "
 7,"Resources created","
-select rl.date 'Date / Time',
+
+select
+rl.date 'Date / Time',
 concat(u.username,' (',u.fullname,' )') 'Created By User',
 g.name 'User Group',
 r.ref 'Resource ID',
-view_title_field_subselect AS 'Title' 
-from resource_log rl
+
+        (
+            SELECT rd.value 
+              FROM resource_data AS rd 
+             WHERE rd.resource = r.ref 
+               AND rd.resource_type_field = [title_field]
+             LIMIT 1
+         ) 'Resource Title'
+
+from
+resource_log rl
 join resource r on r.ref=rl.resource
 left outer join user u on rl.user=u.ref
 left outer join usergroup g on u.usergroup=g.ref
-where rl.type='c'
-and rl.date>=date('[from-y]-[from-m]-[from-d]') and rl.date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
-order by rl.date;
+where
+rl.type='c'
+and
+rl.date>=date('[from-y]-[from-m]-[from-d]') and rl.date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
+order by rl.date
 "
 8,"Resources with zero downloads","
-select r.ref 'Resource ID',
-view_title_field_subselect AS 'Title' 
-from resource r where r.ref not in 
+select ref 'Resource ID',
+        (
+            SELECT rd.value 
+              FROM resource_data AS rd 
+             WHERE rd.resource = ref 
+               AND rd.resource_type_field = [title_field]
+             LIMIT 1
+         ) 'Title' from resource where ref not in 
+
 (
 select object_ref from daily_stat
 WHERE activity_type='Resource download'
@@ -179,16 +216,27 @@ or
 group by object_ref
 )
 
-AND DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
-AND r.ref>0;
+AND
+DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
+
+AND
+ref>0
 "
 9,"Resources with zero views","
-select r.ref 'Resource ID',
-view_title_field_subselect AS 'Title' 
-from resource r where r.ref not in 
+select ref 'Resource ID',
+        (
+            SELECT rd.value 
+              FROM resource_data AS rd 
+             WHERE rd.resource = ref 
+               AND rd.resource_type_field = [title_field]
+             LIMIT 1
+         ) 'Title' from resource where ref not in 
+
 (
 SELECT object_ref FROM daily_stat d
+
 WHERE d.activity_type='Resource view'
+
 AND 
 (
 year>[from-y]
@@ -197,6 +245,7 @@ or
 or
 (year=[from-y] and month=[from-m] and day>=[from-d])
 )
+
 AND
 (
 year<[to-y]
@@ -205,14 +254,19 @@ or
 or
 (year=[to-y] and month=[to-m] and day<=[to-d])
 )
+
 group by object_ref
 )
 
-AND DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
-AND ref>0;
+AND
+DATE_FORMAT(creation_date, '%Y-%m-%d')<=date('[to-y]-[to-m]-[to-d]')
+
+AND
+ref>0
 "
 10,"Resource downloads by group","
-select g.name 'Group Name',
+select
+g.name 'Group Name',
 count(rl.resource) 'Resource Downloads'
 
 from
@@ -222,23 +276,35 @@ left outer join usergroup g on u.usergroup=g.ref
 where
 rl.type='d'
 and rl.date>=date('[from-y]-[from-m]-[from-d]') and rl.date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
-group by g.ref order by 'Resource Downloads' desc;
+group by g.ref order by 'Resource Downloads' desc
 "
 11,"Resource download detail","
-select rl.date 'Date / Time',
+select
+rl.date 'Date / Time',
 concat(u.username,' (',u.fullname,' )') 'Downloaded By User',
 g.name 'User Group',
 r.ref 'Resource ID',
-view_title_field_subselect AS 'Title', 
+
+        (
+            SELECT rd.value 
+              FROM resource_data AS rd 
+             WHERE rd.resource = r.ref 
+               AND rd.resource_type_field = [title_field]
+             LIMIT 1
+         ) 'Resource Title',
 rt.name 'Resource Type'
-from resource_log rl
+
+from
+resource_log rl
 join resource r on r.ref=rl.resource
 left outer join user u on rl.user=u.ref
 left outer join usergroup g on u.usergroup=g.ref
 left outer join resource_type rt on r.resource_type=rt.ref
-where rl.type='d'
-and rl.date>=date('[from-y]-[from-m]-[from-d]') and rl.date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
-order by rl.date;
+where
+rl.type='d'
+and
+rl.date>=date('[from-y]-[from-m]-[from-d]') and rl.date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
+order by rl.date
 "
 12,"User details including group allocation","select 
 u.username 'Username',
@@ -250,44 +316,36 @@ g.name 'Group name'
 
 from user u join usergroup g on u.usergroup=g.ref
 
-where 
-# --- date ranges
-# Make sure date is greater than FROM date
-(u.created > CAST('[from-y]-[from-m]-[from-d]' AS DATE))
-and 
-# Make sure date is less than TO date
-(u.created < CAST('[to-y]-[to-m]-[to-d]' AS DATE))
-
 order by username;
 "
 13,"Expired Resources","
-select distinct r.ref 'Resource ID',
-view_title_field_subselect AS 'Title', 
-resource_data.value 'Expires' 
-from resource r
-join resource_data on r.ref=resource_data.resource 
-join resource_type_field on resource_data.resource_type_field=resource_type_field.ref 
-where resource_type_field.type=6 
-and value>=date('[from-y]-[from-m]-[from-d]') 
-and value<=adddate(date('[to-y]-[to-m]-[to-d]'),1) 
-and length(value)>0 
-and r.ref>0 
-order by r.ref;
+select distinct resource.ref 'Resource ID',resource.field8 'Resource Title',resource_data.value 'Expires' from resource join resource_data on resource.ref=resource_data.resource join resource_type_field on resource_data.resource_type_field=resource_type_field.ref where resource_type_field.type=6 and value>=date('[from-y]-[from-m]-[from-d]') and value<=adddate(date('[to-y]-[to-m]-[to-d]'),1) and length(value)>0 and resource.ref>0 order by resource.ref;
 "
 14,"Resources created - with thumbnails","
-select r.ref 'thumbnail',
+select
+r.ref 'thumbnail',
 rl.date 'Date / Time',
 concat(u.username,' (',u.fullname,' )') 'Created By User',
 g.name 'User Group',
 r.ref 'Resource ID',
-view_title_field_subselect AS 'Title' 
 
-from resource_log rl
+        (
+            SELECT rd.value 
+              FROM resource_data AS rd 
+             WHERE rd.resource = r.ref 
+               AND rd.resource_type_field = [title_field]
+             LIMIT 1
+         ) 'Resource Title'
+
+from
+resource_log rl
 join resource r on r.ref=rl.resource
 left outer join user u on rl.user=u.ref
 left outer join usergroup g on u.usergroup=g.ref
-where rl.type='c'
-and rl.date>=date('[from-y]-[from-m]-[from-d]') and rl.date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
+where
+rl.type='c'
+and
+rl.date>=date('[from-y]-[from-m]-[from-d]') and rl.date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
 order by rl.date;
 "
 15,"Keywords used in searches (with no results counter)","
@@ -313,6 +371,7 @@ INNER JOIN daily_stat AS d
    ORDER BY Searches DESC;
 "
 16,"Database statistics","
+
 select 
 (select count(*) from resource) as 'Total resources',
 (select count(*) from keyword) 'Total keywords',
