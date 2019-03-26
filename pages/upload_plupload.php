@@ -620,7 +620,10 @@ if ($_FILES)
 
                             if($upload_then_edit && $upload_here)
                                 {
-                                add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
+                                if(!empty(get_upload_here_selected_nodes($search, array())))
+                                    {
+                                    add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
+                                    }
                                 }
 
                             # Add to collection?
