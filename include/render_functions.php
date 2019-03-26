@@ -2588,6 +2588,9 @@ function render_upload_here_button(array $search_params, $return_params_only = f
         $collection = explode(',', $collection);
         $collection = (int) $collection[0];
 
+        //Check the user is able to upload to this collection before continuing
+        if(!collection_writeable($collection)) {return;}
+
         $upload_here_params['collection_add'] = $collection;
         }
 
