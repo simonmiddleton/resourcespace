@@ -153,7 +153,7 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
             if($send_email && filter_var($cntrb_detail["email"], FILTER_VALIDATE_EMAIL))
                 {
                 debug("sending email notification to contributing user " . $cntrb_user);
-                send_mail($cntrb_user["email"],$applicationname . ": " . $lang["status" . $archive],$message . "\n\n" . $maillinkurl, $rse_workflow_from,$rse_workflow_from);
+                send_mail($cntrb_detail["email"],$applicationname . ": " . $lang["status" . $archive],$message . "\n\n" . $maillinkurl, $rse_workflow_from,$rse_workflow_from);
                 if($wfstates[$archive]["rse_workflow_bcc_admin"]==1)
                     {
                     $bccadmin_users = get_notification_users("SYSTEM_ADMIN");
