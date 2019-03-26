@@ -1161,7 +1161,10 @@ if($responsive_ui)
 
         hook("search_header_after_actions");
 
-        render_upload_here_button($searchparams);
+        if($is_authenticated)
+            {
+            render_upload_here_button($searchparams);
+            }
         
         if (!$display_selector_dropdowns && !$perpage_dropdown){?>
         <div class="InpageNavLeftBlock">
