@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 5);
+define('SYSTEM_UPGRADE_LEVEL', 6);
 
 // ------------------------- FIELD TYPES -------------------------
 
