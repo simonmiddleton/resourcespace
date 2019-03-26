@@ -1161,7 +1161,7 @@ if($responsive_ui)
 
         hook("search_header_after_actions");
 
-        if($is_authenticated)
+        if(isset($is_authenticated) && $is_authenticated)
             {
             render_upload_here_button($searchparams);
             }
