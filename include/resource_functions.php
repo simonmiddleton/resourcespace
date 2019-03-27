@@ -558,13 +558,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     if(substr($val,0,1)==","){$val=substr($val,1);}
                     sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value($val))."' where ref='$ref'");
                     }
-                                        
-				# Add any onchange code
-				if($fields[$n]["onchange_macro"]!="")
-					{
-					eval($fields[$n]["onchange_macro"]);    
-					}				
-				}
+                }
+
+            # Add any onchange code
+            if($fields[$n]["onchange_macro"]!="")
+                {
+                eval($fields[$n]["onchange_macro"]);    
+                }		
 			}
 		}
 
