@@ -117,6 +117,12 @@ if (getval("save",false) && enforcePostRequest(false))
 					"resource_defaults","config_options","welcome_message","ip_restrict","request_mode","allow_registration_selection","inherit_flags") as $column)		
 		
 		{
+        if ($execution_lockout && $column=="config_options")
+            {
+            # Do not allow config overrides to be changed from UI if $execution_lockout is set.
+            continue;
+            } 
+        
 		if (in_array($column,array("allow_registration_selection")))
 			{
 			$val=getval($column,"0") ? "1" : "0";
@@ -139,8 +145,6 @@ if (getval("save",false) && enforcePostRequest(false))
 			$val=getvalescaped($column,"");
 			}
 			
-		if ($execution_lockout && $column=="config_options") {$val="";} # Do not allow config overrides if $execution_lockout is set.
-		
 		if (isset($sql))
 			{
 			$sql.=",";
