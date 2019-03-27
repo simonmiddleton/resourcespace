@@ -2070,7 +2070,7 @@ function setup_user($userdata)
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences,
-           $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession;
+           $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -2109,7 +2109,7 @@ function setup_user($userdata)
         $ip_restrict_group=trim($userdata["ip_restrict_group"]);
         $ip_restrict_user=trim($userdata["ip_restrict_user"]);
         
-        if(isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
+        if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
 		{
 		if (!function_exists("get_user_collections"))
 			{
