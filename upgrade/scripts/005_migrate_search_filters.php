@@ -21,7 +21,7 @@ if($search_filter_nodes && (!isset($sysvars["SEARCH_FILTER_MIGRATION"]) || $sysv
         $migrateresult = migrate_search_filter($filtertext);        
         if(is_numeric($migrateresult))
             {
-            message_add(array_column($notification_users,"ref"), $lang["filter_search_success"] . ": '" . $filtertext . "'",generateURL($baseurl_short . "/pages/admin/admin_group_management_edit.php",array("ref"=>$group["ref"])));
+            message_add(array_column($notification_users,"ref"), $lang["filter_search_success"] . ": '" . $filtertext . "'",generateURL($baseurl_short . "pages/admin/admin_group_management_edit.php",array("ref"=>$group["ref"])));
             // Successfully migrated - now use the new filter
             sql_query("UPDATE usergroup SET search_filter_id='" . $migrateresult . "' WHERE ref='" . $group["ref"] . "'");
             }
