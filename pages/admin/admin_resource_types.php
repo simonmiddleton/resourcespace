@@ -151,7 +151,7 @@ for ($n=0;$n<count($resource_types);$n++)
 				    {
 				    ?>
 				    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["rt"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
-				    <?php echo i18n_get_translated($resource_types[$n]["name"]);?>
+				    <?php echo htmlspecialchars(i18n_get_translated($resource_types[$n]["name"]));?>
 				    </a>
 				    <?php
 				    }
