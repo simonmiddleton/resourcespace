@@ -134,7 +134,7 @@ else
 		if($workflowaction["ref"]==$delete){continue;}
 		echo "<tr class=\"rse_workflow_link\" onclick=\"CentralSpaceLoad('" .  $baseurl . "/plugins/rse_workflow/pages/edit_action.php?ref=" . $workflowaction["ref"] . "',true);\">";
 		?>
-			<td><div class="ListTitle"><?php echo $workflowaction["name"]; ?></div>
+			<td><div class="ListTitle"><?php echo htmlspecialchars($workflowaction["name"]); ?></div>
 			</td>			
 			<td><?php echo $workflowaction["text"]; ?>
 			</td>
