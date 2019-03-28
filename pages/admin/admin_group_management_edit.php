@@ -246,7 +246,7 @@ include "../../include/header.php";
 
         <div class="Question">
             <label for="name"><?php echo $lang["property-name"]; ?></label>
-            <input name="name" type="text" class="stdwidth" value="<?php echo $record['name']; ?>"> 
+            <input name="name" type="text" class="stdwidth" value="<?php echo htmlspecialchars($record['name']); ?>"> 
             <div class="clearerleft"></div>
         </div>
 
