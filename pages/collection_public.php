@@ -211,7 +211,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
             }
         hook("beforecollectiontoolscolumn");
 
-        $action_selection_id = 'themes_action_selection' . $collections[$n]["ref"] . "_bottom_" . $collections[$n]["ref"] ;
+        $action_selection_id = 'collectionpublic_action_selection' . $collections[$n]["ref"] . "_bottom_" . $collections[$n]["ref"] ;
 
         ?>
         <td class="tools">
@@ -222,7 +222,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
             ?>
             <div class="ActionsContainer  ">
             <div class="DropdownActionsLabel">Actions:</div>
-            <select class="themeactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
+            <select class="collectionpublicactions" id="<?php echo $action_selection_id ?>" onchange="action_onchange_<?php echo $action_selection_id ?>(this.value);">
             <option><?php echo $lang["actions-select"]?></option>
             </select>
             </div>
@@ -231,7 +231,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
     <script>
         jQuery('#<?php echo $action_selection_id ?>').bind({
                         mouseenter:function(e){
-                        LoadActions('themes','<?php echo $action_selection_id ?>','collection','<?php echo $collections[$n]["ref"] ?>','<?php echo $CSRF_token_identifier; ?>','<?php echo generateCSRFToken($usersession,"theme_actions"); ?>');
+                        LoadActions('collectionpublic','<?php echo $action_selection_id ?>','collection','<?php echo $collections[$n]["ref"] ?>','<?php echo $CSRF_token_identifier; ?>','<?php echo generateCSRFToken($usersession,"collectionpublic_actions"); ?>');
                         }});
     </script>
     <?php
