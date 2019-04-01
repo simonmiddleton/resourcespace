@@ -12,7 +12,7 @@ if (!checkperm_user_edit($userref))
 $log_search = getval("log_search", "");
 $backurl = getval("backurl", "");
 $requesteduser = getval('actasuser',0, true);
-$actasuser = $requesteduser !== 0 ? $userref : $requesteduser;
+$actasuser = $requesteduser === $userref ? $userref : $requesteduser;
 
 // Filter by a particular table and its reference
 $table = getval('table', '');
@@ -39,8 +39,12 @@ $no_reference_data_tables = sql_array('
          WHERE remote_table IS NOT NULL AND remote_table <> ""
     ',
     array());
-
-if(!checkperm('a') || $requesteduser == $userref)
+$test = checkperm('a');
+debug("t19586: \$test = {$test}");
+debug("t19586: \$requesteduser = {$requesteduser}");
+debug("t19586: \$userref = {$userref}");
+debug("t19586: \$actasuser = {$actasuser}");
+if(!checkperm('a') || $requesteduser == $actasuser && $requesteduser != 0)
     {
     $log_tables_where_statements = array(
         'activity_log' => "`activity_log`.`user`='{$actasuser}' AND ",
