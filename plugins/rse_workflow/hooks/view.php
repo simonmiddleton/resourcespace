@@ -23,14 +23,6 @@ function HookRse_workflowViewPageevaluation()
         {
         if(getvalescaped("rse_workflow_action_" . $workflowaction["ref"],"")!="" && enforcePostRequest(false))
             {
-            $validstates = explode(',', $workflowaction['statusfrom']);
-            $edit_access = get_edit_access($ref,$resource['archive'], '', $resource);
-
-            if('' != $k)
-                {
-                $edit_access = 0;
-                }
-
             // Check if resource status has already been changed between form being loaded and submitted
             $resource_status_check = getval("resource_status_check","");
 			if($resource_status_check != "" && $resource_status_check != $resource["archive"])
@@ -40,54 +32,42 @@ function HookRse_workflowViewPageevaluation()
 				}
 			else
 				{
+                $validstates = explode(',', $workflowaction['statusfrom']);
+                $edit_access = get_edit_access($ref,$resource['archive'], '', $resource);
+    
+                if('' != $k)
+                    {
+                    $edit_access = 0;
+                    }
+                    
                 if(
                     in_array($resource['archive'], $validstates)
                     && (
                             (
                                 $edit_access
-                                && (checkperm("wf{$workflowaction['ref']}") || checkperm("e{$workflowaction['statusto']}"))
+                                && checkperm("e{$workflowaction['statusto']}")
                             )
                             || checkperm("wf{$workflowaction['ref']}")
                        )
                     )
                     {
-                    $validstates=explode(",",$workflowaction["statusfrom"]);
-                    $edit_access=get_edit_access($ref,$resource["archive"],"",$resource);
-                    if ($k != "") 
+                    update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);;
+                    hook("rse_wf_archivechange","",array($ref,$resource["archive"],$workflowaction["statusto"]));
+                                                
+                    if (checkperm("z" . $workflowaction["statusto"]))
                         {
-                        $edit_access=0;
-                        }
-                    // Check if resource status has already been changed between form being loaded and submitted
-                    $resource_status_check = getval("resource_status_check","");
-                    if($resource_status_check != "" && $resource_status_check != $resource["archive"])
-                        {
-                        $errors["status"] = $lang["status"] . ': ' . $lang["save-conflict-error"];
-                        echo "<div class=\"PageInformal\">" . $lang["error"] . ": " . $lang["status"] . " - " . $lang["save-conflict-error"] . "</div>";
+                        ?>
+                        <script type="text/javascript">
+                        styledalert('<?php echo $lang["rse_workflow_saved"] . "','" . $lang["status" . $workflowaction["statusto"]];?>');
+                        document.location.href="<?php echo $baseurl ?>/pages/search.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>";
+                        </script><?php
+                        exit();
                         }
                     else
-                        {
-                        if (in_array($resource["archive"],$validstates) && $edit_access && (checkperm("wf" . $workflowaction["ref"]) || (checkperm("e" . $workflowaction["statusto"]))))
-                            {
-                            update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);
-                            hook("rse_wf_archivechange","",array($ref,$resource["archive"],$workflowaction["statusto"]));
-                            
-                            if (checkperm("z" . $workflowaction["statusto"]))
-                                {
-                                ?>
-                                <script type="text/javascript">
-                                styledalert('<?php echo $lang["rse_workflow_saved"] . "','" . $lang["status" . $workflowaction["statusto"]];?>');
-                                document.location.href="<?php echo $baseurl ?>/pages/search.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>";
-                                </script><?php
-                                exit();
-                                }
-                            else
-                                { 
-                                echo "<div class=\"PageInformal\">" . $lang["rse_workflow_saved"] . " " . $lang["status" . $workflowaction["statusto"]] . "</div>";
-                                $resource["archive"]=$workflowaction["statusto"];
-                                }
-                            }
+                        { 
+                        echo "<div class=\"PageInformal\">" . $lang["rse_workflow_saved"] . " " . $lang["status" . $workflowaction["statusto"]] . "</div>";
+                        $resource["archive"]=$workflowaction["statusto"];
                         }
-                    
                     } 
                 }
             }
@@ -107,13 +87,12 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
     foreach($workflowactions as $workflowaction)
         {
         $validstates = explode(',', $workflowaction['statusfrom']);	
-        
         if(
             in_array($resource['archive'], $validstates)
             && (
                     (
                         $edit_access
-                        && (checkperm("wf{$workflowaction['ref']}") || checkperm("e{$workflowaction['statusto']}"))
+                        && checkperm("e{$workflowaction['statusto']}")
                     )
                     // Provide workflow action option if user has access to it without having edit access to resource
                     // Use case: a particular user group doesn't have access to the archive state but still needs to be
