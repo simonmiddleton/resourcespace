@@ -173,7 +173,7 @@ function migrate_search_filter($filtertext)
     if($filterid !== false)
         {
         $logtext .= "FILTER MIGRATION: - Filter already migrated. ID = " . $existingrules[$filterid]["ref"] . "\n";
-        return $filterid;
+        return $existingrules[$filterid]["ref"];
         }
     else
         {
@@ -195,8 +195,6 @@ function migrate_search_filter($filtertext)
         $rulevalues = explode("|",trim($rule_parts[1]));
         
         // Create filter_rule
-        db_begin_transaction();
-        
         $logtext .=  "FILTER MIGRATION: -- Creating filter_rule for '" . $filter_rule . "'\n";
         sql_query("INSERT INTO filter_rule (filter) VALUES ('{$filterid}')");
         $new_filter_rule = sql_insert_id();
@@ -245,10 +243,10 @@ function migrate_search_filter($filtertext)
                 }
             }
         
-        debug($logtext);                
-        
+        debug($logtext);       
         if(count($errors) > 0)
             {
+            delete_filter($filterid);
             return $errors;
             }
             
@@ -256,7 +254,6 @@ function migrate_search_filter($filtertext)
         $logtext .=  "FILTER MIGRATION: -- Adding nodes to filter_rule\n";
         $sql = "INSERT INTO filter_rule_node (filter_rule,node,node_condition) VALUES " . implode(',',$nodeinsert);
         sql_query($sql);
-        db_end_transaction();
         }
         
     debug("FILTER MIGRATION: filter migration completed for '" . $filtertext);
