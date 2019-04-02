@@ -39,11 +39,7 @@ $no_reference_data_tables = sql_array('
          WHERE remote_table IS NOT NULL AND remote_table <> ""
     ',
     array());
-$test = checkperm('a');
-debug("t19586: \$test = {$test}");
-debug("t19586: \$requesteduser = {$requesteduser}");
-debug("t19586: \$userref = {$userref}");
-debug("t19586: \$actasuser = {$actasuser}");
+
 if(!checkperm('a') || $requesteduser == $actasuser && $requesteduser != 0)
     {
     $log_tables_where_statements = array(
