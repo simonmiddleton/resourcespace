@@ -68,3 +68,52 @@ function HookTransformAllAdditional_title_pages()
         echo "</script>";
         }
     }
+
+function HookTransformAllAfteruilayout()
+    {
+    global $CSRF_enabled, $CSRF_token_identifier, $usersession;
+
+    $form_append_csrf = '';
+    if($CSRF_enabled)
+        {
+        $form_append_csrf = sprintf('
+            form.append(
+                jQuery("<input></input>")
+                    .attr("type", "hidden")
+                    .attr("name", "%s")
+                    .attr("value", "%s")
+            );',
+            $CSRF_token_identifier,
+            generateCSRFToken($usersession, 'transform_download_file')
+        );
+        }
+    ?>
+    <!-- Transform plugin custom functions -->
+    <script>
+    function transform_download_file(resource, url)
+        {
+        event.preventDefault();
+
+        var iaccept = document.getElementById('iaccept').checked;
+        if(iaccept == false)
+            {
+            return false;
+            }
+
+        var crop_url = url + '&iaccept=on';
+
+        var form = jQuery('<form id="TransformDownloadFile"></form>')
+            .attr("action", crop_url)
+            .attr("method", "post");
+
+        <?php echo $form_append_csrf; ?>
+
+        form.appendTo('body').submit().remove();
+
+        var view_page_anchor = document.createElement("a");
+        view_page_anchor.setAttribute("href", baseurl_short + "?r=" + resource);
+        CentralSpaceLoad(view_page_anchor, true, false);
+        }
+    </script>
+    <?php
+    }
