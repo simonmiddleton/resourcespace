@@ -221,7 +221,7 @@ if ($download && $terms_download){
     $terms_accepted=getvalescaped('iaccept', '');
     if('on'!=$terms_accepted)
         {
-        $crop_url=substr($_SERVER['REQUEST_URI'],1);
+        $crop_url = str_replace($baseurl_short, "/", $_SERVER['REQUEST_URI']);
         $redirect_to_terms_url="pages/terms.php?ref=".$ref."&url=".urlencode($crop_url);
         redirect($redirect_to_terms_url);
         }
