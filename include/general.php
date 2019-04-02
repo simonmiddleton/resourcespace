@@ -36,7 +36,7 @@ $GLOBALS['get_resource_path_fpcache'] = array();
 function get_resource_path(
     $ref,
     $getfilepath,
-    $size,
+    $size = '',
     $generate = true,
     $extension = 'jpg',
     $scramble = true,
