@@ -4261,7 +4261,7 @@ function check_access_key($resource,$key)
                         
                         if($co_parts[0]!='' && isset($co_parts[1]))
                             {
-                            $name=str_replace("$","",$co_parts[0]);
+                            $name=str_replace("$","",ltrim($co_parts[0]));
                             $value=ltrim($co_parts[1]); 
                             if(strtolower($value)=='false'){$value=0;}
                             elseif(strtolower($value)=='true'){$value=1;}
