@@ -277,7 +277,11 @@ else
     }
 
 $uploadparams["resource_type"] = $resource['resource_type'];   
+
 $setarchivestate = getvalescaped('status', $resource["archive"], TRUE);
+// Validate this is permitted
+$setarchivestate = get_default_archive_state($setarchivestate);
+
 $uploadparams["status"] = $setarchivestate;
 
 # Allow alternative configuration settings for this resource type.
@@ -1730,35 +1734,16 @@ echo " <input type=hidden name=\"exemptfields\" id=\"exemptfields\" value=\"" . 
 # Work out the correct archive status.
 if ($ref<0) # Upload template.
    {
-   global $override_status_default;
-   $modified_defaultstatus = hook("modifydefaultstatusmode");
-   if ($setarchivestate==2)
-      {
-      if (checkperm("e2")) {$setarchivestate = 2;} # Set status to Archived - if the user has the required permission.
-      elseif ($modified_defaultstatus) {$setarchivestate = $modified_defaultstatus;}  # Set the modified default status - if set.
-      elseif (checkperm("e" . $resource["archive"])) {$setarchivestate = $resource["archive"];} # Else, set status to the status stored in the user template - if the user has the required permission.
-      elseif (checkperm("c")) {$setarchivestate = 0;} # Else, set status to Active - if the user has the required permission.
-      elseif (checkperm("d")) {$setarchivestate = -2;} # Else, set status to Pending Submission.
-      }
-   else
-      {
-      if ($modified_defaultstatus) {$setarchivestate = $modified_defaultstatus;}  # Set the modified default status - if set.
-      elseif ($override_status_default!==false) {$setarchivestate = $override_status_default;}
-      elseif ($resource["archive"]!=2 && checkperm("e" . $resource["archive"])) {$setarchivestate = $resource["archive"];} # Set status to the status stored in the user template - if the status is not Archived and if the user has the required permission.
-      elseif (checkperm("c")) {$setarchivestate = 0;} # Else, set status to Active - if the user has the required permission.
-      elseif (checkperm("d") && !checkperm('e-2') && checkperm('e-1')) {$setarchivestate = -1;} # Else, set status to Pending Review if the user has only edit access to Pending review
-      elseif (checkperm("d")) {$setarchivestate = -2;} # Else, set status to Pending Submission.   
-      }
    if ($show_status_and_access_on_upload==false)
-      {
-      # Hide the dropdown, and set the default status.
-      ?>
-      <input type=hidden name="status" id="status" value="<?php echo htmlspecialchars($setarchivestate)?>"><?php
-      }
-   }
-else # Edit Resource(s).
-   {
-   $setarchivestate = $resource["archive"];
+        {
+        # Hide the dropdown, and set the default status.
+        ?>
+        <input type=hidden name="status" id="status" value="<?php echo htmlspecialchars($setarchivestate)?>"><?php
+        }
+   else # Edit Resource(s).
+        {
+        $setarchivestate = $resource["archive"];
+        }
    }
 ?>
 </div><!-- end of ResourceMetadataSection -->
