@@ -2489,6 +2489,7 @@ $lang["systemconfig_modal_default"] = "Enable modals for standard pages where co
 $lang['systemconfig_browse_bar_section'] = 'Browse Bar';
 $lang['systemconfig_browse_bar_enable'] = 'Enable Browse Bar';
 $lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse Bar';
+$lang['systemconfig_user_local_timezone'] = 'User local time zone';
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
