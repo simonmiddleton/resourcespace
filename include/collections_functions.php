@@ -1589,6 +1589,7 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 	# Returns an array of resource references that can be used as theme category images.
 	global $theme_images_number;
 	global $theme_category_levels;
+	global $usergroup, $userref;
 	global $userpermissions;
 	# Resources that have been specifically chosen using the option on the collection comments page will be returned first based on order by.
 	
@@ -1619,37 +1620,53 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
             return is_array($images) ? array_column($images, "ref") : array();
 			}
 		else
-			{
-			$sqlselect="select r.ref, cr.use_as_theme_thumbnail, theme2, r.hit_count from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
-            
-			// Add search sql so we honour permissions
-
-			// We are going to temporarily insert the "J" permission to limit the scope of the search for performance
-			// Save the permissions prior to insertion
-			$saved_userpermissions = $userpermissions;
-			// Insert the "J" permission if it is not already there
-			if (!checkperm("J"))
+		{
+			$sqlfilter_custom="";
+			$sqlselect="SELECT r.ref, cr.use_as_theme_thumbnail, theme2, r.hit_count FROM collection c "
+							."JOIN collection_resource cr on cr.collection=c.ref "
+							."JOIN resource r on r.ref=cr.resource and r.archive=0 and r.ref>0 and r.has_image=1 ";
+			
+			// Add custom access joins if necessary
+			if (!checkperm("v"))
 				{
-				$userpermissions[]="J";
-				}
-            $searchsql = do_search("",'','',0,-1,'desc',false,0,false,false,'',false,false,true,false,true);
-			// Restore saved permissions
-			$userpermissions = $saved_userpermissions;
+				$sqlselect.= " LEFT OUTER JOIN resource_custom_access rca2 " 
+										."ON r.ref=rca2.resource "
+										."AND rca2.user='$userref' "
+										."AND (rca2.user_expires IS null or rca2.user_expires>now()) "
+										."AND rca2.access<>2 "
+							." LEFT OUTER JOIN resource_custom_access rca "
+										."ON r.ref=rca.resource "
+										."AND rca.usergroup='$usergroup' "
+										."AND rca.access<>2 ";
 
-			$orderby=" order by ti.use_as_theme_thumbnail desc";
+				# Check both the resource access, but if confidential is returned, also look at the joined user-specific or group-specific custom access for rows.
+				$sqlfilter_custom.=" AND (     r.access<>'2' " 
+				                  ."       OR (r.access=2 AND ( (rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2) ) ) )";
+
+				}
+
+			// Build filter, attaching custom access filtering, if any 	
+			$sqlfilter=" WHERE c.public=1 and c.theme='" . escape_check($themes[0]) . "' "
+			           .$sqlfilter_custom;
+
+			// Attach filter to principal select		   
+			$sqlselect.=$sqlfilter;
+
+			$orderby  =" ORDER BY ti.use_as_theme_thumbnail desc";
+			
 			$orderby_theme='';
 			for ($n=2;$n<=count($themes)+1;$n++)
                 {
 				if (isset($themes[$n-1]))
                     {
-					$sqlselect.=" and theme".$n."='" . escape_check($themes[$n-1]) . "' ";
+					$sqlselect.=" AND theme".$n."='" . escape_check($themes[$n-1]) . "' ";
                     } 
 				else
                     {
 					if ($n<=$theme_category_levels)
                         {
 						# Resources in sub categories can be used but should be below those in the current category
-						$orderby_theme=" order by theme".$n;
+						$orderby_theme=" ORDER BY theme".$n;
                         }
                     }
                 } 
@@ -1657,14 +1674,13 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 			if($collection != "")
 				{
 				$sqlselect.=" and c.ref = '" . escape_check($collection) .  "'";
-                $orderby.=",ti.hit_count desc,ti.ref desc";
 				}
-			
+				
 			$orderby.=",ti.hit_count desc,ti.ref desc";
 			}
 	
-		$sqlselect .= " and r.has_image=1 ";
-		$sql = "SELECT ti.ref value from (" . $sqlselect . $orderby_theme . ") ti JOIN (" . $searchsql . ") ar ON ti.ref=ar.ref WHERE ar.ref IS NOT NULL " . $orderby . " limit " . escape_check($theme_images_number);
+		$sql = "SELECT ti.ref value from (" . $sqlselect . $orderby_theme . ") ti "
+		       .$orderby . " limit " . escape_check($theme_images_number);
 
         $images=sql_array($sql,0);
 
