@@ -5443,7 +5443,7 @@ function get_default_archive_state($requestedstate = "")
     {
     global $override_status_default;
     
-    if (is_integer($requestedstate) && checkperm("e" . $requestedstate))
+    if ((string)(int)$requestedstate == (string)$requestedstate && checkperm("e" . $requestedstate))
         {
         return $requestedstate;
         }
