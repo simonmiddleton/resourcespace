@@ -5431,3 +5431,46 @@ function get_last_resource_edit_array($resources = array())
     $lastusername = (trim($lastuserdetails[0]["fullname"]) != "") ? $lastuserdetails[0]["fullname"] : $lastuserdetails[0]["username"];
     return array("ref" => $lastmodified[0]["ref"],"time" => $timestamp, "user" => $lastusername);
     }
+   
+/**
+* Get the default archive state for new resources 
+*
+* @param integer    $requestedstate     (optional) ID of requested archive state
+*
+* @return integer   ID of valid user requested archive state, may differ from that requested
+*/    
+function get_default_archive_state($requestedstate = "")
+    {
+    global $override_status_default;
+    
+    if ((string)(int)$requestedstate == (string)$requestedstate && checkperm("e" . $requestedstate))
+        {
+        return $requestedstate;
+        }
+    
+    $modified_defaultstatus = hook("modifydefaultstatusmode");
+    if ($modified_defaultstatus !== false)
+        {
+        # Set the modified default status
+        return $modified_defaultstatus;
+        }
+    elseif ($override_status_default)
+        {
+        # Set the default status if set in config.
+        return $override_status_default;
+        }
+    elseif (checkperm("c"))
+        {
+        # Set status to Active
+        return 0;
+        }
+    elseif (checkperm("d") && !checkperm('e-2') && checkperm('e-1'))
+        {
+        # Set status to 'pending review' if the user has only edit access to Pending review
+        return -1;
+        }
+    else
+        {
+        return -2;
+        }
+     }
