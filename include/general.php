@@ -7674,3 +7674,46 @@ function display_upload_options()
         return false;
         }
     }
+
+
+/**
+* Offset to user local time zone
+* 
+* IMPORTANT: the offset is fixed, there is no calculation for summertime!
+* 
+* 
+* @param string $date The date in ISO format
+* 
+* @return string The date in ISO format
+*/
+function offset_user_local_timezone($date)
+    {
+    global $user_local_timezone;
+
+    echo PHP_EOL . PHP_EOL;
+
+    $server_datetimezone = new DateTimeZone(date_default_timezone_get());
+    $user_local_datetimezone = new DateTimeZone($user_local_timezone);
+
+    // Create two DateTime objects that will contain the same Unix timestamp, but have different timezones attached to them
+    $server_datetime = new DateTime($date, $server_datetimezone);
+    $user_local_datetime = new DateTime($date, $user_local_datetimezone);
+
+    echo "<pre>";print_r($server_datetime);echo "</pre>";
+    echo "<pre>";print_r($user_local_datetime);echo "</pre>";
+
+    // Calculate the GMT offset for the date/time contained in the $server_datetime
+    // object, but using the timezone rules as defined for the users' timezone
+    // ($user_local_datetimezone).
+    $time_offset = $user_local_datetimezone->getOffset($server_datetime);
+
+    echo "<pre>";print_r($time_offset);echo "</pre>";
+
+    $offset_interval = DateInterval::createFromDateString((string) $time_offset . ' seconds');
+    $user_local_datetime->add($offset_interval);
+
+    echo "<pre>";print_r($user_local_datetime);echo "</pre>";
+
+    // echo "<pre>";print_r(DateTime::getLastErrors());echo "</pre>";
+    // return $offset_date->format('Y-m-d H:i:s');
+    }

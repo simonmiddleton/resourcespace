@@ -17,7 +17,7 @@ $page_def[] = config_add_single_select(
     'user_local_timezone',
     $lang['systemconfig_user_local_timezone'],
     timezone_identifiers_list(),
-    true,
+    false,
     420,
     '',
     true);

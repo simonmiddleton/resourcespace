@@ -167,8 +167,8 @@ include "../../include/header.php";
         'user_local_timezone',
         $lang['systemconfig_user_local_timezone'],
         timezone_identifiers_list(),
-        true,
-        420,
+        false,
+        300,
         '',
         true);
     $page_def[] = config_add_html('</div>');
