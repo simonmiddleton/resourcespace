@@ -1497,8 +1497,6 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
 <?php   
 }
 
-if ($edit_upload_options_at_top || $upload_review_mode){include '../include/edit_upload_options.php';}
-
 
 $use=$ref;
 
@@ -1608,14 +1606,18 @@ if($collapsible_sections)
   <div id="CollapsibleSections">
      <?php
   }
-
-
+ 
  if ($display_any_fields)
  {
  ?>
 
 <?php if (!$upload_review_mode) { ?>
-<br /><br /><?php hook('addcollapsiblesection'); ?><h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
+<br />
+<br />
+<?php hook('addcollapsiblesection'); 
+if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_options()){include '../include/edit_upload_options.php';}
+?>
+<h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo $lang["resourcemetadata"]?></h2><?php
  } 
 
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
@@ -2121,11 +2123,8 @@ if($disablenavlinks)
         <?php
         }
         
-if (!$edit_upload_options_at_top){include '../include/edit_upload_options.php';}
-
+if (!$edit_upload_options_at_top && display_upload_options()){include '../include/edit_upload_options.php';}
 ?>
-
-
 </div>
 
 <?php 

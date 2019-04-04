@@ -1479,7 +1479,7 @@ if ($allowed_extensions!="" && $alternative==''){
 </div>	
 <?php
 hook ("beforepluploadform");
-if($replace_resource != '' || $replace != '' || $upload_then_edit)
+if(($replace_resource != '' || $replace != '' || $upload_then_edit) && (display_upload_options() || $replace_resource_preserve_option))
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
@@ -1542,7 +1542,7 @@ if($replace_resource != '' || $replace != '' || $upload_then_edit)
     In the other upload workflows this checkbox is shown in a previous page. */
     if (!hook("replacemetadatacheckbox")) 
         {
-        if (getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="")
+        if ((getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="") && $metadata_read)
             { ?>
             <div class="Question">
                 <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if (getval("no_exif","")=="no"){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
