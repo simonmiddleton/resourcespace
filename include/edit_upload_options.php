@@ -414,4 +414,10 @@ if($on_upload)
     </script>
     <?php
     }
+    else if ($edit_upload_options_at_top)
+    {
+        ?>
+        </div> <!-- End of Upload options -->
+        <?php
+    }
 endif; # hook replaceuploadoptions

@@ -27,7 +27,11 @@ $offset                                 = getvalescaped('offset', '', true);
 $order_by                               = getvalescaped('order_by', '');
 // This is the archive state for searching, NOT the archive state to be set from the form POST
 $archive                                = getvalescaped('archive', '', true);
+
 $setarchivestate                        = getvalescaped('status', '', true);
+// Validate this workflow state is permitted or set the default if nothing passed 
+$setarchivestate                        = get_default_archive_state($setarchivestate);
+
 $alternative                            = getvalescaped('alternative', ''); # Batch upload alternative files
 $replace                                = getvalescaped('replace', ''); # Replace Resource Batch
 $replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
@@ -610,14 +614,12 @@ if ($_FILES)
                             // Usually, this happens when a user had from the first time upload_then_edit mode on
                             if(false === $ref)
                                 {
-                                $ref = create_resource($resource_type);
+                                $ref = create_resource($resource_type, $setarchivestate);
                                 }
-
-                            if(checkperm("e{$setarchivestate}"))
-                                {
-                                update_archive_status($ref, $setarchivestate);
-                                }
-
+                            
+                            // Check valid requested state by calling function that checks permissions
+                            update_archive_status($ref, $setarchivestate);
+                            
                             if($upload_then_edit && $upload_here)
                                 {
                                 if(!empty(get_upload_here_selected_nodes($search, array())))
@@ -1477,7 +1479,7 @@ if ($allowed_extensions!="" && $alternative==''){
 </div>	
 <?php
 hook ("beforepluploadform");
-if($replace_resource != '' || $replace != '' || $upload_then_edit)
+if(($replace_resource != '' || $replace != '' || $upload_then_edit) && (display_upload_options() || $replace_resource_preserve_option))
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
@@ -1540,7 +1542,7 @@ if($replace_resource != '' || $replace != '' || $upload_then_edit)
     In the other upload workflows this checkbox is shown in a previous page. */
     if (!hook("replacemetadatacheckbox")) 
         {
-        if (getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="")
+        if ((getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="") && $metadata_read)
             { ?>
             <div class="Question">
                 <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if (getval("no_exif","")=="no"){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
