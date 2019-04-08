@@ -1001,8 +1001,10 @@ else if(1 == $resource['has_image'])
                     // Set the width and height of the image otherwise if the source of the file
                     // is fetched from download.php, Annotorious will not be able to determine its
                     // size
-                    preview_image_copy.width(<?php echo $image_width; ?>);
-                    preview_image_copy.height(<?php echo $image_height; ?>);
+                    var preview_image_width=preview_image.width();
+                    var preview_image_height=preview_image.height();
+                    preview_image_copy.width( preview_image_width );
+                    preview_image_copy.height( preview_image_height );
 
                     preview_image_copy.appendTo(preview_image_link.parent());
                     preview_image_link.hide();
