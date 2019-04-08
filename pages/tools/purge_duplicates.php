@@ -84,7 +84,8 @@ foreach($duplicates as $duplicate)
     if($delete_permanently)
         {
         logScript("Deleting permanently resource #{$duplicate['ref']}");
-        delete_resource($duplicate['ref']);
+
+        unset($resource_deletion_state);
         delete_resource($duplicate['ref']);
         }
     else
