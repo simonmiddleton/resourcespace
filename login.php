@@ -200,6 +200,27 @@ if (!hook("replaceloginform")) {
 		</div> 
 <?php } ?>
 
+        <div class="Question">
+            <label for="user_local_timezone"><?php echo $lang["local_tz"]; ?></label>
+            <select id="user_local_tz" class="stdwidth" name="user_local_timezone">
+            <?php
+            foreach(timezone_identifiers_list() as $timezone)
+                {
+                ?>
+                <option value="<?php echo $timezone; ?>"><?php echo $timezone; ?></option>
+                <?php
+                }
+                ?>
+            </select>
+            <script>
+            jQuery(document).ready(function() {
+                var user_local_tz = detect_local_timezone();
+                jQuery('#user_local_tz').val(user_local_tz);
+            });
+            </script>
+            <div class="clearerleft"></div>
+        </div>
+
 		<div class="Question">
 			<label for="username"><?php echo $lang["username"]?> </label>
 			<input type="text" name="username" id="username" class="stdwidth" <?php if (!$login_autocomplete) { ?>AUTOCOMPLETE="OFF"<?php } ?> value="<?php echo htmlspecialchars(getval("username","")) ?>" />
