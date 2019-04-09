@@ -2703,7 +2703,7 @@ function new_featured_collection_form(array $themearray = array())
             <?php generateFormToken("new_collection_form"); ?>
             <div class="Question">
                 <label for="collectionname" ><?php echo $lang["collectionname"] ?></label>
-                <input type="text" name="collectionname"></input>
+                <input type="text" name="collectionname" required="true"></input>
                 <div class="clearleft"></div>
             </div>
 
