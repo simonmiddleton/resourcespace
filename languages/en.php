@@ -1664,6 +1664,8 @@ $lang["shouldbeormore"]="should be ? or greater"; # E.g. should be 200M or great
 $lang["config_file"]="(config: %file)"; # %file will be replaced, e.g. (config: /etc/php5/apache2/php.ini)
 $lang['large_file_support_64_bit'] = 'Large file support (64 bit platform)';
 $lang['large_file_warning_32_bit'] = 'WARNING: Running 32 bit PHP. Files larger than 2GB will not be supported.';
+$lang['server_timezone_check'] = 'PHP timezone is the same as the one MySQL uses';
+$lang['server_timezone_check_fail'] = 'PHP timezone is "%phptz%" and MySQL timezone is "%mysqltz%"';
 
 $lang["starsminsearch"]="Stars (minimum)";
 $lang["anynumberofstars"]="Any number of stars";
