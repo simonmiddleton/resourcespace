@@ -678,11 +678,12 @@ if ($_FILES)
                                     $view_title_field_escaped = escape_check($view_title_field);
 
                                     $resource_detail = sql_query ("
-                                                 SELECT r.ref, r.file_extension, rd.value
-                                                   FROM resource r
-                                        LEFT OUTER JOIN resource_data AS rd ON r.ref = rd.resource
-                                                  WHERE r.ref = '{$ref_escaped}'
-                                                    AND rd.resource_type_field = '{$view_title_field_escaped}'");
+                                        SELECT r.ref, r.file_extension, rd.value
+                                        FROM resource r
+                                        LEFT JOIN resource_data AS rd ON r.ref = rd.resource
+                                        AND rd.resource_type_field = '{$view_title_field_escaped}'
+                                        WHERE r.ref = '{$ref_escaped}'
+                                                    ");
 
                                     $new_auto_generated_title = str_replace(
                                         array('%title', '%resource', '%extension'),
