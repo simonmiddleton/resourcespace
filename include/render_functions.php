@@ -1306,7 +1306,7 @@ function render_access_key_tr(array $record)
         // For resource
         $link      = $baseurl . '?r=' . urlencode($record['resource']) . '&k=' . urlencode($record['access_key']);
         $type      = $lang['share-resource'];
-        $edit_link = sprintf('%spages/resource_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=',
+        $edit_link = sprintf('%spages/resource_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s',
             $baseurl_short,
             urlencode($record['resource']),
             urlencode($record['access_key']),
@@ -1320,7 +1320,7 @@ function render_access_key_tr(array $record)
         // For collection
         $link      = $baseurl . '?c=' . urlencode($record['collection']) . '&k=' . urlencode($record['access_key']);
         $type      = $lang['sharecollection'];
-        $edit_link = sprintf('%spages/collection_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=',
+        $edit_link = sprintf('%spages/collection_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s',
             $baseurl_short,
             urlencode($record['collection']),
             urlencode($record['access_key']),
