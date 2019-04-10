@@ -3808,11 +3808,13 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
     if(trim($field['display_condition']) == "")
         {
-        return true;
+        return true;  # This field does not have a display condition, so it should be displayed
         }
 
+    // Assume the candidate field is to be displayed    
     $displaycondition = true;
-    $s                = explode(';', $field['display_condition']);
+    // Break down into array of conditions
+    $conditions       = explode(';', $field['display_condition']);
     $condref          = 0;
     $scriptconditions = array();
     
@@ -3827,11 +3829,15 @@ function check_display_condition($n, array $field, array $fields, $render_js)
     // On upload, check against the posted nodes as save_resource_data() saves nodes after going through all the fields
     $user_set_values = getval('nodes', array());
 
-    foreach ($s as $condition) # Check each condition
+    foreach ($conditions as $condition) # Check each condition
         {
         $displayconditioncheck = false;
-        $s                     = explode('=', $condition);
 
+        // Break this condition down into fieldname $s[0] and value(s) $s[1]
+        $s = explode('=', $condition);
+
+        // Process all fields which are referenced by display condition(s) on the candidate field
+        // For each referenced field, render javascript to trigger when the referenced field changes
         for ($cf=0;$cf<count($display_check_data);$cf++) # Check each field to see if needs to be checked
             {
             // Work out nodes submitted by user, if any
@@ -3850,6 +3856,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 $ui_selected_node_values = $user_set_values[$display_check_data[$cf]['ref']];
                 }
 
+            // Does the fieldname on this condition match the field being processed    
             if($s[0] == $display_check_data[$cf]['name']) # this field needs to be checked
                 {
                 $display_check_data[$cf]['nodes'] = get_nodes($display_check_data[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'] ? true : false));
@@ -3860,6 +3867,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 $scriptconditions[$condref]['type']  = $display_check_data[$cf]['type'];
 
                 $checkvalues=$s[1];
+                // Break down values delimited with pipe characters
                 $validvalues=explode("|",mb_strtoupper($checkvalues));
                 $scriptconditions[$condref]['valid'] = array();
                 $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
@@ -3905,6 +3913,9 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
                 // Check display conditions
                 // Certain fixed list types allow for multiple nodes to be passed at the same time
+
+                // Generate a javascript function specific to the field with the display condition
+                // This function will be invoked whenever a field referenced by the display condition changes
                 if(in_array($display_check_data[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
                     {
                     if(FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'])
@@ -3913,10 +3924,17 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         <script>
                         jQuery(document).ready(function()
                             {
-                            checkDisplayCondition<?php echo $field['ref']; ?>(node);
+                            <?php
+                            if($GLOBALS["multiple"] === false)
+                                {
+                                ?>
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                <?php
+                                }
+                            ?>
                             jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
                                 {
-                                checkDisplayCondition<?php echo $field['ref']; ?>(node);
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
                                 });
                             });
                         </script>
@@ -3931,10 +3949,17 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         <script>
                         jQuery(document).ready(function()
                             {
-                            checkDisplayCondition<?php echo $field['ref']; ?>(node);
+                            <?php
+                            if($GLOBALS["multiple"] === false)
+                                {
+                                ?>
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                <?php
+                                }
+                            ?>
                             jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
                                 {
-                                checkDisplayCondition<?php echo $field['ref']; ?>(node);
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
                                 });
                             });
                         </script>
@@ -3966,13 +3991,13 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         if($GLOBALS["multiple"] === false)
                             {
                             ?>
-                            checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
                             <?php
                             }
                         ?>
                         jQuery('<?php echo $jquery_selector; ?>').change(function ()
                             {
-                            checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
                             });
                         });
                     </script>
@@ -3984,7 +4009,14 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     <script type="text/javascript">
                     jQuery(document).ready(function()
                         {
-                        checkDisplayCondition<?php echo $field['ref']; ?>();
+                        <?php
+                        if($GLOBALS["multiple"] === false)
+                            {
+                            ?>
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            <?php
+                            }
+                        ?>
                         jQuery('#field_<?php echo $display_check_data[$cf]["ref"]; ?>').change(function ()
                             {
                             checkDisplayCondition<?php echo $field['ref']; ?>();
@@ -3995,20 +4027,23 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     }
                 }
 
-        } # see if next field needs to be checked
-    $condref++;
+            } # see if next field needs to be checked
+        $condref++;
 
-    } # check next condition
+        } # check next condition
 
     if($render_js)
         {
         ?>
         <script type="text/javascript">
-        function checkDisplayCondition<?php echo $field["ref"];?>(node)
+        function checkDisplayCondition<?php echo $field["ref"];?>()
             {
+            // Get current display status
             field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+            // Assume field will not be displayed
             newfield<?php echo $field['ref']; ?>status = 'none';
             newfield<?php echo $field['ref']; ?>show   = false;
+            // TODO Explain meaning of provisional
             newfield<?php echo $field['ref']; ?>provisional = true;
             <?php
             foreach($scriptconditions as $scriptcondition)
@@ -4027,6 +4062,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     )
                 */
                 ?>
+                // TODO Explain meaning of subcheck
                 newfield<?php echo $field['ref']; ?>subcheck = false;
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
                 <?php
@@ -4066,6 +4102,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     <?php
                     }
                 ?>
+                // TODO Explain this
                 if(!newfield<?php echo $field['ref']; ?>subcheck)
                     {
                     newfield<?php echo $field['ref']; ?>provisional = false;
@@ -4074,11 +4111,13 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 }
                 ?>
 
+                // Is field to be displayed
                 if(newfield<?php echo $field['ref']; ?>provisional)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
                     }
 
+                // If display status changed then toggle the visibility
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
                     jQuery('#question_<?php echo $n ?>').slideToggle();
