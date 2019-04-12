@@ -962,19 +962,19 @@ function save_resource_data_multi($collection,$editsearch = array())
 					else
 						{
 						// Range has been passed via normal inputs, construct the value from the date/time dropdowns
-						$date_parts=array("start","end");
+						$date_parts=array("_start_","_end_");
 						
 						foreach($date_parts as $date_part)
 							{
-							$val = getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "year","");
+							$val = getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "year","");
 							if (intval($val)<=0) 
 								{
 								$val="";
 								}
-							elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "month",""))!="") 
+							elseif (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "month",""))!="") 
 								{
 								$val.="-" . $field;
-								if (($field=getvalescaped("field_" . $fields[$n]["ref"] . "_" . $date_part . "day",""))!="") 
+								if (($field=getvalescaped("field_" . $fields[$n]["ref"] . $date_part . "day",""))!="") 
 									{
 									$val.="-" . $field;
 									}
