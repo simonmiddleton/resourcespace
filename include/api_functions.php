@@ -78,11 +78,16 @@ function execute_api_call($query,$pretty=false)
     $result = call_user_func_array("api_" . $function, $setparams);
     if($pretty)
         {
+            debug("API: json_encode() using JSON_PRETTY_PRINT");
             return json_encode($result,(defined('JSON_PRETTY_PRINT')?JSON_PRETTY_PRINT:0));
         }
     else
         {
-            return json_encode($result);
+            debug("API: json_encode()");
+            $json_encoded_result = json_encode($result);
+
+            debug("API: JSON error: " . json_last_error_msg());
+            return $json_encoded_result;
         }
     }
     
