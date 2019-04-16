@@ -2686,8 +2686,34 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         global $email_notify;
         $bcc.="," . $email_notify;
         }
-    # No/invalid email address? Exit.
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {return false;}
+
+    /*
+    Checking email is valid. Email argument can be an RFC 2822 compliant string so handle multi addresses as well
+    IMPORTANT: FILTER_VALIDATE_EMAIL is not fully RFC 2822 compliant, an email like "Another User <anotheruser@example.com>"
+    will be invalid
+    */
+    $rfc_2822_multi_delimiters = array(', ', ',');
+    $email = str_replace($rfc_2822_multi_delimiters, '**', $email);
+    $check_emails = explode('**', $email);
+    $valid_emails = array();
+    foreach($check_emails as $check_email)
+        {
+        if(!filter_var($check_email, FILTER_VALIDATE_EMAIL))
+            {
+            debug("send_mail: Invalid e-mail address - '{$check_email}'");
+            continue;
+            }
+
+        $valid_emails[] = $check_email;
+        }
+    // No/invalid email address? Exit.
+    if(empty($valid_emails))
+        {
+        debug("send_mail: No valid e-mail address found!");
+        return false;
+        }
+    // Valid emails? then make it back into an RFC 2822 compliant string
+    $email = implode(', ', $valid_emails);
     
     # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
     global $use_phpmailer;
