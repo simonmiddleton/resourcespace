@@ -417,6 +417,7 @@ if ($_FILES)
         // If this chunk-file-filename has been processed, don't process it again
         if($chunk == $processed_file_content[0] && $queue_index == $processed_file_content[1])
             {
+            debug("PLUPLOAD - Duplicate chunk [" . $chunk . "] of file " . $plfilename . " found at index [" . $queue_index . "] in the upload queue");
             die('{"jsonrpc" : "2.0", "error" : {"code": 109, "message": "Duplicate chunk [' . $chunk . '] of file ' . $plfilename . ' found at index [' . $queue_index . '] in the upload queue"}, "id" : "id"}');
             }
         }
