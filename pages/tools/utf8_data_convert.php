@@ -26,13 +26,14 @@ function checkEncoding($string, $string_encoding)
 
 
 $dry_run = false;
+$show_sql = false;
 // Tables that should be looked at
 $tables = array(
     'resource',
     'resource_data',
     'node',
 );
-$encodings = array('ASCII', 'ISO-8859-1');
+$encodings = array('UTF-8', 'ISO-8859-1', 'ASCII');
 $to_encoding = 'UTF-8';
 
 // Script options (if required)
@@ -42,6 +43,7 @@ $cli_long_options  = array(
     'table:',
     'from-encoding:',
     'to-encoding:',
+    'show-sql',
 );
 foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option_value)
     {
@@ -58,6 +60,11 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
     if($option_name == 'dry-run')
         {
         $dry_run = true;
+        }
+
+    if($option_name == 'show-sql')
+        {
+        $show_sql = true;
         }
 
     /*
@@ -89,8 +96,6 @@ logScript("Converting data to UTF-8 (useful when migrating a database from a non
 logScript("Running with:");
 logScript("dry-run = " . ($dry_run ? 'true' : 'false') . PHP_EOL);
 
-// We add UTF-8 at the end as an ISO-8859-1 encoded string can be detected as UTF-8 (ie. detect order matters)
-$encodings[] = "UTF-8";
 mb_detect_order($encodings);
 
 $query_log = "";
@@ -203,6 +208,9 @@ if(in_array('node', $tables))
         }
     }
 
-logScript("");
-logScript("Query log:" . PHP_EOL . PHP_EOL . $query_log);
+if($show_sql)
+    {
+    logScript("");
+    logScript("Query log:" . PHP_EOL . PHP_EOL . $query_log);
+    }
 logScript("Completed!");
