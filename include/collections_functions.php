@@ -2239,9 +2239,9 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	$search_collection = explode(',', $search_collection); // just get the number
     	$search_collection = escape_check($search_collection[0]);
     	}
-        
+
     $urlparams = array(
-        "search"      =>  (isset($collection_data['ref']) ? "!collection" . $collection_data['ref'] : $search),
+        "search"      =>  $search,
         "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
         "ref"         =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
         "restypes"    =>  isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "",
@@ -2517,11 +2517,20 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
         
     // View all resources
-    if(($k=="" || $internal_share_access) && (isset($collection_data["c"]) && $collection_data["c"]>0) || (is_array($result) && count($result) > 0))
+    if(
+        !$top_actions // View all resources makes sense only from collection bar context
+        && (
+            ($k=="" || $internal_share_access)
+            && (isset($collection_data["c"]) && $collection_data["c"] > 0)
+            || (is_array($result) && count($result) > 0)
+        )
+    )
         {
-		// Force ascending order
-		$tempurlparams = array();
-		$tempurlparams['sort']="ASC";
+        $tempurlparams = array(
+            'sort' => 'ASC',
+            'search' => (isset($collection_data['ref']) ? "!collection{$collection_data['ref']}" : $search),
+        );
+
         $data_attribute['url'] = generateURL($baseurl_short . "pages/search.php",$urlparams,$tempurlparams);
         $options[$o]['value']='view_all_resources_in_collection';
 		$options[$o]['label']=$lang['view_all_resources'];
@@ -2538,7 +2547,17 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         {
         if($allow_multi_edit)
             {
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams);
+            $extra_params = array(
+                'editsearchresults' => 'true',
+            );
+
+            // The edit all action for the collection bar will always be a special search !collection[ID]
+            if(isset($collection_data['ref']) && !$top_actions && $pagename == 'collections')
+                {
+                $extra_params['search'] = "!collection{$collection_data['ref']}";
+                }
+
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php", $urlparams, $extra_params);
             $options[$o]['value']='edit_all_in_collection';
             $options[$o]['label']=$lang['edit_all_resources'];
             $options[$o]['data_attr']=$data_attribute;

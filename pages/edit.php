@@ -182,46 +182,30 @@ if ($go!="")
 
 $collection=getvalescaped("collection",0,true);
 $editsearch = getval("editsearchresults","") != "";
-if ($collection != 0 || $editsearch) 
+if($editsearch)
     {
+    debug("edit.php: editing multiple items...");
+    debug("edit.php: \$search = {$search}");
+    debug("edit.php: \$collection = {$collection}");
+    debug("edit.php: \$editsearch = " . ($editsearch ? 'true' : 'false'));
+
+    $multiple = true;
+    $edit_autosave = false; # Do not allow auto saving for batch editing.
+
+    // Check all resources are editable
+    $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false);
+    $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true);
+    $items       = array_column($edititems,"ref");
+    if(count($searchitems) != count($edititems))
+        {
+        $error = $lang['error-permissiondenied'];
+        error_alert($error);
+        exit();
+        }
+
+    $last_resource_edit = get_last_resource_edit_array($items); 
+
     # If editing multiple items, use the first resource as the template
-    $multiple=true;
-    $edit_autosave=false; # Do not allow auto saving for batch editing.
-    if ($collection != 0)
-        {
-        $items=get_collection_resources($collection);  
-        if (count($items)==0) 
-            {
-           $error=$lang['error-cannoteditemptycollection'];
-           error_alert($error);
-           exit();
-            }
-        
-        // Check all resources are editable
-        if (!allow_multi_edit($collection))
-            {
-            $error=$lang['error-permissiondenied'];
-            error_alert($error);
-            exit();
-            }
-            
-        $last_resource_edit = get_last_resource_edit($collection); 
-        }
-    else
-        {
-        // Check all resources are editable
-        $searchitems    = do_search($search,$restypes,'resourceid',$archive,-1,$sort,false,0,false,false,'',false,false, true, false);
-        $edititems      = do_search($search,$restypes,'resourceid',$archive,-1,$sort,false,0,false,false,'',false,false, true, true);
-        $items          = array_column($edititems,"ref");
-        if (count($searchitems) != count($edititems))
-            {
-            $error=$lang['error-permissiondenied'];
-            error_alert($error);
-            exit();
-            }
-        $last_resource_edit = get_last_resource_edit_array($items);  
-        }
-        
     $ref = $items[0];
     }
 else
