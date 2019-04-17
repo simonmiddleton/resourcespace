@@ -143,6 +143,7 @@ function logScript($message, $file = null)
 *                                    );
 * @param  string $table  Table name (e.g resource_type_field, user, resource)
 * @param  integer $table_reference  ID of the record in the referred table
+* @param  boolean $count  Switch for if the result should be a single count or the result set
 * 
 * @return array
 */
