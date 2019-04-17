@@ -70,7 +70,7 @@ $url = generateURL("{$baseurl_short}pages/admin/admin_system_log.php",
 );
 $offset = (int) getval('offset', 0, true);
 $per_page = (int) getval('per_page_list', $default_perpage_list, true);
-$all_records = count(get_activity_log($log_search, NULL, NULL, $log_tables_where_statements, $table, $table_reference));
+$all_records = get_activity_log($log_search, NULL, NULL, $log_tables_where_statements, $table, $table_reference, true);
 $totalpages = ceil($all_records / $per_page);
 $curpage = floor($offset / $per_page) + 1;
 $jumpcount = 0;
