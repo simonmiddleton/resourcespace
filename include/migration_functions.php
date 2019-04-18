@@ -177,8 +177,10 @@ function migrate_search_filter($filtertext)
         }
     else
         {
+        $truncated_filter_name = mb_strcut($filtertext, 0, 200);
+
         // Create filter. All migrated filters will have AND rules
-        sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($filtertext) . "','" . RS_FILTER_ALL  . "')");
+        sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($truncated_filter_name) . "','" . RS_FILTER_ALL  . "')");
         $filterid = sql_insert_id();
         $logtext .= "FILTER MIGRATION: - Created new filter. ID = " . $filterid . "'\n";
         }
@@ -217,9 +219,10 @@ function migrate_search_filter($filtertext)
             {
             $all_fields_index = array_search($rulefield, array_column($all_fields, 'name'));
             $field_ref = $all_fields[$all_fields_index]["ref"];
+            $field_type = $all_fields[$all_fields_index]["type"];
             $logtext .= "FILTER MIGRATION: --- filter field name: '" . $rulefield. "' , field id #" . $field_ref . "\n";
-            
-            $field_nodes = get_nodes($field_ref,NULL);
+
+            $field_nodes = get_nodes($field_ref, NULL, (FIELD_TYPE_CATEGORY_TREE == $field_type ? true : false));
             $all_valid_nodes = array_merge($all_valid_nodes,$field_nodes);
             }
             
@@ -242,7 +245,7 @@ function migrate_search_filter($filtertext)
                 $logtext .=  "FILTER MIGRATION: --- Invalid field option: '" . $rulevalue . "', skipping\n";
                 }
             }
-        
+
         debug($logtext);       
         if(count($errors) > 0)
             {
