@@ -86,7 +86,12 @@ function execute_api_call($query,$pretty=false)
             debug("API: json_encode()");
             $json_encoded_result = json_encode($result);
 
-            debug("API: JSON error: " . json_last_error_msg());
+            if(json_last_error() !== JSON_ERROR_NONE)
+                {
+                debug("API: JSON error: " . json_last_error_msg());
+                debug("API: JSON error when \$result = " . print_r($result, true));
+                }
+
             return $json_encoded_result;
         }
     }
