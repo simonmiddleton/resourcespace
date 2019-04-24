@@ -2224,6 +2224,13 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	$search_collection = escape_check($search_collection[0]);
     	}
 
+    // Collection bar actions should always be a special search !collection[ID] (exceptions might arise but most of the 
+    // time it should be handled using the special search)
+    if(isset($collection_data['ref']) && !$top_actions && $pagename == 'collections')
+        {
+        $search = "!collection{$collection_data['ref']}";
+        }
+
     $urlparams = array(
         "search"      =>  $search,
         "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
@@ -2534,12 +2541,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             $extra_params = array(
                 'editsearchresults' => 'true',
             );
-
-            // The edit all action for the collection bar will always be a special search !collection[ID]
-            if(isset($collection_data['ref']) && !$top_actions && $pagename == 'collections')
-                {
-                $extra_params['search'] = "!collection{$collection_data['ref']}";
-                }
 
             $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php", $urlparams, $extra_params);
             $options[$o]['value']='edit_all_in_collection';
