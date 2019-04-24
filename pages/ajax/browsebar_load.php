@@ -94,6 +94,7 @@ switch ($returntype)
                 $return_items[$n]["expandable"] = "true";            
                 $tgtparams = array();
                 $tgtparams["restypes"]  = $restype["ref"];
+                $tgtparams["noreload"] = "true";
                 $tgtparams["search"]  = "";
                 $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
                 $return_items[$n]["link"] = $tgturl;
@@ -205,6 +206,7 @@ switch ($returntype)
                 
                 $tgtparams = array();
                 $tgtparams["search"]  = NODE_TOKEN_PREFIX . $node["ref"];
+                $tgtparams["noreload"] = "true";
                 $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams, $target_search);
                 $return_items[$n]["link"] = $tgturl;
                 $return_items[$n]["modal"] = false;
@@ -261,6 +263,7 @@ switch ($returntype)
                 $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";            
                 $tgtparams = array();
                 $tgtparams["search"]  = NODE_TOKEN_PREFIX . $node["ref"];
+                $tgtparams["noreload"] = "true";
                 $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams, $target_search);
                 $return_items[$n]["link"] = $tgturl;
                 $return_items[$n]["modal"] = false;
