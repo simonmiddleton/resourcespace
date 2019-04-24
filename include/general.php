@@ -351,7 +351,9 @@ function get_resource_data($ref,$cache=true)
                     $user = $userref;
                     }
                 else {$user = -1;}
-                $wait = sql_query("insert into resource (ref,resource_type,created_by) values ('" . escape_check($ref) . "','$default_resource_type','$user')");
+
+                $default_archive_state = escape_check(get_default_archive_state());
+                $wait = sql_query("insert into resource (ref,resource_type,created_by, archive) values ('" . escape_check($ref) . "','$default_resource_type','$user', '{$default_archive_state}')");
                 $resource = sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
                 }
             }

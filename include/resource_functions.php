@@ -658,10 +658,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 }
             else
                 {
-                if($setarchivestate != $oldarchive && 0 < $ref)
+                // update archive status if different (doesn't matter whether it is a user template or a genuine resource)
+                if($setarchivestate != $oldarchive)
                     {
                     update_archive_status($ref,$setarchivestate,array($oldarchive));
-                    }                
+                    }
+
 				$new_checksums["status"] = $setarchivestate;
                 }
 			}
@@ -5442,7 +5444,7 @@ function get_last_resource_edit_array($resources = array())
 function get_default_archive_state($requestedstate = "")
     {
     global $override_status_default;
-    
+
     if ((string)(int)$requestedstate == (string)$requestedstate && checkperm("e" . $requestedstate))
         {
         return $requestedstate;
