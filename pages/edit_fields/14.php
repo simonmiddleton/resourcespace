@@ -11,5 +11,6 @@ $end_dm=$end_dd=$end_dh=$end__di=-1;
 
 $rangedates = explode(",",$value);
 natsort($rangedates);
+$value = implode(",",$rangedates);
 render_date_range_field($name,$value,false,false,$field);
 	 
