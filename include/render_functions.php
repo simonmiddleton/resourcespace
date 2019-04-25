@@ -1421,6 +1421,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
   $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
   $upload_review_lock_metadata, $locked_fields, $lastedited, $copyfrom, $fields;
 
+  debug("display_field: display_field(\$n = {$n}, \$field = {$field['ref']}, \$newtab = {$newtab}, \$modal = {$modal});");
+
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
   
