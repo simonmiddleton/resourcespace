@@ -241,7 +241,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 						$rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
 						if(!preg_match($rangeregex,$date_edtf,$matches))
 							{
-							$errors[$fields[$n]["ref"]] = $lang["information-regexp_fail"] . " : " . $val;
+							$errors[$fields[$n]["ref"]] = $lang["information-regexp_fail"] . " : " . $date_edtf;
 							continue;
 							}
                         if(is_numeric($fields[$n]["linked_data_field"]))
