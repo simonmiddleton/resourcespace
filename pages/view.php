@@ -807,7 +807,7 @@ else if(1 == $resource['has_image'])
 
     // PDFjs works only for PDF files. Because this requires the PDF file itself, we can only use this mode if user has
     // full access to the resource.
-    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access === 0)
+    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access == 0)
         {
         // IMPORTANT: never show the real file path with this feature
         $hide_real_filepath_initial = $hide_real_filepath;
@@ -1645,7 +1645,7 @@ hook ("resourceactions") ?>
 		</a></li><?php 
 		}
 
-    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access === 0)
+    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access == 0)
         {
         $find_in_pdf_url = generateURL("{$baseurl_short}pages/search_text_in_pdf.php", array( 'ref' => $ref));
         ?>
