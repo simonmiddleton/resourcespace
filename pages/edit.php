@@ -265,7 +265,7 @@ $uploadparams["resource_type"] = $resource['resource_type'];
 
 // Resource archive (ie user template - negative resource ID) can be default only when user actually gets to set it otherwise
 // makes no sense in using it and we should let the system decide based on configuration and permissions what it should use.
-$default_setarchivestate = ($show_status_and_access_on_upload ? $resource['archive'] : '');
+$default_setarchivestate = ($show_status_and_access_on_upload || $resource['ref'] > 0 ? $resource['archive'] : '');
 $setarchivestate = getvalescaped('status', $default_setarchivestate, TRUE);
 // Validate this is permitted
 $setarchivestate = get_default_archive_state($setarchivestate);
