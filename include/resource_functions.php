@@ -3197,7 +3197,7 @@ function notify_user_contributed_submitted($refs,$collection=0)
         }
     else
         {
-        $linkurl = $baseurl . "/pages/search.php?search=!contributions" . $userref . "&archive=-1";
+        $templatevars['url'] = $baseurl . "/pages/search.php?search=!contributions" . $userref . "&archive=-1";
         }
 	
 	$templatevars['list']=$list;
