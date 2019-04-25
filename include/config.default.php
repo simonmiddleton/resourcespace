@@ -3385,6 +3385,10 @@ $upload_review_lock_metadata = false;
 # requires $offline_job_queue=true;
 $upload_then_process=false;
 
+// Set to TRUE to review resources based on resource ID (starting from most recent) when using upload then edit mode.
+// Requires "$upload_then_edit = true;"
+$upload_review_mode_review_by_resourceid = false;
+
 # Uncomment and set to an archive state where $upload_then_process files are stored before processing.
 # It is strongly recommended that a unique archive state be created to handle this
 # $upload_then_process_holding_state=-3;
