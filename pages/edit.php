@@ -1409,19 +1409,30 @@ if(isset($metadata_template_resource_type) && !$multiple && ($ref < 0 || $upload
         <script>
         function MetadataTemplateOptionChanged(value)
             {
-            // Undo template selection <=> clear out the form
+            $confirm_message = "<?php echo $lang['usemetadatatemplatesure']?>";
+            $resetform = false;
             if(value == '')
                 {
-                jQuery('#mainform').append(
+                $confirm_message = "<?php echo $lang['removemetadatatemplatesure'] ?>";
+                $resetform = true;
+                }
+
+            if(confirm($confirm_message))
+                {
+                if($resetform)
+                    {
+                    // Undo template selection <=> clear out the form
+                    jQuery('#mainform').append(
                     jQuery('<input type="hidden">').attr(
                         {
                         name: 'resetform',
                         value: 'true'
                         })
-                );
-                }
+                    );
+                    }
 
-            return CentralSpacePost(document.getElementById('mainform'), true);
+                return CentralSpacePost(document.getElementById('mainform'), true);
+                }
             }
         </script>
         <div class="clearerleft"></div>
