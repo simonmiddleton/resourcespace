@@ -1260,6 +1260,19 @@ function delete_resource_nodes($resourceid,$nodes=array())
     if(!is_array($nodes))
         {$nodes=array($nodes);}
     sql_query("DELETE FROM resource_node WHERE resource ='$resourceid' AND node in ('" . implode("','",$nodes) . "')"); 
+
+    $field_nodes_arr = array();
+    foreach ($nodes as $node)
+        {
+        $nodedata = array();
+        get_node($node, $nodedata);
+        $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+        }
+
+    foreach ($field_nodes_arr as $key => $value)
+        {
+        resource_log($resourceid,"e",$key,"",implode(",",$value),"");
+        }
     }
 
 
