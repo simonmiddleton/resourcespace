@@ -1227,10 +1227,11 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
 * @param integer $resource
 * @param integer $resource_type_field
 * @param boolean $detailed             Set to true to return full node details (as get_node() does)
+* @param boolean $node_sort            Set to SORT_ASC to sort nodes ascending, SORT_DESC sort nodes descending, null means do not sort
 * 
 * @return array
 */
-function get_resource_nodes($resource, $resource_type_field = null, $detailed = false)
+function get_resource_nodes($resource, $resource_type_field = null, $detailed = false, $node_sort = null)
     {
     $sql_select = 'n.ref AS `value`';
 
@@ -1244,6 +1245,18 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
     if(!is_null($resource_type_field) && is_numeric($resource_type_field))
         {
         $query .= " AND n.resource_type_field = '" . escape_check($resource_type_field) . "'";
+        }
+
+    if(!is_null($node_sort))
+        {
+        if($node_sort == SORT_ASC)
+            {
+            $query .= " ORDER BY n.ref ASC";
+            }
+        if($node_sort == SORT_DESC)
+            {
+            $query .= " ORDER BY n.ref DESC";
+            }
         }
 
     if($detailed)

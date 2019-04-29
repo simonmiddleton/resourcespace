@@ -284,10 +284,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
 								$daterangenodes[]=set_node(null, $fields[$n]["ref"], $val, null, null,true);
 								}
 							}
-						}
-						// Get currently selected nodes for this field 
-						$current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref']);
-						
+                        }
+
+                        natsort($daterangenodes);
+                        
+                        // Get currently selected nodes for this field 
+						$current_field_nodes = get_resource_nodes($ref, $fields[$n]['ref'], false, SORT_ASC);
+                                            
 						// Check if resource field data has been changed between form being loaded and submitted				
 						$post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
 						$current_cs = md5(implode(",",$current_field_nodes));						
