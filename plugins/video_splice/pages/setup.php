@@ -9,16 +9,6 @@ if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
 $page_heading = $lang['videospliceconfiguration'];
 
-if (getval("submit","")!="")
-	{
-	$resourcetype=getvalescaped("resourcetype","");
-	$videosplice_parent_field_set=getvalescaped("videosplice_parent_field","");
-	
-	$f=fopen("../config/config.php","w");
-	fwrite($f,"<?php \$videosplice_resourcetype='$resourcetype'; \$videosplice_parent_field=$videosplice_parent_field_set; ?>");
-	fclose($f);
-	redirect("pages/team/team_plugins.php");
-	}
 
 $page_def[]= config_add_single_rtype_select("videosplice_resourcetype",$lang["video_resource_type"]);
 $page_def[]= config_add_single_ftype_select("videosplice_parent_field",$lang["parent_resource_field"]);
