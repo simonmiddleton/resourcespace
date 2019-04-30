@@ -5706,13 +5706,15 @@ function get_utility_path($utilityname, &$checked_path = null)
             return $return;       
 
         case 'exiftool':
+            global $exiftool_global_options;
+
             return get_executable_path(
                 $exiftool_path,
                 array(
                     'unix' => 'exiftool',
                     'win'  => 'exiftool.exe'
                 ),
-                $checked_path);
+                $checked_path) . " {$exiftool_global_options} ";
 
         case 'antiword':
         case 'pdftotext':
