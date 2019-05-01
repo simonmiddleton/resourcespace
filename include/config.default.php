@@ -458,6 +458,16 @@ $metadata_read_default=true;
 # For example: $exiftool_no_process=array("eps","png");
 $exiftool_no_process=array();
 
+/*
+ExifTool global options - these get applied to any exiftool command run. For more information on options please see
+https://sno.phy.queensu.ca/~phil/exiftool/exiftool_pod.html#Advanced-options
+
+Example use cases:
+$exiftool_global_options = "-config '/var/www/test.Exiftool_config'"; # @see https://sno.phy.queensu.ca/~phil/exiftool/config.html
+$exiftool_global_options = "-x EXIF:CreateDate"; # exclude tag
+*/
+$exiftool_global_options = "";
+
 # Which field do we drop the original filename in to?
 $filename_field=51;
 
