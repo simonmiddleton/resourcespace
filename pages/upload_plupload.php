@@ -664,6 +664,13 @@ if ($_FILES)
                                     }
                                 }
 
+                            if($upload_then_edit && $reset_date_upload_template)
+                                {
+                                // If extracting embedded metadata than expect the date to be overriden as it would be if
+                                // upload_then_edit = false
+                                update_field($ref, $reset_date_field, date('Y-m-d H:i:s'));
+                                }
+
                             # Log this			
                             daily_stat("Resource upload",$ref);
                             
