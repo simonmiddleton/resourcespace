@@ -236,7 +236,9 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
         {
         return false;
         }
-    list($size, $return_height_width) = $size_info;
+
+    $size = $size_info['identifier'];
+    $return_height_width = $size_info['return_height_width'];
 
 	$img_path = get_resource_path($resourceid,true,$size,false);
 	if(!file_exists($img_path))
