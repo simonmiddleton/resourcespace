@@ -2739,7 +2739,7 @@ function write_metadata($path, $ref, $uniqid="")
                         if($exifappend && ($writevalue=="" || ($writevalue!="" && strpos($writtenfields[$group_tag],$writevalue)!==false)))
                             {                                                            
                             // The new value is blank or already included in what is being written, skip to next group tag
-                            continue;                                
+                            continue 2; # @see https://www.php.net/manual/en/control-structures.continue.php note
                             }                               
                         $writtenfields[$group_tag]=$writevalue;                          
                         debug ("write_metadata - updating tag " . $group_tag);
