@@ -392,7 +392,11 @@ $disk_quota_notification_email='';
 # $disk_quota_limit_size_warning_noupload=10;
 
 # Set your time zone below (default GMT)
-if (function_exists("date_default_timezone_set")) {date_default_timezone_set("GMT");}
+if (function_exists("date_default_timezone_set")) {date_default_timezone_set("UTC");}
+
+// Configuration used to be allow for date offset based on user local time zone. For this to work well the server (or 
+// whatever MySQL uses) should be on the same timezone as PHP
+$user_local_timezone = 'UTC';
 
 # IPTC header - Character encoding auto-detection
 # If using IPTC headers, specify any non-ascii characters used in your local language
