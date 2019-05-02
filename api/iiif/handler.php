@@ -74,12 +74,12 @@ else
 				
 				$img_path = get_resource_path($resourceid,true,'',false);
 				$image_size = get_original_imagesize($resourceid,$img_path);
-				$response["width"] = $image_size[1];
-				$response["height"] = $image_size[2];
+				$response["width"] = (int) $image_size[1];
+				$response["height"] = (int) $image_size[2];
 				
 				$response["sizes"] = array();
-				$response["sizes"][0]["width"] = $image_size[1];
-				$response["sizes"][0]["height"] = $image_size[2];
+				$response["sizes"][0]["width"] = (int) $image_size[1];
+				$response["sizes"][0]["height"] = (int) $image_size[2];
 				
 				$response["profile"] = array();
 				$response["profile"][] = "http://iiif.io/api/image/2/level0.json";
