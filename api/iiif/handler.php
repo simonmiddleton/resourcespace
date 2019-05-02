@@ -477,6 +477,7 @@ else
 							$response["@type"] = "oa:Annotation";
 							$response["motivation"] = "sc:painting";
                             $response["resource"] = iiif_get_image($identifier, $resourceid, $annotationid, $size_info);
+                            $response["on"] = $rooturl . $identifier . "/canvas/" . $annotationid;
 							}
 						else
 							{
