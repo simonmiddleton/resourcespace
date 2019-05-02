@@ -138,8 +138,11 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         
         // Add image (only 1 per canvas currently supported)
 		$canvases[$position]["images"] = array();
-        $canvases[$position]["images"][] = iiif_get_image($identifier,$iiif_result["ref"],$position,$size);	
-//exit(print_r($canvases[$position]["images"]));		
+        $size_info = array(
+            'identifier' => $size,
+            'return_height_width' => true,
+        );
+        $canvases[$position]["images"][] = iiif_get_image($identifier, $iiif_result["ref"], $position, $size_info);
         }
     
 	if($sequencekeys)
@@ -184,8 +187,8 @@ function iiif_get_thumbnail($resourceid)
 	 // Get the size of the images
     if ((list($tw,$th) = @getimagesize($img_path))!==false)
         {
-        $thumbnail["height"] = $th;
-        $thumbnail["width"] = $tw;   
+        $thumbnail["height"] = (int) $th;
+        $thumbnail["width"] = (int) $tw;   
         }
     else
         {
@@ -209,17 +212,32 @@ function iiif_get_thumbnail($resourceid)
 * @uses get_original_imagesize()
 * @uses get_resource_path()
 * 
-* @param integer $identifier		IIIF identifier (this associates resources via the metadata field set as $iiif_identifier_field
-* @param integer $resourceid		Resource ID
-* @param string $position			The canvas identifier, i..e position in the sequence. If $iiif_sequence_field is defined
-* @param string $size				ResourceSpace size identifier - we use 'hpr' if the original file is not a JPG file
- it will be the value of this metadata field for the given resource
+* @param integer $identifier  IIIF identifier (this associates resources via the metadata field set as $iiif_identifier_field
+* @param integer $resourceid  Resource ID
+* @param string $position     The canvas identifier, i..e position in the sequence. If $iiif_sequence_field is defined
+* @param array $size          ResourceSpace size information. Required information: identifier and whether it 
+*                             requires to return height & width back (e.g annotations don't require it). 
+*                             Please note for the identifier - we use 'hpr' if the original file is not a JPG file it 
+*                             will be the value of this metadata field for the given resource
+*                             Example:
+*                             $size_info = array(
+*                               'identifier'          => 'hpr',
+*                               'return_height_width' => true
+*                             );
 * 
 * @return array
 */	
-function iiif_get_image($identifier,$resourceid,$position, $size)
+function iiif_get_image($identifier,$resourceid,$position, array $size_info)
     {
     global $rooturl,$rootimageurl;
+
+    // Quick validation of the size_info param
+    if(empty($size_info) || (!isset($size_info['identifier']) && !isset($size_info['return_height_width'])))
+        {
+        return false;
+        }
+    list($size, $return_height_width) = $size_info;
+
 	$img_path = get_resource_path($resourceid,true,$size,false);
 	if(!file_exists($img_path))
             {
@@ -243,8 +261,12 @@ function iiif_get_image($identifier,$resourceid,$position, $size)
 	$images["on"] = $rooturl . $identifier . "/canvas/" . $position;
 	
 	$image_size = get_original_imagesize($resourceid,$img_path);
-	
-	$images["height"] = intval($image_size[2]);
-	$images["width"] = intval($image_size[1]);
-	return $images;  
+
+    if($return_height_width)
+        {
+        $images["height"] = intval($image_size[2]);
+        $images["width"] = intval($image_size[1]);
+        }
+
+    return $images;  
 	}
