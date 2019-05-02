@@ -462,6 +462,7 @@ else
 							if($iiif_result["iiif_position"] == $annotationid)
 								{
 								$resourceid = $iiif_result["ref"];
+                                $size = (strtolower($iiif_result['file_extension']) != 'jpg') ? 'hpr' : '';
 								$validrequest = true;
 								break;
 								}
@@ -471,8 +472,8 @@ else
 							$response["@context"] = "http://iiif.io/api/presentation/2/context.json";
 							$response["@id"] = $rooturl . $identifier . "/annotation/" . $annotationid;
 							$response["@type"] = "oa:Annotation";
-							$response["motivation"] = "sc:painting";						
-							$response["resource"] =  iiif_get_image($identifier,$resourceid,$annotationid);
+							$response["motivation"] = "sc:painting";
+                            $response["resource"] = iiif_get_image($identifier, $resourceid, $annotationid, $size);
 							}
 						else
 							{
