@@ -54,6 +54,13 @@ if (!hook("replaceslideshow"))
         {
         ?>
         <script>
+        <?php 
+        if ($themes_show_background_image) {
+            ?>
+            DeactivateSlideshow()
+            <?php ;}
+            ?>  
+
         var SlideshowImages = new Array();
         var SlideshowCurrent = -1;
         var SlideshowTimer = 0;
