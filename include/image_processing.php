@@ -468,7 +468,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 }   
 
             # Create previews
-            global $enable_thumbnail_creation_on_upload,$file_upload_block_duplicates,$checksum,$originals_separate_storage;
+            global $enable_thumbnail_creation_on_upload,$file_upload_block_duplicates,$checksum;
             # Checksums are also normally created at preview generation time, but we may already have a checksum if $file_upload_block_duplicates is enabled
             $checksum_required=true;
             if($file_upload_block_duplicates && isset($checksum))
@@ -478,8 +478,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 }
             if ($enable_thumbnail_creation_on_upload)
                 { 
-                # Used to creat folder for resized images when $originals_separate_storage = true;
-                if($originals_separate_storage) {get_resource_path($ref,true,"pre",true);}
                 create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
                 }
             else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
@@ -1072,7 +1070,7 @@ function iptc_return_utf8($text)
  
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true)
     {
-    global $keep_for_hpr,$imagemagick_path, $preview_generate_max_file_size,$autorotate_no_ingest, $previews_allow_enlarge,$lang;
+    global $keep_for_hpr,$imagemagick_path, $preview_generate_max_file_size,$autorotate_no_ingest, $previews_allow_enlarge,$lang,$originals_separate_storage;
 
     if(!is_numeric($ref))
         {
@@ -1232,6 +1230,9 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     if (($extension=="jpg") || ($extension=="jpeg") || ($extension=="png") || ($extension=="gif"))
     # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
         {
+        # Used to create folder for resized images when $originals_separate_storage = true;
+        if($originals_separate_storage) {get_resource_path($ref,true,"pre",true);}
+        
         if (isset($imagemagick_path))
             {
             $return_val=create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested);
