@@ -466,9 +466,9 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $path=get_resource_path($ref,true,"",false,"mp3");
                 if (file_exists($path)) {unlink($path);}
                 }   
-        
+
             # Create previews
-            global $enable_thumbnail_creation_on_upload,$file_upload_block_duplicates,$checksum;
+            global $enable_thumbnail_creation_on_upload,$file_upload_block_duplicates,$checksum,$originals_separate_storage;
             # Checksums are also normally created at preview generation time, but we may already have a checksum if $file_upload_block_duplicates is enabled
             $checksum_required=true;
             if($file_upload_block_duplicates && isset($checksum))
@@ -478,6 +478,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 }
             if ($enable_thumbnail_creation_on_upload)
                 { 
+                # Used to creat folder for resized images when $originals_separate_storage = true;
+                if($originals_separate_storage) {get_resource_path($ref,true,"pre",true);}
                 create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
                 }
             else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
