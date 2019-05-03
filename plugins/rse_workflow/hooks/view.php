@@ -114,21 +114,24 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
         <p><?php echo $lang['rse_workflow_user_info']; ?></p>
         <script type="text/javascript">
         function open_notes(action_ref) {
-            
             var workflow_action = jQuery('#rse_workflow_action_' + action_ref);
             var more_link = jQuery('#more_link_' + action_ref);
 
-            more_link.after('<textarea id="more_for_workflow_action_' + action_ref + '" name="more_for_workflow_action_' + action_ref + '" style="width: 100%; resize: none;" rows="6"></textarea>');
+            // Populate textarea with any text there may already be present
+            var more_text_hidden = jQuery('#more_workflow_action_' + action_ref).val();
+
+            more_link.after('<textarea id="more_for_workflow_action_' + action_ref 
+                + '" name="more_for_workflow_action_' + action_ref 
+                + '" style="width: 100%; resize: none;" rows="6">' + more_text_hidden + '</textarea>');
             more_link.after('<p id="notes_for_workflow_action_' + action_ref + '"><?php echo $lang["rse_workflow_more_notes_title"]; ?></p>');
 
             more_link.text('<?php echo $lang["rse_workflow_link_close"]; ?>');
             more_link.attr('onClick', 'close_notes(' + action_ref + ');');
 
-            // Attach textarea value to the hidden input:
+            // Bind the input textarea 'more_for_workflow_action' value to the hidden 'more_workflow_action' field
             jQuery('#more_for_workflow_action_' + action_ref).keyup(function (event) {
                 var notes = this.value;
-                var title = '<?php echo $lang["rse_workflow_more_notes_title"]; ?>\n\r';
-                jQuery('#more_workflow_action_' + action_ref).val(title + notes);
+                jQuery('#more_workflow_action_' + action_ref).val(notes);
             });
         }
 
@@ -161,7 +164,8 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
              <tr class="DownloadDBlend">
                 <td><?php echo i18n_get_translated($validaction["text"]); if($show_more_link) { ?><a href="#" id="more_link_<?php echo $validaction["ref"]; ?>" onClick="open_notes(<?php echo $validaction["ref"]; ?>);" style="float: right;"><?php echo $lang['rse_workflow_link_open']; ?></a><?php } ?></td>
                 <td>
-					<form action="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&curpos=<?php echo urlencode($curpos)?>" id="resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>">
+					<form action="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&curpos=<?php echo urlencode($curpos)?>&workflowaction=<?php echo urlencode($validaction["ref"])?>" 
+                          id="resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>">
 					<input id='resource_status_checksum' name='resource_status_check' type='hidden' value='<?php echo $resource["archive"]; ?>'>
 					<input type="hidden" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] ?>" value="true" >
 					<input type="hidden" name="more_workflow_action_<?php echo $validaction["ref"] ?>" id="more_workflow_action_<?php echo $validaction["ref"] ?>" value="" >       
