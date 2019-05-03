@@ -466,7 +466,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $path=get_resource_path($ref,true,"",false,"mp3");
                 if (file_exists($path)) {unlink($path);}
                 }   
-        
+
             # Create previews
             global $enable_thumbnail_creation_on_upload,$file_upload_block_duplicates,$checksum;
             # Checksums are also normally created at preview generation time, but we may already have a checksum if $file_upload_block_duplicates is enabled
@@ -1070,7 +1070,10 @@ function iptc_return_utf8($text)
  
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true)
     {
-    global $keep_for_hpr,$imagemagick_path, $preview_generate_max_file_size,$autorotate_no_ingest, $previews_allow_enlarge,$lang;
+    global $keep_for_hpr,$imagemagick_path, $preview_generate_max_file_size,$autorotate_no_ingest, $previews_allow_enlarge,$lang,$originals_separate_storage;
+
+    # Used to preemptively create folder
+    get_resource_path($ref,true,"pre",true);
 
     if(!is_numeric($ref))
         {
