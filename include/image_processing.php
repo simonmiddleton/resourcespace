@@ -1072,6 +1072,9 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     {
     global $keep_for_hpr,$imagemagick_path, $preview_generate_max_file_size,$autorotate_no_ingest, $previews_allow_enlarge,$lang,$originals_separate_storage;
 
+    # Used to preemptively create folder
+    get_resource_path($ref,true,"pre",true);
+
     if(!is_numeric($ref))
         {
         trigger_error("Parameter 'ref' must be numeric!");
@@ -1230,9 +1233,6 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     if (($extension=="jpg") || ($extension=="jpeg") || ($extension=="png") || ($extension=="gif"))
     # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
         {
-        # Used to create folder for resized images when $originals_separate_storage = true;
-        if($originals_separate_storage) {get_resource_path($ref,true,"pre",true);}
-        
         if (isset($imagemagick_path))
             {
             $return_val=create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested);
