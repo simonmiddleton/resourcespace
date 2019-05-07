@@ -2282,9 +2282,9 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         }
 
     // Avoid out of memory errors such as when working with large PDF files
-    if(strlen($diff)>10000)
+    if(mb_strlen($diff) > 10000)
         {
-        $diff = mb_substr($diff,10000);
+        $diff = mb_strcut($diff, 0, 10000);
         }
 
 	$modifiedlogtype=hook("modifylogtype","",array($type));
