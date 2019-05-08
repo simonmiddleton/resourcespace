@@ -1449,6 +1449,8 @@ $lang["publiccollections"]="Public collections";
 $lang["viewmygroupsonly"]="View my groups only";
 $lang["usemetadatatemplate"]="Use metadata template";
 $lang["undometadatatemplate"]="(undo template selection)";
+$lang["usemetadatatemplatesure"]="Are you sure you wish to apply this metadata template? This will clear the current data that has been entered.";
+$lang["removemetadatatemplatesure"]="Are you sure you wish to remove this metadata template? This will clear the current data that has been entered.";
 
 $lang["accountemailalreadyexists"]="An account with that e-mail address already exists";
 

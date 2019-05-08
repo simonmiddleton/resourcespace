@@ -324,10 +324,10 @@ function is_parent_node($ref)
         return false;
         }
 
-    $query = "SELECT count(ref) AS value FROM node WHERE parent = '" . escape_check($ref) . "';";
-    $parent_counter = sql_value($query, 0);
+    $query = "SELECT exists (SELECT ref from node WHERE parent = '" . escape_check($ref) . "') AS value;";
+    $parent_exists = sql_value($query, 0);
 
-    if($parent_counter > 0)
+    if($parent_exists > 0)
         {
         return true;
         }
@@ -662,6 +662,9 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     {
     global $baseurl_short, $lang;
 
+    static $resource_type_field_last = 0;
+    static $all_nodes = array();    
+
     if(is_null($ref) || (trim($ref)==""))
         {
         return false;
@@ -682,7 +685,12 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     // Determine Node depth
     $node_depth_level = get_tree_node_level($ref);
 
-    $all_nodes = get_nodes($resource_type_field, NULL, TRUE, NULL, NULL, '', TRUE);
+    // Fetch all nodes on change of resource type field
+    if($resource_type_field !== $resource_type_field_last)
+        {
+        $all_nodes = get_nodes($resource_type_field, NULL, TRUE, NULL, NULL, '', TRUE);
+        $resource_type_field_last = $resource_type_field;    
+        }
 
     // We remove the current node from the list of parents for it( a node should not add to itself)
     $nodes = $all_nodes;
@@ -1219,10 +1227,11 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
 * @param integer $resource
 * @param integer $resource_type_field
 * @param boolean $detailed             Set to true to return full node details (as get_node() does)
+* @param boolean $node_sort            Set to SORT_ASC to sort nodes ascending, SORT_DESC sort nodes descending, null means do not sort
 * 
 * @return array
 */
-function get_resource_nodes($resource, $resource_type_field = null, $detailed = false)
+function get_resource_nodes($resource, $resource_type_field = null, $detailed = false, $node_sort = null)
     {
     $sql_select = 'n.ref AS `value`';
 
@@ -1236,6 +1245,18 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
     if(!is_null($resource_type_field) && is_numeric($resource_type_field))
         {
         $query .= " AND n.resource_type_field = '" . escape_check($resource_type_field) . "'";
+        }
+
+    if(!is_null($node_sort))
+        {
+        if($node_sort == SORT_ASC)
+            {
+            $query .= " ORDER BY n.ref ASC";
+            }
+        if($node_sort == SORT_DESC)
+            {
+            $query .= " ORDER BY n.ref DESC";
+            }
         }
 
     if($detailed)
@@ -1252,6 +1273,19 @@ function delete_resource_nodes($resourceid,$nodes=array())
     if(!is_array($nodes))
         {$nodes=array($nodes);}
     sql_query("DELETE FROM resource_node WHERE resource ='$resourceid' AND node in ('" . implode("','",$nodes) . "')"); 
+
+    $field_nodes_arr = array();
+    foreach ($nodes as $node)
+        {
+        $nodedata = array();
+        get_node($node, $nodedata);
+        $field_nodes_arr[$nodedata["resource_type_field"]][] = $nodedata["name"];
+        }
+
+    foreach ($field_nodes_arr as $key => $value)
+        {
+        resource_log($resourceid,"e",$key,"",implode(",",$value),"");
+        }
     }
 
 

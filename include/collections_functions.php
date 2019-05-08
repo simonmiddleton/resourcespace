@@ -1589,6 +1589,7 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 	# Returns an array of resource references that can be used as theme category images.
 	global $theme_images_number;
 	global $theme_category_levels;
+	global $usergroup, $userref;
 	global $userpermissions;
 	# Resources that have been specifically chosen using the option on the collection comments page will be returned first based on order by.
 	
@@ -1619,37 +1620,53 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
             return is_array($images) ? array_column($images, "ref") : array();
 			}
 		else
-			{
-			$sqlselect="select r.ref, cr.use_as_theme_thumbnail, theme2, r.hit_count from collection c join collection_resource cr on c.ref=cr.collection join resource r on cr.resource=r.ref where c.public=1 and c.theme='" . escape_check($themes[0]) . "' ";
-            
-			// Add search sql so we honour permissions
-
-			// We are going to temporarily insert the "J" permission to limit the scope of the search for performance
-			// Save the permissions prior to insertion
-			$saved_userpermissions = $userpermissions;
-			// Insert the "J" permission if it is not already there
-			if (!checkperm("J"))
+		{
+			$sqlfilter_custom="";
+			$sqlselect="SELECT r.ref, cr.use_as_theme_thumbnail, theme2, r.hit_count FROM collection c "
+							."JOIN collection_resource cr on cr.collection=c.ref "
+							."JOIN resource r on r.ref=cr.resource and r.archive=0 and r.ref>0 and r.has_image=1 ";
+			
+			// Add custom access joins if necessary
+			if (!checkperm("v"))
 				{
-				$userpermissions[]="J";
-				}
-            $searchsql = do_search("",'','',0,-1,'desc',false,0,false,false,'',false,false,true,false,true);
-			// Restore saved permissions
-			$userpermissions = $saved_userpermissions;
+				$sqlselect.= " LEFT OUTER JOIN resource_custom_access rca2 " 
+										."ON r.ref=rca2.resource "
+										."AND rca2.user='$userref' "
+										."AND (rca2.user_expires IS null or rca2.user_expires>now()) "
+										."AND rca2.access<>2 "
+							." LEFT OUTER JOIN resource_custom_access rca "
+										."ON r.ref=rca.resource "
+										."AND rca.usergroup='$usergroup' "
+										."AND rca.access<>2 ";
 
-			$orderby=" order by ti.use_as_theme_thumbnail desc";
+				# Check both the resource access, but if confidential is returned, also look at the joined user-specific or group-specific custom access for rows.
+				$sqlfilter_custom.=" AND (     r.access<>'2' " 
+				                  ."       OR (r.access=2 AND ( (rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2) ) ) )";
+
+				}
+
+			// Build filter, attaching custom access filtering, if any 	
+			$sqlfilter=" WHERE c.public=1 and c.theme='" . escape_check($themes[0]) . "' "
+			           .$sqlfilter_custom;
+
+			// Attach filter to principal select		   
+			$sqlselect.=$sqlfilter;
+
+			$orderby  =" ORDER BY ti.use_as_theme_thumbnail desc";
+			
 			$orderby_theme='';
 			for ($n=2;$n<=count($themes)+1;$n++)
                 {
 				if (isset($themes[$n-1]))
                     {
-					$sqlselect.=" and theme".$n."='" . escape_check($themes[$n-1]) . "' ";
+					$sqlselect.=" AND theme".$n."='" . escape_check($themes[$n-1]) . "' ";
                     } 
 				else
                     {
 					if ($n<=$theme_category_levels)
                         {
 						# Resources in sub categories can be used but should be below those in the current category
-						$orderby_theme=" order by theme".$n;
+						$orderby_theme=" ORDER BY theme".$n;
                         }
                     }
                 } 
@@ -1657,14 +1674,13 @@ function get_theme_image($themes=array(), $collection="", $smart=false)
 			if($collection != "")
 				{
 				$sqlselect.=" and c.ref = '" . escape_check($collection) .  "'";
-                $orderby.=",ti.hit_count desc,ti.ref desc";
 				}
-			
+				
 			$orderby.=",ti.hit_count desc,ti.ref desc";
 			}
 	
-		$sqlselect .= " and r.has_image=1 ";
-		$sql = "SELECT ti.ref value from (" . $sqlselect . $orderby_theme . ") ti JOIN (" . $searchsql . ") ar ON ti.ref=ar.ref WHERE ar.ref IS NOT NULL " . $orderby . " limit " . escape_check($theme_images_number);
+		$sql = "SELECT ti.ref value from (" . $sqlselect . $orderby_theme . ") ti "
+		       .$orderby . " limit " . escape_check($theme_images_number);
 
         $images=sql_array($sql,0);
 
@@ -2223,9 +2239,16 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     	$search_collection = explode(',', $search_collection); // just get the number
     	$search_collection = escape_check($search_collection[0]);
     	}
-        
+
+    // Collection bar actions should always be a special search !collection[ID] (exceptions might arise but most of the 
+    // time it should be handled using the special search)
+    if(isset($collection_data['ref']) && !$top_actions && $pagename == 'collections')
+        {
+        $search = "!collection{$collection_data['ref']}";
+        }
+
     $urlparams = array(
-        "search"      =>  (isset($collection_data['ref']) ? "!collection" . $collection_data['ref'] : $search),
+        "search"      =>  $search,
         "collection"  =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
         "ref"         =>  (isset($collection_data['ref']) ? $collection_data['ref'] : ""),
         "restypes"    =>  isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "",
@@ -2343,18 +2366,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 		$options[$o]['label']=$lang['action-upload-to-collection'];
 		$options[$o]['data_attr']=$data_attribute;
 
-        // Upload here functionality
-        if($top_actions)
-            {
-            $options[$o]['label'] = $lang['upload_here'];
-
-            $upload_here_option = $options[$o];
-
-            unset($options[$o]);
-
-            array_unshift($options, $upload_here_option);
-            }
-
 		$o++;
         }
 
@@ -2419,23 +2430,36 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 	
     // Download option
-    if( $download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
+    # Ability to request a whole collection (only if user has restricted access to any of these resources)
+    if($pagename == 'collection_manage') 
         {
-        $download_url = generateURL($baseurl_short . "pages/download_usage.php",$urlparams);
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=>$download_url));
-        $options[$o]['value']='download_collection';
-		$options[$o]['label']=$lang['action-download'];
-		$options[$o]['data_attr']=$data_attribute;
-		$o++;
+        $min_access = collection_min_access($collection_data['ref']);
         }
-    else if( (isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
+    else
         {
-        $download_url = generateURL($baseurl_short . "pages/collection_download.php",$urlparams);
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=>$download_url));
-        $options[$o]['value']='download_collection';
-		$options[$o]['label']=$lang['action-download'];
-		$options[$o]['data_attr']=$data_attribute;
-		$o++;
+        $min_access = collection_min_access($result);
+        }
+
+    if($min_access ==0 )
+        {
+        if( $download_usage && ( isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
+            {
+            $download_url = generateURL($baseurl_short . "pages/download_usage.php",$urlparams);
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=>$download_url));
+            $options[$o]['value']='download_collection';
+            $options[$o]['label']=$lang['action-download'];
+            $options[$o]['data_attr']=$data_attribute;
+            $o++;
+            }
+        else if( (isset($zipcommand) || $use_zip_extension || ( isset($archiver_path) && isset($collection_download_settings) ) ) && $collection_download && $count_result > 0)
+            {
+            $download_url = generateURL($baseurl_short . "pages/collection_download.php",$urlparams);
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/terms.php",$urlparams,array("url"=>$download_url));
+            $options[$o]['value']='download_collection';
+            $options[$o]['label']=$lang['action-download'];
+            $options[$o]['data_attr']=$data_attribute;
+            $o++;
+            }
         }
 
     // Contact Sheet
@@ -2500,11 +2524,20 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
         
     // View all resources
-    if(($k=="" || $internal_share_access) && (isset($collection_data["c"]) && $collection_data["c"]>0) || (is_array($result) && count($result) > 0))
+    if(
+        !$top_actions // View all resources makes sense only from collection bar context
+        && (
+            ($k=="" || $internal_share_access)
+            && (isset($collection_data["c"]) && $collection_data["c"] > 0)
+            || (is_array($result) && count($result) > 0)
+        )
+    )
         {
-		// Force ascending order
-		$tempurlparams = array();
-		$tempurlparams['sort']="ASC";
+        $tempurlparams = array(
+            'sort' => 'ASC',
+            'search' => (isset($collection_data['ref']) ? "!collection{$collection_data['ref']}" : $search),
+        );
+
         $data_attribute['url'] = generateURL($baseurl_short . "pages/search.php",$urlparams,$tempurlparams);
         $options[$o]['value']='view_all_resources_in_collection';
 		$options[$o]['label']=$lang['view_all_resources'];
@@ -2521,7 +2554,11 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         {
         if($allow_multi_edit)
             {
-            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams);
+            $extra_params = array(
+                'editsearchresults' => 'true',
+            );
+
+            $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php", $urlparams, $extra_params);
             $options[$o]['value']='edit_all_in_collection';
             $options[$o]['label']=$lang['edit_all_resources'];
             $options[$o]['data_attr']=$data_attribute;
@@ -2686,7 +2723,7 @@ function new_featured_collection_form(array $themearray = array())
             <?php generateFormToken("new_collection_form"); ?>
             <div class="Question">
                 <label for="collectionname" ><?php echo $lang["collectionname"] ?></label>
-                <input type="text" name="collectionname"></input>
+                <input type="text" name="collectionname" required="true"></input>
                 <div class="clearleft"></div>
             </div>
 

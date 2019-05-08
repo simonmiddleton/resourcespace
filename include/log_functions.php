@@ -143,10 +143,11 @@ function logScript($message, $file = null)
 *                                    );
 * @param  string $table  Table name (e.g resource_type_field, user, resource)
 * @param  integer $table_reference  ID of the record in the referred table
+* @param  boolean $count  Switch for if the result should be a single count or the result set
 * 
 * @return array
 */
-function get_activity_log($search, $offset, $rows, array $where_statements, $table, $table_reference)
+function get_activity_log($search, $offset, $rows, array $where_statements, $table, $table_reference, $count = false)
     {
     foreach($where_statements as $ws_table => $where_statement)
         {
@@ -181,7 +182,17 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
         $when_statements .= " WHEN ASCII('{$log_code_escaped}') THEN '{$log_code_description}'";
         }
 
+    $count_statement_start = "";
+    $count_statement_end = "";
+
+    if($count)
+        {
+        $count_statement_start = "SELECT COUNT(*) AS value FROM (";
+        $count_statement_end = ") AS count_select";
+        }
+
     $sql_query = "
+                {$count_statement_start}
                  SELECT
                         `activity_log`.`logged` AS 'datetime',
                         `user`.`username` AS 'user',
@@ -273,6 +284,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                         )
 
         ORDER BY `datetime` DESC
+        {$count_statement_end}
     ";
 
     if(trim($table) !== '')
@@ -290,5 +302,13 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
 
     $limit = sql_limit($offset, $rows);
 
-    return sql_query("{$sql_query} {$limit}");
+    if($count)
+        {
+        return sql_value($sql_query, 0);
+        }
+    else
+        {
+        return sql_query("{$sql_query} {$limit}");
+        }
     }
+

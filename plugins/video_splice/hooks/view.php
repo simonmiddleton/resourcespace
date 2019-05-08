@@ -168,35 +168,55 @@ function HookVideo_spliceViewAfterresourceactions()
 <input type="submit" name="cut" value="<?php echo $lang["action-cut"]?>" style="width:40%;">
 </td></tr>
 
-</table>
-
 <?php
+global $videojs;
 if (isset($preview) && $preview)
 	{
-	# Show the preview
-	
-	# Work out a colour theme
-	global $userfixedtheme;
-	$theme=(isset($userfixedtheme) && $userfixedtheme!="")?$userfixedtheme:getval("colourcss","greyblu");
-	$colour="505050";
-	if ($theme=="greyblu") {$colour="446693";}
-	global $baseurl;
-	
-	# Embedded preview player
+	if (!$videojs) 
+		{ ?>
+		</table>
+		<p align="center">
+		<object type="application/x-shockwave-flash" data="<?php echo $baseurl_short?>lib/flashplayer/player_flv_maxi.swf" width="240" height="135">
+			 <param name="allowFullScreen" value="true" />
+			 <param name="movie" value="<?php echo $baseurl_short?>lib/flashplayer/player_flv_maxi.swf" />
+			 <param name="FlashVars" value="flv=<?php echo convert_path_to_url($target) ?>&amp;width=240&amp;height=135&amp;margin=0&amp;buffer=10&amp;showvolume=0&amp;volume=200&amp;showtime=0&amp;autoplay=1&amp;autoload=1&amp;showfullscreen=0&amp;showstop=0&amp;playercolor=<?php echo $colour?>" />
+		</object>
+		</p>
+		<?php 
+		} 
+	else 
+		{ 
+		?>
+<tr><td colspan=4 align="center">
+		<div class="videojscontent">
+			<video 
+				id="cutpreview"
+				data-setup="{}"
+				controls=""
+				width="240" 
+				height="135" 
+				class="video-js vjs-default-skin vjs-big-play-centered" 
+				poster=""
+			>
+			<source src="<?php echo convert_path_to_url($target) ?>" type="video/mp4"/>
+			<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+			<?php hook("html5videoextra"); ?>
+			</video>
+		
+		</div>
+</td></tr>
+<tr><td></td></tr>
+</table>
+		<?php
+		}
+	}
+	else
+	{
 	?>
-	<p align="center">
-	<object type="application/x-shockwave-flash" data="../lib/flashplayer/player_flv_maxi.swf" width="240" height="135">
-    <param name="allowFullScreen" value="true" />
-	
-     <param name="movie" value="../lib/flashplayer/player_flv_maxi.swf" />
-     <param name="FlashVars" value="flv=<?php echo convert_path_to_url($target) ?>&amp;width=240&amp;height=135&amp;margin=0&amp;buffer=10&amp;showvolume=0&amp;volume=200&amp;showtime=0&amp;autoplay=1&amp;autoload=1&amp;showfullscreen=0&amp;showstop=0&amp;playercolor=<?php echo $colour?>" />
-	</object>
-	</p>
-	<?php
+</table>
+	<?php	
 	}
 ?>
-
-
 
 </form>
 

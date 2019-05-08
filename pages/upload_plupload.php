@@ -27,7 +27,11 @@ $offset                                 = getvalescaped('offset', '', true);
 $order_by                               = getvalescaped('order_by', '');
 // This is the archive state for searching, NOT the archive state to be set from the form POST
 $archive                                = getvalescaped('archive', '', true);
+
 $setarchivestate                        = getvalescaped('status', '', true);
+// Validate this workflow state is permitted or set the default if nothing passed 
+$setarchivestate                        = get_default_archive_state($setarchivestate);
+
 $alternative                            = getvalescaped('alternative', ''); # Batch upload alternative files
 $replace                                = getvalescaped('replace', ''); # Replace Resource Batch
 $replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
@@ -137,7 +141,8 @@ $uploadparams= array(
     'filename_field'                         => getval('filename_field', ''),
 	'keep_original'	                         => $replace_resource_preserve_option && $replace_resource_preserve_default,
     'replace_resource_original_alt_filename' => $replace_resource_original_alt_filename,
-    'single'                                 => ($single ? "true" : "false")
+    'single'                                 => ($single ? "true" : "false"),
+    'status'                                 => $setarchivestate
 );
 
 global $merge_filename_with_title;
@@ -412,6 +417,7 @@ if ($_FILES)
         // If this chunk-file-filename has been processed, don't process it again
         if($chunk == $processed_file_content[0] && $queue_index == $processed_file_content[1])
             {
+            debug("PLUPLOAD - Duplicate chunk [" . $chunk . "] of file " . $plfilename . " found at index [" . $queue_index . "] in the upload queue");
             die('{"jsonrpc" : "2.0", "error" : {"code": 109, "message": "Duplicate chunk [' . $chunk . '] of file ' . $plfilename . ' found at index [' . $queue_index . '] in the upload queue"}, "id" : "id"}');
             }
         }
@@ -609,17 +615,18 @@ if ($_FILES)
                             // Usually, this happens when a user had from the first time upload_then_edit mode on
                             if(false === $ref)
                                 {
-                                $ref = create_resource($resource_type);
+                                $ref = create_resource($resource_type, $setarchivestate);
                                 }
-
+                            
+                            // Check valid requested state by calling function that checks permissions
+                            update_archive_status($ref, $setarchivestate);
+                            
                             if($upload_then_edit && $upload_here)
                                 {
-                                if(checkperm("e{$setarchivestate}"))
+                                if(!empty(get_upload_here_selected_nodes($search, array())))
                                     {
-                                    update_archive_status($ref, $setarchivestate);
+                                    add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
                                     }
-
-                                add_resource_nodes($ref, get_upload_here_selected_nodes($search, array()), true);
                                 }
 
                             # Add to collection?
@@ -657,6 +664,13 @@ if ($_FILES)
                                     }
                                 }
 
+                            if($upload_then_edit && $reset_date_upload_template)
+                                {
+                                // If extracting embedded metadata than expect the date to be overriden as it would be if
+                                // upload_then_edit = false
+                                update_field($ref, $reset_date_field, date('Y-m-d H:i:s'));
+                                }
+
                             # Log this			
                             daily_stat("Resource upload",$ref);
                             
@@ -672,11 +686,12 @@ if ($_FILES)
                                     $view_title_field_escaped = escape_check($view_title_field);
 
                                     $resource_detail = sql_query ("
-                                                 SELECT r.ref, r.file_extension, rd.value
-                                                   FROM resource r
-                                        LEFT OUTER JOIN resource_data AS rd ON r.ref = rd.resource
-                                                  WHERE r.ref = '{$ref_escaped}'
-                                                    AND rd.resource_type_field = '{$view_title_field_escaped}'");
+                                        SELECT r.ref, r.file_extension, rd.value
+                                        FROM resource r
+                                        LEFT JOIN resource_data AS rd ON r.ref = rd.resource
+                                        AND rd.resource_type_field = '{$view_title_field_escaped}'
+                                        WHERE r.ref = '{$ref_escaped}'
+                                                    ");
 
                                     $new_auto_generated_title = str_replace(
                                         array('%title', '%resource', '%extension'),
@@ -824,6 +839,10 @@ if ($_FILES)
 									// No resource found with the same filename
 									header('Content-Type: application/json');
                                     unlink($plfilepath);
+                                    if(file_exists($plupload_processed_filepath))
+                                        {
+                                        unlink($plupload_processed_filepath);
+                                        }
 									die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no resource found with filename ' . $origuploadedfilename . '"}, "id" : "id"}');
 									}
 								else
@@ -845,6 +864,10 @@ if ($_FILES)
 										// Multiple resources found with the same filename
 										header('Content-Type: application/json');
                                         unlink($plfilepath);
+                                        if(file_exists($plupload_processed_filepath))
+                                            {
+                                            unlink($plupload_processed_filepath);
+                                            }
 										die('{"jsonrpc" : "2.0", "error" : {"code": 107, "message": "ERROR - multiple resources found with filename ' . $origuploadedfilename . '. Resource IDs : ' . $resourcelist . '"}, "id" : "id" }');
 										}
 									}
@@ -1473,7 +1496,7 @@ if ($allowed_extensions!="" && $alternative==''){
 </div>	
 <?php
 hook ("beforepluploadform");
-if($replace_resource != '' || $replace != '' || $upload_then_edit)
+if(($replace_resource != '' || $replace != '' || $upload_then_edit) && (display_upload_options() || $replace_resource_preserve_option))
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
@@ -1536,7 +1559,7 @@ if($replace_resource != '' || $replace != '' || $upload_then_edit)
     In the other upload workflows this checkbox is shown in a previous page. */
     if (!hook("replacemetadatacheckbox")) 
         {
-        if (getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="")
+        if ((getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="") && $metadata_read)
             { ?>
             <div class="Question">
                 <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if (getval("no_exif","")=="no"){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">

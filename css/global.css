@@ -171,7 +171,7 @@ select::-ms-expand
 
 /*General layout*/
 
-#Header {padding:10px 25px;margin:0; margin-bottom:10px;text-align:left;}
+#Header {padding: 5px 25px 5px 25px;margin:0;margin-bottom:10px;text-align:left;background-image:none;display: block !important;}
 #TextHeader{font-size:25px;float:left;}
 #TextHeader a {text-decoration:none;}
 #TextDesc{font-size:1em;float:left;display:block;clear:left;}
@@ -182,7 +182,6 @@ select::-ms-expand
 
 
 .ui-layout-container{overflow:auto;}
-#Header {margin: 0;padding: 5px 25px 5px 25px;background-image:none;}
 #HeaderNav1, #HeaderNav2 {padding:0;}
 #HeaderNav1 {float:right;}
 #HeaderNav2 {padding-left: 30px;}
@@ -261,7 +260,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .BottomInpageNav {clear: left;padding-top: 5px;margin: 20px 15px 20px 0px; position:relative;}
 .BottomInpageKey {margin-right: 15px; clear: left; text-align: left;}
 .TopInpageNavLeft{float:left;padding-right:120px;}
-.TopInpageNavRight{position:absolute;right:0;top:0;width:280px;text-align:right;}
+.TopInpageNavRight{position:absolute;right:0;top:3px;width:max-content;text-align:right;}
 .InpageNavLeftBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 20px 0 0;}
 .InpageNavRightBlock {display:inline-block; *display: inline; *zoom: 1;text-align:left;margin: 0 15px 0 0;}
 .BottomInpageNavLeft {float:left;}
@@ -529,7 +528,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .ThemeBox li {padding:0 0.35em 0 0em;margin:0px 0.5em 0.25em 0.25em;}
 
 /*Home styling */
-.HomePanel {margin:0px 15px 15px 0px;width: 250px;float: left;} 
+.HomePanel {margin:15px 15px 0 0;width: 250px;float: left;} 
 .HomePanelIN {padding: 15px;min-height: 150px;}
 .HomePanel h2 {display:block;margin: 5px 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .HomePanel p {margin: 0; padding: 5px 0 4px 0;}
@@ -1412,7 +1411,7 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 .keywordselected a {padding-left:8px;}
 
 #photoholder {  
-    margin: 1px;
+    margin-top: 15px;
 }
 
 
@@ -1733,3 +1732,8 @@ a.BrowseRefresh{
     display: table-cell;
     padding-left: 5px;
     }
+
+/* Fix scrollbars on Header */
+#Header {
+    overflow: hidden;
+}

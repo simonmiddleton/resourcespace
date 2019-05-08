@@ -34,12 +34,18 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
         {
         $rse_workflow_from=$wfstates[$archive]["rse_workflow_email_from"];
         }
-    
+
+    $workflowaction = getval('workflowaction','');
+
     // Set message text and URL to link to resources
+    // The field 'more_workflow_action' is a hidden field which carries input text on the action specific form
+    // A textarea named 'more_for_workflow_action' is effectively bound to and copies any keyboard input to 'more_workflow_action' 
     $message = $lang["rse_workflow_state_notify_message"] . $lang["status" . $archive];
-    if(getval('more_workflow_action_' . $archive,'') != '')
+    
+    if(getval('more_workflow_action_' . $workflowaction,'') != '')
         {
-        $message .= "\n\n" . getval('more_workflow_action_' . $archive, '');
+            $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
+            $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
         }
         
     if(count($resource) > 200)
@@ -130,9 +136,10 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
                 }
             
             $message = $lang["userresources_status_change"] . $lang["status" . $archive];
-            if(getval('more_workflow_action_' . $archive,'') != '')
+            if(getval('more_workflow_action_' . $workflowaction,'') != '')
                 {
-                $message .= "\n\n" . getval('more_workflow_action_' . $archive, '');
+                    $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
+                    $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
                 }
         
             if(count($cntrb_detail["resources"]) > 200)
@@ -153,7 +160,7 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
             if($send_email && filter_var($cntrb_detail["email"], FILTER_VALIDATE_EMAIL))
                 {
                 debug("sending email notification to contributing user " . $cntrb_user);
-                send_mail($cntrb_user["email"],$applicationname . ": " . $lang["status" . $archive],$message . "\n\n" . $maillinkurl, $rse_workflow_from,$rse_workflow_from);
+                send_mail($cntrb_detail["email"],$applicationname . ": " . $lang["status" . $archive],$message . "\n\n" . $maillinkurl, $rse_workflow_from,$rse_workflow_from);
                 if($wfstates[$archive]["rse_workflow_bcc_admin"]==1)
                     {
                     $bccadmin_users = get_notification_users("SYSTEM_ADMIN");

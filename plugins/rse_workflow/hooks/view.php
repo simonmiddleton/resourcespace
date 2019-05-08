@@ -23,14 +23,6 @@ function HookRse_workflowViewPageevaluation()
         {
         if(getvalescaped("rse_workflow_action_" . $workflowaction["ref"],"")!="" && enforcePostRequest(false))
             {
-            $validstates = explode(',', $workflowaction['statusfrom']);
-            $edit_access = get_edit_access($ref,$resource['archive'], '', $resource);
-
-            if('' != $k)
-                {
-                $edit_access = 0;
-                }
-
             // Check if resource status has already been changed between form being loaded and submitted
             $resource_status_check = getval("resource_status_check","");
 			if($resource_status_check != "" && $resource_status_check != $resource["archive"])
@@ -40,54 +32,42 @@ function HookRse_workflowViewPageevaluation()
 				}
 			else
 				{
+                $validstates = explode(',', $workflowaction['statusfrom']);
+                $edit_access = get_edit_access($ref,$resource['archive'], '', $resource);
+    
+                if('' != $k)
+                    {
+                    $edit_access = 0;
+                    }
+                    
                 if(
                     in_array($resource['archive'], $validstates)
                     && (
                             (
                                 $edit_access
-                                && (checkperm("wf{$workflowaction['ref']}") || checkperm("e{$workflowaction['statusto']}"))
+                                && checkperm("e{$workflowaction['statusto']}")
                             )
                             || checkperm("wf{$workflowaction['ref']}")
                        )
                     )
                     {
-                    $validstates=explode(",",$workflowaction["statusfrom"]);
-                    $edit_access=get_edit_access($ref,$resource["archive"],"",$resource);
-                    if ($k != "") 
+                    update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);;
+                    hook("rse_wf_archivechange","",array($ref,$resource["archive"],$workflowaction["statusto"]));
+                                                
+                    if (checkperm("z" . $workflowaction["statusto"]))
                         {
-                        $edit_access=0;
-                        }
-                    // Check if resource status has already been changed between form being loaded and submitted
-                    $resource_status_check = getval("resource_status_check","");
-                    if($resource_status_check != "" && $resource_status_check != $resource["archive"])
-                        {
-                        $errors["status"] = $lang["status"] . ': ' . $lang["save-conflict-error"];
-                        echo "<div class=\"PageInformal\">" . $lang["error"] . ": " . $lang["status"] . " - " . $lang["save-conflict-error"] . "</div>";
+                        ?>
+                        <script type="text/javascript">
+                        styledalert('<?php echo $lang["rse_workflow_saved"] . "','" . $lang["status" . $workflowaction["statusto"]];?>');
+                        document.location.href="<?php echo $baseurl ?>/pages/search.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>";
+                        </script><?php
+                        exit();
                         }
                     else
-                        {
-                        if (in_array($resource["archive"],$validstates) && $edit_access && (checkperm("wf" . $workflowaction["ref"]) || (checkperm("e" . $workflowaction["statusto"]))))
-                            {
-                            update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);
-                            hook("rse_wf_archivechange","",array($ref,$resource["archive"],$workflowaction["statusto"]));
-                            
-                            if (checkperm("z" . $workflowaction["statusto"]))
-                                {
-                                ?>
-                                <script type="text/javascript">
-                                styledalert('<?php echo $lang["rse_workflow_saved"] . "','" . $lang["status" . $workflowaction["statusto"]];?>');
-                                document.location.href="<?php echo $baseurl ?>/pages/search.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>";
-                                </script><?php
-                                exit();
-                                }
-                            else
-                                { 
-                                echo "<div class=\"PageInformal\">" . $lang["rse_workflow_saved"] . " " . $lang["status" . $workflowaction["statusto"]] . "</div>";
-                                $resource["archive"]=$workflowaction["statusto"];
-                                }
-                            }
+                        { 
+                        echo "<div class=\"PageInformal\">" . $lang["rse_workflow_saved"] . " " . $lang["status" . $workflowaction["statusto"]] . "</div>";
+                        $resource["archive"]=$workflowaction["statusto"];
                         }
-                    
                     } 
                 }
             }
@@ -107,13 +87,12 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
     foreach($workflowactions as $workflowaction)
         {
         $validstates = explode(',', $workflowaction['statusfrom']);	
-        
         if(
             in_array($resource['archive'], $validstates)
             && (
                     (
                         $edit_access
-                        && (checkperm("wf{$workflowaction['ref']}") || checkperm("e{$workflowaction['statusto']}"))
+                        && checkperm("e{$workflowaction['statusto']}")
                     )
                     // Provide workflow action option if user has access to it without having edit access to resource
                     // Use case: a particular user group doesn't have access to the archive state but still needs to be
@@ -135,21 +114,24 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
         <p><?php echo $lang['rse_workflow_user_info']; ?></p>
         <script type="text/javascript">
         function open_notes(action_ref) {
-            
             var workflow_action = jQuery('#rse_workflow_action_' + action_ref);
             var more_link = jQuery('#more_link_' + action_ref);
 
-            more_link.after('<textarea id="more_for_workflow_action_' + action_ref + '" name="more_for_workflow_action_' + action_ref + '" style="width: 100%; resize: none;" rows="6"></textarea>');
+            // Populate textarea with any text there may already be present
+            var more_text_hidden = jQuery('#more_workflow_action_' + action_ref).val();
+
+            more_link.after('<textarea id="more_for_workflow_action_' + action_ref 
+                + '" name="more_for_workflow_action_' + action_ref 
+                + '" style="width: 100%; resize: none;" rows="6">' + more_text_hidden + '</textarea>');
             more_link.after('<p id="notes_for_workflow_action_' + action_ref + '"><?php echo $lang["rse_workflow_more_notes_title"]; ?></p>');
 
             more_link.text('<?php echo $lang["rse_workflow_link_close"]; ?>');
             more_link.attr('onClick', 'close_notes(' + action_ref + ');');
 
-            // Attach textarea value to the hidden input:
+            // Bind the input textarea 'more_for_workflow_action' value to the hidden 'more_workflow_action' field
             jQuery('#more_for_workflow_action_' + action_ref).keyup(function (event) {
                 var notes = this.value;
-                var title = '<?php echo $lang["rse_workflow_more_notes_title"]; ?>\n\r';
-                jQuery('#more_workflow_action_' + action_ref).val(title + notes);
+                jQuery('#more_workflow_action_' + action_ref).val(notes);
             });
         }
 
@@ -182,7 +164,8 @@ function HookRse_workflowViewRenderbeforeresourcedetails()
              <tr class="DownloadDBlend">
                 <td><?php echo i18n_get_translated($validaction["text"]); if($show_more_link) { ?><a href="#" id="more_link_<?php echo $validaction["ref"]; ?>" onClick="open_notes(<?php echo $validaction["ref"]; ?>);" style="float: right;"><?php echo $lang['rse_workflow_link_open']; ?></a><?php } ?></td>
                 <td>
-					<form action="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&curpos=<?php echo urlencode($curpos)?>" id="resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>">
+					<form action="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&curpos=<?php echo urlencode($curpos)?>&workflowaction=<?php echo urlencode($validaction["ref"])?>" 
+                          id="resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>">
 					<input id='resource_status_checksum' name='resource_status_check' type='hidden' value='<?php echo $resource["archive"]; ?>'>
 					<input type="hidden" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] ?>" value="true" >
 					<input type="hidden" name="more_workflow_action_<?php echo $validaction["ref"] ?>" id="more_workflow_action_<?php echo $validaction["ref"] ?>" value="" >       

@@ -19,7 +19,7 @@ if($resource === false)
 resource_type_config_override($resource['resource_type']);
 
 $access = get_resource_access($resource);
-if($access !== 0)
+if($access != 0)
     {
     http_response_code(403);
     exit($lang["error-403-forbidden"]);

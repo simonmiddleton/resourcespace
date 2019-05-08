@@ -217,12 +217,12 @@ function sql_connect()
 	
 	# Group concat limit increased to support option based metadata with more realistic limit for option entries
 	# Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)	
-	sql_query("SET SESSION group_concat_max_len = 32767"); 
+	sql_query("SET SESSION group_concat_max_len = 32767",false,-1,false,0); 
 	
     # Set MySQL Strict Mode (if configured)    
     if ($mysql_force_strict_mode)    
         {
-        sql_query("SET SESSION sql_mode='STRICT_ALL_TABLES'",false,-1,true,0);	
+        sql_query("SET SESSION sql_mode='STRICT_ALL_TABLES'",false,-1,false,0);	
         }
     else
         {
@@ -2070,7 +2070,7 @@ function setup_user($userdata)
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences,
-           $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession;
+           $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -2109,7 +2109,7 @@ function setup_user($userdata)
         $ip_restrict_group=trim($userdata["ip_restrict_group"]);
         $ip_restrict_user=trim($userdata["ip_restrict_user"]);
         
-        if(isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
+        if(isset($anonymous_login) && $username==$anonymous_login && isset($rs_session) && !checkperm('b')) // This is only required if anonymous user has collection functionality
 		{
 		if (!function_exists("get_user_collections"))
 			{

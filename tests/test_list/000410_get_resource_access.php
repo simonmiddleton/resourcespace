@@ -13,8 +13,10 @@ $resource_unrestricted_access = create_resource(1, 0);
 update_archive_status($resource_unrestricted_access, 0);
 
 // Archived resource - restricted access
+$additional_archive_states = array(4);
+$lang['status4']="Test state";
 $resource_restricted_access = create_resource(1, 0);
-update_archive_status($resource_restricted_access, 2);
+update_archive_status($resource_restricted_access, 4);
 
 
 $use_cases = array(
@@ -27,7 +29,7 @@ $use_cases = array(
     array(
         'description' => 'Restricted resource to workflow state (rws2)',
         'resource' => $resource_restricted_access,
-        'add_permissions' => array('rws2'),
+        'add_permissions' => array('rws4'),
         'assertion' => 1
     ),
 );

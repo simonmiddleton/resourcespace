@@ -177,7 +177,7 @@ else
 			}
 		
 		?>
-		<div class="ResourcePanel" style="height: 208px;">
+		<div class="ResourcePanel">
 		
 	
 		<a class="ImageWrapper" href="<?php echo $link_url?>" title="<?php echo $title ?>" onClick="return ModalLoad(this,true);"><?php if ($result["has_image"]==1) { ?><img  src="<?php echo get_resource_path($ref,false,"thm",false,$result["preview_extension"],-1,1,false,$result["file_modified"])?>" 

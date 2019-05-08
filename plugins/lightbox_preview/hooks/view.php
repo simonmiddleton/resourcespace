@@ -4,7 +4,7 @@ include_once dirname(__FILE__) . "/../include/utility.php";
 
 function HookLightbox_previewViewRenderbeforerecorddownload($disable_flag)
     {
-    if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false || $disable_flag === true)
+    if(isset($_SERVER['HTTP_USER_AGENT']) && (strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false || $disable_flag === true))
         {
         return false;
         }
@@ -61,7 +61,7 @@ function HookLightbox_previewViewRenderbeforerecorddownload($disable_flag)
 
 function HookLightbox_previewViewRenderaltthumb()
     {
-    if(strpos($_SERVER['HTTP_USER_AGENT'],"TRIDENT") !== false || strpos($_SERVER['HTTP_USER_AGENT'],"MSIE") !== false)
+    if(isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'],"TRIDENT") !== false || strpos($_SERVER['HTTP_USER_AGENT'],"MSIE") !== false))
         {
         return false;
         }
@@ -90,7 +90,7 @@ function HookLightbox_previewViewRenderaltthumb()
 
 function HookLightbox_previewViewAftersearchimg()
     {
-    if(strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false)
+    if(isset($_SERVER['HTTP_USER_AGENT']) && (strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") !== false || strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") !== false))
         {
         return false;
         }

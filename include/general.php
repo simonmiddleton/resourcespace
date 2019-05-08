@@ -36,7 +36,7 @@ $GLOBALS['get_resource_path_fpcache'] = array();
 function get_resource_path(
     $ref,
     $getfilepath,
-    $size,
+    $size = '',
     $generate = true,
     $extension = 'jpg',
     $scramble = true,
@@ -351,7 +351,9 @@ function get_resource_data($ref,$cache=true)
                     $user = $userref;
                     }
                 else {$user = -1;}
-                $wait = sql_query("insert into resource (ref,resource_type,created_by) values ('" . escape_check($ref) . "','$default_resource_type','$user')");
+
+                $default_archive_state = escape_check(get_default_archive_state());
+                $wait = sql_query("insert into resource (ref,resource_type,created_by, archive) values ('" . escape_check($ref) . "','$default_resource_type','$user', '{$default_archive_state}')");
                 $resource = sql_query("select *,mapzoom from resource where ref='" . escape_check($ref) . "'");
                 }
             }
@@ -1525,7 +1527,7 @@ function get_user($ref)
         if (isset($udata_cache[$ref])){
           $return=$udata_cache[$ref];
         } else {
-    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, u.search_filter_o_id, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
+    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, u.search_filter_o_id, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter, g.search_filter_id FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
     }
     
     # Return a user's credentials.
@@ -2686,8 +2688,34 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         global $email_notify;
         $bcc.="," . $email_notify;
         }
-    # No/invalid email address? Exit.
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {return false;}
+
+    /*
+    Checking email is valid. Email argument can be an RFC 2822 compliant string so handle multi addresses as well
+    IMPORTANT: FILTER_VALIDATE_EMAIL is not fully RFC 2822 compliant, an email like "Another User <anotheruser@example.com>"
+    will be invalid
+    */
+    $rfc_2822_multi_delimiters = array(', ', ',');
+    $email = str_replace($rfc_2822_multi_delimiters, '**', $email);
+    $check_emails = explode('**', $email);
+    $valid_emails = array();
+    foreach($check_emails as $check_email)
+        {
+        if(!filter_var($check_email, FILTER_VALIDATE_EMAIL))
+            {
+            debug("send_mail: Invalid e-mail address - '{$check_email}'");
+            continue;
+            }
+
+        $valid_emails[] = $check_email;
+        }
+    // No/invalid email address? Exit.
+    if(empty($valid_emails))
+        {
+        debug("send_mail: No valid e-mail address found!");
+        return false;
+        }
+    // Valid emails? then make it back into an RFC 2822 compliant string
+    $email = implode(', ', $valid_emails);
     
     # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
     global $use_phpmailer;
@@ -3808,11 +3836,13 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
     if(trim($field['display_condition']) == "")
         {
-        return true;
+        return true;  # This field does not have a display condition, so it should be displayed
         }
 
+    // Assume the candidate field is to be displayed    
     $displaycondition = true;
-    $s                = explode(';', $field['display_condition']);
+    // Break down into array of conditions
+    $conditions       = explode(';', $field['display_condition']);
     $condref          = 0;
     $scriptconditions = array();
     
@@ -3827,11 +3857,15 @@ function check_display_condition($n, array $field, array $fields, $render_js)
     // On upload, check against the posted nodes as save_resource_data() saves nodes after going through all the fields
     $user_set_values = getval('nodes', array());
 
-    foreach ($s as $condition) # Check each condition
+    foreach ($conditions as $condition) # Check each condition
         {
         $displayconditioncheck = false;
-        $s                     = explode('=', $condition);
 
+        // Break this condition down into fieldname $s[0] and value(s) $s[1]
+        $s = explode('=', $condition);
+
+        // Process all fields which are referenced by display condition(s) on the candidate field
+        // For each referenced field, render javascript to trigger when the referenced field changes
         for ($cf=0;$cf<count($display_check_data);$cf++) # Check each field to see if needs to be checked
             {
             // Work out nodes submitted by user, if any
@@ -3850,6 +3884,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 $ui_selected_node_values = $user_set_values[$display_check_data[$cf]['ref']];
                 }
 
+            // Does the fieldname on this condition match the field being processed    
             if($s[0] == $display_check_data[$cf]['name']) # this field needs to be checked
                 {
                 $display_check_data[$cf]['nodes'] = get_nodes($display_check_data[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'] ? true : false));
@@ -3860,6 +3895,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 $scriptconditions[$condref]['type']  = $display_check_data[$cf]['type'];
 
                 $checkvalues=$s[1];
+                // Break down values delimited with pipe characters
                 $validvalues=explode("|",mb_strtoupper($checkvalues));
                 $scriptconditions[$condref]['valid'] = array();
                 $v = trim_array(get_resource_nodes($ref, $display_check_data[$cf]['ref']));
@@ -3905,6 +3941,9 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
                 // Check display conditions
                 // Certain fixed list types allow for multiple nodes to be passed at the same time
+
+                // Generate a javascript function specific to the field with the display condition
+                // This function will be invoked whenever a field referenced by the display condition changes
                 if(in_array($display_check_data[$cf]['type'], $FIXED_LIST_FIELD_TYPES))
                     {
                     if(FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'])
@@ -3913,10 +3952,17 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         <script>
                         jQuery(document).ready(function()
                             {
-                            checkDisplayCondition<?php echo $field['ref']; ?>(node);
+                            <?php
+                            if($GLOBALS["multiple"] === false)
+                                {
+                                ?>
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                <?php
+                                }
+                            ?>
                             jQuery('#CentralSpace').on('categoryTreeChanged', function(e,node)
                                 {
-                                checkDisplayCondition<?php echo $field['ref']; ?>(node);
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
                                 });
                             });
                         </script>
@@ -3931,10 +3977,17 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         <script>
                         jQuery(document).ready(function()
                             {
-                            checkDisplayCondition<?php echo $field['ref']; ?>(node);
+                            <?php
+                            if($GLOBALS["multiple"] === false)
+                                {
+                                ?>
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
+                                <?php
+                                }
+                            ?>
                             jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
                                 {
-                                checkDisplayCondition<?php echo $field['ref']; ?>(node);
+                                checkDisplayCondition<?php echo $field['ref']; ?>();
                                 });
                             });
                         </script>
@@ -3966,13 +4019,13 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                         if($GLOBALS["multiple"] === false)
                             {
                             ?>
-                            checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
                             <?php
                             }
                         ?>
                         jQuery('<?php echo $jquery_selector; ?>').change(function ()
                             {
-                            checkDisplayCondition<?php echo $field['ref']; ?>(jQuery(this).val());
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
                             });
                         });
                     </script>
@@ -3984,7 +4037,14 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     <script type="text/javascript">
                     jQuery(document).ready(function()
                         {
-                        checkDisplayCondition<?php echo $field['ref']; ?>();
+                        <?php
+                        if($GLOBALS["multiple"] === false)
+                            {
+                            ?>
+                            checkDisplayCondition<?php echo $field['ref']; ?>();
+                            <?php
+                            }
+                        ?>
                         jQuery('#field_<?php echo $display_check_data[$cf]["ref"]; ?>').change(function ()
                             {
                             checkDisplayCondition<?php echo $field['ref']; ?>();
@@ -3995,20 +4055,23 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     }
                 }
 
-        } # see if next field needs to be checked
-    $condref++;
+            } # see if next field needs to be checked
+        $condref++;
 
-    } # check next condition
+        } # check next condition
 
     if($render_js)
         {
         ?>
         <script type="text/javascript">
-        function checkDisplayCondition<?php echo $field["ref"];?>(node)
+        function checkDisplayCondition<?php echo $field["ref"];?>()
             {
+            // Get current display status
             field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+            // Assume field will not be displayed
             newfield<?php echo $field['ref']; ?>status = 'none';
             newfield<?php echo $field['ref']; ?>show   = false;
+            // TODO Explain meaning of provisional
             newfield<?php echo $field['ref']; ?>provisional = true;
             <?php
             foreach($scriptconditions as $scriptcondition)
@@ -4027,6 +4090,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     )
                 */
                 ?>
+                // TODO Explain meaning of subcheck
                 newfield<?php echo $field['ref']; ?>subcheck = false;
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
                 <?php
@@ -4066,6 +4130,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     <?php
                     }
                 ?>
+                // TODO Explain this
                 if(!newfield<?php echo $field['ref']; ?>subcheck)
                     {
                     newfield<?php echo $field['ref']; ?>provisional = false;
@@ -4074,11 +4139,13 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 }
                 ?>
 
+                // Is field to be displayed
                 if(newfield<?php echo $field['ref']; ?>provisional)
                     {
                     newfield<?php echo $field['ref']; ?>status = 'block';
                     }
 
+                // If display status changed then toggle the visibility
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
                     jQuery('#question_<?php echo $n ?>').slideToggle();
@@ -4211,7 +4278,7 @@ function check_access_key($resource,$key)
                 elseif(isset($userinfo[0]["search_filter_id"]) && is_numeric($userinfo[0]["search_filter_id"]) && $userinfo[0]['search_filter_id'] > 0)
                     {
                     // Group search filter
-                    $usersearchfilter = $userdata["search_filter_id"];
+                    $usersearchfilter = $userinfo[0]["search_filter_id"];
                     }
                 }
             else
@@ -4261,7 +4328,7 @@ function check_access_key($resource,$key)
                         
                         if($co_parts[0]!='' && isset($co_parts[1]))
                             {
-                            $name=str_replace("$","",$co_parts[0]);
+                            $name=str_replace("$","",ltrim($co_parts[0]));
                             $value=ltrim($co_parts[1]); 
                             if(strtolower($value)=='false'){$value=0;}
                             elseif(strtolower($value)=='true'){$value=1;}
@@ -5639,13 +5706,15 @@ function get_utility_path($utilityname, &$checked_path = null)
             return $return;       
 
         case 'exiftool':
+            global $exiftool_global_options;
+
             return get_executable_path(
                 $exiftool_path,
                 array(
                     'unix' => 'exiftool',
                     'win'  => 'exiftool.exe'
                 ),
-                $checked_path);
+                $checked_path) . " {$exiftool_global_options} ";
 
         case 'antiword':
         case 'pdftotext':
@@ -6276,7 +6345,10 @@ function get_rs_session_id($create=false)
     // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users
     if(isset($_COOKIE["rs_session"]))
         {
-        rs_setcookie("rs_session",$_COOKIE["rs_session"], 7, "", "", substr($baseurl,0,5)=="https", true); // extend the life of the cookie
+        if (!headers_sent())
+            {
+            rs_setcookie("rs_session",$_COOKIE["rs_session"], 7, "", "", substr($baseurl,0,5)=="https", true); // extend the life of the cookie
+            }
         return($_COOKIE["rs_session"]);
         }
     if ($create) 
@@ -6284,7 +6356,10 @@ function get_rs_session_id($create=false)
         // Create a new ID - numeric values only so we can search for it easily
         $rs_session= rand();
         global $baseurl;
-        rs_setcookie("rs_session",$rs_session, 7, "", "", substr($baseurl,0,5)=="https", true);
+        if (!headers_sent())
+            {
+            rs_setcookie("rs_session",$rs_session, 7, "", "", substr($baseurl,0,5)=="https", true);
+            }
 
         if(is_array($anonymous_login))
             {
@@ -6595,11 +6670,11 @@ function get_download_filename($ref,$size,$alternative,$ext)
             $filename = trim(nl2br(strip_tags($newfilename)));
             if($size != "" && !$download_filenames_without_size)
                 {
-                $filename = substr($filename, 0, 200) . '-' . $size . '.' . $ext;
+                $filename = strip_extension(mb_basename(substr($filename, 0, 200))) . '-' . $size . '.' . $ext;
                 }
             else
                 {
-                $filename = substr($filename, 0, 200) . '.' . $ext;
+                $filename = strip_extension(mb_basename(substr($filename, 0, 200))) . '.' . $ext;
                 }
 
             if($prefix_resource_id_to_filename)
@@ -7655,4 +7730,22 @@ function has_browsebar()
     && ('' == $k || $internal_share_access)
     && $browse_bar;
     //   && false == $loginterms ?
+    }
+
+/**
+* Utility to if collapsable upload options should be displayed
+*  
+* @return boolean
+*/   
+function display_upload_options()
+    {
+    global $metadata_read, $enable_add_collection_on_upload, $relate_on_upload, $camera_autorotation;
+    if ($metadata_read || $enable_add_collection_on_upload || $relate_on_upload || $camera_autorotation)
+        {
+        return true;
+        }
+    else
+        {
+        return false;
+        }
     }

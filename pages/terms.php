@@ -97,13 +97,11 @@ include "../include/header.php";
 	</div>
 	
 	<div class="QuestionSubmit">
-	<label></label>
-	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["proceed"]?>&nbsp;&nbsp;" 
-	<?php if(strpos($url,"crop.php")!==false) 
-			{ 
-			$targetPage = $baseurl_short."pages/view.php?ref=".urlencode($ref);
-			echo 'onClick="redirectAfterDelay(\''.$targetPage.'\',2000);"'; 
-			}?>/>
+        <label></label>
+        <input name="save"
+               type="submit"
+               value="&nbsp;&nbsp;<?php echo $lang["proceed"]?>&nbsp;&nbsp;"
+               <?php hook('terms_save_input_attributes', '', array($ref, $url)); ?>/>
 	</div>
 	</form>
 </div>

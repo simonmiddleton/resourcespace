@@ -117,6 +117,12 @@ if (getval("save",false) && enforcePostRequest(false))
 					"resource_defaults","config_options","welcome_message","ip_restrict","request_mode","allow_registration_selection","inherit_flags") as $column)		
 		
 		{
+        if ($execution_lockout && $column=="config_options")
+            {
+            # Do not allow config overrides to be changed from UI if $execution_lockout is set.
+            continue;
+            } 
+        
 		if (in_array($column,array("allow_registration_selection")))
 			{
 			$val=getval($column,"0") ? "1" : "0";
@@ -133,14 +139,36 @@ if (getval("save",false) && enforcePostRequest(false))
 		elseif($column=="request_mode")
 			{
 			$val=getval($column, 1, true);
+            }
+        elseif($column=="search_filter_id")
+			{
+            $val=getval($column, 1, true);
+            $search_filter_old = trim(getval("search_filter",""));
+            if($search_filter_nodes && $val == 0 && $search_filter_old != "")
+                {
+                $migrateresult = migrate_search_filter($search_filter_old); 
+                
+                if(is_numeric($migrateresult))
+                    {
+                    log_activity($lang["filter_search_success"] . ": '" . $search_filter_old, LOG_CODE_SYSTEM, $migrateresult, "filter", "ref", $migrateresult, null, $search_filter_old, $userref);
+                    // Successfully migrated - now use the new filter
+                    $val = $migrateresult;
+                    }
+                elseif(is_array($migrateresult))
+                    {
+                    debug("FILTER MIGRATION: Error migrating filter: '" . $search_filter_old . "' - " . implode('\n' ,$migrateresult));
+                    // Error - set flag so as not to reattempt migration and notify admins of failure
+                    $val = -1;
+                    $notification_users = get_notification_users();
+                    message_add(array_column($notification_users,"ref"), $lang["filter_migration"] . " - " . $lang["filter_search_error"] . ": <br />" . implode('\n' ,$migrateresult),generateURL($baseurl_short . "pages/admin/admin_group_management_edit.php",array("ref"=>$ref)));
+                    }
+                }
 			}			
 		else
 			{
 			$val=getvalescaped($column,"");
 			}
 			
-		if ($execution_lockout && $column=="config_options") {$val="";} # Do not allow config overrides if $execution_lockout is set.
-		
 		if (isset($sql))
 			{
 			$sql.=",";
@@ -152,14 +180,10 @@ if (getval("save",false) && enforcePostRequest(false))
 		$sql.="{$column}='{$val}'";
 		log_activity(null,LOG_CODE_EDITED,$val,'usergroup',$column,$ref);
 		}
-	$sql.=" where ref='{$ref}'";
-	sql_query($sql);
     
-    if($search_filter_nodes && getval("search_filter_id",0,true) == 0 && trim(getval("search_filter","")) != "")
-        {
-        migrate_usergroup_filter();
-        }
-	
+    $sql.=" where ref='{$ref}'";
+    sql_query($sql);
+
 	hook("usergroup_edit_add_form_save","",array($ref));
 	if(!$error)
 		{
@@ -222,7 +246,7 @@ include "../../include/header.php";
 
         <div class="Question">
             <label for="name"><?php echo $lang["property-name"]; ?></label>
-            <input name="name" type="text" class="stdwidth" value="<?php echo $record['name']; ?>"> 
+            <input name="name" type="text" class="stdwidth" value="<?php echo htmlspecialchars($record['name']); ?>"> 
             <div class="clearerleft"></div>
         </div>
 

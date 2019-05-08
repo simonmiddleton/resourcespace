@@ -458,6 +458,16 @@ $metadata_read_default=true;
 # For example: $exiftool_no_process=array("eps","png");
 $exiftool_no_process=array();
 
+/*
+ExifTool global options - these get applied to any exiftool command run. For more information on options please see
+https://sno.phy.queensu.ca/~phil/exiftool/exiftool_pod.html#Advanced-options
+
+Example use cases:
+$exiftool_global_options = "-config '/var/www/test.Exiftool_config'"; # @see https://sno.phy.queensu.ca/~phil/exiftool/config.html
+$exiftool_global_options = "-x EXIF:CreateDate"; # exclude tag
+*/
+$exiftool_global_options = "";
+
 # Which field do we drop the original filename in to?
 $filename_field=51;
 
@@ -1323,6 +1333,7 @@ $about_link=true;
 
 # When uploading resources (batch upload) and editing the template, should the date be reset to today's date?
 # If set to false, the previously entered date is used.
+# Please note that if upload_then_edit is enabled, then this will happen at upload stage in order to get the similar behaviour for this mode
 $reset_date_upload_template=true;
 $reset_date_field=12; # Which date field to reset? (if using multiple date fields)
 
@@ -3208,10 +3219,7 @@ $user_pref_daily_digest_mark_read=true;
 // Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
 $inactive_message_auto_digest_period=7;
 // Accompanying user preference option
-$user_pref_inactive_digest = true;
-
-# login_background. If enabled this uses first slideshow image as a background for the login screen. This image will not then be used in the slideshow. If not using the manage slideshow tool this will look for a file named 1.jpg in the $homeanim_folder.
-$login_background=false;
+$user_pref_inactive_digest = false;
 
 /*
 Resource types that cannot upload files. They are only being used to store information. Use resource type ID as values for this array.
@@ -3387,6 +3395,10 @@ $upload_review_lock_metadata = false;
 # New upload mode that focuses on getting files into the filestore, then working off a queue for further processing (metadata extract, preview creation, etc).
 # requires $offline_job_queue=true;
 $upload_then_process=false;
+
+// Set to TRUE to review resources based on resource ID (starting from most recent) when using upload then edit mode.
+// Requires "$upload_then_edit = true;"
+$upload_review_mode_review_by_resourceid = false;
 
 # Uncomment and set to an archive state where $upload_then_process files are stored before processing.
 # It is strongly recommended that a unique archive state be created to handle this

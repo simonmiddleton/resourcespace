@@ -117,7 +117,7 @@ include "../../include/header.php";
 <p>    
 <a href="<?php echo $backurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a>
 </p>
-<h1><?php echo i18n_get_translated($restypedata["name"]) ?></h1>
+<h1><?php echo htmlspecialchars(i18n_get_translated($restypedata["name"])) ?></h1>
 <?php if (isset($error_text)) { ?><div class="FormError"><?php echo $error_text?></div><?php } ?>
 <?php if (isset($saved_text)) { ?><div class="PageInfoMessage"><?php echo $saved_text?></div><?php } ?>
 
@@ -158,7 +158,7 @@ if($confirm_delete)
 	<?php
 	  for($n=0;$n<count($destrestypes);$n++){
 	?>
-		<option value="<?php echo $destrestypes[$n]["ref"]; ?>"><?php echo i18n_get_translated($destrestypes[$n]["name"]); ?></option>
+		<option value="<?php echo $destrestypes[$n]["ref"]; ?>"><?php echo htmlspecialchars(i18n_get_translated($destrestypes[$n]["name"])); ?></option>
 	<?php
 	  }
 	?>

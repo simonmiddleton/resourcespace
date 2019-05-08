@@ -173,12 +173,14 @@ function migrate_search_filter($filtertext)
     if($filterid !== false)
         {
         $logtext .= "FILTER MIGRATION: - Filter already migrated. ID = " . $existingrules[$filterid]["ref"] . "\n";
-        return $filterid;
+        return $existingrules[$filterid]["ref"];
         }
     else
         {
+        $truncated_filter_name = mb_strcut($filtertext, 0, 200);
+
         // Create filter. All migrated filters will have AND rules
-        sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($filtertext) . "','" . RS_FILTER_ALL  . "')");
+        sql_query("INSERT INTO filter (name, filter_condition) VALUES ('" . escape_check($truncated_filter_name) . "','" . RS_FILTER_ALL  . "')");
         $filterid = sql_insert_id();
         $logtext .= "FILTER MIGRATION: - Created new filter. ID = " . $filterid . "'\n";
         }
@@ -195,8 +197,6 @@ function migrate_search_filter($filtertext)
         $rulevalues = explode("|",trim($rule_parts[1]));
         
         // Create filter_rule
-        db_begin_transaction();
-        
         $logtext .=  "FILTER MIGRATION: -- Creating filter_rule for '" . $filter_rule . "'\n";
         sql_query("INSERT INTO filter_rule (filter) VALUES ('{$filterid}')");
         $new_filter_rule = sql_insert_id();
@@ -219,9 +219,10 @@ function migrate_search_filter($filtertext)
             {
             $all_fields_index = array_search($rulefield, array_column($all_fields, 'name'));
             $field_ref = $all_fields[$all_fields_index]["ref"];
+            $field_type = $all_fields[$all_fields_index]["type"];
             $logtext .= "FILTER MIGRATION: --- filter field name: '" . $rulefield. "' , field id #" . $field_ref . "\n";
-            
-            $field_nodes = get_nodes($field_ref,NULL);
+
+            $field_nodes = get_nodes($field_ref, NULL, (FIELD_TYPE_CATEGORY_TREE == $field_type ? true : false));
             $all_valid_nodes = array_merge($all_valid_nodes,$field_nodes);
             }
             
@@ -244,11 +245,11 @@ function migrate_search_filter($filtertext)
                 $logtext .=  "FILTER MIGRATION: --- Invalid field option: '" . $rulevalue . "', skipping\n";
                 }
             }
-        
-        debug($logtext);                
-        
+
+        debug($logtext);       
         if(count($errors) > 0)
             {
+            delete_filter($filterid);
             return $errors;
             }
             
@@ -256,7 +257,6 @@ function migrate_search_filter($filtertext)
         $logtext .=  "FILTER MIGRATION: -- Adding nodes to filter_rule\n";
         $sql = "INSERT INTO filter_rule_node (filter_rule,node,node_condition) VALUES " . implode(',',$nodeinsert);
         sql_query($sql);
-        db_end_transaction();
         }
         
     debug("FILTER MIGRATION: filter migration completed for '" . $filtertext);

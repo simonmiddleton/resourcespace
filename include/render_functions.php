@@ -525,7 +525,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             $found_day=$s[2];
             }
             ?>      
-            <select name="<?php echo $name?>_year" id="<?php echo $id?>_year" class="SearchWidth" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo $name?>_year" id="<?php echo $id?>_year" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo $lang["anyyear"]?></option>
               <?php
               $y=date("Y");
@@ -538,7 +538,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             
             <?php if ($forsearchbar && $searchbyday) { ?><br /><?php } ?>
             
-            <select name="<?php echo $name?>_month" id="<?php echo $id?>_month" class="SearchWidth" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+            <select name="<?php echo $name?>_month" id="<?php echo $id?>_month" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo $lang["anymonth"]?></option>
               <?php
               for ($d=1;$d<=12;$d++)
@@ -552,7 +552,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
             <?php if (!$forsearchbar || ($forsearchbar && $searchbyday)) 
             	{ 
             	?>
-				<select name="<?php echo $name?>_day" id="<?php echo $id?>_day" class="SearchWidth" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
+				<select name="<?php echo $name?>_day" id="<?php echo $id?>_day" class="SearchWidth<?php if ($forsearchbar){ echo "Half";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
 				  <option value=""><?php echo $lang["anyday"]?></option>
 				  <?php
 				  for ($d=1;$d<=31;$d++)
@@ -877,6 +877,13 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 				$action_index_to_remove = array_search('save_search_items_to_collection', array_column($search_actions_array, 'value'));
                 unset($search_actions_array[$action_index_to_remove]);
 				$search_actions_array = array_values($search_actions_array);
+
+                if($forpage === "themes")
+                    {
+                    $action_index_to_remove = array_search('remove_collection', array_column($collection_actions_array, 'value'));
+                    unset($collection_actions_array[$action_index_to_remove]);
+                    $collection_actions_array = array_values($collection_actions_array);
+                    }
                 }
     
             $actions_array = array_merge($collection_actions_array, $search_actions_array);
@@ -1299,7 +1306,7 @@ function render_access_key_tr(array $record)
         // For resource
         $link      = $baseurl . '?r=' . urlencode($record['resource']) . '&k=' . urlencode($record['access_key']);
         $type      = $lang['share-resource'];
-        $edit_link = sprintf('%spages/resource_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=',
+        $edit_link = sprintf('%spages/resource_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s',
             $baseurl_short,
             urlencode($record['resource']),
             urlencode($record['access_key']),
@@ -1313,7 +1320,7 @@ function render_access_key_tr(array $record)
         // For collection
         $link      = $baseurl . '?c=' . urlencode($record['collection']) . '&k=' . urlencode($record['access_key']);
         $type      = $lang['sharecollection'];
-        $edit_link = sprintf('%spages/collection_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=',
+        $edit_link = sprintf('%spages/collection_share.php?ref=%s&editaccess=%s&editexpiration=%s&editaccesslevel=%s&editgroup=%s',
             $baseurl_short,
             urlencode($record['collection']),
             urlencode($record['access_key']),
@@ -1413,6 +1420,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
   $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $upload_review_mode, $check_edit_checksums,
   $upload_review_lock_metadata, $locked_fields, $lastedited, $copyfrom, $fields;
+
+  debug("display_field: display_field(\$n = {$n}, \$field = {$field['ref']}, \$newtab = {$newtab}, \$modal = {$modal});");
 
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
@@ -2525,18 +2534,19 @@ function render_filter_bar_button($text, $on_click, $icon)
 /**
 * Render "Upload here" button.
 *
-* This applies to search results that do not relate to a collection, but consist of purely the following:
+* This applies to search results that are either a special search "!collection" and/or consist of purely the following:
 * - Nodes
 * - Resource type
 * - Workflow (archive) state
 * 
 * For free text searches this SHOULD NOT work!
 * 
-* @param array $search_params
+* @param array   $search_params
+* @param boolean $return_params_only Exception to the rule! Rather than render, return the upload here params
 * 
 * @return void
 */
-function render_upload_here_button(array $search_params,$return_params_only=false)
+function render_upload_here_button(array $search_params, $return_params_only = false)
     {
     if(!(checkperm('c') || checkperm('d')))
         {
@@ -2548,7 +2558,13 @@ function render_upload_here_button(array $search_params,$return_params_only=fals
         return;
         }
 
-    if(isset($search_params['search']) && empty(resolve_nodes_from_string($search_params['search'])))
+    if(
+        isset($search_params['search'])
+        && (
+            mb_substr($search_params['search'], 0, 11) != '!collection'
+            && empty(resolve_nodes_from_string($search_params['search']))
+        )
+    )
         {
         return;
         }
@@ -2565,6 +2581,20 @@ function render_upload_here_button(array $search_params,$return_params_only=fals
 
     $upload_here_params['upload_here'] = true;
     $upload_here_params['search'] = $search_params['search'];
+
+    // Special search !collection
+    if(mb_substr($search_params['search'], 0, 11) == '!collection')
+        {
+        $collection = explode(' ', $search_params['search']);
+        $collection = str_replace('!collection', '', $collection[0]);
+        $collection = explode(',', $collection);
+        $collection = (int) $collection[0];
+
+        //Check the user is able to upload to this collection before continuing
+        if(!collection_writeable($collection)) {return;}
+
+        $upload_here_params['collection_add'] = $collection;
+        }
 
     // If resource types is a list then always select the first resource type the user has access to
     $resource_types = explode(',', $search_params['restypes']);
@@ -2683,8 +2713,11 @@ function render_browse_bar()
         {
         $bb_html .= generate_browse_bar_item("FC", $lang["themes"]);
         }
-
-    $bb_html .= generate_browse_bar_item("C", $lang["mycollections"]);
+    if(!checkperm('b'))
+        {
+        $bb_html .= generate_browse_bar_item("C", $lang["mycollections"]);
+        }
+        
     if($browse_bar_workflow)
         {
         $bb_html .= generate_browse_bar_item("WF", $lang['browse_by_workflow_state']);

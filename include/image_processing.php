@@ -14,6 +14,8 @@ include_once 'metadata_functions.php';
 if (!function_exists("upload_file")){
 function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="",$after_upload_processing=false)
     {
+    debug("upload_file(ref = $ref, no_exif = $no_exif,revert = $revert, autorotate = $autorotate, file_path = $file_path, after_upload_processing = $after_upload_processing)");
+
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
 
@@ -464,7 +466,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $path=get_resource_path($ref,true,"",false,"mp3");
                 if (file_exists($path)) {unlink($path);}
                 }   
-        
+
             # Create previews
             global $enable_thumbnail_creation_on_upload,$file_upload_block_duplicates,$checksum;
             # Checksums are also normally created at preview generation time, but we may already have a checksum if $file_upload_block_duplicates is enabled
@@ -1068,7 +1070,10 @@ function iptc_return_utf8($text)
  
 function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true)
     {
-    global $keep_for_hpr,$imagemagick_path, $preview_generate_max_file_size,$autorotate_no_ingest, $previews_allow_enlarge,$lang;
+    global $keep_for_hpr,$imagemagick_path, $preview_generate_max_file_size,$autorotate_no_ingest, $previews_allow_enlarge,$lang,$originals_separate_storage;
+
+    # Used to preemptively create folder
+    get_resource_path($ref,true,"pre",true);
 
     if(!is_numeric($ref))
         {
@@ -2430,6 +2435,8 @@ function generate_file_checksum($resource,$extension,$anyway=false)
     global $file_checksums_offline;
     $generated = false;
 
+    debug("generate_file_checksum(resource = $resource, extension = $extension, anyway = $anyway)");
+
     if (($file_checksums && !$file_checksums_offline)||$anyway) // do it if file checksums are turned on, or if requestor said do it anyway
         {
         # Generates a unique checksum for the given file, based either on the first 50K and the file size or the full file.
@@ -2670,6 +2677,13 @@ function get_image_orientation($file)
         {
         $orientation = trim(str_replace('CW', '', $orientation));
         }
+
+    // Failed or no orientation available
+    if(!is_numeric($orientation))
+        {
+        return 0;
+        }
+
     return $orientation;
     }
 
@@ -2678,7 +2692,9 @@ function AutoRotateImage($src_image, $ref = false)
     # use $ref to pass a resource ID in case orientation data needs to be taken
     # from a non-ingested image to properly rotate a preview image
     global $imagemagick_path, $camera_autorotation_ext, $camera_autorotation_gm;
-    
+
+    debug("AutoRotateImage(src_image = $src_image, ref = $ref)");
+
     if (!isset($imagemagick_path)) 
         {
         return false;
@@ -2738,8 +2754,12 @@ function AutoRotateImage($src_image, $ref = false)
             } 
         else
             {
-            $command = $convert_fullpath . ' ' . escapeshellarg($src_image) . ' -auto-orient ' . escapeshellarg($new_image);
-            $output=run_command($command);
+            $orientation = get_image_orientation($src_image);
+            if ($orientation != 0) 
+                {
+                $command = $convert_fullpath . ' ' . escapeshellarg($src_image) . ' -auto-orient ' . escapeshellarg($new_image);
+                $output=run_command($command);
+                }
             }
         }
 

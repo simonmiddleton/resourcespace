@@ -11,9 +11,9 @@ if (!checkperm("a"))
 
 include "../../include/header.php";
 
-$find=getval("find","");
-$filter_by_parent=getval("filterbyparent", "");
-$filter_by_permissions=getval("filterbypermissions","");
+$find=getvalescaped("find","");
+$filter_by_parent=getvalescaped("filterbyparent", "");
+$filter_by_permissions=getvalescaped("filterbypermissions","");
 
 if ($filter_by_permissions != "")
 	{
@@ -136,7 +136,7 @@ function addColumnHeader($orderName, $labelKey)
 					<a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($groups[$n]["ref"],$find,STR_HIGHLIGHT_SIMPLE); ?></a>
 				</td>					
 				<td>
-					<a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($groups[$n]["name"],$find,STR_HIGHLIGHT_SIMPLE); ?></a>
+					<a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo strip_tags_and_attributes(str_highlight($groups[$n]["name"], $find, STR_HIGHLIGHT_SIMPLE)); ?></a>
 				</td>
 				
 				<td>					
@@ -147,13 +147,13 @@ function addColumnHeader($orderName, $labelKey)
 					<?php
 					if ($groups[$n]["orphaned"])
 						{
-						?><a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">&lt;<?php echo $groups[$n]["pname"];?>&gt;</a>
+						?><a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">&lt;<?php echo htmlspecialchars($groups[$n]["pname"]) ;?>&gt;</a>
 						<?php
 						}
 					else
 						{
 						?><a href="<?php echo $baseurl_short; ?>pages/admin/admin_group_management.php?filterbyparent=<?php echo $groups[$n]["pref"];
-						?>" onClick="return CentralSpaceLoad(this,false);"><?php echo str_highlight ($groups[$n]["pname"],$find,STR_HIGHLIGHT_SIMPLE); ?></a>
+						?>" onClick="return CentralSpaceLoad(this,false);"><?php echo strip_tags_and_attributes(str_highlight($groups[$n]["pname"], $find, STR_HIGHLIGHT_SIMPLE)); ?></a>
 						<?php
 						}
 					?>

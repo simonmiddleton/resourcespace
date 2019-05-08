@@ -43,12 +43,15 @@ $sent=false;
 
 if (getval("send","")!="" && enforcePostRequest(false))
 	{
+    debug("feedback.php: Sending user survey...");
 	$csvheaders="\"date\"";
 	$csvline="\"" . date("Y-m-d") . "\"";
 	$message="Date: ". date("Y-m-d")."\n";
+    debug("feedback.php: count(\$feedback_questions) = " . count($feedback_questions));
 	for ($n=1;$n<=count($feedback_questions);$n++)
 		{
-		$type=$feedback_questions[$n]["type"];	
+		$type=$feedback_questions[$n]["type"];
+        debug("feedback.php: \$type = {$type}");
 		
 		if ($type!=4) # Do not run for labels
 			{
@@ -76,6 +79,7 @@ if (getval("send","")!="" && enforcePostRequest(false))
 			if ($csvline!="") {$csvline.=",";}
 			if ($csvheaders!="") {$csvheaders.=",";}
 			$csvline.="\"" . str_replace("\"","'",$value) . "\"";
+            debug("feedback.php: \$csvline = {$csvline}");
 			$csvheaders.="\"".str_replace("\"","'",str_replace("\n","",$feedback_questions[$n]['text']))."\"";
 			if ($value!=""){$message.=$feedback_questions[$n]['text'].": \n". $value."\n\n";}
 			}
@@ -104,8 +108,10 @@ if (getval("send","")!="" && enforcePostRequest(false))
 		$result=sql_query("select * from site_text where page='all' and name='emailfeedback'");
 		if (count($result)==0){$wait=sql_query('insert into site_text (page,name,text,language) values ("all","emailfeedback","[img_storagedir_/../gfx/whitegry/titles/title.gif] [message] [text_footer][attach_' . $storagedir . '/feedback/results.csv]","en-US")');}
 		
+        debug("feedback.php: Send form results to email_notify...");
 		# send form results and results.csv to email_notify
 		if ($use_phpmailer){
+            debug("feedback.php: \$use_phpmailer = " . ($use_phpmailer ? 'true' : 'false'));
 			$templatevars['message']=$message . "Survey results attached\n\n";
 			send_mail($email_notify,$username." has submitted feedback for ".$applicationname,$message,"","","emailfeedback",$templatevars);
 			} 

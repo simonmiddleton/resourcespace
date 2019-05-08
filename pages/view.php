@@ -703,6 +703,9 @@ $flvfile = get_resource_path(
     (1 == $video_preview_hls_support || 2 == $video_preview_hls_support) ? 'm3u8' : $ffmpeg_preview_extension
 );
 
+# Default use_watermark if required by related_resources
+$use_watermark = false;
+
 if(!file_exists($flvfile) && 'flv' != $ffmpeg_preview_extension)
     {
     $flvfile = get_resource_path($ref, true, 'pre', false, 'flv');
@@ -804,7 +807,7 @@ else if(1 == $resource['has_image'])
 
     // PDFjs works only for PDF files. Because this requires the PDF file itself, we can only use this mode if user has
     // full access to the resource.
-    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access === 0)
+    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access == 0)
         {
         // IMPORTANT: never show the real file path with this feature
         $hide_real_filepath_initial = $hide_real_filepath;
@@ -844,7 +847,6 @@ else if(1 == $resource['has_image'])
              src="<?php echo $imageurl; ?>" 
              alt="<?php echo $lang['fullscreenpreview']; ?>" 
              GALLERYIMG="no"
-			 style="<?php echo "max-height:{$image_height}px; " ?>"
         <?php
         if($annotate_enabled)
             {
@@ -999,8 +1001,10 @@ else if(1 == $resource['has_image'])
                     // Set the width and height of the image otherwise if the source of the file
                     // is fetched from download.php, Annotorious will not be able to determine its
                     // size
-                    preview_image_copy.width(<?php echo $image_width; ?>);
-                    preview_image_copy.height(<?php echo $image_height; ?>);
+                    var preview_image_width=preview_image.width();
+                    var preview_image_height=preview_image.height();
+                    preview_image_copy.width( preview_image_width );
+                    preview_image_copy.height( preview_image_height );
 
                     preview_image_copy.appendTo(preview_image_link.parent());
                     preview_image_link.hide();
@@ -1641,7 +1645,7 @@ hook ("resourceactions") ?>
 		</a></li><?php 
 		}
 
-    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access === 0)
+    if($resource['file_extension'] == 'pdf' && $use_pdfjs_viewer && $access == 0)
         {
         $find_in_pdf_url = generateURL("{$baseurl_short}pages/search_text_in_pdf.php", array( 'ref' => $ref));
         ?>
