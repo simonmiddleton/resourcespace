@@ -89,3 +89,86 @@ function do_http_request($url, $basic_auth, $content_type, $request_method, $dat
 
     return $response;
     }
+
+function mplus_generate_connection_data($host, $application, $user, $pass)
+    {
+    if(trim($host) == '' || trim($application) == '' || trim($user) == '' || trim($pass) == '')
+        {
+        return array();
+        }
+
+    $result = array(
+        'host' => $host,
+        'application' => $application,
+        'username' => $user,
+        'password' => $pass,
+    );
+
+    return $result;
+    }
+
+
+/**
+* Run a module search in the search service using an expert search expression
+* 
+* @uses do_http_request()
+* 
+* @param array  $conn_data   Connection data. @see mplus_generate_connection_data()
+* @param string $module_name Module name
+* 
+* @return
+*/
+function mplus_search(array $conn_data, $module_name, $mpid)
+    {
+    $basic_auth = "{$conn_data['username']}:{$conn_data['password']}";
+    $url = "{$conn_data['host']}/{$conn_data['application']}/ria-ws/application/module/{$module_name}/search/";
+
+
+
+
+$xml = new DOMDocument('1.0', 'UTF-8');
+$application = $xml->createElement('application');
+$application->setAttribute('xmlns', 'http://www.zetcom.com/ria/ws/module/search');
+$application->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+$application->setAttribute('xsi:schemaLocation', 'http://www.zetcom.com/ria/ws/module/search http://www.zetcom.com/ria/ws/module/search/search_1_1.xsd');
+$application = $xml->appendChild($application);
+
+$modules = $xml->createElement('modules');
+$modules = $application->appendChild($modules);
+
+// @TODO: expect to have to go through multiple modules at this point to retrieve the information needed
+$module = $xml->createElement('module');
+$module->setAttribute('name', $module_name);
+$module = $modules->appendChild($module);
+
+$search = $xml->createElement('search');
+$search->setAttribute('limit', 1);
+$search->setAttribute('offset', 0);
+$search = $module->appendChild($search);
+
+$select = $xml->createElement('select');
+$select = $search->appendChild($select);
+
+echo $xml->saveXML();
+
+
+
+die();
+    $result = do_http_request($url, $basic_auth, "application/xml", "POST", $request_xml);
+
+    if($result['status_code'] != 200)
+        {
+        trigger_error(str_replace('$code', $result['status_code'], $lang['museumplus_error_unexpected_response']));
+        }
+
+
+
+
+
+    if($result['headers']['content-type'][0] == 'application/xml')
+        {
+        $xml = new SimpleXMLElement($result['result']);
+        }
+
+    return $xml;
+    }
