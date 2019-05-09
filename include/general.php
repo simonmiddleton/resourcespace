@@ -1527,7 +1527,7 @@ function get_user($ref)
         if (isset($udata_cache[$ref])){
           $return=$udata_cache[$ref];
         } else {
-    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, u.search_filter_o_id, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
+    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, u.search_filter_o_id, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter, g.search_filter_id FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
     }
     
     # Return a user's credentials.
