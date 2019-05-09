@@ -1361,7 +1361,8 @@ function get_saved_searches($collection)
 
 function add_saved_search($collection)
 	{
-	sql_query("insert into collection_savedsearch(collection,search,restypes,archive) values ('" . escape_check($collection) . "','" . getvalescaped("addsearch","") . "','" . getvalescaped("restypes","") . "','" . getvalescaped("archive","",true) . "')");
+	sql_query("insert into collection_savedsearch(collection,search,restypes,archive) values ('" 
+		. escape_check($collection) . "','" . getvalescaped("addsearch","") . "','" . getvalescaped("restypes","") . "','" . getvalescaped("archive","") . "')");
 	}
 
 function remove_saved_search($collection,$search)
