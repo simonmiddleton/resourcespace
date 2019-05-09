@@ -60,7 +60,7 @@
 			'\"" . escape_check($rebuilt_search) . '"' . ($restypes_names == "" ? "" : " (" . escape_check(i18n_get_translated($restypes_names)) . ")") . "',
 			'" . escape_check($search) . "',
 			'" . escape_check($restypes) . "',
-			" . escape_check($archive) . ",
+			'" . escape_check($archive) . "',
 			1
 		)");
 		search_notification_process($userref,sql_insert_id());
