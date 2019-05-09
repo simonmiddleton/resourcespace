@@ -121,7 +121,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
     // to enclose strings and backslash as escape character
     // Uses update_field and add_resource_nodes/delete_resource_nodes
     
-    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents;
+    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents, $resource_field_column_limit;
     
     $resourcedata=get_resource_data($resource,true);
     $editaccess = get_edit_access($resource,$resourcedata['archive'],false,$resourcedata);
@@ -199,7 +199,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
                     if(count($fieldoptiontranslations) < 2)
                         {
                         $currentoptions[]=trim($fieldnode['name']); # Not a translatable field
-                        debug("update_field: current field option: '" . trim($fieldnode['name']) . "'<br />");
+                        debug("update_field: current field option: '" . trim($fieldnode['name']));
                         }
                     else
                         {
@@ -210,14 +210,14 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
                             if (substr($fieldoptiontranslations[$n],2,1)!=":" && substr($fieldoptiontranslations[$n],5,1)!=":" && substr($fieldoptiontranslations[$n],0,1)!=":")
                                 {
                                 $currentoptions[]=trim($fieldnode['name']);
-                                debug("update_field: current field option: '" . $fieldnode['name'] . "'<br />");
+                                debug("update_field: current field option: '" . $fieldnode['name']);
                                 }
                             else
                                 {
                                 # Support both 2 character and 5 character language codes (for example en, en-US).
                                 $p=strpos($fieldoptiontranslations[$n],':');                         
                                 $currentoptions[]=trim(substr($fieldoptiontranslations[$n],$p+1));
-                                debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)) . "'<br />");
+                                debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)));
                                 }
                             }
                         }
@@ -232,9 +232,9 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
                         $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
                         $nodes_to_add[]   = $newnode;
                         $currentoptions[] = trim($newvalue);
-                        $fieldnodes[]  = array("ref" => $newnode,"name" => trim($newvalue));                    
-        
-                        debug("update_field: field option added: '" . trim($newvalue) . "'<br />");
+                        $fieldnodes[]  = array("ref" => $newnode,"name" => trim($newvalue)); 
+                        $newnodes[] = $newnode;
+                        debug("update_field: field option added: '" . trim($newvalue));
                         }
                     }
                 }
@@ -256,7 +256,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
                                 $nodes_to_add[]=$parent_node_ref;
                                 }
                             }
-                        }
+                        }                    
                     $newnodes[] = $fieldnode["ref"];
                     }
                 else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["name"],$newvalues))
@@ -271,7 +271,6 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
             # Update resource_node table
             db_begin_transaction();
             delete_resource_nodes($resource,$nodes_to_remove);
-    
             if(count($nodes_to_add)>0)
                 {
                 add_resource_nodes($resource,$nodes_to_add, false);
@@ -286,12 +285,25 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
             $curr_nodes = array_intersect_key($node_options,array_flip($current_field_nodes));    
             $curr_nodes_str  = "," . implode(",",$curr_nodes);
             
-            // Build new value for log:
-            $new_nodes = array_intersect_key($node_options,array_flip($newnodes));  
-            $new_nodes_str = "," . implode(",",$new_nodes);
-            
-            resource_log($resource, LOG_CODE_EDITED, $field, '', $curr_nodes_str, $new_nodes_str);
+            # If this is a 'joined' field we need to add it to the resource column
+            $joins = get_resource_table_joins();
+            if(in_array($fieldinfo['ref'],$joins))
+                {
+                // Build new value for resource table:
+                $new_nodes = array_intersect_key($node_options,array_flip($newnodes));  
+                $new_nodes_str = implode(",",$new_nodes);
+                $truncated_value = truncate_join_field_value($new_nodes_str);
+
+                // Remove backslashes from the end of the truncated value
+                if(substr($truncated_value, -1) === '\\')
+                    {
+                    $truncated_value = substr($truncated_value, 0, strlen($truncated_value) - 1);
+                    }	
+
+                sql_query("UPDATE resource SET field".$field."='" . $truncated_value . "' WHERE ref='$resource'");
+                }
             }
+
         return true;
         }
     else
