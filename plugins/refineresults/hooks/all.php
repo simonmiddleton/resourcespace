@@ -52,7 +52,7 @@ function HookRefineresultsSearchBeforesearchresults()
     
 function HookRefineresultsSearchBeforesearchresultsexpandspace()
     {
-    global $baseurl_short,$lang,$search,$k,$archive;
+    global $baseurl_short,$lang,$search,$k,$archive,$default_display;
 
     # Slightly different behaviour when allowing external share searching. Show the full search string in the box.
     $value="";
@@ -68,7 +68,7 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
     
     # Get the url parameters to pass back in to the search
     $modal          = getvalescaped('modal', '');
-    $display        = getvalescaped('display', '');
+    $display        = getvalescaped('display', $default_display);
     $order_by       = getvalescaped('order_by', '');
     $offset         = getvalescaped('offset', '');
     $per_page       = getvalescaped('per_page', '');
