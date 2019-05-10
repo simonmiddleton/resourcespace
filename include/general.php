@@ -4211,11 +4211,13 @@ function check_access_key($resource,$key)
             SELECT user,
                    usergroup,
                    expires,
-                   password_hash
+                   password_hash, 
+                   access
               FROM external_access_keys
              WHERE resource = '$resource_escaped'
                AND access_key = '$key_escaped'
-               AND (expires IS NULL OR expires > now())");
+               AND (expires IS NULL OR expires > now())
+               ORDER BY access");
 
     if (count($keys)==0)
         {
@@ -4223,6 +4225,24 @@ function check_access_key($resource,$key)
         }
     else
         {
+        if($keys[0]["access"] == -1)
+            {
+            // If the resources have -1 as access they may have been added without the correct expiry etc.
+            sql_query("UPDATE external_access_keys ak
+                LEFT JOIN (SELECT * FROM external_access_keys ake WHERE access_key='$key_escaped' ORDER BY access DESC, expires ASC LIMIT 1) ake
+                    ON ake.access_key=ak.access_key
+                    AND ake.collection=ak.collection
+                SET ak.expires=ake.expires, 
+                    ak.access=ake.access,
+                    ak.usergroup=ake.usergroup,
+                    ak.email=ake.email,
+                    ak.password_hash=ake.password_hash
+                WHERE ak.access_key = '$key_escaped'
+                AND ak.access='-1'
+                AND ak.expires IS NULL");
+            return false;            
+            }
+
         if($keys[0]["password_hash"] != "" && PHP_SAPI != "cli")
             {
             // A share password has been set. Check if user has a valid cookie set

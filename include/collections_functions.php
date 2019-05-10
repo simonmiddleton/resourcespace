@@ -2103,18 +2103,20 @@ function collection_set_themes ($collection, $categories = array())
 	}
 	
 function remove_all_resources_from_collection($ref){
-	// abstracts it out of save_collection()
-	$removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($ref) . ';');
+    // abstracts it out of save_collection()
+    $removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($ref) . ';');
 
-	// First log this for each resource (in case it was done by mistake)
-	foreach($removed_resources as $removed_resource_id)
-		{
-		collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
-		}
+    // First log this for each resource (in case it was done by mistake)
+    foreach($removed_resources as $removed_resource_id)
+        {
+        collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
+        }
 
-	sql_query('DELETE FROM collection_resource WHERE collection = ' . escape_check($ref));
-	collection_log($ref, 'R', 0);
-	}	
+    sql_query('DELETE FROM collection_resource WHERE collection = ' . escape_check($ref));
+    sql_query("DELETE FROM external_access_keys WHERE collection='" . escape_check($ref) . "'");
+
+    collection_log($ref, 'R', 0);
+    }	
 
 if (!function_exists("get_home_page_promoted_collections")){
 function get_home_page_promoted_collections()
