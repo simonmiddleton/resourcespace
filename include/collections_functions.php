@@ -1490,8 +1490,8 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
 			for ($n=0;$n<count($keys);$n++)
 				{
 				# Insert a new access key entry for this resource/collection.
-				sql_query("insert into external_access_keys(resource,access_key,user,collection,date) values ('$resource','" . escape_check($keys[$n]["access_key"]) . "','$userref','$collection',now())");
-				#log this
+				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
+                #log this
 				collection_log($collection,"s",$resource, $keys[$n]["access_key"]);	
 				
 				# Set the flag so a warning appears.
