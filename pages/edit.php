@@ -1277,7 +1277,9 @@ if(!$multiple)
             }?>
        </label>
        <?php if ($check_edit_checksums)
-        {?>
+        {
+        $resource=get_resource_data($ref);
+        ?>
         <input id='resource_type_checksum' name='resource_type_checksum' type='hidden' value='<?php echo $resource['resource_type']; ?>'>
         <?php
         }
