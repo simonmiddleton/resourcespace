@@ -198,7 +198,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             $new_nodevals[] = $node_options[$ui_selected_node_value];
                             }
                         $new_nodes_val = implode($new_nodevals,",");
-                        sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(substr($new_nodes_val,1)))."' where ref='$ref'");
+                        sql_query("update resource set field".$fields[$n]["ref"]."='".escape_check(truncate_join_field_value(strip_leading_comma($new_nodes_val)))."' where ref='$ref'");
                         }
 					}
 
