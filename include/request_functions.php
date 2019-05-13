@@ -453,7 +453,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 }
             }
         }
-    if (trim($details)!="") {$message.=$lang["requestreason"] . ": " . newlines($details) . "\n\n";}
+    if (trim($details)!="") {$message.=$lang["requestreason"] . ": " . newlines($details);}
     
     # Add custom fields
     $c="";
