@@ -65,8 +65,6 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     background-color: #2E99E6;
     background-image: none;
     color: #fff;
-    border: 0;
-    display: inline-block;
     text-decoration: none;
     cursor: pointer;
     font-weight: normal;
@@ -76,11 +74,9 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 
 .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
     line-height: 1.8rem;
-    padding: 0 0.5rem;
+    padding: 0 1rem;
     vertical-align: middle;
     display: block;
-    min-height: unset;
-    margin-right: 5px;
 }
 
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
@@ -472,15 +468,36 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .backtoresults .prevLink:hover,.backtoresults .nextLink:hover,.backtoresults .closeLink:hover,.backtoresults .maxLink:hover {text-decoration:none;}
 
 .RecordPanel .RecordResouce {position:relative;clear: left;} 
-.RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 100%;}
-#previewimagewrapper {float:none;margin: 0px 20px 15px 0px; position: relative;width: 100%; display: flex; justify-content: center;}
+.RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 720px;}
+#previewimagewrapper {float:left;margin: 0px 15px 15px 0px; position: relative; min-width: 720px;}
+
+/* Larger layout changes */
+.RecordPanelLarge #previewimagewrapper {float: none; text-align: center; margin: 0px 15px 10px 0;}
+.RecordPanel.RecordPanelLarge .Picture {display: inline-block; max-width: unset;}
+.RecordPanel.RecordPanelLarge .RecordDownload {width: 100%;}
+.RecordPanel.RecordPanelLarge #ResourceDownloadOptions {
+    width: 70%;
+    float: left;
+    margin-right: 3%;
+    clear: left;
+}
+.RecordPanel.RecordPanelLarge .RecordDownloadSpace {
+    padding: 6px 1rem;
+}
+
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink,
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink:hover,
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink:active  {
+    background-color: white;
+    box-shadow: unset;
+}
 
 .RecordPanel .PictureDoc {float: left;margin: 50px 130px;}
 
 .RecordPanel .Detail {float: left;}
 
 .RecordPanel form { margin:0; padding:0;}
-.RecordPanel .Title {padding:0.1em 0 0.5em;margin:0 0 10px;font-size:1.25em;clear: left;}
+.RecordPanel .Title {padding:0.1em 0 0.5em;font-size:1.25em;clear: left;}
 
 .NoFind {font-size: 1.1em;margin: 50px 0px 25px;text-align: center;padding: 1rem;border-radius: 4px;}
 
@@ -492,19 +509,19 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .item {word-wrap: break-word; float: left;margin: 10px;width: 100%;position:relative;}
 .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {font-size: 1em;margin: 0px;padding: 0px;text-transform: uppercase; font-size: 0.875rem; color: #999;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0px;padding: 0px;}
-.RecordPanel .RecordDownload {float: none;width: 100%;margin: 0px 0px 10px;}
-.RecordPanel .RecordDownload table {width: 70%;margin: 0px;padding: 0px;float: left;margin-right: 3%; clear:left;}
-.RecordPanel .RecordDownload td {padding: 5px;margin: 0;}
+.RecordPanel .RecordDownload {float: left;width: 435px;margin: 0px 10px 10px 0;}
+.RecordPanel .RecordDownload table {width: 100%;margin: 0px;padding: 0px;}
+.RecordPanel .RecordDownload td {padding: 5px 5px 5px 0;margin: 0;}
 .RecordPanel .RecordDownload .DownloadDBlend td {margin: 0;vertical-align: middle;}
-.RecordPanel .RecordDownloadSpace {padding: 6px 1rem;}
-.RecordPanel .RecordDownloadSpace ul {padding:0.2em 0;margin:0;margin-top: 10px;list-style:none; display: table-cell;}
-.RecordPanel .RecordDownloadSpace li {padding:0;margin:0 12px 3px 0;float:left;min-width:208px;clear: both;}
+.RecordPanel .RecordDownloadSpace {padding: 5px 10px 0 10px;}
+.RecordPanel .RecordDownloadSpace ul {padding:0.2em 0;margin:0;margin-top: 5px;list-style:none;}
+.RecordPanel .RecordDownloadSpace li {padding:0;margin:0 12px 3px 0;float:left;min-width:195px;}
 .RecordPanel .RecordDownloadSpace li a:hover {text-decoration:none;}
 
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {text-align: center;font-weight: bold;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend h2 {margin:0;padding:0;font-size: 1em;    text-align: left;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {margin:0;padding:0;    text-align: left;}
-.RecordPanel .RecordDownloadSpace .DownloadButton {min-width: 130px;}
+
 .RecordStory {padding: 8px;}
 .RecordStory h1{font-size:1.25em; padding:0.5em 0 0.5em 0; margin:0;}
 
@@ -624,6 +641,7 @@ div.autocomplete ul li {
 .RatingStars {text-align:center;margin-bottom:5px;margin-top:5px;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .RatingStarsContainer a {line-height: unset; display: unset; background-color: unset; padding: 0; box-shadow: none;}
 #RatingCount {display: inline-block;}
+#UserRatingMessage {padding-left: 10px;}
 
 /* CSS for the lightbox (for resource feedback) */
 #lightbox{  position: absolute; left: 0; width: 100%; z-index: 100; text-align: center; line-height: 0;}
@@ -660,7 +678,7 @@ div.autocomplete ul li {
 
 .DownloadDisabled {font-weight: normal;}
 
-.AltThumb {float:left;padding-right:5px;}
+.AltThumb {float:left;padding-right:5px;max-width:85px;max-height:75px;}
 
 /* single file upload progress bar */
 .meter-wrap{position: relative;width:290px;}
@@ -1572,6 +1590,7 @@ select.MultiSelect:before {
 }
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink {
     min-height: unset;
+    padding: 0;
 }
 
 #ResourceToolsContainer h2 {
@@ -1736,4 +1755,12 @@ a.BrowseRefresh{
 /* Fix scrollbars on Header */
 #Header {
     overflow: hidden;
+}
+
+#RecordDownloadSummary, #ResourceWorkflowActions {
+    width: 36.8%;
+}
+
+.RecordPanelLarge #RecordDownloadSummary, .RecordPanelLarge #ResourceWorkflowActions {
+    width: 49.4%;
 }

@@ -106,6 +106,16 @@ if($comments_resource_enable && $comments_view_panel_show_marker){
     $resource_comments=sql_value("select count(*) value from comment where resource_ref='" . escape_check($ref) . "'","0");
 }
 
+# Should the page use a larger resource preview layout?
+$use_larger_layout = true;
+if (isset($resource_view_large_ext))
+	{
+	if (!in_array($resource["file_extension"], $resource_view_large_ext))
+		{
+		$use_larger_layout = false;
+		}
+	}
+
 // Set $use_mp3_player switch if appropriate
 $use_mp3_player = (
     !(isset($resource['is_transcoding']) && 1 == $resource['is_transcoding'])
@@ -573,7 +583,7 @@ jQuery(document).ready(function () {
 <?php } ?>
 <!--Panel for record and details-->
 <div class="RecordBox">
-<div class="RecordPanel"> 
+<div class="RecordPanel<?php echo $use_larger_layout ? ' RecordPanelLarge' : ''; ?>">
 
 <div class="RecordHeader">
 <?php if (!hook("renderinnerresourceheader")) { ?>
@@ -1130,7 +1140,8 @@ hook("renderbeforerecorddownload", '', array($disable_flag));
 	hook("beforeresourcetoolsheader");
 	if (!hook('replaceresourcetoolsheader')) {
 ?>
-<h2 id="resourcetools"><?php echo $lang["columnheader-resource_downloads"]?></h2>
+<h2 id="resourcetools"><?php echo $lang["resourcetools"]?></h2>
+
 <?php
 	}
 
@@ -1364,7 +1375,7 @@ if ($resource["has_image"]==1 && $download_multisize)
 		if(!hook("replacedownloadspacetableheaders")){
 			if ($table_headers_drawn==false) { ?>
 				<td><?php echo $lang["fileinformation"]?></td>
-                <td><?php echo $lang["filedimensions"]?></td>
+				<?php echo $use_larger_layout ? "<td>" . $lang["filedimensions"] . "</td>" : ''; ?>
 				<td><?php echo $lang["filesize"]?></td>
 				<?php if ($showprice) { ?><td><?php echo $lang["price"] ?></td><?php } ?>
 				<td class="textcenter"><?php echo $lang["options"]?></td>
@@ -1374,8 +1385,10 @@ if ($resource["has_image"]==1 && $download_multisize)
 			} 
 		} # end hook("replacedownloadspacetableheaders")?>
 		<tr class="DownloadDBlend" id="DownloadBox<?php echo $n?>">
-		<td class="DownloadFileName"><h2><?php echo $headline?></h2></td>
-        <td class="DownloadFileDimensions"><?php
+		<td class="DownloadFileName"><h2><?php echo $headline?></h2><?php
+
+		echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';
+
 		if (is_numeric($sizes[$n]["width"]))
 			{
 			echo get_size_info($sizes[$n]);
@@ -1397,7 +1410,7 @@ if ($resource["has_image"]==1 && $download_multisize)
 				{ 
 				# Add an extra line for previewing
 				?> 
-				<tr class="DownloadDBlend"><td class="DownloadFileName"><h2><?php echo $lang["preview"]?></h2></td><td class="DownloadFileDimensions"><p><?php echo $lang["fullscreenpreview"]?></p></td><td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
+				<tr class="DownloadDBlend"><td class="DownloadFileName"><h2><?php echo $lang["preview"]?></h2><?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';?><p><?php echo $lang["fullscreenpreview"]?></p></td><td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
 				<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
 				?>
 				<td class="DownloadButton">
@@ -1530,7 +1543,6 @@ if (!$videojs && $use_mp3_player && file_exists($mp3realpath) && $access==0)
 hook("additionalresourcetools3");
  } 
 if(!hook("replaceactionslistopen")){?>
-<div id="ResourceToolsDiv">
 <ul id="ResourceToolsContainer">
 <?php
 } # end hook("replaceactionslistopen")
@@ -1539,7 +1551,6 @@ if(!hook("replaceactionslistopen")){?>
 hook ("resourceactions") ?>
 <?php if ($k=="" || $internal_share_access) { ?>
 <?php if (!hook("replaceresourceactions")) {
-    echo "<h2>" . $lang["resourcetools"] . "</h2>";
 	hook("resourceactionstitle");
 	 if ($resource_contact_link)	
 	 	{ ?>
@@ -1611,7 +1622,7 @@ hook ("resourceactions") ?>
 		if (!$disable_alternative_files && !checkperm('A')) 
 			{ ?>
 			<li><a href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
-			<?php echo "<i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"]?>
+			<?php echo "<i class='fa fa-files-o'></i>&nbsp;" . $lang["alternativefiles"]?>
 			</a></li>
 			<?php 
 			}
@@ -1681,11 +1692,12 @@ if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/us
 
 
 </div>
-</div>
 <?php } /* End of renderresourcedownloadspace hook */ ?>
 <?php } /* End of renderinnerresourceview hook */
 
+if ($download_summary) {include "../include/download_summary.php";}
 
+hook("renderbeforeresourcedetails");
 
 
 /* ---------------  Display metadata ----------------- */
@@ -1699,8 +1711,7 @@ if (!hook('replacemetadata')) {
 <?php include "view_metadata.php";
 } /* End of replacemetadata hook */ ?>
 </div>
-<?php if ($download_summary) {include "../include/download_summary.php";}
-hook("renderbeforeresourcedetails");?>
+
 </div>
 
 </div>

@@ -12,23 +12,23 @@ function HookImage_textViewDownloadbuttonreplace()
             {   
             ?>          
             
-            <a id="downloadlink" href="<?php echo $baseurl ?>/pages/terms.php?ref=<?php echo urlencode($ref)?>&search=<?php
+            <a id="downloadlink" style="margin-bottom:5px" href="<?php echo $baseurl ?>/pages/terms.php?ref=<?php echo urlencode($ref)?>&search=<?php
                                     echo urlencode($search) ?>&k=<?php echo urlencode($k)?>&url=<?php
                                     echo urlencode("pages/download_progress.php?ref=" . $ref . "&ext=" . $altfiles[$n]["file_extension"] . "&k=" . $k . "&search=" . urlencode($search)
                                     . "&offset=" . $offset . "&alternative=" . $altfiles[$n]["ref"] . "&archive=" . $archive . "&sort=".$sort."&order_by="
-                                    . urlencode($order_by)."&nooverlay=true")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["image_text_download_clear"]?></a></td><td class="DownloadButton"><?php
+                                    . urlencode($order_by)."&nooverlay=true")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["image_text_download_clear"]?></a><?php
             }
             
         else if (in_array(strtoupper($resource["file_extension"]), $image_text_filetypes))
             {
             if(isset($size_info["extension"])){$dlext=$size_info["extension"];}else{$dlext=$resource["file_extension"];}
                 
-            ?><a id="downloadlink" href="<?php echo $baseurl ?>/pages/terms.php?ref=<?php echo urlencode($ref)?>&search=<?php
+            ?><a id="downloadlink" style="margin-bottom:5px" href="<?php echo $baseurl ?>/pages/terms.php?ref=<?php echo urlencode($ref)?>&search=<?php
 			echo urlencode($search) ?>&k=<?php echo urlencode($k)?>&url=<?php
                         echo urlencode("pages/download_progress.php?ref=" . $ref . "&size=" . $size_info["id"]
 			. "&ext=" . $dlext . "&k=" . $k . "&search=" . urlencode($search)
 			. "&offset=" . $offset . "&archive=" . $archive . "&sort=".$sort."&order_by="
-			. urlencode($order_by) ."&nooverlay=true")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["image_text_download_clear"]?></a></td><td class="DownloadButton"><?php    
+			. urlencode($order_by) ."&nooverlay=true")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["image_text_download_clear"]?></a><?php    
             }
 	return false;
 	}

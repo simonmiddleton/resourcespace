@@ -28,7 +28,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 	$defaultFormat = getDefaultOutputFormat($inputFormat);
 	$tableHeadersDrawn = false;
 
-	?><table cellpadding="0" cellspacing="0"><?php
+	?><table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions"><?php
 	hook("formatchooserbeforedownloads");
 	$sizes = get_image_sizes($ref, false, $resource['file_extension'], false);
 	$downloadCount = 0;
@@ -138,7 +138,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 			echo $lang['action-download'] ?></a></td>
 		</tr><?php
 		}
-	?></table><?php
+	?><?php
 	hook("formatchooseraftertable");
 	if ($downloadCount > 0)
 		{
@@ -214,7 +214,6 @@ if ($alt_access)
 	hook("processaltfiles");
 	$last_alt_type="-";
 	?>
-	<table>
 	<?php
 	for ($n=0;$n<count($altfiles);$n++)
 		{

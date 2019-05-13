@@ -8,7 +8,7 @@
 $lang['rse_workflow_configuration']="Workflow configuration";
 $lang['rse_workflow_summary'] = "<div>This plugin allows you to create additional archive (workflow) states, as well as defining actions to describe the movement between states.   <br><br></div>";
 $lang['rse_workflow_introduction']="To amend workflow states and actions, use the 'Manage workflow actions' and 'Manage Workflow states' from Team Centre. Click %%HERE to go to Team Centre";
-$lang['rse_workflow_user_info'] = "You can perform the following actions on this resource. These actions will change the workflow status of this resource, and may trigger actions for other users.";
+$lang['rse_workflow_user_info'] = "These actions will change the workflow status of this resource and may trigger actions for other users.";
 $lang['rse_workflow_actions_heading']="Workflow actions";
 $lang['rse_workflow_manage_workflow']="Manage workflow";
 $lang['rse_workflow_manage_actions']="Manage workflow actions";
