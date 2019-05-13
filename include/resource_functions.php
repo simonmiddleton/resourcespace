@@ -2522,11 +2522,32 @@ function relate_to_array($ref,$array)
 		sql_query("insert into resource_related(resource,related) values ($ref," . join("),(" . $ref . ",",$array) . ")");
 	}		
 
+/**
+* Returns a list of exiftool fields, which are basically fields with an 'exiftool field' set.
+* 
+* @param integer resource_type
+* 
+* @return array
+*/
 function get_exiftool_fields($resource_type)
-	{
-	# Returns a list of exiftool fields, which are basically fields with an 'exiftool field' set.
-	return sql_query("select f.ref,f.type,f.exiftool_field,f.exiftool_filter,group_concat(n.name) as options,f.name from resource_type_field f left join node n on f.ref=n.resource_type_field where length(exiftool_field)>0 and (resource_type='$resource_type' or resource_type='0')  group by f.ref order by exiftool_field");
-	}
+    {
+    $resource_type = escape_check($resource_type);
+
+    return sql_query("
+           SELECT f.ref,
+                  f.type,
+                  f.exiftool_field,
+                  f.exiftool_filter,
+                  group_concat(n.name) AS options,
+                  f.name,
+                  f.read_only
+             FROM resource_type_field AS f
+        LEFT JOIN node AS n ON f.ref = n.resource_type_field
+            WHERE length(exiftool_field) > 0
+              AND (resource_type = '$resource_type' OR resource_type = '0')
+         GROUP BY f.ref
+         ORDER BY exiftool_field");
+    }
 
 /**
 * Create a temporary copy of the file in the tmp folder (ie. the usual filestore/tmp/)
@@ -2642,16 +2663,19 @@ function write_metadata($path, $ref, $uniqid="")
 
         //$write_to = get_exiftool_fields($resource_type); # Returns an array of exiftool fields for the particular resource type, which are basically fields with an 'exiftool field' set.
         $metadata_all=get_resource_field_data($ref, false,true,-1,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
-		
+        $read_only_fields = array_column(array_filter($metadata_all, function($value) {
+            return ((bool) $value['read_only'] == true);
+        }), 'ref');
+
         $write_to=array();
         foreach($metadata_all as $metadata_item)
             {
-            if(trim($metadata_item["exiftool_field"])!="")
+            if(trim($metadata_item["exiftool_field"]) != "" && !in_array($metadata_item['ref'], $read_only_fields))
                 {
-                $write_to[]= $metadata_item;
+                $write_to[] = $metadata_item;
                 }
             }
-        
+
         $writtenfields=array(); // Need to check if we are writing to an embedded field from more than one RS field, in which case subsequent values need to be appended, not replaced
            
         for($i = 0; $i<count($write_to); $i++) # Loop through all the found fields.

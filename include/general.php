@@ -433,7 +433,8 @@ function get_resource_type_field($field)
                 fits_field,
                 personal_data,
                 include_in_csv_export,
-                browse_bar" . hook('add_resource_type_field_column') . "
+                browse_bar,
+                read_only" . hook('add_resource_type_field_column') . "
            FROM resource_type_field
           WHERE ref = '{$field}'
     ";
@@ -442,7 +443,7 @@ function get_resource_type_field($field)
         $rtf_query=$modified_rtf_query;
     }
     $return = sql_query($rtf_query);
-    
+
     if(0 == count($return))
         {
         return false;
