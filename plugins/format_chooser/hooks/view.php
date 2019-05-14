@@ -138,7 +138,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 			echo $lang['action-download'] ?></a></td>
 		</tr><?php
 		}
-	?><?php
+
 	hook("formatchooseraftertable");
 	if ($downloadCount > 0)
 		{
@@ -213,8 +213,7 @@ if ($alt_access)
 	$altfiles=get_alternative_files($ref,$alt_order_by,$alt_sort);
 	hook("processaltfiles");
 	$last_alt_type="-";
-	?>
-	<?php
+
 	for ($n=0;$n<count($altfiles);$n++)
 		{
 		$alt_type=$altfiles[$n]['alt_type'];
@@ -290,11 +289,9 @@ if ($alt_access)
 		<?php	
 		}
         hook("morealtdownload");
-       ?>
-   	</table>
-   	<?php
 	}
 # --- end of alternative files listing
+	?></table><?php
 	return true;
 	}
 
