@@ -333,9 +333,13 @@ else { ?>
 							jQuery(this).dialog('close');
 							}
 						// RemoveResourceFromCollection includes call to CollectionDivLoad
-						RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id);
 
-						jQuery('#ResourceShell' + resource_id).fadeOut();
+						RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id);
+						// Remove resource from search results if this is not a collection search	
+						if(is_special_search('!collection', 11))
+							{
+							jQuery('#ResourceShell' + resource_id).fadeOut();
+							}
 						jQuery(this).dialog('close');
 					},
 					// Cancel resource removal
@@ -364,7 +368,7 @@ else { ?>
 
 			jQuery('#trash_bin').droppable({
 				accept: '.CollectionPanelShell, .ResourcePanel',
-				activeClass: "ui-state-hover",
+				activeClass: "ui-droppable-active ui-state-hover",
 				hoverClass: "ui-state-active",
 
 				drop: function(event, ui) {
@@ -419,7 +423,11 @@ else { ?>
 						else
 							{
 							RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id);
-							jQuery('#ResourceShell' + resource_id).fadeOut();
+							// Remove resource from search results if this is not a collection search	
+							if(is_special_search('!collection', 11))
+								{
+								jQuery('#ResourceShell' + resource_id).fadeOut();
+								}
 							}
 						}
 					else
