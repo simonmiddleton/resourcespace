@@ -10,6 +10,7 @@ $lang['museumplus_api_pass'] = $lang['password'];
 $lang['museumplus_RS_settings_header'] = 'ResourceSpace settings';
 $lang['museumplus_mpid_field'] = 'Metadata field used to store the MuseumPlus identifier (MpID)';
 $lang['museumplus_resource_types'] = 'Select resource types which can be synchronised with MuseumPlus';
+$lang['museumplus_object_details_title'] = 'MuseumPlus details';
 $lang['museumplus_'] = '';
 
 // Errors
