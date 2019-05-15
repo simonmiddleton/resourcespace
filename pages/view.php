@@ -1622,7 +1622,7 @@ hook ("resourceactions") ?>
 		if (!$disable_alternative_files && !checkperm('A')) 
 			{ ?>
 			<li><a href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return CentralSpaceLoad(this,true);">
-			<?php echo "<i class='fa fa-files-o'></i>&nbsp;" . $lang["alternativefiles"]?>
+			<?php echo "<i class='fa fa-files-o'></i>&nbsp;" . $lang["managealternativefiles"]?>
 			</a></li>
 			<?php 
 			}
