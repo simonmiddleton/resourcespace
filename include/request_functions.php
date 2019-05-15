@@ -472,7 +472,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
                 return false; # Required field was not set.
                 }
             
-            $message.=i18n_get_translated($custom[$n]) . ": " . getval("custom" . $n,"") . "\n\n";
+            $message.="\n\n" . i18n_get_translated($custom[$n]) . ": " . getval("custom" . $n,"") . "\n\n";
             }
         }
     
