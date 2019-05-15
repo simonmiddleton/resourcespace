@@ -270,9 +270,9 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
     );
     $config_option = sql_value($query, null);
 
-    if(is_null($default) && isset($GLOBALS[$name]))
+    if(is_null($default) && isset($GLOBALS['system_wide_config_options'][$name]))
         {
-        $default = $GLOBALS[$name];
+        $default = $GLOBALS['system_wide_config_options'][$name];
         }
 
      if(is_null($config_option))

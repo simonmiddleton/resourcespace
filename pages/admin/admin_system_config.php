@@ -401,7 +401,7 @@ if('true' === getval('ajax', '') && 'true' === getval('autosave', ''))
 
 
 config_process_file_input($page_def, 'system/config', $baseurl . '/pages/admin/admin_system_config.php');
-process_config_options();
+$GLOBALS = $system_wide_config_options;
 
 include '../../include/header.php';
 ?>

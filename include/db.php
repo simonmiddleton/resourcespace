@@ -329,8 +329,9 @@ else
 		}
 	}
 
-// Load system wide config options from database
+// Load system wide config options from database and then store them to distinguish between the system wide and user preference
 process_config_options();
+$system_wide_config_options = get_defined_vars();
 
 # Include the appropriate language file
 $pagename=safe_file_name(str_replace(".php","",pagename()));

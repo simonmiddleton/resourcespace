@@ -153,6 +153,7 @@ $lang['information-inherit_global_fields'] = 'Should global fields be included f
 $lang["property-smart_theme_name"]="Smart featured collection name";
 $lang["property-exiftool_field"]="Exiftool field";
 $lang['property-fits_field'] = 'FITS field';
+$lang['property-read_only_field'] = 'Read-only metadata field (ie. will not write back on Download)';
 $lang['information-fits_field'] = 'FITS (File Information Tool Set) field will overwrite Exiftool values if a value can be found!';
 $lang["property-exiftool_filter"]="Exiftool filter";
 $lang["property-help_text"]="Help text";

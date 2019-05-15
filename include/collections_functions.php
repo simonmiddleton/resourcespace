@@ -1361,7 +1361,8 @@ function get_saved_searches($collection)
 
 function add_saved_search($collection)
 	{
-	sql_query("insert into collection_savedsearch(collection,search,restypes,archive) values ('" . escape_check($collection) . "','" . getvalescaped("addsearch","") . "','" . getvalescaped("restypes","") . "','" . getvalescaped("archive","",true) . "')");
+	sql_query("insert into collection_savedsearch(collection,search,restypes,archive) values ('" 
+		. escape_check($collection) . "','" . getvalescaped("addsearch","") . "','" . getvalescaped("restypes","") . "','" . getvalescaped("archive","") . "')");
 	}
 
 function remove_saved_search($collection,$search)
@@ -1489,8 +1490,8 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
 			for ($n=0;$n<count($keys);$n++)
 				{
 				# Insert a new access key entry for this resource/collection.
-				sql_query("insert into external_access_keys(resource,access_key,user,collection,date) values ('$resource','" . escape_check($keys[$n]["access_key"]) . "','$userref','$collection',now())");
-				#log this
+				sql_query("insert into external_access_keys(resource,access_key,user,collection,date,expires,access,usergroup,password_hash) values ('" . escape_check($resource) . "','" . escape_check($keys[$n]["access_key"]) . "','$userref','" . escape_check($collection) . "',now()," . ($keys[$n]["expires"]==''?'null':"'" . escape_check($keys[$n]["expires"]) . "'") . ",'" . escape_check($keys[$n]["access"]) . "'," . (($keys[$n]["usergroup"]!="")?"'" . escape_check($keys[$n]["usergroup"]) ."'":"NULL") . ",'" . $keys[$n]["password_hash"] . "')");
+                #log this
 				collection_log($collection,"s",$resource, $keys[$n]["access_key"]);	
 				
 				# Set the flag so a warning appears.
@@ -2102,18 +2103,20 @@ function collection_set_themes ($collection, $categories = array())
 	}
 	
 function remove_all_resources_from_collection($ref){
-	// abstracts it out of save_collection()
-	$removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($ref) . ';');
+    // abstracts it out of save_collection()
+    $removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($ref) . ';');
 
-	// First log this for each resource (in case it was done by mistake)
-	foreach($removed_resources as $removed_resource_id)
-		{
-		collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
-		}
+    // First log this for each resource (in case it was done by mistake)
+    foreach($removed_resources as $removed_resource_id)
+        {
+        collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
+        }
 
-	sql_query('DELETE FROM collection_resource WHERE collection = ' . escape_check($ref));
-	collection_log($ref, 'R', 0);
-	}	
+    sql_query('DELETE FROM collection_resource WHERE collection = ' . escape_check($ref));
+    sql_query("DELETE FROM external_access_keys WHERE collection='" . escape_check($ref) . "'");
+
+    collection_log($ref, 'R', 0);
+    }	
 
 if (!function_exists("get_home_page_promoted_collections")){
 function get_home_page_promoted_collections()

@@ -2665,7 +2665,7 @@ function render_upload_here_button(array $search_params, $return_params_only = f
 
 function render_trash($type, $deletetext,$forjs=false)
     {
-    $trash_html = '<div id="' . $type . '_bin" class="trash_bin"><span class="trash_bin_text"><i class="fa fa-trash" aria-hidden="true"></i></span></div>
+    $trash_html = '<div id="' . $type . '_bin" class="trash_bin ui-droppable ui-droppable-active ui-state-hover"><span class="trash_bin_text"><i class="fa fa-trash" aria-hidden="true"></i></span></div>
     <div id="trash_bin_delete_dialog" style="display:none;"></div>
     <div id="delete_permanent_dialog" style="display:none;text-align:left;">'  . $deletetext . '</div>
 ';

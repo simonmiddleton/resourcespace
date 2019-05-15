@@ -306,6 +306,7 @@ $fieldcolumns = array(
     'advanced_search'          => array($lang['property-enable_advanced_search'],'',1,1),
     'simple_search'            => array($lang['property-enable_simple_search'],'',1,1),		
     'browse_bar'               => array($lang['field_show_in_browse_bar'],'',1,1),
+    'read_only'                => array($lang['property-read_only_field'], '', 1, 1),
     'exiftool_field'           => array($lang['property-exiftool_field'],'',0,1),
     'fits_field'               => array($lang['property-fits_field'], $lang['information-fits_field'], 0, 1),
     'personal_data'            => array($lang['property-personal_data'],'',1,1),

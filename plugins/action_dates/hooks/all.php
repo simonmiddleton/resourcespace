@@ -43,14 +43,14 @@ function HookAction_datesCronCron()
 			
 		if(count($emailrefs)>0)
 			{
-			global $baseurl;
+			global $baseurl,$baseurl_short;
 			# Send email as the date is within the specified number of days
 			
 			$subject=$lang['action_dates_email_subject'];
 			$message=str_replace("%%DAYS",$action_dates_email_admin_days,$lang['action_dates_email_text']) . "\r\n";
 			$notification_message = $message; 
 			$message.= $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$emailrefs) . "\r\n";
-			$url = $baseurl . "/pages/search.php?search=!list" . implode(":",$emailrefs);
+			$url = $baseurl_short . "pages/search.php?search=!list" . implode(":",$emailrefs);
 			$templatevars['message']=$message;
 			$admin_notify_emails = array();
 			$admin_notify_users = array();
