@@ -8,6 +8,7 @@ $museumplus_host = '';
 $museumplus_application = '';
 $museumplus_api_user = '';
 $museumplus_api_pass = '';
+$museumplus_search_mpid_field = '';
 
 
 // ResourceSpace settings

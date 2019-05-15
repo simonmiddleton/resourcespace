@@ -21,7 +21,7 @@ if(empty($connection_data))
     $error = $lang['museumplus_error_bad_conn_data'];
     }
 
-$mplus_data = mplus_search($connection_data, $museumplus_rs_mappings, 'Object', $mpid);
+$mplus_data = mplus_search($connection_data, $museumplus_rs_mappings, 'Object', $mpid, $museumplus_search_mpid_field);
 include '../../../include/header.php';
 ?>
 <h2><?php echo htmlspecialchars($lang['museumplus_object_details_title']); ?></h2>

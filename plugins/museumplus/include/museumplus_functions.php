@@ -91,6 +91,18 @@ function do_http_request($url, $basic_auth, $content_type, $request_method, $dat
     }
 
 
+/**
+* Helper function to ensure required connection data was provided
+* 
+* @see http://docs.zetcom.com/ws/
+* 
+* @param string $host
+* @param string $application
+* @param string $user
+* @param string $pass
+* 
+* @return array
+*/
 function mplus_generate_connection_data($host, $application, $user, $pass)
     {
     if(trim($host) == '' || trim($application) == '' || trim($user) == '' || trim($pass) == '')
@@ -114,15 +126,21 @@ function mplus_generate_connection_data($host, $application, $user, $pass)
 * 
 * @uses do_http_request()
 * 
-* @param array  $conn_data   Connection data. @see mplus_generate_connection_data()
-* @param array  $mappings    MuseumPlus - ResourceSpace mappings
-* @param string $module_name Module name
-* @param string $mpid        MuseumPlus ID
+* @param array  $conn_data        Connection data. @see mplus_generate_connection_data()
+* @param array  $mappings         MuseumPlus - ResourceSpace mappings
+* @param string $module_name      Module name
+* @param string $mpid             MuseumPlus ID
+* @param string $mplus_mpid_field MuseumPlus field name that stores the MpID in the searched module
 * 
 * @return array
 */
-function mplus_search(array $conn_data, array $mappings, $module_name, $mpid)
+function mplus_search(array $conn_data, array $mappings, $module_name, $mpid, $mplus_mpid_field)
     {
+    if(empty($conn_data) || empty($mappings) || trim($module_name) === '' || trim($mpid) === '')
+        {
+        return array();
+        }
+
     $basic_auth = "{$conn_data['username']}:{$conn_data['password']}";
     $url = "{$conn_data['host']}/{$conn_data['application']}/ria-ws/application/module/{$module_name}/search/";
 
@@ -160,7 +178,7 @@ function mplus_search(array $conn_data, array $mappings, $module_name, $mpid)
     $expert = $xml->createElement('expert');
     $expert = $search->appendChild($expert);
     $equalsField = $xml->createElement('equalsField');
-    $equalsField->setAttribute('fieldPath', 'ObjMgrFileMatchVrt'); # @todo: value of attribute is configurable
+    $equalsField->setAttribute('fieldPath', $mplus_mpid_field);
     $equalsField->setAttribute('operand', $mpid);
     $equalsField = $expert->appendChild($equalsField);
 
