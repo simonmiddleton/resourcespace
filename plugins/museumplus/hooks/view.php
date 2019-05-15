@@ -16,7 +16,7 @@ function HookMuseumplusViewRenderfield($field, $resource)
         <div class="itemNarrow">
             <h3><?php echo htmlspecialchars($field['title']); ?></h3>
             <p>
-                <a href="<?php echo $baseurl; ?>/plugins/museumplus/pages/museumplus_object_details.php?ref=<?php echo $ref; ?>&mpid=<?php echo $museumplus_mpid_field; ?>"><?php echo $value; ?></a>
+                <a href="<?php echo $baseurl; ?>/plugins/museumplus/pages/museumplus_object_details.php?ref=<?php echo $ref; ?>"><?php echo $value; ?></a>
             </p>
         </div>
         <?php

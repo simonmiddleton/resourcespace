@@ -136,7 +136,12 @@ function mplus_generate_connection_data($host, $application, $user, $pass)
 */
 function mplus_search(array $conn_data, array $mappings, $module_name, $mpid, $mplus_mpid_field)
     {
-    if(empty($conn_data) || empty($mappings) || trim($module_name) === '' || trim($mpid) === '')
+    if(
+        empty($conn_data)
+        || empty($mappings)
+        || trim($module_name) === ''
+        || trim($mpid) === ''
+        || trim($mplus_mpid_field) === '')
         {
         return array();
         }

@@ -17,7 +17,7 @@ $lang['museumplus_'] = '';
 // Errors
 $lang['museumplus_error_bad_conn_data'] = 'MuseumPlus Connection Data invalid';
 $lang['museumplus_error_unexpected_response'] = 'Unexpected MuseumPlus response code received - %code';
-$lang['museumplus_'] = '';
+$lang['museumplus_error_no_data_found'] = 'No data found in MuseumPlus for this MpID - %mpid';
 $lang['museumplus_'] = '';
 $lang['museumplus_'] = '';
 $lang['museumplus_'] = '';
