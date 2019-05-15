@@ -1,6 +1,4 @@
 <?php
-include_once dirname(__FILE__) . '/../include/museumplus_functions.php';
-
 function HookMuseumplusAllAdditionalvalcheck($fields, $fields_item)
     {
     global $lang, $ref, $resource, $museumplus_host, $museumplus_application, $museumplus_api_user, $museumplus_api_pass,
@@ -16,7 +14,9 @@ function HookMuseumplusAllAdditionalvalcheck($fields, $fields_item)
         return false;
         }
 
-    $mpid = getvalescaped("field_{$museumplus_mpid_field}", ''); # CAN BE ALPHANUMERIC
+    // Other plugins can modify the field (e.g when MpID field is the original filename without the extension) in which case,
+    // code needs to be able to handle this so it will attempt to retrieve it from the database instead.
+    $mpid = getvalescaped("field_{$museumplus_mpid_field}", get_data_by_field($ref, $museumplus_mpid_field)); # CAN BE ALPHANUMERIC
     if(trim($mpid) === '')
         {
         return false;

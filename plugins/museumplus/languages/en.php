@@ -12,6 +12,15 @@ $lang['museumplus_mpid_field'] = 'Metadata field used to store the MuseumPlus id
 $lang['museumplus_resource_types'] = 'Select resource types which can be synchronised with MuseumPlus';
 $lang['museumplus_object_details_title'] = 'MuseumPlus details';
 $lang['museumplus_search_match_field'] = 'The field that stores the MpID on MuseumPlus side';
+$lang['museumplus_script_header'] = 'Script settings';
+$lang['museumplus_last_run_date'] = '
+<div class="Question">
+    <label>
+        <strong>Script last run</strong>
+    </label>
+    <input name="script_last_ran" type="text" value="%script_last_ran" disabled style="width: 420px;">
+</div>
+<div class="clearerleft"></div>';
 $lang['museumplus_'] = '';
 
 // Errors

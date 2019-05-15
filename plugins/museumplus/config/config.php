@@ -1,4 +1,6 @@
 <?php
+include_once dirname(__DIR__) . '/include/museumplus_functions.php';
+
 // Constants
 
 
@@ -15,6 +17,8 @@ $museumplus_search_mpid_field = '';
 $museumplus_mpid_field = null;
 $museumplus_resource_types = array();
 
+// Script settings
+$museumplus_script_failure_notify_days = 3;
 
 // MuseumPlus - ResourceSpace mappings
 // @todo: once mappings have been established - move to setup page of the plugin and then set it here to an empty array

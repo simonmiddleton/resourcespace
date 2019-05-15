@@ -16,6 +16,9 @@ if(!in_array($plugin_name, $plugins))
     plugin_activate_for_setup($plugin_name);
     }
 
+$museumplus_rs_mappings = unserialize(base64_decode($museumplus_rs_saved_mappings));
+
+
 
 // API settings
 $page_def[] = config_add_section_header($lang['museumplus_api_settings_header']);
@@ -27,11 +30,15 @@ $page_def[] = config_add_text_input('museumplus_search_mpid_field', $lang['museu
 
 // ResourceSpace settings
 $page_def[] = config_add_section_header($lang['museumplus_RS_settings_header']);
-$page_def[] = config_add_single_ftype_select('museumplus_mpid_field', $lang['museumplus_mpid_field']);
-$page_def[] = config_add_multi_rtype_select('museumplus_resource_types', $lang['museumplus_resource_types']);
+$page_def[] = config_add_single_ftype_select('museumplus_mpid_field', $lang['museumplus_mpid_field'], 420);
+$page_def[] = config_add_multi_rtype_select('museumplus_resource_types', $lang['museumplus_resource_types'], 420);
 
-
-
+// Script settings
+$page_def[] = config_add_section_header($lang['museumplus_script_header']);
+$museumplus_script_last_ran = '';
+check_script_last_ran('last_museumplus_import', $museumplus_script_failure_notify_days, $museumplus_script_last_ran);
+$script_last_ran_content = str_replace('%script_last_ran', $museumplus_script_last_ran, $lang['museumplus_last_run_date']);
+$page_def[] = config_add_html($script_last_ran_content);
 
 
 

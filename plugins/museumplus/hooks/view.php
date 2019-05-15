@@ -11,6 +11,11 @@ function HookMuseumplusViewRenderfield($field, $resource)
     if($field['ref'] == $museumplus_mpid_field && in_array($resource['resource_type'], $museumplus_resource_types))
         {
         $museumplus_mpid_field = $field['value'];
+        if(trim($museumplus_mpid_field) == '')
+            {
+            return false;
+            }
+
         $value = highlightkeywords($museumplus_mpid_field, $search, $field['partial_index'], $field['name'], $field['keywords_index']);
         ?>
         <div class="itemNarrow">
