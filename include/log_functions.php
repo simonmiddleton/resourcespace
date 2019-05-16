@@ -186,7 +186,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
 
     if($count)
         {
-        $count_statement_start = "SELECT COUNT(*) AS value FROM (";
+        $count_statement_start = "SELECT COUNT(*) AS value, 'table' AS 'table' FROM (";
         $count_statement_end = ") AS count_select";
         }
 
