@@ -2,15 +2,21 @@
 
 function HookConditional_termsViewDownloadlink($baseparams)
     {
-    global $baseurl, $conditional_terms_field, $conditional_terms_value, $fields, $search, $order_by, $archive, $sort, $offset;
+    global $baseurl, $resource, $conditional_terms_field, $conditional_terms_value, $fields, $search, $order_by, $archive, $sort, $offset;
+
     $showterms=false;
-    foreach($fields as $field)
+
+    $resource_value_to_test=trim( get_data_by_field($resource['ref'],$conditional_terms_field) );
+
+    if( $conditional_terms_value==$resource_value_to_test || ",".$conditional_terms_value==$resource_value_to_test )
         {
-        if($field['fref']==$conditional_terms_field && (trim($field['value'])==$conditional_terms_value || trim($field['value'])=="," . $conditional_terms_value))
-            {$showterms=true;}
+        $showterms=true;
         }
-    
-    if(!$showterms){return false;}
+
+    if(!$showterms)
+        {
+        return false;
+        }
     
     ?>href="<?php echo $baseurl ?>/pages/terms.php?<?php echo $baseparams ?>&amp;search=<?php
             echo urlencode($search) ?>&amp;url=<?php
