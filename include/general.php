@@ -7706,3 +7706,8 @@ function has_browsebar()
     && $browse_bar;
     //   && false == $loginterms ?
     }
+    
+function get_recent_users($days)
+    {
+    return (sql_value("select count(*) value from user where datediff(now(),last_active) <= '" . escape_check($days) . "'",0));
+    }

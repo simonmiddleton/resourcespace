@@ -101,4 +101,7 @@ if (isset($disksize))
 	if ($percent>=95) {echo " WARNING nearly full";}
 	}
 
+// Add active user count (last 7 day)
+echo ", " . get_recent_users(7) . " recent users";
+
 
