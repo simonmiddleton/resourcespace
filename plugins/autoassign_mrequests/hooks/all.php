@@ -14,13 +14,36 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
     $resource_data          = get_resource_field_data($resources[0]); // in this case it should only have one resource
     $mapped_fields          = get_mapped_fields();
     $assigned_administrator = 0;
+    $resource_nodes         = get_resource_nodes($resources[0]);
 
-    // Process each metadata field value pair for the resource being requested, looking for an assignee
+    // Process each non node based metadata field value pair for the resource being requested, looking for an assignee
     foreach ($resource_data as $r_data) {
         // Is the metadata field the subject of a mapping
         if(in_array($r_data['ref'], $mapped_fields)) {
             // Return the assignee for the mapping if one exists for the field value pair 
-            $assigned_administrator = get_mapped_user_by_field($r_data['ref'], $r_data['value']);
+            get_mapped_user_by_field($r_data['ref'], $r_data['value'])!=0?$assigned_administrator=get_mapped_user_by_field($r_data['ref'], $r_data['value']):0;
+            // If an assignee was found then terminate loop otherwise move on to next field value pair
+            If($assigned_administrator !== 0) 
+                {
+                break;
+                } 
+        }
+    }
+
+    $node_fields_list = array();
+    $current_node = array();
+
+    foreach ($resource_nodes as $node) {
+        get_node($node, $current_node);
+        array_push($node_fields_list, $current_node);
+    }
+
+    // Process each node based metadata field value pair for the resource being requested, looking for an assignee
+    foreach ($node_fields_list as $r_node) {
+        // Is the metadata field the subject of a mapping
+        if(in_array($r_node['resource_type_field'], $mapped_fields)) {
+            // Return the assignee for the mapping if one exists for the field value pair 
+            get_mapped_user_by_field($r_node['resource_type_field'], $r_node['name'])!=0?$assigned_administrator=get_mapped_user_by_field($r_node['resource_type_field'], $r_node['name']):0;
             // If an assignee was found then terminate loop otherwise move on to next field value pair
             If($assigned_administrator !== 0) 
                 {
