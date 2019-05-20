@@ -50,7 +50,6 @@ body {
 
     body{
         height: 100% !important;
-        background-image: none !important;
     }
         
     #CentralSpaceLogin #login_box {
@@ -195,6 +194,10 @@ body {
     .FormWide .Question .stdwidth, .FormWide .Question .tickset{width: 100%}
     .CategoryBox {
         width:100%;
+    }
+
+    body {
+        background-image: none !important;
     }
 }
 /* Login Forms */
