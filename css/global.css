@@ -484,6 +484,9 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel.RecordPanelLarge .RecordDownloadSpace {
     padding: 6px 1rem;
 }
+.RecordPanelLarge #ResourceToolsContainer {
+    display: inline-grid;
+}
 
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink,
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .AltThumbLink:hover,

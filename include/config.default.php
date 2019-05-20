@@ -3121,7 +3121,7 @@ $resource_edit_modal_from_view_modal=false;
 $resource_view_use_pre = false;
 
 # Only use use the larger layout on the view page for certain file extensions.
-# $resource_view_large_ext = array("jpg", "jpeg", "tif", "tiff", "gif, "svg");
+# $resource_view_large_ext = array("jpg", "jpeg", "tif", "tiff", "gif", "png", "svg");
 
 # Show geographical search results in a modal
 $geo_search_modal_results = true;
