@@ -21,7 +21,6 @@ $body=getvalescaped("body",0);
 # get ref value from database, unless it is set to new 
 if (getval("ref","")=="new"){$createnews=true;} else {$news=get_news($ref,"",""); $createnews=false;}
 
-
 if (getval("save","")!="" && enforcePostRequest(false))
 	{
 	# Save news
@@ -35,35 +34,47 @@ $news=get_news($ref,"","");
 include dirname(__FILE__)."/../../../include/header.php";
 ?>
 
-<p><a href="news_edit.php?offset=<?php echo $offset?>&findtext=<?php echo $findtext?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["news_manage"]?></a></p>
+<p id="EditNewsBack">
+    <a href="news_edit.php?offset=<?php echo $offset?>&findtext=<?php echo $findtext?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["news_manage"]?></a>
+</p>
 
 <div class="BasicsBox">
-<h1><?php echo $lang["news_edit"]?></h1>
+    <h1><?php echo $lang["news_edit"]?></h1>
 
-<form method=post id="mainform">
-    <?php generateFormToken("mainform"); ?>
-<input type=hidden name=name value="<?php echo $ref?>">
+    <form method=post id="mainform">
+        <?php generateFormToken("mainform"); ?>
 
-<div class="Question"><label><?php echo $lang["date"]?></label><input name="date" class="stdwidth" value="<?php If ($createnews){echo date("Y-m-d H:i:s");}else{echo $news[0]["date"];}?>"></div>
-<div class="clearerleft"> </div>
+        <input type=hidden name=name value="<?php echo $ref?>">
 
-<div class="Question"><label><?php echo $lang["news_headline"];?></label><input name="title" class="stdwidth" value="<?php If ($createnews){echo $lang["news_addtitle"];}else{echo $news[0]["title"];}?>">
-<div class="clearerleft"> </div>
+        <div class="Question">
+            <label><?php echo $lang["date"]?></label>
+            <input name="date" class="stdwidth" type="text" value="<?php echo $createnews ? date("Y-m-d H:i:s") : $news[0]["date"]; ?>">
+        </div>
 
-<div class="Question"><label><?php echo $lang["news_body"]?></label><textarea name="body" class="stdwidth" rows=15 cols=50 ><?php If (!$createnews){echo htmlspecialchars($news[0]["body"]);}?></textarea></div>
-<div class="clearerleft"> </div>
+        <div class="clearerleft"> </div>
 
+        <div class="Question">
+            <label><?php echo $lang["news_headline"];?></label>
+            <input name="title" class="stdwidth" type="text" value="<?php echo $createnews ? $lang["news_addtitle"] : $news[0]["title"]; ?>">
+        </div>
 
-<div class="QuestionSubmit">
-<label for="buttons"> </label>			
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
-</div>
-</form>
-</div>
+        <div class="clearerleft"> </div>
 
+        <div class="Question">
+            <label><?php echo $lang["news_body"]?></label>
+            <textarea name="body" class="stdwidth" rows=15 cols=50 >
+                <?php if (!$createnews){echo htmlspecialchars($news[0]["body"]);}?>
+            </textarea>
+        </div>
 
+        <div class="clearerleft"> </div>
+
+        <div class="QuestionSubmit">
+            <label for="buttons"> </label>
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
+        </div>
+    </form>
 </div>
 
 <?php		
 include dirname(__FILE__)."/../../../include/footer.php";
-?>

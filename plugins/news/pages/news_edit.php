@@ -50,10 +50,8 @@ $jumpcount=1;
 <div class="BasicsBox">
 	<form method="post">
         <?php generateFormToken("news_add"); ?>
-		<div class="QuestionSubmit">
-			<label for="buttons"> </label>		
-			<input name="create" type="submit" value="<?php echo $lang["news_add"]?>"/>
-		</div>
+		<label for="buttons"> </label>		
+		<input name="create" type="submit" value="<?php echo $lang["news_add"]?>"/>
 	</form>
 </div>
 
@@ -87,8 +85,8 @@ for ($n=$offset;(($n<count($news)) && ($n<($offset+$per_page)));$n++)
 	
 	<td>
 	<div class="ListTools">
-		<a href="news_content_edit.php?ref=<?php echo $news[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>">&gt;&nbsp;<?php echo $lang["action-edit"]?> </a>
-		<a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('newsdelete').value='<?php echo $news[$n]["ref"]?>';document.getElementById('newsform').submit();} return false;">&gt;&nbsp;<?php echo $lang["action-delete"]?></a>
+		<a href="news_content_edit.php?ref=<?php echo $news[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>"><?php echo LINK_CARET . $lang["action-edit"]?> </a>
+		<a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('newsdelete').value='<?php echo $news[$n]["ref"]?>';document.getElementById('newsform').submit();} return false;"><?php echo LINK_CARET . $lang["action-delete"]?></a>
 		</div>
 	</td>
 	</tr>

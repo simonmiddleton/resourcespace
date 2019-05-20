@@ -9,25 +9,23 @@ function HookNewsHomeHomebeforepanels()
 	$results=count($news);
    	?>
 
-	<div id="SearchBoxPanel" style="margin-top:10px;">
-		<div id="NewsPanel">
-        	<h2><span class="fa fa-newspaper-o"></span>&nbsp;<?php echo $lang['title']; ?></h2>
-			<?php
-				if($results > 0)
+	<div id="NewsPanel">
+    	<h2><span class="fa fa-newspaper-o"></span>&nbsp;<?php echo $lang['title']; ?></h2>
+		<?php
+			if($results > 0)
+			{
+			for($n = 0; ($n < $results); $n++)
 				{
-				for($n = 0; ($n < $results); $n++)
-					{
-					?>
-					<p><?php echo LINK_CARET; ?><a href="<?php echo $baseurl; ?>/plugins/news/pages/news.php?ref=<?php echo $news[$n]['ref']; ?>"><?php echo $news[$n]['title']; ?></a></p>
-					<?php
-					}
+				?>
+				<p><?php echo LINK_CARET; ?><a href="<?php echo $baseurl; ?>/plugins/news/pages/news.php?ref=<?php echo $news[$n]['ref']; ?>"><?php echo $news[$n]['title']; ?></a></p>
+				<?php
 				}
-			else
-				{
-				echo $lang['news_nonewmessages'];
-				}
-			?>
-		</div>
+			}
+		else
+			{
+			echo $lang['news_nonewmessages'];
+			}
+		?>
 	</div>
 	<?php
 	}

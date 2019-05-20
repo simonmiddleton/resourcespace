@@ -44,5 +44,24 @@
 }
 
 #NewsPanel {
+	margin-top: 15px;
 	padding: 15px;
+	display: inline-block;
+	width: 485px;
+	background-color: rgba(0, 0, 0, 0.45);
+	border-radius: 4px;
+	color: white;
+}
+
+#NewsPanel a {
+	color: white;
+}
+
+#EditNewsBack {
+	margin-top: 15px;
+	padding-bottom: 0;
+}
+
+#NewsNav {
+	margin-top: 15px;
 }
