@@ -714,26 +714,12 @@ div.autocomplete ul li {
     }
 
 
-li.plupload_droptext {font-size: 1.1em;}
-
-.plupload_filelist_header {height:12px;}
- /* Smoothness changes - general */
-#pluploader .plupload_header_content {padding-left:10px;background-image:none;}
-#pluploader .plupload_view_switch{bottom:16px;}
-#pluploader .plupload_view_switch .ui-button-icon-only {margin-right:0px;}
-
- /* Smoothness changes - list view */
-.plupload_view_list .plupload_filelist_header {padding-right:15px;}
-.plupload_view_list .plupload_filelist_header .plupload_file_action {padding-right:21px;}
-.plupload_view_list .plupload_content {top:86px;bottom:41px;overflow-x: hidden;overflow-y: scroll;}
-.plupload_view_list .plupload_file {height:28px;padding-bottom:0px;}
-#pluploader .plupload_view_list .plupload_file_action {padding-top:6px;padding-bottom:6px;}
-.plupload_view_list .plupload_filelist_footer {padding-right:15px;}
-.plupload_view_list .plupload_filelist_footer .plupload_file_action {padding-right:21px;padding-left:6px;}
 .plupload_container {min-height:500px;}
-.plupload_droptext {font-size:20px;line-height:350px;}
+.plupload_droptext {font-size:20px;line-height:400px;}
 .plupload_wrapper, .plupload_header_title {font-family: inherit;}
-
+.plupload_header {display:none;}
+.plupload_content {top:0 !important;}
+.ui-widget-content {border:3px dashed #ccc;border-radius:10px;}
 
 #showlog,#hidelog
     {

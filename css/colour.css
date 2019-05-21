@@ -250,19 +250,8 @@ div.autocomplete ul li {color: #000;}
 .treetext a:hover {color: #000000; background: none;}
 .treetext a:active {color: #000000; background: none;}
 
-.plupload_container {padding:0px;}
-.plupload_logo {background-image:none;}
-.plupload_header_content {color:#1c94c4;}
-li.plupload_droptext {color:#999;}
-.plupload_file_size{color:#777;}
-#pluploader .plupload_header, #pluploader .plupload_add, #pluploader .plupload_start, #pluploader .plupload_file {opacity:1;} 
-#pluploader .ui-button-disabled {opacity:.3;}
-#pluploader .plupload_header {border-top:0px;border-right:0px;border-left:0px;border-bottom-color:#AAA;background: #e6e6e6 url("smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png") 0% 58% repeat-x;}
-.plupload_view_list .plupload_message.ui-state-error, .plupload_view_thumb .plupload_message.ui-state-error {background: #fef1ec url("smoothness/images/ui-bg_glass_95_fef1ec_1x400.png") 0% 58% repeat-x;}
-.plupload_message.ui-state-error p {color:#555;}
-#pluploader .plupload_filelist_footer {border-bottom:0px;border-left:0px;border-right:0px;}
-.plupload_view_list .plupload_filelist_header {border-top:1px;border-right:0px;border-left:0px;}
-.plupload_view_list .plupload_file {border-top:0px;border-right:0px;border-left:0px;background: #e6e6e6 url("smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png") 0% 54% repeat-x;}
+
+
 .Terms{color:#000;border: 1px solid #ccc;background: #fff;}
 .ui-layout-toggler-open-hover{background-color:rgba(255,255,255,0.3);}
 
@@ -436,9 +425,6 @@ input:checked + .customFieldLabel, .keywordselected
   background-color: #fff;
 }
 
-.ui-button .ui-icon {
-    background-image: none;
-}
 
 /* Browse bar */
 #BrowseBar a, #BrowseBarTab, #BrowseBarTab a:hover
