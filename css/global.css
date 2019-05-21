@@ -710,6 +710,9 @@ li.plupload_droptext {font-size: 1.1em;}
 .plupload_view_list .plupload_filelist_footer {padding-right:15px;}
 .plupload_view_list .plupload_filelist_footer .plupload_file_action {padding-right:21px;padding-left:6px;}
 .plupload_container {min-height:500px;}
+.plupload_droptext {font-size:20px;line-height:350px;}
+.plupload_wrapper, .plupload_header_title {font-family: inherit;}
+
 
 #showlog,#hidelog
     {
