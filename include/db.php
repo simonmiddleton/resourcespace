@@ -747,7 +747,7 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
     # This has been added retroactively to support large result sets, yet a pager can work as if a full
     # result set has been returned as an array (as it was working previously).
 	# $logthis parameter is only relevant if $mysql_log_transactions is set.  0=don't log, 1=always log, 2=detect logging - i.e. SELECT statements will not be logged
-    global $db,$config_show_performance_footer,$debug_log,$debug_log_override,$mysql_verbatim_queries,$use_mysqli, $mysql_log_transactions;
+    global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log, $mysql_verbatim_queries, $use_mysqli, $mysql_log_transactions;
     
 	if (!isset($debug_log_override))
 		{
@@ -763,7 +763,7 @@ function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $
 		$querycount++;
     	}
     	
-    if ($debug_log || $debug_log_override) 
+    if (($debug_log || $debug_log_override) && !$suppress_sql_log)
 		{
 		debug("SQL: " . $sql);
 		}
