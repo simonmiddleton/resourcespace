@@ -110,8 +110,14 @@ function HookSimplesamlAllProvideusercredentials()
         $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
         $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block, $anonymous_login,$allow_password_change, $simplesaml_create_new_match_email,
         $simplesaml_allow_duplicate_email, $simplesaml_multiple_email_notify, $simplesaml_authorisation_claim_name, 
-        $simplesaml_authorisation_claim_value;
-                    
+        $simplesaml_authorisation_claim_value, $usercredentialsprovided;
+        
+        // Don't authenticate if this hook has already been handled by another higher piority plugin
+        if(isset($usercredentialsprovided) && $usercredentialsprovided)
+            {
+            return false;    
+            }
+
         // Allow anonymous logins outside SSO if simplesaml is not configured to block access to site.
         // NOTE: if anonymous_login is set to an invalid user, then use SSO otherwise it goes in an indefinite loop
         if(!$simplesaml_site_block && isset($anonymous_login) && trim($anonymous_login) !== '' && getval("usesso","")=="")
@@ -418,7 +424,8 @@ function HookSimplesamlAllProvideusercredentials()
 			$user_select_sql="and u.username='" . escape_check($username) . " '";
             $allow_password_change = false;
             $session_autologout = false;
-			return true;
+            $usercredentialsprovided = true;
+            return true;
 			}
 		return false;
         }
