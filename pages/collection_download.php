@@ -323,8 +323,8 @@ if ($submitted != "")
 				$filename = '';
 				if ($original_filenames_when_downloading)	
 					{
-					# Retrieve the original file name		
-					$filename=get_data_by_field($ref,$filename_field);	
+					# Compute a filename for this resource		
+					$filename=get_download_filename($ref,$size,0,$pextension);	
 
 					collection_download_use_original_filenames_when_downloading($filename, $ref, $collection_download_tar, $filenames);
 					}

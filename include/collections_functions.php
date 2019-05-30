@@ -2898,24 +2898,6 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
 
     if ($usesize!=""&&!$subbed_original){$append="-".$usesize;}else {$append="";}
 	$basename_minus_extension=remove_extension($pathparts['basename']);
-	
-	if ($download_filename_id_only) 
-	    {
-		# Id only means ignore settings $original_filenames_when_download and $prefix_resource_id_to_filename
-		$filename = $prefix_filename_string . $ref . "." . $pextension;
-		}	
-	else 
-		{  
-		# Otherwise use settings $original_filenames_when_download and $prefix_resource_id_to_filename
-		if ($prefix_resource_id_to_filename) 
-			{
-			$filename = $prefix_filename_string . $ref . "_" . $basename_minus_extension.$append.".".$pextension;
-			}
-		else 
-			{
-			$filename = $prefix_filename_string . $basename_minus_extension.$append.".".$pextension;
-			}
-    	}
 
     $fs=explode("/",$filename);$filename=$fs[count($fs)-1];
 
