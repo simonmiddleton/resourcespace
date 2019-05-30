@@ -1,0 +1,9 @@
+name: adobe_link
+desc: [Advanced] Allow ingest of Adobe files from ResourceSpace into Adobe CC
+author: Montala Limited
+version: 1.0
+config_url: /plugins/adobe_link/pages/setup.php
+info_url: https://www.resourcespace.com/knowledge-base/user/plugin-adobe_link
+category: Content Sharing
+disable_group_select: 0
+
