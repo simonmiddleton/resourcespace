@@ -8,7 +8,7 @@ function HookConditional_termsViewDownloadlink($baseparams)
 
     $resource_value_to_test=trim( get_data_by_field($resource['ref'],$conditional_terms_field) );
 
-    if( $conditional_terms_value==$resource_value_to_test || ",".$conditional_terms_value==$resource_value_to_test )
+    if( $conditional_terms_value==$resource_value_to_test )
         {
         $showterms=true;
         }
