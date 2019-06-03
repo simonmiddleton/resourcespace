@@ -141,6 +141,7 @@ function updateFieldOptions(question)
 
                 }
         }, 'json');
+    jQuery('#modal').css('overflow', 'visible');
     }
 
 jQuery(document).ready(function(){
