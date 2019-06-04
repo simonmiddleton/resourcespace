@@ -151,7 +151,7 @@ else
   
   if ($results==0)		
 	  {
-	  echo $lang['actions_noactions'];
+	  echo "<tr><td style='padding:20px;'>" . $lang['actions_noactions'] . "</td></tr>";
 	  }
   else
 	  {
