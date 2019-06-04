@@ -456,6 +456,8 @@ else
     </li>
     <?php } ?>
         
+    		
+	<?php if (($top_nav_upload && checkperm("c")) || ($top_nav_upload_user && checkperm("d"))) { ?><li class="HeaderLink UploadButton"><a href="<?php echo $baseurl; if ($upload_then_edit) { ?>/pages/upload_plupload.php<?php } else { ?>/pages/edit.php?ref=-<?php echo @$userref?>&amp;uploader=<?php echo $top_nav_upload_type; } ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo $lang["upload"]?></a></li><?php } ?>    
         
     <?php
     if(!hook('replaceheaderfullnamelink'))

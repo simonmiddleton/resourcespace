@@ -967,7 +967,7 @@ $lang['deleteallresourcesfromcollection'] = 'Delete all resources';
 $lang["deleteallsure"]="Are you sure you wish to DELETE these resources? This will delete the resources themselves, not just remove them from this collection.";
 $lang["batchdonotaddcollection"]="(do not add to a collection)";
 $lang["collectionsthemes"]="Related featured and public collections";
-$lang["recent"]="Recently added";
+$lang["recent"]="Recent";
 $lang["n_recent"]="%qty Recently added resources";
 $lang["batchcopyfrom"]="Copy the data below from resource with ID";
 $lang["copy"]="Copy";
@@ -2310,6 +2310,7 @@ $lang['disk_size_no_upload_explain']="Due to space constraints, uploading has be
 /*
  * Start - User Dash Strings
  */
+$lang["dash"]="Dash";
 $lang["savethissearchtodash"]="Save to dash tile";
 $lang["createnewdashtile"]="Create new dash tile";
 $lang["specialdashtiles"]="Special dash tiles";

@@ -83,7 +83,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     text-align: center;
 }
 
-button:hover, input[type=submit]:hover, input[type=button]:hover, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:hover {
+button:hover, input[type=submit]:hover, input[type=button]:hover, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:hover,.UploadButton a {
     background: #1378BF;
     box-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
@@ -266,7 +266,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .TopInpageNav a:hover, .TopInpageNav a:active, .BottomInpageNav a:hover, .BottomInpageNav a:active, #CentralSpaceLogin a:hover, #CentralSpaceLogin a:active {text-decoration:underline;}
 
 .HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;white-space: nowrap; overflow: hidden;font-size: 0px;}
-.HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0px; font-size: 15px; line-height: 36px;}
+.HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0px; font-size: 16px; line-height: 36px;}
 .HorizontalNav a:link, .HorizontalNav a:visited {text-decoration:none;}
 .HorizontalNav a:hover, .HorizontalNav a:active {text-decoration:underline;}
 .HorizontalWhiteNav li:first-child {border-left:none;}
@@ -1753,3 +1753,15 @@ a.BrowseRefresh{
 .RecordPanelLarge #RecordDownloadSummary, .RecordPanelLarge #ResourceWorkflowActions {
     width: 49.4%;
 }
+
+.UploadButton a
+    {
+    border-radius:4px;    
+    padding:0 10px 0 10px;
+    opacity:0.9 !important;
+    margin-right:10px;
+    }
+.UploadButton a:hover
+    {
+    opacity:1 !important;
+    }
