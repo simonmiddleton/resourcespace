@@ -2245,7 +2245,8 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
     // Collection bar actions should always be a special search !collection[ID] (exceptions might arise but most of the 
     // time it should be handled using the special search)
-    if(isset($collection_data['ref']) && !$top_actions && $pagename == 'collections')
+
+    if(isset($collection_data['ref']) && !$top_actions && in_array($pagename, array('collections','collection_manage')))
         {
         $search = "!collection{$collection_data['ref']}";
         }
