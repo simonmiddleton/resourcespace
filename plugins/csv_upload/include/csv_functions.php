@@ -115,7 +115,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 		array_push ($messages, "Info: Override resource_type {$resource_type_filter}({$resource_types[$resource_type_filter]}) is valid");
 		}
 
-    if (count($field_not_exist)>0)
+    if (isset($field_not_exist) && count($field_not_exist)>0)
         {
         foreach ($field_not_exist as $field_name)
             {
