@@ -830,8 +830,9 @@ elseif($restypes=='')
         </div>
     </form>
     <p><br/><?php
-    if ($allow_account_request) { ?><a href="<?php echo $baseurl_short?>pages/user_request.php">&gt; <?php echo $lang["nopassword"]?> </a></p><?php }
-    if ($allow_password_reset){?><p><a href="<?php echo $baseurl_short?>pages/user_password.php">&gt; <?php echo $lang["forgottenpassword"]?></a><?php }?>
+    if ($allow_account_request) { ?><a href="<?php echo $baseurl_short?>pages/user_request.php"><?php echo LINK_CARET . $lang["nopassword"]?> </a></p><?php }
+    if ($allow_password_reset){?><p><a href="<?php echo $baseurl_short?>pages/user_password.php"><?php echo LINK_CARET . $lang["forgottenpassword"]?></a><?php }?>
+    <br/><?php hook("loginformlink") ?>
     </p>
     </div>
  

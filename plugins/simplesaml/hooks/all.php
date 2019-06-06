@@ -434,7 +434,7 @@ function HookSimplesamlAllProvideusercredentials()
 		return false;
         }
 
-function HookSimplesamlLoginLoginformlink()
+function HookSimplesamlAllLoginformlink()
         {
         if(!file_exists(simplesaml_get_lib_path() . '/config/config.php'))
             {
