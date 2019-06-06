@@ -3,7 +3,7 @@
 function getPreviewURLForType($resource, $type, $alternative = -1, $page = 1)
     {
     global $use_watermark;
-
+    
     $path = get_resource_path(
         $resource['ref'],
         true,
