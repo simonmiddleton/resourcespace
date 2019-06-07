@@ -1559,14 +1559,14 @@ function do_search(
         # Execute query as normal
         if($returnsql){return $results_sql;}
         $result=sql_query($results_sql,false,$fetchrows);
+        }
 
-        # Performance improvement - perform a second count-only query and pad the result array as necessary
-        if($search_sql_double_pass_mode && count($result)>=$max_results)
-            {
-            $count_sql="SELECT count(distinct r.ref) value FROM resource r" . $t . "  WHERE $t2 $sql";
-            $count=sql_value($count_sql,0);
-            $result=array_pad($result,$count,0);
-            }
+    # Performance improvement - perform a second count-only query and pad the result array as necessary
+    if($search_sql_double_pass_mode && count($result)>=$max_results)
+        {
+        $count_sql="SELECT count(distinct r.ref) value FROM resource r" . $t . "  WHERE $t2 $sql";
+        $count=sql_value($count_sql,0);
+        $result=array_pad($result,$count,0);
         }
 
     debug("Search found " . count($result) . " results");
