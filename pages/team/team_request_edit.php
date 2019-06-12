@@ -78,8 +78,20 @@ if (isset($resulttext))
 
 if ($request !== false)
 	{
-    # Check access
-    if (checkperm("Rb") && ($request["assigned_to"]!=$userref))
+    $show_this_request=false;
+    # Show request assigned to the user if the user can accept requests (permission "Rb")
+    # Should the request be shown if assigned to the user (used to have "Rb") but the user can no longer accept requests
+    if (checkperm("Rb") && ($request["assigned_to"]==$userref))
+        {
+        $show_this_request=true;
+        }
+    # Show request if the user can assign requests (permission "Ra")
+    if(checkperm('Ra'))
+        {
+        $show_this_request=true;
+        }
+    
+    if (!$show_this_request)
         {
         ?><p><?php echo str_replace("%","<b>" . ($request["assigned_to_username"]==""?"(unassigned)":$request["assigned_to_username"]) . "</b>",$lang["requestnotassignedtoyou"]) ?></p><?php
         }
