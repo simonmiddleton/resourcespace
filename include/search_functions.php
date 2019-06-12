@@ -748,7 +748,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         {
         if ($sql_filter!="") {$sql_filter.=" AND ";}
         $restypes_x=explode(",",$restypes);
-        $sql_filter.="resource_type IN ('" . join("','",$restypes_x) . "')";
+        $sql_filter.="resource_type IN ('" . join("','", escape_check_array_values($restypes_x)) . "')";
         }
 
     # Apply star search
