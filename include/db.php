@@ -1343,6 +1343,32 @@ function unescape($text)
     return $text;
     }
 
+/**
+* Escape each elements' value of an array to safely use any of the values in SQL statements
+* 
+* @uses escape_check()
+* 
+* @param array $unsafe_array Array of values that should be escaped
+* 
+* @return array Returns an array with its values escaped for SQLi
+*/
+function escape_check_array_values(array $unsafe_array)
+    {
+    $escape_array_element = function($value)
+        {
+        if(is_array($value))
+            {
+            return escape_check_array_values($value);
+            }
+
+        return escape_check($value);
+        };
+
+    $escaped_array = array_map($escape_array_element, $unsafe_array);
+
+    return $escaped_array;
+    }
+
 
 if (!function_exists("nicedate")) {
 function nicedate($date,$time=false,$wordy=true)
