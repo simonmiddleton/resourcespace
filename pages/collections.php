@@ -308,64 +308,6 @@ else { ?>
 					}
 			});
 
-			jQuery('#trash_bin_delete_dialog').dialog({
-				autoOpen: false,
-				modal: true,
-				resizable: false,
-				dialogClass: 'delete-dialog no-close',
-				open: function(event,ui) {
-					jQuery(this)
-						.closest(".ui-dialog")
-						.find(".ui-dialog-title")
-						.html("<?php echo $lang["trash_bin_delete_dialog_title"] . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name'));
-				},
-				buttons: {
-					// Confirm removal of this resource from the resolved collection
-					"<?php echo $lang['yes']; ?>": function() {
-						var class_of_drag=jQuery(this).data('class_of_drag');
-						var resource_id = jQuery(this).data("resource_id");
-						var collection_id=jQuery(this).data('collection_id');
-						var collection_name=jQuery(this).data('collection_name');
-
-						if(collection_id == "")
-							{
-							console.error('RS_debug: Unable to resolve from which collection drag and drop resource removal is being requested.');
-							jQuery(this).dialog('close');
-							}
-						// RemoveResourceFromCollection includes call to CollectionDivLoad
-
-						RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id);
-						// Remove resource from search results if this is not a collection search	
-						if(is_special_search('!collection', 11))
-							{
-							jQuery('#ResourceShell' + resource_id).fadeOut();
-							}
-						jQuery(this).dialog('close');
-					},
-					// Cancel resource removal
-					"<?php echo $lang['no']; ?>": function() {
-						var class_of_drag=jQuery(this).data('class_of_drag');
-						var resource_id = jQuery(this).data("resource_id");
-						var collection_id=jQuery(this).data('collection_id');
-						var collection_name=jQuery(this).data('collection_name');
-
-						if(collection_id == "")
-							{
-							console.error('RS_debug: Unable to resolve which collection to reload following cancellation of resource removal.');
-							jQuery(this).dialog('close');
-							}
-
-						// If resource was dragged from the CollectionPanelShell then refresh the current collection within the CollectionDiv
-						if (class_of_drag.indexOf("CollectionPanelShell") >= 0)
-							{
-							collection_id = jQuery("#collection").val();
-							CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=' + collection_id);
-							}
-						jQuery(this).dialog('close');
-					}
-				}
-			});
-
 			jQuery('#trash_bin').droppable({
 				accept: '.CollectionPanelShell, .ResourcePanel',
 				activeClass: "ui-droppable-active ui-state-hover",
@@ -374,7 +316,63 @@ else { ?>
 				drop: function(event, ui) {
 					var resource_id = ui.draggable.attr("id");
 					resource_id = resource_id.replace('ResourceShell', '');
-					
+					jQuery('#trash_bin_delete_dialog').dialog({
+						autoOpen: false,
+						modal: true,
+						resizable: false,
+						dialogClass: 'delete-dialog no-close',
+						open: function(event,ui) {
+							jQuery(this)
+								.closest(".ui-dialog")
+								.find(".ui-dialog-title")
+								.html("<?php echo $lang["trash_bin_delete_dialog_title"] . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name'));
+						},
+						buttons: {
+							// Confirm removal of this resource from the resolved collection
+							"<?php echo $lang['yes']; ?>": function() {
+								var class_of_drag=jQuery(this).data('class_of_drag');
+								var resource_id = jQuery(this).data("resource_id");
+								var collection_id=jQuery(this).data('collection_id');
+								var collection_name=jQuery(this).data('collection_name');
+
+								if(collection_id == "")
+									{
+									console.error('RS_debug: Unable to resolve from which collection drag and drop resource removal is being requested.');
+									jQuery(this).dialog('close');
+									}
+								// RemoveResourceFromCollection includes call to CollectionDivLoad
+
+								RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id);
+								// Remove resource from search results if this is not a collection search	
+								if(is_special_search('!collection', 11))
+									{
+									jQuery('#ResourceShell' + resource_id).fadeOut();
+									}
+								jQuery(this).dialog('close');
+							},
+							// Cancel resource removal
+							"<?php echo $lang['no']; ?>": function() {
+								var class_of_drag=jQuery(this).data('class_of_drag');
+								var resource_id = jQuery(this).data("resource_id");
+								var collection_id=jQuery(this).data('collection_id');
+								var collection_name=jQuery(this).data('collection_name');
+
+								if(collection_id == "")
+									{
+									console.error('RS_debug: Unable to resolve which collection to reload following cancellation of resource removal.');
+									jQuery(this).dialog('close');
+									}
+
+								// If resource was dragged from the CollectionPanelShell then refresh the current collection within the CollectionDiv
+								if (class_of_drag.indexOf("CollectionPanelShell") >= 0)
+									{
+									collection_id = jQuery("#collection").val();
+									CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=' + collection_id);
+									}
+								jQuery(this).dialog('close');
+							}
+						}
+					});
 					// Resolve the collection depending on the origin of the resource been dragged
 					var class_of_drag = ui.draggable.attr("class");
 					var collection_id = "";

@@ -1225,6 +1225,7 @@ function get_user_dash($user)
 			      		// This tile is set for all users so provide extra options
 				        jQuery("#trash_bin_delete_dialog").dialog({
 				        	title:'<?php echo $lang["dashtiledelete"]; ?>',
+				        	autoOpen: true,
 				        	modal: true,
 		    				resizable: false,
 	    					dialogClass: 'delete-dialog no-close',
