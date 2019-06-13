@@ -515,7 +515,7 @@ include_once __DIR__ . '/../pages/ajax/message.php';
 <?php hook("midheader"); ?>
 <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">
 <?php
-if($pagename != "terms" && !strpos($_SERVER["HTTP_REFERER"],"login") && !$terms_login)
+if(!($pagename == "terms" && strpos($_SERVER["HTTP_REFERER"],"login") !== false && $terms_login))
     {
         include (dirname(__FILE__) . "/header_links.php");
     }
@@ -547,7 +547,7 @@ if($pagename != "terms" && !strpos($_SERVER["HTTP_REFERER"],"login") && !$terms_
         'document_viewer'
     );
 
-if($pagename == "terms" && strpos($_SERVER["HTTP_REFERER"],"login") && $terms_login)
+if($pagename == "terms" && strpos($_SERVER["HTTP_REFERER"],"login") !== false && $terms_login)
     {
         array_push($omit_searchbar_pages, 'terms');
         $collections_footer = false;
