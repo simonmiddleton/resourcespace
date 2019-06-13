@@ -770,7 +770,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $notification_message = $lang['requestassignedtoyoumail'];
             $request_url = $baseurl . "/?q=" . $request;
             $admin_message = $notification_message . "\n\n" . $request_url . "\n";
-            get_config_option($assigned_to_user,'email_user_notifications', $send_email, false);  // Don't get default as we may get the requesting user's preference
+            get_config_option($assigned_to_user['ref'],'email_user_notifications', $send_email, false);  // Don't get default as we may get the requesting user's preference
             if($send_email)
                 {
                 $assigned_to_user = get_user($admin_notify_user);
