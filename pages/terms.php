@@ -43,7 +43,7 @@ if('' != $terms_save && enforcePostRequest(false))
     if('on' == $terms_iaccept)
         {
 		sql_query("UPDATE user SET accepted_terms = 1 WHERE ref = '{$userref}'");
-		$terms_url_accepted="&iaccept=".$terms_iaccept;
+		$terms_url_accepted=(strpos($url, "?")?"&":"?") . "iaccept=".$terms_iaccept;
         }
 
 	$url.=$terms_url_accepted;
