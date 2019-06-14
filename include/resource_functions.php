@@ -3696,41 +3696,38 @@ function get_resource_access($resource)
     /*
     Restricted access to all available resources
     OR Restricted access to resources in a particular workflow state
+    OR Restricted access to resources of a particular resource type
     UNLESS user/ group has been granted custom (override) access
     */
     if (
         $access == 0
-        && (!checkperm("g") || checkperm("rws{$resourcedata['archive']}"))
+        && ((!checkperm("g") || checkperm("rws{$resourcedata['archive']}") || checkperm('X'.$resource_type))
         && !$customgroupaccess
         && !$customuseraccess)
+        )
         {
-        $access = 1; 
+        $access = 1;
         }
 
-	if ($access==0 && checkperm('X'.$resource_type)){
-		// this resource type is always restricted for this user group
-		$access=1;
-		}
-		
-	// Check derestrict filter
+	// Check for a derestrict filter, this allows exeptions for users without the 'g' permission who normally have restricted accesss to all available resources)
 	global $userderestrictfilter;
-	if ($access==1 && trim($userderestrictfilter)!="")
-		{		
+	if ($access==1 && !checkperm("g") && !checkperm("rws{$resourcedata['archive']}") && !checkperm('X'.$resource_type) && trim($userderestrictfilter) != "")
+		{
 		# A filter has been set to derestrict access when certain metadata criteria are met
 		if(!isset($metadata))
-                   {
-                    #  load metadata if not already loaded
-                   $metadata=get_resource_field_data($ref,false,false);
-                   }
+            {
+            #  load metadata if not already loaded
+            $metadata=get_resource_field_data($ref,false,false);
+            }
 		$matchedfilter=false;
 		for ($n=0;$n<count($metadata);$n++)
 			{
 			$name=$metadata[$n]["name"];
-			$value=$metadata[$n]["value"];			
+			$value=$metadata[$n]["value"];
 			if ($name!="")
 				{
 				$match=filter_match($userderestrictfilter,$name,$value);
-				if ($match==1) {$matchedfilter=false;break;} 
+				if ($match==1) {$matchedfilter=false;break;}
 				if ($match==2) {$matchedfilter=true;} 
 				}
 			}
