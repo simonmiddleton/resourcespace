@@ -53,7 +53,7 @@ function execute_api_call($query,$pretty=false)
         {
         $paramkey = $n + 1;
         debug ("API Checking for parameter " . $fparam->getName() . " (param" . $paramkey . ")");
-        if (array_key_exists("param" . $paramkey,$params))
+        if (array_key_exists("param" . $paramkey,$params) && $params["param" . $paramkey] != "")
             {
             debug ("API " . $fparam->getName() . " -   value has been passed : '" . $params["param" . $paramkey] . "'");
             $setparams[$n] = $params["param" . $paramkey];
