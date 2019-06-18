@@ -98,6 +98,10 @@ function perform_login()
              WHERE ref = '{$userref}'
         ");
 
+        // Update user local time zone (if provided)
+        $get_user_local_timezone = getval('user_local_timezone', null);
+        set_config_option($userref, 'user_local_timezone', $get_user_local_timezone);
+
 		# Log this
 		daily_stat("User session",$userref);
 		

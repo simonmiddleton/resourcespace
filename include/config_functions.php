@@ -181,13 +181,13 @@ function render_text_option($fieldname, $value, $size=20, $units=''){
 * @return boolean
 */
 function set_config_option($user_id, $param_name, $param_value)
-    {	
+    {
     // We do allow for param values to be empty strings or 0 (zero)
     if(empty($param_name) || is_null($param_value))
         {
         return false;
         }
-		
+
     // Prepare the value before inserting it
     $param_value = config_clean($param_value);
     $param_value = escape_check($param_value);
@@ -210,7 +210,7 @@ function set_config_option($user_id, $param_name, $param_value)
     );
     $current_param_value = null;
     if(get_config_option($user_id, $param_name, $current_param_value))
-        {		
+        {
         if($current_param_value == $param_value)
             {
             return true;

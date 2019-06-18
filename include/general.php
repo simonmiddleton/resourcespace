@@ -7775,3 +7775,32 @@ function get_recent_users($days)
     {
     return (sql_value("select count(*) value from user where datediff(now(),last_active) <= '" . escape_check($days) . "'",0));
     }
+
+
+/**
+* Offset a datetime to user local time zone
+* 
+* IMPORTANT: the offset is fixed, there is no calculation for summertime!
+* 
+* @param string $datetime A date/time string. @see https://www.php.net/manual/en/datetime.formats.php
+* @param string $format   The format of the outputted date string. @see https://www.php.net/manual/en/function.date.php
+* 
+* @return string The date in the specified format
+*/
+function offset_user_local_timezone($datetime, $format)
+    {
+    global $user_local_timezone;
+
+    $server_dtz = new DateTimeZone(date_default_timezone_get());
+    $user_local_dtz = new DateTimeZone($user_local_timezone);
+
+    // Create two DateTime objects that will contain the same Unix timestamp, but have different timezones attached to them
+    $server_dt = new DateTime($datetime, $server_dtz);
+    $user_local_dt = new DateTime($datetime, $user_local_dtz);
+
+    $time_offset = $user_local_dt->getOffset() - $server_dt->getOffset();;
+
+    $user_local_dt->add(DateInterval::createFromDateString((string) $time_offset . ' seconds'));
+
+    return $user_local_dt->format($format);
+    }

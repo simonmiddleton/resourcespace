@@ -1376,6 +1376,9 @@ function nicedate($date,$time=false,$wordy=true)
 	# format a MySQL ISO date
 	# Always use the 'wordy' style from now on as this works better internationally.
 	global $lang,$date_d_m_y,$date_yyyy;
+
+    $date = offset_user_local_timezone($date, 'Y-m-d H:i:s');
+
 	$y = substr($date,0,4);
 	if(!$date_yyyy)
 	{

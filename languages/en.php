@@ -1668,6 +1668,8 @@ $lang["shouldbeormore"]="should be ? or greater"; # E.g. should be 200M or great
 $lang["config_file"]="(config: %file)"; # %file will be replaced, e.g. (config: /etc/php5/apache2/php.ini)
 $lang['large_file_support_64_bit'] = 'Large file support (64 bit platform)';
 $lang['large_file_warning_32_bit'] = 'WARNING: Running 32 bit PHP. Files larger than 2GB will not be supported.';
+$lang['server_timezone_check'] = 'PHP timezone is the same as the one MySQL uses';
+$lang['server_timezone_check_fail'] = 'PHP timezone is "%phptz%" and MySQL timezone is "%mysqltz%"';
 
 $lang["starsminsearch"]="Stars (minimum)";
 $lang["anynumberofstars"]="Any number of stars";
@@ -2252,6 +2254,7 @@ $lang["home__themes"]="The very best resources, hand picked and grouped.";
 $lang["home__welcometext"]="The simple, fast, &amp; free way to organise your digital assets.";
 $lang["home__welcometitle"]="Welcome to ResourceSpace [ver]";
 $lang["login__welcomelogin"]="Welcome to ResourceSpace, please log in...";
+$lang["local_tz"] = "Local time zone";
 $lang["research_request__introtext"]="Our professional researchers are here to assist you in finding the very best resources for your projects. Complete this form as thoroughly as possible so we're able to meet your criteria accurately. <br /><br />A member of the research team will be assigned to your request. We'll keep in contact via email throughout the process, and once we've completed the research you'll receive an email with a link to all the resources that we recommend.  ";
 $lang["resource_email__introtext"]="Quickly share this resource with other users by email. A link is automatically sent out. You can also include any message as part of the email.";
 $lang["resource_request__introtext"]="Your request is almost complete. Please include the reason for your request so we can respond efficiently.";
@@ -2494,6 +2497,7 @@ $lang["systemconfig_modal_default"] = "Enable modals for standard pages where co
 $lang['systemconfig_browse_bar_section'] = 'Browse Bar';
 $lang['systemconfig_browse_bar_enable'] = 'Enable Browse Bar';
 $lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse Bar';
+$lang['systemconfig_user_local_timezone'] = 'User local time zone';
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';

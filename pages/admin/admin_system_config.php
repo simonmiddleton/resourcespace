@@ -11,9 +11,16 @@ $yes_no_options         = array($lang['no'], $lang['yes']);
 // System section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemsetup'] . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
 $page_def[] = config_add_text_input('applicationname', $lang['setup-applicationname'], false, 420, false, '', true);
-
 $page_def[] = config_add_text_input('email_from', $lang['setup-emailfrom'], false, 420, false, '', true);
 $page_def[] = config_add_text_input('email_notify', $lang['setup-emailnotify'], false, 420, false, '', true);
+$page_def[] = config_add_single_select(
+    'user_local_timezone',
+    $lang['systemconfig_user_local_timezone'],
+    timezone_identifiers_list(),
+    false,
+    420,
+    '',
+    true);
 $page_def[] = config_add_html('</div>');
 
 
