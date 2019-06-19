@@ -11,6 +11,7 @@ include_once '../include/render_functions.php';
 
 # Editing resource or collection of resources (multiple)?
 $ref=getvalescaped("ref","",true);
+$use=$ref;
 if(getval("create","")!="" && $ref==0 && $userref>0){$ref=0-$userref;} // Saves manual link creation having to work out user template ref
 
 # Fetch search details (for next/back browsing and forwarding of search params)
@@ -1497,9 +1498,6 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
 </div>
 <?php   
 }
-
-
-$use=$ref;
 
 # Resource aliasing.
 # 'Copy from' or 'Metadata template' been supplied? Load data from this resource instead.
