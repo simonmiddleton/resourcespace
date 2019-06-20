@@ -6,6 +6,10 @@ function HookVideo_spliceViewAfterresourceactions()
 	
 	if ($resource["resource_type"]!=$videosplice_resourcetype) {return false;} # Not the right type.
 
+	if ( !resource_download_allowed($resource['ref'], "scr", $resource['resource_type']) )
+		{
+		return false;	
+		}
 
 	if (getval("video_splice_cut_from_hours","")!="")
 		{
