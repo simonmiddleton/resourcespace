@@ -149,11 +149,11 @@ for($n = 0; $n < count($collection_resources); $n++)
 
     // If using original filenames when downloading, copy the file to new location so the name is included.
     $filename = '';
-    if($GLOBALS["original_filenames_when_downloading"])   
-        {
-        # Compute a filename for this resource		
-        $filename=get_download_filename($ref,$size,0,$pextension);	
+    # Compute a filename for this resource
+    $filename=get_download_filename($ref,$size,0,$pextension);
 
+    if($GLOBALS["original_filenames_when_downloading"])
+        {
         collection_download_use_original_filenames_when_downloading($filename, $ref, false, $filenames);
         }
 
