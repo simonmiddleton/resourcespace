@@ -143,14 +143,11 @@ if($user_data !== false && count($user_data) > 0)
     setup_user($user_data[0]);
     }
 
-
-// If we allow users to upload via e-mails based on permissions, we skip users who either don't have permissions to 
-// upload or those who are blocked explicitly
+// Check which is based on permissions interprets the user list as "Blocked Users"
+// If the user has neither permission "c" nor "d" or they are in the "Blocked Users" list then their email is skipped
 if(
-    $checkmail_allow_users_based_on_permission
-    && (
-        !(checkperm('c') || checkperm('d'))
-        || in_array($userref, $checkmail_users)
+	$checkmail_allow_users_based_on_permission
+    && ( !(checkperm('c') || checkperm('d')) || in_array($userref, $checkmail_users)
     )
 )
     {
@@ -174,6 +171,8 @@ if(
     skip_mail($imap, $current_message, $error_message, true);
     }
 
+// Check which is not based on permissions interprets the user list as "Allowed Users"
+// If user is not in the "Allowed Users" list then their email is skipped
 if(!$checkmail_allow_users_based_on_permission && !in_array($userref, $checkmail_users))
     {
     skip_mail(

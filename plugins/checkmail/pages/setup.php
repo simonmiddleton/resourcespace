@@ -69,5 +69,19 @@ include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
 include '../../../include/footer.php';
 
-	
+?>
+<script>
+// Attach change handler to checkmail allow permission question so that user list label can be dynamically set
+jQuery("#checkmail_allow_users_based_on_permission").on("change", function() {
+	var chkPermLabel = jQuery("label[for='checkmail_users']");
+	if (this.value == 0) 
+		{
+		chkPermLabel[0].textContent="<?php echo $lang['checkmail_users']?>";
+		} 
+	else 
+		{
+		chkPermLabel[0].textContent="<?php echo $lang['checkmail_blocked_users_label']?>";
+		}
+});
+</script>
 
