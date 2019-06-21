@@ -6,7 +6,9 @@ include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permis
 $plugin_name = 'discount_code';
 if(!in_array($plugin_name, $plugins))
     {plugin_activate_for_setup($plugin_name);}
-    
+
+$errorfields=array();
+
 $delete_code=getval("delete_code","");
 if ($delete_code!="" && enforcePostRequest(false))
     {
@@ -14,12 +16,19 @@ if ($delete_code!="" && enforcePostRequest(false))
     $delete_code_escaped = escape_check($delete_code);
     sql_query("delete from discount_code where code='$delete_code_escaped'");
     }
-
 elseif (getval("add","")!="" && enforcePostRequest(false))
     {
-    # Add discount code.
-    sql_query("delete from discount_code where code='" . getvalescaped("code","") . "'"); # Clear any existing matching code.
-    sql_query("insert into discount_code(code,percent,expires) values ('" . getvalescaped("code","") . "','" . getvalescaped("percent","") . "','" . getvalescaped("expires","") . "');");
+    $dateParsed=date_create_from_format("Y-m-d",getval("expires",""));
+    if($dateParsed)
+        {
+        # Add discount code.
+        sql_query("delete from discount_code where code='" . getvalescaped("code","") . "'"); # Clear any existing matching code.
+        sql_query("insert into discount_code(code,percent,expires) values ('" . getvalescaped("code","") . "','" . getvalescaped("percent","") . "','" . getvalescaped("expires","") . "');");
+        }
+    else
+        {
+        $errorfields[]="code-expires";   
+        }
     }
 
 $discount_codes=sql_query("select code,percent,expires from discount_code order by code");
@@ -59,12 +68,28 @@ include "../../../include/header.php";
 &nbsp;
 <?php echo $lang["discount"] . ": " ?><input type="text" name="percent" size="2" value="10">%
 &nbsp;
-<?php echo $lang["code-expires-yyyymmdd"] . " " ?><input type="text" name="expires" size="12" value="<?php echo date("Y-m-d",time()+60*60*24*100) ?>">
+<?php echo $lang["code-expires-yyyymmdd"] . " " ?><input type="text" id="code-expires" name="expires" size="12" value="<?php echo date("Y-m-d",time()+60*60*24*100) ?>">
 <input type="submit" name="add" value="<?php echo $lang["add_code"] ?>">   
 </form>
 
 </div>  
 </div>  
 <?php
+if (count($errorfields)>0)
+    {
+    echo "<div class=\"PageInformal\">";
+    foreach($errorfields as $errorfield)
+        {
+        echo $lang["error_" . $errorfield] . PHP_EOL;
+        ?>
+        <script>
+        jQuery(document).ready(function(){
+            jQuery('#<?php echo $errorfield; ?>').addClass('highlighted');
+        });
+        </script>
+        <?php
+        }
+    echo "</div>";
+    }
 include "../../../include/footer.php";
 ?>

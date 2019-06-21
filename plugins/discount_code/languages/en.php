@@ -20,5 +20,6 @@ $lang["discount_code"]="Discount Code";
 
 $lang["error-invalid-discount-code"]="<strong>Invalid discount code.</strong><br>A discount has not been applied.";
 $lang["error-discount-code-already-used"]="<strong>Discount code already used.</strong><br>You can use discount codes only once. A discount has not been applied.";
+$lang["error_code-expires"]="<strong>Invalid discount code expiry date.</strong><br>A discount has not been applied.";
 
 $lang["discount_applied"]="Discount applied";
