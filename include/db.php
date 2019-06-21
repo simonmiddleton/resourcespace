@@ -1371,33 +1371,65 @@ function escape_check_array_values(array $unsafe_array)
 
 
 if (!function_exists("nicedate")) {
-function nicedate($date,$time=false,$wordy=true)
-	{
-	# format a MySQL ISO date
-	# Always use the 'wordy' style from now on as this works better internationally.
-	global $lang,$date_d_m_y,$date_yyyy;
+/**
+* Formats a MySQL ISO date
+* 
+* Always use the 'wordy' style from now on as this works better internationally.
+* 
+* @uses offset_user_local_timezone()
+* 
+* @return string
+*/
+function nicedate($date, $time = false, $wordy = true)
+    {
+    global $lang, $date_d_m_y, $date_yyyy;
 
-    $date = offset_user_local_timezone($date, 'Y-m-d H:i:s');
+    if($date == '')
+        {
+        return '';
+        }
 
-	$y = substr($date,0,4);
-	if(!$date_yyyy)
-	{
-		$y = substr($y, 2, 2);
-	}
-	if ( $y=="" ) return "-";
-	$m = $wordy ? (@$lang["months"][substr($date,5,2)-1]) : substr($date,5,2);
-	if ($m=="") return $y;
-	$d = substr($date,8, 2);
-	if ($d=="" || $d=="00") return $m . " " . $y;
-	$t = $time ? (" @ "  . substr($date,11,5)) : "";
-	if($date_d_m_y)
-		{
-		return $d . " " . $m . " " . $y . $t;
-		}
-	else{
-		return $m . " " . $d . " " . $y . $t;
-		}
-	}	
+    $original_time_part = substr($date, 11, 5);
+    if($original_time_part !== false || $original_time_part !== '')
+        {
+        $date = offset_user_local_timezone($date, 'Y-m-d H:i:s');
+        }
+
+    $y = substr($date, 0, 4);
+    if(!$date_yyyy)
+        {
+        $y = substr($y, 2, 2);
+        }
+
+    if($y == "")
+        {
+        return "-";
+        };
+
+    $month_part = substr($date, 5, 2);
+    $m = $wordy ? (@$lang["months"][$month_part - 1]) : $month_part;
+    if($m == "")
+        {
+        return $y;
+        }
+
+    $d = substr($date, 8, 2);    
+    if($d == "" || $d == "00")
+        {
+        return "{$m} {$y}";
+        }
+
+    $t = $time ? " @ " . substr($date, 11, 5) : "";
+
+    if($date_d_m_y)
+        {
+        return $d . " " . $m . " " . $y . $t;
+        }
+    else
+        {
+        return $m . " " . $d . " " . $y . $t;
+        }
+    }
 }
 
 function redirect($url)
