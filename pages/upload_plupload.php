@@ -215,7 +215,30 @@ if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
 $sort=getval("sort",$default_sort_direction);
 
 $allowed_extensions="";
-if ($resource_type!="" && !$alternative) {$allowed_extensions=get_allowed_extensions_by_type($resource_type);}
+
+if($upload_then_edit && !$alternative)
+    {
+        $all_allowed_extensions_holder = array();
+        $all_resource_types = get_resource_types();
+    
+        foreach ($all_resource_types as $type) 
+        {
+            $extensions = explode(",", get_allowed_extensions_by_type($type["ref"]));
+            foreach ($extensions as $extension) 
+            {
+                if ($extension != "") 
+                {
+                    array_push($all_allowed_extensions_holder, $extension);
+                }
+            }
+        }
+        array_unique($all_allowed_extensions_holder);
+        $allowed_extensions = implode(",", $all_allowed_extensions_holder);
+    }
+else if ($resource_type!="" && !$alternative) 
+    {
+        $allowed_extensions=get_allowed_extensions_by_type($resource_type);
+    }
 
 if (is_numeric($collection_add))
 	{
