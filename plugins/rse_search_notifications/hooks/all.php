@@ -6,7 +6,15 @@ function HookRse_search_notificationsAllRender_search_actions_add_option($option
     {
     global $lang, $watched_searches_url, $search, $restypes, $archive, $k;
 
-    if($k != '' || !isset($search) || $search == '')
+    if($k != '')
+        {
+        return array();
+        }
+
+    // Prevent watch if search criteria are absent
+    if(    (!isset($search)   || $search == '') 
+        && (!isset($restypes) || $restypes == '') 
+        && (!isset($archive)  || $archive == '') )
         {
         return array();
         }
