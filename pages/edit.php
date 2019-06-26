@@ -1502,6 +1502,8 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
 # Resource aliasing.
 # 'Copy from' or 'Metadata template' been supplied? Load data from this resource instead.
 $originalref=$use;
+$original_fields=array();
+$original_nodes=array();
 
 if (getval("copyfrom","")!="")
   {
