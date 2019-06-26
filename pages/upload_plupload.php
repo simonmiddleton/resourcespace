@@ -223,16 +223,24 @@ if($upload_then_edit && !$alternative)
     
         foreach ($all_resource_types as $type) 
         {
-            $extensions = explode(",", get_allowed_extensions_by_type($type["ref"]));
-            foreach ($extensions as $extension) 
+            if(get_allowed_extensions_by_type($type["ref"]) == "")
             {
-                if ($extension != "") 
+                $all_allowed_extensions_holder = array();
+                break;
+            }
+            else
+            {
+                $extensions = explode(",", get_allowed_extensions_by_type($type["ref"]));
+                foreach ($extensions as $extension) 
                 {
-                    array_push($all_allowed_extensions_holder, $extension);
+                    if ($extension != "") 
+                    {
+                        array_push($all_allowed_extensions_holder, strtolower($extension));
+                    }
                 }
             }
         }
-        array_unique($all_allowed_extensions_holder);
+        $all_allowed_extensions_holder = array_unique($all_allowed_extensions_holder);
         $allowed_extensions = implode(",", $all_allowed_extensions_holder);
     }
 else if ($resource_type!="" && !$alternative) 
