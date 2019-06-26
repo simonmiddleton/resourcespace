@@ -57,7 +57,7 @@ function do_search(
         
     # globals needed for hooks
      global $sql, $order, $select, $sql_join, $sql_filter, $orig_order, $collections_omit_archived, 
-           $search_sql_double_pass_mode, $usergroup, $search_filter_strict, $default_sort, 
+           $search_sql_double_pass_mode, $usergroup, $userref, $search_filter_strict, $default_sort, 
            $superaggregationflag, $k, $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES,$TEXT_FIELD_TYPES, $stemming,
            $open_access_for_contributor;
 		   
@@ -204,7 +204,6 @@ function do_search(
     $sql_join="";
     if ((!checkperm("v")) && !$access_override)
         {
-        global $usergroup;global $userref;
         # one extra join (rca2) is required for user specific permissions (enabling more intelligent watermarks in search view)
         # the original join is used to gather group access into the search query as well.
         $sql_join   = " LEFT OUTER JOIN resource_custom_access rca2 ON r.ref=rca2.resource AND rca2.user='$userref' AND (rca2.user_expires IS null or rca2.user_expires>now()) AND rca2.access<>2  ";
