@@ -6915,7 +6915,7 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
     {
     foreach($resource_type_extension_mapping as $resource_type_id => $allowed_extensions)
         {
-        if(in_array($extension, $allowed_extensions))
+        if(in_array(strtolower($extension), $allowed_extensions))
             {
             return $resource_type_id;
             }
