@@ -868,8 +868,44 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         if (!checkperm("v") && !(substr($search,0,11)=="!collection" && $k!='' && $collection_allow_not_approved_share)) 
             {
             # Append standard filtering to hide resources in a pending state, whatever the search
-            if (!$pending_submission_searchable_to_all) {$sql_filter.= (($sql_filter!="")?" AND ":"") . "(r.archive<>-2 OR r.created_by='" . $userref . "')";}
-            if (!$pending_review_visible_to_all){$sql_filter.=(($sql_filter!="")?" AND ":"") . "(r.archive<>-1 OR r.created_by='" . $userref . "')";}
+            if (!$pending_submission_searchable_to_all) 
+                {
+                $sql_filter.= (($sql_filter!="")?" AND ":"") . "(r.archive<>-2 OR r.created_by='" . $userref . "'";
+                for ($n=-2;$n<=3;$n++)
+                    {
+                    if(checkperm("ert" . $n))
+                        {
+                        $sql_filter.= " OR resource_type='" . $n . "'";
+                        }
+                    }
+                foreach ($additional_archive_states as $additional_archive_state)
+                    {
+                    if(checkperm("ert" . $n))
+                        {
+                        $sql_filter.= " OR resource_type='" . $n . "'";
+                        }
+                    }
+                $sql_filter.= ")";
+                }
+            if (!$pending_review_visible_to_all)
+                {
+                $sql_filter.=(($sql_filter!="")?" AND ":"") . "(r.archive<>-1 OR r.created_by='" . $userref . "'";
+                for ($n=-2;$n<=3;$n++)
+                    {
+                    if(checkperm("ert" . $n))
+                        {
+                        $sql_filter.= " OR resource_type='" . $n . "'";
+                        }
+                    }
+                foreach ($additional_archive_states as $additional_archive_state)
+                    {
+                    if(checkperm("ert" . $n))
+                        {
+                        $sql_filter.= " OR resource_type='" . $n . "'";
+                        }
+                    }
+                $sql_filter.= ")";
+                }
             }
         }
         
