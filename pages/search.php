@@ -1151,7 +1151,7 @@ if($responsive_ui)
             <?php
             }
 
-        if(!isset($collectiondata))
+        if(!isset($collectiondata) || !$collectiondata)
             {
             $collectiondata = array();
             }
