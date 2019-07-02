@@ -6,7 +6,7 @@ global $reset_date_upload_template, $reset_date_field, $blank_date_upload_templa
 $dy="";
 $dm=$dd=$dh=$di=-1;
 
-if(!$blank_date_upload_template || $ref>0) {
+if(!$blank_date_upload_template || $ref>0 || '' != getval('submitted', '')) {
 	
 
 if (($ref<0) && $reset_date_upload_template && $reset_date_field==$field["ref"])
