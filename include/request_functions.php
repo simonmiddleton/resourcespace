@@ -213,7 +213,7 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
     return $returnsql?$sql:sql_query($sql);
     }
   
-function email_collection_request($ref,$details)
+function email_collection_request($ref,$details,$external_email)
     {
     # Request mode 0
     # E-mails a collection request (posted) to the team
@@ -349,11 +349,12 @@ function email_collection_request($ref,$details)
     
     if (count($admin_notify_users)>0)
         {
-        global $userref;
         message_add($admin_notify_users,$notification_message,$templatevars["requesturl"],$userref, MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,MESSAGE_DEFAULT_TTL_SECONDS,COLLECTION_REQUEST, $ref);
         }
-              
-    if ($request_senduserupdates)
+    
+    # $userref and $useremail will be that of the internal requestor    
+    # - We need to send the $userconfirmmessage to the internal requestor saying that their request has been submitted    
+    if (isset($userref) && $request_senduserupdates)
         {
         get_config_option($userref,'email_user_notifications', $send_email);    
         if($send_email && filter_var($useremail, FILTER_VALIDATE_EMAIL))
@@ -362,12 +363,17 @@ function email_collection_request($ref,$details)
             }        
         else
             {
-                
-            global $userref;
             message_add($userref,$userconfirmmessage, $templatevars['url']);
             }
         }
-    
+
+    # $userref and $useremail will be null for external requestor
+    # - We can only send an email to the email address provided on the external request 
+    if (!isset($userref) && filter_var($external_email, FILTER_VALIDATE_EMAIL))
+        {
+        send_mail($external_email,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,NULL,"emailusercollectionrequest",$templatevars);
+        }    
+
     # Increment the request counter
     sql_query("update resource set request_count=request_count+1 where ref='$ref'");
     

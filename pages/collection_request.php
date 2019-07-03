@@ -35,7 +35,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 		else
 			{
 			# Request mode 0 : Simply e-mail the request.
-			$result=email_collection_request($ref,getvalescaped("request",""));
+			$result=email_collection_request($ref,getvalescaped("request",""),getvalescaped("email",""));
 			}
 		}
 	else
