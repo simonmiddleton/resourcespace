@@ -373,9 +373,10 @@ function email_collection_request($ref,$details,$external_email)
         {
         send_mail($external_email,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage,$email_from,NULL,"emailusercollectionrequest",$templatevars);
         }    
-
-    # Increment the request counter
-    sql_query("update resource set request_count=request_count+1 where ref='$ref'");
+    
+    # Increment the request counter for each resource in the requested collection
+    sql_query("update resource set request_count=request_count+1 " 
+             ."where ref in(select cr.resource from collection_resource cr where cr.collection='$ref' and cr.resource = ref)");
     
     return true;
     }
@@ -854,9 +855,10 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             }
         }    
     
-    # Increment the request counter
-    sql_query("update resource set request_count=request_count+1 where ref='$ref'");
-    
+    # Increment the request counter for each resource in the requested collection
+    sql_query("update resource set request_count=request_count+1 " 
+             ."where ref in(select cr.resource from collection_resource cr where cr.collection='$ref' and cr.resource = ref)");
+
     return true;
     }
 
