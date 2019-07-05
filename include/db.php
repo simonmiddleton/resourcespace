@@ -2132,7 +2132,7 @@ function setup_user($userdata)
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection, $userpreferences,
-           $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login;
+           $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter;
 		
 	# Hook to modify user permissions
 	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
