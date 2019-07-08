@@ -1203,11 +1203,7 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
     if(!is_array($nodes))
         {$nodes=array($nodes);}
 
-    $nodes_escaped=[];
-    foreach($nodes as $node)
-        {
-        array_push($nodes_escaped, escape_check($node));
-        }
+    $nodes_escaped = escape_check_array_values($nodes);
 
     $sql = "insert into resource_node (resource, node) values ";
     $nodesql = "";
