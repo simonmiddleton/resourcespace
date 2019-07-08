@@ -247,7 +247,7 @@ if($upload_then_edit && !$alternative)
                 {
                     if ($extension != "") 
                     {
-                        array_push($all_allowed_extensions_holder, strtolower($extension));
+                        array_push($all_allowed_extensions_holder, trim(strtolower($extension)));
                     }
                 }
             }
