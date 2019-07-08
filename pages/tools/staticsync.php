@@ -267,13 +267,14 @@ function ProcessFolder($folder)
 			
 			$modified_extension = hook('staticsync_modify_extension', 'staticsync', array($fullpath, $shortpath, $extension));
 			if ($modified_extension !== false) { $extension = $modified_extension; }
-			
-            /* Below Code Adapted  from CMay's bug report */
+
             global $banned_extensions, $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
             # Check to see if extension is banned, do not add if it is banned
-            if(array_search($extension, $banned_extensions)){continue;}
-            /* Above Code Adapted from CMay's bug report */
-            
+            if(array_search($extension, $banned_extensions) !== false)
+                {
+                continue;
+                }
+
             if ($count > $staticsync_max_files) { return(true); }
 
             # Already exists or deleted/archived in which case we won't proceed?
