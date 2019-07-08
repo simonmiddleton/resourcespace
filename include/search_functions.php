@@ -867,44 +867,25 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             }
         if (!checkperm("v") && !(substr($search,0,11)=="!collection" && $k!='' && $collection_allow_not_approved_share)) 
             {
+            $pending_states_visible_to_all_sql = "";
             # Append standard filtering to hide resources in a pending state, whatever the search
-            if (!$pending_submission_searchable_to_all) 
+            if (!$pending_submission_searchable_to_all) {$pending_states_visible_to_all_sql.= "(r.archive<>-2 OR r.created_by='" . $userref . "')";}
+            if (!$pending_review_visible_to_all){$pending_states_visible_to_all_sql.=(($pending_states_visible_to_all_sql!="")?" AND ":"") . "(r.archive<>-1 OR r.created_by='" . $userref . "')";}
+
+            if ($pending_states_visible_to_all_sql != "")
                 {
-                $sql_filter.= (($sql_filter!="")?" AND ":"") . "(r.archive<>-2 OR r.created_by='" . $userref . "'";
-                for ($n=-2;$n<=3;$n++)
-                    {
-                    if(checkperm("ert" . $n))
+                    #Except when the resource is type that the user has ert permission for
+                    $rtexclusions = "";
+                    for ($n=0;$n<count($userpermissions);$n++)
                         {
-                        $sql_filter.= " OR resource_type='" . $n . "'";
+                        if (substr($userpermissions[$n],0,3)=="ert")
+                            {
+                            $rt=substr($userpermissions[$n],3);
+                            if (is_numeric($rt)) {$rtexclusions .= " OR (resource_type=" . $rt . ")";}
+                            }
                         }
-                    }
-                foreach ($additional_archive_states as $additional_archive_state)
-                    {
-                    if(checkperm("ert" . $n))
-                        {
-                        $sql_filter.= " OR resource_type='" . $n . "'";
-                        }
-                    }
-                $sql_filter.= ")";
-                }
-            if (!$pending_review_visible_to_all)
-                {
-                $sql_filter.=(($sql_filter!="")?" AND ":"") . "(r.archive<>-1 OR r.created_by='" . $userref . "'";
-                for ($n=-2;$n<=3;$n++)
-                    {
-                    if(checkperm("ert" . $n))
-                        {
-                        $sql_filter.= " OR resource_type='" . $n . "'";
-                        }
-                    }
-                foreach ($additional_archive_states as $additional_archive_state)
-                    {
-                    if(checkperm("ert" . $n))
-                        {
-                        $sql_filter.= " OR resource_type='" . $n . "'";
-                        }
-                    }
-                $sql_filter.= ")";
+                    $sql_filter .= " AND ((" . $pending_states_visible_to_all_sql . ") " . $rtexclusions . ")";
+                    unset($rtexclusions);
                 }
             }
         }
