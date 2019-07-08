@@ -2,6 +2,8 @@
 // Clean up old temp files. These can be left on the system as a result of cancelled or failed downloads/uploads
 if($purge_temp_folder_age==0)
     {
+    echo "Config purge_temp_folder_age is set to 0 and is considered deactivated. Skipping delete temp files - FAILED<br />" . PHP_EOL;
+    debug("Config purge_temp_folder_age is set to 0 and is considered deactivated. Skipping delete temp files - FAILED");
     return;
     }
     
