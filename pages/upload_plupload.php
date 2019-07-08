@@ -108,12 +108,24 @@ if ($upload_then_edit && $replace == "" && $replace_resource == "")
     $redirecturl_extra_params = array();
 
 	# Set the redirect after upload to the start of the edit process
-    $redirecturl = generateURL(
-        "{$baseurl}/pages/edit.php",
-        array(
-            'upload_review_mode' => true,
-        ),
-        $redirecturl_extra_params);
+    if($alternative != "") 
+        {
+        $redirecturl = generateURL(
+            "{$baseurl}/pages/view.php",
+            array(
+                'ref' => $alternative
+            ),
+            $redirecturl_extra_params);	
+        }
+    else
+        {
+        $redirecturl = generateURL(
+            "{$baseurl}/pages/edit.php",
+            array(
+                'upload_review_mode' => true,
+            ),
+            $redirecturl_extra_params);	
+        }
 
 	# Clear the user template
 	clear_resource_data(0-$userref);
