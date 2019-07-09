@@ -298,7 +298,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 if(!preg_match($rangeregex,$date_edtf,$matches))
                     {
                     //ignore this string as it is not a valid EDTF string
-                    continue;
+                    continue 2;
                     }
                 $rangedates = explode("/",$date_edtf);
                 $rangestart=str_pad($rangedates[0], 10, "-00");
@@ -1280,7 +1280,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         $rgb=explode(":",$search);$rgb=explode(",",$rgb[1]);
         
-        $searchsql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE has_image=1 AND $sql_filter GROUP BY r.ref ORDER BY (abs(image_red-" . $rgb[0] . ")+abs(image_green-" . $rgb[1] . ")+abs(image_blue-" . $rgb[2] . ")) ASC LIMIT 500" . $sql_suffix;
+        $searchsql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE has_image=1 AND $sql_filter GROUP BY r.ref ORDER BY (abs(image_red-" . $rgb[0] . ")+abs(image_green-" . $rgb[1] . ")+abs(image_blue-" . $rgb[2] . ")) ASC" . $sql_suffix;
         return $returnsql ? $searchsql : sql_query($searchsql,false,$fetchrows);
         }
         
