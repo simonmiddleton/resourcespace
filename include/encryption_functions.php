@@ -9,13 +9,11 @@
 * @todo Add a third parameter to use with custom metadata (NOT ResourceSpace metadata) for generating MAC. this should
 * add extra security by making MAC harder to be forged
 * 
-* @return  string  Encrypted data, base64 encoded
+* @return  string  Encrypted data
 */
 function rsEncrypt($data, $key)
     {
     global $scramble_key;
-
-    debug("rsCrypt: rsEncrypt( {$data}, {$key} )");
 
     /*
     Encrypt-then-MAC (EtM)
@@ -36,7 +34,7 @@ function rsEncrypt($data, $key)
     $method  = "AES-128-CTR";
     $options = OPENSSL_RAW_DATA;
     $nonce   = generateSecureKey(128);
-    
+
     // Get 2 derived subkeys, one for message authentication code (MAC) and the other one for encryption/ decryption.
     $mac_key = hash_hmac("sha256", "mac_key", $scramble_key, true);
     $enc_key = hash_hmac("sha256", "enc_key", $scramble_key, true);
@@ -44,18 +42,18 @@ function rsEncrypt($data, $key)
     // Synthetic Initialization Vector (SIV)
     $siv = substr(hash_hmac("sha256", "{$nonce}{$scramble_key}{$key}", $mac_key, true), 0, 16);
 
-    $cyphertext = openssl_encrypt($data, $method, $enc_key, $options, $siv);
+    $cyphertext = bin2hex(openssl_encrypt($data, $method, $enc_key, $options, $siv));
 
-    $mac = hash_hmac("sha256", "{$cyphertext}{$nonce}{$scramble_key}", $mac_key, true);
+    $mac = hash_hmac("sha256", "{$cyphertext}{$nonce}{$scramble_key}", $mac_key);
 
-    return base64_encode("{$nonce}@@{$cyphertext}@@{$mac}");
+    return "{$nonce}@@{$cyphertext}@@{$mac}";
     }
 
 
 /**
 * Decrypts data
 * 
-* @param  string  $data  Data to be decypted
+* @param  string  $data  Data to be decrypted
 * @param  string  $key
 * @todo Add a third parameter to use with custom metadata (NOT ResourceSpace metadata) for generating MAC. this should
 * add extra security by making MAC harder to be forged
@@ -66,7 +64,6 @@ function rsDecrypt($data, $key)
     {
     global $scramble_key;
 
-    $data    = base64_decode($data);
     $method  = "AES-128-CTR";
     $options = OPENSSL_RAW_DATA;
 
@@ -77,17 +74,16 @@ function rsDecrypt($data, $key)
     list($nonce, $cyphertext, $mac) = explode("@@", $data);
 
     // Check MAC
-    if($mac !== hash_hmac("sha256", "{$cyphertext}{$nonce}{$scramble_key}", $mac_key, true))
+    if($mac !== hash_hmac("sha256", "{$cyphertext}{$nonce}{$scramble_key}", $mac_key))
         {
+        debug("rsCrypt: MAC did not match!");
         return false;
         }
 
     // Synthetic Initialization Vector (SIV)
     $siv = substr(hash_hmac("sha256", "{$nonce}{$scramble_key}{$key}", $mac_key, true), 0, 16);
 
-    $plaintext = openssl_decrypt($cyphertext, $method, $enc_key, $options, $siv);
-
-    debug("rsCrypt: rsDecrypt( {$plaintext}, {$key} )");
+    $plaintext = openssl_decrypt(hex2bin($cyphertext), $method, $enc_key, $options, $siv);
 
     return $plaintext;
     }
