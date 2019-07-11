@@ -676,9 +676,6 @@ if (!hook("replacetitleprefix","",array($resource["archive"]))) { switch ($resou
 			}
 		}
 	}
-	
-	
-	
 
 if(!hook('replaceviewtitle'))
     {
@@ -689,13 +686,18 @@ if(!hook('replaceviewtitle'))
 </div>
 
 <?php if (!hook("replaceresourceistranscoding")){
-	if (isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) { ?><div class="PageInformal"><?php echo $lang['resourceistranscoding']?></div><?php }
-	} //end hook replaceresourceistrancoding ?>
+    if (isset($resource['is_transcoding']) && $resource['is_transcoding']!=0) { ?><div class="PageInformal"><?php echo $lang['resourceistranscoding']?></div><?php }
+    } //end hook replaceresourceistrancoding ?>
 
-<?php hook('renderbeforeresourceview', '', array('resource' => $resource)); 
-$download_multisize=true;
-
-
+<?php hook('renderbeforeresourceview', '', array('resource' => $resource));
+if (in_array($resource["file_extension"], config_merge_non_image_types()) && $non_image_types_generate_preview_only)
+    {
+    $download_multisize=false;
+    }
+else
+    {
+    $download_multisize=true;
+    }
 ?>
 
 <div class="RecordResource">

@@ -985,6 +985,8 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             create_previews_using_im($ref,false,$extension,$previewonly,false,$alternative);
             }
     }
+
+$non_image_types = config_merge_non_image_types();
     
 # If a file has been created, generate previews just as if a JPG was uploaded.
 if (isset($newfile))

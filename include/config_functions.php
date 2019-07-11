@@ -1169,3 +1169,23 @@ function config_generate_html(array $page_def)
             }
         }
     }
+
+
+/**
+* Merge all non image configurations
+*
+* @return array Returns merged array of non image configurations.
+*/
+function config_merge_non_image_types()
+    {
+    global $non_image_types,$ffmpeg_supported_extensions,$unoconv_extensions,$ghostscript_extensions;
+
+    return array_unique(
+        array_map(
+            'strtolower',
+            array_merge(
+                $non_image_types,
+                $ffmpeg_supported_extensions,
+                $unoconv_extensions,
+                $ghostscript_extensions)));
+    }
