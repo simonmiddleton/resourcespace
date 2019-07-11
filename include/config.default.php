@@ -3581,13 +3581,14 @@ $prefix_resource_id_to_filename = false;
 */
 $auto_generated_resource_title_format = '';
 
-// List of extensions for which ResourceSpace should generate the internal preview sizes.
+// List of extensions for which ResourceSpace should only generate the internal preview sizes.
 $non_image_types = array();
 
 // List of extensions supported by ghostscript
 $ghostscript_extensions = array('ps', 'pdf');
 
-// Generate only the internal preview sizes for any of the extensions found in $non_image_types list
+// Generate only the internal preview sizes and show only the original file for download for any of the 
+// extensions found in a merge of $non_image_types, $ffmpeg_supported_extensions, $unoconv_extensions and $ghostscript_extensions list
 $non_image_types_generate_preview_only = true;
 
 // Enable updated search filter functionality? Allows for simpler setup of more advanced search filters
