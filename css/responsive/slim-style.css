@@ -92,7 +92,7 @@ body {
     div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 16px; }
     div#SearchBox.SlimHeaderFixedPosition { margin-top: 46px; }
 
-    .ui-layout-west: display:none;
+    .ui-layout-west { display:none; }
 }
 /* General Forms */
 @media(max-width:1100px) {   
