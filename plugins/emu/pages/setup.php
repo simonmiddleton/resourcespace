@@ -20,7 +20,7 @@ $emu_rs_mappings               = unserialize(base64_decode($emu_rs_saved_mapping
 $emu_script_last_ran           = '';
 $emu_config_modified_timestamp = time();
 
-check_script_last_ran($emu_script_last_ran);
+check_script_last_ran('last_emu_import', $emu_script_failure_notify_days, $emu_script_last_ran);
 
 
 // Save module - column - rs_field mappings

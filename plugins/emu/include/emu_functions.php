@@ -1,37 +1,5 @@
 <?php
 /**
-* Check if script last ran more than the failure notification days
-* Note: Never/ period longer than allowed failure should return false
-* 
-* @param string $emu_scrip_last_ran Datetime (string format) when script was last run
-* 
-* @return boolean
-*/
-function check_script_last_ran(&$emu_script_last_ran = '')
-    {
-    global $lang, $emu_script_failure_notify_days;
-
-    $emu_script_last_ran = $lang['status-never'];
-
-    $script_last_ran                   = sql_value('SELECT `value` FROM sysvars WHERE name = "last_emu_import"', '');
-    $emu_script_failure_notify_seconds = intval($emu_script_failure_notify_days) * 24 * 60 * 60;
-
-    if('' != $script_last_ran)
-        {
-        $emu_script_last_ran = date('l F jS Y @ H:m:s', strtotime($script_last_ran));
-
-        // It's been less than Admins allow it to last run, meaning it is all good!
-        if(time() < (strtotime($script_last_ran) + $emu_script_failure_notify_seconds))
-            {
-            return true;
-            }
-        }
-
-    return false;
-    }
-
-
-/**
 * Format date for EMu use (similar to the ISO8601 date format except
 * the time zone designator is not included)
 * 

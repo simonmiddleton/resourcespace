@@ -59,7 +59,7 @@ if('cli' == $php_sapi_name && 2 == $argc)
 
 // Check when this script was last run - do it now in case of permanent process locks
 $emu_script_last_ran = '';
-if(!check_script_last_ran($emu_script_last_ran))
+if(!check_script_last_ran('last_emu_import', $emu_script_failure_notify_days, $emu_script_last_ran))
     {
     $emu_script_failed_subject = ($emu_test_mode ? 'TESTING MODE: ' : '') . 'EMu Import script - WARNING';
     send_mail($email_notify, $emu_script_failed_subject, "WARNING: The EMu Import Script has not completed since '{$emu_script_last_ran}'.\r\n\r\nYou can safely ignore this warning only if you subsequently received notification of a successful script completion.", $email_from);

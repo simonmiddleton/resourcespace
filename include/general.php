@@ -7806,3 +7806,42 @@ function offset_user_local_timezone($datetime, $format)
 
     return $user_local_dt->format($format);
     }
+
+
+/**
+* Check if script last ran more than the failure notification days
+* Note: Never/ period longer than allowed failure should return false
+* 
+* @param string   $name                   Name of the sysvar to check the record for
+* @param integer  $fail_notify_allowance  How long to allow (in days) before user can consider script has failed
+* @param string   $last_ran_datetime      Datetime (string format) when script was last run
+* 
+* @return boolean
+*/
+function check_script_last_ran($name, $fail_notify_allowance, &$last_ran_datetime)
+    {
+    $last_ran_datetime = (trim($last_ran_datetime) === '' ? $GLOBALS['lang']['status-never'] : $last_ran_datetime);
+
+    if(trim($name) === '')
+        {
+        return false;
+        }
+    $name = escape_check($name);
+
+    $script_last_ran = sql_value("SELECT `value` FROM sysvars WHERE name = '{$name}'", '');
+    $script_failure_notify_seconds = intval($fail_notify_allowance) * 24 * 60 * 60;
+
+    if('' != $script_last_ran)
+        {
+        // @todo: potentially inject a date format value if it turns out to be required
+        $last_ran_datetime = date('l F jS Y @ H:m:s', strtotime($script_last_ran));
+
+        // It's been less than user allows it to last run, meaning it is all good!
+        if(time() < (strtotime($script_last_ran) + $script_failure_notify_seconds))
+            {
+            return true;
+            }
+        }
+
+    return false;
+    }

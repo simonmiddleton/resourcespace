@@ -1,0 +1,9 @@
+name: museumplus
+author: Montala Ltd.
+version: 1.0
+desc: [Advanced] Allows resource metadata to be extracted from MuseumPlus using its REST API (MpRIA).
+info_url: https://www.resourcespace.com/knowledge-base/user/plugin-museumplus
+config_url: /plugins/museumplus/pages/setup.php
+default_priority: 100
+category: asset processing
+disable_group_select: 1

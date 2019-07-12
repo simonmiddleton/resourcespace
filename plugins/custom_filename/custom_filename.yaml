@@ -1,0 +1,8 @@
+name: custom_filename
+author: Alin Cota
+version: 1.0
+desc: Provides the ablity to post-process the filename and save the newly processed value in a separate field. At the moment this plugin takes the original filename and removes the extension to help with MuseumPlus integration.
+config_url: /plugins/custom_filename/pages/setup.php
+default_priority: 100
+category: asset processing
+disable_group_select: 1

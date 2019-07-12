@@ -15,7 +15,7 @@ function HookEmuCron_copy_hitcountAddplugincronjob()
     if('' != $emu_interval_run)
         {
         $emu_script_last_ran        = '';
-        $check_script_last_ran      = check_script_last_ran($emu_script_last_ran);
+        $check_script_last_ran      = check_script_last_ran('last_emu_import', $emu_script_failure_notify_days, $emu_script_last_ran);
         $emu_script_future_run_date = new DateTime();
 
         // Use last date the script was run, if available
