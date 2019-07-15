@@ -1081,7 +1081,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         }
 
                     # Work out existing field value.
-                    $existing       = escape_check(sql_value("SELECT `value` FROM resource_data WHERE resource = '{$ref}' AND resource_type_field = '{$fields[$n]['ref']}'", ''));
+                    $existing = sql_value("SELECT `value` FROM resource_data WHERE resource = ".escape_check($ref)." AND resource_type_field = ".escape_check($fields[$n]['ref']), "");
                         
                     if (getval("modeselect_" . $fields[$n]["ref"],"")=="FR")
                         {
@@ -1184,7 +1184,7 @@ function save_resource_data_multi($collection,$editsearch = array())
                         $val = $hookval;
                         }                    
     
-                    if ($existing !== str_replace("\\", '', $val) || $value_changed)
+                    if ($val !== $existing || $value_changed)
                         {
                         # This value is different from the value we have on record.
                         
