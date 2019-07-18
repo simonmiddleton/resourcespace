@@ -653,14 +653,14 @@ if ($_FILES)
                                 {
                                 $ref=$modified_ref;
                                 }
-                            else
+                            elseif(!$upload_then_edit)
                                 {
                                 $ref=copy_resource(0-$userref); # Copy from user template   
                                 }
 
                             // copy_resource() returns false if user doesn't have a resource template
                             // Usually, this happens when a user had from the first time upload_then_edit mode on
-                            if(false === $ref)
+                            if($upload_then_edit || false === $ref)
                                 {
                                 $ref = create_resource($resource_type, $setarchivestate);
                                 }
