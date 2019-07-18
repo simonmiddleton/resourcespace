@@ -98,7 +98,7 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
     /***** END OF NOTIFY GROUP SUPPORT *****/
 
     /*****NOTIFY CONTRIBUTOR*****/
-    if($wfstates[$archive]['notify_user_flag'] == 1)
+    if(isset($wfstates[$archive]['notify_user_flag']) && $wfstates[$archive]['notify_user_flag'] == 1)
         {
         $cntrb_arr = array();
         foreach($resource as $resourceref)
