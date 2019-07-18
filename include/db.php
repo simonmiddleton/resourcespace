@@ -16,8 +16,6 @@ include_once 'debug_functions.php';
 include_once 'log_functions.php';
 include_once 'file_functions.php';
 
-include_once 'resource_functions.php';
-
 # Switch on output buffering.
 ob_start(null,4096);
 
