@@ -511,6 +511,20 @@ $searchparams= array(
     'foredit'                                   => ($editable_only?"true":"")
 );
  
+$checkparams = array();
+$checkparams[] = "order_by";
+$checkparams[] = "sort";
+$checkparams[] = "display";
+$checkparams[] = "k";
+
+foreach($checkparams as $checkparam)
+    {
+    if(preg_match('/[^a-z:_\-0-9]/i', $$checkparam))
+        {
+        exit($lang['error_invalid_input'] . ":- <pre>" . $checkparam . " : " . htmlspecialchars($$checkparam) . "</pre>");
+        }
+    }
+
 
 if(false === strpos($search, '!') || '!properties' == substr($search, 0, 11))
     {

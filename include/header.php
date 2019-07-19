@@ -168,6 +168,7 @@ if ($chosen_dropdowns || $chosen_dropdowns_collection)
         <?php
         }
         
+global $not_authenticated_pages;
 $not_authenticated_pages = array('login', 'user_change_password','user_password','user_request');
 
 $browse_on = has_browsebar();

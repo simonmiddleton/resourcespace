@@ -9,7 +9,7 @@
 /**
  * Validate the given field.
  * 
- * If the field validates, this function will store it in the provided conifguration
+ * If the field validates, this function will store it in the provided configuration
  * module and key.
  * 
  * @param string $fieldname Name of field (provided to the render functions)

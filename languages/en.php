@@ -2502,6 +2502,7 @@ $lang['systemconfig_user_local_timezone'] = 'User local time zone';
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
 $lang['error_generic'] = 'Sorry, there has been an error. If this error persists please contact your system administrator';
+$lang['error_invalid_input'] = 'Invalid request received. If you believe this is a legitimate request please contact your system administrator';
 
 $lang["maximise"]="Maximise";
 

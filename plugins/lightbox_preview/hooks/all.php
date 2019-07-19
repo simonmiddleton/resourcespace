@@ -40,12 +40,11 @@ function HookLightbox_previewAllReplacefullscreenpreviewicon()
 	$url = getPreviewURL($result[$n]);
 	if ($url === false)
 		return false;
-
 	$showkeypreview = true;
 
 	# Replace the link to add the 'previewlink' ID
 	?>
-		<span class="IconPreview"><a aria-hidden="true" class="fa fa-expand" id= "previewlink<?php echo $order_by . $ref?>" href="<?php
+		<span class="IconPreview"><a aria-hidden="true" class="fa fa-expand" id= "previewlink<?php echo htmlspecialchars($order_by) . $ref?>" href="<?php
 			echo $baseurl_short?>pages/preview.php?from=search&ref=<?php
 			echo urlencode($ref)?>&ext=<?php echo $result[$n]["preview_extension"]?>&search=<?php
 			echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php
@@ -54,7 +53,7 @@ function HookLightbox_previewAllReplacefullscreenpreviewicon()
 			echo $lang["fullscreenpreview"]?>"></a></span>
 			
 	<?php
-	addLightBox('#previewlink' . $order_by . $ref, $url, $result[$n]["field".$view_title_field], $order_by);
+	addLightBox('#previewlink' . htmlspecialchars($order_by) . $ref, $url, $result[$n]["field".$view_title_field], htmlspecialchars($order_by));
 	return true;
 	}
 
