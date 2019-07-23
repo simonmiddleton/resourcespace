@@ -3828,7 +3828,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
 
 function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="")
 	{
-	# For the provided resource and metadata, does the  edit access does the current user have to this resource?
+	# For the provided resource and metadata, does the current user have edit access to this resource?
 	# Checks the edit permissions (e0, e-1 etc.) and also the group edit filter which filters edit access based on resource metadata.
 	
 	global $userref,$usereditfilter,$edit_access_for_contributor;
@@ -3849,12 +3849,23 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 		
 	if ($resource==0-$userref) {return true;} # Can always edit their own user template.
 
-        # If $edit_access_for_contributor is true in config then users can always edit their own resources.
-        if ($edit_access_for_contributor && $userref==$resourcedata["created_by"]) {return true;}
+    # If $edit_access_for_contributor is true in config then users can always edit their own resources.
+    if ($edit_access_for_contributor && $userref==$resourcedata["created_by"]) {return true;}
         
-	if (!checkperm("e" . $status)) {return false;} # Must have edit permission to this resource first and foremost, before checking the filter.
-	
-	if (checkperm("z" . $status) || ($status<0 && !(checkperm("t") || $resourcedata['created_by'] == $userref) && !checkperm("ert" . $resourcedata['resource_type']))) {return false;} # Cannot edit if z permission, or if other user uploads pending approval and not admin
+    # Must have edit permission to this resource first and foremost, before checking the filter.
+    if (!checkperm("e" . $status)) {return false;} 
+    
+    # Cannot edit if z permission
+    if (checkperm("z" . $status)) {return false;}
+
+    # Cannot edit if pending status (<0) and neither admin ('t') nor created by currentuser 
+    #             and does not have force edit access to the resource type
+    if (    $status<0 && !( checkperm("t") || $resourcedata['created_by'] == $userref ) 
+         && !checkperm("ert" . $resourcedata['resource_type'])
+       )
+        {
+        return false;
+        } 
 	
 	$gotmatch=false;
 	if (trim($usereditfilter)=="" || ($status<0 && $resourcedata['created_by'] == $userref)) # No filter set, or resource was contributed by user and is still in a User Contributed state in which case the edit filter should not be applied.
@@ -3874,7 +3885,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 			$value=$metadata[$n]["value"];			
 			if ($name!="")
 				{
-				$match=filter_match($usereditfilter,$name,$value);
+				$match=filter_match(trim($usereditfilter),$name,$value);
 				if ($match==1) {return false;} # The match for this field was incorrect, always fail in this event.
 				if ($match==2) {$gotmatch=true;} # The match for this field was correct.
 				}
@@ -3885,7 +3896,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 			{
 			$resource_type=$resourcedata['resource_type'];
 
-			$match=filter_match($usereditfilter,"resource_type",$resource_type);
+			$match=filter_match(trim($usereditfilter),"resource_type",$resource_type);
 			if ($match==1) {return false;} # Resource type was specified but the value did not match. Disallow edit access.
 			if ($match==2) {$gotmatch=true;}
 			}
