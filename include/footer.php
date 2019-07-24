@@ -543,18 +543,6 @@ if (getval("ajax","") == "")
                     if (pane==\"west\")
                         {
                         var browsewidth = jQuery('.ui-layout-west').width();
-                        if(browsewidth < 185 && browse_show=='show')
-                            {
-                            ToggleBrowseBar('close');
-                            }
-                        else if(browsewidth >= 100 && browse_show=='hide')
-                            {
-                            ToggleBrowseBar('open',true);
-                            }
-                        else if(browsewidth > 800)
-                            {
-                            myLayout.sizePane('west', 800);
-                            }
                         jQuery('#BrowseBarContent').width(browsewidth-40);
                         var newbrowsewidth = jQuery('.ui-layout-west').width();
                         if(newbrowsewidth != 35)
