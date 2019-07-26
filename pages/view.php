@@ -1434,32 +1434,60 @@ if ($resource["has_image"]==1 && $download_multisize)
 elseif (strlen($resource["file_extension"])>0 && !($access==1 && $restricted_full_download==false))
 	{
 	# Files without multiple download sizes (i.e. no alternative previews generated).
-	$counter++;
 	$path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
 	if (file_exists($path))
 		{
+		$counter++;
 		hook("beforesingledownloadsizeresult");
-			if(!hook("origdownloadlink")):
-		?>
-		<tr class="DownloadDBlend">
-		<td class="DownloadFileName"><h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2></td>
-		<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
-		<td <?php hook("modifydownloadbutton") ?>  class="DownloadButton">
-		<?php if (!$direct_download || $save_as){ ?>
-			<a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&ext=" . $resource["file_extension"] ))) { ?>href="<?php echo generateURL($baseurl_short . "pages/terms.php",$urlparams, array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("ext"=>$resource["file_extension"])))); } ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
-		<?php } else { ?>
-			<a href="#" onclick="directDownload('<?php echo  generateURL($baseurl_short . "pages/download_progress.php",$urlparams, array("ext"=>$resource['file_extension'])); ?>')"><?php echo $lang["action-download"]?></a>
-		<?php } // end if direct_download ?>
-		</td>
-		</tr>
-		<?php
-			endif; # hook origdownloadlink
+			if(!hook("origdownloadlink"))
+			{
+			?>
+			<tr class="DownloadDBlend">
+			<td class="DownloadFileName"><h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2></td>
+			<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
+			<td <?php hook("modifydownloadbutton") ?>  class="DownloadButton">
+			<?php if (!$direct_download || $save_as){ ?>
+				<a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&ext=" . $resource["file_extension"] ))) { ?>href="<?php echo generateURL($baseurl_short . "pages/terms.php",$urlparams, array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("ext"=>$resource["file_extension"])))); } ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"] ?></a>
+			<?php } else { ?>
+				<a href="#" onclick="directDownload('<?php echo  generateURL($baseurl_short . "pages/download_progress.php",$urlparams, array("ext"=>$resource['file_extension'])); ?>')"><?php echo $lang["action-download"]?></a>
+			<?php } // end if direct_download ?>
+			</td>
+			</tr>
+			<?php # hook origdownloadlink
+			}
+		}
+	else
+		{
+		$nodownloads=true;
 		}
 	} 
-else
+elseif (strlen($resource["file_extension"])>0 && ($access==1 && $restricted_full_download==false))
 	{
-	$nodownloads=true;
-	}
+	# Files without multiple download sizes (i.e. no alternative previews generated).
+	$path=get_resource_path($ref,true,"",false,$resource["file_extension"]);
+	$downloadthissize=resource_download_allowed($ref,"",$resource["resource_type"]);
+	if (file_exists($path))
+		{
+		$counter++;
+		hook("beforesingledownloadsizeresult");
+			if(!hook("origdownloadlink"))
+			{
+			?>
+			<tr class="DownloadDBlend">
+			<td class="DownloadFileName"><h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2></td>
+			<td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
+			<?php
+			add_download_column($ref, "", $downloadthissize);
+			?>
+			</tr>
+			<?php # hook origdownloadlink
+			}
+		}
+	else
+		{
+		$nodownloads=true;
+		}
+	} 
 	
 if(($nodownloads || $counter == 0) && !checkperm('T' . $resource['resource_type'] . '_'))
 	{
