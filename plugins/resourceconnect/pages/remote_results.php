@@ -50,7 +50,7 @@ $access_key=md5("resourceconnect" . $scramble_key);
 $expected_sign=md5($access_key . $search);
 if ($sign!=$expected_sign) {exit("<p>" . $lang["resourceconnect_error-not_signed_with_correct_key"] . "</p>");}
 
-if ($offset>count($results)) {while ($offset>count($results)) {$offset-=$pagesize;}}
+if (is_array($results) && $offset>count($results)) {while ($offset>count($results)) {$offset-=$pagesize;}}
 if ($offset<0) {$offset=0;}
 ?><div class="BasicsBox"><?php
 
