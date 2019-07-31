@@ -196,23 +196,23 @@ if($table == '' && $table_reference == 0)
                 {
                 ?>
                 <tr>
-                    <td><?php echo $record['datetime']; ?></td>
-                    <td><?php echo $record['user']; ?></td>
-                    <td><?php echo $record['operation']; ?></td>
-                    <td><?php echo $record['notes']; ?></td>
-                    <td><?php echo $record['resource_field']; ?></td>
-                    <td><?php echo $record['old_value']; ?></td>
-                    <td><?php echo $record['new_value']; ?></td>
-                    <td><?php echo $record['difference']; ?></td>
+                    <td><?php echo htmlspecialchars($record['datetime']); ?></td>
+                    <td><?php echo htmlspecialchars($record['user']); ?></td>
+                    <td><?php echo htmlspecialchars($record['operation']); ?></td>
+                    <td><?php echo htmlspecialchars($record['notes']); ?></td>
+                    <td><?php echo htmlspecialchars($record['resource_field']); ?></td>
+                    <td><?php echo htmlspecialchars($record['old_value']); ?></td>
+                    <td><?php echo htmlspecialchars($record['new_value']); ?></td>
+                    <td><?php echo strip_tags_and_attributes($record['difference'], array("pre")); ?></td>
                     <?php
                     if($table == '' || $table_reference == 0)
                         {
                         ?>
-                        <td><?php echo $record['table']; ?></td>
+                        <td><?php echo htmlspecialchars($record['table']); ?></td>
                         <?php
                         }
                         ?>
-                    <td><?php echo $record['column']; ?></td>
+                    <td><?php echo htmlspecialchars($record['column']); ?></td>
                     <?php
                     if($table != '' && $table_reference == 0 && array_key_exists($record['table'], $tables_data))
                         {
@@ -231,7 +231,7 @@ if($table == '' && $table_reference == 0)
                     else if($table == '' || $table_reference == 0)
                         {
                         ?>
-                        <td><?php echo $record['table_reference']; ?></td>
+                        <td><?php echo htmlspecialchars($record['table_reference']); ?></td>
                         <?php
                         }
                         ?>
