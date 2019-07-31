@@ -55,7 +55,7 @@ $search=trim($search);
 $access_key=$affiliate["accesskey"];
 $sign=md5($access_key . $search);
 
-echo file_get_contents($abaseurl . "/plugins/resourceconnect/pages/remote_results.php?search=" . urlencode($search) . "&pagesize=" . $pagesize .
+echo file_get_contents($abaseurl . "/plugins/resourceconnect/pages/remote_results.php?user=" . urlencode($username) . "&search=" . urlencode($search) . "&pagesize=" . $pagesize .
                        "&per_page=" . $per_page ."&order_by=" . $order_by ."&sort=" . $sort .
                        "&offset=" . $offset . "&sign=" . urlencode($sign) . "&language_set="  . urlencode($language) . "&affiliatename=" . urlencode(getval("affiliatename","")) . "&restypes=" . urlencode($restypes) . "&resourceconnect_source=" . urlencode($baseurl));
 
