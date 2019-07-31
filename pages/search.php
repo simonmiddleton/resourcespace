@@ -1271,17 +1271,22 @@ if($responsive_ui)
     if (is_array($drag_upload_params))
         {
         $drag_url=generateURL("{$GLOBALS['baseurl']}/pages/upload_plupload.php", $drag_upload_params);
-        $drag_over=" onDragOver=\"UploadViaDrag('" . $drag_url . "');\" ";
+        $drag_over=" onDragOver=\"UploadViaDrag(event,'".$drag_url."');\" ";
         }
     ?>
     <script>
-    var DragUploading=false
-    function UploadViaDrag(url)
+    var DragUploading=false;
+    function UploadViaDrag(e,url)
         {
+        if(e.srcElement.className=="ImageBorder ImageStrip") 
+            {
+            e.preventDefault();
+            return false;
+            }
         if (DragUploading) {return false;}
         DragUploading=true;CentralSpaceLoad(url);
         }
-    </script>
+   </script>
     
     
     <div class="clearerleft"></div>
