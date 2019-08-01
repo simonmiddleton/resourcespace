@@ -6,7 +6,7 @@
 function HookAdobe_linkViewBefore_footer_always()
     {
     global $lang;
-    if($_SERVER['HTTP_USER_AGENT'] !== "InDesign-DAMConnect")
+    if(!isset($_SERVER['HTTP_USER_AGENT']) || $_SERVER['HTTP_USER_AGENT'] !== "InDesign-DAMConnect")
         {
         return false;
         }
@@ -130,7 +130,7 @@ function HookAdobe_linkViewDownloadbuttonreplace()
     # Adds a special link to the download button.
     $adb_ext = $size_info_array["id"] == "" ? $resource['file_extension'] : $size_info_array["extension"];
     
-    if($_SERVER['HTTP_USER_AGENT'] !== "InDesign-DAMConnect"
+    if(!isset($_SERVER['HTTP_USER_AGENT']) || $_SERVER['HTTP_USER_AGENT'] !== "InDesign-DAMConnect"
         ||
         (!in_array(strtolower($adb_ext),$adobe_link_asset_extensions) && !in_array(strtolower($adb_ext),$adobe_link_document_extensions))
         )
@@ -176,7 +176,7 @@ function HookAdobe_linkViewOrigdownloadlink()
 	global $userref, $baseurl, $usergroup, $lang, $ref, $access, $resource, $k, $size_info, $baseurl_short, $urlparams, $path, $direct_download, $alternative;
 	global $adobe_link_document_extensions, $adobe_link_asset_extensions, $lang;
     
-    if($_SERVER['HTTP_USER_AGENT'] !== "InDesign-DAMConnect"
+    if(!isset($_SERVER['HTTP_USER_AGENT']) || $_SERVER['HTTP_USER_AGENT'] !== "InDesign-DAMConnect"
         ||
         (!in_array(strtolower($resource['file_extension']),$adobe_link_asset_extensions) && !in_array(strtolower($resource['file_extension']),$adobe_link_document_extensions))
         )
