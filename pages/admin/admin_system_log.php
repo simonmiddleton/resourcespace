@@ -203,7 +203,7 @@ if($table == '' && $table_reference == 0)
                     <td><?php echo htmlspecialchars($record['resource_field']); ?></td>
                     <td><?php echo htmlspecialchars($record['old_value']); ?></td>
                     <td><?php echo htmlspecialchars($record['new_value']); ?></td>
-                    <td><?php echo strip_tags_and_attributes($record['difference'], array("pre")); ?></td>
+                    <td><?php $permitted_html_tags = array("html", "body"); echo strip_tags_and_attributes($record['difference'], array("pre")); ?></td>
                     <?php
                     if($table == '' || $table_reference == 0)
                         {
