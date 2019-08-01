@@ -541,6 +541,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .BasicsBox .VerticalNav ul {padding:0.2em 0;margin:0 0 1em;list-style:none;}
 .BasicsBox .VerticalNav li {padding:0 0.35em 0 0em;margin:0px 0.5em 0.75em 0px;}
 .nopadding,.nopadding .VerticalNav ul {padding:0px;margin:0px;}
+.nopad, .BasicsBox .nopad {padding:0px;}
 
 /* Themes */
 .ThemeBox {float: left;width: 250px;margin: 0px 15px 15px 0px;padding: 0px;}
@@ -602,6 +603,9 @@ behavior: url('../css/iepngfix.htc');
 .NewFlag {display:inline;font-size:0.6em;margin-left:5px;padding:1px 3px 1px 3px;}
 .Breadcrumbs {float:left;margin-top:4px;}
 .SearchBreadcrumbs {margin-top:15px;}
+.SearchTitle {padding: 0px;margin-top:15px;}
+.SearchTitle + p{padding-bottom: 0px;}
+.SearchBreadcrumbs + .RecordHeader .SearchTitle {margin-top:0px;}
 
 .CategoryBox {overflow:auto;width:414px;height:80px;padding:2px;font-size:1em;}
 .MiniCategoryBox {overflow:auto;width:auto;height:80px;padding:2px;font-size:1em;}
@@ -1497,7 +1501,7 @@ a.Enabled, a:visited.Enabled {
     padding: 0.66em;
     background: rgba(0, 0, 0, 0.65);
 }
-.BreadcrumbsBox > .SearchBreadcrumbs {
+.BreadcrumbsBox > .SearchBreadcrumbs{
     margin: 0;
 }
 

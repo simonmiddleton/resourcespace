@@ -110,8 +110,8 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
 if (!function_exists("get_collection")){
 function get_collection($ref)
 	{
-	# Returns all data for collection $ref
-	$return=sql_query("select c.*, c.theme2, c.theme3, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image,c.session_id from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
+    # Returns all data for collection $ref.
+    $return=sql_query("select c.*, c.theme2, c.theme3, c.keywords, u.fullname, u.username, c.home_page_publish, c.home_page_text, c.home_page_image, c.session_id, c.description from collection c left outer join user u on u.ref = c.user where c.ref = '" . escape_check($ref) . "'");
 	if (count($return)==0) {return false;} else 
 		{
 		$return=$return[0];
@@ -656,7 +656,7 @@ function index_collection($ref,$index_string='')
 
 	if ($index_collection_titles)
 		{
-			$indexfields = 'c.ref,c.name,c.keywords';
+			$indexfields = 'c.ref,c.name,c.keywords,c.description';
 		} else {
 			$indexfields = 'c.ref,c.keywords';
 		}

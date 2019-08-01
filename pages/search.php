@@ -917,6 +917,24 @@ if($enable_themes && $enable_theme_breadcrumbs && !$search_titles && isset($them
         $theme_link);
     }
 
+// Show collection title and description.
+if ($collectionsearch && !$search_titles)
+    {
+    if ($show_collection_name)
+        { ?>
+        <div class="RecordHeader">
+            <h1 class="SearchTitle">
+            <?php echo i18n_get_collection_name($collectiondata); ?>
+            </h1>
+        <?php
+        if(trim($collectiondata['description']) != "")
+            {
+            echo "<p>" . htmlspecialchars($collectiondata['description']) . "</p>";
+            }
+        echo "</div>";
+        }
+    }
+
 if (!hook("replacesearchheader")) # Always show search header now.
     {
     $resources_count=is_array($result)?count($result):0;

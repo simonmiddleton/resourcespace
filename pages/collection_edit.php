@@ -50,6 +50,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
     //$public = getvalescaped('public', 0, true);
     $coldata["public"]          = getval('public', 0, true);
     $coldata["keywords"]        = getval("keywords","");
+    $coldata["description"]     = getval("description","");
     hook('saveadditionalfields');
 
     for($n=1;$n<=$theme_category_levels;$n++)
@@ -119,6 +120,12 @@ include "../include/header.php";
 	</div>
 
 	<?php hook('additionalfields');?>
+
+    <div class="Question">
+        <label for="description"><?php echo $lang["collection_description"]?></label>
+        <textarea class="stdwidth" rows="4" name="description" id="description"><?php echo htmlspecialchars($collection["description"])?></textarea>
+        <div class="clearerleft"> </div>
+    </div>
 
 	<div class="Question">
 		<label for="keywords"><?php echo $lang["relatedkeywords"]?></label>

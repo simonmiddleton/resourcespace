@@ -214,6 +214,11 @@ $page_def[] = config_add_boolean_select('browse_bar', $lang['systemconfig_browse
 $page_def[] = config_add_boolean_select('browse_bar_workflow', $lang['systemconfig_browse_bar_workflow'], $yes_no_options, 420, '', true);
 $page_def[] = config_add_html('</div>');
 
+// Collection section
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['collections'] . '</h3><div id="SystemConfigCollectionSection" class="CollapsibleSection">');
+$page_def[] = config_add_boolean_select('show_collection_name', $lang['systemconfig_show_collection_name'], $yes_no_options, 420, '', true);
+$page_def[] = config_add_html('</div>');
+
 // Featured Collection section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_featured_collections'] . '</h3><div id="SystemConfigFeaturedCollectionSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('enable_themes', $lang['systemconfig_enable_themes'], $yes_no_options, 420, '', true);
@@ -229,9 +234,6 @@ $page_def[] = config_add_single_select(
     true
 );
 $page_def[] = config_add_html('</div>');
-
-
-
 
 // Workflow section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_workflow'] . '</h3><div id="SystemConfigWorkflowSection" class="CollapsibleSection">');

@@ -2498,6 +2498,7 @@ $lang['systemconfig_browse_bar_section'] = 'Browse Bar';
 $lang['systemconfig_browse_bar_enable'] = 'Enable Browse Bar';
 $lang['systemconfig_browse_bar_workflow'] = 'Display workflow states in Browse Bar';
 $lang['systemconfig_user_local_timezone'] = 'User local time zone';
+$lang['systemconfig_show_collection_name'] = "Show collection name and description when viewing collection resources";
 
 /* Error Messages */
 $lang['error_check_html_first'] = 'Please Check HTML! The text used does not contain valid HTML.';
@@ -2780,7 +2781,6 @@ $lang["filter_or"]                  = "OR";
 $lang["filter_and"]                 = "AND";
 $lang['see_log'] = "Please refer to the log below for more details on this upload.";$lang['login_word'] = "Login";$lang["edit_copy_from_field"]       = "Copy data from field";
 
-
 /* Browse bar */
 $lang['browse_bar_text']                = "Browse";
 $lang['field_show_in_browse_bar']       = "Show in Browse Bar";
@@ -2790,6 +2790,8 @@ $lang['error-invalid_browse_action']    = "Invalid action. Please check existing
 $lang['browse_by_tag']                  = "Browse by tag";
 $lang['browse_by_workflow_state']       = "Workflow";
 
-
 # Updates to workflow
 $lang["userresources_status_change"]="Resources that you have contributed have been moved to the state: ";
+
+$lang["collection_description"] = "Description";
+
