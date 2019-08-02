@@ -192,6 +192,8 @@ if($table == '' && $table_reference == 0)
                         ?>
                 </tr>
             <?php
+            $original_permitted_html_tags = $permitted_html_tags;
+            $permitted_html_tags = array("html", "body");
             foreach(get_activity_log($log_search, $offset, $per_page, $log_tables_where_statements, $table, $table_reference) as $record)
                 {
                 ?>
@@ -203,7 +205,7 @@ if($table == '' && $table_reference == 0)
                     <td><?php echo htmlspecialchars($record['resource_field']); ?></td>
                     <td><?php echo htmlspecialchars($record['old_value']); ?></td>
                     <td><?php echo htmlspecialchars($record['new_value']); ?></td>
-                    <td><?php $permitted_html_tags = array("html", "body"); echo strip_tags_and_attributes($record['difference'], array("pre")); ?></td>
+                    <td><?php echo strip_tags_and_attributes($record['difference'], array("pre")); ?></td>
                     <?php
                     if($table == '' || $table_reference == 0)
                         {
@@ -238,6 +240,7 @@ if($table == '' && $table_reference == 0)
                 </tr>
                 <?php
                 }
+                $permitted_html_tags = $original_permitted_html_tags;
                 ?>
             </tbody>
         </table>
