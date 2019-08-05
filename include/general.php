@@ -1069,6 +1069,7 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
     }
     # loop through all image sizes
     $sizes=sql_query("select * from preview_size order by width desc");
+    
     for ($n=0;$n<count($sizes);$n++)
         {
         $path=get_resource_path($ref,true,$sizes[$n]["id"],false,"jpg");

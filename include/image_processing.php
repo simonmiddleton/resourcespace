@@ -1068,7 +1068,7 @@ function iptc_return_utf8($text)
     return $text;
     }
  
-function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true)
+function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ignoremaxsize=false,$ingested=false,$checksum_required=true,$onlysizes = array())
     {
     global $keep_for_hpr,$imagemagick_path, $preview_generate_max_file_size,$autorotate_no_ingest, $previews_allow_enlarge,$lang,$originals_separate_storage;
 
@@ -1235,7 +1235,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         {
         if (isset($imagemagick_path))
             {
-            $return_val=create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested);
+            $return_val=create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested, $onlysizes);
             return $return_val;
             }
         else
@@ -1252,6 +1252,11 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             $sizes="";
             if ($thumbonly) {$sizes=" where id='thm' or id='col'";}
             if ($previewonly) {$sizes=" where id='thm' or id='col' or id='pre' or id='scr'";}
+            if (count($onlysizes) > 0 )
+                {
+                $onlysizes = array_filter($onlysizes,function($v){return ctype_lower($v);});
+                $sizes=" where id in ('" . implode("','", $onlysizes) . "')";   
+                }
 
             # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
             if ((list($sw,$sh) = @getimagesize($file))===false) {return false;}
@@ -1339,9 +1344,12 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     return true;
     }
 
-function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false)
+function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false,$onlysizes = array())
     {
-    global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file,$autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews, $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
+    global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
+    global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
+    global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
+    global $preview_tiles, $preview_tiles_create_auto, $preview_tile_size, $preview_tile_scale_factors;
 
     if(!is_numeric($ref))
         {
@@ -1450,9 +1458,21 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             }
         
         $sizes="";
-        if ($thumbonly) {$sizes=" where id='thm' or id='col'";}
-        if ($previewonly) {$sizes=" where id='thm' or id='col' or id='pre' or id='scr'";}
-
+        if ($thumbonly)
+            {
+            $sizes=" where id='thm' or id='col'";
+            }
+        elseif ($previewonly)
+            {
+            $sizes=" where id='thm' or id='col' or id='pre' or id='scr'";
+            }
+        elseif (is_array($onlysizes) && count($onlysizes) > 0 )
+            {
+            $sizefilter = array_filter($onlysizes,function($v){return ctype_lower($v);});
+            $sizes=" where id in ('" . implode("','", $sizefilter) . "')";
+            $all_sizes= false;
+            }
+        
         $ps=sql_query("select * from preview_size $sizes order by width desc, height desc");
         if($lean_preview_generation && $all_sizes)
             {
@@ -1475,7 +1495,79 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             $ps = array_values($ps);
             }
+            
+        if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes))
+            {
+            $o = count($ps);
+            // Ensure that scales are in order
+            natsort($preview_tile_scale_factors);
+
+            debug("create_previews - adding tiles to generate list: source width: " . $sw . " source height: " . $sh);
+            foreach($preview_tile_scale_factors as $scale)
+                {
+                $x=0;
+                $y=0;
+                $fullgenerated = false;
+                $tileregion = $preview_tile_size * $scale;
+                debug("create_previews - creating tiles at scale: " . $scale . ". Region size=" . $tileregion);
+                if($fullgenerated && $tileregion > $sh || $tileregion > $sw)
+                    {
+                    debug("create_previews scaled tile (" . $scale . ") too large for source. Tile region length: " . $tileregion );
+                    continue;
+                    }                    
+                
+                while($y < $sh)
+                    {
+                    $tileh = $tileregion;
+                    if(($y + $tileregion) > $sh)
+                        {
+                        debug("create_previews tiles: $y, - tile taller than area, reducing height");
+                        $tileh = $sh - $y;
+                        }
+                    while($x < $sw)
+                        {
+                        $tilew = $tileregion;
+                        if(($x + $tileregion) > $sw)
+                            {
+                            debug("create_previews tiles: $x, - tile wider than area, reducing width");
+                            $tilew = $sw - $x;
+                            }
+                        $tileid = (string)($x) . "_" . (string)($y) . "_" . (string)($tilew) . "_" . (string)($tileh);
+                        debug("create_previews tiles scale: " . $scale . ", x: " . $x . ", y: " . $y);
+                        debug("create_previews tiles id: " . $tileid);
+                        $ps[$o]['id']               = "tile_" . $tileid; 
+                        $ps[$o]['width']            = $preview_tile_size;
+                        $ps[$o]["height"]           = $preview_tile_size;
+                        $ps[$o]["x"]                = $x;
+                        $ps[$o]["y"]                = $y;  
+                        $ps[$o]["w"]                = $tilew;
+                        $ps[$o]["h"]                = $tileh;
+                        $ps[$o]["type"]             = "tile";
+                        $ps[$o]["internal"]         = 1;
+                        $ps[$o]["allow_preview"]    = 0;
+
+                        $x = $x + $tileregion;
+                        $o++;
+                        }
+                    $x=0;
+                    $y = $y + $tileregion;
+                    }
+                }
+            }
         
+        if(count($onlysizes) == 1 && substr($onlysizes[0],0,8) == "resized_")
+            {
+            $o = count($ps);
+            $size_req = explode("_",substr($onlysizes[0],8));
+            $customx = $size_req[0];
+            $customy = $size_req[1];
+    
+            debug("create_previews - creating custom size width: " . $customx . " height: " . $customy);
+            $ps[$o]['id'] = $onlysizes[0]; 
+            $ps[$o]['width'] = $customx;
+            $ps[$o]["height"] = $customy;
+            }
+            
         # Locate imagemagick.
         $convert_fullpath = get_utility_path("im-convert");
         if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
@@ -1532,7 +1624,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 # Check that source image dimensions are sufficient to create the required size. Unusually wide/tall images can
                 # mean that the height/width of the larger sizes is less than the required target height/width
                 list($checkw,$checkh) = @getimagesize($file);
-                if(($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) && $file!=$hpr_path)
+                if((($checkw<$ps[$n]['width'] || $checkh<$ps[$n]['height']) || (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")) && $file!=$hpr_path)
                     {
                     $file=file_exists($hpr_path)?$hpr_path:$origfile;
                     }
@@ -1552,7 +1644,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $extensions_no_alpha_off = array('png', 'gif', 'tif');
             
             $preview_quality=get_preview_quality($ps[$n]['id']);
-            
+       
             if(!$imagemagick_mpr)
                 {
                 $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array($extension, $extensions_no_alpha_off) ? '[0] +matte ' : '[0] ') . $flatten . ' -quality ' . $preview_quality;
@@ -1563,17 +1655,30 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $th=$ps[$n]["height"];
             $id=$ps[$n]["id"];
             
+            # Add crop if generating a tile
+            $crop = false;
+            if(isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")
+                {
+                $cropx = $ps[$n]["x"];
+                $cropy = $ps[$n]["y"];
+                $cropw = $ps[$n]["w"];
+                $croph = $ps[$n]["h"];
+                $crop = true;
+                }
+                
             if($imagemagick_mpr)
                 {
                 $mpr_parts['id']=$id;
                 $mpr_parts['quality']=$preview_quality;
                 $mpr_parts['tw']=($id=='hpr' && $tw==999999 && isset($o_width) ? $o_width : $tw); // might as well pass on the original dimension
                 $mpr_parts['th']=($id=='hpr' && $th==999999 && isset($o_height) ? $o_height : $th); // might as well pass on the original dimension
+                
+                # TODO Add support for tiles
                 $mpr_parts['flatten']=($flatten=='' ? false : true);
                 $mpr_parts['icc_transform_complete']=$icc_transform_complete;
                 }
+          
                 
-
             # Debug
             debug("Contemplating " . $ps[$n]["id"] . " (sw=$sw, tw=$tw, sh=$sh, th=$th, extension=$extension)");
 
@@ -1709,7 +1814,15 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                     if(!$imagemagick_mpr)
                         {
-                        $runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"")." -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
+                        $runcommand = $command ." ".(($extension!="png" && $extension!="gif")?" +matte $profile ":"");
+                        
+                        if($crop)
+                            {
+                            // Add crop argument for tiling
+                            $runcommand .= " -crop " . $cropw . "x" . $croph . "+" . $cropx . "+" . $cropy;
+                            }
+                        
+                        $runcommand .= " -resize " . $tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") .escapeshellarg($path);
                         if(!hook("imagepskipthumb"))
                             {$command_list.=$runcommand."\n";
                             $output=run_command($runcommand);
@@ -3014,6 +3127,26 @@ function delete_previews($resource,$alternative=-1)
                 }
             }
         }
+
+    $delete_prefixes = array();
+    $delete_prefixes[] = "resized_";
+    $delete_prefixes[] = "tile_";
+    
+    $allfiles = new DirectoryIterator($resourcefolder);
+    foreach ($allfiles as $fileinfo)
+        {
+        if (!$fileinfo->isDot())
+            {
+            $filename = $fileinfo->getFilename();
+            foreach($delete_prefixes as $delete_prefix)
+                {
+                if(substr($filename,strlen($resource),strlen($delete_prefix)) == $delete_prefix)
+                    {
+                    unlink($resourcefolder . DIRECTORY_SEPARATOR . $filename);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -3054,4 +3187,4 @@ function getSvgSize($file_path)
         }
 
     return $svg_size;
-    }
+    } 
