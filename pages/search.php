@@ -1286,25 +1286,20 @@ if($responsive_ui)
     // Generate a URL for drag drop function - fires same URL as "upload here" when dragging.
     $drag_upload_params=render_upload_here_button($searchparams,true);
     $drag_over="";
-    if (is_array($drag_upload_params))
+    if (is_array($drag_upload_params) && ($display=='thumbs' || $display=='xlthumbs'))
         {
         $drag_url=generateURL("{$GLOBALS['baseurl']}/pages/upload_plupload.php", $drag_upload_params);
-        $drag_over=" onDragOver=\"UploadViaDrag(event,'".$drag_url."');\" ";
+        $drag_over=" onDragOver=\"UploadViaDrag('" . $drag_url . "');\" ";
         }
     ?>
     <script>
-    var DragUploading=false;
-    function UploadViaDrag(e,url)
+    var DragUploading=false
+    function UploadViaDrag(url)
         {
-        if(e.srcElement.className=="ImageBorder ImageStrip") 
-            {
-            e.preventDefault();
-            return false;
-            }
         if (DragUploading) {return false;}
         DragUploading=true;CentralSpaceLoad(url);
         }
-   </script>
+    </script>
     
     
     <div class="clearerleft"></div>
