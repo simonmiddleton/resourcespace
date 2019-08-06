@@ -8,6 +8,10 @@ function HookAction_datesCronCron()
 	
 	echo "action_dates: running cron tasks" . PHP_EOL;
     
+    # Reset any residual userref from earlier cron tasks
+    global $userref;
+    $userref=0;
+
 	$allowable_fields=sql_array("select ref as value from resource_type_field where type in (4,6,10)");
 	
 	# Check that this is a valid date field to use
@@ -81,7 +85,9 @@ function HookAction_datesCronCron()
 						message_add($admin_notify_users,$notification_message,$url,0);
 						}
 			}
-		}
+        }
+    
+    # Process resources whose deletion date has been reached
 	if(in_array($action_dates_deletefield, $allowable_fields))
         {
         $change_archive_state = false;
