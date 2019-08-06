@@ -31,7 +31,7 @@ function message_get(&$messages,$user,$get_all=false,$sort_desc=false)
 // add a message.
 function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,$ttl_seconds=MESSAGE_DEFAULT_TTL_SECONDS, $related_activity=0, $related_ref=0)
 	{
-	global $userref,$applicationname,$lang;
+	global $userref,$applicationname,$lang, $baseurl, $baseurl_short;
 	
 	if(!is_int($notification_type))
 		{
@@ -77,8 +77,13 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 				$email_to=sql_value("select email value from user where ref={$user}","");
 				if($email_to!=='')
 					{
+                    if(strpos($url,$baseurl) === false)
+                        {
+                        // If a relative link is provided make sure we add the full URL when emailing
+                        $url = $baseurl . $url;
+                        }
 					$message_text=nl2br($orig_text);
-					send_mail($email_to,$applicationname . ": " . $lang['notification_email_subject'],$message_text . "<br/><br/>" . $url);
+					send_mail($email_to,$applicationname . ": " . $lang['notification_email_subject'],$message_text . "<br/><br/><a href='" . $url . "' >" . $url . "</a>");
 					}
 				}
 			}

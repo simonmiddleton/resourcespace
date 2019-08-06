@@ -13,7 +13,7 @@ $job_data["url"] - [optional] URL to send to the user
 
 If a file is to be created for only a specific user to download you can create a random string e.g. $randomstring and set the path and url for the job as below:-
 
-	$job_data["outputfile"] = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . $randomstring . $scramble_key) . ".<file extension here>";
+	$job_data["outputfile"] = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randomstring . $scramble_key) . ".<file extension here>";
 	$job_data["url"]=$baseurl . "/pages/download.php?userfile=" . $ref . "_" . $randomstring . ".<file extension here>;
 	
 */
@@ -42,8 +42,8 @@ if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|;|`)/i", $shell_exec_cmd))
     {
     if ($config_windows)
         {
-        file_put_contents(get_temp_dir() . "/create_alt_" . $randstring . ".bat",$shell_exec_cmd);
-        $shell_exec_cmd=get_temp_dir() . "/create_alt_" . $randstring . ".bat";
+        file_put_contents(get_temp_dir() . "/create_download_" . $randstring . ".bat",$shell_exec_cmd);
+        $shell_exec_cmd=get_temp_dir() . "/create_download_" . $randstring . ".bat";
         $deletebat = true;
         }
     echo "Running command " . $shell_exec_cmd . PHP_EOL;

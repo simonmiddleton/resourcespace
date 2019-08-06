@@ -13,14 +13,14 @@ $alternative = getvalescaped('alternative','');
 $allowed_extensions=get_allowed_extensions_by_type($resource_type);
 
 # Create a new collection?
-if ($collection_add=="new" && enforcePostRequest(false))
+if($collection_add == "new")
 	{
 	# The user has chosen Create New Collection from the dropdown.
-	if ($collectionname==""){$collectionname = "Upload " . date("ymdHis");} # Do not translate this string, the collection name is translated when displayed!
+	if ($collectionname==""){$collectionname = "Upload " . date("YmdHis");} # Do not translate this string, the collection name is translated when displayed!
 	$collection_add=create_collection($userref,$collectionname);
 	}
 
-if ($collection_add!="")
+if (is_numeric($collection_add))
 	{
 	# Switch to the selected collection (existing or newly created) and refresh the frame.
  	set_user_collection($userref,$collection_add);
@@ -115,6 +115,7 @@ hook("additional_tbs_hiddens");
 <?php
 if(!$local_upload_file_tree)
 	{
+    $chosen_dropdowns=true;
 	?>
 	<div class="Question">
 		<label><?php echo $lang["foldercontent"] ?></label>

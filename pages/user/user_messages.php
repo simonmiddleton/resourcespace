@@ -80,7 +80,7 @@ for ($n=0;$n<count($messages);$n++)
 	{
 	$fullmessage=escape_check(strip_tags_and_attributes($messages[$n]["message"],array("table","tbody","th","tr","td","a"),array("href","target","width","border")));
     $fullmessage=htmlspecialchars($fullmessage,ENT_QUOTES);
-    $message=escape_check(strip_tags_and_attributes($messages[$n]["message"]));
+    $message=strip_tags_and_attributes($messages[$n]["message"]);
 	$message=nl2br($message,ENT_QUOTES);
     $url_encoded=urlencode($messages[$n]["url"]);
 	$unread_css = ($messages[$n]["seen"]==0 ? " class='MessageUnread'" : "");

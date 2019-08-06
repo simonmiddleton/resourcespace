@@ -25,6 +25,7 @@ $collectionname                         = getvalescaped('entercolname', '');
 $search                                 = getvalescaped('search', '');
 $offset                                 = getvalescaped('offset', '', true);
 $order_by                               = getvalescaped('order_by', '');
+$no_exif                                = getval('no_exif', $metadata_read_default ? '' : 'yes') == "yes";
 // This is the archive state for searching, NOT the archive state to be set from the form POST
 $archive                                = getvalescaped('archive', '', true);
 
@@ -34,6 +35,10 @@ $setarchivestate                        = get_default_archive_state($setarchives
 
 $alternative                            = getvalescaped('alternative', ''); # Batch upload alternative files
 $replace                                = getvalescaped('replace', ''); # Replace Resource Batch
+$batch_replace_min                      = getval("batch_replace_min",0,true); # Replace Resource Batch - minimum ID of resource to replace
+$batch_replace_max                      = getval("batch_replace_max",0,true); # Replace Resource Batch - maximum ID
+$batch_replace_col                      = getval("batch_replace_col",0,true); # Replace Resource Batch - collection to replace
+
 $replace_resource                       = getvalescaped('replace_resource', ''); # Option to replace existing resource file
 $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', '');
 $single                                 = getval("single","") != "" || getval("forcesingle","") != "";
@@ -146,10 +151,13 @@ if($collection_add=='undefined')
 
 $uploadparams= array(
     'replace'                                => $replace,
+    'batch_replace_min'                      => $batch_replace_min,
+    'batch_replace_max'                      => $batch_replace_max,
+    'batch_replace_col'                      => $batch_replace_col,
     'alternative'                            => $alternative,
     'collection_add'                         => $collection_add,
     'resource_type'                          => $resource_type,
-    'no_exif'                                => getval('no_exif', ''),
+    'no_exif'                                => $no_exif,
     'autorotate'                             => $upload_then_edit ? $camera_autorotation_checked : getval('autorotate', ''),
     'replace_resource'                       => $replace_resource,
     'archive'                                => $archive,
@@ -721,7 +729,7 @@ if ($_FILES)
                             # Log this			
                             daily_stat("Resource upload",$ref);
                             
-                            $status=upload_file($ref,(getval("no_exif","")=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!=''),$plupload_upload_location);
+                            $status=upload_file($ref,($no_exif=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!=''),$plupload_upload_location);
 
                             if($status && $auto_generated_resource_title_format != '' && !$upload_then_edit)
                                 {
@@ -836,7 +844,7 @@ if ($_FILES)
 										}
 								}
 								
-                            $status = upload_file($replace_resource, ('yes' == getval('no_exif', '') && '' == getval('exif_override', '')), false, ('' != getval('autorotate','')), $plupload_upload_location);
+                            $status = upload_file($replace_resource, (('yes' == $no_exif) && '' == getval('exif_override', '')), false, ('' != getval('autorotate','')), $plupload_upload_location);
 
                             hook("additional_replace_existing");
                             
@@ -858,15 +866,30 @@ if ($_FILES)
                             }
                     else
                             {
-							$filename_field=getvalescaped("filename_field","",true);
-							if($filename_field!="")
+                            if (!isset($batch_replace_col) || $batch_replace_col == 0)
+                                {
+                                $conditions = array();
+                                $batch_replace_min = max((int)($batch_replace_min),$fstemplate_alt_threshold);
+                                $firstref = max($fstemplate_alt_threshold, $batch_replace_min);                                
+                                $replace_resources = sql_array("SELECT ref value FROM resource WHERE ref >= '" . $batch_replace_min . "' " . (($batch_replace_max > 0) ? " AND ref <= '" . $batch_replace_max . "'" : "") . " ORDER BY ref ASC",0);
+                                debug("batch_replace upload: replacing files for resource IDs. Min ID: " . $batch_replace_min  . (($batch_replace_max > 0) ? " Max ID: " . $batch_replace_max : ""));
+                                }
+                            else
+                                {
+                                $replace_resources = get_collection_resources($batch_replace_col);
+                                debug("batch_replace upload: replacing resources within collection " . $batch_replace_col . " only");
+                                }
+                                
+							$filename_field=getvalescaped("filename_field",0,true);
+							if($filename_field != 0)
 								{
 								$target_resource=sql_array("select resource value from resource_data where resource_type_field='$filename_field' and value='$origuploadedfilename' AND resource>'$fstemplate_alt_threshold'","");
-								if(count($target_resource)==1 && !resource_file_readonly($target_resource[0]))
+                                $target_resource=array_values(array_intersect($target_resource,$replace_resources));
+                                if(count($target_resource)==1  && !resource_file_readonly($target_resource[0]))
 									{
 									// A single resource has been found with the same filename
 									daily_stat("Resource upload",$target_resource[0]);
-									$status=upload_file($target_resource[0],(getval("no_exif","")=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!=''), $plupload_upload_location); # Upload to the specified ref.
+									$status=upload_file($target_resource[0],($no_exif=="yes" && getval("exif_override","")==""),false,(getval('autorotate','')!=''), $plupload_upload_location); # Upload to the specified ref.
 									if(file_exists($plupload_processed_filepath))
                                         {
                                         unlink($plupload_processed_filepath);
@@ -879,7 +902,7 @@ if ($_FILES)
 										
 										notify_resource_change($target_resource[0]);
 										}
-									die('{"jsonrpc" : "2.0", "message" : "' . $lang["upload_success"] . '", "id" : "' . htmlspecialchars($target_resource[0]) . '"}');
+									die('{"jsonrpc" : "2.0", "message" : "' . $lang["upload_success"] . ' - ' . $lang["replacefile"] . '", "id" : "' . htmlspecialchars($target_resource[0]) . '"}');
 									}
 								elseif(count($target_resource)==0)
 									{
@@ -890,7 +913,7 @@ if ($_FILES)
                                         {
                                         unlink($plupload_processed_filepath);
                                         }
-									die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no resource found with filename ' . $origuploadedfilename . '"}, "id" : "id"}');
+									die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no valid resource to replace found with filename ' . $origuploadedfilename . '"}, "id" : "id"}');
 									}
 								else
 									{
@@ -901,7 +924,7 @@ if ($_FILES)
 										{
 										foreach ($target_resource as $replaced)
 											{
-											$status = upload_file($replaced, ('yes' == getval('no_exif', '') && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
+											$status = upload_file($replaced, ('yes' == $no_exif && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
 											}
                                         unlink($plfilepath);
                                         die('{"jsonrpc" : "2.0", "message" : "' . $lang["replacefile"] . '", "id" : "' . $resourcelist . '"}');
@@ -915,7 +938,7 @@ if ($_FILES)
                                             {
                                             unlink($plupload_processed_filepath);
                                             }
-										die('{"jsonrpc" : "2.0", "error" : {"code": 107, "message": "ERROR - multiple resources found with filename ' . $origuploadedfilename . '. Resource IDs : ' . $resourcelist . '"}, "id" : "id" }');
+										die('{"jsonrpc" : "2.0", "error" : {"code": 107, "message": "ERROR - multiple valid resources found with filename ' . $origuploadedfilename . '. Resource IDs : ' . $resourcelist . '"}, "id" : "id" }');
 										}
 									}
 								}
@@ -923,29 +946,37 @@ if ($_FILES)
                                     {
                                     # Overwrite an existing resource using the number from the filename.
                                     # Extract the number from the filename
-                                    $plfilename=strtolower(str_replace(" ","_",$plfilename));
-                                    $s=explode(".",$plfilename);
+                                    $origuploadedfilename=strtolower(str_replace(" ","_",$origuploadedfilename));
+                                    $s=explode(".",$origuploadedfilename);
                                     
+
                                     # does the filename follow the format xxxxx.xxx?
                                     if(2 == count($s))
                                         {
                                         $ref = trim($s[0]);
 
                                         // is the first part of the filename numeric?
-                                        if(is_numeric($ref) && !resource_file_readonly($ref))
+                                        if(is_numeric($ref) && in_array($ref,$replace_resources) && !resource_file_readonly($ref))
                                             {
+                                            debug("batch_replace upload: replacing resource with id " . $ref);
                                             daily_stat("Resource upload",$ref);
 
-                                            $status = upload_file($ref, ('yes' == getval('no_exif', '') && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
+                                            $status = upload_file($ref, ('yes' == $no_exif && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
 
                                             die('{"jsonrpc" : "2.0", "message" : "' . $lang["replacefile"] . '", "id" : "' . htmlspecialchars($ref) . '"}');
                                             }
                                         else
                                             {
                                             // No resource found with the same filename
+                                            debug("batch_replace upload: No valid resource id for filename " . $origuploadedfilename);
                                             header('Content-Type: application/json');
                                             unlink($plfilepath);
-                                            die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no ref matching filename ' . $origuploadedfilename . '"}, "id" : "id"}');
+
+                                            if(file_exists($plupload_processed_filepath))
+                                                {
+                                                unlink($plupload_processed_filepath);
+                                                }
+                                            die('{"jsonrpc" : "2.0", "error" : {"code": 106, "message": "ERROR - no valid resource ID matching filename ' . $origuploadedfilename . '"}, "id" : "id"}');
                                             }
                                         }
 
@@ -1093,7 +1124,7 @@ var pluploadconfig = {
                                         else
                                             {
                                             styledalert('<?php echo $lang["error"]?> ' + uploadresponse.error.code, uploadresponse.error.message);
-                                            jQuery("#upload_log").append("\r\n" + uploadresponse.error.message + " " + uploadresponse.error.code);
+                                            jQuery("#upload_log").append("\r\n" + uploadresponse.error.message + " [" + uploadresponse.error.code + "]");
                                             }    
                                         upRedirBlock = true;
                                         }
@@ -1609,7 +1640,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && (display_
         if ((getvalescaped("upload_a_file","")!="" || getvalescaped("replace_resource","")!=""  || getvalescaped("replace","")!="") && $metadata_read)
             { ?>
             <div class="Question">
-                <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if (getval("no_exif","")=="no"){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
+                <label for="no_exif"><?php echo $lang["no_exif"]?></label><input type=checkbox <?php if ($no_exif){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
                 <div class="clearerleft"> </div>
             </div>
             <?php
