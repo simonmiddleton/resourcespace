@@ -5328,11 +5328,12 @@ function error_alert($error,$back=true){
         $$key=$value;
     } 
     if ($back){include(dirname(__FILE__)."/header.php");}
+    http_response_code(403);
     echo "<script type='text/javascript'>
-        ModalClose();
-    alert('$error');";
+    ModalClose();
+    styledalert('" . $lang["error"] . "', '$error');";
     if ($back){echo "history.go(-1);";}
-    echo "</script>";
+    echo "\n</script>";
 }
 /**
  * Returns an xml compliant string in UTF-8
