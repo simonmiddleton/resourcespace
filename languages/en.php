@@ -1098,6 +1098,7 @@ $lang["relatedkeywords"]="Related Keywords";
 $lang["matchingrelatedkeywords"]="Matching related keywords";
 $lang["newkeywordrelationship"]="Create new relationship for keyword...";
 $lang["searchkeyword"]="Search keyword";
+$lang["keywordfailedregexfilter"]="Keyword failed expression validation";
 
 $lang["exportdata"]="Export data";
 $lang["exporttype"]="Export type";

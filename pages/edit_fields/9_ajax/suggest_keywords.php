@@ -53,12 +53,34 @@ foreach($fielddata['nodes'] as $node)
 
 $keyword=stripslashes($keyword);
 
+$fielderror = false;
 if(!$exactmatch && !$readonly)
     {
-    $results[] = array(
+    
+    # Ensure regexp filter is honoured if one is present
+    if (trim(strlen($fielddata["regexp_filter"]))>=1)
+        {
+        if(preg_match("#^" . $fielddata["regexp_filter"] . "$#",$keyword,$matches) <= 0)
+            {
+            $fielderror = true;
+            }
+        }
+
+    if(!$fielderror)
+        {
+        $results[] = array(
             'label' => "{$lang['createnewentryfor']} {$keyword}",
             'value' => "{$lang['createnewentryfor']} {$keyword}"
         );
+        }
+    else
+        {
+        $results[] = array(
+            'label' => "{$lang['keywordfailedregexfilter']} {$keyword}",
+            'value' => "{$lang['keywordfailedregexfilter']} {$keyword}"
+        );
+        }
+
     }
 elseif($readonly && empty($results))
     {
