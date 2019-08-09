@@ -67,6 +67,8 @@ if ($upload_review_mode)
     {
     # Set the collection and ref if not already set.
     $collection=0-$userref;
+    # Make sure review collection is clear of any resources moved out of users archive status permissions by other users
+    collection_cleanup_inaccessible_resources($collection);
     # Start reviewing at the first resource. Need to search all worflow states and remove filters as no data has been set yet
     $search_all_workflow_states_cache = $search_all_workflow_states;
     $usersearchfilter_cache = $usersearchfilter;
