@@ -318,7 +318,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             {
         
             global $merge_filename_with_title, $lang;
-            if($merge_filename_with_title) 
+            if($merge_filename_with_title && isset($processfile))
                 {
 
                 $merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
