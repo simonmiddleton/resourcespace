@@ -1158,18 +1158,23 @@ var pluploadconfig = {
                                     var uploaded_resource_response = JSON.parse(info.response);
                                     var uploaded_resource_id = uploaded_resource_response['id'];
                                     var filename             = file.name;
+                                    // filename preserved at this point
                                     var filename_ext         = getFilePathExtension(filename);
 
                                     if(filename_ext != '')
                                         {
                                         filename = filename.substr(0, file.name.lastIndexOf('.' + filename_ext));
                                         }
-
+ // filename preserved at this point
+                                    
                                     // Add resource ID - filename map only for original resources
                                     if(filename.lastIndexOf(alternative_suffix) === -1)
                                         {
                                         resource_ids_for_alternatives[uploaded_resource_id] = filename;
                                         }
+
+                                        
+
                                     <?php
                                     }?>
                                         
@@ -1358,7 +1363,9 @@ if($attach_alternatives_found_to_resources)
             }
 
         filename = file.name.substr(0, file.name.lastIndexOf('.' + getFilePathExtension(file.name)));
+        
 
+            //filenames are preserved at this point
         // Check if original file, in which case we stop here
         if(filename.lastIndexOf(alternative_suffix) === -1)
             {
@@ -1369,6 +1376,7 @@ if($attach_alternatives_found_to_resources)
         original_filename = filename.substr(0, filename.lastIndexOf(alternative_suffix));
         resource_id       = resource_ids_for_alternatives.indexOf(original_filename);
 
+        
         if(resource_id === -1)
             {
             styledalert("<?php echo $lang['error']; ?>", "<?php echo $lang['error_upload_resource_not_found']; ?>");
@@ -1379,6 +1387,8 @@ if($attach_alternatives_found_to_resources)
 
         // If we've got so far, it means we can upload this file as an alternative for this resource ID
         uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'alternative', resource_id);
+
+        console.log(uploader.settings.url);
         });
 
     uploader.bind('UploadComplete', function (up, files)
@@ -1393,6 +1403,7 @@ if($attach_alternatives_found_to_resources)
                           // Client side form validation
                         jQuery('form.pluploadform').submit(function(e) {
                                 
+
                         // Files in queue upload them first
                         if (uploader.files.length > 0) {
                             // When all files are uploaded submit form
