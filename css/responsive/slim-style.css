@@ -1112,7 +1112,7 @@ body {
         font-size: 1.3em;
     }
     .slide_btn {
-        right: 75% !important;
+        right: calc(75% - 5px) !important;
     }
     #CollectionDiv {
         position: fixed;
