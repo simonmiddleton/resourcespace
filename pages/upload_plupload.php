@@ -417,7 +417,7 @@ if ($_FILES)
 	hook('additional_plupload_checks');
 	// Clean the filename for security reasons
 	if($replace){$origuploadedfilename=escape_check($plfilename);}
-	$plfilename = preg_replace('/[^\w\._]+/', '_', $plfilename);
+	$plfilename = preg_replace('/[^\w\.-]+/', '_', $plfilename);
 	
 	// Make sure the fileName is unique but only if chunking is disabled
 	if ($chunks < 2 && file_exists($targetDir . DIRECTORY_SEPARATOR . $plfilename)) {
