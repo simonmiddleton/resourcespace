@@ -2465,7 +2465,7 @@ function render_share_options($collectionshare=true, $ref, $emailing=false)
         
         <div class="Question">
             <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
-            <input type="password" id="sharepassword" name="sharepassword" class="stdwidth" <?php if(getval("posting","") == "true"){echo "value=\"(unchanged)\"";} ?>>
+            <input type="password" id="sharepassword" name="sharepassword" class="stdwidth">
         </div>
         <?php
         hook("additionalresourceshare");
