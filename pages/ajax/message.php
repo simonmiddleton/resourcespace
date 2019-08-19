@@ -1,7 +1,7 @@
 <?php
 
  	DEFINE ("MESSAGE_POLLING_ABSENT_USER_TIMEOUT_SECONDS",30);
- 	DEFINE ("MESSAGE_FADEOUT_SECONDS",5);
+ 	DEFINE ("MESSAGE_FADEOUT_SECONDS",1115);
 
 	// check for callback, i.e. this file being called directly to get any new messages
 	if (basename(__FILE__)==basename($_SERVER['PHP_SELF']))

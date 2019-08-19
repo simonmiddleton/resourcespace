@@ -292,7 +292,7 @@ r.ref 'Resource ID',
                AND rd.resource_type_field = [title_field]
              LIMIT 1
          ) 'Resource Title',
-rt.name 'Resource Type',rl.notes 'Notes'
+rt.name 'Resource Type'
 
 from
 resource_log rl

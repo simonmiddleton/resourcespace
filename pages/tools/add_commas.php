@@ -5,7 +5,14 @@
 
 include "../../include/db.php";
 include_once "../../include/general.php";
-include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
+if('cli' != PHP_SAPI)
+    {
+    include "../../include/authenticate.php";
+    if (!checkperm("a"))
+        {
+        exit("Permission denied");
+        }
+    }
 include "../../include/resource_functions.php";
 
 $resource_type_fields=sql_query("select ref from resource_type_field where type=3");

@@ -7,16 +7,17 @@ include_once dirname(__FILE__) . "/../include/search_functions.php";
 include_once dirname(__FILE__) . "/../include/action_functions.php";
 include_once dirname(__FILE__) . "/../include/request_functions.php";
 
+$LINE_END = ('cli' == PHP_SAPI) ? PHP_EOL : "<br>";
 set_time_limit($cron_job_time_limit);
 ob_end_flush();
 ob_implicit_flush();
 ob_start();
-echo "Starting cron process...<br />\n";
+echo "Starting cron process..." . $LINE_END;
 
 # Get last cron date
-$lastcron = sql_value("SELECT value FROM sysvars where name='last_cron'",'1970-01-01');
-$lastcrontime = strtotime($lastcron);
-$sincelast  = time() - $lastcrontime;
+$lastcron       = get_sysvar('last_cron', '1970-01-01');
+$lastcrontime   = strtotime($lastcron);
+$sincelast      = time() - $lastcrontime;
 
 // grab a list of files to run as part of the upgrade process
 $new_system_version_files=array();
@@ -28,7 +29,7 @@ for($i=0; $i<=999; $i++)
         {
         if(preg_match('/^' . str_pad($i,3,'0',STR_PAD_LEFT) . '_.*\.php/', $file))
             {
-            echo "Executing job: " . $file . "<br />\n";flush();ob_flush();
+            echo "Executing job: " . $file  . $LINE_END;flush();ob_flush();
             include __DIR__ .  '/cron_jobs/' . $file;
             }
         }
@@ -38,11 +39,10 @@ for($i=0; $i<=999; $i++)
 # Allow plugins to add their own cron jobs.
 hook("cron");
 
-echo "Complete";
+echo PHP_EOL . "All tasks complete" .  $LINE_END;
 
 # Update last cron date
-sql_query("delete from sysvars where name='last_cron'");
-sql_query("insert into sysvars(name,value) values ('last_cron',now())");
+set_sysvar("last_cron",date("Y-m-d H:i:s"));
 
 
 

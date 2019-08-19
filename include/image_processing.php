@@ -473,7 +473,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             $checksum_required=true;
             if($file_upload_block_duplicates && isset($checksum))
                 {
-                sql_query("update resource set file_checksum='" . escape_check($checksum) . "' where ref='" . escape_check($ref) . "'");
+                sql_query("UPDATE resource SET file_checksum='" . escape_check($checksum) . "', last_verified=NOW(), integrity_fail=0 WHERE ref='" . escape_check($ref) . "'");
                 $checksum_required=false;
                 }
             if ($enable_thumbnail_creation_on_upload)
@@ -2557,35 +2557,28 @@ function generate_file_checksum($resource,$extension,$anyway=false)
         $path=get_resource_path($resource,true,"",false,$extension);
         if (file_exists($path))
             {
-
-                        # Generate the ID
-                        if ($file_checksums_50k){
-                            # Fetch the string used to generate the unique ID
-                            $use=filesize_unlimited($path) . "_" . file_get_contents($path,null,null,0,50000);
-                            $checksum=md5($use);
-                        } else {
-                            $checksum=md5_file($path);
-                        }
-
-                        # Generate store.
-            sql_query("update resource set file_checksum='" . escape_check($checksum) . "' where ref='$resource'");
+            $checksum = get_checksum($path);
+            sql_query("UPDATE resource SET file_checksum='" . escape_check($checksum) . "' WHERE ref='$resource'");
             $generated = true;
             }
         }
 
-        if ($generated){
-            return true;
-        } else {
-            # if we didn't generate a new file checksum, clear any existing one so that it will not be incorrect
-            # The lack of checksum will also be used as the trigger for the offline process
-            clear_file_checksum($resource);
-            return false;
+    if ($generated)
+        {
+        return true;
+        }
+    else
+        {
+        # if we didn't generate a new file checksum, clear any existing one so that it will not be incorrect
+        # The lack of checksum will also be used as the trigger for the offline process
+        clear_file_checksum($resource);
+        return false;
         }
     }
 
 function clear_file_checksum($resource){
     if (strlen($resource) > 0 && is_numeric($resource)){
-        sql_query("update resource set file_checksum='' where ref='$resource'");
+        sql_query("UPDATE resource SET file_checksum='' WHERE ref='$resource'");
         return true;
     } else {
     return false;

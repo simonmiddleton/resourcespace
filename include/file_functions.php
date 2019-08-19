@@ -79,3 +79,33 @@ function isPathWhitelisted($path, array $whitelisted_paths)
 
     return false;
     }
+
+
+/**
+* Return a checksum for the given file path.
+* 
+* @param  string  $path     Path to file
+* 
+* @return string
+*/
+function get_checksum($path)
+    {
+    global $file_checksums_50k;
+    if (!is_readable($path))
+        {
+        return false;    
+        }
+
+    # Generate the ID
+    if ($file_checksums_50k)
+        {
+        # Fetch the string used to generate the unique ID
+        $use=filesize_unlimited($path) . "_" . file_get_contents($path,null,null,0,50000);
+        $checksum=md5($use);
+        }
+    else
+        {
+        $checksum=md5_file($path);
+        }
+    return $checksum;
+    }

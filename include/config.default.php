@@ -1186,6 +1186,16 @@ $file_upload_block_duplicates=false;
 # recommended if files are large, since the checksums can take time
 $file_checksums_offline = true;
 
+# Workflow states to ignore when verifying file integrity (to verify file integrity usign checksums requires $file_checksums_50k=false;)
+$file_integrity_ignore_states = array();
+
+# $file_integrity_verify_window - set server time window that the file integrity check script can run in.
+# This can be resource intensive when checking checksums for a large number of resources.
+# Examples: -
+# $file_integrity_verify_window = array(22,6);	# # between 10PM and 6AM (first hour is later than second so time must be after first OR before second)
+# $file_integrity_verify_window = array(18,0);  # between 6PM and 12AM (midnight)
+$file_integrity_verify_window = array(0,0);     # Off by default
+
 # Default group when adding new users;
 $default_group=2;
 

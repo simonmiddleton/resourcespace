@@ -2949,6 +2949,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                 }
 
                 // embed images - ex [img_gfx/whitegry/titles/title.gif]
+                else if('img_headerlogo' == substr($variable, 0, 14))
+                    {
+                    $img_url = get_header_image(true);                    
+                    $$variable = '<img src="' . $img_url . '"/>';
+                    }
                 else if('img_' == substr($variable, 0, 4))
                     {
                     $image_path = substr($variable, 4);
@@ -3757,21 +3762,23 @@ function save_related_keywords($keyword,$related)
 function send_statistics()
     {
     # If configured, send two metrics to Montala.
-    $last_sent=sql_value("select value from sysvars where name='last_sent_stats'","");
+    $last_sent_stats  = get_sysvar('last_sent_stats', '1970-01-01');
     
     # No need to send stats if already sent in last week.
-    if ($last_sent!="" && time()-strtotime($last_sent)<(60*60*24*7)) {return false;}
+    if (time()-strtotime($last_sent_stats) < 7*24*60*60)
+        {
+        return false;
+        }
     
     # Gather stats
     $total_users=sql_value("select count(*) value from user",0);
     $total_resources=sql_value("select count(*) value from resource",0);
     
     # Send stats
-    @file("http://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
+    @file("https://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
     
     # Update last sent date/time.
-    sql_query("delete from sysvars where name='last_sent_stats'");
-    sql_query("insert into sysvars(name,value) values ('last_sent_stats',now())");
+    set_sysvar("last_sent_stats",date("Y-m-d H:i:s")); 
     }
 
 function resolve_users($users)

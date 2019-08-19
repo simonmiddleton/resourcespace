@@ -15,8 +15,6 @@ $per_page=getvalescaped("per_page","");if (is_numeric($per_page)) {$pagesize=$pe
 $sort=getvalescaped("sort","");
 $order_by=getvalescaped("order_by","");
 
-$original_user=getval("user","");
-
 # Authenticate as 'resourceconnect' user.
 global $resourceconnect_user; # Which user to use for remote access?
 $userdata=validate_user("u.ref='$resourceconnect_user'");
@@ -152,7 +150,7 @@ else
 		{
 		$result=$results[$n];
 		$ref=$result["ref"];
-		$url=$baseurl . "/pages/view.php?modal=true&ref=" . $ref . "&k=" . urlencode($original_user) . "-" . substr(md5($access_key . $ref),0,10) . "&language_set=" . urlencode($language) . "&search=" . urlencode($search) . "&offset=" . $offset . "&resourceconnect_source=" . urlencode(getval("resourceconnect_source",""));
+		$url=$baseurl . "/pages/view.php?modal=true&ref=" . $ref . "&k=" . substr(md5($access_key . $ref),0,10) . "&language_set=" . urlencode($language) . "&search=" . urlencode($search) . "&offset=" . $offset . "&resourceconnect_source=" . urlencode(getval("resourceconnect_source",""));
 		
 		# Wrap with local page that includes header/footer/sidebar
 		$link_url="../plugins/resourceconnect/pages/view.php?search=" . urlencode($search) . "&url=" . urlencode($url);

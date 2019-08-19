@@ -1189,3 +1189,43 @@ function config_merge_non_image_types()
                 $unoconv_extensions,
                 $ghostscript_extensions)));
     }
+
+function get_header_image($full = false)
+    {
+    global $linkedheaderimgsrc, $baseurl_short, $baseurl, $storageurl;
+
+    if(trim($linkedheaderimgsrc) != "")
+        {
+        $header_img_src = $linkedheaderimgsrc;
+        if(substr($header_img_src, 0, 4) !== 'http')
+            {
+            // Set via System Config page?
+            if (substr($header_img_src, 0, 13) == '[storage_url]')
+                {
+                // Parse and replace the storage URL
+                $header_img_src = str_replace('[storage_url]', $storageurl, $header_img_src);
+                }
+            else
+                {
+                // Set via config.php
+                // if image source already has the baseurl short, then remove it and add it here
+                if(substr($header_img_src, 0, 1) === '/')
+                    {
+                    $header_img_src = substr($header_img_src, 1);
+                    }
+                $header_img_src = $baseurl_short . $header_img_src;
+                }
+
+            if($full && substr($header_img_src, 0, 1) === '/')
+                {
+                $header_img_src = $baseurl . substr($header_img_src, 1);
+                }
+            }
+        }
+    else 
+        {
+        $header_img_src = $baseurl.'/gfx/titles/title.svg';
+        }
+        
+    return $header_img_src;
+    }

@@ -1,3 +1,6 @@
 <?php
 
-if ($send_statistics) {send_statistics();}
+if ($send_statistics)
+    {
+    send_statistics();
+    }

@@ -2808,4 +2808,12 @@ $lang["replacebatch_resource_min"]      = "Lowest resource ID to replace (ignore
 $lang["replacebatch_resource_max"]      = "Highest resource ID to replace";
 $lang["replacebatch_collection"]        = "Enter a collection ID if you only want to replace resources within this collection";
 $lang["replacebatch_job_created"]       = "Batch replacement job created. You will receive a notification message when the job has completed.";
-$lang["start"]                          = "Start";
+$lang["start"]                          = "Start";$lang["userresources_status_change"]="Resources that you have contributed have been moved to the state: ";
+
+# File integrity checks
+$lang["file_integrity_summary"]             = "File integrity report";
+$lang["file_integrity_summary_failed"]      = "Resource files have failed integrity checks or are missing. Please follow the link to see these resources and take action as required e.g. restore files from backup";
+$lang["file_integrity_fail_search"]         = "File integrity failures";
+$lang["all__file_integrity_fail_email"]     = "[img_headerlogo]<br />\n[lang_file_integrity_summary_failed] <br /><br /> \n[lang_file_integrity_fail_search] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
+$lang["team_resource_integrity_fail"]       = "View suspect resources";
+$lang["team_resource_integrity_fail_info"]  = "Resources with missing or possibly corrupted files";

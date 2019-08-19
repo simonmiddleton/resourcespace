@@ -35,11 +35,11 @@ if(array_key_exists('recreate', $cli_options))
 $recreate = (bool) getvalescaped("recreate", $recreate);
 if($recreate)
     {
-    $resources=sql_query("select ref,file_extension from resource where length(file_extension)>0 order by ref ASC");
+    $resources=sql_query("SELECT ref,file_extension FROM resource WHERE ref>0 AND integrity_fail=0 AND length(file_extension)>0 ORDER by ref ASC");
     }
 else
     {
-    $resources=sql_query("select ref,file_extension from resource where length(file_extension)>0 and (file_checksum is null or file_checksum = '')");
+    $resources=sql_query("SELECT ref,file_extension FROM resource WHERE ref>0 AND integrity_fail=0 AND length(file_extension)>0 AND (file_checksum IS NULL OR file_checksum = '')");
     }
 
 for($n = 0; $n < count($resources); $n++)

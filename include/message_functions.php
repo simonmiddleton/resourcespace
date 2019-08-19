@@ -155,12 +155,18 @@ function message_send_unread_emails()
 	{
 	global $lang, $applicationname,$actions_enable,$baseurl,$list_search_results_title_trim;
     global $user_pref_daily_digest,$applicationname,$actions_on, $inactive_message_auto_digest_period;
-	$lastrun = sql_value("select value from sysvars where name='daily_digest'",'');
+    
+    $lastrun = get_sysvar('daily_digest', '1970-01-01');
+    
+    # Don't run if already run in last 24 hours.
+    if (time()-strtotime($lastrun) < 24*60*60)
+        {
+        echo " - Skipping message_send_unread_emails (daily_digest) - last run: " . $lastrun . "<br />\n";
+        return false;
+        }
+    
 	$sendall = array();
     
-	# Exit if already sent in last 24 hours;
-	if ($lastrun!="" && time()-strtotime($lastrun)<(60*60*24)) {return false;}
-	
 	// Get all the users who have chosen to receive the digest email (or the ones that have opted out if set globally)
 	if($user_pref_daily_digest)
 		{
@@ -331,9 +337,8 @@ function message_send_unread_emails()
 			sql_query("update user_message set seen='" . MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL . "' where message in ('" . implode("','",$messagerefs) . "') and user = '" . $digestuser . "'");
 			}
 		}
-		
-	sql_query("delete from sysvars where name='daily_digest'");
-	sql_query("insert into sysvars(name,value) values ('daily_digest',now())");
+
+    set_sysvar("daily_digest",date("Y-m-d H:i:s")); 
 	}
 
 

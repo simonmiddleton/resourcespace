@@ -8,7 +8,10 @@ $codes=build_codes();
 $country_field=sql_query("select ref,type from resource_type_field where name='country'");
 if (count($country_field) == 0 || $country_field[0]["ref"] == "") 
 	{
-	echo "Country field not found. Must have a field with shorthand name set to 'country'.";
+    if('cli' == PHP_SAPI)
+        {
+        echo " - Country field not found. Must have a field with shorthand name set to 'country'." . PHP_EOL;
+        }
 	} 
 else
     {
@@ -51,7 +54,10 @@ else
             if($last_country !="") 
                 {
                 $coord_latlong = fetch_country_coords($last_country,$codes,$coords);    
-                echo "<p>Country=" . $last_country . "; Refs=" . join(",",$refs).";</p>";
+                if('cli' == PHP_SAPI)
+                    {
+                    echo " - Country=" . $last_country . "; Refs=" . join(",",$refs) . PHP_EOL;
+                    }
                 update_country_coords($refs,$coord_latlong);  
                 }
             $last_country = $rcvalue;
@@ -62,7 +68,10 @@ else
     if($last_country !="") 
         {
         $coord_latlong = fetch_country_coords($last_country,$codes,$coords);  
-        echo "<p>Country=" . $last_country . "; Refs=" . join(",",$refs).";</p>";
+        if('cli' == PHP_SAPI)
+            {
+            echo " - Country=" . $last_country . "; Refs=" . join(",",$refs) . PHP_EOL;
+            }
         update_country_coords($refs,$coord_latlong);  
         }
     }
@@ -71,8 +80,8 @@ function update_country_coords($refs,$latlong)
 {
 if(count($latlong)==2)
     {
-    sql_query("update resource set geo_lat='" . $latlong[0] . "', geo_long='" . $latlong[1] . "' " . 
-    "where ref in('" . join("','",$refs) . "')");
+    sql_query("UPDATE resource SET geo_lat='" . $latlong[0] . "', geo_long='" . $latlong[1] . "' " . 
+    "WHERE ref IN('" . join("','",$refs) . "')");
     }
 }
 
@@ -642,5 +651,3 @@ YEMEN,YE
 ZAMBIA,ZM
 ZIMBABWE,ZW");  // $codes
 }
-
-?>

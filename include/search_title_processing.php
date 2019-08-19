@@ -216,7 +216,7 @@ if ($search_titles)
             }
         else
             {
-            # No resource types and no collection types are selected – show all resource types and all collection types
+            # No resource types and no collection types are selected ï¿½ show all resource types and all collection types
             # Step 1: Replace %resourcetypes%
             $searchtitle = str_replace_formatted_placeholder("%resourcetypes%", $lang["all-resourcetypes"], $lang["resourcetypes-collections"], false, $lang["resourcetypes_separator"]);
             # Step 2: Replace %collectiontypes%
@@ -284,7 +284,7 @@ if ($search_titles)
 	elseif (substr($search,0,4)=="!geo")
 		{
 		$search_title = '<h1 class="searchcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!geo'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["geographicsearchresults"].'</a>'.$searchcrumbs.'</h1> ';
-		}	
+        }
     elseif (substr($search,0,14)=="!contributions")
         {
 		$cuser=substr($search,14);
@@ -343,7 +343,11 @@ if ($search_titles)
     else if (substr($search,0,1)!="!" || substr($search,0,6)=="!empty")
 		{ 
 		$search_title = '<h1 class="searchcrumbs"><a href="'.$baseurl_short.'pages/search.php?search='.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);"></a>'.$searchcrumbs.'</h1> '; 
-		}   
+		}
+    elseif (substr($search,0,14)=="!integrityfail")
+        {
+        $search_title = '<h1 class="searchcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=!integrityfail'.$parameters_string.'" onClick="return CentralSpaceLoad(this,true);">'.$lang["file_integrity_fail_search"].'</a>'.$searchcrumbs.'</h1> ';
+        }
 	
 	hook("addspecialsearchtitle");
 	}
