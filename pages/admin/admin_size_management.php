@@ -22,7 +22,7 @@ $sizes=sql_query("select ref, id, internal, width, height, name from preview_siz
 	
 	
 	<h1><?php echo $lang['page-title_size_management']; ?></h1>
-	<p><?php echo $lang['page-subtitle_size_management']; ?></p>
+	<p><?php echo $lang['page-subtitle_size_management'];render_help_link('systemadmin/manage_sizes'); ?></p>
 
 <?php
 function addColumnHeader($orderName, $labelKey)

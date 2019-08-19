@@ -52,7 +52,7 @@ include "../include/header.php";
 <?php generateFormToken("themeform"); ?>
 <input type="hidden" name="generateurl" id="generateurl" value="">
 <p><a href='<?php echo $baseurl_short?>pages/themes.php<?php echo $linksuffixprev?>' onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtothemes']?></a></p>
-<h1><?php echo $lang["share_theme_category"] . " - " . $themename?></h1>
+<h1><?php echo $lang["share_theme_category"] . " - " . $themename;render_help_link("user/sharing-resources");?></h1>
 
 
 <?php

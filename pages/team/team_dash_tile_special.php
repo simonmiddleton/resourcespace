@@ -8,7 +8,7 @@ include "../../include/dash_functions.php";
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
-<h1><?php echo $lang["specialdashtiles"];?></h1>
+<h1><?php echo $lang["specialdashtiles"];render_help_link('user/manage-dash-tile');?></h1>
 <p></p>
 <p>
 	<a href="<?php echo $baseurl_short?>pages/team/team_home.php" onClick="return CentralSpaceLoad(this,true);">

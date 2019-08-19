@@ -166,7 +166,7 @@ else
 
 <div class="BasicsBox"> 
   <h1><?php echo $lang["viewreports"]?></h1>
-  <p><?php echo text("introtext")?></p>
+  <p><?php echo text("introtext");render_help_link('resourceadmin/reports-and-statistics');?></p>
   
 <form method="post" action="<?php echo $baseurl ?>/pages/team/team_report.php" onSubmit="if (!do_download) {return CentralSpacePost(this);}">
     <?php generateFormToken("team_report"); ?>

@@ -94,7 +94,7 @@ if(!collection_readable($collection))
     exit();
     }
     ?>
-    <p><?php echo $lang["contactsheetintrotext"]; ?></p>
+    <p><?php echo $lang["contactsheetintrotext"]; render_help_link("user/contact-sheet");?></p>
 	
 	<?php if ($error != "" && isset($lang[$error]))
 		{

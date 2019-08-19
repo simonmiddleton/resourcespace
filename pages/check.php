@@ -27,7 +27,7 @@ function ResolveKB($value)
 ?>
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["installationcheck"]?></h1>
+  <h1><?php echo $lang["installationcheck"];render_help_link("systemadmin/install_overview");?></h1>
   <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/check.php">&gt; <?php echo $lang["repeatinstallationcheck"]?></a>
   <br/><br/>
 <table class="InfoTable">

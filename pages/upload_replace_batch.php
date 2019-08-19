@@ -74,7 +74,7 @@ if (isset($info_text))
 
 <h1><?php echo $lang["replaceresourcebatch"] ?></h1>
 
-<p><?php echo $lang["batch_replace_filename_intro"] ?></p>
+<p><?php echo $lang["batch_replace_filename_intro"];render_help_link("resourceadmin/batch-replace");?></p>
 
 <form action="<?php echo $baseurl_short?>pages/upload_replace_batch.php" >
 

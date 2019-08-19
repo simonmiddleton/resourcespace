@@ -25,7 +25,7 @@ if($show_usergroups_dash)
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
-    <h1><?php echo ($show_usergroups_dash ? $lang['manage_user_group_dash_tiles'] . ' - ' . $user_groups[$selected_user_group] : $lang["manage_all_dash"]); ?></h1>
+    <h1><?php echo ($show_usergroups_dash ? $lang['manage_user_group_dash_tiles'] . ' - ' . $user_groups[$selected_user_group] : $lang["manage_all_dash"]); render_help_link('user/manage-dash-tile');?></h1>
     <p>
         <a href="<?php echo $baseurl_short?>pages/team/team_home.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoteamhome"]?></a>
     </p>

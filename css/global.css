@@ -1769,3 +1769,8 @@ a.BrowseRefresh{
     {
     opacity:1 !important;
     }
+
+.HelpLink {
+    font-size: 1rem;
+    vertical-align: text-top;
+}

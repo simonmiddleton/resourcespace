@@ -68,7 +68,7 @@ include '../../include/header.php';
     <p>
         <a href="<?php echo $baseurl; ?>/pages/team/team_home.php" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoteamhome']; ?></a>
     </p>
-    <h1><?php echo $lang['manage_external_shares']; ?></h1>
+    <h1><?php echo $lang['manage_external_shares']; render_help_link('user/sharing-resources');?></h1>
 
 
         <div class="Listview">

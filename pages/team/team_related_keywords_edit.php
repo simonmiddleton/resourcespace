@@ -34,7 +34,7 @@ else
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["managerelatedkeywords"]?></h1>
+<h1><?php echo $lang["managerelatedkeywords"];render_help_link('resourceadmin/related-keywords');?></h1>
 
 <form method=post id="mainform" action="<?php echo $baseurl_short?>pages/team/team_related_keywords_edit.php">
     <?php generateFormToken("mainform"); ?>

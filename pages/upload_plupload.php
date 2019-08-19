@@ -1104,7 +1104,8 @@ var pluploadconfig = {
                         <?php }
                         else { ?>
                                 //Show diff instructions if supports drag and drop
-                                if(!uploader.files.length && uploader.features.dragdrop && uploader.settings.dragdrop)	{jQuery('#plupload_instructions').html('<p><?php echo escape_check($lang["intro-plupload_dragdrop"] )?></p>');}
+                                $help_link = render_help_link("user/uploading");
+                                if(!uploader.files.length && uploader.features.dragdrop && uploader.settings.dragdrop)	{jQuery('#plupload_instructions').html('<p><?php echo escape_check($lang["intro-plupload_dragdrop"]) . $help_link?></p>');}
                         <?php }?>
                         
                         uploader.bind('FileUploaded', function(up, file, info) {
@@ -1552,8 +1553,10 @@ else
 <?php hook("upload_page_top"); ?>
 
 <?php if (!hook("replacepluploadtitle")){?><h1><?php echo $titleh1 ?></h1><?php } ?>
-<div id="plupload_instructions"><p><?php echo $intro?></p></div>
-<?php if (isset($plupload_max_file_size))
+<div id="plupload_instructions"><p><?php echo $intro;render_help_link("user/uploading");?></p></div>
+<?php
+
+if (isset($plupload_max_file_size))
 	{
 	if (is_numeric($plupload_max_file_size))
 		$sizeText = formatfilesize($plupload_max_file_size);

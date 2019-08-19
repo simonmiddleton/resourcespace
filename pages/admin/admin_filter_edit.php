@@ -194,7 +194,7 @@ include "../../include/header.php";
             <p><a href="<?php echo $backurl; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["filter_manage"]; ?></a></p>
              
             <h1><?php echo ($filterid == 0 ? $lang["filter_new"] : $lang["filter_edit"]) ?></h1>
-            <h2><?php echo $lang["filter_edit_text"] ?></h2>
+            <h2><?php echo $lang["filter_edit_text"];render_help_link("systemadmin/search-filters");?></h2>
             <form id="filter_edit_form" name="filter_edit_form" method="post" class="FormWide" action="<?php echo $filter_edit_url; ?>">
                 <input type="hidden" name="filter" value="<?php echo htmlspecialchars($filterid); ?>" />
                 <input type="hidden" name="save" value="true" />

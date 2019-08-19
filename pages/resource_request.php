@@ -92,7 +92,7 @@ include "../include/header.php";
 	</p>
 
   <h1><?php echo i18n_get_translated($lang["requestresource"]); ?></h1>
-  <p><?php echo text("introtext")?></p>
+  <p><?php echo text("introtext");render_help_link("resourceadmin/user-resource-requests")?></p>
   
 	<form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php" onsubmit="return CentralSpacePost(this,true);">
         <?php generateFormToken("resource_request"); ?>

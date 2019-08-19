@@ -37,8 +37,11 @@ include "../../include/header.php";
 
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["teamcentre"]?></h1>
-  <?php if (getval("modal","")=="") { ?><p><?php echo text("introtext")?></p><?php } ?>
+  <h1><?php echo $lang["teamcentre"];?></h1>
+  <?php if (getval("modal","")=="") 
+    { 
+    ?><p><?php echo text("introtext");render_help_link('resourceadmin/quick-start-guide');?></p><?php 
+    }?>
   
 	<div class="VerticalNav">
 	<ul>

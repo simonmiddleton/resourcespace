@@ -23,7 +23,7 @@ include "../../include/header.php";
 
 <div class="BasicsBox"> 
   <h2>&nbsp;</h2>
-  <h1><?php echo $lang["managerelatedkeywords"]?></h1>
+  <h1><?php echo $lang["managerelatedkeywords"];render_help_link('resourceadmin/related-keywords');?></h1>
   <p><?php echo text("introtext")?></p>
  
 <?php 

@@ -65,7 +65,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["collection_set_theme_category_title"]?></h1>
+<h1><?php echo $lang["collection_set_theme_category_title"];render_help_link("user/themes-public-collections");?></h1>
 <p><?php echo text("introtext")?></p>
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_set_category.php">
     <?php generateFormToken("collectionform"); ?>

@@ -107,7 +107,7 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox">
 <h1><?php echo $lang["editcollection"]?></h1>
-<p><?php echo text("introtext")?></p>
+<p><?php echo text("introtext");render_help_link("user/edit-collection");?></p>
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_edit.php">
     <?php generateFormToken("collectionform"); ?>
 	<input type="hidden" name="redirect" id="redirect" value="yes" >

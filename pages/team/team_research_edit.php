@@ -25,7 +25,7 @@ $research=get_research_request($ref);
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["editresearchrequest"]?></h1>
+<h1><?php echo $lang["editresearchrequest"];render_help_link('resourceadmin/user-research-requests');?></h1>
 
 <form method="post" action="<?php echo $baseurl_short?>pages/team/team_research_edit.php" onSubmit="return CentralSpacePost(this,true);">
     <?php generateFormToken("team_research_edit"); ?>

@@ -197,7 +197,7 @@ if($submitdashtile && enforcePostRequest(false))
 		}
 	include "../include/header.php";
 	?>
-	<h1><?php echo $lang["createnewdashtile"];?></h1>
+	<h1><?php echo $lang["createnewdashtile"];render_help_link("user/create-dash-tile");?></h1>
 	<?php 
 	if($error)
 		{?>
@@ -436,7 +436,7 @@ if(!$validpage)
 	}
 ?>
 <div class="BasicsBox">
-<h1><?php echo $pagetitle?></h1>
+<h1><?php echo $pagetitle;render_help_link("user/create-dash-tile");?></h1>
 <form id="create_dash" name="create_dash" method="post">
 	<input type="hidden" name="tltype" value="<?php echo htmlspecialchars($tile_type)?>" />
 	<input type="hidden" name="url" value="<?php echo htmlspecialchars($url); ?>" />

@@ -121,7 +121,7 @@ if(!$modal)
 	<?php
 	}
 	?>
-<h1><?php echo $lang["edituser"]?> <?php global $display_useredit_ref; echo $display_useredit_ref ? $ref : ""; ?></h1>
+<h1><?php echo $lang["edituser"];render_help_link('systemadmin/creating-users');?> <?php global $display_useredit_ref; echo $display_useredit_ref ? $ref : ""; ?></h1>
 </div>
 <?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 <?php if (isset($message)) { ?><div class="PageInfoMessage"><?php echo $message?></div><?php } ?>

@@ -75,7 +75,7 @@ if ($k=="") { ?>
 <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/request_log.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&go=next&<?php echo hook("nextpreviousextraurl") ?>"><?php echo $lang["nextresult"]?>&nbsp;&gt;</a>
 </div>
 
-<h1><?php echo $lang["requestlog"] . " : " . $lang["resourceid"] . " " .  $ref ?></h1>
+<h1><?php echo $lang["requestlog"] . " : " . $lang["resourceid"] . " " .  $ref;render_help_link("resourceadmin/user-resource-requests");?></h1>
 
 </div>
 

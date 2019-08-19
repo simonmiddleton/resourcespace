@@ -17,7 +17,7 @@ include "../include/header.php";
 
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["myrequests"]?></h1>
+  <h1><?php echo $lang["myrequests"];render_help_link("resourceadmin/user-resource-requests");?></h1>
   <p><?php echo text("introtext")?></p>
  
 <?php 

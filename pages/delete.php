@@ -60,7 +60,7 @@ if (isset($resource['is_transcoding']) && $resource['is_transcoding']==1)
 ?>
 <div class="BasicsBox"> 
   <h2>&nbsp;</h2>
-  <h1><?php echo $lang["deleteresource"]?></h1>
+  <h1><?php echo $lang["deleteresource"];render_help_link("user/deleting-resources");?></h1>
   <p class="FormIncorrect"><?php echo $lang["cantdeletewhiletranscoding"]?></p>
 </div>
 <?php	
@@ -77,7 +77,7 @@ if(!$modal)
 ?>
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["deleteresource"]?></h1>
+  <h1><?php echo $lang["deleteresource"];render_help_link("user/deleting-resources");?></h1>
   <p><?php if($delete_requires_password){text("introtext");}else{echo $lang["delete__nopassword"];} ?></p>
   
   <?php if ($resource["archive"]==3) { ?><p><strong><?php echo $lang["finaldeletion"] ?></strong></p><?php } ?>

@@ -234,7 +234,7 @@ include "../../include/header.php";
     </p>
 
     <h1><?php echo $lang['page-title_user_group_management_edit'] ?></h1>
-    <p><?php echo $lang['page-subtitle_user_group_management_edit']; ?></p>
+    <p><?php echo $lang['page-subtitle_user_group_management_edit']; render_help_link("systemadmin/creating-user-groups"); ?></p>
 
         <input type="hidden" name="save" value="1">
 

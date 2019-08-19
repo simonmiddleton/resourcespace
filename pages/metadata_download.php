@@ -194,7 +194,7 @@ include "../include/header.php";
 
 	<h1><?php echo $lang["downloadingmetadata"]?></h1>
 
-	<p><?php echo $lang["file-contains-metadata"]?></p>
+	<p><?php echo $lang["file-contains-metadata"];render_help_link("user/resource-tools");?></p>
 
 	<form id="metadataDownloadForm" name="metadataDownloadForm" method=post action="<?php echo $baseurl_short; ?>pages/metadata_download.php" >
 		<?php generateFormToken("metadataDownloadForm"); ?>

@@ -67,7 +67,7 @@ include "../../include/header.php";
 <div class="BasicsBox"> 
 	<h1><?php echo $lang["manage_own_dash"];?></h1>
 	<p>
-		<?php echo $lang["manageowndashinto"];?>
+		<?php echo $lang["manageowndashinto"];render_help_link('user/create-dash-tile');?>
 	</p>
 	<form class="Listview">
 	<input type="hidden" name="submit" value="true" />

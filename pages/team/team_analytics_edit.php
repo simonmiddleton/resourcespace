@@ -89,7 +89,7 @@ include dirname(__FILE__)."/../../include/header.php";
 
 <div class="BasicsBox"><p><a href="<?php echo $baseurl_short ?>pages/team/team_analytics.php?offset=<?php echo $offset?>&findtext=<?php echo $findtext?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK . $lang["rse_analytics"]?></a></p>
 
-<h1 id="ReportHeader" class="CollapsibleSectionHead <?php if ($ref=="") { ?>expanded<?php } else { ?>collapsed<?php } ?>"><?php echo ($ref==""?$lang["new_report"]:$lang["edit_report"]) ?></h1>
+<h1 id="ReportHeader" class="CollapsibleSectionHead <?php if ($ref=="") { ?>expanded<?php } else { ?>collapsed<?php } ?>"><?php echo ($ref==""?$lang["new_report"]:$lang["edit_report"]);render_help_link('resourceadmin/analytics'); ?></h1>
 
 <div class="CollapsibleSection" id="ReportForm" <?php if ($ref!="") { ?>style="display:none;"<?php } ?>>
 <form method="post" id="mainform" onsubmit="return CentralSpacePost(this);" >

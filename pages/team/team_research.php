@@ -31,7 +31,7 @@ include "../../include/header.php";
 <div class="BasicsBox"> 
   <h2>&nbsp;</h2>
   <h1><?php echo $lang["manageresearchrequests"]?></h1>
-  <p><?php echo text("introtext")?></p>
+  <p><?php echo text("introtext");render_help_link('resourceadmin/user-research-requests');?></p>
  
 <?php 
 $requests=get_research_requests($find,$order_by,$sort);

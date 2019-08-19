@@ -40,7 +40,7 @@ include "../include/header.php";
 ?>
   <div class="BasicsBox">
     <h1><?php echo $lang["findpubliccollection"]?></h1>
-    <p class="tight"><?php echo text("introtext")?></p>
+    <p class="tight"><?php echo text("introtext");render_help_link("collections-public-and-themes");?></p>
 <div class="BasicsBox">
     <form method="post" id="pc_searchform" onSubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_public.php">
         <?php generateFormToken("pc_searchform"); ?>

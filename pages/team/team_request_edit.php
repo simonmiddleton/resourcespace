@@ -68,7 +68,7 @@ include "../../include/header.php";
         <?php
         }
         ?>
-    <h1><?php echo $lang["editrequestorder"]?></h1>
+    <h1><?php echo $lang["editrequestorder"];render_help_link('resourceadmin/user-resource-requests');?></h1>
 </div>
 <?php
 if (isset($resulttext))

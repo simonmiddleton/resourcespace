@@ -97,7 +97,7 @@ function addColumnHeader($orderName, $labelKey)
 
 <div class="BasicsBox">
    
-  <h1><?php echo $lang["resource_types_manage"]?></h1>
+  <h1><?php echo $lang["resource_types_manage"];render_help_link("resourceadmin/resource-types");?></h1>
   
   <?php
   $introtext=text("introtext");

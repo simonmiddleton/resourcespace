@@ -16,8 +16,7 @@ include "../include/header.php";
 <div class="BasicsBox">
 	
 <h1><?php echo $lang["languageselection"]?></h1>
-<p><?php echo text("introtext")?></p>
-  
+<p><?php echo text("introtext");render_help_link('user/language-options');?></p>
 <form method="post" action="<?php echo $baseurl_short?>pages/change_language.php">
     <?php generateFormToken("change_language"); ?>
 <div class="Question">

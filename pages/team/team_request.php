@@ -18,7 +18,7 @@ $offset=getvalescaped("offset",0);
 ?>
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["managerequestsorders"]?></h1>
+  <h1><?php echo $lang["managerequestsorders"];render_help_link('resourceadmin/user-resource-requests');?></h1>
 
 <?php 
 $requests=get_requests();

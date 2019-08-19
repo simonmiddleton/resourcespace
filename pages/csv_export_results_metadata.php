@@ -53,7 +53,7 @@ else
             <input type="hidden" name="sort" value="<?php echo htmlspecialchars($sort) ?>" />
             <input type="hidden" name="starsearch" value="<?php echo htmlspecialchars($starsearch) ?>" />
             
-            <h1><?php echo $lang["csvExportResultsMetadata"]?></h1>
+            <h1><?php echo $lang["csvExportResultsMetadata"];render_help_link("user/csv_export");?></h1>
    
    
             <div class="Question" id="question_personal">

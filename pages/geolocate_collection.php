@@ -36,7 +36,7 @@ $check = false;
 
 include '../include/header.php';
 ?>
-<h1><?php echo $lang["geolocatecollection"] ?></h1>
+<h1><?php echo $lang["geolocatecollection"];render_help_link("user/geolocation");?></h1>
 <h3><?php echo $lang["collectionname"] . ": " . $collectionname  ?></h3>
 <?php
 

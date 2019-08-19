@@ -81,7 +81,7 @@ function DrawOption($permission,$description,$reverse=false,$reload=false)
 		echo $lang['page-title_user_group_management_edit']; ?></a>
 	</p>	
 	<h1><?php echo $lang['page-title_user_group_permissions_edit'] . " - " . htmlspecialchars($group["name"]); ?></h1>
-	<p><?php echo $lang['page-subtitle_user_group_permissions_edit']; ?></p>	
+	<p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>	
 
 	<form method="post" id="permissions" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php<?php echo $url_params ?>" onsubmit="return CentralSpacePost(this,true);" >	
 		<input type="hidden" name="save" value="1">		

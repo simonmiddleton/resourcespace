@@ -2787,10 +2787,32 @@ function generate_browse_bar_item($id, $text)
             </div><!-- End of BrowseRowOuter -->";
 	return $html;
 	}
-	
-	
-	
-	
-	
-	
-	
+
+/**
+* Generates a help icon that opens the relevant Knowledge Base article in a modal
+*  
+* These links can be disabled by setting $contextual_help_links=false;
+* 
+* @param string $page   Knowledge Base article to display, leave blank to show the Knowledge Base homepage
+* 
+* @return void
+*/
+function render_help_link($page='')
+    {
+    global $contextual_help_links,$pagename,$lang,$help_modal,$baseurl;
+    if ($contextual_help_links === false){return;}
+    ?>
+    <a 
+        href="<?php echo $baseurl . '/pages/help.php?page=' . $page ?>"
+        title="<?php echo $lang['help-tooltip']; ?>"
+        class="HelpLink"
+        <?php 
+        if ($help_modal) 
+            { echo "onClick='return ModalLoad(this, true);'";}
+        else
+            { echo "target='_blank'";}
+        ?>
+    >
+    <i aria-hidden="true" class="fa fa-fw fa-question-circle"></i>
+    </a>
+    <?php }

@@ -41,7 +41,7 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox">
 <h1><?php echo $lang["collectioncomments"]?></h1>
-<p><?php echo $lang["collectioncommentsinfo"]?></p>
+<p><?php echo $lang["collectioncommentsinfo"];render_help_link("user/resource_commenting");?></p>
 <?php 
 $imagepath = get_resource_path($ref,true,"col",false,"jpg");
 $imageurl = get_resource_path($ref,false,"col",false,"jpg");

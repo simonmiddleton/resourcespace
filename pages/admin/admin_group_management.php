@@ -99,7 +99,7 @@ function addColumnHeader($orderName, $labelKey)
 
 	
 	<h1><?php echo $lang['page-title_user_group_management']; ?></h1>	
-	<p><?php echo $lang['page-subtitle_user_group_management']; ?></p>
+	<p><?php echo $lang['page-subtitle_user_group_management']; render_help_link("systemadmin/creating-user-groups");?></p>
 	
 	<div class="TopInpageNav">
 		<div class="TopInpageNavLeft">

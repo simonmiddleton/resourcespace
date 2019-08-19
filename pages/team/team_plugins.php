@@ -311,7 +311,7 @@ include "../../include/header.php"; ?>
         ?>
     </form>
 </h1>
-<p><?php echo $lang["plugins-headertext"]; ?></p>
+<p><?php echo $lang["plugins-headertext"]; render_help_link('systemadmin/managing_plugins');?></p>
 <h2 class="pageline"><?php echo (!$searching ? $lang['plugins-installedheader'] : $lang['plugins-search-results-header']); ?></h2>
 <?php hook("before_active_plugin_list");
 if($searching)

@@ -85,7 +85,7 @@ if($editing && !$editexternalurl)
 <div class="BasicsBox">
     <p><a href="<?php echo $baseurl_short . 'pages/view.php?' . $query_string ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
 
-    <h1><?php echo $page_header ?></h1>
+    <h1><?php echo $page_header; render_help_link("user/resource-sharing");?></h1>
 
         <form method="post" id="resourceshareform" action="<?php echo $baseurl_short?>pages/resource_share.php?ref=<?php echo urlencode($ref)?>">
             <input type="hidden" name="ref" id="ref" value="<?php echo htmlspecialchars($ref) ?>">

@@ -53,7 +53,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 
 <div class="RecordBox">
 <div class="RecordPanel">
-<div class="Title"><?php echo $lang['location-title']; ?></div>
+<div class="Title"><?php echo $lang['location-title']; render_help_link("user/geolocation");?></div>
 <?php if (!hook("customgeobacklink")) { ?>
 <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short . ($geocol != '' ? "pages/geolocate_collection.php?ref=" . $geocol : "pages/view.php?ref=" . $ref) ?>"><?php echo LINK_CARET_BACK . ($geocol != '' ? $lang['backtogeolocatecollection'] : $lang['backtoresourceview']) ?></a></p>
 <?php } ?>

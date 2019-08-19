@@ -3627,3 +3627,6 @@ $browse_default_width = 295;
 // Batch replace from local folder
 $batch_replace_local_folder = "/upload";
 
+// Display help links on pages
+$contextual_help_links=true;
+

@@ -149,7 +149,8 @@ include "../include/header.php";
 if ($themeshare && text("introtextthemeshare")!="")
 	{echo text("introtextthemeshare");}
 else 
-	{echo text("introtext");}?>
+	{echo text("introtext");}
+render_help_link("user/sharing-resources");?>
 </p>
 
 <form name="collectionform" method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_email.php<?php echo $linksuffix ?>&catshare=<?php if($themeshare==true){echo "true";}else{echo "false";}?>">

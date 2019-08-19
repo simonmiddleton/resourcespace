@@ -1071,9 +1071,9 @@ else
          if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
          
          if (!$upload_review_mode) { ?>
-         <h1 id="editresource"><?php echo $lang["editresource"]?></h1>
+         <h1 id="editresource"><?php echo $lang["editresource"];render_help_link("user/editing-resources");?></h1>
          <?php } else { ?>
-        <h1 id="editresource"><?php echo $lang["refinemetadata"]?></h1>
+        <h1 id="editresource"><?php echo $lang["refinemetadata"];render_help_link("user/editing-resources");?></h1>
         <?php } ?>
         
          </div><!-- end of RecordHeader -->
@@ -1250,7 +1250,7 @@ else
     ?>
     
     <h1><?php echo $titleh1 ?></h1>
-    <p><?php echo $lang["intro-batch_edit"] ?></p>
+    <p><?php echo $lang["intro-batch_edit"];render_help_link("user/uploading");?></p>
     
     <?php
  }

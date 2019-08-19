@@ -71,7 +71,7 @@ include "../include/header.php";
 	}?>
 		
 		
-  <h1><?php echo $lang["requestcollection"]?></h1>
+  <h1><?php echo $lang["requestcollection"];render_help_link("resourceadmin/user-resource-requests");?></h1>
   <p><?php echo text("introtext")?></p>
   
 	<form method="post" onsubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_request.php">  

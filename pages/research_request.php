@@ -29,7 +29,7 @@ include "../include/header.php";
 
 <div class="BasicsBox">
     <h1><?php echo $lang["researchrequest"]?></h1>
-    <p class="tight"><?php echo text("introtext")?></p>
+    <p class="tight"><?php echo text("introtext");render_help_link("resourceadmin/user-research-requests");?></p>
     <p class="greyText noPadding">* <?php echo $lang["requiredfield"]?></p>
     <?php if (!hook('replace_research_request_form')) { ?>
     <form method="post" action="<?php echo $baseurl_short?>pages/research_request.php">

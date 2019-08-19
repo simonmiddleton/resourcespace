@@ -44,7 +44,7 @@ include "../include/header.php";
 ?>
 
 <div class="BasicsBox"> 
-<h1><?php echo $lang["uploadpreview"]?></h1>
+<h1><?php echo $lang["uploadpreview"];render_help_link("user/edit-resource-preview");?></h1>
 <p><?php echo text("introtext")?></p>
 <script language="JavaScript">
 // Check allowed extensions:

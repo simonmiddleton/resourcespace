@@ -109,7 +109,7 @@ include "../include/header.php";
 <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
 <h1><?php echo $lang["emailresourcetitle"]?></h1>
 
-<p><?php echo text("introtext")?></p>
+<p><?php echo text("introtext");render_help_link("user/sharing-resources");?></p>
 
 <form method=post id="resourceform" action="<?php echo $baseurl_short?>pages/resource_email.php?search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>">
 <input type=hidden name=ref value="<?php echo htmlspecialchars($ref)?>">

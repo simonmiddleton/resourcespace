@@ -84,7 +84,7 @@ function addColumnHeader($orderName, $labelKey)
 ?>
 
   
-  <h1><?php echo $lang["admin_resource_type_fields"]?></h1>
+  <h1><?php echo $lang["admin_resource_type_fields"];render_help_link('resourceadmin/configure-metadata-field');?></h1>
   <?php
   $introtext=text("introtext");
   if ($introtext!="")

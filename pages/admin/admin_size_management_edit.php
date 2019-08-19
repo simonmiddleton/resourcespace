@@ -108,7 +108,7 @@ include "../../include/header.php";
 	</p>
 
 	<h1><?php echo $lang['page-title_size_management_edit']; ?></h1>
-	<p><?php echo $lang['page-subtitle_size_management_edit']; ?></p>
+	<p><?php echo $lang['page-subtitle_size_management_edit'];render_help_link('systemadmin/manage_sizes');?></p>
 
 		<input type="hidden" name="save" value="1">
 

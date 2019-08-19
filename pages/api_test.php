@@ -46,7 +46,7 @@ if (getval("submitting","")!="" && $api_function!="")
 <div class="RecordPanel">
 <div class="Title"><?php echo $lang['api-test-tool']; ?></div>
 
-<p><?php echo $lang["api-help"] ?></p>
+<p><?php echo $lang["api-help"];render_help_link("api"); ?></p>
 
 <form id="api-form" method="post" action="<?php echo $baseurl_short?>pages/api_test.php" onSubmit="return CentralSpacePost(this);">
 <?php generateFormToken("api-form"); ?>

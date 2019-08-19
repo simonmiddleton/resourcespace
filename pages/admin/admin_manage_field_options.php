@@ -448,7 +448,7 @@ if($ajax)
     </p>
     <h1><?php echo $lang['manage_metadata_field_options'] . (isset($field_data['title']) ? ' - ' . $field_data['title'] : ''); ?></h1>
 
-    <p><?php echo $lang['metadata_option_change_warning']; ?></p>
+    <p><?php echo $lang['metadata_option_change_warning']; render_help_link("resourceadmin/modifying-field-options");?></p>
     <?php
     if(in_array($field, $default_to_first_node_for_fields))
         {

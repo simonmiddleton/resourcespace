@@ -104,7 +104,7 @@ include "../include/header.php";
 	<input type="hidden" name="editgroup" id="editgroup" value="">
 	<input type="hidden" name="generateurl" id="generateurl" value="">
     <?php generateFormToken("collectionform"); ?>
-	<h1><?php echo $lang["sharecollection"]; if($editing && !$editexternalurl){echo " - ".$lang["editingexternalshare"]." ".$editaccess;}?></h1>
+	<h1><?php echo $lang["sharecollection"]; if($editing && !$editexternalurl){echo " - ".$lang["editingexternalshare"]." ".$editaccess;};render_help_link("user/sharing-resources");?></h1>
 	<?php
 	if(isset($warningtext))
 		{

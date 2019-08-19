@@ -81,9 +81,8 @@ include "../include/header.php";
 <p>
 <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/alternative_files.php?ref=<?php echo $resource?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtomanagealternativefiles"]?></a>
 </p>
-	
-<h1><?php echo $lang["editalternativefile"]?></h1>
 
+<h1><?php echo $lang["editalternativefile"]; render_help_link('user/alternative-files');?></h1>
 
 <form method="post" class="form" id="fileform" onsubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/alternative_file.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>">
 <?php generateFormToken('fileform'); ?>

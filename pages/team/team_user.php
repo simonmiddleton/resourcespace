@@ -93,7 +93,7 @@ include "../../include/header.php";
 <?php
 		}
 ?><h1><?php echo $lang["manageusers"]?></h1>
-  <p><?php echo text("introtext")?></p>
+  <p><?php echo text("introtext");render_help_link('systemadmin/creating-users');?></p>
 
 <?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 

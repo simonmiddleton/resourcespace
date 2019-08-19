@@ -15,7 +15,7 @@ if (getval("allseen","")!="")
 ?>
 <div class="BasicsBox">
   <h1><?php echo $lang["mymessages"]?></h1>
-  <p><?php echo $lang["mymessages_introtext"] ?></p>
+  <p><?php echo $lang["mymessages_introtext"];render_help_link('user/messages'); ?></p>
 
 <?php if ($user_preferences){?>
 <div class="VerticalNav">

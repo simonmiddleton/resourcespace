@@ -420,7 +420,7 @@ jQuery(document).ready(function()
 <iframe src="blank.html" name="resultcount" id="resultcount" style="visibility:hidden;float:right;" width=1 height=1></iframe>
 <div class="BasicsBox">
 <h1><?php echo ($archiveonly)?$lang["archiveonlysearch"]:$lang["advancedsearch"];?> </h1>
-<p class="tight"><?php echo text("introtext")?></p>
+<p class="tight"><?php echo text("introtext");render_help_link("user/advanced-search");?></p>
 <form method="post" id="advancedform" action="<?php echo $baseurl ?>/pages/search_advanced.php" >
 <?php generateFormToken("advancedform"); ?>
 <input type="hidden" name="submitted" id="submitted" value="yes">
