@@ -138,7 +138,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
 	<!--List Item-->
 	<tr>
 	<td nowrap><?php echo nicedate($log[$n]["date"],true,true)?></td>
-	<td nowrap><?php echo $log[$n]["access_key"]!=""?$lang["externalusersharing"] . ": " . $log[$n]["access_key"] . " " . $lang["viauser"] . " " . $log[$n]["shared_by"]:$log[$n]["fullname"]?></td>
+	<td nowrap><?php echo (hook("userdisplay","",array($log[$n]))?"":($log[$n]["access_key"]!=""?$lang["externalusersharing"] . ": " . $log[$n]["access_key"] . " " . $lang["viauser"] . " " . $log[$n]["shared_by"]:$log[$n]["fullname"])) ?></td>
 	<td><?php echo $lang["log-" . $log[$n]["type"]]." ".$log[$n]["notes"]?></td>
 	<td><?php echo htmlspecialchars($log[$n]["title"])?></td>
 	<td><?php
