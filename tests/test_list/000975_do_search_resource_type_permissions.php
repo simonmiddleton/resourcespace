@@ -5,6 +5,7 @@ include_once(__DIR__ . '/../../include/search_functions.php');
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 // Test to ensure that $editable_only search returns all relevant resources that can be edited.
 
+$saved_userref = $userref;
 $userref = 999; 
 $savedpermissions = $userpermissions;
 // create 5 new resources 
@@ -386,3 +387,6 @@ if (!is_array($results) || count($results)!=3 || !match_values(array_column($res
     echo "ERROR - SUBTEST F.iv\n";
     return false;
 }
+
+$saved_userref = $userref;
+$userpermissions = $savedpermissions;
