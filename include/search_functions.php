@@ -1623,7 +1623,7 @@ function get_default_search_states()
     {
     global $searchstates, $pending_submission_searchable_to_all, $pending_review_visible_to_all;
 
-    $defaultsearchstates = isset($searchstates) ? $searchstates : array();// May be set by rse_workflow plugin
+    $defaultsearchstates = isset($searchstates) ? $searchstates : array(0);// May be set by rse_workflow plugin
     if($pending_submission_searchable_to_all)
         {
         $defaultsearchstates[] = -2;
