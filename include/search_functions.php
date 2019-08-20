@@ -749,7 +749,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
     global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
     $heightmax,$widthmin,$widthmax,$filesizemin,$filesizemax,$fileextension,$haspreviewimage,$geo_search_restrict,$pending_review_visible_to_all,
     $search_all_workflow_states,$pending_submission_searchable_to_all,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard,
-    $open_access_for_contributor;
+    $open_access_for_contributor, $searchstates;
 
     # Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
     if(!is_array($archive)){$archive=explode(",",$archive);}
@@ -843,26 +843,27 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
         $sql_filter.="(r.access<>'2' OR (r.access=2 AND ((rca.access IS NOT null AND rca.access<>2) OR (rca2.access IS NOT null AND rca2.access<>2))))";
         }
         
-    # append archive searching. Updated Jan 2016 to apply to collections as resources in a pending state that are in a shared collection could bypass approval process
+    # append standard archive searching criteria. Updated Jan 2016 to apply to collections as resources in a pending state that are in a shared collection could bypass approval process
     if (!$access_override)
         {
-        if(substr($search,0,11)=="!collection" || substr($search,0,5)=="!list")
+        if(substr($search,0,11)=="!collection" || substr($search,0,5)=="!list" || substr($search,0,15)=="!archivepending" || substr($search,0,12)=="!userpending")
             {
             # Resources in a collection or list may be in any archive state
+            # Other special searches define the archive state in search_special()
             if(substr($search,0,11)=="!collection" && $collections_omit_archived && !checkperm("e2"))
                 {
                 $sql_filter.= (($sql_filter!="")?" AND ":"") . "archive<>2";
-                }           
+                }
             }
         elseif ($search_all_workflow_states || substr($search,0,8)=="!related")
             {hook("search_all_workflow_states_filter");}   
-        elseif ($archive_standard && $pending_review_visible_to_all)
+        elseif ($archive_standard)
             {
-            # If resources pending review are visible to all, when performing a default search with no archive specified 
-            # that normally returns only active resources, include pending review (-1) resources too.
+            # If no archive specified add in default archive states (set by config options or as set in rse_workflow plugin)
             if ($sql_filter!="") {$sql_filter.=" AND ";}
-            $sql_filter.="archive in('0','-1')";
-            } 
+            $defaultsearchstates = get_default_search_states();
+            $sql_filter.="archive IN (" . implode(",",$defaultsearchstates) . ")";
+            }
         else
             {
             # Append normal filtering - extended as advanced search now allows searching by archive state
@@ -1118,7 +1119,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         if ($ref!="") 
             {
-            $sql="SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum= (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE archive = 0 AND ref=$ref AND file_checksum IS NOT null)r2) ORDER BY file_checksum, ref";    
+            $sql="SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum= (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE ref=$ref AND file_checksum IS NOT null)r2) ORDER BY file_checksum, ref";    
             if($returnsql) {return $sql;}
             $results=sql_query($sql,false,$fetchrows);
             $count=count($results);
@@ -1133,7 +1134,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         else
             {
-            $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum IN (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE archive = 0 AND file_checksum <> '' AND file_checksum IS NOT null GROUP BY file_checksum having count(file_checksum)>1)r2) ORDER BY file_checksum, ref" . $sql_suffix;
+            $sql=$sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r $sql_join WHERE $sql_filter AND file_checksum IN (SELECT file_checksum FROM (SELECT file_checksum FROM resource WHERE file_checksum <> '' AND file_checksum IS NOT null GROUP BY file_checksum having count(file_checksum)>1)r2) ORDER BY file_checksum, ref" . $sql_suffix;
             return $returnsql?$sql:sql_query($sql,false,$fetchrows);
             }
         }
@@ -1611,4 +1612,31 @@ function get_upload_here_selected_nodes($search, array $nodes)
         }
 
     return array_merge($nodes, $upload_here_nodes);
+    }
+
+/**
+* get the default archive states to search
+*  
+* @return array
+*/
+function get_default_search_states()
+    {
+    global $searchstates, $pending_submission_searchable_to_all, $pending_review_visible_to_all;
+
+    $defaultsearchstates = isset($searchstates) ? $searchstates : array();// May be set by rse_workflow plugin
+    if($pending_submission_searchable_to_all)
+        {
+        $defaultsearchstates[] = -2;
+        }
+    if($pending_review_visible_to_all)
+        {
+        $defaultsearchstates[] = -1;
+        }
+    
+    $modifiedstates = hook("modify_default_search_states","",array($defaultsearchstates));
+    if(is_array($modifiedstates))
+        {
+        return $modifiedstates;
+        }
+    return $defaultsearchstates;
     }
