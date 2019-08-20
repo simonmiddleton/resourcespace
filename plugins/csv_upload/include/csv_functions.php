@@ -313,6 +313,16 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 								$update_dynamic_field=true;
 								array_push($messages,"Adding option for field " . $meta[$field_resource_type][$field_name]['remote_ref'] . ": " . $cell_actual_value);
 								}
+							elseif($meta[$field_resource_type][$field_name]['type']==14)
+								{
+								/* date range field - want to extract two date values and add as options*/
+								$dates = explode("/",$cell_actual_value);
+								foreach($dates as $date)
+									{
+									$meta[$field_resource_type][$field_name]['options'][]=trim($date);						
+									$update_dynamic_field=true;
+									}
+								}	
 							else
 								{
 								array_push($messages, "Error: Value \"{$cell_actual_value}\" not found in lookup for \"{$field_name}\" field - found on line {$line_count}");

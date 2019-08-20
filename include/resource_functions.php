@@ -1622,7 +1622,7 @@ function remove_all_keyword_mappings_for_field($resource,$resource_type_field)
 */
 function update_field($resource, $field, $value, array &$errors = array(), $log=true)
     {
-    global $FIXED_LIST_FIELD_TYPES, $category_tree_add_parents;
+    global $FIXED_LIST_FIELD_TYPES, $NODE_FIELDS, $category_tree_add_parents;
     
     // accept shortnames in addition to field refs
     if(!is_numeric($field))
@@ -1648,13 +1648,37 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     $newvalues    = trim_array(explode(',', $value));
 
     // Set up arrays of node ids to add/remove. 
-    if(in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
+    if(in_array($fieldinfo['type'], $NODE_FIELDS))
         {
         $errors[] = "WARNING: Updates for fixed list fields should not use update_field. Use add_resource_nodes or add_resource_nodes_multi instead. Field: '{$field}'";
         $nodes_to_add    = array();
         $nodes_to_remove = array();
         }
         
+    # If this is a date range field we need to add values to the field options
+    if($fieldinfo['type'] == 14 )
+    {
+
+       $newvalues = array_map('trim', explode('/', $value));
+
+       $currentoptions = array();
+
+
+    foreach($newvalues as $newvalue)
+        {
+        # Check if each new value exists in current options list
+        if('' != $newvalue && !in_array($newvalue, $currentoptions))
+            {
+            # Append the option and update the field
+            $newnode          = set_node(null, $field, escape_check(trim($newvalue)), null, null, true);
+            $nodes_to_add[]   = $newnode;
+            $currentoptions[] = trim($newvalue);
+
+            debug("update_field: field option added: '" . trim($newvalue) . "'<br />");
+            }
+        }
+    }    
+
 
     # If this is a dynamic keyword we need to add it to the field options
     if($fieldinfo['type'] == 9 && !checkperm('bdk' . $field))
@@ -1710,7 +1734,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     # Fetch previous value
     $existing = sql_value("select value from resource_data where resource='$resource' and resource_type_field='$field'","");
 
-    if (in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
+    if (in_array($fieldinfo['type'], $NODE_FIELDS))
         {
         foreach($fieldoptions as $nodedata)
             {
