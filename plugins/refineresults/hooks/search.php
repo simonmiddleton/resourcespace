@@ -3,7 +3,12 @@
 function HookRefineresultsSearchSearch_header_after_actions()
     {
   global $baseurl_short, $lang, $k, $search, $parameters_string, $result, $collections;
-	
+
+    if(trim($k) == "")
+        {
+        return;
+        }
+
     $results = 0;
     if(is_array($result))
         {

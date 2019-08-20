@@ -19,7 +19,10 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     {
     node_field_options_override($field);
 	
-	global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES;
+    global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear,
+           $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function,
+           $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,
+           $FIXED_LIST_FIELD_TYPES;
     
     // set this to zero since this does not apply to collections
     if (!isset($field['field_constraint'])){$field['field_constraint']=0;}
@@ -266,7 +269,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     if (!$forsearchbar)
         {
         ?>
-        <div class="Question" id="question_<?php echo $n ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
+        <div class="Question" id="question_<?php echo $n ?>" data-resource_type="<?php echo htmlspecialchars($field["resource_type"]); ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
         if (strlen($field["tooltip_text"])>=1)
             {
             echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";
@@ -406,7 +409,8 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
                 $setnames=trim_array(explode(";",$value));
                 $wrap=0;
 
-                $l    = average_length($node_options);
+                $al_multiplier_factor = (defined("FILTER_BAR") && FILTER_BAR) ? 2.7 : 1;
+                $l = average_length($node_options) * $al_multiplier_factor;
                 switch($l)
                     {
                     case($l > 40): $cols = 1; break; 
@@ -1297,32 +1301,49 @@ function render_text_question($label, $input, $additionaltext="", $numeric=false
 	}
 	
 /**
-* render_split_text_question - Used to display a question with two inputs e.g. for a from/to range
+* Used to display a question with two inputs e.g. for a from/to range
 * 
 * @param string $label	Label of question
 * @param array  $inputs  Array of input names and labels(eg. array('pixelwidthmin'=>'From','pixelwidthmin'=>'To')
-* @param string $additionaltext (optional) 	Text to to display after input
-* @param boolean $numeric 					Set to true to force numeric input
+* @param string $additionaltext Text to display after input
+* @param boolean $numeric       Set to true to force numeric input
+* 
+* @return void
 */
-function render_split_text_question($label, $inputs = array(), $additionaltext="", $numeric=false, $extra="", $currentvals=array())
+function render_split_text_question(
+    $label,
+    array $inputs = array(),
+    $additionaltext = "",
+    $numeric = false,
+    $extra = "",
+    array $currentvals = array()
+)
     {
-	?>
-	<div class="Question" id = "pixelwidth">
-		<label><?php echo $label; ?></label>
-		<div>
-		<?php
-		foreach ($inputs as $inputname=>$inputtext)
-			{
-			echo "<div class=\"SplitSearch\">" . $inputtext . "</div>\n";
-			echo "<input name=\"" . $inputname . "\" class=\"SplitSearch\" type=\"text\"". ($numeric?"numericinput":"") . "\" value=\"" . $currentvals[$inputname] . "\"" . $extra . " />\n";
-			}
-		echo $additionaltext;
-		?>
-		</div>
-	</div>
-	<div class="clearerleft"> </div>
-	<?php
-	}
+    ?>
+    <div class="Question">
+        <label><?php echo $label; ?></label>
+        <div class="SplitTextQuestionContent">
+        <?php
+        foreach($inputs as $inputname => $inputtext)
+            {
+            $numericinput_prop = $numeric ? "numericinput" : "";
+            ?>
+            <span><?php echo htmlspecialchars($inputtext); ?></span>
+            <input type="text"
+                   name="<?php echo htmlspecialchars($inputname); ?>"
+                   class="SplitSearch"
+                   value="<?php htmlspecialchars($currentvals[$inputname]); ?>"
+                   <?php echo $numericinput_prop; ?> <?php echo $extra; ?>>
+            <?php
+            }
+            ?>
+            <span><?php echo htmlspecialchars($additionaltext); ?></span>
+        </div>
+    </div>
+    <div class="clearerleft"></div>
+    <?php
+    return;
+    }
 
 /**
 * render_dropdown_question - Used to display a question with a dropdown selector
@@ -1987,7 +2008,7 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
             {  
             ?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo $lang["day"]; ?></label>
-            <select name="<?php echo $name?>_start_day"
+            <select id="<?php echo htmlspecialchars($name); ?>_start_day" name="<?php echo htmlspecialchars($name); ?>_start_day"
              <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
             if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
@@ -2004,7 +2025,7 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
               ?>
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_month"><?php echo $lang["month"]; ?></label>
-            <select name="<?php echo $name?>_start_month"
+            <select id="<?php echo htmlspecialchars($name); ?>_start_month" name="<?php echo htmlspecialchars($name); ?>_start_month"
                 <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
@@ -2025,7 +2046,7 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
             { 
             ?>		
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_month"><?php echo $lang["month"]; ?></label>
-            <select name="<?php echo $name?>_start_month"
+            <select id="<?php echo htmlspecialchars($name); ?>_start_month" name="<?php echo htmlspecialchars($name); ?>_start_month"
                 <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
@@ -2041,7 +2062,7 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_start_day"><?php echo $lang["day"]; ?></label>
-            <select name="<?php echo $name?>_start_day"
+            <select id="<?php echo htmlspecialchars($name); ?>_start_day" name="<?php echo htmlspecialchars($name); ?>_start_day"
               <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
@@ -2062,7 +2083,7 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
         if($forsearch)
             {?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
-            <select name="<?php echo htmlspecialchars($name) ?>_start_year"
+            <select id="<?php echo htmlspecialchars($name); ?>_start_year" name="<?php echo htmlspecialchars($name); ?>_start_year"
                 <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeYear"<?php } 
                 if ($forsearch && $autoupdate) 
                         { ?>onChange="UpdateResultCount();"<?php }
@@ -2108,7 +2129,7 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
             {
             ?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_day"><?php echo $lang["day"]; ?></label>
-            <select name="<?php echo $name?>_end_day"
+            <select id="<?php echo htmlspecialchars($name); ?>_end_day" name="<?php echo htmlspecialchars($name); ?>_end_day"
               <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
@@ -2124,7 +2145,7 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_month"><?php echo $lang["month"]; ?></label>
-            <select name="<?php echo $name?>_end_month"
+            <select id="<?php echo htmlspecialchars($name); ?>_end_month" name="<?php echo htmlspecialchars($name); ?>_end_month"
                 <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
@@ -2145,7 +2166,7 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
             {
             ?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_month"><?php echo $lang["month"]; ?></label>
-            <select name="<?php echo $name?>_end_month"
+            <select id="<?php echo htmlspecialchars($name); ?>_end_month" name="<?php echo htmlspecialchars($name); ?>_end_month"
                 <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeMonth"<?php }
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
@@ -2161,7 +2182,7 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_day"><?php echo $lang["day"]; ?></label>
-            <select name="<?php echo $name?>_end_day"
+            <select id="<?php echo htmlspecialchars($name); ?>_end_day" name="<?php echo htmlspecialchars($name); ?>_end_day"
               <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeDay"<?php }
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
@@ -2182,7 +2203,7 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
         if($forsearch)
             {?>
             <label class="accessibility-hidden" for="<?php echo htmlspecialchars($name) ?>_end_year"><?php echo $lang["year"]; ?></label>
-            <select name="<?php echo $name?>_end_year" 
+            <select id="<?php echo htmlspecialchars($name); ?>_end_year" name="<?php echo htmlspecialchars($name); ?>_end_year"
             <?php if ($chosen_dropdowns) {?>class="ChosenDateRangeYear"<?php }
             if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
                 else if (!$forsearch  && $edit_autosave)
@@ -2862,3 +2883,246 @@ function render_help_link($page='')
     <i aria-hidden="true" class="fa fa-fw fa-question-circle"></i>
     </a>
     <?php }
+
+/**
+* Render the archive states for the filter bar
+* 
+* @param array $selected_archive_states
+* 
+* @return void
+*/
+function render_fb_archive_state(array $selected_archive_states)
+    {
+    if($GLOBALS["advanced_search_archive_select"] === false)
+        {
+        ?>
+        <input type="hidden" name="archive" value="<?php echo htmlspecialchars(implode(",", $selected_archive_states)); ?>">
+        <?php
+        return;
+        }
+
+    $available_archive_states = array();
+    $all_archive_states = array_merge(range(-2, 3), $GLOBALS["additional_archive_states"]);
+    foreach($all_archive_states as $archive_state_ref)
+        {
+        if(!checkperm("z" . $archive_state_ref))
+            {
+            $available_archive_states[$archive_state_ref] = (isset($GLOBALS["lang"]["status" . $archive_state_ref]))?$GLOBALS["lang"]["status" . $archive_state_ref]:$archive_state_ref;
+            }
+        }
+    ?>
+    <div class="Question" id="question_archive" >
+        <label><?php echo $GLOBALS["lang"]["status"]; ?></label>
+        <table cellpadding=2 cellspacing=0>
+            <?php
+            foreach($available_archive_states as $archive_state=>$state_name)
+                {
+                ?>
+                  <tr>
+                    <td width="1">
+                   <input type="checkbox"
+                          name="archive[]"
+                          value="<?php echo $archive_state; ?>"
+                        <?php 
+                       if (in_array($archive_state, $selected_archive_states))
+                           {
+                           ?>
+                           checked
+                           <?php
+                           }?>
+                       >
+               </td>
+               <td><?php echo htmlspecialchars(i18n_get_translated($state_name)); ?>&nbsp;</td>
+               </tr>
+                <?php  
+                }
+            ?>
+        </table>
+        <script>
+        jQuery(document).ready(function()
+            {
+            jQuery("#question_archive input[name='archive[]']").change(function()
+                {
+                if(jQuery("#question_archive input[name='archive[]']:checked").length > 0)
+                    {
+                    UpdateResultCount();
+                    }
+                else
+                    {
+                    jQuery(this).prop("checked", true);
+                    }
+                });
+            });
+        </script>
+    </div>
+    <div class="clearerleft"></div>
+    <?php
+    return;
+    }
+
+/**
+* Render the "Contributed by" section for filter bar
+* 
+* @param int $properties_contributor Contributor user ID
+* 
+* @return void
+*/
+function render_fb_contributed_by($properties_contributor)
+    {
+    global $lang, $sharing_userlists, $baseurl, $advanced_search_contributed_by;
+    if(!$advanced_search_contributed_by)
+        {
+        return;
+        }
+        ?>
+    <div class="Question">
+        <label><?php echo $lang["contributedby"]; ?></label>
+        <?php
+        $single_user_select_field_value = $properties_contributor;
+        $single_user_select_field_id = 'properties_contributor';
+        $single_user_select_field_onchange = 'UpdateResultCount();';
+        $userselectclass = "searchWidth";
+        include "../include/user_select.php";
+        ?>
+        <script>
+        jQuery('#properties_contributor').change(function()
+            {
+            UpdateResultCount();
+            });
+        </script>
+        <?php
+        unset($single_user_select_field_value);
+        unset($single_user_select_field_id);
+        unset($single_user_select_field_onchange);
+        ?>
+    </div>
+    <?php
+    return;
+    }
+
+/**
+* Render "Media" section for filter bar
+* 
+* @param  int  $media_heightmin
+* @param  int  $media_heightmax
+* @param  int  $media_widthmin
+* @param  int  $media_widthmax
+* @param  int  $media_filesizemin
+* @param  int  $media_filesizemax
+* @param  string  $media_fileextension
+* @param  boolean  $properties_haspreviewimag
+* 
+* @return void
+*/
+function render_fb_media_section(
+    $media_heightmin,
+    $media_heightmax,
+    $media_widthmin,
+    $media_widthmax,
+    $media_filesizemin,
+    $media_filesizemax,
+    $media_fileextension,
+    $properties_haspreviewimage
+)
+    {
+    global $lang, $advanced_search_media_section;
+    if(!$advanced_search_media_section)
+        {
+        return;
+        }
+        ?>
+    <h1 class="CollapsibleSectionHead collapsed" ><?php echo $lang["media"]; ?></h1>
+    <div id="AdvancedSearchMediaSection" class="CollapsibleSection">
+    <?php 
+    render_split_text_question(
+        $lang["pixel_height"],
+        array(
+            'media_heightmin' => $lang['from'],
+            'media_heightmax' => $lang['to']
+        ),
+        $lang["pixels"],
+        true,
+        " class=\"stdWidth\" OnChange=\"UpdateResultCount();\"",
+        array(
+            'media_heightmin' => $media_heightmin,
+            'media_heightmax' => $media_heightmax
+        ));
+
+    render_split_text_question(
+        $lang["pixel_width"],
+        array(
+            'media_widthmin' => $lang['from'],
+            'media_widthmax' => $lang['to']
+        ),
+        $lang["pixels"],
+        true,
+        " class=\"stdWidth\" OnChange=\"UpdateResultCount();\"",
+        array(
+            'media_widthmin' => $media_widthmin,
+            'media_widthmax' => $media_widthmax));
+
+    render_split_text_question(
+        $lang["filesize"],
+        array(
+            'media_filesizemin' => $lang['from'],
+            'media_filesizemax' => $lang['to']
+        ),
+        $lang["megabyte-symbol"],
+        false,
+        " class=\"stdWidth\" OnChange=\"UpdateResultCount();\"",
+        array(
+            'media_filesizemin' => $media_filesizemin,
+            'media_filesizemax' => $media_filesizemax));
+
+    render_text_question(
+        $lang["file_extension_label"],
+        "media_fileextension",
+        "",
+        false,
+        " class=\"SearchWidth\" OnChange=\"UpdateResultCount();\"",
+        $media_fileextension);
+
+    render_dropdown_question(
+        $lang["previewimage"],
+        "properties_haspreviewimage",
+        array(
+            "" => "",
+            "1" => $lang["yes"],
+            "0" => $lang["no"]
+        ),
+        $properties_haspreviewimage,
+        " class=\"SearchWidth\" OnChange=\"UpdateResultCount();\"");
+    ?>
+    </div><!-- End of AdvancedSearchMediaSection -->
+    <?php
+    return;
+    }
+
+/**
+* Render the filter bar component (this normally is happening in the navigation bar)
+* 
+* @uses generateFormToken()
+* 
+* @return void
+*/
+function render_filter_bar_component()
+    {
+    global $baseurl, $lang;
+    ?>
+    <li>
+        <form id="header_search_form" class="HeaderSearchForm"
+              method="post" action="<?php echo $baseurl; ?>/pages/search.php"
+              onsubmit="return CentralSpacePost(this, true);">
+            <?php generateFormToken("header_search_form"); ?>
+            <input id="ssearchbox" name="search" type="text" class="searchwidth"
+                   placeholder="<?php echo $lang['all__search']; ?>"
+                   value="<?php echo isset($quicksearch) ? $htmlspecialchars($quicksearch) : ""; ?>" />
+            <a href="<?php echo $baseurl; ?>/pages/search_advanced.php"
+               onclick='return ToggleFilterBar(this.href, {<?php echo generateAjaxToken("ToggleFilterBar"); ?>});'>
+                <i aria-hidden="true" class="fa fa-filter fa-lg fa-fw"></i>
+            </a>
+        </form>
+    </li>
+    <?php
+    return;
+    }

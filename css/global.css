@@ -1744,3 +1744,32 @@ a.BrowseRefresh{
     font-size: 1rem;
     vertical-align: text-top;
 }
+
+#FilterBarContainer { padding: 10px 10px; text-align: left; color: #FFF; }
+#FilterBarContainer .SearchWidth, #FilterBarContainer .CategoryBox { width: 380px; }
+#FilterBarContainer > .BasicsBox { margin: initial; }
+#FilterBarContainer .CollapsibleSectionHead, #FilterBarContainer .Question a { color: #FFF; }
+#FilterBarContainer .Question { padding: 0.5em 0em 0.3em 0em }
+#FilterBarContainer .Question, #FilterBarContainer .QuestionSubmit,
+#FilterBarContainer .Question:last-of-type, #FilterBarContainer .QuestionSubmit:last-of-type { border-bottom: initial; }
+#FilterBarContainer .Question label, #FilterBarContainer .QuestionSubmit label { margin: 5px; padding: initial; font-weight: bold; }
+#FilterBarContainer .QuestionSubmit { padding: initial; }
+#FilterBarContainer .Question table { display: inline-block; width: 100%; max-height: 100px; overflow-y: scroll; } /* Intended for checkboxes rendering */
+#FilterBarContainer .Question input[readonly="readonly"] { width: 365px; } /* Contributed By */
+#FilterBarContainer .Question #autocomplete { width: 255px; } /* Contributed By */
+#FilterBarContainer .Question .keywordselected { float: left; margin: 0px 0px 5px 5px; } /* Dynamic keywords list */
+#FilterBarContainer .Question .customFieldLabel { float: none; border-radius: 4px; margin-left: 5px; padding: 3px 6px; background-color: #2e99e6; color: #fff; }
+#FilterBarContainer .BoldMargin { margin-left: 15px; font-size: 1.2em; font-weight: bolder; }
+#FilterBarContainer .CloseButtonLink { text-decoration: none; }
+#FilterBarContainer .CloseButtonLink:hover { color: #dadada; text-decoration: none; }
+#ActiveFilters { z-index: 999; position: sticky; position: -webkit-sticky; top: -10px; margin: 0px 0px 15px 0px; border-top-left-radius: initial; border-top-right-radius: initial; background: #808080; box-shadow: 0px 20px 10px -15px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+#FilterBarContainer #ActiveFilters { padding: 0.5em 0em 0.7em 0em; }
+#FilterBarContainer .CollapsibleSection { margin: initial; }
+#FilterBarContainer #AdvancedSearchMediaSection .Question label { float: initial; }
+#FilterBarContainer #AdvancedSearchMediaSection .SplitTextQuestionContent { margin: 10px 0px 0px 5px; }
+#FilterBarContainer #AdvancedSearchMediaSection input.SplitSearch { width: 80px; }
+#FilterBarContainer .Question .indent, #FilterBarContainer .Question .stdwidth, #FilterBarContainer .stdwidth { width: initial; }
+#FilterBarContainer div[class*='_range'] select { width: 89px; }
+
+.FullWidth { width: -webkit-fill-available; }
+.InsetBottomShadow { background: rgba(0, 0, 0, 0.2); }

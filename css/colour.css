@@ -107,10 +107,9 @@ input[readonly] {
 #SlideshowContainer #HomeSiteText.dashtext h1 {color:#373737;}
 #SlideshowContainer #HomeSiteText.dashtext {background:transparent;border:none;color:#373737;}
 
-/* Default colours for search, dash tiles, browse bar etc */
-#SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab {
-    background: rgba(0, 0, 0, 0.47);
-    color:#FFF;
+#SearchBox,#HomeSiteText.dashtext,.HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab, #FilterBarContainer{
+	background: rgba(0, 0, 0, 0.47);
+	color:#FFF;
 }
 
 .CollectImageBorder {border: 1px solid #000000;}	

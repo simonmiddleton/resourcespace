@@ -43,9 +43,20 @@
 		<?php } ?>
 		
 		
-		<?php if ($speedtagging && checkperm("s") && checkperm("n")) { ?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/tag.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["tagging"]?></a></li><?php } ?>
-		
-        <?php 
+		<?php if ($speedtagging && checkperm("s") && checkperm("n")) { ?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/tag.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["tagging"]?></a></li><?php }
+
+    if(!$disable_geocoding)
+        {
+        ?>
+        <li class="HeaderLink">
+            <a href="<?php echo $baseurl; ?>/pages/geo_search.php" onclick="return CentralSpaceLoad(this, true);">
+                <i aria-hidden="true" class="fa fa-fw fa-globe"></i>
+                <span><?php echo $lang["geographicsearch"]; ?></span>
+            </a>
+        </li>
+        <?php
+        }
+
         /* ------------ Customisable top navigation ------------------- */
         if(isset($custom_top_nav))
             {

@@ -43,32 +43,86 @@ function suggest_refinement($refs,$search)
     return $suggest;
     }
 
-if (!function_exists("get_advanced_search_fields")) {
-function get_advanced_search_fields($archive=false, $hiddenfields="")
+if(!function_exists("get_advanced_search_fields"))
     {
-    global $FIXED_LIST_FIELD_TYPES, $date_field, $daterange_search;
-    # Returns a list of fields suitable for advanced searching. 
-    $return=array();
-
-    $hiddenfields=explode(",",$hiddenfields);
-
-    $fields=sql_query("SELECT *, ref, name, title, type ,order_by, keywords_index, partial_index, resource_type, resource_column, display_field, use_for_similar, iptc_equiv, display_template, tab_name, required, smart_theme_name, exiftool_field, advanced_search, simple_search, help_text, tooltip_text, display_as_dropdown, display_condition, field_constraint FROM resource_type_field WHERE advanced_search=1 AND ((keywords_index=1 AND length(name)>0) OR type IN (" . implode(",",$FIXED_LIST_FIELD_TYPES) . ")) " . (($archive)?"":"and resource_type<>999") . " ORDER BY resource_type,order_by");
-    # Apply field permissions and check for fields hidden in advanced search
-    for ($n=0;$n<count($fields);$n++)
+    /**
+    * Get fields that are set to be advanced
+    * 
+    * @uses sql_query()
+    * 
+    * @param boolean $archive
+    * @param string  $hiddenfields
+    * 
+    * @return array Returns a list of fields suitable for advanced searching. 
+    */
+    function get_advanced_search_fields($archive = false, $hiddenfields = "")
         {
-        if (metadata_field_view_access($fields[$n]["ref"]) && !checkperm("T" . $fields[$n]["resource_type"]) && !in_array($fields[$n]["ref"], $hiddenfields))
-            {$return[]=$fields[$n];}
-        }
+        global $FIXED_LIST_FIELD_TYPES, $date_field, $daterange_search;
 
-    if(!in_array($date_field,$return) && $daterange_search && metadata_field_view_access($date_field) && !in_array($date_field, $hiddenfields))
-        {
-        $date_field_data = get_resource_type_field($date_field);
-        array_unshift($return,$date_field_data);
-        }
+        $return = array();
+        $hiddenfields = explode(",", $hiddenfields);
+        $fixed_list_fields_list = implode(", ", $FIXED_LIST_FIELD_TYPES);
+        $archive_sql = ($archive ? "" : "AND resource_type <> 999");
 
-    return $return;
+        $fields = sql_query("
+             SELECT ref,
+                    `name`,
+                    title,
+                    `type`,
+                    order_by,
+                    keywords_index,
+                    partial_index,
+                    resource_type,
+                    resource_column,
+                    display_field,
+                    use_for_similar,
+                    iptc_equiv,
+                    display_template,
+                    tab_name,
+                    required,
+                    smart_theme_name,
+                    exiftool_field,
+                    advanced_search,
+                    simple_search,
+                    help_text,
+                    tooltip_text,
+                    display_as_dropdown,
+                    display_condition,
+                    field_constraint,
+                    automatic_nodes_ordering
+               FROM resource_type_field
+              WHERE (simple_search = 1 OR advanced_search = 1)
+                AND (
+                        (keywords_index = 1 AND length(`name`) > 0)
+                        OR `type` IN ({$fixed_list_fields_list})
+                    )
+                {$archive_sql}
+           ORDER BY resource_type ASC, simple_search DESC, order_by ASC");
+
+        for($n = 0; $n < count($fields); $n++)
+            {
+            if(
+                metadata_field_view_access($fields[$n]["ref"])
+                && !checkperm("T{$fields[$n]["resource_type"]}")
+                && !in_array($fields[$n]["ref"], $hiddenfields))
+                {
+                $return[] = $fields[$n];
+                }
+            }
+
+        if(
+            !in_array($date_field, $return)
+            && $daterange_search
+            && metadata_field_view_access($date_field)
+            && !in_array($date_field, $hiddenfields))
+            {
+            $date_field_data = get_resource_type_field($date_field);
+            array_unshift($return, $date_field_data);
+            }
+
+        return $return;
+        }
     }
-}
 
 function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
     {
@@ -1058,7 +1112,20 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         
         # Fix the ORDER BY for this query (special case due to inner query)
         $order_by=str_replace("r.rating","rating",$order_by);
-        $sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r $sql_join WHERE $sql_filter ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
+        $sql = $sql_prefix
+               . "SELECT DISTINCT *,
+                         r2.total_hit_count score
+                    FROM (
+                             SELECT $select
+                               FROM resource AS r
+                             $sql_join 
+                              WHERE $sql_filter
+                           GROUP BY r.ref
+                           ORDER BY ref DESC
+                              LIMIT $last
+                         ) AS r2
+                ORDER BY $order_by" . $sql_suffix;
+
         return $returnsql ? $sql : sql_query($sql,false,$fetchrows);
         }
     

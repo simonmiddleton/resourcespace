@@ -20,7 +20,7 @@ if ($modal || getval("ajax","")!="")
 	<?php
 	}
 
-if (isset($anonymous_login) && $anon_login_modal && !$modal && getval("logout","")==false && !array_key_exists("username",$_POST))
+if (isset($anonymous_login) && !$modal && getval("logout","")==false && !array_key_exists("username",$_POST))
 	{
 	$anon_login_extras="loginmodal=true&url=".urlencode($url)."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""));
 	
@@ -167,7 +167,10 @@ if (getval("langupdate","")!="")
 
 include "include/header.php";
 
-include "include/login_background.php";
+if(getval("no_login_background", "") == "")
+    {
+    include "include/login_background.php";
+    }
 	
 
 

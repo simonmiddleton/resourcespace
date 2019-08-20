@@ -21,7 +21,9 @@ foreach($field['nodes'] as $node)
     {
     $node_options[] = $node['name'];
     }
-$l = average_length($node_options);
+
+$al_multiplier_factor = (defined("FILTER_BAR") && FILTER_BAR) ? 2.7 : 1;
+$l = average_length($node_options) * $al_multiplier_factor;
 
 $cols = 10;
 if($l > 5) 

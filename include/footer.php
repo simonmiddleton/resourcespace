@@ -471,7 +471,8 @@ if (getval("ajax","") == "")
             east__spacing_open:0,
             east__spacing_closed:8,
             east_resizable: true,
-            east__size: 295,
+            east__size: 412,
+            east__initHidden: true,
 
             north_resizable: false,
             north__closable:false,

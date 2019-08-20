@@ -14,7 +14,9 @@ $status_box_id                     = ($is_search ? "nodes_searched_{$field['ref'
 $status_box_elements               = '';
 $update_result_count_function_call = 'UpdateResultCount();';
 $tree_id                           = ($is_search ? "search_tree_{$field['ref']}" : "tree_{$field['ref']}");
+$category_tree_open                = $is_search ? true : $category_tree_open;
 $tree_container_styling            = ($category_tree_open ? 'display: block;' : 'display: none;');
+$category_tree_show_status_window  = $is_search ? false : $category_tree_show_status_window;
 
 if(!isset($selected_nodes))
     {
@@ -60,7 +62,7 @@ if(!(isset($treeonly) && true == $treeonly))
     <div id="<?php echo $status_box_id; ?>" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
         <?php echo $status_box_elements; ?>
     </div>
-    <div>
+    <div style="<?php echo ($is_search ? "display: none;" : ""); ?>">
         <a href="#"
            onclick="
                 if(document.getElementById('<?php echo $tree_id; ?>').style.display!='block')
