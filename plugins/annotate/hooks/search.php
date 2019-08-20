@@ -20,7 +20,7 @@ function HookAnnotateSearchIcons($collections = false)
         return true;
         }
 
-    if(!$collections && isset($result[$n]) && null != $result[$n]['annotation_count'] && 0 != $result[$n]['annotation_count'] && 'pdf' != $result[$n]['file_extension'])
+    if(!$collections && isset($result[$n]) && isset($result[$n]['annotation_count']) && null != $result[$n]['annotation_count'] && 0 != $result[$n]['annotation_count'] && 'pdf' != $result[$n]['file_extension'])
         {
         ?>
         <div class="clearerleft"></div>
