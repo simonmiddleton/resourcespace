@@ -186,6 +186,7 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
         // Add the word.
         args = {
             field: '<?php echo $field["ref"]; ?>',
+            ajax: true,
             keyword: keyword,
             <?php echo generateAjaxToken("selectKeyword_{$js_keywords_suffix}"); ?>
             };
@@ -197,6 +198,11 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
             dataType: 'json',
             async: false,
             success : function(result) {
+                if (xhr.status == 302)
+                    {
+                    location.href = xhr.getResponseHeader("Location");
+                    }
+
                 if(typeof result.new_node_id === 'undefined')
                     {
                     styledalert('Error', 'Could not determine new node ID!');

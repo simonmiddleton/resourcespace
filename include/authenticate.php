@@ -192,7 +192,7 @@ if (!$valid && !isset($system_login))
     $path = $_SERVER["REQUEST_URI"];
     
     if(strpos($path,"/ajax") !== false)
-        {		
+        {
         if(isset($_COOKIE["user"]))
             {
             http_response_code(401);
@@ -203,36 +203,31 @@ if (!$valid && !isset($system_login))
             http_response_code(403);
             exit($lang['error-permissiondenied']);
             }
-        
-        // This is a call to a page intended to be loaded via ajax - probably now failed due to auto logout
-        if(isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],"login.php") === false)
-            {
-            $path = str_replace($baseurl,$baseurl_short,$_SERVER['HTTP_REFERER']);
-            }
-        else
-            {
-            $path = $baseurl_short;
-            }
         }
     
     $path=str_replace("ajax=","ajax_disabled=",$path);# Disable forwarding of the AJAX parameter if this was an AJAX load, otherwise the redirected page will be missing the header/footer.
-	?>
-	<script type="text/javascript">
-	<?php 
-	if (isset($anonymous_login)) 
-	    {
-	    ?>    
-	    top.location.href="<?php echo $baseurl?>/login.php?logout=true<?php if ($autologgedout) { ?>&auto=true<?php } ?><?php if ($nocookies) { ?>&nocookies=true<?php } ?>";
-	    </script>
-	    <?php
-        exit();
-        }
-    else 
+    
+    $redirparams = array();
+
+    $redirparams["url"]         = isset($anonymous_login) ? "" : $path;
+    $redirparams["auto"]        = $autologgedout ? "true" : "";
+    $redirparams["nocookies"]   = $nocookies ? "true" : "";
+    
+    if(strpos($path, "ajax") !== false || getval("ajax","") != "")
         {
-        ?>    
-        top.location.href="<?php echo $baseurl?>/login.php?url=<?php echo urlencode($path)?><?php if ($autologgedout) { ?>&auto=true<?php } ?><?php if ($nocookies) { ?>&nocookies=true<?php } ?>";
+        // Perform a javascript redirect as may be directly loading content directly into div.
+        $url = generateURL($baseurl . "/login.php",$redirparams);
+        ?>
+        <script>
+        top.location.href="<?php echo $url ?>";
         </script>
         <?php
+        exit();
+        }
+    else
+        {
+        $url = generateURL($baseurl . "/login.php",$redirparams);
+        redirect($url);
         exit();
         }
     }   
