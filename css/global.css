@@ -1,7 +1,14 @@
+/*
+ * Global Style Document for ResourceSpace
+ *
+ * Standard structural styling
+ * 
+ */
 
-h2,h3,h4,h5,h6,.Title, .ListviewTitleStyle{font-family:Tahoma, Arial, Helvetica, sans-serif;}
-
-.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button,.ui-widget, body, input, textarea, select {font-family: Tahoma, Arial, Helvetica, sans-serif;}
+/* Default font-family */
+body, input, textarea, select, h2, h3, h4, h5, h6, .Title, .ListviewTitleStyle, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button, .ui-widget {
+    font-family: Tahoma, Arial, Helvetica, sans-serif;
+}
 
 select {font-size:1em; height:1.8rem;}
 
@@ -9,15 +16,13 @@ select {font-size:1em; height:1.8rem;}
 html {height:100%;}
 body {width:100%;height:100%; margin:0;padding:0;font-size:15px;text-align: center; line-height: 1.4;}
 
-.ui-dialog .ui-dialog-buttonpane { text-align: center;}
-.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {  float: none;}
+.ui-dialog .ui-dialog-buttonpane {text-align: center;}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {float: none;}
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button{width:100%;}
-
 
 /*Basic tag setup for creating standards across platforms and browsers*/
 p, h1, h2, h3, h4, h5 {padding:0; margin:0; vertical-align:top;}
 p {padding:0 0 1em; margin:0; font-size:1em;}
-p.tight {padding:0 0 0.75em;}
 h1 {padding:0.5em 0;margin:0;font-weight: normal;font-size: 1.5rem;}
 h2 {padding:0.1em 0;margin:0;font-weight: normal;font-size:1.5em;}
 h3 {font-size:1.25em; padding:0.5em 0 0.5em 0; margin:0;font-weight:normal;}
@@ -31,29 +36,30 @@ ul ul, ul ol, ol ul, ol ol {margin:0 0 0 2.5em;padding:1em 0 0em;}
 li {padding:0em 0 1em;margin:0;}
 blockquote {padding:0 0 2em; margin:0em 2.5em;}
 blockquote blockquote {padding:1em 0 2em; margin:0em 2.5em;}
-a:link {text-decoration:none;}
-a:visited {text-decoration:none;}
-a:hover {text-decoration:underline;}
-a:active {text-decoration:underline;}
-input[readonly] {border: none; background: none;}
+a:link, a:visited {text-decoration:none;}
+a:hover, a:active {text-decoration:underline;}
 input,textarea {box-sizing: border-box;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;}
 option {font-size:1em;}
+
+p.tight {padding:0 0 0.75em;}
+input[readonly] {background: none;}
 input.defaultbutton {position: absolute; left: -100%; width: 0; height: 0;}
 
 /* Form elements */
 input, textarea, button, select, .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .sp-replacer {
-    font-size: 0.875rem;   
-    border-radius: 4px; 
+    font-size: 0.875rem;
+    border-radius: 4px;
 }
 
-input[type="text"], input[type=submit], input[type=button], input[type="password"], input[type="url"],input[type="email"], textarea, button, select {
-    padding: 5px 8px 5px 8px;
+input[type="text"], input[type=submit], input[type=button], input[type="password"], input[type="url"],input[type="email"], input[type="number"], textarea, button, select {
+    padding: 4px 6px 4px 6px;
     vertical-align: middle;
-    min-height: 30px;
+    min-height: 28px;
 }
 
-input[type="text"], input[type="password"], textarea, select, .sp-replacer {
+input[type="text"], input[type="password"], input[type="number"], textarea, select, .sp-replacer {
     border: 1px solid rgba(0,0,0,0.25);
+    box-shadow: inset 0px 1px 2px 0px rgba(0,0,0,0.1);
  }
 
 .TopInpageNavLeft select, .TopInpageNavLeft select:focus {
@@ -104,7 +110,7 @@ select, .sp-replacer {
     background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMiIgaGVpZ2h0PSIxMyIgdmlld0JveD0iMCAwIDIyIDEzIj4KICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgLTQpIj4KICAgIDxyZWN0IHdpZHRoPSIyMiIgaGVpZ2h0PSIxMSIgeT0iMiIvPgogICAgPHBvbHlsaW5lIHN0cm9rZT0iIzJFOTlFNiIgc3Ryb2tlLXdpZHRoPSIyIiBwb2ludHM9IjkuNTk2IDEuNDc1IDkuNTk2IDguNTk2IDIuNDc1IDguNTk2IiB0cmFuc2Zvcm09InJvdGF0ZSg0NSA2LjAzNiA1LjAzNikiLz4KICA8L2c+Cjwvc3ZnPgo=);
     background-repeat: no-repeat;
     background-position: right 65%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px 1px rgba(0,0,0,0.1);
     position: relative;
     z-index: 0;
     padding-right: 30px;
@@ -172,10 +178,8 @@ select::-ms-expand
 #TextHeader a {text-decoration:none;}
 #TextDesc{font-size:1em;float:left;display:block;clear:left;}
 
-
 .headerlink {margin:20px 25px; position: absolute; display: block; width: 400px; height: 55px;  top: 0px; left: 0px;}
 .TeamCentreAlertIcon { position: relative; top: 3px;}
-
 
 .ui-layout-container{overflow:auto;}
 #HeaderNav1, #HeaderNav2 {padding:0;}
@@ -225,6 +229,7 @@ h2#CollectionsPanelHeader {display:none;}
     height: 70px;
     }
 
+/* Fix for .svg files */
 img[src$=".svg"]
     {
     height: 100% !important; 
@@ -337,7 +342,6 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 #CentralSpace .ChosenDateRangeDay {width:95px !important;}
 #CentralSpace .ChosenDateRangeYear {width:100px !important;}
 
-
 /*Right Search Box layout*/
 #SearchBox {float: right; width: 295px;text-align:left; height: inherit; overflow-x: hidden;}
 #SearchBoxPanel {width: 100%;}
@@ -360,7 +364,6 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 .ResourcePanelShell a:link, .ResourcePanelShell a:visited {text-decoration:none;}
 .ResourcePanelShell a:hover, .ResourcePanelShell a:active {text-decoration:underline;}
 .ResourcePanelShell.ui-draggable {text-align: left;}
-
 
 .ResourcePanelShellSmall {padding:0;float: left;margin: 0px 15px 10px 0px;width: 105px;}
 .ResourcePanelSmall {padding:0;margin:0;width: 105px;padding-bottom:5px;}
@@ -531,7 +534,6 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel h2{font-size:1.25em; padding:0; margin:0.2em 0 0.2em 0;font-weight:normal;}
 .RecordPanel p{padding:0; margin:0.5em 0 0.5em 0;}
 
-
 /* Basic page */
 .BasicsBox {margin: 15px 15px 10px 0px;}
 .BasicsBox h1 {padding: 0px 0px 0.5em;}
@@ -562,7 +564,6 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 a.HomePanel {text-decoration:none;}
 a.HomePanel {cursor:pointer;}
 
-
 .TabBar {padding:8px 0 0 0;margin-bottom: -1px; background-color: #ededed;}
 .Tab a {margin:0 5px 0 0;padding:5px 1rem;display:inline-block; border-top-right-radius:5px;border-top-left-radius:5px;}
 .Tab a:hover {text-decoration: none;}
@@ -575,7 +576,6 @@ a.HomePanel {cursor:pointer;}
 }
 .TabSelected {margin-right: 5px;}
 .TabSelected a { margin: 0;}
-
 
 .infotable {border-top: 1px solid #999999;}
 .infotable td,.infotable th {border-bottom: 1px solid #999999;}
@@ -621,7 +621,6 @@ behavior: url('../css/iepngfix.htc');
 }
 
 .URLDisplay {width: 100%;font-size: 1em;}
-
 
 /* Autocomplete dropdown CSS */
 div.autocomplete {
@@ -715,8 +714,8 @@ div.autocomplete ul li {
     width:200px;padding:30px;
     z-index:99999;
     display:none;
+    border-radius:5px;
     }
-
 
 .plupload_container {min-height:500px;}
 .plupload_droptext {font-size:20px;line-height:400px;}
@@ -729,7 +728,6 @@ div.autocomplete ul li {
     {
     margin-top:10px;
     }
-
     
 .ui-layout-pane
     {
@@ -789,7 +787,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 .CommentFormEmail{margin-top: 5px; margin-left: 5px; width: 220px;}
 .CommentFormWebsiteURL{margin-top: 5px; margin-left: 5px; width: 189px;}
 .CommentFormSubmit{margin-top: 5px; margin-bottom: 5px;}
-.CommentFormBody {width: 600px; height: 60px;}
+.CommentFormBody {width: 600px; height: 60px; font-size: 1em;}
 .CommentRespond {display: inline-block; width: auto; margin-right: 12px;}
 
 .collectionscompactstylespacer {height:25px;}
@@ -803,6 +801,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     clear:none;
     }
 
+/* Search bar resource types */
 #searchbarrt
     {
     margin-top:10px;    
@@ -810,9 +809,9 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
 
 #themeselect
     {
-width: 200px;
-font-size: 1em;
-margin-bottom:10px;
+    width: 200px;
+    font-size: 1em;
+    margin-bottom:10px;
     }
 #themeviewall
     {
@@ -820,26 +819,14 @@ margin-bottom:10px;
     margin-bottom:10px;
     }
 
+/* Search view icons */
 .smalllisticon, .smalllisticonactive, .xlthumbsicon, .xlthumbsiconactive, .smallthumbsicon, .smallthumbsiconactive, .largethumbsicon, .largethumbsiconactive, .stripicon, .stripiconactive
     {
-    width: 24px;
-    display: block;
-    height: 24px;
-    float:left;
     padding-left: 3px;
-    }
-
-/* astec migrated 072515 - not sure who's edit this is*/
-.InpageNavLeftBlock
-    {
-    text-align:left;
-    margin-right: 15px;
-    }
-
-.icondisplay
-    {
-    margin-right: 10px;
-    margin-top: 3px;
+    width: 24px;
+    height: 24px;
+    display: block;
+    float: left;
     }
 
 .smalllisticon{background: url(../gfx/interface/listicon.svg) no-repeat 0px; opacity: 0.65;}
@@ -852,6 +839,12 @@ margin-bottom:10px;
 .largethumbsiconactive{background: url(../gfx/interface/largeiconactive.svg) no-repeat 0px;}
 .stripicon{background: url(../gfx/interface/stripicon.svg) no-repeat 0px; opacity: 0.65;}
 .stripiconactive{background: url(../gfx/interface/stripiconactive.svg) no-repeat 0px;}
+
+.icondisplay
+    {
+    margin-right: 10px;
+    margin-top: 3px;
+    }
 
 #searchSortOrderContainer, #resultsdisplay, .InpageNavLeftBlock {
     vertical-align: top;
@@ -1061,6 +1054,8 @@ div.video-js {margin:auto;}
 .video-thumbs .vjs-control-bar {font-size:7px;}
 .video-thumbs .vjs-control-bar .vjs-live-controls {display:none;}
 
+/* Modals */
+
 #modal_overlay {
     position: fixed; 
     top: 0;
@@ -1071,10 +1066,9 @@ div.video-js {margin:auto;}
     display:none;
     z-index: 100;
 }
-#modal_outer
-    {
+#modal_outer {
     z-index: 101;
-    }
+}
 #modal
     {
     position:absolute;
@@ -1202,7 +1196,6 @@ div.MessageBox a {
     text-decoration: underline !important;
 }
 
-
 .FeaturedSimpleLinks {
     display: table;
     width:100%;
@@ -1215,7 +1208,6 @@ div.MessageBox a {
     border-radius:5px;
     overflow: hidden;
 }
-
 
 .FeaturedSimpleTileImage .HomePanelIN {
     background: none;  
@@ -1239,7 +1231,6 @@ div.MessageBox a {
     height: 100%;
     z-index: 1;
 }
- 
  
 a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  { 
     text-decoration:none;
@@ -1415,15 +1406,22 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 
 /* Pill-like display for keywords */
 .ResponsiveViewFullSite { display: none; }
-.Question .customFieldLabel, .keywordselected {
+.Question .customFieldLabel {
     float:none;
     border-radius:4px;
     padding:3px 6px;
     margin-left:5px;
 }
+
+.keywordselected {
+    display:inline;
+    margin-right:5px;
+    float:none; border-radius:4px;
+    padding:3px 6px;
+}
 .customFieldset input[type=checkbox] {margin:0 2px 0 0;}
-.keywordselected {display:inline;}
 .keywordselected a {padding-left:8px;}
+.RemoveKeyword {font-weight: bold; font-size: 1.2em;}
 
 #photoholder {  
     margin-top: 15px;
@@ -1489,6 +1487,9 @@ a.Enabled, a:visited.Enabled {
 .ListTools a, .SingleLine {
     white-space: nowrap;
 }
+.TableOrderBy {
+    width:100px;
+}
 
 
 /* Breadcrumbs */
@@ -1497,6 +1498,7 @@ a.Enabled, a:visited.Enabled {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
+    margin: 0em 1em 1em 0em;
     margin: 0em 1em 1em 0em;
     padding: 0.66em;
     background: rgba(0, 0, 0, 0.65);
@@ -1604,31 +1606,18 @@ select.MultiSelect:before {
     box-shadow: none;
 }
 
-
-#BrowseBarContainer{
+/* Browse Bar */
+#BrowseBarContainer {
     overflow: hidden;
     white-space: nowrap;
 }
-
-#BrowseBar{
+#BrowseBar {
     text-align: left;
     white-space: nowrap;
     height: 100%;
     float: left;
 }
-
-
-.ui-layout-west
-    {
-    overflow-x: hidden;
-    }
-
-.ui-layout-resizer-west
-    {
-    transform: translateX(-37px); 
-} 
-
-#BrowseBarContent{
+#BrowseBarContent {
     height: 100%;
     margin-left: 10px;
     float: left;
@@ -1637,45 +1626,37 @@ select.MultiSelect:before {
     min-width: 140px;
     padding-top: 10px;
 }
-
-.BrowseRowInner{
-    display: table-row;
-}
-
-.BrowseBarStructure{
+.BrowseBarStructure {
     display: table-cell;
     min-width: 6px;
     font-family: "Font Awesome 5 Free";
     font-weight: 600;
     padding-left: 10px;
 }
-
+.BrowseRowInner {
+    display: table-row;
+}
 .BrowseBarExpand + a .BrowseTypeNode, .BrowseBarExpand + a .BrowseTypeRestype, .BrowseBarExpand + .BrowseTypeField, .BrowseBarExpand + a .BrowseTypeFeatured{
     padding-left: 5px;
 }
-
 .BrowseLine + .BrowseTypeNode, .BrowseLine + .BrowseTypeRestype, .BrowseLine + .BrowseTypeField, .BrowseLine + .BrowseTypeNew{
     margin-left: 6px;
 }
-
 .BrowseBarLink{
     display: table-cell;
     vertical-align: top;
     white-space: normal;
     padding-left: 4px;
 }
-
 #BrowseBar .BrowseLine {
     border-right: 1px solid;
     width: 6px;
 }
-
 #BrowseBarTabContainer{
     display: inline-block;
     right: 0px;
     height: 100%;
 }
-
 #BrowseBarTab {    
     position: relative;
     float: right;
@@ -1686,8 +1667,6 @@ select.MultiSelect:before {
     border-bottom-right-radius: 10px;
     width: 30px;
 }
-
-
 .BrowseBarTabText {
     margin-bottom: 10px;
     margin-left: 26px;
@@ -1698,52 +1677,43 @@ select.MultiSelect:before {
     transform-origin: left bottom;
     font-size: 1.2em;
 }
-
-
 #BrowseBarContainer a:hover, .BrowseBarItem a:hover, #BrowseBarContainer a:visited, .BrowseBarItem a:visited{
     text-decoration: none;
     cursor: pointer;
     opacity: 1;
 }
-
-.browse_closed:after {
-    content: "\f0fe";
-    }
-
-.browse_expanded:after {
-    content: "\f146";
-    }
-
 .BrowseTypeRestype:after, .BrowseTypeField:after, .BrowseTypeFeatured:after, .BrowseTypeState:after{
     content: "\f07b";
-    }  
+}  
 
 .BrowseOpen .BrowseTypeRestype:after, .BrowseOpen .BrowseTypeField:after, .BrowseOpen .BrowseTypeFeatured:after, .BrowseOpen.BrowseTypeState:after{
     content: "\f07c";
-    }      
-
+}
+.browse_closed:after {
+    content: "\f0fe";
+}
+.browse_expanded:after {
+    content: "\f146";
+}    
 .BrowseTypeNode:after {
     content: "\f02b";
-    }
-
-    
+} 
 .BrowseTypeCol:after {
     content: "\f009";
-    } 
-    
+} 
 .BrowseTypeNew:after {
     content: "\f055";
-    }  
-    
+}  
 a.BrowseRefresh{
     display:none;
     font-size: 0.8em;
-    }
-
+}
 .BrowseOpen .BrowseRefresh{
     display: table-cell;
     padding-left: 5px;
-    }
+}
+.ui-layout-west{overflow-x: hidden;}
+.ui-layout-resizer-west{transform: translateX(-37px);} 
 
 /* Fix scrollbars on Header */
 #Header {

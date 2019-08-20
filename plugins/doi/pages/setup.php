@@ -33,7 +33,7 @@
 	<div class="Question">
 		<form id="doi_test" name="doi_test" method="post">
 			<input type="hidden" name="doi_state" value="test"/>
-			<input type="submit" style="width: 100%; resize: none; height: 32px;"
+			<input type="submit" style="resize: none; height: 32px;"
 			       value="{$lang['doi_setup_test_plugin']}">
 		</form>
 	</div>
@@ -92,15 +92,15 @@ HTML;
 	$page_def[] = config_add_section_header($lang['doi_setup_pref_fields_header']);
 
 	$pref_field = 'doi_pref_creator_fields';
-	$page_def[] = config_add_db_multi_select($pref_field, $lang[$pref_field], $rtfs, 'ref', 'title');
+	$page_def[] = config_add_db_multi_select($pref_field, $lang[$pref_field], $rtfs, 'ref', 'title', '', '', 420);
 	$page_def[] = config_add_single_select($pref_field . '_default', $lang['doi_setup_default'], $lang['doi_datacite_unknown_info_codes'], true);
 
 	$pref_field = 'doi_pref_title_fields';
-	$page_def[] = config_add_db_multi_select($pref_field, $lang[$pref_field], $rtfs, 'ref', 'title');
+	$page_def[] = config_add_db_multi_select($pref_field, $lang[$pref_field], $rtfs, 'ref', 'title', '', '', 420);
 	$page_def[] = config_add_single_select($pref_field . '_default', $lang['doi_setup_default'], $lang['doi_datacite_unknown_info_codes'], true);
 
 	$pref_field = 'doi_pref_publicationYear_fields';
-	$page_def[] = config_add_db_multi_select($pref_field, $lang[$pref_field], $rtfs, 'ref', 'title');
+	$page_def[] = config_add_db_multi_select($pref_field, $lang[$pref_field], $rtfs, 'ref', 'title', '', '', 420);
 	# https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=10
 	# "... If that date cannot be determined, use the date of registration..."
 	# $page_def[] = config_add_single_select($pref_field . '_default', $lang['doi_setup_default'], $lang['doi_datacite_unknown_info_codes'], true);

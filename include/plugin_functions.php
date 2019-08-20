@@ -1192,7 +1192,7 @@ function config_add_db_single_select($config_var, $label, $choices, $ixcol='ref'
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" multiple="multiple" size="7" style="width:<?php echo $width ?>px">
+    <select name="<?php echo $name?>[]" id="<?php echo $name?>" multiple="multiple" size="7" class="MultiSelect" style="width:<?php echo $width ?>px">
 <?php
     foreach($choices as $item)
         {
