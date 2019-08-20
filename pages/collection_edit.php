@@ -209,21 +209,6 @@ include "../include/header.php";
 		include __DIR__ . '/../include/collection_theme_select.php';
 		}
 		
-	global $home_dash,$anonymous_login,$username;
-	if($home_dash && checkPermission_dashcreate())
-		{?>
-		<div class="Question">
-			<label><?php echo $lang["theme_home_promote"]?></label>
-			<div class="Fixed">
-				<a href="<?php echo $baseurl_short;?>pages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=!collection<?php echo $ref?>&order_by=relevance&sort=DESC"  onClick="return CentralSpaceLoad(this,true);">
-					<?php echo $lang["createnewdashtile"];?>&nbsp;&gt;
-				</a>
-			</div>
-			<div class="clearerleft"> </div>
-		</div>
-		<?php
-		}
-
 	if (checkperm("h") && $collection['public']==1 && !$home_dash)
 		{
 		# Option to publish to the home page.
@@ -279,75 +264,15 @@ include "../include/header.php";
 		<input type=hidden id="allow_changes" name="allow_changes" value="checked">
 		<?php 
 		}
-
-    if($multi_edit && 1 < $colcount) 
-        {
-        ?>
-        <div class="Question">
-            <label for="allow_changes"><?php echo $lang['relateallresources'];?></label>
-            <input type=checkbox id="relateall" name="relateall" onClick="if(this.checked) { return confirm('<?php echo $lang['relateallresources_confirmation']; ?>'); }">
-            <div class="clearerleft"></div>
-        </div>
-        <?php
-        }
-
-	if ($colcount!=0 && $collection['savedsearch']=='')
-		{?>
-		<div class="Question">
-		<label for="removeall"><?php echo $lang["removeallresourcesfromcollection"]?></label><input type=checkbox id="removeall" name="removeall">
-		<div class="clearerleft"> </div>
-		</div>
-		<?php 
-		}
-
-	if ($multi_edit && !checkperm("D") && $colcount!=0) 
-		{ ?>
-		<div class="Question">
-		<label for="deleteall"><?php echo $lang["deleteallresourcesfromcollection"]?></label><input type=checkbox id="deleteall" name="deleteall" onClick="if (this.checked) {return confirm('<?php echo $lang["deleteallsure"]?>');}">
-		<div class="clearerleft"> </div>
-		</div><?php 
-		} 
-
-
+    
 	hook('additionalfields2');
-
-
-	if ($enable_collection_copy) 
-		{
-		?>
-		<div class="Question">
-			<label for="copy"><?php echo $lang["copyfromcollection"]?></label>
-			<select name="copy" id="copy" class="stdwidth" onChange="
-			var ccra =document.getElementById('copycollectionremoveall');
-			if (jQuery('#copy').val()!=''){ccra.style.display='block';}
-			else{ccra.style.display='none';}">
-				<option value=""><?php echo $lang["donotcopycollection"]?></option>
-				<?php
-				$list=get_user_collections($userref);
-				for ($n=0;$n<count($list);$n++)
-					{
-					if ($ref!=$list[$n]["ref"])
-						{?><option value="<?php echo htmlspecialchars($list[$n]["ref"]) ?>"><?php echo htmlspecialchars($list[$n]["name"])?></option> <?php }
-					} ?>
-			</select>
-			<div class="clearerleft"> </div>
-		</div>
-		<div class="Question" id="copycollectionremoveall" style="display:none;">
-			<label for="copycollectionremoveall"><?php echo $lang["copycollectionremoveall"]?></label><input type=checkbox id="copycollectionremoveall" name="copycollectionremoveall" value="yes">
-			<div class="clearerleft"> </div>
-		</div>
-		<?php 
-		} ?>
-	<div class="Question">
-		<label><?php echo $lang["collectionlog"]?></label>
-		<div class="Fixed">
-			<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_log.php?ref=<?php echo urlencode($ref) ?>"><?php echo $lang["log"]?> &gt;</a>
-		</div>
-		<div class="clearerleft"> </div>
-	</div>
-	<?php hook('colleditformbottom');?>
-	<?php if (file_exists("plugins/collection_edit.php")) 
-		{ include "plugins/collection_edit.php"; } ?>
+    hook('colleditformbottom');
+    
+    if (file_exists("plugins/collection_edit.php"))
+        {
+        include "plugins/collection_edit.php";
+        }
+    ?>
 	<div class="QuestionSubmit">
 		<label for="buttons"> </label>			
 		<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />

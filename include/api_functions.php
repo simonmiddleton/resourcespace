@@ -22,14 +22,20 @@ function check_api_key($username,$querystring,$sign)
     // Fetch user ID and API key
     $user=get_user_by_username($username); if ($user===false) {return false;}
     $private_key=get_api_key($user);
-    
+        
+    $aj = strpos($querystring,"&ajax=");
+    if($aj != false)
+        {
+        $querystring = substr($querystring,0,$aj);
+        }
+
     # Sign the querystring ourselves and check it matches.
-    
     # First remove the sign parameter as this would not have been present when signed on the client.
     $s=strpos($querystring,"&sign=");
+
     if ($s===false || $s+6+strlen($sign)!==strlen($querystring)) {return false;}
     $querystring=substr($querystring,0,$s);
-    
+
     # Calculate the expected signature.
     $expected=hash("sha256",$private_key . $querystring);
     
@@ -137,7 +143,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         $canvases[$position]["height"] = intval($image_size[2]);
         $canvases[$position]["width"] = intval($image_size[1]);
 				
-		// "If the largest image’s dimensions are less than 1200 pixels on either edge, then the canvas’s dimensions should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
+		// "If the largest imageï¿½s dimensions are less than 1200 pixels on either edge, then the canvasï¿½s dimensions should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
 		if($image_size[1] < 1200 || $image_size[2] < 1200)
 			{
 			$image_size[1] = $image_size[1] * 2;

@@ -33,8 +33,9 @@ function HookRse_search_notificationsAllRender_search_actions_add_option($option
         'value'     => 'watch_this_search',
         'label'     => $lang['search_notifications_watch_this_search'],
         'data_attr' => array(
-            'url' => $data_attr_url
-        )
+            'url' => $data_attr_url,
+        ),
+        'category' => ACTIONGROUP_ADVANCED
     );
 
     array_push($options, $option);

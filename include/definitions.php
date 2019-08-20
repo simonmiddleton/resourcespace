@@ -245,3 +245,11 @@ $permitted_html_attributes = array('id', 'class', 'style');
 
 $jquery_path = "/lib/js/jquery-3.3.1.min.js";
 $jquery_ui_path = "/lib/js/jquery-ui-1.12.1.min.js";
+
+// Define dropdown action categories
+define ('ACTIONGROUP_RESOURCE',     1);
+define ('ACTIONGROUP_COLLECTION',   2);
+define ('ACTIONGROUP_EDIT',         3);
+define ('ACTIONGROUP_SHARE',        4);
+define ('ACTIONGROUP_RESEARCH',     5);
+define ('ACTIONGROUP_ADVANCED',     6);

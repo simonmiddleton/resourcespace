@@ -11,11 +11,11 @@ include "../../include/authenticate.php";if (!checkperm("r")) {exit ("Permission
 include "../../include/research_functions.php";
 include_once "../../include/collections_functions.php";
 
-$offset=getvalescaped("offset",0);
-$find=getvalescaped("find","");
-$order_by=getvalescaped("order_by","ref");
-$sort=getval("sort","ASC");
-$revsort = ($sort=="ASC") ? "DESC" : "ASC";
+$offset     = getval("offset",0, true);
+$find       = getvalescaped("find","");
+$order_by   = getvalescaped("order_by","ref");
+$sort       = getval("sort","ASC") == "ASC" ? "ASC" :"DESC";
+$revsort    = ($sort=="ASC") ? "DESC" : "ASC";
 
 if (array_key_exists("find",$_POST)) {$offset=0;} # reset page counter when posting
 

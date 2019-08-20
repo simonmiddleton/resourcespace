@@ -19,4 +19,4 @@ $resources_count=getvalescaped('resources_count','');
 
 $collection_data=get_collection($collection);
 
-render_actions($collection_data, $top_actions = true, $two_line = true, $collection);
+render_actions($collection_data,true,false,$collection);

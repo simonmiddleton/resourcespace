@@ -11,7 +11,7 @@ class RSSFeed
   var $optional = array();
   var $image = array('url' => '', 'title' => '', 'link' => '', 'description' => '', 'w' => 0, 'h' => 0);
 
-  function RSSFeed($title, $link, $description, $optional = '')
+  function _RSSFeed($title, $link, $description, $optional = '')
   {
     $this->title = $title;
     $this->link = $link;
@@ -40,21 +40,22 @@ class RSSFeed
     }
   }
 
-  function AddArticle($title, $link, $description, $optional = '')
-  {
+function AddArticle($title, $link, $description, $optional = '')
+    {
     // inserisce un nuovo articolo
     $i = array_push($this->Articles, array('title' => $title, 'link' => $link, 'description' => $description));
 
     // aggiunge le coppie chiave valore opzionali
     // all'articolo appena inserito
     if( is_array($optional) and count($optional) )
-    {
-      --$i;
-      while( list($k, $v) = each($optional) ){
-        $this->Articles[$i][$k] = $v;
-      }
+        {
+        --$i;
+        foreach($optional as $k=>$v)
+            {
+            $this->Articles[$i][$k] = $v;
+            }
+        }
     }
-  }
 
   function Output($save = false, $path = '')
   {
@@ -103,25 +104,24 @@ class RSSFeed
     }
 
     // per ogni item stampa tutte le coppie chiave valore
-    for( $i = 0, $c = count($this->Articles); $i < $c; $i++ ){
-      $out .= "<item>\n";
-      
-      while(list($k, $v) = each($this->Articles[$i]))
-      {
-		$k1=$k;
-		if ($k=="guid"){$k1='guid isPermaLink="false"';}
-        $out .= "<".$k1.">".$v."</".$k.">\n";
-      }
-         
-      $out .= "</item>\n";
-    }
+    for( $i = 0, $c = count($this->Articles); $i < $c; $i++ )
+        {
+        $out .= "<item>\n";
+        foreach($this -> Articles[$i] as $k=>$v)
+            {
+            $k1=$k;
+            if ($k=="guid"){$k1='guid isPermaLink="false"';}
+            $out .= "<".$k1.">".$v."</".$k.">\n";
+            }
+        $out .= "</item>\n";
+        }
 
     $out .= "</channel>\n</rss>";
 
     // True output
     if( !$save or !$path ){
       header("Content-type: application/xml");
-      echo $out;
+      echo trim($out);
       return true;
     }
     else

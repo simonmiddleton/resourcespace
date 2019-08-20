@@ -565,6 +565,8 @@ function compile_search_actions($top_actions)
             $options[$o]['label']=$lang['savethissearchtocollection'];
             $data_attribute['url'] = generateURL($baseurl_short . "pages/collections.php", $urlparams, array("addsearch" => $search));
             $options[$o]['data_attr']=$data_attribute;
+            $options[$o]['category']  = ACTIONGROUP_COLLECTION;
+            $options[$o]['order_by']  = 70;
             $o++;
             }
 
@@ -594,6 +596,8 @@ function compile_search_actions($top_actions)
             $options[$o]['value'] = $option_name;
             $options[$o]['label'] = $lang['savethissearchtodash'];
             $options[$o]['data_attr'] = $data_attribute;
+            $options[$o]['category']  = ACTIONGROUP_SHARE;
+            $options[$o]['order_by']  = 170;
             $o++;
             }
             
@@ -614,6 +618,8 @@ function compile_search_actions($top_actions)
             $options[$o]['label']=$lang['savesearchassmartcollection'];
             $options[$o]['data_attr']=array();
             $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+            $options[$o]['category']  = ACTIONGROUP_COLLECTION;
+            $options[$o]['order_by']  = 170;
             $o++;
             }
 
@@ -661,6 +667,8 @@ function compile_search_actions($top_actions)
                 $options[$o]['label']=$lang['savesearchitemstocollection'];
                 $options[$o]['data_attr']=array();
                 $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+                $options[$o]['category']  = ACTIONGROUP_COLLECTION;
+                $options[$o]['order_by']  = 170;
                 $o++;
                 
 
@@ -684,6 +692,8 @@ function compile_search_actions($top_actions)
                 $options[$o]['label']=$lang['searchitemsdiskusage'];
                 $options[$o]['data_attr']=array();
                 $options[$o]['extra_tag_attributes']=$extra_tag_attributes;
+                $options[$o]['category']  = ACTIONGROUP_ADVANCED;
+                $options[$o]['order_by']  = 300;
                 $o++;
                 }
             }
@@ -700,6 +710,8 @@ function compile_search_actions($top_actions)
             $options[$o]['value']='editsearchresults';
             $options[$o]['label']=$lang['edit_all_resources'];
             $options[$o]['data_attr']=$data_attribute;
+            $options[$o]['category'] = ACTIONGROUP_EDIT;
+            $options[$o]['order_by']  = 130;
             $o++;
             }
         }
@@ -717,7 +729,8 @@ function compile_search_actions($top_actions)
             urlencode($sort),
             urlencode($starsearch)
         );
-
+        $options[$o]['category'] = ACTIONGROUP_ADVANCED;
+        $options[$o]['order_by']  = 290;
         $o++;
         }
 
