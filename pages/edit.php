@@ -182,6 +182,7 @@ if ($go!="")
             </script>
             <?php
             }
+        $use = $ref;
         }
    }
 
