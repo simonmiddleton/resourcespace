@@ -462,6 +462,7 @@ if (getval("ajax","") == "")
             } // end omit_collectiondiv_load_pages 
         ?>    
         <script type="text/javascript">
+        var resizeTimer;
         myLayout=jQuery('body').layout(
             {
             livePaneResizing:true,
@@ -552,6 +553,21 @@ if (getval("ajax","") == "")
                             browse_width = newbrowsewidth;    
                             }
                         }
+                        
+                    // Fixes the issue when zooming in (and then out) that then breaks the west-pane browse bar...
+                    
+                    if(0 < newbrowsewidth && newbrowsewidth < 140 && browsewidth != 30)
+                        {
+                        clearTimeout(resizeTimer);
+                        resizeTimer = setTimeout(function() 
+                            {
+                                // Run code here, resizing has 'stopped'
+                                jQuery('#BrowseBarContent').width(255);
+                                SetCookie('browse_width', 255);
+                                browse_width = 255;
+                                location.reload();
+                            }, 300);
+                        }     
                     },
                 ";
                 }?>
