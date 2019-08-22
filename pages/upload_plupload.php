@@ -1102,9 +1102,10 @@ var pluploadconfig = {
                                                 }
                                         });
                         <?php }
-                        else { ?>
+                        else { 
+                            $help_link = render_help_link("user/uploading",true);
+                            ?>
                                 //Show diff instructions if supports drag and drop
-                                $help_link = render_help_link("user/uploading");
                                 if(!uploader.files.length && uploader.features.dragdrop && uploader.settings.dragdrop)	{jQuery('#plupload_instructions').html('<p><?php echo escape_check($lang["intro-plupload_dragdrop"]) . $help_link?></p>');}
                         <?php }?>
                         
