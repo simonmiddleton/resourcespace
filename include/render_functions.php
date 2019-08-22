@@ -2551,9 +2551,37 @@ function render_share_options($collectionshare=true, $ref, $emailing=false)
         }?>
         
         <div class="Question">
-            <label for="sharepassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
-            <input type="password" id="sharepassword" name="sharepassword" class="stdwidth">
+            <label for="inputpassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
+            <input type="text" id="inputpassword" name="inputpassword" class="stdwidth" value="(unchanged)" 
+                    onclick="pclick('inputpassword');" onblur="pblur('inputpassword');">
+            <input type="hidden" id="sharepassword" name="sharepassword" value="(unchanged)">
         </div>
+        <script>
+        var passInput="";
+        var passState="(unchanged)";
+        var passHistory="";
+        function pclick(id) 
+            {
+            // Set to password mode
+            document.getElementById(id).type="password";
+            document.getElementById(id).value=passState;
+            document.getElementById(id).select();
+            }
+        function pblur(id) 
+            {
+            // Copy keyed input other than bracketed placeholders to hidden password
+            passInput = document.getElementById(id).value;
+            if(passInput!="(unchanged)" && passInput!="(changed)") 
+                {
+                document.getElementById("sharepassword").value=passInput; 
+                passState="(changed)";
+                }
+            // Return to text mode showing the appropriate bracketed placeholder
+            document.getElementById(id).value=passState;
+            document.getElementById(id).type="text";
+            }
+        </script>
+
         <?php
         hook("additionalresourceshare");
         ?>
