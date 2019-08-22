@@ -70,12 +70,14 @@ input[readonly] {
 /* Tooltips */
 #easyTooltip {
     background: white;
+    background-image: none;
     border: 1px solid;
     border-radius:5px;
     box-shadow: 4px 5px 5px rgba(0, 0, 0, .5);
 }
 #advancedTooltip {
 	background: inherit;
+    background-image: none;
 	border: 1px solid;
 	border-radius:5px;
     box-shadow: 4px 5px 5px rgba(0, 0, 0, .5);
