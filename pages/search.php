@@ -1188,8 +1188,12 @@ if($responsive_ui)
                 {
                 if($display_selector_dropdowns || $perpage_dropdown)
                     {
+                    if (isset($searchparams["offset"]))
+                        {
+                        $new_offset = floor($searchparams["offset"] / $results_display_array[$n]) * $results_display_array[$n];
+                        }
                     ?>
-                    <option <?php if($per_page == $results_display_array[$n]) { ?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n])); ?>"><?php echo str_replace("?",$results_display_array[$n],$lang["perpage_option"]); ?></option>
+                    <option <?php if($per_page == $results_display_array[$n]) { ?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n],"offset"=>$new_offset)); ?>"><?php echo str_replace("?",$results_display_array[$n],$lang["perpage_option"]); ?></option>
                     <?php
                     }
                 }
