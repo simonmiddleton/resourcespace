@@ -197,13 +197,9 @@ if(getval("submit","") != "")
             $fp = fopen($logfile, 'a');
             fwrite($fp, $logtext);
             fclose($fp);
-            if($showprogress)
-                {
-                send_event_update("Deleting existing data for " . $chunksize . " resources " . PHP_EOL, $completion,$logurl);
-                sql_query("delete from resource_data where resource_type_field='" . $migrate_field . "' AND resource IN ('" . implode("','",array_column($resdata, "resource")) . "')");
-                sql_query("delete from resource_keyword where resource_type_field='" . $migrate_field . "' AND resource IN ('" . implode("','",array_column($resdata, "resource")) . "')");
-                }
-
+            sql_query("delete from resource_data where resource_type_field='" . $migrate_field . "' AND resource IN ('" . implode("','",array_column($resdata, "resource")) . "')");
+            sql_query("delete from resource_keyword where resource_type_field='" . $migrate_field . "' AND resource IN ('" . implode("','",array_column($resdata, "resource")) . "')");
+            
             $lower = 0;
             $upper = $chunksize;
             }
