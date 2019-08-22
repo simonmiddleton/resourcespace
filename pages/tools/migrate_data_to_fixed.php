@@ -12,14 +12,17 @@ include_once "../../include/search_functions.php";
 include_once "../../include/authenticate.php";
 if(!checkperm("a")){exit("Access denied");}
 
+set_time_limit(0);
+
 // Set flag to indicate whether we can show progress using server side events (SSE)
-$showprogress = strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") === false && strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") === false;
-$migrate_field = getvalescaped("field",0,true);
-$field_info = get_resource_type_field($migrate_field);
-$splitvalue = getvalescaped("splitchar","");
-$modal = (getval("modal","")=="true");
-$dryrun = getval("dryrun","")!="";
-$deletedata = getval("deletedata","")=="true";
+$showprogress   = strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"TRIDENT") === false && strpos(strtoupper($_SERVER['HTTP_USER_AGENT']),"MSIE") === false;
+$migrate_field  = getval("field",0,true);
+$field_info     = get_resource_type_field($migrate_field);
+$splitvalue     = getval("splitchar","");
+$maxrows        = getval("maxrows",0, true);
+$modal          = (getval("modal","")=="true");
+$dryrun         = getval("dryrun","") != "";
+$deletedata     = getval("deletedata","")=="true";
 
 $backurl=getvalescaped("backurl","");
 if($backurl=="")
@@ -55,19 +58,8 @@ if(getval("submit","") != "")
     if(!in_array($migrate_field,$valid_fields))
         {
         $messages[] = "Invalid field specified. Only fixed type field types can be specified";
-		//exit();
         }
-        
-    $resdata = sql_query(
-        "SELECT resource,
-                `value` 
-           FROM resource_data 
-          WHERE resource_type_field = '{$migrate_field}'
-            AND `value` IS NOT NULL
-            AND `value` != ''
-            ORDER BY resource ASC"
-    );
-        
+    
     // Get all existing nodes
     $existing_nodes = get_nodes($migrate_field, NULL, TRUE);
 	if($dryrun)
@@ -77,11 +69,9 @@ if(getval("submit","") != "")
 		}
     
 	$migrated = 0;
-    $total = count($resdata);
     $lastcompletion = 0;
     $completion = 0;
     $now = date(time());
-    
     // Set up logging
     $logfile = get_temp_dir(false,'') . "/migrate-data_" . $userref . "_" . md5($username . $now . $scramble_key) . ".txt";
     $logurl = $baseurl . "/pages/download.php?tempfile=migrate-data_" . $userref . "_" . $now . ".txt";
@@ -90,110 +80,149 @@ if(getval("submit","") != "")
     fwrite($fp, "Migrating data from text field '" . $field_info["title"] . "' ID #" . $migrate_field . PHP_EOL);
     fclose($fp);
     
-    // Process each data row
-    foreach($resdata as $resdata_row)
+
+    $chunksize = 1000;    
+    $lower=0;
+    $upper = $lower + $chunksize;
+    $total = sql_value("SELECT count(*) value FROM resource_data   WHERE resource_type_field = '{$migrate_field}'",0);
+
+    while($migrated < $total && ($maxrows == 0 || $migrated < $maxrows))
         {
-        // No need to process any further if no data is found set for this resource
-        if(trim($resdata_row['value']) == '')
-            {
-            continue;
-            }
+        $resdata = sql_query(
+            "SELECT resource,
+                    `value` 
+                FROM resource_data 
+                WHERE resource_type_field = '{$migrate_field}'
+                LIMIT " . $lower . "," . $upper
+            );
 
-        $logtext = "";
-        $nodes_to_add = array();
-        $resource = $resdata_row["resource"];
-        $logtext .= ($dryrun?"TESTING: ":"") . "Checking data for resource id #" . $resource . PHP_EOL;
-
-        if($splitvalue != "")
+        // Process each data row
+        foreach($resdata as $resdata_row)
             {
-            $data_values = explode($splitvalue,$resdata_row["value"]);
-            }
-        else
-            {
-            $data_values = array($resdata_row["value"]);   
-            }
-            
-        foreach($data_values as $data_value)
-            {
-            // Skip if this value is empty (e.g if users left a separator at the end of the value by mistake)
-            if(trim($data_value) == '')
+            // No need to process any further if no data is found set for this resource
+            if(trim($resdata_row['value']) == '' || ($maxrows != 0 && $migrated >= $maxrows))
                 {
                 continue;
                 }
-       
-            $nodeidx = array_search($data_value,array_column($existing_nodes,"name"));
 
-            if($nodeidx !== false)
+            $logtext = "";
+            $nodes_to_add = array();
+            $resource = $resdata_row["resource"];
+            $logtext .= ($dryrun?"TESTING: ":"") . "Checking data for resource id #" . $resource . ". Value: '" . $resdata_row["value"] . "'" . PHP_EOL;
+
+            if($splitvalue != "")
                 {
-                $logtext .= ($dryrun?"TESTING: ":"") . " - Found matching field node option. ref:" . $existing_nodes[$nodeidx]["ref"] . PHP_EOL;
-                $nodes_to_add[] = $existing_nodes[$nodeidx]["ref"];      
+                $data_values = explode($splitvalue,$resdata_row["value"]);
                 }
             else
                 {
-                if(!$dryrun)
-					{
-					$newnode = set_node(NULL, $migrate_field, escape_check($data_value), NULL, '',true);
-			        $logtext .= " - New option added for '" . htmlspecialchars($data_value) . "' - ref: " . $newnode . PHP_EOL;
-					$nodes_to_add[] = $newnode;
-					$newnodecounter = count($existing_nodes);
-					$existing_nodes[$newnodecounter]["ref"] = $newnode;
-					$existing_nodes[$newnodecounter]["name"] = $data_value;
-					}
-				else 
-					{
-					$newnode = $newnoderef;
-			        $logtext .= ($dryrun?"TESTING: ":"") . " - New option added for '" . htmlspecialchars($data_value) . "' - ref: " . $newnoderef . PHP_EOL;
-					$newnodecounter = count($existing_nodes);
-					$existing_nodes[$newnodecounter]["ref"] = $newnoderef;
-					$existing_nodes[$newnodecounter]["name"] = $data_value;
-					$newnoderef++;							
-					}
+                $data_values = array($resdata_row["value"]);   
                 }
-            }           
+                
+            foreach($data_values as $data_value)
+                {
+                // Skip if this value is empty (e.g if users left a separator at the end of the value by mistake)
+                if(trim($data_value) == '')
+                    {
+                    continue;
+                    }
         
-        if(count($nodes_to_add) > 0)
-            {
-            $logtext .= ($dryrun?"TESTING: ":"") . "Adding nodes to resource ID #" . $resource . ": " . implode(",", $nodes_to_add) . PHP_EOL;
+                $nodeidx = array_search($data_value,array_column($existing_nodes,"name"));
 
-			if(!$dryrun)
-				{
-				add_resource_nodes($resource,$nodes_to_add);
-				}
-            }
-		    
-        $migrated++;
-        
-        $completion = floor($migrated/$total*100);        
+                if($nodeidx !== false)
+                    {
+                    $logtext .= ($dryrun?"TESTING: ":"") . " - Found matching field node option. ref:" . $existing_nodes[$nodeidx]["ref"] . PHP_EOL;
+                    $nodes_to_add[] = $existing_nodes[$nodeidx]["ref"];      
+                    }
+                else
+                    {
+                    if(!$dryrun)
+                        {
+                        $newnode = set_node(NULL, $migrate_field, escape_check($data_value), NULL, '',true);
+                        $logtext .= " - New option added for '" . htmlspecialchars($data_value) . "' - ref: " . $newnode . PHP_EOL;
+                        $nodes_to_add[] = $newnode;
+                        $newnodecounter = count($existing_nodes);
+                        $existing_nodes[$newnodecounter]["ref"] = $newnode;
+                        $existing_nodes[$newnodecounter]["name"] = $data_value;
+                        }
+                    else 
+                        {
+                        $newnode = $newnoderef;
+                        $logtext .= ($dryrun?"TESTING: ":"") . " - New option added for '" . htmlspecialchars($data_value) . "' - ref: " . $newnoderef . PHP_EOL;
+                        $newnodecounter = count($existing_nodes);
+                        $existing_nodes[$newnodecounter]["ref"] = $newnoderef;
+                        $existing_nodes[$newnodecounter]["name"] = $data_value;
+                        $newnoderef++;							
+                        }
+                    }
+                }           
             
-        if($showprogress && $lastcompletion != $completion)
-            {               
-            send_event_update("Resource " . $migrated . "/" . $total . PHP_EOL, $completion,$logurl);
-            $lastcompletion = $completion;
-            }
+            if(count($nodes_to_add) > 0)
+                {
+                $logtext .= ($dryrun?"TESTING: ":"") . "Adding nodes to resource ID #" . $resource . ": " . implode(",", $nodes_to_add) . PHP_EOL;
+
+                if(!$dryrun)
+                    {
+                    add_resource_nodes($resource,$nodes_to_add);
+                    }
+                }
+               
+            $migrated++;
             
-        // Update log
-        $fp = fopen($logfile, 'a');
-        fwrite($fp, $logtext);
-        fclose($fp);
-        }
-	
-	if($deletedata)
-		{
-        $logtext = ($dryrun?"TESTING: ":"") . "DELETING EXISTING DATA". PHP_EOL;
-        $fp = fopen($logfile, 'a');
-        fwrite($fp, $logtext);
-        fclose($fp);
-        if($showprogress)
+            $completion = ($maxrows == 0) ? floor($migrated/$total*100) : floor($migrated/$maxrows*100);  
+            if($showprogress && $lastcompletion != $completion)
+                {               
+                send_event_update("Resource " . $migrated . "/" . $total . PHP_EOL, $completion,$logurl);
+                $lastcompletion = $completion;
+                }
+
+            // Update log
+            $fp = fopen($logfile, 'a');
+            fwrite($fp, $logtext);
+            fclose($fp);
+
+            if (connection_aborted() != 0)
+                {
+                $logtext = ($dryrun?"TESTING: ":"") . " Connection aborted" . PHP_EOL;
+                $fp = fopen($logfile, 'a');
+                fwrite($fp, $logtext);
+                fclose($fp);
+                exit();
+                }
+            }
+
+        if($deletedata && !$dryrun)
             {
-            send_event_update(($dryrun?"TESTING: ":"") . "DELETING EXISTING DATA". PHP_EOL, "100",$logurl);
+            $logtext = ($dryrun?"TESTING: ":"") . "Deleting existing data for " . $chunksize . " resources " . PHP_EOL;
+            $fp = fopen($logfile, 'a');
+            fwrite($fp, $logtext);
+            fclose($fp);
+            if($showprogress)
+                {
+                send_event_update("Deleting existing data for " . $chunksize . " resources " . PHP_EOL, $completion,$logurl);
+                sql_query("delete from resource_data where resource_type_field='" . $migrate_field . "' AND resource IN ('" . implode("','",array_column($resdata, "resource")) . "')");
+                sql_query("delete from resource_keyword where resource_type_field='" . $migrate_field . "' AND resource IN ('" . implode("','",array_column($resdata, "resource")) . "')");
+                }
+
+            $lower = 0;
+            $upper = $chunksize;
             }
-            
-        if(!$dryrun)
-			{
-			sql_query("delete from resource_data where resource_type_field='" . $migrate_field . "'");
-			sql_query("delete from resource_keyword where resource_type_field='" . $migrate_field . "'");
-			}
-		}
+        else
+            {
+            $lower = $upper + 1;
+            $upper = $upper + $chunksize;
+            }
+        
+        
+        if (connection_aborted () != 0)
+            {
+            $logtext = ($dryrun?"TESTING: ":"") . " Connection aborted" . PHP_EOL;
+            $fp = fopen($logfile, 'a');
+            fwrite($fp, $logtext);
+            fclose($fp);
+            exit();
+            }
+        }
         
     $logtext = "Completed at " . date("Y-m-d H:i",time()) . ". " . $total . " rows migrated" . PHP_EOL;
     // Update log
@@ -201,7 +230,7 @@ if(getval("submit","") != "")
     fwrite($fp, $logtext);
     fclose($fp);
     
-    $completemessage = ($dryrun?"TESTING: ":"") . "Completed at " . date("Y-m-d H:i",time()) . ". " . $total . " rows migrated</pre>";
+    $completemessage = ($dryrun ? "TESTING: " : "") . "Completed at " . date("Y-m-d H:i",time()) . ". " . $migrated . " rows migrated out of " . $total . "</pre>";
     
     // Send a message to the user
     message_add($userref,$lang["admin_resource_type_field_migrate_data"] . ": " . $completemessage , $logurl);
@@ -248,6 +277,11 @@ include_once "../../include/header.php";
 		<input class="medwidth" type="text" name="splitchar" value=",">
         <div class="clearerleft"> </div>
 	</div>
+    <div class="Question" >
+		<label for="maxrows" ><?php echo $lang["max"] . " " . $lang["resources"]?></label>
+		<input class="medwidth" type="text" name="maxrows" value="">
+        <div class="clearerleft"> </div>
+	</div>
 	<div class="Question" >
 		<label for="dryrun" ><?php echo $lang["admin_resource_type_field_migrate_dry_run"] ?></label>
 		<input class="medwidth" type="checkbox" name="dryrun" value="true">
@@ -274,8 +308,8 @@ include_once "../../include/header.php";
         <div class="clearerleft"> </div>
 	</div>
     <div class="Question" >
-		<input type="hidden" name="submit" value="true">
-		<input type="submit" name="submit" value="<?php echo $lang["action-submit-button-label"] ?>">
+		<input type="hidden" id="submitinput" name="submit" value="">
+		<input type="submit" name="submit" value="<?php echo $lang["action-submit-button-label"] ?>"" onclick="document.getElementById('submitinput').value='true';">
         <div class="clearerleft"> </div>
 	</div>
     
@@ -283,7 +317,6 @@ include_once "../../include/header.php";
     
 	</form>
     <script>
-    //var taskurl = '<?php echo $baseurl_short ?>pages/tools/migrate_data_to_fixed.php'';
         function start_task(form)
         <?php        
         if($showprogress)
