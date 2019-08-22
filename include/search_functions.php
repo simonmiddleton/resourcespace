@@ -124,22 +124,53 @@ if(!function_exists("get_advanced_search_fields"))
         }
     }
 
-function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
+/**
+* Returns a list of fields suitable for advanced searching. 
+* 
+* @param boolean $archive
+* @param string  $hiddenfields
+* 
+* @return array
+*/
+function get_advanced_search_collection_fields($archive = false, $hiddenfields = "")
     {
-    # Returns a list of fields suitable for advanced searching. 
     $return=array();
+    $hiddenfields=explode(",", $hiddenfields);
 
-    $hiddenfields=explode(",",$hiddenfields);
+    $fields[] = array(
+        "ref" => "collection_title",
+        "name" => "collectiontitle",
+        "display_condition" => "",
+        "tooltip_text" => "",
+        "title"=>"Title",
+        "type" => 0,
+        "resource_type" => 0,
+    );
+    $fields[] = array(
+        "ref" => "collection_keywords",
+        "name" => "collectionkeywords",
+        "display_condition" => "",
+        "tooltip_text" => "",
+        "title"=>"Keywords",
+        "type" => 0,
+        "resource_type" => 0,
+    );
+    $fields[] = array(
+        "ref" => "collection_owner",
+        "name" => "collectionowner",
+        "display_condition" => "",
+        "tooltip_text" => "",
+        "title"=>"Owner",
+        "type" => 0,
+        "resource_type" => 0,
+    );
 
-    $fields[]=Array ("ref" => "collection_title", "name" => "collectiontitle", "display_condition" => "", "tooltip_text" => "", "title"=>"Title", "type" => 0);
-    $fields[]=Array ("ref" => "collection_keywords", "name" => "collectionkeywords", "display_condition" => "", "tooltip_text" => "", "title"=>"Keywords", "type" => 0);
-    $fields[]=Array ("ref" => "collection_owner", "name" => "collectionowner", "display_condition" => "", "tooltip_text" => "", "title"=>"Owner", "type" => 0);
-    # Apply field permissions and check for fields hidden in advanced search
-    for ($n=0;$n<count($fields);$n++)
+    for($n = 0; $n < count($fields); $n++)
         {
-
-        if (!in_array($fields[$n]["ref"], $hiddenfields))
-        {$return[]=$fields[$n];}
+        if(!in_array($fields[$n]["ref"], $hiddenfields))
+            {
+            $return[] = $fields[$n];
+            }
         }
 
     return $return;
