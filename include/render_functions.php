@@ -2559,7 +2559,6 @@ function render_share_options($collectionshare=true, $ref, $emailing=false)
         <script>
         var passInput="";
         var passState="(unchanged)";
-        var passHistory="";
         function pclick(id) 
             {
             // Set to password mode
