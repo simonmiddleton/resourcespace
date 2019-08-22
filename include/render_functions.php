@@ -2553,7 +2553,7 @@ function render_share_options($collectionshare=true, $ref, $emailing=false)
         <div class="Question">
             <label for="inputpassword"><?php echo htmlspecialchars($lang["share-set-password"]) ?></label>
             <input type="text" id="inputpassword" name="inputpassword" class="stdwidth" value="(unchanged)" 
-                    onclick="pclick('inputpassword');" onblur="pblur('inputpassword');">
+                    onclick="pclick('inputpassword');" onfocus="pclick('inputpassword');" onblur="pblur('inputpassword');">
             <input type="hidden" id="sharepassword" name="sharepassword" value="(unchanged)">
         </div>
         <script>
