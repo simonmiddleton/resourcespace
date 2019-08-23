@@ -7379,7 +7379,8 @@ function is_resourcespace_upgrade_available()
     $last_cvn_update = get_sysvar('last_cvn_update');
 
     $centralised_version_number = $cvn_cache;
-
+    debug("RS_UPGRADE_AVAILABLE: cvn_cache = {$cvn_cache}");
+    debug("RS_UPGRADE_AVAILABLE: last_cvn_update = $last_cvn_update");
     if($last_cvn_update !== false)
         {
         $cvn_cache_interval = DateTime::createFromFormat('Y-m-d H:i:s', $last_cvn_update)->diff(new DateTime());
@@ -7393,9 +7394,10 @@ function is_resourcespace_upgrade_available()
     if($centralised_version_number === false)
         {
         $centralised_version_number = @file_get_contents('https://www.resourcespace.com/current_release.txt');
-
+        debug("RS_UPGRADE_AVAILABLE: centralised_version_number = $centralised_version_number");
         if($centralised_version_number === false)
             {
+            debug("RS_UPGRADE_AVAILABLE: unable to get centralised_version_number from https://www.resourcespace.com/current_release.txt");
             return false; 
             }
 
@@ -7430,6 +7432,9 @@ function is_resourcespace_upgrade_available()
     $product_version_data = $get_version_details($product_version);
 
     $cvn_data = $get_version_details($centralised_version_number);
+
+    debug("RS_UPGRADE_AVAILABLE: product_version = $product_version");
+    debug("RS_UPGRADE_AVAILABLE: centralised_version_number = $centralised_version_number");
 
     if(empty($product_version_data) || empty($cvn_data))
         {

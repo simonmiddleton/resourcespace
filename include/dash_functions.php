@@ -1605,7 +1605,7 @@ function allowPromotedResources($tile_type)
 */
 function render_upgrade_available_tile($user)
     {
-    if(!checkperm("t") || !checkperm("a"))
+    if(!(checkperm("t") || checkperm("a")))
         {
         return;
         }
