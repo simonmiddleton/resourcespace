@@ -531,6 +531,7 @@ if($modified_fields !== false && is_array($modified_fields) && !empty($modified_
     $fields = $modified_fields;
     }
 
+$n = 0; # this is used by render_search_field()
 foreach(array_merge($fields, $fake_fields) as $field)
     {
     $simple_search_flag = $field["simple_search"] == 1 ? true : false;
@@ -551,6 +552,7 @@ foreach(array_merge($fields, $fake_fields) as $field)
         continue;
         }
 
+    $n++;
     $value = "";
     if(!$reset_form && array_key_exists($field["name"], $values))
         {
