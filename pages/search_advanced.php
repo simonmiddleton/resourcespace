@@ -433,11 +433,12 @@ if(!hook('advsearchresid'))
 
 if(!hook('advsearchdate'))
     {
-    if(!$daterange_search)
+    $date_field_data = get_resource_type_field($date_field);
+    if(!$daterange_search && !($date_field_data["simple_search"] == 1 || $date_field_data["advanced_search"] == 1))
         {
         ?>
         <div class="Question">
-            <label><?php echo $lang["bydate"]?></label>
+            <label><?php echo $lang["bydate"]; ?></label>
             <select id="basicyear" name="basicyear" class="SearchWidth" style="width:120px;" onChange="UpdateResultCount();">
                 <option value=""><?php echo $lang["anyyear"]?></option>
             <?php
@@ -484,9 +485,6 @@ if(!hook('advsearchdate'))
 hook('advsearchaddfields');
 
 $fields = get_advanced_search_fields($archiveonly);
-$rtypes = get_resource_types();
-$advanced_section_rendered = false;
-
 // Fake fields are added to the end of the fields list for rendering special filters like Media section, Contributed by and others
 $fake_fields = array(
     array(
@@ -531,6 +529,7 @@ if($modified_fields !== false && is_array($modified_fields) && !empty($modified_
     $fields = $modified_fields;
     }
 
+$advanced_section_rendered = false;
 $n = 0; # this is used by render_search_field()
 foreach(array_merge($fields, $fake_fields) as $field)
     {
