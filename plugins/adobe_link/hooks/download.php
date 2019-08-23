@@ -26,3 +26,9 @@ function HookAdobe_linkDownloadProvideusercredentials()
     $usercredentialsprovided = true;
     return true;
     }
+
+// Added to bypass cookies_notification check
+function HookAdobe_linkDownloadCookies_notification_bypass()
+    {
+    return true;
+    }

@@ -3,6 +3,12 @@ function HookCookies_notificationAllHandleuserref()
     {
     global $baseurl, $cookies_notification_allow_using_site_on_no_feedback;
 
+    // Allow plugins to bypass this requirement
+    if(hook("cookies_notification_bypass"))
+        {
+        return true;
+        }
+
     // Ajax calls are handled by cookies_notification/pages/ajax/cookies_user_feedback.php
     if(getval('ajax', '') == 'true')
         {
