@@ -468,14 +468,15 @@ if ($_FILES)
         // Get current chunk, queue index and filename so we can know if we processed it before or not
         $processed_file_content = file_get_contents($plupload_processed_filepath);
         $processed_file_content = explode(',', $processed_file_content);
-
+        
+        if ($chunk != 0){
         // If this chunk-file-filename has been processed, don't process it again
         if($chunk == $processed_file_content[0] && $queue_index == $processed_file_content[1])
             {
             debug("PLUPLOAD - Duplicate chunk [" . $chunk . "] of file " . $plfilename . " found at index [" . $queue_index . "] in the upload queue");
             die('{"jsonrpc" : "2.0", "error" : {"code": 109, "message": "Duplicate chunk [' . $chunk . '] of file ' . $plfilename . ' found at index [' . $queue_index . '] in the upload queue"}, "id" : "id"}');
             }
-        }
+        }}
 
 	// Look for the content type header
 	if (isset($_SERVER["HTTP_CONTENT_TYPE"]))
