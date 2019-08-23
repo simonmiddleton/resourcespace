@@ -792,57 +792,11 @@ if ($_FILES)
                             // Replacing an existing resource file
                             daily_stat('Resource upload', $replace_resource);
 
-							if($replace_resource_preserve_option && '' != getval('keep_original', ''))
+                            // save original file as an alternative file
+                            if($replace_resource_preserve_option && '' != getval('keep_original', ''))
 								{
-								// Make the original into an alternative, need resource data so we can get filepath/extension
-								$origdata     = get_resource_data($replace_resource);
-								$origfilename = get_data_by_field($replace_resource, $filename_field);
-
-								$newaltname        = str_replace('%EXTENSION', strtoupper($origdata['file_extension']), $lang['replace_resource_original_description']);
-								$newaltdescription = nicedate(date('Y-m-d H:i'), true);
-
-                                if('' != $replace_resource_original_alt_filename)
-                                    {
-                                    $newaltname = $replace_resource_original_alt_filename;
-                                    $newaltdescription = '';
-                                    }
-
-								$newaref = add_alternative_file($replace_resource, $newaltname, $newaltdescription, escape_check($origfilename), $origdata['file_extension'], $origdata['file_size']);
-																
-								$origpath=get_resource_path($replace_resource, true, "", true, $origdata["file_extension"]);
-								$newaltpath=get_resource_path($replace_resource, true, "", true, $origdata["file_extension"], -1, 1, false, "", $newaref);
-								
-								# Move the old file to the alternative file location
-								$result=rename($origpath, $newaltpath);								
-								
-								# Save alternative file data.
-								//sql_query("update resource_alt_files set file_name='" . escape_check($origfilename) . "',file_extension='" . $origdata["file_extension"] . "',file_size='" . $origdata["file_size"] . "',creation_date=now() where resource='$replace_resource' and ref='$newaref'");
-								
-								if ($alternative_file_previews)
-										{
-										// Move the old previews to new paths
-										$ps=sql_query("select * from preview_size");
-										for ($n=0;$n<count($ps);$n++)
-											{
-											# Find the original 
-											$orig_preview_path=get_resource_path($replace_resource, true, $ps[$n]["id"],false, "");
-											if (file_exists($orig_preview_path))
-												{
-												# Move the old preview file to the alternative preview file location
-												$alt_preview_path=get_resource_path($replace_resource, true, $ps[$n]["id"], true, "", -1, 1, false, "", $newaref);
-												rename($orig_preview_path, $alt_preview_path);			
-												}
-											# Also for the watermarked versions.
-											$wmpath=get_resource_path($replace_resource,true,$ps[$n]["id"],false,"jpg",-1,1,true,"",$alternative);
-											if (file_exists($wmpath))
-												{
-												# Move the old preview file to the alternative preview file location
-												$alt_preview_wmpath=get_resource_path($replace_resource, true, $ps[$n]["id"], true, "", -1, 1, true, "", $newaref);
-												rename($wmpath, $alt_preview_wmpath);			
-												}
-											}
-										}
-								}
+                                save_original_file_as_alternative($replace_resource);    
+                                }  
 								
                             $status = upload_file($replace_resource, (('yes' == $no_exif) && '' == getval('exif_override', '')), false, ('' != getval('autorotate','')), $plupload_upload_location);
 
@@ -960,6 +914,13 @@ if ($_FILES)
                                             {
                                             debug("batch_replace upload: replacing resource with id " . $ref);
                                             daily_stat("Resource upload",$ref);
+
+                                            # Save the original file as an alternative file?                                            
+                                            $keep_original = getval('keep_original', '');
+                                            $save_original = ($keep_original == 1) ? save_original_file_as_alternative($ref) : "";
+                                            if (!$save_original){
+                                                die("Error in saving original file as alternative file");
+                                            }
 
                                             $status = upload_file($ref, ('yes' == $no_exif && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
 
