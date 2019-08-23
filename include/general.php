@@ -7074,8 +7074,7 @@ function delete_old_collections($userref=0, $days=30)
 * 
 * @return boolean|integer - ref of new field, false if unsuccessful
 */
-
-function create_resource_type_field($name,$restype = 0, $type = FIELD_TYPE_TEXT_BOX_SINGLE_LINE, $shortname = "", $index=false)
+function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT_BOX_SINGLE_LINE, $shortname = "", $index=false)
     {
     if((trim($name)=="") || !is_numeric($type) || !is_numeric($restype))
         {

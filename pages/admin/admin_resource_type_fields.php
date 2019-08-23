@@ -51,7 +51,7 @@ if (getval("newfield","")!="" && enforcePostRequest(false))
     $newfieldname = getvalescaped("newfield","");
     $newfieldtype = getval("fieldtype",0,true);    
     $newfieldrestype = getvalescaped("newfieldrestype",0,true);
-    $new = create_resource_type_field($newfieldname,$newfieldrestype, $newfieldtype);
+    $new = create_resource_type_field($newfieldname, $newfieldrestype, $newfieldtype, "", true);
     redirect($baseurl_short . 'pages/admin/admin_resource_type_field_edit.php?ref=' . $new . '&newfield=true');
     }
     
