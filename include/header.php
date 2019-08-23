@@ -284,6 +284,19 @@ if(!hook("customloadinggraphic"))
 
 <!--Global Header-->
 <?php
+$omit_filter_bar_pages = array(
+    'index',
+    'preview_all',
+    'search_advanced',
+    'preview',
+    'admin_header',
+    'login',
+    'user_request',
+    'user_password',
+    'user_change_password',
+    'document_viewer'
+);
+
 if (($pagename=="terms") && (getval("url","")=="index.php")) {$loginterms=true;} else {$loginterms=false;}
 if (($pagename!="preview" || $preview_header_footer) && $pagename!="preview_all") { ?>
 
@@ -375,19 +388,6 @@ if($responsive_ui)
     } // end of Responsive
 
 hook("headertop");
-
-$omit_filter_bar_pages = array(
-    'index',
-    'preview_all',
-    'search_advanced',
-    'preview',
-    'admin_header',
-    'login',
-    'user_request',
-    'user_password',
-    'user_change_password',
-    'document_viewer'
-);
 
 if (!isset($allow_password_change)) {$allow_password_change=true;}
 if(isset($username) && !in_array($pagename, $not_authenticated_pages) && false == $loginterms && '' == $k || $internal_share_access)
