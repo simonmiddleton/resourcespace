@@ -168,7 +168,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         
         function checkSearchDisplayCondition<?php echo $field["ref"];?>(node)
 			{
-            field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+            field<?php echo $field['ref']; ?>status    = jQuery('#filter_bar_question_<?php echo $n; ?>').css('display');
 			newfield<?php echo $field['ref']; ?>status = 'none';
 			newfield<?php echo $field['ref']; ?>show   = false;
             newfield<?php echo $field['ref']; ?>provisional = true;
@@ -243,15 +243,15 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
 
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
-                    jQuery('#question_<?php echo $n ?>').slideToggle();
+                    jQuery('#filter_bar_question_<?php echo $n ?>').slideToggle();
 
-                    if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
+                    if(jQuery('#filter_bar_question_<?php echo $n ?>').css('display') == 'block')
                         {
-                        jQuery('#question_<?php echo $n ?>').css('border-top', '');
+                        jQuery('#filter_bar_question_<?php echo $n ?>').css('border-top', '');
                         }
                     else
                         {
-                        jQuery('#question_<?php echo $n ?>').css('border-top', 'none');
+                        jQuery('#filter_bar_question_<?php echo $n ?>').css('border-top', 'none');
                         }
                     }
         }
@@ -269,7 +269,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
     if (!$forsearchbar)
         {
         ?>
-        <div class="Question" id="question_<?php echo $n ?>" data-resource_type="<?php echo htmlspecialchars($field["resource_type"]); ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
+        <div class="Question" id="filter_bar_question_<?php echo $n ?>" data-resource_type="<?php echo htmlspecialchars($field["resource_type"]); ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
         if (strlen($field["tooltip_text"])>=1)
             {
             echo "title=\"" . htmlspecialchars(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";
