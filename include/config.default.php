@@ -1111,10 +1111,6 @@ $watermark_open=false;
 # Set to true to extend $watermark_open to the search page. $watermark_open must be set to true.
 $watermark_open_search=false; 
 
-# Simple search even more simple
-# Set to 'true' to make the simple search bar more basic, with just the single search box.
-$basic_simple_search=false;
-
 # include an "all" toggle checkbox for Resource Types in Search bar
 $searchbar_selectall=false;
 

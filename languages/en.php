@@ -2441,7 +2441,6 @@ $lang['userpreference_use_checkboxes_for_selection_label'] = 'Use checkboxes to 
 $lang['userpreference_resource_view_modal_label'] = 'Resource view modal';
 $lang["userpreference_modal_default"] = "Show standard pages in a modal (popup) window where enabled?";
 $lang['userpreference_thumbs_default_label'] = 'Default collection bar display';
-$lang['userpreference_basic_simple_search_label'] = 'Basic simple search';
 $lang['userpreference_cc_me_label'] = 'CC me when sending resources and collections';
 $lang['userpreference_email_me_label'] = 'Send me emails instead of system notifications where possible';
 $lang['userpreference_email_digest_label'] = 'Send me a daily digest of notifications, instead of separate emails';
