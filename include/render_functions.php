@@ -2444,8 +2444,8 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
         } 
     else 
         {
-        $height = $defaultheight;
-        $width = round($defaultwidth * $ratio);
+        $height = "auto";
+        $width = "auto";
         $margin = "auto";
         }
     
