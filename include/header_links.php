@@ -15,7 +15,7 @@
 			)
 		)
 		{?>
-		<?php if ($search_results_link){?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/search.php"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["searchresults"]?></a></li><?php } ?><?php } ?>
+		<?php if ($search_results_link){?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/search.php"  onClick="return CentralSpaceLoad(this,true);"><?php echo SEARCH_ICON . $lang["searchresults"]; ?></a></li><?php } ?><?php } ?>
 		
 		<?php if (!hook("replacethemelink")) { ?>
 		<?php if (checkperm("s") && $enable_themes && !$theme_direct_jump && $themes_navlink) { ?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/themes.php" onClick="return CentralSpaceLoad(this,true);"><?php echo FEATURED_COLLECTION_ICON . $lang["themes"]?></a></li><?php } ?>
