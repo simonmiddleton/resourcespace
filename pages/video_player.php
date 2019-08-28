@@ -8,6 +8,7 @@ $video_player_thumbs_view_alt_name_escaped = escape_check($video_player_thumbs_v
 
 # Check for search page and the use of an alt file for video playback
 $use_video_alts = false;
+$alternative = is_null($alternative) ? -1 : $alternative;
 
 if(
        $video_player_thumbs_view_alt
