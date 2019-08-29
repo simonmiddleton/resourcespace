@@ -1,5 +1,5 @@
 <?php
-function isValidURL($url)
+function isValidVimeoURL($url)
     {
     // Check if the video exists
     global $vm2rs_videoId;
@@ -35,7 +35,7 @@ function Hookvm2rsViewrenderinnerresourcepreview()
     $height = $ffmpeg_preview_max_height;
     $vimeo_url = get_data_by_field($ref, $vm2rs_field_id);
 
-    if ($vimeo_url == "" || !isValidURL($vimeo_url))
+    if ($vimeo_url == "" || !isValidVimeoURL($vimeo_url))
         {
         return false;
         }
@@ -61,7 +61,7 @@ function Hookvm2rsViewreplacedownloadoptions()
 
     $vimeo_url = get_data_by_field($ref, $vm2rs_field_id);
 
-    if ($vimeo_url !== "" && isValidURL($vimeo_url))
+    if ($vimeo_url !== "" && isValidVimeoURL($vimeo_url))
         {
         ?>
         <table cellpadding="0" cellspacing="0">
