@@ -236,7 +236,7 @@ $sort=getval("sort",$default_sort_direction);
 
 $allowed_extensions="";
 
-if($upload_then_edit && !$alternative)
+if(($upload_then_edit || $replace ) && !$alternative)
     {
         $all_allowed_extensions_holder = array();
         $all_resource_types = get_resource_types();
