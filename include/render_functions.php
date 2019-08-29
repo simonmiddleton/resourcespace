@@ -2402,7 +2402,7 @@ function renderLockButton($name, $locked_fields=array())
 function render_resource_image($imagedata, $img_url, $display="thumbs")
     {
     global $view_title_field;
-    
+    # if image dimensions then calculate ratio
     if('' != $imagedata['thumb_width'] && 0 != $imagedata['thumb_width'] && '' != $imagedata['thumb_height'])
         {
         $ratio = $imagedata["thumb_width"] / $imagedata["thumb_height"];   
@@ -2437,13 +2437,20 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     
     if ($ratio > 1)
         {
+        # landscape image dimensions
         $width = $defaultwidth;
         $height = round($defaultheight / $ratio);
-        //exit($height);
         $margin = floor(($defaultheight - $height ) / 2) . "px";
-        } 
+        }
+    elseif ($ratio < 1)
+        {
+        # portrait image dimensions
+        $height = $defaultheight;
+        $width = round($defaultwidth * $ratio);
+        }
     else 
         {
+        # square image or no image dimensions
         $height = "auto";
         $width = "auto";
         $margin = "auto";
