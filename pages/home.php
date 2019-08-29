@@ -37,16 +37,18 @@ function loadWelcomeText()
 if (!hook("replaceslideshow"))
 	{
 	global $slideshow_photo_delay;
-    $slideshow_files = get_slideshow_files_data();
+    $slideshow_files_holder = get_slideshow_files_data();
+    $slideshow_files = array();
 
     $homeimages = 0;
-    foreach($slideshow_files as $slideshow_file)
+    foreach($slideshow_files_holder as $slideshow_file)
         {
         if((bool) $slideshow_file['homepage_show'] === false)
             {
             continue;
             }
-
+        
+        array_push($slideshow_files, $slideshow_file);
         $homeimages++;
         }
 
@@ -113,11 +115,6 @@ if (!hook("replaceslideshow"))
         <?php
         foreach($slideshow_files as $slideshow_file_info)
             {
-            if((bool) $slideshow_file_info['homepage_show'] === false)
-                {
-                continue;
-                }
-
             echo "link.push(\"" .  (isset($slideshow_file_info["link"]) ? $slideshow_file_info["link"] : "#") . "\");\n";
             echo "images.push(" .  $slideshow_file_info["ref"] . ");\n";
             }
