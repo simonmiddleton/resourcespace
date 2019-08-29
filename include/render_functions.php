@@ -2447,6 +2447,7 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
         # portrait image dimensions
         $height = $defaultheight;
         $width = round($defaultwidth * $ratio);
+        $margin = floor(($defaultheight - $height ) / 2) . "px";
         }
     else 
         {
