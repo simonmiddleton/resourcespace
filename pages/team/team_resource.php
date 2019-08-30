@@ -26,9 +26,11 @@ include "../../include/header.php";
 			<li><i aria-hidden="true" class="fa fa-fw fa-file"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&amp;noupload=true" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresource"]?></a></li>
 		<?php endif // Test if Add Single Resource is allowed. ?>
 
-		<?php if($upload_methods['in_browser_upload']): // Test if Add Resource Batch - In Browser is allowed. ?>
-            <li><i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&amp;uploader=plupload" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchbrowser"]?></a></li>
-                <?php endif // Test if Add Resource Batch - In Browser is allowed. ?>
+		<?php if($upload_methods['in_browser_upload']): // Test if Add Resource Batch - In Browser is allowed. 
+			$url = ($upload_then_edit) ? "upload_plupload.php" : "edit.php?ref=-$userref&amp;uploader=plupload";
+		?>
+            <li><i aria-hidden="true" class="fa fa-fw fa-upload"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/<?php echo $url?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchbrowser"]?></a></li>
+        <?php endif // Test if Add Resource Batch - In Browser is allowed. ?>
 
 		<?php if($upload_methods['fetch_from_ftp']): // Test if Add Resource Batch - Fetch from FTP server is allowed. ?>
 			<li><i aria-hidden="true" class="fa fa-fw fa-exchange"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchftp"]?></a></li>
