@@ -1720,12 +1720,8 @@ a.BrowseRefresh{
     overflow: hidden;
 }
 
-#RecordDownloadSummary, #ResourceWorkflowActions {
-    width: 445px;
-}
-
-.RecordPanelLarge #RecordDownloadSummary, .RecordPanelLarge #ResourceWorkflowActions {
-    width: 49.4%;
+.RecordPanelLarge #ResourceWorkflowActions, .RecordPanelLarge #RecordDownloadSummary {
+    width: 100%;
 }
 
 .UploadButton a

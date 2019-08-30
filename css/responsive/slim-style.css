@@ -914,6 +914,12 @@ body {
     #RecordDownload {
         width:100%;
     }
+    #ResourceWorkflowActions {
+        width:100%;
+    }
+    .RecordPanel.RecordPanelLarge #ResourceDownloadOptions {
+        width: 100%;
+    }
     .SlimHeader .RecordBox {
         margin:0;
     }
@@ -951,6 +957,7 @@ body {
         text-align: center;
         width: auto;
         margin: 10px auto;
+        min-width: unset;
     }
     #previewimagewrapper .enterLink {
         display:inline-block;
