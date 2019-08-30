@@ -1656,7 +1656,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         }
         
     # If this is a date range field we need to add values to the field options
-    if($fieldinfo['type'] == 14 )
+    if($fieldinfo['type'] == FIELD_TYPE_DATE_RANGE)
     {
 
        $newvalues = array_map('trim', explode('/', $value));
