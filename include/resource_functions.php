@@ -5272,24 +5272,30 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
             // Check if this field is listed in the $fields array - if resource type has changed it may not be present
             $key = array_search($locked_field, array_column($fields, 'ref'));
             if($key!==false)
-                {
+                {                
                 $fieldtype = $fields[$key]["type"];
                 }    
             else
-                {
+                {                
                 $lockfieldinfo = get_resource_type_field($locked_field);
                 $fieldtype = $lockfieldinfo["type"];
                 }                
             
             if(in_array($fieldtype, $FIXED_LIST_FIELD_TYPES))
                 {
+                # Gets the checked values (like 'Keywords - Subject') and puts them in the specific resource table columns (like 'field73' (Keywords - Subject))
+                $specific_field = 'field' . $locked_field;
+                $current_field_for_last_edited = sql_query("SELECT $specific_field AS thefield FROM resource WHERE ref = '$lastedited'");
+                $the_field_data = $current_field_for_last_edited[0]['thefield'];
+                sql_query("UPDATE resource SET $specific_field = '$the_field_data' WHERE ref = '$ref'");
+                
                 // Replace nodes for this field
                 $field_nodes = get_nodes($locked_field, NULL, $fieldtype == FIELD_TYPE_CATEGORY_TREE);
                 $field_node_refs = array_column($field_nodes,"ref");
                 $stripped_nodes = array_diff ($all_selected_nodes, $field_node_refs);
                 $locked_nodes = get_resource_nodes($lastedited, $locked_field);
                 $all_selected_nodes = array_merge($stripped_nodes, $locked_nodes);
-                if($save)
+                if($save == true)
                     {
                     debug("- adding locked field nodes for resource " . $ref . ", field id: " . $locked_field);
                     delete_resource_nodes($ref,$field_node_refs);
@@ -5320,7 +5326,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                 debug(" - adding field value for resource " . $lastedited . " field id:" . $locked_field);
                     $fields[] = $last_fields[$addkey];
                     }
-                if($save)
+                if($save == true)
                     {
                     debug("- adding locked field value for resource " . $ref . ", field id: " . $locked_field);
                     update_field($ref,$locked_field,$last_fields[$addkey]["value"]);
