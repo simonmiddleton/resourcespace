@@ -197,7 +197,7 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
             data    : args,
             dataType: 'json',
             async: false,
-            success : function(result) {
+            success : function(result, status, xhr) {
                 if (xhr.status == 302)
                     {
                     location.href = xhr.getResponseHeader("Location");
