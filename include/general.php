@@ -5339,19 +5339,31 @@ function run_external($cmd,&$code)
     return $output;
 }
 
-function error_alert($error,$back=true){
-
-    foreach ($GLOBALS as $key=>$value){
+function error_alert($error, $back = true, $code = 403)
+    {
+    foreach($GLOBALS as $key => $value)
+        {
         $$key=$value;
-    } 
-    if ($back){include(dirname(__FILE__)."/header.php");}
-    http_response_code(403);
+        }
+
+    http_response_code($code);
+
+    if($back)
+        {
+        include(dirname(__FILE__)."/header.php");
+        }
+
     echo "<script type='text/javascript'>
-    ModalClose();
-    styledalert('" . $lang["error"] . "', '$error');";
-    if ($back){echo "history.go(-1);";}
+        ModalClose();
+        styledalert('" . $lang["error"] . "', '$error');";
+
+    if($back)
+        {
+        echo "history.go(-1);";
+        }
+
     echo "\n</script>";
-}
+    }
 /**
  * Returns an xml compliant string in UTF-8
  *
