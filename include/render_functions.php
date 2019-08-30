@@ -1158,7 +1158,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 							data: {<?php echo generateAjaxToken("relate_resources"); ?>},
                             success: function(data) {
 								if (data.trim() == "SUCCESS") {
-									stylerAlert("OK","Related ok");
+									alert("Related ok");
 								}
 							},
 							error: function (err) {
