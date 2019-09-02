@@ -44,7 +44,7 @@ function HookTransformAdmin_manage_slideshowRender_replace_button_for_manage_sli
     {
     global $lang, $baseurl;
     ?>
-    <button type="submit" onclick="jQuery('#replace_slideshow_image_form_<?php echo $slideshow_image; ?>').fadeIn(); return false;"><?php echo $lang['action-replace']; ?></button>
+    <button type="submit" onclick="jQuery('#replace_slideshow_image_form_<?php echo $slideshow_image; ?>').slideToggle(229); return false;"><?php echo $lang['action-replace']; ?></button>
     <?php
     if($slideshow_file_info['resource_ref'] > 0)
         {
@@ -76,7 +76,7 @@ function HookTransformAdmin_manage_slideshowRender_replace_slideshow_form_for_ma
         method="POST"
         action="<?php echo $baseurl; ?>/plugins/transform/pages/crop.php"
         onsubmit="return CentralSpacePost(this);"
-    >
+        style="display: none;">
         <?php generateFormToken("replace_slideshow_image_form_{$replace_slideshow_id}"); ?>
         <input
             name="ref"
