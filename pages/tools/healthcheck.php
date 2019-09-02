@@ -21,13 +21,6 @@ $file=$storagedir . "/write_text.txt";
 file_put_contents($file,$hash);$check=file_get_contents($file);unlink($file);
 if ($check!==$hash) {exit("FAIL - test write to disk returned a different string ('$hash' vs '$check')");}
 
-
-# Check free disk space is sufficient.
-$avail=disk_total_space($storagedir);
-$free=disk_free_space($storagedir);
-if (($free/$avail)<0.05) {exit("FAIL - less than 5% disk space free.");} 
-
-
 // Check write access to sql_log
 if($mysql_log_transactions)
     {
@@ -48,13 +41,6 @@ if($debug_log)
         exit("FAIL - invalid \$debug_log_location specified in config file: " . $debug_log_location); 
         }        
     }
-
-// Check that the cron process executed within the last 5 days (allows for a window of downtime, for migration, etc.).
-$last_cron=strtotime(sql_value("select value from sysvars where name='last_cron'",""));
-$diff_days=(time()-$last_cron) / (60 * 60 * 24);
-if ($diff_days>5) {exit("FAIL - cron was executed " . round($diff_days,0) . " days ago.");}
-
-
 
 // All is well.
 
@@ -90,6 +76,22 @@ elseif (preg_match('/\nRevision: (\d+)/i', $svninfo, $matches)!=0)
     
 # Send the message (note the O and K are separate, so that if served as plain text the remote check doesn't erroneously report all well)
 echo("O" . "K" . $version);
+
+// Check that the cron process executed within the last 5 days (allows for a window of downtime, for migration, etc.).
+$last_cron=strtotime(sql_value("select value from sysvars where name='last_cron'",""));
+$diff_days=(time()-$last_cron) / (60 * 60 * 24);
+if ($diff_days>5) 
+    {
+    echo "WARNING - cron was executed " . round($diff_days,0) . " days ago.";
+    }
+
+# Check free disk space is sufficient.
+$avail=disk_total_space($storagedir);
+$free=disk_free_space($storagedir);
+if (($free/$avail)<0.05)
+    {
+    echo "WARNING - less than 5% disk space free.";
+    } 
 
 // Warning if quota set and nearing quota limit
 if (isset($disksize))
