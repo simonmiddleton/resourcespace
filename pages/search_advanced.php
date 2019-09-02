@@ -307,7 +307,7 @@ jQuery(document).ready(function(){
             if(submit_caller_element == 'resetform')
                 {
                 event.preventDefault();
-                ClearFilterBar();
+                ClearFilterBar(true);
                 return false;
                 }
 
@@ -651,10 +651,27 @@ if (!$collection_search_includes_resource_metadata)
     </form>
 </div> <!-- BasicsBox -->
 <script>
-function ClearFilterBar()
+function ClearFilterBar(load)
     {
+    load = typeof load !== "undefined" && load === true ? true : false;
     var url = "<?php echo generateURL("{$baseurl}/pages/search_advanced.php", array('submitted' => true, 'resetform' => true)); ?>";
-    jQuery("#FilterBarContainer").load(url);
+
+    if(load)
+        {
+        jQuery("#FilterBarContainer").load(url);
+        }
+    else
+        {
+        TogglePane(
+            'FilterBarContainer',
+            {
+                load_url: '<?php echo $baseurl; ?>/pages/search_advanced.php',
+                <?php echo generateAjaxToken("ToggleFilterBar"); ?>
+            },
+            true);
+        jQuery("#FilterBarContainer").empty();
+        }
+
     document.getElementById('ssearchbox').value='';
     <?php hook("clear_filter_bar_js"); ?>
     }
@@ -694,6 +711,18 @@ jQuery(document).ready(function()
     UpdateActiveFilters({search: "<?php echo $search; ?>"});
     jQuery("#FilterBarContainer .Question table").PutShadowOnScrollableElement();
     registerCollapsibleSections(false);
+
+    jQuery("#CentralSpace").on("CentralSpaceLoaded", function(event, data)
+        {
+        var page_name = typeof data.pagename !== "undefined" ? data.pagename : "";
+
+        if(pagename != "search")
+            {
+            ClearFilterBar(false);
+            }
+
+        return true;
+        });
 
     HideInapplicableFilterBarFields();
     jQuery('.SearchTypeCheckbox').change(function() 
