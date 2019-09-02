@@ -93,6 +93,8 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
     'foredit'           => ($editable_only?"true":"")
     );
 
+    $searchparams = array_filter($searchparams);
+
     $search_url = generateURL('search.php', $searchparams);
     ?>
     
