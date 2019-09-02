@@ -207,6 +207,10 @@ body {
     body {
         background-image: none !important;
     }
+    
+    #ToggleFilterBarButton { display: none !important; }
+    #header_search_form_button { display: inline-block; width: 65%; }
+    
 }
 /* Login Forms */
 @media(max-width:1100px) { 

@@ -3155,10 +3155,11 @@ function render_filter_bar_component()
             <input id="ssearchbox" name="search" type="text" class="searchwidth"
                    placeholder="<?php echo $lang['all__search']; ?>"
                    value="<?php echo isset($quicksearch) ? $htmlspecialchars($quicksearch) : ""; ?>" />
-            <a href="<?php echo $baseurl; ?>/pages/search_advanced.php"
+            <a id="ToggleFilterBarButton" href="<?php echo $baseurl; ?>/pages/search_advanced.php"
                onclick='return ToggleFilterBar(this.href, {<?php echo generateAjaxToken("ToggleFilterBar"); ?>});'>
                 <i aria-hidden="true" class="fa fa-filter fa-lg fa-fw"></i>
             </a>
+            <input id="header_search_form_button" type="submit" value="Search" />
         </form>
     </li>
     <?php

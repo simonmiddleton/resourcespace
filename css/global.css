@@ -178,6 +178,8 @@ select::-ms-expand
 #TextHeader a {text-decoration:none;}
 #TextDesc{font-size:1em;float:left;display:block;clear:left;}
 
+#header_search_form_button { display: none; }
+
 .headerlink {margin:20px 25px; position: absolute; display: block; width: 400px; height: 55px;  top: 0px; left: 0px;}
 .TeamCentreAlertIcon { position: relative; top: 3px;}
 
