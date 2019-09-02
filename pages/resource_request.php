@@ -78,7 +78,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
 		{
 		?>
 		<script>
-		CentralSpaceLoad("<?php echo $baseurl_short ?>pages/done.php?text=resource_request&k=<?php echo htmlspecialchars($k); ?>",true);
+		CentralSpaceLoad("<?php echo $baseurl_short ?>pages/done.php?text=resource_request&resource=<?php echo htmlspecialchars($ref); ?>&k=<?php echo htmlspecialchars($k); ?>",true);
 		</script>
 		<?php
 		}
