@@ -853,33 +853,35 @@ function ShowHelp(field)
     { ?>
     preventautosave=false;
     
-    // Disable autosave on enter keypress as form will be submitted by this keypress anyway which can result in duplicate data
-    jQuery(document).bind('keydown',function (e)
-        {               
-        if (e.which == 13)
-            {
-              preventautosave=true;
-            }
-       else
-            {       
-            preventautosave=false;  
-            }
-        })
     
-
     // Disable autosave on enter keypress as form will be submitted by this keypress anyway which can result in duplicate data
-    jQuery(document).bind('keydown',function (e)
-    {               
-      if (e.which == 13)
-      {
-        preventautosave=true;
-     }
-     else
-     {       
-        preventautosave=false;  
-     }
-    })
-
+    
+    // jQuery(document).bind('keydown',function (e)
+    //     {               
+    //     if(e.which == 13)
+    //         {
+    //         preventautosave=true;
+    //         e.preventDefault();
+    //         }
+    //     else
+    //         {
+    //         preventautosave=false;  
+    //         }
+    //     });
+        
+    jQuery(document).on("keydown", ":input:not(textarea)", function(e) 
+        {
+        if (e.key == "Enter") 
+            {
+            preventautosave = true;
+            e.preventDefault();
+            }
+            else
+            {
+            preventautosave = false;    
+            }
+        });
+        
 
     function AutoSave(field, stop_recurrence)
         {
