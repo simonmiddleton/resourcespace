@@ -302,7 +302,8 @@ if (is_numeric(trim(getvalescaped("searchresourceid","")))){
 }
 
 // Is this a collection search?
-$collectionsearch = strpos($search,"!collection") !== false; // We want the default collection order to be applied
+$collection_search_strpos = strpos($search, "!collection");
+$collectionsearch = $collection_search_strpos !== false && $collection_search_strpos === 0; // We want the default collection order to be applied
 if($collectionsearch)
     {
     // Collection search may also have extra search keywords passed to search within a collection
@@ -311,7 +312,7 @@ if($collectionsearch)
     $collection = (int)array_shift($search_elements);
     $search = "!collection" . $collection . " " . implode(", ",$search_elements);
     }
-    
+
 hook("searchstringprocessing");
 
 # Fetch and set the values
