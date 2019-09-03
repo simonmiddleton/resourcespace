@@ -6,7 +6,7 @@ function HookResourceconnectLogUserdisplay($log)
     if (strpos($log["access_key"],"-")===false) {return false;}
     $s=explode("-",$log["access_key"]);
 
-    echo "'" . $s[0] . "' remotely accessing via " . $log["fullname"];
+    echo "<strong>" . htmlspecialchars($s[0]) . "</strong> remotely accessing via " . htmlspecialchars($log["fullname"]);
 
     return true;
     }
