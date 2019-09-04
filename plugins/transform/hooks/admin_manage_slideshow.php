@@ -1,8 +1,16 @@
 <?php
 function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slideshow(array $slideshow_files)
     {
-    global $baseurl, $lang;
+    global $baseurl, $lang, $cropper_enable_replace_slideshow;
 
+    if ($cropper_enable_replace_slideshow != 1)
+        { 
+            // if config option in transform plugin doesn't allow slideshow images to be edited, then do not show input field
+        
+    print "<p><b>To add or replace slideshow images, update the setting 'Enable replacing the slideshow' in Admin > System > Manage plugins > transform > Options.</b></p>";
+
+            return; // if config option in transform plugin doesn't allow slideshow images to be edited, then do not show input field
+        }
     $return_to_url = $baseurl . '/pages/admin/admin_manage_slideshow.php';
 
     // Calculate the next slideshow image ID (ie. filename will be ID.jpg)
@@ -42,7 +50,13 @@ function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slides
 
 function HookTransformAdmin_manage_slideshowRender_replace_button_for_manage_slideshow($slideshow_image, array $slideshow_file_info)
     {
-    global $lang, $baseurl;
+    global $lang, $baseurl, $cropper_enable_replace_slideshow;
+
+    if ($cropper_enable_replace_slideshow != 1)
+        { 
+            return; // if config option in transform plugin doesn't allow slideshow images to be edited, then do not show input field
+        }
+
     ?>
     <button type="submit" onclick="jQuery('#replace_slideshow_image_form_<?php echo $slideshow_image; ?>').slideToggle(229); return false;"><?php echo $lang['action-replace']; ?></button>
     <?php
@@ -67,7 +81,13 @@ function HookTransformAdmin_manage_slideshowRender_replace_button_for_manage_sli
 
 function HookTransformAdmin_manage_slideshowRender_replace_slideshow_form_for_manage_slideshow($replace_slideshow_id)
     {
-    global $baseurl, $lang;
+    global $baseurl, $lang, $cropper_enable_replace_slideshow;
+
+    if ($cropper_enable_replace_slideshow != 1)
+    {
+    
+        return; 
+    }
 
     $return_to_url = $baseurl . '/pages/admin/admin_manage_slideshow.php';
     ?>

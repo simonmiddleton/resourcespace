@@ -268,11 +268,11 @@ include '../../include/header.php';
                                 type="submit"
                                 onclick="ReorderSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>, 'movedown');"
                                 <?php echo $movedown_disabled; ?>><?php echo $lang['action-move-down']; ?></button>
-                        <?php if ($cropper_enable_replace_slideshow == 1) { hook('render_replace_button_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_file_info));} ?>
+                        <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_file_info)); ?>
                         <button id="slideshow_<?php echo $slideshow_file_info["ref"]; ?>_delete"
                                 type="submit" onclick="DeleteSlideshowImage(<?php echo $slideshow_file_info["ref"]; ?>);"
                                 <?php echo $delete_btn_disabled; ?>><?php echo $lang['action-delete']; ?></button>
-                        <?php if ($cropper_enable_replace_slideshow == 1){ hook('render_replace_slideshow_form_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_files));} ?>
+                        <?php hook('render_replace_slideshow_form_for_manage_slideshow', '', array($slideshow_file_info["ref"], $slideshow_files)); ?>
                     </td>
                 </tr>
                 <?php
@@ -293,12 +293,7 @@ if($slideshow_big)
     </div>
     <?php
     }
-
-# display button to add a new image, if the transform config option is set to allow this 
-if ($cropper_enable_replace_slideshow == 1)
-{
     hook('render_new_element_for_manage_slideshow', '', array($slideshow_files));
-}
 ?>
 </div>
 <script>
