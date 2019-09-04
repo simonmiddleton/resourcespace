@@ -417,7 +417,7 @@ if(!hook('advsearchallfields'))
     ?>
 
 <?php
-if(!hook('advsearchresid'))
+if(!hook('advsearchresid') && trim($search) === "")
     {
     ?>
     <div class="Question">
