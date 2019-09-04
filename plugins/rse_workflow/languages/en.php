@@ -50,7 +50,7 @@ $lang["rse_workflow_state_notify_message"]="There are new resources in the workf
 // For more notes functionality:
 $lang['rse_workflow_more_notes_label'] = 'More notes when changing workflow?';
 $lang['rse_workflow_notify_user_label'] = 'Should contributor be notified?';
-$lang['rse_workflow_simple_search_label'] = "Search this workflow state when using Simple Search?";
+$lang['rse_workflow_simple_search_label'] = "Include workflow state in default searches (certain special searches may ignore this)";
 $lang['rse_workflow_link_open'] = 'More';
 $lang['rse_workflow_link_close'] = 'Close';
 $lang['rse_workflow_more_notes_title'] = 'Notes:';

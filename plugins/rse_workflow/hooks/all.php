@@ -4,10 +4,12 @@ function HookRse_workflowAllInitialise()
 	 include_once dirname(__FILE__)."/../include/rse_workflow_functions.php";
 	 include_once dirname(__FILE__)."/../../../include/language_functions.php";
      # Deny access to specific pages if RSE_KEY is not enabled and a valid key is not found.
-     global $pagename, $additional_archive_states, $fixed_archive_states, $wfstates;
+     global $pagename, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates;
     
     # Update $archive_states and associated $lang variables with entries from database
-	$wfstates=rse_workflow_get_archive_states();
+    $searchstates = array();
+    $wfstates=rse_workflow_get_archive_states();
+    
 	global $lang;
 	foreach($wfstates as $wfstateref=>$wfstate)
 		{
@@ -19,6 +21,10 @@ function HookRse_workflowAllInitialise()
             {
             // Save for later so we know which are editable
             $fixed_archive_states[] = $wfstateref;
+            }
+        if(isset($wfstate['simple_search_flag']) && $wfstate['simple_search_flag'] != 0)
+            {
+            $searchstates[] = $wfstateref;
             }
         $lang["status" . $wfstateref] =  i18n_get_translated($wfstate["name"]);
 		}
@@ -195,31 +201,4 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
             }
         }
     /*****END OF NOTIFY CONTRIBUTOR*****/    
-    }
-
-
-function HookRse_workflowAllSearchfiltertop()
-    {
-    $workflow_states = rse_workflow_get_archive_states();
-
-    $simple_search_states = array();
-    foreach($workflow_states as $workflow_state_ref => $workflow_state_detail)
-        {
-        if($workflow_state_detail['simple_search_flag'] == 0)
-            {
-            continue;
-            }
-
-        $simple_search_states[] = $workflow_state_ref;
-        }
-
-    if(count($simple_search_states) == 0)
-        {
-        return;
-        }
-        ?>
-    <input type="hidden" name="search_using_allowed_workflow_states" value="1">
-    <?php
-
-    return;
     }

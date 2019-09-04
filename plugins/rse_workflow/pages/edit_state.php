@@ -223,17 +223,27 @@ else if ($saved)
             <div class="clearerleft"></div>
         </div>
 
-        <div class="Question" id="simple_search_question">
-            <label for="simple_search"><?php echo $lang['rse_workflow_simple_search_label']; ?></label>
-            <?php
-                $simple_search_checked = '';
-                if($workflowstate['simple_search_flag'] == 1) {
-                    $simple_search_checked = 'checked';
-                }
+        <?php
+        if($search_all_workflow_states || ($code == -1 && $pending_review_visible_to_all) || ($code == -2 &&$pending_submission_searchable_to_all))
+            {
+            echo "<input id='simple_search' type='hidden' value='1' />";
+            }
+        else{
             ?>
-            <input id="simple_search" type="checkbox" name="simple_search" value="1" <?php echo $simple_search_checked; ?>>
-            <div class="clearerleft"></div>
-        </div>
+            <div class="Question" id="simple_search_question">
+                <label for="simple_search"><?php echo $lang['rse_workflow_simple_search_label']; ?></label>
+                <?php
+                    $simple_search_checked = '';
+                    if($workflowstate['simple_search_flag'] == 1) {
+                        $simple_search_checked = 'checked';
+                    }
+                ?>
+                <input id="simple_search" type="checkbox" name="simple_search" value="1" <?php echo $simple_search_checked; ?>>
+                <div class="clearerleft"></div>
+            </div>
+            <?php
+            }
+            ?>
     <div class="Question" id="QuestionSubmit">
         <label for="buttons"> </label>
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>
