@@ -353,8 +353,8 @@ $archive = implode(",",$selected_archive_states);
 $archivesearched = in_array(2,$selected_archive_states);
 
 // Disable search through all workflow states when an archive state is specifically requested
-// This prevents links like View deleted resources to show the user resources in all states
-if($search_all_workflow_states && 0 != $archive)
+// This prevents links like 'View deleted resources' showing resources in all states
+if($search_all_workflow_states && !$archive_standard)
     {
     $search_all_workflow_states = false;
     }

@@ -76,7 +76,7 @@ function get_search_open_sections()
 $selected_archive_states=array();
 
 
-$archivechoices=getvalescaped("archive",getvalescaped("saved_archive",array(0)));
+$archivechoices=getvalescaped("archive",getvalescaped("saved_archive",get_default_search_states()));
 if(!is_array($archivechoices)){$archivechoices=explode(",",$archivechoices);}
 foreach($archivechoices as $archivechoice)
     {

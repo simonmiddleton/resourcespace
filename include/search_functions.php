@@ -838,6 +838,8 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
 
     # Convert the provided search parameters into appropriate SQL, ready for inclusion in the do_search() search query.
     if(!is_array($archive)){$archive=explode(",",$archive);}
+    $archive = array_filter($archive,function($state){return (string)(int)$state==(string)$state;}); // remove non-numeric values
+
     # Start with an empty string = an open query.
     $sql_filter="";
 
@@ -942,7 +944,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             }
         elseif ($search_all_workflow_states || substr($search,0,8)=="!related")
             {hook("search_all_workflow_states_filter");}   
-        elseif ($archive_standard)
+        elseif (count($archive) == 0)
             {
             # If no archive specified add in default archive states (set by config options or as set in rse_workflow plugin)
             if ($sql_filter!="") {$sql_filter.=" AND ";}
