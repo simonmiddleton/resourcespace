@@ -131,7 +131,7 @@ $lang["property-options"]="Optionen";
 $lang["property-required"]="Pflichtfeld";
 $lang["property-order_by"]="Sortieren nach";
 $lang["property-indexing"]="<b>Indizieren</b>";
-$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]='Wenn Sie die Indizierung aktivieren und das Feld bereits Daten enthält, müssen Sie <i aria-hidden="true" class="fa fa-sync-alt reloadicon">&nbsp;</i><a target=_blank href=../tools/reindex_field.php?field=%ref>dieses Feld neu indizieren</a>'; # %ref will be replaced with the field id
+$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]="Wenn Sie die Indizierung aktivieren und das Feld bereits Daten enthält, müssen Sie <a target=_blank href=../tools/reindex_field.php?field=%ref>dieses Feld neu indizieren</a>"; # %ref will be replaced with the field id
 $lang["property-index_this_field"]="Feld indizieren";
 $lang["information-enable_partial_indexing"]="Partielle Indizierung der Stichworte (Präfix+Infix Indizierung) sollte sparsam eingesetzt werden, da es die Größe des Index deutlich erhöht. Weitere Details im Wiki.";
 $lang["property-enable_partial_indexing"]="Partielle Indizierung aktivieren";

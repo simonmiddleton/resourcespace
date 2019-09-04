@@ -110,7 +110,7 @@ $lang["property-options"]="Valinnat";
 $lang["property-required"]="Vaadittu";
 $lang["property-order_by"]="Järjestysperuste";
 $lang["property-indexing"]="<b>Indeksointi</b>";
-$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]='Jos indeksointi sallitaan alla ja kenttä sisältää jo tietoa, täytyy <i aria-hidden="true" class="fa fa-sync-alt reloadicon">&nbsp;</i><a target=_blank href=../tools/reindex_field.php?field=%ref>kenttä indeksoida uudelleen</a>'; # %ref will be replaced with the field id
+$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]="Jos indeksointi sallitaan alla ja kenttä sisältää jo tietoa, täytyy <a target=_blank href=../tools/reindex_field.php?field=%ref>kenttä indeksoida uudelleen</a>"; # %ref will be replaced with the field id
 $lang["property-index_this_field"]="Indeksoi tämä kenttä";
 $lang["information-enable_partial_indexing"]="Osittainen avainsanan indeksointi (etupääteen ja sisäpäätteen indeksointi) tulisi tehdä säästäväisesti, sillä se lisää indeksin kokoa huomattavasti. Katso yksityiskohtia wikistä.";
 $lang["property-enable_partial_indexing"]="Salli osittainen indeksointi";

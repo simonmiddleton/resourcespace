@@ -143,7 +143,7 @@ $lang["property-options"]="Alternativ";
 $lang["property-required"]="Obligatoriskt";
 $lang["property-order_by"]="Sorteringsnummer";
 $lang["property-indexing"]="<b>Indexering</b>";
-$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]='Om du aktiverar indexering nedan och fältet redan innehåller data måste du <i aria-hidden="true" class="fa fa-sync-alt reloadicon">&nbsp;</i><a target=_blank href=../tools/reindex_field.php?field=%ref>återindexera detta fält.</a>'; # %ref will be replaced with the field id
+$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]="Om du aktiverar indexering nedan och fältet redan innehåller data måste du <a target=_blank href=../tools/reindex_field.php?field=%ref>återindexera detta fält.</a>"; # %ref will be replaced with the field id
 $lang["property-index_this_field"]="Indexera detta fält";
 $lang["information-enable_partial_indexing"]="Nyckelordsindexering av delar av ord (prefix + infix) bör användas sparsamt, då det ökar storleken på indexet betydligt. Du kan läsa mer om detta i wikin.";
 $lang["property-enable_partial_indexing"]="Aktivera indexering av delar av ord";
