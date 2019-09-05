@@ -1744,9 +1744,12 @@ if ($ref<0) # Upload template.
 ?>
 </div><!-- end of ResourceMetadataSection -->
 <?php
-# Status / Access / Related Resources
 
-if (eval($show_status_and_access_on_upload_perm) && !hook("editstatushide")) # Only display Status / Access / Related Resources if permissions match.
+# Status / Access / Related Resources
+if (  ($ref > 0 && $upload_review_mode && eval($show_status_and_access_on_upload_perm) )  # If editing a resource after upload
+   || ($ref < 0 && eval($show_status_and_access_on_upload_perm) ) # If editing a resource template
+   || ($ref > 0 && !$upload_review_mode) # If regular resource edit
+   || !hook("editstatushide")  ) # If grant_edit plugin isn't overriding
 {
   if(!hook("replacestatusandrelationshipsheader"))
   {
