@@ -856,22 +856,9 @@ function ShowHelp(field)
     
     // Disable autosave on enter keypress as form will be submitted by this keypress anyway which can result in duplicate data
     
-    // jQuery(document).bind('keydown',function (e)
-    //     {               
-    //     if(e.which == 13)
-    //         {
-    //         preventautosave=true;
-    //         e.preventDefault();
-    //         }
-    //     else
-    //         {
-    //         preventautosave=false;  
-    //         }
-    //     });
-        
-    jQuery(document).on("keydown", ":input:not(textarea)", function(e) 
+    jQuery(document).on("keydown", ":input:not(textarea):input:not(text)", function(e) 
         {
-        if (e.key == "Enter") 
+        if (e.which == 13) 
             {
             preventautosave = true;
             e.preventDefault();
