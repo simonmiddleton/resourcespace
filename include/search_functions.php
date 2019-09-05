@@ -949,6 +949,11 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             # If no archive specified add in default archive states (set by config options or as set in rse_workflow plugin)
             if ($sql_filter!="") {$sql_filter.=" AND ";}
             $defaultsearchstates = get_default_search_states();
+            if(count($defaultsearchstates) == 0)
+                {
+                // Make sure we have at least one state - system has been misconfigured
+                $defaultsearchstates[] = 0;
+                }
             $sql_filter.="archive IN (" . implode(",",$defaultsearchstates) . ")";
             }
         else
@@ -957,11 +962,6 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             if($sql_filter!="")
                 {
                 $sql_filter.=" AND ";
-                }
-
-            if('' == implode(',', $archive))
-                {
-                $archive = array(0);
                 }
 
             $sql_filter.="archive IN (" . implode(",",$archive) . ")";
