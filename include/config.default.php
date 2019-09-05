@@ -1571,7 +1571,7 @@ $show_status_and_access_on_upload_perm = "return !checkperm('F*');"; # Stack per
 # Show Status and Access = true && Show Access = false - Only Status Shown
 # Show Status and Access = false && Show Access = false - Neither Shown
 # DEFAULT VALUE: = $show_status_and_access_on_upload;
-$show_access_on_upload = &$show_status_and_access_on_upload;
+$show_access_on_upload = $show_status_and_access_on_upload;
 
 # Permission required to show "access" field on upload, this evaluates PHP code so must be preceded with 'return'. True = No permission required. 
 # Example below ensures they have permissions to edit active resources.
