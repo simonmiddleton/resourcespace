@@ -362,6 +362,7 @@ body {
         color: #3a3a3a;
         opacity: 1;
         background-color: #ffffff;
+        margin-right: 5px;
     }
     #HeaderNav2 {
         padding-left: 0;
@@ -617,7 +618,6 @@ body {
 
     #UICenter {
         position: relative !important;
-        width: 98% !important;
         margin-top: 5px !important;
         top:0px !important;
         margin-left: 1% !important;
@@ -1156,7 +1156,10 @@ body {
     }
     #CollectionDiv #toggleThumbsLink {
         display:none;
-    }
+    } 
+    #FilterBarContainer {
+        height:100% !important;
+        }      
    
 }
 
