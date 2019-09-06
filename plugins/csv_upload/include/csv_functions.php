@@ -2,6 +2,29 @@
 
 function csv_upload_process($filename,&$meta,$resource_types,&$messages,$override="",$max_error_count=100,$processcsv=false)
 	{
+
+	/*
+from definitions.php
+
+not included:
+FIELD_TYPE_CHECK_BOX_LIST,    
+FIELD_TYPE_DROP_DOWN_LIST,  
+FIELD_TYPE_CATEGORY_TREE, 
+FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,
+FIELD_TYPE_RADIO_BUTTONS,   
+FIELD_TYPE_DATE_RANGE
+*/
+/* field types that should not be checked for options in the CSV upload process */
+$csv_field_definitions = array(
+	FIELD_TYPE_TEXT_BOX_SINGLE_LINE, 
+	FIELD_TYPE_TEXT_BOX_MULTI_LINE,  
+	FIELD_TYPE_DATE_AND_OPTIONAL_TIME,   
+	FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE,  
+	FIELD_TYPE_EXPIRY_DATE,                 
+	FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR,
+	FIELD_TYPE_DATE,             
+	FIELD_TYPE_WARNING_MESSAGE       
+	) ; 	
 	// echo "csv_upload_process(" . $filename . ", Resource types: ";
 	// foreach($resource_types as $restype) {echo $restype. ", ";}
 	// echo "Override:" . $override . "<br>";
@@ -306,14 +329,14 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 						// there are options but value does not match any of them
 						if (count($meta[$field_resource_type][$field_name]['options'])>0 && array_search(trim($cell_actual_value),$meta[$field_resource_type][$field_name]['options'])===false)
 							{
-							if($meta[$field_resource_type][$field_name]['type']==9)
+							if($meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
 								{
 								// Need to add to options table
 								$meta[$field_resource_type][$field_name]['options'][]=trim($cell_actual_value);						
 								$update_dynamic_field=true;
 								array_push($messages,"Adding option for field " . $meta[$field_resource_type][$field_name]['remote_ref'] . ": " . $cell_actual_value);
 								}
-							elseif($meta[$field_resource_type][$field_name]['type']==14)
+							elseif($meta[$field_resource_type][$field_name]['type']==FIELD_TYPE_DATE_RANGE)
 								{
 								/* date range field - want to extract two date values and add as options*/
 								$dates = explode("/",$cell_actual_value);
@@ -322,7 +345,12 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$overrid
 									$meta[$field_resource_type][$field_name]['options'][]=trim($date);						
 									$update_dynamic_field=true;
 									}
-								}	
+								}
+							elseif(in_array($meta[$field_resource_type][$field_name]['type'], $csv_field_definitions) )
+							{
+								# field types that have options but do not display as a controlled list input field, e.g. drop-down
+								# do not raise error if the cell value does not match one of the optoins 
+							} 	
 							else
 								{
 								array_push($messages, "Error: Value \"{$cell_actual_value}\" not found in lookup for \"{$field_name}\" field - found on line {$line_count}");
