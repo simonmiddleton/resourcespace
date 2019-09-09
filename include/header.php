@@ -539,7 +539,7 @@ else
 <!--Main Part of the page-->
 <?php
 
-if($browse_on)
+if($browse_on && checkperm("s") === true)
     {
     render_browse_bar();
     }

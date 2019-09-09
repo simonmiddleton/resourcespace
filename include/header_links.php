@@ -45,7 +45,7 @@
 		
 		<?php if ($speedtagging && checkperm("s") && checkperm("n")) { ?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/tag.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["tagging"]?></a></li><?php }
 
-    if(!$disable_geocoding)
+    if(!$disable_geocoding && checkperm("s") === true)
         {
         ?>
         <li class="HeaderLink">
