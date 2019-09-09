@@ -1078,6 +1078,7 @@ var pluploadconfig = {
                         <?php }?>
                         
                         uploader.bind('FileUploaded', function(up, file, info) {
+                            console.log("bind FileUploaded...");
                                 // Process response
                                  try
                                     {
@@ -1166,8 +1167,6 @@ var pluploadconfig = {
                                 newcolname = jQuery('#entercolname').val();
                                 uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'collection_add',newcol);
                                 uploader.settings.url = ReplaceUrlParameter(uploader.settings.url,'entercolname',newcolname);
-                                
-                                //console.log('url changed ' + uploader.settings.url);
                                 <?php
                                 } ?>
                             // Add index of file in queue so we can know which file is being processed
@@ -1289,6 +1288,7 @@ if($attach_alternatives_found_to_resources)
     ?>
     uploader.bind('FilesAdded', function (up, files)
         {
+        console.log("bind FilesAdded...");
         if(up.files.length <= 1)
             {
             return true;
@@ -1321,6 +1321,7 @@ if($attach_alternatives_found_to_resources)
 
     uploader.bind('BeforeUpload', function (up, file)
         {
+        console.log("bind BeforeUpload...");
         var alternative_suffix = '<?php echo trim($upload_alternatives_suffix); ?>';
 
         if(alternative_suffix == '')
@@ -1329,10 +1330,13 @@ if($attach_alternatives_found_to_resources)
             }
 
         filename = file.name.substr(0, file.name.lastIndexOf('.' + getFilePathExtension(file.name)));
-        
+        console.log("filename = " + filename);
+
         // Check if original file, in which case we stop here
         if(filename.lastIndexOf(alternative_suffix) === -1)
             {
+            console.log("Dealing with an original file. We stop here!");
+            uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'alternative', '');
             return true;
             }
 
@@ -1350,13 +1354,14 @@ if($attach_alternatives_found_to_resources)
 
         // If we've got so far, it means we can upload this file as an alternative for this resource ID
         uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'alternative', resource_id);
-
         });
 
     uploader.bind('UploadComplete', function (up, files)
         {
+        console.log("bind UploadComplete...");
         // Clean-up so user can go through a second batch
         uploader.settings.url = ReplaceUrlParameter(uploader.settings.url, 'alternative', '');
+        resource_ids_for_alternatives = [];
         });
     <?php
     }

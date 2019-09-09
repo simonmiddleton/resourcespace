@@ -3525,7 +3525,6 @@ Set the suffix used to identify alternatives for a particular resource when both
 are being uploaded in a batch using the UI (plupload)
 IMPORTANT: This will only work if the user uploads all files (resource and its alternatives) into the same 
 collection.
-Please make sure to only upload one resource and its original alternatives otherwise it will not work as expected
 */
 $upload_alternatives_suffix = '';
 
