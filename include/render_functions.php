@@ -533,7 +533,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
               <option value=""><?php echo $lang["anyyear"]?></option>
               <?php
               $y=date("Y");
-              for ($d=$minyear;$d<=$y;$d++)
+              for ($d=$y;$d>=$minyear;$d--)
                 {
                 ?><option <?php if ($d==$found_year) { ?>selected<?php } ?>><?php echo $d?></option><?php
                 }
