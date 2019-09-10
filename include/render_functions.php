@@ -3163,9 +3163,7 @@ function render_fb_media_section(
 */
 function render_filter_bar_component()
     {
-    
     global $baseurl, $lang;
-
     ?>
     <li>
         <form id="header_search_form" class="HeaderSearchForm"
@@ -3183,6 +3181,37 @@ function render_filter_bar_component()
             </a>
             <input id="header_search_form_button" type="submit" value="Search" />
         </form>
+        <script>
+        jQuery(document).ready(function()
+            {
+            jQuery("#ssearchbox").keydown(function(event)
+                {
+                if(!(isFilterBarOpen() && event.keyCode == 13))
+                    {
+                    return;
+                    }
+
+                event.preventDefault();
+                
+                var allfields = jQuery("#allfields");
+
+                // If current search was a special search type, that is stored in the allfields since special searches are
+                // not seen by the user as a search. This means we need to append to the allfields if that's the case,
+                // otherwise replace with the newly searched value
+                var found_special_search_values = allfields.val().match(/\!\w{4,}/gm);
+                if(found_special_search_values == null)
+                    {
+                    allfields.val(this.value);
+                    }
+                else
+                    {
+                    allfields.val(allfields.val() + " " + this.value);
+                    }
+
+                UpdateResultCount();
+                });
+            });
+        </script>
     </li>
     <?php
     return;
