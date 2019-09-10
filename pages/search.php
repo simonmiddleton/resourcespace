@@ -1219,6 +1219,7 @@ if($responsive_ui)
 
         if(isset($is_authenticated) && $is_authenticated)
             {
+            render_filter_results_button();
             render_upload_here_button($searchparams);
             }
         

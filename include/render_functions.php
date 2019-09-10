@@ -2777,6 +2777,24 @@ function render_upload_here_button(array $search_params, $return_params_only = f
     return render_filter_bar_button($GLOBALS['lang']['upload_here'], $upload_here_on_click, UPLOAD_ICON);
     }
 
+
+/**
+* Renders a button in the filter bar/section on the search page
+* 
+* @return void
+*/
+function render_filter_results_button()
+    {
+    global $lang, $baseurl;
+
+    $sa_url = "{$baseurl}/pages/search_advanced.php";
+    $csrf_token = str_replace('"', "'", generateAjaxToken("ToggleFilterBarFromSearch"));
+    $filter_bar_onclick = "return ToggleFilterBar('{$sa_url}', {{$csrf_token}});";
+
+    return render_filter_bar_button($lang["filter_results"], $filter_bar_onclick, FILTER_ICON);
+    }
+
+
 /**
 * Renders the trash bin. This is used to delete dash tiles and remove resources from collections
 * 

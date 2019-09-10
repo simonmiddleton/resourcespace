@@ -866,6 +866,7 @@ $lang['upload_here'] = "Upload here";
 $lang['help-tooltip'] = "Get more information on this page";
 $lang["active_filters"] = "Active filters";
 $lang["advanced"] = "Advanced";
+$lang["filter_results"] = "Filter results";
 
 # Pager
 $lang["next"]="Next";
