@@ -181,8 +181,8 @@ if (!hook("replaceloginform")) {
   <h1><?php echo text("welcomelogin")?></h1>
   <p><?php echo text(getvalescaped("text","defaultintro"))?></p>
   <p>
-  <?php if ($allow_account_request) { ?><a id="account_apply" href="pages/user_request.php"><?php echo LINK_CARET . $lang["nopassword"]?> </a><?php } ?>
-  <?php if ($allow_password_reset) { ?><br/><a id="account_pw_reset" href="pages/user_password.php"><?php echo LINK_CARET . $lang["forgottenpassword"]?></a><?php } ?>
+  <?php if ($allow_account_request) { ?><a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php"><?php echo LINK_CARET . $lang["nopassword"]?> </a><?php } ?>
+  <?php if ($allow_password_reset) { ?><br/><a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php"><?php echo LINK_CARET . $lang["forgottenpassword"]?></a><?php } ?>
   <?php hook("loginformlink") ?> 
   </p>
   <?php if ($error!="") { ?><div class="FormIncorrect"><?php echo $error?></div><?php } ?>
