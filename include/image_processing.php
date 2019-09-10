@@ -2585,6 +2585,30 @@ function clear_file_checksum($resource){
     }
 }
 
+function check_duplicate_checksum($filepath,$replace_resource){
+    global $file_upload_block_duplicates,$file_checksums_50k;
+    if($file_upload_block_duplicates)
+        {
+        # Generate the ID
+        if ($file_checksums_50k)
+            {
+            # Fetch the string used to generate the unique ID
+            $use=filesize_unlimited($filepath) . "_" . file_get_contents($filepath,null,null,0,50000);
+            $checksum=md5($use);
+            }
+        else
+            {
+            $checksum=md5_file($filepath);
+            }
+        $duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
+        if(count($duplicates)>0 && !($replace_resource && in_array($replace_resource,$duplicates)))
+            {
+            return $duplicates;                       
+            }
+        }
+    return array(); 
+}
+
 if (!function_exists("upload_preview")){
 function upload_preview($ref)
     {       

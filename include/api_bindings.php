@@ -96,9 +96,18 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
     
     # Also allow upload URL in the same pass (API specific, to reduce calls)
     if ($url!="")
-        {     
-        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
-        if ($return===false) {return false;}
+        {
+        #Check for duplicates if required
+        $duplicates=check_duplicate_checksum($url,false);
+        if (count($duplicates)>0)
+            {
+            return "FAILED: Resource created but duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+            }   
+        else 
+            {
+            $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+            if ($return===false) {return false;}
+            } 
         }
         
     # Also allow metadata to be passed here.
@@ -458,7 +467,18 @@ function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$fi
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
 
-    return upload_file($ref,$no_exif,$revert,$autorotate,$file_path);
+    $duplicates=check_duplicate_checksum($file_path,false);
+    if (count($duplicates)>0)
+        {
+        return "FAILED: Resource created but duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+        }   
+    else 
+        {
+        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+        if ($return===false) {return false;}
+        } 
+
+    return $ref;
     }
     
 function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url="")
@@ -466,8 +486,19 @@ function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=fa
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
+    
+    $duplicates=check_duplicate_checksum($url,false);
+    if (count($duplicates)>0)
+        {
+        return "FAILED: Resource created but duplicate file uploaded, file matches resources: " . implode(",",$duplicates);
+        }   
+    else 
+        {
+        $return=upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+        if ($return===false) {return false;}
+        } 
 
-    return upload_file_by_url($ref,$no_exif,$revert,$autorotate,$url);
+    return $ref;
     }
 
 function api_get_related_resources($ref)

@@ -566,28 +566,14 @@ if ($_FILES)
             rename("{$plfilepath}.part", $plfilepath);
 
             # Additional ResourceSpace upload code
-            
-			# Check for duplicate files
-			if($file_upload_block_duplicates)
-				{
-				# Generate the ID
-				if ($file_checksums_50k)
-					{
-					# Fetch the string used to generate the unique ID
-					$use=filesize_unlimited($plfilepath) . "_" . file_get_contents($plfilepath,null,null,0,50000);
-					$checksum=md5($use);
-					}
-				else
-					{
-					$checksum=md5_file($plfilepath);
-					}
-				$duplicates=sql_array("select ref value from resource where file_checksum='$checksum'");
-				if(count($duplicates)>0 && !($replace_resource && in_array($replace_resource,$duplicates)))
-					{
-					debug("PLUPLOAD ERROR- duplicate file matches resources" . implode(",",$duplicates));
-					die('{"jsonrpc" : "2.0", "error" : {"code": 108, "message": "Duplicate file upload, file matches resources: ' . implode(",",$duplicates) . '", "duplicates": "' . implode(",",$duplicates) . '"}, "id" : "id"}');						
-					}
-				}
+
+			# Check for duplicate files if required
+			$duplicates=check_duplicate_checksum($plfilepath,$replace_resource);
+            if(count($duplicates)>0)
+            {
+                debug("PLUPLOAD ERROR- duplicate file matches resources" . implode(",",$duplicates));
+                die('{"jsonrpc" : "2.0", "error" : {"code": 108, "message": "Duplicate file upload, file matches resources: ' . implode(",",$duplicates) . '", "duplicates": "' . implode(",",$duplicates) . '"}, "id" : "id"}'); 
+            }
 
             $plupload_upload_location=$plfilepath;
             if(!hook("initialuploadprocessing"))
