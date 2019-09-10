@@ -3179,7 +3179,7 @@ function render_filter_bar_component()
             <a id="ToggleFilterBarButton" href="<?php echo $baseurl; ?>/pages/search_advanced.php"
                onclick='return ToggleFilterBar(this.href, {<?php echo generateAjaxToken("ToggleFilterBar"); ?>});'
                <?php if (checkperm("s") !== true) { print 'style="display:none;"'; } ?> >
-                <i aria-hidden="true" class="fa fa-filter fa-lg fa-fw"></i>
+                <i aria-hidden="true" class="fas fa-sliders-h fa-lg"></i>
             </a>
             <input id="header_search_form_button" type="submit" value="Search" />
         </form>

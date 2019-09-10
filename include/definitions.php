@@ -167,7 +167,7 @@ define('RECENT_ICON','<i aria-hidden="true" class="fa fa-fw fa-clock"></i>&nbsp;
 define('HELP_ICON','<i aria-hidden="true" class="fa fa-fw fa-book"></i>&nbsp;');
 define('HOME_ICON','<i aria-hidden="true" class="fa fa-fw fa-home"></i>&nbsp;');
 define('SEARCH_ICON', '<i class="fa fa-search" aria-hidden="true"></i>&nbsp;');
-define('FILTER_ICON', '<i aria-hidden="true" class="fa fa-filter fa-fw"></i>');
+define('FILTER_ICON', '<i class="MarginRight-05em fas fa-sliders-h" aria-hidden="true"></i>');
 
 define ('NODE_TOKEN_PREFIX','@@');
 define ('NODE_TOKEN_OR','|');
