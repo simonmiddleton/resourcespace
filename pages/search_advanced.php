@@ -710,6 +710,10 @@ jQuery(document).ready(function()
     {
     UpdateActiveFilters({search: "<?php echo $search; ?>"});
     jQuery("#FilterBarContainer .Question table").PutShadowOnScrollableElement();
+    jQuery("#CentralSpace").on("categoryTreeChanged", function(event, node)
+        {
+        jQuery(".jstree").parent().PutShadowOnScrollableElement();
+        });
     registerCollapsibleSections(false);
 
     jQuery("#CentralSpace").on("CentralSpaceLoaded", function(event, data)

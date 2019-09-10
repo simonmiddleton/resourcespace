@@ -1768,6 +1768,8 @@ a.BrowseRefresh{
 #FilterBarContainer #AdvancedSearchMediaSection input.SplitSearch { width: 80px; }
 #FilterBarContainer .Question .indent, #FilterBarContainer .Question .stdwidth, #FilterBarContainer .stdwidth { width: initial; }
 #FilterBarContainer div[class*='_range'] select { width: 89px; }
+#FilterBarContainer div.Fixed { max-height: 200px; overflow-y: scroll; }
+#FilterBarContainer .Question .Fixed { width: 100%; }
 
 .FullWidth { width: -webkit-fill-available; }
 .InsetBottomShadow { background: rgba(0, 0, 0, 0.2); }
