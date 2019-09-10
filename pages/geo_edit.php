@@ -9,6 +9,8 @@ if ($disable_geocoding){exit("Geomapping disabled.");}
 
 # Fetch resource data.
 $ref = getvalescaped('ref','',true);
+$order_by = getvalescaped($_GET['order_by'],'',true);
+$search = getvalescaped($_GET['search'],'',true);
 # See if we came from the geolocate_collection page
 $geocol = getvalescaped('geocol','',true);
 if ($ref=='') {die;}
@@ -55,7 +57,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 <div class="RecordPanel">
 <div class="Title"><?php echo $lang['location-title']; render_help_link("user/geolocation");?></div>
 <?php if (!hook("customgeobacklink")) { ?>
-<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short . ($geocol != '' ? "pages/geolocate_collection.php?ref=" . $geocol : "pages/view.php?ref=" . $ref) ?>"><?php echo LINK_CARET_BACK . ($geocol != '' ? $lang['backtogeolocatecollection'] : $lang['backtoresourceview']) ?></a></p>
+<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short . ($geocol != '' ? "pages/geolocate_collection.php?ref=" . $geocol : "pages/view.php?ref=" . $ref) ?>&search=<?php echo $search; ?>&order_by=<?php echo $order_by; ?>"><?php echo LINK_CARET_BACK . ($geocol != '' ? $lang['backtogeolocatecollection'] : $lang['backtoresourceview']) ?></a></p>
 <?php } ?>
 
 <!-- Drag mode selector -->
