@@ -26,6 +26,7 @@ input[readonly] {
 #Header li a {color:#fff; opacity:0.7;}
 #Header a:hover,
 #Header .current {opacity:1;text-decoration: none}
+#Header li.UploadButton a {color: white;}
 
 /* Colours for $header_text_title */
 #TextHeader, #TextHeader a, #TextDesc {color:#fff;}
