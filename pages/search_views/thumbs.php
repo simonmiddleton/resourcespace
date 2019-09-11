@@ -23,8 +23,15 @@ if (!hook("renderresultthumb"))
         }
     hook('thumbs_resourceshell_height');
     
+    if($display_resource_id_in_thumbnail === true) #[t20844]
+        { 
+        $thumbs_displayed_fields_height += 29;
+        $br = '<br />';
+        }; 
+
     ?>
-    <!--Resource Panel-->
+
+    <!--Resource Panel -->    
     <div class="ResourcePanel <?php echo ($display == 'xlthumbs' ? 'ResourcePanelLarge' : '') ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
     style="height: <?php echo $thumbs_displayed_fields_height; ?>px;"
     >
@@ -166,6 +173,7 @@ if (!hook("renderresultthumb"))
             <?php 
             } ?> 
         <!-- END HOOK Renderimagethumb-->
+
         <?php 
 
         if (!hook("replaceicons")) 
@@ -333,7 +341,7 @@ if (!hook("renderresultthumb"))
         if(!hook("replacethumbsidinthumbnail"))
             {
             if ($display_resource_id_in_thumbnail && $ref>0) 
-                { echo "<span class='ResourcePanelResourceID'>" . htmlspecialchars($ref) . "</span>"; } 
+                { echo "<span class='ResourcePanelResourceID'>" . htmlspecialchars($ref) . "</span>$br"; } 
             else 
                 { ?>&nbsp;<?php }
             } # end hook("replacethumbsidinthumbnail")
