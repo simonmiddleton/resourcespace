@@ -327,7 +327,7 @@ jQuery(document).ready(function(){
     	    
     	    	
 	    });
-		jQuery('.Question').easyTooltip({
+		jQuery('#FilterBarContainer .Question').easyTooltip({
 			xOffset: -50,
 			yOffset: 70,
 			charwidth: 70,
