@@ -108,7 +108,7 @@ function HookResourceConnectAllSearchfiltertop()
     <script>
     jQuery(document).ready(function()
         {
-        jQuery(document).tooltip();
+        jQuery(".Question.ResourceConnectSearch").tooltip();
         });
     </script>
 	<div class="Question SearchItem ResourceConnectSearch"><?php echo $lang["resourceconnect_search_database"];?>&nbsp;<a href="#" onClick="styledalert('<?php echo $lang["resourceconnect_search_database"] ?>','<?php echo $lang["resourceconnect_search_info"] ?>');" title="<?php echo $lang["resourceconnect_search_info"] ?>"><i class="fa fa-info-circle"></i></a><br />
