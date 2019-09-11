@@ -3198,7 +3198,7 @@ function render_filter_bar_component()
                 // If current search was a special search type, that is stored in the allfields since special searches are
                 // not seen by the user as a search. This means we need to append to the allfields if that's the case,
                 // otherwise replace with the newly searched value
-                var found_special_search_values = allfields.val().match(/\!\w{4,}/gm);
+                var found_special_search_values = allfields.val().match(SPECIAL_SEARCH_REGEX + "/gm");
                 if(found_special_search_values == null)
                     {
                     allfields.val(this.value);

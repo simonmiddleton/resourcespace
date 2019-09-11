@@ -252,3 +252,5 @@ define ('ACTIONGROUP_EDIT',         3);
 define ('ACTIONGROUP_SHARE',        4);
 define ('ACTIONGROUP_RESEARCH',     5);
 define ('ACTIONGROUP_ADVANCED',     6);
+
+define("SPECIAL_SEARCH_REGEX", "/\!\w{3,}/");

@@ -347,7 +347,8 @@ var resource_type_fields_data = [];
     <div class="clearerleft"></div>
 </div>
 <?php
-if($search_includes_resources && !hook("advsearchrestypes"))
+$allwords_has_special_search = preg_match_all(SPECIAL_SEARCH_REGEX, $allwords);
+if(!$allwords_has_special_search && $search_includes_resources && !hook("advsearchrestypes"))
     {
     ?>
     <div class="Question">
