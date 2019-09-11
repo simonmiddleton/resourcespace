@@ -283,5 +283,23 @@ echo $hidden_input_elements;
         echo $update_result_count_function_call;
         ?>
         });
+
+    jquery_tree_by_id.on("after_open.jstree", function(event, node)
+        {
+        var data = {
+            html_id: jQuery(event.target).attr("id")
+        }
+
+        jQuery(document).trigger('categoryTreeAfterOpen', data);
+        });
+
+    jquery_tree_by_id.on("after_close.jstree", function(event, node)
+        {
+        var data = {
+            html_id: jQuery(event.target).attr("id")
+        }
+
+        jQuery(document).trigger('categoryTreeAfterClose', data);
+        });
     </script>
 </div>

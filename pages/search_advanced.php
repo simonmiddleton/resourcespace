@@ -710,9 +710,13 @@ jQuery(document).ready(function()
     {
     UpdateActiveFilters({search: "<?php echo $search; ?>"});
     jQuery("#FilterBarContainer .Question table").PutShadowOnScrollableElement();
-    jQuery("#CentralSpace").on("categoryTreeChanged", function(event, node)
+    jQuery(document).on("categoryTreeAfterOpen", function(event, data)
         {
-        jQuery(".jstree").parent().PutShadowOnScrollableElement();
+        jQuery("#" + data.html_id).parent().PutShadowOnScrollableElement();
+        });
+    jQuery(document).on("categoryTreeAfterClose", function(event, data)
+        {
+        jQuery("#" + data.html_id).parent().PutShadowOnScrollableElement();
         });
     registerCollapsibleSections(false);
 
