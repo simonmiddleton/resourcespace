@@ -709,7 +709,6 @@ if (getval("ajax","") == "")
 				jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
 				}
 			});
-		jQuery("#SearchBarContainer").on("click","#Rssearchexpand",toggleSimpleSearch);
 		jQuery("#CentralSpaceContainer").on("click","#Responsive_ResultDisplayOptions",function(event)
 			{
 			if(jQuery(this).hasClass("RSelectedButton"))
