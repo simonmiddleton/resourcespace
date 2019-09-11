@@ -30,7 +30,7 @@ body {
     -webkit-overflow-scrolling: touch;
 }
 
-@media(max-width:1100px) {
+@media(max-width:1200px) {
 
     #UICenter{
         margin-bottom: 161px !important;
@@ -276,6 +276,7 @@ body {
 @media(max-width:1200px) {
     #Header {
         min-height: 47px;
+        height: auto !important;
     }
     #HeaderButtons {
         display: block !important;
@@ -583,7 +584,7 @@ body {
 }
 
 /* Footer */
-@media(max-width:1100px) {
+@media(max-width:1200px) {
     #FooterNavLeft {
         float:none;
         text-align:center;

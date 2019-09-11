@@ -1074,7 +1074,7 @@ div.video-js {margin:auto;}
 #modal
     {
     position:absolute;
-    width: 1235px;
+    max-width: 1235px;
     text-align:left;
     opacity: 1;
     display:none;
