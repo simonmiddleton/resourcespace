@@ -713,7 +713,7 @@ $research_request=false;
 $country_search=false;
 
 # Resource ID search blank in right nav? (probably only needed if $config_search_for_number is set to true) 
-$resourceid_simple_search=false;
+$resourceid_simple_search=true;
 
 # Enable sorting resources in other ways:
 $colour_sort=true;

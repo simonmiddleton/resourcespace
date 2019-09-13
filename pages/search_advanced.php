@@ -418,7 +418,7 @@ if(!hook('advsearchallfields'))
     ?>
 
 <?php
-if(!hook('advsearchresid') && trim($search) === "")
+if(!hook('advsearchresid') && trim($search) === "" && $resourceid_simple_search)
     {
     ?>
     <div class="Question">
