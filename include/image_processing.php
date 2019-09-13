@@ -1421,30 +1421,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $prefix = $extension .':';
             }
 
-        # Locate imagemagick.
-        $identify_fullpath = get_utility_path("im-identify");
-        if ($identify_fullpath==false) {debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'."); return false;}
-    
-        # Get image's dimensions.
-        $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
-        $identoutput=run_command($identcommand);
+        list($sw, $sh) = getFileDimensions($prefix, $file, $extension);
 
         if($extension == "svg")
             {
-            list($sw, $sh) = getSvgSize($origfile);
             $o_width  = $sw;
             $o_height = $sh;
-            }
-        else if(!empty($identoutput))
-            {
-            $wh=explode("x",$identoutput);
-            $sw = $o_width = $wh[0];
-            $sh = $o_height = $wh[1];
-            }
-        else
-            {
-            // we really need dimensions here, so fallback to php's method
-            list($sw,$sh) = @getimagesize($file);
             }
 
         if($lean_preview_generation)
@@ -1888,10 +1870,30 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     // Generate the command for a single watermark instead of a tiled one
                     if(isset($watermark_single_image))
                         {
+                        // Get watermark dimensions
+                        list($wmw, $wmh) = getFileDimensions('', $watermarkreal, 'jpeg');
                         $wm_scale = $watermark_single_image['scale'];
+                        // Work out minimum dimension of target dimensions, essential to calulate correct values based on ratio of watermark
+                        $tmin = min($tw, $th);
 
-                        $wm_scaled_width  = $tw * ($wm_scale / 100);
-                        $wm_scaled_height = $th * ($wm_scale / 100);
+                        // Landscape
+                        if ($wmw > $wmh)
+                            {
+                            $wm_scaled_height=($tmin*($wmh/$wmw))*($wm_scale / 100);
+                            $wm_scaled_width=$tmin*($wm_scale / 100);
+                            }
+                        // Portrait
+                        else if ($wmw < $wmh)
+                            {
+                            $wm_scaled_width=($tmin*($wmw/$wmh))*($wm_scale / 100);
+                            $wm_scaled_height=$tmin*($wm_scale / 100);
+                            }
+                        // Square
+                        else
+                            {
+                            $wm_scaled_width=$tmin*($wm_scale / 100);
+                            $wm_scaled_height=$tmin*($wm_scale / 100);
+                            }                 
                         
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
                         $runcommand = sprintf('%s %s %s -gravity %s -geometry %sx%s+0+0 -resize %sx%s -composite %s',
@@ -3166,6 +3168,36 @@ function delete_previews($resource,$alternative=-1)
         }
     }
 
+function getFileDimensions($prefix, $file, $extension)
+    {
+    # Locate imagemagick.
+    $identify_fullpath = get_utility_path("im-identify");
+    if ($identify_fullpath==false) {debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'."); return false;}
+    
+    # Get image's dimensions.
+    $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
+    $identoutput=run_command($identcommand);
+
+    if($extension == "svg")
+        {
+        list($w, $h) = getSvgSize($origfile);
+        }
+    else if(!empty($identoutput))
+        {
+        $wh=explode("x",$identoutput);
+        $w = $o_width = $wh[0];
+        $h = $o_height = $wh[1];
+        }
+    else
+        {
+        // we really need dimensions here, so fallback to php's method
+        list($w,$h) = @getimagesize($file);
+        }
+    
+    $dimensions = array($w, $h);
+
+    return($dimensions);
+    }
 
 /**
 * Get SVG size by reading the file and looking for dimensions at either width and height OR at Viewbox attribute(s)
