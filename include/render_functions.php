@@ -2401,7 +2401,7 @@ function renderLockButton($name, $locked_fields=array())
 */
 function render_resource_image($imagedata, $img_url, $display="thumbs")
     {
-    global $view_title_field;
+    global $view_title_field,$retina_mode;
     # if image dimensions then calculate ratio
     if('' != $imagedata['thumb_width'] && 0 != $imagedata['thumb_width'] && '' != $imagedata['thumb_height'])
         {
@@ -2452,8 +2452,8 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     else 
         {
         # square image or no image dimensions
-        $height = "auto";
-        $width = "auto";
+        $height = $retina_mode?$defaultheight:"auto";
+        $width = $retina_mode?round($defaultwidth * $ratio):"auto";
         $margin = "auto";
         }
     
