@@ -1158,7 +1158,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 							data: {<?php echo generateAjaxToken("relate_resources"); ?>},
                             success: function(data) {
 								if (data.trim() == "SUCCESS") {
-									styledalert('<?=$lang["ok"]?>', '<?=$lang["status-ok"]?>');
+									styledalert('<?=$lang["requeststatus2"]?>', '<?=$lang["actions_add_editable_to_collection"]?>');
 								}
 							},
 							error: function (err) {
