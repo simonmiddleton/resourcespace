@@ -741,6 +741,8 @@ div.autocomplete ul li {
 .ui-layout-pane
     {
     overflow: auto;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
     }
 
 .InfoBoxResourceTypeIcon
