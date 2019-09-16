@@ -725,7 +725,7 @@ jQuery(document).ready(function()
         {
         var page_name = typeof data.pagename !== "undefined" ? data.pagename : "";
 
-        if(pagename != "search")
+        if(pagename != "search" && (typeof filter_open === 'undefined' || !filter_open))
             {
             ClearFilterBar(false);
             }

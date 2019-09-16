@@ -170,6 +170,7 @@ include "../../include/header.php";
         300,
         '',
         true);
+    $page_def[] = config_add_boolean_select('filter_bar_default_open', $lang['filter_bar_default_open'], $enable_disable_options, 300, '', true);
     $page_def[] = config_add_html('</div>');
 
 

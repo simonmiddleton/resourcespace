@@ -504,7 +504,8 @@ $searchparams= array(
     'sort'                                      => $sort,
     'restypes'                                  => $restypes,
     'recentdaylimit'                            => getvalescaped('recentdaylimit', '', true),
-    'foredit'                                   => ($editable_only?"true":"")
+    'foredit'                                   => ($editable_only?"true":""),
+    'source'                                    => trim(getval("source", ""))
 );
 
 $checkparams = array();
@@ -608,7 +609,7 @@ if($k == "")
     var filter_bar_search = <?php echo trim(getval("source", "")) == "filter_bar" ? "true" : "false"; ?>;
     var require_filter_bar_reload = <?php echo trim(getval("filter_bar_reload", "")) !== "false" ? "true" : "false"; ?>;
 
-    if(!filter_bar_search)
+    if(!filter_bar_search && (typeof filter_open === "undefined" || !filter_open))
         {
         TogglePane(
             'FilterBarContainer',
@@ -617,6 +618,14 @@ if($k == "")
                 <?php echo generateAjaxToken("ToggleFilterBar"); ?>
             },
             true);
+            
+        if(typeof filter_open !== "undefined")
+            {
+            ReloadFilterBar();
+            filter_open = !filter_open;
+            SetCookie('filter_open', filter_open); 
+            }
+        
         }
 
     if(filter_bar_search && require_filter_bar_reload)

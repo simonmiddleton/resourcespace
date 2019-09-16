@@ -114,6 +114,7 @@ $page_def[] = config_add_boolean_select('modal_default', $lang['systemconfig_mod
 $page_def[] = config_add_boolean_select('comments_resource_enable', $lang['systemconfig_comments'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_single_select('upload_then_edit', $lang['default_upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 420, '', true);
 $page_def[] = config_add_boolean_select('byte_prefix_mode_decimal', $lang['byte_prefix_mode_decimal'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_boolean_select('filter_bar_default_open', $lang['filter_bar_default_open'], $enable_disable_options, 420, '', true);
 
 $page_def[] = config_add_html('</div>');
 

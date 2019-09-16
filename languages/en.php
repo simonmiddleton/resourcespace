@@ -2828,3 +2828,4 @@ $lang["collection_actiontype_4"]        = "Share";
 $lang["collection_actiontype_5"]        = "Research";
 $lang["collection_actiontype_6"]        = "Advanced";
 $lang["collection_actiontype_999"]      = "Other";
+$lang["filter_bar_default_open"]        = "Search bar defaults to open position";
