@@ -319,7 +319,17 @@ function get_resource_path(
             $migrating_scrambled = true;
             }
 
-    return  $file;
+    if(isset($originals_separate_storage) && $originals_separate_storage === true) 
+        {  
+        if (strpos($file, '/filestore/') !== false) 
+            { 
+            $storagedir_explode = explode('/', $storagedir);
+            $storagedir_end = end($storagedir_explode);
+            $file = str_replace('filestore', "$storagedir_end", $file);
+            }
+        } 
+
+    return $file;
     }
 
 
