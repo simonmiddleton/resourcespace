@@ -89,11 +89,11 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     text-align: center;
 }
 
-td.DownloadFileName a 
+#ResourceDownloadOptions td.DownloadFileName a 
 {
-    background-color: transparent !important;
-    border-top: none !important;
-    box-shadow: none !important;
+    background-color: transparent;
+    border-top: none;
+    box-shadow: none;
 }
 
 button:hover, input[type=submit]:hover, input[type=button]:hover, .RecordPanel .RecordDownloadSpace .DownloadDBlend a:hover,.UploadButton a {
