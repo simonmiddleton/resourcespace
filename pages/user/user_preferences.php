@@ -170,7 +170,10 @@ include "../../include/header.php";
         300,
         '',
         true);
-    $page_def[] = config_add_boolean_select('filter_bar_default_open', $lang['filter_bar_default_open'], $enable_disable_options, 300, '', true);
+    
+    $filter_bar_csrf_token = str_replace('"', "'", generateAjaxToken("ToggleFilterBar"));
+    $filter_bar_js = "ToggleFilterBar(baseurl_short + 'pages/search_advanced.php',{" . $filter_bar_csrf_token . "},(this.value == 1) ? 'open' : 'closed');";
+    $page_def[] = config_add_boolean_select('filter_bar_default_open', $lang['filter_bar_default_open'], $enable_disable_options, 300, '', true,$filter_bar_js);
     $page_def[] = config_add_html('</div>');
 
 
