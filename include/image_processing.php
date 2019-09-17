@@ -1870,11 +1870,32 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     // Generate the command for a single watermark instead of a tiled one
                     if(isset($watermark_single_image))
                         {
+                        // Work out minimum of target dimensions, by calulating targets dimensions based on actual file ratio to get minimum dimension, essential to calulate correct values based on ratio of watermark
+
+                        // Landscape
+                        if ($sw > $sh)
+                            {
+                            $tmin=min($tw*($sh/$sw),$th);
+                            }
+                        // Portrait
+                        else if ($sw < $sh)
+                            {
+                            $tmin=min($th*($sw/$sh),$tw);
+                            }
+                        // Square
+                        else
+                            {
+                            $tmin=min($tw,$th);
+                            }
+                        debug("ttest: \$tw = {$tw}");
+debug("ttest: \$th = {$th}");
+debug("ttest: \$sw = {$sw}");
+debug("ttest: \$sh = {$sh}");
+debug("ttest: \$tmin = {$tmin}");
+
                         // Get watermark dimensions
                         list($wmw, $wmh) = getFileDimensions('', $watermarkreal, 'jpeg');
                         $wm_scale = $watermark_single_image['scale'];
-                        // Work out minimum dimension of target dimensions, essential to calulate correct values based on ratio of watermark
-                        $tmin = min($tw, $th);
 
                         // Landscape
                         if ($wmw > $wmh)
