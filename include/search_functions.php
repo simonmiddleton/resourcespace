@@ -1291,7 +1291,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     }
                 }   
             }   
-        $searchsql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource $colcustperm  WHERE c.collection='" . $collection . "' AND $colcustfilter GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        $searchsql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource $colcustperm  WHERE c.collection='" . $collection . "' AND ($colcustfilter) GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $collectionsearchsql=hook('modifycollectionsearchsql','',array($searchsql));
 
         if($collectionsearchsql)
