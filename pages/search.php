@@ -609,29 +609,33 @@ if($k == "")
     var filter_bar_search = <?php echo trim(getval("source", "")) == "filter_bar" ? "true" : "false"; ?>;
     var require_filter_bar_reload = <?php echo trim(getval("filter_bar_reload", "")) !== "false" ? "true" : "false"; ?>;
 
-    if(!filter_bar_search && (typeof filter_open === "undefined" || !filter_open))
-        {
-        TogglePane(
-            'FilterBarContainer',
+    if(!filter_bar_search)
+        {        
+        var filter_state_saved = getCookie('filter_state');
+        filter_state = (typeof filter_state_saved !== 'undefined') ? filter_state_saved : '<?php echo ($filter_bar_default_open) ? "open" : "closed"; ?>';
+        if(filter_state == "open") 
             {
-                load_url: '<?php echo $baseurl; ?>/pages/search_advanced.php',
-                <?php echo generateAjaxToken("ToggleFilterBar"); ?>
-            },
-            true);
-            
-        if(typeof filter_open !== "undefined")
-            {
-            ReloadFilterBar();
-            filter_open = !filter_open;
-            SetCookie('filter_open', filter_open); 
+            // Already open - reload the filter bar
+            var url = "<?php echo generateURL("{$baseurl}/pages/search_advanced.php", array('search' => $search)); ?>";
+            jQuery("#FilterBarContainer").load(url);
             }
-        
+        else
+            {
+            TogglePane(
+                'FilterBarContainer',
+                {
+                    load_url: '<?php echo $baseurl; ?>/pages/search_advanced.php',
+                    <?php echo generateAjaxToken("ToggleFilterBar"); ?>
+                },filter_state);
+            }
+        SetCookie('filter_state', filter_state);
         }
-
+            
     if(filter_bar_search && require_filter_bar_reload)
         {
         ReloadFilterBar('<?php echo $search; ?>');
         }
+    
     </script>
     <?php
     }

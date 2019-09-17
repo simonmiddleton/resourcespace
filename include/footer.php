@@ -454,19 +454,17 @@ if (getval("ajax","") == "")
             jQuery(document).ready(function()
                 {
                 <?php 
-                if($filter_bar_default_open)
+                $csrf_token = str_replace('"', "'", generateAjaxToken("ToggleFilterBar")); 
+                echo "
+                var filter_state_saved = getCookie('filter_state');
+                filter_state = (typeof filter_state_saved !== 'undefined') ? filter_state_saved : '" . (($filter_bar_default_open) ? "open" : "closed") . "';
+                //console.log('footer - filter_state is ' + filter_state);
+                SetCookie('filter_state', filter_state);
+                if(filter_state == 'open' && !isFilterBarOpen())
                     {
-                    $csrf_token = str_replace('"', "'", generateAjaxToken("ToggleFilterBar")); 
-                    echo "
-                    filter_open_saved = getCookie('filter_open');
-                    filter_open = (typeof filter_open_saved !== 'undefined') ? filter_open_saved : " . (($filter_bar_default_open) ? "true" : "false") . ";
-                    SetCookie('filter_open', filter_open);
-                    if(filter_open)
-                        {
-                        ToggleFilterBar('{$baseurl}/pages/search_advanced.php', {" . $csrf_token . "});
-                        }
-                    ";
-                    }?>
+                    ToggleFilterBar('{$baseurl}/pages/search_advanced.php', {" . $csrf_token . "},'open');
+                    }
+                ";?>
                 CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?thumbs=<?php echo urlencode($thumbs); ?>&collection='+usercollection+'<?php echo (isset($k) ? "&k=".urlencode($k) : ""); ?>&order_by=<?php echo (isset($order_by) ? urlencode($order_by) : ""); ?>&sort=<?php echo (isset($sort) ? urlencode($sort) : ""); ?>&search=<?php echo (isset($search) ? urlencode($search) : ""); ?>&restypes=<?php echo (isset($restypes) ? urlencode($restypes) : "") ?>&archive=<?php echo (isset($archive) ? urlencode($archive) : "" ) ?>&daylimit=<?php echo (isset($daylimit) ? urlencode($daylimit) : "" ) ?>&offset=<?php echo (isset($offset) ? urlencode($offset) : "" );echo (isset($resources_count) ? "&resources_count=$resources_count" :""); ?>');
                 InitThumbs();
                 });

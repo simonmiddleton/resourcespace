@@ -669,7 +669,7 @@ function ClearFilterBar(load)
                 load_url: '<?php echo $baseurl; ?>/pages/search_advanced.php',
                 <?php echo generateAjaxToken("ToggleFilterBar"); ?>
             },
-            true);
+            'close');
         jQuery("#FilterBarContainer").empty();
         }
 
@@ -725,7 +725,7 @@ jQuery(document).ready(function()
         {
         var page_name = typeof data.pagename !== "undefined" ? data.pagename : "";
 
-        if(pagename != "search" && (typeof filter_open === 'undefined' || !filter_open))
+        if(pagename != "search" && (typeof filter_state === 'undefined' || filter_state=="closed"))
             {
             ClearFilterBar(false);
             }
