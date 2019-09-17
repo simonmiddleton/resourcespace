@@ -602,7 +602,7 @@ if($k=="" || $internal_share_access)
     <?php
     }
 
-if($k == "")
+if($k == "" && getval("go","") == "")
     {
     ?>
     <script>
