@@ -43,7 +43,10 @@ function tms_convert_value($value, $key, array $module)
     $tms_rs_mapping_index = array_search($key, array_column($module['tms_rs_mappings'], 'tms_column'));
     if($tms_rs_mapping_index !== false)
         {
-        return mb_convert_encoding($value, 'UTF-8', $module['tms_rs_mappings'][$tms_rs_mapping_index]['encoding']);
+	$mappings=$module['tms_rs_mappings'];
+	$mappings=array_values($mappings);
+
+        return mb_convert_encoding($value, 'UTF-8', $mappings[$tms_rs_mapping_index]['encoding']);
         }
 
     // Default to the old way of detecting the encoding if we can't figure out the expected encoding of the tms column data.
