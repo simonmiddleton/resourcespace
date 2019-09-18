@@ -185,14 +185,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
     $count_statement_start = "";
     $count_statement_end = "";
 
-    if($count)
-        {
-        $count_statement_start = "SELECT COUNT(*) AS value FROM (";
-        $count_statement_end = ") AS count_select";
-        }
-
     $sql_query = "
-                {$count_statement_start}
                  SELECT
                         `activity_log`.`logged` AS 'datetime',
                         `user`.`username` AS 'user',
@@ -284,7 +277,6 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                         )
 
         ORDER BY `datetime` DESC
-        {$count_statement_end}
     ";
 
     if(trim($table) !== '')
@@ -304,6 +296,9 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
 
     if($count)
         {
+        $count_statement_start = "SELECT COUNT(*) AS value FROM (";
+        $count_statement_end = ") AS count_select";
+        $sql_query = $count_statement_start . $sql_query . $count_statement_end;
         return sql_value($sql_query, 0);
         }
     else
