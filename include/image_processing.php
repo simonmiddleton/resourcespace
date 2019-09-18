@@ -1421,7 +1421,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $prefix = $extension .':';
             }
 
-        list($sw, $sh) = getFileDimensions($prefix, $file, $extension);
+        # Locate imagemagick.
+        $identify_fullpath = get_utility_path("im-identify");
+        if ($identify_fullpath==false) {debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'."); return false;}
+
+        list($sw, $sh) = getFileDimensions($identify_fullpath, $prefix, $file, $extension);
 
         if($extension == "svg")
             {
@@ -1889,7 +1893,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             }
 
                         // Get watermark dimensions
-                        list($wmw, $wmh) = getFileDimensions('', $watermarkreal, 'jpeg');
+                        list($wmw, $wmh) = getFileDimensions($identify_fullpath, '', $watermarkreal, 'jpeg');
                         $wm_scale = $watermark_single_image['scale'];
 
                         // Landscape
@@ -3184,12 +3188,8 @@ function delete_previews($resource,$alternative=-1)
         }
     }
 
-function getFileDimensions($prefix, $file, $extension)
+function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     {
-    # Locate imagemagick.
-    $identify_fullpath = get_utility_path("im-identify");
-    if ($identify_fullpath==false) {debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'."); return false;}
-    
     # Get image's dimensions.
     $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
     $identoutput=run_command($identcommand);
