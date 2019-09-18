@@ -1704,9 +1704,7 @@ function get_ip()
 	
 	if ($ip_forwarded_for)
 		{
-		# Attempt to read Apache forwarding header instead.
-		$headers = @apache_request_headers();
-		if (@array_key_exists('X-Forwarded-For', $headers)) {return $headers["X-Forwarded-For"];}
+		if (isset($_SERVER) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {return $_SERVER["HTTP_X_FORWARDED_FOR"];}
 		}
 		
 	# Returns the IP address for the current user.
