@@ -111,7 +111,7 @@ if(!function_exists("get_advanced_search_fields"))
             }
 
         if(
-            !in_array($date_field, $return)
+            !(in_array($date_field, array_column($return, 'ref')))
             && $daterange_search
             && metadata_field_view_access($date_field)
             && !in_array($date_field, $hiddenfields))

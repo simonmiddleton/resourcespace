@@ -532,7 +532,16 @@ if($modified_fields !== false && is_array($modified_fields) && !empty($modified_
 
 $advanced_section_rendered = false;
 $n = 0; # this is used by render_search_field()
-foreach(array_merge($fields, $fake_fields) as $field)
+
+$array_filter_fields_all = array_merge($fields, $fake_fields);
+
+// order the array by the simple_search flag.. descending order i.e. 1 first then 0
+usort($array_filter_fields_all, function ($a, $b) {
+    if ($a["simple_search"] == $b["simple_search"])  return 0;
+    return ($a["simple_search"] < $b["simple_search"]) ? 1 : -1;
+});
+
+foreach($array_filter_fields_all as $field)
     {
     $simple_search_flag = $field["simple_search"] == 1 ? true : false;
     $advanced_search_flag = $field["advanced_search"] == 1 ? true : false;
