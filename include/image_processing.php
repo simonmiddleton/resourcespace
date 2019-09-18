@@ -1887,11 +1887,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             {
                             $tmin=min($tw,$th);
                             }
-                        debug("ttest: \$tw = {$tw}");
-debug("ttest: \$th = {$th}");
-debug("ttest: \$sw = {$sw}");
-debug("ttest: \$sh = {$sh}");
-debug("ttest: \$tmin = {$tmin}");
 
                         // Get watermark dimensions
                         list($wmw, $wmh) = getFileDimensions('', $watermarkreal, 'jpeg');
