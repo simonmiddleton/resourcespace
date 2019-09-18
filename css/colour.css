@@ -27,6 +27,9 @@ input[readonly] {
 #Header a:hover,
 #Header .current {opacity:1;text-decoration: none}
 #Header li.UploadButton a {color: white;}
+/* links in Header overflow dropdown menu */
+li.HeaderLink a {color:#fff !important; opacity:0.7;}
+
 
 /* Colours for $header_text_title */
 #TextHeader, #TextHeader a, #TextDesc {color:#fff;}
