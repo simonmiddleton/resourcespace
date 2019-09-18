@@ -230,14 +230,23 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
     // Check if limiting is required
     $limit = '';
 
-    if(!is_null($offset) && is_int($offset))
+    if(!is_null($offset) && is_int($offset)) # Offset specified
         {
-        $limit = "LIMIT {$offset}";
+        if(!is_null($rows) && is_int($rows)) # Row limit specified
+            {
+            $limit = "LIMIT {$offset},{$rows}";
+            }
+        else # Row limit absent
+            {
+            $limit = "LIMIT {$offset},999999999"; # Use a large arbitrary limit
+            }
         }
-
-    if('' != $limit && !is_null($rows) && is_int($rows))
+    else # Offset not specified
         {
-        $limit .= ",{$rows}";
+        if(!is_null($rows) && is_int($rows)) # Row limit specified
+            {
+            $limit = "LIMIT {$rows}";
+            }
         }
 
     // Filter by name if required
