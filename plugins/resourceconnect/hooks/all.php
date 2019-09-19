@@ -7,6 +7,13 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
 	global $scramble_key;
 	$access_key=md5("resourceconnect" . $scramble_key);
 
+	# Strip out the username if it has been passed.
+	if (strpos($key,"-")!==false)
+	{
+	$s=explode("-",$key);
+	$key=end($s);
+	}
+
 	if ($key!=substr(md5($access_key . $resource),0,10)) {return false;} # Invalid access key. Fall back to user logins.
 
 	global $resourceconnect_user; # Which user to use for remote access?
