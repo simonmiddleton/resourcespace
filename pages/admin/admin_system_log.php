@@ -232,9 +232,23 @@ if($table == '' && $table_reference == 0)
                         }
                     else if($table == '' || $table_reference == 0)
                         {
-                        ?>
-                        <td><?php echo htmlspecialchars($record['table_reference']); ?></td>
-                        <?php
+                        $ref = htmlspecialchars($record['table_reference']);
+                        
+                        switch ($record['column'])
+                            {
+                            // if this is resource ref, then add link to view resource
+                            case "ref":
+                                print <<<html
+                            <td><a href="$baseurl/pages/view.php?search=&order_by=&ref=$ref" title="View resource" onclick="return ModalLoad(this,true);">$ref</a></td>
+html;
+                            break;
+
+                            default:
+                                print "<td>$ref</td>";
+                            break;
+
+
+                            }
                         }
                         ?>
                 </tr>
