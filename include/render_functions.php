@@ -2832,33 +2832,36 @@ function generate_browse_bar_item($id, $text)
     $html .= "</div><!-- End of BrowseRowInner -->
             </div><!-- End of BrowseRowOuter -->";
 	return $html;
-	}
-
+    }
+    
 /**
 * Generates a help icon that opens the relevant Knowledge Base article in a modal
 *  
 * These links can be disabled by setting $contextual_help_links=false;
 * 
-* @param string $page   Knowledge Base article to display, leave blank to show the Knowledge Base homepage
+* @param string  $page              Knowledge Base article to display, leave blank to show the Knowledge Base homepage
+* @param boolean $return_string     Set to true to return the html as a single line string, False will cause the function to echo the html
 * 
-* @return void
+* @return mixed  if $return_string=true return is string, else void
 */
-function render_help_link($page='')
+function render_help_link($page='',$return_string=false)
     {
     global $contextual_help_links,$pagename,$lang,$help_modal,$baseurl;
     if ($contextual_help_links === false){return;}
-    ?>
-    <a 
-        href="<?php echo $baseurl . '/pages/help.php?page=' . $page ?>"
-        title="<?php echo $lang['help-tooltip']; ?>"
-        class="HelpLink"
-        <?php 
-        if ($help_modal) 
-            { echo "onClick='return ModalLoad(this, true);'";}
-        else
-            { echo "target='_blank'";}
-        ?>
-    >
-    <i aria-hidden="true" class="fa fa-fw fa-question-circle"></i>
-    </a>
-    <?php }
+
+    // Build html for link into a string
+    $help_link_html  =      '<a ';
+    $help_link_html .=          'href="' . $baseurl . '/pages/help.php?page=' . $page . '" ';
+    $help_link_html .=          'title="' . $lang["help-tooltip"] . '" ';
+    $help_link_html .=          'class="HelpLink"';
+    if ($help_modal) 
+        { $help_link_html .=    'onClick="return ModalLoad(this, true);" ';}
+    else
+        { $help_link_html .=    'target="_blank" ';}
+    $help_link_html .=      '>';
+    $help_link_html .=      '<i aria-hidden="true" class="fa fa-fw fa-question-circle"></i>';
+    $help_link_html .=      '</a>';
+
+    if ($return_string===false) {echo $help_link_html;return;}
+    else {return $help_link_html;}
+    }
