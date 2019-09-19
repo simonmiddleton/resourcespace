@@ -15,7 +15,7 @@
 			)
 		)
 		{?>
-		<?php if ($search_results_link){?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/search.php"  onClick="return CentralSpaceLoad(this,true);"><?php echo SEARCH_ICON . $lang["searchresults"]; ?></a></li><?php } ?><?php } ?>
+		<?php if ($search_results_link){?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/search.php"  onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["searchresults"]?></a></li><?php } ?><?php } ?>
 		
 		<?php if (!hook("replacethemelink")) { ?>
 		<?php if (checkperm("s") && $enable_themes && !$theme_direct_jump && $themes_navlink) { ?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/themes.php" onClick="return CentralSpaceLoad(this,true);"><?php echo FEATURED_COLLECTION_ICON . $lang["themes"]?></a></li><?php } ?>
@@ -43,20 +43,9 @@
 		<?php } ?>
 		
 		
-		<?php if ($speedtagging && checkperm("s") && checkperm("n")) { ?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/tag.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["tagging"]?></a></li><?php }
-
-    if(!$disable_geocoding && checkperm("s") === true)
-        {
-        ?>
-        <li class="HeaderLink">
-            <a href="<?php echo $baseurl; ?>/pages/geo_search.php" onclick="return CentralSpaceLoad(this, true);">
-                <i aria-hidden="true" class="fa fa-fw fa-globe"></i>
-                <span><?php echo $lang["geographicsearch"]; ?></span>
-            </a>
-        </li>
-        <?php
-        }
-
+		<?php if ($speedtagging && checkperm("s") && checkperm("n")) { ?><li class="HeaderLink"><a href="<?php echo $baseurl?>/pages/tag.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["tagging"]?></a></li><?php } ?>
+		
+        <?php 
         /* ------------ Customisable top navigation ------------------- */
         if(isset($custom_top_nav))
             {

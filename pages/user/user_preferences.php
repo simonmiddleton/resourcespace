@@ -158,6 +158,7 @@ include "../../include/header.php";
     // User interface section
     $page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['userpreference_user_interface'] . '</h2><div id="UserPreferenceUserInterfaceSection" class="CollapsibleSection">');
     $page_def[] = config_add_single_select('thumbs_default', $lang['userpreference_thumbs_default_label'], array('show' => $lang['showthumbnails'], 'hide' => $lang['hidethumbnails']), true, 300, '', true);
+    $page_def[] = config_add_boolean_select('basic_simple_search', $lang['userpreference_basic_simple_search_label'], $enable_disable_options, 300, '', true);
     $page_def[] = config_add_single_select('upload_then_edit', $lang['upload_sequence'], array(true => $lang['upload_first_then_set_metadata'], false => $lang['set_metadata_then_upload']), true, 300, '', true);
     $page_def[] = config_add_boolean_select('modal_default', $lang['userpreference_modal_default'], $enable_disable_options, 300, '', true);        
     $page_def[] = config_add_boolean_select('keyboard_navigation', $lang['userpreference_keyboard_navigation'], $enable_disable_options, 300, '', true);
@@ -170,10 +171,6 @@ include "../../include/header.php";
         300,
         '',
         true);
-    
-    $filter_bar_csrf_token = str_replace('"', "'", generateAjaxToken("ToggleFilterBar"));
-    $filter_bar_js = "ToggleFilterBar(baseurl_short + 'pages/search_advanced.php',{" . $filter_bar_csrf_token . "},(this.value == 1) ? 'open' : 'closed');";
-    $page_def[] = config_add_boolean_select('filter_bar_default_open', $lang['filter_bar_default_open'], $enable_disable_options, 300, '', true,$filter_bar_js);
     $page_def[] = config_add_html('</div>');
 
 

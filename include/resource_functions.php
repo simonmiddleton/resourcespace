@@ -5555,75 +5555,77 @@ function get_default_archive_state($requestedstate = "")
 
 
 function save_original_file_as_alternative($ref)
+{
+debug("save_original_file function called");
+if (!$ref){
+    debug("ERROR: Unable to save original file as alternative - no resource id passed");
+    return false;
+}
+
+/*
+global vars
+* @param boolean $alternative_file_previews                  Generate thumbs/previews for alternative files?
+* @param boolean $alternative_file_previews_batch            Generate thumbs/previews for alternative files?
+* @param array   $lang 
+*/
+
+global $lang, $alternative_file_previews, $alternative_file_previews_batch;
+
+// GET variables
+$replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', ''); // alternative filename
+$alternative                            = getvalescaped('alternative', ''); # Batch upload alternative files    
+$filename_field                         = getval('filename_field', ''); // GET variable - field to use for filename
+
+// Make the original into an alternative, need resource data so we can get filepath/extension
+$origdata     = get_resource_data($ref);
+$origfilename = get_data_by_field($ref, $filename_field);
+
+$newaltname        = str_replace('%EXTENSION', strtoupper($origdata['file_extension']), $lang['replace_resource_original_description']);
+$newaltdescription = nicedate(date('Y-m-d H:i'), true);
+
+if('' != $replace_resource_original_alt_filename)
+{
+    $newaltname = $replace_resource_original_alt_filename;
+    $newaltdescription = '';
+}
+
+$newaref = add_alternative_file($ref, $newaltname, $newaltdescription, escape_check($origfilename), $origdata['file_extension'], $origdata['file_size']);
+
+$origpath=get_resource_path($ref, true, "", true, $origdata["file_extension"]);
+$newaltpath=get_resource_path($ref, true, "", true, $origdata["file_extension"], -1, 1, false, "", $newaref);
+
+# Move the old file to the alternative file location
+$result=rename($origpath, $newaltpath);								
+
+if ($alternative_file_previews)
+{
+    // Move the old previews to new paths
+    $ps=sql_query("select * from preview_size");
+    for ($n=0;$n<count($ps);$n++)
     {
-
-    if ($ref < 1)
+    # Find the original 
+        $orig_preview_path=get_resource_path($ref, true, $ps[$n]["id"],false, "");
+        if (file_exists($orig_preview_path))
         {
-        debug("ERROR: Unable to save original file as alternative - resource id incorrect");
-        die('{"jsonrpc" : "2.0", "error" : {"code": 111, "message": "Failed to save original file as alternative file. "}, "id" : "id"}');                
+        # Move the old preview file to the alternative preview file location
+        $alt_preview_path=get_resource_path($ref, true, $ps[$n]["id"], true, "", -1, 1, false, "", $newaref);
+        rename($orig_preview_path, $alt_preview_path);			
         }
-
-    /*
-    global vars
-    * @param boolean $alternative_file_previews                  Generate thumbs/previews for alternative files?
-    * @param boolean $alternative_file_previews_batch            Generate thumbs/previews for alternative files?
-    * @param array   $lang 
-    */
-
-    global $lang, $alternative_file_previews, $alternative_file_previews_batch;
-
-    // GET variables
-    $replace_resource_original_alt_filename = getvalescaped('replace_resource_original_alt_filename', ''); // alternative filename
-    $alternative                            = getvalescaped('alternative', ''); # Batch upload alternative files    
-    $filename_field                         = getval('filename_field', ''); // GET variable - field to use for filename
-
-    // Make the original into an alternative, need resource data so we can get filepath/extension
-    $origdata     = get_resource_data($ref);
-    $origfilename = get_data_by_field($ref, $filename_field);
-
-    $newaltname        = str_replace('%EXTENSION', strtoupper($origdata['file_extension']), $lang['replace_resource_original_description']);
-    $newaltdescription = nicedate(date('Y-m-d H:i'), true);
-
-    if('' != $replace_resource_original_alt_filename)
+        # Also for the watermarked versions.
+        $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,"",$alternative);
+        if (file_exists($wmpath))
         {
-        $newaltname = $replace_resource_original_alt_filename;
-        $newaltdescription = '';
+        # Move the old preview file to the alternative preview file location
+        $alt_preview_wmpath=get_resource_path($ref, true, $ps[$n]["id"], true, "", -1, 1, true, "", $newaref);
+        rename($wmpath, $alt_preview_wmpath);			
         }
-
-    $newaref = add_alternative_file($ref, $newaltname, $newaltdescription, escape_check($origfilename), $origdata['file_extension'], $origdata['file_size']);
-
-    $origpath=get_resource_path($ref, true, "", true, $origdata["file_extension"]);
-    $newaltpath=get_resource_path($ref, true, "", true, $origdata["file_extension"], -1, 1, false, "", $newaref);
-
-    # Move the old file to the alternative file location
-    $result=rename($origpath, $newaltpath);		# true on success; false on failure to rename file						
-
-    if ($alternative_file_previews)
-        {
-        // Move the old previews to new paths
-        $ps=sql_query("select * from preview_size");
-        for ($n=0;$n<count($ps);$n++)
-            {
-            # Find the original 
-                $orig_preview_path=get_resource_path($ref, true, $ps[$n]["id"],false, "");
-                if (file_exists($orig_preview_path))
-                    {
-                    # Move the old preview file to the alternative preview file location
-                    $alt_preview_path=get_resource_path($ref, true, $ps[$n]["id"], true, "", -1, 1, false, "", $newaref);
-                    rename($orig_preview_path, $alt_preview_path);			
-                    }
-                # Also for the watermarked versions.
-                $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,"",$alternative);
-                if (file_exists($wmpath))
-                    {
-                    # Move the old preview file to the alternative preview file location
-                    $alt_preview_wmpath=get_resource_path($ref, true, $ps[$n]["id"], true, "", -1, 1, true, "", $newaref);
-                    rename($wmpath, $alt_preview_wmpath);			
-                    }
-            }
-        }
-
-
-            
-    return $result;
     }
+}
+            
+
+return true;
+
+
+
+
+}

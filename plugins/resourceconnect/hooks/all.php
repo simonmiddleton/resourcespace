@@ -5,14 +5,7 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
 	{
 	# Generate access key and check that the key is correct for this resource.
 	global $scramble_key;
-        $access_key=md5("resourceconnect" . $scramble_key);
-
-        # Strip out the username if it has been passed.
-        if (strpos($key,"-")!==false)
-             {
-             $s=explode("-",$key);
-             $key=end($s);
-             }
+	$access_key=md5("resourceconnect" . $scramble_key);
 
 	if ($key!=substr(md5($access_key . $resource),0,10)) {return false;} # Invalid access key. Fall back to user logins.
 
@@ -106,20 +99,18 @@ function ResourceConnectCollectionWarning($languagestring,$collection)
 
 function HookResourceConnectAllSearchfiltertop()
 	{
+	# Option to search affiliate systems in the basic search panel
 	global $lang,$language,$resourceconnect_affiliates,$baseurl,$resourceconnect_selected;
-	if(!checkperm("resourceconnect"))
-        {
-        return false;
-        }
-	   ?>
-    <script>
-    jQuery(document).ready(function()
-        {
-        jQuery(".Question.ResourceConnectSearch").tooltip();
-        });
-    </script>
-	<div class="Question SearchItem ResourceConnectSearch"><?php echo $lang["resourceconnect_search_database"];?>&nbsp;<a href="#" onClick="styledalert('<?php echo $lang["resourceconnect_search_database"] ?>','<?php echo $lang["resourceconnect_search_info"] ?>');" title="<?php echo $lang["resourceconnect_search_info"] ?>"><i class="fa fa-info-circle"></i></a><br />
-	<select class="SearchWidth" name="resourceconnect_selected" onchange="UpdateResultCount();">
+	if (!checkperm("resourceconnect")) {return false;}
+	?>
+<script>
+  jQuery(document).ready(function(){
+    jQuery( document ).tooltip();
+  } );
+  </script>
+	<div class="SearchItem ResourceConnectSearch"><?php echo $lang["resourceconnect_search_database"];?>&nbsp;<a href="#" onClick="styledalert('<?php echo $lang["resourceconnect_search_database"] ?>','<?php echo $lang["resourceconnect_search_info"] ?>');" title="<?php echo $lang["resourceconnect_search_info"] ?>"><i class="fa fa-info-circle"></i></a><br />
+	<select class="SearchWidth" name="resourceconnect_selected">
+	
 	<?php for ($n=0;$n<count($resourceconnect_affiliates);$n++)
 		{
 		?>
@@ -155,54 +146,15 @@ function HookResourceconnectAllGenerateurl($url)
 																			
 	return ($baseurl . "/" . $url);
 	}
+	
+/*
+function HookResourceConnectAllAdvancedsearchlink()
+	{
+	global $resourceconnect_selected,$resourceconnect_this;
+	if (!checkperm("resourceconnect")) {return false;}
 
-function HookResourceconnectAllReset_filter_bar()
-    {
-    global $extra_params;
-
-    if(is_null($extra_params))
-        {
-        return false;
-        };
-
-    $extra_params = array_merge(
-        $extra_params,
-        array(
-            "resourceconnect_selected" => "",
-        ));
-
-    return true;
-    }
-
-function HookResourceconnectAllFb_modify_fields(array $fields)
-    {
-    $index = false;
-    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
-        {
-        $fields = $GLOBALS["hook_return_value"];
-        }
-
-    foreach($fields as $key => $field)
-        {
-        // At the end of Simple Search fields
-        if($field["simple_search"] == 0 && $field["advanced_search"] == 1)
-            {
-            $index = $key;
-            break;
-            }
-        }
-
-    $GLOBALS["hook_return_value"] = $return = array_merge(
-        array_slice($fields, 0, $index),
-        array(array(
-            "ref" => null,
-            "name" => "ResourceConnect-field", # render_search_field() is globaling $fields for display conditions and this field is in between real RS fields
-            "simple_search" => 1,
-            "advanced_search" => 0,
-            "fct_name" => "HookResourceConnectAllSearchfiltertop",
-            "fct_args" => array()
-        )),
-        array_slice($fields, $index, count($fields) - 1, true));
-
-    return $return;
-    }
+	# Hide 'advanced search' link when current affiliate not selected.
+	return ($resourceconnect_selected!=$resourceconnect_this);
+		
+	}
+*/

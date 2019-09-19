@@ -227,7 +227,7 @@ $lang["changethemeto"] = "Change theme to";
 
 # Search bar
 $lang["simplesearch"]="Simple search";
-$lang["searchbutton"]=$lang["all__search"]="Search";
+$lang["searchbutton"]="Search";
 $lang["clearbutton"]="Clear";
 $lang["bycountry"]="By country";
 $lang["bydate"]="By date";
@@ -864,9 +864,6 @@ $lang['double_width'] = 'Double width';
 $lang['filter_by_table'] = 'Filter by table...';
 $lang['upload_here'] = "Upload here";
 $lang['help-tooltip'] = "Get more information on this page";
-$lang["active_filters"] = "Active filters";
-$lang["advanced"] = "Advanced";
-$lang["filter_results"] = "Filter results";
 
 # Pager
 $lang["next"]="Next";
@@ -2442,6 +2439,7 @@ $lang['userpreference_use_checkboxes_for_selection_label'] = 'Use checkboxes to 
 $lang['userpreference_resource_view_modal_label'] = 'Resource view modal';
 $lang["userpreference_modal_default"] = "Show standard pages in a modal (popup) window where enabled?";
 $lang['userpreference_thumbs_default_label'] = 'Default collection bar display';
+$lang['userpreference_basic_simple_search_label'] = 'Basic simple search';
 $lang['userpreference_cc_me_label'] = 'CC me when sending resources and collections';
 $lang['userpreference_email_me_label'] = 'Send me emails instead of system notifications where possible';
 $lang['userpreference_email_digest_label'] = 'Send me a daily digest of notifications, instead of separate emails';
@@ -2828,4 +2826,3 @@ $lang["collection_actiontype_4"]        = "Share";
 $lang["collection_actiontype_5"]        = "Research";
 $lang["collection_actiontype_6"]        = "Advanced";
 $lang["collection_actiontype_999"]      = "Other";
-$lang["filter_bar_default_open"]        = "Search bar defaults to open position";

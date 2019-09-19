@@ -469,14 +469,14 @@ if ($_FILES)
         $processed_file_content = file_get_contents($plupload_processed_filepath);
         $processed_file_content = explode(',', $processed_file_content);
         
-        
-        // If this chunk-file-filename has been processed, don't process it again, unless it is a part of a batch replace file operation identified by keep_original GET variable == 1
-        if($chunk == $processed_file_content[0] && $queue_index == $processed_file_content[1] && (getval('keep_original', '') != 1))
+        if ($chunk != 0){
+        // If this chunk-file-filename has been processed, don't process it again
+        if($chunk == $processed_file_content[0] && $queue_index == $processed_file_content[1])
             {
             debug("PLUPLOAD - Duplicate chunk [" . $chunk . "] of file " . $plfilename . " found at index [" . $queue_index . "] in the upload queue");
             die('{"jsonrpc" : "2.0", "error" : {"code": 109, "message": "Duplicate chunk [' . $chunk . '] of file ' . $plfilename . ' found at index [' . $queue_index . '] in the upload queue"}, "id" : "id"}');
             }
-        }
+        }}
 
 	// Look for the content type header
 	if (isset($_SERVER["HTTP_CONTENT_TYPE"]))
@@ -782,12 +782,7 @@ if ($_FILES)
                             // save original file as an alternative file
                             if($replace_resource_preserve_option && '' != getval('keep_original', ''))
 								{
-                                $save_original_as_alternative =  save_original_file_as_alternative($replace_resource);    
-                                if (!$save_original_as_alternative)
-                                    {
-                                    debug("PLUPLOAD ERROR- Failed to save original file as alternative file : " . $ref );
-                                    die('{"jsonrpc" : "2.0", "error" : {"code": 110, "message": "Failed to save original file as alternative file."}, "id" : "id"}');
-                                    }
+                                save_original_file_as_alternative($replace_resource);    
                                 }  
 								
                             $status = upload_file($replace_resource, (('yes' == $no_exif) && '' == getval('exif_override', '')), false, ('' != getval('autorotate','')), $plupload_upload_location);
@@ -909,14 +904,13 @@ if ($_FILES)
 
                                             # Save the original file as an alternative file?                                            
                                             $keep_original = getval('keep_original', '');
-                                            $save_original_as_alternative = ($keep_original == 1) ? save_original_file_as_alternative($ref) : "";
-                                            if (!$save_original_as_alternative){
-                                                # if attempt to save original file as alternative failed then output error
-                                                debug("PLUPLOAD ERROR- Failed to save original file as alternative file : " . $ref );
-                                                die('{"jsonrpc" : "2.0", "error" : {"code": 110, "message": "Failed to save original file as alternative file."}, "id" : "id"}');
+                                            $save_original = ($keep_original == 1) ? save_original_file_as_alternative($ref) : "";
+                                            if (!$save_original){
+                                                die("Error in saving original file as alternative file");
                                             }
 
                                             $status = upload_file($ref, ('yes' == $no_exif && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
+
                                             die('{"jsonrpc" : "2.0", "message" : "' . $lang["replacefile"] . '", "id" : "' . htmlspecialchars($ref) . '"}');
                                             }
                                         else

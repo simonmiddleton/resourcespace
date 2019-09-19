@@ -14,9 +14,7 @@ $status_box_id                     = ($is_search ? "nodes_searched_{$field['ref'
 $status_box_elements               = '';
 $update_result_count_function_call = 'UpdateResultCount();';
 $tree_id                           = ($is_search ? "search_tree_{$field['ref']}" : "tree_{$field['ref']}");
-$category_tree_open                = $is_search ? true : $category_tree_open;
 $tree_container_styling            = ($category_tree_open ? 'display: block;' : 'display: none;');
-$category_tree_show_status_window  = $is_search ? false : $category_tree_show_status_window;
 
 if(!isset($selected_nodes))
     {
@@ -62,7 +60,7 @@ if(!(isset($treeonly) && true == $treeonly))
     <div id="<?php echo $status_box_id; ?>" class="CategoryBox" <?php if(!$category_tree_show_status_window) { ?>style="display:none;"<?php } ?>>
         <?php echo $status_box_elements; ?>
     </div>
-    <div style="<?php echo ($is_search ? "display: none;" : ""); ?>">
+    <div>
         <a href="#"
            onclick="
                 if(document.getElementById('<?php echo $tree_id; ?>').style.display!='block')
@@ -282,24 +280,6 @@ echo $hidden_input_elements;
 
         echo $update_result_count_function_call;
         ?>
-        });
-
-    jquery_tree_by_id.on("after_open.jstree", function(event, node)
-        {
-        var data = {
-            html_id: jQuery(event.target).attr("id")
-        }
-
-        jQuery(document).trigger('categoryTreeAfterOpen', data);
-        });
-
-    jquery_tree_by_id.on("after_close.jstree", function(event, node)
-        {
-        var data = {
-            html_id: jQuery(event.target).attr("id")
-        }
-
-        jQuery(document).trigger('categoryTreeAfterClose', data);
         });
     </script>
 </div>

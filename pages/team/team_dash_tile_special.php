@@ -78,6 +78,15 @@ include "../../include/header.php";
 		</li>
 		<?php
 		}
+	if(!$home_advancedsearch)
+		{ ?>
+		<li>
+			<a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&submitdashtile=true&tltype=conf&tlstyle=advsr&title=advancedsearch&tile_audience=true&link=pages/search_advanced.php&url=pages/ajax/dash_tile.php%3Ftltype=conf%26tlstyle=advsr";?>">
+				<?php echo $lang["createdashtileadvancedsearch"];?>
+			</a>
+		</li>
+		<?php
+		}
 	if(!$home_mycontributions)
 		{ ?>
 		<li>

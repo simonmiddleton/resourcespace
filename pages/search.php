@@ -49,6 +49,11 @@ $search = getvalescaped('search', '');
 $modal  = ('true' == getval('modal', ''));
 $collection_add=getvalescaped("collection_add",""); // Need this if redirected here from upload
 
+if(false !== strpos($search, TAG_EDITOR_DELIMITER))
+    {
+    $search = str_replace(TAG_EDITOR_DELIMITER, ' ', $search);
+    }
+
 hook("moresearchcriteria");
 
 // When searching for specific field options we convert search into nodeID search format (@@nodeID)
@@ -504,15 +509,15 @@ $searchparams= array(
     'sort'                                      => $sort,
     'restypes'                                  => $restypes,
     'recentdaylimit'                            => getvalescaped('recentdaylimit', '', true),
-    'foredit'                                   => ($editable_only?"true":""),
-    'source'                                    => trim(getval("source", ""))
+    'foredit'                                   => ($editable_only?"true":"")
 );
-
+ 
 $checkparams = array();
 $checkparams[] = "order_by";
 $checkparams[] = "sort";
 $checkparams[] = "display";
 $checkparams[] = "k";
+
 foreach($checkparams as $checkparam)
     {
     if(preg_match('/[^a-z:_\-0-9]/i', $$checkparam))
@@ -521,9 +526,10 @@ foreach($checkparams as $checkparam)
         }
     }
 
+
 if(false === strpos($search, '!') || '!properties' == substr($search, 0, 11))
     {
-    rs_setcookie("search", $search, 0, "", "", false, false);
+    rs_setcookie('search', $search,0,"","",false,false);
     }
 
 hook('searchaftersearchcookie');
@@ -598,44 +604,6 @@ if($k=="" || $internal_share_access)
     if (dontReloadSearchBar !== true)
         ReloadSearchBar();
     ReloadLinks();
-    </script>
-    <?php
-    }
-
-if($k == "" && getval("go","") == "")
-    {
-    ?>
-    <script>
-    var filter_bar_search = <?php echo trim(getval("source", "")) == "filter_bar" ? "true" : "false"; ?>;
-    var require_filter_bar_reload = <?php echo trim(getval("filter_bar_reload", "")) !== "false" ? "true" : "false"; ?>;
-
-    if(!filter_bar_search)
-        {        
-        var filter_state_saved = getCookie('filter_state');
-        filter_state = (typeof filter_state_saved !== 'undefined') ? filter_state_saved : '<?php echo ($filter_bar_default_open) ? "open" : "closed"; ?>';
-        if(filter_state == "open") 
-            {
-            // Already open - reload the filter bar
-            var url = "<?php echo generateURL("{$baseurl}/pages/search_advanced.php", array('search' => $search)); ?>";
-            jQuery("#FilterBarContainer").load(url);
-            }
-        else
-            {
-            TogglePane(
-                'FilterBarContainer',
-                {
-                    load_url: '<?php echo $baseurl; ?>/pages/search_advanced.php',
-                    <?php echo generateAjaxToken("ToggleFilterBar"); ?>
-                },filter_state);
-            }
-        SetCookie('filter_state', filter_state);
-        }
-            
-    if(filter_bar_search && require_filter_bar_reload)
-        {
-        ReloadFilterBar('<?php echo $search; ?>');
-        }
-    
     </script>
     <?php
     }
@@ -1232,7 +1200,6 @@ if($responsive_ui)
 
         if(isset($is_authenticated) && $is_authenticated)
             {
-            render_filter_results_button();
             render_upload_here_button($searchparams);
             }
         

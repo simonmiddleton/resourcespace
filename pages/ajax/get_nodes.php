@@ -16,27 +16,17 @@ $resource_type_field = getvalescaped('resource_type_field', 0, true);
 $name                = trim(getvalescaped('name', ''));
 $rows                = getvalescaped('rows', 10, true);
 
-$check_unauthorised_access = function($resource_type_field)
-    {
-    if(!metadata_field_view_access($resource_type_field))
-        {
-        http_response_code(401);
-        $return['error'] = array(
-            'status' => 401,
-            'title'  => 'Unauthorized',
-            'detail' => $GLOBALS['lang']['error-permissiondenied']);
-
-        echo json_encode($return);
-        exit();
-        }
-
-    return; 
-    };
-
 // Prevent access to fields to which user does not have access to
-if($resource_type_field > 0)
+if(!metadata_field_view_access($resource_type_field))
     {
-    $check_unauthorised_access($resource_type_field);
+    header('HTTP/1.1 401 Unauthorized');
+    $return['error'] = array(
+        'status' => 401,
+        'title'  => 'Unauthorized',
+        'detail' => $lang['error-permissiondenied']);
+
+    echo json_encode($return);
+    exit();
     }
 
 $return               = array();
@@ -46,8 +36,6 @@ $current_node_pointer = 0;
 
 if(0 < $node && get_node($node, $found_node_by_ref))
     {
-    $check_unauthorised_access($found_node_by_ref["resource_type_field"]);
-
     $found_node_by_ref['name'] = i18n_get_translated($found_node_by_ref['name']);
 
     $return['data'] = $found_node_by_ref;
@@ -104,7 +92,6 @@ if($resource_type_field > 0 && $name == "")
 // create one now telling client code this is a bad request
 if(0 === count($return))
     {
-    http_response_code(400);
     $return['error'] = array(
         'status' => 400,
         'title'  => 'Bad Request',

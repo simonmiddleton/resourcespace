@@ -1,5 +1,5 @@
 name: refineresults
 author: Dan Huby
-version: 1.1
-desc: Adds a refine results box above search results for external shares only
+version: 1.0
+desc: Adds a refine results box above search results
 category: user interface

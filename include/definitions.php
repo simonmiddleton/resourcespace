@@ -167,11 +167,13 @@ define('RECENT_ICON','<i aria-hidden="true" class="fa fa-fw fa-clock"></i>&nbsp;
 define('HELP_ICON','<i aria-hidden="true" class="fa fa-fw fa-book"></i>&nbsp;');
 define('HOME_ICON','<i aria-hidden="true" class="fa fa-fw fa-home"></i>&nbsp;');
 define('SEARCH_ICON', '<i class="fa fa-search" aria-hidden="true"></i>&nbsp;');
-define('FILTER_ICON', '<i class="MarginRight-05em fas fa-sliders-h" aria-hidden="true"></i>');
 
 define ('NODE_TOKEN_PREFIX','@@');
 define ('NODE_TOKEN_OR','|');
 define ('NODE_TOKEN_NOT','!');
+
+// Simple Search pills' delimiter
+define ('TAG_EDITOR_DELIMITER', '~');
 
 // Facial recognition
 define('FACIAL_RECOGNITION_CROP_SIZE_PREFIX', '_facial_recognition_crop_');
@@ -252,5 +254,3 @@ define ('ACTIONGROUP_EDIT',         3);
 define ('ACTIONGROUP_SHARE',        4);
 define ('ACTIONGROUP_RESEARCH',     5);
 define ('ACTIONGROUP_ADVANCED',     6);
-
-define("SPECIAL_SEARCH_REGEX", "/\!\w{3,}/");
