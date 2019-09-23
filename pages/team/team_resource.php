@@ -33,7 +33,7 @@ include "../../include/header.php";
         <?php endif // Test if Add Resource Batch - In Browser is allowed. ?>
 
 		<?php if($upload_methods['fetch_from_ftp']): // Test if Add Resource Batch - Fetch from FTP server is allowed. ?>
-			<li><i aria-hidden="true" class="fa fa-fw fa-exchange"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchftp"]?></a></li>
+			<li><i aria-hidden="true" class="fa fa-fw fa-exchange"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo $userref?>&uploader=ftp" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["addresourcebatchftp"]?></a></li>
 		<?php endif // Test if Add Resource Batch - Fetch from FTP server is allowed. ?>
 
 		<?php if($upload_methods['fetch_from_local_folder']): // Test if Add Resource Batch - Fetch from local upload folder is allowed. ?>

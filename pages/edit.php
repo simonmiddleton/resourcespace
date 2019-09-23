@@ -2149,6 +2149,7 @@ if($collapsible_sections)
 hook('aftereditcollapsiblesection');
 ?>
 </div><!-- end of BasicsBox -->
+<?php if($uploader == 'ftp') { print '<input type="hidden" name="uploader" value="ftp" />'; } ?>
 </form>
 
 <script>

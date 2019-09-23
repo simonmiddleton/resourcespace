@@ -120,7 +120,7 @@ if(!$local_upload_file_tree)
 	<div class="Question">
 		<label><?php echo $lang["foldercontent"] ?></label>
 		<!--<div class="tickset">-->
-		<select name="uploadfiles[]" multiple size=20>
+		<select name="uploadfiles[]" multiple size="20" class="MultiSelect">
 		<?php 
 			foreach ($files as $fn){
 				echo "file:$fn<br/>";
