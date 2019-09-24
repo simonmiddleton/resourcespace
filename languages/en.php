@@ -2808,7 +2808,9 @@ $lang["replacebatch_resource_min"]      = "Lowest resource ID to replace (ignore
 $lang["replacebatch_resource_max"]      = "Highest resource ID to replace";
 $lang["replacebatch_collection"]        = "Enter a collection ID if you only want to replace resources within this collection";
 $lang["replacebatch_job_created"]       = "Batch replacement job created. You will receive a notification message when the job has completed.";
-$lang["start"]                          = "Start";$lang["userresources_status_change"]="Resources that you have contributed have been moved to the state: ";
+$lang["error_saveorigalternative"]      = "Error saving original as alternative file";   
+
+$lang["start"]                          = "Start";
 
 # File integrity checks
 $lang["file_integrity_summary"]             = "File integrity report";

@@ -148,7 +148,7 @@ if($offline_job_queue)
     ?>
 
 <div class="Question">
-<input type="submit" value="<?php echo $lang["start"]; ?>" name="upload" id="upload_button" onClick="CentralSpacePost(this,true);" />
+<input type="submit" value="<?php echo $lang["start"]; ?>" name="upload" id="upload_button" />
 <div class="clearerleft"> </div>
 </div>
 

@@ -904,10 +904,11 @@ if ($_FILES)
 
                                             # Save the original file as an alternative file?                                            
                                             $keep_original = getval('keep_original', '');
-                                            $save_original = ($keep_original == 1) ? save_original_file_as_alternative($ref) : "";
-                                            if (!$save_original){
-                                                die("Error in saving original file as alternative file");
-                                            }
+                                            $save_original = ($keep_original == 1) ? save_original_file_as_alternative($ref) : true;
+                                            if (!$save_original)
+                                                {
+                                                die('{"jsonrpc" : "2.0", "error" : {"code": 109, "message": "' . $lang["error_saveorigalternative"] . '"}, "id" : "' . htmlspecialchars($ref) . '"}');
+                                                }
 
                                             $status = upload_file($ref, ('yes' == $no_exif && '' == getval('exif_override', '')), false, ('' != getval('autorotate', '')), $plupload_upload_location);
 
