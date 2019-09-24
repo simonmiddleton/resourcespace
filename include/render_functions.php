@@ -1751,7 +1751,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
        }
      else
        {
-       if ( in_array($field["type"],array(2,3,4,6,7,10,14)) )
+       if ( in_array($field["type"],array(2,3,4,6,7,10,12,14)) )
          {
          # For the selected field types the helptext is always shown; so no javascript toggling 
          $help_js="";
@@ -1851,7 +1851,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         # Show inline help for this field.
         # For certain field types that have no obvious focus, the help always appears
        ?>
-       <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,3,4,6,7,10,14)) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"],false)))?></div></div>
+       <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,3,4,6,7,10,12,14)) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"],false)))?></div></div>
        <?php
      }
 
