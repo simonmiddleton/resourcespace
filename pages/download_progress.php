@@ -12,6 +12,7 @@ $ext=getval("ext","");
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext)){$ext="jpg";} # Mitigate path injection
 $alternative=getval("alternative",-1);
 $search=getvalescaped("search","");
+$source=getvalescaped("source","");
 $usage=getval("usage","-1");
 $usagecomment=getval("usagecomment","");
 
@@ -87,7 +88,7 @@ if (!$save_as)
         {?>
         <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/view.php",$url_parameters) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
         <?php
-        if(strpos($search,"!collection") !== false)
+        if(strpos($source,"rsconnect") !== true)
             {?>
             <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php", $url_parameters) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresults"]?></a></p>
             <?php

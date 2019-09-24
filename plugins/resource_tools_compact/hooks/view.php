@@ -41,7 +41,7 @@ function getShortDownload()
 							echo urlencode("pages/download_progress.php?ref=" . $ref . "&size=" . $size_info["id"]
 									. "&ext=" . $size_info["extension"] . "&k=" . $k . "&search=" . urlencode($search)
 									. "&offset=" . $offset . "&archive=" . $archive . "&sort=".$sort."&order_by="
-									. urlencode($order_by))?>"<?php
+									. urlencode($order_by))?>&source=rsconnect"<?php
 					}
 					?> onClick="return CentralSpaceLoad(this,true);">
 				<?php 
