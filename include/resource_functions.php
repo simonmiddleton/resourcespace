@@ -3853,9 +3853,9 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
 function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="")
 	{
 	# For the provided resource and metadata, does the current user have edit access to this resource?
-	# Checks the edit permissions (e0, e-1 etc.) and also the group edit filter which filters edit access based on resource metadata.
+    # Checks the edit permissions (e0, e-1 etc.) and also the group edit filter which filters edit access based on resource metadata.
 	
-	global $userref,$usereditfilter,$edit_access_for_contributor;
+    global $userref,$usereditfilter,$edit_access_for_contributor;
 
     $plugincustomeditaccess = hook('customediteaccess','',array($resource,$status,$resourcedata));
 
@@ -3942,7 +3942,8 @@ function filter_match($filter,$name,$value)
 	# Returns:
 	# 0 = no match for name
 	# 1 = matched name but value was not present
-	# 2 = matched name and value was correct
+    # 2 = matched name and value was correct
+
 	$s=explode(";",$filter);
 	foreach ($s as $condition)
 		{

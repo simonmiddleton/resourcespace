@@ -60,8 +60,10 @@
 	<div class="Title"><?php echo $lang['location-title']; ?></div>
 	<?php
 
-	$order_by = getvalescaped($_GET['order_by'],'',true);
-	$search = getvalescaped($_GET['search'],'',true);
+	$order_by = @$_GET['order_by']) != '' ? $_GET['order_by'] : 'resourceid';
+	$search = @$_GET['search']) != '' ? $_GET['search'] : '!last1000';
+
+	print "<script>console.log('Order by: $order_by -- Search: $search');</script>";
        
 	if ($resource["geo_lat"]!="" && $resource["geo_long"]!="")
 	    {

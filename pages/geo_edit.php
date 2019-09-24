@@ -9,8 +9,8 @@ if ($disable_geocoding){exit("Geomapping disabled.");}
 
 # Fetch resource data.
 $ref = getvalescaped('ref','',true);
-$order_by = getvalescaped($_GET['order_by'],'',true);
-$search = getvalescaped($_GET['search'],'',true);
+$order_by = @$_GET['order_by']) != '' ? $_GET['order_by'] : 'resourceid';
+$search = @$_GET['search']) != '' ? $_GET['search'] : '!last1000';
 # See if we came from the geolocate_collection page
 $geocol = getvalescaped('geocol','',true);
 if ($ref=='') {die;}
