@@ -1259,7 +1259,8 @@ if($responsive_ui)
     
     # Archive link
     if ((!$archivesearched) && (strpos($search,"!")===false) && $archive_search) 
-        { 
+        {
+        $archive_standard = false;
         $arcresults=do_search($search,$restypes,$order_by,2,0);
         if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
         if ($arcresults>0) 

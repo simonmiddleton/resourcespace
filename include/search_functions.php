@@ -859,7 +859,7 @@ function search_filter($search,$archive,$restypes,$starsearch,$recent_search_day
             }
         elseif ($search_all_workflow_states || substr($search,0,8)=="!related")
             {hook("search_all_workflow_states_filter");}   
-        elseif (count($archive) == 0)
+        elseif (count($archive) == 0 || $archive_standard)
             {
             # If no archive specified add in default archive states (set by config options or as set in rse_workflow plugin)
             if ($sql_filter!="") {$sql_filter.=" AND ";}
@@ -1625,7 +1625,8 @@ function get_default_search_states()
     {
     global $searchstates, $pending_submission_searchable_to_all, $pending_review_visible_to_all;
 
-    $defaultsearchstates = isset($searchstates) ? $searchstates : array(0);// May be set by rse_workflow plugin
+    $defaultsearchstates = isset($searchstates) ? $searchstates : array(0); // May be set by rse_workflow plugin
+
     if($pending_submission_searchable_to_all)
         {
         $defaultsearchstates[] = -2;
@@ -1634,7 +1635,7 @@ function get_default_search_states()
         {
         $defaultsearchstates[] = -1;
         }
-    
+
     $modifiedstates = hook("modify_default_search_states","",array($defaultsearchstates));
     if(is_array($modifiedstates))
         {
