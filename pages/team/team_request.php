@@ -63,7 +63,7 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
 	<td><?php echo $requests[$n]["ref"]?></td>
 	<td><?php echo $requests[$n]["username"] ?></td>
 	<td><?php echo $requests[$n]["fullname"] ?></td>
-	<td><?php echo nicedate($requests[$n]["created"],true)?></td>
+	<td><?php echo nicedate($requests[$n]["created"],true) . " $user_local_timezone" ?></td>
 	<td><?php echo $requests[$n]["c"] ?></td>
 	<td><?php echo $lang["resourcerequesttype" . $requests[$n]["request_mode"]] ?></td>
 	<td><?php echo $requests[$n]["assigned_to_username"] ?></td>
