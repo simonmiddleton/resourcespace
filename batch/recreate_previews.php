@@ -34,7 +34,7 @@ else
     echo "update_previews.php - update previews for all/selected resources\n\n";
     echo "- extra options to use existing uploaded previews or to force recreation of video previews e.g. when changing to mp4/hls previews\n";
     echo "USAGE:\n";
-    echo "php update_previews.php [collection|resource] [id] [maxref] [-previewbased] [-videoupdate]\n\n";
+    echo "php update_previews.php [collection|resource] [id] [maxref] [sizes] [comma separated size ids][-previewbased] [-videoupdate]\n\n";
     echo "examples\n";
     echo "php update_previews.php collection 247\n";
     echo "- this will update previews for all resources in collection #247\n\n";
@@ -46,20 +46,31 @@ else
     echo "- this will update previews for resources starting with resource ID #19564 and ending with resource 19800\n\n";
     echo "php update_previews.php resource 1 -videoupdate\n";
     echo "- this will update previews for all video resources that do not have the required '\$ffmpeg_preview_extension' extension or hls m3u8 playlist files\n\n";
+    echo "php update_previews.php collection 247 sizes scr,col\n";
+    echo "- this will update only the col and scr preview sizes for all resources in collection #247\n\n";   
     exit();
+    }
+
+if(in_array("sizes",$argv))
+    {
+    $sizes  = explode(",",$argv[array_search("sizes",$argv) + 1]); 
+    }
+else
+    {
+    $sizes = array();
     }
 
 $previewbased = in_array("-previewbased",$argv);
 $videoupdate = in_array("-videoupdate",$argv);
 
-function update_preview($ref, $previewbased)
+function update_preview($ref, $previewbased, $sizes)
     {
     $resourceinfo=sql_query("select * from resource where ref='$ref'");
     if (count($resourceinfo)>0 && !hook("replaceupdatepreview", '', array($ref, $resourceinfo[0])))
         {
         if(!empty($resourceinfo[0]['file_path'])){$ingested=false;}
         else{$ingested=true;}
-        create_previews($ref, false,($previewbased?"jpg":$resourceinfo[0]["file_extension"]),false, $previewbased,-1,true,$ingested);
+        create_previews($ref, false,($previewbased?"jpg":$resourceinfo[0]["file_extension"]),false, $previewbased,-1,true,$ingested, true, $sizes);
         hook("afterupdatepreview","",array($ref));
         return true;
         }
@@ -113,7 +124,7 @@ if(is_array($resources) && count($resources) > 0)
             
         echo "Recreating previews for resource #" . $resource . "...";
         ob_flush(); 
-        if (update_preview($resource, $previewbased))
+        if (update_preview($resource, $previewbased, $sizes))
             {
             echo "....completed\n"; 
             }
