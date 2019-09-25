@@ -22,7 +22,7 @@ function HookRse_workflowAllInitialise()
             // Save for later so we know which are editable
             $fixed_archive_states[] = $wfstateref;
             }
-        if(isset($wfstate['simple_search_flag']) && $wfstate['simple_search_flag'] != 0)
+        if((isset($wfstate['simple_search_flag']) && $wfstate['simple_search_flag'] != 0) || $wfstateref == 0) // Always include active state
             {
             $searchstates[] = $wfstateref;
             }
