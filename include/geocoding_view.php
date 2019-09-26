@@ -60,8 +60,8 @@
 	<div class="Title"><?php echo $lang['location-title']; ?></div>
 	<?php
 
-	$order_by = (isset($_GET['order_by']) && $_GET['order_by'] != '') ? getvalescaped($_GET['order_by']) : 'resourceid';
-	$search = (isset($_GET['search']) && $_GET['search'] != '') ? getvalescaped($_GET['search']) : '!last1000';
+	$order_by = (isset($_GET['order_by']) && $_GET['order_by'] != '') ? getvalescaped($_GET['order_by'], 'resourceid') : 'resourceid';
+	$search = (isset($_GET['search']) && $_GET['search'] != '') ? getvalescaped($_GET['search'], '!last1000') : '!last1000';
        
 	if ($resource["geo_lat"]!="" && $resource["geo_long"]!="")
 	    {
