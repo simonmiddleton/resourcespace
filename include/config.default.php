@@ -731,7 +731,7 @@ $original_filename_sort=false; // deprecated, based on resource table column
 $default_sort="relevance";
 
 # What is the default sort order when viewing collection resources?
-# Options are date, colour, collection, popularity, country
+# Options are date, colour, collection, popularity, country, resourcetype
 # Note: when users are expecting resources to be shown in the order they provided, make sure this is set to 'collection'
 $default_collection_sort = 'collection';
 
