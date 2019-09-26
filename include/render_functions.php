@@ -1154,7 +1154,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 							data: {<?php echo generateAjaxToken("relate_resources"); ?>},
                             success: function(data) {
 								if (data.trim() == "SUCCESS") {
-									styledalert('<?=$lang["complete"]?>', '<?=$lang['relateallresources_confirmation']?>');
+									styledalert('<?php echo $lang["complete"]?>', '<?php echo $lang['relateallresources_confirmation']?>');
 								}
 							},
 							error: function (err) {
