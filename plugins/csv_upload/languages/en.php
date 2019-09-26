@@ -6,7 +6,7 @@
 
 $lang["csv_upload_nav_link"]="CSV upload";
 $lang["csv_upload_intro"]="<p>This plugin allows you to create resources by uploading a CSV file. The format of the CSV is important and must follow a defined format.</p>";
-$lang["csv_upload_encoding_notice"]="<p>Make sure the CSV file is encoded using <b>UTF-8</b>.</p>";
+$lang["csv_upload_encoding_notice"]="<p>Make sure the CSV file is encoded using <b>UTF-8 without BOM</b>.</p>";
 
 $lang["csv_upload_condition1"]="<li>The CSV must have a header row</li>";
 $lang["csv_upload_condition2"]="<li>To create resources of different resource types there must be a column named 'resource_type' containing the reference ID of the resource type (e.g. 1 is Photo)</li>";
