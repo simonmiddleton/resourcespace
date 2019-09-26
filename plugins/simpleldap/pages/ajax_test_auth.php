@@ -16,7 +16,8 @@ $simpleldap['loginfield']            = getvalescaped('loginfield', '');
 $simpleldap['ldapgroupfield']        = getvalescaped('ldapgroupfield', '');
 $simpleldap['email_attribute']       = getvalescaped('email_attribute', '');
 $simpleldap['phone_attribute']       = getvalescaped('phone_attribute', '');
-$simpleldap['LDAPTLS_REQCERT_never'] = getvalescaped('LDAPTLS_REQCERT_never', false);
+$simpleldap['emailsuffix']           = getvalescaped('emailsuffix','');
+$simpleldap['LDAPTLS_REQCERT_never'] = getval('LDAPTLS_REQCERT_never', 0,true) != 0;
 
 $escaped_ldapuser = (function_exists('ldap_escape')) ? ldap_escape($simpleldap['ldapuser'], '', LDAP_ESCAPE_DN) : $simpleldap['ldapuser'];
 

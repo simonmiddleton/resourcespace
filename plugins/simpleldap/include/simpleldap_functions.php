@@ -20,6 +20,12 @@ function simpleldap_authenticate($username,$password){
     // given a username and password, return false if not authenticated, or 
     // associative array of displayname, username, e-mail, group if valid
     global $simpleldap;
+
+    if($simpleldap['LDAPTLS_REQCERT_never'])
+        {
+        putenv('LDAPTLS_REQCERT=never');
+        }
+
     // ldap escape username
     $ldap_username = (function_exists('ldap_escape')) ? ldap_escape($username, '', LDAP_ESCAPE_DN) : $username;
 	
