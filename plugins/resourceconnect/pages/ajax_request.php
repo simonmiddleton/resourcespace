@@ -21,7 +21,7 @@ $sort=getval("sort","");
 
 
 # Parse and replace nodes.
-$k=(split_keywords($search));$search="";
+$k=(split_keywords($search,false, false, false, false, true));$search="";
 foreach ($k as $kw)
 	{
 	if (substr($kw,0,2)=="@@")
