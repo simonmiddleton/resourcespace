@@ -25,7 +25,7 @@ function HookResourceconnectCollectionsThumblistextra()
 		}
 	}
 
-function HookResourceconnectCollectionsCountresult($collection,$count)
+function HookResourceconnectAllCountresult($collection,$count)
 	{
 	return $count+sql_value("select count(*) value from resourceconnect_collection_resources where collection='$collection'",0);
 
