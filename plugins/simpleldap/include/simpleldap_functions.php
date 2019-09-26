@@ -21,7 +21,7 @@ function simpleldap_authenticate($username,$password){
     // associative array of displayname, username, e-mail, group if valid
     global $simpleldap;
 
-    if($simpleldap['LDAPTLS_REQCERT_never'])
+    if(isset($simpleldap['LDAPTLS_REQCERT_never']) && $simpleldap['LDAPTLS_REQCERT_never'])
         {
         putenv('LDAPTLS_REQCERT=never');
         }
