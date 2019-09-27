@@ -240,54 +240,15 @@ function do_search(
         $select.=",null group_access, null user_access ";
         }
 
-
-    # JOINS
-    $joins=array();
-        
-    # Build 'joins' field array if not returning the refs only
-    if(!$return_refs_only) 
+    # add 'joins' to select (only add fields if not returning the refs only)
+    $joins=$return_refs_only===false ? get_resource_table_joins() : array();
+    foreach($joins as $datajoin)
         {
-        # Get the basic set of joins
-        $joins=get_resource_table_joins();
-
-        # Attach joins from resource config overrides if accessible
-        $attach_config_joins=false;
-
-        if ( !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')
+        if(metadata_field_view_access($datajoin) || $datajoin == $GLOBALS["view_title_field"])
             {
-            $attach_config_joins=false; # Dont bother if overrides inaccessible due to Ajax
-            }
-        if (function_exists("resource_type_config_override")) 
-            {
-            $attach_config_joins=true; # Overrides are accessible
-            }
-        if ($attach_config_joins)
-            {
-            # Now add 'joins' for each possible view title field set at resource type level
-            $allrestypes = get_resource_types();
-            foreach($allrestypes as $restype)
-                {
-                # Load the configuration for the selected resource type
-                resource_type_config_override($restype['ref']);
-                if ($GLOBALS["view_title_field"])
-                    {
-                    if(!in_array($GLOBALS["view_title_field"],$joins)) 
-                        {
-                        $joins[]=$GLOBALS["view_title_field"];
-                        }
-                    }
-                }
-            }
-        # Finally, add the 'joins' to the select 
-        foreach($joins as $datajoin)
-            {
-            if(metadata_field_view_access($datajoin) || $datajoin == $GLOBALS["view_title_field"])
-                {
-                $select .= ", r.field{$datajoin} ";
-                }
+            $select .= ", r.field{$datajoin} ";
             }
         }
-
 
     # Prepare SQL to add join table for all provided keywords
 
