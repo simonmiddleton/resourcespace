@@ -81,7 +81,7 @@ function HookResourceconnectViewResourceactions_anonymous()
 	$access_key=md5("resourceconnect" . $scramble_key);
 	
 	# Formulate resource link (for collections bar)
-	$view_url=$baseurl . "/pages/view.php?ref=" . $ref . "&k=" . substr(md5($access_key . $ref),0,10) . "&language_set=" . urlencode($language) . "&resourceconnect_source=" . urlencode($baseurl);
+	$view_url=$baseurl . "/pages/view.php?modal=true&ref=" . $ref . "&k=" . substr(md5($access_key . $ref),0,10) . "&language_set=" . urlencode($language) . "&resourceconnect_source=" . urlencode($baseurl);
 	
 	# Add to collections link.
 	$url=getval("resourceconnect_source","") . "/plugins/resourceconnect/pages/add_collection.php?nc=" . time();
