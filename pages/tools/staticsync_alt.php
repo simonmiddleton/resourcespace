@@ -314,11 +314,12 @@ function ProcessFolder($folder)
 					# Extract metadata from the file path as per $staticsync_mapfolders in config.php
 					if (isset($staticsync_mapfolders))
 						{
-						foreach ($staticsync_mapfolders as $mapfolder)
-							{
-							$match=$mapfolder["match"];
-							$field=$mapfolder["field"];
-							$level=$mapfolder["level"];
+                        $field_nodes    = array();
+                        foreach ($staticsync_mapfolders as $mapfolder)
+                            {
+                            $match=$mapfolder["match"];
+                            $field=$mapfolder["field"];
+                            $level=$mapfolder["level"];
 							
 							if (strpos("/" . $shortpath, $match) !== false)
                                 {
@@ -368,7 +369,7 @@ function ProcessFolder($folder)
                                             {
                                             $value = $modifiedval;
                                             }
-                                            
+
                                         $field_info=get_resource_type_field($field);
                                         if(in_array($field_info['type'], $FIXED_LIST_FIELD_TYPES))
                                             {
