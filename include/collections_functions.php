@@ -2731,7 +2731,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         
     
     // Relate all resources
-    if($enable_related_resources) 
+    if($enable_related_resources && $allow_multi_edit && 0 < $count_result) 
         {
         $options[$o]['value'] = 'relate_all';
         $options[$o]['label'] = $lang['relateallresources'];
