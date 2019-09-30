@@ -47,6 +47,14 @@ echo "Timestamp for this run is $staticsync_run_timestamp\n";
 
 set_time_limit(60*60*40);
 
+if(isset($staticsync_userref))
+    {
+    # If a user is specified, log them in.
+    $userref=$staticsync_userref;
+    $userdata=get_user($userref);
+    setup_user($userdata);
+    }
+
 if ($argc == 2)
     {
     if ( in_array($argv[1], array('--help', '-help', '-h', '-?')) )
@@ -156,7 +164,14 @@ function touch_category_tree_level($path_parts)
 
 function ProcessFolder($folder)
 	{
-	global $syncdir,$nogo,$max,$count,$done,$modtimes,$lastsync, $ffmpeg_preview_extension, $staticsync_autotheme, $staticsync_extension_mapping_default, $staticsync_extension_mapping, $staticsync_mapped_category_tree,$staticsync_title_includes_path, $staticsync_ingest, $staticsync_mapfolders,$staticsync_alternatives_suffix,$staticsync_alt_suffixes,$staticsync_alt_suffix_array,$file_minimum_age,$staticsync_run_timestamp, $view_title_field, $filename_field;
+    global $syncdir,$nogo,$max,$count,$done,$modtimes,$lastsync, $ffmpeg_preview_extension;
+    global $staticsync_autotheme, $staticsync_extension_mapping_default, $staticsync_extension_mapping;
+    global $staticsync_mapped_category_tree,$staticsync_title_includes_path, $staticsync_ingest;
+    global $staticsync_mapfolders,$staticsync_alternatives_suffix,$staticsync_alt_suffixes;
+    global $staticsync_alt_suffix_array,$file_minimum_age,$staticsync_run_timestamp, $view_title_field, $filename_field;
+    global $resource_deletion_state, $alternativefiles, $staticsync_revive_state, $enable_thumbnail_creation_on_upload,
+           $FIXED_LIST_FIELD_TYPES, $staticsync_extension_mapping_append_values, $staticsync_extension_mapping_append_values_fields, $view_title_field, $filename_field,
+           $staticsync_whitelist_folders,$staticsync_ingest_force,$errors, $category_tree_add_parents;
 	
 	$collection=0;
 	
@@ -271,7 +286,7 @@ function ProcessFolder($folder)
 					}
 				
 				# Import this file
-				$r=import_resource($shortpath,$type,$title,$staticsync_ingest);
+                $r = import_resource($shortpath, $type, $title, $staticsync_ingest,$enable_thumbnail_creation_on_upload, $extension);
 				if ($r!==false)
 					{
 					# Add to mapped category tree (if configured)
@@ -305,20 +320,128 @@ function ProcessFolder($folder)
 							$field=$mapfolder["field"];
 							$level=$mapfolder["level"];
 							
-							if (strpos("/" . $shortpath,$match)!==false)
-								{
-								# Match. Extract metadata.
-								$path_parts=explode("/",$shortpath);
-								if ($level<count($path_parts))
-									{
-									# Save the value
-									print_r($path_parts);
-									$value=$path_parts[$level-1];
-									update_field ($r,$field,$value);
-									echo " - Extracted metadata from path: $value\n";
-									}
-								}
-							}
+							if (strpos("/" . $shortpath, $match) !== false)
+                                {
+                                # Match. Extract metadata.
+                                $path_parts = explode("/", $shortpath);
+                                if ($level < count($path_parts))
+                                    {
+                                    // special cases first.
+                                    if ($field == 'access')
+                                        {
+                                        # access level is a special case
+                                        # first determine if the value matches a defined access level
+
+                                        $value = $path_parts[$level-1];
+
+                                        for ($n=0; $n<3; $n++){
+                                            # if we get an exact match or a match except for case
+                                            if ($value == $lang["access" . $n] || strtoupper($value) == strtoupper($lang['access' . $n]))
+                                                {
+                                                $accessval = $n;
+                                                echo "Will set access level to " . $lang['access' . $n] . " ($n)" . PHP_EOL;
+                                                }
+                                            }
+
+                                        }
+                                    else if ($field == 'archive')
+										{
+										# archive level is a special case
+										# first determine if the value matches a defined archive level
+										
+										$value = $mapfolder["archive"];
+										$archive_array=array_merge(array(-2,-1,0,1,2,3),$additional_archive_states);
+										
+										if(in_array($value,$archive_array))
+											{
+											$archiveval = $value;
+											echo "Will set archive level to " . $lang['status' . $value] . " ($archiveval)". PHP_EOL;
+											}
+										
+										}
+                                    else 
+                                        {
+                                        # Save the value
+                                        $value = $path_parts[$level-1];
+                                        $modifiedval = hook('staticsync_mapvalue','',array($r, $value));
+                                        if($modifiedval)
+                                            {
+                                            $value = $modifiedval;
+                                            }
+                                            
+                                        $field_info=get_resource_type_field($field);
+                                        if(in_array($field_info['type'], $FIXED_LIST_FIELD_TYPES))
+                                            {
+                                            $fieldnodes = get_nodes($field, NULL, $field_info['type'] == FIELD_TYPE_CATEGORY_TREE);
+
+                                            if(in_array($value, array_column($fieldnodes,"name")) || ($field_info['type']==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field)))
+                                                {
+                                                // Add this to array of nodes to add
+                                                $newnode = set_node(null, $field, trim($value), null, null, true);
+                                                echo "Adding node" . trim($value) . "\n";
+                                                
+                                                $newnodes = array($newnode);
+                                                if($field_info['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 
+                                                    {
+                                                    // We also need to add all parent nodes for category trees
+                                                    $parent_nodes = get_parent_nodes($newnode);
+                                                    $newnodes = array_merge($newnodes,array_keys($parent_nodes));
+                                                    }
+
+                                                if($staticsync_extension_mapping_append_values && !in_array($field_info['type'],array(FIELD_TYPE_DROP_DOWN_LIST,FIELD_TYPE_RADIO_BUTTONS)) && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
+                                                    {
+                                                    // The $staticsync_extension_mapping_append_values variable actually refers to folder->metadata mapping, not the file extension
+                                                    $curnodes = get_resource_nodes($r,$field);
+                                                    $field_nodes[$field]   = array_merge($curnodes,$newnodes);
+                                                    }
+                                                else
+                                                    {
+                                                    // We have got a new value for this field and we are not appending values,
+                                                    // replace any existing value the array 
+                                                    $field_nodes[$field]   = $newnodes;
+                                                    }
+                                                }                                            
+                                            }
+                                        else
+                                            {
+                                            if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)))
+                                                {
+                                                $given_value=$value;
+                                                // append the values if possible...not used on dropdown, date, category tree, datetime, or radio buttons
+                                                if(in_array($field['type'],array(0,1,4,5,6,8)))
+                                                    {
+                                                    $old_value=sql_value("select value value from resource_data where resource=$r and resource_type_field=$field","");
+                                                    $value=append_field_value($field_info,$value,$old_value);
+                                                    }
+                                                }
+                                            update_field ($r, $field, $value);
+                                            if($staticsync_extension_mapping_append_values && (!isset($staticsync_extension_mapping_append_values_fields) || in_array($field_info['ref'], $staticsync_extension_mapping_append_values_fields)) && isset($given_value))
+                                                {
+                                                $value=$given_value;
+                                                }
+                                            }
+
+                                            // If this is a 'joined' field add it to the resource column
+                                            $joins = get_resource_table_joins();
+                                            if(in_array($field_info['ref'], $joins))
+                                                {
+                                                sql_query("UPDATE resource SET field{$field_info['ref']} = '" . escape_check(truncate_join_field_value($value)) . "' WHERE ref = '{$r}'");
+                                                }
+                                        
+                                        echo " - Extracted metadata from path: $value for field id # " . $field_info['ref'] . PHP_EOL;
+                                        }
+                                    }
+                                }
+                            }
+                        if(count($field_nodes)>0)
+                            {
+                            $nodes_to_add = array();
+                            foreach($field_nodes as $field_id=>$nodeids)
+                                {
+                                $nodes_to_add = array_merge($nodes_to_add,$nodeids);
+                                }
+                            add_resource_nodes($r,$nodes_to_add);
+                            }
 						}
 
                                         // add the timestamp from this run to the keywords field to help retrieve this batch later
