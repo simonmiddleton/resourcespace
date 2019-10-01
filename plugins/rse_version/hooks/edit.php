@@ -19,7 +19,23 @@ function HookRse_versionEditEdit_all_mode_js()
     ?>var r=document.getElementById('revert_<?php echo $n?>');
     if (this.value=='Revert')
         {
-        r.style.display='block';fr.style.display='none';cf.style.display='none';q.style.display='none';
+         /* 
+        hide default input field(s) - q var
+        show revert to state as of datetime - r var
+        hide findreplace fr var
+        */
+       
+        q.style.display='none';
+        r.style.display='block';
+        fr.style.display='none';  
+        
+        /* cf refers to copy from field - not always present, e.g. date field */
+        if (typeof cf !== 'undefined') 
+            {
+            // the variable is defined
+            cf.style.display='none';
+            }
+
         }
     else 
         {
