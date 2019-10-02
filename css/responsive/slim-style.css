@@ -352,8 +352,7 @@ body {
         padding-left: 0px;
         }   
 
-}
-@media(max-width: 1100px) {
+
     #HeaderNav1 li a,
     #HeaderNav2 li a {
         color: #3a3a3a;
@@ -362,6 +361,17 @@ body {
     }
     #HeaderNav2 {
         padding-left: 0;
+    }
+
+    #Header .HorizontalNav ul li  {
+        padding:0 5px;     
+    }
+    
+    #Header .HorizontalNav ul li.UploadButton a {
+        background: #1378BF;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+        color: #ffffff;
+        border: #1378BF;        
     }
 }
 @media(max-width:900px) {
