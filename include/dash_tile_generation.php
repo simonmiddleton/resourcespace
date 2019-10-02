@@ -293,13 +293,12 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 	$tile_style="thmbs";
 	$search_string = explode('?',$tile["link"]);
 	parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
-	$count = ($tile["resource_count"]) ? "-1" : "1";
 	$search = isset($search_string["search"]) ? $search_string["search"] :"";
 	$restypes = isset($search_string["restypes"]) ? $search_string["restypes"] : "";
 	$order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
 	$archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
 	$sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
-	$tile_search=do_search($search,$restypes,$order_by,$archive,$count,$sort,false,0,false,false,"",false,false);
+	$tile_search=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,0,false,false,"",false,false);
 	$found_resources=true;
 	if(!is_array($tile_search) || empty($tile_search))
 		{
@@ -316,7 +315,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 		{
 		$previewresource=$tile_search[0];
 		
-		if($promoted_image)
+		if($promoted_image && in_array($promoted_image,array_column($tile_search,"ref")))
 			{
 			$promoted_image_data=get_resource_data($promoted_image);
 			if ($promoted_image_data!==false)
