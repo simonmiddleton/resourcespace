@@ -108,7 +108,8 @@ function do_search(
         "resourcetype"    => "resource_type $sort,r.ref $sort",
         "titleandcountry" => "title $sort,country $sort",
         "random"          => "RAND()",
-        "status"          => "archive $sort"
+        "status"          => "archive $sort",
+        "modified"        => "modified $sort"
     );
 
     # Append order by field to the above array if absent and if named "fieldn" (where n is one or more digits)
@@ -217,7 +218,7 @@ function do_search(
         }
 
     # Join thumbs_display_fields to resource table
-    $select="r.ref, r.resource_type, r.has_image, r.is_transcoding, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path ";
+    $select="r.ref, r.resource_type, r.has_image, r.is_transcoding, r.creation_date, r.rating, r.user_rating, r.user_rating_count, r.user_rating_total, r.file_extension, r.preview_extension, r.image_red, r.image_green, r.image_blue, r.thumb_width, r.thumb_height, r.archive, r.access, r.colour_key, r.created_by, r.file_modified, r.file_checksum, r.request_count, r.new_hit_count, r.expiry_notification_sent, r.preview_tweaks, r.file_path, r.modified ";
     $sql_hitcount_select="r.hit_count";
     
     $modified_select=hook('modifyselect');

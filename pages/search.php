@@ -1130,6 +1130,8 @@ if($responsive_ui)
             $orderFields['resourceid'] = $lang['resourceid'];
         if ($order_by_resource_type)
             $orderFields['resourcetype'] = $lang['type'];
+        
+        $orderFields['modified'] = $lang['modified'];
 
         # Add thumbs_display_fields to sort order links for thumbs views
         for ($x=0;$x<count($sf);$x++)
