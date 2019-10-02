@@ -2388,7 +2388,10 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
         }
     else
         {
-        $ratio = 1;
+        // use php function getimagesize()
+        $size = getimagesize($img_url);
+        $ratio = (isset($size[0]))? $size[0] / $size[1] : 1;
+
         }
         
     switch($display)
@@ -2423,15 +2426,15 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
         elseif ($ratio < 1)
             {
             # portrait image dimensions
-        $height = $defaultheight;
+            $height = $defaultheight;
             $width = round($defaultwidth * $ratio);
             $margin = floor(($defaultheight - $height ) / 2) . "px";
             }
         else
             {
             # square image or no image dimensions
-        $height = "auto";
-            $width = "auto";
+            $height = $defaultheight;
+            $width = $defaultwidth;
             $margin = "auto";
             }
     

@@ -182,8 +182,45 @@ else
 		<div class="ResourcePanel">
 		
 	
-		<a class="ImageWrapper" href="<?php echo $link_url?>" title="<?php echo $title ?>" onClick="return ModalLoad(this,true);"><?php if ($result["has_image"]==1) { ?><img  src="<?php echo get_resource_path($ref,false,"thm",false,$result["preview_extension"],-1,1,false,$result["file_modified"])?>" 
-		        style="padding-top:<?php echo floor((150-$result["thumb_height"])/2) ?>px;" /><?php } else { ?><img border=0 src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($result["resource_type"],$result["file_extension"],false,false,true) ?>"
+		<a class="ImageWrapper" href="<?php echo $link_url?>" title="<?php echo $title ?>" onClick="return ModalLoad(this,true);">
+		
+		<?php if ($result["has_image"]==1) {
+			
+			$img_url = get_resource_path($ref,false,"thm",false,$result["preview_extension"],-1,1,false,$result["file_modified"]);
+			$size = getimagesize($img_url);
+        	$ratio = (isset($size[0]))? $size[0] / $size[1] : 1; 
+			
+			$defaultheight = $defaultwidth = 174;
+
+			if ($ratio > 1)
+            {
+            $width = $defaultwidth;
+            $height = round($defaultheight / $ratio);
+            $margin = floor(($defaultheight - $height ) / 2) . "px";
+            }
+        elseif ($ratio < 1)
+            {
+            # portrait image dimensions
+            $height = $defaultheight;
+            $width = round($defaultwidth * $ratio);
+            $margin = floor(($defaultheight - $height ) / 2) . "px";
+            }
+        else
+            {
+            # square image or no image dimensions
+            $height = $defaultheight;
+            $width = $defaultwidth;
+            $margin = "auto";
+            }
+			
+			print "<img height=\"$height\" width=\"$width\" margin=\"$margin\" src=\"$img_url\" style=\"margin-top:$margin;\" />";
+			?>
+		
+		
+		
+		<?php } else { ?>
+				
+		<img border=0 src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($result["resource_type"],$result["file_extension"],false,false,true) ?>"
 
 		/><?php } ?></a>
 	
