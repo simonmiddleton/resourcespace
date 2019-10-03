@@ -719,7 +719,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
             {
             return (array($s[0],$s[0] . "-" . $s[1],$search));
             }
-        else if is_array($search)
+        else if (is_array($search))
             {
             return $search;
             }
