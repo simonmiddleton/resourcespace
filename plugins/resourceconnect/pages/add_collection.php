@@ -14,21 +14,37 @@ $url=getvalescaped("url","");
 $back=getvalescaped("back","");
 
 
-
-
 /**
- * Does a record exist in the table already for this resource. Identify matching resource using collection id, resource ref in original database and resourceconnect source
+ * Does a record exist in the table already for this resource. 
+ * Identify matching resource using collection id, resource ref in original database and resourceconnect source
  */
-$matches = array();
 
-preg_match("/ref=(\d+)/", $url, $matches); // get resource ref from url
-$ref = $matches[0];
+$pattern_ref = "/ref=(\d+)/"; // regex pattern to match resource id
+$pattern_source = "/^(.*)\/pages/"; // regex patter to match remote resourceconnect host
 
-preg_match("/^(.*)\/pages/", $url, $matches); // get resourceconnect source from url
-$source = $matches[0];
+/* check that a match exists in url for both the ref and the source  */
+if (preg_match($pattern_ref, $url) == 1 && preg_match($pattern_source, $url) == 1)
+    { 
+    
+    /** 
+     * both ref and source patterns have been matched in url, 
+     * now check if existing entry exists in table for this resource  
+     */
 
-$entry_exists = sql_value("SELECT count(ref) as value FROM resourceconnect_collection_resources WHERE collection = '$usercollection' AND instr(url, '$ref') AND LOCATE('$source', url,0) = 0", 0);
+    $matches_ref = array();
+    preg_match($pattern_ref, $url, $matches_ref);
+    $ref = $matches_ref[0];
 
+    $matches_source = array();
+    preg_match($pattern_source, $url, $matches_source);
+    $source = $matches_source[0];
+
+    $entry_exists = sql_value("SELECT count(ref) as value FROM resourceconnect_collection_resources WHERE collection = '$usercollection' AND instr(url, '$ref') AND LOCATE('$source', url,0) = 0", 0);
+    } else 
+    {
+    /* url does not match patterns to allow comparison, so set entry_exists var to 0 */
+    $entry_exists = 0;
+    }
 
 // if no existing record then add
 if ($entry_exists == 0)
