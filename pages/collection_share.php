@@ -28,7 +28,7 @@ if (checkperm("b") || !$allow_share) {
         $error=$lang["error-permissiondenied"];
         }
 
-$internal_share_only=checkperm("noex");
+$internal_share_only=checkperm("noex") || intval($user_dl_limit) > 0;
 
 # Check if editing existing external share
 $editaccess=getvalescaped("editaccess","");

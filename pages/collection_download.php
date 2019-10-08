@@ -118,8 +118,28 @@ for ($n=0;$n<count($result);$n++)
         $count_data_only_types++;
         }
     }
+    
+if(intval($user_dl_limit) > 0)
+    {
+    $download_limit_check = get_user_downloads($userref,$user_dl_days);
+    if($download_limit_check + count($result) > $user_dl_limit)
+        {
+        $dlsummary = $download_limit_check . "/" . $user_dl_limit;
+        $errormessage = $lang["download_limit_collection_error"] . " ". str_replace("%%DOWNLOADED%%",$download_limit_check,$lang['download_limit_summary']);
+        if(getval("ajax","") != "")
+            {
+            error_alert(htmlspecialchars($errormessage), true,200);
+            }
+        else
+            {
+            include "../include/header.php";
+            $onload_message = array("title" => $lang["error"],"text" => $errormessage);
+            include "../include/footer.php";
+            }
+        exit();
+        }
+    }
 
-#print_r($available_sizes);
 if(0 == count($available_sizes) && 0 === $count_data_only_types)
 	{
 	?>

@@ -28,7 +28,7 @@ $minaccess=get_resource_access($ref);
 // Check if sharing permitted
 if (!can_share_resource($ref,$minaccess)) {exit($lang["error-permissiondenied"]);}
 
-$user_select_internal=checkperm("noex");
+$user_select_internal=checkperm("noex") ||  intval($user_dl_limit) > 0;
 
 $errors="";
 if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))

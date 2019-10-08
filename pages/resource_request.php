@@ -34,6 +34,15 @@ resource_type_config_override($resource["resource_type"]);
 
 $resource_title = '';
 
+if(intval($user_dl_limit) > 0)
+    {
+    $download_limit_check = get_user_downloads($userref,$user_dl_days);
+    if($download_limit_check >= $user_dl_limit)
+        {
+        $userrequestmode = 0;
+        }
+    }
+
 // Get any metadata fields we may want to show to the user on this page
 // Currently only title is showing
 foreach($resource_field_data as $resource_field)

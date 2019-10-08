@@ -70,7 +70,7 @@ if (!$allow_share) {
         }
 		
 
-$user_select_internal=checkperm("noex");
+$user_select_internal=checkperm("noex") || intval($user_dl_limit) > 0;
 	
 #Check if any resources are not in the active state
 foreach ($refArray as $colref){

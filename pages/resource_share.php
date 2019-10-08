@@ -42,7 +42,7 @@ if (!can_share_resource($ref,$minaccess))
     $error      = $lang["error-permissiondenied"];
     }
 	
-$internal_share_only=checkperm("noex");
+$internal_share_only=checkperm("noex") || intval($user_dl_limit) > 0;
         
 # Process deletion of access keys
 $deleteaccess = getvalescaped('deleteaccess', '');

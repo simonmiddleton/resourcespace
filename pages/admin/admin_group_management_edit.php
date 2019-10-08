@@ -114,7 +114,8 @@ if (getval("save",false) && enforcePostRequest(false))
             }
 
 	foreach (array("name","permissions","parent","search_filter","search_filter_id","edit_filter","derestrict_filter",
-					"resource_defaults","config_options","welcome_message","ip_restrict","request_mode","allow_registration_selection","inherit_flags") as $column)		
+                    "resource_defaults","config_options","welcome_message","ip_restrict","request_mode",
+                    "allow_registration_selection","inherit_flags", "download_limit","download_log_days") as $column)		
 		
 		{
         if ($execution_lockout && $column=="config_options")
@@ -132,7 +133,7 @@ if (getval("save",false) && enforcePostRequest(false))
 			{
 			$val=implode(",",getvalescaped($column,''));
 			}			
-		elseif($column=="parent")
+		elseif(in_array($column,array("parent","download_limit","download_log_days")))
 			{
 			$val=getval($column,0,true);
 			}			
@@ -352,11 +353,23 @@ include "../../include/header.php";
             <label for="derestrict_filter"><?php echo $lang["fieldtitle-derestrict_filter"]; ?></label>
             <textarea name="derestrict_filter" class="stdwidth" rows="3" cols="50"><?php echo $record['derestrict_filter']; ?></textarea>
             <div class="clearerleft"></div>
+            <div class="FormHelp">
+                <div class="FormHelpInner"><?php echo $lang["information-derestrict_filter"]; ?></div>
+            </div>
         </div>
 
-        <div class="FormHelp">
-            <div class="FormHelpInner"><?php echo $lang["information-derestrict_filter"]; ?></div>
+        <div class="Question">
+            <label for="download_limit"><?php echo $lang["group_download_limit_title"]; ?></label>
+            <input name="download_limit" type="number" class="vshrtwidth" value="<?php echo htmlspecialchars($record['download_limit']); ?>">
+            <div class="clearerleft"></div>
         </div>
+
+        <div class="Question">
+            <label for="download_log_days"><?php echo $lang["group_download_limit_period"]; ?></label>
+            <input name="download_log_days" type="number" class="vshrtwidth" value="<?php echo htmlspecialchars($record['download_log_days']); ?>">
+            <div class="clearerleft"></div>
+        </div>
+
 
         <div class="Question">
             <label for="resource_defaults"><?php echo $lang["property-resource_defaults"]; ?></label>

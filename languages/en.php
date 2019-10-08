@@ -2100,6 +2100,12 @@ $lang['action-title_filter_by_parent_group'] = "Parent user group filter";
 $lang['action-title_filter_by_permissions'] = "Permissions filter";
 $lang["fieldhelp-permissions_filter"]="You may enter a single permission or comma separated permissions.  Partial permission names and wildcards are not allowed.  Permissions are case sensitive.";
 
+$lang['group_download_limit_title'] = "Resource download limit. Set to 0 for no limit";
+$lang['group_download_limit_period'] = "Download limit period (limit in last X days). Set to 0 for absolute download limit";
+$lang['download_limit_error'] = "Your download limit has been reached.";
+$lang['download_limit_collection_error'] = "This collection download would exceed your download limit.";
+$lang['download_limit_summary'] = "You have downloaded %%DOWNLOADED%% resources.";
+
 # User group management edit
 $lang['page-title_user_group_management_edit'] = "Edit user group";
 $lang['page-subtitle_user_group_management_edit'] = "Use this section to modify user group properties.";

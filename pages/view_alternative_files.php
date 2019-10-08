@@ -71,7 +71,7 @@ if ($alt_access)
 		<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
 		?>
 		
-		<?php if ($access==0){?>
+		<?php if ($access==0 && resource_download_allowed($ref,"",$resource["resource_type"],$altfiles[$n]["ref"])){?>
 		<td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
 		<?php 		
 		if (!$direct_download || $save_as)

@@ -1486,7 +1486,7 @@ function get_usergroups($usepermissions = false, $find = '', $id_name_pair_array
 
     # Executes query.
     global $default_group;
-    $r = sql_query("select *,inherit_flags from usergroup $sql order by (ref='$default_group') desc,name");
+    $r = sql_query("select *,inherit_flags, download_limit, download_log_days from usergroup $sql order by (ref='$default_group') desc,name");
 
     # Translates group names in the newly created array.
     $return = array();
@@ -1527,7 +1527,7 @@ function get_usergroup($ref)
 {
     # Returns the user group corresponding to the $ref. A standard user group name is translated using $lang. A custom user group name is i18n translated.
     
-    $return = sql_query("SELECT ref,name,permissions,parent,search_filter,search_filter_id,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags" . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref='$ref'");
+    $return = sql_query("SELECT ref,name,permissions,parent,search_filter,search_filter_id,edit_filter,ip_restrict,resource_defaults,config_options,welcome_message,request_mode,allow_registration_selection,derestrict_filter,group_specific_logo,inherit_flags, download_limit, download_log_days " . hook('get_usergroup_add_columns') . " FROM usergroup WHERE ref='$ref'");
     if (count($return)==0) {return false;}
     else {
         $return[0]["name"] = lang_or_i18n_get_translated($return[0]["name"], "usergroup-");
@@ -1543,7 +1543,7 @@ function get_user($ref)
         if (isset($udata_cache[$ref])){
           $return=$udata_cache[$ref];
         } else {
-    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, u.search_filter_o_id, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter, g.search_filter_id FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
+    $udata_cache[$ref]=sql_query("SELECT u.*, if(find_in_set('permissions',g.inherit_flags)>0 AND pg.permissions IS NOT NULL,pg.permissions,g.permissions) permissions, g.parent, g.search_filter, g.edit_filter, g.ip_restrict ip_restrict_group, g.name groupname, u.ip_restrict ip_restrict_user, u.search_filter_override, u.search_filter_o_id, g.resource_defaults,if(find_in_set('config_options',g.inherit_flags)>0 AND pg.config_options IS NOT NULL,pg.config_options,g.config_options) config_options,g.request_mode, g.derestrict_filter, g.search_filter_id, g.download_limit, g.download_log_days FROM user u LEFT JOIN usergroup g ON u.usergroup=g.ref LEFT JOIN usergroup pg ON g.parent=pg.ref WHERE u.ref='$ref'");
     }
     
     # Return a user's credentials.
@@ -5358,15 +5358,19 @@ function error_alert($error, $back = true, $code = 403)
         }
 
     echo "<script type='text/javascript'>
-        ModalClose();
-        styledalert('" . $lang["error"] . "', '$error');";
-
+        jQuery(document).ready(function()
+            {
+            ModalClose();
+            styledalert('" . $lang["error"] . "', '$error');
+            " . ($back ? "window.setTimeout(function(){history.go(-1);},2000);" : "") ."
+            });
+        </script>";
     if($back)
         {
-        echo "history.go(-1);";
+        include(dirname(__FILE__)."/footer.php");
         }
-
-    echo "\n</script>";
+    
+    
     }
 /**
  * Returns an xml compliant string in UTF-8

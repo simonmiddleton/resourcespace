@@ -13,6 +13,7 @@ include_once "../include/transform_functions.php";
 global $cropper_allowed_extensions;
 
 $ref = getval("ref",true,0);
+
 if(is_numeric($ref)==false) {exit($lang['error_resource_id_non_numeric']);}
 $resource=get_resource_data($ref);
 if ($resource===false || $ref < 0) {exit($lang['resourcenotfound']);}
@@ -37,15 +38,37 @@ if (isset($_REQUEST['mode']) && strtolower($_REQUEST['mode']) == 'original'){
     $original = false;
 }
 
-// if they can't download this resource, they shouldn't be doing this
-// also, if they are trying to modify the original but don't have edit access
-// they should never get these errors, because the links shouldn't show up if no perms
+$blockcrop = false;
+
+// Check sufficient access
 if ($access!=0 || ($original && !$edit_access))
     {
-	include "../../../include/header.php";
-	echo "Permission denied.";
-	include "../../../include/footer.php";
-	exit;
+    $blockcrop= true;
+    $error = $lang['error-permissiondenied'];
+    }
+elseif(intval($user_dl_limit) > 0)
+    {
+    $download_limit_check = get_user_downloads($userref,$user_dl_days);
+    if($download_limit_check >= $user_dl_limit)
+        {
+        $blockcrop= true;
+        $error = $lang['download_limit_error'];
+        }
+    }
+
+if($blockcrop)
+    {
+    if(getval("ajax","") != "")
+        {
+        error_alert($error, true,200); // 200 so that history works
+        }
+    else
+        {
+        include "../../../include/header.php";
+        $onload_message = array("title" => $lang["error"],"text" => $error);
+        include "../../../include/footer.php";    
+        }
+    exit();
     }
 
 

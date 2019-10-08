@@ -42,6 +42,7 @@ $usage          = getvalescaped('usage', '-1');
 $usagecomment   = getvalescaped('usagecomment', '');
 $ext            = getvalescaped('ext', '');
 $snapshot_frame = getvalescaped('snapshot_frame', 0, true);
+$modal          = (getval("modal","")=="true");
 
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     {
@@ -98,9 +99,18 @@ else
 
     if(!$allowed || $ref <= 0)
         {
-        debug("PAGES/DOWNLOAD.PHP: Permission denied!");
-        # This download is not allowed. How did the user get here?
-        exit('Permission denied');
+        $error = $lang['error-permissiondenied'];
+        if(getval("ajax","") != "")
+            {
+            error_alert($error, true,200);
+            }
+        else
+            {
+            include "../include/header.php";
+            $onload_message = array("title" => $lang["error"],"text" => $error);
+            include "../include/footer.php";
+            }
+        exit();
         }
 
     // additional access check, as the resource download may be allowed, but access restriction should force watermark.  

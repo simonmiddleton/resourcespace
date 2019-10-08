@@ -3782,7 +3782,7 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
 if (!function_exists("resource_download_allowed")){
 function resource_download_allowed($resource,$size,$resource_type,$alternative=-1)
 	{
-	
+	global $userref, $usergroup, $user_dl_limit, $user_dl_days, $noattach;
 	# For the given resource and size, can the current user download it?
 	# resource type and access may already be available in the case of search, so pass them along to get_resource_access to avoid extra queries
 	# $resource can be a resource-specific search result array.
@@ -3793,15 +3793,24 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         return false;
         }
 
+
 	if (checkperm('X' . $resource_type . "_" . $size) && $alternative==-1)
 		{
 		# Block access to this resource type / size? Not if an alternative file
 		# Only if no specific user access override (i.e. they have successfully requested this size).
-		global $userref, $usergroup;
 		$usercustomaccess = get_custom_access_user($resource,$userref);
 		$usergroupcustomaccess = get_custom_access($resource,$usergroup);
 		if (($usercustomaccess === false || !($usercustomaccess==='0')) && ($usergroupcustomaccess === false || !($usergroupcustomaccess==='0'))) {return false;}
-		}
+        }
+    
+    if(($size == "" || $size == "hpr" || getval("noattach","") == "")  && intval($user_dl_limit) > 0)
+        {
+        $download_limit_check = get_user_downloads($userref,$user_dl_days);
+        if($download_limit_check >= $user_dl_limit)
+            {
+            return false;
+            }
+        }
 
 	# Full access
 	if ($access==0)
