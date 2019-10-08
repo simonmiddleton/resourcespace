@@ -13,9 +13,6 @@ header("Content-type: text/css");
 global $header_colour_style_override, $header_link_style_override, $home_colour_style_override, $collection_bar_background_override,
 $collection_bar_foreground_override;
 
-
-print $collection_bar_foreground_override;
-
 $browse_on = has_browsebar();
 
 # Override the header background colour
@@ -74,11 +71,7 @@ if ((isset($collection_bar_background_override) && $collection_bar_background_ov
 if ((isset($collection_bar_foreground_override) && $collection_bar_foreground_override != ''))
     {
     ?>
-    .CollectionPanelShell, #CollectionDiv select, #CollectionDiv optgroup
-        {
-        background-color: <?php echo $collection_bar_foreground_override; ?>;
-        }
-    .#CollectionDiv optgroup
+    .CollectionPanelShell, #CollectionDiv select
         {
         background-color: <?php echo $collection_bar_foreground_override; ?>;
         }

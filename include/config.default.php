@@ -213,8 +213,8 @@ $header_link_style_override='';
 $home_colour_style_override='';
 
 # Used for specifying custom colours for collection bar elements
-$collection_bar_background_override='rgb(34,139,34)';
-$collection_bar_foreground_override='rgb(34,139,34)';
+$collection_bar_background_override='';
+$collection_bar_foreground_override='';
 
 # Available languages
 # If $defaultlanguage is not set, the brower's default language will be used instead
