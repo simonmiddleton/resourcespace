@@ -319,7 +319,8 @@ if ( (($extension=="pages") || ($extension=="numbers") || (!isset($unoconv_path)
     
 /* ----------------------------------------
     Unoconv is a python-based utility to run files through OpenOffice. It is available in Ubuntu.
-    This adds conversion of office docs to PDF format and adds them as alternative files
+    This adds conversion of office docs to PDF format and adds them as alternative files (this behaviour can be disabled by
+    adding the extension to non_image_types list)
     One could also see the potential to base previews on the PDFs for paging and better quality for most of these formats.
    ----------------------------------------
 */
@@ -344,7 +345,40 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
     $path_parts=pathinfo($file);
     $basename_minus_extension=remove_extension($path_parts['basename']);
     $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
-    if (file_exists($pdffile))
+
+    $no_alt_condition = (
+        $GLOBALS['non_image_types_generate_preview_only']
+        && in_array($extension, $GLOBALS['non_image_types']) 
+        && in_array($extension, config_merge_non_image_types())
+    );
+
+    if(file_exists($pdffile) && $no_alt_condition)
+        {
+        // Set vars so we continue generating previews as if this is a PDF file
+        $extension = "pdf";
+        $file = $pdffile;
+        $unoconv_fake_pdf_file = true;
+
+        // We need to avoid a job spinning off another job because create_previews() can run as an offline job and it 
+        // includes preview_preprocessing.php.
+        global $offline_job_queue, $offline_job_in_progress;
+
+        if($offline_job_queue && !$offline_job_in_progress)
+            {
+            $extract_text_job_data = array(
+                'ref'       => $ref,
+                'extension' => $extension,
+                'path'      => $file,
+            );
+
+            job_queue_add('extract_text', $extract_text_job_data);
+            }
+        else
+            {
+            extract_text($ref, $extension, $pdffile);
+            }
+        }
+    else if (file_exists($pdffile))
         {
         # Attach this PDF file as an alternative download.
         sql_query("delete from resource_alt_files where resource = '".$ref."' and unoconv='1'");    
@@ -987,7 +1021,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
     }
 
 $non_image_types = config_merge_non_image_types();
-    
+
 # If a file has been created, generate previews just as if a JPG was uploaded.
 if (isset($newfile))
     {
@@ -1010,5 +1044,10 @@ if (isset($newfile))
         && file_exists($file_used_for_previewonly))
         {
         unlink($file_used_for_previewonly);
+        }
+
+    if(isset($unoconv_fake_pdf_file) && $unoconv_fake_pdf_file)
+        {
+        unlink($file);
         }
     }
