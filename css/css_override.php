@@ -67,14 +67,26 @@ if ((isset($collection_bar_background_override) && $collection_bar_background_ov
     <?php
     }
 
-# Override the collection bar foreground colour
+/**
+ * Override the collection bar foreground colour
+ * optgroup background-color needs to be set to #778899 as Firefox/Windows does not recognise rgb() colour properties
+ * */
 if ((isset($collection_bar_foreground_override) && $collection_bar_foreground_override != ''))
     {
     ?>
-    .CollectionPanelShell, #CollectionDiv select
+    .CollectionPanelShell, #CollectionDiv select, #CollectionDiv option
         {
         background-color: <?php echo $collection_bar_foreground_override; ?>;
+        }    
+    
+    @-moz-document url-prefix() 
+        {    
+        #CollectionDiv optgroup 
+            {
+            background-color: #778899;
+            }    
         }
+
 
     .ui-layout-resizer
         {
