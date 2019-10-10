@@ -310,6 +310,8 @@ if (!hook("renderresultthumb"))
         <!-- Checkboxes -->
         <div class="ResourcePanelIcons">
             <?php
+            hook("thumblistextras");  // add icons for resourceconnect
+
             if(!hook("thumbscheckboxes"))
             {
             if ($use_checkboxes_for_selection)

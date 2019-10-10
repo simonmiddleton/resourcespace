@@ -103,6 +103,42 @@ function HookResourceConnectSearchReplacesearchresults()
 	return true;
 	}
 	
+
+/**
+ * Purpose: display preview and remove icons for a resource in collection>action>view_all_resources, where resource is from a resourceconnect source
+ * 
+ * Additional information: Resourconnect resource data has a ref == -87412 - use this to identify non-resourceconnect resources, otherwise will display icons for local resources as well
+ * 
+ */
+
+
+function HookResourceConnectSearchThumblistextras()
+	{
+		
+	global $baseurl, $result, $n, $lang;
+
+	$resource = $result[$n]; // record for resource
+
+	if ($resource["ref"] != -87412)
+		{ 
+		return true;
+		} // only display icons for resourceconnect resources identified by ref = -87412
+
+	$ref = $resource["ref_tab"]; // resource id in resourceconnect_collection_resources table
+	$pre_url = $resource["pre_url"]; // preview image url - stored locally
+	$title = $resource["field8"]; // image title
+		
+	
+	print <<<html
+
+	<a aria-hidden="true" class="fa fa-expand" id="previewlinkcollection$ref" href="$pre_url" title="Full screen preview" data-title="{$lang["fullscreenpreview"]}" data-lightbox="lightboxcollection" onmouseup="closeModalOnLightBoxEnable();"></a>
+	
+	<a class="removeFromCollection fa fa-minus-circle" href="$baseurl/pages/collections.php?resourceconnect_remove=$ref&nc=<?php echo time() ?>" onClick="return CollectionDivLoad(this,false);"> </a></div>	
+html;
+
+	} 
+
+
 function HookResourceConnectSearchProcess_search_results($result,$search)
 	{
     global $baseurl,$k;
@@ -122,6 +158,7 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
 		$result[]=array
 			(
 			"ref"=>-87412,
+			"ref_tab"=>$resource["ref"],
 			"access"=>0,
             "archive"=>0,
 			"resource_type"=>0,
