@@ -105,6 +105,7 @@ function HookResourceConnectSearchReplacesearchresults()
 	
 function HookResourceConnectSearchProcess_search_results($result,$search)
 	{
+    global $baseurl,$k;
 	if (substr($search,0,11)!="!collection") {return false;} # Not a collection. Exit.
 	$collection=substr($search,11);
 	$affiliate_resources=sql_query("select * from resourceconnect_collection_resources where collection='" . escape_check($collection) . "'");
@@ -131,7 +132,7 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
 			"field8"=>$resource["title"],
 			"preview_extension"=>"",
 			"file_modified"=>$resource["date_added"],
-			"url"=>"../plugins/resourceconnect/pages/view.php?url=" . urlencode($resource["url"]),
+			"url"=>"{$baseurl}/plugins/resourceconnect/pages/view.php?k={$k}&col={$collection}&url=" . urlencode($resource["url"]),
 			"thm_url"=>$resource["large_thumb"],
 			"col_url"=>$resource["thumb"],
 			"pre_url"=>$resource["xl_thumb"],
