@@ -56,7 +56,8 @@ $uploadparams["public"] = getval("public","");
 $uploadparams["autorotate"] = $autorotate;
 $uploadparams["entercolname"] = getvalescaped("entercolname","");
 
-# Are we in upload review mode?
+# Upload review mode will be true if we are coming from upload_plupload and then editing (config $upload_then_edit)
+#   or if it's a special collection search where the collection is the negated user reference meaning its resources are to be edited 
 $upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collection-" . $userref);
 $lastedited = getval('lastedited',0,true);
 $lockable_fields = $upload_review_lock_metadata && $upload_review_mode;
@@ -211,8 +212,9 @@ if($editsearch)
 
     $last_resource_edit = get_last_resource_edit_array($items); 
 
-    # If editing multiple items, use the first resource as the template
+    # This is a multiple item edit (even if there is only one item in the list), so use the first resource as the template
     $ref = $items[0];
+    $use = $ref;
     }
 else
     {
