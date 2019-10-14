@@ -482,8 +482,8 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 #previewimagewrapper {float:left;margin: 0px 15px 15px 0px; position: relative; min-width: 720px;}
 
 /* Larger layout changes */
-.RecordPanelLarge #previewimagewrapper {float: none; text-align: center; margin: 0px 15px 10px 0;}
-.RecordPanel.RecordPanelLarge .Picture {display: inline-block; max-width: unset;}
+.RecordPanelLarge #previewimagewrapper {float: none; text-align: center; margin: 0 0 10px 0;}
+.RecordPanel.RecordPanelLarge .Picture {display: inline-block; max-width: 100%;}
 .RecordPanel.RecordPanelLarge .RecordDownload {width: 100%;}
 .RecordPanel.RecordPanelLarge #ResourceDownloadOptions {
     width: 70%;
