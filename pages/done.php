@@ -36,14 +36,14 @@ include "../include/header.php";
 	if ($resource!="")
 		{
 		?>
-	    <p>y<a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($resource) ?>&k=<?php echo urlencode(getval("k","")) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo ($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["continuetoresourceview"]?></a></p>
+	    <p><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($resource) ?>&k=<?php echo urlencode(getval("k","")) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo ($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["continuetoresourceview"]?></a></p>
 		<?php
 		}
 	endif; # hook donebacktoresource
 	?>
  
 	<?php if (getval("k","")=="") { ?>
-    <p>x<a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>&amp;restypes=<?php echo urlencode($restypes); ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["continuetoresults"]?></a></p>
+    <p><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>&amp;restypes=<?php echo urlencode($restypes); ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["continuetoresults"]?></a></p>
 
     <p><a href="<?php echo ($use_theme_as_home?$baseurl_short.'pages/themes.php':$default_home_page)?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["continuetohome"]?></a></p>
 
