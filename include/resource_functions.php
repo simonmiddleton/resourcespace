@@ -3886,7 +3886,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     if ($edit_access_for_contributor && $userref==$resourcedata["created_by"]) {return true;}
         
     # Must have edit permission to this resource first and foremost, before checking the filter.
-    if (!checkperm("e" . $status)) {return false;} 
+    if (!checkperm("e" . $status) && !checkperm("ert" . $resourcedata['resource_type'])) {return false;} 
     
     # Cannot edit if z permission
     if (checkperm("z" . $status)) {return false;}
@@ -3939,7 +3939,12 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
 	if ($gotmatch) {
 	  $gotmatch = !hook("denyafterusereditfilter");
 	}
-	
+    
+    if(checkperm("ert" . $resourcedata['resource_type']))
+        {
+        return true;
+        }
+
 	# Default after all filter operations, allow edit.
 	return $gotmatch;
 	}
