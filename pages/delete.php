@@ -19,7 +19,7 @@ $order_by=getvalescaped("order_by","relevance");
 $offset=getvalescaped("offset",0,true);
 $restypes=getvalescaped("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
-$archive=getvalescaped("archive",0,true);
+$archive=getvalescaped("archive","");
 
 $modal=(getval("modal","")=="true");
 $default_sort_direction="DESC";
@@ -82,7 +82,7 @@ if(!$modal)
   
   <?php if ($resource["archive"]==3) { ?><p><strong><?php echo $lang["finaldeletion"] ?></strong></p><?php } ?>
   
-	<form method="post" action="<?php echo $baseurl_short?>pages/delete.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>">
+	<form method="post" action="<?php echo $baseurl_short?>pages/delete.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>&amp;restypes=<?php echo urlencode($restypes); ?>">
 	<input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
     <?php generateFormToken("delete_resource"); ?>
 	<div class="Question">

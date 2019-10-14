@@ -1675,7 +1675,7 @@ hook ("resourceactions") ?>
 			{
 			?>
 			<li>
-			<a href="<?php echo $baseurl_short?>pages/delete.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="return ModalLoad(this,true);">
+			<a href="<?php echo $baseurl_short?>pages/delete.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>&amp;restypes=<?php echo urlencode($restypes); ?>" onClick="return ModalLoad(this,true);">
 			<?php 
 			if ($resource["archive"]==3)
 				{
