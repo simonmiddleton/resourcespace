@@ -394,3 +394,13 @@ WHERE
   date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
 ORDER BY ml.ref DESC
 "
+18,"Resource comments","
+SELECT  c.ref 'Ref', c.created 'Date', c.resource_ref 'Resource ID', c.resource_ref 'thumbnail', c.body 'Comment', 
+ifnull(concat(u.username,' (',u.fullname,')'),concat('ANONYMOUS: ',c.fullname,' (',c.website_url,')')) 'User', ifnull(c.email,u.email) Email
+
+FROM comment c LEFT JOIN user u ON u.ref=c.user_ref
+
+WHERE 
+
+c.created>=date('[from-y]-[from-m]-[from-d]') and c.created<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
+order by c.created DESC;"
