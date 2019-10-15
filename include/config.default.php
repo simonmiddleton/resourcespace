@@ -3116,7 +3116,8 @@ $delete_resource_custom_access = false;
 $system_down_redirect = false;
 
 # Option for the system to empty the configured temp folder of old files when it is creating new temporary files there.
-# Set to 0 (off) by default.
+# Expressed as a number of days. If the age of the temporary folder exceeds this number of days then it will be deleted.
+# Set to 0 (off) by default. 
 # Please use with care e.g. make sure your IIS/Apache service account doesn't have write access to the whole server
 $purge_temp_folder_age=0;
 
