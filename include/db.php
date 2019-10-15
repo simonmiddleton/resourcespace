@@ -1378,19 +1378,19 @@ if (!function_exists("nicedate")) {
 * 
 * @uses offset_user_local_timezone()
 * 
-* @return string
+* @return string Returns an empty string if date not set/invalid
 */
 function nicedate($date, $time = false, $wordy = true)
     {
     global $lang, $date_d_m_y, $date_yyyy;
 
-    if($date == '')
+    if($date == '' || strtotime($date) === false)
         {
         return '';
         }
 
     $original_time_part = substr($date, 11, 5);
-    if($original_time_part !== false || $original_time_part !== '')
+    if($original_time_part !== false || $original_time_part != '')
         {
         $date = offset_user_local_timezone($date, 'Y-m-d H:i:s');
         }
