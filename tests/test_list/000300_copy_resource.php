@@ -1,7 +1,4 @@
 <?php
-
-return false;
-
 if (php_sapi_name()!=="cli") {exit("This utility is command line only.");}
 
 
