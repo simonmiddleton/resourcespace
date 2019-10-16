@@ -5,6 +5,7 @@
 include '../../../include/db.php';
 include '../../../include/authenticate.php';
 include '../../../include/reporting_functions.php';
+include '../../../include/dash_functions.php';
 
 $report=getvalescaped("report","");
 $activity_type=getvalescaped("activity_type","");
@@ -50,6 +51,7 @@ $from_dash=getval("from_dash","")!="";
 
 # Rendering a tile? Set "n" or the graph sequence number to the tile number, so all graph IDs are unique on the dash page.
 $tile=getvalescaped("tile","");
+$user_tile=getval("user_tile",0,true);
 if ($tile!="")
     {
     $n=$tile;
@@ -482,6 +484,15 @@ if ($from_dash)
 <?php } ?>
 
 
-<?php if ($from_dash) { ?>
+<?php if ($from_dash) { 
+if($tile>0)
+{
+    # Update $tile and $usertile for generate_dash_tile_toolbar purposes
+    $usertile=get_user_tile($user_tile,$userref);
+    $tile=get_tile($tile);
+    $tile_id        = (isset($usertile)) ? "contents_user_tile".$usertile["ref"] : "contents_tile".$tile["ref"];
+    generate_dash_tile_toolbar($tile, $tile_id);
+}
+?>
 </div>
 <?php } ?>

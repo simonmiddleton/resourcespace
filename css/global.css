@@ -1000,6 +1000,25 @@ a.HomePanel:hover {
     width: 515px;
 }
 
+.DashTileActions {
+    position: absolute;
+    color: #fff;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: #000;
+    height: 20px;
+    text-align: right;
+    z-index:3;
+}
+
+.DashTileActions .tool {
+    margin-left: 8px;
+    vertical-align: middle;
+    display: inline-block;
+    padding-right: 5px;    
+}
+
 .tools a{white-space: nowrap;}
 #trash_bin_delete_dialog {display:none !important;}
 .no-close .ui-dialog-titlebar-close {display: none;}

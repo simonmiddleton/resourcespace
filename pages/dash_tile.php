@@ -459,7 +459,7 @@ if(!$validpage)
 	echo $formextra;
 
 	if($modifylink)
-		{ 
+		{
 		?>
 		<div class="Question">
 			<label for="link"><?php echo $lang["dashtilelink"];?></label> 

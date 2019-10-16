@@ -280,6 +280,7 @@ function tile_freetext($tile,$tile_id,$tile_width,$tile_height)
 	<h2> <?php echo htmlspecialchars(i18n_get_translated($tile["title"])); ?></h2>
 	<p><?php echo htmlspecialchars(i18n_get_translated($tile["txt"])); ?></p>
 	<?php
+	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
 /*
@@ -420,6 +421,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 		</script>
 		<?php
 		}
+	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
 function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
@@ -515,6 +517,7 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 		</script>
 		<?php
 		}
+	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
 function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
@@ -593,6 +596,7 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 		</script>
 		<?php
 		}
+	generate_dash_tile_toolbar($tile,$tile_id);
 	}
 
 
@@ -705,7 +709,7 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
         <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
         <?php
         }
-
+	generate_dash_tile_toolbar($tile,$tile_id);
     return;
     }
 
@@ -801,7 +805,7 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
         <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
         <?php
         }
-
+	generate_dash_tile_toolbar($tile,$tile_id);
     return;
     }
 
@@ -837,6 +841,6 @@ function tile_featured_collection_blank($tile, $tile_id)
         <script>jQuery('#<?php echo $tile_id; ?>').addClass('TileContentShadow');</script>
         <?php
         }
-
+	generate_dash_tile_toolbar($tile,$tile_id);
     return;
     }
