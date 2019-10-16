@@ -62,6 +62,7 @@ if ($intro!="") { ?><p><?php echo $intro ?></p><?php }
 <td><?php echo $lang["action"]?></td>
 <td><?php echo $lang["resourceid"]?></td>
 <td><?php $field=get_fields(array($view_title_field));echo lang_or_i18n_get_translated($field[0]["title"], "fieldtitle-");?></td>
+<?php hook("log_extra_columns_header"); ?>
 </tr>
 
 <?php
@@ -86,6 +87,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
 		?></td>
 	<td><?php if ($log[$n]['resource']!=0){?><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($log[$n]["resource"]) ?>'><?php echo $log[$n]["resource"]?></a><?php } ?></td>
 	<td><?php if ($log[$n]['resource']!=0){?><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($log[$n]["resource"]) ?>'><?php echo i18n_get_translated($log[$n]["title"])?></a><?php } ?></td>
+    <?php hook("log_extra_columns_row", "", array($log[$n], $colinfo)); ?>
 	</tr> 
 <?php } ?>
 </table>

@@ -1995,10 +1995,30 @@ function collection_log($collection,$type,$resource,$notes = "")
              VALUES (now(), {$user}, '{$collection}', '{$type}', {$resource}, '{$notes}')");
 	}
     
-function get_collection_log($collection, $fetchrows=-1)
+function get_collection_log($collection, $fetchrows = -1)
 	{
-	global $view_title_field;	
-	return sql_query("select c.date,u.username,u.fullname,c.type,r.field".$view_title_field." title,c.resource, c.notes from collection_log c left outer join user u on u.ref=c.user left outer join resource r on r.ref=c.resource where collection='$collection' order by c.date desc",false,$fetchrows);
+	global $view_title_field;
+
+    $extra_fields = hook("collection_log_extra_fields");
+    if(!$extra_fields)
+        {
+        $extra_fields = "";
+        }
+
+	return sql_query("
+                 SELECT c.date,
+                        u.username,
+                        u.fullname,
+                        c.type,
+                        r.field{$view_title_field} AS title,
+                        c.resource,
+                        c.notes
+                        {$extra_fields}
+                   FROM collection_log AS c
+        LEFT OUTER JOIN user AS u ON u.ref = c.user
+        LEFT OUTER JOIN resource AS r ON r.ref = c.resource
+                  WHERE collection = '{$collection}'
+               ORDER BY c.date DESC", false, $fetchrows);
 	}
 	
 function get_collection_videocount($ref)
@@ -2106,7 +2126,7 @@ function remove_all_resources_from_collection($ref){
     // abstracts it out of save_collection()
     $removed_resources = sql_array('SELECT resource AS value FROM collection_resource WHERE collection = ' . escape_check($ref) . ';');
 
-    // First log this for each resource (in case it was done by mistake)
+    collection_log($ref, LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES, 0);
     foreach($removed_resources as $removed_resource_id)
         {
         collection_log($ref, 'r', $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
@@ -2114,8 +2134,6 @@ function remove_all_resources_from_collection($ref){
 
     sql_query('DELETE FROM collection_resource WHERE collection = ' . escape_check($ref));
     sql_query("DELETE FROM external_access_keys WHERE collection='" . escape_check($ref) . "'");
-
-    collection_log($ref, 'R', 0);
     }	
 
 if (!function_exists("get_home_page_promoted_collections")){
