@@ -164,12 +164,3 @@ function HookResourceConnectAllAdvancedsearchlink()
         
     }
 */
-
-function HookResourceConnectAllReplace_get_collection_resources()
-    {
-    $collection = getval('c',true);
-    $affiliate_resources=sql_array("select ref value from resourceconnect_collection_resources where collection='" . escape_check($collection) . "' order by ref asc");
-    $results = sql_array("select resource value from collection_resource where collection='" . escape_check($collection) . "' order by sortorder asc, date_added desc, resource desc");
-    $merge_results = array_merge($affiliate_resources,$results);
-    return $merge_results;
-    }
