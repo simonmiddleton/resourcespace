@@ -458,9 +458,39 @@ $metadata_read=true;
 # If metadata_read is true, set whether the default setting on the edit/upload page is to extract metadata (true means the metadata will be extracted)
 $metadata_read_default=true;
 
-# If Exiftool path is set, do NOT send files with the following extensions to exiftool for processing
+# If Exiftool path is set, do NOT send files with the following extensions to exiftool for processing. Updated to include common video formats as this can cause slowdowns when multiple downloads are in progress
 # For example: $exiftool_no_process=array("eps","png");
-$exiftool_no_process=array();
+$exiftool_no_process=array('aaf',
+    '3gp',
+    'asf',
+    'avchd',
+    'avi',
+    'cam',
+    'dat',
+    'dsh',
+    'flv',
+    'm1v',
+    'm2v',
+    'mkv',
+    'wrap',
+    'mov',
+    'mpeg',
+    'mpg',
+    'mpe',
+    'mp4',
+    'mxf',
+    'nsv',
+    'ogm',
+    'ogv',
+    'rm',
+    'ram',
+    'svi',
+    'smi',
+    'webm',
+    'wmv',
+    'divx',
+    'xvid',
+    'm4v');
 
 /*
 ExifTool global options - these get applied to any exiftool command run. For more information on options please see
