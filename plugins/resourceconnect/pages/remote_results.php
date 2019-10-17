@@ -28,18 +28,18 @@ $restypes="";
 $resource_types=get_resource_types("", false);
 $rtx=explode(",",getvalescaped("restypes",""));
 foreach ($rtx as $rt)
-	{
-	# Locate the resource type name in the local list.	
-	# We have to handle resource type names because the resource type numeric IDs could be different from system to system.
-	foreach ($resource_types as $resource_type)
-		{
-		if ($rt!="" && strpos($resource_type["name"],$rt)!==false)
-			{
-			if ($restypes!="") {$restypes.=",";}	
-			$restypes.=$resource_type["ref"];
-			}
-		}
-	}
+    {
+    # Locate the resource type name in the local list.  
+    # We have to handle resource type names because the resource type numeric IDs could be different from system to system.
+    foreach ($resource_types as $resource_type)
+        {
+        if ($rt!="" && strpos($resource_type["name"],$rt)!==false)
+            {
+            if ($restypes!="") {$restypes.=",";}    
+            $restypes.=$resource_type["ref"];
+            }
+        }
+    }
 
 $results=do_search($search,$restypes,$order_by,0,$pagesize+$offset,$sort,false); # Search
 
@@ -55,24 +55,24 @@ if ($offset<0) {$offset=0;}
 ?><div class="BasicsBox"><?php
 
 if (!is_array($results))
-	{
-	?>
-	<h1><?php echo $affiliatename ?></h1>
-	<p><?php echo $lang["nomatchingresources"] ?></p>
-	<?php
-	}
+    {
+    ?>
+    <h1><?php echo $affiliatename ?></h1>
+    <p><?php echo $lang["nomatchingresources"] ?></p>
+    <?php
+    }
 else
-	{
-	?>
-	<div class="TopInpageNav">
-	<div class="InpageNavLeftBlock"><?php echo $lang["youfound"] ?>:<br><span class="Selected"><?php echo count($results) . " " ?></span><?php if (count($results)==1){echo $lang["youfoundresource"];} else {echo $lang["youfoundresources"];}?></div>
+    {
+    ?>
+    <div class="TopInpageNav">
+    <div class="InpageNavLeftBlock"><?php echo $lang["youfound"] ?>:<br><span class="Selected"><?php echo count($results) . " " ?></span><?php if (count($results)==1){echo $lang["youfoundresource"];} else {echo $lang["youfoundresources"];}?></div>
 
-	<div class="InpageNavLeftBlock"><?php echo $lang["resourceconnect_affiliate"] ?>:<br><span class="Selected"><?php echo $affiliatename ?></span></div>	
+    <div class="InpageNavLeftBlock"><?php echo $lang["resourceconnect_affiliate"] ?>:<br><span class="Selected"><?php echo $affiliatename ?></span></div>   
 
     
     
     <div id="searchSortOrderContainer" class="InpageNavLeftBlock ">
-		Sort order:<br>
+        Sort order:<br>
         <select id="rc_order_by" onChange="ResourceConnect_Repage(0);">
             <option value="relevance"><?php echo $lang["relevance"] ?></option>
             <option value="popularity"><?php echo $lang["popularity"] ?></option>
@@ -101,7 +101,7 @@ else
 
         
     <?php
-	function rc_pager()
+    function rc_pager()
         {
         global $offset,$pagesize,$lang,$results;
         ?>
@@ -128,71 +128,75 @@ else
     
     <div class="RecordBox clearerleft" id="RefineResults" style="display:none;">
 
-	<div class="Question Inline" id="question_refine" style="border-top:none;">
-	<label id="label_refine" for="refine_keywords"><?php echo $lang["additionalkeywords"]?></label>
-	<input class="medwidth Inline" type=text id="refine_keywords" name="refine_keywords" value="">
-	<input class="vshrtwidth Inline" name="save" type="submit" id="refine_submit" onClick="ResourceConnect_Repage(0);return false;" value="&nbsp;&nbsp;<?php echo $lang["refine"]?>&nbsp;&nbsp;" />
-	<div class="clearerleft"> </div>
+    <div class="Question Inline" id="question_refine" style="border-top:none;">
+    <label id="label_refine" for="refine_keywords"><?php echo $lang["additionalkeywords"]?></label>
+    <input class="medwidth Inline" type=text id="refine_keywords" name="refine_keywords" value="">
+    <input class="vshrtwidth Inline" name="save" type="submit" id="refine_submit" onClick="ResourceConnect_Repage(0);return false;" value="&nbsp;&nbsp;<?php echo $lang["refine"]?>&nbsp;&nbsp;" />
+    <div class="clearerleft"> </div>
 
-	</div>
-	</div>
+    </div>
+    </div>
         
         
         
     </div>
     
-	<div class="clearerleft"></div>
+    <div class="clearerleft"></div>
     
             
             
-	<!--<h1><?php echo $affiliatename ?></h1>-->
-	<?php
-	
-	for ($n=$offset;$n<count($results) && $n<($offset+$pagesize);$n++)
-		{
-		$result=$results[$n];
-		$ref=$result["ref"];
-		$url=$baseurl . "/pages/view.php?modal=true&ref=" . $ref . "&k=" . urlencode($original_user) . "-" . substr(md5($access_key . $ref),0,10) . "&language_set=" . urlencode($language) . "&search=" . urlencode($search) . "&offset=" . $offset . "&resourceconnect_source=" . urlencode(getval("resourceconnect_source",""));
-		
-		# Wrap with local page that includes header/footer/sidebar
-		$link_url="../plugins/resourceconnect/pages/view.php?search=" . urlencode($search) . "&url=" . urlencode($url);
-		
-		$title=str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result["field".$view_title_field])));
-		
-		# Add to collections link.
-		$add_url=getval("resourceconnect_source","") . "/plugins/resourceconnect/pages/add_collection.php?nc=" . time();
-		$add_url.="&title=" . urlencode(get_data_by_field($ref,$view_title_field));
-		$add_url.="&url=" . urlencode(str_replace("&search","&source_search",$url)); # Move the search so it doesn't get set, and therefore the nav is hidden when viewing the resource
-		$add_url.="&back=" . urlencode($baseurl . "/pages/view.php?" . $_SERVER["QUERY_STRING"]);
-		# Add image 
-		if ($result["has_image"]==1)
-			{ 
-			$add_url.="&thumb=" . urlencode(get_resource_path($ref,false,"col",false,"jpg"));
-			$add_url.="&large_thumb=" . urlencode(get_resource_path($ref,false,"thm",false,"jpg"));
-			$add_url.="&xl_thumb=" . urlencode(get_resource_path($ref,false,"pre",false,"jpg"));
-			}	
-		else
-			{
-			$add_url.="&thumb=" . urlencode($baseurl . "/gfx/" . get_nopreview_icon($result["resource_type"],$result["file_extension"],true));
-			$add_url.="&large_thumb=" . urlencode($baseurl . "/gfx/" . get_nopreview_icon($result["resource_type"],$result["file_extension"],false));
-			$add_url.="&xl_thumb=" . urlencode($baseurl . "/gfx/" . get_nopreview_icon($result["resource_type"],$result["file_extension"],false));
-			}
-		
-		?>
-		<div class="ResourcePanel">
-		
-	
-		<a class="ImageWrapper" href="<?php echo $link_url?>" title="<?php echo $title ?>" onClick="return ModalLoad(this,true);">
-		
-		<?php if ($result["has_image"]==1) {
-			
-			$img_url = get_resource_path($ref,false,"thm",false,$result["preview_extension"],-1,1,false,$result["file_modified"]);
-			$size = getimagesize($img_url);
-        	$ratio = (isset($size[0]))? $size[0] / $size[1] : 1; 
-			
-			$defaultheight = $defaultwidth = 174;
+    <!--<h1><?php echo $affiliatename ?></h1>-->
+    <?php
+    
+    for ($n=$offset;$n<count($results) && $n<($offset+$pagesize);$n++)
+        {
+        $result=$results[$n];
+        $ref=$result["ref"];
+        # Set $k value to enable files fetched through download.php
+        global $k;
+        $k=$original_user. "-" . substr(md5($access_key . $ref),0,10);
 
-			if ($ratio > 1)
+        $url=$baseurl . "/pages/view.php?modal=true&ref=" . $ref . "&k=" . $k . "&language_set=" . urlencode($language) . "&search=" . urlencode($search) . "&offset=" . $offset . "&resourceconnect_source=" . urlencode(getval("resourceconnect_source",""));
+        
+        # Wrap with local page that includes header/footer/sidebar
+        $link_url="../plugins/resourceconnect/pages/view.php?search=" . urlencode($search) . "&url=" . urlencode($url);
+        
+        $title=str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result["field".$view_title_field])));
+        
+        # Add to collections link.
+        $add_url=getval("resourceconnect_source","") . "/plugins/resourceconnect/pages/add_collection.php?nc=" . time();
+        $add_url.="&title=" . urlencode(get_data_by_field($ref,$view_title_field));
+        $add_url.="&url=" . urlencode(str_replace("&search","&source_search",$url)); # Move the search so it doesn't get set, and therefore the nav is hidden when viewing the resource
+        $add_url.="&back=" . urlencode($baseurl . "/pages/view.php?" . $_SERVER["QUERY_STRING"]);
+        # Add image 
+        if ($result["has_image"]==1)
+            { 
+            $add_url.="&thumb=" . urlencode(get_resource_path($ref,false,"col",false,"jpg"));
+            $add_url.="&large_thumb=" . urlencode(get_resource_path($ref,false,"thm",false,"jpg"));
+            $add_url.="&xl_thumb=" . urlencode(get_resource_path($ref,false,"pre",false,"jpg"));
+            }   
+        else
+            {
+            $add_url.="&thumb=" . urlencode($baseurl . "/gfx/" . get_nopreview_icon($result["resource_type"],$result["file_extension"],true));
+            $add_url.="&large_thumb=" . urlencode($baseurl . "/gfx/" . get_nopreview_icon($result["resource_type"],$result["file_extension"],false));
+            $add_url.="&xl_thumb=" . urlencode($baseurl . "/gfx/" . get_nopreview_icon($result["resource_type"],$result["file_extension"],false));
+            }
+        
+        ?>
+        <div class="ResourcePanel">
+        
+    
+        <a class="ImageWrapper" href="<?php echo $link_url?>" title="<?php echo $title ?>" onClick="return ModalLoad(this,true);">
+        
+        <?php if ($result["has_image"]==1) {
+            
+            $img_url = get_resource_path($ref,false,"thm",false,$result["preview_extension"],-1,1,false,$result["file_modified"]);
+            $size = getimagesize($img_url);
+            $ratio = (isset($size[0]))? $size[0] / $size[1] : 1; 
+            
+            $defaultheight = $defaultwidth = 174;
+
+            if ($ratio > 1)
             {
             $width = $defaultwidth;
             $height = round($defaultheight / $ratio);
@@ -212,29 +216,29 @@ else
             $width = $defaultwidth;
             $margin = "auto";
             }
-			
-			print "<img height=\"$height\" width=\"$width\" margin=\"$margin\" src=\"$img_url\" style=\"margin-top:$margin;\" />";
-			?>
-		
-		
-		
-		<?php } else { ?>
-				
-		<img border=0 src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($result["resource_type"],$result["file_extension"],false,false,true) ?>"
+            
+            print "<img height=\"$height\" width=\"$width\" margin=\"$margin\" src=\"$img_url\" style=\"margin-top:$margin;\" />";
+            ?>
+        
+        
+        
+        <?php } else { ?>
+                
+        <img border=0 src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($result["resource_type"],$result["file_extension"],false,false,true) ?>"
 
-		/><?php } ?></a>
-	
-		<div class="ResourcePanelInfo"><?php echo tidy_trim($title,25) ?>&nbsp;</div>
+        /><?php } ?></a>
+    
+        <div class="ResourcePanelInfo"><?php echo tidy_trim($title,25) ?>&nbsp;</div>
 
         <div class="clearer"></div>
                 
-		<div class="ResourcePanelIcons">
+        <div class="ResourcePanelIcons">
         
         <!-- Preview icon -->
         <?php
         #$url = getPreviewURL($result);
         $url = $baseurl . "/pages/preview.php?ref=" . $result["ref"] . "&k=" . substr(md5($access_key . $ref),0,10) . "&resourceconnect_source=1";
-	if ($url!==false)
+    if ($url!==false)
                 { ?>
                 <a aria-hidden="true" class="fa fa-expand" target="_blank" 
                         href="<?php echo $url ?>"
@@ -245,14 +249,14 @@ else
             ?>
 
         
-		<a class="addToCollection fa fa-plus-circle" target="collections" href="<?php echo $add_url ?>" onClick="return CollectionDivLoad(this,true);"></a>
-		</div>
+        <a class="addToCollection fa fa-plus-circle" target="collections" href="<?php echo $add_url ?>" onClick="return CollectionDivLoad(this,true);"></a>
+        </div>
 
-		
-		</div>
+        
+        </div>
 
-		<?php
-		}
+        <?php
+        }
     ?><div class="BottomInpageNav"><?php
     rc_pager();
     ?></div>
@@ -265,4 +269,4 @@ else
     <?php
     # Initiate lightbox.
     addLightBox('.RCfullscreen');
-	}
+    }
