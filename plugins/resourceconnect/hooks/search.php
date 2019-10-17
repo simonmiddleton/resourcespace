@@ -2,64 +2,64 @@
 
 /*
 function HookResourceConnectSearchBeforesearchresults2()
-	{
-	global $lang,$search,$k,$archive,$resourceconnect_link_name,$search,$language;
-	if ($k!="") {return false;} # Do not enable for external sharing
-	if (substr($search,0,1)=="!") {return false;} # Only work for normal (non 'special') searches
-	if ($search=="") {return false;} # Don't work for blank searches.
-	
-	if (!checkperm("resourceconnect")) {return false;}
-	?>
-	<div class="SearchOptionNav"><a href="../plugins/resourceconnect/pages/search.php?search=<?php echo urlencode($search) ?>&language_set=<?php echo $language ?>">&gt;&nbsp;<?php echo i18n_get_translated($resourceconnect_link_name) ?></a></div>
-	<?php
-	}
+    {
+    global $lang,$search,$k,$archive,$resourceconnect_link_name,$search,$language;
+    if ($k!="") {return false;} # Do not enable for external sharing
+    if (substr($search,0,1)=="!") {return false;} # Only work for normal (non 'special') searches
+    if ($search=="") {return false;} # Don't work for blank searches.
+    
+    if (!checkperm("resourceconnect")) {return false;}
+    ?>
+    <div class="SearchOptionNav"><a href="../plugins/resourceconnect/pages/search.php?search=<?php echo urlencode($search) ?>&language_set=<?php echo $language ?>">&gt;&nbsp;<?php echo i18n_get_translated($resourceconnect_link_name) ?></a></div>
+    <?php
+    }
 */
 
 function HookResourceConnectSearchReplacesearchresults()
-	{
-	global $lang,$language,$resourceconnect_affiliates,$baseurl,$resourceconnect_selected,$search,$resourceconnect_this,$resourceconnect_treat_local_system_as_affiliate,$resourceconnect_pagesize;
-	if (!checkperm("resourceconnect")) {return false;}
+    {
+    global $lang,$language,$resourceconnect_affiliates,$baseurl,$resourceconnect_selected,$search,$resourceconnect_this,$resourceconnect_treat_local_system_as_affiliate,$resourceconnect_pagesize;
+    if (!checkperm("resourceconnect")) {return false;}
 
-	# Do not replace results for special searches
-	if (substr($search,0,1)=="!") {return false;}
+    # Do not replace results for special searches
+    if (substr($search,0,1)=="!") {return false;}
 
-	# Do not replace results for searches of this system.
-	if (!$resourceconnect_treat_local_system_as_affiliate && $resourceconnect_selected==$resourceconnect_this) {return false;}
+    # Do not replace results for searches of this system.
+    if (!$resourceconnect_treat_local_system_as_affiliate && $resourceconnect_selected==$resourceconnect_this) {return false;}
 
-	$affiliate=$resourceconnect_affiliates[$resourceconnect_selected];
-	$counter=$resourceconnect_selected;
-	$page_size=$resourceconnect_pagesize;
-	
-	$restypes="";
-	$resource_types=get_resource_types();
-	reset($_POST);foreach ($_POST as $key=>$value)
-		{
-		if (substr($key,0,8)=="resource")
-			{
-			$restype=substr($key,8);
-			if (is_numeric($restype)) 
-				{
-				if ($restypes!="") {$restypes.=",";}
-				foreach ($resource_types as $resource_type)		
-					{
-					if ($resource_type["ref"]==$restype) {$restypes.=$resource_type["name"];}
-					}
-				}
-			}
-		}
-	?>	
-		
-	<div id="resourceconnect_container_<?php echo $counter ?>"><p><?php echo $lang["resourceconnect_pleasewait"] ?></p></div>
-	<div class="clearerleft"></div>
+    $affiliate=$resourceconnect_affiliates[$resourceconnect_selected];
+    $counter=$resourceconnect_selected;
+    $page_size=$resourceconnect_pagesize;
+    
+    $restypes="";
+    $resource_types=get_resource_types();
+    reset($_POST);foreach ($_POST as $key=>$value)
+        {
+        if (substr($key,0,8)=="resource")
+            {
+            $restype=substr($key,8);
+            if (is_numeric($restype)) 
+                {
+                if ($restypes!="") {$restypes.=",";}
+                foreach ($resource_types as $resource_type)     
+                    {
+                    if ($resource_type["ref"]==$restype) {$restypes.=$resource_type["name"];}
+                    }
+                }
+            }
+        }
+    ?>  
+        
+    <div id="resourceconnect_container_<?php echo $counter ?>"><p><?php echo $lang["resourceconnect_pleasewait"] ?></p></div>
+    <div class="clearerleft"></div>
 
-	<script>
-	// Repage / pager function - reload the results based on the requested offset and selected sort/per page options
-	var offset_<?php echo $counter ?>=0;
-	function ResourceConnect_Repage(distance)
-		{
-		offset_<?php echo $counter ?>+=distance;
-		if (offset_<?php echo $counter ?><0) {offset_<?php echo $counter ?>=0;}
-	
+    <script>
+    // Repage / pager function - reload the results based on the requested offset and selected sort/per page options
+    var offset_<?php echo $counter ?>=0;
+    function ResourceConnect_Repage(distance)
+        {
+        offset_<?php echo $counter ?>+=distance;
+        if (offset_<?php echo $counter ?><0) {offset_<?php echo $counter ?>=0;}
+    
         // Load from cookies (initial load) or from selected values (when updating currently display) as appropriate
         var sort=jQuery('#rc_sort').val();if (typeof(sort) != "undefined") {SetCookie ("rc_sort",sort,10,true);} else {sort=jQuery.cookie('rc_sort');}
         var order_by=jQuery('#rc_order_by').val();if (typeof(order_by) != "undefined") {SetCookie ("rc_order_by",order_by,10,true);} else {order_by=jQuery.cookie('rc_order_by');}
@@ -69,8 +69,8 @@ function HookResourceConnectSearchReplacesearchresults()
         var refine=jQuery('#refine_keywords').val();
         if (typeof(refine)=="undefined") {refine='';} else {SetCookie("rc_refine_keywords",refine,10,true);refine=', ' + refine;}
     
-		jQuery('#resourceconnect_container_<?php echo $counter ?>').load('<?php echo $baseurl ?>/plugins/resourceconnect/pages/ajax_request.php?search=<?php echo urlencode($search) ?>' + encodeURIComponent(refine) + '&pagesize=<?php echo $page_size ?>&affiliate=<?php echo $resourceconnect_selected ?>&affiliatename=<?php echo urlencode(i18n_get_translated($affiliate["name"])) ?>&restypes=<?php echo urlencode($restypes) ?>&offset=' + offset_<?php echo $counter ?> + '&sort=' + sort + '&order_by=' + order_by + '&per_page=' + per_page);
-		}
+        jQuery('#resourceconnect_container_<?php echo $counter ?>').load('<?php echo $baseurl ?>/plugins/resourceconnect/pages/ajax_request.php?search=<?php echo urlencode($search) ?>' + encodeURIComponent(refine) + '&pagesize=<?php echo $page_size ?>&affiliate=<?php echo $resourceconnect_selected ?>&affiliatename=<?php echo urlencode(i18n_get_translated($affiliate["name"])) ?>&restypes=<?php echo urlencode($restypes) ?>&offset=' + offset_<?php echo $counter ?> + '&sort=' + sort + '&order_by=' + order_by + '&per_page=' + per_page);
+        }
 
     // Set the sort/perpage options based on the stored cookie
     function ResourceConnect_SetPageOptions()
@@ -94,15 +94,15 @@ function HookResourceConnectSearchReplacesearchresults()
     // First time search. Reset refine then run search.
     SetCookie("rc_refine_keywords",'',10,true);
     jQuery('#refine_keywords').val('');
-	ResourceConnect_Repage(0);
-	</script>
+    ResourceConnect_Repage(0);
+    </script>
 
 
-	<?php
-	
-	return true;
-	}
-	
+    <?php
+    
+    return true;
+    }
+    
 
 /**
  * Purpose: display preview and remove icons for a resource in collection>action>view_all_resources, where resource is from a resourceconnect source
@@ -113,90 +113,92 @@ function HookResourceConnectSearchReplacesearchresults()
 
 
 function HookResourceConnectSearchThumblistextras()
-	{
-		
-	global $baseurl, $result, $n, $lang;
+    {
+        
+    global $baseurl, $result, $n, $lang;
 
-	$resource = $result[$n]; // record for resource
+    $resource = $result[$n]; // record for resource
 
-	if ($resource["ref"] != -87412)
-		{ 
-		return true;
-		} // only display icons for resourceconnect resources identified by ref = -87412
+    if ($resource["ref"] != -87412)
+        { 
+        return true;
+        } // only display icons for resourceconnect resources identified by ref = -87412
 
-	$ref = $resource["ref_tab"]; // resource id in resourceconnect_collection_resources table
-	$pre_url = $resource["pre_url"]; // preview image url - stored locally
-	$title = $resource["field8"]; // image title
-		
-	
-	print <<<html
+    $ref = $resource["ref_tab"]; // resource id in resourceconnect_collection_resources table
+    $pre_url = $resource["pre_url"]; // preview image url - stored locally
+    $title = $resource["field8"]; // image title
+        
+    
+    print <<<html
 
-	<a aria-hidden="true" class="fa fa-expand" id="previewlinkcollection$ref" href="$pre_url" title="Full screen preview" data-title="{$lang["fullscreenpreview"]}" data-lightbox="lightboxcollection" onmouseup="closeModalOnLightBoxEnable();"></a>
-	
-	<a class="removeFromCollection fa fa-minus-circle" href="$baseurl/pages/collections.php?resourceconnect_remove=$ref&nc=<?php echo time() ?>" onClick="return CollectionDivLoad(this,false);"> </a></div>	
+    <a aria-hidden="true" class="fa fa-expand" id="previewlinkcollection$ref" href="$pre_url" title="Full screen preview" data-title="{$lang["fullscreenpreview"]}" data-lightbox="lightboxcollection" onmouseup="closeModalOnLightBoxEnable();"></a>
+    
+    <a class="removeFromCollection fa fa-minus-circle" href="$baseurl/pages/collections.php?resourceconnect_remove=$ref&nc=<?php echo time() ?>" onClick="return CollectionDivLoad(this,false);"> </a></div>    
 html;
 
-	} 
+    } 
 
 
 function HookResourceConnectSearchProcess_search_results($result,$search)
-	{
+    {
     global $baseurl,$k;
-	if (substr($search,0,11)!="!collection") {return false;} # Not a collection. Exit.
-	$collection=substr($search,11);
-	$affiliate_resources=sql_query("select * from resourceconnect_collection_resources where collection='" . escape_check($collection) . "'");
-	if (count($affiliate_resources)==0) {return false;} # No affiliate resources. Exit.
+    if (substr($search,0,11)!="!collection") {return false;} # Not a collection. Exit.
+    $collection=substr($search,11);
+    $affiliate_resources=sql_query("select * from resourceconnect_collection_resources where collection='" . escape_check($collection) . "'");
+    if (count($affiliate_resources)==0) {return false;} # No affiliate resources. Exit.
 
-	#echo "<pre>";
-	#print_r($result);
-	#print_r($affiliate_resources);
-	#echo "</pre>";
+    #echo "<pre>";
+    #print_r($result);
+    #print_r($affiliate_resources);
+    #echo "</pre>";
 
-	# Append the affiliate resources to the collection display
-	foreach ($affiliate_resources as $resource)
-		{
-		$result[]=array
-			(
-			"ref"=>-87412,
-			"ref_tab"=>$resource["ref"],
-			"access"=>0,
+    # Append the affiliate resources to the collection display
+    foreach ($affiliate_resources as $resource)
+        {
+        $urlparams = array("k"=>$k,"col"=>$collection,"url"=>$resource["url"]);
+        $url = generateURL("{$baseurl}/plugins/resourceconnect/pages/view.php",$urlparams);
+        $result[]=array
+            (
+            "ref"=>-87412,
+            "ref_tab"=>$resource["ref"],
+            "access"=>0,
             "archive"=>0,
-			"resource_type"=>0,
-			"has_image"=>1,
-			"thumb_width"=>0,
-			"thumb_height"=>0,
-			"file_extension"=>"",
-			"field8"=>$resource["title"],
-			"preview_extension"=>"",
-			"file_modified"=>$resource["date_added"],
-			"url"=>"{$baseurl}/plugins/resourceconnect/pages/view.php?k={$k}&col={$collection}&url=" . urlencode($resource["url"]),
-			"thm_url"=>$resource["large_thumb"],
-			"col_url"=>$resource["thumb"],
-			"pre_url"=>$resource["xl_thumb"],
-			"user_rating"=>''
-			);
-		}
-	return $result;
-	}
-	
-	
+            "resource_type"=>0,
+            "has_image"=>1,
+            "thumb_width"=>0,
+            "thumb_height"=>0,
+            "file_extension"=>"",
+            "field8"=>$resource["title"],
+            "preview_extension"=>"",
+            "file_modified"=>$resource["date_added"],
+            "url"=>$url,
+            "thm_url"=>$resource["large_thumb"],
+            "col_url"=>$resource["thumb"],
+            "pre_url"=>$resource["xl_thumb"],
+            "user_rating"=>''
+            );
+        }
+    return $result;
+    }
+    
+    
 function HookResourceConnectSearchReplaceresourcetools()
-	{
-	global $ref;
-	return ($ref<0);
-	}
-	
+    {
+    global $ref;
+    return ($ref<0);
+    }
+    
 function HookResourceConnectSearchReplaceresourcetoolssmall()
-	{
-	global $ref;
-	return ($ref<0);
-	}
-	
+    {
+    global $ref;
+    return ($ref<0);
+    }
+    
 function HookResourceConnectSearchReplaceresourcetoolsxl()
-	{
-	global $ref;
-	return ($ref<0);
-	}
-	
-	
-	
+    {
+    global $ref;
+    return ($ref<0);
+    }
+    
+    
+    
