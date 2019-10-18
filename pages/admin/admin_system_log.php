@@ -240,10 +240,12 @@ if($table == '' && $table_reference == 0)
                             case "ref":
                                 if ($record['table'] == "resource") // only display links where ref field is in resource table
                                 {
-                                    print <<<html
-                            <td><a href="$baseurl/pages/view.php?search=&order_by=&ref=$ref" title="View resource" onclick="return ModalLoad(this,true);">$ref</a></td>
-html;
-                                }
+?>
+                               
+                            <td><a href="<?php echo "$baseurl/pages/view.php?search=&order_by=&ref=$ref" ?>" title="View resource" onclick="return ModalLoad(this,true);"><?php echo $ref ?></a></td>
+                           
+<?php
+}
                             break;
 
                             default:
