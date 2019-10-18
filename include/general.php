@@ -546,7 +546,7 @@ function get_resource_field_data($ref,$multi=false,$use_permissions=true,$origin
     // Resource types can be configured to not have global fields in which case we only present the user fields valid for
     // this resource type
     $inherit_global_fields = (bool) sql_value("SELECT inherit_global_fields AS `value` FROM resource_type WHERE ref = {$rtype}", true);
-    if(!$inherit_global_fields)
+    if(!$inherit_global_fields && !$multi)
         {
         $validtypes = array($rtype);
 
