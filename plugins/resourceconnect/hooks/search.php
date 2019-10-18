@@ -115,7 +115,7 @@ function HookResourceConnectSearchReplacesearchresults()
 function HookResourceConnectSearchThumblistextras()
     {
         
-    global $baseurl, $result, $n, $lang;
+    global $baseurl_short, $baseurl, $result, $n, $lang, $url;
 
     $resource = $result[$n]; // record for resource
 
@@ -128,8 +128,17 @@ function HookResourceConnectSearchThumblistextras()
     $pre_url = $resource["pre_url"]; // preview image url - stored locally
     $title = $resource["field8"]; // image title
     ?>
-
+    <!-- Full screen preview -->
     <a aria-hidden="true" class="fa fa-expand" id="previewlinkcollection<?php echo $ref ?>" href="<?php echo $pre_url ?>" title="Full screen preview" data-title="<?php echo $lang["fullscreenpreview"] ?>" data-lightbox="lightboxcollection" onmouseup="closeModalOnLightBoxEnable();"></a>
+    
+    <!-- Share resource -->
+    <a aria-hidden="true" class="fa fa-share-alt"
+                                href="<?php echo $baseurl_short?>plugins/resourceconnect/pages/resource_share.php?url=<?php echo urlencode($url) ?>"  
+                                onClick="return CentralSpaceLoad(this,true);"  
+                                title="<?php echo $lang["share-resource"]?>"
+                        ></a>
+    
+    <!-- Remove from collection -->
     <a class="removeFromCollection fa fa-minus-circle" href="<?php echo "$baseurl/pages/collections.php?resourceconnect_remove=$ref&nc=" . time() ?>" onClick="return CollectionDivLoad(this,false);"> </a></div>    
     <?php
     } 
