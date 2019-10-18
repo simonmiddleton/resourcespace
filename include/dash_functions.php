@@ -1623,9 +1623,6 @@ function render_upgrade_available_tile($user)
 
 function generate_dash_tile_toolbar(array $tile, $tile_id)
     {
-    /*echo '<pre>';echo print_r($tile_id, true);echo '</pre>';
-    echo '<pre>';echo print_r($tile, true);echo '</pre>';
-    die('Died at line ' . __LINE__ . ' in ' . __FILE__);*/
     global $baseurl_short, $lang;
     $editlink = $baseurl_short . "pages/dash_tile.php?edit=" . $tile['ref'];
     if(checkPermission_dashadmin() || checkPermission_dashuser())
