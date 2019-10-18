@@ -127,15 +127,11 @@ function HookResourceConnectSearchThumblistextras()
     $ref = $resource["ref_tab"]; // resource id in resourceconnect_collection_resources table
     $pre_url = $resource["pre_url"]; // preview image url - stored locally
     $title = $resource["field8"]; // image title
-        
-    
-    print <<<html
+    ?>
 
-    <a aria-hidden="true" class="fa fa-expand" id="previewlinkcollection$ref" href="$pre_url" title="Full screen preview" data-title="{$lang["fullscreenpreview"]}" data-lightbox="lightboxcollection" onmouseup="closeModalOnLightBoxEnable();"></a>
-    
-    <a class="removeFromCollection fa fa-minus-circle" href="$baseurl/pages/collections.php?resourceconnect_remove=$ref&nc=<?php echo time() ?>" onClick="return CollectionDivLoad(this,false);"> </a></div>    
-html;
-
+    <a aria-hidden="true" class="fa fa-expand" id="previewlinkcollection<?php echo $ref ?>" href="<?php echo $pre_url ?>" title="Full screen preview" data-title="<?php echo $lang["fullscreenpreview"] ?>" data-lightbox="lightboxcollection" onmouseup="closeModalOnLightBoxEnable();"></a>
+    <a class="removeFromCollection fa fa-minus-circle" href="<?php echo "$baseurl/pages/collections.php?resourceconnect_remove=$ref&nc=" . time() ?>" onClick="return CollectionDivLoad(this,false);"> </a></div>    
+    <?php
     } 
 
 
