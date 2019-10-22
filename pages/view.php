@@ -1017,7 +1017,7 @@ else if(1 == $resource['has_image'])
                             {
                             toggleAnnotationsOption(element);
                             }, 
-                            1000);
+                            3000);
 
                         return false;
                         }
@@ -1070,7 +1070,7 @@ else if(1 == $resource['has_image'])
                             {
                             showHidePreviewTools();
                             }, 
-                            1000);
+                            3000);
                         toggleAnnotationsOption(jQuery('.AnnotationsOption'));
                         });
                     <?php
