@@ -25,7 +25,8 @@ $collectionname                         = getvalescaped('entercolname', '');
 $search                                 = getvalescaped('search', '');
 $offset                                 = getvalescaped('offset', '', true);
 $order_by                               = getvalescaped('order_by', '');
-$no_exif                                = getval('no_exif', $metadata_read_default ? '' : 'yes') == "yes";
+$no_exif_raw                            = getval('no_exif', $metadata_read_default ? '' : 'yes');
+$no_exif                                = $no_exif_raw == "yes" || $no_exif_raw =="1" ? true : false;
 // This is the archive state for searching, NOT the archive state to be set from the form POST
 $archive                                = getvalescaped('archive', '', true);
 
