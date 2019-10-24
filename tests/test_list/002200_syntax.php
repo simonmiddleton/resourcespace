@@ -1,5 +1,9 @@
 <?php
- 
+if('cli' != PHP_SAPI)
+    {
+    exit('This utility is command line only.');
+    }
+
 # Simple syntax check of pages to ensure they all function at a very basic level and arrive at the footer.
  
 # Build array of pages to scan.
