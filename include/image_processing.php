@@ -317,11 +317,11 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         else
             {
         
-            global $merge_filename_with_title, $lang;
+            global $merge_filename_with_title, $merge_filename_with_title_default, $lang;
             if($merge_filename_with_title && isset($processfile))
                 {
 
-                $merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
+                $merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', $merge_filename_with_title_default));
                 $merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
                 $merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
 
@@ -360,24 +360,24 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                             continue;
                             }
                     
-                        switch ($merge_filename_with_title_option) 
+                        switch (strtolower($merge_filename_with_title_option)) 
                             {
-                            case $lang['merge_filename_title_do_not_use']:
+                            case strtolower($lang['merge_filename_title_do_not_use']):
                                 // Do nothing since the user doesn't want to use this feature
                                 break;
 
-                            case $lang['merge_filename_title_replace']:
+                            case strtolower($lang['merge_filename_title_replace']):
                                 $newval = $merged_filename;
                                 break;
 
-                            case $lang['merge_filename_title_prefix']:
+                            case strtolower($lang['merge_filename_title_prefix']):
                                 $newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
                                 if($oldval == '') {
                                     $newval = $merged_filename;
                                 }
                                 break;
 
-                            case $lang['merge_filename_title_suffix']:
+                            case strtolower($lang['merge_filename_title_suffix']):
                                 $newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
                                 if($oldval == '') {
                                     $newval = $merged_filename;
@@ -778,9 +778,9 @@ function extract_exif_comment($ref,$extension="")
                             $newval =  iptc_return_utf8($value);    
                             }
 
-                        global $merge_filename_with_title, $lang, $view_title_field;
+                        global $merge_filename_with_title, $merge_filename_with_title_default, $lang, $view_title_field;
                         if($merge_filename_with_title && $read_from[$i]['ref'] == $view_title_field) {
-                            $merge_filename_with_title_option             = urldecode(getval('merge_filename_with_title_option', ''));
+                            $merge_filename_with_title_option             = urldecode(getval('merge_filename_with_title_option', $merge_filename_with_title_default));
                             $merge_filename_with_title_include_extensions = urldecode(getval('merge_filename_with_title_include_extensions', ''));
                             $merge_filename_with_title_spacer             = urldecode(getval('merge_filename_with_title_spacer', ''));
 
@@ -802,22 +802,22 @@ function extract_exif_comment($ref,$extension="")
                                 continue;
                             }
                             
-                            switch ($merge_filename_with_title_option) {
-                                case $lang['merge_filename_title_do_not_use']:
+                            switch (strtolower($merge_filename_with_title_option)) {
+                                case strtolower($lang['merge_filename_title_do_not_use']):
                                     $newval = $oldval;
                                     break;
 
-                                case $lang['merge_filename_title_replace']:
+                                case strtolower($lang['merge_filename_title_replace']):
                                     $newval = $merged_filename;
                                     break;
 
-                                case $lang['merge_filename_title_prefix']:
+                                case strtolower($lang['merge_filename_title_prefix']):
                                     $newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
                                     if($oldval == '') {
                                         $newval = $merged_filename;
                                     }
                                     break;
-                                case $lang['merge_filename_title_suffix']:
+                                case strtolower($lang['merge_filename_title_suffix']):
                                     $newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
                                     if($oldval == '') {
                                         $newval = $merged_filename;
@@ -845,10 +845,9 @@ function extract_exif_comment($ref,$extension="")
                     else {
 
                         // Process if no embedded title is found:
-                        global $merge_filename_with_title, $lang, $view_title_field;
+                        global $merge_filename_with_title, $merge_filename_with_title_default, $lang, $view_title_field;
                         if($merge_filename_with_title && $read_from[$i]['ref'] == $view_title_field) {
-
-                            $merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
+                            $merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', $merge_filename_with_title_default));
                             $merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
                             $merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
 
@@ -870,22 +869,22 @@ function extract_exif_comment($ref,$extension="")
                                 continue;
                             }
                             
-                            switch ($merge_filename_with_title_option) {
-                                case $lang['merge_filename_title_do_not_use']:
+                            switch (strtolower($merge_filename_with_title_option)) {
+                                case strtolower($lang['merge_filename_title_do_not_use']):
                                     // Do nothing since the user doesn't want to use this feature
                                     break;
 
-                                case $lang['merge_filename_title_replace']:
+                                case strtolower($lang['merge_filename_title_replace']):
                                     $newval = $merged_filename;
                                     break;
 
-                                case $lang['merge_filename_title_prefix']:
+                                case strtolower($lang['merge_filename_title_prefix']):
                                     $newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
                                     if($oldval == '') {
                                         $newval = $merged_filename;
                                     }
                                     break;
-                                case $lang['merge_filename_title_suffix']:
+                                case strtolower($lang['merge_filename_title_suffix']):
                                     $newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
                                     if($oldval == '') {
                                         $newval = $merged_filename;

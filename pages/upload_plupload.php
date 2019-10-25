@@ -170,14 +170,14 @@ $uploadparams= array(
     'status'                                 => $setarchivestate
 );
 
-global $merge_filename_with_title;
+global $merge_filename_with_title, $merge_filename_with_title_default;
 if($merge_filename_with_title) {
 
-    $merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', ''));
+    $merge_filename_with_title_option = urlencode(getval('merge_filename_with_title_option', $merge_filename_with_title_default));
     $merge_filename_with_title_include_extensions = urlencode(getval('merge_filename_with_title_include_extensions', ''));
     $merge_filename_with_title_spacer = urlencode(getval('merge_filename_with_title_spacer', ''));
     
-    if($merge_filename_with_title_option != '') {
+    if(strtolower($merge_filename_with_title_option) != '') {
         $uploadparams['merge_filename_with_title_option'] =  $merge_filename_with_title_option;
     }
     

@@ -108,14 +108,14 @@ if($ref < 0 || $upload_review_mode)
     $check_edit_checksums = false;
     }
 
-global $merge_filename_with_title;
+global $merge_filename_with_title, $merge_filename_with_title_default;
 if($merge_filename_with_title && $ref < 0)
     {
-    $merge_filename_with_title_option = getval('merge_filename_with_title_option', '');
+    $merge_filename_with_title_option = getval('merge_filename_with_title_option', $merge_filename_with_title_default);
     $merge_filename_with_title_include_extensions = getval('merge_filename_with_title_include_extensions', '');
     $merge_filename_with_title_spacer = getval('merge_filename_with_title_spacer', '');
 
-    if($merge_filename_with_title_option != '') 
+    if(strtolower($merge_filename_with_title_option) != '') 
         {
         $uploadparams["merge_filename_with_title_option"] = $merge_filename_with_title_option;
         }
