@@ -59,15 +59,12 @@
 	<div id="GeolocationData">
 	<div class="Title"><?php echo $lang['location-title']; ?></div>
 	<?php
-
-	$order_by = (isset($_GET['order_by']) && $_GET['order_by'] != '') ? getvalescaped($_GET['order_by'], 'resourceid') : 'resourceid';
-	$search = (isset($_GET['search']) && $_GET['search'] != '') ? getvalescaped($_GET['search'], '!last1000') : '!last1000';
        
 	if ($resource["geo_lat"]!="" && $resource["geo_long"]!="")
 	    {
 		    ?>
 	    <?php if ($edit_access) { ?>
-	    <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo $search; ?>&order_by=<?php echo $order_by; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['location-edit']; ?></a></p><?php } ?>
+	    <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['location-edit']; ?></a></p><?php } ?>
 	    
 		    <?php $mapheight=$view_mapheight; include dirname(__FILE__) . "/geo_map.php";
 		    $zoom = $resource["mapzoom"];
@@ -111,7 +108,7 @@
     else
         {
         ?>
-        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo $search; ?>&order_by=<?php echo $order_by; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_PLUS ?><?php echo $lang['location-add'];?></a>
+        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_PLUS ?><?php echo $lang['location-add'];?></a>
         <?php
         }
 
