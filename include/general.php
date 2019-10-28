@@ -1053,6 +1053,7 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
         $returnline["allow_preview"]=$lastpreview;
         $returnline["allow_restricted"]=$lastrestricted;
         $returnline["path"]=$path2;
+        $returnline["url"] = get_resource_path($ref, false, "", false, $extension);
         $returnline["id"]="";
         $dimensions = sql_query("select width,height,file_size,resolution,unit from resource_dimensions where resource=". $ref);
         
@@ -1109,6 +1110,7 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
                     $returnline["allow_restricted"]=$sizes[$n]["allow_restricted"];
                     }
                 $returnline["path"]=$path;
+                $returnline["url"] = get_resource_path($ref, false, $sizes[$n]["id"], false, "jpg");
                 $returnline["id"]=$sizes[$n]["id"];
                 if ((list($sw,$sh) = @getimagesize($path))===false) {$sw=0;$sh=0;}
                 if ($file_exists)
@@ -1131,6 +1133,8 @@ function get_image_sizes($ref,$internal=false,$extension="jpg",$onlyifexists=tru
     return $return;
     }
 }
+
+
 function get_preview_quality($size)
     {
     global $imagemagick_quality,$preview_quality_unique;

@@ -4394,7 +4394,6 @@ function get_page_count($resource,$alternative=-1)
     # also handle alternative file multipage previews by switching $resource array if necessary
     # $alternative specifies an actual alternative file
     $ref=$resource['ref'];
-
     $ref_escaped = escape_check($ref);
     $alternative_escaped = escape_check($alternative);
 
@@ -5644,3 +5643,86 @@ return true;
 
 
 }
+
+
+/**
+* Return all sizes available for a specific resource. Multi page resources should have each page size included as well 
+* in the output.
+* 
+* @uses get_resource_access()
+* @uses get_resource_data()
+* @uses get_image_sizes()
+* @uses get_page_count()
+* @uses get_resource_path()
+* 
+* @param integer $ref Resource ID
+* 
+* @return array
+*/
+function get_resource_all_image_sizes($ref)
+    {
+    if(get_resource_access($ref) !== 0)
+        {
+        return array();
+        }
+
+    $resource_data = get_resource_data($ref, true);
+    if($resource_data["file_extension"] == "" || $resource_data["preview_extension"] == "")
+        {
+        return array();
+        }
+
+    $extensions = array($resource_data["file_extension"], $resource_data["preview_extension"]);
+    $all_image_sizes = array();
+
+    foreach($extensions as $extension)
+        {
+        $available_sizes_by_extension = get_image_sizes($ref, true, $extension, true);
+
+        foreach($available_sizes_by_extension as $size_data)
+            {
+            $size_id = trim($size_data["id"]) === "" ? "original" : $size_data["id"];
+
+            if(array_key_exists($size_id, $all_image_sizes))
+                {
+                continue;
+                }
+
+            $key = "{$size_id}_{$size_data["extension"]}";
+            $all_image_sizes[$key]["size_code"] = $size_id;
+            $all_image_sizes[$key]["extension"] = $size_data["extension"];
+            $all_image_sizes[$key]["path"] = $size_data["path"];
+            $all_image_sizes[$key]["url"] = $size_data["url"];
+
+            // Screen size can have multi page previews so if this is one of those cases, get rest of the pages before 
+            // moving on to the next available size
+            if($size_id == "scr" && ($page_count = get_page_count($resource_data)) && $page_count > 1)
+                {
+                // First page is always the normal scr size preview, so just tag it as such.
+                $all_image_sizes[$key]["multi_page"] = true;
+                $all_image_sizes[$key]["page"] = 1;
+
+                for($page = 2; $page <= $page_count; $page++)
+                    {
+                    $path = get_resource_path($ref, true, "scr", false, $extension, true, $page);
+                    if(!file_exists($path))
+                        {
+                        continue;
+                        }
+
+                    $url = get_resource_path($ref, false, "scr", false, $extension, true, $page);
+
+                    $key = "{$size_id}_{$size_data["extension"]}_{$page}";
+                    $all_image_sizes[$key]["size_code"] = $size_id;
+                    $all_image_sizes[$key]["extension"] = $size_data["extension"];
+                    $all_image_sizes[$key]["multi_page"] = true;
+                    $all_image_sizes[$key]["page"] = $page;
+                    $all_image_sizes[$key]["path"] = $path;
+                    $all_image_sizes[$key]["url"] = $url;
+                    }
+                }
+            }
+        }
+
+    return array_values($all_image_sizes);
+    }
