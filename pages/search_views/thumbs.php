@@ -1,7 +1,26 @@
 <?php 
 if (!hook("renderresultthumb")) 
     {
+    # Establish various metrics for use in thumbnail rendering
+    # Note that only $resolved_title_trim is currently used
+    $resolved_title_trim=0; 
+    $resolved_title_height=0;
+    $resolved_title_wordwrap=0; 
+    if ($display == "xlthumbs") 
+        {
+        $resolved_title_trim=$xl_search_results_title_trim;
+        $resolved_title_height = 350 + (28 * count($xl_thumbs_display_fields));
+        $resolved_title_wordwrap = $xl_search_results_title_wordwrap;
+        } 
+    else 
+        {
+        $resolved_title_trim=$search_results_title_trim;
+        $resolved_title_height = 202 + (28 * count($thumbs_display_fields));
+        $resolved_title_wordwrap = $search_results_title_wordwrap;
+        }
+
     $thumbs_displayed_fields_height = ($display == "xlthumbs" ? 350 : 202) + (28 * count($thumbs_display_fields));
+
     if($annotate_enabled)
         {
         $thumbs_displayed_fields_height += 28;
@@ -278,19 +297,19 @@ if (!hook("renderresultthumb"))
                 {
                 if (!hook("replaceresourcepanelinfonormal"))
                     { ?>
-                    <div class="ResourcePanelInfo  ResourceTypeField<?php echo $df[$x]['ref']?>">
+                    <div class="ResourcePanelInfo  ResourceTypeField<?php echo $df[$x]['ref']?>"
+                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
+                    >
                         <?php 
                         if ($x==0)
                             { // add link if necessary ?>
                             <a 
                                 href="<?php echo $url?>"  
                                 onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
-                                title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))))?>"
-
                             >
                             <?php 
                             } //end link
-                        echo highlightkeywords(tidy_trim(TidyList(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))),$search_results_title_trim),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
+                        echo highlightkeywords(tidy_trim(TidyList(i18n_get_translated(strip_tags(strip_tags_and_attributes($value)))),$resolved_title_trim),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
                         if ($x==0)
                             { // add link if necessary ?>
                             </a>
