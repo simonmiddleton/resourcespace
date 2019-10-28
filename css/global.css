@@ -1020,7 +1020,7 @@ a.HomePanel:hover {
 }
 
 .tools a{white-space: nowrap;}
-#trash_bin_delete_dialog {display:none !important;}
+#trash_bin_delete_dialog {display:none !important; }
 .no-close .ui-dialog-titlebar-close {display: none;}
 
 /* Plugin Categories Styling */
@@ -1055,7 +1055,7 @@ a.HomePanel:hover {
 .trash_bin {
     width: 10%;
     min-width: 100px;
-    padding-top: 8%; 
+    padding-top: 150px; 
     display: none;
     position: fixed;
     top: 0px;
