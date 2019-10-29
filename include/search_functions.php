@@ -60,12 +60,32 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
             {$return[]=$fields[$n];}
         }
 
-    if(!in_array($date_field,$return) && $daterange_search && metadata_field_view_access($date_field) && !in_array($date_field, $hiddenfields))
+    # If not already in the list of advanced search metadata fields, insert the field which is the designated searchable date ($date_field)
+    $date_field_data=null;
+    if(!in_array($date_field,$return) 
+        && $daterange_search 
+        && metadata_field_view_access($date_field) 
+        && !in_array($date_field, $hiddenfields))
         {
         $date_field_data = get_resource_type_field($date_field);
-        array_unshift($return,$date_field_data);
+        # Insert searchable date field so that it appears as the first array entry for a given resource type
+        $return1=array();
+        for ($n=0;$n<count($return);$n++)
+            {
+            if (isset($date_field_data))
+                {
+                if ($return[$n]["resource_type"] == $date_field_data['resource_type']) 
+                    {
+                    $return1[]=$date_field_data;
+                    $date_field_data=null; # Only insert it once
+                    }
+                }
+            $return1[]=$return[$n];
+            }
+        return $return1;
         }
-
+ 
+    # Designated searchable date_field is already present in the lost of advanced search metadata fields        }
     return $return;
     }
 }
