@@ -1574,3 +1574,57 @@ function node_orderby_comparator($n1, $n2)
     {
     return $n1["order_by"] - $n2["order_by"];
     }
+
+	
+/**
+ * 
+ * This function returns an array containing list of values for a selected field, identified by $field_label, in the multidimensional array $nodes
+ * 
+ * @param array $nodes - node tree to parse
+ * @param string $field_label - node field to retrieve value of and add to array $node_values
+ * @param array $node_values  - list of values for a selected field in the node tree
+ * 
+ * @return array $node_values
+ */
+
+function get_node_elements(array $node_values, array $nodes, $field_label)
+	{    
+	if(isset($nodes[0]))
+		{
+		foreach ($nodes as $node)
+			{
+			if (isset($node["name"])) array_push($node_values, $node[$field_label]) ;      
+			$node_values =  (isset($node["children"])) ? get_node_elements($node_values, $node["children"], $field_label)  :  get_node_elements($node_values, $node, $field_label); 
+			}
+		}
+	return $node_values;
+	}
+
+/**
+ * This function returns a multidimensional array with hierarchy that reflects category tree field hierarchy, using parent and order_by fields
+ * 
+ * @param string $parentId - elements at top of tree do not have a value for "parent" field, so default value is empty string, otherwise it is the value of the parent element in tree
+ * @param array $nodes - node tree to parse and order
+ * 
+ * @return array $tree - multidimension array containing nodes in correct hierarchical order
+ * 
+ */
+
+function get_node_tree($parentId = "", array $nodes)
+	{
+	$tree = array();
+	foreach ($nodes as $node) 
+		{
+		if($node["parent"] == $parentId)
+			{
+        	$children = get_node_tree($node["ref"] , $nodes);
+			if ($children)
+				{
+                uasort($children,"node_orderby_comparator"); 
+                $node["children"] = $children;
+            	}
+            $tree[] = $node;
+        	}
+    	}
+    return $tree;
+	}
