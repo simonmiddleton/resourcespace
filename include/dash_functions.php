@@ -1204,13 +1204,15 @@ function get_user_dash($user)
 			      activeClass: "ui-state-hover",
 			      hoverClass: "ui-state-active",
 			      drop: function(event,ui) {
-			      	var id=jQuery(ui.draggable).attr("id");
-			      	id = id.replace("user_tile","");
+			      	var usertileid=jQuery(ui.draggable).attr("id");
+			      	usertileid = usertileid.replace("user_tile","");
 			    <?php
 			    # If permission to delete all_user tiles
 			    if((checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h")))
 			    	{ ?>
-			    	var tileid=jQuery(ui.draggable).attr("tile");
+                    var tileid=jQuery(ui.draggable).attr("tile");
+                    var usertileid=jQuery(ui.draggable).attr("id");
+                    usertileid = usertileid.replace("user_tile","");
 			    <?php
 			      	} ?>
 
@@ -1257,10 +1259,10 @@ function render_delete_dialog_JS($all_users=false)
         resizable: false,
         dialogClass: 'delete-dialog no-close',
         buttons: {
-            "<?php echo $lang['confirmdashtiledelete'] ?>": function() {deleteDashTile(id); jQuery(this).dialog( "close" );},
+            "<?php echo $lang['confirmdashtiledelete'] ?>": function() {deleteDashTile(usertileid); jQuery(this).dialog( "close" );},
             <?php if($all_users){
             ?>
-            "<?php echo $lang['confirmdefaultdashtiledelete'] ?>": function() {deleteDefaultDashTile(tileid,id); jQuery(this).dialog( "close" );},
+            "<?php echo $lang['confirmdefaultdashtiledelete'] ?>": function() {deleteDefaultDashTile(tileid,usertileid); jQuery(this).dialog( "close" );},
             "<?php echo $lang['managedefaultdash'] ?>": function() {window.location = "<?php echo $baseurl; ?>/pages/team/team_dash_tile.php"; return false;},
             <?php } ?>
             "<?php echo $lang['cancel'] ?>":  function() { jQuery(this).dialog('close'); }
@@ -1654,62 +1656,69 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
     <script>
     jQuery(document).ready(function ()
         {
-        var id = "<?php echo htmlspecialchars(substr($tile_id, 18)); ?>"
-        var tileid = "#<?php echo htmlspecialchars($tile_id); ?>";
-        var usertileid = "#<?php echo htmlspecialchars(substr($tile_id, 9)); ?>";
-        var dashtileactionsid = "#DashTileActions_" + id;
-        var deletetileid = ".dash-delete_" + id;
-        var editlink = "<?php echo $tile["url"]; ?>";
-        var tilehref;
-        var tileonclick;
-
-        jQuery(tileid).hover(
-        function(e)
-            {
-            jQuery(dashtileactionsid).stop(true, true).slideDown();
-            },
-        function(e)
-            {
-            jQuery(dashtileactionsid).stop(true, true).slideUp();
-            });
-
-        jQuery(dashtileactionsid).hover(
-        function(e)
-            {
-            tilehref = jQuery(usertileid).attr("href");
-            tileonclick = jQuery(usertileid).attr("onclick");
-            jQuery(usertileid).attr("href", "#");
-            jQuery(usertileid).attr("onclick", "return false;");
-            },
-        function(e)
-            {
-            jQuery(usertileid).attr("href", tilehref);
-            jQuery(usertileid).attr("onclick", tileonclick);
-            tilehref = '';
-            tileonclick = '';
-            });
-
-    jQuery(deletetileid).click(
-            function(event,ui) {
-            <?php
-            if(checkPermission_dashadmin())
+        if (pagename == "home")
+        {
+            var tileid = "<?php echo $tile["ref"]?>"; //Needs to be set for delete functionality
+            var usertileid = "<?php echo htmlspecialchars(substr($tile_id, 18)); ?>" //Needs to be set for delete functionality
+            var usertileidname = "#<?php echo htmlspecialchars(substr($tile_id, 9)); ?>";
+            var dashtileactionsid = "#DashTileActions_" + usertileid;
+            var deletetileid = ".dash-delete_" + usertileid;
+            var editlink = "<?php echo $tile["url"]; ?>";
+            var tilehref; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
+            var tileonclick; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
+    
+            jQuery(usertileidname).hover(
+            function(e)
                 {
-                ?>
-                if(jQuery(usertileid).hasClass("allUsers")) {
-                    // This tile is set for all users so provide extra options
-                    <?php render_delete_dialog_JS(true); ?>
-                }
-                else {
-                    //This tile belongs to this user only
-                    <?php render_delete_dialog_JS(false); ?>
-                }
-            <?php
-                }
-            else #Only show dialog to delete for this user
-                { ?>
-                var dialog = <?php render_delete_dialog_JS(false); 
-                } ?>
-            })
+                jQuery(dashtileactionsid).stop(true, true).slideDown();
+                },
+            function(e)
+                {
+                jQuery(dashtileactionsid).stop(true, true).slideUp();
+                });
+    
+            jQuery(dashtileactionsid).hover(
+            function(e)
+                {
+                tilehref = jQuery(usertileidname).attr("href");
+                tileonclick = jQuery(usertileidname).attr("onclick");
+                jQuery(usertileidname).attr("href", "#");
+                jQuery(usertileidname).attr("onclick", "return false;");
+                },
+            function(e)
+                {
+                jQuery(usertileidname).attr("href", tilehref);
+                jQuery(usertileidname).attr("onclick", tileonclick);
+                tilehref = '';
+                tileonclick = '';
+                });
+    
+        jQuery(deletetileid).click(
+                function(event,ui) {
+                <?php
+                if(checkPermission_dashadmin())
+                    {
+                    ?>
+                    if(jQuery(usertileidname).hasClass("allUsers")) {
+                        // This tile is set for all users so provide extra options
+                        <?php render_delete_dialog_JS(true); ?>
+                    }
+                    else {
+                        //This tile belongs to this user only
+                        <?php render_delete_dialog_JS(false); ?>
+                    }
+                <?php
+                    }
+                else #Only show dialog to delete for this user
+                    { ?>
+                    var dialog = <?php render_delete_dialog_JS(false); 
+                    } ?>
+                })
+            }
+            else
+            {
+            jQuery("#DashTileActions_").remove();
+            }
         });
     </script>
     <?php  
