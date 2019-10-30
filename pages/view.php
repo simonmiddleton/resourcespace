@@ -323,6 +323,59 @@ function check_view_display_condition($fields,$n)
 	return $displaycondition;
 	}
 	
+/**
+ * 
+ * This function returns an array containing list of values for a selected field, identified by $field_label, in the multidimensional array $nodes
+ * 
+ * @param array $nodes - node tree to parse
+ * @param string $field_label - node field to retrieve value of and add to array $node_values
+ * @param array $node_values  - list of values for a selected field in the node tree
+ * 
+ * @return array $node_values
+ */
+
+function get_node_elements(array $node_values, array $nodes, $field_label)
+	{    
+	if(isset($nodes[0]))
+		{
+		foreach ($nodes as $node)
+			{
+			if (isset($node["name"])) array_push($node_values, $node[$field_label]) ;      
+			$node_values =  (isset($node["children"])) ? get_node_elements($node_values, $node["children"], $field_label)  :  $node_values = get_node_elements($node_values, $node, $field_label); 
+			}
+		}
+	return $node_values;
+	}
+
+/**
+ * This function returns a multidimensional array with hierarchy that reflects category tree field hierarchy, using parent and order_by fields
+ * 
+ * @param string $parentId - elements at top of tree do not have a value for "parent" field, so default value is empty string, otherwise it is the value of the parent element in tree
+ * @param array $nodes - node tree to parse and order
+ * 
+ * @return array $tree - multidimension array containing nodes in correct hierarchical order
+ * 
+ */
+
+function get_node_tree($parentId = "", array $nodes)
+	{
+	$tree = array();
+	foreach ($nodes as $node) 
+		{
+		if($node["parent"] == $parentId)
+			{
+        	$children = get_node_tree($node["ref"] , $nodes);
+			if ($children)
+				{
+                uasort($children,"node_orderby_comparator"); 
+                $node["children"] = $children;
+            	}
+            $tree[] = $node;
+        	}
+    	}
+    return $tree;
+	}
+
 function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	{
 		
@@ -336,6 +389,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 		{    
 		# Get all nodes attached to this resource and this field    
 		$nodes_in_sequence = get_resource_nodes($ref,$field['ref'],true);
+		
 		if((bool) $field['automatic_nodes_ordering'])
 			{
 			uasort($nodes_in_sequence,"node_name_comparator");    
@@ -344,10 +398,14 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			{
 			uasort($nodes_in_sequence,"node_orderby_comparator");    
 			}
+	
+		$node_tree = get_node_tree("", $nodes_in_sequence); // get nodes as a tree in correct hierarchical order
+		$node_names = get_node_elements(array(), $node_tree, "name"); // retrieve values for a selected field in the tree 
+
 		$keyword_array=array();
-		foreach($nodes_in_sequence as $node)
+		foreach($node_names as $name)
 			{
-			$keyword_array[] = i18n_get_translated($node['name']);
+			$keyword_array[] = i18n_get_translated($name);
 			}
 		$value = implode(',',$keyword_array);
 		}
