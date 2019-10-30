@@ -372,7 +372,7 @@ if (!hook("renderresultthumb"))
             include "resource_tools.php";
             } // end hook replaceresourcetools ?>
     </div>
-
+</div>
     <?php 
     } # end hook renderresultthumb
 
