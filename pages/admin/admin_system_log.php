@@ -198,7 +198,7 @@ if($table == '' && $table_reference == 0)
                 {
                 ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($record['datetime']); ?></td>
+                    <td><?php echo htmlspecialchars(nicedate($record['datetime'], true)); ?></td>
                     <td><?php echo htmlspecialchars($record['user']); ?></td>
                     <td><?php echo htmlspecialchars($record['operation']); ?></td>
                     <td><?php echo htmlspecialchars($record['notes']); ?></td>
