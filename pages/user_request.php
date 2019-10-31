@@ -126,8 +126,6 @@ include "../include/login_background.php";
 <form method="post" action="<?php echo $baseurl_short?>pages/user_request.php">  
 
 <?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!<?php echo $error_extra?></div><br /><?php } ?>
-<label for="buttons"> </label>	
-
 <?php
 if (!hook("replacemain"))
     { /* BEGIN hook Replacemain */ ?>
@@ -359,7 +357,7 @@ if(!hook("replaceantispam"))
 ?>
 
 <div class="QuestionSubmit">
-		
+<label for="buttons"> </label>			
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["requestuserlogin"]?>&nbsp;&nbsp;" />
 </div>
 </form>
