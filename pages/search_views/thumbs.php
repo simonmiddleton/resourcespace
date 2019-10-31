@@ -364,13 +364,14 @@ if (!hook("renderresultthumb"))
             if ($display_resource_id_in_thumbnail && $ref>0) 
                 { echo "<span class='ResourcePanelResourceID'>" . htmlspecialchars($ref) . "</span>$br"; } 
             else 
-                { ?>&nbsp;<?php }
+                { ?><?php }
             } # end hook("replacethumbsidinthumbnail")
 
         if (!hook("replaceresourcetools"))
             { 
             include "resource_tools.php";
             } // end hook replaceresourcetools ?>
+
     </div>
 </div>
     <?php 

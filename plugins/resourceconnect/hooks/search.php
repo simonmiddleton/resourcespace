@@ -139,7 +139,7 @@ function HookResourceConnectSearchThumblistextras()
                         ></a>
     
     <!-- Remove from collection -->
-    <a class="removeFromCollection fa fa-minus-circle" href="<?php echo "$baseurl/pages/collections.php?resourceconnect_remove=$ref&nc=" . time() ?>" onClick="return CollectionDivLoad(this,false);"> </a></div>    
+    <a class="removeFromCollection fa fa-minus-circle" href="<?php echo "$baseurl/pages/collections.php?resourceconnect_remove=$ref&nc=" . time() ?>" onClick="return CollectionDivLoad(this,false);"> </a>
     <?php
     } 
 
