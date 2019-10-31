@@ -740,7 +740,7 @@ function compile_search_actions($top_actions)
         {
         $options[$o]['value']            = 'csv_export_results_metadata';
         $options[$o]['label']            = $lang['csvExportResultsMetadata'];
-        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restype=%s&order_by=%s&archive=%s&sort=%s&starsearch=%s',
+        $options[$o]['data_attr']['url'] = sprintf('%spages/csv_export_results_metadata.php?search=%s&restypes=%s&order_by=%s&archive=%s&sort=%s&starsearch=%s',
             $baseurl_short,
             urlencode($search),
             urlencode($restypes),
