@@ -1010,7 +1010,20 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             sql_query("update resource_alt_files set page_count=$pagecount where ref=$alternative");
             }
         else if (isset($pagecount)){
-            sql_query("update resource_dimensions set page_count=$pagecount where resource=$ref");
+
+            $pagecount_escaped = escape_check($pagecount);
+            $ref_escaped = escape_check($ref);
+            $sql = "SELECT count(*) AS value FROM `resource_dimensions` WHERE resource = '$ref_escaped'";
+            $query = sql_value($sql, 0);
+
+            if($query == 0)
+                {
+                sql_query("INSERT INTO resource_dimensions (resource, page_count) VALUES ('{$ref_escaped}', '{$pagecount_escaped}')");
+                }
+            else
+                {
+                sql_query("UPDATE resource_dimensions SET page_count = '{$pagecount_escaped}' WHERE resource = '{$ref_escaped}'");
+                }            
             }
     }
     else
