@@ -1316,15 +1316,7 @@ if($responsive_ui)
 
     if ((!is_array($result) || count($result)<1) && empty($collections))
         {
-            // No matches found? Log this in
-            $key_id = resolve_keyword($search);
-
-            if($key_id === FALSE) {
-                $key_id = resolve_keyword($search, TRUE);
-                daily_stat('Keyword usage', $key_id);
-            }
-
-            daily_stat("Keyword usage - no results found", $key_id);
+        // No matches found? Log this in
         ?>
         <div class="BasicsBox"> 
           <div class="NoFind">
