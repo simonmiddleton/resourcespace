@@ -5,6 +5,7 @@ include "../include/authenticate.php";
 include_once "../include/search_functions.php";
 include_once "../include/resource_functions.php";
 include_once "../include/collections_functions.php";
+include_once "../include/node_functions.php";
 include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";
 include_once "../include/api_bindings.php";

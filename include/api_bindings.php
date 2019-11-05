@@ -629,3 +629,8 @@ function api_get_resource_all_image_sizes($resource)
     {
     return get_resource_all_image_sizes($resource);
     }
+
+function api_get_node_id($value, $resource_type_field)
+    {
+    return get_node_id($value,$resource_type_field);
+    }

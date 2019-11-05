@@ -1545,6 +1545,31 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
     return array();
     }
 
+
+/**
+* Return a node ID for a given string
+*
+* @param  string    $value                  The node name to return
+* @param  integer   $resource_type_field    The field to search
+*  
+* @return           false = not found
+*                   integer = node ID of matching keyword.
+*/
+function get_node_id(string $value,$resource_type_field)
+    {
+    $node=sql_query("select ref from node where resource_type_field='" . escape_check($resource_type_field) . "' and name='" . escape_check($value) . "'");
+    if (count($node)>0)
+        {
+        return $node[0]["ref"];
+        }
+    else
+        {
+        return false;
+        }
+    }
+
+
+
 /**
 * Comparator function for uasort to allow sorting of node array by name
 * 
