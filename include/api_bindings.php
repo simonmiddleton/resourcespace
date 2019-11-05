@@ -632,5 +632,7 @@ function api_get_resource_all_image_sizes($resource)
 
 function api_get_node_id($value, $resource_type_field)
     {
+    if(!metadata_field_view_access($resource_type_field)) {return false;} # Need at least view access to the field.
+
     return get_node_id($value,$resource_type_field);
     }
