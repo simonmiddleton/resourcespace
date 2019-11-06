@@ -108,28 +108,17 @@ if($editing && !$editexternalurl)
                         <li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["emailresourcetitle"]?></a></li> 
                         <?php 
                         }
-                    if(!$internal_share_only && !$hide_resource_share_generate_url) 
-						{ ?>
-                        <li><i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_share.php?' . $query_string . '&generateurl=true' ?>" onClick="return CentralSpaceLoad(this,true);" ><?php echo $lang["generateurl"]?></a></li> 
-                        <?php 
-                        }
-					else // Just show the internal share URL straight away as there is no generate link
-						{ ?>
-                        <h2><?php echo $lang["generateurl"]; ?></h2><br /><p><?php echo $lang["generateurlinternal"];?></p>
-                        <p><input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?r=<?php echo $ref?>"></p>
-                        <?php
-                        }
                     }
-                if (!$internal_share_only && ($editing || ($generateurl && getval("deleteaccess","") == "")))
+                if(!$editing)
+                    { ?>
+                    <p><?php echo $lang["generateurlinternal"];?></p>
+                    <p><input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?r=<?php echo $ref?>"></p>
+                    <?php
+                    }
+
+                if (($editing || (getval("deleteaccess","") == "")))
                     {
-                    if(!$editing)
-                        { ?>
-                        <p><?php echo $lang["generateurlinternal"];?></p>
-                        <p><input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?r=<?php echo $ref?>"></p>
-                        <?php
-                        }
-                                 
-                    if ($access=="" || ($editing && !$editexternalurl))
+                    if (($access=="" || ($editing && !$editexternalurl)) && !$internal_share_only)
                         {
                         ?>                    
                         <p><?php if (!$editing || $editexternalurl){ echo $lang["selectgenerateurlexternal"]; } ?></p>
@@ -153,7 +142,7 @@ if($editing && !$editexternalurl)
                         </div>
                         <?php
                         }
-                    else if('' == getvalescaped('editaccess', ''))
+                    else if('' == getvalescaped('editaccess', '') && !$internal_share_only)
                         {
                         // Access has been selected. Generate a new URL.
                         $generated_access_key = '';
