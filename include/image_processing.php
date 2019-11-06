@@ -130,9 +130,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     // Get extension of file just in case the user didn't provide one
                     $path_parts = pathinfo($filename);
                 
-                    $original_extension = $path_parts['extension'];
+                    if(isset($path_parts['extension']))
+                        {
+                        $uploaded_extension = $path_parts['extension'];
+                        }
 
-                    if(isset($user_set_filename_path_parts['extension']) && $original_extension == $user_set_filename_path_parts['extension'])
+                    if(isset($user_set_filename_path_parts['extension']) && (!isset($uploaded_extension) || $uploaded_extension == $user_set_filename_path_parts['extension']))
                         {
                         $filename = $user_set_filename;
                         }
@@ -141,12 +144,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     $path_parts = pathinfo($filename);
                     if(!isset($path_parts['extension'])) 
                         {
-                        $filename .= '.' . $original_extension;
+                        $filename .= '.' . $uploaded_extension;
                         }
                     }
                 }
             }
-    
+
         # Work out extension
         if (!isset($extension))
             {

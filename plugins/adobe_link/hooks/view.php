@@ -6,23 +6,22 @@
 function HookAdobe_linkViewBefore_footer_always()
     {
     global $lang;
-    if(!isset($_SERVER['HTTP_USER_AGENT']) || $_SERVER['HTTP_USER_AGENT'] !== "InDesign-DAMConnect")
+    if(!isset($_SERVER['HTTP_USER_AGENT']) || !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect")))
         {
         return false;
         }
     ?>
     <script>
 
-    jQuery(document).ready(function(){
-        
+    jQuery(document).ready(function()
+        {
         window.addEventListener("message", function(event) {
-            if(event.origin == 'file://') {
-                var data = event.data;
-                extractJSON(data,' ');
-            }
+            if(event.data && event.data.eventType=="assetReadyToPlace")
+                {
+                styledalert('<?php echo htmlspecialchars($lang["adobe_link_title"]); ?>','<?php echo htmlspecialchars($lang["adobe_link_copy_successful"]); ?>');
+                }    
+            });
         });
-
-    });
 
     function extractJSON(obj, indent) {
         for (const i in obj) {
@@ -33,7 +32,6 @@ function HookAdobe_linkViewBefore_footer_always()
                 var content = jQuery('.js-textarea').val();
                 if(content != '')
                     content = content + "\n";
-                jQuery('.js-textarea').val(content + indent + i + ': ' + obj[i]);
             }
         }
     }
@@ -49,13 +47,14 @@ function HookAdobe_linkViewBefore_footer_always()
         });
         
         objMessage.count = objMessage.items.length;
-        objMessage.eventType = "downloadDocument"
+        objMessage.eventType = "downloadDocument";
+
+        styledalert('<?php echo htmlspecialchars($lang["adobe_link_title"]); ?>','<?php echo htmlspecialchars($lang["adobe_link_import_successful"]); ?>');
 
         window.postMessage(objMessage, '*');
-        styledalert('<?php echo htmlspecialchars($lang["adobe_link_title"]); ?>','<?php echo htmlspecialchars($lang["adobe_link_import_successful"]); ?>');
-    }
+        }
 
-        function sendDownloadAssetMessageToCCApp(objData) {
+    function sendDownloadAssetMessageToCCApp(objData) {
 
         var objMessage = {};
 
@@ -72,7 +71,14 @@ function HookAdobe_linkViewBefore_footer_always()
         objMessage.eventType = "downloadAsset"
 
         window.postMessage(objMessage, '*');
-        styledalert('<?php echo htmlspecialchars($lang["adobe_link_title"]); ?>','<?php echo htmlspecialchars($lang["adobe_link_copy_successful"]); ?>');
+        <?php 
+        if ($_SERVER['HTTP_USER_AGENT'] != "InDesign-DAMConnect")
+            {
+            // Photoshop not always showing the 'Asset ready to place' message
+            echo "styledalert('" . htmlspecialchars($lang["adobe_link_title"]) . "','" . htmlspecialchars($lang["adobe_link_copy_successful"]) . "');";
+            }
+            ?>
+        
     }
     
     function sendResizePanelMessageToCCApp(objData) {
@@ -117,7 +123,19 @@ function HookAdobe_linkViewBefore_footer_always()
         objData.width = size.split(",")[0];
         objData.height = size.split(",")[1];
         sendResizePanelMessageToCCApp(objData);
-    });           
+    }); 
+
+   function AdobeLinkDocumentSave(link){
+
+        var objMessage = {};
+        objMessage.eventType = "uploadDocument";
+        var objData = {};
+        objData.uploadUrl = jQuery(link).attr('data-attribute-path');
+        objMessage.data = objData;
+        window.postMessage(objMessage, '*');
+        styledalert('<?php echo $lang["adobe_link_saving"]; ?>','<?php echo $lang["adobe_link_saving_wait"]; ?>');
+        window.setTimeout("imgsrc = jQuery('#previewimage').attr('src');jQuery('#previewimage').attr('src',imgsrc + new Date().getTime());",5000);
+   }          
         
     </script>
     <?php
@@ -125,15 +143,16 @@ function HookAdobe_linkViewBefore_footer_always()
     
 function HookAdobe_linkViewDownloadbuttonreplace()
 	{
-    global $userref, $baseurl ,$baseurl_short, $urlparams, $ref, $resource, $size_info_array, $lang, $adobe_link_asset_extensions, $adobe_link_document_extensions; 
-
+    global $userref, $baseurl, $urlparams, $ref, $resource, $size_info_array, $lang, $adobe_link_asset_extensions;
+    global $adobe_link_document_extensions, $edit_access; 
+        
     # Adds a special link to the download button.
     $adb_ext = $size_info_array["id"] == "" ? $resource['file_extension'] : $size_info_array["extension"];
     
-    if(!isset($_SERVER['HTTP_USER_AGENT']) || $_SERVER['HTTP_USER_AGENT'] !== "InDesign-DAMConnect"
+    if(!isset($_SERVER['HTTP_USER_AGENT']) || !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
         ||
         (!in_array(strtolower($adb_ext),$adobe_link_asset_extensions) && !in_array(strtolower($adb_ext),$adobe_link_document_extensions))
-        )
+      )
         {
         return false;
         }
@@ -149,7 +168,6 @@ function HookAdobe_linkViewDownloadbuttonreplace()
     $extraparams["adb_key"] = $userref . ":" . $adb_tmp_key;
     $path = generateURL($baseurl . "/pages/download.php", $urlparams, $extraparams);
 
-
     $adobelink = "<a href='" . $path . "'";
     $adobelink .= "data-attribute-path='" . htmlspecialchars($path) . "' ";
     $adobelink .= "data-attribute-ref='" . htmlspecialchars($ref) . "' ";
@@ -158,25 +176,36 @@ function HookAdobe_linkViewDownloadbuttonreplace()
     if(in_array(strtolower($adb_ext),$adobe_link_asset_extensions))
         {
         $adobelink .= "onclick='AdobeLinkAssetDownload(this);return false;' ";
+        $adobelink .= ">" . $lang["adobe_link_import"]. "</a>";
         }
     else
         {
         $adobelink .= "onclick='AdobeLinkDocumentDownload(this);return false;' ";
+        $adobelink .= ">" . $lang["adobe_link_open"]. "</a>";
+        }
+    echo $adobelink;
+
+    if($edit_access && in_array(strtolower($adb_ext),$adobe_link_document_extensions))
+        {
+        $extraparams["replace_resource"] =  $ref;
+        $uploadpath = generateURL($baseurl . "/pages/upload_plupload.php", $urlparams, $extraparams);
+        $adobesavelink = "</td><td class='DownloadButton'><a href='" . $uploadpath . "' ";
+        $adobesavelink .= "data-attribute-path='" . htmlspecialchars($uploadpath) . "' ";
+        $adobesavelink .= "onclick='AdobeLinkDocumentSave(this);return false;' ";
+        $adobesavelink .= ">" . $lang["adobe_link_upload_document"]. "</a>";
+        echo $adobesavelink;
         }
 
-    $adobelink .= ">" . $lang["adobe_link_import"]. "</a>";
-    // Show the link
-    echo $adobelink;
     return true;
 	}
 	
 function HookAdobe_linkViewOrigdownloadlink()
 	{
 	# Adds a special link to the download button.
-	global $userref, $baseurl, $usergroup, $lang, $ref, $access, $resource, $k, $size_info, $baseurl_short, $urlparams, $path, $direct_download, $alternative;
-	global $adobe_link_document_extensions, $adobe_link_asset_extensions, $lang;
+	global $userref, $usergroup, $lang, $ref, $access, $resource, $k, $size_info, $baseurl, $urlparams, $path, $direct_download, $alternative;
+	global $adobe_link_document_extensions, $adobe_link_asset_extensions, $lang, $edit_access;
     
-    if(!isset($_SERVER['HTTP_USER_AGENT']) || $_SERVER['HTTP_USER_AGENT'] !== "InDesign-DAMConnect"
+    if(!isset($_SERVER['HTTP_USER_AGENT']) || !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
         ||
         (!in_array(strtolower($resource['file_extension']),$adobe_link_asset_extensions) && !in_array(strtolower($resource['file_extension']),$adobe_link_document_extensions))
         )
@@ -201,13 +230,13 @@ function HookAdobe_linkViewOrigdownloadlink()
     if(in_array(strtolower($resource['file_extension']),$adobe_link_asset_extensions))
         {
         $adobelink .= "onclick='AdobeLinkAssetDownload(this);return false;' ";
+        $adobelink .= ">" . $lang["adobe_link_import"]. "</a>";
         }
     else
         {
         $adobelink .= "onclick='AdobeLinkDocumentDownload(this);return false;' ";
+        $adobelink .= ">" . $lang["adobe_link_open"]. "</a>";
         }
-
-    $adobelink .= ">" . $lang["adobe_link_import"]. "</a>";
 
     // Show the link
     ?>
@@ -216,6 +245,21 @@ function HookAdobe_linkViewOrigdownloadlink()
     <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
     <td class="DownloadButton">
     <?php echo $adobelink; 
+
+     if($edit_access && in_array(strtolower($resource['file_extension']),$adobe_link_document_extensions))
+        {
+        $extraparams["replace_resource"] =  $ref;
+        $uploadpath = generateURL($baseurl . "/pages/upload_plupload.php", $urlparams, $extraparams);
+        $adobesavelink = "</td><td class='DownloadButton'><a href='" . $uploadpath . "'";
+        $adobesavelink .= "data-attribute-path='" . htmlspecialchars($uploadpath) . "' ";
+        $adobesavelink .= "onclick='AdobeLinkDocumentSave(this);return false;' ";
+        $adobesavelink .= ">" . $lang["adobe_link_upload_document"]. "</a>";
+        echo $adobesavelink;
+        ?>
+        </td>
+        </tr><?php
+        }
+
     ?>
     </td>
     </tr>
@@ -223,3 +267,8 @@ function HookAdobe_linkViewOrigdownloadlink()
     return true;
 	}
 
+function HookAdobe_linkViewReplacepreviewlink()
+	{
+    global $previewimagelink;
+    $previewimagelink .= "?reload=" . uniqid();
+    }
