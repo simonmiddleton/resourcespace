@@ -45,7 +45,7 @@ include ("../../include/header.php");
         if($team_centre_bug_report && !hook("custom_bug_report"))
             {
             ?>
-            <li><i aria-hidden="true" class="fa fa-fw fa-bug"></i>&nbsp;<a href="<?php echo $baseurl_short?>pages/admin/admin_reportbug.php" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["reportbug"]?></a></li>
+            <li><i aria-hidden="true" class="fa fa-fw fa-bug"></i>&nbsp;<a href="https://www.resourcespace.com/bug_report"><?php echo $lang["reportbug"]?></a></li>
             <?php
             }
 
