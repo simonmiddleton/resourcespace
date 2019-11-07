@@ -3621,7 +3621,7 @@ function get_resource_access($resource)
 
 		if(-1 != $extaccess && (!$internal_share_access || ($internal_share_access && $extaccess < $access)))
             {
-            return $extaccess;
+            return (int) $extaccess;
             }
 		}
 	
@@ -3689,12 +3689,12 @@ function get_resource_access($resource)
 	if (isset($userspecific) && $userspecific!="")
 		{
 		$customuseraccess=true;
-		return $userspecific;
+		return (int) $userspecific;
 		}
 	if (isset($groupspecific) && $groupspecific!="")
 		{
 		$customgroupaccess=true;
-		return $groupspecific;
+		return (int) $groupspecific;
 		}
         
 	if (checkperm('T'.$resource_type))
@@ -3759,7 +3759,7 @@ function get_resource_access($resource)
 		if($matchedfilter){$access=0;}
         }
 		
-	return $access;	
+	return (int) $access;
 	}
 }
 	

@@ -673,14 +673,21 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 	return hook($name, $pagename, $params, $last_hook_value_wins);
 	}
 
-# Indicate that from now on we want to group together DML statements into one transaction (faster as only one commit at end).
+/**
+* Indicate that from now on we want to group together DML statements into one transaction.
+* 
+* @return boolean Returns TRUE on success or FALSE on failure.
+*/
 function db_begin_transaction()
 	{
-	global $db,$use_mysqli;
-	if ($use_mysqli && function_exists('mysqli_begin_transaction'))
+	global $db, $use_mysqli;
+
+	if($use_mysqli && function_exists('mysqli_begin_transaction'))
 		{
-		mysqli_begin_transaction($db);
+		return mysqli_begin_transaction($db);
 		}
+
+    return false;
 	}
 
 # Used to perform the same DML operation over-and-over-again without the hit of preparing the statement every time.
@@ -716,24 +723,37 @@ function sql_query_prepared($sql,$bind_data)
     mysqli_stmt_execute($prepared_statement_cache[$sql]);
     }
 
-# Tell the database to commit the current transaction.
+/**
+* Tell the database to commit the current transaction.
+* 
+* @return boolean Returns TRUE on success or FALSE on failure.
+*/
 function db_end_transaction()
 	{
-	global $db,$use_mysqli;
-	if ($use_mysqli && function_exists('mysqli_commit'))
+	global $db, $use_mysqli;
+
+	if($use_mysqli && function_exists('mysqli_commit'))
 		{
-		mysqli_commit($db);
+		return mysqli_commit($db);
 		}
+
+    return false;
 	}
 
-# Tell the database to rollback the current transaction.
+/**
+* Tell the database to rollback the current transaction.
+* 
+* @return boolean Returns TRUE on success or FALSE on failure.
+*/
 function db_rollback_transaction()
 	{
-	global $db,$use_mysqli;
-	if ($use_mysqli && function_exists('mysqli_rollback'))
+	global $db, $use_mysqli;
+	if($use_mysqli && function_exists('mysqli_rollback'))
 		{
-		mysqli_rollback($db);
+		return mysqli_rollback($db);
 		}
+
+    return false;
 	}        
 
 function sql_query($sql,$cache=false,$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
