@@ -2389,7 +2389,7 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     else
         {
         // use php function getimagesize()
-        $size = ($img_url) ? getimagesize($img_url) : "";
+        $size = ($img_url != "") ? getimagesize($img_url) : "";
         $ratio = (isset($size[0]))? $size[0] / $size[1] : 1;
 
         }
