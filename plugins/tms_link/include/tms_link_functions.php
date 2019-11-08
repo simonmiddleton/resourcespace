@@ -45,8 +45,14 @@ function tms_convert_value($value, $key, array $module)
         {
 	$mappings=$module['tms_rs_mappings'];
 	$mappings=array_values($mappings);
-
-        return mb_convert_encoding($value, 'UTF-8', $mappings[$tms_rs_mapping_index]['encoding']);
+        if(strtoupper($mappings[$tms_rs_mapping_index]["encoding"]) != "UTF-8")
+            {
+            return mb_convert_encoding($value, 'UTF-8', $mappings[$tms_rs_mapping_index]['encoding']);
+            }
+        else
+            {
+            return $value;
+            }
         }
 
     // Default to the old way of detecting the encoding if we can't figure out the expected encoding of the tms column data.
@@ -112,7 +118,18 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
         $columnsql = '';
         foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
             {
-            $columnsql .= (trim($columnsql) == '' ? $tms_rs_mapping['tms_column'] : ", {$tms_rs_mapping['tms_column']}");
+            if(trim($columnsql) != '')
+                {
+                $columnsql .= ", ";
+                } 
+            if(strtoupper($tms_rs_mapping["encoding"]) != "UTF-8")
+                {
+                $columnsql .= "CAST (" . $tms_rs_mapping['tms_column'] . " AS VARBINARY(MAX)) " . $tms_rs_mapping['tms_column'];
+                }
+            else
+                {
+                $columnsql .= $tms_rs_mapping['tms_column'];
+                }  
             }
         $tmssql = "SELECT {$columnsql} FROM {$module['module_name']} {$conditionsql};";
         $tmsresultset = odbc_exec($conn, $tmssql);
