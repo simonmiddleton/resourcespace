@@ -90,7 +90,7 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
             continue;
             }
 
-        $input_identifier = "field_{$module_uid}_{$module['rs_uid_field']}";
+        $input_identifier = ($ref < 0) ? "field_{$module_uid}_{$module['rs_uid_field']}" : "field_{$module['rs_uid_field']}";
         $tms_form_post_id = getval($input_identifier, 0, true);
 		if($tms_form_post_id == 0)
 			{
