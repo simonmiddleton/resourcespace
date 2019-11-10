@@ -115,7 +115,7 @@ function tms_link_get_tms_data($resource, $tms_object_id = "", $resourcechecksum
             return $lang["tms_link_no_tms_data"];
             }
 
-        $columnsql = '';
+        $columnsql = $module['tms_uid_field'];
         foreach($module['tms_rs_mappings'] as $tms_rs_mapping)
             {
             if(trim($columnsql) != '')
