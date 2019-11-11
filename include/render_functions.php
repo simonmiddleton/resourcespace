@@ -2402,8 +2402,8 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
         break;
     
         case "thumbs":
-            $defaultwidth = 174;
-            $defaultheight = 174;
+            $defaultwidth = 175;
+            $defaultheight = 175;
         break;        
         
         case "collection":

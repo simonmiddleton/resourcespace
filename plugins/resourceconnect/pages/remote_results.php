@@ -194,7 +194,7 @@ else
             $size = getimagesize($img_url);
             $ratio = (isset($size[0]))? $size[0] / $size[1] : 1; 
             
-            $defaultheight = $defaultwidth = 174;
+            $defaultheight = $defaultwidth = 175;
 
             if ($ratio > 1)
             {

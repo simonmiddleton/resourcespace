@@ -669,8 +669,8 @@ if(!$collectionsearch)
             scroll: false,
             drag: function (event, ui)
                 {
-                jQuery(ui.helper).width(174);
-                jQuery(ui.helper).height(174);
+                jQuery(ui.helper).width(175);
+                jQuery(ui.helper).height(175);
                 jQuery(ui.helper).css('opacity','0.5');
                 jQuery(ui.helper).css('transform','scale(0.8)');
                 jQuery(ui.helper).children('.ResourcePanelIcons').hide();
