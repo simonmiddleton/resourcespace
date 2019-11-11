@@ -2776,7 +2776,6 @@ function extract_text($ref,$extension,$path="")
 
     if ($extension=="zip")
         {
-            debug('bang');
         # Zip files - map the field
         $path=escapeshellarg($path);
 
@@ -2788,7 +2787,7 @@ function extract_text($ref,$extension,$path="")
             {
             # Remove the first few lines according to $zip_contents_field_crop in config.
             $text=explode("\n",$text);
-            for ($n=0;$n<count($zip_contents_field_crop);$n++) {array_shift($text);}
+            for ($n=0;$n<$zip_contents_field_crop;$n++) {array_shift($text);}
             $text=join("\n",$text);
             }
         
