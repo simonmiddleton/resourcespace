@@ -1442,10 +1442,12 @@ UL.jqueryFileTree A:hover {font-weight:bold;}
 }
 
 .keywordselected {
-    display:inline;
-    margin-right:5px;
-    float:none; border-radius:4px;
-    padding:3px 6px;
+    display: inline-block;
+    margin: 0 5px 5px 0;
+    float: none;
+    border-radius: 4px;
+    padding: 2px 6px;
+    line-height: 20px;
 }
 .customFieldset input[type=checkbox] {margin:0 2px 0 0;}
 .keywordselected a {padding-left:8px;}
