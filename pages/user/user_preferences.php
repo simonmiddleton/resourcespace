@@ -285,6 +285,11 @@ include "../../include/header.php";
         $autosave_option_name  = getvalescaped('autosave_option_name', '');
         $autosave_option_value = getvalescaped('autosave_option_value', '');
 
+        if($autosave_option_name == 'user_local_timezone') # If '$autosave_option_name' = 'user_local_timezone' - save to cookie
+            {
+                rs_setcookie('user_local_timezone', $autosave_option_value, 365);
+            }
+
         // Search for the option name within our defined (allowed) options
         // if it is not there, error and don't allow saving it
         $page_def_option_index = array_search($autosave_option_name, array_column($page_def, 1));

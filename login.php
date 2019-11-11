@@ -74,6 +74,11 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
 	if ($result['valid'])
 		{
         set_login_cookies($result["ref"],$session_hash,$language, $user_preferences);
+
+        # Set 'user_local_timezone' in cookie like 'user preferences page' does
+        $login_lang = getval("user_local_timezone", "");        
+        rs_setcookie('user_local_timezone', $login_lang, 365);
+
 		# If the redirect URL is the collection frame, do not redirect to this as this will cause
 		# the collection frame to appear full screen.
 		if (strpos($url,"pages/collections.php")!==false) {$url="index.php";}
@@ -190,7 +195,7 @@ if (!hook("replaceloginform")) {
 
 <?php if ($disable_languages==false) { ?>	
 		<div class="Question">
-			<label for="language"><?php echo $lang["language"]?> </label>
+            <label for="language"><?php echo $lang["language"]?></label>
 			<select id="language" class="stdwidth" name="language" onChange="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
 			<?php reset ($languages); foreach ($languages as $key=>$value) { ?>
 			<option value="<?php echo $key?>" <?php if ($language==$key) { ?>selected<?php } ?>><?php echo $value?></option>
@@ -204,18 +209,34 @@ if (!hook("replaceloginform")) {
             <label for="user_local_timezone"><?php echo $lang["local_tz"]; ?></label>
             <select id="user_local_tz" class="stdwidth" name="user_local_timezone">
             <?php
+
+            $user_local_timezone = getval('user_local_timezone', '');
+
             foreach(timezone_identifiers_list() as $timezone)
                 {
-                ?>
-                <option value="<?php echo $timezone; ?>"><?php echo $timezone; ?></option>
-                <?php
+                if($user_local_timezone == $timezone)
+                    {
+                    print "<option value='$timezone' selected>$timezone</option>";
+                    }
+                else
+                    {
+                    print "<option value='$timezone'>$timezone</option>";
+                    }                
                 }
-                ?>
+            
+            ?>
             </select>
             <script>
             jQuery(document).ready(function() {
                 var user_local_tz = detect_local_timezone();
-                jQuery('#user_local_tz').val(user_local_tz);
+                <?php 
+
+                if(!isset($user_local_timezone) xor $user_local_timezone == '') 
+                    {
+                        print "jQuery('#user_local_tz').val(user_local_tz);";
+                    }
+
+                ?>
             });
             </script>
             <div class="clearerleft"></div>
