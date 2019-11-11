@@ -2776,6 +2776,7 @@ function extract_text($ref,$extension,$path="")
 
     if ($extension=="zip")
         {
+            debug('bang');
         # Zip files - map the field
         $path=escapeshellarg($path);
 
