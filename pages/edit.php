@@ -1730,19 +1730,16 @@ function SelectTab(tab)
 echo " <input type=hidden name=\"exemptfields\" id=\"exemptfields\" value=\"" . implode(",",$required_fields_exempt) . "\">";   
 
 # Work out the correct archive status.
-if ($ref<0) # Upload template.
+if ($ref < 0 && !$show_status_and_access_on_upload) 
    {
-   if ($show_status_and_access_on_upload==false)
-        {
-        # Hide the dropdown, and set the default status.
-        ?>
-        <input type=hidden name="status" id="status" value="<?php echo htmlspecialchars($setarchivestate)?>"><?php
-        }
-   else # Edit Resource(s).
-        {
-        $setarchivestate = $resource["archive"];
-        }
-   }
+    # # Upload template and not displaying status. Hide the dropdown and set the default status.
+    ?>
+    <input type=hidden name="status" id="status" value="<?php echo htmlspecialchars($setarchivestate)?>"><?php
+    }
+else # Edit Resource(s).
+    {
+    $setarchivestate = $resource["archive"];
+    }
 ?>
 </div><!-- end of ResourceMetadataSection -->
 <?php
@@ -1803,11 +1800,11 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
          <select class="stdwidth" name="status" id="status" <?php if ($edit_autosave) {?>onChange="AutoSave('Status');"<?php } ?>><?php
          for ($n=-2;$n<=3;$n++)
             {
-            if (checkperm("e" . $n)) { ?><option value="<?php echo $n?>" <?php if ($setarchivestate==$n) { ?>selected<?php } ?>><?php echo $lang["status" . $n]?></option><?php }
+            if (checkperm("e" . $n) || $n==$setarchivestate) { ?><option value="<?php echo $n?>" <?php if ($setarchivestate==$n) { ?>selected<?php } ?>><?php echo $lang["status" . $n]?></option><?php }
             }
          foreach ($additional_archive_states as $additional_archive_state)
             {
-            if (checkperm("e" . $additional_archive_state)) { ?><option value="<?php echo $additional_archive_state?>" <?php if ($setarchivestate==$additional_archive_state) { ?>selected<?php } ?>><?php echo isset($lang["status" . $additional_archive_state])?$lang["status" . $additional_archive_state]:$additional_archive_state ?></option><?php }
+            if (checkperm("e" . $additional_archive_state) || $additional_archive_state==$setarchivestate) { ?><option value="<?php echo $additional_archive_state?>" <?php if ($setarchivestate==$additional_archive_state) { ?>selected<?php } ?>><?php echo isset($lang["status" . $additional_archive_state])?$lang["status" . $additional_archive_state]:$additional_archive_state ?></option><?php }
             }?>
          </select>
          <div class="clearerleft"> </div>
