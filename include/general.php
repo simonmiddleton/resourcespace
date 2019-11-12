@@ -1588,7 +1588,7 @@ function save_user($ref)
         $username               = trim(getvalescaped('username', ''));
         $password               = trim(getvalescaped('password', ''));
         $fullname               = trim(getvalescaped('fullname', ''));
-        $email                  = trim(getvalescaped('email', ''));
+        $email                  = trim(getval('email', '')); //To be escaped on usage in DB
         $expires                = "'" . getvalescaped('account_expires', '') . "'";
         $usergroup              = trim(getvalescaped('usergroup', ''));
         $ip_restrict            = trim(getvalescaped('ip_restrict', ''));
@@ -1600,7 +1600,7 @@ function save_user($ref)
         $approved               = getval('approved', 0, true);
 
         # Username or e-mail address already exists?
-        $c = sql_value("SELECT count(*) value FROM user WHERE ref <> '$ref' AND (username = '" . $username . "' OR email = '" . $email . "')", 0);
+        $c = sql_value("SELECT count(*) value FROM user WHERE ref <> '$ref' AND (username = '" . $username . "' OR email = '" . escape_check($email) . "')", 0);
         if($c > 0 && $email != '')
             {
             return false;
@@ -1671,7 +1671,7 @@ function save_user($ref)
         sql_query("update user set
         username='" . $username . "'" . $passsql . ",
         fullname='" . $fullname . "',
-        email='" . $email . "',
+        email='" . escape_check($email) . "',
         usergroup='" . $usergroup . "',
         account_expires=$expires,
         ip_restrict='" . $ip_restrict . "',
