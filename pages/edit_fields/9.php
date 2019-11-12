@@ -129,7 +129,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
         ?>
         if(user_action)
             {
-            AutoSave('<?php echo $field["ref"]; ?>');
+            AutoSave('<?php echo $field["ref"]; ?>',this);
             }
             <?php
         }

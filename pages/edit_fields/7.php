@@ -100,7 +100,7 @@ if(!(isset($treeonly) && true == $treeonly))
                     <?php
 					if(!$is_search && $edit_autosave)
 						{
-						echo "AutoSave('{$field['ref']}');";
+						echo "AutoSave('{$field['ref']}',this);";
 						}
 
 					echo $update_result_count_function_call;
@@ -275,7 +275,7 @@ echo $hidden_input_elements;
         <?php
         if($edit_autosave)
             {
-            echo "AutoSave('{$field['ref']}');";
+            echo "AutoSave('{$field['ref']}',this);";
             }
 
         echo $update_result_count_function_call;
