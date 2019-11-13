@@ -72,11 +72,26 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
     $order_by       = getvalescaped('order_by', '');
     $offset         = getvalescaped('offset', '');
     $per_page       = getvalescaped('per_page', '');
-    $archive        = getvalescaped('archive', '');
     $sort           = getvalescaped('sort', '');
     $restypes       = getvalescaped('restypes', '');
     $recentdaylimit = getvalescaped('recentdaylimit', '');
     $editable_only  = getval('foredit','')=='true';
+
+    // Construct archive string and array
+    $archive_choices = getval("archive", "");
+    $selected_archive_states = array();
+    if(!is_array($archive_choices))
+        {
+        $archive_choices = explode(",", $archive_choices);
+        }
+    foreach($archive_choices as $archive_choice)
+        {
+        if(is_numeric($archive_choice))
+            {
+            $selected_archive_states[] = $archive_choice;
+            }  
+        }
+    $archive = implode(",", $selected_archive_states);
 
     $searchparams= array(
     'search'            => $search,
