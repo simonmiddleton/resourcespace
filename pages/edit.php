@@ -876,13 +876,14 @@ function ShowHelp(field)
         {
         if(preventautosave) return false;
 
-        var value_onchange = jQuery(obj).attr("onchange"); // get value of onchange attribute
-        jQuery(obj).removeAttr("onchange"); // remove onchange attribute
         jQuery('#AutoSaveStatus' + field).html('<?php echo $lang["saving"] ?>');
         jQuery('#AutoSaveStatus' + field).show();
         jQuery.post(jQuery('#mainform').attr('action') + '&autosave=true&autosave_field=' + field,jQuery('#mainform').serialize(),
             function(data)
                 {
+                // disable input fields (not including hidden input) for this input group e.g. date range, input text    
+                jQuery(obj).parents(".Question").find("input:text,input:checkbox,input:radio,select,textarea,button").attr("disabled", true);
+
                 saveresult=JSON.parse(data);
                 if (saveresult['result']=="SAVED")
                     {
@@ -922,9 +923,9 @@ function ShowHelp(field)
                     // alert box with error message
                     styledalert('<?php echo $lang["error"] ?>',saveerrors);
                     }
+                // once autosave has completed, remove disabled attribute    
+                jQuery(obj).parents(".Question").find("input:text,input:checkbox,input:radio,select,textarea,button").removeAttr("disabled");  
                 });
-        // once autosave has completed, add original onchange attribute        
-        jQuery(obj).attr("onchange", value_onchange );        
 	}
 <?php } 
 
