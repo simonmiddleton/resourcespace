@@ -13,9 +13,10 @@
 * $field    an associative array of field data, i.e. a row from the resource_type_field table.
 * $name     the input name to use in the form (post name)
 * $value    the default value to set for this field, if any
+* $reset    is non-blank if the caller requires the field to be reset
 * @param array $searched_nodes Array of all the searched nodes previously
 */
-function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array())
+function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="")
     {
     node_field_options_override($field);
 	
@@ -513,7 +514,7 @@ function render_search_field($field,$value="",$autoupdate,$class="stdwidth",$for
         $found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day='';
         if (!$forsearchbar && $daterange_search)
             {
-			render_date_range_field($name,$value,true, $autoupdate);
+			render_date_range_field($name, $value, true, $autoupdate, array(), $reset);
             }
         else
             {
@@ -1915,7 +1916,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
   }
 
 	
-function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false,$field=array())
+function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,$field=array(),$reset="")
 	{
 	$found_year='';$found_month='';$found_day='';$found_start_year='';$found_start_month='';$found_start_day='';$found_end_year='';$found_end_month='';$found_end_day=''; 
 	global $daterange_edtf_support,$lang, $minyear,$date_d_m_y, $chosen_dropdowns, $edit_autosave,$forsearchbar;
@@ -1961,12 +1962,15 @@ function render_date_range_field($name,$value,$forsearch=true, $autoupdate=false
 		$found_end_day=$se[2];
 		}
         
-    // If the form has been submitted but data was not saved get the submitted values   
-    foreach(array("start_year", "start_month","start_day","end_year","end_month","end_day") as $subpart)
+    // If the form has been submitted (but not reset) but data was not saved get the submitted values   
+    if($reset == "") 
         {
-        if(getval($name . "_" . $subpart,"") != "")
+        foreach(array("start_year", "start_month","start_day","end_year","end_month","end_day") as $subpart)
             {
-            ${"found_" . $subpart} = getval($name . "_" . $subpart,"");
+            if(getval($name . "_" . $subpart,"") != "")
+                {
+                ${"found_" . $subpart} = getval($name . "_" . $subpart,"");
+                }
             }
         }
 	

@@ -644,10 +644,14 @@ for ($n=0;$n<count($fields);$n++)
 
 	# Work out a default value
 	if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
-	if (getval("resetform","")!="") {$value="";}
-	
+	# Clearbutton means resetform
+	$resetform=getval("resetform","");
+	if ($resetform != "") 
+		{
+		$value="";
+		}
 	# Render this field
-    render_search_field($fields[$n], $value, true, 'SearchWidth', false, array(), $searched_nodes);
+    render_search_field($fields[$n], $value, true, 'SearchWidth', false, array(), $searched_nodes, $resetform);
 	}
 ?>
 </div>
@@ -788,9 +792,13 @@ if (!$collection_search_includes_resource_metadata)
 	 # Work out a default value
 	 if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
 	 # Clearbutton means resetform
-	 if (getval("resetform","")!="") {$value="";}
+	 $resetform=getval("resetform","");
+	 if ($resetform != "") 
+	 	{
+		$value="";
+		}
 	 # Render this field
-	 render_search_field($fields[$n],$value,true,"SearchWidth",false,array(),$searched_nodes);
+	 render_search_field($fields[$n],$value,true,"SearchWidth",false,array(),$searched_nodes,$resetform);
 	 }
    }
 ?>
