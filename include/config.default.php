@@ -3667,3 +3667,5 @@ $batch_replace_local_folder = "/upload";
 // Display help links on pages
 $contextual_help_links=true;
 
+// Display upgrade available tile
+$check_upgrade_available=true;
