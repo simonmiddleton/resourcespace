@@ -5604,12 +5604,14 @@ function update_timestamp($resource)
 */
 function get_extension(array $resource, $size)
     {
+    global $job_ext;
     if($size == '')
         {
         $size = 'original';
         }
 
-    $pextension = ($size == 'original' ? $resource['file_extension'] : 'jpg');
+    // Offline collection download job may have requested a specific file extension
+    $pextension = $size == 'original' ? $resource['file_extension'] : (isset($job_ext) && trim($job_ext) != "") ? $job_ext : 'jpg';
 
     $replace_extension = hook('replacedownloadextension', '', array($resource, $pextension));
     if(trim($replace_extension) !== '')

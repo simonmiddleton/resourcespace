@@ -262,6 +262,13 @@ if ($submitted != "")
             'settings_id'           => $settings_id,
             'include_csv_file'      => $include_csv_file,
         );
+
+        $modified_job_data = hook("collection_download_modify_job","",array($collection_download_job_data));
+        if(is_array($modified_job_data))
+            {
+            $collection_download_job_data = $modified_job_data;
+            }
+
         job_queue_add(
             'collection_download',
             $collection_download_job_data,
