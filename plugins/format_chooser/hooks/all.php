@@ -110,9 +110,9 @@ function HookFormat_chooserAllReplacedownloadextension($resource, $extension)
 		# Download the original file for this resource
 		return $inputFormat;
         }
-
-    //$reqext = (isset($job_ext) && $job_ext != "") ? $job_ext : ); 
-	$ext = strtoupper(getvalescaped('ext', getDefaultOutputFormat($inputFormat)));
+        
+    $reqext = (isset($job_ext) && $job_ext != "") ? $job_ext : getval("ext",getDefaultOutputFormat($inputFormat)); 
+    $ext = strtoupper($reqext);
     if (empty($ext) || !in_array($ext, $format_chooser_output_formats))
         {
         return false;
