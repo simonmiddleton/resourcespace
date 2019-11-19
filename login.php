@@ -216,11 +216,15 @@ if (!hook("replaceloginform")) {
                 {
                 if($user_local_timezone == $timezone)
                     {
-                    print "<option value='$timezone' selected>$timezone</option>";
+                    ?>
+                    <option value="<?php echo $timezone; ?>" selected><?php echo $timezone; ?></option>
+                    <?php
                     }
                 else
                     {
-                    print "<option value='$timezone'>$timezone</option>";
+                    ?>
+                    <option value="<?php echo $timezone; ?>"><?php echo $timezone; ?></option>
+                    <?php
                     }                
                 }
             
@@ -231,9 +235,9 @@ if (!hook("replaceloginform")) {
                 var user_local_tz = detect_local_timezone();
                 <?php 
 
-                if(!isset($user_local_timezone) xor $user_local_timezone == '') 
+                if(!isset($user_local_timezone) || $user_local_timezone == '') 
                     {
-                        print "jQuery('#user_local_tz').val(user_local_tz);";
+                    ?>jQuery('#user_local_tz').val(user_local_tz);<?php
                     }
 
                 ?>

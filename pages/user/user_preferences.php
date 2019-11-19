@@ -287,7 +287,7 @@ include "../../include/header.php";
 
         if($autosave_option_name == 'user_local_timezone') # If '$autosave_option_name' = 'user_local_timezone' - save to cookie
             {
-                rs_setcookie('user_local_timezone', $autosave_option_value, 365);
+            rs_setcookie('user_local_timezone', $autosave_option_value, 365);
             }
 
         // Search for the option name within our defined (allowed) options
