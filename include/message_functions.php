@@ -153,8 +153,7 @@ function message_purge()
 
 function message_send_unread_emails()
 	{
-	global $lang, $applicationname,$actions_enable,$baseurl,$list_search_results_title_trim;
-    global $user_pref_daily_digest,$applicationname,$actions_on, $inactive_message_auto_digest_period;
+	global $lang, $applicationname, $actions_enable, $baseurl, $list_search_results_title_trim, $user_pref_daily_digest, $applicationname, $actions_on, $inactive_message_auto_digest_period, $user_pref_inactive_digest;
     
     $lastrun = get_sysvar('daily_digest', '1970-01-01');
     
@@ -209,9 +208,10 @@ function message_send_unread_emails()
             continue;
             }
 		setup_user($messageuser);
-        get_config_option($digestuser,'user_pref_inactive_digest', $user_auto_digest_option);
+        get_config_option($digestuser,'user_pref_inactive_digest', $user_pref_inactive_digest);
+        get_config_option($digestuser,'user_pref_daily_digest', $user_pref_daily_digest);
         
-        if($inactive_message_auto_digest_period == 0 || !$user_auto_digest_option) // This may be set differently as a group configuration overerride or disabled by user
+        if($inactive_message_auto_digest_period == 0 || (!$user_pref_inactive_digest && !$user_pref_daily_digest)) // This may be set differently as a group configuration overerride or disabled by user
             {
             debug("Skipping email digest for user ref " . $digestuser . " as user or group preference disabled");
             continue;
