@@ -298,15 +298,21 @@ if($import_collections && isset($input_fh))
         if(!array_key_exists($collection_resource["collection"], $collection_mapping))
             {
             logScript("Looking for collection '{$collection_resource["collection_name"]}'");
-            $found_user_collection = get_user_collections($userref, $collection_resource["collection_name"]);
-            if(empty($found_user_collection))
+            $found_user_collections = get_user_collections($userref, $collection_resource["collection_name"]);
+            $found_exact_match = array_search($collection_resource["collection_name"], array_column($found_user_collections, "name"));
+            if(false === $found_exact_match)
+                {
+                $found_user_collections = array();
+                }
+
+            if(empty($found_user_collections))
                 {
                 $copy_suffix = ($collection_resource["collection_name"] == "New uploads" ? " - {$lang["copy"]}" : "");
                 $new_collection_id = create_collection($userref, "{$collection_resource["collection_name"]}{$copy_suffix}");
                 logScript("Created collection '{$collection_resource["collection_name"]}{$copy_suffix}'");
-                $found_user_collection = array(array("ref" => $new_collection_id));
+                $found_user_collections = array(array("ref" => $new_collection_id));
                 }
-            $collection_mapping[$collection_resource["collection"]] = $found_user_collection[0]["ref"];
+            $collection_mapping[$collection_resource["collection"]] = $found_user_collections[0]["ref"];
             }
 
         logScript("Adding remote resource '{$collection_resource["url"]}' to collection");
