@@ -1808,7 +1808,7 @@ $lang["list-recipients"] = "This message was sent to the following e-mail addres
 
 $lang["sort"] = "Sort";
 $lang["sortcollection"] = "Sort collection";
-$lang["emptycollection"] = "Remove resources";
+$lang["emptycollection"] = "Remove all resources";
 $lang["deleteresources"] = "Delete resources";
 $lang["emptycollectionareyousure"]="Are you sure you want to remove all resources from this collection?";
 
