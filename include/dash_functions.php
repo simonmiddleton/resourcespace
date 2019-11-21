@@ -771,8 +771,23 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
 		}
 	else
 		{
-		$user_group_tiles = sql_array("SELECT dash_tile.ref AS `value` FROM usergroup_dash_tile JOIN dash_tile ON usergroup_dash_tile.dash_tile = dash_tile.ref WHERE usergroup_dash_tile.usergroup = '{$user_group}' ORDER BY usergroup_dash_tile.default_order_by");
-		}
+		$user_group_tiles = sql_array( "SELECT 
+                                            dash_tile.ref AS `value`
+                                        FROM
+                                            usergroup_dash_tile
+                                                JOIN
+                                            dash_tile ON usergroup_dash_tile.dash_tile = dash_tile.ref
+                                        WHERE
+                                            usergroup_dash_tile.usergroup = '{$user_group}'
+                                                AND dash_tile.all_users = 1
+                                                AND (dash_tile.allow_delete = 1
+                                                OR (dash_tile.allow_delete = 0
+                                                AND dash_tile.ref IN (SELECT DISTINCT
+                                                    user_dash_tile.dash_tile
+                                                FROM
+                                                    user_dash_tile)))
+                                        ORDER BY usergroup_dash_tile.default_order_by;");
+        }
 
     // If client code has specified a user ID, then just add the tiles for it
     if(is_numeric($user_id) && 0 < $user_id)
