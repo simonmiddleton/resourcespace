@@ -1,6 +1,11 @@
 <?php
 
-	global $geo_search_restrict;	
+	global $geo_search_restrict;
+	
+	# Fetch 'order_by' and 'search' parameters so we pass back to url when navigating
+	$order_by = getvalescaped('order_by','resourceid');
+	$search = getvalescaped('search','!last1000');
+	
 	if (count($geo_search_restrict)>0)
 		{
 		foreach ($geo_search_restrict	as $zone)
@@ -64,7 +69,7 @@
 	    {
 		    ?>
 	    <?php if ($edit_access) { ?>
-	    <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['location-edit']; ?></a></p><?php } ?>
+	    <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo $search; ?>&order_by=<?php echo $order_by; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['location-edit']; ?></a></p><?php } ?>
 	    
 		    <?php $mapheight=$view_mapheight; include dirname(__FILE__) . "/geo_map.php";
 		    $zoom = $resource["mapzoom"];
@@ -108,7 +113,7 @@
     else
         {
         ?>
-        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_PLUS ?><?php echo $lang['location-add'];?></a>
+        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo $search; ?>&order_by=<?php echo $order_by; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_PLUS ?><?php echo $lang['location-add'];?></a>
         <?php
         }
 

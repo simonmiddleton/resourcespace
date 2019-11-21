@@ -9,6 +9,11 @@ if ($disable_geocoding){exit("Geomapping disabled.");}
 
 # Fetch resource data.
 $ref = getvalescaped('ref','',true);
+
+# Fetch 'order_by' and 'search' parameters so we pass back to url when navigating
+$order_by = getvalescaped('order_by','resourceid');
+$search = getvalescaped('search','!last1000');
+
 # See if we came from the geolocate_collection page
 $geocol = getvalescaped('geocol','',true);
 if ($ref=='') {die;}
@@ -55,7 +60,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 <div class="RecordPanel">
 <div class="Title"><?php echo $lang['location-title']; render_help_link("user/geolocation");?></div>
 <?php if (!hook("customgeobacklink")) { ?>
-<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short . ($geocol != '' ? "pages/geolocate_collection.php?ref=" . $geocol : "pages/view.php?ref=" . $ref) ?>"><?php echo LINK_CARET_BACK . ($geocol != '' ? $lang['backtogeolocatecollection'] : $lang['backtoresourceview']) ?></a></p>
+<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short . ($geocol != '' ? "pages/geolocate_collection.php?ref=" . $geocol : "pages/view.php?ref=" . $ref) ?>&search=<?php echo $search; ?>&order_by=<?php echo $order_by; ?>"><?php echo LINK_CARET_BACK . ($geocol != '' ? $lang['backtogeolocatecollection'] : $lang['backtoresourceview']) ?></a></p>
 <?php } ?>
 
 <!-- Drag mode selector -->
@@ -171,10 +176,12 @@ jQuery('#UICenter').scroll(function() {
 hook("rendermapfooter");
 ?>
 <p><?php echo $lang['location-details']; ?></p>
-<form id="map-form" method="post" action="<?php echo $baseurl_short?>pages/geo_edit.php">
+<form id="map-form" method="post" action="<?php echo $baseurl_short?>pages/geo_edit.php?search=">
     <?php generateFormToken("map-form"); ?>
 <input name="ref" type="hidden" value="<?php echo $ref; ?>" />
 <input name="geocol" type="hidden" value="<?php echo $geocol; ?>" />
+<input name="search" type="hidden" value="<?php echo $search; ?>" />
+<input name="order_by" type="hidden" value="<?php echo $order_by; ?>" />
 <input name="map-zoom" type="hidden" value="<?php echo $zoom ?>" id="map-zoom" />
 <?php echo $lang['latlong']; ?>: <input name="geo-loc" type="text" size="50" value="<?php echo $resource["geo_long"]==""?"":($resource["geo_lat"] . "," . $resource["geo_long"]) ?>" id="map-input" />
 <?php hook("renderlocationextras"); ?>
