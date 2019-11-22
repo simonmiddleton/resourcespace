@@ -562,31 +562,36 @@ function save_resource_data($ref,$multi,$autosave_field="")
         {
         return $errors;
         }
+      
+   # Save related resource field if value for Related input field is autosaved, or if form has been submitted by user
+    if (($autosave_field=="") || ($autosave_field=="Related"))
+        {
+         # save related resources field
+         sql_query("delete from resource_related where resource='$ref' or related='$ref'"); # remove existing related items
+         $related=explode(",",getvalescaped("related",""));
+         # Make sure all submitted values are numeric
+         $ok=array();for ($n=0;$n<count($related);$n++) {if (is_numeric(trim($related[$n]))) {$ok[]=trim($related[$n]);}}
+         if (count($ok)>0) {sql_query("insert into resource_related(resource,related) values ($ref," . join("),(" . $ref . ",",$ok) . ")");} 
+        }    
+
         
-        if ($autosave_field=="")
-            {
-            # Additional tasks when editing all fields (i.e. not autosaving)
-            
-            # Always index the resource ID as a keyword
-            remove_keyword_mappings($ref, $ref, -1);
-            add_keyword_mappings($ref, $ref, -1);
-            
-            # Also index the resource type name, unless disabled
-            global $index_resource_type;
-            if ($index_resource_type)
-                    {
-                    $restypename=sql_value("select name value from resource_type where ref in (select resource_type from resource where ref='" . escape_check($ref) . "')","");
-                    remove_all_keyword_mappings_for_field($ref,-2);
-                    add_keyword_mappings($ref,$restypename,-2);
-                    }
-            
-            # Also save related resources field
-            sql_query("delete from resource_related where resource='$ref' or related='$ref'"); # remove existing related items
-            $related=explode(",",getvalescaped("related",""));
-            # Make sure all submitted values are numeric
-            $ok=array();for ($n=0;$n<count($related);$n++) {if (is_numeric(trim($related[$n]))) {$ok[]=trim($related[$n]);}}
-            if (count($ok)>0) {sql_query("insert into resource_related(resource,related) values ($ref," . join("),(" . $ref . ",",$ok) . ")");}
-            }
+    if ($autosave_field=="")
+        {
+        # Additional tasks when editing all fields (i.e. not autosaving)
+        
+        # Always index the resource ID as a keyword
+        remove_keyword_mappings($ref, $ref, -1);
+        add_keyword_mappings($ref, $ref, -1);
+        
+        # Also index the resource type name, unless disabled
+        global $index_resource_type;
+        if ($index_resource_type)
+                {
+                $restypename=sql_value("select name value from resource_type where ref in (select resource_type from resource where ref='" . escape_check($ref) . "')","");
+                remove_all_keyword_mappings_for_field($ref,-2);
+                add_keyword_mappings($ref,$restypename,-2);
+                }
+       }
 
     // Update resource_node table
     db_begin_transaction();
