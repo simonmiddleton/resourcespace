@@ -386,13 +386,17 @@ function HookSimplesamlAllProvideusercredentials()
                             // Already account(s) with this email address, notify the administrator (provided it is an actual attempt to pevent unnecessary duplicates)
                             simplesaml_duplicate_notify($username,$group,$email,$email_matches,$userid);
                             }
+                        include_once __DIR__ . '/dash_functions.php';
+                        build_usergroup_dash($group, $userid);
                         }
                     }
                 }
             else
                 {
                 // Create the user
-                $userid=new_user($username,$group);    
+                $userid=new_user($username,$group);
+                include_once __DIR__ . '/dash_functions.php';
+                build_usergroup_dash($group, $userid);
                 }
             }
             
