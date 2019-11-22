@@ -3015,12 +3015,12 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
 
     if (!isset($body)){$body=$message;}
 
-    global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password;
+    global $use_smtp,$smtp_secure,$smtp_host,$smtp_port,$smtp_auth,$smtp_username,$smtp_password,$debug_log;
     $mail = new PHPMailer\PHPMailer\PHPMailer();
     // use an external SMTP server? (e.g. Gmail)
     if ($use_smtp) {
         $mail->IsSMTP(); // enable SMTP
-        $mail->SMTPDebug = 0;  // debugging: 1 = errors and messages, 2 = messages only
+        $mail->SMTPDebug = $debug_log ? 1 : 0;  // debugging: 1 = errors and messages, 2 = messages only
         $mail->SMTPAuth = $smtp_auth;  // authentication enabled/disabled
         $mail->SMTPSecure = $smtp_secure; // '', 'tls' or 'ssl'
         $mail->Host = $smtp_host; // hostname
