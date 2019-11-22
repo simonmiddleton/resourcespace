@@ -207,7 +207,7 @@ $select_table_url = generateURL(
         </select>    
     </div>   
     <?php
-    if($table != "")
+    if($table == "")
         {
         ?>
         <select class="SplitSearch" name="table">
