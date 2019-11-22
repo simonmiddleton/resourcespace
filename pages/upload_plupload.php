@@ -1222,7 +1222,7 @@ var pluploadconfig = {
                                   });
                                   
                           <?php }
-				elseif ($plupload_clearqueue && checkperm("d") ){?>
+				elseif (($plupload_clearqueue && checkperm("d")) && !$replace){?>
                                   uploader.bind('UploadComplete', function(up, files) {
                                         jQuery('.plupload_done').slideUp('2000', function() {
                                                         uploader.splice();
@@ -1233,7 +1233,7 @@ var pluploadconfig = {
                                   
                           <?php }
 
-				elseif ($plupload_clearqueue && !checkperm("d") ){?>
+				elseif (($plupload_clearqueue && !checkperm("d")) || $replace ){?>
                           //remove the completed files once complete
                           uploader.bind('UploadComplete', function(up, files) {
                                                   jQuery('.plupload_done').slideUp('2000', function() {
