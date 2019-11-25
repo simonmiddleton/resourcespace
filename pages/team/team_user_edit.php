@@ -49,7 +49,13 @@ elseif (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 			redirect ($backurl!=""?$backurl:$baseurl_short ."pages/team/team_user.php?nc=" . time());
 			exit();
 			}
-		$message=$lang["changessaved"];
+		if (getval("save","")!="" && $modal)
+			{
+			# close Modal and return to action list
+			print "<script>ModalClose()</script>";
+			exit();
+			}	
+		
 		}
 	}
 
