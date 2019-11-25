@@ -43,7 +43,8 @@ if(getval('save', '') !== '' && enforcePostRequest(false))
         'applicable_resource_types' => $tms_link_applicable_resource_types,
         'tms_rs_mappings' => $tms_link_tms_rs_mappings,
     );
-
+    // reindex array to avoid any issues after deletions
+    $tms_link_modules_mappings[$id]["tms_rs_mappings"] = array_values($tms_link_modules_mappings[$id]["tms_rs_mappings"]);
     tms_link_save_module_mappings_config($tms_link_modules_mappings);
     }
 
