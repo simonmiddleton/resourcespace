@@ -109,7 +109,8 @@ if (getval("save",false) && enforcePostRequest(false))
 
         if (isset($logo_extension))
             {
-            sql_query("update usergroup set group_specific_logo='{$logo_extension}' where ref='{$ref}'");
+            $logo_extension_escaped = escape_check($logo_extension);
+            sql_query("UPDATE usergroup SET group_specific_logo = '{$logo_extension_escaped}' WHERE ref = '{$ref}'");
             log_activity(null,null,null,'usergroup','group_specific_logo',$ref);
             }
 
