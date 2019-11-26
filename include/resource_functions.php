@@ -3095,6 +3095,8 @@ function delete_alternative_file($resource,$ref)
 	
 function get_alternative_file($resource,$ref)
 	{
+    $resource = escape_check($resource);
+    $ref = escape_check($ref);
 	# Returns the row for the requested alternative file
 	$return=sql_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource='$resource' and ref='$ref'");
 	if (count($return)==0) {return false;} else {return $return[0];}
