@@ -682,9 +682,12 @@ function get_resource_top_keywords($resource,$count)
             {  
             if (substr($r,0,1)==","){$r=substr($r,1);}
             $s=split_keywords($r);
+            # Splitting keywords can result in break words being included in these results
+            # These should be removed here otherwise they will show as keywords themselves which is incorrect
+            global $noadd; 
             foreach ($s as $a)
                 {
-                if(!empty($a))
+                if(!empty($a) && !in_array($a,$noadd))
                     {
                     $return[]=$a;
                     }
