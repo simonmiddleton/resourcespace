@@ -123,7 +123,7 @@ function HookWordpress_ssoAllProvideusercredentials()
 						}
 				debug("wordpress_sso - found matching ResourceSpace user");
 				$dummyrequest=uniqid(); # use to prevent subsequent authentication using same querystring
-				sql_query("update user set wp_authrequest='$dummyrequest' where username='$username'");
+				sql_query("UPDATE user SET wp_authrequest = '$dummyrequest' WHERE username = '" . escape_check($username) . "'");
 				setcookie("wordpress_sso_test",$dummyrequest,0,"/");
 						
 				//allow login
