@@ -50,7 +50,7 @@ elseif (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag
 		{
 		if ($ldapgroups[$i] <> '' && $rsgroups[$i] <> '' && is_numeric($rsgroups[$i]))
 			{
-			$query = "replace into simpleldap_groupmap (ldapgroup,rsgroup,priority) values ('" . escape_check($ldapgroups[$i]) . "','" . $rsgroups[$i] . "' ," . (($priority[$i]!="")?"'" . $priority[$i] . "'":"NULL") .")";
+			$query = "replace into simpleldap_groupmap (ldapgroup,rsgroup,priority) values ('" . escape_check($ldapgroups[$i]) . "','" . $rsgroups[$i] . "' ," . (($priority[$i]!="")?"'" . escape_check($priority[$i]) . "'":"NULL") .")";
 			sql_query($query);		
 			}
 		} 
