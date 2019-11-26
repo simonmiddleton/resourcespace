@@ -3355,11 +3355,17 @@ function notify_user_contributed_unsubmitted($refs,$collection=0)
 		}
 	}		
 	
+
+/**
+*  A standard field title is translated using $lang.  A custom field title is i18n translated.
+* 
+* @param integer $field Resource type field ID
+* 
+* @return boolean|array Returns FALSE or record data (array)
+*/
 function get_field($field)
     {
-    # A standard field title is translated using $lang.  A custom field title is i18n translated.
-
-    # Executes query.
+    $field_escaped = escape_check($field);
     $r = sql_query("
         SELECT ref,
                name,
@@ -3384,7 +3390,7 @@ function get_field($field)
                display_as_dropdown,
                automatic_nodes_ordering
           FROM resource_type_field
-         WHERE ref = '{$field}'
+         WHERE ref = '{$field_escaped}'
      ");
 
     # Translates the field title if the searched field is found.
