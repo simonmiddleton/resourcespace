@@ -46,11 +46,11 @@ function set_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured
 
         return $new_ref;
         }
-    else if(!is_null($ref) && $new_ref == 0)
+    else if(!is_null($ref) && $new_ref != 0 && $ref == $new_ref)
         {
         log_activity("Updated slideshow image", LOG_CODE_EDITED, null, 'slideshow', 'ref', $ref);
 
-        return $ref;
+        return $new_ref;
         }
 
     return false;
