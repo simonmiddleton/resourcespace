@@ -1427,7 +1427,10 @@ if($responsive_ui)
          * If there is a mix of resource_types in results, and there is a config option for a particular resource_type that overrides $annotate_enabled, then display of ResourcePanels in search.php is affected.
          * This line detects if $annotate_enabled == true in config, and ensures that all ResourcePanels have same height value 
          */
-        if ($annotate_enabled == true) $annotate_enabled_adjust_size_all = true;
+        if ($annotate_enabled == true) 
+            {
+            $annotate_enabled_adjust_size_all = true;
+            }
      
         # loop and display the results
         for ($n=$offset;(($n<count($result)) && ($n<($offset+$per_page)));$n++)
