@@ -176,7 +176,7 @@ jQuery('#UICenter').scroll(function() {
 hook("rendermapfooter");
 ?>
 <p><?php echo $lang['location-details']; ?></p>
-<form id="map-form" method="post" action="<?php echo $baseurl_short?>pages/geo_edit.php?search=">
+<form id="map-form" method="post" action="<?php echo $baseurl_short?>pages/geo_edit.php">
     <?php generateFormToken("map-form"); ?>
 <input name="ref" type="hidden" value="<?php echo $ref; ?>" />
 <input name="geocol" type="hidden" value="<?php echo $geocol; ?>" />
