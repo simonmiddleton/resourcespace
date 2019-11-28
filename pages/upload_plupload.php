@@ -573,7 +573,7 @@ if ($_FILES)
             if(count($duplicates)>0)
             {
                 debug("PLUPLOAD ERROR- duplicate file matches resources" . implode(",",$duplicates));
-                die('{"jsonrpc" : "2.0", "error" : {"code": 108, "message": "Duplicate file upload, file matches resources: ' . implode(",",$duplicates) . '", "duplicates": "' . implode(",",$duplicates) . '"}, "id" : "id"}'); 
+                die('{"jsonrpc" : "2.0", "error" : {"code": 108, "message": "Duplicate file upload, file matches resources: ' . implode(",",$duplicates) . '", "duplicates": "' . implode(",",$duplicates) . '"}, "id" : "id", "collection" : "' . $collection_add . '" }'); 
             }
 
             $plupload_upload_location=$plfilepath;
@@ -1028,7 +1028,8 @@ var pluploadconfig = {
 
         // Silverlight settings
         silverlight_xap_url : '../lib/plupload_2.1.8/Moxie.xap',
-        dragdrop: true,        
+        dragdrop: true,  
+        logopened: false,      
         
         preinit: {
                 PostInit: function(uploader) {
@@ -1065,14 +1066,24 @@ var pluploadconfig = {
                                  try
                                     {
                                     uploadresponse = JSON.parse(info.response);
+                                    if (info.response.indexOf("collection") > 0)
+                                        {
+                                        newcol = uploadresponse.collection;                                            
+                                        CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nowarn=true&nc=' . time() ?>");
+                                        }
                                     if (info.response.indexOf("error") > 0)
                                         {
                                         uploaderrormessage = uploadresponse.error.code + " " + uploadresponse.error.message;
                                         if(uploadresponse.error.code==108)
                                             {
-                                            styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourceupload"] ?>\n' + uploadresponse.error.duplicates + '\r\n<?php echo $lang['see_log']?>');   
+                                            styledalert('<?php echo $lang["error"]?>','<?php echo $lang["duplicateresourcefound"]?>');   
                                             message = '<?php echo $lang['error-duplicatesfound']?>';
                                             jQuery("#upload_log").append("\r\n" + message.replace('%resourceref%', uploadresponse.error.duplicates).replace('%filename%', file.name));
+                                            if(!uploader.settings.logopened)
+                                                {
+                                                    jQuery("#UploadLogSectionHead").click();
+                                                    uploader.settings.logopened = true;
+                                                }
                                             }
                                         else
                                             {
@@ -1084,11 +1095,6 @@ var pluploadconfig = {
                                     else
                                         {
                                         jQuery("#upload_log").append("\r\n" + file.name + " - " + uploadresponse.message + " " + uploadresponse.id);
-                                        if (info.response.indexOf("collection") > 0)
-                                            {
-                                            newcol = uploadresponse.collection;                                            
-                                            CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?collection=" + newcol + "&nowarn=true&nc=' . time() ?>");
-                                            }
                                         if(resource_keys===processed_resource_keys){resource_keys=[];}
                                         resource_keys.push(uploadresponse.id.replace( /^\D+/g, ''));
                                         }
