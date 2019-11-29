@@ -1,5 +1,9 @@
 <?php
+
+# Download the Google PHP API client to /lib/google_api_php_client_2.2.0/ or other path as specified below:
 require_once dirname(__DIR__) . '/../../lib/google_api_php_client_2.2.0/vendor/autoload.php';
+
+
 include_once __DIR__ . '/../include/google_oauth_functions.php';
 
 
