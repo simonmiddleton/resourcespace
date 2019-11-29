@@ -7409,11 +7409,15 @@ function is_resourcespace_upgrade_available()
 
     if($centralised_version_number === false)
         {
+        $default_socket_timeout_cache = ini_get('default_socket_timeout');
+        ini_set('default_socket_timeout',5); //Set timeout to 5 seconds incase server cannot access resourcespace.com
         $centralised_version_number = @file_get_contents('https://www.resourcespace.com/current_release.txt');
+        ini_set('default_socket_timeout',$default_socket_timeout_cache);
         debug("RS_UPGRADE_AVAILABLE: centralised_version_number = $centralised_version_number");
         if($centralised_version_number === false)
             {
             debug("RS_UPGRADE_AVAILABLE: unable to get centralised_version_number from https://www.resourcespace.com/current_release.txt");
+            set_sysvar('last_cvn_update', date('Y-m-d H:i:s'));
             return false; 
             }
 
